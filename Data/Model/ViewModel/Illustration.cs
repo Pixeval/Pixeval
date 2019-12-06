@@ -1,4 +1,6 @@
-﻿using PropertyChanged;
+﻿using System;
+using System.Diagnostics;
+using PropertyChanged;
 using Pzxlane.Data.Model.Web.Response;
 #pragma warning disable 8509
 
@@ -45,9 +47,9 @@ namespace Pzxlane.Data.Model.ViewModel
             {
                 return illustration switch
                 {
-                    { Type: "illust", IsManga: true } => Manga,
+                    { Type: "illustration", IsManga: true } => Manga,
                     { Type: "ugoira" }                => Ugoira,
-                    { Type: "illust", IsManga: false} => Illust
+                    { Type: "illustration", IsManga: false} => Illust
                 };
             }
         }

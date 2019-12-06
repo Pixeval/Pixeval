@@ -2,7 +2,7 @@
 
 namespace Pzxlane.Data.Model.Web.Request
 {
-    public class FavoriteWorkRequest
+    public class GalleryRequest
     {
         [AliasAs("user_id")]
         public string Id { get; set; }

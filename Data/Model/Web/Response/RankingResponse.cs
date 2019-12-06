@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Pzxlane.Data.Model.Web.Response
@@ -10,7 +9,7 @@ namespace Pzxlane.Data.Model.Web.Response
         public List<Illust> Illusts { get; set; }
 
         [JsonProperty("next_url")]
-        public Uri NextUrl { get; set; }
+        public string NextUrl { get; set; }
 
         public class Illust
         {

@@ -16,21 +16,6 @@ namespace Pzxlane.Data.Model.Web.Response
 
         public class Pagination
         {
-            [JsonProperty("previous")]
-            public long Previous { get; set; }
-
-            [JsonProperty("next")]
-            public long Next { get; set; }
-
-            [JsonProperty("current")]
-            public long Current { get; set; }
-
-            [JsonProperty("per_page")]
-            public long PerPage { get; set; }
-
-            [JsonProperty("total")]
-            public long Total { get; set; }
-
             [JsonProperty("pages")]
             public long Pages { get; set; }
         }

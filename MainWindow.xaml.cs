@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows;
 using Pzxlane.Caching.Persisting;
+using Pzxlane.Core;
 using Pzxlane.Data.Model.Web.Delegation;
 
 namespace Pzxlane
@@ -14,21 +15,18 @@ namespace Pzxlane
         public MainWindow()
         {
             InitializeComponent();
-
         }
 
 
         private async void MainWindow_OnInitialized(object sender, EventArgs e)
         {
-            Debug.WriteLine("auth");
             await Authentication.Authenticate("2653221698@qq.com", "ly20020730");
+
             Debug.WriteLine(Identity.Global.ToString());
-            foreach (var (key, value) in DnsResolver.DnsCache.Value)
+
+            await foreach (var illust in PixivClient.Instance.Upload("333556"))
             {
-                foreach (var ipAddress in value)
-                {
-                    Debug.WriteLine(key + " " + ipAddress);
-                }
+                Debug.WriteLine((await illust).Id);
             }
         }
     }

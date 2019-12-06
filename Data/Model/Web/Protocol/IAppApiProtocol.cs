@@ -18,7 +18,7 @@ namespace Pzxlane.Data.Model.Web.Protocol
         Task<UserInformationResponse> GetUserInformation(UserInformationRequest userInformationRequest);
 
         [Get("/v1/user/bookmarks/illust")]
-        Task<FavoriteWorksResponse> GetFavoriteWorks(FavoriteWorkRequest favoriteWorkRequest);
+        Task<GalleryResponse> GetGallery(GalleryRequest favoriteWorkRequest);
 
         [Get("/v1/spotlight/articles?category=all")]
         Task<SpotlightResponse> GetSpotlights(int offset);

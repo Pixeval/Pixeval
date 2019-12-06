@@ -12,7 +12,7 @@ namespace Pzxlane.Data.Model.Web.Protocol
         Task<QueryResponse> QueryWorks(QueryWorksRequest queryWorksRequest);
 
         [Get("/users/{uid}/works.json")]
-        Task<UploadResponse> GetUploads(UploadsRequest uploadResponse);
+        Task<UploadResponse> GetUploads(string uid, UploadsRequest uploadResponse);
 
         [Get("/works/{uid}.json")]
         Task<IllustResponse> GetSingle(string uid, [AliasAs("image_sizes")] string imageSizes = "px_128x128,small,medium,large,px_480mw", [AliasAs("include_stats")] string includeStat = "true");

@@ -6,7 +6,7 @@ using Pzxlane.Data.Model.Web.Request;
 using Pzxlane.Data.Model.Web.Response;
 using Pzxlane.Objects;
 
-namespace Pzxlane.Api.Client
+namespace Pzxlane.Core
 {
     public static class PixivClientExtension
     {

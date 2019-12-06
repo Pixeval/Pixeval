@@ -3,7 +3,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using Pzxlane.Objects;
 
 namespace Pzxlane.Data.Model.Web.Delegation
@@ -28,19 +27,14 @@ namespace Pzxlane.Data.Model.Web.Delegation
         {
             var host = request.RequestUri.DnsSafeHost;
 
-            return await Retry.For<IPAddress, Task<HttpResponseMessage>, TaskCanceledException>(await DnsResolver.Lookup(host), ip =>
-            {
-                var ipAddressString = ip.ToString();
+            var isSslSession = request.RequestUri.ToString().StartsWith("https://");
 
-                var isSslSession = request.RequestUri.ToString().StartsWith("https://");
+            request.RequestUri = new Uri($"{(isSslSession ? "https://" : "http://")}{(await DnsResolver.Lookup(host))[0]}{request.RequestUri.PathAndQuery}");
+            request.Headers.Host = host;
 
-                request.RequestUri = new Uri($"{(isSslSession ? "https://" : "http://")}{ipAddressString}{request.RequestUri.PathAndQuery}");
-                request.Headers.Host = host;
+            requestHandler?.Handle(request);
 
-                requestHandler?.Handle(request);
-
-                return base.SendAsync(request, cancellationToken);
-            }, 3);
+            return await base.SendAsync(request, cancellationToken);
         }
 
         protected abstract DnsResolver DnsResolver { get; set; }

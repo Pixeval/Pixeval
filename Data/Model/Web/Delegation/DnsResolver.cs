@@ -50,7 +50,7 @@ namespace Pzxlane.Data.Model.Web.Delegation
                 });
         }
 
-        public async Task<IReadOnlyCollection<IPAddress>> Lookup(string hostname)
+        public async Task<IList<IPAddress>> Lookup(string hostname)
         {
             if (DnsCache.Value.ContainsKey(hostname))
             {

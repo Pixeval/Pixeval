@@ -10,9 +10,6 @@ namespace Pzxlane.Data.Model.Web.Request
         [AliasAs("q")]
         public string Tag { get; set; }
 
-        [AliasAs("image_sizes")]
-        public string ImageSizes { get; set; } = "px_128x128,px_480mw,large";
-
         [AliasAs("per_page")]
         public int PerPage { get; set; } = 60;
 
