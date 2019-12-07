@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Media;
 using Pzxlane.Caching.Persisting;
 using Pzxlane.Core;
+using Pzxlane.Data.Model.ViewModel;
 using Pzxlane.Data.Model.Web.Delegation;
+using Pzxlane.Objects;
 
 namespace Pzxlane
 {
@@ -22,12 +25,9 @@ namespace Pzxlane
         {
             await Authentication.Authenticate("2653221698@qq.com", "ly20020730");
 
-            Debug.WriteLine(Identity.Global.ToString());
-
-            await foreach (var illust in PixivClient.Instance.Upload("333556"))
-            {
-                Debug.WriteLine((await illust).Id);
-            }
+            var url = Identity.Global.AvatarUrl;
+            UserAvatar.Source = (ImageSource) new ImageSourceConverter().ConvertFrom(await HttpClientFactory.PixivImage(url).GetByteArrayAsync(""));
+            UserName.Content = Identity.Global.Name;
         }
     }
 }

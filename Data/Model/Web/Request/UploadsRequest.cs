@@ -11,6 +11,6 @@ namespace Pzxlane.Data.Model.Web.Request
         public string Publicity { get; set; } = "public";
 
         [AliasAs("per_page")]
-        public int PerPage { get; set; } = 60;
+        public int PerPage { get; set; } = 300;
     }
 }

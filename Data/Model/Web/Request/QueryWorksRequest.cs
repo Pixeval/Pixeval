@@ -11,7 +11,7 @@ namespace Pzxlane.Data.Model.Web.Request
         public string Tag { get; set; }
 
         [AliasAs("per_page")]
-        public int PerPage { get; set; } = 60;
+        public int PerPage { get; set; } = 300;
 
         [AliasAs("period")]
         public string Period { get; set; } = "all";

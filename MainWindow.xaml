@@ -3,10 +3,80 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Pzxlane" Initialized="MainWindow_OnInitialized"
+        xmlns:local="clr-namespace:Pzxlane"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
+        Initialized="MainWindow_OnInitialized"
+        Title="MainWindow" Height="900" Width="1600">
+    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <Grid x:Name="NavigatorContainer" VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="250">
+            <materialDesign:Card VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <StackPanel x:Name="NavigatorWrapper">
+                    <StackPanel x:Name="UserInformation" Margin="0 40 0 0">
+                        <Image x:Name="UserAvatar" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="100" Width="100">
+                            <Image.Clip>
+                                <EllipseGeometry RadiusX="50" RadiusY="50" Center="50 50"/>
+                            </Image.Clip>
+                        </Image>
+                        <Label x:Name="UserName" Margin="0 25 0 50" Height="35" FontSize="18" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Microsoft YaHei Light"/>
+                    </StackPanel>
+                    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <ListView Style="{DynamicResource MaterialDesignListView}" x:Name="NavigatorList">
+                            <ListViewItem Height="60" HorizontalAlignment="Stretch" x:Name="MenuTab">
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Margin="20 0 0 0" Width="35" Height="35">
+                                        <Canvas Width="24" Height="24">
+                                            <Path Data="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" Fill="Gray" />
+                                        </Canvas>
+                                    </Viewbox>
+                                    <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="主          页" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Microsoft YaHei Light"/>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem Height="60" HorizontalAlignment="Stretch" x:Name="GalleryTab">
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Margin="20 0 0 0" Width="35" Height="35">
+                                        <Canvas Width="24" Height="24">
+                                            <Path Data="M22,16V4A2,2 0 0,0 20,2H8A2,2 0 0,0 6,4V16A2,2 0 0,0 8,18H20A2,2 0 0,0 22,16M11,12L13.03,14.71L16,11L20,16H8M2,6V20A2,2 0 0,0 4,22H18V20H4V6" Fill="Gray" />
+                                        </Canvas>
+                                    </Viewbox>
+                                    <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="我 的 收 藏" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Microsoft YaHei Light"/>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem Height="60" HorizontalAlignment="Stretch" x:Name="FollowingTab">
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Margin="20,0,0,0" Width="35" Height="35">
+                                        <Canvas Width="24" Height="24">
+                                            <Path Data="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z" Fill="Gray" />
+                                        </Canvas>
+                                    </Viewbox>
+                                    <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="我 的 关 注" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Microsoft YaHei Light"/>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem Height="60" HorizontalAlignment="Stretch" x:Name="PixivVisionTab">
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Margin="20 0 0 0" Width="35" Height="35">
+                                        <Canvas Width="24" Height="24">
+                                            <Path Data="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z" Fill="Gray" />
+                                        </Canvas>
+                                    </Viewbox>
+                                    <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="特          辑" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Microsoft YaHei Light"/>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem Height="60" HorizontalAlignment="Stretch" x:Name="RankingTab">
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Margin="20 0 0 0" Width="35" Height="35">
+                                        <Canvas Width="24" Height="24">
+                                            <Path Data="M19,20V9H5V20H19M16,2H18V4H19A2,2 0 0,1 21,6V20A2,2 0 0,1 19,22H5A2,2 0 0,1 3,20V6A2,2 0 0,1 5,4H6V2H8V4H16V2M12,18.17L11.42,17.64C9.36,15.77 8,14.54 8,13.03C8,11.8 8.97,10.83 10.2,10.83C10.9,10.83 11.56,11.15 12,11.66C12.44,11.15 13.1,10.83 13.8,10.83C15.03,10.83 16,11.8 16,13.03C16,14.54 14.64,15.77 12.58,17.64L12,18.17Z" Fill="Gray" />
+                                        </Canvas>
+                                    </Viewbox>
+                                    <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="每 日 推 荐" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Microsoft YaHei Light"/>
+                                </StackPanel>
+                            </ListViewItem>
+                        </ListView>
+                    </StackPanel>
+                </StackPanel>
+            </materialDesign:Card>
+        </Grid>
     </Grid>
 </Window>

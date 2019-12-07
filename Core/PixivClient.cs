@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -34,63 +35,6 @@ namespace Pzxlane.Core
                 }
 
                 return _instance;
-            }
-        }
-
-        public async IAsyncEnumerable<Task<Illustration>> Recommend()
-        {
-            foreach (var illust in (await HttpClientFactory.AppApiService.GetRanking(new RankingRequest())).Illusts)
-            {
-                yield return PixivHelper.IllustrationInfo(illust.Id.ToString());
-            }
-        }
-
-        public async IAsyncEnumerable<Task<Illustration>> Gallery(string uid)
-        {
-            var httpClient = HttpClientFactory.PixivApi(ProtocolBase.AppApiBaseUrl);
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"Bearer {Identity.Global.AccessToken}");
-
-            var url = "/v1/user/bookmarks/illust";
-
-            while (!url.IsNullOrEmpty())
-            {
-                var model = (await httpClient.GetStringAsync(url)).FromJson<GalleryResponse>();
-
-                foreach (var responseIllust in model.Illusts)
-                {
-                    yield return PixivHelper.IllustrationInfo(responseIllust.Id.ToString());
-                }
-                url = model.NextUrl;
-            }
-        }
-
-        public async IAsyncEnumerable<Task<Illustration>> Query(string tag)
-        {
-            var illustPages = await PixivHelper.GetQueryPagesCount(tag);
-
-            foreach (var i in Enumerable.Range(1, illustPages))
-            {
-                var responses = await HttpClientFactory.PublicApiService.QueryWorks(new QueryWorksRequest { Tag = tag, Offset = i });
-
-                foreach (var response in responses.ToResponse)
-                {
-                    yield return PixivHelper.IllustrationInfo(response.Id.ToString());
-                }
-            }
-        }
-
-        public async IAsyncEnumerable<Task<Illustration>> Upload(string uid)
-        {
-            var illustPages = await PixivHelper.GetUploadPagesCount(uid);
-
-            foreach (var i in Enumerable.Range(1, illustPages))
-            {
-                var responses = await HttpClientFactory.PublicApiService.GetUploads(uid, new UploadsRequest{ Page = i });
-
-                foreach (var response in responses.ToResponse)
-                {
-                    yield return PixivHelper.IllustrationInfo(response.Id.ToString());
-                }
             }
         }
     }

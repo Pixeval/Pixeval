@@ -43,7 +43,8 @@ namespace Pzxlane.Core
         public static async Task<int> GetQueryPagesCount(string tag)
         {
             return (int)(await HttpClientFactory.PublicApiService.QueryWorks(new QueryWorksRequest { Tag = tag, Offset = 1 }))
-                .QueryPagination.Total;
+                .QueryPagination
+                .Pages;
         }
     }
 }
