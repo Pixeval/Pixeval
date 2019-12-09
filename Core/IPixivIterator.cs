@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Pzxlane.Data.Model.ViewModel;
+using Pixeval.Data.Model.ViewModel;
 
-namespace Pzxlane.Core
+namespace Pixeval.Core
 {
     public interface IPixivIterator
     {
