@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Pzxlane.Data.Model.ViewModel;
-using Pzxlane.Data.Model.Web.Delegation;
-using Pzxlane.Data.Model.Web.Request;
-using Pzxlane.Data.Model.Web.Response;
-using Pzxlane.Objects;
+using Pixeval.Data.Model.ViewModel;
+using Pixeval.Data.Model.Web.Delegation;
+using Pixeval.Data.Model.Web.Request;
+using Pixeval.Data.Model.Web.Response;
+using Pixeval.Objects;
 
-namespace Pzxlane.Core
+namespace Pixeval.Core
 {
     public static class PixivClientExtension
     {

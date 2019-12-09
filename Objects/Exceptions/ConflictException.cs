@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Pzxlane.Objects.Exceptions
+namespace Pixeval.Objects.Exceptions
 {
     public class ConflictException : Exception
     {

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Windows;
-using Pzxlane.Caching.Persisting;
-using Pzxlane.Objects;
-using Pzxlane.Objects.Exceptions;
+using Pixeval.Caching.Persisting;
+using Pixeval.Objects;
+using Pixeval.Objects.Exceptions;
 
-namespace Pzxlane.Data.Model.Web.Delegation
+namespace Pixeval.Data.Model.Web.Delegation
 {
     public class PixivAuthenticationHttpRequestHandler : IHttpRequestHandler
     {

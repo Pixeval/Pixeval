@@ -1,9 +1,9 @@
 ﻿using System;
 using Newtonsoft.Json;
-using Pzxlane.Objects;
-using Pzxlane.Objects.Exceptions;
+using Pixeval.Objects;
+using Pixeval.Objects.Exceptions;
 
-namespace Pzxlane.Data.Model.Web.Response
+namespace Pixeval.Data.Model.Web.Response
 {
     public class TokenResponse
     {

@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using Pzxlane.Caching.Persisting;
-using Pzxlane.Data.Model.ViewModel;
-using Pzxlane.Data.Model.Web;
-using Pzxlane.Data.Model.Web.Delegation;
-using Pzxlane.Data.Model.Web.Response;
-using Pzxlane.Objects;
+using Pixeval.Caching.Persisting;
+using Pixeval.Data.Model.ViewModel;
+using Pixeval.Data.Model.Web;
+using Pixeval.Data.Model.Web.Delegation;
+using Pixeval.Data.Model.Web.Response;
+using Pixeval.Objects;
 
-namespace Pzxlane.Core
+namespace Pixeval.Core
 {
     public class GalleryIterator : IPixivIterator
     {

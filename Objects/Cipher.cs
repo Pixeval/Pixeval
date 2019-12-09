@@ -1,8 +1,7 @@
-﻿using System;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace Pzxlane.Objects
+namespace Pixeval.Objects
 {
     public class Cipher
     {

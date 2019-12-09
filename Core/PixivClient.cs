@@ -1,19 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Windows.Documents;
-using Pzxlane.Caching.Persisting;
-using Pzxlane.Data.Model.ViewModel;
-using Pzxlane.Data.Model.Web;
-using Pzxlane.Data.Model.Web.Delegation;
-using Pzxlane.Data.Model.Web.Request;
-using Pzxlane.Data.Model.Web.Response;
-using Pzxlane.Objects;
-using Page = System.Collections.Generic.IEnumerable<Pzxlane.Data.Model.ViewModel.Illustration>;
-
-namespace Pzxlane.Core
+﻿namespace Pixeval.Core
 {
     public sealed class PixivClient
     {

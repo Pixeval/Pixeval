@@ -7,15 +7,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\pxlogo_large.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Data\SqLite\" />
     <Folder Include="Globalization\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="3.7.0" />
     <PackageReference Include="MaterialDesignThemes" Version="2.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="PropertyChanged.Fody" Version="3.1.3" />
     <PackageReference Include="refit" Version="5.0.23" />
+    <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\pxlogo_large.png" />
   </ItemGroup>
 
 </Project>

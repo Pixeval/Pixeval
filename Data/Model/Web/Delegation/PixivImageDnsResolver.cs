@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Net;
 
-namespace Pzxlane.Data.Model.Web.Delegation
+namespace Pixeval.Data.Model.Web.Delegation
 {
     public class PixivImageDnsResolver : DnsResolver
     {

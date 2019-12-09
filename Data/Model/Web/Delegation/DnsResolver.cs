@@ -3,13 +3,13 @@ using System.Collections.Immutable;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Pzxlane.Data.Model.Web.Protocol;
-using Pzxlane.Data.Model.Web.Request;
-using Pzxlane.Data.Model.Web.Response;
-using Pzxlane.Objects;
+using Pixeval.Data.Model.Web.Protocol;
+using Pixeval.Data.Model.Web.Request;
+using Pixeval.Data.Model.Web.Response;
+using Pixeval.Objects;
 using Refit;
 
-namespace Pzxlane.Data.Model.Web.Delegation
+namespace Pixeval.Data.Model.Web.Delegation
 {
     /// <summary>
     /// Use a free <a href="https://1.0.0.1">DNS server</a> as DNS resolver instead of system default to avoid DNS pollution, thanks to <a href="https://github.com/Notsfsssf">@Notsfsssf</a>'s idea

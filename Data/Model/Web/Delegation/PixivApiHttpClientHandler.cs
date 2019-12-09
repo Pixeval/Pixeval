@@ -1,6 +1,6 @@
 ﻿using System.Net.Http;
 
-namespace Pzxlane.Data.Model.Web.Delegation
+namespace Pixeval.Data.Model.Web.Delegation
 {
     public class PixivApiHttpClientHandler : DnsResolvedHttpClientHandler
     {

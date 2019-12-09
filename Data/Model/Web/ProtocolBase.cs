@@ -1,4 +1,4 @@
-﻿namespace Pzxlane.Data.Model.Web
+﻿namespace Pixeval.Data.Model.Web
 {
     public class ProtocolBase
     {

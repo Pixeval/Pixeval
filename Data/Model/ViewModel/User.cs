@@ -1,6 +1,6 @@
 ﻿using PropertyChanged;
 
-namespace Pzxlane.Data.Model.ViewModel
+namespace Pixeval.Data.Model.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public class User

@@ -1,8 +1,7 @@
 ﻿using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Pzxlane.Objects
+namespace Pixeval.Objects
 {
     public class TextBuffer
     {

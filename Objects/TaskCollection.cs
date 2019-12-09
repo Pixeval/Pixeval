@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Pzxlane.Objects
+namespace Pixeval.Objects
 {
     public class TaskCollection<T, TResult>
     {

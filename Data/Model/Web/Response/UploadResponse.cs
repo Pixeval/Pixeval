@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Pzxlane.Data.Model.Web.Response
+namespace Pixeval.Data.Model.Web.Response
 {
     public class UploadResponse
     {

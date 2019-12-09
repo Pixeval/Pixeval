@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Pzxlane.Data.Model.Web;
-using Pzxlane.Data.Model.Web.Delegation;
-using Pzxlane.Data.Model.Web.Protocol;
-using Pzxlane.Data.Model.Web.Request;
-using Pzxlane.Objects;
+using Pixeval.Data.Model.Web;
+using Pixeval.Data.Model.Web.Delegation;
+using Pixeval.Data.Model.Web.Protocol;
+using Pixeval.Data.Model.Web.Request;
+using Pixeval.Objects;
 using Refit;
 
-namespace Pzxlane.Caching.Persisting
+namespace Pixeval.Caching.Persisting
 {
     public class Authentication
     {
@@ -23,7 +23,7 @@ namespace Pzxlane.Caching.Persisting
             var token = await RestService.For<ITokenProtocol>(HttpClientFactory.PixivApi(ProtocolBase.OAuthBaseUrl))
                 .GetToken(new TokenRequest { Name = name, Password = pwd }, time, hash);
 
-            Identity.Global = Identity.Parse(token);
+            Identity.Global = Identity.Parse(pwd, token);
 
             TextBuffer.SaveText(Constants.Conf, Identity.Global, Converters.From<object, string>(typeof(ObjectJsonConverter)));
         }

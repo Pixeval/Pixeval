@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace Pzxlane.Objects
+namespace Pixeval.Objects
 {
     public static class Texts
     {

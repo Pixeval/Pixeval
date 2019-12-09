@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace Pzxlane.Objects
+namespace Pixeval.Objects
 {
     public static class Reflection
     {

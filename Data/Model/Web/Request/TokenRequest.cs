@@ -1,6 +1,6 @@
 ﻿using Refit;
 
-namespace Pzxlane.Data.Model.Web.Request
+namespace Pixeval.Data.Model.Web.Request
 {
     public class TokenRequest
     {

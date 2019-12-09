@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Pzxlane.Data.Model.Web.Request;
-using Pzxlane.Data.Model.Web.Response;
+using Pixeval.Data.Model.Web.Request;
+using Pixeval.Data.Model.Web.Response;
 using Refit;
 
-namespace Pzxlane.Data.Model.Web.Protocol
+namespace Pixeval.Data.Model.Web.Protocol
 {
     [Headers("User-Agent: PixivAndroidApp/5.0.64 (Android 6.0)", "Content-Type: application/x-www-form-urlencoded")]
     public interface ITokenProtocol

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
-using Pzxlane.Caching.Persisting;
-using Pzxlane.Core;
-using Pzxlane.Data.Model.ViewModel;
-using Pzxlane.Data.Model.Web.Delegation;
-using Pzxlane.Objects;
+using System.Windows.Input;
+using Pixeval.Caching.Persisting;
+using Pixeval.Objects;
 
-namespace Pzxlane
+namespace Pixeval
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -20,14 +20,31 @@ namespace Pzxlane
             InitializeComponent();
         }
 
-
         private async void MainWindow_OnInitialized(object sender, EventArgs e)
         {
-            await Authentication.Authenticate("2653221698@qq.com", "ly20020730");
+            await AddUserNameAndAvatar();
+        }
 
-            var url = Identity.Global.AvatarUrl;
-            UserAvatar.Source = (ImageSource) new ImageSourceConverter().ConvertFrom(await HttpClientFactory.PixivImage(url).GetByteArrayAsync(""));
-            UserName.Content = Identity.Global.Name;
+        private async Task AddUserNameAndAvatar()
+        {
+            if (!Identity.Global.AvatarUrl.IsNullOrEmpty() && !Identity.Global.Name.IsNullOrEmpty())
+            {
+                UserName.Text = Identity.Global.Name;
+                UserAvatar.Source = await PixivImage.FromUrl(Identity.Global.AvatarUrl);
+            }
+        }
+
+        private void SignOutTab_OnSelected(object sender, RoutedEventArgs e)
+        {
+            Identity.Clear();
+            var login = new SignIn();
+            login.Show();
+            Close();
+        }
+
+        private void MainWindow_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            
         }
     }
 }

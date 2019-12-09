@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net.Http;
-using Pzxlane.Data.Model.Web.Protocol;
+using Pixeval.Data.Model.Web.Protocol;
 using Refit;
 
-namespace Pzxlane.Data.Model.Web.Delegation
+namespace Pixeval.Data.Model.Web.Delegation
 {
     public class HttpClientFactory
     {
@@ -12,10 +12,7 @@ namespace Pzxlane.Data.Model.Web.Delegation
             BaseAddress = new Uri(baseAddress)
         };
 
-        public static HttpClient PixivImage(string baseAddress) => new HttpClient(PixivImageHttpClientHandler.Instance)
-        {
-            BaseAddress = new Uri(baseAddress)
-        };
+        public static HttpClient PixivImage() => new HttpClient(PixivImageHttpClientHandler.Instance);
 
         public static readonly IPublicApiProtocol PublicApiService = RestService.For<IPublicApiProtocol>(PixivApi(ProtocolBase.PublicApiBaseUrl));
 

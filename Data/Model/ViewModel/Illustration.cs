@@ -1,10 +1,9 @@
-﻿using System;
-using System.Diagnostics;
+﻿using Pixeval.Data.Model.Web.Response;
 using PropertyChanged;
-using Pzxlane.Data.Model.Web.Response;
+
 #pragma warning disable 8509
 
-namespace Pzxlane.Data.Model.ViewModel
+namespace Pixeval.Data.Model.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public class Illustration

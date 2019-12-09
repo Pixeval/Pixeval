@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Pzxlane.Data.Model.ViewModel;
-using Pzxlane.Data.Model.Web.Delegation;
-using Pzxlane.Data.Model.Web.Request;
+using Pixeval.Data.Model.ViewModel;
+using Pixeval.Data.Model.Web.Delegation;
+using Pixeval.Data.Model.Web.Request;
 
-namespace Pzxlane.Core
+namespace Pixeval.Core
 {
     public class UploadIterator : IPixivIterator
     {
