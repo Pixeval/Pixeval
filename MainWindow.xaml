@@ -4,12 +4,54 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:persisting="clr-namespace:Pixeval.Caching.Persisting"
+        xmlns:valueConverters="clr-namespace:Pixeval.Objects.ValueConverters"
+        xmlns:viewModel="clr-namespace:Pixeval.Data.Model.ViewModel"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontFamily="Microsoft Yahei UI Light"
         mc:Ignorable="d"
         Initialized="MainWindow_OnInitialized" MouseDown="MainWindow_OnMouseDown"
-        Title="MainWindow" Height="900" Width="1600">
+        Title="MainWindow" Height="900" Width="1600" x:Name="PixevalMainWindow">
     <Window.Resources>
         <CubicEase x:Key="CubicEase" EasingMode="EaseOut"/>
+        <valueConverters:ThumbnailUrlToImageConverter x:Key="ThumbnailUrlToImageConverter"/>
+        <valueConverters:VisibleIfTrueConverter x:Key="VisibleIfTrueConverter"/>
+        <valueConverters:VisibleIfFalseConverter x:Key="VisibleIfFalseConverter"/>
+        <DataTemplate x:Key="IllustrationViewModelDataTemplate" DataType="viewModel:Illustration">
+            <ListViewItem>
+                <Grid Width="210" Height="280">
+                    <Grid Margin="5">
+                        <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="{Binding Path=Thumbnail, Converter={StaticResource ThumbnailUrlToImageConverter}, IsAsync=True}"/>
+                        <Border Height="60" VerticalAlignment="Bottom">
+                            <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding Path=Title}" FontFamily="Microsoft Yahei UI Light" Foreground="#FFF1F1F1" FontSize="20" TextAlignment="Center" TextWrapping="Wrap"/>
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0 0" EndPoint="0 1" Opacity="0.6">
+                                    <GradientStop Color="Black" Offset="1"/>
+                                    <GradientStop Color="Gray" Offset="0.5"/>
+                                    <GradientStop Color="Transparent" Offset="0"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                        <Grid>
+                            <Button Height="30" Width="30" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="15 10 15 0" Style="{DynamicResource MaterialDesignToolButton}" Visibility="{Binding Path=IsLiked, Converter={StaticResource VisibleIfFalseConverter}}">
+                                <Viewbox Width="24" Height="24">
+                                    <Canvas Width="24" Height="24">
+                                        <Path Data="M12.1,18.55L12,18.65L11.89,18.55C7.14,14.24 4,11.39 4,8.5C4,6.5 5.5,5 7.5,5C9.04,5 10.54,6 11.07,7.36H12.93C13.46,6 14.96,5 16.5,5C18.5,5 20,6.5 20,8.5C20,11.39 16.86,14.24 12.1,18.55M16.5,3C14.76,3 13.09,3.81 12,5.08C10.91,3.81 9.24,3 7.5,3C4.42,3 2,5.41 2,8.5C2,12.27 5.4,15.36 10.55,20.03L12,21.35L13.45,20.03C18.6,15.36 22,12.27 22,8.5C22,5.41 19.58,3 16.5,3Z" Fill="Gray" />
+                                    </Canvas>
+                                </Viewbox>
+                            </Button>
+                            <Button Height="30" Width="30" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="15 10 15 0" Style="{DynamicResource MaterialDesignToolButton}" Visibility="{Binding Path=IsLiked, Converter={StaticResource VisibleIfTrueConverter}}">
+                                <Viewbox Width="24" Height="24">
+                                    <Canvas Width="24" Height="24">
+                                        <Path Data="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z" Fill="Crimson"/>
+                                    </Canvas>
+                                </Viewbox>
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </ListViewItem>
+        </DataTemplate>
     </Window.Resources>
     
     <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
@@ -61,10 +103,10 @@
                                     <EllipseGeometry x:Name="AvatarEllipseGeometry" RadiusX="60" RadiusY="60" Center="60 60"/>
                                 </Image.Clip>
                             </Image>
-                            <TextBlock x:Name="UserName" Margin="5 125 5 0" Height="60" FontSize="18" TextAlignment="Center" FontFamily="Microsoft YaHei Light" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+                            <TextBlock x:Name="UserName" Margin="5 125 5 0" Height="60" FontSize="18" TextAlignment="Center" VerticalAlignment="Center" TextWrapping="NoWrap"/>
                         </Grid>
                         <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                            <ListView Style="{DynamicResource MaterialDesignListView}" x:Name="NavigatorList" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListView Style="{DynamicResource MaterialDesignListView}" x:Name="NavigatorList" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="NavigatorList_OnSelectionChanged">
                                 <ListViewItem Height="60" x:Name="MenuTab">
                                     <StackPanel Orientation="Horizontal">
                                         <Viewbox Margin="20 0 0 0" Width="35" Height="35">
@@ -72,7 +114,7 @@
                                                 <Path Data="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" Fill="Gray" />
                                             </Canvas>
                                         </Viewbox>
-                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="主          页" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Microsoft YaHei Light"/>
+                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="主          页" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                                     </StackPanel>
                                 </ListViewItem>
                                 <ListViewItem Height="60" x:Name="GalleryTab">
@@ -82,7 +124,7 @@
                                                 <Path Data="M22,16V4A2,2 0 0,0 20,2H8A2,2 0 0,0 6,4V16A2,2 0 0,0 8,18H20A2,2 0 0,0 22,16M11,12L13.03,14.71L16,11L20,16H8M2,6V20A2,2 0 0,0 4,22H18V20H4V6" Fill="Gray" />
                                             </Canvas>
                                         </Viewbox>
-                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="我 的 收 藏" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Microsoft YaHei Light"/>
+                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="我 的 收 藏" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                                     </StackPanel>
                                 </ListViewItem>
                                 <ListViewItem Height="60" x:Name="FollowingTab">
@@ -92,7 +134,7 @@
                                                 <Path Data="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z" Fill="Gray" />
                                             </Canvas>
                                         </Viewbox>
-                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="我 的 关 注" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Microsoft YaHei Light"/>
+                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="我 的 关 注" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                                     </StackPanel>
                                 </ListViewItem>
                                 <ListViewItem Height="60" x:Name="PixivVisionTab">
@@ -102,7 +144,7 @@
                                                 <Path Data="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z" Fill="Gray" />
                                             </Canvas>
                                         </Viewbox>
-                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="特          辑" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Microsoft YaHei Light"/>
+                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="特          辑" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                                     </StackPanel>
                                 </ListViewItem>
                                 <ListViewItem Height="60" x:Name="RankingTab">
@@ -112,7 +154,7 @@
                                                 <Path Data="M19,20V9H5V20H19M16,2H18V4H19A2,2 0 0,1 21,6V20A2,2 0 0,1 19,22H5A2,2 0 0,1 3,20V6A2,2 0 0,1 5,4H6V2H8V4H16V2M12,18.17L11.42,17.64C9.36,15.77 8,14.54 8,13.03C8,11.8 8.97,10.83 10.2,10.83C10.9,10.83 11.56,11.15 12,11.66C12.44,11.15 13.1,10.83 13.8,10.83C15.03,10.83 16,11.8 16,13.03C16,14.54 14.64,15.77 12.58,17.64L12,18.17Z" Fill="Gray" />
                                             </Canvas>
                                         </Viewbox>
-                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="每 日 推 荐" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Microsoft YaHei Light"/>
+                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="每 日 推 荐" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                                     </StackPanel>
                                 </ListViewItem>
                             </ListView>
@@ -125,25 +167,18 @@
                                                 <Path Data="M17,19.09L19.45,20.58L18.8,17.77L21,15.89L18.11,15.64L17,13L15.87,15.64L13,15.89L15.18,17.77L14.5,20.58L17,19.09M4,14H12V16H4V14M4,6H16V8H4V6M4,10H16V12H4V10Z" Fill="Gray" />
                                             </Canvas>
                                         </Viewbox>
-                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="下 载 列 表" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Microsoft YaHei Light"/>
+                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="下 载 列 表" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                                     </StackPanel>
                                 </ListViewItem>
-                                <ListViewItem Height="60" HorizontalAlignment="Stretch" x:Name="SettingsTab">
-                                    <materialDesign:DialogHost CloseOnClickAway="True">
-                                        <materialDesign:DialogHost.DialogContent>
-                                            <Grid>
-                                                <TextBlock Text="Hello"></TextBlock>
-                                            </Grid>
-                                        </materialDesign:DialogHost.DialogContent>
-                                        <StackPanel Orientation="Horizontal">
-                                            <Viewbox Margin="20 0 0 0" Width="35" Height="35">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Data="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" Fill="Gray" />
-                                                </Canvas>
-                                            </Viewbox>
-                                            <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="设          置" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Microsoft YaHei Light"/>
-                                        </StackPanel>
-                                    </materialDesign:DialogHost>
+                                <ListViewItem Height="60" HorizontalAlignment="Stretch" x:Name="SettingsTab" Selected="SettingsTab_OnSelected">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Viewbox Margin="20 0 0 0" Width="35" Height="35">
+                                            <Canvas Width="24" Height="24">
+                                                <Path Data="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" Fill="Gray" />
+                                            </Canvas>
+                                        </Viewbox>
+                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="设          置" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                                    </StackPanel>
                                 </ListViewItem>
                                 <ListViewItem Height="60" HorizontalAlignment="Stretch" x:Name="SignOutTab" Selected="SignOutTab_OnSelected">
                                     <StackPanel Orientation="Horizontal">
@@ -152,7 +187,7 @@
                                                 <Path Data="M14.08,15.59L16.67,13H7V11H16.67L14.08,8.41L15.5,7L20.5,12L15.5,17L14.08,15.59M19,3A2,2 0 0,1 21,5V9.67L19,7.67V5H5V19H19V16.33L21,14.33V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5C3,3.89 3.89,3 5,3H19Z" Fill="Gray" />
                                             </Canvas>
                                         </Viewbox>
-                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="登          出" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Microsoft YaHei Light"/>
+                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="登          出" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                                     </StackPanel>
                                 </ListViewItem>
                             </ListView>
@@ -270,7 +305,10 @@
             </materialDesign:Card>
         </Grid>
         <Grid x:Name="ContentDisplay" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="250 0 0 0">
-            <Grid x:Name="Home" Background="#FAFAFC">
+            <Grid x:Name="HomeDisplayContainer" Background="#FAFAFC" ZIndex="1">
+                <Grid.RenderTransform>
+                    <TranslateTransform x:Name="HomeDisplayContainerTransform" Y="0"/>
+                </Grid.RenderTransform>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="2*"/>
@@ -300,7 +338,8 @@
                     </Image.Clip>
                 </Image>
                 <StackPanel Grid.Row="1" Height="50" Margin="0 20 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Horizontal">
-                    <TextBox Width="800" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="请输入要搜索的内容[]~(￣▽￣)~*" FontFamily="Microsoft YaHei UI Light"/>
+                    <TextBox Width="800" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="请输入要搜索的内容[]~(￣▽￣)~*"/>
+                    <TextBox Width="0" Height="0" x:Name="ToLoseFocus"/>
                     <Button Margin="10 0 0 0" Width="50" Height="50" Style="{DynamicResource MaterialDesignToolButton}">
                         <Viewbox Width="30" Height="30" Margin="0 10 0 0">
                             <Canvas Width="24" Height="24">
@@ -311,6 +350,15 @@
                         </Viewbox>
                     </Button>
                 </StackPanel>
+            </Grid>
+            <Grid x:Name="QueryDisplayContainer" Background="#FAFAFC">
+                <ListView Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=1}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemTemplate="{StaticResource IllustrationViewModelDataTemplate}">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel ItemHeight="280" ItemWidth="210"/>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                </ListView>
             </Grid>
         </Grid>
         <Grid x:Name="DownloadList" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="300">
@@ -362,5 +410,73 @@
                 <TranslateTransform x:Name="DownloadListTranslateTransform" X="300"/>
             </Grid.RenderTransform>
         </Grid>
+        <materialDesign:DialogHost CloseOnClickAway="True" x:Name="SettingDialog" DialogClosing="SettingDialog_OnDialogClosing" DataContext="{x:Static persisting:Settings.Global}">
+            <materialDesign:DialogHost.Resources>
+                <valueConverters:StringSplitConverter x:Key="StringSplitConverter"/>
+            </materialDesign:DialogHost.Resources>
+            <materialDesign:DialogHost.Style>
+                <Style TargetType="materialDesign:DialogHost" BasedOn="{StaticResource MaterialDesignEmbeddedDialogHost}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=SettingsTab, Path=IsSelected}" Value="True">
+                            <Setter Property="IsOpen" Value="True"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </materialDesign:DialogHost.Style>
+            <materialDesign:DialogHost.DialogContent>
+                <materialDesign:Card Height="500" Width="600">
+                    <Grid>
+                        <TextBlock Text="Pixeval设置" FontSize="20" HorizontalAlignment="Center" Margin="0 30 0 0" VerticalAlignment="Top" Height="30"/>
+                        <Separator VerticalAlignment="Top" Margin="50 70 50 0"/>
+                        <StackPanel VerticalAlignment="Top" Margin="100 100 100 0">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="60"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="5*"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="插入图片到列表时排序" FontSize="15" VerticalAlignment="Center"/>
+                                <ToggleButton x:Name="IsSortWhileInsertIllustToImageBox" Grid.Row="0" Grid.Column="1" Background="#66CCFF" HorizontalAlignment="Right" IsChecked="{Binding Path=SortOnInserting, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBlock Grid.Row="1" Grid.Column="0" FontSize="15" Text="缓存缩略图, 开启后可优化加载速度" VerticalAlignment="Center"/>
+                                <ToggleButton x:Name="IsCacheThumbnail" Grid.Row="1" Grid.Column="1" Background="#66CCFF" HorizontalAlignment="Right" IsChecked="{Binding Path=CachingThumbnail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBlock Grid.Row="2" Grid.Column="0" FontSize="15" Text="程序启动时同步P站收藏夹图片到本地" VerticalAlignment="Center"/>
+                                <ToggleButton x:Name="SyncGalleryOnStart" Grid.Row="2" Grid.Column="1" Background="#66CCFF" HorizontalAlignment="Right" IsChecked="{Binding Path=SyncOnStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBlock Grid.Row="3" Grid.Column="0" FontSize="15" Text="开启R-18/R-18G搜索" VerticalAlignment="Center"/>
+                                <ToggleButton x:Name="QueryR18" Grid.Row="3" Grid.Column="1" Background="#66CCFF" HorizontalAlignment="Right" IsChecked="{Binding Path=QueryR18, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBlock Grid.Row="4" Grid.Column="0" FontSize="15" Text="要过滤的最低收藏数" VerticalAlignment="Center"/>
+                                <Slider Maximum="2000" Minimum="0" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="200 0 0 0" VerticalAlignment="Center" Foreground="#66CCFF" AutoToolTipPlacement="BottomRight" AutoToolTipPrecision="0" Value="{Binding Path=MinBookmark, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox x:Name="DownloadLocationTextBox" Grid.Row="5" Grid.Column="0" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="作品下载位置" Text="{Binding Path=DownloadLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Button x:Name="OpenFileDialogButton" Grid.Row="5" Grid.Column="1" Height="30" Width="30" VerticalAlignment="Bottom" Style="{DynamicResource MaterialDesignToolButton}" Click="OpenFileDialogButton_OnClick">
+                                    <Viewbox Width="20" Height="20" VerticalAlignment="Bottom">
+                                        <Canvas Width="24" Height="24">
+                                            <Path Data="M4 4C2.89 4 2 4.89 2 6V18C2 19.11 2.9 20 4 20H12.08A7 7 0 0 1 12 19A7 7 0 0 1 19 12A7 7 0 0 1 22 12.69V8C22 6.89 21.1 6 20 6H12L10 4H4M18 14C17.87 14 17.76 14.09 17.74 14.21L17.55 15.53C17.25 15.66 16.96 15.82 16.7 16L15.46 15.5C15.35 15.5 15.22 15.5 15.15 15.63L14.15 17.36C14.09 17.47 14.11 17.6 14.21 17.68L15.27 18.5C15.25 18.67 15.24 18.83 15.24 19C15.24 19.17 15.25 19.33 15.27 19.5L14.21 20.32C14.12 20.4 14.09 20.53 14.15 20.64L15.15 22.37C15.21 22.5 15.34 22.5 15.46 22.5L16.7 22C16.96 22.18 17.24 22.35 17.55 22.47L17.74 23.79C17.76 23.91 17.86 24 18 24H20C20.11 24 20.22 23.91 20.24 23.79L20.43 22.47C20.73 22.34 21 22.18 21.27 22L22.5 22.5C22.63 22.5 22.76 22.5 22.83 22.37L23.83 20.64C23.89 20.53 23.86 20.4 23.77 20.32L22.7 19.5C22.72 19.33 22.74 19.17 22.74 19C22.74 18.83 22.73 18.67 22.7 18.5L23.76 17.68C23.85 17.6 23.88 17.47 23.82 17.36L22.82 15.63C22.76 15.5 22.63 15.5 22.5 15.5L21.27 16C21 15.82 20.73 15.65 20.42 15.53L20.23 14.21C20.22 14.09 20.11 14 20 14H18M19 17.5C19.83 17.5 20.5 18.17 20.5 19C20.5 19.83 19.83 20.5 19 20.5C18.16 20.5 17.5 19.83 17.5 19C17.5 18.17 18.17 17.5 19 17.5Z" Fill="Gray" />
+                                        </Canvas>
+                                    </Viewbox>
+                                </Button>
+                                <TextBox x:Name="ExceptTagTextBox" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="请输入要排除的标签, 使用空格分隔" Text="{Binding Path=ExceptTags, Converter={StaticResource StringSplitConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox x:Name="ContainsTagTextBox" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="请输入要抓取的标签, 使用空格分隔" Text="{Binding Path=ContainsTags, Converter={StaticResource StringSplitConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Button x:Name="ClearSettingButton" ToolTip="还原为默认" VerticalAlignment="Bottom" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Height="40" Width="40" Style="{DynamicResource MaterialDesignToolButton}" Click="ClearSettingButton_OnClick">
+                                    <Viewbox Width="30" Height="30">
+                                        <Canvas Width="24" Height="24">
+                                            <Path Data="M13,3A9,9 0 0,0 4,12H1L4.89,15.89L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3Z" Fill="Gray" />
+                                        </Canvas>
+                                    </Viewbox>
+                                </Button>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </materialDesign:Card>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
     </Grid>
 </Window>

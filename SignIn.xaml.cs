@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows;
 using Pixeval.Caching.Persisting;
@@ -20,10 +19,12 @@ namespace Pixeval
             InitializeComponent();
         }
 
-        private void SignIn_OnClosing(object sender, CancelEventArgs e)
+        private async void SignIn_OnClosing(object sender, CancelEventArgs e)
         {
-            if (!Identity.ConfExists())
+            if (Identity.Global.AccessToken == null)
             {
+                PixevalEnvironment.LogoutExit = true;
+                await Settings.Global.Store();
                 Environment.Exit(0);
             }
         }
@@ -48,8 +49,6 @@ namespace Pixeval
                 Login.Enable();
                 return;
             }
-
-            await Identity.Global.Store();
 
             var mainWindow = new MainWindow();
             mainWindow.Show();

@@ -1,38 +1,106 @@
-﻿using Pixeval.Data.Model.Web.Response;
-using PropertyChanged;
+﻿using System.ComponentModel;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using Pixeval.Annotations;
+using Pixeval.Core;
+using Pixeval.Data.Model.Web.Response;
 
 #pragma warning disable 8509
 
 namespace Pixeval.Data.Model.ViewModel
 {
-    [AddINotifyPropertyChangedInterface]
-    public class Illustration
+    public class Illustration : INotifyPropertyChanged
     {
-        public string Id { get; set; }
+        private string id;
+        public string Id
+        {
+            get => id;
+            set => UpdateProperty(ref id, value);
+        }
 
-        public bool IsUgoira { get; set; }
+        private bool isUgoira;
+        public bool IsUgoira
+        {
+            get => isUgoira;
+            set => UpdateProperty(ref isUgoira, value);
+        }
 
-        public string Origin { get; set; }
+        private string origin;
+        public string Origin
+        {
+            get => origin;
+            set => UpdateProperty(ref origin, value);
+        }
 
-        public string Thumbnail { get; set; }
+        private string thumbnail;
+        public string Thumbnail
+        {
+            get => thumbnail;
+            set => UpdateProperty(ref thumbnail, value);
+        }
 
-        public int Bookmark { get; set; }
+        private int bookmark;
+        public int Bookmark
+        {
+            get => bookmark;
+            set => UpdateProperty(ref bookmark, value);
+        }
 
-        public bool IsLiked { get; set; }
+        private bool isLiked;
+        public bool IsLiked
+        {
+            get => isLiked;
+            set => UpdateProperty(ref isLiked, value);
+        }
 
-        public bool IsManga { get; set; }
+        private bool isManga;
+        public bool IsManga
+        {
+            get => isManga;
+            set => UpdateProperty(ref isManga, value);
+        }
 
-        public string Title { get; set; }
+        private string title;
+        public string Title
+        {
+            get => title;
+            set => UpdateProperty(ref title, value);
+        }
 
-        public IllustType Type { get; set; }
+        private IllustType type;
+        public IllustType Type
+        {
+            get => type;
+            set => UpdateProperty(ref type, value);
+        }
 
-        public string UserName { get; set; }
+        private string userName;
+        public string UserName
+        {
+            get => userName;
+            set => UpdateProperty(ref userName, value);
+        }
 
-        public string UserId { get; set; }
+        private string userId;
+        public string UserId
+        {
+            get => userId;
+            set => UpdateProperty(ref userId, value);
+        }
 
-        public string[] Tags { get; set; }
+        private string[] tags;
+        public string[] Tags
+        {
+            get => tags;
+            set => UpdateProperty(ref tags, value);
+        }
 
-        public Illustration[] MangaMetadata { get; set; }
+        private Illustration[] mangaMetadata;
+        public Illustration[] MangaMetadata
+        {
+            get => mangaMetadata;
+            set => UpdateProperty(ref mangaMetadata, value);
+        }
 
         public class IllustType
         {
@@ -53,5 +121,32 @@ namespace Pixeval.Data.Model.ViewModel
             }
         }
 
+        private void UpdateProperty<T>(ref T obj, T newVal, [CallerMemberName] string propertyName = "")
+        {
+            if (!newVal.Equals(obj))
+            {
+                obj = newVal;
+                OnPropertyChanged(propertyName);
+            }
+        }
+        
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (propertyName == nameof(IsLiked))
+            {
+                if (isLiked)
+                {
+                    PixivClient.Instance.PostFavoriteAsync(this);
+                }
+                else
+                {
+                    PixivClient.Instance.RemoveFavoriteAsync(this);
+                }
+            }
+        }
     }
 }

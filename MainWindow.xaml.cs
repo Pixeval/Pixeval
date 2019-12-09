@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using MaterialDesignThemes.Wpf;
 using Pixeval.Caching.Persisting;
 using Pixeval.Objects;
 
@@ -34,17 +35,12 @@ namespace Pixeval
             }
         }
 
-        private void SignOutTab_OnSelected(object sender, RoutedEventArgs e)
-        {
-            Identity.Clear();
-            var login = new SignIn();
-            login.Show();
-            Close();
-        }
-
         private void MainWindow_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            
+            ToLoseFocus.Focus();
+            DownloadListTab.IsSelected = false;
         }
+
+        private void SettingDialog_OnDialogClosing(object sender, DialogClosingEventArgs e) => SettingsTab.IsSelected = false;
     }
 }

@@ -2,7 +2,6 @@
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using Pixeval.Data.Model.Web.Response;
 using Pixeval.Objects;
 
@@ -85,13 +84,13 @@ namespace Pixeval.Caching.Persisting
             if (await RefreshRequired())
             {
                 await Authentication.Authenticate(Global?.MailAddress, Global?.Password);
-                if (Global != null) await Global.Store();
             }
         }
 
         public static void Clear()
         {
             File.Delete(Path.Combine(PixevalEnvironment.ConfFolder, "pixeval_conf.json"));
+            Global = new Identity();
         }
     }
 }
