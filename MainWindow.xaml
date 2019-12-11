@@ -4,11 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:persisting="clr-namespace:Pixeval.Caching.Persisting"
         xmlns:valueConverters="clr-namespace:Pixeval.Objects.ValueConverters"
         xmlns:viewModel="clr-namespace:Pixeval.Data.Model.ViewModel"
         xmlns:controls="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:persisting="clr-namespace:Pixeval.Persisting"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontFamily="Microsoft Yahei UI Light"
         mc:Ignorable="d"
@@ -354,8 +354,8 @@
                 <StackPanel Grid.Row="1" Height="50" Margin="0 20 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Horizontal">
                     <TextBox x:Name="KeywordTextBox" Width="800" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="请输入要搜索的内容~(￣▽￣)~*"/>
                     <TextBox Width="0" Height="0" x:Name="ToLoseFocus"/>
-                    <Button x:Name="DoQueryButton" IsDefault="False" Margin="10 0 0 0" Width="50" Height="50" Style="{DynamicResource MaterialDesignToolButton}" Click="DoQueryButton_OnClick">
-                        <Viewbox Width="30" Height="30" Margin="0 10 0 0">
+                    <Button x:Name="DoQueryButton" IsDefault="False" Margin="10 15 0 0" Width="50" Height="40" Style="{DynamicResource MaterialDesignToolButton}" Click="DoQueryButton_OnClick">
+                        <Viewbox Width="34" Height="30">
                             <Canvas Width="24" Height="24">
                                 <Path
                                     Data="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"

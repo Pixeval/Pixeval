@@ -2,10 +2,10 @@
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Pixeval.Data.Model.Web.Response;
+using Pixeval.Data.Web.Response;
 using Pixeval.Objects;
 
-namespace Pixeval.Caching.Persisting
+namespace Pixeval.Persisting
 {
     public class Identity
     {

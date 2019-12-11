@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using Pixeval.Data.Model.ViewModel;
-using Pixeval.Data.Model.Web.Delegation;
-using Pixeval.Data.Model.Web.Request;
+using Pixeval.Data.Web.Delegation;
+using Pixeval.Data.Web.Request;
 using Pixeval.Objects.Exceptions;
 
 namespace Pixeval.Core
@@ -17,8 +17,11 @@ namespace Pixeval.Core
 
         private int currentIndex;
 
+        private readonly int start;
+
         public QueryIterator(string tag, int totalPages, int start = 1)
         {
+            this.start = start;
             currentIndex = start;
             this.tag = tag;
             this.totalPages = totalPages;
@@ -31,9 +34,9 @@ namespace Pixeval.Core
 
         public async IAsyncEnumerable<Illustration> MoveNextAsync()
         {
-            var works = await HttpClientFactory.PublicApiService.QueryWorks(new QueryWorksRequest {Tag = tag, Offset = currentIndex});
+            var works = await HttpClientFactory.PublicApiService.QueryWorks(new QueryWorksRequest {Tag = tag, Offset = currentIndex++});
 
-            if (currentIndex == 1 && !works.ToResponse.Any())
+            if (currentIndex - start == 1 && !works.ToResponse.Any())
             {
                 throw new QueryNotRespondingException();
             }
@@ -42,8 +45,6 @@ namespace Pixeval.Core
             {
                 yield return await PixivHelper.IllustrationInfo(response.Id.ToString());
             }
-
-            currentIndex++;
         }
     }
 }

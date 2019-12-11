@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Pixeval.Data.Model.ViewModel;
-using Pixeval.Data.Model.Web.Delegation;
-using Pixeval.Data.Model.Web.Request;
-using Pixeval.Data.Model.Web.Response;
+using Pixeval.Data.Web.Delegation;
+using Pixeval.Data.Web.Request;
+using Pixeval.Data.Web.Response;
 using Pixeval.Objects;
 
 namespace Pixeval.Core

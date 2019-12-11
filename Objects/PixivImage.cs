@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using Pixeval.Caching.Persisting;
 using Pixeval.Data.Model.ViewModel;
-using Pixeval.Data.Model.Web.Delegation;
+using Pixeval.Data.Web.Delegation;
+using Pixeval.Persisting;
 
 namespace Pixeval.Objects
 {
@@ -66,7 +66,7 @@ namespace Pixeval.Objects
             });
         }
 
-        public static async Task<BitmapImage> GetAndCreateOrLoadFromCache(string url, string id, int episode = 0)
+        public static async Task<BitmapImage> GetAndCreateOrLoadFromCache(bool usingCache, string url, string id, int episode = 0)
         {
             var path = Path.Combine(PixevalEnvironment.TempFolder, $"{id}_{episode}.png");
             if (File.Exists(path))
@@ -75,7 +75,8 @@ namespace Pixeval.Objects
             }
 
             var img = await FromUrl(url);
-            CacheImage(img, id, episode);
+            
+            if (usingCache) CacheImage(img, id, episode);
 
             return img;
         }

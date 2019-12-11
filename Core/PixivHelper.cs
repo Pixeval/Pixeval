@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Pixeval.Data.Model.ViewModel;
-using Pixeval.Data.Model.Web.Delegation;
-using Pixeval.Data.Model.Web.Request;
+using Pixeval.Data.Web.Delegation;
+using Pixeval.Data.Web.Request;
 using Pixeval.Objects;
 
 namespace Pixeval.Core

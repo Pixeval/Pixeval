@@ -1,4 +1,4 @@
-﻿namespace Pixeval.Caching.Persisting
+﻿namespace Pixeval.Persisting
 {
     public class Constants
     {

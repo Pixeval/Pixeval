@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Security.Policy;
 using System.Threading.Tasks;
 using Pixeval.Objects;
 using PropertyChanged;
 
-namespace Pixeval.Caching.Persisting
+namespace Pixeval.Persisting
 {
     [AddINotifyPropertyChangedInterface]
     public class Settings

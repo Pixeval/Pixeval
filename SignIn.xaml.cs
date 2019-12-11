@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
-using Pixeval.Caching.Persisting;
 using Pixeval.Objects;
 using Pixeval.Objects.Exceptions;
+using Pixeval.Persisting;
 using Refit;
 
 namespace Pixeval

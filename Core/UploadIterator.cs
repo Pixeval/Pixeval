@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Pixeval.Data.Model.ViewModel;
-using Pixeval.Data.Model.Web.Delegation;
-using Pixeval.Data.Model.Web.Request;
+using Pixeval.Data.Web.Delegation;
+using Pixeval.Data.Web.Request;
 
 namespace Pixeval.Core
 {

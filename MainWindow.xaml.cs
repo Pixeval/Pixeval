@@ -14,11 +14,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using MaterialDesignThemes.Wpf;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using Pixeval.Caching.Persisting;
 using Pixeval.Core;
 using Pixeval.Data.Model.ViewModel;
 using Pixeval.Objects;
 using Pixeval.Objects.Exceptions;
+using Pixeval.Persisting;
 
 namespace Pixeval
 {
@@ -28,8 +28,6 @@ namespace Pixeval
     public partial class MainWindow : Window
     {
         private IPixivIterator currentIterator;
-
-        private readonly Dictionary<string, BitmapImage> imageCache = new Dictionary<string, BitmapImage>();
 
         public MainWindow()
         {
@@ -145,7 +143,6 @@ namespace Pixeval
         private void TerminateTask()
         {
             ImageListView.ItemsSource = null;
-            imageCache.Clear();
             terminate = false;
         }
 
@@ -165,6 +162,10 @@ namespace Pixeval
 
         private void NavigatorList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (!e.AddedItems.Contains(MenuTab))
+            {
+                TerminateTask();
+            }
             terminate = true;
             ScheduleHomePage();
         }
@@ -195,6 +196,7 @@ namespace Pixeval
         {
             DoQueryButton.Enable();
             (HomeDisplayContainer.Resources["MoveUpAnimation"] as Storyboard)?.Begin();
+            TerminateTask();
         }
 
         private void OpenFileDialogButton_OnClick(object sender, RoutedEventArgs e)
@@ -227,15 +229,10 @@ namespace Pixeval
 
             var dataContext = image.DataContext<Illustration>();
 
-            if (imageCache.TryGetValue(dataContext.Id, out var bitmap))
+            if (Uri.IsWellFormedUriString(dataContext.Thumbnail, UriKind.Absolute))
             {
-                image.Source = bitmap;
-            }
-            else if (Uri.IsWellFormedUriString(dataContext.Thumbnail, UriKind.Absolute))
-            {
-                var bmp = await PixivImage.GetAndCreateOrLoadFromCache(dataContext.Thumbnail, dataContext.Id);
+                var bmp = await PixivImage.GetAndCreateOrLoadFromCache(Settings.Global.CachingThumbnail, dataContext.Thumbnail, dataContext.Id);
 
-                imageCache[dataContext.Id] = bmp;
                 image.Source = bmp;
             }
 

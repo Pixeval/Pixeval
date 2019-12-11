@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using Pixeval.Caching.Persisting;
 using Pixeval.Data.Model.ViewModel;
-using Pixeval.Data.Model.Web;
-using Pixeval.Data.Model.Web.Delegation;
-using Pixeval.Data.Model.Web.Response;
+using Pixeval.Data.Web;
+using Pixeval.Data.Web.Delegation;
+using Pixeval.Data.Web.Response;
 using Pixeval.Objects;
+using Pixeval.Persisting;
 
 namespace Pixeval.Core
 {

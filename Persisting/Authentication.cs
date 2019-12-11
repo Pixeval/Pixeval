@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Pixeval.Data.Model.Web;
-using Pixeval.Data.Model.Web.Delegation;
-using Pixeval.Data.Model.Web.Protocol;
-using Pixeval.Data.Model.Web.Request;
+using Pixeval.Data.Web;
+using Pixeval.Data.Web.Delegation;
+using Pixeval.Data.Web.Protocol;
+using Pixeval.Data.Web.Request;
 using Pixeval.Objects;
 using Refit;
 

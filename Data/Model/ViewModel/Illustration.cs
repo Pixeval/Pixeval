@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
-using Pixeval.Data.Model.Web.Response;
+using Pixeval.Data.Web.Response;
 using PropertyChanged;
 
 #pragma warning disable 8509
