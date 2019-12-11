@@ -7,7 +7,7 @@ using Pixeval.Data.Model.Web.Request;
 using Pixeval.Objects;
 using Refit;
 
-namespace Pixeval.Caching.Persisting
+namespace Pixeval.Persisting
 {
     public class Authentication
     {

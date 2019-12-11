@@ -10,7 +10,7 @@ namespace Pixeval.Objects
     {
         public static void DownloadFile(string url, string path, Dictionary<string, string> header)
         {
-            using var httpClient = new HttpClient();
+            var httpClient = new HttpClient();
 
             foreach (var (key, value) in header)
             {

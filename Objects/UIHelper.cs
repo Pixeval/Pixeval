@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Media;
 
 namespace Pixeval.Objects
@@ -8,7 +9,6 @@ namespace Pixeval.Objects
         public static T FindChild<T>(this DependencyObject parent, string childName)
             where T : DependencyObject
         {
-            // Confirm parent and childName are valid. 
             if (parent == null) return null;
 
             T foundChild = null;
@@ -17,7 +17,6 @@ namespace Pixeval.Objects
             for (var i = 0; i < childrenCount; i++)
             {
                 var child = VisualTreeHelper.GetChild(parent, i);
-                // If the child is not of the request child type child
                 if (!(child is T))
                 {
                     foundChild = FindChild<T>(child, childName);
@@ -39,6 +38,16 @@ namespace Pixeval.Objects
             }
 
             return foundChild;
+        }
+
+        public static T DataContext<T>(this FrameworkElement element)
+        {
+            return (T) element.DataContext;
+        }
+
+        public static void ScheduleTask(Action action)
+        {
+            Application.Current.Dispatcher?.BeginInvoke(action);
         }
     }
 }

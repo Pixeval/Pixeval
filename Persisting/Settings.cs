@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using Pixeval.Objects;
 using PropertyChanged;
@@ -13,8 +14,6 @@ namespace Pixeval.Caching.Persisting
 
         public bool SyncOnStart { get; set; }
 
-        public bool QueryR18 { get; set; }
-
         public bool SortOnInserting { get; set; }
 
         public bool CachingThumbnail { get; set; }
@@ -23,9 +22,13 @@ namespace Pixeval.Caching.Persisting
 
         public string DownloadLocation { get; set; }
 
-        public IEnumerable<string> ExceptTags { get; set; }
+        public int QueryPages { get; set; } = 1;
 
-        public IEnumerable<string> ContainsTags { get; set; }
+        public int QueryStart { get; set; } = 1;
+
+        public ISet<string> ExceptTags { get; set; } = new HashSet<string>();
+
+        public ISet<string> ContainsTags { get; set; } = new HashSet<string>();
 
         public override string ToString()
         {
@@ -34,8 +37,6 @@ namespace Pixeval.Caching.Persisting
 
         public async Task Store()
         {
-            if (!Directory.Exists(PixevalEnvironment.SettingsFolder))
-                Directory.CreateDirectory(PixevalEnvironment.SettingsFolder);
             await File.WriteAllTextAsync(Path.Combine(PixevalEnvironment.SettingsFolder, "settings.json"), Global.ToString());
         }
 
@@ -56,9 +57,10 @@ namespace Pixeval.Caching.Persisting
             Global.CachingThumbnail = false;
             Global.ContainsTags = null;
             Global.ExceptTags = null;
-            Global.QueryR18 = false;
             Global.SyncOnStart = false;
             Global.MinBookmark = 0;
+            Global.QueryPages = 1;
+            Global.QueryStart = 1;
         }
     }
 }

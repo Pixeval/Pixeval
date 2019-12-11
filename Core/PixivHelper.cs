@@ -2,6 +2,7 @@
 using Pixeval.Data.Model.ViewModel;
 using Pixeval.Data.Model.Web.Delegation;
 using Pixeval.Data.Model.Web.Request;
+using Pixeval.Objects;
 
 namespace Pixeval.Core
 {
@@ -16,7 +17,7 @@ namespace Pixeval.Core
                 return null;
             }
 
-            return new Illustration
+            var illust = new Illustration
             {
                 Bookmark = (int) (response.Stats.FavoritedCount.Private + response.Stats.FavoritedCount.Public),
                 Id = response.Id.ToString(),
@@ -31,6 +32,8 @@ namespace Pixeval.Core
                 UserName = response.User.Name,
                 UserId = response.User.Id.ToString()
             };
+
+            return illust;
         }
 
         public static async Task<int> GetUploadPagesCount(string uid)

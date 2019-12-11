@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Pixeval.Data.Model.ViewModel;
 using Pixeval.Data.Model.Web.Delegation;
 using Pixeval.Data.Model.Web.Request;
@@ -18,7 +19,6 @@ namespace Pixeval.Core
             this.uid = uid;
             this.totalPages = totalPages;
         }
-
 
         public bool HasNext()
         {

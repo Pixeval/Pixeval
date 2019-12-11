@@ -54,7 +54,6 @@ namespace Pixeval.Caching.Persisting
 
         public async Task Store()
         {
-            if (!Directory.Exists(PixevalEnvironment.ConfFolder)) Directory.CreateDirectory(PixevalEnvironment.ConfFolder);
             await File.WriteAllTextAsync(Path.Combine(PixevalEnvironment.ConfFolder, "pixeval_conf.json"), ToString());
         }
 

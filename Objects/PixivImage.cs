@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using Pixeval.Caching.Persisting;
+using Pixeval.Data.Model.ViewModel;
 using Pixeval.Data.Model.Web.Delegation;
 
 namespace Pixeval.Objects
@@ -39,9 +40,44 @@ namespace Pixeval.Objects
             return bmp;
         }
 
-        public static void CacheImage(byte[] imageBArr, string fileName)
+        internal static void SaveBitmapImage(this BitmapImage bitmapImage, string path)
         {
-            File.WriteAllBytesAsync(Path.Combine(PixevalEnvironment.TempFolder, fileName), imageBArr);
+            var encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bitmapImage));
+
+            using var fs = new FileStream(path, FileMode.Create);
+            encoder.Save(fs);
+        }
+
+        public static void CacheImage(byte[] imageBArr, string id, int episode = 0)
+        {
+            CacheImage(FromByteArray(imageBArr), id, episode);
+        }
+
+        public static void CacheImage(BitmapImage bitmapImage, string id, int episode = 0)
+        {
+            Task.Run(() =>
+            {
+                var path = Path.Combine(PixevalEnvironment.TempFolder, $"{id}_{episode}.png");
+                if (!File.Exists(path))
+                {
+                    bitmapImage.SaveBitmapImage(path);
+                }
+            });
+        }
+
+        public static async Task<BitmapImage> GetAndCreateOrLoadFromCache(string url, string id, int episode = 0)
+        {
+            var path = Path.Combine(PixevalEnvironment.TempFolder, $"{id}_{episode}.png");
+            if (File.Exists(path))
+            {
+                return FromByteArray(await File.ReadAllBytesAsync(path));
+            }
+
+            var img = await FromUrl(url);
+            CacheImage(img, id, episode);
+
+            return img;
         }
     }
 }

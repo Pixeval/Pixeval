@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Pixeval.Caching.Persisting;
 using Pixeval.Data.Model.ViewModel;
 using Pixeval.Data.Model.Web;
@@ -19,6 +20,7 @@ namespace Pixeval.Core
             this.uid = uid;
         }
 
+        public event Action Finalize;
 
         public bool HasNext()
         {
@@ -31,7 +33,7 @@ namespace Pixeval.Core
             var httpClient = HttpClientFactory.PixivApi(ProtocolBase.PublicApiBaseUrl);
             httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"Bearer {Identity.Global.AccessToken}");
 
-            const string query = "/v1/user/bookmarks/illust";
+            var query = $"/v1/user/bookmarks/illust?user_id={uid}&restrict=public&filter=for_ios";
             context = (await httpClient.GetStringAsync(context == null ? query : context.NextUrl)).FromJson<GalleryResponse>();
 
             foreach (var contextIllust in context.Illusts)

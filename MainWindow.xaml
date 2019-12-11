@@ -7,21 +7,26 @@
         xmlns:persisting="clr-namespace:Pixeval.Caching.Persisting"
         xmlns:valueConverters="clr-namespace:Pixeval.Objects.ValueConverters"
         xmlns:viewModel="clr-namespace:Pixeval.Data.Model.ViewModel"
+        xmlns:controls="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontFamily="Microsoft Yahei UI Light"
         mc:Ignorable="d"
         Initialized="MainWindow_OnInitialized" MouseDown="MainWindow_OnMouseDown"
-        Title="MainWindow" Height="900" Width="1600" x:Name="PixevalMainWindow">
+        Title="MainWindow" Height="900" Width="1600">
     <Window.Resources>
         <CubicEase x:Key="CubicEase" EasingMode="EaseOut"/>
-        <valueConverters:ThumbnailUrlToImageConverter x:Key="ThumbnailUrlToImageConverter"/>
         <valueConverters:VisibleIfTrueConverter x:Key="VisibleIfTrueConverter"/>
         <valueConverters:VisibleIfFalseConverter x:Key="VisibleIfFalseConverter"/>
         <DataTemplate x:Key="IllustrationViewModelDataTemplate" DataType="viewModel:Illustration">
             <ListViewItem>
-                <Grid Width="210" Height="280">
-                    <Grid Margin="5">
-                        <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="{Binding Path=Thumbnail, Converter={StaticResource ThumbnailUrlToImageConverter}, IsAsync=True}"/>
+                <Grid Width="210" Height="280" ClipToBounds="True">
+                    <Border x:Name="GridBorder" CornerRadius="15" Background="#FAFAFC" ClipToBounds="True"/>
+                    <Grid ToolTip="{Binding Path=Id}" ClipToBounds="True">
+                        <Grid.OpacityMask>
+                            <VisualBrush Visual="{Binding ElementName=GridBorder}"></VisualBrush>
+                        </Grid.OpacityMask>
+                        <Image x:Name="Thumbnail" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="UniformToFill" Loaded="Thumbnail_OnLoaded" Unloaded="Thumbnail_OnUnloaded"/>
                         <Border Height="60" VerticalAlignment="Bottom">
                             <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding Path=Title}" FontFamily="Microsoft Yahei UI Light" Foreground="#FFF1F1F1" FontSize="20" TextAlignment="Center" TextWrapping="Wrap"/>
                             <Border.Background>
@@ -53,7 +58,6 @@
             </ListViewItem>
         </DataTemplate>
     </Window.Resources>
-    
     <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Grid x:Name="NavigatorContainer" VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="250">
             <materialDesign:Card VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="250" x:Name="NavigatorCard">
@@ -170,7 +174,7 @@
                                         <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="下 载 列 表" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                                     </StackPanel>
                                 </ListViewItem>
-                                <ListViewItem Height="60" HorizontalAlignment="Stretch" x:Name="SettingsTab" Selected="SettingsTab_OnSelected">
+                                <ListViewItem Height="60" HorizontalAlignment="Stretch" x:Name="SettingsTab">
                                     <StackPanel Orientation="Horizontal">
                                         <Viewbox Margin="20 0 0 0" Width="35" Height="35">
                                             <Canvas Width="24" Height="24">
@@ -306,8 +310,18 @@
         </Grid>
         <Grid x:Name="ContentDisplay" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="250 0 0 0">
             <Grid x:Name="HomeDisplayContainer" Background="#FAFAFC" ZIndex="1">
+                <Grid.Resources>
+                    <!-- ReSharper disable Xaml.RedundantResource -->
+                    <Storyboard x:Key="MoveUpAnimation" TargetProperty="(Grid.RenderTransform).(TranslateTransform.Y)" TargetName="HomeDisplayContainer">
+                        <DoubleAnimation From="{Binding ElementName=ContentDisplay, Path=ActualHeight}" To="0" EasingFunction="{StaticResource CubicEase}" Duration="00:00:00.3"/>
+                    </Storyboard>
+                    <Storyboard x:Key="MoveDownAnimation" TargetProperty="(Grid.RenderTransform).(TranslateTransform.Y)" TargetName="HomeDisplayContainer">
+                        <DoubleAnimation From="0" To="5000" EasingFunction="{StaticResource CubicEase}" Duration="00:00:01.50"/>
+                    </Storyboard>
+                    <!-- ReSharper restore Xaml.RedundantResource -->
+                </Grid.Resources>
                 <Grid.RenderTransform>
-                    <TranslateTransform x:Name="HomeDisplayContainerTransform" Y="0"/>
+                    <TranslateTransform Y="0"/>
                 </Grid.RenderTransform>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -338,9 +352,9 @@
                     </Image.Clip>
                 </Image>
                 <StackPanel Grid.Row="1" Height="50" Margin="0 20 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Horizontal">
-                    <TextBox Width="800" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="请输入要搜索的内容[]~(￣▽￣)~*"/>
+                    <TextBox x:Name="KeywordTextBox" Width="800" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="请输入要搜索的内容~(￣▽￣)~*"/>
                     <TextBox Width="0" Height="0" x:Name="ToLoseFocus"/>
-                    <Button Margin="10 0 0 0" Width="50" Height="50" Style="{DynamicResource MaterialDesignToolButton}">
+                    <Button x:Name="DoQueryButton" IsDefault="False" Margin="10 0 0 0" Width="50" Height="50" Style="{DynamicResource MaterialDesignToolButton}" Click="DoQueryButton_OnClick">
                         <Viewbox Width="30" Height="30" Margin="0 10 0 0">
                             <Canvas Width="24" Height="24">
                                 <Path
@@ -352,10 +366,10 @@
                 </StackPanel>
             </Grid>
             <Grid x:Name="QueryDisplayContainer" Background="#FAFAFC">
-                <ListView Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=1}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemTemplate="{StaticResource IllustrationViewModelDataTemplate}">
+                <ListView x:Name="ImageListView" VirtualizingPanel.CacheLengthUnit="Pixel" VirtualizingPanel.CacheLength="0 0" VirtualizingPanel.ScrollUnit="Pixel" VirtualizingPanel.VirtualizationMode="Standard" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=1}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemTemplate="{StaticResource IllustrationViewModelDataTemplate}">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <WrapPanel ItemHeight="280" ItemWidth="210"/>
+                            <controls:VirtualizingWrapPanel Orientation="Vertical"/>
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                 </ListView>
@@ -413,6 +427,7 @@
         <materialDesign:DialogHost CloseOnClickAway="True" x:Name="SettingDialog" DialogClosing="SettingDialog_OnDialogClosing" DataContext="{x:Static persisting:Settings.Global}">
             <materialDesign:DialogHost.Resources>
                 <valueConverters:StringSplitConverter x:Key="StringSplitConverter"/>
+                <valueConverters:QueryR18ToggleButtonIsCheckedConverter x:Key="QueryR18ToggleButtonIsCheckedConverter"/>
             </materialDesign:DialogHost.Resources>
             <materialDesign:DialogHost.Style>
                 <Style TargetType="materialDesign:DialogHost" BasedOn="{StaticResource MaterialDesignEmbeddedDialogHost}">
@@ -424,13 +439,15 @@
                 </Style>
             </materialDesign:DialogHost.Style>
             <materialDesign:DialogHost.DialogContent>
-                <materialDesign:Card Height="500" Width="600">
+                <materialDesign:Card Height="600" Width="750">
                     <Grid>
                         <TextBlock Text="Pixeval设置" FontSize="20" HorizontalAlignment="Center" Margin="0 30 0 0" VerticalAlignment="Top" Height="30"/>
                         <Separator VerticalAlignment="Top" Margin="50 70 50 0"/>
                         <StackPanel VerticalAlignment="Top" Margin="100 100 100 0">
                             <Grid>
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
                                     <RowDefinition Height="40"/>
                                     <RowDefinition Height="40"/>
                                     <RowDefinition Height="40"/>
@@ -451,21 +468,25 @@
                                 <ToggleButton x:Name="IsCacheThumbnail" Grid.Row="1" Grid.Column="1" Background="#66CCFF" HorizontalAlignment="Right" IsChecked="{Binding Path=CachingThumbnail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                 <TextBlock Grid.Row="2" Grid.Column="0" FontSize="15" Text="程序启动时同步P站收藏夹图片到本地" VerticalAlignment="Center"/>
                                 <ToggleButton x:Name="SyncGalleryOnStart" Grid.Row="2" Grid.Column="1" Background="#66CCFF" HorizontalAlignment="Right" IsChecked="{Binding Path=SyncOnStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                <TextBlock Grid.Row="3" Grid.Column="0" FontSize="15" Text="开启R-18/R-18G搜索" VerticalAlignment="Center"/>
-                                <ToggleButton x:Name="QueryR18" Grid.Row="3" Grid.Column="1" Background="#66CCFF" HorizontalAlignment="Right" IsChecked="{Binding Path=QueryR18, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBlock Grid.Row="3" Grid.Column="0" FontSize="15" Text="关闭R-18/R-18G搜索" VerticalAlignment="Center"/>
+                                <ToggleButton x:Name="QueryR18" Grid.Row="3" Grid.Column="1" Background="#66CCFF" HorizontalAlignment="Right" Checked="QueryR18_OnChecked" Unchecked="QueryR18_OnUnchecked" IsChecked="{Binding Path=ExceptTags, Mode=OneWay, Converter={StaticResource QueryR18ToggleButtonIsCheckedConverter}}"/>
                                 <TextBlock Grid.Row="4" Grid.Column="0" FontSize="15" Text="要过滤的最低收藏数" VerticalAlignment="Center"/>
                                 <Slider Maximum="2000" Minimum="0" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="200 0 0 0" VerticalAlignment="Center" Foreground="#66CCFF" AutoToolTipPlacement="BottomRight" AutoToolTipPrecision="0" Value="{Binding Path=MinBookmark, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                <TextBox x:Name="DownloadLocationTextBox" Grid.Row="5" Grid.Column="0" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="作品下载位置" Text="{Binding Path=DownloadLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                <Button x:Name="OpenFileDialogButton" Grid.Row="5" Grid.Column="1" Height="30" Width="30" VerticalAlignment="Bottom" Style="{DynamicResource MaterialDesignToolButton}" Click="OpenFileDialogButton_OnClick">
+                                <TextBlock Grid.Row="5" Grid.Column="0" FontSize="15" Text="搜索页数, 最低为1, 最高为10" VerticalAlignment="Center"/>
+                                <Slider Maximum="10" Minimum="1" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="200 0 0 0" VerticalAlignment="Center" Foreground="#66CCFF" Value="{Binding QueryPages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox x:Name="DownloadLocationTextBox" Grid.Row="7" Grid.Column="0" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="作品下载位置" Text="{Binding Path=DownloadLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBlock Grid.Row="6" Grid.Column="0" FontSize="15" Text="搜索起始页, 最低为1" VerticalAlignment="Center"/>
+                                <TextBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="200 0 0 0" VerticalAlignment="Center" Text="{Binding QueryStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Button x:Name="OpenFileDialogButton" Grid.Row="7" Grid.Column="1" Height="30" Width="30" VerticalAlignment="Bottom" Style="{DynamicResource MaterialDesignToolButton}" Click="OpenFileDialogButton_OnClick">
                                     <Viewbox Width="20" Height="20" VerticalAlignment="Bottom">
                                         <Canvas Width="24" Height="24">
                                             <Path Data="M4 4C2.89 4 2 4.89 2 6V18C2 19.11 2.9 20 4 20H12.08A7 7 0 0 1 12 19A7 7 0 0 1 19 12A7 7 0 0 1 22 12.69V8C22 6.89 21.1 6 20 6H12L10 4H4M18 14C17.87 14 17.76 14.09 17.74 14.21L17.55 15.53C17.25 15.66 16.96 15.82 16.7 16L15.46 15.5C15.35 15.5 15.22 15.5 15.15 15.63L14.15 17.36C14.09 17.47 14.11 17.6 14.21 17.68L15.27 18.5C15.25 18.67 15.24 18.83 15.24 19C15.24 19.17 15.25 19.33 15.27 19.5L14.21 20.32C14.12 20.4 14.09 20.53 14.15 20.64L15.15 22.37C15.21 22.5 15.34 22.5 15.46 22.5L16.7 22C16.96 22.18 17.24 22.35 17.55 22.47L17.74 23.79C17.76 23.91 17.86 24 18 24H20C20.11 24 20.22 23.91 20.24 23.79L20.43 22.47C20.73 22.34 21 22.18 21.27 22L22.5 22.5C22.63 22.5 22.76 22.5 22.83 22.37L23.83 20.64C23.89 20.53 23.86 20.4 23.77 20.32L22.7 19.5C22.72 19.33 22.74 19.17 22.74 19C22.74 18.83 22.73 18.67 22.7 18.5L23.76 17.68C23.85 17.6 23.88 17.47 23.82 17.36L22.82 15.63C22.76 15.5 22.63 15.5 22.5 15.5L21.27 16C21 15.82 20.73 15.65 20.42 15.53L20.23 14.21C20.22 14.09 20.11 14 20 14H18M19 17.5C19.83 17.5 20.5 18.17 20.5 19C20.5 19.83 19.83 20.5 19 20.5C18.16 20.5 17.5 19.83 17.5 19C17.5 18.17 18.17 17.5 19 17.5Z" Fill="Gray" />
                                         </Canvas>
                                     </Viewbox>
                                 </Button>
-                                <TextBox x:Name="ExceptTagTextBox" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="请输入要排除的标签, 使用空格分隔" Text="{Binding Path=ExceptTags, Converter={StaticResource StringSplitConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                <TextBox x:Name="ContainsTagTextBox" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="请输入要抓取的标签, 使用空格分隔" Text="{Binding Path=ContainsTags, Converter={StaticResource StringSplitConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                <Button x:Name="ClearSettingButton" ToolTip="还原为默认" VerticalAlignment="Bottom" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Height="40" Width="40" Style="{DynamicResource MaterialDesignToolButton}" Click="ClearSettingButton_OnClick">
+                                <TextBox x:Name="ExceptTagTextBox" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="请输入要排除的标签, 使用空格分隔" Text="{Binding Path=ExceptTags, Converter={StaticResource StringSplitConverter}, Mode=OneWay}" LostFocus="ExceptTagTextBox_OnLostFocus"/>
+                                <TextBox x:Name="ContainsTagTextBox" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="请输入要抓取的标签, 使用空格分隔" Text="{Binding Path=ContainsTags, Converter={StaticResource StringSplitConverter}, Mode=OneWay}" LostFocus="ContainsTagTextBox_OnLostFocus"/>
+                                <Button x:Name="ClearSettingButton" ToolTip="还原为默认" VerticalAlignment="Bottom" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Height="40" Width="40" Style="{DynamicResource MaterialDesignToolButton}" Click="ClearSettingButton_OnClick">
                                     <Viewbox Width="30" Height="30">
                                         <Canvas Width="24" Height="24">
                                             <Path Data="M13,3A9,9 0 0,0 4,12H1L4.89,15.89L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3Z" Fill="Gray" />
@@ -475,6 +496,23 @@
                             </Grid>
                         </StackPanel>
                     </Grid>
+                </materialDesign:Card>
+            </materialDesign:DialogHost.DialogContent>
+            <materialDesign:DialogHost x:Name="ProgressDialog" CloseOnClickAway="True">
+                <materialDesign:DialogHost.DialogContent>
+                    <materialDesign:Card Width="500" Height="200" Background="White">
+                        <StackPanel VerticalAlignment="Center">
+                            <mah:ProgressRing Margin="50 0 50 0" IsActive="True"  Foreground="#66CCFF" />
+                            <TextBlock x:Name="ProgressNoticeTextBlock" HorizontalAlignment="Center" Margin="0 30 0 0" FontSize="15"/>
+                        </StackPanel>
+                    </materialDesign:Card>
+                </materialDesign:DialogHost.DialogContent>
+            </materialDesign:DialogHost>
+        </materialDesign:DialogHost>
+        <materialDesign:DialogHost x:Name="NoticeDialog" CloseOnClickAway="True">
+            <materialDesign:DialogHost.DialogContent>
+                <materialDesign:Card Background="White">
+                    <TextBlock x:Name="NoticeMessage" VerticalAlignment="Center" Margin="20" FontSize="15"/>
                 </materialDesign:Card>
             </materialDesign:DialogHost.DialogContent>
         </materialDesign:DialogHost>
