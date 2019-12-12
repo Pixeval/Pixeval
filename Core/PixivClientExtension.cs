@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Pixeval.Data.Model.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
@@ -10,16 +11,16 @@ namespace Pixeval.Core
 {
     public static class PixivClientExtension
     {
-        public static void PostFavoriteAsync(this PixivClient _, Illustration illustration)
+        public static async Task PostFavoriteAsync(this PixivClient _, Illustration illustration)
         {
             illustration.IsLiked = true;
-            HttpClientFactory.AppApiService.AddBookmark(new AddBookmarkRequest {Id = illustration.Id});
+            await HttpClientFactory.AppApiService.AddBookmark(new AddBookmarkRequest {Id = illustration.Id});
         }
 
-        public static void RemoveFavoriteAsync(this PixivClient _, Illustration illustration)
+        public static async Task RemoveFavoriteAsync(this PixivClient _, Illustration illustration)
         {
             illustration.IsLiked = false;
-            HttpClientFactory.AppApiService.DeleteBookmark(illustration.Id);
+            await HttpClientFactory.AppApiService.DeleteBookmark(new DeleteBookmarkRequest { IllustId = illustration.Id });
         }
 
         public static async IAsyncEnumerable<UserNavResponse.UserPreview> QueryUsers(this PixivClient _, string keyword)

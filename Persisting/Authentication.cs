@@ -24,9 +24,6 @@ namespace Pixeval.Persisting
                 .GetToken(new TokenRequest { Name = name, Password = pwd }, time, hash);
 
             Identity.Global = Identity.Parse(pwd, token);
-
-            TextBuffer.SaveText(Constants.Conf, Identity.Global, Converters.From<object, string>(typeof(ObjectJsonConverter)));
         }
-
     }
 }

@@ -15,40 +15,54 @@
         Initialized="MainWindow_OnInitialized" MouseDown="MainWindow_OnMouseDown"
         Title="MainWindow" Height="900" Width="1600">
     <Window.Resources>
-        <CubicEase x:Key="CubicEase" EasingMode="EaseOut"/>
-        <valueConverters:VisibleIfTrueConverter x:Key="VisibleIfTrueConverter"/>
-        <valueConverters:VisibleIfFalseConverter x:Key="VisibleIfFalseConverter"/>
+        <CubicEase x:Key="CubicEase" EasingMode="EaseOut" />
+        <valueConverters:VisibleIfTrueConverter x:Key="VisibleIfTrueConverter" />
+        <valueConverters:VisibleIfFalseConverter x:Key="VisibleIfFalseConverter" />
+        <valueConverters:WidthMinus45PxConverter x:Key="WidthMinus45PxConverter" />
         <DataTemplate x:Key="IllustrationViewModelDataTemplate" DataType="viewModel:Illustration">
             <ListViewItem>
                 <Grid Width="210" Height="280" ClipToBounds="True">
-                    <Border x:Name="GridBorder" CornerRadius="15" Background="#FAFAFC" ClipToBounds="True"/>
+                    <Border x:Name="GridBorder" CornerRadius="15" Background="#FAFAFC" ClipToBounds="True" />
                     <Grid ToolTip="{Binding Path=Id}" ClipToBounds="True">
                         <Grid.OpacityMask>
-                            <VisualBrush Visual="{Binding ElementName=GridBorder}"></VisualBrush>
+                            <VisualBrush Visual="{Binding ElementName=GridBorder}" />
                         </Grid.OpacityMask>
-                        <Image x:Name="Thumbnail" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="UniformToFill" Loaded="Thumbnail_OnLoaded" Unloaded="Thumbnail_OnUnloaded"/>
+                        <Image x:Name="Thumbnail" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                               Stretch="UniformToFill" Loaded="Thumbnail_OnLoaded" Unloaded="Thumbnail_OnUnloaded" />
                         <Border Height="60" VerticalAlignment="Bottom">
-                            <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding Path=Title}" FontFamily="Microsoft Yahei UI Light" Foreground="#FFF1F1F1" FontSize="20" TextAlignment="Center" TextWrapping="Wrap"/>
+                            <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                                       Text="{Binding Path=Title}" FontFamily="Microsoft Yahei UI Light"
+                                       Foreground="#FFF1F1F1" FontSize="20" TextAlignment="Center" TextWrapping="Wrap" />
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0 0" EndPoint="0 1" Opacity="0.6">
-                                    <GradientStop Color="Black" Offset="1"/>
-                                    <GradientStop Color="Gray" Offset="0.5"/>
-                                    <GradientStop Color="Transparent" Offset="0"/>
+                                    <GradientStop Color="Black" Offset="1" />
+                                    <GradientStop Color="Gray" Offset="0.5" />
+                                    <GradientStop Color="Transparent" Offset="0" />
                                 </LinearGradientBrush>
                             </Border.Background>
                         </Border>
                         <Grid>
-                            <Button Height="30" Width="30" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="15 10 15 0" Style="{DynamicResource MaterialDesignToolButton}" Visibility="{Binding Path=IsLiked, Converter={StaticResource VisibleIfFalseConverter}}">
+                            <Button x:Name="FavoriteButton" Click="FavoriteButton_OnClick" Height="30" Width="30"
+                                    VerticalAlignment="Top" HorizontalAlignment="Left" Margin="15 10 15 0"
+                                    Style="{DynamicResource MaterialDesignToolButton}"
+                                    Visibility="{Binding Path=IsLiked, Converter={StaticResource VisibleIfFalseConverter}}">
                                 <Viewbox Width="24" Height="24">
                                     <Canvas Width="24" Height="24">
-                                        <Path Data="M12.1,18.55L12,18.65L11.89,18.55C7.14,14.24 4,11.39 4,8.5C4,6.5 5.5,5 7.5,5C9.04,5 10.54,6 11.07,7.36H12.93C13.46,6 14.96,5 16.5,5C18.5,5 20,6.5 20,8.5C20,11.39 16.86,14.24 12.1,18.55M16.5,3C14.76,3 13.09,3.81 12,5.08C10.91,3.81 9.24,3 7.5,3C4.42,3 2,5.41 2,8.5C2,12.27 5.4,15.36 10.55,20.03L12,21.35L13.45,20.03C18.6,15.36 22,12.27 22,8.5C22,5.41 19.58,3 16.5,3Z" Fill="Gray" />
+                                        <Path
+                                            Data="M12.1,18.55L12,18.65L11.89,18.55C7.14,14.24 4,11.39 4,8.5C4,6.5 5.5,5 7.5,5C9.04,5 10.54,6 11.07,7.36H12.93C13.46,6 14.96,5 16.5,5C18.5,5 20,6.5 20,8.5C20,11.39 16.86,14.24 12.1,18.55M16.5,3C14.76,3 13.09,3.81 12,5.08C10.91,3.81 9.24,3 7.5,3C4.42,3 2,5.41 2,8.5C2,12.27 5.4,15.36 10.55,20.03L12,21.35L13.45,20.03C18.6,15.36 22,12.27 22,8.5C22,5.41 19.58,3 16.5,3Z"
+                                            Fill="Gray" />
                                     </Canvas>
                                 </Viewbox>
                             </Button>
-                            <Button Height="30" Width="30" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="15 10 15 0" Style="{DynamicResource MaterialDesignToolButton}" Visibility="{Binding Path=IsLiked, Converter={StaticResource VisibleIfTrueConverter}}">
+                            <Button x:Name="RemoveFavoriteButton" Click="RemoveFavoriteButton_OnClick" Height="30"
+                                    Width="30" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="15 10 15 0"
+                                    Style="{DynamicResource MaterialDesignToolButton}"
+                                    Visibility="{Binding Path=IsLiked, Converter={StaticResource VisibleIfTrueConverter}}">
                                 <Viewbox Width="24" Height="24">
                                     <Canvas Width="24" Height="24">
-                                        <Path Data="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z" Fill="Crimson"/>
+                                        <Path
+                                            Data="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"
+                                            Fill="Crimson" />
                                     </Canvas>
                                 </Viewbox>
                             </Button>
@@ -57,30 +71,153 @@
                 </Grid>
             </ListViewItem>
         </DataTemplate>
+        <DataTemplate x:Key="SpotlightDataTemplate" DataType="viewModel:SpotlightArticle">
+            <ListViewItem Height="300" HorizontalAlignment="Stretch" Cursor="Hand">
+                <ListViewItem.Triggers>
+                    <EventTrigger RoutedEvent="ListViewItem.MouseEnter">
+                        <BeginStoryboard>
+                            <Storyboard TargetName="SpotlightScaleTransform" TargetProperty="(ScaleTransform.ScaleX)">
+                                <DoubleAnimation From="1" To="1.2" Duration="00:00:00.3"
+                                                 EasingFunction="{StaticResource CubicEase}" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                        <BeginStoryboard>
+                            <Storyboard TargetName="SpotlightScaleTransform" TargetProperty="(ScaleTransform.ScaleY)">
+                                <DoubleAnimation From="1" To="1.2" Duration="00:00:00.3"
+                                                 EasingFunction="{StaticResource CubicEase}" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                        <BeginStoryboard>
+                            <Storyboard TargetName="SpotlightBlurEffect" TargetProperty="(BlurEffect.Radius)">
+                                <DoubleAnimation From="1" To="80" Duration="00:00:00.3"
+                                                 EasingFunction="{StaticResource CubicEase}" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                        <BeginStoryboard>
+                            <Storyboard TargetName="SpotlightMask" TargetProperty="(Grid.Opacity)">
+                                <DoubleAnimation From="0" To="0.4" Duration="00:00:00.3"
+                                                 EasingFunction="{StaticResource CubicEase}" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                        <BeginStoryboard>
+                            <Storyboard TargetName="SpotlightTitle" TargetProperty="(TextBlock.Opacity)">
+                                <DoubleAnimation From="0" To="1" Duration="00:00:00.3"
+                                                 EasingFunction="{StaticResource CubicEase}" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="ListViewItem.MouseLeave">
+                        <BeginStoryboard>
+                            <Storyboard TargetName="SpotlightScaleTransform" TargetProperty="(ScaleTransform.ScaleX)">
+                                <DoubleAnimation From="1.2" To="1" Duration="00:00:00.3"
+                                                 EasingFunction="{StaticResource CubicEase}" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                        <BeginStoryboard>
+                            <Storyboard TargetName="SpotlightScaleTransform" TargetProperty="(ScaleTransform.ScaleY)">
+                                <DoubleAnimation From="1.2" To="1" Duration="00:00:00.3"
+                                                 EasingFunction="{StaticResource CubicEase}" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                        <BeginStoryboard>
+                            <Storyboard TargetName="SpotlightBlurEffect" TargetProperty="(BlurEffect.Radius)">
+                                <DoubleAnimation From="80" To="1" Duration="00:00:00.3"
+                                                 EasingFunction="{StaticResource CubicEase}" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                        <BeginStoryboard>
+                            <Storyboard TargetName="SpotlightMask" TargetProperty="(Grid.Opacity)">
+                                <DoubleAnimation From="0.4" To="0" Duration="00:00:00.3"
+                                                 EasingFunction="{StaticResource CubicEase}" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                        <BeginStoryboard>
+                            <Storyboard TargetName="SpotlightTitle" TargetProperty="(TextBlock.Opacity)">
+                                <DoubleAnimation From="1" To="0" Duration="00:00:00.3"
+                                                 EasingFunction="{StaticResource CubicEase}" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </ListViewItem.Triggers>
+                <Grid Height="300" HorizontalAlignment="Center"
+                      Width="{Binding ElementName=SpotlightListView, Path=ActualWidth, Converter={StaticResource WidthMinus45PxConverter}}">
+                    <Image x:Name="SpotlightThumbnail" Stretch="UniformToFill" HorizontalAlignment="Stretch"
+                           VerticalAlignment="Center" RenderTransformOrigin="0.5 0.5"
+                           MaxWidth="{Binding ElementName=SpotlightListView, Path=ActualWidth}"
+                           Loaded="SpotlightThumbnail_OnLoaded" Unloaded="SpotlightThumbnail_OnUnloaded">
+                        <Image.Effect>
+                            <BlurEffect x:Name="SpotlightBlurEffect" KernelType="Gaussian" Radius="1" />
+                        </Image.Effect>
+                        <Image.RenderTransform>
+                            <ScaleTransform x:Name="SpotlightScaleTransform" />
+                        </Image.RenderTransform>
+                    </Image>
+                    <Grid x:Name="SpotlightMask" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                          Background="Black" Opacity="0"
+                          MaxWidth="{Binding ElementName=SpotlightListView, Path=ActualWidth}" />
+                    <TextBlock x:Name="SpotlightTitle" Margin="80 0 80 0" HorizontalAlignment="Center"
+                               VerticalAlignment="Center" FontSize="55" TextWrapping="Wrap" TextAlignment="Center"
+                               Text="{Binding Title}" FontFamily="YouYuan" Opacity="0" LineHeight="80"
+                               Foreground="#FFB6B6B6" />
+                </Grid>
+            </ListViewItem>
+        </DataTemplate>
+        <DataTemplate x:Key="UserPreviewTemplate" DataType="viewModel:UserPreview">
+            <ListViewItem x:Name="UserPrevItem" Loaded="UserPrevItem_OnLoaded">
+                <ListViewItem.Resources>
+                    <valueConverters:UserIdConverter x:Key="UserIdConverter"/>
+                </ListViewItem.Resources>
+                <materialDesign:Card Width="{Binding ElementName=UserPreviewListView, Path=ActualWidth}" Height="200">
+                    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <Image x:Name="UserAvatar" Width="150" Height="150" Margin="50 0 0 0" Stretch="UniformToFill" VerticalAlignment="Center" Loaded="UserAvatar_Loaded" Unloaded="UserAvatar_OnUnloaded">
+                                <Image.Clip>
+                                    <EllipseGeometry Center="75 75" RadiusX="75" RadiusY="75"/>
+                                </Image.Clip>
+                            </Image>
+                            <StackPanel Orientation="Vertical" Width="300" Margin="20 30 0 30">
+                                <TextBlock FontSize="25" Margin="0 20 0 0" Text="{Binding UserName}" TextWrapping="Wrap"/>
+                                <TextBlock FontSize="20" Margin="15 25 0 0" Text="{Binding UserId, Converter={StaticResource UserIdConverter}}" />
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="540" Margin="0 0 50 0">
+                            <Image x:Name="UserPrevImage1" Loaded="UserPrevImage1_OnLoaded" Unloaded="UserPrevImage1_OnUnloaded" Height="180" Width="150" Stretch="UniformToFill" Margin="10 0"/>
+                            <Image x:Name="UserPrevImage2" Loaded="UserPrevImage2_OnLoaded" Unloaded="UserPrevImage2_OnUnloaded" Height="180" Width="150" Stretch="UniformToFill" Margin="10 0"/>
+                            <Image x:Name="UserPrevImage3" Loaded="UserPrevImage3_OnLoaded" Unloaded="UserPrevImage3_OnUnloaded" Height="180" Width="150" Stretch="UniformToFill" Margin="10 0"/>
+                        </StackPanel>
+                    </Grid>
+                </materialDesign:Card>
+            </ListViewItem>
+        </DataTemplate>
     </Window.Resources>
     <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Grid x:Name="NavigatorContainer" VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="250">
-            <materialDesign:Card VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="250" x:Name="NavigatorCard">
+            <materialDesign:Card VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="250"
+                                 x:Name="NavigatorCard">
                 <Grid>
                     <StackPanel x:Name="NavigatorWrapper" Margin="0 0 0 60">
                         <Grid x:Name="UserInformation" Margin="0 40 0 0">
-                            <Image x:Name="UserAvatar" HorizontalAlignment="Stretch" VerticalAlignment="Top" >
+                            <Image x:Name="UserAvatar" HorizontalAlignment="Stretch" VerticalAlignment="Top">
                                 <Image.Style>
                                     <Style TargetType="Image">
-                                        <Setter Property="Width" Value="120"/>
-                                        <Setter Property="Height" Value="120"/>
+                                        <Setter Property="Width" Value="120" />
+                                        <Setter Property="Height" Value="120" />
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ElementName=ExpandToggleButton, Path=IsChecked}" Value="False">
+                                            <DataTrigger
+                                                Binding="{Binding ElementName=ExpandToggleButton, Path=IsChecked}"
+                                                Value="False">
                                                 <Setter Property="RenderTransform">
                                                     <Setter.Value>
-                                                        <RotateTransform CenterX="35" CenterY="35" Angle="0"></RotateTransform>
+                                                        <RotateTransform CenterX="35" CenterY="35" Angle="0" />
                                                     </Setter.Value>
                                                 </Setter>
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding ElementName=ExpandToggleButton, Path=IsChecked}" Value="True">
+                                            <DataTrigger
+                                                Binding="{Binding ElementName=ExpandToggleButton, Path=IsChecked}"
+                                                Value="True">
                                                 <Setter Property="RenderTransform">
                                                     <Setter.Value>
-                                                        <RotateTransform CenterX="60" CenterY="60" Angle="0"></RotateTransform>
+                                                        <RotateTransform CenterX="60" CenterY="60" Angle="0" />
                                                     </Setter.Value>
                                                 </Setter>
                                             </DataTrigger>
@@ -90,216 +227,279 @@
                                 <Image.Triggers>
                                     <EventTrigger RoutedEvent="Mouse.MouseEnter">
                                         <BeginStoryboard>
-                                            <Storyboard TargetName="UserAvatar" TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)">
-                                                <DoubleAnimation x:Name="UserAvatarPositiveRotationAnimation" From="0" To="360" Duration="00:00:01" EasingFunction="{StaticResource CubicEase}"/>
+                                            <Storyboard TargetName="UserAvatar"
+                                                        TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)">
+                                                <DoubleAnimation x:Name="UserAvatarPositiveRotationAnimation" From="0"
+                                                                 To="360" Duration="00:00:01"
+                                                                 EasingFunction="{StaticResource CubicEase}" />
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </EventTrigger>
                                     <EventTrigger RoutedEvent="Mouse.MouseLeave">
                                         <BeginStoryboard>
-                                            <Storyboard TargetName="UserAvatar" TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)">
-                                                <DoubleAnimation x:Name="UserAvatarNegativeRotationAnimation" From="360" To="0" Duration="00:00:01" EasingFunction="{StaticResource CubicEase}"/>
+                                            <Storyboard TargetName="UserAvatar"
+                                                        TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)">
+                                                <DoubleAnimation x:Name="UserAvatarNegativeRotationAnimation"
+                                                                 From="360" To="0" Duration="00:00:01"
+                                                                 EasingFunction="{StaticResource CubicEase}" />
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </EventTrigger>
                                 </Image.Triggers>
                                 <Image.Clip>
-                                    <EllipseGeometry x:Name="AvatarEllipseGeometry" RadiusX="60" RadiusY="60" Center="60 60"/>
+                                    <EllipseGeometry x:Name="AvatarEllipseGeometry" RadiusX="60" RadiusY="60"
+                                                     Center="60 60" />
                                 </Image.Clip>
                             </Image>
-                            <TextBlock x:Name="UserName" Margin="5 125 5 0" Height="60" FontSize="18" TextAlignment="Center" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+                            <TextBlock x:Name="UserName" Margin="5 125 5 0" Height="60" FontSize="18"
+                                       TextAlignment="Center" VerticalAlignment="Center" TextWrapping="NoWrap" />
                         </Grid>
                         <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                            <ListView Style="{DynamicResource MaterialDesignListView}" x:Name="NavigatorList" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="NavigatorList_OnSelectionChanged">
-                                <ListViewItem Height="60" x:Name="MenuTab">
+                            <ListView Style="{DynamicResource MaterialDesignListView}" x:Name="NavigatorList"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                      SelectionChanged="NavigatorList_OnSelectionChanged">
+                                <ListViewItem Height="60" x:Name="MenuTab" Selected="MenuTab_OnSelected">
                                     <StackPanel Orientation="Horizontal">
                                         <Viewbox Margin="20 0 0 0" Width="35" Height="35">
                                             <Canvas Width="24" Height="24">
                                                 <Path Data="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" Fill="Gray" />
                                             </Canvas>
                                         </Viewbox>
-                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="主          页" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="主          页"
+                                               VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
                                     </StackPanel>
                                 </ListViewItem>
-                                <ListViewItem Height="60" x:Name="GalleryTab">
+                                <ListViewItem Height="60" x:Name="GalleryTab" Selected="GalleryTab_OnSelected">
                                     <StackPanel Orientation="Horizontal">
                                         <Viewbox Margin="20 0 0 0" Width="35" Height="35">
                                             <Canvas Width="24" Height="24">
-                                                <Path Data="M22,16V4A2,2 0 0,0 20,2H8A2,2 0 0,0 6,4V16A2,2 0 0,0 8,18H20A2,2 0 0,0 22,16M11,12L13.03,14.71L16,11L20,16H8M2,6V20A2,2 0 0,0 4,22H18V20H4V6" Fill="Gray" />
+                                                <Path
+                                                    Data="M22,16V4A2,2 0 0,0 20,2H8A2,2 0 0,0 6,4V16A2,2 0 0,0 8,18H20A2,2 0 0,0 22,16M11,12L13.03,14.71L16,11L20,16H8M2,6V20A2,2 0 0,0 4,22H18V20H4V6"
+                                                    Fill="Gray" />
                                             </Canvas>
                                         </Viewbox>
-                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="我 的 收 藏" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="我 的 收 藏"
+                                               VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
                                     </StackPanel>
                                 </ListViewItem>
-                                <ListViewItem Height="60" x:Name="FollowingTab">
+                                <ListViewItem Height="60" x:Name="FollowingTab" Selected="FollowingTab_OnSelected" Unselected="FollowingTab_OnUnselected">
                                     <StackPanel Orientation="Horizontal">
                                         <Viewbox Margin="20,0,0,0" Width="35" Height="35">
                                             <Canvas Width="24" Height="24">
-                                                <Path Data="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z" Fill="Gray" />
+                                                <Path
+                                                    Data="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"
+                                                    Fill="Gray" />
                                             </Canvas>
                                         </Viewbox>
-                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="我 的 关 注" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="我 的 关 注"
+                                               VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
                                     </StackPanel>
                                 </ListViewItem>
-                                <ListViewItem Height="60" x:Name="PixivVisionTab">
+                                <ListViewItem Height="60" x:Name="SpotlightTab" Selected="SpotlightTab_OnSelected" Unselected="SpotlightTab_OnUnselected">
                                     <StackPanel Orientation="Horizontal">
                                         <Viewbox Margin="20 0 0 0" Width="35" Height="35">
                                             <Canvas Width="24" Height="24">
-                                                <Path Data="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z" Fill="Gray" />
+                                                <Path
+                                                    Data="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"
+                                                    Fill="Gray" />
                                             </Canvas>
                                         </Viewbox>
-                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="特          辑" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="特          辑"
+                                               VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
                                     </StackPanel>
                                 </ListViewItem>
-                                <ListViewItem Height="60" x:Name="RankingTab">
+                                <ListViewItem Height="60" x:Name="RankingTab" Selected="RankingTab_OnSelected">
                                     <StackPanel Orientation="Horizontal">
                                         <Viewbox Margin="20 0 0 0" Width="35" Height="35">
                                             <Canvas Width="24" Height="24">
-                                                <Path Data="M19,20V9H5V20H19M16,2H18V4H19A2,2 0 0,1 21,6V20A2,2 0 0,1 19,22H5A2,2 0 0,1 3,20V6A2,2 0 0,1 5,4H6V2H8V4H16V2M12,18.17L11.42,17.64C9.36,15.77 8,14.54 8,13.03C8,11.8 8.97,10.83 10.2,10.83C10.9,10.83 11.56,11.15 12,11.66C12.44,11.15 13.1,10.83 13.8,10.83C15.03,10.83 16,11.8 16,13.03C16,14.54 14.64,15.77 12.58,17.64L12,18.17Z" Fill="Gray" />
+                                                <Path
+                                                    Data="M19,20V9H5V20H19M16,2H18V4H19A2,2 0 0,1 21,6V20A2,2 0 0,1 19,22H5A2,2 0 0,1 3,20V6A2,2 0 0,1 5,4H6V2H8V4H16V2M12,18.17L11.42,17.64C9.36,15.77 8,14.54 8,13.03C8,11.8 8.97,10.83 10.2,10.83C10.9,10.83 11.56,11.15 12,11.66C12.44,11.15 13.1,10.83 13.8,10.83C15.03,10.83 16,11.8 16,13.03C16,14.54 14.64,15.77 12.58,17.64L12,18.17Z"
+                                                    Fill="Gray" />
                                             </Canvas>
                                         </Viewbox>
-                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="每 日 推 荐" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="每 日 推 荐"
+                                               VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
                                     </StackPanel>
                                 </ListViewItem>
                             </ListView>
-                            <Separator x:Name="Separator" Width="230" Margin="10 10 0 10" Height="1" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                            <ListView Style="{DynamicResource MaterialDesignListView}" x:Name="ExternalNavigatorList" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <Separator x:Name="Separator" Width="230" Margin="10 10 0 10" Height="1"
+                                       HorizontalAlignment="Left" VerticalAlignment="Top" />
+                            <ListView Style="{DynamicResource MaterialDesignListView}" x:Name="ExternalNavigatorList"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                 <ListViewItem Height="60" HorizontalAlignment="Stretch" x:Name="DownloadListTab">
                                     <StackPanel Orientation="Horizontal">
                                         <Viewbox Margin="20 0 0 0" Width="35" Height="35">
                                             <Canvas Width="24" Height="24">
-                                                <Path Data="M17,19.09L19.45,20.58L18.8,17.77L21,15.89L18.11,15.64L17,13L15.87,15.64L13,15.89L15.18,17.77L14.5,20.58L17,19.09M4,14H12V16H4V14M4,6H16V8H4V6M4,10H16V12H4V10Z" Fill="Gray" />
+                                                <Path
+                                                    Data="M17,19.09L19.45,20.58L18.8,17.77L21,15.89L18.11,15.64L17,13L15.87,15.64L13,15.89L15.18,17.77L14.5,20.58L17,19.09M4,14H12V16H4V14M4,6H16V8H4V6M4,10H16V12H4V10Z"
+                                                    Fill="Gray" />
                                             </Canvas>
                                         </Viewbox>
-                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="下 载 列 表" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="下 载 列 表"
+                                               VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
                                     </StackPanel>
                                 </ListViewItem>
                                 <ListViewItem Height="60" HorizontalAlignment="Stretch" x:Name="SettingsTab">
                                     <StackPanel Orientation="Horizontal">
                                         <Viewbox Margin="20 0 0 0" Width="35" Height="35">
                                             <Canvas Width="24" Height="24">
-                                                <Path Data="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" Fill="Gray" />
+                                                <Path
+                                                    Data="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"
+                                                    Fill="Gray" />
                                             </Canvas>
                                         </Viewbox>
-                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="设          置" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="设          置"
+                                               VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
                                     </StackPanel>
                                 </ListViewItem>
-                                <ListViewItem Height="60" HorizontalAlignment="Stretch" x:Name="SignOutTab" Selected="SignOutTab_OnSelected">
+                                <ListViewItem Height="60" HorizontalAlignment="Stretch" x:Name="SignOutTab"
+                                              Selected="SignOutTab_OnSelected">
                                     <StackPanel Orientation="Horizontal">
                                         <Viewbox Margin="20 0 0 0" Width="35" Height="35">
                                             <Canvas Width="24" Height="24">
-                                                <Path Data="M14.08,15.59L16.67,13H7V11H16.67L14.08,8.41L15.5,7L20.5,12L15.5,17L14.08,15.59M19,3A2,2 0 0,1 21,5V9.67L19,7.67V5H5V19H19V16.33L21,14.33V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5C3,3.89 3.89,3 5,3H19Z" Fill="Gray" />
+                                                <Path
+                                                    Data="M14.08,15.59L16.67,13H7V11H16.67L14.08,8.41L15.5,7L20.5,12L15.5,17L14.08,15.59M19,3A2,2 0 0,1 21,5V9.67L19,7.67V5H5V19H19V16.33L21,14.33V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5C3,3.89 3.89,3 5,3H19Z"
+                                                    Fill="Gray" />
                                             </Canvas>
                                         </Viewbox>
-                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="登          出" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="登          出"
+                                               VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
                                     </StackPanel>
                                 </ListViewItem>
                             </ListView>
                         </StackPanel>
                     </StackPanel>
-                    <ToggleButton x:Name="ExpandToggleButton" ToolTip="折叠侧边栏" VerticalAlignment="Bottom" Style="{DynamicResource MaterialDesignHamburgerToggleButton}" Height="25" Width="25" HorizontalAlignment="Left" Margin="30 0 0 23" Foreground="Gray" IsChecked="True">
+                    <ToggleButton x:Name="ExpandToggleButton" ToolTip="折叠侧边栏" VerticalAlignment="Bottom"
+                                  Style="{DynamicResource MaterialDesignHamburgerToggleButton}" Height="25" Width="25"
+                                  HorizontalAlignment="Left" Margin="30 0 0 23" Foreground="Gray" IsChecked="True">
                         <ToggleButton.Triggers>
                             <EventTrigger RoutedEvent="ToggleButton.Unchecked">
                                 <BeginStoryboard>
                                     <Storyboard TargetName="ContentDisplay" TargetProperty="(Grid.Margin)">
-                                        <ThicknessAnimation EasingFunction="{StaticResource CubicEase}" From="250 0 0 0" To="90 0 0 0" Duration="00:00:00.3"/>
+                                        <ThicknessAnimation EasingFunction="{StaticResource CubicEase}"
+                                                            From="250 0 0 0" To="90 0 0 0" Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                                 <BeginStoryboard>
                                     <Storyboard TargetName="NavigatorCard" TargetProperty="(materialDesign:Card.Width)">
-                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="250" To="90" Duration="00:00:00.3"/>
+                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="250" To="90"
+                                                         Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                                 <BeginStoryboard>
                                     <Storyboard TargetName="NavigatorContainer" TargetProperty="(Grid.Width)">
-                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="250" To="90" Duration="00:00:00.3"/>
+                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="250" To="90"
+                                                         Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                                 <BeginStoryboard>
                                     <Storyboard TargetName="Separator" TargetProperty="(Separator.Width)">
-                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="230" To="70" Duration="00:00:00.3"/>
+                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="230" To="70"
+                                                         Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                                 <BeginStoryboard>
                                     <Storyboard TargetName="UserAvatar" TargetProperty="(Image.Width)">
-                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="120" To="70" Duration="00:00:00.3"/>
+                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="120" To="70"
+                                                         Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                                 <BeginStoryboard>
-                                    <Storyboard TargetName="AvatarEllipseGeometry" TargetProperty="(EllipseGeometry.RadiusX)">
-                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="60" To="35" Duration="00:00:00.3"/>
+                                    <Storyboard TargetName="AvatarEllipseGeometry"
+                                                TargetProperty="(EllipseGeometry.RadiusX)">
+                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="60" To="35"
+                                                         Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                                 <BeginStoryboard>
-                                    <Storyboard TargetName="AvatarEllipseGeometry" TargetProperty="(EllipseGeometry.RadiusY)">
-                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="60" To="35" Duration="00:00:00.3"/>
+                                    <Storyboard TargetName="AvatarEllipseGeometry"
+                                                TargetProperty="(EllipseGeometry.RadiusY)">
+                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="60" To="35"
+                                                         Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                                 <BeginStoryboard>
-                                    <Storyboard TargetName="AvatarEllipseGeometry" TargetProperty="(EllipseGeometry.Center)">
-                                        <PointAnimation EasingFunction="{StaticResource CubicEase}" From="60 60" To="35 35" Duration="00:00:00.3"/>
+                                    <Storyboard TargetName="AvatarEllipseGeometry"
+                                                TargetProperty="(EllipseGeometry.Center)">
+                                        <PointAnimation EasingFunction="{StaticResource CubicEase}" From="60 60"
+                                                        To="35 35" Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                                 <BeginStoryboard>
                                     <Storyboard TargetName="UserName" TargetProperty="(TextBlock.Opacity)">
-                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="1" To="0" Duration="00:00:00.3"/>
+                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="1" To="0"
+                                                         Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                                 <BeginStoryboard>
                                     <Storyboard TargetName="UserName" TargetProperty="(TextBlock.Margin)">
-                                        <ThicknessAnimation EasingFunction="{StaticResource CubicEase}" From="5 125 5 0" To="5 35 5 0" Duration="00:00:00.3"/>
+                                        <ThicknessAnimation EasingFunction="{StaticResource CubicEase}"
+                                                            From="5 125 5 0" To="5 35 5 0" Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger>
                             <EventTrigger RoutedEvent="ToggleButton.Checked">
                                 <BeginStoryboard>
                                     <Storyboard TargetName="ContentDisplay" TargetProperty="(Grid.Margin)">
-                                        <ThicknessAnimation EasingFunction="{StaticResource CubicEase}" From="90 0 0 0" To="250 0 0 0" Duration="00:00:00.3"/>
+                                        <ThicknessAnimation EasingFunction="{StaticResource CubicEase}" From="90 0 0 0"
+                                                            To="250 0 0 0" Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                                 <BeginStoryboard>
                                     <Storyboard TargetName="NavigatorCard" TargetProperty="(materialDesign:Card.Width)">
-                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="90" To="250" Duration="00:00:00.3"/>
+                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="90" To="250"
+                                                         Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                                 <BeginStoryboard>
                                     <Storyboard TargetName="NavigatorContainer" TargetProperty="(Grid.Width)">
-                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="90" To="250" Duration="00:00:00.3"/>
+                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="90" To="250"
+                                                         Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                                 <BeginStoryboard>
                                     <Storyboard TargetName="Separator" TargetProperty="(Separator.Width)">
-                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="70" To="230" Duration="00:00:00.3"/>
+                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="70" To="230"
+                                                         Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                                 <BeginStoryboard>
                                     <Storyboard TargetName="UserAvatar" TargetProperty="(Image.Width)">
-                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="70" To="120" Duration="00:00:00.3"/>
+                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="70" To="120"
+                                                         Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                                 <BeginStoryboard>
-                                    <Storyboard TargetName="AvatarEllipseGeometry" TargetProperty="(EllipseGeometry.RadiusX)">
-                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="35" To="60" Duration="00:00:00.3"/>
+                                    <Storyboard TargetName="AvatarEllipseGeometry"
+                                                TargetProperty="(EllipseGeometry.RadiusX)">
+                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="35" To="60"
+                                                         Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                                 <BeginStoryboard>
-                                    <Storyboard TargetName="AvatarEllipseGeometry" TargetProperty="(EllipseGeometry.RadiusY)">
-                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="35" To="60" Duration="00:00:00.3"/>
+                                    <Storyboard TargetName="AvatarEllipseGeometry"
+                                                TargetProperty="(EllipseGeometry.RadiusY)">
+                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="35" To="60"
+                                                         Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                                 <BeginStoryboard>
-                                    <Storyboard TargetName="AvatarEllipseGeometry" TargetProperty="(EllipseGeometry.Center)">
-                                        <PointAnimation EasingFunction="{StaticResource CubicEase}" From="35 35" To=" 60 60" Duration="00:00:00.3"/>
+                                    <Storyboard TargetName="AvatarEllipseGeometry"
+                                                TargetProperty="(EllipseGeometry.Center)">
+                                        <PointAnimation EasingFunction="{StaticResource CubicEase}" From="35 35"
+                                                        To=" 60 60" Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                                 <BeginStoryboard>
                                     <Storyboard TargetName="UserName" TargetProperty="(TextBlock.Opacity)">
-                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="0" To="1" Duration="00:00:00.3"/>
+                                        <DoubleAnimation EasingFunction="{StaticResource CubicEase}" From="0" To="1"
+                                                         Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                                 <BeginStoryboard>
                                     <Storyboard TargetName="UserName" TargetProperty="(TextBlock.Margin)">
-                                        <ThicknessAnimation EasingFunction="{StaticResource CubicEase}" From="5 35 5 0" To="5 125 5 0" Duration="00:00:00.3"/>
+                                        <ThicknessAnimation EasingFunction="{StaticResource CubicEase}" From="5 35 5 0"
+                                                            To="5 125 5 0" Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger>
@@ -312,49 +512,61 @@
             <Grid x:Name="HomeDisplayContainer" Background="#FAFAFC" ZIndex="1">
                 <Grid.Resources>
                     <!-- ReSharper disable Xaml.RedundantResource -->
-                    <Storyboard x:Key="MoveUpAnimation" TargetProperty="(Grid.RenderTransform).(TranslateTransform.Y)" TargetName="HomeDisplayContainer">
-                        <DoubleAnimation From="{Binding ElementName=ContentDisplay, Path=ActualHeight}" To="0" EasingFunction="{StaticResource CubicEase}" Duration="00:00:00.3"/>
+                    <Storyboard x:Key="MoveUpAnimation" TargetProperty="(Grid.RenderTransform).(TranslateTransform.Y)"
+                                TargetName="HomeDisplayContainer">
+                        <DoubleAnimation From="{Binding ElementName=ContentDisplay, Path=ActualHeight}" To="0"
+                                         EasingFunction="{StaticResource CubicEase}" Duration="00:00:00.3" />
                     </Storyboard>
-                    <Storyboard x:Key="MoveDownAnimation" TargetProperty="(Grid.RenderTransform).(TranslateTransform.Y)" TargetName="HomeDisplayContainer">
-                        <DoubleAnimation From="0" To="5000" EasingFunction="{StaticResource CubicEase}" Duration="00:00:01.50"/>
+                    <Storyboard x:Key="MoveDownAnimation"
+                                TargetProperty="(Grid.RenderTransform).(TranslateTransform.Y)"
+                                TargetName="HomeDisplayContainer">
+                        <DoubleAnimation From="0" To="5000" EasingFunction="{StaticResource CubicEase}"
+                                         Duration="00:00:01.50" />
                     </Storyboard>
                     <!-- ReSharper restore Xaml.RedundantResource -->
                 </Grid.Resources>
                 <Grid.RenderTransform>
-                    <TranslateTransform Y="0"/>
+                    <TranslateTransform Y="0" />
                 </Grid.RenderTransform>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="2*" />
                 </Grid.RowDefinitions>
-                <Image Grid.Row="0" Width="100" Height="100" VerticalAlignment="Bottom" Margin="0 0 0 20" Source="/Resources/pxlogo_large.png">
+                <Image Grid.Row="0" Width="100" Height="100" VerticalAlignment="Bottom" Margin="0 0 0 20"
+                       Source="/Resources/pxlogo_large.png">
                     <Image.Triggers>
                         <EventTrigger RoutedEvent="Mouse.MouseEnter">
                             <BeginStoryboard>
                                 <Storyboard TargetName="PixivLogoTransform" TargetProperty="(RotateTransform.Angle)">
-                                    <DoubleAnimation From="0" To="360" Duration="00:00:01" EasingFunction="{StaticResource CubicEase}"/>
+                                    <DoubleAnimation From="0" To="360" Duration="00:00:01"
+                                                     EasingFunction="{StaticResource CubicEase}" />
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger>
                         <EventTrigger RoutedEvent="Mouse.MouseLeave">
                             <BeginStoryboard>
                                 <Storyboard TargetName="PixivLogoTransform" TargetProperty="(RotateTransform.Angle)">
-                                    <DoubleAnimation From="360" To="0" Duration="00:00:01" EasingFunction="{StaticResource CubicEase}"/>
+                                    <DoubleAnimation From="360" To="0" Duration="00:00:01"
+                                                     EasingFunction="{StaticResource CubicEase}" />
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger>
                     </Image.Triggers>
                     <Image.RenderTransform>
-                        <RotateTransform x:Name="PixivLogoTransform" CenterX="50" CenterY="50" Angle="0"/>
+                        <RotateTransform x:Name="PixivLogoTransform" CenterX="50" CenterY="50" Angle="0" />
                     </Image.RenderTransform>
                     <Image.Clip>
-                        <EllipseGeometry RadiusX="50" RadiusY="50" Center="50 50"/>
+                        <EllipseGeometry RadiusX="50" RadiusY="50" Center="50 50" />
                     </Image.Clip>
                 </Image>
-                <StackPanel Grid.Row="1" Height="50" Margin="0 20 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Horizontal">
-                    <TextBox x:Name="KeywordTextBox" Width="800" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="请输入要搜索的内容~(￣▽￣)~*"/>
-                    <TextBox Width="0" Height="0" x:Name="ToLoseFocus"/>
-                    <Button x:Name="DoQueryButton" IsDefault="False" Margin="10 15 0 0" Width="50" Height="40" Style="{DynamicResource MaterialDesignToolButton}" Click="DoQueryButton_OnClick">
+                <StackPanel Grid.Row="1" Height="50" Margin="0 20 0 0" HorizontalAlignment="Center"
+                            VerticalAlignment="Top" Orientation="Horizontal">
+                    <TextBox x:Name="KeywordTextBox" Width="800"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                             materialDesign:HintAssist.Hint="请输入要搜索的内容~(￣▽￣)~*" />
+                    <TextBox Width="0" Height="0" x:Name="ToLoseFocus" />
+                    <Button x:Name="DoQueryButton" IsDefault="False" Margin="10 15 0 0" Width="50" Height="40"
+                            Style="{DynamicResource MaterialDesignToolButton}" Click="DoQueryButton_OnClick">
                         <Viewbox Width="34" Height="30">
                             <Canvas Width="24" Height="24">
                                 <Path
@@ -366,10 +578,56 @@
                 </StackPanel>
             </Grid>
             <Grid x:Name="QueryDisplayContainer" Background="#FAFAFC">
-                <ListView x:Name="ImageListView" VirtualizingPanel.CacheLengthUnit="Pixel" VirtualizingPanel.CacheLength="0 0" VirtualizingPanel.ScrollUnit="Pixel" VirtualizingPanel.VirtualizationMode="Standard" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=1}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemTemplate="{StaticResource IllustrationViewModelDataTemplate}">
+                <ListView x:Name="ImageListView" VirtualizingPanel.CacheLengthUnit="Pixel"
+                          VirtualizingPanel.CacheLength="0 0" VirtualizingPanel.ScrollUnit="Pixel"
+                          VirtualizingPanel.VirtualizationMode="Standard"
+                          Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=1}}"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ItemTemplate="{StaticResource IllustrationViewModelDataTemplate}"
+                          Visibility="{Binding ElementName=SpotlightTab, Path=IsSelected, Converter={StaticResource VisibleIfFalseConverter}}">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <controls:VirtualizingWrapPanel Orientation="Vertical"/>
+                            <controls:VirtualizingWrapPanel Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                </ListView>
+                <ListView x:Name="SpotlightListView" VirtualizingPanel.CacheLengthUnit="Pixel"
+                          VirtualizingPanel.CacheLength="0 0" VirtualizingPanel.ScrollUnit="Pixel"
+                          VirtualizingPanel.VirtualizationMode="Standard"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          Visibility="{Binding ElementName=SpotlightTab, Path=IsSelected, Converter={StaticResource VisibleIfTrueConverter}}"
+                          ItemTemplate="{StaticResource SpotlightDataTemplate}">
+                    <ListView.Template>
+                        <ControlTemplate>
+                            <ScrollViewer VirtualizingStackPanel.IsVirtualizing="True"
+                                          VirtualizingStackPanel.VirtualizationMode="Recycling">
+                                <ItemsPresenter />
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ListView.Template>
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                </ListView>
+                <ListView x:Name="UserPreviewListView" VirtualizingPanel.CacheLengthUnit="Pixel"
+                          VirtualizingPanel.CacheLength="0 0" VirtualizingPanel.ScrollUnit="Pixel"
+                          VirtualizingPanel.VirtualizationMode="Standard"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ItemTemplate="{StaticResource UserPreviewTemplate}"
+                          Visibility="{Binding ElementName=FollowingTab, Path=IsSelected, Converter={StaticResource VisibleIfTrueConverter}}">
+                    <ListView.Template>
+                        <ControlTemplate>
+                            <ScrollViewer VirtualizingStackPanel.IsVirtualizing="True"
+                                          VirtualizingStackPanel.VirtualizationMode="Recycling">
+                                <ItemsPresenter />
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ListView.Template>
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                 </ListView>
@@ -383,14 +641,16 @@
                             <DataTrigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
-                                        <DoubleAnimation From="300" To="0" EasingFunction="{StaticResource CubicEase}" Duration="00:00:00.3"/>
+                                        <DoubleAnimation From="300" To="0" EasingFunction="{StaticResource CubicEase}"
+                                                         Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </DataTrigger.EnterActions>
                             <DataTrigger.ExitActions>
                                 <BeginStoryboard>
                                     <Storyboard TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
-                                        <DoubleAnimation From="0" To="300" EasingFunction="{StaticResource CubicEase}" Duration="00:00:00.3"/>
+                                        <DoubleAnimation From="0" To="300" EasingFunction="{StaticResource CubicEase}"
+                                                         Duration="00:00:00.3" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </DataTrigger.ExitActions>
@@ -401,98 +661,160 @@
             <materialDesign:Card VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                 <Grid Height="60" VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Style="{DynamicResource MaterialDesignToolButton}" Height="40" Width="40" x:Name="DownloadAllButton" Margin="20 0 0 0">
+                    <Button Grid.Column="0" Style="{DynamicResource MaterialDesignToolButton}" Height="40" Width="40"
+                            x:Name="DownloadAllButton" Margin="20 0 0 0">
                         <Viewbox Width="30" Height="30">
                             <Canvas Width="24" Height="24">
                                 <Path Data="M9,1V7H5L12,14L19,7H15V1H9M5,16V18H19V16H5M5,20V22H19V20H5Z" Fill="Gray" />
                             </Canvas>
                         </Viewbox>
                     </Button>
-                    <Button x:Name="RetractDownloadListButton" Grid.Column="1" Style="{DynamicResource MaterialDesignToolButton}" Height="40" Width="40" Margin="0 0 20 0" Click="RetractDownloadListButton_OnClick">
+                    <Button x:Name="RetractDownloadListButton" Grid.Column="1"
+                            Style="{DynamicResource MaterialDesignToolButton}" Height="40" Width="40" Margin="0 0 20 0"
+                            Click="RetractDownloadListButton_OnClick">
                         <Viewbox Width="30" Height="30">
                             <Canvas Width="24" Height="24">
-                                <Path Data="M4,2H2V22H4V13H18.17L12.67,18.5L14.08,19.92L22,12L14.08,4.08L12.67,5.5L18.17,11H4V2Z" Fill="Gray" />
+                                <Path
+                                    Data="M4,2H2V22H4V13H18.17L12.67,18.5L14.08,19.92L22,12L14.08,4.08L12.67,5.5L18.17,11H4V2Z"
+                                    Fill="Gray" />
                             </Canvas>
                         </Viewbox>
                     </Button>
                 </Grid>
             </materialDesign:Card>
             <Grid.RenderTransform>
-                <TranslateTransform x:Name="DownloadListTranslateTransform" X="300"/>
+                <TranslateTransform x:Name="DownloadListTranslateTransform" X="300" />
             </Grid.RenderTransform>
         </Grid>
-        <materialDesign:DialogHost CloseOnClickAway="True" x:Name="SettingDialog" DialogClosing="SettingDialog_OnDialogClosing" DataContext="{x:Static persisting:Settings.Global}">
+        <materialDesign:DialogHost CloseOnClickAway="True" x:Name="SettingDialog"
+                                   DialogClosing="SettingDialog_OnDialogClosing"
+                                   DataContext="{x:Static persisting:Settings.Global}">
             <materialDesign:DialogHost.Resources>
-                <valueConverters:StringSplitConverter x:Key="StringSplitConverter"/>
-                <valueConverters:QueryR18ToggleButtonIsCheckedConverter x:Key="QueryR18ToggleButtonIsCheckedConverter"/>
+                <valueConverters:StringSplitConverter x:Key="StringSplitConverter" />
+                <valueConverters:QueryR18ToggleButtonIsCheckedConverter x:Key="QueryR18ToggleButtonIsCheckedConverter" />
             </materialDesign:DialogHost.Resources>
             <materialDesign:DialogHost.Style>
-                <Style TargetType="materialDesign:DialogHost" BasedOn="{StaticResource MaterialDesignEmbeddedDialogHost}">
+                <Style TargetType="materialDesign:DialogHost"
+                       BasedOn="{StaticResource MaterialDesignEmbeddedDialogHost}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding ElementName=SettingsTab, Path=IsSelected}" Value="True">
-                            <Setter Property="IsOpen" Value="True"/>
+                            <Setter Property="IsOpen" Value="True" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </materialDesign:DialogHost.Style>
             <materialDesign:DialogHost.DialogContent>
-                <materialDesign:Card Height="600" Width="750">
+                <materialDesign:Card Height="700" Width="900">
                     <Grid>
-                        <TextBlock Text="Pixeval设置" FontSize="20" HorizontalAlignment="Center" Margin="0 30 0 0" VerticalAlignment="Top" Height="30"/>
-                        <Separator VerticalAlignment="Top" Margin="50 70 50 0"/>
+                        <TextBlock Text="Pixeval设置" FontSize="20" HorizontalAlignment="Center" Margin="0 30 0 0"
+                                   VerticalAlignment="Top" Height="30" />
+                        <Separator VerticalAlignment="Top" Margin="50 70 50 0" />
                         <StackPanel VerticalAlignment="Top" Margin="100 100 100 0">
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="40"/>
-                                    <RowDefinition Height="40"/>
-                                    <RowDefinition Height="40"/>
-                                    <RowDefinition Height="40"/>
-                                    <RowDefinition Height="40"/>
-                                    <RowDefinition Height="40"/>
-                                    <RowDefinition Height="40"/>
-                                    <RowDefinition Height="40"/>
-                                    <RowDefinition Height="40"/>
-                                    <RowDefinition Height="40"/>
-                                    <RowDefinition Height="60"/>
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="60" />
+                                    <RowDefinition Height="40" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="5*"/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="5*" />
+                                    <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Row="0" Grid.Column="0" Text="插入图片到列表时排序" FontSize="15" VerticalAlignment="Center"/>
-                                <ToggleButton x:Name="IsSortWhileInsertIllustToImageBox" Grid.Row="0" Grid.Column="1" Background="#66CCFF" HorizontalAlignment="Right" IsChecked="{Binding Path=SortOnInserting, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                <TextBlock Grid.Row="1" Grid.Column="0" FontSize="15" Text="缓存缩略图, 开启后可优化加载速度" VerticalAlignment="Center"/>
-                                <ToggleButton x:Name="IsCacheThumbnail" Grid.Row="1" Grid.Column="1" Background="#66CCFF" HorizontalAlignment="Right" IsChecked="{Binding Path=CachingThumbnail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                <TextBlock Grid.Row="2" Grid.Column="0" FontSize="15" Text="程序启动时同步P站收藏夹图片到本地" VerticalAlignment="Center"/>
-                                <ToggleButton x:Name="SyncGalleryOnStart" Grid.Row="2" Grid.Column="1" Background="#66CCFF" HorizontalAlignment="Right" IsChecked="{Binding Path=SyncOnStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                <TextBlock Grid.Row="3" Grid.Column="0" FontSize="15" Text="关闭R-18/R-18G搜索" VerticalAlignment="Center"/>
-                                <ToggleButton x:Name="QueryR18" Grid.Row="3" Grid.Column="1" Background="#66CCFF" HorizontalAlignment="Right" Checked="QueryR18_OnChecked" Unchecked="QueryR18_OnUnchecked" IsChecked="{Binding Path=ExceptTags, Mode=OneWay, Converter={StaticResource QueryR18ToggleButtonIsCheckedConverter}}"/>
-                                <TextBlock Grid.Row="4" Grid.Column="0" FontSize="15" Text="要过滤的最低收藏数" VerticalAlignment="Center"/>
-                                <Slider Maximum="2000" Minimum="0" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="200 0 0 0" VerticalAlignment="Center" Foreground="#66CCFF" AutoToolTipPlacement="BottomRight" AutoToolTipPrecision="0" Value="{Binding Path=MinBookmark, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                <TextBlock Grid.Row="5" Grid.Column="0" FontSize="15" Text="搜索页数, 最低为1, 最高为10" VerticalAlignment="Center"/>
-                                <Slider Maximum="10" Minimum="1" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="200 0 0 0" VerticalAlignment="Center" Foreground="#66CCFF" Value="{Binding QueryPages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                <TextBox x:Name="DownloadLocationTextBox" Grid.Row="7" Grid.Column="0" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="作品下载位置" Text="{Binding Path=DownloadLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                <TextBlock Grid.Row="6" Grid.Column="0" FontSize="15" Text="搜索起始页, 最低为1" VerticalAlignment="Center"/>
-                                <TextBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="200 0 0 0" VerticalAlignment="Center" Text="{Binding QueryStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                <Button x:Name="OpenFileDialogButton" Grid.Row="7" Grid.Column="1" Height="30" Width="30" VerticalAlignment="Bottom" Style="{DynamicResource MaterialDesignToolButton}" Click="OpenFileDialogButton_OnClick">
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="插入图片到列表时排序" FontSize="15"
+                                           VerticalAlignment="Center" />
+                                <ToggleButton x:Name="IsSortWhileInsertIllustToImageBox" Grid.Row="0" Grid.Column="1"
+                                              Background="#66CCFF" HorizontalAlignment="Right"
+                                              IsChecked="{Binding Path=SortOnInserting, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Grid.Row="1" Grid.Column="0" FontSize="15" Text="缓存缩略图, 开启后可优化加载速度"
+                                           VerticalAlignment="Center" />
+                                <ToggleButton x:Name="IsCacheThumbnail" Grid.Row="1" Grid.Column="1"
+                                              Background="#66CCFF" HorizontalAlignment="Right"
+                                              IsChecked="{Binding Path=CachingThumbnail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Grid.Row="2" Grid.Column="0" FontSize="15" Text="程序启动时同步P站收藏夹图片到本地"
+                                           VerticalAlignment="Center" />
+                                <ToggleButton x:Name="SyncGalleryOnStart" Grid.Row="2" Grid.Column="1"
+                                              Background="#66CCFF" HorizontalAlignment="Right"
+                                              IsChecked="{Binding Path=SyncOnStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Grid.Row="3" Grid.Column="0" FontSize="15" Text="关闭R-18/R-18G搜索"
+                                           VerticalAlignment="Center" />
+                                <ToggleButton x:Name="QueryR18" Grid.Row="3" Grid.Column="1" Background="#66CCFF"
+                                              HorizontalAlignment="Right" Checked="QueryR18_OnChecked"
+                                              Unchecked="QueryR18_OnUnchecked"
+                                              IsChecked="{Binding Path=ExceptTags, Mode=OneWay, Converter={StaticResource QueryR18ToggleButtonIsCheckedConverter}}" />
+                                <TextBlock Grid.Row="4" Grid.Column="0" FontSize="15" Text="要过滤的最低收藏数"
+                                           VerticalAlignment="Center" />
+                                <Slider Maximum="2000" Minimum="0" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                                        Margin="200 0 0 0" VerticalAlignment="Center" Foreground="#66CCFF"
+                                        AutoToolTipPlacement="BottomRight" AutoToolTipPrecision="0"
+                                        Value="{Binding Path=MinBookmark, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Grid.Row="5" Grid.Column="0" FontSize="15" Text="搜索页数, 最低为1, 最高为10"
+                                           VerticalAlignment="Center" />
+                                <Slider Maximum="10" Minimum="1" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+                                        Margin="200 0 0 0" VerticalAlignment="Center" Foreground="#66CCFF"
+                                        Value="{Binding QueryPages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox x:Name="DownloadLocationTextBox" Grid.Row="8" Grid.Column="0"
+                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                                         materialDesign:HintAssist.Hint="作品下载位置"
+                                         Text="{Binding Path=DownloadLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Grid.Row="6" Grid.Column="0" FontSize="15" Text="图片搜索起始页, 最低为1"
+                                           VerticalAlignment="Center" />
+                                <TextBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="200 0 0 0"
+                                         VerticalAlignment="Center"
+                                         Text="{Binding QueryStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Grid.Row="7" Grid.Column="0" FontSize="15"
+                                           Text="特辑搜索起始页, 最低为1 (特辑和图片搜索使用同一个搜索页数设置)" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="480 0 0 0"
+                                         VerticalAlignment="Center"
+                                         Text="{Binding SpotlightQueryStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <Button x:Name="OpenFileDialogButton" Grid.Row="8" Grid.Column="1" Height="30"
+                                        Width="30" VerticalAlignment="Bottom"
+                                        Style="{DynamicResource MaterialDesignToolButton}"
+                                        Click="OpenFileDialogButton_OnClick">
                                     <Viewbox Width="20" Height="20" VerticalAlignment="Bottom">
                                         <Canvas Width="24" Height="24">
-                                            <Path Data="M4 4C2.89 4 2 4.89 2 6V18C2 19.11 2.9 20 4 20H12.08A7 7 0 0 1 12 19A7 7 0 0 1 19 12A7 7 0 0 1 22 12.69V8C22 6.89 21.1 6 20 6H12L10 4H4M18 14C17.87 14 17.76 14.09 17.74 14.21L17.55 15.53C17.25 15.66 16.96 15.82 16.7 16L15.46 15.5C15.35 15.5 15.22 15.5 15.15 15.63L14.15 17.36C14.09 17.47 14.11 17.6 14.21 17.68L15.27 18.5C15.25 18.67 15.24 18.83 15.24 19C15.24 19.17 15.25 19.33 15.27 19.5L14.21 20.32C14.12 20.4 14.09 20.53 14.15 20.64L15.15 22.37C15.21 22.5 15.34 22.5 15.46 22.5L16.7 22C16.96 22.18 17.24 22.35 17.55 22.47L17.74 23.79C17.76 23.91 17.86 24 18 24H20C20.11 24 20.22 23.91 20.24 23.79L20.43 22.47C20.73 22.34 21 22.18 21.27 22L22.5 22.5C22.63 22.5 22.76 22.5 22.83 22.37L23.83 20.64C23.89 20.53 23.86 20.4 23.77 20.32L22.7 19.5C22.72 19.33 22.74 19.17 22.74 19C22.74 18.83 22.73 18.67 22.7 18.5L23.76 17.68C23.85 17.6 23.88 17.47 23.82 17.36L22.82 15.63C22.76 15.5 22.63 15.5 22.5 15.5L21.27 16C21 15.82 20.73 15.65 20.42 15.53L20.23 14.21C20.22 14.09 20.11 14 20 14H18M19 17.5C19.83 17.5 20.5 18.17 20.5 19C20.5 19.83 19.83 20.5 19 20.5C18.16 20.5 17.5 19.83 17.5 19C17.5 18.17 18.17 17.5 19 17.5Z" Fill="Gray" />
+                                            <Path
+                                                Data="M4 4C2.89 4 2 4.89 2 6V18C2 19.11 2.9 20 4 20H12.08A7 7 0 0 1 12 19A7 7 0 0 1 19 12A7 7 0 0 1 22 12.69V8C22 6.89 21.1 6 20 6H12L10 4H4M18 14C17.87 14 17.76 14.09 17.74 14.21L17.55 15.53C17.25 15.66 16.96 15.82 16.7 16L15.46 15.5C15.35 15.5 15.22 15.5 15.15 15.63L14.15 17.36C14.09 17.47 14.11 17.6 14.21 17.68L15.27 18.5C15.25 18.67 15.24 18.83 15.24 19C15.24 19.17 15.25 19.33 15.27 19.5L14.21 20.32C14.12 20.4 14.09 20.53 14.15 20.64L15.15 22.37C15.21 22.5 15.34 22.5 15.46 22.5L16.7 22C16.96 22.18 17.24 22.35 17.55 22.47L17.74 23.79C17.76 23.91 17.86 24 18 24H20C20.11 24 20.22 23.91 20.24 23.79L20.43 22.47C20.73 22.34 21 22.18 21.27 22L22.5 22.5C22.63 22.5 22.76 22.5 22.83 22.37L23.83 20.64C23.89 20.53 23.86 20.4 23.77 20.32L22.7 19.5C22.72 19.33 22.74 19.17 22.74 19C22.74 18.83 22.73 18.67 22.7 18.5L23.76 17.68C23.85 17.6 23.88 17.47 23.82 17.36L22.82 15.63C22.76 15.5 22.63 15.5 22.5 15.5L21.27 16C21 15.82 20.73 15.65 20.42 15.53L20.23 14.21C20.22 14.09 20.11 14 20 14H18M19 17.5C19.83 17.5 20.5 18.17 20.5 19C20.5 19.83 19.83 20.5 19 20.5C18.16 20.5 17.5 19.83 17.5 19C17.5 18.17 18.17 17.5 19 17.5Z"
+                                                Fill="Gray" />
                                         </Canvas>
                                     </Viewbox>
                                 </Button>
-                                <TextBox x:Name="ExceptTagTextBox" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="请输入要排除的标签, 使用空格分隔" Text="{Binding Path=ExceptTags, Converter={StaticResource StringSplitConverter}, Mode=OneWay}" LostFocus="ExceptTagTextBox_OnLostFocus"/>
-                                <TextBox x:Name="ContainsTagTextBox" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="请输入要抓取的标签, 使用空格分隔" Text="{Binding Path=ContainsTags, Converter={StaticResource StringSplitConverter}, Mode=OneWay}" LostFocus="ContainsTagTextBox_OnLostFocus"/>
-                                <Button x:Name="ClearSettingButton" ToolTip="还原为默认" VerticalAlignment="Bottom" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Height="40" Width="40" Style="{DynamicResource MaterialDesignToolButton}" Click="ClearSettingButton_OnClick">
+                                <TextBox x:Name="ExceptTagTextBox" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2"
+                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                                         materialDesign:HintAssist.Hint="请输入要排除的标签, 使用空格分隔"
+                                         Text="{Binding Path=ExceptTags, Converter={StaticResource StringSplitConverter}, Mode=OneWay}"
+                                         LostFocus="ExceptTagTextBox_OnLostFocus" />
+                                <TextBox x:Name="ContainsTagTextBox" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2"
+                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                                         materialDesign:HintAssist.Hint="请输入要抓取的标签, 使用空格分隔"
+                                         Text="{Binding Path=ContainsTags, Converter={StaticResource StringSplitConverter}, Mode=OneWay}"
+                                         LostFocus="ContainsTagTextBox_OnLostFocus" />
+                                <Button x:Name="ClearSettingButton" ToolTip="还原为默认" VerticalAlignment="Bottom"
+                                        Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Height="40" Width="40"
+                                        Style="{DynamicResource MaterialDesignToolButton}"
+                                        Click="ClearSettingButton_OnClick">
                                     <Viewbox Width="30" Height="30">
                                         <Canvas Width="24" Height="24">
-                                            <Path Data="M13,3A9,9 0 0,0 4,12H1L4.89,15.89L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3Z" Fill="Gray" />
+                                            <Path
+                                                Data="M13,3A9,9 0 0,0 4,12H1L4.89,15.89L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3Z"
+                                                Fill="Gray" />
                                         </Canvas>
                                     </Viewbox>
                                 </Button>
+                                <TextBlock FontSize="12" Grid.Row="12" Grid.Column="0" VerticalAlignment="Bottom"
+                                           Text="注: 特辑一页搜索10条, 图片一页搜索300张" />
                             </Grid>
                         </StackPanel>
                     </Grid>
@@ -502,8 +824,9 @@
                 <materialDesign:DialogHost.DialogContent>
                     <materialDesign:Card Width="500" Height="200" Background="White">
                         <StackPanel VerticalAlignment="Center">
-                            <mah:ProgressRing Margin="50 0 50 0" IsActive="True"  Foreground="#66CCFF" />
-                            <TextBlock x:Name="ProgressNoticeTextBlock" HorizontalAlignment="Center" Margin="0 30 0 0" FontSize="15"/>
+                            <mah:ProgressRing Margin="50 0 50 0" IsActive="True" Foreground="#66CCFF" />
+                            <TextBlock x:Name="ProgressNoticeTextBlock" HorizontalAlignment="Center" Margin="0 30 0 0"
+                                       FontSize="15" />
                         </StackPanel>
                     </materialDesign:Card>
                 </materialDesign:DialogHost.DialogContent>
@@ -512,7 +835,7 @@
         <materialDesign:DialogHost x:Name="NoticeDialog" CloseOnClickAway="True">
             <materialDesign:DialogHost.DialogContent>
                 <materialDesign:Card Background="White">
-                    <TextBlock x:Name="NoticeMessage" VerticalAlignment="Center" Margin="20" FontSize="15"/>
+                    <TextBlock x:Name="NoticeMessage" VerticalAlignment="Center" Margin="20" FontSize="15" />
                 </materialDesign:Card>
             </materialDesign:DialogHost.DialogContent>
         </materialDesign:DialogHost>

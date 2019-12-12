@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using Pixeval.Objects;
+using Pixeval.Persisting;
 
 namespace Pixeval.Data.Web.Delegation
 {
@@ -32,7 +37,21 @@ namespace Pixeval.Data.Web.Delegation
 
             requestHandler?.Handle(request);
 
-            return await base.SendAsync(request, cancellationToken);
+            var result = await base.SendAsync(request, cancellationToken);
+
+            if (result.StatusCode == HttpStatusCode.BadRequest)
+            {
+                using var _ = await new AsyncLock().LockAsync();
+                await Authentication.Authenticate(Identity.Global.MailAddress, Identity.Global.Password);
+
+                var token = request.Headers.Authorization;       
+                if (token != null)
+                    request.Headers.Authorization = new AuthenticationHeaderValue(token.Scheme, Identity.Global.AccessToken);
+
+                return await base.SendAsync(request, cancellationToken);
+            }
+
+            return result;
         }
 
         protected abstract DnsResolver DnsResolver { get; set; }

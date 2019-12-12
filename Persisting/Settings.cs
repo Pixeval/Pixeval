@@ -25,6 +25,8 @@ namespace Pixeval.Persisting
 
         public int QueryStart { get; set; } = 1;
 
+        public int SpotlightQueryStart { get; set; } = 1;
+
         public ISet<string> ExceptTags { get; set; } = new HashSet<string>();
 
         public ISet<string> ContainsTags { get; set; } = new HashSet<string>();
@@ -60,6 +62,7 @@ namespace Pixeval.Persisting
             Global.MinBookmark = 0;
             Global.QueryPages = 1;
             Global.QueryStart = 1;
+            Global.SpotlightQueryStart = 1;
         }
     }
 }

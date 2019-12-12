@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Pixeval.Data.Model.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
-using Pixeval.Objects;
 
 namespace Pixeval.Core
 {
@@ -45,9 +45,11 @@ namespace Pixeval.Core
 
         public static async Task<int> GetQueryPagesCount(string tag)
         {
-            return (int)(await HttpClientFactory.PublicApiService.QueryWorks(new QueryWorksRequest { Tag = tag, Offset = 1 }))
+            var total = (double) (await HttpClientFactory.PublicApiService.QueryWorks(new QueryWorksRequest {Tag = tag, Offset = 1, PerPage = 1}))
                 .QueryPagination
-                .Pages;
+                .Pages / 300;
+
+            return (int) Math.Ceiling(total);
         }
     }
 }

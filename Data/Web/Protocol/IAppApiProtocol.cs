@@ -12,7 +12,7 @@ namespace Pixeval.Data.Web.Protocol
         Task<RankingResponse> GetRanking(RankingRequest rankingRequest);
 
         [Post("/v1/illust/bookmark/delete")]
-        Task DeleteBookmark([Body(BodySerializationMethod.UrlEncoded)][AliasAs("illust_id")] string illustId);
+        Task DeleteBookmark([Body(BodySerializationMethod.UrlEncoded)] DeleteBookmarkRequest deleteBookmarkRequest);
 
         [Get("/v1/user/detail")]
         Task<UserInformationResponse> GetUserInformation(UserInformationRequest userInformationRequest);
@@ -20,6 +20,7 @@ namespace Pixeval.Data.Web.Protocol
         [Get("/v1/user/bookmarks/illust")]
         Task<GalleryResponse> GetGallery(GalleryRequest favoriteWorkRequest);
 
+        [Headers("Accept-Language: zh-cn")]
         [Get("/v1/spotlight/articles?category=all")]
         Task<SpotlightResponse> GetSpotlights(int offset);
 
@@ -30,7 +31,7 @@ namespace Pixeval.Data.Web.Protocol
         Task FollowArtist([Body(BodySerializationMethod.UrlEncoded)] FollowArtistRequest followArtistRequest);
 
         [Post("/v1/user/follow/delete")]
-        Task UnFollowArtist([Body(BodySerializationMethod.UrlEncoded)] [AliasAs("user_id")] string id);
+        Task UnFollowArtist([Body(BodySerializationMethod.UrlEncoded)] UnFollowArtistRequest unFollowArtistRequest);
 
         [Get("/v1/ugoira/metadata")]
         Task<UgoiraMetadataResponse> GetUgoiraMetadata([AliasAs("illust_id")] string id);

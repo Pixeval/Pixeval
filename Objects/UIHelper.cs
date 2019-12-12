@@ -40,6 +40,33 @@ namespace Pixeval.Objects
             return foundChild;
         }
 
+        public static T FindVisualParent<T>(DependencyObject child)
+            where T : DependencyObject
+        {
+            var parentObject = VisualTreeHelper.GetParent(child);
+            return parentObject switch
+            {
+                null => null,
+                T parent => parent,
+                _        => FindVisualParent<T>(parentObject)
+            };
+        }
+
+        public static T FindChild<T>(this DependencyObject depObj)
+            where T : DependencyObject
+        {
+            if (depObj == null) return null;
+
+            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+            {
+                var child = VisualTreeHelper.GetChild(depObj, i);
+
+                var result = (child as T) ?? FindChild<T>(child);
+                if (result != null) return result;
+            }
+            return null;
+        }
+
         public static T DataContext<T>(this FrameworkElement element)
         {
             return (T) element.DataContext;

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows;
 using Pixeval.Data.Model.ViewModel;
 using Pixeval.Data.Web;
 using Pixeval.Data.Web.Delegation;
@@ -12,9 +13,14 @@ namespace Pixeval.Core
     {
         private RankingResponse context;
 
+        private int limit;
+
         public bool HasNext()
         {
             if (context == null) return true;
+
+            if (limit++ >= 5) return false;
+
             return !context.NextUrl.IsNullOrEmpty();
         }
 

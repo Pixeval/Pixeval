@@ -10,7 +10,7 @@ namespace Pixeval.Data.Web.Response
         public List<UserPreview> UserPreviews { get; set; }
 
         [JsonProperty("next_url")]
-        public Uri NextUrl { get; set; }
+        public string NextUrl { get; set; }
 
         public class UserPreview
         {
@@ -102,13 +102,13 @@ namespace Pixeval.Data.Web.Response
         public class ImageUrls
         {
             [JsonProperty("square_medium")]
-            public Uri SquareMedium { get; set; }
+            public string SquareMedium { get; set; }
 
             [JsonProperty("medium")]
-            public Uri Medium { get; set; }
+            public string Medium { get; set; }
 
             [JsonProperty("large")]
-            public Uri Large { get; set; }
+            public string Large { get; set; }
 
             [JsonProperty("original", NullValueHandling = NullValueHandling.Ignore)]
             public Uri Original { get; set; }
@@ -162,7 +162,7 @@ namespace Pixeval.Data.Web.Response
         public class ProfileImageUrls
         {
             [JsonProperty("medium")]
-            public Uri Medium { get; set; }
+            public string Medium { get; set; }
         }
 
         public class Novel
