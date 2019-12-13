@@ -6,7 +6,7 @@ namespace Pixeval.Data.Web.Request
     {
         [AliasAs("restrict")]
         public string Restrict { get; set; } = "public";
-        
+
         [AliasAs("illust_id")]
         public string Id { get; set; }
     }
