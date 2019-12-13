@@ -11,10 +11,7 @@ namespace Pixeval.Objects
             var hash = hasher.ComputeHash(input.GetBytes());
 
             var stringBuilder = new StringBuilder();
-            foreach (var b in hash)
-            {
-                stringBuilder.Append(b.ToString("x2"));
-            }
+            foreach (var b in hash) stringBuilder.Append(b.ToString("x2"));
 
             return stringBuilder.ToString();
         }

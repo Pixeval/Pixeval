@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Windows;
 using Pixeval.Data.Model.ViewModel;
 using Pixeval.Data.Web;
 using Pixeval.Data.Web.Delegation;
@@ -32,10 +31,7 @@ namespace Pixeval.Core
             const string query = "/v1/illust/recommended";
             context = (await httpClient.GetStringAsync(context == null ? query : context.NextUrl)).FromJson<RankingResponse>();
 
-            foreach (var contextIllust in context.Illusts)
-            {
-                yield return await PixivHelper.IllustrationInfo(contextIllust.Id.ToString());
-            }
+            foreach (var contextIllust in context.Illusts) yield return await PixivHelper.IllustrationInfo(contextIllust.Id.ToString());
         }
     }
 }

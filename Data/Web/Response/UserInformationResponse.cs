@@ -134,7 +134,7 @@ namespace Pixeval.Data.Web.Response
         public class ProfileImageUrls
         {
             [JsonProperty("medium")]
-            public Uri Medium { get; set; }
+            public string Medium { get; set; }
         }
 
         public class Workspace
@@ -176,7 +176,4 @@ namespace Pixeval.Data.Web.Response
             public string Comment { get; set; }
         }
     }
-
-
-
 }

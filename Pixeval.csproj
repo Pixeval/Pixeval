@@ -15,6 +15,8 @@
   <ItemGroup>
     <PackageReference Include="Costura.Fody" Version="4.1.0" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="3.7.0" />
+    <PackageReference Include="FluentWPF" Version="0.8.0" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.14.5" />
     <PackageReference Include="MahApps.Metro" Version="1.6.5" />
     <PackageReference Include="MaterialDesignThemes" Version="2.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
@@ -24,6 +26,7 @@
     <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
     <PackageReference Include="VirtualizingWrapPanel.NETCore" Version="1.4.0" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
+    <PackageReference Include="XamlAnimatedGif" Version="1.2.2" />
   </ItemGroup>
 
   <ItemGroup>

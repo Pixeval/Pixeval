@@ -19,9 +19,10 @@
         <valueConverters:VisibleIfTrueConverter x:Key="VisibleIfTrueConverter" />
         <valueConverters:VisibleIfFalseConverter x:Key="VisibleIfFalseConverter" />
         <valueConverters:WidthMinus45PxConverter x:Key="WidthMinus45PxConverter" />
+        <valueConverters:IllustSubscriptConverter x:Key="IllustSubscriptConverter"/>
         <DataTemplate x:Key="IllustrationViewModelDataTemplate" DataType="viewModel:Illustration">
-            <ListViewItem>
-                <Grid Width="210" Height="280" ClipToBounds="True">
+            <ListViewItem x:Name="IllustrationContainer" MouseDoubleClick="IllustrationContainer_OnMouseDoubleClick">
+                <Grid Width="210" Height="280" ClipToBounds="True" Cursor="Hand">
                     <Border x:Name="GridBorder" CornerRadius="15" Background="#FAFAFC" ClipToBounds="True" />
                     <Grid ToolTip="{Binding Path=Id}" ClipToBounds="True">
                         <Grid.OpacityMask>
@@ -67,13 +68,26 @@
                                 </Viewbox>
                             </Button>
                         </Grid>
+                        <Grid VerticalAlignment="Top" HorizontalAlignment="Right" Width="30" Height="30" Margin="0 15 15 0" Visibility="{Binding Converter={StaticResource IllustSubscriptConverter}}">
+                            <Viewbox Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsUgoira, Converter={StaticResource VisibleIfTrueConverter}}" ToolTip="这是一个图集">
+                                <Canvas Width="24" Height="24">
+                                    <Path Data="M11,8H13V16H11V8M7.67,8H4.33C3.53,8 3,8.67 3,9.33V14.67C3,15.33 3.53,16 4.33,16H7.67C8.47,16 9,15.33 9,14.67V12H7V14H5V10H9V9.33C9,8.67 8.47,8 7.67,8M21,10V8H15V16H17V14H19.5V12H17V10H21Z" Fill="Gray" />
+                                </Canvas>
+                            </Viewbox>
+                            <Viewbox Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsManga, Converter={StaticResource VisibleIfTrueConverter}}" ToolTip="这是一个GIF动图">
+                                <Canvas Width="24" Height="24">
+                                    <Path Data="M22,16V4A2,2 0 0,0 20,2H8A2,2 0 0,0 6,4V16A2,2 0 0,0 8,18H20A2,2 0 0,0 22,16M11,12L13.03,14.71L16,11L20,16H8M2,6V20A2,2 0 0,0 4,22H18V20H4V6" Fill="Gray" />
+                                </Canvas>
+                            </Viewbox>
+                        </Grid>
                     </Grid>
                 </Grid>
             </ListViewItem>
         </DataTemplate>
         <DataTemplate x:Key="SpotlightDataTemplate" DataType="viewModel:SpotlightArticle">
-            <ListViewItem Height="300" HorizontalAlignment="Stretch" Cursor="Hand">
-                <ListViewItem.Triggers>
+            <Grid Height="300" HorizontalAlignment="Stretch" Cursor="Hand"
+                   Width="{Binding ElementName=SpotlightListView, Path=ActualWidth, Converter={StaticResource WidthMinus45PxConverter}}">
+                <Grid.Triggers>
                     <EventTrigger RoutedEvent="ListViewItem.MouseEnter">
                         <BeginStoryboard>
                             <Storyboard TargetName="SpotlightScaleTransform" TargetProperty="(ScaleTransform.ScaleX)">
@@ -138,56 +152,58 @@
                             </Storyboard>
                         </BeginStoryboard>
                     </EventTrigger>
-                </ListViewItem.Triggers>
-                <Grid Height="300" HorizontalAlignment="Center"
-                      Width="{Binding ElementName=SpotlightListView, Path=ActualWidth, Converter={StaticResource WidthMinus45PxConverter}}">
-                    <Image x:Name="SpotlightThumbnail" Stretch="UniformToFill" HorizontalAlignment="Stretch"
-                           VerticalAlignment="Center" RenderTransformOrigin="0.5 0.5"
-                           MaxWidth="{Binding ElementName=SpotlightListView, Path=ActualWidth}"
-                           Loaded="SpotlightThumbnail_OnLoaded" Unloaded="SpotlightThumbnail_OnUnloaded">
-                        <Image.Effect>
-                            <BlurEffect x:Name="SpotlightBlurEffect" KernelType="Gaussian" Radius="1" />
-                        </Image.Effect>
-                        <Image.RenderTransform>
-                            <ScaleTransform x:Name="SpotlightScaleTransform" />
-                        </Image.RenderTransform>
-                    </Image>
-                    <Grid x:Name="SpotlightMask" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                          Background="Black" Opacity="0"
-                          MaxWidth="{Binding ElementName=SpotlightListView, Path=ActualWidth}" />
-                    <TextBlock x:Name="SpotlightTitle" Margin="80 0 80 0" HorizontalAlignment="Center"
-                               VerticalAlignment="Center" FontSize="55" TextWrapping="Wrap" TextAlignment="Center"
-                               Text="{Binding Title}" FontFamily="YouYuan" Opacity="0" LineHeight="80"
-                               Foreground="#FFB6B6B6" />
-                </Grid>
-            </ListViewItem>
+                </Grid.Triggers>
+                <Image x:Name="SpotlightThumbnail" Stretch="UniformToFill" HorizontalAlignment="Stretch"
+                       VerticalAlignment="Center" RenderTransformOrigin="0.5 0.5"
+                       MaxWidth="{Binding ElementName=SpotlightListView, Path=ActualWidth}"
+                       Loaded="SpotlightThumbnail_OnLoaded" Unloaded="SpotlightThumbnail_OnUnloaded">
+                    <Image.Effect>
+                        <BlurEffect x:Name="SpotlightBlurEffect" KernelType="Gaussian" Radius="1" />
+                    </Image.Effect>
+                    <Image.RenderTransform>
+                        <ScaleTransform x:Name="SpotlightScaleTransform" />
+                    </Image.RenderTransform>
+                </Image>
+                <Grid x:Name="SpotlightMask" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                      Background="Black" Opacity="0"
+                      MaxWidth="{Binding ElementName=SpotlightListView, Path=ActualWidth}" />
+                <TextBlock x:Name="SpotlightTitle" Margin="80 0 80 0" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" FontSize="55" TextWrapping="Wrap" TextAlignment="Center"
+                           Text="{Binding Title}" FontFamily="YouYuan" Opacity="0" LineHeight="80"
+                           Foreground="#FFB6B6B6" />
+            </Grid>
         </DataTemplate>
         <DataTemplate x:Key="UserPreviewTemplate" DataType="viewModel:UserPreview">
-            <ListViewItem x:Name="UserPrevItem" Loaded="UserPrevItem_OnLoaded">
-                <ListViewItem.Resources>
-                    <valueConverters:UserIdConverter x:Key="UserIdConverter"/>
-                </ListViewItem.Resources>
-                <materialDesign:Card Width="{Binding ElementName=UserPreviewListView, Path=ActualWidth}" Height="200">
-                    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                            <Image x:Name="UserAvatar" Width="150" Height="150" Margin="50 0 0 0" Stretch="UniformToFill" VerticalAlignment="Center" Loaded="UserAvatar_Loaded" Unloaded="UserAvatar_OnUnloaded">
-                                <Image.Clip>
-                                    <EllipseGeometry Center="75 75" RadiusX="75" RadiusY="75"/>
-                                </Image.Clip>
-                            </Image>
-                            <StackPanel Orientation="Vertical" Width="300" Margin="20 30 0 30">
-                                <TextBlock FontSize="25" Margin="0 20 0 0" Text="{Binding UserName}" TextWrapping="Wrap"/>
-                                <TextBlock FontSize="20" Margin="15 25 0 0" Text="{Binding UserId, Converter={StaticResource UserIdConverter}}" />
-                            </StackPanel>
+            <materialDesign:Card x:Name="UserPrevItem" Cursor="Hand" Width="{Binding ElementName=UserPreviewListView, Path=ActualWidth}" Height="200" Loaded="UserPrevItem_OnLoaded" Unloaded="UserPrevItem_OnUnloaded">
+                <materialDesign:Card.Resources>
+                    <valueConverters:UserIdConverter x:Key="UserIdConverter" />
+                </materialDesign:Card.Resources>
+                <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Image x:Name="UserAvatar" Width="150" Height="150" Margin="50 0 0 0"
+                                   Stretch="UniformToFill" VerticalAlignment="Center">
+                            <Image.Clip>
+                                <EllipseGeometry Center="75 75" RadiusX="75" RadiusY="75" />
+                            </Image.Clip>
+                        </Image>
+                        <StackPanel Orientation="Vertical" Width="300" Margin="20 30 0 30">
+                            <TextBlock FontSize="25" Margin="0 20 0 0" Text="{Binding UserName}"
+                                           TextWrapping="Wrap" />
+                            <TextBlock FontSize="20" Margin="15 25 0 0"
+                                           Text="{Binding UserId, Converter={StaticResource UserIdConverter}}" />
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="540" Margin="0 0 50 0">
-                            <Image x:Name="UserPrevImage1" Loaded="UserPrevImage1_OnLoaded" Unloaded="UserPrevImage1_OnUnloaded" Height="180" Width="150" Stretch="UniformToFill" Margin="10 0"/>
-                            <Image x:Name="UserPrevImage2" Loaded="UserPrevImage2_OnLoaded" Unloaded="UserPrevImage2_OnUnloaded" Height="180" Width="150" Stretch="UniformToFill" Margin="10 0"/>
-                            <Image x:Name="UserPrevImage3" Loaded="UserPrevImage3_OnLoaded" Unloaded="UserPrevImage3_OnUnloaded" Height="180" Width="150" Stretch="UniformToFill" Margin="10 0"/>
-                        </StackPanel>
-                    </Grid>
-                </materialDesign:Card>
-            </ListViewItem>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Right"
+                                    Width="540" Margin="0 0 50 0">
+                        <Image x:Name="UserPrevImage1" Height="180" Width="150" Stretch="UniformToFill"
+                                   Margin="10 0" />
+                        <Image x:Name="UserPrevImage2" Height="180" Width="150" Stretch="UniformToFill"
+                                   Margin="10 0" />
+                        <Image x:Name="UserPrevImage3" Height="180" Width="150" Stretch="UniformToFill"
+                                   Margin="10 0" />
+                    </StackPanel>
+                </Grid>
+            </materialDesign:Card>
         </DataTemplate>
     </Window.Resources>
     <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
@@ -282,7 +298,8 @@
                                                VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
                                     </StackPanel>
                                 </ListViewItem>
-                                <ListViewItem Height="60" x:Name="FollowingTab" Selected="FollowingTab_OnSelected" Unselected="FollowingTab_OnUnselected">
+                                <ListViewItem Height="60" x:Name="FollowingTab" Selected="FollowingTab_OnSelected"
+                                              Unselected="FollowingTab_OnUnselected">
                                     <StackPanel Orientation="Horizontal">
                                         <Viewbox Margin="20,0,0,0" Width="35" Height="35">
                                             <Canvas Width="24" Height="24">
@@ -295,7 +312,8 @@
                                                VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
                                     </StackPanel>
                                 </ListViewItem>
-                                <ListViewItem Height="60" x:Name="SpotlightTab" Selected="SpotlightTab_OnSelected" Unselected="SpotlightTab_OnUnselected">
+                                <ListViewItem Height="60" x:Name="SpotlightTab" Selected="SpotlightTab_OnSelected"
+                                              Unselected="SpotlightTab_OnUnselected">
                                     <StackPanel Orientation="Horizontal">
                                         <Viewbox Margin="20 0 0 0" Width="35" Height="35">
                                             <Canvas Width="24" Height="24">
@@ -578,25 +596,24 @@
                 </StackPanel>
             </Grid>
             <Grid x:Name="QueryDisplayContainer" Background="#FAFAFC">
-                <ListView x:Name="ImageListView" VirtualizingPanel.CacheLengthUnit="Pixel"
+                <ListView x:Name="ImageListView" VirtualizingPanel.CacheLengthUnit="Pixel" Grid.ZIndex="1"
                           VirtualizingPanel.CacheLength="0 0" VirtualizingPanel.ScrollUnit="Pixel"
-                          VirtualizingPanel.VirtualizationMode="Standard"
+                          VirtualizingPanel.VirtualizationMode="Recycling"
                           Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=1}}"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                          ItemTemplate="{StaticResource IllustrationViewModelDataTemplate}"
-                          Visibility="{Binding ElementName=SpotlightTab, Path=IsSelected, Converter={StaticResource VisibleIfFalseConverter}}">
+                          ItemTemplate="{StaticResource IllustrationViewModelDataTemplate}">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <controls:VirtualizingWrapPanel Orientation="Vertical" />
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                 </ListView>
-                <ListView x:Name="SpotlightListView" VirtualizingPanel.CacheLengthUnit="Pixel"
+                <ListView x:Name="UserPreviewListView" VirtualizingPanel.CacheLengthUnit="Pixel"
                           VirtualizingPanel.CacheLength="0 0" VirtualizingPanel.ScrollUnit="Pixel"
                           VirtualizingPanel.VirtualizationMode="Standard"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                          Visibility="{Binding ElementName=SpotlightTab, Path=IsSelected, Converter={StaticResource VisibleIfTrueConverter}}"
-                          ItemTemplate="{StaticResource SpotlightDataTemplate}">
+                          ItemTemplate="{StaticResource UserPreviewTemplate}"
+                          Visibility="{Binding ElementName=FollowingTab, Path=IsSelected, Converter={StaticResource VisibleIfTrueConverter}}">
                     <ListView.Template>
                         <ControlTemplate>
                             <ScrollViewer VirtualizingStackPanel.IsVirtualizing="True"
@@ -611,12 +628,12 @@
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                 </ListView>
-                <ListView x:Name="UserPreviewListView" VirtualizingPanel.CacheLengthUnit="Pixel"
+                <ListView x:Name="SpotlightListView" VirtualizingPanel.CacheLengthUnit="Pixel"
                           VirtualizingPanel.CacheLength="0 0" VirtualizingPanel.ScrollUnit="Pixel"
                           VirtualizingPanel.VirtualizationMode="Standard"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                          ItemTemplate="{StaticResource UserPreviewTemplate}"
-                          Visibility="{Binding ElementName=FollowingTab, Path=IsSelected, Converter={StaticResource VisibleIfTrueConverter}}">
+                          Visibility="{Binding ElementName=SpotlightTab, Path=IsSelected, Converter={StaticResource VisibleIfTrueConverter}}"
+                          ItemTemplate="{StaticResource SpotlightDataTemplate}">
                     <ListView.Template>
                         <ControlTemplate>
                             <ScrollViewer VirtualizingStackPanel.IsVirtualizing="True"
@@ -659,30 +676,76 @@
                 </Style>
             </Grid.Style>
             <materialDesign:Card VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <Grid Height="60" VerticalAlignment="Top">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Style="{DynamicResource MaterialDesignToolButton}" Height="40" Width="40"
-                            x:Name="DownloadAllButton" Margin="20 0 0 0">
-                        <Viewbox Width="30" Height="30">
-                            <Canvas Width="24" Height="24">
-                                <Path Data="M9,1V7H5L12,14L19,7H15V1H9M5,16V18H19V16H5M5,20V22H19V20H5Z" Fill="Gray" />
-                            </Canvas>
-                        </Viewbox>
-                    </Button>
-                    <Button x:Name="RetractDownloadListButton" Grid.Column="1"
-                            Style="{DynamicResource MaterialDesignToolButton}" Height="40" Width="40" Margin="0 0 20 0"
-                            Click="RetractDownloadListButton_OnClick">
-                        <Viewbox Width="30" Height="30">
-                            <Canvas Width="24" Height="24">
-                                <Path
-                                    Data="M4,2H2V22H4V13H18.17L12.67,18.5L14.08,19.92L22,12L14.08,4.08L12.67,5.5L18.17,11H4V2Z"
-                                    Fill="Gray" />
-                            </Canvas>
-                        </Viewbox>
-                    </Button>
+                <Grid>
+                    <Grid Height="60" VerticalAlignment="Top">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Style="{DynamicResource MaterialDesignToolButton}" Height="40" Width="40"
+                                x:Name="DownloadAllButton" Margin="20 0 0 0">
+                            <Viewbox Width="30" Height="30">
+                                <Canvas Width="24" Height="24">
+                                    <Path Data="M9,1V7H5L12,14L19,7H15V1H9M5,16V18H19V16H5M5,20V22H19V20H5Z" Fill="Gray" />
+                                </Canvas>
+                            </Viewbox>
+                        </Button>
+                        <Button Grid.Column="1" Style="{DynamicResource MaterialDesignToolButton}" Height="40" Width="40">
+                            <Viewbox Width="30" Height="30">
+                                <Canvas Width="24" Height="24">
+                                    <Path Data="M15,16H19V18H15V16M15,8H22V10H15V8M15,12H21V14H15V12M3,18A2,2 0 0,0 5,20H11A2,2 0 0,0 13,18V8H3V18M14,5H11L10,4H6L5,5H2V7H14V5Z" Fill="Gray" />
+                                </Canvas>
+                            </Viewbox>
+                        </Button>
+                        <Button x:Name="RetractDownloadListButton" Grid.Column="2"
+                                Style="{DynamicResource MaterialDesignToolButton}" Height="40" Width="40" Margin="0 0 20 0"
+                                Click="RetractDownloadListButton_OnClick">
+                            <Viewbox Width="30" Height="30">
+                                <Canvas Width="24" Height="24">
+                                    <Path Data="M19,3H16.3H7.7H5A2,2 0 0,0 3,5V7.7V16.4V19A2,2 0 0,0 5,21H7.7H16.4H19A2,2 0 0,0 21,19V16.3V7.7V5A2,2 0 0,0 19,3M15.6,17L12,13.4L8.4,17L7,15.6L10.6,12L7,8.4L8.4,7L12,10.6L15.6,7L17,8.4L13.4,12L17,15.6L15.6,17Z" Fill="Gray" />
+                                </Canvas>
+                            </Viewbox>
+                        </Button>
+                    </Grid>
+                    <ListView x:Name="ToDownloadListView" Margin="0 80 0 0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListView.ItemTemplate>
+                            <DataTemplate DataType="viewModel:Illustration">
+                                <ListViewItem x:Name="ToDownloadListViewItem" MouseDoubleClick="ToDownloadListViewItem_OnMouseDoubleClick">
+                                    <Grid Cursor="Hand" Width="290">
+                                        <Grid.Resources>
+                                            <valueConverters:DownloadListDisplayConverter x:Key="DownloadListDisplayConverter" />
+                                        </Grid.Resources>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="3*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock VerticalAlignment="Center" Grid.Column="0" HorizontalAlignment="Left" Margin="10 0 0 0" FontSize="20" Text="{Binding Id, Converter={StaticResource DownloadListDisplayConverter}}" TextWrapping="NoWrap" TextTrimming="WordEllipsis" FontFamily="Microsoft Yahei UI Light"/>
+                                        <Button Grid.Column="1" Style="{DynamicResource MaterialDesignToolButton}" HorizontalAlignment="Right">
+                                            <Viewbox Width="24" Height="24">
+                                                <Canvas Width="24" Height="24">
+                                                    <Path Data="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" Fill="Gray" />
+                                                </Canvas>
+                                            </Viewbox>
+                                        </Button>
+                                        <Button x:Name="RemoveFromDownloadListButton" Grid.Column="2" Style="{DynamicResource MaterialDesignToolButton}" HorizontalAlignment="Center" Click="RemoveFromDownloadButton_OnClick">
+                                            <Viewbox Width="24" Height="24">
+                                                <Canvas Width="24" Height="24">
+                                                    <Path Data="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" Fill="Gray" />
+                                                </Canvas>
+                                            </Viewbox>
+                                        </Button>
+                                    </Grid>
+                                </ListViewItem>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
                 </Grid>
             </materialDesign:Card>
             <Grid.RenderTransform>

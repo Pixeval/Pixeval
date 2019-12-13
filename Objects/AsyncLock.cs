@@ -50,8 +50,8 @@ namespace Pixeval.Objects
 
     public class AsyncLock
     {
-        private readonly AsyncSemaphore mSemaphore;
         private readonly Task<Release> mRelease;
+        private readonly AsyncSemaphore mSemaphore;
 
         public AsyncLock()
         {
@@ -62,9 +62,9 @@ namespace Pixeval.Objects
         public Task<Release> LockAsync()
         {
             var wait = mSemaphore.WaitAsync();
-            return wait.IsCompleted ?
-                mRelease :
-                wait.ContinueWith((_, state) => new Release((AsyncLock)state),
+            return wait.IsCompleted
+                ? mRelease
+                : wait.ContinueWith((_, state) => new Release((AsyncLock) state),
                     this, CancellationToken.None,
                     TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
         }
@@ -73,7 +73,10 @@ namespace Pixeval.Objects
         {
             private readonly AsyncLock mToRelease;
 
-            internal Release(AsyncLock toRelease) { mToRelease = toRelease; }
+            internal Release(AsyncLock toRelease)
+            {
+                mToRelease = toRelease;
+            }
 
             public void Dispose()
             {

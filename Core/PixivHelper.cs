@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Pixeval.Data.Model.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
+using Pixeval.Objects;
 
 namespace Pixeval.Core
 {
@@ -12,10 +14,7 @@ namespace Pixeval.Core
         {
             var response = (await HttpClientFactory.PublicApiService.GetSingle(id)).ToResponse[0];
 
-            if (response == null)
-            {
-                return null;
-            }
+            if (response == null) return null;
 
             var illust = new Illustration
             {
@@ -26,19 +25,30 @@ namespace Pixeval.Core
                 IsUgoira = response.Type == "ugoira",
                 Origin = response.ImageUrls.Large,
                 Tags = response.Tags.ToArray(),
-                Thumbnail = response.ImageUrls.Medium,
+                Thumbnail = response.ImageUrls.Px480Mw,
                 Title = response.Title,
                 Type = Illustration.IllustType.Parse(response),
                 UserName = response.User.Name,
-                UserId = response.User.Id.ToString()
+                UserId = response.User.Id.ToString(),
             };
+
+            if (illust.IsManga)
+            {
+                illust.MangaMetadata = response.Metadata.Pages.Select(p =>
+                {
+                    var page = (Illustration)illust.Clone();
+                    page.IsManga = false;
+                    page.Origin = p.ImageUrls.Large;
+                    return page;
+                }).ToArray();
+            }
 
             return illust;
         }
 
         public static async Task<int> GetUploadPagesCount(string uid)
         {
-            return (int) (await HttpClientFactory.PublicApiService.GetUploads(uid, new UploadsRequest { Page = 1 }))
+            return (int) (await HttpClientFactory.PublicApiService.GetUploads(uid, new UploadsRequest {Page = 1}))
                 .UploadPagination
                 .Pages;
         }
@@ -46,8 +56,8 @@ namespace Pixeval.Core
         public static async Task<int> GetQueryPagesCount(string tag)
         {
             var total = (double) (await HttpClientFactory.PublicApiService.QueryWorks(new QueryWorksRequest {Tag = tag, Offset = 1, PerPage = 1}))
-                .QueryPagination
-                .Pages / 300;
+                        .QueryPagination
+                        .Pages / 300;
 
             return (int) Math.Ceiling(total);
         }

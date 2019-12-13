@@ -31,7 +31,6 @@ namespace Pixeval.Persisting
 
         public static Identity Parse(string password, TokenResponse token)
         {
-            
             var response = token.ToResponse;
             return new Identity
             {
@@ -75,15 +74,9 @@ namespace Pixeval.Persisting
 
         public static async Task RefreshIfRequired()
         {
-            if (Global == null)
-            {
-                await Restore();
-            }
+            if (Global == null) await Restore();
 
-            if (await RefreshRequired())
-            {
-                await Authentication.Authenticate(Global?.MailAddress, Global?.Password);
-            }
+            if (await RefreshRequired()) await Authentication.Authenticate(Global?.MailAddress, Global?.Password);
         }
 
         public static void Clear()

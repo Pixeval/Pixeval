@@ -9,6 +9,7 @@ namespace Pixeval.Data.Web.Protocol
     public interface ITokenProtocol
     {
         [Post("/auth/token")]
-        Task<TokenResponse> GetToken([Body(BodySerializationMethod.UrlEncoded)] TokenRequest body, [Header("X-Client-Time")] string clientTime, [Header("X-Client-Hash")] string clientHash);
+        Task<TokenResponse> GetToken([Body(BodySerializationMethod.UrlEncoded)]
+            TokenRequest body, [Header("X-Client-Time")] string clientTime, [Header("X-Client-Hash")] string clientHash);
     }
 }

@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using Pixeval.Objects;
 using Pixeval.Persisting;
 
@@ -26,6 +25,8 @@ namespace Pixeval.Data.Web.Delegation
             ServerCertificateCustomValidationCallback = DangerousAcceptAnyServerCertificateValidator;
         }
 
+        protected abstract DnsResolver DnsResolver { get; set; }
+
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var host = request.RequestUri.DnsSafeHost;
@@ -44,7 +45,7 @@ namespace Pixeval.Data.Web.Delegation
                 using var _ = await new AsyncLock().LockAsync();
                 await Authentication.Authenticate(Identity.Global.MailAddress, Identity.Global.Password);
 
-                var token = request.Headers.Authorization;       
+                var token = request.Headers.Authorization;
                 if (token != null)
                     request.Headers.Authorization = new AuthenticationHeaderValue(token.Scheme, Identity.Global.AccessToken);
 
@@ -53,7 +54,5 @@ namespace Pixeval.Data.Web.Delegation
 
             return result;
         }
-
-        protected abstract DnsResolver DnsResolver { get; set; }
     }
 }

@@ -21,8 +21,5 @@ namespace Pixeval.Data.Web.Request
 
         [AliasAs("sort")]
         public string Sort { get; set; } = "date";
-
-        [AliasAs("mode")]
-        public string Mode { get; set; } = "exact_tag";
     }
 }

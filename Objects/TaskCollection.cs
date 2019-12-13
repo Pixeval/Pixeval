@@ -13,6 +13,16 @@ namespace Pixeval.Objects
             tasks = taskSelector(enumerable);
         }
 
+        public async Task<TResult[]> WhenAll()
+        {
+            return await Task.WhenAll(tasks);
+        }
+
+        public async Task<Task<TResult>> WhenAny()
+        {
+            return await Task.WhenAny(tasks);
+        }
+
         public class Builder
         {
             private IEnumerable<T> taskList;
@@ -35,16 +45,6 @@ namespace Pixeval.Objects
             {
                 return new TaskCollection<T, TResult>(taskList, taskSelector);
             }
-        }
-
-        public async Task<TResult[]> WhenAll()
-        {
-            return await Task.WhenAll(tasks);
-        }
-
-        public async Task<Task<TResult>> WhenAny()
-        {
-            return await Task.WhenAny(tasks);
         }
     }
 }

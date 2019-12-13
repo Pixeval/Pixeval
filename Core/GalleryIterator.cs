@@ -1,7 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
-using System.Windows;
 using Pixeval.Data.Model.ViewModel;
 using Pixeval.Data.Web;
 using Pixeval.Data.Web.Delegation;
@@ -38,17 +35,11 @@ namespace Pixeval.Core
 
             var model = (await httpClient.GetStringAsync(context == null ? query : context.NextUrl)).FromJson<GalleryResponse>();
 
-            if (context == null && model.Illusts.IsNullOrEmpty())
-            {
-                throw new QueryNotRespondingException();
-            }
+            if (context == null && model.Illusts.IsNullOrEmpty()) throw new QueryNotRespondingException();
 
             context = model;
 
-            foreach (var contextIllust in context.Illusts)
-            {
-                yield return await PixivHelper.IllustrationInfo(contextIllust.Id.ToString());
-            }
+            foreach (var contextIllust in context.Illusts) yield return await PixivHelper.IllustrationInfo(contextIllust.Id.ToString());
         }
     }
 }

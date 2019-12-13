@@ -10,7 +10,7 @@ using Refit;
 namespace Pixeval
 {
     /// <summary>
-    /// Interaction logic for SignIn.xaml
+    ///     Interaction logic for SignIn.xaml
     /// </summary>
     public partial class SignIn : Window
     {

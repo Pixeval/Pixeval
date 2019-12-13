@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Pixeval.Data.Model.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
@@ -29,10 +28,7 @@ namespace Pixeval.Core
         {
             var works = await HttpClientFactory.PublicApiService.GetUploads(uid, new UploadsRequest {Page = currentIndex++});
 
-            foreach (var response in works.ToResponse)
-            {
-                yield return await PixivHelper.IllustrationInfo(response.Id.ToString());
-            }
+            foreach (var response in works.ToResponse) yield return await PixivHelper.IllustrationInfo(response.Id.ToString());
         }
     }
 }

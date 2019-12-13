@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Pixeval.Data.Model.ViewModel;
 using Pixeval.Data.Web;
 using Pixeval.Data.Web.Delegation;
@@ -31,7 +30,6 @@ namespace Pixeval.Core
             {
                 var response = (await client.GetStringAsync(url)).FromJson<FollowingResponse>();
                 foreach (var preview in response.UserPreviews)
-                {
                     yield return new UserPreview
                     {
                         Thumbnails = preview.Illusts.Select(i => i.ImageUrls.SquareMedium).ToArray(),
@@ -39,7 +37,6 @@ namespace Pixeval.Core
                         UserName = preview.User.Name,
                         Avatar = preview.User.ProfileImageUrls.Medium
                     };
-                }
 
                 url = response.NextUrl;
             }

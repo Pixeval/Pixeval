@@ -78,11 +78,4 @@ namespace Pixeval.Data.Web.Response
             public Uri Medium { get; set; }
         }
     }
-
-
-
-    
-
-
-    
 }

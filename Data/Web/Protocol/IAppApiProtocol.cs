@@ -12,7 +12,8 @@ namespace Pixeval.Data.Web.Protocol
         Task<RankingResponse> GetRanking(RankingRequest rankingRequest);
 
         [Post("/v1/illust/bookmark/delete")]
-        Task DeleteBookmark([Body(BodySerializationMethod.UrlEncoded)] DeleteBookmarkRequest deleteBookmarkRequest);
+        Task DeleteBookmark([Body(BodySerializationMethod.UrlEncoded)]
+            DeleteBookmarkRequest deleteBookmarkRequest);
 
         [Get("/v1/user/detail")]
         Task<UserInformationResponse> GetUserInformation(UserInformationRequest userInformationRequest);
@@ -28,16 +29,19 @@ namespace Pixeval.Data.Web.Protocol
         Task<FollowingResponse> GetFollowing(FollowingRequest followingRequest);
 
         [Post("/v1/user/follow/add")]
-        Task FollowArtist([Body(BodySerializationMethod.UrlEncoded)] FollowArtistRequest followArtistRequest);
+        Task FollowArtist([Body(BodySerializationMethod.UrlEncoded)]
+            FollowArtistRequest followArtistRequest);
 
         [Post("/v1/user/follow/delete")]
-        Task UnFollowArtist([Body(BodySerializationMethod.UrlEncoded)] UnFollowArtistRequest unFollowArtistRequest);
+        Task UnFollowArtist([Body(BodySerializationMethod.UrlEncoded)]
+            UnFollowArtistRequest unFollowArtistRequest);
 
         [Get("/v1/ugoira/metadata")]
         Task<UgoiraMetadataResponse> GetUgoiraMetadata([AliasAs("illust_id")] string id);
 
         [Post("/v2/illust/bookmark/add")]
-        Task AddBookmark([Body(BodySerializationMethod.UrlEncoded)] AddBookmarkRequest addBookmarkRequest);
+        Task AddBookmark([Body(BodySerializationMethod.UrlEncoded)]
+            AddBookmarkRequest addBookmarkRequest);
 
         [Get("/v1/search/user?filter=for_android")]
         Task<UserNavResponse> GetUserNav(string word, int offset = 0);

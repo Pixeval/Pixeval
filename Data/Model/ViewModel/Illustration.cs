@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Media.Imaging;
+﻿using System;
+using System.Collections.Generic;
 using Pixeval.Data.Web.Response;
 using PropertyChanged;
 
@@ -10,7 +8,7 @@ using PropertyChanged;
 namespace Pixeval.Data.Model.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
-    public class Illustration
+    public class Illustration : ICloneable
     {
         public string Id { get; set; }
 
@@ -57,6 +55,11 @@ namespace Pixeval.Data.Model.ViewModel
                 };
             }
         }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 
     public class IllustrationComparator : IComparer<Illustration>
@@ -65,10 +68,7 @@ namespace Pixeval.Data.Model.ViewModel
 
         public int Compare(Illustration x, Illustration y)
         {
-            if (x == null || y == null)
-            {
-                return 0;
-            }
+            if (x == null || y == null) return 0;
 
             return x.Bookmark < y.Bookmark ? 1 : x.Bookmark == y.Bookmark ? 0 : -1;
         }

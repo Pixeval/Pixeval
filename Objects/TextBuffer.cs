@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Text;
 
 namespace Pixeval.Objects
 {
@@ -7,10 +6,7 @@ namespace Pixeval.Objects
     {
         public static FileInfo GetOrCreateFile(string path)
         {
-            if (!File.Exists(path))
-            {
-                File.Create(path);
-            }
+            if (!File.Exists(path)) File.Create(path);
             return new FileInfo(path);
         }
     }

@@ -30,7 +30,7 @@ namespace Pixeval.Data.Web.Response
         public class ZipUrls
         {
             [JsonProperty("medium")]
-            public Uri Medium { get; set; }
+            public string Medium { get; set; }
         }
     }
 }

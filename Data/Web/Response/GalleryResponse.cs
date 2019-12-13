@@ -15,7 +15,6 @@ namespace Pixeval.Data.Web.Response
         {
             [JsonProperty("id")]
             public long Id { get; set; }
-
         }
     }
 }

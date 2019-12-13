@@ -21,7 +21,7 @@ namespace Pixeval.Persisting
             var hash = Cipher.Md5Hex(time + ClientHash);
 
             var token = await RestService.For<ITokenProtocol>(HttpClientFactory.PixivApi(ProtocolBase.OAuthBaseUrl))
-                .GetToken(new TokenRequest { Name = name, Password = pwd }, time, hash);
+                .GetToken(new TokenRequest {Name = name, Password = pwd}, time, hash);
 
             Identity.Global = Identity.Parse(pwd, token);
         }

@@ -21,13 +21,10 @@ namespace Pixeval.Core
             while (true)
             {
                 var users = (await HttpClientFactory.AppApiService.GetUserNav(keyword, currentIndex++)).UserPreviews;
-                if (users.IsNullOrEmpty()) 
+                if (users.IsNullOrEmpty())
                     yield break;
 
-                foreach (var preview in users)
-                {
-                    yield return preview;
-                }
+                foreach (var preview in users) yield return preview;
             }
         }
     }

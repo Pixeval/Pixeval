@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using Pixeval.Data.Model.ViewModel;
+using ImageMagick;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Persisting;
 
@@ -9,7 +11,7 @@ namespace Pixeval.Objects
 {
     public static class PixivImage
     {
-        private static async Task<byte[]> FromUrlInternal(string url)
+        internal static async Task<byte[]> FromUrlInternal(string url)
         {
             var client = HttpClientFactory.PixivImage();
             client.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "http://www.pixiv.net");
@@ -40,6 +42,11 @@ namespace Pixeval.Objects
             return bmp;
         }
 
+        public static Task<BitmapImage> FromStreamAsync(Stream stream)
+        {
+            return Task.Run(() => FromStream(stream));
+        }
+
         internal static void SaveBitmapImage(this BitmapImage bitmapImage, string path)
         {
             var encoder = new PngBitmapEncoder();
@@ -59,26 +66,96 @@ namespace Pixeval.Objects
             Task.Run(() =>
             {
                 var path = Path.Combine(PixevalEnvironment.TempFolder, $"{id}_{episode}.png");
-                if (!File.Exists(path))
-                {
-                    bitmapImage.SaveBitmapImage(path);
-                }
+                if (!File.Exists(path)) bitmapImage.SaveBitmapImage(path);
             });
         }
 
         public static async Task<BitmapImage> GetAndCreateOrLoadFromCache(bool usingCache, string url, string id, int episode = 0)
         {
-            var path = Path.Combine(PixevalEnvironment.TempFolder, $"{id}_{episode}.png");
-            if (File.Exists(path))
+            if (usingCache)
             {
-                return FromByteArray(await File.ReadAllBytesAsync(path));
+                var path = Path.Combine(PixevalEnvironment.TempFolder, $"{id}_{episode}.png");
+                if (File.Exists(path)) 
+                {
+                    var toCache = FromByteArray(await File.ReadAllBytesAsync(path));
+                    CacheImage(toCache, id, episode);
+                    return toCache;
+                }
             }
 
             var img = await FromUrl(url);
-            
-            if (usingCache) CacheImage(img, id, episode);
-
             return img;
+        }
+
+        private static IReadOnlyList<Stream> ReadGifZipEntries(Stream stream)
+        {
+            var dis = new List<Stream>();
+            using var zipArchive = new ZipArchive(stream, ZipArchiveMode.Read);
+
+            foreach (var zipArchiveEntry in zipArchive.Entries)
+            {
+                using var aStream = zipArchiveEntry.Open();
+
+                var ms = new MemoryStream();
+                aStream.CopyTo(ms);
+                ms.Position = 0L;
+                dis.Add(ms);
+            }
+
+            return dis;
+        }
+
+        internal static IReadOnlyList<Stream> ReadGifZipEntries(byte[] bArr)
+        {
+            return ReadGifZipEntries(new MemoryStream(bArr));
+        }
+
+        internal static async IAsyncEnumerable<BitmapImage> ReadGifZipBitmapImages(byte[] bArr)
+        {
+            var lst = await Task.Run(() => ReadGifZipEntries(bArr));
+
+            foreach (var s in lst)
+            {
+                yield return await FromStreamAsync(s);
+            }
+        }
+
+        internal static Task<BitmapImage> GetAndCreateOrLoadFromCacheInternal(string url, string id, int episode = 0)
+        {
+            return GetAndCreateOrLoadFromCache(Settings.Global.CachingThumbnail, url, id, episode);
+        }
+
+        private static Stream MergeGifStream(IReadOnlyList<Stream> streams, IReadOnlyList<long> delay)
+        {
+            var ms = new MemoryStream();
+            using var mCollection = new MagickImageCollection();
+
+            for (var i = 0; i < streams.Count; i++)
+            {
+                var iStream = streams[i];
+
+                var img = new MagickImage(iStream)
+                {
+                    AnimationDelay = (int) delay[i]
+                };
+                mCollection.Add(img);
+            }
+
+            var settings = new QuantizeSettings {Colors = 256};
+            mCollection.Quantize(settings);
+            mCollection.Optimize();
+            mCollection.Write(ms, MagickFormat.Gif);
+            return ms;
+        }
+
+        public static async Task<Stream> GetGifStream(string link, IReadOnlyList<long> delay)
+        {
+            return MergeGifStream(ReadGifZipEntries(await FromUrlInternal(link)), delay);
+        }
+
+        public static async Task<BitmapImage> GetGifBitmap(string link, IReadOnlyList<long> delay)
+        {
+            return FromStream(MergeGifStream(ReadGifZipEntries(await FromUrlInternal(link)), delay));
         }
     }
 }

@@ -43,10 +43,7 @@ namespace Pixeval.Persisting
 
         public async Task<Settings> Restore()
         {
-            if (File.Exists(Path.Combine(PixevalEnvironment.SettingsFolder, "settings.json")))
-            {
-                Global = (await File.ReadAllTextAsync(Path.Combine(PixevalEnvironment.SettingsFolder, "settings.json"))).FromJson<Settings>();
-            }
+            if (File.Exists(Path.Combine(PixevalEnvironment.SettingsFolder, "settings.json"))) Global = (await File.ReadAllTextAsync(Path.Combine(PixevalEnvironment.SettingsFolder, "settings.json"))).FromJson<Settings>();
             return Global;
         }
 

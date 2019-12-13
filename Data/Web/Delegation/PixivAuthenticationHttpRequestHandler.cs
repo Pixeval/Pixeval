@@ -8,9 +8,10 @@ namespace Pixeval.Data.Web.Delegation
 {
     public class PixivAuthenticationHttpRequestHandler : IHttpRequestHandler
     {
+        public static PixivAuthenticationHttpRequestHandler Instance = new PixivAuthenticationHttpRequestHandler();
+
         private PixivAuthenticationHttpRequestHandler()
         {
-
         }
 
         public void Handle(HttpRequestMessage httpRequestMessage)
@@ -18,15 +19,10 @@ namespace Pixeval.Data.Web.Delegation
             var token = httpRequestMessage.Headers.Authorization;
             if (token != null)
             {
-                if (Identity.Global.AccessToken.IsNullOrEmpty())
-                {
-                    throw new TokenNotFoundException($"{nameof(Identity.Global.AccessToken)} is empty, this exception should never be thrown, if you see this message, please send issue on github or contact me (decem0730@gmail.com)");
-                }
+                if (Identity.Global.AccessToken.IsNullOrEmpty()) throw new TokenNotFoundException($"{nameof(Identity.Global.AccessToken)} is empty, this exception should never be thrown, if you see this message, please send issue on github or contact me (decem0730@gmail.com)");
 
                 httpRequestMessage.Headers.Authorization = new AuthenticationHeaderValue(token.Scheme, Identity.Global.AccessToken);
             }
         }
-
-        public static PixivAuthenticationHttpRequestHandler Instance = new PixivAuthenticationHttpRequestHandler();
     }
 }

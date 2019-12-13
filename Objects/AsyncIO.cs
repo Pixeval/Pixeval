@@ -12,10 +12,7 @@ namespace Pixeval.Objects
         {
             var httpClient = new HttpClient();
 
-            foreach (var (key, value) in header)
-            {
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation(key, value);
-            }
+            foreach (var (key, value) in header) httpClient.DefaultRequestHeaders.TryAddWithoutValidation(key, value);
 
             Task.Run(async () => File.WriteAllBytes(path, await httpClient.GetByteArrayAsync(url)));
         }

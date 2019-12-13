@@ -15,10 +15,7 @@ namespace Pixeval.Objects
 
         public static void AddRange<T>(this ICollection<T> dst, IEnumerable<T> src)
         {
-            foreach (var t in src)
-            {
-                dst.Add(t);
-            }
+            foreach (var t in src) dst.Add(t);
         }
 
         public static void AddSorted<T>(this Collection<T> list, T item, IComparer<T> comparer)
@@ -30,10 +27,7 @@ namespace Pixeval.Objects
             }
 
             var i = 0;
-            while (i < list.Count && comparer.Compare(list[i], item) < 0)
-            {
-                i++;
-            }
+            while (i < list.Count && comparer.Compare(list[i], item) < 0) i++;
 
             list.Insert(i, item);
         }
@@ -41,6 +35,11 @@ namespace Pixeval.Objects
         public static IImmutableSet<R> ToImmutableSet<T, R>(this IEnumerable<T> enumerable, Func<T, R> function)
         {
             return enumerable == null ? new HashSet<R>().ToImmutableHashSet() : enumerable.Select(function).ToImmutableHashSet();
+        }
+
+        public static bool EqualsIgnoreCase(this IEnumerable<string> src, IEnumerable<string> compare)
+        {
+            return src.All(x => x.IsNullOrEmpty() && compare.Any(i => i.EqualsIgnoreCase(x)));
         }
     }
 }

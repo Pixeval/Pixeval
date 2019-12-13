@@ -28,7 +28,7 @@ namespace Pixeval.Objects
 
         public static T NewInstance<T>()
         {
-            return (T)NewInstance(typeof(T));
+            return (T) NewInstance(typeof(T));
         }
 
         public static object NewInstance(Type type)

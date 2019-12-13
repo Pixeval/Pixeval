@@ -1,22 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
+using System.Windows;
 using System.Windows.Data;
+using Pixeval.Data.Model.ViewModel;
 
 namespace Pixeval.Objects.ValueConverters
 {
-    public class QueryR18ToggleButtonIsCheckedConverter : IValueConverter
+    public class IllustSubscriptConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is IEnumerable<string> val)
+            var val = (Illustration) value;
+            if (val == null)
             {
-                var enumerable = val as string[] ?? val.ToArray();
-                if (enumerable.Contains("R-18") && enumerable.Contains("R-18G")) return true;
+                return Visibility.Hidden;
             }
 
-            return false;
+            if (val.IsManga || val.IsUgoira)
+            {
+                return Visibility.Visible;
+            }
+
+            return Visibility.Hidden;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

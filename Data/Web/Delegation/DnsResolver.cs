@@ -12,30 +12,14 @@ using Refit;
 namespace Pixeval.Data.Web.Delegation
 {
     /// <summary>
-    /// Use a free <a href="https://1.0.0.1">DNS server</a> as DNS resolver instead of system default to avoid DNS pollution, thanks to <a href="https://github.com/Notsfsssf">@Notsfsssf</a>'s idea
+    ///     Use a free <a href="https://1.0.0.1">DNS server</a> as DNS resolver instead of system default to avoid DNS
+    ///     pollution, thanks to <a href="https://github.com/Notsfsssf">@Notsfsssf</a>'s idea
     /// </summary>
     public abstract class DnsResolver
     {
         public static readonly ThreadLocal<Dictionary<string, List<IPAddress>>> DnsCache = new ThreadLocal<Dictionary<string, List<IPAddress>>>(() => new Dictionary<string, List<IPAddress>>());
 
         protected readonly ISet<IPAddress> IpList = new HashSet<IPAddress>(new IPAddressEqualityComparer());
-
-        private class IPAddressEqualityComparer : IEqualityComparer<IPAddress>
-        {
-            public bool Equals(IPAddress x, IPAddress y)
-            {
-                if (x == null || y == null)
-                {
-                    return false;
-                }
-                return x.ToString() == y.ToString();
-            }
-
-            public int GetHashCode(IPAddress obj)
-            {
-                return obj.GetHashCode();
-            }
-        }
 
         protected async Task<DnsResolveResponse> GetDnsJson(string hostname)
         {
@@ -52,10 +36,7 @@ namespace Pixeval.Data.Web.Delegation
 
         public async Task<IList<IPAddress>> Lookup(string hostname)
         {
-            if (DnsCache.Value.ContainsKey(hostname))
-            {
-                return DnsCache.Value[hostname].ToImmutableList();
-            }
+            if (DnsCache.Value.ContainsKey(hostname)) return DnsCache.Value[hostname].ToImmutableList();
 
             var response = await GetDnsJson(hostname);
 
@@ -65,20 +46,13 @@ namespace Pixeval.Data.Web.Delegation
                 if (!answer.IsNullOrEmpty())
                 {
                     foreach (var queriedIp in answer)
-                    {
                         if (IPAddress.TryParse(queriedIp.Data, out var address))
-                        {
                             IpList.Add(address);
-                        }
-                    }
                 }
                 else
                 {
                     IpList.AddRange(Dns.GetHostAddresses(hostname));
-                    if (IpList.IsNullOrEmpty())
-                    {
-                        UseDefaultDns();
-                    }
+                    if (IpList.IsNullOrEmpty()) UseDefaultDns();
                 }
 
                 CacheDns(hostname);
@@ -93,15 +67,25 @@ namespace Pixeval.Data.Web.Delegation
         private void CacheDns(string hostname)
         {
             if (DnsCache.Value.ContainsKey(hostname))
-            {
                 DnsCache.Value[hostname].AddRange(IpList);
-            }
             else
-            {
                 DnsCache.Value[hostname] = new List<IPAddress>(IpList);
-            }
         }
 
         protected abstract void UseDefaultDns();
+
+        private class IPAddressEqualityComparer : IEqualityComparer<IPAddress>
+        {
+            public bool Equals(IPAddress x, IPAddress y)
+            {
+                if (x == null || y == null) return false;
+                return x.ToString() == y.ToString();
+            }
+
+            public int GetHashCode(IPAddress obj)
+            {
+                return obj.GetHashCode();
+            }
+        }
     }
 }

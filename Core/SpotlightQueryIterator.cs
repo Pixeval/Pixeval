@@ -6,8 +6,8 @@ namespace Pixeval.Core
 {
     public class SpotlightQueryIterator
     {
-        private readonly int start;
         private readonly int queryPages;
+        private readonly int start;
 
         public SpotlightQueryIterator(int start, int queryPages)
         {
@@ -20,10 +20,7 @@ namespace Pixeval.Core
             for (var i = start; i < start + queryPages - 1; i++)
             {
                 var spotlight = await HttpClientFactory.AppApiService.GetSpotlights(i * 10);
-                foreach (var spotlightSpotlightArticle in spotlight.SpotlightArticles)
-                {
-                    yield return spotlightSpotlightArticle;
-                }
+                foreach (var spotlightSpotlightArticle in spotlight.SpotlightArticles) yield return spotlightSpotlightArticle;
             }
         }
     }

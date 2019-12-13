@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Windows.Data;
 
 namespace Pixeval.Objects.ValueConverters
@@ -15,10 +14,7 @@ namespace Pixeval.Objects.ValueConverters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null || value.ToString().IsNullOrEmpty())
-            {
-                return new List<string>();
-            }
+            if (value == null || value.ToString().IsNullOrEmpty()) return new List<string>();
             return value.ToString().Split(" ");
         }
     }

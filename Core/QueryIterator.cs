@@ -9,13 +9,12 @@ namespace Pixeval.Core
 {
     public class QueryIterator : IPixivIterator
     {
+        private readonly int start;
         private readonly string tag;
 
         private readonly int totalPages;
 
         private int currentIndex;
-
-        private readonly int start;
 
         public QueryIterator(string tag, int totalPages, int start = 1)
         {
@@ -32,17 +31,11 @@ namespace Pixeval.Core
 
         public async IAsyncEnumerable<Illustration> MoveNextAsync()
         {
-            var works = await HttpClientFactory.PublicApiService.QueryWorks(new QueryWorksRequest { Tag = tag, Offset = currentIndex++ });
+            var works = await HttpClientFactory.PublicApiService.QueryWorks(new QueryWorksRequest {Tag = tag, Offset = currentIndex++});
 
-            if (currentIndex - start == 1 && !works.ToResponse.Any())
-            {
-                throw new QueryNotRespondingException();
-            }
+            if (currentIndex - start == 1 && !works.ToResponse.Any()) throw new QueryNotRespondingException();
 
-            foreach (var response in works.ToResponse)
-            {
-                yield return await PixivHelper.IllustrationInfo(response.Id.ToString());
-            }
+            foreach (var response in works.ToResponse) yield return await PixivHelper.IllustrationInfo(response.Id.ToString());
         }
     }
 }
