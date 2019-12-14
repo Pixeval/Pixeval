@@ -43,7 +43,7 @@ namespace Pixeval.Data.Web.Protocol
         Task AddBookmark([Body(BodySerializationMethod.UrlEncoded)]
             AddBookmarkRequest addBookmarkRequest);
 
-        [Get("/v1/search/user?filter=for_android")]
-        Task<UserNavResponse> GetUserNav(string word, int offset = 0);
+        [Get("/v1/search/user")]
+        Task<UserNavResponse> GetUserNav(string word, int offset = 0, string filter = "for_android");
     }
 }

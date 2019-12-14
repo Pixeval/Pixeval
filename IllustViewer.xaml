@@ -72,7 +72,7 @@
                         </Viewbox>
                     </Button>
                 </Grid>
-                <Button x:Name="DownloadButton" Background="Transparent" BorderBrush="Transparent" Width="55"
+                <Button x:Name="DownloadButton" Background="Transparent" BorderBrush="Transparent" Width="55" Click="DownloadButton_OnClick"
                         Height="40" ToolTip="下载">
                     <Viewbox Width="25" Height="25">
                         <Canvas Width="24" Height="24">
@@ -185,7 +185,7 @@
                 <ListView x:Name="TagsListView" Margin="10 0 10 0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Grid>
+                            <Grid x:Name="TagItem" Cursor="Hand" MouseDown="TagItem_OnMouseDown">
                                 <materialDesign:Card>
                                     <TextBlock Text="{Binding}" Margin="5" FontFamily="Microsoft Yahei UI Light"/>
                                 </materialDesign:Card>
@@ -200,5 +200,6 @@
                 </ListView>
             </Grid>
         </Grid>
+        <materialDesign:Snackbar x:Name="IllustViewerSnackBar" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
     </Grid>
 </fluentWpf:AcrylicWindow>

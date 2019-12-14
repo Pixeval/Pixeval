@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using MaterialDesignThemes.Wpf;
 using Pixeval.Core;
 using Pixeval.Data.Model.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
 using Pixeval.Objects;
+using Pixeval.Objects.Exceptions;
 
 namespace Pixeval
 {
@@ -23,13 +24,18 @@ namespace Pixeval
     {
         private readonly IList<Illustration> displayList;
 
+        private readonly SnackbarMessageQueue messageQueue = new SnackbarMessageQueue(TimeSpan.FromMilliseconds(500))
+        {
+            IgnoreDuplicate = true
+        };
+
         private Illustration currentModel;
 
         private int currentIndex;
 
         public IllustViewer(Illustration defaultIllust, IEnumerable<Illustration> displayList = null)
         {
-            this.displayList = displayList == null ? new List<Illustration>() : displayList.ToList();
+            this.displayList = displayList == null ? new List<Illustration> { defaultIllust } : displayList.ToList();
 
             currentModel = defaultIllust;
             currentIndex = this.displayList.IndexOf(currentModel);
@@ -39,14 +45,20 @@ namespace Pixeval
                 throw new InvalidOperationException();
             }
 
-            SwitchDataContext();
-
             InitializeComponent();
+
             RefreshIllust();
+            IllustViewerSnackBar.MessageQueue = messageQueue;
+        }
+
+        public static void Show(Illustration defaultIllust, IEnumerable<Illustration> displayList = null)
+        {
+            new IllustViewer(defaultIllust, displayList).Show();
         }
 
         private async void RefreshIllust()
         {
+            SwitchDataContext(currentModel);
             gifPlaying = false;
 
             UiHelper.ShowControl(ProgressRing);
@@ -56,12 +68,17 @@ namespace Pixeval
 
             if (currentModel.IsUgoira)
             {
+                gifPlaying = true;
+
                 var data = await HttpClientFactory.AppApiService.GetUgoiraMetadata(currentModel.Id);
-                var url = FormatGifZipUrl(data.UgoiraMetadataInfo.ZipUrls.Medium);
+                var url = PixivImage.FormatGifZipUrl(data.UgoiraMetadataInfo.ZipUrls.Medium);
 
                 var list = await PixivImage.ReadGifZipBitmapImages(await PixivImage.FromUrlInternal(url)).ToListAsync();
 
-                PlayGif(list, data.UgoiraMetadataInfo.Frames.Select(f => f.Delay));
+                if (gifPlaying)
+                {
+                    PlayGif(list, data.UgoiraMetadataInfo.Frames.Select(f => f.Delay));
+                }
             }
             else
             {
@@ -79,8 +96,6 @@ namespace Pixeval
 
         private void PlayGif(IList<BitmapImage> images, IEnumerable<long> delay)
         {
-            gifPlaying = true;
-
             var delayArr = delay.ToArray();
             Task.Run(async () =>
             {
@@ -111,11 +126,6 @@ namespace Pixeval
             collection.AddRange(currentModel.Tags);
         }
 
-        private static string FormatGifZipUrl(string link)
-        {
-            return !link.EndsWith("ugoira1920x1080.zip") ? Regex.Replace(link, "ugoira(\\d+)x(\\d+).zip", "ugoira1920x1080.zip") : link;
-        }
-
         private void IllustFadeIn()
         {
             (Resources["ImageFadeIn"] as Storyboard)?.Begin();
@@ -126,9 +136,9 @@ namespace Pixeval
             (Resources["ImageFadeOut"] as Storyboard)?.Begin();
         }
 
-        private void SwitchDataContext()
+        private void SwitchDataContext(Illustration model)
         {
-            DataContext = currentModel;
+            DataContext = model;
         }
 
         private bool dragging;
@@ -231,13 +241,29 @@ namespace Pixeval
         private void ViewAllContentButton_OnClick(object sender, RoutedEventArgs e)
         {
             var list = currentModel.MangaMetadata;
-            var viewer = new IllustViewer(list[0], list);
-            viewer.Show();
+            Show(list[0], list);
         }
 
         private void AddToDownloadListButton_OnClick(object sender, RoutedEventArgs e)
         {
             DownloadList.Add(currentModel);
+            messageQueue.Enqueue(Externally.AddedAllToDownloadList);
+        }
+
+        private async void DownloadButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var model = currentModel;
+
+            await PixivImage.DownloadIllustInternal(model);
+            messageQueue.Enqueue(Externally.DownloadComplete(model));
+        }
+
+        private void TagItem_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MainWindow.Instance.NavigatorList.SelectedItem = MainWindow.Instance.MenuTab;
+            MainWindow.Instance.KeywordTextBox.Text = sender.GetDataContext<string>();
+
+            MainWindow.Instance.Activate();
         }
     }
 }

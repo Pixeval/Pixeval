@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Pixeval.Objects;
@@ -19,7 +20,12 @@ namespace Pixeval.Persisting
 
         public int MinBookmark { get; set; }
 
-        public string DownloadLocation { get; set; }
+        private string downloadLocation;
+        public string DownloadLocation
+        {
+            get => downloadLocation.IsNullOrEmpty() ? Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) : downloadLocation;
+            set => downloadLocation = value;
+        }
 
         public int QueryPages { get; set; } = 1;
 

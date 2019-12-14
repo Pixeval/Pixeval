@@ -9,11 +9,12 @@
         xmlns:controls="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:persisting="clr-namespace:Pixeval.Persisting"
+        xmlns:objects="clr-namespace:Pixeval.Objects"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        TextElement.FontFamily="Microsoft Yahei UI Light"
+        TextElement.FontFamily="Microsoft YaHei UI Light"
         mc:Ignorable="d"
-        Initialized="MainWindow_OnInitialized" MouseDown="MainWindow_OnMouseDown"
-        Title="MainWindow" Height="900" Width="1600">
+        Initialized="MainWindow_OnInitialized" MouseDown="MainWindow_OnMouseDown" Deactivated="MainWindow_OnDeactivated"
+        Title="Pixeval" Height="900" Width="1600">
     <Window.Resources>
         <CubicEase x:Key="CubicEase" EasingMode="EaseOut" />
         <valueConverters:VisibleIfTrueConverter x:Key="VisibleIfTrueConverter" />
@@ -22,7 +23,15 @@
         <valueConverters:IllustSubscriptConverter x:Key="IllustSubscriptConverter"/>
         <DataTemplate x:Key="IllustrationViewModelDataTemplate" DataType="viewModel:Illustration">
             <ListViewItem x:Name="IllustrationContainer" MouseDoubleClick="IllustrationContainer_OnMouseDoubleClick">
-                <Grid Width="210" Height="280" ClipToBounds="True" Cursor="Hand">
+                <ListViewItem.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem x:Name="DownloadNowMenuItem" Header="下载该作品" Click="DownloadNowMenuItem_OnClick"/>
+                        <MenuItem x:Name="DownloadAllNowMenuItem" Header="下载当前列表中的所有作品" Click="DownloadAllNowMenuItem_OnClick"/>
+                        <MenuItem x:Name="AddToDownloadListMenuItem" Header="添加到下载列表" Click="AddToDownloadListMenuItem_OnClick"/>
+                        <MenuItem x:Name="AddAllToDownloadListMenuItem" Header="将当前列表的所有作品添加到下载列表" Click="AddAllToDownloadListMenuItem_OnClick"/>
+                    </ContextMenu>
+                </ListViewItem.ContextMenu>
+                <Grid Width="210" Height="280" ClipToBounds="True">
                     <Border x:Name="GridBorder" CornerRadius="15" Background="#FAFAFC" ClipToBounds="True" />
                     <Grid ToolTip="{Binding Path=Id}" ClipToBounds="True">
                         <Grid.OpacityMask>
@@ -32,8 +41,8 @@
                                Stretch="UniformToFill" Loaded="Thumbnail_OnLoaded" Unloaded="Thumbnail_OnUnloaded" />
                         <Border Height="60" VerticalAlignment="Bottom">
                             <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                                       Text="{Binding Path=Title}" FontFamily="Microsoft Yahei UI Light"
-                                       Foreground="#FFF1F1F1" FontSize="20" TextAlignment="Center" TextWrapping="Wrap" />
+                                       Text="{Binding Path=Title}" FontFamily="Microsoft YaHei UI Light"
+                                       Foreground="#FFF1F1F1" FontSize="18" TextAlignment="Center" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" />
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0 0" EndPoint="0 1" Opacity="0.6">
                                     <GradientStop Color="Black" Offset="1" />
@@ -69,12 +78,12 @@
                             </Button>
                         </Grid>
                         <Grid VerticalAlignment="Top" HorizontalAlignment="Right" Width="30" Height="30" Margin="0 15 15 0" Visibility="{Binding Converter={StaticResource IllustSubscriptConverter}}">
-                            <Viewbox Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsUgoira, Converter={StaticResource VisibleIfTrueConverter}}" ToolTip="这是一个图集">
+                            <Viewbox Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsUgoira, Converter={StaticResource VisibleIfTrueConverter}}" ToolTip="这是一个GIF动图">
                                 <Canvas Width="24" Height="24">
                                     <Path Data="M11,8H13V16H11V8M7.67,8H4.33C3.53,8 3,8.67 3,9.33V14.67C3,15.33 3.53,16 4.33,16H7.67C8.47,16 9,15.33 9,14.67V12H7V14H5V10H9V9.33C9,8.67 8.47,8 7.67,8M21,10V8H15V16H17V14H19.5V12H17V10H21Z" Fill="Gray" />
                                 </Canvas>
                             </Viewbox>
-                            <Viewbox Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsManga, Converter={StaticResource VisibleIfTrueConverter}}" ToolTip="这是一个GIF动图">
+                            <Viewbox Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsManga, Converter={StaticResource VisibleIfTrueConverter}}" ToolTip="这是一个图集">
                                 <Canvas Width="24" Height="24">
                                     <Path Data="M22,16V4A2,2 0 0,0 20,2H8A2,2 0 0,0 6,4V16A2,2 0 0,0 8,18H20A2,2 0 0,0 22,16M11,12L13.03,14.71L16,11L20,16H8M2,6V20A2,2 0 0,0 4,22H18V20H4V6" Fill="Gray" />
                                 </Canvas>
@@ -85,8 +94,13 @@
             </ListViewItem>
         </DataTemplate>
         <DataTemplate x:Key="SpotlightDataTemplate" DataType="viewModel:SpotlightArticle">
-            <Grid Height="300" HorizontalAlignment="Stretch" Cursor="Hand"
+            <Grid x:Name="SpotlightContainer" Height="300" HorizontalAlignment="Stretch" Cursor="Hand" MouseLeftButtonDown="SpotlightContainer_OnMouseLeftButtonDown"
                    Width="{Binding ElementName=SpotlightListView, Path=ActualWidth, Converter={StaticResource WidthMinus45PxConverter}}">
+                <Grid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem x:Name="DownloadSpotlightItem" Header="下载特辑" Click="DownloadSpotlightItem_OnClick"/>
+                    </ContextMenu>
+                </Grid.ContextMenu>
                 <Grid.Triggers>
                     <EventTrigger RoutedEvent="ListViewItem.MouseEnter">
                         <BeginStoryboard>
@@ -579,7 +593,7 @@
                 </Image>
                 <StackPanel Grid.Row="1" Height="50" Margin="0 20 0 0" HorizontalAlignment="Center"
                             VerticalAlignment="Top" Orientation="Horizontal">
-                    <TextBox x:Name="KeywordTextBox" Width="800"
+                    <TextBox x:Name="KeywordTextBox" Width="800" GotFocus="KeywordTextBox_OnGotFocus"
                              Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                              materialDesign:HintAssist.Hint="请输入要搜索的内容~(￣▽￣)~*" />
                     <TextBox Width="0" Height="0" x:Name="ToLoseFocus" />
@@ -594,11 +608,36 @@
                         </Viewbox>
                     </Button>
                 </StackPanel>
+                <Popup StaysOpen="True" x:Name="QueryOptionPopup" PopupAnimation="Fade" AllowsTransparency="True" HorizontalOffset="350" objects:PopupHelper.PopupPlacementTarget="{Binding ElementName=KeywordTextBox}" Grid.Row="1" Placement="Bottom" PlacementTarget="{Binding ElementName=KeywordTextBox}">
+                    <StackPanel Height="40" Background="#FAFAFC" Orientation="Horizontal">
+                        <ToggleButton x:Name="QueryArtistToggleButton" ToolTip="搜索用户" Width="30" Height="30" Style="{DynamicResource MaterialDesignFlatToggleButton}" Margin="0 0 5 0" Checked="QueryArtistToggleButton_OnChecked">
+                            <Viewbox Width="24" Height="24">
+                                <Canvas Width="24" Height="24">
+                                    <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" Fill="Gray" />
+                                </Canvas>
+                            </Viewbox>
+                        </ToggleButton>
+                        <ToggleButton x:Name="QuerySingleArtistToggleButton" ToolTip="搜索单个用户" Width="30" Height="30" Style="{DynamicResource MaterialDesignFlatToggleButton}" Margin="5 0 5 0" Checked="QuerySingleWorkToggleButton_OnChecked">
+                            <Viewbox Width="24" Height="24">
+                                <Canvas Width="24" Height="24">
+                                    <Path Data="M19,21V19H15V17H19V15L22,18L19,21M10,4A4,4 0 0,1 14,8A4,4 0 0,1 10,12A4,4 0 0,1 6,8A4,4 0 0,1 10,4M10,14C11.15,14 12.25,14.12 13.24,14.34C12.46,15.35 12,16.62 12,18C12,18.7 12.12,19.37 12.34,20H2V18C2,15.79 5.58,14 10,14Z" Fill="Gray" />
+                                </Canvas>
+                            </Viewbox>
+                        </ToggleButton>
+                        <ToggleButton x:Name="QuerySingleWorkToggleButton" ToolTip="搜索单个作品" Width="30" Height="30" Style="{DynamicResource MaterialDesignFlatToggleButton}" Margin="5 0 0 0" Checked="QuerySingleWorkToggleButton_OnChecked">
+                            <Viewbox Width="24" Height="24">
+                                <Canvas Width="24" Height="24">
+                                    <Path Data="M10,7V9H12V17H14V7H10M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2Z" Fill="Gray" />
+                                </Canvas>
+                            </Viewbox>
+                        </ToggleButton>
+                    </StackPanel>
+                </Popup>
             </Grid>
             <Grid x:Name="QueryDisplayContainer" Background="#FAFAFC">
                 <ListView x:Name="ImageListView" VirtualizingPanel.CacheLengthUnit="Pixel" Grid.ZIndex="1"
                           VirtualizingPanel.CacheLength="0 0" VirtualizingPanel.ScrollUnit="Pixel"
-                          VirtualizingPanel.VirtualizationMode="Recycling"
+                          VirtualizingPanel.VirtualizationMode="Recycling" 
                           Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=1}}"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           ItemTemplate="{StaticResource IllustrationViewModelDataTemplate}">
@@ -650,7 +689,7 @@
                 </ListView>
             </Grid>
         </Grid>
-        <Grid x:Name="DownloadList" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="300">
+        <Grid x:Name="DownloadListGrid" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="300">
             <Grid.Style>
                 <Style>
                     <Style.Triggers>
@@ -684,14 +723,14 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Button Grid.Column="0" Style="{DynamicResource MaterialDesignToolButton}" Height="40" Width="40"
-                                x:Name="DownloadAllButton" Margin="20 0 0 0">
+                                x:Name="DownloadAllButton" Margin="20 0 0 0" Click="DownloadAllButton_OnClick">
                             <Viewbox Width="30" Height="30">
                                 <Canvas Width="24" Height="24">
                                     <Path Data="M9,1V7H5L12,14L19,7H15V1H9M5,16V18H19V16H5M5,20V22H19V20H5Z" Fill="Gray" />
                                 </Canvas>
                             </Viewbox>
                         </Button>
-                        <Button Grid.Column="1" Style="{DynamicResource MaterialDesignToolButton}" Height="40" Width="40">
+                        <Button x:Name="ClearDownloadListButton" Click="ClearDownloadListButton_OnClick" Grid.Column="1" Style="{DynamicResource MaterialDesignToolButton}" Height="40" Width="40">
                             <Viewbox Width="30" Height="30">
                                 <Canvas Width="24" Height="24">
                                     <Path Data="M15,16H19V18H15V16M15,8H22V10H15V8M15,12H21V14H15V12M3,18A2,2 0 0,0 5,20H11A2,2 0 0,0 13,18V8H3V18M14,5H11L10,4H6L5,5H2V7H14V5Z" Fill="Gray" />
@@ -722,7 +761,7 @@
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock VerticalAlignment="Center" Grid.Column="0" HorizontalAlignment="Left" Margin="10 0 0 0" FontSize="20" Text="{Binding Id, Converter={StaticResource DownloadListDisplayConverter}}" TextWrapping="NoWrap" TextTrimming="WordEllipsis" FontFamily="Microsoft Yahei UI Light"/>
-                                        <Button Grid.Column="1" Style="{DynamicResource MaterialDesignToolButton}" HorizontalAlignment="Right">
+                                        <Button x:Name="DownloadSingleFromDownloadListButton" Click="DownloadSingleFromDownloadListButton_OnClick" Grid.Column="1" Style="{DynamicResource MaterialDesignToolButton}" HorizontalAlignment="Right">
                                             <Viewbox Width="24" Height="24">
                                                 <Canvas Width="24" Height="24">
                                                     <Path Data="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" Fill="Gray" />
@@ -770,7 +809,7 @@
                 </Style>
             </materialDesign:DialogHost.Style>
             <materialDesign:DialogHost.DialogContent>
-                <materialDesign:Card Height="700" Width="900">
+                <materialDesign:Card Height="620" Width="800">
                     <Grid>
                         <TextBlock Text="Pixeval设置" FontSize="20" HorizontalAlignment="Center" Margin="0 30 0 0"
                                    VerticalAlignment="Top" Height="30" />
@@ -778,7 +817,6 @@
                         <StackPanel VerticalAlignment="Top" Margin="100 100 100 0">
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="40" />
                                     <RowDefinition Height="40" />
                                     <RowDefinition Height="40" />
                                     <RowDefinition Height="40" />
@@ -806,43 +844,38 @@
                                 <ToggleButton x:Name="IsCacheThumbnail" Grid.Row="1" Grid.Column="1"
                                               Background="#66CCFF" HorizontalAlignment="Right"
                                               IsChecked="{Binding Path=CachingThumbnail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                <TextBlock Grid.Row="2" Grid.Column="0" FontSize="15" Text="程序启动时同步P站收藏夹图片到本地"
+                                <TextBlock Grid.Row="2" Grid.Column="0" FontSize="15" Text="关闭R-18/R-18G搜索"
                                            VerticalAlignment="Center" />
-                                <ToggleButton x:Name="SyncGalleryOnStart" Grid.Row="2" Grid.Column="1"
-                                              Background="#66CCFF" HorizontalAlignment="Right"
-                                              IsChecked="{Binding Path=SyncOnStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                <TextBlock Grid.Row="3" Grid.Column="0" FontSize="15" Text="关闭R-18/R-18G搜索"
-                                           VerticalAlignment="Center" />
-                                <ToggleButton x:Name="QueryR18" Grid.Row="3" Grid.Column="1" Background="#66CCFF"
+                                <ToggleButton x:Name="QueryR18" Grid.Row="2" Grid.Column="1" Background="#66CCFF"
                                               HorizontalAlignment="Right" Checked="QueryR18_OnChecked"
                                               Unchecked="QueryR18_OnUnchecked"
                                               IsChecked="{Binding Path=ExceptTags, Mode=OneWay, Converter={StaticResource QueryR18ToggleButtonIsCheckedConverter}}" />
-                                <TextBlock Grid.Row="4" Grid.Column="0" FontSize="15" Text="要过滤的最低收藏数"
+                                <TextBlock Grid.Row="3" Grid.Column="0" FontSize="15" Text="要过滤的最低收藏数"
                                            VerticalAlignment="Center" />
-                                <Slider Maximum="2000" Minimum="0" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                                <Slider Maximum="2000" Minimum="0" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
                                         Margin="200 0 0 0" VerticalAlignment="Center" Foreground="#66CCFF"
                                         AutoToolTipPlacement="BottomRight" AutoToolTipPrecision="0"
                                         Value="{Binding Path=MinBookmark, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                <TextBlock Grid.Row="5" Grid.Column="0" FontSize="15" Text="搜索页数, 最低为1, 最高为10"
+                                <TextBlock Grid.Row="4" Grid.Column="0" FontSize="15" Text="搜索页数, 最低为1, 最高为10"
                                            VerticalAlignment="Center" />
-                                <Slider Maximum="10" Minimum="1" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+                                <Slider Maximum="10" Minimum="1" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
                                         Margin="200 0 0 0" VerticalAlignment="Center" Foreground="#66CCFF"
                                         Value="{Binding QueryPages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                <TextBox x:Name="DownloadLocationTextBox" Grid.Row="8" Grid.Column="0"
+                                <TextBlock Grid.Row="5" Grid.Column="0" FontSize="15" Text="图片搜索起始页, 最低为1"
+                                           VerticalAlignment="Center" />
+                                <TextBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="200 0 0 0"
+                                         VerticalAlignment="Center"
+                                         Text="{Binding QueryStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Grid.Row="6" Grid.Column="0" FontSize="15"
+                                           Text="特辑搜索起始页, 最低为1 (特辑和图片搜索使用同一个搜索页数设置)" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="480 0 0 0"
+                                         VerticalAlignment="Center"
+                                         Text="{Binding SpotlightQueryStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox x:Name="DownloadLocationTextBox" Grid.Row="7" Grid.Column="0"
                                          Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                                          materialDesign:HintAssist.Hint="作品下载位置"
                                          Text="{Binding Path=DownloadLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                <TextBlock Grid.Row="6" Grid.Column="0" FontSize="15" Text="图片搜索起始页, 最低为1"
-                                           VerticalAlignment="Center" />
-                                <TextBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="200 0 0 0"
-                                         VerticalAlignment="Center"
-                                         Text="{Binding QueryStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                <TextBlock Grid.Row="7" Grid.Column="0" FontSize="15"
-                                           Text="特辑搜索起始页, 最低为1 (特辑和图片搜索使用同一个搜索页数设置)" VerticalAlignment="Center" />
-                                <TextBox Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="480 0 0 0"
-                                         VerticalAlignment="Center"
-                                         Text="{Binding SpotlightQueryStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                <Button x:Name="OpenFileDialogButton" Grid.Row="8" Grid.Column="1" Height="30"
+                                <Button x:Name="OpenFileDialogButton" Grid.Row="7" Grid.Column="1" Height="30"
                                         Width="30" VerticalAlignment="Bottom"
                                         Style="{DynamicResource MaterialDesignToolButton}"
                                         Click="OpenFileDialogButton_OnClick">
@@ -854,18 +887,18 @@
                                         </Canvas>
                                     </Viewbox>
                                 </Button>
-                                <TextBox x:Name="ExceptTagTextBox" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2"
+                                <TextBox x:Name="ExceptTagTextBox" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
                                          Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                                          materialDesign:HintAssist.Hint="请输入要排除的标签, 使用空格分隔"
                                          Text="{Binding Path=ExceptTags, Converter={StaticResource StringSplitConverter}, Mode=OneWay}"
                                          LostFocus="ExceptTagTextBox_OnLostFocus" />
-                                <TextBox x:Name="ContainsTagTextBox" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2"
+                                <TextBox x:Name="ContainsTagTextBox" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2"
                                          Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                                          materialDesign:HintAssist.Hint="请输入要抓取的标签, 使用空格分隔"
                                          Text="{Binding Path=ContainsTags, Converter={StaticResource StringSplitConverter}, Mode=OneWay}"
                                          LostFocus="ContainsTagTextBox_OnLostFocus" />
                                 <Button x:Name="ClearSettingButton" ToolTip="还原为默认" VerticalAlignment="Bottom"
-                                        Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Height="40" Width="40"
+                                        Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Height="40" Width="40"
                                         Style="{DynamicResource MaterialDesignToolButton}"
                                         Click="ClearSettingButton_OnClick">
                                     <Viewbox Width="30" Height="30">
@@ -876,14 +909,14 @@
                                         </Canvas>
                                     </Viewbox>
                                 </Button>
-                                <TextBlock FontSize="12" Grid.Row="12" Grid.Column="0" VerticalAlignment="Bottom"
+                                <TextBlock FontSize="12" Grid.Row="11" Grid.Column="0" VerticalAlignment="Bottom"
                                            Text="注: 特辑一页搜索10条, 图片一页搜索300张" />
                             </Grid>
                         </StackPanel>
                     </Grid>
                 </materialDesign:Card>
             </materialDesign:DialogHost.DialogContent>
-            <materialDesign:DialogHost x:Name="ProgressDialog" CloseOnClickAway="True">
+            <materialDesign:DialogHost x:Name="ProgressDialog" CloseOnClickAway="True" DialogClosing="ProgressDialog_OnDialogClosing">
                 <materialDesign:DialogHost.DialogContent>
                     <materialDesign:Card Width="500" Height="200" Background="White">
                         <StackPanel VerticalAlignment="Center">
@@ -902,5 +935,6 @@
                 </materialDesign:Card>
             </materialDesign:DialogHost.DialogContent>
         </materialDesign:DialogHost>
+        <materialDesign:Snackbar x:Name="MainWindowSnackBar" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
     </Grid>
 </Window>

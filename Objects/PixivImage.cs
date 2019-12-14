@@ -1,9 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using ImageMagick;
+using Pixeval.Core;
+using Pixeval.Data.Model.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Persisting;
 
@@ -156,6 +161,98 @@ namespace Pixeval.Objects
         public static async Task<BitmapImage> GetGifBitmap(string link, IReadOnlyList<long> delay)
         {
             return FromStream(MergeGifStream(ReadGifZipEntries(await FromUrlInternal(link)), delay));
+        }
+
+        public static Task DownloadIllustsInternal(IEnumerable<Illustration> illustrations)
+        {
+            DownloadList.ToDownloadList.Clear();
+            return DownloadIllusts(illustrations, Settings.Global.DownloadLocation);
+        }
+
+        public static Task DownloadIllusts(IEnumerable<Illustration> illustrations, string path)
+        {
+            return Task.WhenAll(illustrations.Select(illustration => DownloadIllust(illustration, path)));
+        }
+
+        internal static async Task DownloadIllustInternal(Illustration illustration)
+        {
+            DownloadList.Remove(illustration);
+            await DownloadIllust(illustration, Settings.Global.DownloadLocation);
+        }
+
+        public static async Task DownloadIllust(Illustration illustration, string rootPath)
+        {
+            var path = TextBuffer.GetOrCreateDirectory(rootPath);
+
+            if (illustration.IsManga)
+            {
+                await DownloadManga(illustration, path);
+            } 
+            else if (illustration.IsUgoira)
+            {
+                await DownloadUgoira(illustration, path);
+            }
+            else
+            {
+                var url = illustration.Origin;
+                await File.WriteAllBytesAsync(Path.Combine(path, $"{illustration.Id}{GetExtension(url)}"), await FromUrlInternal(url));
+            }
+        }
+
+        public static async Task DownloadUgoira(Illustration illustration, string rootPath)
+        {
+            if (!illustration.IsUgoira)
+            {
+                throw new InvalidOperationException();
+            }
+
+            var metadata = await HttpClientFactory.AppApiService.GetUgoiraMetadata(illustration.Id);
+            var url = FormatGifZipUrl(metadata.UgoiraMetadataInfo.ZipUrls.Medium);
+
+            await using var img = (MemoryStream) await GetGifStream(url, metadata.UgoiraMetadataInfo.Frames.Select(f => f.Delay / 10).ToList());
+            await File.WriteAllBytesAsync(Path.Combine(rootPath, $"{illustration.Id}.gif"), await Task.Run(() => img.ToArray()));
+        }
+
+        public static async Task DownloadManga(Illustration illustration, string rootPath)
+        {
+            if (!illustration.IsManga)
+            {
+                throw new InvalidOperationException();
+            }
+
+            var mangaDir = TextBuffer.GetOrCreateDirectory(Path.Combine(rootPath, illustration.Id));
+
+            for (var i = 0; i < illustration.MangaMetadata.Length; i++)
+            {
+                var url = illustration.MangaMetadata[i].Origin;
+                await File.WriteAllBytesAsync(Path.Combine(mangaDir, $"{i}{GetExtension(url)}"), await FromUrlInternal(url));
+            }
+        }
+
+        public static async Task DownloadSpotlight(SpotlightArticle article)
+        {
+            var root = TextBuffer.GetOrCreateDirectory(Path.Combine(Settings.Global.DownloadLocation, "Spotlight", article.Title));
+
+            var extractor = new SpotlightContentExtractor(article.Id.ToString());
+            var illusts = await extractor.GetArticleWorks();
+
+            var list = new List<Task>();
+            foreach (var illust in illusts)
+            {
+                list.Add(DownloadIllust(await PixivHelper.IllustrationInfo(illust), root));
+            }
+
+            await Task.WhenAll(list);
+        }
+
+        private static string GetExtension(string url)
+        {
+            return TextBuffer.GetExtension(url);
+        }
+
+        public static string FormatGifZipUrl(string link)
+        {
+            return !link.EndsWith("ugoira1920x1080.zip") ? Regex.Replace(link, "ugoira(\\d+)x(\\d+).zip", "ugoira1920x1080.zip") : link;
         }
     }
 }

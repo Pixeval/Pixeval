@@ -15,7 +15,6 @@ namespace Pixeval.Data.Web.Delegation
         {
             return new HttpClient(PixivApiHttpClientHandler.Instance)
             {
-                Timeout = TimeSpan.FromSeconds(20),
                 BaseAddress = new Uri(baseAddress)
             };
         }

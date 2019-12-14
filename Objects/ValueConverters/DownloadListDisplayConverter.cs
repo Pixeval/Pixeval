@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using Pixeval.Data.Model.ViewModel;
 
 namespace Pixeval.Objects.ValueConverters
 {
