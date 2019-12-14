@@ -610,14 +610,14 @@
                 </StackPanel>
                 <Popup StaysOpen="True" x:Name="QueryOptionPopup" PopupAnimation="Fade" AllowsTransparency="True" HorizontalOffset="350" objects:PopupHelper.PopupPlacementTarget="{Binding ElementName=KeywordTextBox}" Grid.Row="1" Placement="Bottom" PlacementTarget="{Binding ElementName=KeywordTextBox}">
                     <StackPanel Height="40" Background="#FAFAFC" Orientation="Horizontal">
-                        <ToggleButton x:Name="QueryArtistToggleButton" ToolTip="搜索用户" Width="30" Height="30" Style="{DynamicResource MaterialDesignFlatToggleButton}" Margin="0 0 5 0" Checked="QueryArtistToggleButton_OnChecked">
+                        <ToggleButton x:Name="QueryArtistToggleButton" ToolTip="搜索用户" Width="30" Height="30" Style="{DynamicResource MaterialDesignFlatToggleButton}" Margin="0 0 5 0" Checked="QueryArtistToggleButton_OnChecked" Unchecked="QueryArtistToggleButton_OnUnchecked">
                             <Viewbox Width="24" Height="24">
                                 <Canvas Width="24" Height="24">
                                     <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" Fill="Gray" />
                                 </Canvas>
                             </Viewbox>
                         </ToggleButton>
-                        <ToggleButton x:Name="QuerySingleArtistToggleButton" ToolTip="搜索单个用户" Width="30" Height="30" Style="{DynamicResource MaterialDesignFlatToggleButton}" Margin="5 0 5 0" Checked="QuerySingleWorkToggleButton_OnChecked">
+                        <ToggleButton x:Name="QuerySingleArtistToggleButton" ToolTip="搜索单个用户" Width="30" Height="30" Style="{DynamicResource MaterialDesignFlatToggleButton}" Margin="5 0 5 0" Checked="QuerySingleArtistToggleButton_OnChecked">
                             <Viewbox Width="24" Height="24">
                                 <Canvas Width="24" Height="24">
                                     <Path Data="M19,21V19H15V17H19V15L22,18L19,21M10,4A4,4 0 0,1 14,8A4,4 0 0,1 10,12A4,4 0 0,1 6,8A4,4 0 0,1 10,4M10,14C11.15,14 12.25,14.12 13.24,14.34C12.46,15.35 12,16.62 12,18C12,18.7 12.12,19.37 12.34,20H2V18C2,15.79 5.58,14 10,14Z" Fill="Gray" />
@@ -635,38 +635,6 @@
                 </Popup>
             </Grid>
             <Grid x:Name="QueryDisplayContainer" Background="#FAFAFC">
-                <ListView x:Name="ImageListView" VirtualizingPanel.CacheLengthUnit="Pixel" Grid.ZIndex="1"
-                          VirtualizingPanel.CacheLength="0 0" VirtualizingPanel.ScrollUnit="Pixel"
-                          VirtualizingPanel.VirtualizationMode="Recycling" 
-                          Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=1}}"
-                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                          ItemTemplate="{StaticResource IllustrationViewModelDataTemplate}">
-                    <ListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <controls:VirtualizingWrapPanel Orientation="Vertical" />
-                        </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
-                </ListView>
-                <ListView x:Name="UserPreviewListView" VirtualizingPanel.CacheLengthUnit="Pixel"
-                          VirtualizingPanel.CacheLength="0 0" VirtualizingPanel.ScrollUnit="Pixel"
-                          VirtualizingPanel.VirtualizationMode="Standard"
-                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                          ItemTemplate="{StaticResource UserPreviewTemplate}"
-                          Visibility="{Binding ElementName=FollowingTab, Path=IsSelected, Converter={StaticResource VisibleIfTrueConverter}}">
-                    <ListView.Template>
-                        <ControlTemplate>
-                            <ScrollViewer VirtualizingStackPanel.IsVirtualizing="True"
-                                          VirtualizingStackPanel.VirtualizationMode="Recycling">
-                                <ItemsPresenter />
-                            </ScrollViewer>
-                        </ControlTemplate>
-                    </ListView.Template>
-                    <ListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel />
-                        </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
-                </ListView>
                 <ListView x:Name="SpotlightListView" VirtualizingPanel.CacheLengthUnit="Pixel"
                           VirtualizingPanel.CacheLength="0 0" VirtualizingPanel.ScrollUnit="Pixel"
                           VirtualizingPanel.VirtualizationMode="Standard"
@@ -684,6 +652,37 @@
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                </ListView>
+                <ListView x:Name="UserPreviewListView" VirtualizingPanel.CacheLengthUnit="Pixel"
+                          VirtualizingPanel.CacheLength="0 0" VirtualizingPanel.ScrollUnit="Pixel"
+                          VirtualizingPanel.VirtualizationMode="Standard"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ItemTemplate="{StaticResource UserPreviewTemplate}">
+                    <ListView.Template>
+                        <ControlTemplate>
+                            <ScrollViewer VirtualizingStackPanel.IsVirtualizing="True"
+                                          VirtualizingStackPanel.VirtualizationMode="Recycling">
+                                <ItemsPresenter />
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ListView.Template>
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                </ListView>
+                <ListView x:Name="ImageListView" VirtualizingPanel.CacheLengthUnit="Pixel" Grid.ZIndex="1"
+                          VirtualizingPanel.CacheLength="0 0" VirtualizingPanel.ScrollUnit="Pixel"
+                          VirtualizingPanel.VirtualizationMode="Recycling" 
+                          Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=1}}"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ItemTemplate="{StaticResource IllustrationViewModelDataTemplate}">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <controls:VirtualizingWrapPanel Orientation="Vertical" />
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                 </ListView>

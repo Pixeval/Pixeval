@@ -39,6 +39,7 @@ namespace Pixeval
             Instance = this;
 
             InitializeComponent();
+
             NavigatorList.SelectedItem = MenuTab;
             MainWindowSnackBar.MessageQueue = messageQueue;
 
@@ -56,13 +57,29 @@ namespace Pixeval
                 return;
             }
 
-            if (QuerySingleWorkToggleButton.IsChecked == true)
+            if (QueryArtistToggleButton.IsChecked == true)
+            {
+                TryQueryUser();
+            }
+            else if (QuerySingleWorkToggleButton.IsChecked == true)
             {
                 TryQuerySingle();
             }
             else
             {
                 QueryWorks();
+            }
+        }
+
+        private async void TryQueryUser()
+        {
+            var iterator = new UserInformationIterator(KeywordTextBox.Text);
+
+            var list = UiHelper.NewItemsSource<UserPreview>(UserPreviewListView);
+
+            await foreach (var i in iterator.GetUserNav())
+            {
+                list.Add(i);
             }
         }
 
@@ -103,20 +120,12 @@ namespace Pixeval
 
         private void Dispatcher_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            if (e.Exception.InnerException != null && e.Exception.InnerException.Message.Contains("The server returned an invalid or unrecognized response"))
+            if (e.Exception.InnerException == null || !e.Exception.InnerException.Message.Contains("The server returned an invalid or unrecognized response"))
             {
-            }
-            if (e.Exception is QueryNotRespondingException)
-            {
-                ImageListView.ItemsSource = null;
-                Notice("抱歉, Pixeval无法根据当前的设置找到任何作品, 或许是您的页码设置过大/关键字不存在/没有收藏任何作品, 请检查后再尝试吧~");
-            }
-            else
-            {
-                Notice(e.Exception.Message);
-            }
+                Notice(e.Exception is QueryNotRespondingException ? "抱歉, Pixeval无法根据当前的设置找到任何作品, 或许是您的页码设置过大/关键字不存在/没有收藏任何作品, 请检查后再尝试吧~" : e.Exception.Message);
 
-            e.Handled = true;
+                e.Handled = true;
+            }
         }
 
         private void KeywordTextBox_OnGotFocus(object sender, RoutedEventArgs e)
@@ -127,11 +136,26 @@ namespace Pixeval
         private void QuerySingleWorkToggleButton_OnChecked(object sender, RoutedEventArgs e)
         {
             QueryArtistToggleButton.IsChecked = false;
+            QuerySingleArtistToggleButton.IsChecked = false;
+        }
+
+        private void QueryArtistToggleButton_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            HideContentDisplays(UserPreviewListView);
+            UiHelper.ReleaseItemsSource(UserPreviewListView);
         }
 
         private void QueryArtistToggleButton_OnChecked(object sender, RoutedEventArgs e)
         {
+            ShowContentDisplays(UserPreviewListView);
             QuerySingleWorkToggleButton.IsChecked = false;
+            QuerySingleArtistToggleButton.IsChecked = false;
+        }
+
+        private void QuerySingleArtistToggleButton_OnChecked(object sender, RoutedEventArgs e)
+        {
+            QuerySingleWorkToggleButton.IsChecked = false;
+            QueryArtistToggleButton.IsChecked = false;
         }
 
         private async void MainWindow_OnInitialized(object sender, EventArgs e)
@@ -191,7 +215,7 @@ namespace Pixeval
 
         private async void SpotlightTab_OnSelected(object sender, RoutedEventArgs e)
         {
-            UiHelper.HideControl(ImageListView);
+            ShowContentDisplays(SpotlightListView);
 
             QueryStartUp();
 
@@ -203,15 +227,13 @@ namespace Pixeval
 
         private void SpotlightTab_OnUnselected(object sender, RoutedEventArgs e)
         {
-            UiHelper.ShowControl(ImageListView);
-
+            HideContentDisplays(SpotlightListView);
             UiHelper.ReleaseItemsSource(SpotlightListView);
         }
 
         private async void FollowingTab_OnSelected(object sender, RoutedEventArgs e)
         {
-            UiHelper.HideControl(ImageListView);
-            UiHelper.HideControl(SpotlightListView);
+            ShowContentDisplays(UserPreviewListView);
 
             QueryStartUp();
             NoticeProgress();
@@ -224,10 +246,36 @@ namespace Pixeval
 
         private void FollowingTab_OnUnselected(object sender, RoutedEventArgs e)
         {
-            UiHelper.ShowControl(ImageListView);
-            UiHelper.ShowControl(SpotlightListView);
-
+            HideContentDisplays(UserPreviewListView);
             UiHelper.ReleaseItemsSource(UserPreviewListView);
+        }
+
+        private void ShowContentDisplays(ListView control)
+        {
+            if (control == SpotlightListView)
+            {
+                UiHelper.HideControl(ImageListView);
+                UiHelper.HideControl(UserPreviewListView);
+            }
+            else if (control == UserPreviewListView)
+            {
+                UiHelper.ShowControl(UserPreviewListView);
+                UiHelper.HideControl(ImageListView);
+            }
+        }
+
+        private void HideContentDisplays(ListView control)
+        {
+            if (control == SpotlightListView)
+            {
+                UiHelper.ShowControl(ImageListView);
+                UiHelper.ShowControl(UserPreviewListView);
+            }
+            else if (control == UserPreviewListView)
+            {
+                UiHelper.ShowControl(ImageListView);
+                UiHelper.HideControl(UserPreviewListView);
+            }
         }
 
         private void SignOutTab_OnSelected(object sender, RoutedEventArgs e)
@@ -400,9 +448,15 @@ namespace Pixeval
             var dataContext = sender.GetDataContext<UserPreview>();
 
             UiHelper.SetImageSource(avatar, await PixivImage.GetAndCreateOrLoadFromCacheInternal(dataContext.Avatar, dataContext.UserName));
-            UiHelper.SetImageSource(thumbnails[0], await PixivImage.GetAndCreateOrLoadFromCacheInternal(dataContext.Thumbnails[0], $"{dataContext.UserId}"));
-            UiHelper.SetImageSource(thumbnails[1], await PixivImage.GetAndCreateOrLoadFromCacheInternal(dataContext.Thumbnails[1], $"{dataContext.UserId}", 1));
-            UiHelper.SetImageSource(thumbnails[2], await PixivImage.GetAndCreateOrLoadFromCacheInternal(dataContext.Thumbnails[2], $"{dataContext.UserId}", 2));
+
+            var counter = 0;
+            foreach (var thumbnail in thumbnails)
+            {
+                if (counter < dataContext.Thumbnails.Length)
+                {
+                    UiHelper.SetImageSource(thumbnail, await PixivImage.GetAndCreateOrLoadFromCacheInternal(dataContext.Thumbnails[counter], $"{dataContext.UserId}", counter++));
+                }
+            }
         }
 
         private void UserPrevItem_OnUnloaded(object sender, RoutedEventArgs e)

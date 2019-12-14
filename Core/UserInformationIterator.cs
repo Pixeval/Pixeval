@@ -26,6 +26,8 @@ namespace Pixeval.Core
             var counter = 0;
             while (!url.IsNullOrEmpty())
             {
+                if (counter > 10) yield break;
+
                 var httpClient = HttpClientFactory.PixivApi(ProtocolBase.AppApiBaseUrl);
                 httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"Bearer {Identity.Global.AccessToken}");
 
@@ -33,6 +35,7 @@ namespace Pixeval.Core
 
                 if (response.UserPreviews.IsNullOrEmpty() && counter++ == 0)
                 {
+                    MessageBox.Show("aaa");
                     throw new QueryNotRespondingException();
                 }
 
