@@ -35,7 +35,6 @@ namespace Pixeval.Core
 
                 if (response.UserPreviews.IsNullOrEmpty() && counter++ == 0)
                 {
-                    MessageBox.Show("aaa");
                     throw new QueryNotRespondingException();
                 }
 
