@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Pixeval.Data.Model.ViewModel;
+using Pixeval.Data.ViewModel;
 
 namespace Pixeval.Core
 {
