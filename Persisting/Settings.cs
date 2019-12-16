@@ -12,6 +12,8 @@ namespace Pixeval.Persisting
     {
         public static Settings Global = new Settings();
 
+        private string downloadLocation;
+
         public bool SyncOnStart { get; set; }
 
         public bool SortOnInserting { get; set; }
@@ -20,7 +22,6 @@ namespace Pixeval.Persisting
 
         public int MinBookmark { get; set; }
 
-        private string downloadLocation;
         public string DownloadLocation
         {
             get => downloadLocation.IsNullOrEmpty() ? Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) : downloadLocation;

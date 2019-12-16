@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using Pixeval.Data.Model.ViewModel;
+using System.Linq;
+using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Response;
 using Pixeval.Objects;
 using Pixeval.Objects.Exceptions;
-using Pixeval.Persisting;
 
 namespace Pixeval.Core
 {
@@ -29,7 +29,7 @@ namespace Pixeval.Core
         public async IAsyncEnumerable<Illustration> MoveNextAsync()
         {
             var httpClient = HttpClientFactory.PixivApi(ProtocolBase.AppApiBaseUrl);
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"Bearer {Identity.Global.AccessToken}");
+            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer");
 
             var query = $"/v1/user/bookmarks/illust?user_id={uid}&restrict=public&filter=for_ios";
 
@@ -39,7 +39,7 @@ namespace Pixeval.Core
 
             context = model;
 
-            foreach (var contextIllust in context.Illusts) yield return await PixivHelper.IllustrationInfo(contextIllust.Id.ToString());
+            foreach (var contextIllust in context.Illusts.Where(contextIllust => contextIllust != null)) yield return await PixivHelper.IllustrationInfo(contextIllust.Id.ToString());
         }
     }
 }

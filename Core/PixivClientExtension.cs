@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Pixeval.Data.Model.ViewModel;
+using AngleSharp.Html.Parser;
+using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
-using Pixeval.Data.Web.Response;
-using Pixeval.Objects;
 
 namespace Pixeval.Core
 {
@@ -23,28 +24,28 @@ namespace Pixeval.Core
             await HttpClientFactory.AppApiService.DeleteBookmark(new DeleteBookmarkRequest {IllustId = illustration.Id});
         }
 
-        public static async IAsyncEnumerable<UserNavResponse.UserPreview> QueryUsers(this PixivClient _, string keyword)
+        public static async Task<IEnumerable<string>> GetArticleWorks(this PixivClient _, string spotlightId)
         {
-            for (var i = 0;; i += 30)
-            {
-                var users = (await HttpClientFactory.AppApiService.GetUserNav(keyword, i)).UserPreviews;
+            var httpClient = new HttpClient();
+            var html = await httpClient.GetStringAsync($"https://www.pixivision.net/en/a/{spotlightId}");
 
-                if (!users.Any()) yield break;
+            var doc = await new HtmlParser().ParseDocumentAsync(html);
 
-                foreach (var usersUserPreview in users) yield return usersUserPreview;
-            }
+            return doc.QuerySelectorAll(".am__body .am__work")
+                .Select(element => element.Children[1].Children[0].GetAttribute("href"))
+                .Select(url => Regex.Match(url, "https://www.pixiv.net/artworks/(?<Id>\\d+)").Groups["Id"].Value);
         }
 
-        private static void DownloadIllustration(Illustration illustration, string path, Dictionary<string, string> header)
+        public static async Task FollowArtist(this PixivClient _, User user)
         {
-            AsyncIO.DownloadFile(illustration.Origin, path, header);
+            user.IsFollowed = true;
+            await HttpClientFactory.AppApiService.FollowArtist(new FollowArtistRequest {Id = user.Id});
         }
 
-        private static void DownloadManga(Illustration illustration, string path, Dictionary<string, string> header)
+        public static async Task UnFollowArtist(this PixivClient _, User user)
         {
-            if (illustration.Type == Illustration.IllustType.Manga)
-            {
-            }
+            user.IsFollowed = false;
+            await HttpClientFactory.AppApiService.UnFollowArtist(new UnFollowArtistRequest {UserId = user.Id});
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using PropertyChanged;
 
-namespace Pixeval.Data.Model.ViewModel
+namespace Pixeval.Data.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public class User
@@ -11,14 +11,12 @@ namespace Pixeval.Data.Model.ViewModel
 
         public bool IsFollowed { get; set; }
 
-        public string Twitter { get; set; }
-
-        public string WebPage { get; set; }
-
-        public int Illustrations { get; set; }
+        public string Avatar { get; set; }
 
         public string Introduction { get; set; }
 
-        public string[] Thumbnails { get; set; }
+        public string Background { get; set; }
+
+        public string[] Thumbnails { get; set; } = new string[3];
     }
 }

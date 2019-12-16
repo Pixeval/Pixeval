@@ -5,7 +5,7 @@ using PropertyChanged;
 
 #pragma warning disable 8509
 
-namespace Pixeval.Data.Model.ViewModel
+namespace Pixeval.Data.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public class Illustration : ICloneable
@@ -36,6 +36,11 @@ namespace Pixeval.Data.Model.ViewModel
 
         public Illustration[] MangaMetadata { get; set; }
 
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
+
         public class IllustType
         {
             public static readonly IllustType Illust = new IllustType();
@@ -54,11 +59,6 @@ namespace Pixeval.Data.Model.ViewModel
                     { Type: "illustration", IsManga: false} => Illust
                 };
             }
-        }
-
-        public object Clone()
-        {
-            return MemberwiseClone();
         }
     }
 

@@ -12,10 +12,7 @@ namespace Pixeval.Objects
 
         public static string GetOrCreateDirectory(string path)
         {
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
+            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
             return path;
         }

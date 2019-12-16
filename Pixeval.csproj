@@ -7,8 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\29238793.jpg" />
-    <None Remove="Resources\51823321.jpg" />
+    <None Remove="Resources\pxlogo.ico" />
     <None Remove="Resources\pxlogo_large.png" />
   </ItemGroup>
 
@@ -28,12 +27,10 @@
     <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
     <PackageReference Include="VirtualizingWrapPanel.NETCore" Version="1.4.0" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
-    <PackageReference Include="XamlAnimatedGif" Version="1.2.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\29238793.jpg" />
-    <Resource Include="Resources\51823321.jpg" />
+    <Resource Include="Resources\pxlogo.ico" />
     <Resource Include="Resources\pxlogo_large.png" />
   </ItemGroup>
 

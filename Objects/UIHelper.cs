@@ -91,7 +91,7 @@ namespace Pixeval.Objects
         }
 
         public static void HideControl(UIElement element)
-        { 
+        {
             element.Visibility = Visibility.Hidden;
         }
 
@@ -122,9 +122,9 @@ namespace Pixeval.Objects
             var sb = new Storyboard();
             var doubleAnimation = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(milliseconds))
             {
-                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+                EasingFunction = new CubicEase {EasingMode = EasingMode.EaseOut}
             };
-            Storyboard.SetTarget(doubleAnimation, (DependencyObject)sender);
+            Storyboard.SetTarget(doubleAnimation, (DependencyObject) sender);
             Storyboard.SetTargetProperty(doubleAnimation, new PropertyPath(path));
             sb.Children.Add(doubleAnimation);
             sb.Begin();
@@ -141,6 +141,11 @@ namespace Pixeval.Objects
         {
             Application.Current.Dispatcher?.BeginInvoke(action);
         }
+
+        public static T GetResources<T>(this FrameworkElement element, string name)
+        {
+            return (T) element.Resources[name];
+        }
     }
 
     public class PopupHelper
@@ -150,7 +155,7 @@ namespace Pixeval.Objects
 
         public static DependencyObject GetPopupPlacementTarget(DependencyObject obj)
         {
-            return (DependencyObject)obj.GetValue(PopupPlacementTargetProperty);
+            return (DependencyObject) obj.GetValue(PopupPlacementTargetProperty);
         }
 
         public static void SetPopupPlacementTarget(DependencyObject obj, DependencyObject value)

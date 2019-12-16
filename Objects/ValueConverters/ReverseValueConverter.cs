@@ -4,13 +4,12 @@ using System.Windows.Data;
 
 namespace Pixeval.Objects.ValueConverters
 {
-    public class ImageCenterConverter : IValueConverter
+    public class ReverseValueConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value != null) return (double) value / 2;
-
-            return 0;
+            if (value == null) return 0;
+            return -(double) value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

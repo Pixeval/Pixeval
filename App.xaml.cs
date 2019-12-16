@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Threading.Tasks;
+using System.Windows;
 using Pixeval.Persisting;
 
 namespace Pixeval
@@ -8,6 +10,21 @@ namespace Pixeval
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            if (Dispatcher != null)
+                Dispatcher.UnhandledException += (sender, args) => DispatcherOnUnhandledException(args.Exception);
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) => DispatcherOnUnhandledException((Exception) args.ExceptionObject);
+            TaskScheduler.UnobservedTaskException += (sender, args) => DispatcherOnUnhandledException(args.Exception);
+        }
+
+        private static void DispatcherOnUnhandledException(Exception e)
+        {
+#if DEBUG
+            Trace.WriteLine(e.Message);
+#endif
+        }
+
         protected override async void OnStartup(StartupEventArgs e)
         {
             await Settings.Global.Restore();

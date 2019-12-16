@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using Pixeval.Data.Model.ViewModel;
+using Pixeval.Data.ViewModel;
 
 namespace Pixeval.Objects.ValueConverters
 {
@@ -11,15 +11,9 @@ namespace Pixeval.Objects.ValueConverters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var val = (Illustration) value;
-            if (val == null)
-            {
-                return Visibility.Hidden;
-            }
+            if (val == null) return Visibility.Hidden;
 
-            if (val.IsManga || val.IsUgoira)
-            {
-                return Visibility.Visible;
-            }
+            if (val.IsManga || val.IsUgoira) return Visibility.Visible;
 
             return Visibility.Hidden;
         }

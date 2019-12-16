@@ -1,0 +1,262 @@
+﻿<Window x:Class="Pixeval.UserViewer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Pixeval"
+        xmlns:valueConverters="clr-namespace:Pixeval.Objects.ValueConverters"
+        xmlns:controls="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
+        xmlns:viewModel="clr-namespace:Pixeval.Data.ViewModel"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.FontFamily="Microsoft YaHei Light"
+        mc:Ignorable="d" Loaded="UserViewer_OnLoaded" d:DataContext="{d:DesignData User}"
+        Title="{Binding Name}" Height="768" Width="1366" Icon="/Resources/pxlogo.ico">
+
+    <Window.Resources>
+        <valueConverters:VisibleIfTrueConverter x:Key="VisibleIfTrueConverter" />
+        <valueConverters:VisibleIfFalseConverter x:Key="VisibleIfFalseConverter" />
+        <valueConverters:ReverseValueConverter x:Key="ReverseValueConverter" />
+        <CubicEase x:Key="CubicEase" />
+        <Storyboard x:Key="SelectorSnackBarMoveRightAnimation"
+                    TargetProperty="(Grid.RenderTransform).(TranslateTransform.X)" TargetName="SelectorSnackBar">
+            <DoubleAnimation From="0" To="80" EasingFunction="{StaticResource CubicEase}" Duration="00:00:0.3" />
+        </Storyboard>
+        <Storyboard x:Key="SelectorSnackBarMoveLeftAnimation"
+                    TargetProperty="(Grid.RenderTransform).(TranslateTransform.X)" TargetName="SelectorSnackBar">
+            <DoubleAnimation From="80" To="0" EasingFunction="{StaticResource CubicEase}" Duration="00:00:0.3" />
+        </Storyboard>
+        <Storyboard x:Key="SelectorOpacityMaskMoveRightAnimation"
+                    TargetProperty="(Grid.RenderTransform).(TranslateTransform.X)" TargetName="SelectorOpacityMask">
+            <DoubleAnimation From="0" To="80" EasingFunction="{StaticResource CubicEase}" Duration="00:00:0.3" />
+        </Storyboard>
+        <Storyboard x:Key="SelectorOpacityMaskMoveLeftAnimation"
+                    TargetProperty="(Grid.RenderTransform).(TranslateTransform.X)" TargetName="SelectorOpacityMask">
+            <DoubleAnimation From="80" To="0" EasingFunction="{StaticResource CubicEase}" Duration="00:00:0.3" />
+        </Storyboard>
+        <DataTemplate x:Key="IllustrationViewModelDataTemplate" DataType="viewModel:Illustration">
+            <ListViewItem x:Name="IllustrationContainer" MouseDoubleClick="IllustrationContainer_OnMouseDoubleClick">
+                <ListViewItem.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem x:Name="DownloadNowMenuItem" Header="下载该作品" Click="DownloadNowMenuItem_OnClick" />
+                        <MenuItem x:Name="DownloadAllNowMenuItem" Header="下载当前列表中的所有作品"
+                                  Click="DownloadAllNowMenuItem_OnClick" />
+                        <MenuItem x:Name="AddToDownloadListMenuItem" Header="添加到下载列表"
+                                  Click="AddToDownloadListMenuItem_OnClick" />
+                        <MenuItem x:Name="AddAllToDownloadListMenuItem" Header="将当前列表的所有作品添加到下载列表"
+                                  Click="AddAllToDownloadListMenuItem_OnClick" />
+                    </ContextMenu>
+                </ListViewItem.ContextMenu>
+                <Grid Width="210" Height="280" ClipToBounds="True">
+                    <Border x:Name="GridBorder" CornerRadius="15" Background="#FAFAFC" ClipToBounds="True" />
+                    <Grid ToolTip="{Binding Path=Id}" ClipToBounds="True">
+                        <Grid.Resources>
+                            <valueConverters:IllustSubscriptConverter x:Key="IllustSubscriptConverter" />
+                        </Grid.Resources>
+                        <Grid.OpacityMask>
+                            <VisualBrush Visual="{Binding ElementName=GridBorder}" />
+                        </Grid.OpacityMask>
+                        <Image x:Name="Thumbnail" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                               Stretch="UniformToFill" Loaded="Thumbnail_OnLoaded" Unloaded="Thumbnail_OnUnloaded" />
+                        <Border Height="60" VerticalAlignment="Bottom">
+                            <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                                       Text="{Binding Path=Title}" FontFamily="Microsoft YaHei UI Light"
+                                       Foreground="#FFF1F1F1" FontSize="18" TextAlignment="Center" TextWrapping="Wrap"
+                                       TextTrimming="CharacterEllipsis" />
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0 0" EndPoint="0 1" Opacity="0.6">
+                                    <GradientStop Color="Black" Offset="1" />
+                                    <GradientStop Color="Gray" Offset="0.5" />
+                                    <GradientStop Color="Transparent" Offset="0" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                        <Grid>
+                            <Button x:Name="FavoriteButton" Click="FavoriteButton_OnClick" Height="30" Width="30"
+                                    VerticalAlignment="Top" HorizontalAlignment="Left" Margin="15 10 15 0"
+                                    Style="{DynamicResource MaterialDesignToolButton}"
+                                    Visibility="{Binding Path=IsLiked, Converter={StaticResource VisibleIfFalseConverter}}">
+                                <Viewbox Width="24" Height="24">
+                                    <Canvas Width="24" Height="24">
+                                        <Path
+                                            Data="M12.1,18.55L12,18.65L11.89,18.55C7.14,14.24 4,11.39 4,8.5C4,6.5 5.5,5 7.5,5C9.04,5 10.54,6 11.07,7.36H12.93C13.46,6 14.96,5 16.5,5C18.5,5 20,6.5 20,8.5C20,11.39 16.86,14.24 12.1,18.55M16.5,3C14.76,3 13.09,3.81 12,5.08C10.91,3.81 9.24,3 7.5,3C4.42,3 2,5.41 2,8.5C2,12.27 5.4,15.36 10.55,20.03L12,21.35L13.45,20.03C18.6,15.36 22,12.27 22,8.5C22,5.41 19.58,3 16.5,3Z"
+                                            Fill="Gray" />
+                                    </Canvas>
+                                </Viewbox>
+                            </Button>
+                            <Button x:Name="RemoveFavoriteButton" Click="RemoveFavoriteButton_OnClick" Height="30"
+                                    Width="30" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="15 10 15 0"
+                                    Style="{DynamicResource MaterialDesignToolButton}"
+                                    Visibility="{Binding Path=IsLiked, Converter={StaticResource VisibleIfTrueConverter}}">
+                                <Viewbox Width="24" Height="24">
+                                    <Canvas Width="24" Height="24">
+                                        <Path
+                                            Data="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"
+                                            Fill="Crimson" />
+                                    </Canvas>
+                                </Viewbox>
+                            </Button>
+                        </Grid>
+                        <Grid VerticalAlignment="Top" HorizontalAlignment="Right" Width="30" Height="30"
+                              Margin="0 15 15 0"
+                              Visibility="{Binding Converter={StaticResource IllustSubscriptConverter}}">
+                            <Viewbox Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                     Visibility="{Binding IsUgoira, Converter={StaticResource VisibleIfTrueConverter}}"
+                                     ToolTip="这是一个GIF动图">
+                                <Canvas Width="24" Height="24">
+                                    <Path
+                                        Data="M11,8H13V16H11V8M7.67,8H4.33C3.53,8 3,8.67 3,9.33V14.67C3,15.33 3.53,16 4.33,16H7.67C8.47,16 9,15.33 9,14.67V12H7V14H5V10H9V9.33C9,8.67 8.47,8 7.67,8M21,10V8H15V16H17V14H19.5V12H17V10H21Z"
+                                        Fill="Gray" />
+                                </Canvas>
+                            </Viewbox>
+                            <Viewbox Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                     Visibility="{Binding IsManga, Converter={StaticResource VisibleIfTrueConverter}}"
+                                     ToolTip="这是一个图集">
+                                <Canvas Width="24" Height="24">
+                                    <Path
+                                        Data="M22,16V4A2,2 0 0,0 20,2H8A2,2 0 0,0 6,4V16A2,2 0 0,0 8,18H20A2,2 0 0,0 22,16M11,12L13.03,14.71L16,11L20,16H8M2,6V20A2,2 0 0,0 4,22H18V20H4V6"
+                                        Fill="Gray" />
+                                </Canvas>
+                            </Viewbox>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </ListViewItem>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid Margin="0 20 0 0">
+            <Grid Height="5" VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid x:Name="SelectorSnackBar" Grid.Column="0" Width="80" HorizontalAlignment="Right"
+                      Background="#66CCFF">
+                    <Grid.RenderTransform>
+                        <TranslateTransform X="0" />
+                    </Grid.RenderTransform>
+                </Grid>
+            </Grid>
+            <Grid Height="50" VerticalAlignment="Top" Margin="0 5 0 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid x:Name="UploadSelector" Cursor="Hand" Grid.Column="0" Width="80" HorizontalAlignment="Right"
+                      MouseLeftButtonDown="UploadSelector_OnMouseLeftButtonDown">
+                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"
+                               FontFamily="Microsoft YaHei UI Light">
+                        插  画
+                    </TextBlock>
+                </Grid>
+                <Grid x:Name="FavoriteSelector" Cursor="Hand" Grid.Column="1" Width="80" HorizontalAlignment="Left"
+                      MouseLeftButtonDown="FavoriteSelector_OnMouseLeftButtonDown">
+                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"
+                               FontFamily="Microsoft YaHei UI Light">
+                        收  藏
+                    </TextBlock>
+                </Grid>
+            </Grid>
+            <Grid Height="50" Margin="0 5 0 0" VerticalAlignment="Top">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid x:Name="SelectorOpacityMask" Grid.Column="0" Background="Gray" Width="80"
+                          HorizontalAlignment="Right" Opacity="0.2">
+                        <Grid.RenderTransform>
+                            <TranslateTransform X="0" />
+                        </Grid.RenderTransform>
+                    </Grid>
+                </Grid>
+            </Grid>
+            <Separator Margin="0 55 0 0" VerticalAlignment="Top" />
+        </Grid>
+        <ListView x:Name="ImageListView" VirtualizingPanel.CacheLengthUnit="Pixel" Grid.ZIndex="1"
+                  VirtualizingPanel.CacheLength="0 0" VirtualizingPanel.ScrollUnit="Pixel" Margin="0 75 0 0"
+                  VirtualizingPanel.VirtualizationMode="Standard"
+                  Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=1}}"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  ItemTemplate="{StaticResource IllustrationViewModelDataTemplate}">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <controls:VirtualizingWrapPanel Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+        </ListView>
+        <Grid x:Name="ShowcaseContainer" Background="#FAFAFC" SizeChanged="ShowcaseContainer_OnSizeChanged"
+              Loaded="ShowcaseContainer_OnLoaded" ZIndex="2">
+            <Image x:Name="BackgroundImage" Stretch="UniformToFill" Margin="0 0 0 150" />
+            <Image x:Name="UserAvatar" VerticalAlignment="Bottom" HorizontalAlignment="Left" Stretch="UniformToFill"
+                   Width="140" Height="140" Margin="100 0 0 75">
+                <Image.Clip>
+                    <EllipseGeometry RadiusX="70" RadiusY="70" Center="70 70" />
+                </Image.Clip>
+            </Image>
+            <Ellipse HorizontalAlignment="Left" VerticalAlignment="Bottom" Height="140" Width="140" Margin="100 0 0 75"
+                     StrokeThickness="2" Stroke="White" />
+            <TextBlock Text="{Binding Path=Name}" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="25"
+                       FontFamily="Microsoft YaHei Light" Margin="250 0 0 100" />
+            <TextBlock Text="{Binding Path=Introduction}" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"
+                       FontSize="15" FontFamily="Microsoft YaHei Light" Margin="280 0 280 20" Height="70"
+                       TextWrapping="Wrap" TextTrimming="WordEllipsis" />
+            <Border Margin="0 0 100 100" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="120" Height="40"
+                    Background="#66CCFF" CornerRadius="20"
+                    Visibility="{Binding Path=IsFollowed, Converter={StaticResource VisibleIfFalseConverter}}"
+                    Grid.ZIndex="1">
+                <Button x:Name="FollowButton" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                        Style="{DynamicResource MaterialDesignToolButton}" Padding="30 0" Width="120" Height="40"
+                        Click="FollowButton_OnClick">
+                    <TextBlock>关  注</TextBlock>
+                </Button>
+            </Border>
+            <Border Margin="0 0 100 100" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="120" Height="40"
+                    Background="#FFCBCBCB" CornerRadius="20"
+                    Visibility="{Binding Path=IsFollowed, Converter={StaticResource VisibleIfTrueConverter}}"
+                    Grid.ZIndex="1">
+                <Button x:Name="UnFollowButton" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                        Style="{DynamicResource MaterialDesignToolButton}" Padding="30 0" Width="120" Height="40"
+                        Click="UnFollowButton_OnClick">
+                    <TextBlock>已  关  注</TextBlock>
+                </Button>
+            </Border>
+            <ToggleButton Style="{DynamicResource MaterialDesignFlatToggleButton}" Height="40" Width="40"
+                          VerticalAlignment="Bottom" Margin="0 0 0 -20" Unchecked="ToggleButton_OnUnchecked"
+                          Checked="ToggleButton_OnChecked" Grid.ZIndex="1">
+                <ToggleButton.Triggers>
+                    <EventTrigger RoutedEvent="ToggleButton.Checked">
+                        <BeginStoryboard>
+                            <Storyboard TargetName="ShowcaseTranslateTransform" TargetProperty="Y">
+                                <DoubleAnimation From="0"
+                                                 To="{Binding ElementName=ShowcaseContainer, Path=ActualHeight, Converter={StaticResource ReverseValueConverter}}"
+                                                 Duration="00:00:00.3" EasingFunction="{StaticResource CubicEase}" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                        <BeginStoryboard>
+                            <Storyboard TargetName="ShowcaseTranslateTransform" TargetProperty="Y">
+                                <DoubleAnimation
+                                    From="{Binding ElementName=ShowcaseContainer, Path=ActualHeight, Converter={StaticResource ReverseValueConverter}}"
+                                    To="0" Duration="00:00:00.3" EasingFunction="{StaticResource CubicEase}" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </ToggleButton.Triggers>
+                <Viewbox Width="35" Height="35">
+                    <Canvas Width="24" Height="24">
+                        <Path
+                            Data="M12,18.17L8.83,15L7.42,16.41L12,21L16.59,16.41L15.17,15M12,5.83L15.17,9L16.58,7.59L12,3L7.41,7.59L8.83,9L12,5.83Z"
+                            Fill="Gray" />
+                    </Canvas>
+                </Viewbox>
+            </ToggleButton>
+            <Grid.RenderTransform>
+                <TranslateTransform x:Name="ShowcaseTranslateTransform" />
+            </Grid.RenderTransform>
+        </Grid>
+        <materialDesign:Snackbar x:Name="UserViewerSnackBar" HorizontalContentAlignment="Center"
+                                 VerticalContentAlignment="Center" />
+    </Grid>
+</Window>

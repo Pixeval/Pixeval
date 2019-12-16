@@ -12,7 +12,7 @@ namespace Pixeval
     /// <summary>
     ///     Interaction logic for SignIn.xaml
     /// </summary>
-    public partial class SignIn : Window
+    public partial class SignIn
     {
         public SignIn()
         {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Pixeval.Data.Model.ViewModel;
+using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Response;
@@ -21,7 +21,7 @@ namespace Pixeval.Core
             url = $"https://app-api.pixiv.net/v1/user/following?user_id={userId}&restrict=public";
         }
 
-        public async IAsyncEnumerable<UserPreview> GetUserPreviews()
+        public async IAsyncEnumerable<User> GetUserPreviews()
         {
             var client = HttpClientFactory.PixivApi(ProtocolBase.AppApiBaseUrl);
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {Identity.Global.AccessToken}");
@@ -30,11 +30,11 @@ namespace Pixeval.Core
             {
                 var response = (await client.GetStringAsync(url)).FromJson<FollowingResponse>();
                 foreach (var preview in response.UserPreviews)
-                    yield return new UserPreview
+                    yield return new User
                     {
                         Thumbnails = preview.Illusts.Select(i => i.ImageUrls.SquareMedium).ToArray(),
-                        UserId = preview.User.Id.ToString(),
-                        UserName = preview.User.Name,
+                        Id = preview.User.Id.ToString(),
+                        Name = preview.User.Name,
                         Avatar = preview.User.ProfileImageUrls.Medium
                     };
 

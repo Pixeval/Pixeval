@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using ImageMagick;
 using Pixeval.Core;
-using Pixeval.Data.Model.ViewModel;
+using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Persisting;
 
@@ -80,7 +81,7 @@ namespace Pixeval.Objects
             if (usingCache)
             {
                 var path = Path.Combine(PixevalEnvironment.TempFolder, $"{id}_{episode}.png");
-                if (File.Exists(path)) 
+                if (File.Exists(path))
                 {
                     var toCache = FromByteArray(await File.ReadAllBytesAsync(path));
                     CacheImage(toCache, id, episode);
@@ -119,10 +120,7 @@ namespace Pixeval.Objects
         {
             var lst = await Task.Run(() => ReadGifZipEntries(bArr));
 
-            foreach (var s in lst)
-            {
-                yield return await FromStreamAsync(s);
-            }
+            foreach (var s in lst) yield return await FromStreamAsync(s);
         }
 
         internal static Task<BitmapImage> GetAndCreateOrLoadFromCacheInternal(string url, string id, int episode = 0)
@@ -163,31 +161,29 @@ namespace Pixeval.Objects
             return FromStream(MergeGifStream(ReadGifZipEntries(await FromUrlInternal(link)), delay));
         }
 
-        public static Task DownloadIllustsInternal(IEnumerable<Illustration> illustrations)
+        public static Task DownloadIllustsInternal(IEnumerable<Illustration> illustrations, string addIllustratorNamedDirectory = null)
         {
-            DownloadList.ToDownloadList.Clear();
-            return DownloadIllusts(illustrations, Settings.Global.DownloadLocation);
+            return DownloadIllusts(illustrations, Settings.Global.DownloadLocation, addIllustratorNamedDirectory);
         }
 
-        public static Task DownloadIllusts(IEnumerable<Illustration> illustrations, string path)
+        public static Task DownloadIllusts(IEnumerable<Illustration> illustrations, string path, string addIllustratorNamedDirectory = null)
         {
-            return Task.WhenAll(illustrations.Select(illustration => DownloadIllust(illustration, path)));
+            return Task.WhenAll(illustrations.Select(illustration => DownloadIllust(illustration, path, addIllustratorNamedDirectory)));
         }
 
-        internal static async Task DownloadIllustInternal(Illustration illustration)
+        internal static async Task DownloadIllustInternal(Illustration illustration, string addIllustratorNamedDirectory = null)
         {
-            DownloadList.Remove(illustration);
-            await DownloadIllust(illustration, Settings.Global.DownloadLocation);
+            await DownloadIllust(illustration, Settings.Global.DownloadLocation, addIllustratorNamedDirectory);
         }
 
-        public static async Task DownloadIllust(Illustration illustration, string rootPath)
+        public static async Task DownloadIllust(Illustration illustration, string rootPath, string addIllustratorNamedDirectory = null)
         {
-            var path = TextBuffer.GetOrCreateDirectory(rootPath);
+            var path = TextBuffer.GetOrCreateDirectory(addIllustratorNamedDirectory == null ? rootPath : Path.Combine(rootPath, addIllustratorNamedDirectory));
 
             if (illustration.IsManga)
             {
                 await DownloadManga(illustration, path);
-            } 
+            }
             else if (illustration.IsUgoira)
             {
                 await DownloadUgoira(illustration, path);
@@ -201,10 +197,7 @@ namespace Pixeval.Objects
 
         public static async Task DownloadUgoira(Illustration illustration, string rootPath)
         {
-            if (!illustration.IsUgoira)
-            {
-                throw new InvalidOperationException();
-            }
+            if (!illustration.IsUgoira) throw new InvalidOperationException();
 
             var metadata = await HttpClientFactory.AppApiService.GetUgoiraMetadata(illustration.Id);
             var url = FormatGifZipUrl(metadata.UgoiraMetadataInfo.ZipUrls.Medium);
@@ -215,10 +208,7 @@ namespace Pixeval.Objects
 
         public static async Task DownloadManga(Illustration illustration, string rootPath)
         {
-            if (!illustration.IsManga)
-            {
-                throw new InvalidOperationException();
-            }
+            if (!illustration.IsManga) throw new InvalidOperationException();
 
             var mangaDir = TextBuffer.GetOrCreateDirectory(Path.Combine(rootPath, illustration.Id));
 
@@ -233,14 +223,9 @@ namespace Pixeval.Objects
         {
             var root = TextBuffer.GetOrCreateDirectory(Path.Combine(Settings.Global.DownloadLocation, "Spotlight", article.Title));
 
-            var extractor = new SpotlightContentExtractor(article.Id.ToString());
-            var illusts = await extractor.GetArticleWorks();
-
+            var illusts = await PixivClient.Instance.GetArticleWorks(article.Id.ToString());
             var list = new List<Task>();
-            foreach (var illust in illusts)
-            {
-                list.Add(DownloadIllust(await PixivHelper.IllustrationInfo(illust), root));
-            }
+            foreach (var illust in illusts) list.Add(DownloadIllust(await PixivHelper.IllustrationInfo(illust), root));
 
             await Task.WhenAll(list);
         }
@@ -253,6 +238,24 @@ namespace Pixeval.Objects
         public static string FormatGifZipUrl(string link)
         {
             return !link.EndsWith("ugoira1920x1080.zip") ? Regex.Replace(link, "ugoira(\\d+)x(\\d+).zip", "ugoira1920x1080.zip") : link;
+        }
+
+        public static void AddIllust(this Collection<Illustration> container, Illustration illust)
+        {
+            if (IllustNotMatchCondition(Settings.Global.ExceptTags, Settings.Global.ContainsTags, illust))
+                return;
+
+            if (Settings.Global.SortOnInserting)
+                container.AddSorted(illust, IllustrationComparator.Instance);
+            else
+                container.Add(illust);
+        }
+
+        internal static bool IllustNotMatchCondition(ISet<string> exceptTag, ISet<string> containsTag, Illustration illustration)
+        {
+            return !exceptTag.IsNullOrEmpty() && exceptTag.Any(x => !x.IsNullOrEmpty() && illustration.Tags.Any(i => i.EqualsIgnoreCase(x))) ||
+                   !containsTag.IsNullOrEmpty() && containsTag.Any(x => !x.IsNullOrEmpty() && !illustration.Tags.Any(i => i.EqualsIgnoreCase(x))) ||
+                   illustration.Bookmark < Settings.Global.MinBookmark;
         }
     }
 }

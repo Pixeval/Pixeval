@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
-using Pixeval.Data.Model.ViewModel;
+using System.Linq;
+using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
+using Pixeval.Objects.Exceptions;
 
 namespace Pixeval.Core
 {
@@ -27,8 +29,9 @@ namespace Pixeval.Core
         public async IAsyncEnumerable<Illustration> MoveNextAsync()
         {
             var works = await HttpClientFactory.PublicApiService.GetUploads(uid, new UploadsRequest {Page = currentIndex++});
+            if (currentIndex == 2 && !works.ToResponse.Any()) throw new QueryNotRespondingException();
 
-            foreach (var response in works.ToResponse) yield return await PixivHelper.IllustrationInfo(response.Id.ToString());
+            foreach (var response in works.ToResponse.Where(illustration => illustration != null)) yield return await PixivHelper.IllustrationInfo(response.Id.ToString());
         }
     }
 }

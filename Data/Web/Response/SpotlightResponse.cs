@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Pixeval.Data.Model.ViewModel;
+using Pixeval.Data.ViewModel;
 
 namespace Pixeval.Data.Web.Response
 {

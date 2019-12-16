@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Pixeval.Data.Model.ViewModel;
+using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
-using Pixeval.Objects;
+using Pixeval.Data.Web.Response;
+using Refit;
 
 namespace Pixeval.Core
 {
@@ -12,9 +13,15 @@ namespace Pixeval.Core
     {
         public static async Task<Illustration> IllustrationInfo(string id)
         {
-            var response = (await HttpClientFactory.PublicApiService.GetSingle(id)).ToResponse[0];
-
-            if (response == null) return null;
+            IllustResponse.Response response;
+            try
+            {
+                response = (await HttpClientFactory.PublicApiService.GetSingle(id)).ToResponse[0];
+            }
+            catch (ApiException)
+            {
+                return null;
+            }
 
             var illust = new Illustration
             {
@@ -25,30 +32,28 @@ namespace Pixeval.Core
                 IsUgoira = response.Type == "ugoira",
                 Origin = response.ImageUrls.Large,
                 Tags = response.Tags.ToArray(),
-                Thumbnail = response.ImageUrls.Px480Mw,
+                Thumbnail = response.ImageUrls.Px480Mw ?? response.ImageUrls.Medium,
                 Title = response.Title,
                 Type = Illustration.IllustType.Parse(response),
                 UserName = response.User.Name,
-                UserId = response.User.Id.ToString(),
+                UserId = response.User.Id.ToString()
             };
 
             if (illust.IsManga)
-            {
                 illust.MangaMetadata = response.Metadata.Pages.Select(p =>
                 {
-                    var page = (Illustration)illust.Clone();
+                    var page = (Illustration) illust.Clone();
                     page.IsManga = false;
                     page.Origin = p.ImageUrls.Large;
                     return page;
                 }).ToArray();
-            }
 
             return illust;
         }
 
         public static async Task<int> GetUploadPagesCount(string uid)
         {
-            return (int) (await HttpClientFactory.PublicApiService.GetUploads(uid, new UploadsRequest {Page = 1}))
+            return (int) (await HttpClientFactory.PublicApiService.GetUploads(uid, new UploadsRequest {Page = 1, PerPage = 1}))
                 .UploadPagination
                 .Pages;
         }

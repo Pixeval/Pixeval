@@ -6,14 +6,14 @@ namespace Pixeval.Objects
 {
     public class AlignableWrapPanel : Panel
     {
-        public HorizontalAlignment HorizontalContentAlignment
-        {
-            get => (HorizontalAlignment)GetValue(HorizontalContentAlignmentProperty);
-            set => SetValue(HorizontalContentAlignmentProperty, value);
-        }
-
         public static readonly DependencyProperty HorizontalContentAlignmentProperty =
             DependencyProperty.Register("HorizontalContentAlignment", typeof(HorizontalAlignment), typeof(AlignableWrapPanel), new FrameworkPropertyMetadata(HorizontalAlignment.Left, FrameworkPropertyMetadataOptions.AffectsArrange));
+
+        public HorizontalAlignment HorizontalContentAlignment
+        {
+            get => (HorizontalAlignment) GetValue(HorizontalContentAlignmentProperty);
+            set => SetValue(HorizontalContentAlignmentProperty, value);
+        }
 
         protected override Size MeasureOverride(Size constraint)
         {
@@ -24,33 +24,31 @@ namespace Pixeval.Objects
 
             for (var i = 0; i < children.Count; i++)
             {
-                var child = children[i] as UIElement;
+                var child = children[i];
 
-                // Flow passes its own constraint to children
                 child.Measure(constraint);
                 var sz = child.DesiredSize;
 
-                if (curLineSize.Width + sz.Width > constraint.Width) //need to switch to another line
+                if (curLineSize.Width + sz.Width > constraint.Width)
                 {
                     panelSize.Width = Math.Max(curLineSize.Width, panelSize.Width);
                     panelSize.Height += curLineSize.Height;
                     curLineSize = sz;
 
-                    if (sz.Width > constraint.Width) // if the element is wider then the constraint - give it a separate line                    
+                    if (sz.Width > constraint.Width)
                     {
                         panelSize.Width = Math.Max(sz.Width, panelSize.Width);
                         panelSize.Height += sz.Height;
                         curLineSize = new Size();
                     }
                 }
-                else //continue to accumulate a line
+                else
                 {
                     curLineSize.Width += sz.Width;
                     curLineSize.Height = Math.Max(sz.Height, curLineSize.Height);
                 }
             }
 
-            // the last line size, if any need to be added
             panelSize.Width = Math.Max(curLineSize.Width, panelSize.Width);
             panelSize.Height += curLineSize.Height;
 
@@ -68,22 +66,23 @@ namespace Pixeval.Objects
             {
                 var sz = children[i].DesiredSize;
 
-                if (curLineSize.Width + sz.Width > arrangeBounds.Width) //need to switch to another line
+                if (curLineSize.Width + sz.Width > arrangeBounds.Width)
                 {
                     ArrangeLine(accumulatedHeight, curLineSize, arrangeBounds.Width, firstInLine, i);
 
                     accumulatedHeight += curLineSize.Height;
                     curLineSize = sz;
 
-                    if (sz.Width > arrangeBounds.Width) //the element is wider then the constraint - give it a separate line                    
+                    if (sz.Width > arrangeBounds.Width)
                     {
                         ArrangeLine(accumulatedHeight, sz, arrangeBounds.Width, i, ++i);
                         accumulatedHeight += sz.Height;
                         curLineSize = new Size();
                     }
+
                     firstInLine = i;
                 }
-                else //continue to accumulate a line
+                else
                 {
                     curLineSize.Width += sz.Width;
                     curLineSize.Height = Math.Max(sz.Height, curLineSize.Height);

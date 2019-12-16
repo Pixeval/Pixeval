@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -13,7 +14,9 @@ using System.Windows.Threading;
 using MaterialDesignThemes.Wpf;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Pixeval.Core;
-using Pixeval.Data.Model.ViewModel;
+using Pixeval.Data.ViewModel;
+using Pixeval.Data.Web.Delegation;
+using Pixeval.Data.Web.Request;
 using Pixeval.Objects;
 using Pixeval.Objects.Exceptions;
 using Pixeval.Persisting;
@@ -29,7 +32,7 @@ namespace Pixeval
     {
         public static MainWindow Instance;
 
-        private readonly SnackbarMessageQueue messageQueue = new SnackbarMessageQueue(TimeSpan.FromMilliseconds(500))
+        private readonly SnackbarMessageQueue messageQueue = new SnackbarMessageQueue(TimeSpan.FromSeconds(2))
         {
             IgnoreDuplicate = true
         };
@@ -43,8 +46,19 @@ namespace Pixeval
             NavigatorList.SelectedItem = MenuTab;
             MainWindowSnackBar.MessageQueue = messageQueue;
 
-            UiHelper.SetItemsSource(ToDownloadListView, DownloadList.ToDownloadList);
             if (Dispatcher != null) Dispatcher.UnhandledException += Dispatcher_UnhandledException;
+
+            UiHelper.SetItemsSource(ToDownloadListView, DownloadList.ToDownloadList);
+        }
+
+        private void Dispatcher_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            if (e.Exception.InnerException == null || !e.Exception.InnerException.Message.Contains("The server returned an invalid or unrecognized response"))
+            {
+                Notice(e.Exception is QueryNotRespondingException ? Externally.QueryNotResponding : e.Exception.Message);
+
+                e.Handled = true;
+            }
         }
 
         private void DoQueryButton_OnClick(object sender, RoutedEventArgs e)
@@ -53,80 +67,97 @@ namespace Pixeval
 
             if (KeywordTextBox.Text.IsNullOrEmpty())
             {
-                Notice("请在输入搜索关键字后再进行搜索~");
+                Notice(Externally.InputIsEmpty);
                 return;
             }
+
+            if (QuerySingleArtistToggleButton.IsChecked == true)
+            {
+                ShowArtist(KeywordTextBox.Text);
+                return;
+            }
+
+            QueryStartUp();
 
             if (QueryArtistToggleButton.IsChecked == true)
-            {
-                TryQueryUser();
-            }
+                TryQueryUser(KeywordTextBox.Text);
             else if (QuerySingleWorkToggleButton.IsChecked == true)
-            {
-                TryQuerySingle();
-            }
+                TryQuerySingle(KeywordTextBox.Text);
             else
-            {
-                QueryWorks();
-            }
+                QueryWorks(KeywordTextBox.Text);
         }
 
-        private async void TryQueryUser()
+        private async void ShowArtist(string userId)
         {
-            var iterator = new UserInformationIterator(KeywordTextBox.Text);
-
-            var list = UiHelper.NewItemsSource<UserPreview>(UserPreviewListView);
-
-            await foreach (var i in iterator.GetUserNav())
+            if (!int.TryParse(userId, out _))
             {
-                list.Add(i);
-            }
-        }
-
-        private async void TryQuerySingle()
-        {
-            if (!int.TryParse(KeywordTextBox.Text, out _))
-            {
-                Notice("搜索单个作品时必须输入纯数字哟~ ");
+                Notice(Externally.InputIllegal("单个用户"));
                 return;
             }
+
             try
             {
-                IllustViewer.Show(await PixivHelper.IllustrationInfo(KeywordTextBox.Text));
+                await HttpClientFactory.AppApiService.GetUserInformation(new UserInformationRequest {Id = userId});
+            }
+            catch (ApiException e)
+            {
+                if (e.StatusCode == HttpStatusCode.NotFound)
+                {
+                    Notice(Externally.CannotFindUser);
+                    return;
+                }
+            }
+
+            UserViewer.Show(userId);
+        }
+
+        private async void TryQueryUser(string keyword)
+        {
+            var iterator = new UserPreviewIterator(keyword);
+
+            var list = UiHelper.NewItemsSource<User>(UserPreviewListView);
+
+            await foreach (var i in iterator.GetUserPreview()) list.Add(i);
+        }
+
+        private async void TryQuerySingle(string illustId)
+        {
+            if (!int.TryParse(illustId, out _))
+            {
+                Notice(Externally.InputIllegal("单个作品"));
+                return;
+            }
+
+            try
+            {
+                IllustViewer.Show(await PixivHelper.IllustrationInfo(illustId));
             }
             catch (ApiException exception)
             {
                 if (exception.StatusCode == HttpStatusCode.NotFound && exception.StatusCode == HttpStatusCode.BadRequest)
-                    Notice("您所输入的ID不存在, 请检查后再试一次吧~");
+                    Notice(Externally.IdDoNotExists);
                 else throw;
             }
         }
 
-        private async void QueryWorks()
+        private async void QueryWorks(string keyword)
         {
-            QueryStartUp();
+            var pages = await PixivHelper.GetQueryPagesCount(keyword);
 
-            var pages = await PixivHelper.GetQueryPagesCount(KeywordTextBox.Text);
-
-            NoticeProgress(pages);
+            Notice(null, pages);
 
             var container = new ObservableCollection<Illustration>();
             ImageListView.ItemsSource = container;
 
-            Query(new QueryIterator(KeywordTextBox.Text, pages, Settings.Global.QueryStart), container, false);
+            Query(new QueryIterator(KeywordTextBox.Text, pages, Settings.Global.QueryStart), container, true);
+        }
+
+        private void IllustrationContainer_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            IllustViewer.Show(sender.GetDataContext<Illustration>(), ImageListView.ItemsSource as IEnumerable<Illustration>);
         }
 
         #region 主窗口
-
-        private void Dispatcher_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
-        {
-            if (e.Exception.InnerException == null || !e.Exception.InnerException.Message.Contains("The server returned an invalid or unrecognized response"))
-            {
-                Notice(e.Exception is QueryNotRespondingException ? "抱歉, Pixeval无法根据当前的设置找到任何作品, 或许是您的页码设置过大/关键字不存在/没有收藏任何作品, 请检查后再尝试吧~" : e.Exception.Message);
-
-                e.Handled = true;
-            }
-        }
 
         private void KeywordTextBox_OnGotFocus(object sender, RoutedEventArgs e)
         {
@@ -176,6 +207,7 @@ namespace Pixeval
         {
             DeactivateControl();
         }
+
         private void MainWindow_OnDeactivated(object sender, EventArgs e)
         {
             DeactivateControl();
@@ -200,15 +232,15 @@ namespace Pixeval
         private void GalleryTab_OnSelected(object sender, RoutedEventArgs e)
         {
             QueryStartUp();
-            NoticeProgress();
+            Notice("正在搜索...");
 
-            Query(new GalleryIterator(Identity.Global.Id), UiHelper.NewItemsSource<Illustration>(ImageListView), true);
+            Query(new GalleryIterator(Identity.Global.Id), UiHelper.NewItemsSource<Illustration>(ImageListView));
         }
 
         private void RankingTab_OnSelected(object sender, RoutedEventArgs e)
         {
             QueryStartUp();
-            NoticeProgress();
+            Notice("正在搜索...");
 
             Query(new RankingIterator(), UiHelper.NewItemsSource<Illustration>(ImageListView), true);
         }
@@ -236,10 +268,10 @@ namespace Pixeval
             ShowContentDisplays(UserPreviewListView);
 
             QueryStartUp();
-            NoticeProgress();
+            Notice("正在搜索...");
 
             var iterator = new UserFollowingIterator(Identity.Global.Id);
-            var container = UiHelper.NewItemsSource<UserPreview>(UserPreviewListView);
+            var container = UiHelper.NewItemsSource<User>(UserPreviewListView);
 
             await foreach (var preview in iterator.GetUserPreviews()) container.Add(preview);
         }
@@ -323,7 +355,7 @@ namespace Pixeval
         {
             var dataContext = sender.GetDataContext<Illustration>();
 
-            if (Uri.IsWellFormedUriString(dataContext.Thumbnail, UriKind.Absolute)) UiHelper.SetImageSource((Image) sender, await PixivImage.GetAndCreateOrLoadFromCacheInternal(dataContext.Thumbnail, dataContext.Id));
+            if (dataContext != null && Uri.IsWellFormedUriString(dataContext.Thumbnail, UriKind.Absolute)) UiHelper.SetImageSource((Image) sender, await PixivImage.GetAndCreateOrLoadFromCacheInternal(dataContext.Thumbnail, dataContext.Id));
 
             UiHelper.StartDoubleAnimationUseCubicEase(sender, "(Image.Opacity)", 0, 1, 500);
         }
@@ -346,6 +378,12 @@ namespace Pixeval
         #endregion
 
         #region 设置
+
+        private void ClearCacheButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Directory.Delete(PixevalEnvironment.TempFolder, true);
+            Notice("清理完成");
+        }
 
         private void SettingDialog_OnDialogClosing(object sender, DialogClosingEventArgs e)
         {
@@ -418,13 +456,11 @@ namespace Pixeval
 
         private async void SpotlightContainer_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            NoticeProgress();
+            Notice("正在搜索...");
 
             var article = sender.GetDataContext<SpotlightArticle>();
 
-            var extractor = new SpotlightContentExtractor(article.Id.ToString());
-
-            var tasks = (await extractor.GetArticleWorks()).Select(PixivHelper.IllustrationInfo);
+            var tasks = (await PixivClient.Instance.GetArticleWorks(article.Id.ToString())).Select(PixivHelper.IllustrationInfo);
             var result = await Task.WhenAll(tasks);
 
             IllustViewer.Show(result[0], result);
@@ -435,28 +471,29 @@ namespace Pixeval
             var context = sender.GetDataContext<SpotlightArticle>();
 
             await PixivImage.DownloadSpotlight(context);
-            messageQueue.Enqueue(Externally.DownloadSpotlightComplete(context));
+            Notice(Externally.DownloadSpotlightComplete(context));
         }
 
         #endregion
 
         #region 用户预览
 
+        private void UserPrevItem_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            UserViewer.Show(sender.GetDataContext<User>().Id);
+        }
+
         private async void UserPrevItem_OnLoaded(object sender, RoutedEventArgs e)
         {
             var (avatar, thumbnails) = GetUserPrevImageControls(sender);
-            var dataContext = sender.GetDataContext<UserPreview>();
+            var dataContext = sender.GetDataContext<User>();
 
-            UiHelper.SetImageSource(avatar, await PixivImage.GetAndCreateOrLoadFromCacheInternal(dataContext.Avatar, dataContext.UserName));
+            UiHelper.SetImageSource(avatar, await PixivImage.GetAndCreateOrLoadFromCacheInternal(dataContext.Avatar, dataContext.Name));
 
             var counter = 0;
             foreach (var thumbnail in thumbnails)
-            {
                 if (counter < dataContext.Thumbnails.Length)
-                {
-                    UiHelper.SetImageSource(thumbnail, await PixivImage.GetAndCreateOrLoadFromCacheInternal(dataContext.Thumbnails[counter], $"{dataContext.UserId}", counter++));
-                }
-            }
+                    UiHelper.SetImageSource(thumbnail, await PixivImage.GetAndCreateOrLoadFromCacheInternal(dataContext.Thumbnails[counter], $"{dataContext.Id}", counter++));
         }
 
         private void UserPrevItem_OnUnloaded(object sender, RoutedEventArgs e)
@@ -484,14 +521,15 @@ namespace Pixeval
         {
             var illust = sender.GetDataContext<Illustration>();
 
+            DownloadList.Remove(illust);
             await PixivImage.DownloadIllustInternal(illust);
-            messageQueue.Enqueue(Externally.DownloadComplete(illust));
+            Notice(Externally.DownloadComplete(illust));
         }
 
         private async void DownloadAllButton_OnClick(object sender, RoutedEventArgs e)
         {
             await PixivImage.DownloadIllustsInternal(DownloadList.ToDownloadList.ToList());
-            messageQueue.Enqueue(Externally.AllDownloadComplete);
+            Notice(Externally.AllDownloadComplete);
         }
 
         private void ClearDownloadListButton_OnClick(object sender, RoutedEventArgs e)
@@ -499,7 +537,7 @@ namespace Pixeval
             if (DownloadList.ToDownloadList.Any())
             {
                 DownloadList.ToDownloadList.Clear();
-                messageQueue.Enqueue(Externally.ClearedDownloadList);
+                Notice(Externally.ClearedDownloadList);
             }
         }
 
@@ -511,31 +549,40 @@ namespace Pixeval
         {
             var illust = sender.GetDataContext<Illustration>();
 
+            DownloadList.Remove(illust);
             await PixivImage.DownloadIllustInternal(illust);
-            messageQueue.Enqueue(Externally.DownloadComplete(illust));
+            Notice(Externally.DownloadComplete(illust));
         }
 
         private async void DownloadAllNowMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            await PixivImage.DownloadIllustsInternal(((IEnumerable<Illustration>) ImageListView.ItemsSource).ToList());
+            DownloadList.ToDownloadList.Clear();
+            await PixivImage.DownloadIllustsInternal((IEnumerable<Illustration>) ImageListView.ItemsSource);
+            Notice(Externally.AllDownloadComplete);
         }
 
         private void AddToDownloadListMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            DownloadList.ToDownloadList.Add(sender.GetDataContext<Illustration>());
-            messageQueue.Enqueue(Externally.AddedAllToDownloadList);
+            DownloadList.Add(sender.GetDataContext<Illustration>());
+            Notice(Externally.AddedAllToDownloadList);
         }
 
 
         private void AddAllToDownloadListMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            DownloadList.ToDownloadList.AddRange(((IEnumerable<Illustration>)ImageListView.ItemsSource).ToList());
-            messageQueue.Enqueue(Externally.AddedAllToDownloadList);
+            DownloadList.AddRange(((IEnumerable<Illustration>) ImageListView.ItemsSource).ToList());
+            Notice(Externally.AddedAllToDownloadList);
         }
 
         #endregion
 
         #region 工具
+
+        private void Notice(string str, int? pages = null)
+        {
+            messageQueue.Enqueue(pages != null ? Externally.NoticeProgressString((int) pages) : str);
+        }
+
         private void QueryStartUp()
         {
             MenuTab.IsSelected = false;
@@ -549,62 +596,18 @@ namespace Pixeval
             return (list[0], list.Skip(1).ToArray());
         }
 
-        private static async void Query(IPixivIterator pixivIterator, Collection<Illustration> container, bool sync)
+        private static async void Query(IPixivIterator pixivIterator, Collection<Illustration> container, bool useCounter = false)
         {
             var counter = 1;
-            while (pixivIterator.HasNext() && counter <= Settings.Global.QueryPages)
+            while (pixivIterator.HasNext())
             {
-                if (sync)
-                    foreach (var illust in await pixivIterator.MoveNextAsync().ToListAsync())
-                        AddToItemSource(illust, container);
-                else
-                    await foreach (var illust in pixivIterator.MoveNextAsync())
-                        AddToItemSource(illust, container);
+                if (useCounter && counter > Settings.Global.QueryPages) break;
+                await foreach (var illust in pixivIterator.MoveNextAsync())
+                    container.AddIllust(illust);
                 counter++;
             }
         }
 
-        private void NoticeProgress(int? pages = null)
-        {
-            ProgressDialog.IsOpen = true;
-            if (pages != null) ProgressNoticeTextBlock.Text = $"正在为您查找第{Settings.Global.QueryStart}到第{Settings.Global.QueryPages + Settings.Global.QueryStart - 1}页, 您所查找的关键字总共有{pages}页";
-        }
-
-        private void ProgressDialog_OnDialogClosing(object sender, DialogClosingEventArgs e)
-        {
-            ProgressNoticeTextBlock.Text = string.Empty;
-        }
-
-        private static void AddToItemSource(Illustration illust, Collection<Illustration> container)
-        {
-            if (IllustNotMatchCondition(Settings.Global.ExceptTags, Settings.Global.ContainsTags, illust))
-                return;
-
-            if (Settings.Global.SortOnInserting)
-                container.AddSorted(illust, IllustrationComparator.Instance);
-            else
-                container.Add(illust);
-        }
-
-        private static bool IllustNotMatchCondition(ISet<string> exceptTag, ISet<string> containsTag, Illustration illustration)
-        {
-            return !exceptTag.IsNullOrEmpty() && exceptTag.Any(x => !x.IsNullOrEmpty() && illustration.Tags.Any(i => i.EqualsIgnoreCase(x))) ||
-                   !containsTag.IsNullOrEmpty() && containsTag.Any(x => !x.IsNullOrEmpty() && !illustration.Tags.Any(i => i.EqualsIgnoreCase(x))) ||
-                   illustration.Bookmark < Settings.Global.MinBookmark;
-        }
-
-        private void Notice(string message)
-        {
-            ProgressDialog.IsOpen = false;
-            NoticeDialog.IsOpen = true;
-            NoticeMessage.Text = message;
-        }
-
         #endregion
-
-        private void IllustrationContainer_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            IllustViewer.Show(sender.GetDataContext<Illustration>(), ImageListView.ItemsSource as IEnumerable<Illustration>);
-        }
     }
 }

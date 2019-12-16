@@ -38,9 +38,19 @@ namespace Pixeval.Data.Web.Delegation
 
             requestHandler?.Handle(request);
 
-            var result = await base.SendAsync(request, cancellationToken);
+            HttpResponseMessage result;
+            try
+            {
+                result = await base.SendAsync(request, cancellationToken);
+            }
+            catch (HttpRequestException e)
+            {
+                if (e.InnerException != null && e.InnerException.Message.Contains("12152"))
+                    return null;
+                throw;
+            }
 
-            if (result.StatusCode == HttpStatusCode.BadRequest)
+            if (result.StatusCode == HttpStatusCode.BadRequest && (await result.Content.ReadAsStringAsync()).Contains("OAuth"))
             {
                 using var _ = await new AsyncLock().LockAsync();
                 await Authentication.Authenticate(Identity.Global.MailAddress, Identity.Global.Password);

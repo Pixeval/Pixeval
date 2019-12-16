@@ -9,7 +9,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using MaterialDesignThemes.Wpf;
 using Pixeval.Core;
-using Pixeval.Data.Model.ViewModel;
+using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
 using Pixeval.Objects;
@@ -18,7 +18,7 @@ using Pixeval.Objects.Exceptions;
 namespace Pixeval
 {
     /// <summary>
-    /// Interaction logic for IllustViewer.xaml
+    ///     Interaction logic for IllustViewer.xaml
     /// </summary>
     public partial class IllustViewer
     {
@@ -29,21 +29,24 @@ namespace Pixeval
             IgnoreDuplicate = true
         };
 
+        private int currentIndex;
+
         private Illustration currentModel;
 
-        private int currentIndex;
+        private bool dragging;
+
+        private Point dragPos;
+
+        private bool gifPlaying;
 
         public IllustViewer(Illustration defaultIllust, IEnumerable<Illustration> displayList = null)
         {
-            this.displayList = displayList == null ? new List<Illustration> { defaultIllust } : displayList.ToList();
+            this.displayList = displayList == null ? new List<Illustration> {defaultIllust} : displayList.ToList();
 
             currentModel = defaultIllust;
             currentIndex = this.displayList.IndexOf(currentModel);
 
-            if (currentIndex == -1)
-            {
-                throw new InvalidOperationException();
-            }
+            if (currentIndex == -1) throw new InvalidOperationException();
 
             InitializeComponent();
 
@@ -75,10 +78,7 @@ namespace Pixeval
 
                 var list = await PixivImage.ReadGifZipBitmapImages(await PixivImage.FromUrlInternal(url)).ToListAsync();
 
-                if (gifPlaying)
-                {
-                    PlayGif(list, data.UgoiraMetadataInfo.Frames.Select(f => f.Delay));
-                }
+                if (gifPlaying) PlayGif(list, data.UgoiraMetadataInfo.Frames.Select(f => f.Delay));
             }
             else
             {
@@ -87,12 +87,10 @@ namespace Pixeval
 
             IllustFadeOut();
             UiHelper.HideControl(ProgressRing);
-            
+
             SetTags();
             SetIllustratorAvatar(currentModel.UserId);
         }
-
-        private bool gifPlaying;
 
         private void PlayGif(IList<BitmapImage> images, IEnumerable<long> delay)
         {
@@ -100,7 +98,6 @@ namespace Pixeval
             Task.Run(async () =>
             {
                 while (true)
-                {
                     for (var i = 0; i < images.Count; i++)
                     {
                         var i1 = i;
@@ -110,7 +107,6 @@ namespace Pixeval
                         if (!gifPlaying)
                             return;
                     }
-                }
             });
         }
 
@@ -141,17 +137,10 @@ namespace Pixeval
             DataContext = model;
         }
 
-        private bool dragging;
-
-        private Point dragPos;
-
         private void ImageContainer_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             dragging = true;
-            if (DisplayIllustration != null)
-            {
-                dragPos = e.GetPosition(ImageContainer);
-            }
+            if (DisplayIllustration != null) dragPos = e.GetPosition(ImageContainer);
         }
 
         private void ImageContainer_OnMouseMove(object sender, MouseEventArgs e)
@@ -180,13 +169,11 @@ namespace Pixeval
         private void ScaleSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (DisplayIllustration != null)
-            {
                 if (!Canvas.GetLeft(DisplayIllustration).Equals(0) || !Canvas.GetTop(DisplayIllustration).Equals(0))
                 {
                     Canvas.SetLeft(DisplayIllustration, 0);
                     Canvas.SetTop(DisplayIllustration, 0);
                 }
-            }
         }
 
         private void Prev_OnClick(object sender, RoutedEventArgs e)
@@ -254,6 +241,7 @@ namespace Pixeval
         {
             var model = currentModel;
 
+            DownloadList.Remove(model);
             await PixivImage.DownloadIllustInternal(model);
             messageQueue.Enqueue(Externally.DownloadComplete(model));
         }
@@ -264,6 +252,11 @@ namespace Pixeval
             MainWindow.Instance.KeywordTextBox.Text = sender.GetDataContext<string>();
 
             MainWindow.Instance.Activate();
+        }
+
+        private void IllustratorAvatar_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            UserViewer.Show(currentModel.UserId);
         }
     }
 }

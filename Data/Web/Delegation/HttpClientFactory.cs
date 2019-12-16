@@ -7,9 +7,9 @@ namespace Pixeval.Data.Web.Delegation
 {
     public class HttpClientFactory
     {
-        public static readonly IPublicApiProtocol PublicApiService = RestService.For<IPublicApiProtocol>(PixivApi(ProtocolBase.PublicApiBaseUrl));
+        public static IPublicApiProtocol PublicApiService { get; } = RestService.For<IPublicApiProtocol>(PixivApi(ProtocolBase.PublicApiBaseUrl));
 
-        public static readonly IAppApiProtocol AppApiService = RestService.For<IAppApiProtocol>(PixivApi(ProtocolBase.AppApiBaseUrl));
+        public static IAppApiProtocol AppApiService { get; } = RestService.For<IAppApiProtocol>(PixivApi(ProtocolBase.AppApiBaseUrl));
 
         public static HttpClient PixivApi(string baseAddress)
         {

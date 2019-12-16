@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using Pixeval.Objects;
 
@@ -12,6 +11,11 @@ namespace Pixeval.Data.Web.Response
 
         [JsonProperty("next_url")]
         public string NextUrl { get; set; }
+
+        public override string ToString()
+        {
+            return this.ToJson();
+        }
 
         public class UserPreview
         {
@@ -77,11 +81,6 @@ namespace Pixeval.Data.Web.Response
         {
             [JsonProperty("medium")]
             public string Medium { get; set; }
-        }
-
-        public override string ToString()
-        {
-            return this.ToJson();
         }
     }
 }

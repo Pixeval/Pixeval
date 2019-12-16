@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using PropertyChanged;
 
-namespace Pixeval.Data.Model.ViewModel
+namespace Pixeval.Data.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public class SpotlightArticle

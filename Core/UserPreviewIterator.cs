@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using Pixeval.Data.Model.ViewModel;
+using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Response;
@@ -12,16 +10,16 @@ using Pixeval.Persisting;
 
 namespace Pixeval.Core
 {
-    public class UserInformationIterator
+    public class UserPreviewIterator
     {
         private string url;
 
-        public UserInformationIterator(string keyword)
+        public UserPreviewIterator(string keyword)
         {
             url = $"https://app-api.pixiv.net/v1/search/user?filter=for_android&word={keyword}";
         }
 
-        public async IAsyncEnumerable<UserPreview> GetUserNav()
+        public async IAsyncEnumerable<User> GetUserPreview()
         {
             var counter = 0;
             while (!url.IsNullOrEmpty())
@@ -33,23 +31,18 @@ namespace Pixeval.Core
 
                 var response = (await httpClient.GetStringAsync(url)).FromJson<UserNavResponse>();
 
-                if (response.UserPreviews.IsNullOrEmpty() && counter++ == 0)
-                {
-                    throw new QueryNotRespondingException();
-                }
+                if (response.UserPreviews.IsNullOrEmpty() && counter++ == 0) throw new QueryNotRespondingException();
 
                 url = response.NextUrl;
 
                 foreach (var responseUserPreview in response.UserPreviews)
-                {
-                    yield return new UserPreview
+                    yield return new User
                     {
                         Avatar = responseUserPreview.User.ProfileImageUrls.Medium,
                         Thumbnails = responseUserPreview.Illusts.Select(i => i.ImageUrl.SquareMedium).ToArray(),
-                        UserId = responseUserPreview.User.Id.ToString(),
-                        UserName = responseUserPreview.User.Name
+                        Id = responseUserPreview.User.Id.ToString(),
+                        Name = responseUserPreview.User.Name
                     };
-                }
             }
         }
     }
