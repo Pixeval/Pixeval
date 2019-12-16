@@ -41,7 +41,7 @@
                FontFamily="Microsoft Yahei UI Light" VerticalContentAlignment="Center"
                HorizontalContentAlignment="Center" Foreground="Crimson" />
         <Button x:Name="Login" IsDefault="True" Click="Login_OnClick" Grid.Row="2" VerticalAlignment="Center"
-                Margin="70 0 70 30" Height="50" FontSize="20" FontFamily="Microsoft Yahei UI Light"
+                Margin="70 0 70 30" Height="50" FontSize="20" FontFamily="Microsoft Yahei UI Light" BorderBrush="Transparent"
                 Background="#0096FA" Content="登       录" />
         <materialDesign:DialogHost Grid.Row="0" Grid.RowSpan="3" x:Name="DialogHost">
             <materialDesign:DialogHost.DialogContent>
