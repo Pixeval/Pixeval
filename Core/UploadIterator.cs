@@ -13,6 +13,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 using System.Collections.Generic;
 using System.Linq;
 using Pixeval.Data.ViewModel;
@@ -46,7 +47,11 @@ namespace Pixeval.Core
             var works = await HttpClientFactory.PublicApiService.GetUploads(uid, new UploadsRequest {Page = currentIndex++});
             if (currentIndex == 2 && !works.ToResponse.Any()) throw new QueryNotRespondingException();
 
-            foreach (var response in works.ToResponse.Where(illustration => illustration != null)) yield return await PixivHelper.IllustrationInfo(response.Id.ToString());
+            foreach (var response in works.ToResponse.Where(illustration => illustration != null))
+            {
+                var illust = await PixivHelper.IllustrationInfo(response.Id.ToString());
+                if (illust != null) yield return illust;
+            }
         }
     }
 }

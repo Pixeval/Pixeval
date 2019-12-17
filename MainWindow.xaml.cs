@@ -13,12 +13,14 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -65,7 +67,7 @@ namespace Pixeval
 
         private void Dispatcher_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            if (e.Exception.InnerException == null || !e.Exception.InnerException.Message.Contains("The server returned an invalid or unrecognized response"))
+            if (e.Exception.InnerException == null || !(e.Exception is HttpRequestException))
             {
                 Notice(e.Exception is QueryNotRespondingException ? Externally.QueryNotResponding : e.Exception.Message);
 
@@ -472,7 +474,7 @@ namespace Pixeval
 
             var article = sender.GetDataContext<SpotlightArticle>();
 
-            var tasks = (await PixivClient.Instance.GetArticleWorks(article.Id.ToString())).Select(PixivHelper.IllustrationInfo);
+            var tasks = (await PixivClient.Instance.GetArticleWorks(article.Id.ToString())).Select(PixivHelper.IllustrationInfo).Where(i => i != null);
             var result = await Task.WhenAll(tasks);
 
             IllustViewer.Show(result[0], result);

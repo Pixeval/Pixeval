@@ -13,6 +13,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 using System.Collections.Generic;
 using System.Linq;
 using Pixeval.Data.ViewModel;
@@ -46,7 +47,11 @@ namespace Pixeval.Core
             const string query = "/v1/illust/recommended";
             context = (await httpClient.GetStringAsync(context == null ? query : context.NextUrl)).FromJson<RankingResponse>();
 
-            foreach (var contextIllust in context.Illusts.Where(illustration => illustration != null)) yield return await PixivHelper.IllustrationInfo(contextIllust.Id.ToString());
+            foreach (var contextIllust in context.Illusts.Where(illustration => illustration != null))
+            {
+                var illust = await PixivHelper.IllustrationInfo(contextIllust.Id.ToString());
+                if (illust != null) yield return illust;
+            }
         }
     }
 }

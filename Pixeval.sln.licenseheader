@@ -35,7 +35,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --%>
 extensions: .vb
 'Sample license text.
-extensions:  .xml .config .xsd
+extensions:  .xml .config .xsd .xaml
 <!--
 Pixeval
 Copyright (C) 2019 Dylech30th <decem0730@gmail.com>

@@ -13,6 +13,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -240,7 +241,11 @@ namespace Pixeval.Objects
 
             var illusts = await PixivClient.Instance.GetArticleWorks(article.Id.ToString());
             var list = new List<Task>();
-            foreach (var illust in illusts) list.Add(DownloadIllust(await PixivHelper.IllustrationInfo(illust), root));
+            foreach (var illust in illusts)
+            {
+                var illustration = await PixivHelper.IllustrationInfo(illust);
+                if (illustration != null) list.Add(DownloadIllust(illustration, root));
+            }
 
             await Task.WhenAll(list);
         }
@@ -268,6 +273,7 @@ namespace Pixeval.Objects
 
         internal static bool IllustNotMatchCondition(ISet<string> exceptTag, ISet<string> containsTag, Illustration illustration)
         {
+            if (illustration == null) return false;
             return !exceptTag.IsNullOrEmpty() && exceptTag.Any(x => !x.IsNullOrEmpty() && illustration.Tags.Any(i => i.EqualsIgnoreCase(x))) ||
                    !containsTag.IsNullOrEmpty() && containsTag.Any(x => !x.IsNullOrEmpty() && !illustration.Tags.Any(i => i.EqualsIgnoreCase(x))) ||
                    illustration.Bookmark < Settings.Global.MinBookmark;

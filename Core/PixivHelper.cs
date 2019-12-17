@@ -13,6 +13,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,7 +21,6 @@ using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
 using Pixeval.Data.Web.Response;
-using Refit;
 
 namespace Pixeval.Core
 {
@@ -33,7 +33,7 @@ namespace Pixeval.Core
             {
                 response = (await HttpClientFactory.PublicApiService.GetSingle(id)).ToResponse[0];
             }
-            catch (ApiException)
+            catch (Exception)
             {
                 return null;
             }

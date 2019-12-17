@@ -13,6 +13,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -180,12 +181,7 @@ namespace Pixeval
 
         private void ScaleSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (DisplayIllustration != null)
-                if (!Canvas.GetLeft(DisplayIllustration).Equals(0) || !Canvas.GetTop(DisplayIllustration).Equals(0))
-                {
-                    Canvas.SetLeft(DisplayIllustration, 0);
-                    Canvas.SetTop(DisplayIllustration, 0);
-                }
+            ResetImagePlacement();
         }
 
         private void Prev_OnClick(object sender, RoutedEventArgs e)
@@ -224,7 +220,12 @@ namespace Pixeval
 
         private void ResetImagePlacement()
         {
-            (Resources["ResetImagePlacement"] as Storyboard)?.Begin();
+            if (DisplayIllustration != null)
+                if (!Canvas.GetLeft(DisplayIllustration).Equals(0) || !Canvas.GetTop(DisplayIllustration).Equals(0))
+                {
+                    Canvas.SetLeft(DisplayIllustration, 0);
+                    Canvas.SetTop(DisplayIllustration, 0);
+                }
         }
 
         private void IllustViewer_OnDeactivated(object sender, EventArgs e)

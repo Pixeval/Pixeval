@@ -1,4 +1,21 @@
-﻿<Window x:Class="Pixeval.SignIn"
+﻿<!--
+Pixeval
+Copyright (C) 2019 Dylech30th <decem0730@gmail.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<Window x:Class="Pixeval.SignIn"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -41,7 +58,8 @@
                FontFamily="Microsoft Yahei UI Light" VerticalContentAlignment="Center"
                HorizontalContentAlignment="Center" Foreground="Crimson" />
         <Button x:Name="Login" IsDefault="True" Click="Login_OnClick" Grid.Row="2" VerticalAlignment="Center"
-                Margin="70 0 70 30" Height="50" FontSize="20" FontFamily="Microsoft Yahei UI Light" BorderBrush="Transparent"
+                Margin="70 0 70 30" Height="50" FontSize="20" FontFamily="Microsoft Yahei UI Light"
+                BorderBrush="Transparent"
                 Background="#0096FA" Content="登       录" />
         <materialDesign:DialogHost Grid.Row="0" Grid.RowSpan="3" x:Name="DialogHost">
             <materialDesign:DialogHost.DialogContent>

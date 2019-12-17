@@ -13,6 +13,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 using System;
 using System.Net;
 using System.Net.Http;
@@ -61,7 +62,7 @@ namespace Pixeval.Data.Web.Delegation
             catch (HttpRequestException e)
             {
                 if (e.InnerException != null && e.InnerException.Message.Contains("12152"))
-                    return null;
+                    return new HttpResponseMessage(HttpStatusCode.OK);
                 throw;
             }
 

@@ -13,10 +13,12 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -53,6 +55,16 @@ namespace Pixeval
             UserViewerSnackBar.MessageQueue = messageQueue;
         }
 
+        private void DispatcherOnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            if (e.Exception.InnerException == null || !(e.Exception is HttpRequestException))
+            {
+                messageQueue.Enqueue(e.Exception is QueryNotRespondingException ? Externally.QueryNotResponding : e.Exception.Message);
+
+                e.Handled = true;
+            }
+        }
+
         public static async void Show(string id)
         {
             var info = await HttpClientFactory.AppApiService.GetUserInformation(new UserInformationRequest {Id = id});
@@ -65,16 +77,6 @@ namespace Pixeval
                 Name = info.UserEntity.Name
             });
             v.Show();
-        }
-
-        private void DispatcherOnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
-        {
-            if (e.Exception.InnerException == null || !e.Exception.InnerException.Message.Contains("The server returned an invalid or unrecognized response"))
-            {
-                messageQueue.Enqueue(e.Exception is QueryNotRespondingException ? Externally.QueryNotResponding : e.Exception.Message);
-
-                e.Handled = true;
-            }
         }
 
         private async void SetupUploads()
