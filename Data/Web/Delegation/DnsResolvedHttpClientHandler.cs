@@ -61,7 +61,7 @@ namespace Pixeval.Data.Web.Delegation
             }
             catch (HttpRequestException e)
             {
-                if (e.InnerException != null && e.InnerException.Message.Contains("12152"))
+                if (e.InnerException != null && e.InnerException.Message.ToLower().Contains("winhttp"))
                     return new HttpResponseMessage(HttpStatusCode.OK);
                 throw;
             }

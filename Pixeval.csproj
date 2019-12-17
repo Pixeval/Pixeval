@@ -4,8 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
-    <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
-    <PublishSingleFile>true</PublishSingleFile>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <Description>A Strong, Fast and Flexible Pixiv Client</Description>
     <Copyright>Dylech30th</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>

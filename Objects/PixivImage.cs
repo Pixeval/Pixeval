@@ -21,6 +21,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using ImageMagick;
@@ -49,12 +50,20 @@ namespace Pixeval.Objects
 
         public static BitmapImage FromByteArray(byte[] bArr)
         {
+            if (bArr.Length == 0)
+            {
+                return null;
+            }
             using var memoryStream = new MemoryStream(bArr);
             return FromStream(memoryStream);
         }
 
         public static BitmapImage FromStream(Stream stream)
         {
+            if (stream.Length == 0)
+            {
+                return null;
+            }
             var bmp = new BitmapImage {CreateOptions = BitmapCreateOptions.DelayCreation};
             bmp.BeginInit();
             bmp.CacheOption = BitmapCacheOption.OnLoad;
@@ -92,14 +101,14 @@ namespace Pixeval.Objects
             });
         }
 
-        public static async Task<BitmapImage> GetAndCreateOrLoadFromCache(bool usingCache, string url, string id, int episode = 0)
+        public static async Task<BitmapImage> GetAndCreateOrLoadFromCache(bool usingCache, string url, string id, int episode = 0, CancellationToken cancellationToken = default)
         {
             if (usingCache)
             {
                 var path = Path.Combine(PixevalEnvironment.TempFolder, $"{id}_{episode}.png");
                 if (File.Exists(path))
                 {
-                    var toCache = FromByteArray(await File.ReadAllBytesAsync(path));
+                    var toCache = FromByteArray(await File.ReadAllBytesAsync(path, cancellationToken));
                     CacheImage(toCache, id, episode);
                     return toCache;
                 }

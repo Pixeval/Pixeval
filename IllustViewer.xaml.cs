@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -72,8 +73,13 @@ namespace Pixeval
             new IllustViewer(defaultIllust, displayList).Show();
         }
 
+        private CancellationTokenSource cancellationToken = new CancellationTokenSource();
+
         private async void RefreshIllust()
         {
+            cancellationToken.Cancel();
+            cancellationToken = new CancellationTokenSource();
+
             SwitchDataContext(currentModel);
             gifPlaying = false;
 
@@ -82,6 +88,9 @@ namespace Pixeval
 
             UiHelper.ReleaseImage(DisplayIllustration);
 
+            SetTags();
+            SetIllustratorAvatar(currentModel.UserId);
+
             if (currentModel.IsUgoira)
             {
                 gifPlaying = true;
@@ -89,20 +98,17 @@ namespace Pixeval
                 var data = await HttpClientFactory.AppApiService.GetUgoiraMetadata(currentModel.Id);
                 var url = PixivImage.FormatGifZipUrl(data.UgoiraMetadataInfo.ZipUrls.Medium);
 
-                var list = await PixivImage.ReadGifZipBitmapImages(await PixivImage.FromUrlInternal(url)).ToListAsync();
+                var list = await PixivImage.ReadGifZipBitmapImages(await PixivImage.FromUrlInternal(url)).ToListAsync(cancellationToken.Token);
 
                 if (gifPlaying) PlayGif(list, data.UgoiraMetadataInfo.Frames.Select(f => f.Delay));
             }
             else
             {
-                UiHelper.SetImageSource(DisplayIllustration, await PixivImage.GetAndCreateOrLoadFromCache(false, currentModel.Origin, currentModel.Id));
+                UiHelper.SetImageSource(DisplayIllustration, await PixivImage.GetAndCreateOrLoadFromCache(false, currentModel.Origin, currentModel.Id, cancellationToken: cancellationToken.Token));
             }
 
             IllustFadeOut();
             UiHelper.HideControl(ProgressRing);
-
-            SetTags();
-            SetIllustratorAvatar(currentModel.UserId);
         }
 
         private void PlayGif(IList<BitmapImage> images, IEnumerable<long> delay)
