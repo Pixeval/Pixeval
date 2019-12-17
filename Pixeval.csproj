@@ -10,7 +10,7 @@
     <Copyright>Dylech30th</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <StartupObject>Pixeval.App</StartupObject>
-    <ApplicationIcon>pxlogo.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\pxlogo.ico</ApplicationIcon>
     <Win32Resource />
   </PropertyGroup>
 

@@ -24,7 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Closing="SignIn_OnClosing" Initialized="SignIn_OnInitialized"
-        Title="登录" Height="550" Width="450" Icon="pack://application:,,,/Resources/pxlogo.ico">
+        Title="登录" Height="550" Width="450" Icon="/Resources/pxlogo.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
