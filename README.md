@@ -26,6 +26,11 @@
   * 浏览/下载Pixivison(特辑)
   * 实时GIF显示
   
+  ## 需求</br>
+  本项目基于.NET Core 3.0，因此使用前需要安装.NET Core 3.0 Runtime，可以打开[这个页面](https://dotnet.microsoft.com/download)点击Download .NET Core Runtime并下载安装
+  
+  ## __注意，本项目已经实现了ip直连，无需科学上网(虽然你用了其实也行....不过考虑到好多科学上网的速度还是比直连慢的...)__
+  
   ## 用法展示
   * 关键字作品搜索</br>
   ![tag_search](https://github.com/Rinacm/Pixeval/blob/master/IntroImages/tag_search.png)
