@@ -86,19 +86,19 @@ namespace Pixeval
             }
 
             if (QuerySingleArtistToggleButton.IsChecked == true)
-            {
                 ShowArtist(KeywordTextBox.Text);
-                return;
-            }
-
-            QueryStartUp();
-
-            if (QueryArtistToggleButton.IsChecked == true)
+            else if (QueryArtistToggleButton.IsChecked == true)
+            {
+                QueryStartUp();
                 TryQueryUser(KeywordTextBox.Text);
+            }
             else if (QuerySingleWorkToggleButton.IsChecked == true)
                 TryQuerySingle(KeywordTextBox.Text);
             else
+            {
+                QueryStartUp();
                 QueryWorks(KeywordTextBox.Text);
+            }
         }
 
         private async void ShowArtist(string userId)
