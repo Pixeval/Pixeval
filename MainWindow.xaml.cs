@@ -393,7 +393,10 @@ namespace Pixeval
         private void QueryR18_OnChecked(object sender, RoutedEventArgs e)
         {
             var set = new HashSet<string>();
-            set.AddRange(Settings.Global.ExceptTags);
+            if (Settings.Global.ExceptTags != null)
+            {
+                set.AddRange(Settings.Global.ExceptTags);
+            }
             set.AddRange(new[] {"R-18", "R-18G"});
             Settings.Global.ExceptTags = set;
         }

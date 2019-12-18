@@ -73,11 +73,11 @@ namespace Pixeval.Persisting
         public void Clear()
         {
             File.Delete(Path.Combine(PixevalEnvironment.SettingsFolder, "settings.json"));
-            Global.DownloadLocation = null;
+            Global.DownloadLocation = string.Empty;
             Global.SortOnInserting = false;
             Global.CachingThumbnail = false;
-            Global.ContainsTags = null;
-            Global.ExceptTags = null;
+            Global.ContainsTags = new HashSet<string>();
+            Global.ExceptTags = new HashSet<string>();
             Global.SyncOnStart = false;
             Global.MinBookmark = 0;
             Global.QueryPages = 1;

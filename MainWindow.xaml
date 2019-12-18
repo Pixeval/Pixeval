@@ -957,7 +957,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                               HorizontalAlignment="Right" Checked="QueryR18_OnChecked"
                                               Unchecked="QueryR18_OnUnchecked"
                                               IsChecked="{Binding Path=ExceptTags, Mode=OneWay, Converter={StaticResource QueryR18ToggleButtonIsCheckedConverter}}" />
-                                <TextBlock Grid.Row="3" Grid.Column="0" FontSize="15" Text="要过滤的最低收藏数"
+                                <TextBlock Grid.Row="3" Grid.Column="0" FontSize="15" Text="搜索作品的最低收藏数"
                                            VerticalAlignment="Center" />
                                 <Slider Maximum="2000" Minimum="0" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
                                         Margin="200 0 0 0" VerticalAlignment="Center" Foreground="#66CCFF"
