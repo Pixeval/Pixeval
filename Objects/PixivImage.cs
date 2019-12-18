@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -32,9 +31,9 @@ using Pixeval.Persisting;
 
 namespace Pixeval.Objects
 {
-    public static class PixivImage
+    internal static class PixivEx
     {
-        internal static async Task<byte[]> FromUrlInternal(string url)
+        public static async Task<byte[]> FromUrlInternal(string url)
         {
             var client = HttpClientFactory.PixivImage();
             client.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "http://www.pixiv.net");
@@ -50,20 +49,14 @@ namespace Pixeval.Objects
 
         public static BitmapImage FromByteArray(byte[] bArr)
         {
-            if (bArr.Length == 0)
-            {
-                return null;
-            }
+            if (bArr.Length == 0) return null;
             using var memoryStream = new MemoryStream(bArr);
             return FromStream(memoryStream);
         }
 
         public static BitmapImage FromStream(Stream stream)
         {
-            if (stream.Length == 0)
-            {
-                return null;
-            }
+            if (stream.Length == 0) return null;
             var bmp = new BitmapImage {CreateOptions = BitmapCreateOptions.DelayCreation};
             bmp.BeginInit();
             bmp.CacheOption = BitmapCacheOption.OnLoad;
@@ -78,18 +71,13 @@ namespace Pixeval.Objects
             return Task.Run(() => FromStream(stream));
         }
 
-        internal static void SaveBitmapImage(this BitmapImage bitmapImage, string path)
+        public static void SaveBitmapImage(this BitmapImage bitmapImage, string path)
         {
             var encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(bitmapImage));
 
             using var fs = new FileStream(path, FileMode.Create);
             encoder.Save(fs);
-        }
-
-        public static void CacheImage(byte[] imageBArr, string id, int episode = 0)
-        {
-            CacheImage(FromByteArray(imageBArr), id, episode);
         }
 
         public static void CacheImage(BitmapImage bitmapImage, string id, int episode = 0)
@@ -101,6 +89,16 @@ namespace Pixeval.Objects
             });
         }
 
+        /// <summary>
+        ///     Get or load image, if <see cref="usingCache" /> is true, method will try to
+        ///     get image from disk, the image will be downloaded and saved to disk if not exist
+        /// </summary>
+        /// <param name="usingCache">cache image or not</param>
+        /// <param name="url">image url</param>
+        /// <param name="id">identifier</param>
+        /// <param name="episode">identifier</param>
+        /// <param name="cancellationToken">determine whether we need to cancel the task</param>
+        /// <returns>the loaded image</returns>
         public static async Task<BitmapImage> GetAndCreateOrLoadFromCache(bool usingCache, string url, string id, int episode = 0, CancellationToken cancellationToken = default)
         {
             if (usingCache)
@@ -118,6 +116,12 @@ namespace Pixeval.Objects
             return img;
         }
 
+        /// <summary>
+        ///     the gif downloaded would be a zip file which contains frames of the gif,
+        ///     the frames will be extracted
+        /// </summary>
+        /// <param name="stream">zip stream</param>
+        /// <returns>the streams of each frame</returns>
         private static IReadOnlyList<Stream> ReadGifZipEntries(Stream stream)
         {
             var dis = new List<Stream>();
@@ -136,23 +140,29 @@ namespace Pixeval.Objects
             return dis;
         }
 
-        internal static IReadOnlyList<Stream> ReadGifZipEntries(byte[] bArr)
+        public static IReadOnlyList<Stream> ReadGifZipEntries(byte[] bArr)
         {
             return ReadGifZipEntries(new MemoryStream(bArr));
         }
 
-        internal static async IAsyncEnumerable<BitmapImage> ReadGifZipBitmapImages(byte[] bArr)
+        public static async IAsyncEnumerable<BitmapImage> ReadGifZipBitmapImages(byte[] bArr)
         {
             var lst = await Task.Run(() => ReadGifZipEntries(bArr));
 
             foreach (var s in lst) yield return await FromStreamAsync(s);
         }
 
-        internal static Task<BitmapImage> GetAndCreateOrLoadFromCacheInternal(string url, string id, int episode = 0)
+        public static Task<BitmapImage> GetAndCreateOrLoadFromCacheInternal(string url, string id, int episode = 0)
         {
             return GetAndCreateOrLoadFromCache(Settings.Global.CachingThumbnail, url, id, episode);
         }
 
+        /// <summary>
+        ///     merge the frames of the gif as a complete gif stream depending on <see cref="delay" /> of each frame
+        /// </summary>
+        /// <param name="streams"></param>
+        /// <param name="delay"></param>
+        /// <returns></returns>
         private static Stream MergeGifStream(IReadOnlyList<Stream> streams, IReadOnlyList<long> delay)
         {
             var ms = new MemoryStream();
@@ -196,7 +206,7 @@ namespace Pixeval.Objects
             return Task.WhenAll(illustrations.Select(illustration => DownloadIllust(illustration, path, addIllustratorNamedDirectory)));
         }
 
-        internal static async Task DownloadIllustInternal(Illustration illustration, string addIllustratorNamedDirectory = null)
+        public static async Task DownloadIllustInternal(Illustration illustration, string addIllustratorNamedDirectory = null)
         {
             await DownloadIllust(illustration, Settings.Global.DownloadLocation, addIllustratorNamedDirectory);
         }
@@ -267,25 +277,6 @@ namespace Pixeval.Objects
         public static string FormatGifZipUrl(string link)
         {
             return !link.EndsWith("ugoira1920x1080.zip") ? Regex.Replace(link, "ugoira(\\d+)x(\\d+).zip", "ugoira1920x1080.zip") : link;
-        }
-
-        public static void AddIllust(this Collection<Illustration> container, Illustration illust)
-        {
-            if (IllustNotMatchCondition(Settings.Global.ExceptTags, Settings.Global.ContainsTags, illust))
-                return;
-
-            if (Settings.Global.SortOnInserting)
-                container.AddSorted(illust, IllustrationComparator.Instance);
-            else
-                container.Add(illust);
-        }
-
-        internal static bool IllustNotMatchCondition(ISet<string> exceptTag, ISet<string> containsTag, Illustration illustration)
-        {
-            if (illustration == null) return false;
-            return !exceptTag.IsNullOrEmpty() && exceptTag.Any(x => !x.IsNullOrEmpty() && illustration.Tags.Any(i => i.EqualsIgnoreCase(x))) ||
-                   !containsTag.IsNullOrEmpty() && containsTag.Any(x => !x.IsNullOrEmpty() && !illustration.Tags.Any(i => i.EqualsIgnoreCase(x))) ||
-                   illustration.Bookmark < Settings.Global.MinBookmark;
         }
     }
 }

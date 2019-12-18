@@ -20,24 +20,27 @@ using Pixeval.Data.Web.Delegation;
 
 namespace Pixeval.Core
 {
-    public class SpotlightQueryIterator
+    public class SpotlightQueryIterator : IPixivIterator<SpotlightArticle>
     {
-        private readonly int queryPages;
-        private readonly int start;
+        private readonly int endPoint;
+
+        private int currentIndex;
 
         public SpotlightQueryIterator(int start, int queryPages)
         {
-            this.start = start < 1 ? 1 : start;
-            this.queryPages = queryPages;
+            currentIndex = start < 1 ? 1 : start;
+            endPoint = currentIndex + queryPages - 1;
         }
 
-        public async IAsyncEnumerable<SpotlightArticle> GetSpotlight()
+        public bool HasNext()
         {
-            for (var i = start; i < start + queryPages - 1; i++)
-            {
-                var spotlight = await HttpClientFactory.AppApiService.GetSpotlights(i * 10);
-                foreach (var spotlightSpotlightArticle in spotlight.SpotlightArticles) yield return spotlightSpotlightArticle;
-            }
+            return currentIndex <= endPoint;
+        }
+
+        public async IAsyncEnumerable<SpotlightArticle> MoveNextAsync()
+        {
+            var spotlight = await HttpClientFactory.AppApiService.GetSpotlights(currentIndex++ * 10);
+            foreach (var spotlightSpotlightArticle in spotlight.SpotlightArticles) yield return spotlightSpotlightArticle;
         }
     }
 }

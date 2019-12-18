@@ -389,6 +389,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                                VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
                                     </StackPanel>
                                 </ListViewItem>
+                                <ListViewItem Height="60" x:Name="UpdateIllustTab"
+                                              Selected="UpdateIllustTab_OnSelected">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Viewbox Margin="20 0 0 0" Width="35" Height="35">
+                                            <Canvas Width="24" Height="24">
+                                                <Path
+                                                    Data="M21,10.12H14.22L16.96,7.3C14.23,4.6 9.81,4.5 7.08,7.2C4.35,9.91 4.35,14.28 7.08,17C9.81,19.7 14.23,19.7 16.96,17C18.32,15.65 19,14.08 19,12.1H21C21,14.08 20.12,16.65 18.36,18.39C14.85,21.87 9.15,21.87 5.64,18.39C2.14,14.92 2.11,9.28 5.62,5.81C9.13,2.34 14.76,2.34 18.27,5.81L21,3V10.12M12.5,8V12.25L16,14.33L15.28,15.54L11,13V8H12.5Z"
+                                                    Fill="Gray" />
+                                            </Canvas>
+                                        </Viewbox>
+                                        <Label Margin="30 0 0 0" FontSize="15" FontWeight="Bold" Content="用 户 新 作"
+                                               VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
+                                    </StackPanel>
+                                </ListViewItem>
                             </ListView>
                             <Separator x:Name="Separator" Width="230" Margin="10 10 0 10" Height="1"
                                        HorizontalAlignment="Left" VerticalAlignment="Top" />
@@ -709,9 +723,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 </ListView>
                 <ListView x:Name="UserPreviewListView" VirtualizingPanel.CacheLengthUnit="Pixel"
                           VirtualizingPanel.CacheLength="0 0" VirtualizingPanel.ScrollUnit="Pixel"
-                          VirtualizingPanel.VirtualizationMode="Standard"
+                          VirtualizingPanel.VirtualizationMode="Recycling"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           ItemTemplate="{StaticResource UserPreviewTemplate}">
+                    <ListView.Resources>
+                        <valueConverters:UserPreviewListViewVisibilityConverter
+                            x:Key="UserPreviewListViewVisibilityConverter" />
+                    </ListView.Resources>
+                    <ListView.Visibility>
+                        <MultiBinding Converter="{StaticResource UserPreviewListViewVisibilityConverter}">
+                            <Binding ElementName="SpotlightTab" Path="IsSelected" />
+                            <Binding ElementName="QueryArtistToggleButton" Path="IsChecked" />
+                        </MultiBinding>
+                    </ListView.Visibility>
                     <ListView.Template>
                         <ControlTemplate>
                             <ScrollViewer VirtualizingStackPanel.IsVirtualizing="True"
@@ -728,10 +752,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 </ListView>
                 <ListView x:Name="ImageListView" VirtualizingPanel.CacheLengthUnit="Pixel" Grid.ZIndex="1"
                           VirtualizingPanel.CacheLength="0 0" VirtualizingPanel.ScrollUnit="Pixel"
-                          VirtualizingPanel.VirtualizationMode="Standard"
+                          VirtualizingPanel.VirtualizationMode="Recycling"
                           Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=1}}"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           ItemTemplate="{StaticResource IllustrationViewModelDataTemplate}">
+                    <ListView.Resources>
+                        <valueConverters:ImageListViewVisibilityConverter x:Key="ImageListViewVisibilityConverter" />
+                    </ListView.Resources>
+                    <ListView.Visibility>
+                        <MultiBinding Converter="{StaticResource ImageListViewVisibilityConverter}">
+                            <Binding ElementName="SpotlightTab" Path="IsSelected" />
+                            <Binding ElementName="FollowingTab" Path="IsSelected" />
+                            <Binding ElementName="QueryArtistToggleButton" Path="IsChecked" />
+                        </MultiBinding>
+                    </ListView.Visibility>
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <controls:VirtualizingWrapPanel Orientation="Vertical" />
@@ -814,10 +848,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                 <ListViewItem x:Name="ToDownloadListViewItem"
                                               MouseDoubleClick="ToDownloadListViewItem_OnMouseDoubleClick">
                                     <Grid Cursor="Hand" Width="290">
-                                        <Grid.Resources>
-                                            <valueConverters:DownloadListDisplayConverter
-                                                x:Key="DownloadListDisplayConverter" />
-                                        </Grid.Resources>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="3*" />
                                             <ColumnDefinition Width="*" />
@@ -825,9 +855,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                         </Grid.ColumnDefinitions>
                                         <TextBlock VerticalAlignment="Center" Grid.Column="0"
                                                    HorizontalAlignment="Left" Margin="10 0 0 0" FontSize="20"
-                                                   Text="{Binding Id, Converter={StaticResource DownloadListDisplayConverter}}"
                                                    TextWrapping="NoWrap" TextTrimming="WordEllipsis"
-                                                   FontFamily="Microsoft Yahei UI Light" />
+                                                   FontFamily="Microsoft YaHei UI Light">
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}作品ID: {0}">
+                                                    <Binding Path="Id" />
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
                                         <Button x:Name="DownloadSingleFromDownloadListButton"
                                                 Click="DownloadSingleFromDownloadListButton_OnClick" Grid.Column="1"
                                                 Style="{DynamicResource MaterialDesignToolButton}"
@@ -906,7 +941,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                     <ColumnDefinition Width="5*" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Row="0" Grid.Column="0" Text="插入图片到列表时排序" FontSize="15"
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="按照收藏数排序" FontSize="15"
                                            VerticalAlignment="Center" />
                                 <ToggleButton x:Name="IsSortWhileInsertIllustToImageBox" Grid.Row="0" Grid.Column="1"
                                               Background="#66CCFF" HorizontalAlignment="Right"
@@ -966,7 +1001,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                          LostFocus="ExceptTagTextBox_OnLostFocus" />
                                 <TextBox x:Name="ContainsTagTextBox" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2"
                                          Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                                         materialDesign:HintAssist.Hint="请输入要抓取的标签, 使用空格分隔"
+                                         materialDesign:HintAssist.Hint="请输入作品必须包含的标签, 使用空格分隔"
                                          Text="{Binding Path=ContainsTags, Converter={StaticResource StringSplitConverter}, Mode=OneWay}"
                                          LostFocus="ContainsTagTextBox_OnLostFocus" />
                             </Grid>

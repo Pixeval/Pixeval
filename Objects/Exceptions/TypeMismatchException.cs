@@ -19,7 +19,7 @@ using System.Runtime.Serialization;
 
 namespace Pixeval.Objects.Exceptions
 {
-    public class TypeMismatchException : Exception
+    internal class TypeMismatchException : Exception
     {
         public TypeMismatchException()
         {

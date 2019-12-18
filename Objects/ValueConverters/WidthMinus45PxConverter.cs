@@ -20,7 +20,7 @@ using System.Windows.Data;
 
 namespace Pixeval.Objects.ValueConverters
 {
-    public class WidthMinus45PxConverter : IValueConverter
+    internal class WidthMinus45PxConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

@@ -17,44 +17,45 @@
 using System.Collections.Generic;
 using System.Linq;
 using Pixeval.Data.ViewModel;
-using Pixeval.Data.Web;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Response;
 using Pixeval.Objects;
-using Pixeval.Persisting;
 
 namespace Pixeval.Core
 {
-    public class UserFollowingIterator
+    public class UserFollowingIterator : IPixivIterator<User>
     {
-        private readonly string userId;
+        private readonly string uid;
 
-        private string url;
+        private FollowingResponse context;
 
         public UserFollowingIterator(string userId)
         {
-            this.userId = userId;
-            url = $"https://app-api.pixiv.net/v1/user/following?user_id={userId}&restrict=public";
+            uid = userId;
         }
 
-        public async IAsyncEnumerable<User> GetUserPreviews()
+        public bool HasNext()
         {
-            var client = HttpClientFactory.PixivApi(ProtocolBase.AppApiBaseUrl);
-            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {Identity.Global.AccessToken}");
+            if (context == null) return true;
 
-            while (!url.IsNullOrEmpty())
+            return !context.NextUrl.IsNullOrEmpty();
+        }
+
+        public async IAsyncEnumerable<User> MoveNextAsync()
+        {
+            var url = $"https://app-api.pixiv.net/v1/user/following?user_id={uid}&restrict=public";
+            context = (await HttpClientFactory.AppApiHttpClient.GetStringAsync(context == null ? url : context.NextUrl)).FromJson<FollowingResponse>();
+
+            foreach (var preview in context.UserPreviews.Where(u => u != null))
             {
-                var response = (await client.GetStringAsync(url)).FromJson<FollowingResponse>();
-                foreach (var preview in response.UserPreviews)
-                    yield return new User
-                    {
-                        Thumbnails = preview.Illusts.Select(i => i.ImageUrls.SquareMedium).ToArray(),
-                        Id = preview.User.Id.ToString(),
-                        Name = preview.User.Name,
-                        Avatar = preview.User.ProfileImageUrls.Medium
-                    };
-
-                url = response.NextUrl;
+                var usr = new User
+                {
+                    Thumbnails = preview.Illusts.Select(i => i.ImageUrls.SquareMedium).ToArray(),
+                    Id = preview.User.Id.ToString(),
+                    Name = preview.User.Name,
+                    Avatar = preview.User.ProfileImageUrls.Medium
+                };
+                yield return usr;
             }
         }
     }

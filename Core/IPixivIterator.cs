@@ -15,14 +15,17 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
-using Pixeval.Data.ViewModel;
 
 namespace Pixeval.Core
 {
-    public interface IPixivIterator
+    /// <summary>
+    ///     Present classes which is relative to pixiv content and it's able to iterate
+    /// </summary>
+    /// <typeparam name="T">Model</typeparam>
+    public interface IPixivIterator<out T>
     {
         bool HasNext();
 
-        IAsyncEnumerable<Illustration> MoveNextAsync();
+        IAsyncEnumerable<T> MoveNextAsync();
     }
 }

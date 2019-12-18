@@ -66,5 +66,10 @@ namespace Pixeval.Objects
         {
             return string.Equals(str1, str2, StringComparison.OrdinalIgnoreCase);
         }
+
+        public static bool IsNumber(this string str)
+        {
+            return int.TryParse(str, out _);
+        }
     }
 }

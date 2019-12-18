@@ -18,7 +18,7 @@ using System.IO;
 
 namespace Pixeval.Objects
 {
-    public class TextBuffer
+    internal class TextBuffer
     {
         public static FileInfo GetOrCreateFile(string path)
         {

@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,7 +31,6 @@ using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
 using Pixeval.Objects;
-using Pixeval.Objects.Exceptions;
 
 namespace Pixeval
 {
@@ -42,6 +42,8 @@ namespace Pixeval
         {
             IgnoreDuplicate = true
         };
+
+        private CancellationTokenSource cancellationToken = new CancellationTokenSource();
 
         private int currentIndex;
 
@@ -73,8 +75,6 @@ namespace Pixeval
             new IllustViewer(defaultIllust, displayList).Show();
         }
 
-        private CancellationTokenSource cancellationToken = new CancellationTokenSource();
-
         private async void RefreshIllust()
         {
             cancellationToken.Cancel();
@@ -96,15 +96,15 @@ namespace Pixeval
                 gifPlaying = true;
 
                 var data = await HttpClientFactory.AppApiService.GetUgoiraMetadata(currentModel.Id);
-                var url = PixivImage.FormatGifZipUrl(data.UgoiraMetadataInfo.ZipUrls.Medium);
+                var url = PixivEx.FormatGifZipUrl(data.UgoiraMetadataInfo.ZipUrls.Medium);
 
-                var list = await PixivImage.ReadGifZipBitmapImages(await PixivImage.FromUrlInternal(url)).ToListAsync(cancellationToken.Token);
+                var list = await PixivEx.ReadGifZipBitmapImages(await PixivEx.FromUrlInternal(url)).ToListAsync(cancellationToken.Token);
 
                 if (gifPlaying) PlayGif(list, data.UgoiraMetadataInfo.Frames.Select(f => f.Delay));
             }
             else
             {
-                UiHelper.SetImageSource(DisplayIllustration, await PixivImage.GetAndCreateOrLoadFromCache(false, currentModel.Origin, currentModel.Id, cancellationToken: cancellationToken.Token));
+                UiHelper.SetImageSource(DisplayIllustration, await PixivEx.GetAndCreateOrLoadFromCache(false, currentModel.Origin, currentModel.Id, cancellationToken: cancellationToken.Token));
             }
 
             IllustFadeOut();
@@ -132,7 +132,7 @@ namespace Pixeval
         private async void SetIllustratorAvatar(string id)
         {
             var userInfo = await HttpClientFactory.AppApiService.GetUserInformation(new UserInformationRequest {Id = id});
-            UiHelper.SetImageSource(IllustratorAvatar, await PixivImage.GetAndCreateOrLoadFromCacheInternal(userInfo.UserEntity.ProfileImageUrls.Medium, $"{userInfo.UserEntity.Id}_avatar"));
+            UiHelper.SetImageSource(IllustratorAvatar, await PixivEx.GetAndCreateOrLoadFromCacheInternal(userInfo.UserEntity.ProfileImageUrls.Medium, $"{userInfo.UserEntity.Id}_avatar"));
         }
 
         private void SetTags()
@@ -261,7 +261,7 @@ namespace Pixeval
             var model = currentModel;
 
             DownloadList.Remove(model);
-            await PixivImage.DownloadIllustInternal(model);
+            await PixivEx.DownloadIllustInternal(model);
             messageQueue.Enqueue(Externally.DownloadComplete(model));
         }
 
@@ -276,6 +276,11 @@ namespace Pixeval
         private void IllustratorAvatar_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             UserViewer.Show(currentModel.UserId);
+        }
+
+        private void ViewInBrowserButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo("cmd", $"/c start https://www.pixiv.net/artworks/{currentModel.Id}") {CreateNoWindow = true});
         }
     }
 }

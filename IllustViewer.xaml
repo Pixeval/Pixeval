@@ -113,6 +113,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                         </Canvas>
                     </Viewbox>
                 </Button>
+                <Button x:Name="ViewInBrowserButton" Background="Transparent" BorderBrush="Transparent" Width="55"
+                        Height="40" ToolTip="在浏览器中查看" Click="ViewInBrowserButton_OnClick">
+                    <Viewbox Width="25" Height="25">
+                        <Canvas Width="24" Height="24">
+                            <Path
+                                Data="M12,10L8,14H11V20H13V14H16M19,4H5C3.89,4 3,4.9 3,6V18A2,2 0 0,0 5,20H9V18H5V8H19V18H15V20H19A2,2 0 0,0 21,18V6A2,2 0 0,0 19,4Z"
+                                Fill="Gray" />
+                        </Canvas>
+                    </Viewbox>
+                </Button>
             </StackPanel>
             <Popup x:Name="SliderPopUp" PopupAnimation="Fade" Width="210" Placement="Bottom" StaysOpen="False"
                    PlacementTarget="{Binding ElementName=ScaleButton}" Height="50"
@@ -216,15 +226,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                         <DataTemplate>
                             <Grid x:Name="TagItem" Cursor="Hand" MouseDown="TagItem_OnMouseDown">
                                 <materialDesign:Card>
-                                    <TextBlock Text="{Binding}" Margin="5" FontFamily="Microsoft Yahei UI Light" />
+                                    <TextBlock Text="{Binding}" Margin="5" FontFamily="Microsoft YaHei UI Light" />
                                 </materialDesign:Card>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <objects:AlignableWrapPanel Width="{Binding ElementName=TagsListView, Path=Width}"
-                                                        HorizontalContentAlignment="Center" />
+                            <objects:AlignWrapPanel Width="{Binding ElementName=TagsListView, Path=Width}"
+                                                    HorizontalContentAlignment="Center" />
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                 </ListView>

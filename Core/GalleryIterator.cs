@@ -17,7 +17,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Pixeval.Data.ViewModel;
-using Pixeval.Data.Web;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Response;
 using Pixeval.Objects;
@@ -25,7 +24,7 @@ using Pixeval.Objects.Exceptions;
 
 namespace Pixeval.Core
 {
-    public class GalleryIterator : IPixivIterator
+    public class GalleryIterator : IPixivIterator<Illustration>
     {
         private readonly string uid;
 
@@ -44,12 +43,9 @@ namespace Pixeval.Core
 
         public async IAsyncEnumerable<Illustration> MoveNextAsync()
         {
-            var httpClient = HttpClientFactory.PixivApi(ProtocolBase.AppApiBaseUrl);
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer");
-
             var query = $"/v1/user/bookmarks/illust?user_id={uid}&restrict=public&filter=for_ios";
 
-            var model = (await httpClient.GetStringAsync(context == null ? query : context.NextUrl)).FromJson<GalleryResponse>();
+            var model = (await HttpClientFactory.AppApiHttpClient.GetStringAsync(context == null ? query : context.NextUrl)).FromJson<GalleryResponse>();
 
             if (context == null && model.Illusts.IsNullOrEmpty()) throw new QueryNotRespondingException();
 

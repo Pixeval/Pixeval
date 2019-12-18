@@ -18,9 +18,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
+using System.Net;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -34,6 +33,7 @@ using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
 using Pixeval.Objects;
 using Pixeval.Objects.Exceptions;
+using Refit;
 
 namespace Pixeval
 {
@@ -57,12 +57,22 @@ namespace Pixeval
 
         private void DispatcherOnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            if (e.Exception.InnerException == null || !(e.Exception is HttpRequestException))
+            switch (e.Exception)
             {
-                messageQueue.Enqueue(e.Exception is QueryNotRespondingException ? Externally.QueryNotResponding : e.Exception.Message);
-
-                e.Handled = true;
+                case QueryNotRespondingException _:
+                    messageQueue.Enqueue(Externally.QueryNotResponding);
+                    break;
+                case ApiException apiException:
+                {
+                    if (apiException.StatusCode == HttpStatusCode.BadRequest) messageQueue.Enqueue(Externally.QueryNotResponding);
+                    break;
+                }
+                default:
+                    messageQueue.Enqueue(e.Exception.Message);
+                    break;
             }
+
+            e.Handled = true;
         }
 
         public static async void Show(string id)
@@ -79,26 +89,18 @@ namespace Pixeval
             v.Show();
         }
 
-        private async void SetupUploads()
+        private void SetupUploads()
         {
             atUploadSelector = true;
-            var c = UiHelper.NewItemsSource<Illustration>(ImageListView);
 
-            var pages = await PixivHelper.GetUploadPagesCount(user.Id);
-            var iterator = new UploadIterator(user.Id, pages);
-
-            await foreach (var illust in iterator.MoveNextAsync()) c.AddIllust(illust);
+            PixivHelper.DoIterate(new UploadIterator(user.Id), UiHelper.NewItemsSource<Illustration>(ImageListView));
         }
 
-        private async void SetupFavorite()
+        private void SetupFavorite()
         {
             atUploadSelector = false;
-            var c = UiHelper.NewItemsSource<Illustration>(ImageListView);
 
-            var iterator = new GalleryIterator(user.Id);
-            while (iterator.HasNext())
-                await foreach (var illust in iterator.MoveNextAsync())
-                    c.AddIllust(illust);
+            PixivHelper.DoIterate(new GalleryIterator(user.Id), UiHelper.NewItemsSource<Illustration>(ImageListView));
         }
 
         private void ShowcaseContainer_OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -121,7 +123,7 @@ namespace Pixeval
             if (((IEnumerable<JToken>) res.response).Any())
             {
                 var img = res.response[0].image_urls.large.ToString();
-                UiHelper.SetImageSource(BackgroundImage, await PixivImage.FromUrl(img));
+                UiHelper.SetImageSource(BackgroundImage, await PixivEx.FromUrl(img));
             }
         }
 
@@ -151,14 +153,14 @@ namespace Pixeval
             var illust = sender.GetDataContext<Illustration>();
 
             DownloadList.Remove(illust);
-            await PixivImage.DownloadIllustInternal(illust);
+            await PixivEx.DownloadIllustInternal(illust);
             messageQueue.Enqueue(Externally.DownloadComplete(illust));
         }
 
         private async void DownloadAllNowMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             DownloadList.ToDownloadList.Clear();
-            await PixivImage.DownloadIllustsInternal((IEnumerable<Illustration>) ImageListView.ItemsSource, Path.Combine(user.Name, $"{(atUploadSelector ? "作品" : "收藏")}"));
+            await PixivEx.DownloadIllustsInternal((IEnumerable<Illustration>) ImageListView.ItemsSource, Path.Combine(user.Name, $"{(atUploadSelector ? "作品" : "收藏")}"));
             messageQueue.Enqueue(Externally.AllDownloadComplete);
         }
 
@@ -179,14 +181,14 @@ namespace Pixeval
             var dataContext = sender.GetDataContext<Illustration>();
 
             if (dataContext != null && Uri.IsWellFormedUriString(dataContext.Thumbnail, UriKind.Absolute))
-                UiHelper.SetImageSource((Image) sender, await PixivImage.GetAndCreateOrLoadFromCacheInternal(dataContext.Thumbnail, dataContext.Id));
+                UiHelper.SetImageSource(sender, await PixivEx.GetAndCreateOrLoadFromCacheInternal(dataContext.Thumbnail, dataContext.Id));
 
             UiHelper.StartDoubleAnimationUseCubicEase(sender, "(Image.Opacity)", 0, 1, 500);
         }
 
         private void Thumbnail_OnUnloaded(object sender, RoutedEventArgs e)
         {
-            UiHelper.ReleaseImage((Image) sender);
+            UiHelper.ReleaseImage(sender);
         }
 
         private void FavoriteButton_OnClick(object sender, RoutedEventArgs e)
@@ -211,7 +213,7 @@ namespace Pixeval
 
         private async void ShowcaseContainer_OnLoaded(object sender, RoutedEventArgs e)
         {
-            UiHelper.SetImageSource(UserAvatar, await PixivImage.FromUrl(this.GetDataContext<User>().Avatar));
+            UiHelper.SetImageSource(UserAvatar, await PixivEx.FromUrl(this.GetDataContext<User>().Avatar));
         }
 
         private async void FollowButton_OnClick(object sender, RoutedEventArgs e)

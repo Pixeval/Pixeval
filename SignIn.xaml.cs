@@ -19,7 +19,6 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 using Pixeval.Objects;
-using Pixeval.Objects.Exceptions;
 using Pixeval.Persisting;
 using Refit;
 

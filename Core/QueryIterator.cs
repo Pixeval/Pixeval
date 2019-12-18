@@ -23,26 +23,24 @@ using Pixeval.Objects.Exceptions;
 
 namespace Pixeval.Core
 {
-    public class QueryIterator : IPixivIterator
+    public class QueryIterator : IPixivIterator<Illustration>
     {
         private readonly int start;
-        private readonly string tag;
 
-        private readonly int totalPages;
+        private readonly string tag;
 
         private int currentIndex;
 
-        public QueryIterator(string tag, int totalPages, int start = 1)
+        public QueryIterator(string tag, int start = 1)
         {
             this.start = start < 1 ? 1 : start;
             currentIndex = start;
             this.tag = tag;
-            this.totalPages = totalPages;
         }
 
         public bool HasNext()
         {
-            return currentIndex <= totalPages;
+            return true;
         }
 
         public async IAsyncEnumerable<Illustration> MoveNextAsync()

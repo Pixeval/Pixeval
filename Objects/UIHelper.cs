@@ -27,40 +27,16 @@ using System.Windows.Media.Animation;
 
 namespace Pixeval.Objects
 {
-    public static class UiHelper
+    internal static class UiHelper
     {
-        public static T FindChild<T>(this DependencyObject parent, string childName)
-            where T : DependencyObject
+        public static void Unable(this FrameworkElement element)
         {
-            if (parent == null) return null;
+            element.IsEnabled = false;
+        }
 
-            T foundChild = null;
-
-            var childrenCount = VisualTreeHelper.GetChildrenCount(parent);
-            for (var i = 0; i < childrenCount; i++)
-            {
-                var child = VisualTreeHelper.GetChild(parent, i);
-                if (!(child is T))
-                {
-                    foundChild = FindChild<T>(child, childName);
-                    if (foundChild != null) break;
-                }
-                else if (!string.IsNullOrEmpty(childName))
-                {
-                    if (child is FrameworkElement frameworkElement && frameworkElement.Name == childName)
-                    {
-                        foundChild = (T) child;
-                        break;
-                    }
-                }
-                else
-                {
-                    foundChild = (T) child;
-                    break;
-                }
-            }
-
-            return foundChild;
+        public static void Enable(this FrameworkElement element)
+        {
+            element.IsEnabled = true;
         }
 
         public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
@@ -75,35 +51,19 @@ namespace Pixeval.Objects
                 }
         }
 
-        public static T FindChild<T>(this DependencyObject depObj)
-            where T : DependencyObject
-        {
-            if (depObj == null) return null;
-
-            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
-            {
-                var child = VisualTreeHelper.GetChild(depObj, i);
-
-                var result = child as T ?? FindChild<T>(child);
-                if (result != null) return result;
-            }
-
-            return null;
-        }
-
         public static T DataContext<T>(this FrameworkElement element)
         {
             return (T) element.DataContext;
         }
 
-        public static void SetImageSource(Image img, ImageSource imgSource)
+        public static void SetImageSource(object img, ImageSource imgSource)
         {
-            img.Source = imgSource;
+            ((Image) img).Source = imgSource;
         }
 
-        public static void ReleaseImage(Image img)
+        public static void ReleaseImage(object img)
         {
-            img.Source = null;
+            ((Image) img).Source = null;
         }
 
         public static void HideControl(UIElement element)
@@ -153,18 +113,13 @@ namespace Pixeval.Objects
             throw new NotSupportedException($"parameter must be derived class of {nameof(FrameworkElement)}");
         }
 
-        public static void ScheduleTask(Action action)
-        {
-            Application.Current.Dispatcher?.BeginInvoke(action);
-        }
-
         public static T GetResources<T>(this FrameworkElement element, string name)
         {
             return (T) element.Resources[name];
         }
     }
 
-    public class PopupHelper
+    internal class PopupHelper
     {
         public static readonly DependencyProperty PopupPlacementTargetProperty =
             DependencyProperty.RegisterAttached("PopupPlacementTarget", typeof(DependencyObject), typeof(PopupHelper), new PropertyMetadata(null, OnPopupPlacementTargetChanged));

@@ -16,12 +16,13 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 
 namespace Pixeval.Objects.ValueConverters
 {
-    public class VisibleIfTrueConverter : IValueConverter
+    internal class VisibleIfTrueConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -36,7 +37,7 @@ namespace Pixeval.Objects.ValueConverters
         }
     }
 
-    public class VisibleIfFalseConverter : IValueConverter
+    internal class VisibleIfFalseConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -47,6 +48,40 @@ namespace Pixeval.Objects.ValueConverters
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class ImageListViewVisibilityConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var val = values.Cast<bool>().ToArray();
+
+            if (!(val[0] || val[1] || val[2])) return Visibility.Visible;
+
+            return Visibility.Hidden;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class UserPreviewListViewVisibilityConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var val = values.Cast<bool>().ToArray();
+
+            if (!val[0] || val[1]) return Visibility.Visible;
+
+            return Visibility.Hidden;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

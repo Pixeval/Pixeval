@@ -20,7 +20,7 @@ using System.Reflection;
 
 namespace Pixeval.Objects
 {
-    public static class Reflection
+    internal static class Reflection
     {
         public static MethodInfo[] PublicInstanceMethods<T>()
         {

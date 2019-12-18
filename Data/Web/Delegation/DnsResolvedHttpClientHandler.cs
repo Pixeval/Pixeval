@@ -31,6 +31,7 @@ namespace Pixeval.Data.Web.Delegation
 
         static DnsResolvedHttpClientHandler()
         {
+            // use legacy http handler instead of .net core's new http handler, that will break whole program on SSL check
             AppContext.SetSwitch("System.Net.Http.UseSocketsHttpHandler", false);
         }
 
@@ -49,6 +50,7 @@ namespace Pixeval.Data.Web.Delegation
 
             var isSslSession = request.RequestUri.ToString().StartsWith("https://");
 
+            // replace the host part in the uri to the ip address of the host
             request.RequestUri = new Uri($"{(isSslSession ? "https://" : "http://")}{(await DnsResolver.Lookup(host))[0]}{request.RequestUri.PathAndQuery}");
             request.Headers.Host = host;
 
@@ -61,11 +63,13 @@ namespace Pixeval.Data.Web.Delegation
             }
             catch (HttpRequestException e)
             {
+                // this exception throws several times with form like "Error Code 12152 WinHttpException" and I cannot find reason, so I just ignore it
                 if (e.InnerException != null && e.InnerException.Message.ToLower().Contains("winhttp"))
                     return new HttpResponseMessage(HttpStatusCode.OK);
                 throw;
             }
 
+            // bad request with authorization messages means the token has been expired, we will refresh the token and try to send request again
             if (result.StatusCode == HttpStatusCode.BadRequest && (await result.Content.ReadAsStringAsync()).Contains("OAuth"))
             {
                 using var _ = await new AsyncLock().LockAsync();

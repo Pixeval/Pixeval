@@ -15,12 +15,15 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
-using Pixeval.Data.Web.Request;
 using Pixeval.Data.Web.Response;
+using Pixeval.Objects;
+using Pixeval.Persisting;
 
 namespace Pixeval.Core
 {
@@ -66,20 +69,39 @@ namespace Pixeval.Core
             return illust;
         }
 
-        public static async Task<int> GetUploadPagesCount(string uid)
+        internal static async void DoIterate<T>(IPixivIterator<T> pixivIterator, ICollection<T> container, bool useCounter = false)
         {
-            return (int) (await HttpClientFactory.PublicApiService.GetUploads(uid, new UploadsRequest {Page = 1, PerPage = 1}))
-                .UploadPagination
-                .Pages;
+            var counter = 1;
+            while (pixivIterator.HasNext())
+            {
+                if (useCounter && counter > Settings.Global.QueryPages) break;
+                await foreach (var illust in pixivIterator.MoveNextAsync())
+                    if (typeof(T) == typeof(Illustration))
+                    {
+                        var i = illust as Illustration;
+                        if (IllustNotMatchCondition(Settings.Global.ExceptTags, Settings.Global.ContainsTags, i))
+                            continue;
+
+                        if (Settings.Global.SortOnInserting)
+                            (container as Collection<Illustration>).AddSorted(i, IllustrationComparator.Instance);
+                        else
+                            container.Add(illust);
+                    }
+                    else
+                    {
+                        container.Add(illust);
+                    }
+
+                counter++;
+            }
         }
 
-        public static async Task<int> GetQueryPagesCount(string tag)
+        internal static bool IllustNotMatchCondition(ISet<string> exceptTag, ISet<string> containsTag, Illustration illustration)
         {
-            var total = (double) (await HttpClientFactory.PublicApiService.QueryWorks(new QueryWorksRequest {Tag = tag, Offset = 1, PerPage = 1}))
-                        .QueryPagination
-                        .Pages / 300;
-
-            return (int) Math.Ceiling(total);
+            if (illustration == null) return false;
+            return !exceptTag.IsNullOrEmpty() && exceptTag.Any(x => !x.IsNullOrEmpty() && illustration.Tags.Any(i => i.EqualsIgnoreCase(x))) ||
+                   !containsTag.IsNullOrEmpty() && containsTag.Any(x => !x.IsNullOrEmpty() && !illustration.Tags.Any(i => i.EqualsIgnoreCase(x))) ||
+                   illustration.Bookmark < Settings.Global.MinBookmark;
         }
     }
 }

@@ -23,23 +23,20 @@ using Pixeval.Objects.Exceptions;
 
 namespace Pixeval.Core
 {
-    public class UploadIterator : IPixivIterator
+    public class UploadIterator : IPixivIterator<Illustration>
     {
-        private readonly int totalPages;
-
         private readonly string uid;
 
         private int currentIndex = 1;
 
-        public UploadIterator(string uid, int totalPages)
+        public UploadIterator(string uid)
         {
             this.uid = uid;
-            this.totalPages = totalPages;
         }
 
         public bool HasNext()
         {
-            return currentIndex <= totalPages;
+            return true;
         }
 
         public async IAsyncEnumerable<Illustration> MoveNextAsync()

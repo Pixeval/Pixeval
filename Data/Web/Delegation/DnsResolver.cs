@@ -50,6 +50,11 @@ namespace Pixeval.Data.Web.Delegation
                 });
         }
 
+        /// <summary>
+        ///     query dns according to specified <see cref="hostname" />
+        /// </summary>
+        /// <param name="hostname"></param>
+        /// <returns>the result of dns query</returns>
         public async Task<IList<IPAddress>> Lookup(string hostname)
         {
             if (DnsCache.Value.ContainsKey(hostname)) return DnsCache.Value[hostname].ToImmutableList();

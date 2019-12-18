@@ -22,7 +22,7 @@ using System.Windows.Data;
 
 namespace Pixeval.Objects.ValueConverters
 {
-    public class QueryR18ToggleButtonIsCheckedConverter : IValueConverter
+    internal class QueryR18ToggleButtonIsCheckedConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

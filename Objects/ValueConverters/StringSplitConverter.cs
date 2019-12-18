@@ -21,7 +21,7 @@ using System.Windows.Data;
 
 namespace Pixeval.Objects.ValueConverters
 {
-    public class StringSplitConverter : IValueConverter
+    internal class StringSplitConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

@@ -17,48 +17,50 @@
 using System.Collections.Generic;
 using System.Linq;
 using Pixeval.Data.ViewModel;
-using Pixeval.Data.Web;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Response;
 using Pixeval.Objects;
 using Pixeval.Objects.Exceptions;
-using Pixeval.Persisting;
 
 namespace Pixeval.Core
 {
-    public class UserPreviewIterator
+    public class UserPreviewIterator : IPixivIterator<User>
     {
-        private string url;
+        private readonly string keyword;
+
+        private UserNavResponse context;
+
+        private int counter;
 
         public UserPreviewIterator(string keyword)
         {
-            url = $"https://app-api.pixiv.net/v1/search/user?filter=for_android&word={keyword}";
+            this.keyword = keyword;
         }
 
-        public async IAsyncEnumerable<User> GetUserPreview()
+        public bool HasNext()
         {
-            var counter = 0;
-            while (!url.IsNullOrEmpty())
+            if (context == null) return true;
+
+            return counter <= 10 && !context.NextUrl.IsNullOrEmpty();
+        }
+
+        public async IAsyncEnumerable<User> MoveNextAsync()
+        {
+            var url = $"https://app-api.pixiv.net/v1/search/user?filter=for_android&word={keyword}";
+            context = (await HttpClientFactory.AppApiHttpClient.GetStringAsync(context == null ? url : context.NextUrl)).FromJson<UserNavResponse>();
+
+            if (context.UserPreviews.IsNullOrEmpty() && counter++ == 0) throw new QueryNotRespondingException();
+
+            foreach (var responseUserPreview in context.UserPreviews.Where(u => u != null))
             {
-                if (counter > 10) yield break;
-
-                var httpClient = HttpClientFactory.PixivApi(ProtocolBase.AppApiBaseUrl);
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"Bearer {Identity.Global.AccessToken}");
-
-                var response = (await httpClient.GetStringAsync(url)).FromJson<UserNavResponse>();
-
-                if (response.UserPreviews.IsNullOrEmpty() && counter++ == 0) throw new QueryNotRespondingException();
-
-                url = response.NextUrl;
-
-                foreach (var responseUserPreview in response.UserPreviews)
-                    yield return new User
-                    {
-                        Avatar = responseUserPreview.User.ProfileImageUrls.Medium,
-                        Thumbnails = responseUserPreview.Illusts.Select(i => i.ImageUrl.SquareMedium).ToArray(),
-                        Id = responseUserPreview.User.Id.ToString(),
-                        Name = responseUserPreview.User.Name
-                    };
+                var usr = new User
+                {
+                    Avatar = responseUserPreview.User.ProfileImageUrls.Medium,
+                    Thumbnails = responseUserPreview.Illusts.Select(i => i.ImageUrl.SquareMedium).ToArray(),
+                    Id = responseUserPreview.User.Id.ToString(),
+                    Name = responseUserPreview.User.Name
+                };
+                yield return usr;
             }
         }
     }
