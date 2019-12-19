@@ -63,7 +63,6 @@ namespace Pixeval
             if (Dispatcher != null) Dispatcher.UnhandledException += Dispatcher_UnhandledException;
 
             UiHelper.SetItemsSource(ToDownloadListView, DownloadList.ToDownloadList);
-            throw new Exception();
         }
 
         private void Dispatcher_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
