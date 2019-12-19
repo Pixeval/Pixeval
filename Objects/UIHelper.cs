@@ -96,7 +96,7 @@ namespace Pixeval.Objects
         public static void StartDoubleAnimationUseCubicEase(object sender, string path, double from, double to, int milliseconds)
         {
             var sb = new Storyboard();
-            var doubleAnimation = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(milliseconds))
+            var doubleAnimation = new DoubleAnimation(from, to, TimeSpan.FromMilliseconds(milliseconds))
             {
                 EasingFunction = new CubicEase {EasingMode = EasingMode.EaseOut}
             };

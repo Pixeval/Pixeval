@@ -39,6 +39,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         <valueConverters:VisibleIfFalseConverter x:Key="VisibleIfFalseConverter" />
         <valueConverters:WidthMinus45PxConverter x:Key="WidthMinus45PxConverter" />
         <valueConverters:IllustSubscriptConverter x:Key="IllustSubscriptConverter" />
+        <Style TargetType="Image" x:Key="ReleaseImageStyle">
+            <Style.Triggers>
+                <Trigger Property="IsVisible" Value="False">
+                    <Setter Property="Source" Value="{x:Null}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
         <DataTemplate x:Key="IllustrationViewModelDataTemplate" DataType="viewModel:Illustration">
             <ListViewItem x:Name="IllustrationContainer" MouseDoubleClick="IllustrationContainer_OnMouseDoubleClick">
                 <ListViewItem.ContextMenu>
@@ -59,7 +66,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                             <VisualBrush Visual="{Binding ElementName=GridBorder}" />
                         </Grid.OpacityMask>
                         <Image x:Name="Thumbnail" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                               Stretch="UniformToFill" Loaded="Thumbnail_OnLoaded" Unloaded="Thumbnail_OnUnloaded" />
+                               Style="{StaticResource ReleaseImageStyle}"
+                               Stretch="UniformToFill" Loaded="Thumbnail_OnLoaded" />
                         <Border Height="60" VerticalAlignment="Bottom">
                             <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Center"
                                        Text="{Binding Path=Title}" FontFamily="Microsoft YaHei UI Light"
@@ -202,8 +210,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 </Grid.Triggers>
                 <Image x:Name="SpotlightThumbnail" Stretch="UniformToFill" HorizontalAlignment="Stretch"
                        VerticalAlignment="Center" RenderTransformOrigin="0.5 0.5"
+                       Style="{StaticResource ReleaseImageStyle}"
                        MaxWidth="{Binding ElementName=SpotlightListView, Path=ActualWidth}"
-                       Loaded="SpotlightThumbnail_OnLoaded" Unloaded="SpotlightThumbnail_OnUnloaded">
+                       Loaded="SpotlightThumbnail_OnLoaded">
                     <Image.Effect>
                         <BlurEffect x:Name="SpotlightBlurEffect" KernelType="Gaussian" Radius="1" />
                     </Image.Effect>
@@ -223,7 +232,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         <DataTemplate x:Key="UserPreviewTemplate" DataType="viewModel:User">
             <materialDesign:Card x:Name="UserPrevItem" Cursor="Hand"
                                  Width="{Binding ElementName=UserPreviewListView, Path=ActualWidth}" Height="200"
-                                 Loaded="UserPrevItem_OnLoaded" Unloaded="UserPrevItem_OnUnloaded"
+                                 Loaded="UserPrevItem_OnLoaded"
                                  MouseLeftButtonDown="UserPrevItem_OnMouseLeftButtonDown">
                 <materialDesign:Card.Resources>
                     <valueConverters:UserIdConverter x:Key="UserIdConverter" />
@@ -231,6 +240,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                         <Image x:Name="UserAvatar" Width="150" Height="150" Margin="50 0 0 0"
+                               Style="{StaticResource ReleaseImageStyle}"
                                Stretch="UniformToFill" VerticalAlignment="Center">
                             <Image.Clip>
                                 <EllipseGeometry Center="75 75" RadiusX="75" RadiusY="75" />
@@ -246,10 +256,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Right"
                                 Width="540" Margin="0 0 50 0">
                         <Image x:Name="UserPrevImage1" Height="180" Width="150" Stretch="UniformToFill"
+                               Style="{StaticResource ReleaseImageStyle}"
                                Margin="10 0" />
                         <Image x:Name="UserPrevImage2" Height="180" Width="150" Stretch="UniformToFill"
+                               Style="{StaticResource ReleaseImageStyle}"
                                Margin="10 0" />
                         <Image x:Name="UserPrevImage3" Height="180" Width="150" Stretch="UniformToFill"
+                               Style="{StaticResource ReleaseImageStyle}"
                                Margin="10 0" />
                     </StackPanel>
                 </Grid>
@@ -324,7 +337,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                             <ListView Style="{DynamicResource MaterialDesignListView}" x:Name="NavigatorList"
                                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                       SelectionChanged="NavigatorList_OnSelectionChanged">
-                                <ListViewItem Height="60" x:Name="MenuTab" Selected="MenuTab_OnSelected">
+                                <ListViewItem Height="60" x:Name="MenuTab">
                                     <StackPanel Orientation="Horizontal">
                                         <Viewbox Margin="20 0 0 0" Width="35" Height="35">
                                             <Canvas Width="24" Height="24">
@@ -362,8 +375,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                                VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
                                     </StackPanel>
                                 </ListViewItem>
-                                <ListViewItem Height="60" x:Name="SpotlightTab" Selected="SpotlightTab_OnSelected"
-                                              Unselected="SpotlightTab_OnUnselected">
+                                <ListViewItem Height="60" x:Name="SpotlightTab" Selected="SpotlightTab_OnSelected">
                                     <StackPanel Orientation="Horizontal">
                                         <Viewbox Margin="20 0 0 0" Width="35" Height="35">
                                             <Canvas Width="24" Height="24">
@@ -703,10 +715,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             <Grid x:Name="QueryDisplayContainer" Background="#FAFAFC">
                 <ListView x:Name="SpotlightListView" VirtualizingPanel.CacheLengthUnit="Pixel"
                           VirtualizingPanel.CacheLength="0 0" VirtualizingPanel.ScrollUnit="Pixel"
-                          VirtualizingPanel.VirtualizationMode="Recycling"
+                          VirtualizingPanel.VirtualizationMode="Standard"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           Visibility="{Binding ElementName=SpotlightTab, Path=IsSelected, Converter={StaticResource VisibleIfTrueConverter}}"
                           ItemTemplate="{StaticResource SpotlightDataTemplate}">
+                    <ListView.Style>
+                        <Style BasedOn="{StaticResource MaterialDesignListView}" TargetType="ListView">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=SpotlightTab, Path=IsSelected}"
+                                             Value="False">
+                                    <Setter Property="ItemsSource" Value="{x:Null}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.Style>
                     <ListView.Template>
                         <ControlTemplate>
                             <ScrollViewer VirtualizingStackPanel.IsVirtualizing="True"
@@ -723,7 +745,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 </ListView>
                 <ListView x:Name="UserPreviewListView" VirtualizingPanel.CacheLengthUnit="Pixel"
                           VirtualizingPanel.CacheLength="0 0" VirtualizingPanel.ScrollUnit="Pixel"
-                          VirtualizingPanel.VirtualizationMode="Recycling"
+                          VirtualizingPanel.VirtualizationMode="Standard"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           ItemTemplate="{StaticResource UserPreviewTemplate}">
                     <ListView.Resources>
@@ -752,10 +774,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 </ListView>
                 <ListView x:Name="ImageListView" VirtualizingPanel.CacheLengthUnit="Pixel" Grid.ZIndex="1"
                           VirtualizingPanel.CacheLength="0 0" VirtualizingPanel.ScrollUnit="Pixel"
-                          VirtualizingPanel.VirtualizationMode="Recycling"
+                          VirtualizingPanel.VirtualizationMode="Standard"
                           Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=1}}"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           ItemTemplate="{StaticResource IllustrationViewModelDataTemplate}">
+                    <ListView.Style>
+                        <Style TargetType="ListView" BasedOn="{StaticResource MaterialDesignListView}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=MenuTab, Path=IsSelected}" Value="True">
+                                    <Setter Property="ItemsSource" Value="{x:Null}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.Style>
                     <ListView.Resources>
                         <valueConverters:ImageListViewVisibilityConverter x:Key="ImageListViewVisibilityConverter" />
                     </ListView.Resources>

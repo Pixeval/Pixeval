@@ -98,9 +98,7 @@ namespace Pixeval
                 var data = await HttpClientFactory.AppApiService.GetUgoiraMetadata(currentModel.Id);
                 var url = PixivEx.FormatGifZipUrl(data.UgoiraMetadataInfo.ZipUrls.Medium);
 
-                var list = await PixivEx.ReadGifZipBitmapImages(await PixivEx.FromUrlInternal(url)).ToListAsync(cancellationToken.Token);
-
-                if (gifPlaying) PlayGif(list, data.UgoiraMetadataInfo.Frames.Select(f => f.Delay));
+                if (gifPlaying) PlayGif(await PixivEx.ReadGifZipBitmapImages(await PixivEx.FromUrlInternal(url)).ToListAsync(cancellationToken.Token), data.UgoiraMetadataInfo.Frames.Select(f => f.Delay));
             }
             else
             {
@@ -143,12 +141,12 @@ namespace Pixeval
 
         private void IllustFadeIn()
         {
-            (Resources["ImageFadeIn"] as Storyboard)?.Begin();
+            this.GetResources<Storyboard>("ImageFadeIn").Begin();
         }
 
         private void IllustFadeOut()
         {
-            (Resources["ImageFadeOut"] as Storyboard)?.Begin();
+            this.GetResources<Storyboard>("ImageFadeOut").Begin();
         }
 
         private void SwitchDataContext(Illustration model)

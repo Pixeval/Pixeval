@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -65,6 +66,8 @@ namespace Pixeval
                     break;
                 case ApiException apiException:
                     if (apiException.StatusCode == HttpStatusCode.BadRequest) messageQueue.Enqueue(Externally.QueryNotResponding);
+                    break;
+                case HttpRequestException _:
                     break;
                 default:
                     ExceptionLogger.WriteException(e.Exception);
@@ -186,11 +189,6 @@ namespace Pixeval
             UiHelper.StartDoubleAnimationUseCubicEase(sender, "(Image.Opacity)", 0, 1, 500);
         }
 
-        private void Thumbnail_OnUnloaded(object sender, RoutedEventArgs e)
-        {
-            UiHelper.ReleaseImage(sender);
-        }
-
         private void FavoriteButton_OnClick(object sender, RoutedEventArgs e)
         {
             PixivClient.Instance.PostFavoriteAsync(sender.GetDataContext<Illustration>());
@@ -201,12 +199,7 @@ namespace Pixeval
             PixivClient.Instance.RemoveFavoriteAsync(sender.GetDataContext<Illustration>());
         }
 
-        private void ToggleButton_OnUnchecked(object sender, RoutedEventArgs e)
-        {
-            UiHelper.ReleaseItemsSource(ImageListView);
-        }
-
-        private void ToggleButton_OnChecked(object sender, RoutedEventArgs e)
+        private void ShowcaseContainerToggleButton_OnChecked(object sender, RoutedEventArgs e)
         {
             UploadSelector.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left) {RoutedEvent = MouseLeftButtonDownEvent});
         }

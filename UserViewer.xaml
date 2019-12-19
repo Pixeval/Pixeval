@@ -50,6 +50,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     TargetProperty="(Grid.RenderTransform).(TranslateTransform.X)" TargetName="SelectorOpacityMask">
             <DoubleAnimation From="80" To="0" EasingFunction="{StaticResource CubicEase}" Duration="00:00:0.3" />
         </Storyboard>
+        <Style TargetType="Image" x:Key="ReleaseImageStyle">
+            <Style.Triggers>
+                <Trigger Property="IsVisible" Value="False">
+                    <Setter Property="Source" Value="{x:Null}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
         <DataTemplate x:Key="IllustrationViewModelDataTemplate" DataType="viewModel:Illustration">
             <ListViewItem x:Name="IllustrationContainer" MouseDoubleClick="IllustrationContainer_OnMouseDoubleClick">
                 <ListViewItem.ContextMenu>
@@ -73,7 +80,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                             <VisualBrush Visual="{Binding ElementName=GridBorder}" />
                         </Grid.OpacityMask>
                         <Image x:Name="Thumbnail" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                               Stretch="UniformToFill" Loaded="Thumbnail_OnLoaded" Unloaded="Thumbnail_OnUnloaded" />
+                               Style="{StaticResource ReleaseImageStyle}"
+                               Stretch="UniformToFill" Loaded="Thumbnail_OnLoaded" />
                         <Border Height="60" VerticalAlignment="Bottom">
                             <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Center"
                                        Text="{Binding Path=Title}" FontFamily="Microsoft YaHei UI Light"
@@ -196,6 +204,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                   Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=1}}"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                   ItemTemplate="{StaticResource IllustrationViewModelDataTemplate}">
+            <ListView.Style>
+                <Style TargetType="ListView" BasedOn="{StaticResource MaterialDesignListView}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=ShowcaseContainerToggleButton, Path=IsChecked}"
+                                     Value="False">
+                            <Setter Property="ItemsSource" Value="{x:Null}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.Style>
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <controls:VirtualizingWrapPanel Orientation="Vertical" />
@@ -238,9 +256,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     <TextBlock>已  关  注</TextBlock>
                 </Button>
             </Border>
-            <ToggleButton Style="{DynamicResource MaterialDesignFlatToggleButton}" Height="40" Width="40"
-                          VerticalAlignment="Bottom" Margin="0 0 0 -20" Unchecked="ToggleButton_OnUnchecked"
-                          Checked="ToggleButton_OnChecked" Grid.ZIndex="1">
+            <ToggleButton x:Name="ShowcaseContainerToggleButton"
+                          Style="{DynamicResource MaterialDesignFlatToggleButton}" Height="40" Width="40"
+                          VerticalAlignment="Bottom" Margin="0 0 0 -20"
+                          Checked="ShowcaseContainerToggleButton_OnChecked" Grid.ZIndex="1">
                 <ToggleButton.Triggers>
                     <EventTrigger RoutedEvent="ToggleButton.Checked">
                         <BeginStoryboard>

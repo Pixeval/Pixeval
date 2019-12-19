@@ -20,6 +20,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -74,6 +75,8 @@ namespace Pixeval
                     break;
                 case ApiException apiException:
                     if (apiException.StatusCode == HttpStatusCode.BadRequest) Notice(Externally.QueryNotResponding);
+                    break;
+                case HttpRequestException _:
                     break;
                 default:
                     ExceptionLogger.WriteException(e.Exception);
@@ -241,11 +244,6 @@ namespace Pixeval
             PixivHelper.DoIterate(new UserUpdateIterator(), ImageListViewNewItemSource());
         }
 
-        private void MenuTab_OnSelected(object sender, RoutedEventArgs e)
-        {
-            UiHelper.ReleaseItemsSource(ImageListView);
-        }
-
         private void GalleryTab_OnSelected(object sender, RoutedEventArgs e)
         {
             QueryStartUp();
@@ -268,11 +266,6 @@ namespace Pixeval
 
             var iterator = new SpotlightQueryIterator(Settings.Global.SpotlightQueryStart, Settings.Global.QueryPages);
             PixivHelper.DoIterate(iterator, UiHelper.NewItemsSource<SpotlightArticle>(SpotlightListView), true);
-        }
-
-        private void SpotlightTab_OnUnselected(object sender, RoutedEventArgs e)
-        {
-            UiHelper.ReleaseItemsSource(SpotlightListView);
         }
 
         private void FollowingTab_OnSelected(object sender, RoutedEventArgs e)
@@ -316,13 +309,13 @@ namespace Pixeval
         private void HomeContainerMoveDown()
         {
             DoQueryButton.Unable();
-            (HomeDisplayContainer.Resources["MoveDownAnimation"] as Storyboard)?.Begin();
+            HomeDisplayContainer.GetResources<Storyboard>("MoveDownAnimation").Begin();
         }
 
         private void HomeContainerMoveUp()
         {
             DoQueryButton.Enable();
-            (HomeDisplayContainer.Resources["MoveUpAnimation"] as Storyboard)?.Begin();
+            HomeDisplayContainer.GetResources<Storyboard>("MoveUpAnimation")?.Begin();
         }
 
         #endregion
@@ -337,11 +330,6 @@ namespace Pixeval
                 UiHelper.SetImageSource(sender, await PixivEx.GetAndCreateOrLoadFromCacheInternal(dataContext.Thumbnail, dataContext.Id));
 
             UiHelper.StartDoubleAnimationUseCubicEase(sender, "(Image.Opacity)", 0, 1, 500);
-        }
-
-        private void Thumbnail_OnUnloaded(object sender, RoutedEventArgs e)
-        {
-            UiHelper.ReleaseImage(sender);
         }
 
         private void FavoriteButton_OnClick(object sender, RoutedEventArgs e)
@@ -393,10 +381,7 @@ namespace Pixeval
         private void QueryR18_OnChecked(object sender, RoutedEventArgs e)
         {
             var set = new HashSet<string>();
-            if (Settings.Global.ExceptTags != null)
-            {
-                set.AddRange(Settings.Global.ExceptTags);
-            }
+            if (Settings.Global.ExceptTags != null) set.AddRange(Settings.Global.ExceptTags);
             set.AddRange(new[] {"R-18", "R-18G"});
             Settings.Global.ExceptTags = set;
         }
@@ -429,11 +414,6 @@ namespace Pixeval
         {
             var dataContext = sender.GetDataContext<SpotlightArticle>();
             UiHelper.SetImageSource((Image) sender, await PixivEx.GetAndCreateOrLoadFromCacheInternal(dataContext.Thumbnail, dataContext.Id.ToString()));
-        }
-
-        private void SpotlightThumbnail_OnUnloaded(object sender, RoutedEventArgs e)
-        {
-            UiHelper.ReleaseImage((Image) sender);
         }
 
         private async void SpotlightContainer_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -476,13 +456,6 @@ namespace Pixeval
             foreach (var thumbnail in thumbnails)
                 if (counter < dataContext.Thumbnails.Length)
                     UiHelper.SetImageSource(thumbnail, await PixivEx.GetAndCreateOrLoadFromCacheInternal(dataContext.Thumbnails[counter], $"{dataContext.Id}", counter++));
-        }
-
-        private void UserPrevItem_OnUnloaded(object sender, RoutedEventArgs e)
-        {
-            var (avatar, thumbnails) = GetUserPrevImageControls(sender);
-            UiHelper.ReleaseImage(avatar);
-            foreach (var thumbnail in thumbnails) UiHelper.ReleaseImage(thumbnail);
         }
 
         #endregion
