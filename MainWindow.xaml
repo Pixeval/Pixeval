@@ -237,8 +237,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 <materialDesign:Card.Resources>
                     <valueConverters:UserIdConverter x:Key="UserIdConverter" />
                 </materialDesign:Card.Resources>
-                <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#FAFAFC">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.ZIndex="1" Background="#FAFAFC">
                         <Image x:Name="UserAvatar" Width="150" Height="150" Margin="50 0 0 0"
                                Style="{StaticResource ReleaseImageStyle}"
                                Stretch="UniformToFill" VerticalAlignment="Center">
@@ -254,7 +254,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Right"
-                                Width="540" Margin="0 0 50 0">
+                                Width="540" Margin="0 0 50 0" Grid.ZIndex="0">
                         <Image x:Name="UserPrevImage1" Height="180" Width="150" Stretch="UniformToFill"
                                Style="{StaticResource ReleaseImageStyle}"
                                Margin="10 0" />
