@@ -17,6 +17,11 @@
   什么？你说拿到钱之后会干嘛？</br>
   ~~当然是每天早上出去喝完胡辣汤吃张葱油饼啦~~当然是用来维护这个项目的网站啦！(<<<= 截止2019年12月19日早上8:20这个网站还没有任何影子 by dc)
   
+## TODOLIST
+  **如果有新的建议或者功能欢迎在issue区发表建议，如果有能力能够自己实现的话我会非常欢迎，届时请提交pull request，我会尽快查看并合并**
+  - [X] 查看关注用户的最新作品
+  - [ ] 添加查看画师的推特作品功能
+  
 ## 遇到BUG了怎么办?
   醒醒，难道你还停留在认为说一句“我程序崩了”我就能飞过去替你修好的年代吗？</br>
   **首先**，你要做的第一件事是来这里发ISSUE，每次程序报错都会生成一个错误日志</br>
@@ -68,9 +73,12 @@ VirtualizingWrapPanel.NETCore | https://gitlab.com/sbaeumlisberger/virtualizing-
   * 实时GIF显示
   * 查看作者的最新作品
   
-  ## 本项目基于.NET Core 3.0，已经打包.NET Core 3.0 runtime，因此无需自行安装.NET Core运行环境
+  **_本项目基于.NET Core 3.0，请在使用之前确保自己安装了.NET Core 3.0 Runtime，如果没有安装请前往[官网](https://dotnet.microsoft.com/download)点击Download .NET Core Runtime，然后按照安装器的指示进行安装_**
   
-  ## __注意，本项目已经实现了ip直连，无需科学上网(虽然你用了其实也行....不过考虑到好多科学上网的速度还是比直连慢的...)__
+  **_注意，本项目已经实现了ip直连，无需科学上网(虽然你用了其实也行....不过考虑到好多科学上网的速度还是比直连慢的...)_**
+  
+  ## 我该如何获得Pixeval?
+  点击Release选项卡或者戳[这里](https://github.com/Rinacm/Pixeval/releases)，选择最新的release版本，下载zip压缩包后解压，双击Pixeval.exe即可使用
   
   ## 我该如何使用Pixeval
   ### Pixeval的模块:
