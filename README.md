@@ -31,6 +31,9 @@
 * 如果命令输出中包含 `Microsoft.NETCore.App 3.x.x`和`Microsoft.WindowsDesktop.App 3.x.x`则说明你的电脑上已经安装了.NET Core 3.0+的运行环境，如果没有这两行或者提示你dotnet命令不存在，说明你的电脑上没有安装.NET Core 3.0+，请前往[官网](https://dotnet.microsoft.com/download/dotnet-core/current/runtime)选择`Download x64`以下载.NET Core Runtime，下载完成后双击下载的exe文件按照指示步骤即可安装
 * 本项目与.NET Core的关系好比Minecraft和java的关系，如果你连以上几步都不会，我建议你在理解上面这几句话之前不要使用任何.NET相关应用
   
+## 我该如何获得Pixeval?
+  点击Release选项卡或者戳[这里](https://github.com/Rinacm/Pixeval/releases)，选择最新的release版本，下载zip压缩包后解压，双击Pixeval.exe即可使用，如果你觉得Release界面下载太慢，我也同样在百度网盘维护着Pixeval的更新，你可以点击[这里](https://pan.baidu.com/s/1OMY06KduTk_js9L7YCGs3g)(提取码: 8vhx)前往百度网盘下载最新版本
+  
 ## 遇到BUG了怎么办?
   醒醒，难道你还停留在认为说一句“我程序崩了”我就能飞过去替你修好的年代吗？</br>
   **首先**，你要做的第一件事是来这里发ISSUE，每次程序报错都会生成一个错误日志</br>
@@ -81,10 +84,7 @@ VirtualizingWrapPanel.NETCore | https://gitlab.com/sbaeumlisberger/virtualizing-
   * 浏览/下载Pixivison(特辑)
   * 实时GIF显示
   * 查看作者的最新作品
-  
-## 我该如何获得Pixeval?
-  点击Release选项卡或者戳[这里](https://github.com/Rinacm/Pixeval/releases)，选择最新的release版本，下载zip压缩包后解压，双击Pixeval.exe即可使用
-  
+ 
   ## 我该如何使用Pixeval
   ### Pixeval的模块:
   * 主窗口:</br>
