@@ -17,6 +17,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows;
+using Pixeval.Objects.Exceptions.Log;
 using Pixeval.Persisting;
 
 namespace Pixeval
@@ -33,6 +34,7 @@ namespace Pixeval
 
         private static void DispatcherOnUnhandledException(Exception e)
         {
+            ExceptionLogger.WriteException(e);
 #if DEBUG
             Trace.WriteLine(e.Message);
 #endif

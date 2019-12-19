@@ -35,6 +35,7 @@ using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
 using Pixeval.Objects;
 using Pixeval.Objects.Exceptions;
+using Pixeval.Objects.Exceptions.Log;
 using Pixeval.Persisting;
 using Refit;
 using Xceed.Wpf.AvalonDock.Controls;
@@ -62,6 +63,7 @@ namespace Pixeval
             if (Dispatcher != null) Dispatcher.UnhandledException += Dispatcher_UnhandledException;
 
             UiHelper.SetItemsSource(ToDownloadListView, DownloadList.ToDownloadList);
+            throw new Exception();
         }
 
         private void Dispatcher_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
@@ -72,11 +74,10 @@ namespace Pixeval
                     Notice(Externally.QueryNotResponding);
                     break;
                 case ApiException apiException:
-                {
                     if (apiException.StatusCode == HttpStatusCode.BadRequest) Notice(Externally.QueryNotResponding);
                     break;
-                }
                 default:
+                    ExceptionLogger.WriteException(e.Exception);
                     Notice(e.Exception.Message);
                     break;
             }

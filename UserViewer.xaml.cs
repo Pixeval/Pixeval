@@ -33,6 +33,7 @@ using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
 using Pixeval.Objects;
 using Pixeval.Objects.Exceptions;
+using Pixeval.Objects.Exceptions.Log;
 using Refit;
 
 namespace Pixeval
@@ -63,11 +64,10 @@ namespace Pixeval
                     messageQueue.Enqueue(Externally.QueryNotResponding);
                     break;
                 case ApiException apiException:
-                {
                     if (apiException.StatusCode == HttpStatusCode.BadRequest) messageQueue.Enqueue(Externally.QueryNotResponding);
                     break;
-                }
                 default:
+                    ExceptionLogger.WriteException(e.Exception);
                     messageQueue.Enqueue(e.Exception.Message);
                     break;
             }

@@ -29,6 +29,8 @@ namespace Pixeval.Persisting
 
         public static readonly string SettingsFolder = ProjectFolder;
 
+        public static readonly string ExceptionReportFolder = Path.Combine(ProjectFolder, "crash-reports");
+
         internal static bool LogoutExit = false;
 
         static PixevalEnvironment()
@@ -38,6 +40,8 @@ namespace Pixeval.Persisting
             if (!Directory.Exists(TempFolder)) Directory.CreateDirectory(TempFolder);
 
             if (!Directory.Exists(SettingsFolder)) Directory.CreateDirectory(SettingsFolder);
+
+            if (!Directory.Exists(ExceptionReportFolder)) Directory.CreateDirectory(ExceptionReportFolder);
         }
     }
 }
