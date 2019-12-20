@@ -3,22 +3,9 @@
   <img src="https://github.com/Rinacm/Pixeval/blob/master/IntroImages/pixeval.png"/>
 </div>
 
-## 开 幕 雷 击
-  什么？你问我为什么README开头是这个东西？</br>
-  ~~**当然是因为我怕你们太长懒得看然后看不到我最最最下面恰烂钱的那一段话**~~ 当然是因为我dc需要大家的激励啦！
-  > 注: 接下来要说的话dc这个憨批会在结尾再重复一遍！！！所以你可以到结尾再看也无所谓！！！当然现在就看我会非常开心的！！！！！ </br>
-  
-  引用隔壁的一张图:</br>
-  ![qiaqiaqia](https://github.com/Rinacm/Pixeval/blob/master/IntroImages/%E4%B8%8D%E7%83%82%E7%9A%84%E9%92%B1%E4%B8%8D%E9%A6%99.png)       </br>
-  经过深思熟虑我觉得LG说的非常有哲理</br>
-  ~~要不然他妈的开头放一次广告结尾放一次广告，生怕别人看不出你在恰烂钱~~</br>
-  **所以！！！！**</br>
-  欢迎大家前往 =>>>>>> [恰烂钱](https://afdian.net/@dylech30th)</br> 来激励我的创作！！！你的支持是我创作和维护该项目的动力！！！</br>
-  什么？你说拿到钱之后会干嘛？</br>
-  ~~当然是每天早上出去喝完胡辣汤吃张葱油饼啦~~当然是用来维护这个项目的网站啦！(<<<= 截止2019年12月19日早上8:20这个网站还没有任何影子 by dc)
-  
 ## TODOLIST（置顶）
   **如果有新的建议或者功能欢迎在issue区发表建议，如果有能力能够自己实现的话我会非常欢迎，届时请提交pull request，我会尽快查看并合并**
+  > 我是一个实打实的平面设计苦手，虽然能够写出代码，但是ui设计水平着实感人，如果你有更好的ui设计提案，欢迎在issue区发表意见，我将会**第一时间**考虑这些提议</br>
   - [X] 查看关注用户的最新作品
   - [ ] 添加查看画师的推特作品功能
   - [ ] 以图搜图(计划使用saucenao api)
@@ -29,21 +16,24 @@
   - [ ] 作品页面的评论查看功能
   
 ## 写在前面
-> **_本项目已经实现了ip直连，无需科学上网(虽然你用了其实也行....不过考虑到好多科学上网的速度还是比直连慢的...)_**</br>
-> **_如果你是公司网/学校网等网络导致使用默认设置出现无法连接等网络问题，说明你的网络环境无法使用免代理，请使用压缩包内的Pixeval-UseDefaultProxy.bat并且打开电脑代理(ss/ssr/v2ray均可)之后使用_**
+> - **_本项目已经实现了免代理(灵感来源自[@Notsfsssf](https://github.com/Notsfsssf)，感谢大佬)，无需科学上网，如果有无法使用免代理的情况请看下一条_**</br>
+> - **_如果你是公司网/学校网等网络环境导致使用默认设置出现无法连接等网络问题，说明你的网络环境无法使用免代理，请使用压缩包内的Pixeval-UseDefaultProxy.bat并且打开电脑代理(ss/ssr/v2ray均可)之后使用_**</br>
 
 在使用Pixeval之前请**务必确保你安装了.NET Core 3.0+的运行环境**，你可以双击Pixeval文件夹里面的InstallDotNetCore3.0.bat，会自动帮你检测是否安装正确版本的.NET Core，没有安装的话会帮你自动下载安装；如果你不想使用该bat文件(咳咳，比如你担心我往你电脑里丢点不干净的东西)，你也可以按照下列步骤确认:</br>
 * Win+R输入`cmd`，回车打开命令提示符窗口
 * 输入`dotnet --list-runtimes`，回车执行
 * 如果命令输出中包含 `Microsoft.NETCore.App 3.x.x`和`Microsoft.WindowsDesktop.App 3.x.x`则说明你的电脑上已经安装了.NET Core 3.0+的运行环境，如果没有这两行或者提示你dotnet命令不存在，说明你的电脑上没有安装.NET Core 3.0+，请前往[官网](https://dotnet.microsoft.com/download/dotnet-core/current/runtime)选择`Download x64`以下载.NET Core Runtime，下载完成后双击下载的exe文件按照指示步骤即可安装
 * 本项目与.NET Core的关系好比Minecraft和java的关系，如果你连以上几步都不会，我建议你在理解上面这几句话之前不要使用任何.NET相关应用
+
+## 支持作者
+   ![LGNB](https://github.com/Rinacm/Pixeval/blob/master/IntroImages/%E4%B8%8D%E7%83%82%E7%9A%84%E9%92%B1%E4%B8%8D%E9%A6%99.png)</br>
+   如果你觉得该项目帮助到了你，欢迎前往[这里](https://afdian.net/@dylech30th)来激励我的创作！！！你的支持是我创作和维护该项目的动力！！！</br>
   
 ## 我该如何获得Pixeval?
   点击Release选项卡或者戳[这里](https://github.com/Rinacm/Pixeval/releases)，选择最新的release版本，下载zip压缩包后解压，双击Pixeval.exe即可使用，如果你觉得Release界面下载太慢，我也同样在百度网盘维护着Pixeval的更新，你可以点击[这里](https://pan.baidu.com/s/1OMY06KduTk_js9L7YCGs3g)(提取码: 8vhx)前往百度网盘下载最新版本(其中有一份完整的说明，请认真阅读说明后再使用)
   
 ## 遇到BUG了怎么办?
-  醒醒，难道你还停留在认为说一句“我程序崩了”我就能飞过去替你修好的年代吗？</br>
-  **首先**，你要做的第一件事是来这里发ISSUE，每次程序报错都会生成一个错误日志</br>
+  **尽管我已经尽可能的排除bug，但是依靠我的一己之力终究不可能根除所有的漏洞，因此如果你遇到了问题，请按照以下步骤来提交issue**</br>
   第一步，按下WIN+R，输入%appdata%，或者手动访问C:\Users\你的Windows账户\AppData\Local\pixeval\crash-reports</br>
   在这个文件夹里你能够找到一些错误日志，一般来说形如dd-MM-yyyy hh-mm-ss.txt，找到离你程序崩溃的时间点最近的那个文件(一般来说是最新的那个)，然后打开，把里面的内容复制出来，**在下面附上你是如何碰到这个BUG的，比如当时正在搜索/浏览什么，设置里面的选项哪些开了哪些没开，异常现象是什么(闪退/未响应/停止搜图)** 接着再在github下面提交issue，请尽可能详细的提供你的错误信息，这样有助于我排除BUG，如果做不到这一点，请不要抱有我能替你解决这个问题的希望，因为**抛开错误日志谈bug的行为无异于耍流氓**，谢谢配合
   
@@ -69,7 +59,6 @@ VirtualizingWrapPanel.NETCore | https://gitlab.com/sbaeumlisberger/virtualizing-
 
 ## 什么是Pixeval
 - Pixeval是一个Pixiv的桌面客户端，使用WPF和.NET Core 3.0编写，用来在Windows上方便快捷的访问Pixiv并提供大量P站作品的处理/过滤功能
-- 本项目是一个兴趣使然的第三方开源项目，与Pixiv_Inc.没有任何关系
 
 ## 我可以用Pixeval做什么
   * **免代理访问Pixiv**
@@ -180,9 +169,6 @@ VirtualizingWrapPanel.NETCore | https://gitlab.com/sbaeumlisberger/virtualizing-
     每日推荐会显示当天所有的日推作品</br></br>
 * 用户新作:</br>
     用户新作会显示关注用户的最新作品</br></br>
-    
-## 免代理访问Pixiv是如何实现的?
-本质上是通过IP直连，具体实现请看`Data\Web\Delegation`文件夹中的`DnsResolver`及`DnsResolvedHttpClientHandler`类
 
 ## 写在最后
   这个项目从去年开始就在写，最开始是叫做pixivcs，其实那时候已经把大部分的功能啊UI啊什么的都写完了，本来可以直接放出来，可惜那时候的代码写的实在是太丑太乱了，大概19年6月份打算重构一下，然而因为本质懒狗所以重构了两天就不干了，一直拖到一个多星期前突然想起来这个项目，于是打算一鼓作气重构完，所以现在这个项目就是超级加倍重构之后的产物.....其实我对这个项目的代码还算是比较满意，至少比上一个要好得多，写这个项目也算是对于我自己的一个教训，深切的让我体会到了不事先打好框架就乱写一气的代价(所以千万不要学我啊！！！！！！
@@ -191,13 +177,5 @@ VirtualizingWrapPanel.NETCore | https://gitlab.com/sbaeumlisberger/virtualizing-
    感谢[@ControlNet](https://github.com/ControlNet) 在写这个项目的过程中一直支持我，每天无聊了就一起聊天，聊着聊着就安静下来了(x</br>
    感谢[@wulunshijian](https://github.com/wulunshijian) 在这一年一直都陪我学代码，在相互学习的过程中自己也巩固了很多知识</br>
    感谢[@duiweiya](https://github.com/duiweiya) 对味自发帮我制作的头图，我甚至都没有提出请求，这就是人与人之间的温情吗，泪流了下来</br>
-   
-## 恰烂钱
-   引用隔壁的一张图:</br>
-   ![qiaqiaqia](https://github.com/Rinacm/Pixeval/blob/master/IntroImages/%E4%B8%8D%E7%83%82%E7%9A%84%E9%92%B1%E4%B8%8D%E9%A6%99.png)</br>
-   经过深思熟虑我觉得LG说的非常有哲理</br>
-   ~~要不然他妈的开头放一次广告结尾放一次广告，生怕别人看不出你在恰烂钱~~</br>
-   **所以！！！！**</br>
-   欢迎大家前往 =>>>>>> [恰烂钱](https://afdian.net/@dylech30th)</br> 来激励我的创作！！！你的支持是我创作和维护该项目的动力！！！</br>
-   什么？你说拿到钱之后会干嘛？</br>
-   ~~当然是每天早上出去喝完胡辣汤吃张葱油饼啦~~当然是用来维护这个项目的网站啦！(<<<= 截止2019年12月19日早上8:20这个网站还没有任何影子)
+   感谢[@Lasm_Gratel](https://github.com/NanamiArihara) 良师益友
+   感谢[@当妈](https://github.com/TheRealKamisama) 每天一起傻屌.jpg
