@@ -370,7 +370,7 @@ namespace Pixeval
 
         private void ClearSettingButton_OnClick(object sender, RoutedEventArgs e)
         {
-            Settings.Global.Clear();
+            Settings.Global.Initialize();
         }
 
         private void RetractDownloadListButton_OnClick(object sender, RoutedEventArgs e)

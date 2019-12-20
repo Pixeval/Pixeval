@@ -28,7 +28,7 @@ namespace Pixeval.Persisting
     {
         public static Settings Global = new Settings();
 
-        private string downloadLocation;
+        private string downloadLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
 
         public bool SortOnInserting { get; set; }
 
@@ -66,13 +66,19 @@ namespace Pixeval.Persisting
 
         public async Task<Settings> Restore()
         {
-            if (File.Exists(Path.Combine(PixevalEnvironment.SettingsFolder, "settings.json"))) Global = (await File.ReadAllTextAsync(Path.Combine(PixevalEnvironment.SettingsFolder, "settings.json"))).FromJson<Settings>();
+            if (File.Exists(Path.Combine(PixevalEnvironment.SettingsFolder, "settings.json")))
+                Global = (await File.ReadAllTextAsync(Path.Combine(PixevalEnvironment.SettingsFolder, "settings.json"))).FromJson<Settings>();
+            else 
+                Initialize();
             return Global;
         }
 
-        public void Clear()
+        public void Initialize()
         {
-            File.Delete(Path.Combine(PixevalEnvironment.SettingsFolder, "settings.json"));
+            if (File.Exists(Path.Combine(PixevalEnvironment.SettingsFolder, "settings.json")))
+                File.Delete(Path.Combine(PixevalEnvironment.SettingsFolder, "settings.json"));
+
+            Global.downloadLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
             Global.DownloadLocation = string.Empty;
             Global.SortOnInserting = false;
             Global.CachingThumbnail = false;

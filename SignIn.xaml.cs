@@ -19,6 +19,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 using Pixeval.Objects;
+using Pixeval.Objects.Exceptions.Log;
 using Pixeval.Persisting;
 using Refit;
 
@@ -95,6 +96,7 @@ namespace Pixeval
 
         private async void SetErrorHint(Exception exception)
         {
+            ExceptionLogger.WriteException(exception);
             ErrorMessage.Content = exception is ApiException aException && await IsPasswordOrAccountError(aException)
                 ? Externally.EmailOrPasswordIsWrong
                 : exception.Message;
