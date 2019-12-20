@@ -32,7 +32,7 @@
 * 本项目与.NET Core的关系好比Minecraft和java的关系，如果你连以上几步都不会，我建议你在理解上面这几句话之前不要使用任何.NET相关应用
   
 ## 我该如何获得Pixeval?
-  点击Release选项卡或者戳[这里](https://github.com/Rinacm/Pixeval/releases)，选择最新的release版本，下载zip压缩包后解压，双击Pixeval.exe即可使用，如果你觉得Release界面下载太慢，我也同样在百度网盘维护着Pixeval的更新，你可以点击[这里](https://pan.baidu.com/s/1OMY06KduTk_js9L7YCGs3g)(提取码: 8vhx)前往百度网盘下载最新版本
+  点击Release选项卡或者戳[这里](https://github.com/Rinacm/Pixeval/releases)，选择最新的release版本，下载zip压缩包后解压，双击Pixeval.exe即可使用，如果你觉得Release界面下载太慢，我也同样在百度网盘维护着Pixeval的更新，你可以点击[这里](https://pan.baidu.com/s/1OMY06KduTk_js9L7YCGs3g)(提取码: 8vhx)前往百度网盘下载最新版本(其中有一份完整的说明，请认真阅读说明后再使用)
   
 ## 遇到BUG了怎么办?
   醒醒，难道你还停留在认为说一句“我程序崩了”我就能飞过去替你修好的年代吗？</br>
