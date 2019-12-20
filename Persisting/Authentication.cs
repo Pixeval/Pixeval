@@ -1,19 +1,18 @@
-﻿// Pixeval
-// Copyright (C) 2019 Dylech30th <decem0730@gmail.com>
+﻿// Pixeval - A Strong, Fast and Flexible Pixiv Client
+// Copyright (C) 2019 Dylech30th
 // 
 // This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
 // 
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// GNU Affero General Public License for more details.
 // 
-// You should have received a copy of the GNU General Public License
+// You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 using System;
 using System.Threading.Tasks;
 using Pixeval.Data.Web;
@@ -21,6 +20,7 @@ using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Protocol;
 using Pixeval.Data.Web.Request;
 using Pixeval.Objects;
+using Pixeval.Objects.Exceptions;
 using Refit;
 
 namespace Pixeval.Persisting
@@ -36,10 +36,17 @@ namespace Pixeval.Persisting
             var time = UtcTimeNow;
             var hash = Cipher.Md5Hex(time + ClientHash);
 
-            var token = await RestService.For<ITokenProtocol>(HttpClientFactory.PixivApi(ProtocolBase.OAuthBaseUrl))
-                .GetToken(new TokenRequest {Name = name, Password = pwd}, time, hash);
+            try
+            {
+                var token = await RestService.For<ITokenProtocol>(HttpClientFactory.PixivApi(ProtocolBase.OAuthBaseUrl, h => h.Timeout = TimeSpan.FromSeconds(10)))
+                    .GetToken(new TokenRequest {Name = name, Password = pwd}, time, hash);
 
-            Identity.Global = Identity.Parse(pwd, token);
+                Identity.Global = Identity.Parse(pwd, token);
+            }
+            catch (TaskCanceledException)
+            {
+                throw new TokenNotFoundException("请求超时, 请仔细检查您的网络环境, 或检查是否在关闭免代理模式时尝试不使用代理登录");
+            }
         }
     }
 }

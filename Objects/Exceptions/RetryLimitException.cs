@@ -18,21 +18,21 @@ using System.Runtime.Serialization;
 
 namespace Pixeval.Objects.Exceptions
 {
-    internal class TypeMismatchException : Exception
+    public class RetryLimitException : Exception
     {
-        public TypeMismatchException()
+        public RetryLimitException()
         {
         }
 
-        protected TypeMismatchException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected RetryLimitException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
 
-        public TypeMismatchException(string message) : base(message)
+        public RetryLimitException(string message) : base(message)
         {
         }
 
-        public TypeMismatchException(string message, Exception innerException) : base(message, innerException)
+        public RetryLimitException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }

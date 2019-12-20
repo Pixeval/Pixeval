@@ -1,22 +1,24 @@
-﻿// Pixeval
-// Copyright (C) 2019 Dylech30th <decem0730@gmail.com>
+﻿// Pixeval - A Strong, Fast and Flexible Pixiv Client
+// Copyright (C) 2019 Dylech30th
 // 
 // This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
 // 
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// GNU Affero General Public License for more details.
 // 
-// You should have received a copy of the GNU General Public License
+// You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Net;
+using System.Net.Http;
+using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
 using Pixeval.Data.Web.Protocol;
@@ -39,7 +41,7 @@ namespace Pixeval.Data.Web.Delegation
 
         protected async Task<DnsResolveResponse> GetDnsJson(string hostname)
         {
-            return await RestService.For<IResolveDnsProtocol>(ProtocolBase.DnsServer)
+            return await RestService.For<IResolveDnsProtocol>(new HttpClient(new HttpClientHandler {SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls}) {BaseAddress = new Uri(ProtocolBase.DnsServer)})
                 .ResolveDns(new DnsResolveRequest
                 {
                     Ct = "application/dns-json",

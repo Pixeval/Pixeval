@@ -1,26 +1,27 @@
-﻿// Pixeval
-// Copyright (C) 2019 Dylech30th <decem0730@gmail.com>
+﻿// Pixeval - A Strong, Fast and Flexible Pixiv Client
+// Copyright (C) 2019 Dylech30th
 // 
 // This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
 // 
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// GNU Affero General Public License for more details.
 // 
-// You should have received a copy of the GNU General Public License
+// You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
 using Pixeval.Objects;
+using Pixeval.Objects.ValueConverters;
 using Pixeval.Persisting;
 
 namespace Pixeval.Data.Web.Delegation
@@ -42,6 +43,7 @@ namespace Pixeval.Data.Web.Delegation
             this.disableDnsQuery = disableDnsQuery;
             // SSL bypass
             ServerCertificateCustomValidationCallback = DangerousAcceptAnyServerCertificateValidator;
+            SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls;
         }
 
         protected abstract DnsResolver DnsResolver { get; set; }
@@ -54,9 +56,23 @@ namespace Pixeval.Data.Web.Delegation
 
             if (!disableDnsQuery)
             {
-                // replace the host part in the uri to the ip address of the host
-                request.RequestUri = new Uri($"{(isSslSession ? "https://" : "http://")}{(await DnsResolver.Lookup(host))[0]}{request.RequestUri.PathAndQuery}");
-                request.Headers.Host = host;
+                for (var i = 0; i < 3; i++)
+                {
+                    try
+                    {
+                        // replace the host part in the uri to the ip address of the host
+                        request.RequestUri = new Uri($"{(isSslSession ? "https://" : "http://")}{(await DnsResolver.Lookup(host))[i]}{request.RequestUri.PathAndQuery}");
+                        request.Headers.Host = host;
+                        break;
+                    }
+                    catch (Exception e)
+                    {
+                        if (e is IndexOutOfRangeException || i == 2)
+                        {
+                            throw new DnsQueryFailedException("Dns查询失败, 请尝试将Pixeval切换为使用代理模式并启用您的代理");
+                        }
+                    }
+                }
             }
 
             requestHandler?.Handle(request);

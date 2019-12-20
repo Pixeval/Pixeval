@@ -16,23 +16,23 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Pixeval.Objects.Exceptions
+namespace Pixeval.Objects.ValueConverters
 {
-    internal class TypeMismatchException : Exception
+    public class DnsQueryFailedException : Exception
     {
-        public TypeMismatchException()
+        public DnsQueryFailedException()
         {
         }
 
-        protected TypeMismatchException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected DnsQueryFailedException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
 
-        public TypeMismatchException(string message) : base(message)
+        public DnsQueryFailedException(string message) : base(message)
         {
         }
 
-        public TypeMismatchException(string message, Exception innerException) : base(message, innerException)
+        public DnsQueryFailedException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }

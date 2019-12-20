@@ -1,18 +1,18 @@
 ﻿<!--
-Pixeval
-Copyright (C) 2019 Dylech30th <decem0730@gmail.com>
+Pixeval - A Strong, Fast and Flexible Pixiv Client
+Copyright (C) 2019 Dylech30th
 
 This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+GNU Affero General Public License for more details.
 
-You should have received a copy of the GNU General Public License
+You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <Window x:Class="Pixeval.SignIn"
@@ -54,11 +54,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                        VerticalContentAlignment="Center" FontFamily="Microsoft Yahei UI Light"
                                        Padding="10 0 0 0" TextWrapping="Wrap" Background="Transparent" />
         </Border>
-        <Label x:Name="ErrorMessage" Grid.Row="2" VerticalAlignment="Top" FontSize="15" Height="30"
-               FontFamily="Microsoft Yahei UI Light" VerticalContentAlignment="Center"
-               HorizontalContentAlignment="Center" Foreground="Crimson" />
+        <TextBlock x:Name="ErrorMessage" Grid.Row="2" VerticalAlignment="Top" FontSize="15" Height="50"
+               FontFamily="Microsoft Yahei UI Light" TextAlignment="Center" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Foreground="Crimson" />
         <Button x:Name="Login" IsDefault="True" Click="Login_OnClick" Grid.Row="2" VerticalAlignment="Center"
-                Margin="70 0 70 30" Height="50" FontSize="20" FontFamily="Microsoft Yahei UI Light"
+                Margin="70 10 70 30" Height="50" FontSize="20" FontFamily="Microsoft Yahei UI Light"
                 BorderBrush="Transparent"
                 Background="#0096FA" Content="登       录" />
         <materialDesign:DialogHost Grid.Row="0" Grid.RowSpan="3" x:Name="DialogHost">
