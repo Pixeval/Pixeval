@@ -25,6 +25,24 @@
 * 如果命令输出中包含 `Microsoft.NETCore.App 3.x.x`和`Microsoft.WindowsDesktop.App 3.x.x`则说明你的电脑上已经安装了.NET Core 3.0+的运行环境，如果没有这两行或者提示你dotnet命令不存在，说明你的电脑上没有安装.NET Core 3.0+，请前往[官网](https://dotnet.microsoft.com/download/dotnet-core/current/runtime)选择`Download x64`以下载.NET Core Runtime，下载完成后双击下载的exe文件按照指示步骤即可安装
 * 本项目与.NET Core的关系好比Minecraft和java的关系，如果你连以上几步都不会，我建议你在理解上面这几句话之前不要使用任何.NET相关应用
 
+## 须知
+  * **本项目所使用的依赖包** </br>
+  
+名称 | 链接 | 用途  
+:-:|:-:|:-:
+Newtonsoft.Json | https://github.com/JamesNK/Newtonsoft.Json | Json数据的解析 |
+AngleSharp | https://github.com/AngleSharp/AngleSharp | HTML解析 |
+FluentWPF | https://github.com/sourcechord/FluentWPF | 作品浏览器的Fluent窗口 |
+Magick.NET | https://github.com/dlemstra/Magick.NET | GIF图片的合成 |
+MahApps.Metro | https://github.com/MahApps/MahApps.Metro | 进度环 |
+MaterialDesignTheme | https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit | 本项目所使用的UI库 |
+Extended.Wpf.Toolkit | https://github.com/xceedsoftware/wpftoolkit | 水印文本框 |
+PropertyChanged.Fody | https://github.com/Fody/PropertyChanged | 简化MVVM的数据绑定 |
+System.Interactive.Async | https://github.com/dotnet/reactive | IAsyncEnumerable的异步linq操作支持 |
+VirtualizingWrapPanel.NETCore | https://gitlab.com/sbaeumlisberger/virtualizing-wrap-panel | 虚拟化的WrapPanel |
+
+  * 另: **本项目使用AGPL v3(Affero General Public License v3.0)协议，禁止任何形式的商用，如果你的代码基于本项目，请依据[AGPL协议](https://github.com/Rinacm/Pixeval/blob/master/LICENSE)进行开源**</br>
+
 ## 支持作者
    ![LGNB](https://github.com/Rinacm/Pixeval/blob/master/IntroImages/%E4%B8%8D%E7%83%82%E7%9A%84%E9%92%B1%E4%B8%8D%E9%A6%99.png)</br>
    如果你觉得该项目帮助到了你，欢迎前往[这里](https://afdian.net/@dylech30th)来激励我的创作！！！你的支持是我创作和维护该项目的动力！！！</br>
@@ -37,26 +55,6 @@
   第一步，按下WIN+R，输入%appdata%，或者手动访问C:\Users\你的Windows账户\AppData\Local\pixeval\crash-reports</br>
   在这个文件夹里你能够找到一些错误日志，一般来说形如dd-MM-yyyy hh-mm-ss.txt，找到离你程序崩溃的时间点最近的那个文件(一般来说是最新的那个)，然后打开，把里面的内容复制出来，**在下面附上你是如何碰到这个BUG的，比如当时正在搜索/浏览什么，设置里面的选项哪些开了哪些没开，异常现象是什么(闪退/未响应/停止搜图)** 接着再在github下面提交issue，请尽可能详细的提供你的错误信息，这样有助于我排除BUG，如果做不到这一点，请不要抱有我能替你解决这个问题的希望，因为**抛开错误日志谈bug的行为无异于耍流氓**，谢谢配合
   
-## 须知
-  * **本项目所使用的依赖包** </br>
-  
-名称 | 链接 | 用途  
--|-|-
-Newtonsoft.Json | https://github.com/JamesNK/Newtonsoft.Json | Json数据的解析 |
-AngleSharp | https://github.com/AngleSharp/AngleSharp | HTML解析 |
-FluentWPF | https://github.com/sourcechord/FluentWPF | 作品浏览器的Fluent窗口 |
-Magick.NET | https://github.com/dlemstra/Magick.NET | GIF图片的合成 |
-MahApps.Metro | https://github.com/MahApps/MahApps.Metro | 进度环 |
-MaterialDesignTheme | https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit | 本项目所使用的UI库 |
-Extended.Wpf.Toolkit | https://github.com/xceedsoftware/wpftoolkit | 水印文本框 |
-PropertyChanged.Fody | https://github.com/Fody/PropertyChanged | 简化MVVM的数据绑定 |
-System.Interactive.Async | https://github.com/dotnet/reactive | IAsyncEnumerable的异步linq操作支持 |
-VirtualizingWrapPanel.NETCore | https://gitlab.com/sbaeumlisberger/virtualizing-wrap-panel | 虚拟化的WrapPanel |
-
-  * **本项目绝对禁止商用**</br>
-  Pixeval是一个兴趣使然的开源项目，一旦碰到任何商用行为请及时举报
-
-
 ## 什么是Pixeval
 - Pixeval是一个Pixiv的桌面客户端，使用WPF和.NET Core 3.0编写，用来在Windows上方便快捷的访问Pixiv并提供大量P站作品的处理/过滤功能
 
@@ -177,5 +175,5 @@ VirtualizingWrapPanel.NETCore | https://gitlab.com/sbaeumlisberger/virtualizing-
    感谢[@ControlNet](https://github.com/ControlNet) 在写这个项目的过程中一直支持我，每天无聊了就一起聊天，聊着聊着就安静下来了(x</br>
    感谢[@wulunshijian](https://github.com/wulunshijian) 在这一年一直都陪我学代码，在相互学习的过程中自己也巩固了很多知识</br>
    感谢[@duiweiya](https://github.com/duiweiya) 对味自发帮我制作的头图，我甚至都没有提出请求，这就是人与人之间的温情吗，泪流了下来</br>
-   感谢[@Lasm_Gratel](https://github.com/NanamiArihara) 良师益友
-   感谢[@当妈](https://github.com/TheRealKamisama) 每天一起傻屌.jpg
+   感谢[@Lasm_Gratel](https://github.com/NanamiArihara) 良师益友</br>
+   感谢[@当妈](https://github.com/TheRealKamisama) 每天一起傻屌.jpg</br>
