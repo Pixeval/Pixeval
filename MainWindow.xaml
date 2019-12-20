@@ -230,15 +230,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="UserPreviewTemplate" DataType="viewModel:User">
-            <materialDesign:Card x:Name="UserPrevItem" Cursor="Hand"
+            <materialDesign:Card x:Name="UserPrevItem" Cursor="Hand" Background="#FAFAFC"
                                  Width="{Binding ElementName=UserPreviewListView, Path=ActualWidth}" Height="200"
                                  Loaded="UserPrevItem_OnLoaded"
                                  MouseLeftButtonDown="UserPrevItem_OnMouseLeftButtonDown">
                 <materialDesign:Card.Resources>
                     <valueConverters:UserIdConverter x:Key="UserIdConverter" />
                 </materialDesign:Card.Resources>
-                <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#FAFAFC">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.ZIndex="1" Background="#FAFAFC">
+                <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.ZIndex="1">
+                        <StackPanel.Background>
+                            <LinearGradientBrush StartPoint="0 0" EndPoint="1 0">
+                                <GradientStop Color="#FAFAFC" Offset="0"/>
+                                <GradientStop Color="#FAFAFC" Offset="0.85"/>
+                                <GradientStop Color="Transparent" Offset="1"/>
+                            </LinearGradientBrush>
+                        </StackPanel.Background>
                         <Image x:Name="UserAvatar" Width="150" Height="150" Margin="50 0 0 0"
                                Style="{StaticResource ReleaseImageStyle}"
                                Stretch="UniformToFill" VerticalAlignment="Center">
