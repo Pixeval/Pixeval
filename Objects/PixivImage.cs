@@ -39,7 +39,17 @@ namespace Pixeval.Objects
             client.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "http://www.pixiv.net");
             client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "PixivIOSApp/5.8.7");
 
-            return await client.GetByteArrayAsync(url);
+            byte[] res;
+            try
+            {
+                res = await client.GetByteArrayAsync(url);
+            }
+            catch
+            {
+                return null;
+            }
+
+            return res;
         }
 
         public static async Task<BitmapImage> FromUrl(string url)
@@ -49,7 +59,7 @@ namespace Pixeval.Objects
 
         public static BitmapImage FromByteArray(byte[] bArr)
         {
-            if (bArr.Length == 0) return null;
+            if (bArr == null || bArr.Length == 0) return null;
             using var memoryStream = new MemoryStream(bArr);
             return FromStream(memoryStream);
         }
@@ -106,7 +116,15 @@ namespace Pixeval.Objects
                 var path = Path.Combine(PixevalEnvironment.TempFolder, $"{id}_{episode}.png");
                 if (File.Exists(path))
                 {
-                    var toCache = FromByteArray(await File.ReadAllBytesAsync(path, cancellationToken));
+                    BitmapImage toCache;
+                    try
+                    {
+                        toCache = FromByteArray(await File.ReadAllBytesAsync(path, cancellationToken));
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
                     CacheImage(toCache, id, episode);
                     return toCache;
                 }
