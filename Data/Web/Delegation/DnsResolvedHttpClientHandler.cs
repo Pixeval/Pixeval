@@ -21,6 +21,7 @@ using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
 using Pixeval.Objects;
+using Pixeval.Objects.Exceptions;
 using Pixeval.Objects.ValueConverters;
 using Pixeval.Persisting;
 

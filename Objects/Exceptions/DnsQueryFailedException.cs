@@ -13,26 +13,27 @@
 // 
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 using System;
 using System.Runtime.Serialization;
 
 namespace Pixeval.Objects.Exceptions
 {
-    public class RetryLimitException : Exception
+    public class DnsQueryFailedException : Exception
     {
-        public RetryLimitException()
+        public DnsQueryFailedException()
         {
         }
 
-        protected RetryLimitException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected DnsQueryFailedException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
 
-        public RetryLimitException(string message) : base(message)
+        public DnsQueryFailedException(string message) : base(message)
         {
         }
 
-        public RetryLimitException(string message, Exception innerException) : base(message, innerException)
+        public DnsQueryFailedException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }
