@@ -172,6 +172,7 @@ VirtualizingWrapPanel.NETCore | https://gitlab.com/sbaeumlisberger/virtualizing-
   这个项目从去年开始就在写，最开始是叫做pixivcs，其实那时候已经把大部分的功能啊UI啊什么的都写完了，本来可以直接放出来，可惜那时候的代码写的实在是太丑太乱了，大概19年6月份打算重构一下，然而因为本质懒狗所以重构了两天就不干了，一直拖到一个多星期前突然想起来这个项目，于是打算一鼓作气重构完，所以现在这个项目就是超级加倍重构之后的产物.....其实我对这个项目的代码还算是比较满意，至少比上一个要好得多，写这个项目也算是对于我自己的一个教训，深切的让我体会到了不事先打好框架就乱写一气的代价(所以千万不要学我啊！！！！！！
     
 ## 鸣谢
+   感谢[@Notsfsssf](https://github.com/Notsfsssf) 提供免代理访问Pixiv的思路</br>
    感谢[@ControlNet](https://github.com/ControlNet) 在写这个项目的过程中一直支持我，每天无聊了就一起聊天，聊着聊着就安静下来了(x</br>
    感谢[@wulunshijian](https://github.com/wulunshijian) 在这一年一直都陪我学代码，在相互学习的过程中自己也巩固了很多知识</br>
    感谢[@duiweiya](https://github.com/duiweiya) 对味自发帮我制作的头图，我甚至都没有提出请求，这就是人与人之间的温情吗，泪流了下来</br>
