@@ -33,7 +33,7 @@ namespace Pixeval
 
         private async void SignIn_OnClosing(object sender, CancelEventArgs e)
         {
-            if (Identity.Global.AccessToken == null)
+            if (Identity.Global == null || Identity.Global.AccessToken == null)
             {
                 PixevalEnvironment.LogoutExit = true;
                 await Settings.Global.Store();

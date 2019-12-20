@@ -18,6 +18,7 @@ using System;
 using System.Net.Http;
 using Pixeval.Data.Web.Protocol;
 using Pixeval.Objects;
+using Pixeval.Persisting;
 using Refit;
 
 namespace Pixeval.Data.Web.Delegation
@@ -31,7 +32,7 @@ namespace Pixeval.Data.Web.Delegation
 
         public static HttpClient PixivApi(string baseAddress)
         {
-            return new HttpClient(PixivApiHttpClientHandler.Instance)
+            return new HttpClient(PixivApiHttpClientHandler.Instance(Settings.Global.UseDefaultProxy))
             {
                 BaseAddress = new Uri(baseAddress)
             };
@@ -39,7 +40,7 @@ namespace Pixeval.Data.Web.Delegation
 
         public static HttpClient PixivImage()
         {
-            return new HttpClient(PixivImageHttpClientHandler.Instance);
+            return new HttpClient(PixivImageHttpClientHandler.Instance(Settings.Global.UseDefaultProxy));
         }
     }
 }

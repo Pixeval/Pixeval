@@ -30,19 +30,19 @@ namespace Pixeval.Persisting
 
         private string downloadLocation;
 
-        public bool SyncOnStart { get; set; }
-
         public bool SortOnInserting { get; set; }
 
         public bool CachingThumbnail { get; set; }
 
-        public int MinBookmark { get; set; }
+        public int MinBookmark { get; set; } = 1;
 
         public string DownloadLocation
         {
             get => downloadLocation.IsNullOrEmpty() ? Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) : downloadLocation;
             set => downloadLocation = value;
         }
+
+        public bool UseDefaultProxy { get; set; }
 
         public int QueryPages { get; set; } = 1;
 
@@ -78,11 +78,11 @@ namespace Pixeval.Persisting
             Global.CachingThumbnail = false;
             Global.ContainsTags = new HashSet<string>();
             Global.ExceptTags = new HashSet<string>();
-            Global.SyncOnStart = false;
             Global.MinBookmark = 0;
             Global.QueryPages = 1;
             Global.QueryStart = 1;
             Global.SpotlightQueryStart = 1;
+            Global.UseDefaultProxy = false;
         }
     }
 }

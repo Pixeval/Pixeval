@@ -956,7 +956,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 </Style>
             </materialDesign:DialogHost.Style>
             <materialDesign:DialogHost.DialogContent>
-                <materialDesign:Card Height="620" Width="800">
+                <materialDesign:Card Height="680" Width="800">
                     <Grid>
                         <TextBlock Text="Pixeval设置" FontSize="20" HorizontalAlignment="Center" Margin="0 30 0 0"
                                    VerticalAlignment="Top" Height="30" />
@@ -964,6 +964,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                         <StackPanel VerticalAlignment="Top" Margin="100 100 100 0">
                             <Grid>
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="40" />
                                     <RowDefinition Height="40" />
                                     <RowDefinition Height="40" />
                                     <RowDefinition Height="40" />
@@ -984,43 +985,45 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                 <ToggleButton x:Name="IsSortWhileInsertIllustToImageBox" Grid.Row="0" Grid.Column="1"
                                               Background="#66CCFF" HorizontalAlignment="Right"
                                               IsChecked="{Binding Path=SortOnInserting, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                <TextBlock Grid.Row="1" Grid.Column="0" FontSize="15" Text="缓存缩略图, 开启后可优化加载速度"
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="关闭免代理模式(适用于部分内网)" FontSize="15" VerticalAlignment="Center"/>
+                                <ToggleButton Grid.Row="1" Grid.Column="1" Background="#66CCFF" HorizontalAlignment="Right" IsChecked="{Binding Path=UseDefaultProxy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBlock Grid.Row="2" Grid.Column="0" FontSize="15" Text="缓存缩略图, 开启后可优化加载速度"
                                            VerticalAlignment="Center" />
-                                <ToggleButton x:Name="IsCacheThumbnail" Grid.Row="1" Grid.Column="1"
+                                <ToggleButton x:Name="IsCacheThumbnail" Grid.Row="2" Grid.Column="1"
                                               Background="#66CCFF" HorizontalAlignment="Right"
                                               IsChecked="{Binding Path=CachingThumbnail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                <TextBlock Grid.Row="2" Grid.Column="0" FontSize="15" Text="关闭R-18/R-18G搜索"
+                                <TextBlock Grid.Row="3" Grid.Column="0" FontSize="15" Text="关闭R-18/R-18G搜索"
                                            VerticalAlignment="Center" />
-                                <ToggleButton x:Name="QueryR18" Grid.Row="2" Grid.Column="1" Background="#66CCFF"
+                                <ToggleButton x:Name="QueryR18" Grid.Row="3" Grid.Column="1" Background="#66CCFF"
                                               HorizontalAlignment="Right" Checked="QueryR18_OnChecked"
                                               Unchecked="QueryR18_OnUnchecked"
                                               IsChecked="{Binding Path=ExceptTags, Mode=OneWay, Converter={StaticResource QueryR18ToggleButtonIsCheckedConverter}}" />
-                                <TextBlock Grid.Row="3" Grid.Column="0" FontSize="15" Text="搜索作品的最低收藏数"
+                                <TextBlock Grid.Row="4" Grid.Column="0" FontSize="15" Text="搜索作品的最低收藏数"
                                            VerticalAlignment="Center" />
-                                <Slider Maximum="2000" Minimum="0" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                                <Slider Maximum="2000" Minimum="0" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
                                         Margin="200 0 0 0" VerticalAlignment="Center" Foreground="#66CCFF"
                                         AutoToolTipPlacement="BottomRight" AutoToolTipPrecision="0"
                                         Value="{Binding Path=MinBookmark, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                <TextBlock Grid.Row="4" Grid.Column="0" FontSize="15" Text="搜索页数, 最低为1, 最高为10"
+                                <TextBlock Grid.Row="5" Grid.Column="0" FontSize="15" Text="搜索页数, 最低为1, 最高为10"
                                            VerticalAlignment="Center" />
-                                <Slider Maximum="10" Minimum="1" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                                <Slider Maximum="10" Minimum="1" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
                                         Margin="200 0 0 0" VerticalAlignment="Center" Foreground="#66CCFF"
                                         Value="{Binding QueryPages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                <TextBlock Grid.Row="5" Grid.Column="0" FontSize="15" Text="图片搜索起始页, 最低为1"
+                                <TextBlock Grid.Row="6" Grid.Column="0" FontSize="15" Text="图片搜索起始页, 最低为1"
                                            VerticalAlignment="Center" />
-                                <TextBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="200 0 0 0"
+                                <TextBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="200 0 0 0"
                                          VerticalAlignment="Center"
                                          Text="{Binding QueryStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                <TextBlock Grid.Row="6" Grid.Column="0" FontSize="15"
+                                <TextBlock Grid.Row="7" Grid.Column="0" FontSize="15"
                                            Text="特辑搜索起始页, 最低为1 (特辑和图片搜索使用同一个搜索页数设置)" VerticalAlignment="Center" />
-                                <TextBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="480 0 0 0"
+                                <TextBox Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="480 0 0 0"
                                          VerticalAlignment="Center"
                                          Text="{Binding SpotlightQueryStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                <TextBox x:Name="DownloadLocationTextBox" Grid.Row="7" Grid.Column="0"
+                                <TextBox x:Name="DownloadLocationTextBox" Grid.Row="8" Grid.Column="0"
                                          Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                                          materialDesign:HintAssist.Hint="作品下载位置"
                                          Text="{Binding Path=DownloadLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                <Button x:Name="OpenFileDialogButton" Grid.Row="7" Grid.Column="1" Height="30"
+                                <Button x:Name="OpenFileDialogButton" Grid.Row="8" Grid.Column="1" Height="30"
                                         Width="30" VerticalAlignment="Bottom"
                                         Style="{DynamicResource MaterialDesignToolButton}"
                                         Click="OpenFileDialogButton_OnClick">
@@ -1032,12 +1035,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                         </Canvas>
                                     </Viewbox>
                                 </Button>
-                                <TextBox x:Name="ExceptTagTextBox" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
+                                <TextBox x:Name="ExceptTagTextBox" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2"
                                          Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                                          materialDesign:HintAssist.Hint="请输入要排除的标签, 使用空格分隔"
                                          Text="{Binding Path=ExceptTags, Converter={StaticResource StringSplitConverter}, Mode=OneWay}"
                                          LostFocus="ExceptTagTextBox_OnLostFocus" />
-                                <TextBox x:Name="ContainsTagTextBox" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2"
+                                <TextBox x:Name="ContainsTagTextBox" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2"
                                          Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                                          materialDesign:HintAssist.Hint="请输入作品必须包含的标签, 使用空格分隔"
                                          Text="{Binding Path=ContainsTags, Converter={StaticResource StringSplitConverter}, Mode=OneWay}"

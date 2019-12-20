@@ -15,14 +15,15 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Net.Http;
+using Pixeval.Persisting;
 
 namespace Pixeval.Data.Web.Delegation
 {
     public class PixivApiHttpClientHandler : DnsResolvedHttpClientHandler
     {
-        public static HttpMessageHandler Instance = new PixivApiHttpClientHandler();
+        public static HttpMessageHandler Instance(bool disableDnsQuery) => new PixivApiHttpClientHandler(disableDnsQuery);
 
-        private PixivApiHttpClientHandler() : base(PixivAuthenticationHttpRequestHandler.Instance)
+        private PixivApiHttpClientHandler(bool disableDnsQuery) : base(PixivAuthenticationHttpRequestHandler.Instance, disableDnsQuery)
         {
         }
 

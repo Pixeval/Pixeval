@@ -28,6 +28,7 @@ namespace Pixeval.Data.Web.Delegation
     public abstract class DnsResolvedHttpClientHandler : HttpClientHandler
     {
         private readonly IHttpRequestHandler requestHandler;
+        private readonly bool disableDnsQuery;
 
         static DnsResolvedHttpClientHandler()
         {
@@ -35,9 +36,10 @@ namespace Pixeval.Data.Web.Delegation
             AppContext.SetSwitch("System.Net.Http.UseSocketsHttpHandler", false);
         }
 
-        protected DnsResolvedHttpClientHandler(IHttpRequestHandler requestHandler = null)
+        protected DnsResolvedHttpClientHandler(IHttpRequestHandler requestHandler = null, bool disableDnsQuery = false)
         {
             this.requestHandler = requestHandler;
+            this.disableDnsQuery = disableDnsQuery;
             // SSL bypass
             ServerCertificateCustomValidationCallback = DangerousAcceptAnyServerCertificateValidator;
         }
@@ -50,9 +52,12 @@ namespace Pixeval.Data.Web.Delegation
 
             var isSslSession = request.RequestUri.ToString().StartsWith("https://");
 
-            // replace the host part in the uri to the ip address of the host
-            request.RequestUri = new Uri($"{(isSslSession ? "https://" : "http://")}{(await DnsResolver.Lookup(host))[0]}{request.RequestUri.PathAndQuery}");
-            request.Headers.Host = host;
+            if (!disableDnsQuery)
+            {
+                // replace the host part in the uri to the ip address of the host
+                request.RequestUri = new Uri($"{(isSslSession ? "https://" : "http://")}{(await DnsResolver.Lookup(host))[0]}{request.RequestUri.PathAndQuery}");
+                request.Headers.Host = host;
+            }
 
             requestHandler?.Handle(request);
 

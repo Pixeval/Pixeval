@@ -15,6 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Pixeval.Objects.Exceptions.Log;
@@ -42,7 +43,16 @@ namespace Pixeval
 
         protected override async void OnStartup(StartupEventArgs e)
         {
+            const string useDefaultProxy = "-useDefaultProxy";
             await Settings.Global.Restore();
+
+            if (e.Args.Length > 0)
+            {
+                if (e.Args.Contains(useDefaultProxy))
+                {
+                    Settings.Global.UseDefaultProxy = true;
+                }
+            }
             base.OnStartup(e);
         }
 
