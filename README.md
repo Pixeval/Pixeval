@@ -17,6 +17,7 @@
   - [ ] 初次启动时的ToolTip
   
 ## 写在前面
+> - **_请使用最新的Release_**</br>
 > - **_本项目已经实现了免代理(灵感来源自[@Notsfsssf](https://github.com/Notsfsssf)，感谢大佬)，无需科学上网_**</br>
 > - **_启动Pixeval时请不要使用pInternal.exe，使用LaunchWrapper.exe启动_**
 
