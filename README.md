@@ -8,17 +8,17 @@
   > 我是一个实打实的平面设计苦手，虽然能够写出代码，但是ui设计水平着实感人，如果你有更好的ui设计提案，欢迎在issue区发表意见，我将会**第一时间**考虑这些提议</br>
   - [X] 查看关注用户的最新作品
   - [X] 在作品浏览器窗口直接复制图片
+  - [X] C++实现LaunchWrapper，在启动前检测是否安装.NET Core运行环境
   - [ ] 添加查看画师的推特作品功能
   - [ ] 以图搜图(计划使用saucenao api)
   - [ ] 自动更新
-  - [ ] C++实现LaunchWrapper，在启动前检测是否安装.NET Core运行环境
   - [ ] 自定义下载文件名
   - [ ] 作品页面的评论查看功能
   - [ ] 初次启动时的ToolTip
   
 ## 写在前面
-> - **_本项目已经实现了免代理(灵感来源自[@Notsfsssf](https://github.com/Notsfsssf)，感谢大佬)，无需科学上网，如果有无法使用免代理的情况请看下一条_**</br>
-> - **_如果你是公司网/学校网等网络环境导致使用默认设置出现无法连接等网络问题，说明你的网络环境无法使用免代理，请使用压缩包内的Pixeval-UseDefaultProxy.bat并且打开电脑代理(ss/ssr/v2ray均可)之后使用_**</br>
+> - **_本项目已经实现了免代理(灵感来源自[@Notsfsssf](https://github.com/Notsfsssf)，感谢大佬)，无需科学上网_**</br>
+> - **_启动Pixeval时请不要使用pInternal.exe，使用LaunchWrapper.exe启动_**
 
 在使用Pixeval之前请**务必确保你安装了.NET Core 3.0+的运行环境**，你可以双击Pixeval文件夹里面的InstallDotNetCore3.0.bat，会自动帮你检测是否安装正确版本的.NET Core，没有安装的话会帮你自动下载安装；如果你不想使用该bat文件(咳咳，比如你担心我往你电脑里丢点不干净的东西)，你也可以按照下列步骤确认:</br>
 * Win+R输入`cmd`，回车打开命令提示符窗口
