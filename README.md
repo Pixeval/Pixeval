@@ -17,7 +17,7 @@
   - [ ] 初次启动时的ToolTip
   
 ## 写在前面
-> - **_请使用最新的Release，详见[这里](https://github.com/Rinacm/Pixeval/blob/master/README.md#%E6%88%91%E8%AF%A5%E5%A6%82%E4%BD%95%E8%8E%B7%E5%BE%97pixeval)_**</br>
+> - **_请使用最新的Release，详见[我该如何获取pixeval](https://github.com/Rinacm/Pixeval/blob/master/README.md#%E6%88%91%E8%AF%A5%E5%A6%82%E4%BD%95%E8%8E%B7%E5%BE%97pixeval)_**</br>
 > - **_本项目已经实现了免代理(灵感来源自[@Notsfsssf](https://github.com/Notsfsssf)，感谢大佬)，无需科学上网_**</br>
 > - **_启动Pixeval时请不要使用pInternal.exe，使用LaunchWrapper.exe启动_**
 
