@@ -21,7 +21,7 @@
 > - **_本项目已经实现了免代理(灵感来源自[@Notsfsssf](https://github.com/Notsfsssf)，感谢大佬)，无需科学上网_**</br>
 > - **_启动Pixeval时请不要使用pInternal.exe，使用LaunchWrapper.exe启动_**
 
-在使用Pixeval之前请**务必确保你安装了.NET Core 3.0+的运行环境**，你可以双击Pixeval文件夹里面的InstallDotNetCore3.0.bat，会自动帮你检测是否安装正确版本的.NET Core，没有安装的话会帮你自动下载安装；如果你不想使用该bat文件(咳咳，比如你担心我往你电脑里丢点不干净的东西)，你也可以按照下列步骤确认:</br>
+在使用Pixeval之前请**务必确保你安装了.NET Core 3.0+的运行环境**，使用LaunchWrapper启动时会自动帮你检测是否安装正确版本的.NET Core，没有安装的话会帮你自动下载安装；如果你不想使用我提供的方法安装(咳咳，比如你担心我往你电脑里丢点不干净的东西)，你也可以按照下列步骤确认:</br>
 * Win+R输入`cmd`，回车打开命令提示符窗口
 * 输入`dotnet --list-runtimes`，回车执行
 * 如果命令输出中包含 `Microsoft.NETCore.App 3.x.x`和`Microsoft.WindowsDesktop.App 3.x.x`则说明你的电脑上已经安装了.NET Core 3.0+的运行环境，如果没有这两行或者提示你dotnet命令不存在，说明你的电脑上没有安装.NET Core 3.0+，请前往[官网](https://dotnet.microsoft.com/download/dotnet-core/current/runtime)选择`Download x64`以下载.NET Core Runtime，下载完成后双击下载的exe文件按照指示步骤即可安装
