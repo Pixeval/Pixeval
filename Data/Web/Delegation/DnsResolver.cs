@@ -39,9 +39,11 @@ namespace Pixeval.Data.Web.Delegation
 
         protected readonly ISet<IPAddress> IpList = new HashSet<IPAddress>(new IPAddressEqualityComparer());
 
+        private static bool _dnsQueryFailed;
+
         protected async Task<DnsResolveResponse> GetDnsJson(string hostname)
         {
-            return await RestService.For<IResolveDnsProtocol>(new HttpClient(new HttpClientHandler {SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls}) {BaseAddress = new Uri(ProtocolBase.DnsServer)})
+            return await RestService.For<IResolveDnsProtocol>(new HttpClient(new HttpClientHandler {SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls}) {BaseAddress = new Uri(ProtocolBase.DnsServer), Timeout = TimeSpan.FromSeconds(5)})
                 .ResolveDns(new DnsResolveRequest
                 {
                     Ct = "application/dns-json",
@@ -57,11 +59,25 @@ namespace Pixeval.Data.Web.Delegation
         /// </summary>
         /// <param name="hostname"></param>
         /// <returns>the result of dns query</returns>
-        public async Task<IList<IPAddress>> Lookup(string hostname)
+        public async Task<IReadOnlyList<IPAddress>> Lookup(string hostname)
         {
             if (DnsCache.Value.ContainsKey(hostname)) return DnsCache.Value[hostname].ToImmutableList();
 
-            var response = await GetDnsJson(hostname);
+            if (_dnsQueryFailed)
+            {
+                return CacheDefaultDns(hostname);
+            }
+
+            DnsResolveResponse response;
+            try
+            {
+                response = await GetDnsJson(hostname);
+            }
+            catch (Exception)
+            {
+                _dnsQueryFailed = true;
+                return CacheDefaultDns(hostname);
+            }
 
             if (response != null)
             {
@@ -75,14 +91,21 @@ namespace Pixeval.Data.Web.Delegation
                 else
                 {
                     IpList.AddRange(Dns.GetHostAddresses(hostname));
-                    if (IpList.IsNullOrEmpty()) UseDefaultDns();
+                    if (IpList.IsNullOrEmpty()) IpList.AddRange(UseDefaultDns());
                 }
 
                 CacheDns(hostname);
                 return IpList.ToImmutableList();
             }
 
-            UseDefaultDns();
+            IpList.AddRange(UseDefaultDns());
+            CacheDns(hostname);
+            return IpList.ToImmutableList();
+        }
+
+        private IReadOnlyList<IPAddress> CacheDefaultDns(string hostname)
+        {
+            IpList.AddRange(UseDefaultDns());
             CacheDns(hostname);
             return IpList.ToImmutableList();
         }
@@ -95,7 +118,7 @@ namespace Pixeval.Data.Web.Delegation
                 DnsCache.Value[hostname] = new List<IPAddress>(IpList);
         }
 
-        protected abstract void UseDefaultDns();
+        protected abstract IEnumerable<IPAddress> UseDefaultDns();
 
         private class IPAddressEqualityComparer : IEqualityComparer<IPAddress>
         {

@@ -279,5 +279,11 @@ namespace Pixeval
         {
             Process.Start(new ProcessStartInfo("cmd", $"/c start https://www.pixiv.net/artworks/{currentModel.Id}") {CreateNoWindow = true});
         }
+
+        private void CopyImage_OnClick(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetImage((BitmapSource) DisplayIllustration.Source);
+            messageQueue.Enqueue("图片已复制到剪贴板");
+        }
     }
 }

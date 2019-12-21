@@ -31,7 +31,7 @@ namespace Pixeval.Data.Web.Delegation
 
         public static HttpClient PixivApi(string baseAddress, Action<HttpClient> action = null)
         {
-            return new HttpClient(PixivApiHttpClientHandler.Instance(Settings.Global.UseDefaultProxy))
+            return new HttpClient(PixivApiHttpClientHandler.Instance)
             {
                 BaseAddress = new Uri(baseAddress)
             }.Apply(h => action?.Invoke(h));
@@ -39,7 +39,7 @@ namespace Pixeval.Data.Web.Delegation
 
         public static HttpClient PixivImage(Action<HttpClient> action = null)
         {
-            return new HttpClient(PixivImageHttpClientHandler.Instance(Settings.Global.UseDefaultProxy))
+            return new HttpClient(PixivImageHttpClientHandler.Instance)
                 .Apply(h => action?.Invoke(h));
         }
     }

@@ -19,9 +19,9 @@ namespace Pixeval.Data.Web.Delegation
 {
     public class PixivImageHttpClientHandler : DnsResolvedHttpClientHandler
     {
-        public static HttpMessageHandler Instance(bool disableDnsQuery) => new PixivImageHttpClientHandler(disableDnsQuery);
+        public static HttpMessageHandler Instance = new PixivImageHttpClientHandler();
 
-        private PixivImageHttpClientHandler(bool disableDnsQuery) : base(PixivAuthenticationHttpRequestHandler.Instance, disableDnsQuery)
+        private PixivImageHttpClientHandler() : base(PixivAuthenticationHttpRequestHandler.Instance)
         {
         }
 

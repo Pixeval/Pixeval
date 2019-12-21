@@ -413,7 +413,9 @@ namespace Pixeval
         private async void SpotlightThumbnail_OnLoaded(object sender, RoutedEventArgs e)
         {
             var dataContext = sender.GetDataContext<SpotlightArticle>();
-            UiHelper.SetImageSource((Image) sender, await PixivEx.GetAndCreateOrLoadFromCacheInternal(dataContext.Thumbnail, dataContext.Id.ToString()));
+            var cover = PixivEx.GetSpotlightCover(dataContext);
+
+            UiHelper.SetImageSource((Image) sender, await PixivEx.GetAndCreateOrLoadFromCacheInternal(cover, dataContext.Id.ToString()));
         }
 
         private async void SpotlightContainer_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

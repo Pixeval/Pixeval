@@ -13,6 +13,8 @@
 // 
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+using System.Collections.Generic;
 using System.Net;
 
 namespace Pixeval.Data.Web.Delegation
@@ -21,11 +23,11 @@ namespace Pixeval.Data.Web.Delegation
     {
         public static DnsResolver Instance = new PixivApiDnsResolver();
 
-        protected override void UseDefaultDns()
+        protected override IEnumerable<IPAddress> UseDefaultDns()
         {
-            IpList.Add(IPAddress.Parse("210.140.131.219"));
-            IpList.Add(IPAddress.Parse("210.140.131.223"));
-            IpList.Add(IPAddress.Parse("210.140.131.226"));
+            yield return IPAddress.Parse("210.140.131.219");
+            yield return IPAddress.Parse("210.140.131.223");
+            yield return IPAddress.Parse("210.140.131.226");
         }
     }
 }

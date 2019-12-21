@@ -194,6 +194,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                        ToolTip="{Binding Id}" Canvas.Top="0" Canvas.Left="0"
                        Height="{Binding ElementName=ImageContainer, Path=ActualHeight}"
                        Width="{Binding ElementName=ImageContainer, Path=ActualWidth}">
+                    <Image.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem x:Name="CopyImage" Header="复制" Click="CopyImage_OnClick"/>
+                        </ContextMenu>
+                    </Image.ContextMenu>
                     <Image.Resources>
                         <valueConverters:ImageCenterConverter x:Key="ImageCenterConverter" />
                     </Image.Resources>

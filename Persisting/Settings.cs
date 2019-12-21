@@ -41,8 +41,6 @@ namespace Pixeval.Persisting
             set => downloadLocation = value;
         }
 
-        public bool UseDefaultProxy { get; set; }
-
         public int QueryPages { get; set; } = 1;
 
         public int QueryStart { get; set; } = 1;
@@ -87,7 +85,6 @@ namespace Pixeval.Persisting
             Global.QueryPages = 1;
             Global.QueryStart = 1;
             Global.SpotlightQueryStart = 1;
-            Global.UseDefaultProxy = false;
         }
     }
 }

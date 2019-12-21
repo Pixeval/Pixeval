@@ -45,19 +45,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         <Border VerticalAlignment="Top" HorizontalAlignment="Stretch" BorderBrush="Black"
                 BorderThickness="0.5 0.5 0.5 0.25" Grid.Row="1" CornerRadius="5 5 0 0" Height="60" Margin="50 30 50 0">
             <xctk:WatermarkTextBox x:Name="Email" BorderThickness="0" Watermark="邮箱/Pixiv ID" FontSize="20"
-                                   FontFamily="Microsoft Yahei UI Light" Background="Transparent" TextWrapping="Wrap"
+                                   FontFamily="Microsoft YaHei UI Light" Background="Transparent" TextWrapping="Wrap"
                                    Padding="10 0 0 0" VerticalContentAlignment="Center" />
         </Border>
         <Border Grid.Row="1" BorderBrush="Black" VerticalAlignment="Top" HorizontalAlignment="Stretch"
                 BorderThickness="0.5 0.25 0.5 0.5" CornerRadius="0 0 5 5" Margin="50 90 50 0" Height="60">
             <xctk:WatermarkPasswordBox x:Name="Password" BorderThickness="0" Watermark="密码" FontSize="20"
-                                       VerticalContentAlignment="Center" FontFamily="Microsoft Yahei UI Light"
+                                       VerticalContentAlignment="Center" FontFamily="Microsoft YaHei UI Light"
                                        Padding="10 0 0 0" TextWrapping="Wrap" Background="Transparent" />
         </Border>
         <TextBlock x:Name="ErrorMessage" Grid.Row="2" VerticalAlignment="Top" FontSize="15" Height="50"
-               FontFamily="Microsoft Yahei UI Light" TextAlignment="Center" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Foreground="Crimson" />
+               FontFamily="Microsoft YaHei UI Light" TextAlignment="Center" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Foreground="Crimson" />
         <Button x:Name="Login" IsDefault="True" Click="Login_OnClick" Grid.Row="2" VerticalAlignment="Center"
-                Margin="70 10 70 30" Height="50" FontSize="20" FontFamily="Microsoft Yahei UI Light"
+                Margin="70 10 70 30" Height="50" FontSize="20" FontFamily="Microsoft YaHei UI Light"
                 BorderBrush="Transparent"
                 Background="#0096FA" Content="登       录" />
         <materialDesign:DialogHost Grid.Row="0" Grid.RowSpan="3" x:Name="DialogHost">

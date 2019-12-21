@@ -22,7 +22,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Pixeval.Objects;
 using Pixeval.Objects.Exceptions;
-using Pixeval.Objects.ValueConverters;
 using Pixeval.Persisting;
 
 namespace Pixeval.Data.Web.Delegation
@@ -30,7 +29,6 @@ namespace Pixeval.Data.Web.Delegation
     public abstract class DnsResolvedHttpClientHandler : HttpClientHandler
     {
         private readonly IHttpRequestHandler requestHandler;
-        private readonly bool disableDnsQuery;
 
         static DnsResolvedHttpClientHandler()
         {
@@ -38,10 +36,9 @@ namespace Pixeval.Data.Web.Delegation
             AppContext.SetSwitch("System.Net.Http.UseSocketsHttpHandler", false);
         }
 
-        protected DnsResolvedHttpClientHandler(IHttpRequestHandler requestHandler = null, bool disableDnsQuery = false)
+        protected DnsResolvedHttpClientHandler(IHttpRequestHandler requestHandler = null)
         {
             this.requestHandler = requestHandler;
-            this.disableDnsQuery = disableDnsQuery;
             // SSL bypass
             ServerCertificateCustomValidationCallback = DangerousAcceptAnyServerCertificateValidator;
             SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls;
@@ -55,23 +52,20 @@ namespace Pixeval.Data.Web.Delegation
 
             var isSslSession = request.RequestUri.ToString().StartsWith("https://");
 
-            if (!disableDnsQuery)
+            for (var i = 0; i < 3; i++)
             {
-                for (var i = 0; i < 3; i++)
+                try
                 {
-                    try
+                    // replace the host part in the uri to the ip address of the host
+                    request.RequestUri = new Uri($"{(isSslSession ? "https://" : "http://")}{(await DnsResolver.Lookup(host))[i]}{request.RequestUri.PathAndQuery}");
+                    request.Headers.Host = host;
+                    break;
+                }
+                catch (Exception e)
+                {
+                    if (e is IndexOutOfRangeException || i == 2)
                     {
-                        // replace the host part in the uri to the ip address of the host
-                        request.RequestUri = new Uri($"{(isSslSession ? "https://" : "http://")}{(await DnsResolver.Lookup(host))[i]}{request.RequestUri.PathAndQuery}");
-                        request.Headers.Host = host;
-                        break;
-                    }
-                    catch (Exception e)
-                    {
-                        if (e is IndexOutOfRangeException || i == 2)
-                        {
-                            throw new DnsQueryFailedException("Dns查询失败, 请尝试将Pixeval切换为使用代理模式并启用您的代理");
-                        }
+                        throw new DnsQueryFailedException("Dns查询失败, 请尝试将Pixeval切换为使用代理模式并启用您的代理");
                     }
                 }
             }

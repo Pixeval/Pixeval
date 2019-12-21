@@ -39,16 +39,7 @@ namespace Pixeval
 
         protected override async void OnStartup(StartupEventArgs e)
         {
-            const string useDefaultProxy = "-useDefaultProxy";
             await Settings.Global.Restore();
-
-            if (e.Args.Length > 0)
-            {
-                if (e.Args.Contains(useDefaultProxy))
-                {
-                    Settings.Global.UseDefaultProxy = true;
-                }
-            }
             base.OnStartup(e);
         }
 
