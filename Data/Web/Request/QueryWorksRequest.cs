@@ -26,7 +26,7 @@ namespace Pixeval.Data.Web.Request
         public string Tag { get; set; }
 
         [AliasAs("per_page")]
-        public int PerPage { get; set; } = 300;
+        public int PerPage { get; set; } = 30;
 
         [AliasAs("period")]
         public string Period { get; set; } = "all";
@@ -36,5 +36,11 @@ namespace Pixeval.Data.Web.Request
 
         [AliasAs("sort")]
         public string Sort { get; set; } = "date";
+
+        [AliasAs("image_sizes")]
+        public string ImageSizes { get; set; } = "px_128x128,px_480mw,large";
+
+        [AliasAs("include_stats")]
+        public string IncludeStats { get; set; } = "true";
     }
 }

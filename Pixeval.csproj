@@ -29,7 +29,6 @@
     <PackageReference Include="PropertyChanged.Fody" Version="3.2.1" />
     <PackageReference Include="refit" Version="5.0.23" />
     <PackageReference Include="System.Interactive.Async" Version="4.0.0" />
-    <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
     <PackageReference Include="VirtualizingWrapPanel.NETCore" Version="1.4.0" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
   </ItemGroup>

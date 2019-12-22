@@ -13,6 +13,7 @@
 // 
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -51,10 +52,10 @@ namespace Pixeval.Core
                 Tags = response.Tags.ToArray(),
                 Thumbnail = response.ImageUrls.Px480Mw ?? response.ImageUrls.Medium,
                 Title = response.Title,
-                Type = Illustration.IllustType.Parse(response),
+                Type = response.Type,
                 UserName = response.User.Name,
                 UserId = response.User.Id.ToString()
-            };
+            }.Apply(i => i.TypeEnum = IllustTypeParser.ParseType(i));
 
             if (illust.IsManga)
                 illust.MangaMetadata = response.Metadata.Pages.Select(p =>
@@ -73,7 +74,7 @@ namespace Pixeval.Core
             var counter = 1;
             while (pixivIterator.HasNext())
             {
-                if (useCounter && counter > Settings.Global.QueryPages) break;
+                if (useCounter && counter > Settings.Global.QueryPages * 10) break;
                 await foreach (var illust in pixivIterator.MoveNextAsync())
                     if (typeof(T) == typeof(Illustration))
                     {
@@ -81,10 +82,10 @@ namespace Pixeval.Core
                         if (IllustNotMatchCondition(Settings.Global.ExceptTags, Settings.Global.ContainsTags, i))
                             continue;
 
-                        if (Settings.Global.SortOnInserting)
-                            (container as Collection<Illustration>).AddSorted(i, IllustrationComparator.Instance);
-                        else
-                            container.Add(illust);
+                        if (container is Collection<Illustration> illustrationContainer)
+                        {
+                            illustrationContainer.AddSorted(i, Settings.Global.SortOnInserting ? IllustrationPopularityComparator.Instance : (IComparer<Illustration>) IllustrationPublishDateComparator.Instance);
+                        }
                     }
                     else
                     {

@@ -26,6 +26,12 @@ namespace Pixeval.Data.Web.Request
         public string Publicity { get; set; } = "public";
 
         [AliasAs("per_page")]
-        public int PerPage { get; set; } = 300;
+        public int PerPage { get; set; } = 30;
+
+        [AliasAs("image_sizes")]
+        public string ImageSizes { get; set; } = "px_128x128,px_480mw,large";
+
+        [AliasAs("include_stats")]
+        public bool IncludeStats { get; set; } = true;
     }
 }

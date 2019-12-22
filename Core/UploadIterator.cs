@@ -35,18 +35,24 @@ namespace Pixeval.Core
 
         public bool HasNext()
         {
-            return true;
+            return !lastPage;
         }
+
+        private bool lastPage;
 
         public async IAsyncEnumerable<Illustration> MoveNextAsync()
         {
             var works = await HttpClientFactory.PublicApiService.GetUploads(uid, new UploadsRequest {Page = currentIndex++});
             if (currentIndex == 2 && !works.ToResponse.Any()) throw new QueryNotRespondingException();
 
+            if (works.Pages.Next == null)
+            {
+                lastPage = true;
+            }
+
             foreach (var response in works.ToResponse.Where(illustration => illustration != null))
             {
-                var illust = await PixivHelper.IllustrationInfo(response.Id.ToString());
-                if (illust != null) yield return illust;
+                yield return response.Parse();
             }
         }
     }

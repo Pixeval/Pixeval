@@ -17,7 +17,6 @@ using System;
 using System.Net.Http;
 using Pixeval.Data.Web.Protocol;
 using Pixeval.Objects;
-using Pixeval.Persisting;
 using Refit;
 
 namespace Pixeval.Data.Web.Delegation
@@ -25,6 +24,7 @@ namespace Pixeval.Data.Web.Delegation
     public class HttpClientFactory
     {
         public static HttpClient AppApiHttpClient = PixivApi(ProtocolBase.AppApiBaseUrl).Apply(h => h.DefaultRequestHeaders.Add("Authorization", "Bearer"));
+        
         public static IPublicApiProtocol PublicApiService { get; } = RestService.For<IPublicApiProtocol>(PixivApi(ProtocolBase.PublicApiBaseUrl));
 
         public static IAppApiProtocol AppApiService { get; } = RestService.For<IAppApiProtocol>(PixivApi(ProtocolBase.AppApiBaseUrl));

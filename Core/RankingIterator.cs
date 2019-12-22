@@ -32,7 +32,7 @@ namespace Pixeval.Core
         {
             if (context == null) return true;
 
-            if (limit++ >= 5) return false;
+            if (limit++ >= 10) return false;
 
             return !context.NextUrl.IsNullOrEmpty();
         }
@@ -44,8 +44,7 @@ namespace Pixeval.Core
 
             foreach (var contextIllust in context.Illusts.Where(illustration => illustration != null))
             {
-                var illust = await PixivHelper.IllustrationInfo(contextIllust.Id.ToString());
-                if (illust != null) yield return illust;
+                yield return contextIllust.Parse();
             }
         }
     }

@@ -39,8 +39,10 @@ namespace Pixeval.Core
 
         public bool HasNext()
         {
-            return true;
+            return !lastPage;
         }
+
+        private bool lastPage;
 
         public async IAsyncEnumerable<Illustration> MoveNextAsync()
         {
@@ -48,10 +50,14 @@ namespace Pixeval.Core
 
             if (currentIndex - start == 1 && !works.ToResponse.Any()) throw new QueryNotRespondingException();
 
+            if (works.Pages.Next == null)
+            {
+                lastPage = true;
+            }
+
             foreach (var response in works.ToResponse.Where(response => response != null))
             {
-                var illust = await PixivHelper.IllustrationInfo(response.Id.ToString());
-                if (illust != null) yield return illust;
+                yield return response.Parse();
             }
         }
     }

@@ -33,9 +33,6 @@ namespace Pixeval.Data.Web.Protocol
         [Get("/v1/user/detail")]
         Task<UserInformationResponse> GetUserInformation(UserInformationRequest userInformationRequest);
 
-        [Get("/v1/user/bookmarks/illust")]
-        Task<GalleryResponse> GetGallery(GalleryRequest favoriteWorkRequest);
-
         [Headers("Accept-Language: zh-cn")]
         [Get("/v1/spotlight/articles?category=all")]
         Task<SpotlightResponse> GetSpotlights(int offset);

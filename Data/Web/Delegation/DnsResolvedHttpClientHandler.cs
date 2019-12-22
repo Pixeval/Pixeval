@@ -14,12 +14,14 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using Pixeval.Objects;
 using Pixeval.Objects.Exceptions;
 using Pixeval.Persisting;
@@ -41,7 +43,6 @@ namespace Pixeval.Data.Web.Delegation
             this.requestHandler = requestHandler;
             // SSL bypass
             ServerCertificateCustomValidationCallback = DangerousAcceptAnyServerCertificateValidator;
-            SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls;
         }
 
         protected abstract DnsResolver DnsResolver { get; set; }
@@ -52,23 +53,8 @@ namespace Pixeval.Data.Web.Delegation
 
             var isSslSession = request.RequestUri.ToString().StartsWith("https://");
 
-            for (var i = 0; i < 3; i++)
-            {
-                try
-                {
-                    // replace the host part in the uri to the ip address of the host
-                    request.RequestUri = new Uri($"{(isSslSession ? "https://" : "http://")}{(await DnsResolver.Lookup(host))[i]}{request.RequestUri.PathAndQuery}");
-                    request.Headers.Host = host;
-                    break;
-                }
-                catch (Exception e)
-                {
-                    if (e is IndexOutOfRangeException || i == 2)
-                    {
-                        throw new DnsQueryFailedException("Dns查询失败, 请尝试将Pixeval切换为使用代理模式并启用您的代理");
-                    }
-                }
-            }
+            request.RequestUri = new Uri($"{(isSslSession ? "https://" : "http://")}{(await DnsResolver.Lookup(host))[0]}{request.RequestUri.PathAndQuery}");
+            request.Headers.Host = host;
 
             requestHandler?.Handle(request);
 

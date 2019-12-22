@@ -23,7 +23,7 @@ using Pixeval.Objects;
 
 namespace Pixeval.Data.Web.Response
 {
-    public class UploadResponse
+    public class QueryWorksResponse
     {
         [JsonProperty("status")]
         public string Status { get; set; }
@@ -31,11 +31,11 @@ namespace Pixeval.Data.Web.Response
         [JsonProperty("response")]
         public List<Response> ToResponse { get; set; }
 
-        [JsonProperty("count")]
-        public long Count { get; set; }
-
         [JsonProperty("pagination")]
         public Pagination Pages { get; set; }
+
+        [JsonProperty("count")]
+        public long Count { get; set; }
 
         public class Pagination
         {
@@ -70,10 +70,10 @@ namespace Pixeval.Data.Web.Response
             public string Caption { get; set; }
 
             [JsonProperty("tags")]
-            public List<string> Tags { get; set; }
+            public string[] Tags { get; set; }
 
             [JsonProperty("tools")]
-            public List<string> Tools { get; set; }
+            public string[] Tools { get; set; }
 
             [JsonProperty("image_urls")]
             public ImageUrls ImageUrls { get; set; }
@@ -94,10 +94,7 @@ namespace Pixeval.Data.Web.Response
             public string AgeLimit { get; set; }
 
             [JsonProperty("created_time")]
-            public DateTimeOffset CreatedTime { get; set; }
-
-            [JsonProperty("reuploaded_time")]
-            public DateTimeOffset ReuploadedTime { get; set; }
+            public DateTimeOffset CreateTime { get; set; }
 
             [JsonProperty("user")]
             public User User { get; set; }
@@ -120,26 +117,23 @@ namespace Pixeval.Data.Web.Response
             [JsonProperty("type")]
             public string Type { get; set; }
 
-            [JsonProperty("sanity_level")]
-            public string SanityLevel { get; set; }
-
             public Illustration Parse()
             {
                 return new Illustration
                 {
                     Bookmark = (int) (Stats.FavoritedCount.Public + Stats.FavoritedCount.Private),
+                    Type = Type,
                     Id = Id.ToString(),
                     IsLiked = FavoriteId != 0,
-                    IsUgoira = Type == "ugoira",
                     IsManga = IsManga,
+                    IsUgoira = Type == "ugoira",
                     Origin = ImageUrls.Large,
-                    Tags = Tags.ToArray(),
+                    Tags = Tags,
                     Thumbnail = ImageUrls.Px480Mw.IsNullOrEmpty() ? ImageUrls.Px128X128 : ImageUrls.Px480Mw,
                     Title = Title,
-                    Type = Type,
                     UserId = User.Id.ToString(),
                     UserName = User.Name,
-                    PublishDate = CreatedTime
+                    PublishDate = CreateTime
                 }.Apply(i => i.TypeEnum = IllustTypeParser.ParseType(i));
             }
         }
@@ -202,15 +196,6 @@ namespace Pixeval.Data.Web.Response
 
             [JsonProperty("is_friend")]
             public bool IsFriend { get; set; }
-
-            [JsonProperty("profile_image_urls")]
-            public ProfileImageUrls ProfileImageUrls { get; set; }
-        }
-
-        public class ProfileImageUrls
-        {
-            [JsonProperty("px_50x50")]
-            public string Px50X50 { get; set; }
         }
     }
 }

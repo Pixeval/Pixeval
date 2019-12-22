@@ -161,7 +161,6 @@ namespace Pixeval
         private void QueryWorks(string keyword)
         {
             QueryStartUp();
-
             PixivHelper.DoIterate(new QueryIterator(keyword, Settings.Global.QueryStart), UiHelper.NewItemsSource<Illustration>(ImageListView), true);
         }
 

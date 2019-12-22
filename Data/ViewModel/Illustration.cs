@@ -15,7 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
-using Pixeval.Data.Web.Response;
+using Pixeval.Core;
 using PropertyChanged;
 
 #pragma warning disable 8509
@@ -41,7 +41,7 @@ namespace Pixeval.Data.ViewModel
 
         public string Title { get; set; }
 
-        public IllustType Type { get; set; }
+        public string Type { get; set; }
 
         public string UserName { get; set; }
 
@@ -51,41 +51,36 @@ namespace Pixeval.Data.ViewModel
 
         public Illustration[] MangaMetadata { get; set; }
 
+        public DateTimeOffset PublishDate { get; set; }
+
+        public IllustType TypeEnum { get; set; }
+
         public object Clone()
         {
             return MemberwiseClone();
         }
-
-        public class IllustType
-        {
-            public static readonly IllustType Illust = new IllustType();
-
-            public static readonly IllustType Ugoira = new IllustType();
-
-            public static readonly IllustType Manga = new IllustType();
-
-            public static IllustType Parse(IllustResponse.Response illustration)
-            {
-                return illustration switch
-                {
-                    { Type: "illustration", IsManga: true } => Manga,
-                    { Type: "manga"}                        => Manga,
-                    { Type: "ugoira" }                      => Ugoira,
-                    { Type: "illustration", IsManga: false} => Illust
-                };
-            }
-        }
     }
 
-    public class IllustrationComparator : IComparer<Illustration>
+    public class IllustrationPopularityComparator : IComparer<Illustration>
     {
-        public static readonly IllustrationComparator Instance = new IllustrationComparator();
+        public static readonly IllustrationPopularityComparator Instance = new IllustrationPopularityComparator();
 
         public int Compare(Illustration x, Illustration y)
         {
             if (x == null || y == null) return 0;
 
             return x.Bookmark < y.Bookmark ? 1 : x.Bookmark == y.Bookmark ? 0 : -1;
+        }
+    }
+
+    public class IllustrationPublishDateComparator : IComparer<Illustration>
+    {
+        public static readonly IllustrationPublishDateComparator Instance = new IllustrationPublishDateComparator();
+
+        public int Compare(Illustration x, Illustration y)
+        {
+            if (x == null || y == null) return 0;
+            return x.PublishDate < y.PublishDate ? 1 : x.PublishDate == y.PublishDate ? 0 : -1;
         }
     }
 }

@@ -52,8 +52,7 @@ namespace Pixeval.Core
 
             foreach (var contextIllust in context.Illusts.Where(contextIllust => contextIllust != null))
             {
-                var illust = await PixivHelper.IllustrationInfo(contextIllust.Id.ToString());
-                if (illust != null) yield return illust;
+                yield return contextIllust.Parse();
             }
         }
     }

@@ -24,7 +24,7 @@ namespace Pixeval.Data.Web.Protocol
     public interface IPublicApiProtocol
     {
         [Get("/search/works.json")]
-        Task<QueryResponse> QueryWorks(QueryWorksRequest queryWorksRequest);
+        Task<QueryWorksResponse> QueryWorks(QueryWorksRequest queryWorksRequest);
 
         [Get("/users/{uid}/works.json")]
         Task<UploadResponse> GetUploads(string uid, UploadsRequest uploadResponse);
