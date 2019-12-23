@@ -662,8 +662,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 </Image>
                 <StackPanel Grid.Row="1" Height="50" Margin="0 20 0 0" HorizontalAlignment="Center"
                             VerticalAlignment="Top" Orientation="Horizontal">
-                    <TextBox x:Name="KeywordTextBox" Width="800" GotFocus="KeywordTextBox_OnGotFocus"
-                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                    <TextBox x:Name="KeywordTextBox" Width="800" GotFocus="KeywordTextBox_OnGotFocus" PreviewKeyDown="KeywordTextBox_OnPreviewKeyDown"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}" TextChanged="KeywordTextBox_OnTextChanged"
                              materialDesign:HintAssist.Hint="请输入要搜索的内容~(￣▽￣)~*" />
                     <TextBox Width="0" Height="0" x:Name="ToLoseFocus" />
                     <Button x:Name="DoQueryButton" IsDefault="False" Margin="10 15 0 0" Width="50" Height="40"
@@ -677,6 +677,24 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                         </Viewbox>
                     </Button>
                 </StackPanel>
+                <Popup x:Name="AutoCompletionPopup" Grid.Row="1" Width="800" StaysOpen="False" AllowsTransparency="True" 
+                       PopupAnimation="Fade" PlacementTarget="{Binding ElementName=KeywordTextBox}"
+                       Placement="Bottom">
+                    <materialDesign:Card Width="800" Background="#FAFAFC">
+                        <ListBox x:Name="AutoCompletionListBox" Width="800" MaxHeight="400" ScrollViewer.CanContentScroll="False">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate DataType="viewModel:AutoCompletion">
+                                    <ListBoxItem HorizontalAlignment="Stretch" x:Name="AutoCompletionElement">
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <TextBlock FontSize="12" HorizontalAlignment="Left" Text="{Binding Tag}" Margin="0 0 0 5"/>
+                                            <TextBlock FontSize="10" HorizontalAlignment="Left" Text="{Binding TranslatedName}"/>
+                                        </Grid>
+                                    </ListBoxItem>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </materialDesign:Card>
+                </Popup>
                 <Popup StaysOpen="True" x:Name="QueryOptionPopup" PopupAnimation="Fade" AllowsTransparency="True"
                        HorizontalOffset="350"
                        objects:PopupHelper.PopupPlacementTarget="{Binding ElementName=KeywordTextBox}" Grid.Row="1"

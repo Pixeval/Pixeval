@@ -57,5 +57,9 @@ namespace Pixeval.Data.Web.Protocol
 
         [Get("/v1/search/user")]
         Task<UserNavResponse> GetUserNav(string word, int offset = 0, string filter = "for_android");
+
+        [Headers("Accept-Language: en-US")]
+        [Get("/v2/search/autocomplete")]
+        Task<AutoCompletionResponse> GetAutoCompletion(AutoCompletionRequest autoCompletionRequest);
     }
 }

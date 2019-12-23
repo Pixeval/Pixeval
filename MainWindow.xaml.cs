@@ -176,6 +176,42 @@ namespace Pixeval
             QueryOptionPopup.IsOpen = true;
         }
 
+        private async void KeywordTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            var word = KeywordTextBox.Text;
+
+            try
+            {
+                var result = await HttpClientFactory.AppApiService.GetAutoCompletion(new AutoCompletionRequest { Word = word });
+                if (result.Tags.Any())
+                {
+                    AutoCompletionPopup.IsOpen = true;
+                    AutoCompletionListBox.ItemsSource = result.Tags.Select(p => new AutoCompletion { Tag = p.Name, TranslatedName = p.TranslatedName });
+                }
+            }
+            catch (ApiException)
+            {
+                AutoCompletionPopup.IsOpen = false;
+            }
+        }
+
+        private void KeywordTextBox_OnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            var key = e.Key;
+            if (key == Key.Enter)
+            {
+                if (AutoCompletionListBox.SelectedIndex != -1)
+                    KeywordTextBox.Text = ((AutoCompletion) AutoCompletionListBox.SelectedItem).Tag;
+            }
+
+            AutoCompletionListBox.SelectedIndex = key switch
+            {
+                var x when x == Key.Down || x == Key.S => AutoCompletionListBox.SelectedIndex == -1 ? 0 : AutoCompletionListBox.SelectedIndex + 1,
+                var x when x == Key.Up || x == Key.A   => AutoCompletionListBox.SelectedIndex != -1 && AutoCompletionListBox.SelectedIndex != 0 ? AutoCompletionListBox.SelectedIndex - 1 : AutoCompletionListBox.SelectedIndex,
+                _                                      => AutoCompletionListBox.SelectedIndex
+            };
+        }
+
         private void QuerySingleWorkToggleButton_OnChecked(object sender, RoutedEventArgs e)
         {
             QueryArtistToggleButton.IsChecked = false;
@@ -227,6 +263,7 @@ namespace Pixeval
         {
             ToLoseFocus.Focus();
             QueryOptionPopup.IsOpen = false;
+            AutoCompletionPopup.IsOpen = false;
             DownloadListTab.IsSelected = false;
         }
 
