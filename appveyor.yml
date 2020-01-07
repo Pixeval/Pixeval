@@ -6,6 +6,11 @@ branches:
     
 image: Visual Studio 2019
 configuration: Release
+
+
+before_build:
+  - nuget restore
+
 build:
   parallel: true
   project: Pixeval.sln
@@ -13,3 +18,7 @@ build:
 artifacts:
   - path: bin\$(configuration)\netcoreapp3.0\*
     name: myapp
+
+cache:
+  - packages -> **\packages.config      # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+  - '%USERPROFILE%\.nuget\packages -> **\project.json'  # project.json cache
