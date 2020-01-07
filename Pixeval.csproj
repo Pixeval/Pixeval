@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <Description>A Strong, Fast and Flexible Pixiv Client</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <StartupObject>Pixeval.App</StartupObject>
+    <ApplicationIcon>Resources\pxlogo.ico</ApplicationIcon>
+    <Win32Resource />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="LaunchWrapper\**" />
+    <EmbeddedResource Remove="LaunchWrapper\**" />
+    <None Remove="LaunchWrapper\**" />
+    <Page Remove="LaunchWrapper\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\iconfont.ttf" />
+    <None Remove="Resources\pxlogo.ico" />
+    <None Remove="Resources\pxlogo_large.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AngleSharp" Version="0.13.0" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="3.7.0" />
+    <PackageReference Include="FluentWPF" Version="0.8.0" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.14.5" />
+    <PackageReference Include="MahApps.Metro" Version="1.6.5" />
+    <PackageReference Include="MaterialDesignColors" Version="1.2.1" />
+    <PackageReference Include="MaterialDesignThemes" Version="2.6.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="PropertyChanged.Fody" Version="3.2.1" />
+    <PackageReference Include="refit" Version="5.0.23" />
+    <PackageReference Include="System.Interactive.Async" Version="4.0.0" />
+    <PackageReference Include="VirtualizingWrapPanel.NETCore" Version="1.4.0" />
+    <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\iconfont.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\pxlogo.ico" />
+    <Resource Include="Resources\pxlogo_large.png" />
+  </ItemGroup>
+
+</Project>
