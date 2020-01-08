@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
@@ -70,6 +71,13 @@ namespace Pixeval.Objects
         public static bool IsNumber(this string str)
         {
             return int.TryParse(str, out _);
+        }
+
+        // taken from https://stackoverflow.com/questions/146134/how-to-remove-illegal-characters-from-path-and-filenames
+        public static string FormatPath(string original)
+        {
+            var invalidChars = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+            return invalidChars.Aggregate(original, (current, c) => current.Replace(c.ToString(), string.Empty));
         }
     }
 }

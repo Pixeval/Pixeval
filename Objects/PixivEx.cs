@@ -232,7 +232,7 @@ namespace Pixeval.Objects
 
         public static async Task DownloadIllust(Illustration illustration, string rootPath, string addIllustratorNamedDirectory = null)
         {
-            var path = TextBuffer.GetOrCreateDirectory(addIllustratorNamedDirectory == null ? rootPath : Path.Combine(rootPath, addIllustratorNamedDirectory));
+            var path = TextBuffer.GetOrCreateDirectory(Texts.FormatPath(addIllustratorNamedDirectory == null ? rootPath : Path.Combine(rootPath, addIllustratorNamedDirectory)));
 
             if (illustration.IsManga)
             {
@@ -245,7 +245,7 @@ namespace Pixeval.Objects
             else
             {
                 var url = illustration.Origin;
-                await File.WriteAllBytesAsync(Path.Combine(path, $"[{illustration.UserName}]{illustration.Id}{GetExtension(url)}"), await FromUrlInternal(url));
+                await File.WriteAllBytesAsync(Texts.FormatPath(Path.Combine(path, $"[{illustration.UserName}]{illustration.Id}{GetExtension(url)}")), await FromUrlInternal(url));
             }
         }
 
@@ -257,7 +257,7 @@ namespace Pixeval.Objects
             var url = FormatGifZipUrl(metadata.UgoiraMetadataInfo.ZipUrls.Medium);
 
             await using var img = (MemoryStream) await GetGifStream(url, metadata.UgoiraMetadataInfo.Frames.Select(f => f.Delay / 10).ToList());
-            await File.WriteAllBytesAsync(Path.Combine(rootPath, $"[{illustration.UserName}]{illustration.Id}.gif"), await Task.Run(() => img.ToArray()));
+            await File.WriteAllBytesAsync(Texts.FormatPath(Path.Combine(rootPath, $"[{illustration.UserName}]{illustration.Id}.gif")), await Task.Run(() => img.ToArray()));
         }
 
         public static async Task DownloadManga(Illustration illustration, string rootPath)
@@ -269,7 +269,7 @@ namespace Pixeval.Objects
             for (var i = 0; i < illustration.MangaMetadata.Length; i++)
             {
                 var url = illustration.MangaMetadata[i].Origin;
-                await File.WriteAllBytesAsync(Path.Combine(mangaDir, $"{i}{GetExtension(url)}"), await FromUrlInternal(url));
+                await File.WriteAllBytesAsync(Texts.FormatPath(Path.Combine(mangaDir, $"{i}{GetExtension(url)}")), await FromUrlInternal(url));
             }
         }
 
