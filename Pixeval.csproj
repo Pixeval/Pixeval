@@ -49,4 +49,8 @@
     <Resource Include="Resources\pxlogo_large.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
+  </ItemGroup>
+
 </Project>
