@@ -46,7 +46,7 @@ namespace Pixeval.Persisting
             }
             catch (TaskCanceledException)
             {
-                throw new TokenNotFoundException("请求超时, 请仔细检查您的网络环境, 或检查是否在关闭免代理模式时尝试不使用代理登录");
+                throw new TokenNotFoundException("请求超时, 请仔细检查您的网络环境");
             }
         }
     }
