@@ -18,7 +18,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -151,6 +155,21 @@ namespace Pixeval.Objects
             {
                 // ignore
             }
+        }
+
+        public static void PlayGif(this Image image, IEnumerable<Stream> imageSources, IEnumerable<int> delay, CancellationToken cancellationToken)
+        {
+            Task.Run(async () =>
+            {
+                var enumerable = imageSources as Stream[] ?? imageSources.ToArray();
+                var delays = delay as int[] ?? delay.ToArray();
+                while (!cancellationToken.IsCancellationRequested)
+                    for (var i = 0; i < enumerable.Length && !cancellationToken.IsCancellationRequested; i++)
+                    {
+                        image.Source = PixivEx.FromStream(enumerable[i]);
+                        await Task.Delay(delays[i], cancellationToken);
+                    }
+            }, cancellationToken);
         }
     }
 

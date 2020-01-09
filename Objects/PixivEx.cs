@@ -215,24 +215,24 @@ namespace Pixeval.Objects
             return FromStream(MergeGifStream(ReadGifZipEntries(await FromUrlInternal(link)), delay));
         }
 
-        public static Task DownloadIllustsInternal(IEnumerable<Illustration> illustrations, string addIllustratorNamedDirectory = null)
+        public static Task DownloadIllustsInternal(IEnumerable<Illustration> illustrations)
         {
-            return DownloadIllusts(illustrations, Settings.Global.DownloadLocation, addIllustratorNamedDirectory);
+            return DownloadIllusts(illustrations, Settings.Global.DownloadLocation);
         }
 
-        public static Task DownloadIllusts(IEnumerable<Illustration> illustrations, string path, string addIllustratorNamedDirectory = null)
+        public static Task DownloadIllusts(IEnumerable<Illustration> illustrations, string path)
         {
-            return Task.WhenAll(illustrations.Select(illustration => DownloadIllust(illustration, path, addIllustratorNamedDirectory)));
+            return Task.WhenAll(illustrations.Select(illustration => DownloadIllust(illustration, path)));
         }
 
-        public static async Task DownloadIllustInternal(Illustration illustration, string addIllustratorNamedDirectory = null)
+        public static async Task DownloadIllustInternal(Illustration illustration)
         {
-            await DownloadIllust(illustration, Settings.Global.DownloadLocation, addIllustratorNamedDirectory);
+            await DownloadIllust(illustration, Settings.Global.DownloadLocation);
         }
 
-        public static async Task DownloadIllust(Illustration illustration, string rootPath, string addIllustratorNamedDirectory = null)
+        public static async Task DownloadIllust(Illustration illustration, string rootPath)
         {
-            var path = TextBuffer.GetOrCreateDirectory(Texts.FormatPath(addIllustratorNamedDirectory == null ? rootPath : Path.Combine(rootPath, addIllustratorNamedDirectory)));
+            var path = TextBuffer.GetOrCreateDirectory(rootPath);
 
             if (illustration.IsManga)
             {
@@ -244,8 +244,8 @@ namespace Pixeval.Objects
             }
             else
             {
-                var url = illustration.Origin;
-                await File.WriteAllBytesAsync(Texts.FormatPath(Path.Combine(path, $"[{illustration.UserName}]{illustration.Id}{GetExtension(url)}")), await FromUrlInternal(url));
+                var url = illustration.Origin.IsNullOrEmpty() ? illustration.Large : illustration.Origin;
+                await File.WriteAllBytesAsync(Path.Combine(path, $"[{Texts.FormatPath(illustration.UserName)}]{illustration.Id}{GetExtension(url)}"), await FromUrlInternal(url));
             }
         }
 
@@ -257,19 +257,18 @@ namespace Pixeval.Objects
             var url = FormatGifZipUrl(metadata.UgoiraMetadataInfo.ZipUrls.Medium);
 
             await using var img = (MemoryStream) await GetGifStream(url, metadata.UgoiraMetadataInfo.Frames.Select(f => f.Delay / 10).ToList());
-            await File.WriteAllBytesAsync(Texts.FormatPath(Path.Combine(rootPath, $"[{illustration.UserName}]{illustration.Id}.gif")), await Task.Run(() => img.ToArray()));
+            await File.WriteAllBytesAsync(Path.Combine(rootPath, $"[{Texts.FormatPath(illustration.UserName)}]{illustration.Id}.gif"), await Task.Run(() => img.ToArray()));
         }
 
         public static async Task DownloadManga(Illustration illustration, string rootPath)
         {
             if (!illustration.IsManga) throw new InvalidOperationException();
 
-            var mangaDir = TextBuffer.GetOrCreateDirectory(Path.Combine(rootPath, $"[{illustration.UserName}]{illustration.Id}"));
-
+            var mangaDir = TextBuffer.GetOrCreateDirectory(Path.Combine(rootPath, $"[{Texts.FormatPath(illustration.UserName)}]{illustration.Id}"));
             for (var i = 0; i < illustration.MangaMetadata.Length; i++)
             {
-                var url = illustration.MangaMetadata[i].Origin;
-                await File.WriteAllBytesAsync(Texts.FormatPath(Path.Combine(mangaDir, $"{i}{GetExtension(url)}")), await FromUrlInternal(url));
+                var url = illustration.MangaMetadata[i].Origin.IsNullOrEmpty() ? illustration.MangaMetadata[i].Large : illustration.MangaMetadata[i].Origin;
+                await File.WriteAllBytesAsync(Path.Combine(mangaDir, $"{i}{GetExtension(url)}"), await FromUrlInternal(url));
             }
         }
 
@@ -277,15 +276,10 @@ namespace Pixeval.Objects
         {
             var root = TextBuffer.GetOrCreateDirectory(Path.Combine(Settings.Global.DownloadLocation, "Spotlight", article.Title));
 
-            var illusts = await PixivClient.Instance.GetArticleWorks(article.Id.ToString());
-            var list = new List<Task>();
-            foreach (var illust in illusts)
-            {
-                var illustration = await PixivHelper.IllustrationInfo(illust);
-                if (illustration != null) list.Add(DownloadIllust(illustration, root));
-            }
+            var tasks = (await PixivClient.Instance.GetArticleWorks(article.Id.ToString())).Select(PixivHelper.IllustrationInfo).Where(i => i != null);
+            var result = await Task.WhenAll(tasks);
 
-            await Task.WhenAll(list);
+            await Task.WhenAll(result.Select(t => DownloadIllust(t, root)));
         }
 
         private static string GetExtension(string url)

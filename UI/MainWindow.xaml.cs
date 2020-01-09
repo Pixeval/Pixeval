@@ -457,9 +457,9 @@ namespace Pixeval.UI
             MessageQueue.Enqueue(Externally.DownloadComplete(illust));
         }
 
-        private async void DownloadAllButton_OnClick(object sender, RoutedEventArgs e)
+        private void DownloadAllButton_OnClick(object sender, RoutedEventArgs e)
         {
-            await PixivEx.DownloadIllustsInternal(DownloadList.ToDownloadList.ToList());
+            PixivEx.DownloadIllustsInternal(DownloadList.ToDownloadList.ToList());
             MessageQueue.Enqueue(Externally.AllDownloadComplete);
         }
 
@@ -485,10 +485,10 @@ namespace Pixeval.UI
             MessageQueue.Enqueue(Externally.DownloadComplete(illust));
         }
 
-        private async void DownloadAllNowMenuItem_OnClick(object sender, RoutedEventArgs e)
+        private void DownloadAllNowMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             DownloadList.ToDownloadList.Clear();
-            await PixivEx.DownloadIllustsInternal((IEnumerable<Illustration>) ImageListView.ItemsSource);
+            PixivEx.DownloadIllustsInternal(GetImageSourceCopy());
             MessageQueue.Enqueue(Externally.AllDownloadComplete);
         }
 
@@ -501,13 +501,27 @@ namespace Pixeval.UI
 
         private void AddAllToDownloadListMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            DownloadList.AddRange(((IEnumerable<Illustration>) ImageListView.ItemsSource).ToList());
+            DownloadList.AddRange(GetImageSourceCopy());
             MessageQueue.Enqueue(Externally.AddedAllToDownloadList);
         }
 
         #endregion
 
         #region 用户预览
+
+        private void UserIllustsImageListView_OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                UserBrowserPageScrollViewer.LineUp();
+                UserBrowserPageScrollViewer.LineUp();
+            }
+            else
+            {
+                UserBrowserPageScrollViewer.LineDown();
+                UserBrowserPageScrollViewer.LineDown();
+            }
+        }
 
         private void UserPrevItem_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -710,7 +724,7 @@ namespace Pixeval.UI
         {
             if (SpotlightTab.IsSelected)
                 DownloadList.Add(sender.GetDataContext<Illustration>());
-            else if ((BrowsingUser() ? UserIllustsImageListView : ImageListView).ItemsSource is IEnumerable<Illustration> illusts) DownloadList.AddRange(illusts);
+            else if (GetImageSourceCopy() is { } illusts) DownloadList.AddRange(illusts);
             MessageQueue.Enqueue(Externally.AddedAllToDownloadList);
         }
 
@@ -746,6 +760,12 @@ namespace Pixeval.UI
         #endregion
 
         #region 工具
+
+        private IEnumerable<Illustration> GetImageSourceCopy()
+        {
+            var lst = (IEnumerable<Illustration>) (BrowsingUser() ? UserIllustsImageListView : ImageListView)?.ItemsSource;
+            return lst != null ? lst.ToList() : new List<Illustration>();
+        }
 
         private void QueryStartUp()
         {

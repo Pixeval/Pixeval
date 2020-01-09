@@ -76,8 +76,7 @@ namespace Pixeval.Objects
         // taken from https://stackoverflow.com/questions/146134/how-to-remove-illegal-characters-from-path-and-filenames
         public static string FormatPath(string original)
         {
-            var invalidChars = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
-            return invalidChars.Aggregate(original, (current, c) => current.Replace(c.ToString(), string.Empty));
+            return string.Concat(original.Split(Path.GetInvalidFileNameChars()));
         }
     }
 }

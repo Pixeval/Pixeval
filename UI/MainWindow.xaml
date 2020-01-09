@@ -1130,7 +1130,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 </Grid.RenderTransform>
             </Grid>
         </Grid>
-        <ScrollViewer x:Name="UserBrowserPageScrollViewer" HorizontalScrollBarVisibility="Disabled">
+        <ScrollViewer x:Name="UserBrowserPageScrollViewer" HorizontalScrollBarVisibility="Disabled" Opacity="0">
             <ScrollViewer.RenderTransform>
                 <ScaleTransform ScaleX="0" ScaleY="0"
                                 CenterX="{Binding ElementName=UserBrowserPageScrollViewer, Path=ActualWidth, Converter={StaticResource ControlCenterConverter}}"
@@ -1316,7 +1316,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 </Grid>
                 <Grid Margin="0 20 0 0">
                     <ListView x:Name="UserIllustsImageListView" VirtualizingPanel.CacheLengthUnit="Pixel"
-                              Grid.ZIndex="1"
+                              Grid.ZIndex="1" PreviewMouseWheel="UserIllustsImageListView_OnPreviewMouseWheel"
                               VirtualizingPanel.CacheLength="0 0" VirtualizingPanel.ScrollUnit="Pixel"
                               VirtualizingPanel.VirtualizationMode="Standard" HorizontalAlignment="Stretch"
                               ScrollViewer.HorizontalScrollBarVisibility="Disabled"

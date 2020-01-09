@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Pixeval.Core;
 using Pixeval.Data.ViewModel;
 using Pixeval.Objects;
 
@@ -136,7 +137,10 @@ namespace Pixeval.Data.Web.Response
                     Resolution = $"{Width}x{Height}",
                     ViewCount = (int) Stats.ViewsCount,
                     PublishDate = CreateTime
-                };
+                }.Apply(async i =>
+                {
+                    if (i.IsManga) i.MangaMetadata = (await PixivHelper.IllustrationInfo(i.Id)).MangaMetadata;
+                });
             }
         }
 

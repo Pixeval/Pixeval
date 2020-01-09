@@ -96,7 +96,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                      Text="{Binding SpotlightQueryStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <TextBox x:Name="DownloadLocationTextBox" Grid.Row="7" Grid.Column="0"
                                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                                     materialDesign:HintAssist.Hint="作品下载位置"
+                                     materialDesign:HintAssist.Hint="作品下载位置" FontSize="13"
                                      Text="{Binding Path=DownloadLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <Button x:Name="OpenFileDialogButton" Grid.Row="7" Grid.Column="1" Height="30"
                                     Width="30" VerticalAlignment="Bottom"
@@ -111,12 +111,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                 </Viewbox>
                             </Button>
                             <TextBox x:Name="ExceptTagTextBox" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
-                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" FontSize="13"
                                      materialDesign:HintAssist.Hint="请输入要排除的标签, 使用空格分隔"
                                      Text="{Binding Path=ExceptTags, Converter={StaticResource StringSplitConverter}, Mode=OneWay}"
                                      LostFocus="ExceptTagTextBox_OnLostFocus" />
                             <TextBox x:Name="ContainsTagTextBox" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2"
-                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" FontSize="13"
                                      materialDesign:HintAssist.Hint="请输入作品必须包含的标签, 使用空格分隔"
                                      Text="{Binding Path=ContainsTags, Converter={StaticResource StringSplitConverter}, Mode=OneWay}"
                                      LostFocus="ContainsTagTextBox_OnLostFocus" />
