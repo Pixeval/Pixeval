@@ -1,18 +1,25 @@
 # Pixeval
 A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF
 
-**2020/1/9更新：**
-* 将用户浏览器和作品浏览器集成到主窗口中
-* 修改了图片列表的UI
-* 压缩包内包含了完整的.NET Core运行环境，避免有些非常非常可爱的萌新不看说明不知道要装.net，缺点是体积大大增加
-**BUG修复:**
-* 修复了作者名包含不合法字符时导致的下载失败问题
+**更新：**
+* 2020/1/9
+    - 将用户浏览器和作品浏览器集成到主窗口中
+    - 修改了图片列表的UI
+    - 压缩包内包含了完整的.NET Core运行环境，避免有些非常非常可爱的萌新不看说明不知道要装.net，缺点是体积大大增加
+
+**BUG修复：**
+* 2020/1/8
+    - 修复了作者名包含不合法字符时导致的下载失败问题
+* 2020/1/10
+    - 修复了特辑下载时无法下载图集的问题
+    - 修复了刚刚启动时无法下载图片/将图片添加到下载列表的问题
+    - 优化了作者名包含不合法字符时的解决方案
 
 **下载：**
 * 前往[Release页面](https://github.com/Rinacm/Pixeval/releases)下载最新版本的Release
 * [百度网盘](https://pan.baidu.com/s/11dHmITNEeD6MAyzPLb052w) 提取码: 2vd8
-* [Google Drive](https://drive.google.com/file/d/1_WreRDQ_SLzntdTG8B-mojGlTe_yDQ10/view?usp=sharing)
-* [One Drive](https://1drv.ms/u/s!AjGDnrSBn8YtgYdUezDVr1alEpXKXA?e=2VVYWU)
+* [Google Drive](https://drive.google.com/drive/folders/1CufNXqdxKsIWej744dAZqUUQ0h53OVmb?usp=sharing)
+* [One Drive](https://1drv.ms/u/s!AjGDnrSBn8YtgYdTPxBWOiM0CV6KYg?e=1OXzF5)
 
 **如有遇到任何问题请通过以下方式联系作者：**
 * 提交[issue](https://github.com/Rinacm/Pixeval/issues)
