@@ -21,20 +21,12 @@ namespace Pixeval.Objects.Exceptions
 {
     internal class TokenNotFoundException : Exception
     {
-        public TokenNotFoundException()
-        {
-        }
+        public TokenNotFoundException() { }
 
-        protected TokenNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+        protected TokenNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
-        public TokenNotFoundException(string message) : base(message)
-        {
-        }
+        public TokenNotFoundException(string message) : base(message) { }
 
-        public TokenNotFoundException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+        public TokenNotFoundException(string message, Exception innerException) : base(message, innerException) { }
     }
 }

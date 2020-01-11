@@ -77,7 +77,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             </Style.Triggers>
         </Style>
         <DataTemplate x:Key="IllustrationTemplate" DataType="viewModel:Illustration">
-            <Grid Width="280" Height="200" x:Name="IllustrationContainer" Cursor="Hand"
+            <Grid Width="280" Height="200" x:Name="IllustrationContainer" Cursor="Hand" PreviewMouseRightButtonDown="IllustrationContainer_OnPreviewMouseRightButtonDown"
                   MouseLeftButtonDown="IllustrationContainer_OnMouseLeftButtonDown" ToolTip="{Binding Path=Id}"
                   ClipToBounds="True">
                 <Grid.ContextMenu>
@@ -998,7 +998,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     </ListView>
                 </Grid>
             </Grid>
-            <Grid x:Name="DownloadListGrid" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="300">
+            <Grid x:Name="DownloadListGrid" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="300"
+                  Opacity="0">
                 <Grid.Style>
                     <Style>
                         <Style.Triggers>
@@ -1011,11 +1012,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                                              Duration="00:00:00.3" />
                                         </Storyboard>
                                     </BeginStoryboard>
+                                    <BeginStoryboard>
+                                        <Storyboard TargetProperty="(UIElement.Opacity)">
+                                            <DoubleAnimation From="0" To="1"
+                                                             EasingFunction="{StaticResource CubicEase}"
+                                                             Duration="00:00:00.3" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
                                 </DataTrigger.EnterActions>
                                 <DataTrigger.ExitActions>
                                     <BeginStoryboard>
                                         <Storyboard TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
                                             <DoubleAnimation From="0" To="300"
+                                                             EasingFunction="{StaticResource CubicEase}"
+                                                             Duration="00:00:00.3" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                    <BeginStoryboard>
+                                        <Storyboard TargetProperty="(UIElement.Opacity)">
+                                            <DoubleAnimation From="1" To="0"
                                                              EasingFunction="{StaticResource CubicEase}"
                                                              Duration="00:00:00.3" />
                                         </Storyboard>
@@ -1034,7 +1049,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <Button Grid.Column="0" Style="{DynamicResource MaterialDesignToolButton}" Height="40"
-                                    Width="40"
+                                    Width="40" ToolTip="下载全部"
                                     x:Name="DownloadAllButton" Margin="20 0 0 0" Click="DownloadAllButton_OnClick">
                                 <Viewbox Width="30" Height="30">
                                     <Canvas Width="24" Height="24">
@@ -1044,6 +1059,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                 </Viewbox>
                             </Button>
                             <Button x:Name="ClearDownloadListButton" Click="ClearDownloadListButton_OnClick"
+                                    ToolTip="清空下载列表"
                                     Grid.Column="1" Style="{DynamicResource MaterialDesignToolButton}" Height="40"
                                     Width="40">
                                 <Viewbox Width="30" Height="30">
@@ -1054,7 +1070,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                     </Canvas>
                                 </Viewbox>
                             </Button>
-                            <Button x:Name="RetractDownloadListButton" Grid.Column="2"
+                            <Button x:Name="RetractDownloadListButton" Grid.Column="2" ToolTip="关闭"
                                     Style="{DynamicResource MaterialDesignToolButton}" Height="40" Width="40"
                                     Margin="0 0 20 0"
                                     Click="RetractDownloadListButton_OnClick">
@@ -1340,8 +1356,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     <StackPanel x:Name="IllustBrowserContainer" Background="#FAFAFC" Width="1000">
                         <materialDesign:Card x:Name="Banner" Height="100" StackPanel.ZIndex="1">
                             <Grid Background="#FAFAFC">
-                                <Image x:Name="ImageBrowserUserAvatar" HorizontalAlignment="Left" Margin="20 20 0 20"
-                                       Width="60" Height="60" Stretch="UniformToFill"
+                                <Image x:Name="IllustBrowserUserAvatar" HorizontalAlignment="Left" Margin="20 20 0 20"
+                                       Width="60" Height="60" Stretch="UniformToFill" Cursor="Hand"
                                        MouseLeftButtonDown="ImageBrowserUserAvatar_OnMouseLeftButtonDown">
                                     <Image.Triggers>
                                         <EventTrigger RoutedEvent="Image.MouseLeftButtonDown">

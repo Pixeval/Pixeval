@@ -21,20 +21,12 @@ namespace Pixeval.Objects.Exceptions
 {
     internal class TypeMismatchException : Exception
     {
-        public TypeMismatchException()
-        {
-        }
+        public TypeMismatchException() { }
 
-        protected TypeMismatchException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+        protected TypeMismatchException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
-        public TypeMismatchException(string message) : base(message)
-        {
-        }
+        public TypeMismatchException(string message) : base(message) { }
 
-        public TypeMismatchException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+        public TypeMismatchException(string message, Exception innerException) : base(message, innerException) { }
     }
 }

@@ -28,6 +28,10 @@ using Pixeval.Core;
 using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Persisting;
+#if DEBUG
+using System.Diagnostics;
+
+#endif
 
 namespace Pixeval.Objects
 {
@@ -245,6 +249,9 @@ namespace Pixeval.Objects
             else
             {
                 var url = illustration.Origin.IsNullOrEmpty() ? illustration.Large : illustration.Origin;
+#if DEBUG
+                Trace.WriteLine(url);
+#endif
                 await File.WriteAllBytesAsync(Path.Combine(path, $"[{Texts.FormatPath(illustration.UserName)}]{illustration.Id}{GetExtension(url)}"), await FromUrlInternal(url));
             }
         }
@@ -268,6 +275,9 @@ namespace Pixeval.Objects
             for (var i = 0; i < illustration.MangaMetadata.Length; i++)
             {
                 var url = illustration.MangaMetadata[i].Origin.IsNullOrEmpty() ? illustration.MangaMetadata[i].Large : illustration.MangaMetadata[i].Origin;
+#if DEBUG
+                Trace.WriteLine(url);
+#endif
                 await File.WriteAllBytesAsync(Path.Combine(mangaDir, $"{i}{GetExtension(url)}"), await FromUrlInternal(url));
             }
         }

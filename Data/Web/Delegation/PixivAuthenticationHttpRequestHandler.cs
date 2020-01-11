@@ -26,9 +26,7 @@ namespace Pixeval.Data.Web.Delegation
     {
         public static PixivAuthenticationHttpRequestHandler Instance = new PixivAuthenticationHttpRequestHandler();
 
-        private PixivAuthenticationHttpRequestHandler()
-        {
-        }
+        private PixivAuthenticationHttpRequestHandler() { }
 
         public void Handle(HttpRequestMessage httpRequestMessage)
         {

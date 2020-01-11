@@ -46,9 +46,7 @@ namespace Pixeval
         AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
         AttributeTargets.Delegate | AttributeTargets.Field | AttributeTargets.Event |
         AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.GenericParameter)]
-    public sealed class CanBeNullAttribute : Attribute
-    {
-    }
+    public sealed class CanBeNullAttribute : Attribute { }
 
     /// <summary>
     ///     Indicates that the value of the marked element can never be <c>null</c>.
@@ -64,9 +62,7 @@ namespace Pixeval
         AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
         AttributeTargets.Delegate | AttributeTargets.Field | AttributeTargets.Event |
         AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.GenericParameter)]
-    public sealed class NotNullAttribute : Attribute
-    {
-    }
+    public sealed class NotNullAttribute : Attribute { }
 
     /// <summary>
     ///     Can be applied to symbols of types derived from IEnumerable as well as to symbols of Task
@@ -87,9 +83,7 @@ namespace Pixeval
     [AttributeUsage(
         AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
         AttributeTargets.Delegate | AttributeTargets.Field)]
-    public sealed class ItemNotNullAttribute : Attribute
-    {
-    }
+    public sealed class ItemNotNullAttribute : Attribute { }
 
     /// <summary>
     ///     Can be applied to symbols of types derived from IEnumerable as well as to symbols of Task
@@ -111,9 +105,7 @@ namespace Pixeval
     [AttributeUsage(
         AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
         AttributeTargets.Delegate | AttributeTargets.Field)]
-    public sealed class ItemCanBeNullAttribute : Attribute
-    {
-    }
+    public sealed class ItemCanBeNullAttribute : Attribute { }
 
     /// <summary>
     ///     Indicates that the marked method builds string by the format pattern and (optional) arguments.
@@ -204,9 +196,7 @@ namespace Pixeval
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public sealed class InvokerParameterNameAttribute : Attribute
-    {
-    }
+    public sealed class InvokerParameterNameAttribute : Attribute { }
 
     /// <summary>
     ///     Indicates that the method is contained in a type that implements
@@ -268,9 +258,7 @@ namespace Pixeval
     [AttributeUsage(AttributeTargets.Method)]
     public sealed class NotifyPropertyChangedInvocatorAttribute : Attribute
     {
-        public NotifyPropertyChangedInvocatorAttribute()
-        {
-        }
+        public NotifyPropertyChangedInvocatorAttribute() { }
 
         public NotifyPropertyChangedInvocatorAttribute([NotNull] string parameterName)
         {
@@ -341,9 +329,7 @@ namespace Pixeval
     public sealed class ContractAnnotationAttribute : Attribute
     {
         public ContractAnnotationAttribute([NotNull] string contract)
-            : this(contract, false)
-        {
-        }
+            : this(contract, false) { }
 
         public ContractAnnotationAttribute([NotNull] string contract, bool forceFullStates)
         {
@@ -371,9 +357,7 @@ namespace Pixeval
     [AttributeUsage(AttributeTargets.All)]
     public sealed class LocalizationRequiredAttribute : Attribute
     {
-        public LocalizationRequiredAttribute() : this(true)
-        {
-        }
+        public LocalizationRequiredAttribute() : this(true) { }
 
         public LocalizationRequiredAttribute(bool required)
         {
@@ -406,9 +390,7 @@ namespace Pixeval
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class | AttributeTargets.Struct)]
-    public sealed class CannotApplyEqualityOperatorAttribute : Attribute
-    {
-    }
+    public sealed class CannotApplyEqualityOperatorAttribute : Attribute { }
 
     /// <summary>
     ///     When applied to a target attribute, specifies a requirement for any type marked
@@ -444,19 +426,13 @@ namespace Pixeval
     public sealed class UsedImplicitlyAttribute : Attribute
     {
         public UsedImplicitlyAttribute()
-            : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default)
-        {
-        }
+            : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default) { }
 
         public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags)
-            : this(useKindFlags, ImplicitUseTargetFlags.Default)
-        {
-        }
+            : this(useKindFlags, ImplicitUseTargetFlags.Default) { }
 
         public UsedImplicitlyAttribute(ImplicitUseTargetFlags targetFlags)
-            : this(ImplicitUseKindFlags.Default, targetFlags)
-        {
-        }
+            : this(ImplicitUseKindFlags.Default, targetFlags) { }
 
         public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
         {
@@ -481,19 +457,13 @@ namespace Pixeval
     public sealed class MeansImplicitUseAttribute : Attribute
     {
         public MeansImplicitUseAttribute()
-            : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default)
-        {
-        }
+            : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default) { }
 
         public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags)
-            : this(useKindFlags, ImplicitUseTargetFlags.Default)
-        {
-        }
+            : this(useKindFlags, ImplicitUseTargetFlags.Default) { }
 
         public MeansImplicitUseAttribute(ImplicitUseTargetFlags targetFlags)
-            : this(ImplicitUseKindFlags.Default, targetFlags)
-        {
-        }
+            : this(ImplicitUseKindFlags.Default, targetFlags) { }
 
         public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
         {
@@ -557,9 +527,7 @@ namespace Pixeval
     [MeansImplicitUse(ImplicitUseTargetFlags.WithMembers)]
     public sealed class PublicAPIAttribute : Attribute
     {
-        public PublicAPIAttribute()
-        {
-        }
+        public PublicAPIAttribute() { }
 
         public PublicAPIAttribute([NotNull] string comment)
         {
@@ -576,9 +544,7 @@ namespace Pixeval
     ///     If the parameter is an enumerable, indicates that it is enumerated while the method is executed.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public sealed class InstantHandleAttribute : Attribute
-    {
-    }
+    public sealed class InstantHandleAttribute : Attribute { }
 
     /// <summary>
     ///     Indicates that a method does not make any observable state changes.
@@ -594,9 +560,7 @@ namespace Pixeval
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Method)]
-    public sealed class PureAttribute : Attribute
-    {
-    }
+    public sealed class PureAttribute : Attribute { }
 
     /// <summary>
     ///     Indicates that the return value of the method invocation must be used.
@@ -612,9 +576,7 @@ namespace Pixeval
     [AttributeUsage(AttributeTargets.Method)]
     public sealed class MustUseReturnValueAttribute : Attribute
     {
-        public MustUseReturnValueAttribute()
-        {
-        }
+        public MustUseReturnValueAttribute() { }
 
         public MustUseReturnValueAttribute([NotNull] string justification)
         {
@@ -645,9 +607,7 @@ namespace Pixeval
     [AttributeUsage(
         AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Parameter | AttributeTargets.Method |
         AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Struct | AttributeTargets.GenericParameter)]
-    public sealed class ProvidesContextAttribute : Attribute
-    {
-    }
+    public sealed class ProvidesContextAttribute : Attribute { }
 
     /// <summary>
     ///     Indicates that a parameter is a path to a file or a folder within a web project.
@@ -656,9 +616,7 @@ namespace Pixeval
     [AttributeUsage(AttributeTargets.Parameter)]
     public sealed class PathReferenceAttribute : Attribute
     {
-        public PathReferenceAttribute()
-        {
-        }
+        public PathReferenceAttribute() { }
 
         public PathReferenceAttribute([NotNull] [PathReference] string basePath)
         {
@@ -693,9 +651,7 @@ namespace Pixeval
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Method)]
-    public sealed class SourceTemplateAttribute : Attribute
-    {
-    }
+    public sealed class SourceTemplateAttribute : Attribute { }
 
     /// <summary>
     ///     Allows specifying a macro for a parameter of a <see cref="SourceTemplateAttribute">source template</see>.
@@ -834,9 +790,7 @@ namespace Pixeval
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method | AttributeTargets.Field | AttributeTargets.Property)]
     public sealed class AspMvcActionAttribute : Attribute
     {
-        public AspMvcActionAttribute()
-        {
-        }
+        public AspMvcActionAttribute() { }
 
         public AspMvcActionAttribute([NotNull] string anonymousProperty)
         {
@@ -855,9 +809,7 @@ namespace Pixeval
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]
     public sealed class AspMvcAreaAttribute : Attribute
     {
-        public AspMvcAreaAttribute()
-        {
-        }
+        public AspMvcAreaAttribute() { }
 
         public AspMvcAreaAttribute([NotNull] string anonymousProperty)
         {
@@ -877,9 +829,7 @@ namespace Pixeval
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method | AttributeTargets.Field | AttributeTargets.Property)]
     public sealed class AspMvcControllerAttribute : Attribute
     {
-        public AspMvcControllerAttribute()
-        {
-        }
+        public AspMvcControllerAttribute() { }
 
         public AspMvcControllerAttribute([NotNull] string anonymousProperty)
         {
@@ -895,18 +845,14 @@ namespace Pixeval
     ///     for custom wrappers similar to <c>System.Web.Mvc.Controller.View(String, String)</c>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]
-    public sealed class AspMvcMasterAttribute : Attribute
-    {
-    }
+    public sealed class AspMvcMasterAttribute : Attribute { }
 
     /// <summary>
     ///     ASP.NET MVC attribute. Indicates that the marked parameter is an MVC model type. Use this attribute
     ///     for custom wrappers similar to <c>System.Web.Mvc.Controller.View(String, Object)</c>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public sealed class AspMvcModelTypeAttribute : Attribute
-    {
-    }
+    public sealed class AspMvcModelTypeAttribute : Attribute { }
 
     /// <summary>
     ///     ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter is an MVC
@@ -915,17 +861,13 @@ namespace Pixeval
     ///     <c>System.Web.Mvc.Html.RenderPartialExtensions.RenderPartial(HtmlHelper, String)</c>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method | AttributeTargets.Field | AttributeTargets.Property)]
-    public sealed class AspMvcPartialViewAttribute : Attribute
-    {
-    }
+    public sealed class AspMvcPartialViewAttribute : Attribute { }
 
     /// <summary>
     ///     ASP.NET MVC attribute. Allows disabling inspections for MVC views within a class or a method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public sealed class AspMvcSuppressViewErrorAttribute : Attribute
-    {
-    }
+    public sealed class AspMvcSuppressViewErrorAttribute : Attribute { }
 
     /// <summary>
     ///     ASP.NET MVC attribute. Indicates that a parameter is an MVC display template.
@@ -933,9 +875,7 @@ namespace Pixeval
     ///     <c>System.Web.Mvc.Html.DisplayExtensions.DisplayForModel(HtmlHelper, String)</c>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]
-    public sealed class AspMvcDisplayTemplateAttribute : Attribute
-    {
-    }
+    public sealed class AspMvcDisplayTemplateAttribute : Attribute { }
 
     /// <summary>
     ///     ASP.NET MVC attribute. Indicates that the marked parameter is an MVC editor template.
@@ -943,9 +883,7 @@ namespace Pixeval
     ///     <c>System.Web.Mvc.Html.EditorExtensions.EditorForModel(HtmlHelper, String)</c>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]
-    public sealed class AspMvcEditorTemplateAttribute : Attribute
-    {
-    }
+    public sealed class AspMvcEditorTemplateAttribute : Attribute { }
 
     /// <summary>
     ///     ASP.NET MVC attribute. Indicates that the marked parameter is an MVC template.
@@ -953,9 +891,7 @@ namespace Pixeval
     ///     <c>System.ComponentModel.DataAnnotations.UIHintAttribute(System.String)</c>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]
-    public sealed class AspMvcTemplateAttribute : Attribute
-    {
-    }
+    public sealed class AspMvcTemplateAttribute : Attribute { }
 
     /// <summary>
     ///     ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter
@@ -964,27 +900,21 @@ namespace Pixeval
     ///     <c>System.Web.Mvc.Controller.View(Object)</c>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method | AttributeTargets.Field | AttributeTargets.Property)]
-    public sealed class AspMvcViewAttribute : Attribute
-    {
-    }
+    public sealed class AspMvcViewAttribute : Attribute { }
 
     /// <summary>
     ///     ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter
     ///     is an MVC view component name.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]
-    public sealed class AspMvcViewComponentAttribute : Attribute
-    {
-    }
+    public sealed class AspMvcViewComponentAttribute : Attribute { }
 
     /// <summary>
     ///     ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter
     ///     is an MVC view component view. If applied to a method, the MVC view component view name is default.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method | AttributeTargets.Field | AttributeTargets.Property)]
-    public sealed class AspMvcViewComponentViewAttribute : Attribute
-    {
-    }
+    public sealed class AspMvcViewComponentViewAttribute : Attribute { }
 
     /// <summary>
     ///     ASP.NET MVC attribute. When applied to a parameter of an attribute,
@@ -1000,16 +930,12 @@ namespace Pixeval
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property)]
-    public sealed class AspMvcActionSelectorAttribute : Attribute
-    {
-    }
+    public sealed class AspMvcActionSelectorAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Field)]
     public sealed class HtmlElementAttributesAttribute : Attribute
     {
-        public HtmlElementAttributesAttribute()
-        {
-        }
+        public HtmlElementAttributesAttribute() { }
 
         public HtmlElementAttributesAttribute([NotNull] string name)
         {
@@ -1038,9 +964,7 @@ namespace Pixeval
     ///     <c>System.Web.WebPages.WebPageBase.RenderSection(String)</c>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
-    public sealed class RazorSectionAttribute : Attribute
-    {
-    }
+    public sealed class RazorSectionAttribute : Attribute { }
 
     /// <summary>
     ///     Indicates how method, constructor invocation, or property access
@@ -1108,9 +1032,7 @@ namespace Pixeval
     ///     <see cref="AssertionConditionAttribute" /> attribute.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public sealed class AssertionMethodAttribute : Attribute
-    {
-    }
+    public sealed class AssertionMethodAttribute : Attribute { }
 
     /// <summary>
     ///     Indicates the condition parameter of the assertion method. The method itself should be
@@ -1153,9 +1075,7 @@ namespace Pixeval
     /// </summary>
     [Obsolete("Use [ContractAnnotation('=> halt')] instead")]
     [AttributeUsage(AttributeTargets.Method)]
-    public sealed class TerminatesProgramAttribute : Attribute
-    {
-    }
+    public sealed class TerminatesProgramAttribute : Attribute { }
 
     /// <summary>
     ///     Indicates that method is pure LINQ method, with postponed enumeration (like Enumerable.Select,
@@ -1163,9 +1083,7 @@ namespace Pixeval
     ///     of delegate type by analyzing LINQ method chains.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public sealed class LinqTunnelAttribute : Attribute
-    {
-    }
+    public sealed class LinqTunnelAttribute : Attribute { }
 
     /// <summary>
     ///     Indicates that IEnumerable passed as a parameter is not enumerated.
@@ -1186,17 +1104,13 @@ namespace Pixeval
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public sealed class NoEnumerationAttribute : Attribute
-    {
-    }
+    public sealed class NoEnumerationAttribute : Attribute { }
 
     /// <summary>
     ///     Indicates that the marked parameter is a regular expression pattern.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public sealed class RegexPatternAttribute : Attribute
-    {
-    }
+    public sealed class RegexPatternAttribute : Attribute { }
 
     /// <summary>
     ///     Prevents the Member Reordering feature from tossing members of the marked class.
@@ -1206,18 +1120,14 @@ namespace Pixeval
     /// </remarks>
     [AttributeUsage(
         AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Struct | AttributeTargets.Enum)]
-    public sealed class NoReorderAttribute : Attribute
-    {
-    }
+    public sealed class NoReorderAttribute : Attribute { }
 
     /// <summary>
     ///     XAML attribute. Indicates the type that has <c>ItemsSource</c> property and should be treated
     ///     as <c>ItemsControl</c>-derived type, to enable inner items <c>DataContext</c> type resolve.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public sealed class XamlItemsControlAttribute : Attribute
-    {
-    }
+    public sealed class XamlItemsControlAttribute : Attribute { }
 
     /// <summary>
     ///     XAML attribute. Indicates the property of some <c>BindingBase</c>-derived type, that
@@ -1229,9 +1139,7 @@ namespace Pixeval
     ///     marked with the <see cref="XamlItemsControlAttribute" /> attribute.
     /// </remarks>
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class XamlItemBindingOfItemsControlAttribute : Attribute
-    {
-    }
+    public sealed class XamlItemBindingOfItemsControlAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public sealed class AspChildControlTypeAttribute : Attribute
@@ -1250,19 +1158,13 @@ namespace Pixeval
     }
 
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method)]
-    public sealed class AspDataFieldAttribute : Attribute
-    {
-    }
+    public sealed class AspDataFieldAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method)]
-    public sealed class AspDataFieldsAttribute : Attribute
-    {
-    }
+    public sealed class AspDataFieldsAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class AspMethodPropertyAttribute : Attribute
-    {
-    }
+    public sealed class AspMethodPropertyAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public sealed class AspRequiredAttributeAttribute : Attribute
@@ -1349,27 +1251,17 @@ namespace Pixeval
     }
 
     [AttributeUsage(AttributeTargets.Method)]
-    public sealed class RazorHelperCommonAttribute : Attribute
-    {
-    }
+    public sealed class RazorHelperCommonAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class RazorLayoutAttribute : Attribute
-    {
-    }
+    public sealed class RazorLayoutAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Method)]
-    public sealed class RazorWriteLiteralMethodAttribute : Attribute
-    {
-    }
+    public sealed class RazorWriteLiteralMethodAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Method)]
-    public sealed class RazorWriteMethodAttribute : Attribute
-    {
-    }
+    public sealed class RazorWriteMethodAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Parameter)]
-    public sealed class RazorWriteMethodParameterAttribute : Attribute
-    {
-    }
+    public sealed class RazorWriteMethodParameterAttribute : Attribute { }
 }

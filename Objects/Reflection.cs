@@ -15,7 +15,6 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
-using System.Linq;
 using System.Reflection;
 
 namespace Pixeval.Objects
@@ -49,7 +48,8 @@ namespace Pixeval.Objects
 
         public static object NewInstance(Type type)
         {
-            return type.GetConstructors().First(ctor => !ctor.GetParameters().Any()).Invoke(new object[] { });
+            // return type.GetConstructors().First(ctor => !ctor.GetParameters().Any()).Invoke(new object[] { });
+            return Activator.CreateInstance(type);
         }
     }
 }

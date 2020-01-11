@@ -20,7 +20,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -39,13 +38,17 @@ using Pixeval.Data.Web;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
 using Pixeval.Objects;
-using Pixeval.Objects.Exceptions;
-using Pixeval.Objects.Exceptions.Logger;
 using Pixeval.Persisting;
 using Pixeval.UI.UserControls;
 using Refit;
 using Xceed.Wpf.AvalonDock.Controls;
 using static Pixeval.Objects.UiHelper;
+
+#if RELEASE
+using System.Net.Http;
+using Pixeval.Objects.Exceptions;
+using Pixeval.Objects.Exceptions.Logger;
+#endif
 
 namespace Pixeval.UI
 {
@@ -75,8 +78,7 @@ namespace Pixeval.UI
         private static void Dispatcher_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
 #if RELEASE
-            switch (e.Exception)
-            {
+            switch (e.Exception) {
                 case QueryNotRespondingException _:
                     MessageQueue.Enqueue(Externally.QueryNotResponding);
                     break;
@@ -177,6 +179,7 @@ namespace Pixeval.UI
         private void IllustrationContainer_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             OpenIllustBrowser(sender.GetDataContext<Illustration>());
+            e.Handled = true;
         }
 
         #region 主窗口
@@ -459,6 +462,7 @@ namespace Pixeval.UI
 
         private void DownloadAllButton_OnClick(object sender, RoutedEventArgs e)
         {
+            DownloadList.ToDownloadList.Clear();
             PixivEx.DownloadIllustsInternal(DownloadList.ToDownloadList.ToList());
             MessageQueue.Enqueue(Externally.AllDownloadComplete);
         }
@@ -650,6 +654,11 @@ namespace Pixeval.UI
 
         #region 作品浏览器
 
+        private void IllustrationContainer_OnPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+        }
+
         private async void IllustBrowserDialogHost_OnDialogOpened(object sender, DialogOpenedEventArgs e)
         {
             var context = sender.GetDataContext<Illustration>();
@@ -660,7 +669,7 @@ namespace Pixeval.UI
             IllustBrowserContainer.Children.Insert(1, template);
 
             var userInfo = await HttpClientFactory.AppApiService.GetUserInformation(new UserInformationRequest {Id = context.UserId});
-            SetImageSource(ImageBrowserUserAvatar, await PixivEx.GetAndCreateOrLoadFromCacheInternal(userInfo.UserEntity.ProfileImageUrls.Medium, $"{userInfo.UserEntity.Id}_avatar"));
+            SetImageSource(IllustBrowserUserAvatar, await PixivEx.GetAndCreateOrLoadFromCacheInternal(userInfo.UserEntity.ProfileImageUrls.Medium, $"{userInfo.UserEntity.Id}_avatar"));
 
             if (context.IsManga)
             {
@@ -693,7 +702,7 @@ namespace Pixeval.UI
         private void IllustBrowserDialogHost_OnDialogClosing(object sender, DialogClosingEventArgs e)
         {
             IllustBrowserContainer.Children.RemoveAt(1);
-            ReleaseImage(ImageBrowserUserAvatar);
+            ReleaseImage(IllustBrowserUserAvatar);
             IllustBrowserDialogHost.DataContext = null;
         }
 
@@ -730,6 +739,7 @@ namespace Pixeval.UI
 
         private void ImageBrowserUserAvatar_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            IllustBrowserDialogHost.CloseControl();
             SetUserBrowserContext(new User {Id = sender.GetDataContext<Illustration>().UserId});
         }
 

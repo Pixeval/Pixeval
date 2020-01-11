@@ -21,20 +21,12 @@ namespace Pixeval.Objects.Exceptions
 {
     public class DnsQueryFailedException : Exception
     {
-        public DnsQueryFailedException()
-        {
-        }
+        public DnsQueryFailedException() { }
 
-        protected DnsQueryFailedException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+        protected DnsQueryFailedException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
-        public DnsQueryFailedException(string message) : base(message)
-        {
-        }
+        public DnsQueryFailedException(string message) : base(message) { }
 
-        public DnsQueryFailedException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+        public DnsQueryFailedException(string message, Exception innerException) : base(message, innerException) { }
     }
 }
