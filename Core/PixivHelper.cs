@@ -19,11 +19,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Response;
 using Pixeval.Objects;
+using Pixeval.Objects.Exceptions.Logger;
 using Pixeval.Persisting;
+using Refit;
 
 namespace Pixeval.Core
 {
@@ -35,6 +38,11 @@ namespace Pixeval.Core
             try
             {
                 response = (await HttpClientFactory.AppApiService.GetSingle(id)).IllustInfo;
+            }
+            catch (ApiException e)
+            {
+                ExceptionLogger.WriteException(e);
+                return null;
             }
             catch (Exception)
             {
@@ -80,19 +88,22 @@ namespace Pixeval.Core
             {
                 if (useCounter && counter > Settings.Global.QueryPages * 10) break;
                 await foreach (var illust in pixivIterator.MoveNextAsync())
+                {
                     if (typeof(T) == typeof(Illustration))
                     {
                         var i = illust as Illustration;
                         if (IllustNotMatchCondition(Settings.Global.ExceptTags, Settings.Global.ContainsTags, i))
                             continue;
 
-                        if (container is Collection<Illustration> illustrationContainer) illustrationContainer.AddSorted(i, Settings.Global.SortOnInserting ? IllustrationPopularityComparator.Instance : (IComparer<Illustration>) IllustrationPublishDateComparator.Instance);
+                        if (container is Collection<Illustration> illustrationContainer) illustrationContainer.AddSorted(i, Settings.Global.SortOnInserting ? IllustrationPopularityComparator.Instance : (IComparer<Illustration>)IllustrationPublishDateComparator.Instance);
                     }
                     else
                     {
                         container.Add(illust);
                     }
+                }
 
+                await Task.Delay(1000);
                 counter++;
             }
         }

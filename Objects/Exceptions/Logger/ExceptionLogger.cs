@@ -18,14 +18,17 @@ using System;
 using System.Globalization;
 using System.IO;
 using Pixeval.Persisting;
+using Refit;
 
 namespace Pixeval.Objects.Exceptions.Logger
 {
     public class ExceptionLogger
     {
+        private const string Separator = "---------------------------------------------------------------------------------";
+
         public static void WriteException(Exception e)
         {
-            File.WriteAllTextAsync(Path.Combine(PixevalEnvironment.ExceptionReportFolder, $"{DateTime.Now.ToString(CultureInfo.InvariantCulture)}.txt".Replace("/", "-").Replace(":", "-")), e.ToString());
+            File.WriteAllTextAsync(Path.Combine(PixevalEnvironment.ExceptionReportFolder, $"{DateTime.Now.ToString(CultureInfo.InvariantCulture)}.txt".Replace("/", "-").Replace(":", "-")), e is ApiException apiException ? apiException + Environment.NewLine + Separator + Environment.NewLine + apiException.Content : e.ToString());
         }
     }
 }

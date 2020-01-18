@@ -15,9 +15,11 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using Pixeval.Objects.Exceptions.Logger;
 using Pixeval.Persisting;
+using Refit;
 
 namespace Pixeval
 {
@@ -25,17 +27,30 @@ namespace Pixeval
     {
         public App()
         {
-#if RELEASE
             if (Dispatcher != null)
                 Dispatcher.UnhandledException += (sender, args) => DispatcherOnUnhandledException(args.Exception);
             AppDomain.CurrentDomain.UnhandledException += (sender, args) => DispatcherOnUnhandledException((Exception) args.ExceptionObject);
             TaskScheduler.UnobservedTaskException += (sender, args) => DispatcherOnUnhandledException(args.Exception);
-#endif
         }
 
         private static void DispatcherOnUnhandledException(Exception e)
         {
-            ExceptionLogger.WriteException(e);
+#if RELEASE
+            if (!(e is NullReferenceException))
+            {
+                if (e is ApiException apiException)
+                {
+                    ExceptionLogger.WriteException(apiException);
+                    return;
+                }
+                ExceptionLogger.WriteException(e);
+            }
+#elif DEBUG
+            if (e is ApiException apiException)
+            {
+                MessageBox.Show(apiException.Content);
+            }
+#endif
         }
 
         protected override async void OnStartup(StartupEventArgs e)
