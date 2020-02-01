@@ -1,6 +1,8 @@
 # Pixeval
 A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF
 
+**春节期间摸鱼，有事春节后修**
+
 **更新：**
 * 2020/1/9
     - 将用户浏览器和作品浏览器集成到主窗口中
