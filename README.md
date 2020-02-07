@@ -3,6 +3,10 @@ A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF
 
 **春节期间摸鱼，有事春节后修**
 
+**推荐：**
+* 如果你希望找到一个Android上的免代理客户端，那么我推荐[@Notsfsssf](https://github.com/Notsfsssf)的作品[Pix-EzViewer](https://github.com/Notsfsssf/Pix-EzViewer)
+* 如果你更习惯于使用UWP，那么我建议你尝试由[@tobiichiamane](https://github.com/tobiichiamane/pixivfs-uwp)开发的[@pixivuwp](https://github.com/Notsfsssf/Pix-EzViewer)
+
 **更新：**
 * 2020/1/9
     - 将用户浏览器和作品浏览器集成到主窗口中
