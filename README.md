@@ -3,7 +3,7 @@ A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF
 
 **推荐：**
 * 如果你希望找到一个Android上的免代理客户端，那么我推荐[@Notsfsssf](https://github.com/Notsfsssf)的作品[Pix-EzViewer](https://github.com/Notsfsssf/Pix-EzViewer) (本项目的免代理实现也源于此)
-* 如果你更习惯于使用UWP，那么我建议你尝试由[@tobiichiamane](https://github.com/tobiichiamane/pixivfs-uwp)开发的[@pixivuwp](https://github.com/Notsfsssf/Pix-EzViewer)
+* 如果你更习惯于使用UWP，那么我建议你尝试由[@tobiichiamane](https://github.com/tobiichiamane)开发的[@pixivuwp](https://github.com/tobiichiamane/pixivfs-uwp)
 
 **更新：**
 * 2020/1/9
@@ -31,6 +31,7 @@ A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF
 * [百度网盘](https://pan.baidu.com/s/11dHmITNEeD6MAyzPLb052w) 提取码: 2vd8
 * [Google Drive](https://drive.google.com/drive/folders/1CufNXqdxKsIWej744dAZqUUQ0h53OVmb?usp=sharing)
 * [One Drive](https://1drv.ms/u/s!AjGDnrSBn8YtgYdTPxBWOiM0CV6KYg?e=1OXzF5)
+* [下载站点](http://47.95.218.243/Pixeval.exe)
 
 **如有遇到任何问题请通过以下方式联系作者：**
 * 提交[issue](https://github.com/Rinacm/Pixeval/issues/new)
@@ -41,6 +42,7 @@ A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF
 如果你对于某一部分的设计有不同的见解，或者你希望增加某些功能，欢迎通过提交[issue](https://github.com/Rinacm/Pixeval/issues/new)/联系decem0730@gmail.com/添加qq群439964524来进行反馈，如果你对于WPF/C#有了解并希望为该项目尽一份力，欢迎通过提交[Pull Request](https://github.com/Rinacm/Pixeval/pulls)来为本项目目前只有我一人的开发者团队添砖加瓦，谢谢
 
 **鸣谢：**
+* [@Notsfsssf](https://github.com/Notsfsssf)
 * [@ControlNet](https://github.com/ControlNet)
 * [@wulunshijian](https://github.com/wulunshijian)
 * [@duiweiya](https://github.com/duiweiya)
