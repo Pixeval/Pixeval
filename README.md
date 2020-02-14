@@ -1,8 +1,6 @@
 # Pixeval
 A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF
 
-**春节期间摸鱼，有事春节后修**
-
 **推荐：**
 * 如果你希望找到一个Android上的免代理客户端，那么我推荐[@Notsfsssf](https://github.com/Notsfsssf)的作品[Pix-EzViewer](https://github.com/Notsfsssf/Pix-EzViewer) (本项目的免代理实现也源于此)
 * 如果你更习惯于使用UWP，那么我建议你尝试由[@tobiichiamane](https://github.com/tobiichiamane/pixivfs-uwp)开发的[@pixivuwp](https://github.com/Notsfsssf/Pix-EzViewer)
@@ -12,6 +10,8 @@ A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF
     - 将用户浏览器和作品浏览器集成到主窗口中
     - 修改了图片列表的UI
     - 压缩包内包含了完整的.NET Core运行环境，避免有些非常非常可爱的萌新不看说明不知道要装.net，缺点是体积大大增加
+* 2020/2/14
+    - 优化了代码，删除了部分无用函数和工具类
 
 **BUG修复：**
 * 2020/1/8
@@ -20,6 +20,11 @@ A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF
     - 修复了特辑下载时无法下载图集的问题
     - 修复了刚刚启动时无法下载图片/将图片添加到下载列表的问题
     - 优化了作者名包含不合法字符时的解决方案
+* 2020/2/14
+    - 修复了查看特辑时作品信息显示不正确的bug
+    - 修复了查看某些作品时上传日期显示0001/01/01的bug
+    - 修复了点击缩略图时可能无法打开大图的bug
+    - 都0202年了，我依然没有女朋友，这也是个bug
 
 **下载：**
 * 前往[Release页面](https://github.com/Rinacm/Pixeval/releases)下载最新版本的Release
