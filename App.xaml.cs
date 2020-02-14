@@ -43,6 +43,7 @@ namespace Pixeval
                     ExceptionLogger.WriteException(apiException);
                     return;
                 }
+
                 ExceptionLogger.WriteException(e);
             }
 #elif DEBUG

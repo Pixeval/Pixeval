@@ -30,10 +30,6 @@ using Refit;
 
 namespace Pixeval.Data.Web.Delegation
 {
-    /// <summary>
-    ///     Use a free <a href="https://1.0.0.1">DNS server</a> as DNS resolver instead of system default to avoid DNS
-    ///     pollution, thanks to <a href="https://github.com/Notsfsssf">@Notsfsssf</a>'s idea
-    /// </summary>
     public abstract class DnsResolver
     {
         public static readonly ThreadLocal<Dictionary<string, List<IPAddress>>> DnsCache = new ThreadLocal<Dictionary<string, List<IPAddress>>>(() => new Dictionary<string, List<IPAddress>>());
@@ -55,11 +51,6 @@ namespace Pixeval.Data.Web.Delegation
                 });
         }
 
-        /// <summary>
-        ///     query dns according to specified <see cref="hostname" />
-        /// </summary>
-        /// <param name="hostname"></param>
-        /// <returns>the result of dns query</returns>
         public async Task<IReadOnlyList<IPAddress>> Lookup(string hostname)
         {
             if (DnsCache.Value.ContainsKey(hostname)) return DnsCache.Value[hostname].ToImmutableList();

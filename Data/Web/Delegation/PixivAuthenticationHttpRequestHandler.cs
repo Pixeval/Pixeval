@@ -24,11 +24,11 @@ namespace Pixeval.Data.Web.Delegation
 {
     public class PixivAuthenticationHttpRequestHandler : IHttpRequestHandler
     {
-        public static PixivAuthenticationHttpRequestHandler Instance = new PixivAuthenticationHttpRequestHandler();
+        public static readonly PixivAuthenticationHttpRequestHandler Instance = new PixivAuthenticationHttpRequestHandler();
 
-        private PixivAuthenticationHttpRequestHandler() { }
+        protected PixivAuthenticationHttpRequestHandler() { }
 
-        public void Handle(HttpRequestMessage httpRequestMessage)
+        public virtual void Handle(HttpRequestMessage httpRequestMessage)
         {
             var token = httpRequestMessage.Headers.Authorization;
             if (token != null)

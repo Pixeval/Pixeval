@@ -34,15 +34,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             <valueConverters:QueryR18ToggleButtonIsCheckedConverter x:Key="QueryR18ToggleButtonIsCheckedConverter" />
         </materialDesign:DialogHost.Resources>
         <materialDesign:DialogHost.DialogContent>
-            <materialDesign:Card Height="620" Width="800">
+            <materialDesign:Card Height="520" Width="800">
                 <Grid>
                     <TextBlock Text="Pixeval设置" FontSize="20" HorizontalAlignment="Center" Margin="0 30 0 0"
                                VerticalAlignment="Top" Height="30" />
                     <Separator VerticalAlignment="Top" Margin="50 70 50 0" />
-                    <StackPanel VerticalAlignment="Top" Margin="100 100 100 0">
+                    <StackPanel VerticalAlignment="Top" Margin="100 90 100 0">
                         <Grid TextElement.FontSize="15">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="40" />
                                 <RowDefinition Height="40" />
                                 <RowDefinition Height="40" />
                                 <RowDefinition Height="40" />
@@ -62,43 +61,38 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                             <ToggleButton x:Name="IsSortWhileInsertIllustToImageBox" Grid.Row="0" Grid.Column="1"
                                           Background="#66CCFF" HorizontalAlignment="Right"
                                           IsChecked="{Binding Path=SortOnInserting, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="缓存缩略图, 开启后可优化加载速度"
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="关闭R-18/R-18G搜索"
                                        VerticalAlignment="Center" />
-                            <ToggleButton x:Name="IsCacheThumbnail" Grid.Row="1" Grid.Column="1"
-                                          Background="#66CCFF" HorizontalAlignment="Right"
-                                          IsChecked="{Binding Path=CachingThumbnail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBlock Grid.Row="2" Grid.Column="0" Text="关闭R-18/R-18G搜索"
-                                       VerticalAlignment="Center" />
-                            <ToggleButton x:Name="QueryR18" Grid.Row="2" Grid.Column="1" Background="#66CCFF"
+                            <ToggleButton x:Name="QueryR18" Grid.Row="1" Grid.Column="1" Background="#66CCFF"
                                           HorizontalAlignment="Right" Checked="QueryR18_OnChecked"
                                           Unchecked="QueryR18_OnUnchecked"
                                           IsChecked="{Binding Path=ExceptTags, Mode=OneWay, Converter={StaticResource QueryR18ToggleButtonIsCheckedConverter}}" />
-                            <TextBlock Grid.Row="3" Grid.Column="0" Text="搜索作品的最低收藏数"
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="搜索作品的最低收藏数"
                                        VerticalAlignment="Center" />
-                            <Slider Maximum="2000" Minimum="0" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                            <Slider Maximum="2000" Minimum="0" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
                                     Margin="200 0 0 0" VerticalAlignment="Center" Foreground="#66CCFF"
                                     AutoToolTipPlacement="BottomRight" AutoToolTipPrecision="0"
                                     Value="{Binding Path=MinBookmark, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBlock Grid.Row="4" Grid.Column="0" Text="搜索页数, 最低为1, 最高为10"
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="搜索页数, 最低为1, 最高为10"
                                        VerticalAlignment="Center" />
-                            <Slider Maximum="10" Minimum="1" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                            <Slider Maximum="10" Minimum="1" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
                                     Margin="200 0 0 0" VerticalAlignment="Center" Foreground="#66CCFF"
                                     Value="{Binding QueryPages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBlock Grid.Row="5" Grid.Column="0" Text="图片搜索起始页, 最低为1"
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="图片搜索起始页, 最低为1"
                                        VerticalAlignment="Center" />
-                            <TextBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="200 0 0 0"
+                            <TextBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="200 0 0 0"
                                      VerticalAlignment="Center"
                                      Text="{Binding QueryStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBlock Grid.Row="6" Grid.Column="0"
+                            <TextBlock Grid.Row="5" Grid.Column="0"
                                        Text="特辑搜索起始页, 最低为1 (特辑和图片搜索使用同一个搜索页数设置)" VerticalAlignment="Center" />
-                            <TextBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="480 0 0 0"
+                            <TextBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="480 0 0 0"
                                      VerticalAlignment="Center"
                                      Text="{Binding SpotlightQueryStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBox x:Name="DownloadLocationTextBox" Grid.Row="7" Grid.Column="0"
+                            <TextBox x:Name="DownloadLocationTextBox" Grid.Row="6" Grid.Column="0"
                                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                                      materialDesign:HintAssist.Hint="作品下载位置" FontSize="13"
                                      Text="{Binding Path=DownloadLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            <Button x:Name="OpenFileDialogButton" Grid.Row="7" Grid.Column="1" Height="30"
+                            <Button x:Name="OpenFileDialogButton" Grid.Row="6" Grid.Column="1" Height="30"
                                     Width="30" VerticalAlignment="Bottom"
                                     Style="{DynamicResource MaterialDesignToolButton}"
                                     Click="OpenFileDialogButton_OnClick">
@@ -110,42 +104,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                     </Canvas>
                                 </Viewbox>
                             </Button>
-                            <TextBox x:Name="ExceptTagTextBox" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
+                            <TextBox x:Name="ExceptTagTextBox" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
                                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}" FontSize="13"
                                      materialDesign:HintAssist.Hint="请输入要排除的标签, 使用空格分隔"
                                      Text="{Binding Path=ExceptTags, Converter={StaticResource StringSplitConverter}, Mode=OneWay}"
                                      LostFocus="ExceptTagTextBox_OnLostFocus" />
-                            <TextBox x:Name="ContainsTagTextBox" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2"
+                            <TextBox x:Name="ContainsTagTextBox" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
                                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}" FontSize="13"
                                      materialDesign:HintAssist.Hint="请输入作品必须包含的标签, 使用空格分隔"
                                      Text="{Binding Path=ContainsTags, Converter={StaticResource StringSplitConverter}, Mode=OneWay}"
                                      LostFocus="ContainsTagTextBox_OnLostFocus" />
                         </Grid>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 20 0 0">
-                            <Button x:Name="ClearSettingButton" ToolTip="还原为默认"
-                                    Height="40" Width="40" Margin="0 0 20 0"
-                                    Style="{DynamicResource MaterialDesignToolButton}"
-                                    Click="ClearSettingButton_OnClick">
-                                <Viewbox Width="30" Height="30">
-                                    <Canvas Width="24" Height="24">
-                                        <Path
-                                            Data="M13,3A9,9 0 0,0 4,12H1L4.89,15.89L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3Z"
-                                            Fill="Gray" />
-                                    </Canvas>
-                                </Viewbox>
-                            </Button>
-                            <Button Margin="20 0 0 0" x:Name="ClearCacheButton" Width="40" Height="40"
-                                    ToolTip="清理缓存" Style="{DynamicResource MaterialDesignToolButton}"
-                                    Click="ClearCacheButton_OnClick">
-                                <Viewbox Width="30" Height="30">
-                                    <Canvas Width="24" Height="24">
-                                        <Path
-                                            Data="M19.36,2.72L20.78,4.14L15.06,9.85C16.13,11.39 16.28,13.24 15.38,14.44L9.06,8.12C10.26,7.22 12.11,7.37 13.65,8.44L19.36,2.72M5.93,17.57C3.92,15.56 2.69,13.16 2.35,10.92L7.23,8.83L14.67,16.27L12.58,21.15C10.34,20.81 7.94,19.58 5.93,17.57Z"
-                                            Fill="Gray" />
-                                    </Canvas>
-                                </Viewbox>
-                            </Button>
-                        </StackPanel>
                         <TextBlock FontSize="12" VerticalAlignment="Bottom" Margin="0 30 0 0"
                                    Text="注: 特辑一页搜索10条, 图片一页搜索300张" />
                     </StackPanel>

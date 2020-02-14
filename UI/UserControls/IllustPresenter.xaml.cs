@@ -15,10 +15,14 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using Pixeval.Data.ViewModel;
+using Pixeval.Data.Web.Delegation;
+using Pixeval.Data.Web.Request;
 using Pixeval.Objects;
 using PropertyChanged;
+using static Pixeval.Objects.UiHelper;
 
 namespace Pixeval.UI.UserControls
 {
@@ -41,7 +45,32 @@ namespace Pixeval.UI.UserControls
 
         private async void CopyImageItem_OnClick(object sender, RoutedEventArgs e)
         {
-            Clipboard.SetImage(await PixivEx.GetAndCreateOrLoadFromCache(false, Illust.Origin, Illust.Id));
+            Clipboard.SetImage(await PixivEx.FromUrl(Illust.Origin));
+        }
+
+        private void MovePrevButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            ChangeSource((ICommandSource) sender);
+        }
+
+        private void MoveNextButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            ChangeSource((ICommandSource) sender);
+        }
+
+        private void ChangeSource(ICommandSource btn)
+        {
+            if (btn.Command.CanExecute(btn.CommandParameter))
+            {
+                btn.Command.Execute(btn.CommandParameter);
+
+                Application.Current.Dispatcher?.Invoke(async () =>
+                {
+                    MainWindow.Instance.IllustBrowserDialogHost.DataContext = Illust;
+                    var userInfo = await HttpClientFactory.AppApiService.GetUserInformation(new UserInformationRequest {Id = Illust.UserId});
+                    SetImageSource(MainWindow.Instance.IllustBrowserUserAvatar, await PixivEx.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium));
+                });
+            }
         }
     }
 }

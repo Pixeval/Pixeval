@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Response;
@@ -65,7 +64,8 @@ namespace Pixeval.Core
                 UserId = response.User.Id.ToString(),
                 ViewCount = (int) response.TotalView,
                 Comments = (int) response.TotalComments,
-                Resolution = $"{response.Width}x{response.Height}"
+                Resolution = $"{response.Width}x{response.Height}",
+                PublishDate = response.CreateDate
             };
 
             if (illust.IsManga)
@@ -84,26 +84,26 @@ namespace Pixeval.Core
         internal static async void DoIterate<T>(IPixivIterator<T> pixivIterator, ICollection<T> container, bool useCounter = false)
         {
             var counter = 1;
+            var needSort = pixivIterator is QueryIterator || pixivIterator is RankingIterator;
+            var isIllust = typeof(T) == typeof(Illustration);
             while (pixivIterator.HasNext())
             {
                 if (useCounter && counter > Settings.Global.QueryPages * 10) break;
                 await foreach (var illust in pixivIterator.MoveNextAsync())
-                {
-                    if (typeof(T) == typeof(Illustration))
+                    if (isIllust)
                     {
                         var i = illust as Illustration;
                         if (IllustNotMatchCondition(Settings.Global.ExceptTags, Settings.Global.ContainsTags, i))
                             continue;
 
-                        if (container is Collection<Illustration> illustrationContainer) illustrationContainer.AddSorted(i, Settings.Global.SortOnInserting ? IllustrationPopularityComparator.Instance : (IComparer<Illustration>)IllustrationPublishDateComparator.Instance);
+                        if (container is Collection<Illustration> illustrationContainer) illustrationContainer.AddSorted(i, needSort ? Settings.Global.SortOnInserting ? IllustrationPopularityComparator.Instance : (IComparer<Illustration>) IllustrationPublishDateComparator.Instance : IllustrationPublishDateComparator.Instance);
                     }
                     else
                     {
                         container.Add(illust);
                     }
-                }
 
-                await Task.Delay(1000);
+                await Task.Delay(500);
                 counter++;
             }
         }

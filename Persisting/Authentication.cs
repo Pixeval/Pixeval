@@ -32,6 +32,12 @@ namespace Pixeval.Persisting
 
         private static string UtcTimeNow => DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss+00:00");
 
+        /// <summary>
+        ///     Authorize
+        /// </summary>
+        /// <param name="name">user account</param>
+        /// <param name="pwd">user password</param>
+        /// <returns>the <see cref="Task" />> of the auth process</returns>
         public static async Task Authenticate(string name, string pwd)
         {
             var time = UtcTimeNow;

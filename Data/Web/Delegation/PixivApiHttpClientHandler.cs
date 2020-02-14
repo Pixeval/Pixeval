@@ -20,7 +20,7 @@ namespace Pixeval.Data.Web.Delegation
 {
     public class PixivApiHttpClientHandler : DnsResolvedHttpClientHandler
     {
-        public static HttpMessageHandler Instance = new PixivApiHttpClientHandler();
+        public static readonly HttpMessageHandler Instance = new PixivApiHttpClientHandler();
 
         private PixivApiHttpClientHandler() : base(PixivAuthenticationHttpRequestHandler.Instance) { }
 

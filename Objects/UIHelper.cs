@@ -115,7 +115,7 @@ namespace Pixeval.Objects
         {
             if (sender is FrameworkElement element) return element.DataContext<T>();
 
-            throw new NotSupportedException($"parameter must be derived class of {nameof(FrameworkElement)}");
+            throw new NotSupportedException($"parameter must be derive class of {nameof(FrameworkElement)}");
         }
 
         public static T GetResources<T>(this FrameworkElement element, string name)

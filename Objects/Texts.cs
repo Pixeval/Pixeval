@@ -73,10 +73,15 @@ namespace Pixeval.Objects
             return int.TryParse(str, out _);
         }
 
-        // taken from https://stackoverflow.com/questions/146134/how-to-remove-illegal-characters-from-path-and-filenames
+        // see https://stackoverflow.com/questions/146134/how-to-remove-illegal-characters-from-path-and-filenames
         public static string FormatPath(string original)
         {
             return string.Concat(original.Split(Path.GetInvalidFileNameChars()));
+        }
+
+        public static string GetExtension(string file)
+        {
+            return file[file.LastIndexOf('.')..];
         }
     }
 }

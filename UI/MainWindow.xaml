@@ -34,7 +34,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         mc:Ignorable="d"
         Initialized="MainWindow_OnInitialized" MouseDown="MainWindow_OnMouseDown"
         Deactivated="MainWindow_OnDeactivated"
-        Title="Pixeval | A Fast, Strong and Flexible Pixiv Client" Height="900" Width="1600"
+        Title="Pixeval" Height="900" Width="1600"
         Icon="/Resources/pxlogo.ico">
     <Window.Resources>
         <CubicEase x:Key="CubicEase" EasingMode="EaseOut" />
@@ -77,7 +77,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             </Style.Triggers>
         </Style>
         <DataTemplate x:Key="IllustrationTemplate" DataType="viewModel:Illustration">
-            <Grid Width="280" Height="200" x:Name="IllustrationContainer" Cursor="Hand" PreviewMouseRightButtonDown="IllustrationContainer_OnPreviewMouseRightButtonDown"
+            <Grid Width="280" Height="200" x:Name="IllustrationContainer" Cursor="Hand"
+                  PreviewMouseRightButtonDown="IllustrationContainer_OnPreviewMouseRightButtonDown"
                   MouseLeftButtonDown="IllustrationContainer_OnMouseLeftButtonDown" ToolTip="{Binding Path=Id}"
                   ClipToBounds="True">
                 <Grid.ContextMenu>
@@ -425,7 +426,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         </DataTemplate>
     </Window.Resources>
     <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-        <Grid x:Name="ContentContainer" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <Grid x:Name="ContentContainer" Grid.ColumnSpan="2">
             <Grid.RenderTransform>
                 <ScaleTransform ScaleX="1" ScaleY="1"
                                 CenterX="{Binding ElementName=ContentContainer, Path=ActualWidth, Converter={StaticResource ControlCenterConverter}}"
@@ -1146,7 +1147,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 </Grid.RenderTransform>
             </Grid>
         </Grid>
-        <ScrollViewer x:Name="UserBrowserPageScrollViewer" HorizontalScrollBarVisibility="Disabled" Opacity="0">
+        <ScrollViewer x:Name="UserBrowserPageScrollViewer" HorizontalScrollBarVisibility="Disabled" Opacity="0"
+                      Grid.Column="0">
             <ScrollViewer.RenderTransform>
                 <ScaleTransform ScaleX="0" ScaleY="0"
                                 CenterX="{Binding ElementName=UserBrowserPageScrollViewer, Path=ActualWidth, Converter={StaticResource ControlCenterConverter}}"
@@ -1346,11 +1348,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 </Grid>
             </StackPanel>
         </ScrollViewer>
-        <userControls:PixevalSettingPage x:Name="PixevalSettingPage" />
+        <userControls:PixevalSettingPage x:Name="PixevalSettingPage" Grid.ColumnSpan="2" />
         <materialDesign:DialogHost x:Name="IllustBrowserDialogHost" CloseOnClickAway="True"
                                    DialogOpened="IllustBrowserDialogHost_OnDialogOpened"
                                    DialogClosing="IllustBrowserDialogHost_OnDialogClosing"
-                                   d:DataContext="{d:DesignData Illustration}">
+                                   d:DataContext="{d:DesignData Illustration}" Grid.ColumnSpan="2">
             <materialDesign:DialogHost.DialogContent>
                 <materialDesign:Card BorderBrush="#FAFAFC" Background="#FAFAFC">
                     <StackPanel x:Name="IllustBrowserContainer" Background="#FAFAFC" Width="1000">
@@ -1539,6 +1541,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             </materialDesign:DialogHost.DialogContent>
         </materialDesign:DialogHost>
         <materialDesign:Snackbar x:Name="MainWindowSnackBar" HorizontalContentAlignment="Center"
-                                 VerticalContentAlignment="Center" HorizontalAlignment="Center" />
+                                 VerticalContentAlignment="Center" />
     </Grid>
 </Window>

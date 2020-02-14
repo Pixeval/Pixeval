@@ -20,10 +20,10 @@ namespace Pixeval.Data.Web.Delegation
 {
     public class PixivImageHttpClientHandler : DnsResolvedHttpClientHandler
     {
-        public static HttpMessageHandler Instance = new PixivImageHttpClientHandler();
+        public static readonly HttpMessageHandler Instance = new PixivImageHttpClientHandler();
 
-        private PixivImageHttpClientHandler() : base(PixivAuthenticationHttpRequestHandler.Instance) { }
+        private PixivImageHttpClientHandler() : base(PixivAuthenticationHttpRequestHandler.Instance, false) { }
 
-        protected override DnsResolver DnsResolver { get; set; } = PixivImageDnsResolver.Instance;
+        protected override DnsResolver DnsResolver { get; set; } = null;
     }
 }

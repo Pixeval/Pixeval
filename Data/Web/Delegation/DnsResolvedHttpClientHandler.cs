@@ -27,18 +27,18 @@ namespace Pixeval.Data.Web.Delegation
 {
     public abstract class DnsResolvedHttpClientHandler : HttpClientHandler
     {
+        private readonly bool directConnect;
         private readonly IHttpRequestHandler requestHandler;
 
         static DnsResolvedHttpClientHandler()
         {
-            // use legacy http handler instead of .net core's new http handler, that will break whole program on SSL check
             AppContext.SetSwitch("System.Net.Http.UseSocketsHttpHandler", false);
         }
 
-        protected DnsResolvedHttpClientHandler(IHttpRequestHandler requestHandler = null)
+        protected DnsResolvedHttpClientHandler(IHttpRequestHandler requestHandler = null, bool directConnect = true)
         {
             this.requestHandler = requestHandler;
-            // SSL bypass
+            this.directConnect = directConnect;
             ServerCertificateCustomValidationCallback = DangerousAcceptAnyServerCertificateValidator;
         }
 
@@ -46,12 +46,15 @@ namespace Pixeval.Data.Web.Delegation
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var host = request.RequestUri.DnsSafeHost;
+            if (directConnect)
+            {
+                var host = request.RequestUri.DnsSafeHost;
 
-            var isSslSession = request.RequestUri.ToString().StartsWith("https://");
+                var isSslSession = request.RequestUri.ToString().StartsWith("https://");
 
-            request.RequestUri = new Uri($"{(isSslSession ? "https://" : "http://")}{(await DnsResolver.Lookup(host))[0]}{request.RequestUri.PathAndQuery}");
-            request.Headers.Host = host;
+                request.RequestUri = new Uri($"{(isSslSession ? "https://" : "http://")}{(await DnsResolver.Lookup(host))[0]}{request.RequestUri.PathAndQuery}");
+                request.Headers.Host = host;
+            }
 
             requestHandler?.Handle(request);
 
@@ -62,13 +65,11 @@ namespace Pixeval.Data.Web.Delegation
             }
             catch (HttpRequestException e)
             {
-                // this exception throws several times with form like "Error Code 12152 WinHttpException" and I cannot find reason, so I just ignore it
                 if (e.InnerException != null && e.InnerException.Message.ToLower().Contains("winhttp"))
                     return new HttpResponseMessage(HttpStatusCode.OK);
                 throw;
             }
 
-            // bad request with authorization messages means the token has been expired, we will refresh the token and try to send request again
             if (result.StatusCode == HttpStatusCode.BadRequest && (await result.Content.ReadAsStringAsync()).Contains("OAuth"))
             {
                 using var _ = await new AsyncLock().LockAsync();

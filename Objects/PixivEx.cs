@@ -16,11 +16,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using ImageMagick;
@@ -28,10 +28,6 @@ using Pixeval.Core;
 using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Persisting;
-#if DEBUG
-using System.Diagnostics;
-
-#endif
 
 namespace Pixeval.Objects
 {
@@ -94,57 +90,6 @@ namespace Pixeval.Objects
             encoder.Save(fs);
         }
 
-        public static void CacheImage(BitmapImage bitmapImage, string id, int episode = 0)
-        {
-            Task.Run(() =>
-            {
-                var path = Path.Combine(PixevalEnvironment.TempFolder, $"{id}_{episode}.png");
-                if (!File.Exists(path)) bitmapImage.SaveBitmapImage(path);
-            });
-        }
-
-        /// <summary>
-        ///     Get or load image, if <see cref="usingCache" /> is true, method will try to
-        ///     get image from disk, the image will be downloaded and saved to disk if not exist
-        /// </summary>
-        /// <param name="usingCache">cache image or not</param>
-        /// <param name="url">image url</param>
-        /// <param name="id">identifier</param>
-        /// <param name="episode">identifier</param>
-        /// <param name="cancellationToken">determine whether we need to cancel the task</param>
-        /// <returns>the loaded image</returns>
-        public static async Task<BitmapImage> GetAndCreateOrLoadFromCache(bool usingCache, string url, string id, int episode = 0, CancellationToken cancellationToken = default)
-        {
-            if (usingCache)
-            {
-                var path = Path.Combine(PixevalEnvironment.TempFolder, $"{id}_{episode}.png");
-                if (File.Exists(path))
-                {
-                    BitmapImage toCache;
-                    try
-                    {
-                        toCache = FromByteArray(await File.ReadAllBytesAsync(path, cancellationToken));
-                    }
-                    catch (Exception)
-                    {
-                        return null;
-                    }
-
-                    CacheImage(toCache, id, episode);
-                    return toCache;
-                }
-            }
-
-            var img = await FromUrl(url);
-            return img;
-        }
-
-        /// <summary>
-        ///     the gif downloaded would be a zip file which contains frames of the gif,
-        ///     the frames will be extracted
-        /// </summary>
-        /// <param name="stream">zip stream</param>
-        /// <returns>the streams of each frame</returns>
         private static IReadOnlyList<Stream> ReadGifZipEntries(Stream stream)
         {
             var dis = new List<Stream>();
@@ -175,17 +120,6 @@ namespace Pixeval.Objects
             foreach (var s in lst) yield return await FromStreamAsync(s);
         }
 
-        public static Task<BitmapImage> GetAndCreateOrLoadFromCacheInternal(string url, string id, int episode = 0)
-        {
-            return GetAndCreateOrLoadFromCache(Settings.Global.CachingThumbnail, url, id, episode);
-        }
-
-        /// <summary>
-        ///     merge the frames of the gif as a complete gif stream depending on <see cref="delay" /> of each frame
-        /// </summary>
-        /// <param name="streams"></param>
-        /// <param name="delay"></param>
-        /// <returns></returns>
         private static Stream MergeGifStream(IReadOnlyList<Stream> streams, IReadOnlyList<long> delay)
         {
             var ms = new MemoryStream();
@@ -236,8 +170,8 @@ namespace Pixeval.Objects
 
         public static async Task DownloadIllust(Illustration illustration, string rootPath)
         {
-            var path = TextBuffer.GetOrCreateDirectory(rootPath);
-
+            var path = Directory.CreateDirectory(rootPath).FullName;
+            Trace.WriteLine(path);
             if (illustration.IsManga)
             {
                 await DownloadManga(illustration, path);
@@ -249,10 +183,7 @@ namespace Pixeval.Objects
             else
             {
                 var url = illustration.Origin.IsNullOrEmpty() ? illustration.Large : illustration.Origin;
-#if DEBUG
-                Trace.WriteLine(url);
-#endif
-                await File.WriteAllBytesAsync(Path.Combine(path, $"[{Texts.FormatPath(illustration.UserName)}]{illustration.Id}{GetExtension(url)}"), await FromUrlInternal(url));
+                await File.WriteAllBytesAsync(Path.Combine(path, $"[{Texts.FormatPath(illustration.UserName)}]{illustration.Id}{Texts.GetExtension(url)}"), await FromUrlInternal(url));
             }
         }
 
@@ -271,30 +202,25 @@ namespace Pixeval.Objects
         {
             if (!illustration.IsManga) throw new InvalidOperationException();
 
-            var mangaDir = TextBuffer.GetOrCreateDirectory(Path.Combine(rootPath, $"[{Texts.FormatPath(illustration.UserName)}]{illustration.Id}"));
+            var mangaDir = Directory.CreateDirectory(Path.Combine(rootPath, $"[{Texts.FormatPath(illustration.UserName)}]{illustration.Id}")).FullName;
             for (var i = 0; i < illustration.MangaMetadata.Length; i++)
             {
                 var url = illustration.MangaMetadata[i].Origin.IsNullOrEmpty() ? illustration.MangaMetadata[i].Large : illustration.MangaMetadata[i].Origin;
 #if DEBUG
                 Trace.WriteLine(url);
 #endif
-                await File.WriteAllBytesAsync(Path.Combine(mangaDir, $"{i}{GetExtension(url)}"), await FromUrlInternal(url));
+                await File.WriteAllBytesAsync(Path.Combine(mangaDir, $"{i}{Texts.GetExtension(url)}"), await FromUrlInternal(url));
             }
         }
 
         public static async Task DownloadSpotlight(SpotlightArticle article)
         {
-            var root = TextBuffer.GetOrCreateDirectory(Path.Combine(Settings.Global.DownloadLocation, "Spotlight", article.Title));
+            var root = Directory.CreateDirectory(Path.Combine(Settings.Global.DownloadLocation, "Spotlight", article.Title)).FullName;
 
             var tasks = (await PixivClient.Instance.GetArticleWorks(article.Id.ToString())).Select(PixivHelper.IllustrationInfo).Where(i => i != null);
             var result = await Task.WhenAll(tasks);
 
             await Task.WhenAll(result.Select(t => DownloadIllust(t, root)));
-        }
-
-        private static string GetExtension(string url)
-        {
-            return TextBuffer.GetExtension(url);
         }
 
         public static string FormatGifZipUrl(string link)
@@ -304,12 +230,12 @@ namespace Pixeval.Objects
 
         public static string GetSpotlightCover(SpotlightArticle article)
         {
-            // var match = Regex.Match(article.Thumbnail, "/(?<illust_id>\\d+)_p\\d+_master1200\\.jpg|png");
-            // if (match.Success)
-            // {
-            //     var url = Regex.Replace(article.Thumbnail, "/c/\\d+x\\d+_\\d+/img-master/", "/img-original/").Replace("_master1200", string.Empty);
-            //     return url;
-            // }
+            var match = Regex.Match(article.Thumbnail, "/(?<illust_id>\\d+)_p\\d+_master1200\\.jpg|png");
+            if (match.Success)
+            {
+                var url = Regex.Replace(article.Thumbnail, "/c/\\d+x\\d+_\\d+/img-master/", "/img-original/").Replace("_master1200", string.Empty);
+                return url;
+            }
 
             return article.Thumbnail;
         }

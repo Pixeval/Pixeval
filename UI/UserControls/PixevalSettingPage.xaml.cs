@@ -16,9 +16,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Windows;
-using System.Windows.Controls;
 using MaterialDesignThemes.Wpf;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Pixeval.Objects;
@@ -29,7 +27,7 @@ namespace Pixeval.UI.UserControls
     /// <summary>
     ///     Interaction logic for PixevalSettingPage.xaml
     /// </summary>
-    public partial class PixevalSettingPage : UserControl
+    public partial class PixevalSettingPage
     {
         public PixevalSettingPage()
         {
@@ -39,12 +37,6 @@ namespace Pixeval.UI.UserControls
         public void Open()
         {
             SettingDialog.OpenControl();
-        }
-
-        private void ClearCacheButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            Directory.Delete(PixevalEnvironment.TempFolder, true);
-            MainWindow.MessageQueue.Enqueue("清理完成");
         }
 
         private void SettingDialog_OnDialogClosing(object sender, DialogClosingEventArgs e)
@@ -61,11 +53,6 @@ namespace Pixeval.UI.UserControls
             };
 
             if (fileDialog.ShowDialog() == CommonFileDialogResult.Ok) DownloadLocationTextBox.Text = fileDialog.FileName;
-        }
-
-        private void ClearSettingButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            Settings.Global.Initialize();
         }
 
         private void QueryR18_OnChecked(object sender, RoutedEventArgs e)

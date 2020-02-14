@@ -25,8 +25,6 @@ namespace Pixeval.Persisting
 
         public static readonly string ConfFolder = ProjectFolder;
 
-        public static readonly string TempFolder = Path.Combine(ProjectFolder, "tmp");
-
         public static readonly string SettingsFolder = ProjectFolder;
 
         public static readonly string ExceptionReportFolder = Path.Combine(ProjectFolder, "crash-reports");
@@ -35,13 +33,9 @@ namespace Pixeval.Persisting
 
         static PixevalEnvironment()
         {
-            if (!Directory.Exists(ProjectFolder)) Directory.CreateDirectory(ProjectFolder);
-
-            if (!Directory.Exists(TempFolder)) Directory.CreateDirectory(TempFolder);
-
-            if (!Directory.Exists(SettingsFolder)) Directory.CreateDirectory(SettingsFolder);
-
-            if (!Directory.Exists(ExceptionReportFolder)) Directory.CreateDirectory(ExceptionReportFolder);
+            Directory.CreateDirectory(ProjectFolder);
+            Directory.CreateDirectory(SettingsFolder);
+            Directory.CreateDirectory(ExceptionReportFolder);
         }
     }
 }

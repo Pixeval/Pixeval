@@ -40,11 +40,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Height="{Binding ElementName=ContentImage, Path=ActualHeight}"
-                    Style="{DynamicResource MaterialDesignToolButton}"
+            <Button x:Name="MovePrevButton" Grid.Column="0"
+                    Height="{Binding ElementName=ContentImage, Path=ActualHeight}"
+                    Style="{DynamicResource MaterialDesignToolButton}" Click="MovePrevButton_OnClick"
                     Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" />
-            <Button Grid.Column="1" Height="{Binding ElementName=ContentImage, Path=ActualHeight}"
-                    Style="{DynamicResource MaterialDesignToolButton}"
+            <Button x:Name="MoveNextButton" Grid.Column="1"
+                    Height="{Binding ElementName=ContentImage, Path=ActualHeight}"
+                    Style="{DynamicResource MaterialDesignToolButton}" Click="MoveNextButton_OnClick"
                     Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" />
         </Grid>
     </Grid>

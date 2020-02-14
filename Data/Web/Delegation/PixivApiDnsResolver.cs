@@ -21,7 +21,7 @@ namespace Pixeval.Data.Web.Delegation
 {
     public class PixivApiDnsResolver : DnsResolver
     {
-        public static DnsResolver Instance = new PixivApiDnsResolver();
+        public static readonly DnsResolver Instance = new PixivApiDnsResolver();
 
         protected override IEnumerable<IPAddress> UseDefaultDns()
         {
