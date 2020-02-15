@@ -179,6 +179,7 @@ namespace Pixeval.UI
         private void IllustrationContainer_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             OpenIllustBrowser(sender.GetDataContext<Illustration>());
+            e.Handled = true;
         }
 
         #region 主窗口
@@ -744,8 +745,9 @@ namespace Pixeval.UI
 
         private void ImageBrowserUserAvatar_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            IllustBrowserDialogHost.CloseControl();
-            SetUserBrowserContext(new User {Id = sender.GetDataContext<Illustration>().UserId});
+            var usr = new User {Id = sender.GetDataContext<Illustration>().UserId};
+            IllustBrowserDialogHost.CurrentSession.Close();
+            SetUserBrowserContext(usr);
         }
 
         private void ViewInBrowserButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
