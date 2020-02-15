@@ -31,7 +31,7 @@ A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF
 * [百度网盘](https://pan.baidu.com/s/11dHmITNEeD6MAyzPLb052w) 提取码: 2vd8
 * [Google Drive](https://drive.google.com/drive/folders/1CufNXqdxKsIWej744dAZqUUQ0h53OVmb?usp=sharing)
 * [One Drive](https://1drv.ms/u/s!AjGDnrSBn8YtgYdTPxBWOiM0CV6KYg?e=1OXzF5)
-* [下载站点](http://47.95.218.243/Pixeval.exe)
+* [下载站点](http://47.95.218.243/Pixeval.zip)
 
 **如有遇到任何问题请通过以下方式联系作者：**
 * 提交[issue](https://github.com/Rinacm/Pixeval/issues/new)
