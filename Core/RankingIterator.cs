@@ -29,6 +29,8 @@ namespace Pixeval.Core
 
         private int limit;
 
+        public SortOption SortOption { get; } = SortOption.Popularity;
+
         public bool HasNext()
         {
             if (context == null) return true;

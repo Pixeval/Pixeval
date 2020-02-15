@@ -29,8 +29,5 @@ namespace Pixeval.Data.Web.Protocol
 
         [Get("/users/{uid}/works.json")]
         Task<UploadResponse> GetUploads(string uid, UploadsRequest uploadResponse);
-
-        [Get("/works/{uid}.json")]
-        Task<IllustResponse> GetSingle(string uid, [AliasAs("image_sizes")] string imageSizes = "px_128x128,small,medium,large,px_480mw", [AliasAs("include_stats")] bool includeStat = true);
     }
 }

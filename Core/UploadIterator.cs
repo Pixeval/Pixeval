@@ -36,6 +36,8 @@ namespace Pixeval.Core
             this.uid = uid;
         }
 
+        public SortOption SortOption { get; } = SortOption.PublishDate;
+
         public bool HasNext()
         {
             return !lastPage;

@@ -34,6 +34,8 @@ namespace Pixeval.Core
             uid = userId;
         }
 
+        public SortOption SortOption { get; } = SortOption.None;
+
         public bool HasNext()
         {
             if (context == null) return true;

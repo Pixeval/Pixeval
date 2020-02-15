@@ -32,6 +32,8 @@ namespace Pixeval.Core
             endPoint = currentIndex + queryPages - 1;
         }
 
+        public SortOption SortOption { get; } = SortOption.None;
+
         public bool HasNext()
         {
             return currentIndex <= endPoint;

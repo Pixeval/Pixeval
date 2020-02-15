@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -171,7 +170,6 @@ namespace Pixeval.Objects
         public static async Task DownloadIllust(Illustration illustration, string rootPath)
         {
             var path = Directory.CreateDirectory(rootPath).FullName;
-            Trace.WriteLine(path);
             if (illustration.IsManga)
             {
                 await DownloadManga(illustration, path);
@@ -206,9 +204,6 @@ namespace Pixeval.Objects
             for (var i = 0; i < illustration.MangaMetadata.Length; i++)
             {
                 var url = illustration.MangaMetadata[i].Origin.IsNullOrEmpty() ? illustration.MangaMetadata[i].Large : illustration.MangaMetadata[i].Origin;
-#if DEBUG
-                Trace.WriteLine(url);
-#endif
                 await File.WriteAllBytesAsync(Path.Combine(mangaDir, $"{i}{Texts.GetExtension(url)}"), await FromUrlInternal(url));
             }
         }

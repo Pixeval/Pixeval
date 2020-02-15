@@ -27,6 +27,8 @@ namespace Pixeval.Core
     {
         private UserUpdateResponse context;
 
+        public SortOption SortOption { get; } = SortOption.None;
+
         public bool HasNext()
         {
             if (context == null) return true;

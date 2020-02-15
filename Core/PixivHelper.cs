@@ -84,26 +84,32 @@ namespace Pixeval.Core
         internal static async void DoIterate<T>(IPixivIterator<T> pixivIterator, ICollection<T> container, bool useCounter = false)
         {
             var counter = 1;
-            var needSort = pixivIterator is QueryIterator || pixivIterator is RankingIterator;
-            var isIllust = typeof(T) == typeof(Illustration);
             while (pixivIterator.HasNext())
             {
                 if (useCounter && counter > Settings.Global.QueryPages * 10) break;
                 await foreach (var illust in pixivIterator.MoveNextAsync())
-                    if (isIllust)
+                    if (illust is Illustration i)
                     {
-                        var i = illust as Illustration;
                         if (IllustNotMatchCondition(Settings.Global.ExceptTags, Settings.Global.ContainsTags, i))
                             continue;
 
-                        if (container is Collection<Illustration> illustrationContainer) illustrationContainer.AddSorted(i, needSort ? Settings.Global.SortOnInserting ? IllustrationPopularityComparator.Instance : (IComparer<Illustration>) IllustrationPublishDateComparator.Instance : IllustrationPublishDateComparator.Instance);
+                        if (container is Collection<Illustration> illustrationContainer)
+                        {
+                            IComparer<Illustration> comparer = pixivIterator.SortOption switch
+                            {
+                                SortOption.None        => null,
+                                SortOption.PublishDate => IllustrationPublishDateComparator.Instance,
+                                SortOption.Popularity  => IllustrationPopularityComparator.Instance,
+                                _                      => null
+                            };
+                            illustrationContainer.AddSorted(i, comparer);
+                        }
                     }
                     else
                     {
                         container.Add(illust);
                     }
 
-                await Task.Delay(500);
                 counter++;
             }
         }

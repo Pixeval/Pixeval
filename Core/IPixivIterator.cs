@@ -20,8 +20,17 @@ namespace Pixeval.Core
 {
     public interface IPixivIterator<out T>
     {
+        SortOption SortOption { get; }
+
         bool HasNext();
 
         IAsyncEnumerable<T> MoveNextAsync();
+    }
+
+    public enum SortOption
+    {
+        Popularity,
+        PublishDate,
+        None
     }
 }

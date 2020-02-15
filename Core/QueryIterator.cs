@@ -40,6 +40,8 @@ namespace Pixeval.Core
             this.tag = tag;
         }
 
+        public SortOption SortOption { get; } = SortOption.Popularity;
+
         public bool HasNext()
         {
             return !lastPage;

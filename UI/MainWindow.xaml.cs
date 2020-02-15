@@ -391,14 +391,16 @@ namespace Pixeval.UI
             StartDoubleAnimationUseCubicEase(sender, "(Image.Opacity)", 0, 1, 500);
         }
 
-        private void FavorButton_OnClick(object sender, RoutedEventArgs e)
+        private void FavorButton_OnPreviewMouseLeftButtonDown(object sender, RoutedEventArgs e)
         {
             PixivClient.Instance.PostFavoriteAsync(sender.GetDataContext<Illustration>());
+            e.Handled = true;
         }
 
-        private void DisfavorButton_OnClick(object sender, RoutedEventArgs e)
+        private void DisfavorButton_OnPreviewMouseLeftButtonDown(object sender, RoutedEventArgs e)
         {
             PixivClient.Instance.RemoveFavoriteAsync(sender.GetDataContext<Illustration>());
+            e.Handled = true;
         }
 
         #endregion
