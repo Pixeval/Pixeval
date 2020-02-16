@@ -43,6 +43,7 @@ using Pixeval.UI.UserControls;
 using Refit;
 using Xceed.Wpf.AvalonDock.Controls;
 using static Pixeval.Objects.UiHelper;
+
 #if RELEASE
 using System.Net.Http;
 using Pixeval.Objects.Exceptions;

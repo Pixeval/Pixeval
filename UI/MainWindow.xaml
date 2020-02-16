@@ -37,14 +37,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         Title="Pixeval" Height="900" Width="1600"
         Icon="/Resources/pxlogo.ico">
     <Window.Resources>
+        <system:Double x:Key="Divide">2</system:Double>
         <CubicEase x:Key="CubicEase" EasingMode="EaseOut" />
         <valueConverters:VisibleIfTrueConverter x:Key="VisibleIfTrueConverter" />
         <valueConverters:VisibleIfFalseConverter x:Key="VisibleIfFalseConverter" />
-        <valueConverters:WidthMinus45PxConverter x:Key="WidthMinus45PxConverter" />
+        <valueConverters:DoublePlusConverter x:Key="DoublePlusConverter" />
         <valueConverters:IllustSubscriptConverter x:Key="IllustSubscriptConverter" />
-        <valueConverters:IllustTagConverter x:Key="IllustTagConverter" />
         <valueConverters:DateTimeOffsetConverter x:Key="DateTimeOffsetConverter" />
-        <valueConverters:ControlCenterConverter x:Key="ControlCenterConverter" />
+        <valueConverters:DoubleDivisionConverter x:Key="DoubleDivisionConverter" />
         <Storyboard x:Key="UserBrowserOpacityIncreaseAnimation" TargetName="UserBrowserPageScrollViewer"
                     TargetProperty="(ScrollViewer.Opacity)">
             <DoubleAnimation From="0" To="1" Duration="00:00:00.3" EasingFunction="{StaticResource CubicEase}" />
@@ -237,9 +237,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             </materialDesign:Card>
         </DataTemplate>
         <DataTemplate x:Key="SpotlightDataTemplate" DataType="viewModel:SpotlightArticle">
+            <DataTemplate.Resources>
+                <system:Double x:Key="MinusPrecision">-45</system:Double>
+            </DataTemplate.Resources>
             <Grid x:Name="SpotlightContainer" Height="300" HorizontalAlignment="Stretch" Cursor="Hand"
                   MouseLeftButtonDown="SpotlightContainer_OnMouseLeftButtonDown"
-                  Width="{Binding ElementName=SpotlightListView, Path=ActualWidth, Converter={StaticResource WidthMinus45PxConverter}}">
+                  Width="{Binding ElementName=SpotlightListView, Path=ActualWidth, Converter={StaticResource DoublePlusConverter}, ConverterParameter={StaticResource MinusPrecision}}">
                 <Grid.ContextMenu>
                     <ContextMenu>
                         <MenuItem x:Name="DownloadSpotlightItem" Header="下载特辑" Click="DownloadSpotlightItem_OnClick" />
@@ -388,9 +391,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                             </BeginStoryboard>
                         </EventTrigger>
                     </materialDesign:Card.Triggers>
-                    <materialDesign:Card.Resources>
-                        <valueConverters:UserIdConverter x:Key="UserIdConverter" />
-                    </materialDesign:Card.Resources>
                     <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.ZIndex="1">
                             <StackPanel.Background>
@@ -410,8 +410,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                             <StackPanel Orientation="Vertical" Width="300" Margin="20 30 0 30">
                                 <TextBlock FontSize="25" Margin="0 20 0 0" Text="{Binding Name}"
                                            TextWrapping="Wrap" />
-                                <TextBlock FontSize="20" Margin="15 25 0 0"
-                                           Text="{Binding Id, Converter={StaticResource UserIdConverter}}" />
+                                <TextBlock FontSize="20" Margin="15 25 0 0">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}用户ID: {0}">
+                                            <Binding Path="Id" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
                             </StackPanel>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Right"
@@ -435,8 +440,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         <Grid x:Name="ContentContainer" Grid.ColumnSpan="2">
             <Grid.RenderTransform>
                 <ScaleTransform ScaleX="1" ScaleY="1"
-                                CenterX="{Binding ElementName=ContentContainer, Path=ActualWidth, Converter={StaticResource ControlCenterConverter}}"
-                                CenterY="{Binding ElementName=ContentContainer, Path=ActualHeight, Converter={StaticResource ControlCenterConverter}}" />
+                                CenterX="{Binding ElementName=ContentContainer, Path=ActualWidth, Converter={StaticResource DoubleDivisionConverter}, ConverterParameter={StaticResource Divide}}"
+                                CenterY="{Binding ElementName=ContentContainer, Path=ActualHeight, Converter={StaticResource DoubleDivisionConverter}, ConverterParameter={StaticResource Divide}}" />
             </Grid.RenderTransform>
             <Grid x:Name="NavigatorContainer" VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="250">
                 <materialDesign:Card VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="250"
@@ -1157,8 +1162,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                       Grid.Column="0">
             <ScrollViewer.RenderTransform>
                 <ScaleTransform ScaleX="0" ScaleY="0"
-                                CenterX="{Binding ElementName=UserBrowserPageScrollViewer, Path=ActualWidth, Converter={StaticResource ControlCenterConverter}}"
-                                CenterY="{Binding ElementName=UserBrowserPageScrollViewer, Path=ActualHeight, Converter={StaticResource ControlCenterConverter}}" />
+                                CenterX="{Binding ElementName=UserBrowserPageScrollViewer, Path=ActualWidth, Converter={StaticResource DoubleDivisionConverter}, ConverterParameter={StaticResource Divide}}"
+                                CenterY="{Binding ElementName=UserBrowserPageScrollViewer, Path=ActualHeight, Converter={StaticResource DoubleDivisionConverter}, ConverterParameter={StaticResource Divide}}" />
             </ScrollViewer.RenderTransform>
             <ScrollViewer.Resources>
                 <system:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">10</system:Double>
@@ -1480,8 +1485,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                                         <Hyperlink x:Name="TagNavigateHyperlink"
                                                                    Click="TagNavigateHyperlink_OnClick"
                                                                    Foreground="#03A9F4">
-                                                            <TextBlock
-                                                                Text="{Binding Name, Converter={StaticResource IllustTagConverter}}" />
+                                                            <TextBlock>
+                                                                <TextBlock.Text>
+                                                                    <MultiBinding StringFormat="{}#{0}">
+                                                                        <Binding Path="Name" />
+                                                                    </MultiBinding>
+                                                                </TextBlock.Text>
+                                                            </TextBlock>
                                                         </Hyperlink>
                                                     </TextBlock>
                                                     <TextBlock FontSize="10" Margin="5 0 0 0"

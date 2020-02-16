@@ -17,7 +17,6 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows;
-using Pixeval.Objects.Exceptions.Logger;
 using Pixeval.Persisting;
 using Refit;
 
@@ -47,10 +46,7 @@ namespace Pixeval
                 ExceptionLogger.WriteException(e);
             }
 #elif DEBUG
-            if (e is ApiException apiException)
-            {
-                MessageBox.Show(apiException.Content);
-            }
+            if (e is ApiException apiException) MessageBox.Show(apiException.Content);
 #endif
         }
 
