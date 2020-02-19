@@ -47,7 +47,7 @@ namespace Pixeval.UI.UserControls
 
         private async void CopyImageItem_OnClick(object sender, RoutedEventArgs e)
         {
-            Clipboard.SetImage(await PixivEx.FromUrl(Illust.Origin));
+            Clipboard.SetImage(await PixivEx.FromUrl(Illust.Origin.IsNullOrEmpty() ? Illust.Large : Illust.Origin));
         }
 
         private void MovePrevButton_OnClick(object sender, RoutedEventArgs e)

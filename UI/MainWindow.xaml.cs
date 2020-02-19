@@ -479,11 +479,7 @@ namespace Pixeval.UI
                 .WhenAll();
             var result = tasks.Peek(i => i.IsManga = true).ToArray();
 
-            OpenIllustBrowser(result[0].Apply(r =>
-            {
-                r.IsFromSpotlight = true;
-                r.MangaMetadata = result.ToArray();
-            }));
+            OpenIllustBrowser(result[0].Apply(r => r.MangaMetadata = result.ToArray()));
         }
 
         private async void DownloadSpotlightItem_OnClick(object sender, RoutedEventArgs e)
@@ -715,31 +711,16 @@ namespace Pixeval.UI
             var template = new IllustTransitioner(list);
             IllustBrowserContainer.Children.Insert(1, template);
 
-            var userInfo = await HttpClientFactory.AppApiService.GetUserInformation(new UserInformationRequest {Id = context.UserId});
-            SetImageSource(IllustBrowserUserAvatar, await PixivEx.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium));
-
             if (context.IsManga)
             {
-                if (context.IsFromSpotlight)
-                {
-                    var tasks = await Tasks<Illustration, (BitmapImage image, Illustration illust)>.Of(context.MangaMetadata)
-                        .Mapping(illustration => Task.Run(async () => (await PixivEx.FromUrl(illustration.Large), illustration)))
-                        .Construct()
-                        .WhenAll();
+                if (context.MangaMetadata.IsNullOrEmpty()) context = await PixivHelper.IllustrationInfo(context.Id);
 
-                    list.AddRange(tasks.Select(i => InitTransitionerSlide(i.image, i.illust)));
-                }
-                else
-                {
-                    if (context.MangaMetadata.IsNullOrEmpty()) context = await PixivHelper.IllustrationInfo(context.Id);
+                var tasks = await Tasks<Illustration, (BitmapImage image, Illustration illust)>.Of(context.MangaMetadata)
+                    .Mapping(illustration => Task.Run(async () => (await PixivEx.FromUrl(illustration.Large), illustration)))
+                    .Construct()
+                    .WhenAll();
 
-                    var tasks = await Tasks<Illustration, BitmapImage>.Of(context.MangaMetadata)
-                        .Mapping(illustration => Task.Run(async () => await PixivEx.FromUrl(illustration.Large)))
-                        .Construct()
-                        .WhenAll();
-
-                    list.AddRange(tasks.Select(i => InitTransitionerSlide(i, context)));
-                }
+                list.AddRange(tasks.Select(i => InitTransitionerSlide(i.image, i.illust)));
             }
             else
             {
@@ -767,6 +748,15 @@ namespace Pixeval.UI
         private async void TagNavigateHyperlink_OnClick(object sender, RoutedEventArgs e)
         {
             var txt = ((Tag) ((Hyperlink) sender).DataContext).Name;
+
+            if (!UserBrowserPageScrollViewer.Opacity.Equals(0))
+            {
+                BackToMainPageButton.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left)
+                {
+                    RoutedEvent = Mouse.MouseDownEvent,
+                    Source = this
+                });
+            }
 
             IllustBrowserDialogHost.CurrentSession.Close();
             Instance.NavigatorList.SelectedItem = Instance.MenuTab;
@@ -899,9 +889,17 @@ namespace Pixeval.UI
             this.GetResources<Storyboard>("ContentContainerScaleYIncreaseAnimation").Begin();
         }
 
-        private void OpenIllustBrowser(Illustration illustration)
+        private async void OpenIllustBrowser(Illustration illustration)
         {
             IllustBrowserDialogHost.DataContext = illustration;
+
+            var userInfo = await HttpClientFactory.AppApiService.GetUserInformation(new UserInformationRequest { Id = illustration.UserId });
+            var avatar = await PixivEx.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium);
+            if (avatar != null)
+            {
+                SetImageSource(IllustBrowserUserAvatar, avatar);
+            }
+
             IllustBrowserDialogHost.OpenControl();
         }
 

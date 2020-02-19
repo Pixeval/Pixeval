@@ -72,7 +72,6 @@ namespace Pixeval.Core
                 illust.MangaMetadata = response.MetaPages.Select(p =>
                 {
                     var page = (Illustration) illust.Clone();
-                    page.IsManga = false;
                     page.Origin = p.ImageUrls.Original;
                     page.Large = p.ImageUrls.Large;
                     return page;

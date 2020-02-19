@@ -59,8 +59,6 @@ namespace Pixeval.Data.ViewModel
 
         public int Comments { get; set; }
 
-        public bool IsFromSpotlight { get; set; }
-
         public object Clone()
         {
             return MemberwiseClone();
