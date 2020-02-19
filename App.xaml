@@ -13,13 +13,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
--->
-<Application x:Class="Pixeval.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             StartupUri="UI/SignIn.xaml">
+along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
+<Application
+    x:Class="Pixeval.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    StartupUri="UI/SignIn.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -33,16 +32,29 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
+            <Style
+                x:Key="ScrollThumbs"
+                TargetType="{x:Type Thumb}">
                 <Setter Property="Template">
                     <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type Thumb}">
-                            <Grid x:Name="Grid">
-                                <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto"
-                                           Height="Auto" Fill="Transparent" />
-                                <Border x:Name="Rectangle1" CornerRadius="5" HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Stretch" Width="Auto" Height="Auto"
-                                        Background="{TemplateBinding Background}" />
+                        <ControlTemplate
+                            TargetType="{x:Type Thumb}">
+                            <Grid
+                                x:Name="Grid">
+                                <Rectangle
+                                    Width="Auto"
+                                    Height="Auto"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    Fill="Transparent" />
+                                <Border
+                                    x:Name="Rectangle1"
+                                    Width="Auto"
+                                    Height="Auto"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="5" />
                             </Grid>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="Tag" Value="Horizontal">
@@ -54,41 +66,58 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     </Setter.Value>
                 </Setter>
             </Style>
-            <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
+            <Style
+                x:Key="{x:Type ScrollBar}"
+                TargetType="{x:Type ScrollBar}">
                 <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
                 <Setter Property="Foreground" Value="#8C8C8C" />
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="Width" Value="8" />
                 <Setter Property="Template">
                     <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type ScrollBar}">
-                            <Grid x:Name="GridRoot" Width="8" Background="{TemplateBinding Background}">
+                        <ControlTemplate
+                            TargetType="{x:Type ScrollBar}">
+                            <Grid
+                                x:Name="GridRoot"
+                                Width="8"
+                                Background="{TemplateBinding Background}">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="0.00001*" />
+                                    <RowDefinition
+                                        Height="0.00001*" />
                                 </Grid.RowDefinitions>
-                                <Track x:Name="PART_Track" Grid.Row="0" IsDirectionReversed="true" Focusable="false">
+                                <Track
+                                    x:Name="PART_Track"
+                                    Grid.Row="0"
+                                    Focusable="false"
+                                    IsDirectionReversed="true">
                                     <Track.Thumb>
-                                        <Thumb x:Name="Thumb" Background="{TemplateBinding Foreground}"
-                                               Style="{DynamicResource ScrollThumbs}" />
+                                        <Thumb
+                                            x:Name="Thumb"
+                                            Background="{TemplateBinding Foreground}"
+                                            Style="{DynamicResource ScrollThumbs}" />
                                     </Track.Thumb>
                                     <Track.IncreaseRepeatButton>
-                                        <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0"
-                                                      Focusable="false" />
+                                        <RepeatButton
+                                            x:Name="PageUp"
+                                            Command="ScrollBar.PageDownCommand"
+                                            Focusable="false"
+                                            Opacity="0" />
                                     </Track.IncreaseRepeatButton>
                                     <Track.DecreaseRepeatButton>
-                                        <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0"
-                                                      Focusable="false" />
+                                        <RepeatButton
+                                            x:Name="PageDown"
+                                            Command="ScrollBar.PageUpCommand"
+                                            Focusable="false"
+                                            Opacity="0" />
                                     </Track.DecreaseRepeatButton>
                                 </Track>
                             </Grid>
                             <ControlTemplate.Triggers>
                                 <Trigger SourceName="Thumb" Property="IsMouseOver" Value="true">
-                                    <Setter Value="{DynamicResource ButtonSelectBrush}" TargetName="Thumb"
-                                            Property="Background" />
+                                    <Setter TargetName="Thumb" Property="Background" Value="{DynamicResource ButtonSelectBrush}" />
                                 </Trigger>
                                 <Trigger SourceName="Thumb" Property="IsDragging" Value="true">
-                                    <Setter Value="{DynamicResource DarkBrush}" TargetName="Thumb"
-                                            Property="Background" />
+                                    <Setter TargetName="Thumb" Property="Background" Value="{DynamicResource DarkBrush}" />
                                 </Trigger>
                                 <Trigger Property="IsEnabled" Value="false">
                                     <Setter TargetName="Thumb" Property="Visibility" Value="Collapsed" />

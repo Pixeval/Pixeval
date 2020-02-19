@@ -212,8 +212,10 @@ namespace Pixeval.Objects
         {
             var root = Directory.CreateDirectory(Path.Combine(Settings.Global.DownloadLocation, "Spotlight", article.Title)).FullName;
 
-            var tasks = (await PixivClient.Instance.GetArticleWorks(article.Id.ToString())).Select(PixivHelper.IllustrationInfo).Where(i => i != null);
-            var result = await Task.WhenAll(tasks);
+            var result = await Tasks<string, Illustration>.Of(await PixivClient.Instance.GetArticleWorks(article.Id.ToString()))
+                .Mapping(PixivHelper.IllustrationInfo)
+                .Construct()
+                .WhenAll();
 
             await Task.WhenAll(result.Select(t => DownloadIllust(t, root)));
         }

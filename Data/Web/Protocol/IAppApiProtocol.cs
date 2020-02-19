@@ -57,5 +57,9 @@ namespace Pixeval.Data.Web.Protocol
         [Headers("Accept-Language: zn-cn")]
         [Get("/v1/illust/detail")]
         Task<SingleWorkResponse> GetSingle([AliasAs("illust_id")] string id);
+
+        [Headers("Accept-Language: zn-cn")]
+        [Get("/v1/user/recommended?filter=for_android")]
+        Task<RecommendIllustratorResponse> GetRecommendIllustrators(RecommendIllustratorRequest recommendIllustratorRequest);
     }
 }

@@ -65,5 +65,10 @@ namespace Pixeval.Objects
 
             return peek;
         }
+
+        public static IEnumerable<T> NonNull<T>(this IEnumerable<T> source)
+        {
+            return source.Where(s => s != null);
+        }
     }
 }

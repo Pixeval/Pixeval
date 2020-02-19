@@ -14,9 +14,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
+using MaterialDesignThemes.Wpf.Transitions;
 using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
@@ -50,27 +52,27 @@ namespace Pixeval.UI.UserControls
 
         private void MovePrevButton_OnClick(object sender, RoutedEventArgs e)
         {
-            ChangeSource((ICommandSource) sender);
+            Transitioner.MovePreviousCommand.Execute(null, null);
+            ChangeSource();
         }
 
         private void MoveNextButton_OnClick(object sender, RoutedEventArgs e)
         {
-            ChangeSource((ICommandSource) sender);
+            Transitioner.MoveNextCommand.Execute(null, null);
+            ChangeSource();
         }
 
-        private void ChangeSource(ICommandSource btn)
+        private void ChangeSource()
         {
-            if (btn.Command.CanExecute(btn.CommandParameter))
+            Task.Run(() =>
             {
-                btn.Command.Execute(btn.CommandParameter);
-
-                Application.Current.Dispatcher?.Invoke(async () =>
+                (Dispatcher ?? throw new InvalidOperationException()).Invoke(async () =>
                 {
                     MainWindow.Instance.IllustBrowserDialogHost.DataContext = Illust;
                     var userInfo = await HttpClientFactory.AppApiService.GetUserInformation(new UserInformationRequest {Id = Illust.UserId});
                     SetImageSource(MainWindow.Instance.IllustBrowserUserAvatar, await PixivEx.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium));
                 });
-            }
+            });
         }
     }
 }

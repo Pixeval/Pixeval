@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using Microsoft.CSharp.RuntimeBinder;
@@ -34,7 +35,7 @@ namespace Pixeval.Objects
 {
     internal static class UiHelper
     {
-        public static void Unable(this FrameworkElement element)
+        public static void Disable(this FrameworkElement element)
         {
             element.IsEnabled = false;
         }
@@ -170,6 +171,20 @@ namespace Pixeval.Objects
                         await Task.Delay(delays[i], cancellationToken);
                     }
             }, cancellationToken);
+        }
+
+        public static void Scroll(ScrollViewer sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                sender.LineUp();
+                sender.LineUp();
+            }
+            else
+            {
+                sender.LineDown();
+                sender.LineDown();
+            }
         }
     }
 

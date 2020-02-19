@@ -49,7 +49,7 @@ namespace Pixeval.UI
                 return;
             }
 
-            Login.Unable();
+            Login.Disable();
 
             try
             {

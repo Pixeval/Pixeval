@@ -34,6 +34,8 @@ namespace Pixeval.Persisting
 
         public int MinBookmark { get; set; } = 1;
 
+        public bool RecommendIllustrator { get; set; }
+
         public string DownloadLocation
         {
             get => downloadLocation.IsNullOrEmpty() ? Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) : downloadLocation;
@@ -83,6 +85,7 @@ namespace Pixeval.Persisting
             Global.QueryPages = 1;
             Global.QueryStart = 1;
             Global.SpotlightQueryStart = 1;
+            Global.RecommendIllustrator = false;
         }
     }
 }

@@ -29,6 +29,8 @@ namespace Pixeval.Persisting
 
         public static readonly string ExceptionReportFolder = Path.Combine(ProjectFolder, "crash-reports");
 
+        public static readonly string ConfigurationFileName = "pixeval_conf.json";
+
         internal static bool LogoutExit = false;
 
         static PixevalEnvironment()

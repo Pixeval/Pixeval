@@ -69,23 +69,23 @@ namespace Pixeval.Persisting
 
         public async Task Store()
         {
-            await File.WriteAllTextAsync(Path.Combine(PixevalEnvironment.ConfFolder, "pixeval_conf.json"), ToString());
+            await File.WriteAllTextAsync(Path.Combine(PixevalEnvironment.ConfFolder, PixevalEnvironment.ConfigurationFileName), ToString());
         }
 
         public static async Task Restore()
         {
-            Global = (await File.ReadAllTextAsync(Path.Combine(PixevalEnvironment.ConfFolder, "pixeval_conf.json"), Encoding.UTF8)).FromJson<Identity>();
+            Global = (await File.ReadAllTextAsync(Path.Combine(PixevalEnvironment.ConfFolder, PixevalEnvironment.ConfigurationFileName), Encoding.UTF8)).FromJson<Identity>();
         }
 
         public static bool ConfExists()
         {
-            var path = Path.Combine(PixevalEnvironment.ConfFolder, "pixeval_conf.json");
+            var path = Path.Combine(PixevalEnvironment.ConfFolder, PixevalEnvironment.ConfigurationFileName);
             return File.Exists(path) && new FileInfo(path).Length != 0;
         }
 
         public static async ValueTask<bool> RefreshRequired()
         {
-            return (await File.ReadAllTextAsync(Path.Combine(PixevalEnvironment.ConfFolder, "pixeval_conf.json"), Encoding.UTF8)).FromJson<Identity>().ExpireIn <= DateTime.Now;
+            return (await File.ReadAllTextAsync(Path.Combine(PixevalEnvironment.ConfFolder, PixevalEnvironment.ConfigurationFileName), Encoding.UTF8)).FromJson<Identity>().ExpireIn <= DateTime.Now;
         }
 
         public static async Task RefreshIfRequired()
@@ -97,7 +97,7 @@ namespace Pixeval.Persisting
 
         public static void Clear()
         {
-            File.Delete(Path.Combine(PixevalEnvironment.ConfFolder, "pixeval_conf.json"));
+            File.Delete(Path.Combine(PixevalEnvironment.ConfFolder, PixevalEnvironment.ConfigurationFileName));
             Global = new Identity();
         }
     }

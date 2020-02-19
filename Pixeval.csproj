@@ -21,7 +21,9 @@
 
   <ItemGroup>
     <None Remove="Resources\0.jpg" />
+    <None Remove="Resources\0.png" />
     <None Remove="Resources\iconfont.ttf" />
+    <None Remove="Resources\iconfontex.ttf" />
     <None Remove="Resources\pxlogo.ico" />
     <None Remove="Resources\pxlogo_large.png" />
   </ItemGroup>
@@ -43,8 +45,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\0.jpg" />
+    <Resource Include="Resources\0.png" />
     <Resource Include="Resources\iconfont.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\iconfontex.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\pxlogo.ico" />

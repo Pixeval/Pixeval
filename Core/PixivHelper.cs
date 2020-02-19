@@ -84,6 +84,7 @@ namespace Pixeval.Core
         internal static async void DoIterate<T>(IPixivIterator<T> pixivIterator, ICollection<T> container, bool useCounter = false)
         {
             var counter = 1;
+            var hashTable = new Dictionary<string, Illustration>();
             while (pixivIterator.HasNext())
             {
                 if (useCounter && counter > Settings.Global.QueryPages * 10) break;
@@ -95,6 +96,9 @@ namespace Pixeval.Core
 
                         if (container is Collection<Illustration> illustrationContainer)
                         {
+                            if (hashTable.ContainsKey(i.Id)) continue;
+
+                            hashTable[i.Id] = i;
                             IComparer<Illustration> comparer = pixivIterator.SortOption switch
                             {
                                 SortOption.None        => null,
