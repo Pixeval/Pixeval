@@ -20,6 +20,10 @@ using System.Windows;
 using Pixeval.Persisting;
 using Refit;
 
+#if RELEASE
+using Pixeval.Objects.Exceptions.Logger;
+#endif
+
 namespace Pixeval
 {
     public partial class App
