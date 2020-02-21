@@ -50,7 +50,9 @@ namespace Pixeval.Objects
 
         public static IImmutableSet<R> ToImmutableSet<T, R>(this IEnumerable<T> enumerable, Func<T, R> function)
         {
-            return enumerable == null ? new HashSet<R>().ToImmutableHashSet() : enumerable.Select(function).ToImmutableHashSet();
+            return enumerable == null
+                ? new HashSet<R>().ToImmutableHashSet()
+                : enumerable.Select(function).ToImmutableHashSet();
         }
 
         public static bool EqualsIgnoreCase(this IEnumerable<string> src, IEnumerable<string> compare)

@@ -69,12 +69,16 @@ namespace Pixeval.Persisting
 
         public async Task Store()
         {
-            await File.WriteAllTextAsync(Path.Combine(PixevalEnvironment.ConfFolder, PixevalEnvironment.ConfigurationFileName), ToString());
+            await File.WriteAllTextAsync(
+                Path.Combine(PixevalEnvironment.ConfFolder, PixevalEnvironment.ConfigurationFileName), ToString());
         }
 
         public static async Task Restore()
         {
-            Global = (await File.ReadAllTextAsync(Path.Combine(PixevalEnvironment.ConfFolder, PixevalEnvironment.ConfigurationFileName), Encoding.UTF8)).FromJson<Identity>();
+            Global = (await File.ReadAllTextAsync(
+                    Path.Combine(PixevalEnvironment.ConfFolder, PixevalEnvironment.ConfigurationFileName),
+                    Encoding.UTF8))
+                .FromJson<Identity>();
         }
 
         public static bool ConfExists()
@@ -85,7 +89,9 @@ namespace Pixeval.Persisting
 
         public static async ValueTask<bool> RefreshRequired()
         {
-            return (await File.ReadAllTextAsync(Path.Combine(PixevalEnvironment.ConfFolder, PixevalEnvironment.ConfigurationFileName), Encoding.UTF8)).FromJson<Identity>().ExpireIn <= DateTime.Now;
+            return (await File.ReadAllTextAsync(
+                       Path.Combine(PixevalEnvironment.ConfFolder, PixevalEnvironment.ConfigurationFileName),
+                       Encoding.UTF8)).FromJson<Identity>().ExpireIn <= DateTime.Now;
         }
 
         public static async Task RefreshIfRequired()

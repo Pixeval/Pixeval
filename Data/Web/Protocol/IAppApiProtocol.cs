@@ -60,6 +60,7 @@ namespace Pixeval.Data.Web.Protocol
 
         [Headers("Accept-Language: zn-cn")]
         [Get("/v1/user/recommended?filter=for_android")]
-        Task<RecommendIllustratorResponse> GetRecommendIllustrators(RecommendIllustratorRequest recommendIllustratorRequest);
+        Task<RecommendIllustratorResponse> GetRecommendIllustrators(
+            RecommendIllustratorRequest recommendIllustratorRequest);
     }
 }

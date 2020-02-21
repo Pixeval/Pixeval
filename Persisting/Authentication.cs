@@ -45,7 +45,8 @@ namespace Pixeval.Persisting
 
             try
             {
-                var token = await RestService.For<ITokenProtocol>(HttpClientFactory.PixivApi(ProtocolBase.OAuthBaseUrl, h => h.Timeout = TimeSpan.FromSeconds(10)))
+                var token = await RestService.For<ITokenProtocol>(HttpClientFactory.PixivApi(ProtocolBase.OAuthBaseUrl,
+                        h => h.Timeout = TimeSpan.FromSeconds(10)))
                     .GetToken(new TokenRequest {Name = name, Password = pwd}, time, hash);
 
                 Identity.Global = Identity.Parse(pwd, token);

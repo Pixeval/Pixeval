@@ -44,7 +44,8 @@ namespace Pixeval.Data.Web.Delegation
 
         protected abstract DnsResolver DnsResolver { get; set; }
 
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+            CancellationToken cancellationToken)
         {
             if (directConnect)
             {
@@ -52,7 +53,9 @@ namespace Pixeval.Data.Web.Delegation
 
                 var isSslSession = request.RequestUri.ToString().StartsWith("https://");
 
-                request.RequestUri = new Uri($"{(isSslSession ? "https://" : "http://")}{(await DnsResolver.Lookup(host))[0]}{request.RequestUri.PathAndQuery}");
+                request.RequestUri =
+                    new Uri(
+                        $"{(isSslSession ? "https://" : "http://")}{(await DnsResolver.Lookup(host))[0]}{request.RequestUri.PathAndQuery}");
                 request.Headers.Host = host;
             }
 
@@ -70,14 +73,16 @@ namespace Pixeval.Data.Web.Delegation
                 throw;
             }
 
-            if (result.StatusCode == HttpStatusCode.BadRequest && (await result.Content.ReadAsStringAsync()).Contains("OAuth"))
+            if (result.StatusCode == HttpStatusCode.BadRequest &&
+                (await result.Content.ReadAsStringAsync()).Contains("OAuth"))
             {
                 using var _ = await new AsyncLock().LockAsync();
                 await Authentication.Authenticate(Identity.Global.MailAddress, Identity.Global.Password);
 
                 var token = request.Headers.Authorization;
                 if (token != null)
-                    request.Headers.Authorization = new AuthenticationHeaderValue(token.Scheme, Identity.Global.AccessToken);
+                    request.Headers.Authorization =
+                        new AuthenticationHeaderValue(token.Scheme, Identity.Global.AccessToken);
 
                 return await base.SendAsync(request, cancellationToken);
             }

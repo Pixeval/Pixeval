@@ -23,7 +23,10 @@ namespace Pixeval.Objects
     internal class AlignWrapPanel : Panel
     {
         public static readonly DependencyProperty HorizontalContentAlignmentProperty =
-            DependencyProperty.Register("HorizontalContentAlignment", typeof(HorizontalAlignment), typeof(AlignWrapPanel), new FrameworkPropertyMetadata(HorizontalAlignment.Left, FrameworkPropertyMetadataOptions.AffectsArrange));
+            DependencyProperty.Register("HorizontalContentAlignment", typeof(HorizontalAlignment),
+                typeof(AlignWrapPanel),
+                new FrameworkPropertyMetadata(HorizontalAlignment.Left,
+                    FrameworkPropertyMetadataOptions.AffectsArrange));
 
         public HorizontalAlignment HorizontalContentAlignment
         {
@@ -116,8 +119,8 @@ namespace Pixeval.Objects
             var x = HorizontalContentAlignment switch
             {
                 HorizontalAlignment.Center => ((boundsWidth - lineSize.Width) / 2),
-                HorizontalAlignment.Right  => (boundsWidth - lineSize.Width),
-                _                          => 0
+                HorizontalAlignment.Right => (boundsWidth - lineSize.Width),
+                _ => 0
             };
 
             var children = InternalChildren;

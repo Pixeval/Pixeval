@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <Description>A Strong, Fast and Flexible Pixiv Client</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <StartupObject>Pixeval.App</StartupObject>
     <ApplicationIcon>Resources\pxlogo.ico</ApplicationIcon>
+    <NoWarn>$(NoWarn);NU1701</NoWarn>
     <Win32Resource />
   </PropertyGroup>
 
@@ -29,15 +30,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AngleSharp" Version="0.13.0" />
-    <PackageReference Include="Extended.Wpf.Toolkit" Version="3.7.0" />
+    <PackageReference Include="AngleSharp" Version="0.14.0-alpha-789" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="3.8.1" />
     <PackageReference Include="FluentWPF" Version="0.8.0" />
-    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.14.5" />
-    <PackageReference Include="MahApps.Metro" Version="1.6.5" />
-    <PackageReference Include="MaterialDesignColors" Version="1.2.1" />
-    <PackageReference Include="MaterialDesignThemes" Version="2.6.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="PropertyChanged.Fody" Version="3.2.1" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.15.1" />
+    <PackageReference Include="MahApps.Metro" Version="2.0.0-alpha0660" />
+    <PackageReference Include="MaterialDesignColors" Version="1.2.3-ci981" />
+    <PackageReference Include="MaterialDesignThemes" Version="3.1.0-ci981" />
+    <PackageReference Include="PropertyChanged.Fody" Version="3.2.6" />
     <PackageReference Include="refit" Version="5.0.23" />
     <PackageReference Include="System.Interactive.Async" Version="4.0.0" />
     <PackageReference Include="VirtualizingWrapPanel.NETCore" Version="1.4.0" />
@@ -58,6 +58,7 @@
 
   <ItemGroup>
     <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="ViewModels\" />
   </ItemGroup>
 
 </Project>

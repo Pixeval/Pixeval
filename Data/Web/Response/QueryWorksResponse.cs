@@ -19,24 +19,20 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Pixeval.Core;
-using Pixeval.Data.ViewModel;
+using Pixeval.Models;
 using Pixeval.Objects;
 
 namespace Pixeval.Data.Web.Response
 {
     public class QueryWorksResponse
     {
-        [JsonProperty("status")]
-        public string Status { get; set; }
+        [JsonProperty("status")] public string Status { get; set; }
 
-        [JsonProperty("response")]
-        public List<Response> ToResponse { get; set; }
+        [JsonProperty("response")] public List<Response> ToResponse { get; set; }
 
-        [JsonProperty("pagination")]
-        public Pagination Pages { get; set; }
+        [JsonProperty("pagination")] public Pagination Pages { get; set; }
 
-        [JsonProperty("count")]
-        public long Count { get; set; }
+        [JsonProperty("count")] public long Count { get; set; }
 
         public class Pagination
         {
@@ -46,77 +42,54 @@ namespace Pixeval.Data.Web.Response
             [JsonProperty("next", NullValueHandling = NullValueHandling.Include)]
             public long? Next { get; set; }
 
-            [JsonProperty("current")]
-            public long Current { get; set; }
+            [JsonProperty("current")] public long Current { get; set; }
 
-            [JsonProperty("per_page")]
-            public long PerPage { get; set; }
+            [JsonProperty("per_page")] public long PerPage { get; set; }
 
-            [JsonProperty("total")]
-            public long Total { get; set; }
+            [JsonProperty("total")] public long Total { get; set; }
 
-            [JsonProperty("pages")]
-            public long Pages { get; set; }
+            [JsonProperty("pages")] public long Pages { get; set; }
         }
 
         public class Response : IParser<Illustration>
         {
-            [JsonProperty("id")]
-            public long Id { get; set; }
+            [JsonProperty("id")] public long Id { get; set; }
 
-            [JsonProperty("title")]
-            public string Title { get; set; }
+            [JsonProperty("title")] public string Title { get; set; }
 
-            [JsonProperty("caption")]
-            public string Caption { get; set; }
+            [JsonProperty("caption")] public string Caption { get; set; }
 
-            [JsonProperty("tags")]
-            public string[] Tags { get; set; }
+            [JsonProperty("tags")] public string[] Tags { get; set; }
 
-            [JsonProperty("tools")]
-            public string[] Tools { get; set; }
+            [JsonProperty("tools")] public string[] Tools { get; set; }
 
-            [JsonProperty("image_urls")]
-            public ImageUrls ImageUrls { get; set; }
+            [JsonProperty("image_urls")] public ImageUrls ImageUrls { get; set; }
 
-            [JsonProperty("width")]
-            public long Width { get; set; }
+            [JsonProperty("width")] public long Width { get; set; }
 
-            [JsonProperty("height")]
-            public long Height { get; set; }
+            [JsonProperty("height")] public long Height { get; set; }
 
-            [JsonProperty("stats")]
-            public Stats Stats { get; set; }
+            [JsonProperty("stats")] public Stats Stats { get; set; }
 
-            [JsonProperty("publicity")]
-            public long Publicity { get; set; }
+            [JsonProperty("publicity")] public long Publicity { get; set; }
 
-            [JsonProperty("age_limit")]
-            public string AgeLimit { get; set; }
+            [JsonProperty("age_limit")] public string AgeLimit { get; set; }
 
-            [JsonProperty("created_time")]
-            public DateTimeOffset CreateTime { get; set; }
+            [JsonProperty("created_time")] public DateTimeOffset CreateTime { get; set; }
 
-            [JsonProperty("user")]
-            public User User { get; set; }
+            [JsonProperty("user")] public User User { get; set; }
 
-            [JsonProperty("is_manga")]
-            public bool IsManga { get; set; }
+            [JsonProperty("is_manga")] public bool IsManga { get; set; }
 
-            [JsonProperty("is_liked")]
-            public bool IsLiked { get; set; }
+            [JsonProperty("is_liked")] public bool IsLiked { get; set; }
 
-            [JsonProperty("favorite_id")]
-            public long FavoriteId { get; set; }
+            [JsonProperty("favorite_id")] public long FavoriteId { get; set; }
 
-            [JsonProperty("page_count")]
-            public long PageCount { get; set; }
+            [JsonProperty("page_count")] public long PageCount { get; set; }
 
-            [JsonProperty("book_style")]
-            public string BookStyle { get; set; }
+            [JsonProperty("book_style")] public string BookStyle { get; set; }
 
-            [JsonProperty("type")]
-            public string Type { get; set; }
+            [JsonProperty("type")] public string Type { get; set; }
 
             public Illustration Parse()
             {
@@ -139,69 +112,54 @@ namespace Pixeval.Data.Web.Response
                     PublishDate = CreateTime
                 }.Apply(async i =>
                 {
-                    if (i != null && i.IsManga) i.MangaMetadata = (await PixivHelper.IllustrationInfo(i.Id)).MangaMetadata;
+                    if (i != null && i.IsManga)
+                        i.MangaMetadata = (await PixivHelper.GetIllustrationInfo(i.Id)).MangaMetadata;
                 });
             }
         }
 
         public class ImageUrls
         {
-            [JsonProperty("px_128x128")]
-            public string Px128X128 { get; set; }
+            [JsonProperty("px_128x128")] public string Px128X128 { get; set; }
 
-            [JsonProperty("px_480mw")]
-            public string Px480Mw { get; set; }
+            [JsonProperty("px_480mw")] public string Px480Mw { get; set; }
 
-            [JsonProperty("large")]
-            public string Large { get; set; }
+            [JsonProperty("large")] public string Large { get; set; }
         }
 
         public class Stats
         {
-            [JsonProperty("scored_count")]
-            public long ScoredCount { get; set; }
+            [JsonProperty("scored_count")] public long ScoredCount { get; set; }
 
-            [JsonProperty("score")]
-            public long Score { get; set; }
+            [JsonProperty("score")] public long Score { get; set; }
 
-            [JsonProperty("views_count")]
-            public long ViewsCount { get; set; }
+            [JsonProperty("views_count")] public long ViewsCount { get; set; }
 
-            [JsonProperty("favorited_count")]
-            public FavoritedCount FavoritedCount { get; set; }
+            [JsonProperty("favorited_count")] public FavoritedCount FavoritedCount { get; set; }
 
-            [JsonProperty("commented_count")]
-            public long CommentedCount { get; set; }
+            [JsonProperty("commented_count")] public long CommentedCount { get; set; }
         }
 
         public class FavoritedCount
         {
-            [JsonProperty("public")]
-            public long Public { get; set; }
+            [JsonProperty("public")] public long Public { get; set; }
 
-            [JsonProperty("private")]
-            public long Private { get; set; }
+            [JsonProperty("private")] public long Private { get; set; }
         }
 
         public class User
         {
-            [JsonProperty("id")]
-            public long Id { get; set; }
+            [JsonProperty("id")] public long Id { get; set; }
 
-            [JsonProperty("account")]
-            public string Account { get; set; }
+            [JsonProperty("account")] public string Account { get; set; }
 
-            [JsonProperty("name")]
-            public string Name { get; set; }
+            [JsonProperty("name")] public string Name { get; set; }
 
-            [JsonProperty("is_following")]
-            public bool IsFollowing { get; set; }
+            [JsonProperty("is_following")] public bool IsFollowing { get; set; }
 
-            [JsonProperty("is_follower")]
-            public bool IsFollower { get; set; }
+            [JsonProperty("is_follower")] public bool IsFollower { get; set; }
 
-            [JsonProperty("is_friend")]
-            public bool IsFriend { get; set; }
+            [JsonProperty("is_friend")] public bool IsFriend { get; set; }
         }
     }
 }

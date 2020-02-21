@@ -20,28 +20,20 @@ namespace Pixeval.Data.Web.Request
 {
     public class QueryWorksRequest
     {
-        [AliasAs("page")]
-        public int Offset { get; set; }
+        [AliasAs("page")] public int Offset { get; set; }
 
-        [AliasAs("q")]
-        public string Tag { get; set; }
+        [AliasAs("q")] public string Tag { get; set; }
 
-        [AliasAs("per_page")]
-        public int PerPage { get; set; } = 30;
+        [AliasAs("per_page")] public int PerPage { get; set; } = 30;
 
-        [AliasAs("period")]
-        public string Period { get; set; } = "all";
+        [AliasAs("period")] public string Period { get; set; } = "all";
 
-        [AliasAs("order")]
-        public string Order { get; set; } = "desc";
+        [AliasAs("order")] public string Order { get; set; } = "desc";
 
-        [AliasAs("sort")]
-        public string Sort { get; set; } = "date";
+        [AliasAs("sort")] public string Sort { get; set; } = "date";
 
-        [AliasAs("image_sizes")]
-        public string ImageSizes { get; set; } = "px_128x128,px_480mw,large";
+        [AliasAs("image_sizes")] public string ImageSizes { get; set; } = "px_128x128,px_480mw,large";
 
-        [AliasAs("include_stats")]
-        public string IncludeStats { get; set; } = "true";
+        [AliasAs("include_stats")] public string IncludeStats { get; set; } = "true";
     }
 }

@@ -26,7 +26,9 @@ namespace Pixeval.Objects
         private Func<T, Task<R>> mappingFunc;
         private IEnumerable<T> taskQueue;
 
-        private Tasks() { }
+        private Tasks()
+        {
+        }
 
         public static Tasks<T, R> Of(IEnumerable<T> tasks)
         {

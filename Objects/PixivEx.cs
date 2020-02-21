@@ -24,8 +24,8 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using ImageMagick;
 using Pixeval.Core;
-using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
+using Pixeval.Models;
 using Pixeval.Persisting;
 
 namespace Pixeval.Objects
@@ -181,7 +181,10 @@ namespace Pixeval.Objects
             else
             {
                 var url = illustration.Origin.IsNullOrEmpty() ? illustration.Large : illustration.Origin;
-                await File.WriteAllBytesAsync(Path.Combine(path, $"[{Texts.FormatPath(illustration.UserName)}]{illustration.Id}{Texts.GetExtension(url)}"), await FromUrlInternal(url));
+                await File.WriteAllBytesAsync(
+                    Path.Combine(path,
+                        $"[{Texts.FormatPath(illustration.UserName)}]{illustration.Id}{Texts.GetExtension(url)}"),
+                    await FromUrlInternal(url));
             }
         }
 
@@ -192,28 +195,38 @@ namespace Pixeval.Objects
             var metadata = await HttpClientFactory.AppApiService.GetUgoiraMetadata(illustration.Id);
             var url = FormatGifZipUrl(metadata.UgoiraMetadataInfo.ZipUrls.Medium);
 
-            await using var img = (MemoryStream) await GetGifStream(url, metadata.UgoiraMetadataInfo.Frames.Select(f => f.Delay / 10).ToList());
-            await File.WriteAllBytesAsync(Path.Combine(rootPath, $"[{Texts.FormatPath(illustration.UserName)}]{illustration.Id}.gif"), await Task.Run(() => img.ToArray()));
+            await using var img = (MemoryStream) await GetGifStream(url,
+                metadata.UgoiraMetadataInfo.Frames.Select(f => f.Delay / 10).ToList());
+            await File.WriteAllBytesAsync(
+                Path.Combine(rootPath, $"[{Texts.FormatPath(illustration.UserName)}]{illustration.Id}.gif"),
+                await Task.Run(() => img.ToArray()));
         }
 
         public static async Task DownloadManga(Illustration illustration, string rootPath)
         {
             if (!illustration.IsManga) throw new InvalidOperationException();
 
-            var mangaDir = Directory.CreateDirectory(Path.Combine(rootPath, $"[{Texts.FormatPath(illustration.UserName)}]{illustration.Id}")).FullName;
+            var mangaDir = Directory
+                .CreateDirectory(
+                    Path.Combine(rootPath, $"[{Texts.FormatPath(illustration.UserName)}]{illustration.Id}")).FullName;
             for (var i = 0; i < illustration.MangaMetadata.Length; i++)
             {
-                var url = illustration.MangaMetadata[i].Origin.IsNullOrEmpty() ? illustration.MangaMetadata[i].Large : illustration.MangaMetadata[i].Origin;
-                await File.WriteAllBytesAsync(Path.Combine(mangaDir, $"{i}{Texts.GetExtension(url)}"), await FromUrlInternal(url));
+                var url = illustration.MangaMetadata[i].Origin.IsNullOrEmpty()
+                    ? illustration.MangaMetadata[i].Large
+                    : illustration.MangaMetadata[i].Origin;
+                await File.WriteAllBytesAsync(Path.Combine(mangaDir, $"{i}{Texts.GetExtension(url)}"),
+                    await FromUrlInternal(url));
             }
         }
 
         public static async Task DownloadSpotlight(SpotlightArticle article)
         {
-            var root = Directory.CreateDirectory(Path.Combine(Settings.Global.DownloadLocation, "Spotlight", article.Title)).FullName;
+            var root = Directory
+                .CreateDirectory(Path.Combine(Settings.Global.DownloadLocation, "Spotlight", article.Title)).FullName;
 
-            var result = await Tasks<string, Illustration>.Of(await PixivClient.Instance.GetArticleWorks(article.Id.ToString()))
-                .Mapping(PixivHelper.IllustrationInfo)
+            var result = await Tasks<string, Illustration>
+                .Of(await PixivClient.Instance.GetArticleWorks(article.Id.ToString()))
+                .Mapping(PixivHelper.GetIllustrationInfo)
                 .Construct()
                 .WhenAll();
 
@@ -222,7 +235,9 @@ namespace Pixeval.Objects
 
         public static string FormatGifZipUrl(string link)
         {
-            return !link.EndsWith("ugoira1920x1080.zip") ? Regex.Replace(link, "ugoira(\\d+)x(\\d+).zip", "ugoira1920x1080.zip") : link;
+            return !link.EndsWith("ugoira1920x1080.zip")
+                ? Regex.Replace(link, "ugoira(\\d+)x(\\d+).zip", "ugoira1920x1080.zip")
+                : link;
         }
 
         public static string GetSpotlightCover(SpotlightArticle article)
@@ -230,7 +245,8 @@ namespace Pixeval.Objects
             var match = Regex.Match(article.Thumbnail, "/(?<illust_id>\\d+)_p\\d+_master1200\\.jpg|png");
             if (match.Success)
             {
-                var url = Regex.Replace(article.Thumbnail, "/c/\\d+x\\d+_\\d+/img-master/", "/img-original/").Replace("_master1200", string.Empty);
+                var url = Regex.Replace(article.Thumbnail, "/c/\\d+x\\d+_\\d+/img-master/", "/img-original/")
+                    .Replace("_master1200", string.Empty);
                 return url;
             }
 

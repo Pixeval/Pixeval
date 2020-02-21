@@ -19,9 +19,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Response;
+using Pixeval.Models;
 using Pixeval.Objects;
 using Pixeval.Objects.Exceptions.Logger;
 using Pixeval.Persisting;
@@ -31,7 +31,7 @@ namespace Pixeval.Core
 {
     public class PixivHelper
     {
-        public static async Task<Illustration> IllustrationInfo(string id)
+        public static async Task<Illustration> GetIllustrationInfo(string id)
         {
             SingleWorkResponse.Illust response;
             try
@@ -80,7 +80,8 @@ namespace Pixeval.Core
             return illust;
         }
 
-        internal static async void DoIterate<T>(IPixivIterator<T> pixivIterator, ICollection<T> container, bool useCounter = false)
+        internal static async void DoIterate<T>(IPixivIterator<T> pixivIterator, ICollection<T> container,
+            bool useCounter = false)
         {
             var counter = 1;
             var hashTable = new Dictionary<string, Illustration>();
@@ -100,10 +101,10 @@ namespace Pixeval.Core
                             hashTable[i.Id] = i;
                             IComparer<Illustration> comparer = pixivIterator.SortOption switch
                             {
-                                SortOption.None        => null,
+                                SortOption.None => null,
                                 SortOption.PublishDate => IllustrationPublishDateComparator.Instance,
-                                SortOption.Popularity  => IllustrationPopularityComparator.Instance,
-                                _                      => null
+                                SortOption.Popularity => IllustrationPopularityComparator.Instance,
+                                _ => null
                             };
                             illustrationContainer.AddSorted(i, comparer);
                         }
@@ -117,11 +118,14 @@ namespace Pixeval.Core
             }
         }
 
-        internal static bool IllustNotMatchCondition(ISet<string> exceptTag, ISet<string> containsTag, Illustration illustration)
+        internal static bool IllustNotMatchCondition(ISet<string> exceptTag, ISet<string> containsTag,
+            Illustration illustration)
         {
             if (illustration == null) return false;
-            return !exceptTag.IsNullOrEmpty() && exceptTag.Any(x => !x.IsNullOrEmpty() && illustration.Tags.Any(i => i.Name.EqualsIgnoreCase(x))) ||
-                   !containsTag.IsNullOrEmpty() && containsTag.Any(x => !x.IsNullOrEmpty() && !illustration.Tags.Any(i => i.Name.EqualsIgnoreCase(x))) ||
+            return !exceptTag.IsNullOrEmpty() && exceptTag.Any(x =>
+                       !x.IsNullOrEmpty() && illustration.Tags.Any(i => i.Name.EqualsIgnoreCase(x))) ||
+                   !containsTag.IsNullOrEmpty() && containsTag.Any(x =>
+                       !x.IsNullOrEmpty() && !illustration.Tags.Any(i => i.Name.EqualsIgnoreCase(x))) ||
                    illustration.Bookmark < Settings.Global.MinBookmark;
         }
     }

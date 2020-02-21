@@ -99,7 +99,8 @@ namespace Pixeval.Objects
             listView.ItemsSource = null;
         }
 
-        public static void StartDoubleAnimationUseCubicEase(object sender, string path, double from, double to, int milliseconds)
+        public static void StartDoubleAnimationUseCubicEase(object sender, string path, double from, double to,
+            int milliseconds)
         {
             var sb = new Storyboard();
             var doubleAnimation = new DoubleAnimation(from, to, TimeSpan.FromMilliseconds(milliseconds))
@@ -158,7 +159,8 @@ namespace Pixeval.Objects
             }
         }
 
-        public static void PlayGif(this Image image, IEnumerable<Stream> imageSources, IEnumerable<int> delay, CancellationToken cancellationToken)
+        public static void PlayGif(this Image image, IEnumerable<Stream> imageSources, IEnumerable<int> delay,
+            CancellationToken cancellationToken)
         {
             Task.Run(async () =>
             {
@@ -191,7 +193,8 @@ namespace Pixeval.Objects
     internal class PopupHelper
     {
         public static readonly DependencyProperty PopupPlacementTargetProperty =
-            DependencyProperty.RegisterAttached("PopupPlacementTarget", typeof(DependencyObject), typeof(PopupHelper), new PropertyMetadata(null, OnPopupPlacementTargetChanged));
+            DependencyProperty.RegisterAttached("PopupPlacementTarget", typeof(DependencyObject), typeof(PopupHelper),
+                new PropertyMetadata(null, OnPopupPlacementTargetChanged));
 
         public static DependencyObject GetPopupPlacementTarget(DependencyObject obj)
         {

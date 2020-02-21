@@ -18,86 +18,62 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
-using Pixeval.Data.ViewModel;
+using Pixeval.Models;
 using Pixeval.Objects;
 
 namespace Pixeval.Data.Web.Response
 {
     public class GalleryResponse
     {
-        [JsonProperty("illusts")]
-        public List<Illust> Illusts { get; set; }
+        [JsonProperty("illusts")] public List<Illust> Illusts { get; set; }
 
-        [JsonProperty("next_url")]
-        public string NextUrl { get; set; }
+        [JsonProperty("next_url")] public string NextUrl { get; set; }
 
         public class Illust : IParser<Illustration>
         {
-            [JsonProperty("id")]
-            public long Id { get; set; }
+            [JsonProperty("id")] public long Id { get; set; }
 
-            [JsonProperty("title")]
-            public string Title { get; set; }
+            [JsonProperty("title")] public string Title { get; set; }
 
-            [JsonProperty("type")]
-            public string Type { get; set; }
+            [JsonProperty("type")] public string Type { get; set; }
 
-            [JsonProperty("image_urls")]
-            public ImageUrls ImageUrls { get; set; }
+            [JsonProperty("image_urls")] public ImageUrls ImageUrls { get; set; }
 
-            [JsonProperty("caption")]
-            public string Caption { get; set; }
+            [JsonProperty("caption")] public string Caption { get; set; }
 
-            [JsonProperty("restrict")]
-            public long Restrict { get; set; }
+            [JsonProperty("restrict")] public long Restrict { get; set; }
 
-            [JsonProperty("user")]
-            public User User { get; set; }
+            [JsonProperty("user")] public User User { get; set; }
 
-            [JsonProperty("tags")]
-            public List<Tag> Tags { get; set; }
+            [JsonProperty("tags")] public List<Tag> Tags { get; set; }
 
-            [JsonProperty("tools")]
-            public List<string> Tools { get; set; }
+            [JsonProperty("tools")] public List<string> Tools { get; set; }
 
-            [JsonProperty("create_date")]
-            public DateTimeOffset CreateDate { get; set; }
+            [JsonProperty("create_date")] public DateTimeOffset CreateDate { get; set; }
 
-            [JsonProperty("page_count")]
-            public long PageCount { get; set; }
+            [JsonProperty("page_count")] public long PageCount { get; set; }
 
-            [JsonProperty("width")]
-            public long Width { get; set; }
+            [JsonProperty("width")] public long Width { get; set; }
 
-            [JsonProperty("height")]
-            public long Height { get; set; }
+            [JsonProperty("height")] public long Height { get; set; }
 
-            [JsonProperty("sanity_level")]
-            public long SanityLevel { get; set; }
+            [JsonProperty("sanity_level")] public long SanityLevel { get; set; }
 
-            [JsonProperty("x_restrict")]
-            public long XRestrict { get; set; }
+            [JsonProperty("x_restrict")] public long XRestrict { get; set; }
 
-            [JsonProperty("meta_single_page")]
-            public MetaSinglePage MetaSinglePage { get; set; }
+            [JsonProperty("meta_single_page")] public MetaSinglePage MetaSinglePage { get; set; }
 
-            [JsonProperty("meta_pages")]
-            public List<MetaPage> MetaPages { get; set; }
+            [JsonProperty("meta_pages")] public List<MetaPage> MetaPages { get; set; }
 
-            [JsonProperty("total_view")]
-            public long TotalView { get; set; }
+            [JsonProperty("total_view")] public long TotalView { get; set; }
 
-            [JsonProperty("total_bookmarks")]
-            public long TotalBookmarks { get; set; }
+            [JsonProperty("total_bookmarks")] public long TotalBookmarks { get; set; }
 
-            [JsonProperty("is_bookmarked")]
-            public bool IsBookmarked { get; set; }
+            [JsonProperty("is_bookmarked")] public bool IsBookmarked { get; set; }
 
-            [JsonProperty("visible")]
-            public bool Visible { get; set; }
+            [JsonProperty("visible")] public bool Visible { get; set; }
 
-            [JsonProperty("is_muted")]
-            public bool IsMuted { get; set; }
+            [JsonProperty("is_muted")] public bool IsMuted { get; set; }
 
             public Illustration Parse()
             {
@@ -110,7 +86,7 @@ namespace Pixeval.Data.Web.Response
                     IsUgoira = Type == "ugoira",
                     Origin = MetaSinglePage.OriginalImageUrl,
                     Large = ImageUrls.Large,
-                    Tags = Tags.Select(t => new ViewModel.Tag {Name = t.Name, TranslatedName = t.TranslatedName}),
+                    Tags = Tags.Select(t => new Models.Tag {Name = t.Name, TranslatedName = t.TranslatedName}),
                     Thumbnail = ImageUrls.Medium.IsNullOrEmpty() ? ImageUrls.SquareMedium : ImageUrls.Medium,
                     Title = Title,
                     UserId = User.Id.ToString(),
@@ -135,14 +111,11 @@ namespace Pixeval.Data.Web.Response
 
         public class ImageUrls
         {
-            [JsonProperty("square_medium")]
-            public string SquareMedium { get; set; }
+            [JsonProperty("square_medium")] public string SquareMedium { get; set; }
 
-            [JsonProperty("medium")]
-            public string Medium { get; set; }
+            [JsonProperty("medium")] public string Medium { get; set; }
 
-            [JsonProperty("large")]
-            public string Large { get; set; }
+            [JsonProperty("large")] public string Large { get; set; }
 
             [JsonProperty("original", NullValueHandling = NullValueHandling.Ignore)]
             public string Original { get; set; }
@@ -150,8 +123,7 @@ namespace Pixeval.Data.Web.Response
 
         public class MetaPage
         {
-            [JsonProperty("image_urls")]
-            public ImageUrls ImageUrls { get; set; }
+            [JsonProperty("image_urls")] public ImageUrls ImageUrls { get; set; }
         }
 
         public class MetaSinglePage
@@ -162,35 +134,27 @@ namespace Pixeval.Data.Web.Response
 
         public class Tag
         {
-            [JsonProperty("name")]
-            public string Name { get; set; }
+            [JsonProperty("name")] public string Name { get; set; }
 
-            [JsonProperty("translated_name")]
-            public string TranslatedName { get; set; }
+            [JsonProperty("translated_name")] public string TranslatedName { get; set; }
         }
 
         public class User
         {
-            [JsonProperty("id")]
-            public long Id { get; set; }
+            [JsonProperty("id")] public long Id { get; set; }
 
-            [JsonProperty("name")]
-            public string Name { get; set; }
+            [JsonProperty("name")] public string Name { get; set; }
 
-            [JsonProperty("account")]
-            public string Account { get; set; }
+            [JsonProperty("account")] public string Account { get; set; }
 
-            [JsonProperty("profile_image_urls")]
-            public ProfileImageUrls ProfileImageUrls { get; set; }
+            [JsonProperty("profile_image_urls")] public ProfileImageUrls ProfileImageUrls { get; set; }
 
-            [JsonProperty("is_followed")]
-            public bool IsFollowed { get; set; }
+            [JsonProperty("is_followed")] public bool IsFollowed { get; set; }
         }
 
         public class ProfileImageUrls
         {
-            [JsonProperty("medium")]
-            public string Medium { get; set; }
+            [JsonProperty("medium")] public string Medium { get; set; }
         }
     }
 }

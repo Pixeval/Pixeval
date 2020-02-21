@@ -16,9 +16,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Response;
+using Pixeval.Models;
 using Pixeval.Objects;
 using Pixeval.Objects.Exceptions;
 
@@ -49,7 +49,8 @@ namespace Pixeval.Core
         public async IAsyncEnumerable<User> MoveNextAsync()
         {
             var url = $"https://app-api.pixiv.net/v1/search/user?filter=for_android&word={keyword}";
-            context = (await HttpClientFactory.AppApiHttpClient.GetStringAsync(context == null ? url : context.NextUrl)).FromJson<UserNavResponse>();
+            context = (await HttpClientFactory.AppApiHttpClient.GetStringAsync(context == null ? url : context.NextUrl))
+                .FromJson<UserNavResponse>();
 
             if (context.UserPreviews.IsNullOrEmpty() && counter++ == 0) throw new QueryNotRespondingException();
 

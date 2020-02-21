@@ -24,11 +24,17 @@ namespace Pixeval.Objects.Exceptions.Logger
 {
     public class ExceptionLogger
     {
-        private const string Separator = "---------------------------------------------------------------------------------";
+        private const string Separator =
+            "---------------------------------------------------------------------------------";
 
         public static void WriteException(Exception e)
         {
-            File.WriteAllTextAsync(Path.Combine(PixevalEnvironment.ExceptionReportFolder, $"{DateTime.Now.ToString(CultureInfo.InvariantCulture)}.txt".Replace("/", "-").Replace(":", "-")), e is ApiException apiException ? apiException + Environment.NewLine + Separator + Environment.NewLine + apiException.Content : e.ToString());
+            File.WriteAllTextAsync(
+                Path.Combine(PixevalEnvironment.ExceptionReportFolder,
+                    $"{DateTime.Now.ToString(CultureInfo.InvariantCulture)}.txt".Replace("/", "-").Replace(":", "-")),
+                e is ApiException apiException
+                    ? apiException + Environment.NewLine + Separator + Environment.NewLine + apiException.Content
+                    : e.ToString());
         }
     }
 }

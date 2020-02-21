@@ -15,9 +15,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
-using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Response;
+using Pixeval.Models;
 using Pixeval.Objects;
 using Pixeval.Objects.Exceptions;
 
@@ -39,7 +39,9 @@ namespace Pixeval.Core
         public async IAsyncEnumerable<Illustration> MoveNextAsync()
         {
             const string url = "https://app-api.pixiv.net/v2/illust/follow?restrict=public";
-            var response = (await HttpClientFactory.AppApiHttpClient.GetStringAsync(context == null ? url : context.NextUrl)).FromJson<UserUpdateResponse>();
+            var response =
+                (await HttpClientFactory.AppApiHttpClient.GetStringAsync(context == null ? url : context.NextUrl))
+                .FromJson<UserUpdateResponse>();
 
             if (response.Illusts.IsNullOrEmpty() && context == null) throw new QueryNotRespondingException();
 

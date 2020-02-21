@@ -16,16 +16,14 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Pixeval.Data.ViewModel;
+using Pixeval.Models;
 
 namespace Pixeval.Data.Web.Response
 {
     public class SpotlightResponse
     {
-        [JsonProperty("spotlight_articles")]
-        public List<SpotlightArticle> SpotlightArticles { get; set; }
+        [JsonProperty("spotlight_articles")] public List<SpotlightArticle> SpotlightArticles { get; set; }
 
-        [JsonProperty("next_url")]
-        public string NextUrl { get; set; }
+        [JsonProperty("next_url")] public string NextUrl { get; set; }
     }
 }

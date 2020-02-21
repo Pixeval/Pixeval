@@ -15,8 +15,8 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
-using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
+using Pixeval.Models;
 
 namespace Pixeval.Core
 {
@@ -42,7 +42,8 @@ namespace Pixeval.Core
         public async IAsyncEnumerable<SpotlightArticle> MoveNextAsync()
         {
             var spotlight = await HttpClientFactory.AppApiService.GetSpotlights(currentIndex++ * 10);
-            foreach (var spotlightSpotlightArticle in spotlight.SpotlightArticles) yield return spotlightSpotlightArticle;
+            foreach (var spotlightSpotlightArticle in spotlight.SpotlightArticles)
+                yield return spotlightSpotlightArticle;
         }
     }
 }

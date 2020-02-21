@@ -16,9 +16,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
+using Pixeval.Models;
 using Pixeval.Objects.Exceptions;
 
 namespace Pixeval.Core
@@ -49,13 +49,15 @@ namespace Pixeval.Core
 
         public async IAsyncEnumerable<Illustration> MoveNextAsync()
         {
-            var works = await HttpClientFactory.PublicApiService.QueryWorks(new QueryWorksRequest {Tag = tag, Offset = currentIndex++});
+            var works = await HttpClientFactory.PublicApiService.QueryWorks(new QueryWorksRequest
+                {Tag = tag, Offset = currentIndex++});
 
             if (currentIndex - start == 1 && !works.ToResponse.Any()) throw new QueryNotRespondingException();
 
             if (works.Pages.Next == null) lastPage = true;
 
-            foreach (var response in works.ToResponse.Where(response => response != null)) yield return response.Parse();
+            foreach (var response in works.ToResponse.Where(response => response != null))
+                yield return response.Parse();
         }
     }
 }

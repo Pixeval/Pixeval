@@ -16,9 +16,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Response;
+using Pixeval.Models;
 using Pixeval.Objects;
 using Pixeval.Objects.Exceptions;
 
@@ -47,13 +47,16 @@ namespace Pixeval.Core
         {
             var query = $"/v1/user/bookmarks/illust?user_id={uid}&restrict=public&filter=for_ios";
 
-            var model = (await HttpClientFactory.AppApiHttpClient.GetStringAsync(context == null ? query : context.NextUrl)).FromJson<GalleryResponse>();
+            var model =
+                (await HttpClientFactory.AppApiHttpClient.GetStringAsync(context == null ? query : context.NextUrl))
+                .FromJson<GalleryResponse>();
 
             if (context == null && model.Illusts.IsNullOrEmpty()) throw new QueryNotRespondingException();
 
             context = model;
 
-            foreach (var contextIllust in context.Illusts.Where(contextIllust => contextIllust != null)) yield return contextIllust.Parse();
+            foreach (var contextIllust in context.Illusts.Where(contextIllust => contextIllust != null))
+                yield return contextIllust.Parse();
         }
     }
 }

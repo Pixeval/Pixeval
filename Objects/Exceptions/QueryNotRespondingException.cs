@@ -21,12 +21,20 @@ namespace Pixeval.Objects.Exceptions
 {
     internal class QueryNotRespondingException : Exception
     {
-        public QueryNotRespondingException() { }
+        public QueryNotRespondingException()
+        {
+        }
 
-        protected QueryNotRespondingException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        protected QueryNotRespondingException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
 
-        public QueryNotRespondingException(string message) : base(message) { }
+        public QueryNotRespondingException(string message) : base(message)
+        {
+        }
 
-        public QueryNotRespondingException(string message, Exception innerException) : base(message, innerException) { }
+        public QueryNotRespondingException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
     }
 }

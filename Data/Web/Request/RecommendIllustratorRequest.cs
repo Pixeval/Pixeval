@@ -20,10 +20,8 @@ namespace Pixeval.Data.Web.Request
 {
     public class RecommendIllustratorRequest
     {
-        [AliasAs("filter")]
-        public string Filter { get; } = "for_android";
+        [AliasAs("filter")] public string Filter { get; } = "for_android";
 
-        [AliasAs("offset")]
-        public int Offset { get; set; } = 0;
+        [AliasAs("offset")] public int Offset { get; set; } = 0;
     }
 }

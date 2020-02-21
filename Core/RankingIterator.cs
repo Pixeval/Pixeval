@@ -16,9 +16,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Response;
+using Pixeval.Models;
 using Pixeval.Objects;
 
 namespace Pixeval.Core
@@ -43,9 +43,12 @@ namespace Pixeval.Core
         public async IAsyncEnumerable<Illustration> MoveNextAsync()
         {
             const string query = "/v1/illust/recommended";
-            context = (await HttpClientFactory.AppApiHttpClient.GetStringAsync(context == null ? query : context.NextUrl)).FromJson<RankingResponse>();
+            context =
+                (await HttpClientFactory.AppApiHttpClient.GetStringAsync(context == null ? query : context.NextUrl))
+                .FromJson<RankingResponse>();
 
-            foreach (var contextIllust in context.Illusts.Where(illustration => illustration != null)) yield return contextIllust.Parse();
+            foreach (var contextIllust in context.Illusts.Where(illustration => illustration != null))
+                yield return contextIllust.Parse();
         }
     }
 }

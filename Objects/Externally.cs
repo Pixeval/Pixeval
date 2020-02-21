@@ -15,7 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.IO;
-using Pixeval.Data.ViewModel;
+using Pixeval.Models;
 using Pixeval.Persisting;
 
 namespace Pixeval.Objects
@@ -60,7 +60,8 @@ namespace Pixeval.Objects
 
         public static string NoticeProgressString(int pages)
         {
-            return $"正在为您查找第{Settings.Global.QueryStart}到第{Settings.Global.QueryPages + Settings.Global.QueryStart - 1}页, 您所查找的关键字总共有{pages}页";
+            return
+                $"正在为您查找第{Settings.Global.QueryStart}到第{Settings.Global.QueryPages + Settings.Global.QueryStart - 1}页, 您所查找的关键字总共有{pages}页";
         }
 
         public static string InputIllegal(string s)

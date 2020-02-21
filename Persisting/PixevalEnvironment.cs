@@ -21,15 +21,16 @@ namespace Pixeval.Persisting
 {
     public class PixevalEnvironment
     {
-        public static readonly string ProjectFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "pixeval");
+        public const string ConfigurationFileName = "pixeval_conf.json";
+
+        public static readonly string ProjectFolder =
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "pixeval");
 
         public static readonly string ConfFolder = ProjectFolder;
 
         public static readonly string SettingsFolder = ProjectFolder;
 
         public static readonly string ExceptionReportFolder = Path.Combine(ProjectFolder, "crash-reports");
-
-        public static readonly string ConfigurationFileName = "pixeval_conf.json";
 
         internal static bool LogoutExit = false;
 

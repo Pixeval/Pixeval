@@ -16,9 +16,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Response;
+using Pixeval.Models;
 using Pixeval.Objects;
 
 namespace Pixeval.Core
@@ -46,7 +46,8 @@ namespace Pixeval.Core
         public async IAsyncEnumerable<User> MoveNextAsync()
         {
             var url = $"https://app-api.pixiv.net/v1/user/following?user_id={uid}&restrict=public";
-            context = (await HttpClientFactory.AppApiHttpClient.GetStringAsync(context == null ? url : context.NextUrl)).FromJson<FollowingResponse>();
+            context = (await HttpClientFactory.AppApiHttpClient.GetStringAsync(context == null ? url : context.NextUrl))
+                .FromJson<FollowingResponse>();
 
             foreach (var preview in context.UserPreviews.Where(u => u != null))
             {

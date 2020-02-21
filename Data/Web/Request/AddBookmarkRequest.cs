@@ -20,10 +20,8 @@ namespace Pixeval.Data.Web.Request
 {
     public class AddBookmarkRequest
     {
-        [AliasAs("restrict")]
-        public string Restrict { get; set; } = "public";
+        [AliasAs("restrict")] public string Restrict { get; set; } = "public";
 
-        [AliasAs("illust_id")]
-        public string Id { get; set; }
+        [AliasAs("illust_id")] public string Id { get; set; }
     }
 }

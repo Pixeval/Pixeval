@@ -20,9 +20,9 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Html.Parser;
-using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
+using Pixeval.Models;
 
 namespace Pixeval.Core
 {
@@ -37,7 +37,8 @@ namespace Pixeval.Core
         public static async void RemoveFavoriteAsync(this PixivClient _, Illustration illustration)
         {
             illustration.IsLiked = false;
-            await HttpClientFactory.AppApiService.DeleteBookmark(new DeleteBookmarkRequest {IllustId = illustration.Id});
+            await HttpClientFactory.AppApiService.DeleteBookmark(new DeleteBookmarkRequest
+                {IllustId = illustration.Id});
         }
 
         public static async Task<IEnumerable<string>> GetArticleWorks(this PixivClient _, string spotlightId)

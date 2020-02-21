@@ -18,9 +18,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
+using Pixeval.Models;
 using Pixeval.Objects;
 
 namespace Pixeval.Core
@@ -57,7 +57,9 @@ namespace Pixeval.Core
 
         private async Task Request()
         {
-            var newIllustrators = await HttpClientFactory.AppApiService.GetRecommendIllustrators(new RecommendIllustratorRequest {Offset = requestTimes++ * 30});
+            var newIllustrators =
+                await HttpClientFactory.AppApiService.GetRecommendIllustrators(new RecommendIllustratorRequest
+                    {Offset = requestTimes++ * 30});
             currentIllustrators.AddRange(newIllustrators.UserPreviews.Select(i => i.Parse()));
         }
     }

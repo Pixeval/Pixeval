@@ -38,7 +38,9 @@ namespace Pixeval.Persisting
 
         public string DownloadLocation
         {
-            get => downloadLocation.IsNullOrEmpty() ? Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) : downloadLocation;
+            get => downloadLocation.IsNullOrEmpty()
+                ? Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)
+                : downloadLocation;
             set => downloadLocation = value;
         }
 
@@ -59,13 +61,15 @@ namespace Pixeval.Persisting
 
         public async Task Store()
         {
-            await File.WriteAllTextAsync(Path.Combine(PixevalEnvironment.SettingsFolder, "settings.json"), Global.ToString());
+            await File.WriteAllTextAsync(Path.Combine(PixevalEnvironment.SettingsFolder, "settings.json"),
+                Global.ToString());
         }
 
         public async Task<Settings> Restore()
         {
             if (File.Exists(Path.Combine(PixevalEnvironment.SettingsFolder, "settings.json")))
-                Global = (await File.ReadAllTextAsync(Path.Combine(PixevalEnvironment.SettingsFolder, "settings.json"))).FromJson<Settings>();
+                Global = (await File.ReadAllTextAsync(Path.Combine(PixevalEnvironment.SettingsFolder, "settings.json")))
+                    .FromJson<Settings>();
             else
                 Initialize();
             return Global;

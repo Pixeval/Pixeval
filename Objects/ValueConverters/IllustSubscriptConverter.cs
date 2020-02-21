@@ -18,7 +18,7 @@ using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using Pixeval.Data.ViewModel;
+using Pixeval.Models;
 
 namespace Pixeval.Objects.ValueConverters
 {
