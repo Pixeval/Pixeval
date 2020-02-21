@@ -16,7 +16,7 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release
     - name: Publish
-      run: dotnet publish --configuration Release -R win-x64 --self-contained --output ./output
+      run: dotnet publish --project ./Pixeval.csproj --configuration Release -R win-x64 --self-contained --output ./output
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
