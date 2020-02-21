@@ -1,0 +1,24 @@
+name: Pixeval CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.102
+    - name: Build
+      run: dotnet build --configuration Release
+    - name: Publish
+      run: dotnet publish --configuration Release -R win-x64 --self-contained --output ./output
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: Pixeval
+        path: ./output
