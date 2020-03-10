@@ -22,6 +22,7 @@
   <ItemGroup>
     <None Remove="Resources\0.jpg" />
     <None Remove="Resources\0.png" />
+    <None Remove="Resources\dqueue.ttf" />
     <None Remove="Resources\iconfont.ttf" />
     <None Remove="Resources\iconfontex.ttf" />
     <None Remove="Resources\pxlogo.ico" />
@@ -30,6 +31,7 @@
 
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.13.0" />
+    <PackageReference Include="Autofac" Version="5.1.2" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="3.7.0" />
     <PackageReference Include="FluentWPF" Version="0.8.0" />
     <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.14.5" />
@@ -39,6 +41,8 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="PropertyChanged.Fody" Version="3.2.1" />
     <PackageReference Include="refit" Version="5.0.23" />
+    <PackageReference Include="Syncfusion.Licensing" Version="17.4.0.53" />
+    <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="17.4.0.53" />
     <PackageReference Include="System.Interactive.Async" Version="4.0.0" />
     <PackageReference Include="VirtualizingWrapPanel.NETCore" Version="1.4.0" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
@@ -46,6 +50,9 @@
 
   <ItemGroup>
     <Resource Include="Resources\0.png" />
+    <Resource Include="Resources\dqueue.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\iconfont.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

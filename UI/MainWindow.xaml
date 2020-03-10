@@ -154,14 +154,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                 x:Name="DownloadAllNowMenuItem"
                                 Click="DownloadAllNowMenuItem_OnClick"
                                 Header="下载当前列表中的所有作品" />
-                            <MenuItem
-                                x:Name="AddToDownloadListMenuItem"
-                                Click="AddToDownloadListMenuItem_OnClick"
-                                Header="添加到下载列表" />
-                            <MenuItem
-                                x:Name="AddAllToDownloadListMenuItem"
-                                Click="AddAllToDownloadListMenuItem_OnClick"
-                                Header="将当前列表的所有作品添加到下载列表" />
                         </ContextMenu>
                     </Grid.ContextMenu>
                     <Grid.Triggers>
@@ -897,7 +889,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                         Style="{DynamicResource MaterialDesignListView}">
                                         <ListViewItem
                                             x:Name="MenuTab"
-                                            Height="60">
+                                            Height="55">
                                             <StackPanel
                                                 Orientation="Horizontal">
                                                 <TextBlock
@@ -917,7 +909,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                         </ListViewItem>
                                         <ListViewItem
                                             x:Name="GalleryTab"
-                                            Height="60"
+                                            Height="55"
                                             Selected="GalleryTab_OnSelected">
                                             <StackPanel
                                                 Orientation="Horizontal">
@@ -938,7 +930,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                         </ListViewItem>
                                         <ListViewItem
                                             x:Name="FollowingTab"
-                                            Height="60"
+                                            Height="55"
                                             Selected="FollowingTab_OnSelected"
                                             Unselected="FollowingTab_OnUnselected">
                                             <StackPanel
@@ -960,7 +952,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                         </ListViewItem>
                                         <ListViewItem
                                             x:Name="SpotlightTab"
-                                            Height="60"
+                                            Height="55"
                                             Selected="SpotlightTab_OnSelected">
                                             <StackPanel
                                                 Orientation="Horizontal">
@@ -981,7 +973,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                         </ListViewItem>
                                         <ListViewItem
                                             x:Name="RankingTab"
-                                            Height="60"
+                                            Height="55"
                                             Selected="RankingTab_OnSelected">
                                             <StackPanel
                                                 Orientation="Horizontal">
@@ -1002,7 +994,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                         </ListViewItem>
                                         <ListViewItem
                                             x:Name="UpdateIllustTab"
-                                            Height="60"
+                                            Height="55"
                                             Selected="UpdateIllustTab_OnSelected">
                                             <StackPanel
                                                 Orientation="Horizontal">
@@ -1035,8 +1027,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                         Style="{DynamicResource MaterialDesignListView}">
                                         <ListViewItem
                                             x:Name="DownloadListTab"
-                                            Height="60"
-                                            HorizontalAlignment="Stretch">
+                                            Height="55"
+                                            HorizontalAlignment="Stretch"
+                                            Selected="DownloadListTab_OnSelected">
                                             <StackPanel
                                                 Orientation="Horizontal">
                                                 <TextBlock
@@ -1056,7 +1049,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                         </ListViewItem>
                                         <ListViewItem
                                             x:Name="SettingsTab"
-                                            Height="60"
+                                            Height="55"
                                             HorizontalAlignment="Stretch"
                                             Selected="SettingsTab_OnSelected">
                                             <StackPanel
@@ -1078,7 +1071,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                         </ListViewItem>
                                         <ListViewItem
                                             x:Name="SignOutTab"
-                                            Height="60"
+                                            Height="55"
                                             HorizontalAlignment="Stretch"
                                             Selected="SignOutTab_OnSelected">
                                             <StackPanel
@@ -1874,233 +1867,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     </ListView>
                 </Grid>
             </Grid>
-            <Grid
-                x:Name="DownloadListGrid"
-                Width="300"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Stretch"
-                Opacity="0">
-                <Grid.Style>
-                    <Style>
-                        <Style.Triggers>
-                            <DataTrigger
-                                Binding="{Binding ElementName=DownloadListTab, Path=IsSelected}"
-                                Value="True">
-                                <DataTrigger.EnterActions>
-                                    <BeginStoryboard>
-                                        <Storyboard
-                                            TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
-                                            <DoubleAnimation
-                                                EasingFunction="{StaticResource CubicEase}"
-                                                From="300"
-                                                To="0"
-                                                Duration="00:00:00.3" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                    <BeginStoryboard>
-                                        <Storyboard
-                                            TargetProperty="(UIElement.Opacity)">
-                                            <DoubleAnimation
-                                                EasingFunction="{StaticResource CubicEase}"
-                                                From="0"
-                                                To="1"
-                                                Duration="00:00:00.3" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </DataTrigger.EnterActions>
-                                <DataTrigger.ExitActions>
-                                    <BeginStoryboard>
-                                        <Storyboard
-                                            TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
-                                            <DoubleAnimation
-                                                EasingFunction="{StaticResource CubicEase}"
-                                                From="0"
-                                                To="300"
-                                                Duration="00:00:00.3" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                    <BeginStoryboard>
-                                        <Storyboard
-                                            TargetProperty="(UIElement.Opacity)">
-                                            <DoubleAnimation
-                                                EasingFunction="{StaticResource CubicEase}"
-                                                From="1"
-                                                To="0"
-                                                Duration="00:00:00.3" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </DataTrigger.ExitActions>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Grid.Style>
-                <materialDesign:Card
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch">
-                    <Grid>
-                        <Grid
-                            Height="60"
-                            VerticalAlignment="Top">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <Button
-                                x:Name="DownloadAllButton"
-                                Grid.Column="0"
-                                Width="40"
-                                Height="40"
-                                Margin="20,0,0,0"
-                                Click="DownloadAllButton_OnClick"
-                                Style="{DynamicResource MaterialDesignToolButton}"
-                                ToolTip="下载全部">
-                                <Viewbox
-                                    Width="30"
-                                    Height="30">
-                                    <Canvas
-                                        Width="24"
-                                        Height="24">
-                                        <Path
-                                            Data="M9,1V7H5L12,14L19,7H15V1H9M5,16V18H19V16H5M5,20V22H19V20H5Z"
-                                            Fill="Gray" />
-                                    </Canvas>
-                                </Viewbox>
-                            </Button>
-                            <Button
-                                x:Name="ClearDownloadListButton"
-                                Grid.Column="1"
-                                Width="40"
-                                Height="40"
-                                Click="ClearDownloadListButton_OnClick"
-                                Style="{DynamicResource MaterialDesignToolButton}"
-                                ToolTip="清空下载列表">
-                                <Viewbox
-                                    Width="30"
-                                    Height="30">
-                                    <Canvas
-                                        Width="24"
-                                        Height="24">
-                                        <Path
-                                            Data="M15,16H19V18H15V16M15,8H22V10H15V8M15,12H21V14H15V12M3,18A2,2 0 0,0 5,20H11A2,2 0 0,0 13,18V8H3V18M14,5H11L10,4H6L5,5H2V7H14V5Z"
-                                            Fill="Gray" />
-                                    </Canvas>
-                                </Viewbox>
-                            </Button>
-                            <Button
-                                x:Name="RetractDownloadListButton"
-                                Grid.Column="2"
-                                Width="40"
-                                Height="40"
-                                Margin="0,0,20,0"
-                                Click="RetractDownloadListButton_OnClick"
-                                Style="{DynamicResource MaterialDesignToolButton}"
-                                ToolTip="关闭">
-                                <Viewbox
-                                    Width="30"
-                                    Height="30">
-                                    <Canvas
-                                        Width="24"
-                                        Height="24">
-                                        <Path
-                                            Data="M19,3H16.3H7.7H5A2,2 0 0,0 3,5V7.7V16.4V19A2,2 0 0,0 5,21H7.7H16.4H19A2,2 0 0,0 21,19V16.3V7.7V5A2,2 0 0,0 19,3M15.6,17L12,13.4L8.4,17L7,15.6L10.6,12L7,8.4L8.4,7L12,10.6L15.6,7L17,8.4L13.4,12L17,15.6L15.6,17Z"
-                                            Fill="Gray" />
-                                    </Canvas>
-                                </Viewbox>
-                            </Button>
-                        </Grid>
-                        <ListView
-                            x:Name="ToDownloadListView"
-                            Margin="0,80,0,0"
-                            ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                            <ListView.ItemTemplate>
-                                <DataTemplate
-                                    DataType="viewModel:Illustration">
-                                    <ListViewItem
-                                        x:Name="ToDownloadListViewItem"
-                                        MouseDoubleClick="ToDownloadListViewItem_OnMouseDoubleClick">
-                                        <Grid
-                                            Width="290"
-                                            Cursor="Hand">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition
-                                                    Width="3*" />
-                                                <ColumnDefinition
-                                                    Width="*" />
-                                                <ColumnDefinition
-                                                    Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock
-                                                Grid.Column="0"
-                                                Margin="10,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                FontFamily="Microsoft YaHei UI Light"
-                                                FontSize="20"
-                                                TextTrimming="WordEllipsis"
-                                                TextWrapping="NoWrap">
-                                                <TextBlock.Text>
-                                                    <MultiBinding
-                                                        StringFormat="{}作品ID: {0}">
-                                                        <Binding
-                                                            Path="Id" />
-                                                    </MultiBinding>
-                                                </TextBlock.Text>
-                                            </TextBlock>
-                                            <Button
-                                                x:Name="DownloadSingleFromDownloadListButton"
-                                                Grid.Column="1"
-                                                HorizontalAlignment="Right"
-                                                Click="DownloadSingleFromDownloadListButton_OnClick"
-                                                Style="{DynamicResource MaterialDesignToolButton}">
-                                                <Viewbox
-                                                    Width="24"
-                                                    Height="24">
-                                                    <Canvas
-                                                        Width="24"
-                                                        Height="24">
-                                                        <Path
-                                                            Data="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"
-                                                            Fill="Gray" />
-                                                    </Canvas>
-                                                </Viewbox>
-                                            </Button>
-                                            <Button
-                                                x:Name="RemoveFromDownloadListButton"
-                                                Grid.Column="2"
-                                                HorizontalAlignment="Center"
-                                                Click="RemoveFromDownloadButton_OnClick"
-                                                Style="{DynamicResource MaterialDesignToolButton}">
-                                                <Viewbox
-                                                    Width="24"
-                                                    Height="24">
-                                                    <Canvas
-                                                        Width="24"
-                                                        Height="24">
-                                                        <Path
-                                                            Data="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"
-                                                            Fill="Gray" />
-                                                    </Canvas>
-                                                </Viewbox>
-                                            </Button>
-                                        </Grid>
-                                    </ListViewItem>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                            <ListView.ItemContainerStyle>
-                                <Style
-                                    BasedOn="{StaticResource MaterialDesignListBoxItem}"
-                                    TargetType="ListViewItem">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                        </ListView>
-                    </Grid>
-                </materialDesign:Card>
-                <Grid.RenderTransform>
-                    <TranslateTransform x:Name="DownloadListTranslateTransform" X="300" />
-                </Grid.RenderTransform>
-            </Grid>
         </Grid>
         <ScrollViewer
             x:Name="UserBrowserPageScrollViewer"
@@ -2501,16 +2267,26 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                 </Grid>
             </StackPanel>
         </ScrollViewer>
-        <userControls:PixevalSettingPage
-            x:Name="PixevalSettingPage"
-            Grid.ColumnSpan="2" />
+        <materialDesign:DialogHost
+            x:Name="PixevalSettingDialog"
+            materialDesign:TransitionAssist.DisableTransitions="True"
+            CloseOnClickAway="True"
+            DataContext="{x:Static persisting:Settings.Global}"
+            DialogClosing="PixevalSettingDialog_OnDialogClosing"
+            Style="{DynamicResource MaterialDesignEmbeddedDialogHost}">
+            <materialDesign:DialogHost.DialogContent>
+                <userControls:PixevalSettingPage />
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
         <materialDesign:DialogHost
             x:Name="IllustBrowserDialogHost"
-            Grid.ColumnSpan="2"
             d:DataContext="{d:DesignData Illustration}"
+            materialDesign:TransitionAssist.DisableTransitions="True"
             CloseOnClickAway="True"
             DialogClosing="IllustBrowserDialogHost_OnDialogClosing"
-            DialogOpened="IllustBrowserDialogHost_OnDialogOpened">
+            DialogMargin="0"
+            DialogOpened="IllustBrowserDialogHost_OnDialogOpened"
+            Style="{DynamicResource MaterialDesignEmbeddedDialogHost}">
             <materialDesign:DialogHost.DialogContent>
                 <materialDesign:Card
                     Background="#FAFAFC"
@@ -2693,10 +2469,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                         <materialDesign:Card
                             Width="{Binding ElementName=Banner, Path=ActualWidth}"
                             MaxWidth="{Binding ElementName=Banner, Path=ActualWidth}"
-                            MaxHeight="300"
                             Background="#FAFAFC"
                             StackPanel.ZIndex="1">
-                            <StackPanel>
+                            <StackPanel
+                                Margin="0,0,0,10">
                                 <StackPanel
                                     Margin="20"
                                     FlowDirection="LeftToRight"
@@ -2725,7 +2501,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                     </Grid.ColumnDefinitions>
                                     <ListView
                                         Grid.Column="0"
-                                        Margin="20,0,0,20"
+                                        Margin="20,0,0,0"
                                         ItemsSource="{Binding Tags}"
                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                         <ListView.ItemTemplate>
@@ -2766,6 +2542,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                     <StackPanel
                                         Grid.Column="1"
                                         HorizontalAlignment="Right"
+                                        VerticalAlignment="Top"
                                         FlowDirection="RightToLeft"
                                         Orientation="Horizontal">
                                         <StackPanel.Resources>
@@ -2789,18 +2566,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                             Style="{StaticResource TextBlockStyle}"
                                             Text="&#xe661;"
                                             ToolTip="分享链接" />
-                                        <TextBlock
-                                            x:Name="AddToDownloadListButton"
-                                            MouseLeftButtonDown="AddToDownloadListButton_OnMouseLeftButtonDown"
-                                            Style="{StaticResource TextBlockStyle}"
-                                            Text="&#xe62e;"
-                                            ToolTip="添加到下载列表" />
-                                        <TextBlock
-                                            x:Name="AddAllToDownloadListButton"
-                                            MouseLeftButtonDown="AddAllToDownloadListButton_OnMouseLeftButtonDown"
-                                            Style="{StaticResource TextBlockStyle}"
-                                            Text="&#xe663;"
-                                            ToolTip="添加当前页所有作品到下载列表" />
                                         <TextBlock
                                             x:Name="ViewInBrowserButton"
                                             MouseLeftButtonDown="ViewInBrowserButton_OnMouseLeftButtonDown"
@@ -2835,6 +2600,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                         </materialDesign:Card>
                     </StackPanel>
                 </materialDesign:Card>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+        <materialDesign:DialogHost
+            x:Name="DownloadQueueDialogHost"
+            d:DataContext="{d:DesignData DownloadableIllustrationViewModel}"
+            materialDesign:TransitionAssist.DisableTransitions="True"
+            CloseOnClickAway="True"
+            DialogClosing="DownloadQueueDialogHost_OnDialogClosing"
+            Style="{DynamicResource MaterialDesignEmbeddedDialogHost}">
+            <materialDesign:DialogHost.DialogContent>
+                <userControls:DownloadQueue
+                    Width="800"
+                    Height="450" />
             </materialDesign:DialogHost.DialogContent>
         </materialDesign:DialogHost>
         <materialDesign:Snackbar

@@ -124,6 +124,7 @@ namespace Pixeval.Data.Web.Response
                         i.MangaMetadata = MetaPages.Select(p =>
                         {
                             var page = (Illustration) i.Clone();
+                            page.Thumbnail = p.ImageUrls.Medium;
                             page.Origin = p.ImageUrls.Original;
                             page.Large = p.ImageUrls.Large;
                             page.IsManga = false;

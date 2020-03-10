@@ -32,7 +32,7 @@ namespace Pixeval.Data.Web.Delegation
 
         static DnsResolvedHttpClientHandler()
         {
-            AppContext.SetSwitch("System.Net.Http.UseSocketsHttpHandler", false);
+            System.AppContext.SetSwitch("System.Net.Http.UseSocketsHttpHandler", false);
         }
 
         protected DnsResolvedHttpClientHandler(IHttpRequestHandler requestHandler = null, bool directConnect = true)

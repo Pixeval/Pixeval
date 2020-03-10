@@ -72,16 +72,6 @@ namespace Pixeval.Objects
             Application.Current.Dispatcher?.Invoke(() => ((Image) img).Source = null);
         }
 
-        public static void HideControl(UIElement element)
-        {
-            element.Visibility = Visibility.Hidden;
-        }
-
-        public static void ShowControl(UIElement element)
-        {
-            element.Visibility = Visibility.Visible;
-        }
-
         public static ObservableCollection<T> NewItemsSource<T>(ItemsControl itemsControl)
         {
             var collection = new ObservableCollection<T>();
@@ -156,21 +146,6 @@ namespace Pixeval.Objects
             {
                 // ignore
             }
-        }
-
-        public static void PlayGif(this Image image, IEnumerable<Stream> imageSources, IEnumerable<int> delay, CancellationToken cancellationToken)
-        {
-            Task.Run(async () =>
-            {
-                var enumerable = imageSources as Stream[] ?? imageSources.ToArray();
-                var delays = delay as int[] ?? delay.ToArray();
-                while (!cancellationToken.IsCancellationRequested)
-                    for (var i = 0; i < enumerable.Length && !cancellationToken.IsCancellationRequested; i++)
-                    {
-                        image.Source = PixivEx.FromStream(enumerable[i]);
-                        await Task.Delay(delays[i], cancellationToken);
-                    }
-            }, cancellationToken);
         }
 
         public static void Scroll(ScrollViewer sender, MouseWheelEventArgs e)

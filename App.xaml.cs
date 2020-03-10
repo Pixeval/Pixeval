@@ -39,16 +39,7 @@ namespace Pixeval
         private static void DispatcherOnUnhandledException(Exception e)
         {
 #if RELEASE
-            if (!(e is NullReferenceException))
-            {
-                if (e is ApiException apiException)
-                {
-                    ExceptionLogger.WriteException(apiException);
-                    return;
-                }
-
-                ExceptionLogger.WriteException(e);
-            }
+            ExceptionLogger.WriteException(e);
 #elif DEBUG
             if (e is ApiException apiException) MessageBox.Show(apiException.Content);
 #endif
@@ -63,7 +54,7 @@ namespace Pixeval
         protected override async void OnExit(ExitEventArgs e)
         {
             await Settings.Global.Store();
-            if (!PixevalEnvironment.LogoutExit && Identity.Global.AccessToken != null) await Identity.Global.Store();
+            if (!AppContext.LogoutExit && Identity.Global.AccessToken != null) await Identity.Global.Store();
             base.OnExit(e);
         }
     }

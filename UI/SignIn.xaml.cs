@@ -35,7 +35,7 @@ namespace Pixeval.UI
         {
             if (Identity.Global == null || Identity.Global.AccessToken == null)
             {
-                PixevalEnvironment.LogoutExit = true;
+                AppContext.LogoutExit = true;
                 await Settings.Global.Store();
                 Environment.Exit(0);
             }

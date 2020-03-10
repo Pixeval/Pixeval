@@ -139,7 +139,13 @@ namespace Pixeval.Data.Web.Response
                     PublishDate = CreateTime
                 }.Apply(async i =>
                 {
-                    if (i != null && i.IsManga) i.MangaMetadata = (await PixivHelper.IllustrationInfo(i.Id)).MangaMetadata;
+                    if (i != null && i.IsManga)
+                    {
+                        if (await PixivHelper.IllustrationInfo(i.Id) is { } res)
+                        {
+                            i.MangaMetadata = res.MangaMetadata;
+                        }
+                    }
                 });
             }
         }

@@ -58,11 +58,6 @@ namespace Pixeval.Objects
             return $"{spotlight.Id}已经下载到{Path.Combine(Settings.Global.DownloadLocation, "Spotlight")}";
         }
 
-        public static string NoticeProgressString(int pages)
-        {
-            return $"正在为您查找第{Settings.Global.QueryStart}到第{Settings.Global.QueryPages + Settings.Global.QueryStart - 1}页, 您所查找的关键字总共有{pages}页";
-        }
-
         public static string InputIllegal(string s)
         {
             return $"搜索{s}时必须输入纯数字哟~";

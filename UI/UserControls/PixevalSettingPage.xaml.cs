@@ -34,11 +34,6 @@ namespace Pixeval.UI.UserControls
             InitializeComponent();
         }
 
-        public void Open()
-        {
-            SettingDialog.OpenControl();
-        }
-
         private void SettingDialog_OnDialogClosing(object sender, DialogClosingEventArgs e)
         {
             MainWindow.Instance.SettingsTab.IsSelected = false;

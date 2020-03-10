@@ -15,29 +15,38 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using Pixeval.Objects;
+using System.Threading.Tasks;
 
-namespace Pixeval.Data.ViewModel
+namespace Pixeval.Core
 {
-    internal class DownloadList
+    public interface IPixivAsyncEnumerable<out T> : IAsyncEnumerable<T>
     {
-        public static ObservableCollection<Illustration> ToDownloadList { get; } = new ObservableCollection<Illustration>();
+        SortOption SortOption { get; }
 
-        public static void Add(Illustration illustration)
-        {
-            if (ToDownloadList.All(x => x.Id != illustration.Id)) ToDownloadList.Add(illustration);
-        }
+        int RequestedPages { get; }
 
-        public static void AddRange(IEnumerable<Illustration> illustrations)
-        {
-            ToDownloadList.AddRange(illustrations.Where(x => ToDownloadList.All(i => i.Id != x.Id)));
-        }
+        void Cancel();
 
-        public static void Remove(Illustration illustration)
+        bool IsCancellationRequested();
+
+        void ReportRequestedPages();
+    }
+
+    public class IteratingSchedule
+    {
+        public static IPixivAsyncEnumerable<object> CurrentItr;
+
+        public static void StartNewInstance<T>(IPixivAsyncEnumerable<T> itr)
         {
-            ToDownloadList.Remove(illustration);
+            CurrentItr?.Cancel();
+            CurrentItr = itr as IPixivAsyncEnumerable<object>;
         }
+    }
+
+    public enum SortOption
+    {
+        Popularity,
+        PublishDate,
+        None
     }
 }

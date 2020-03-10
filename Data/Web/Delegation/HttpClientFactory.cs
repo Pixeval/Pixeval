@@ -16,6 +16,7 @@
 
 using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Pixeval.Data.Web.Protocol;
 using Pixeval.Objects;
 using Refit;
@@ -38,10 +39,19 @@ namespace Pixeval.Data.Web.Delegation
             }.Apply(h => action?.Invoke(h));
         }
 
-        public static HttpClient PixivImage(Action<HttpClient> action = null)
+        public static HttpClient PixivImage()
         {
             return new HttpClient(PixivImageHttpClientHandler.Instance)
-                .Apply(h => action?.Invoke(h));
+                .Apply(client =>
+                {
+                    client.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "http://www.pixiv.net");
+                    client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "PixivIOSApp/5.8.7");
+                });
+        }
+
+        public static Task<HttpResponseMessage> GetResponseHeader(HttpClient client, string uri)
+        {
+            return client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
         }
     }
 }

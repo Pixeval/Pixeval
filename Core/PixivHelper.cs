@@ -68,10 +68,11 @@ namespace Pixeval.Core
                 PublishDate = response.CreateDate
             };
 
-            if (illust.IsManga)
+            if (illust.IsManga && response.MetaPages != null)
                 illust.MangaMetadata = response.MetaPages.Select(p =>
                 {
                     var page = (Illustration) illust.Clone();
+                    page.Thumbnail = p.ImageUrls.Medium;
                     page.Origin = p.ImageUrls.Original;
                     page.Large = p.ImageUrls.Large;
                     return page;
@@ -80,40 +81,43 @@ namespace Pixeval.Core
             return illust;
         }
 
-        internal static async void DoIterate<T>(IPixivIterator<T> pixivIterator, ICollection<T> container, bool useCounter = false)
+        internal static async void Iterate<T>(IPixivAsyncEnumerable<T> pixivIterator, ICollection<T> container, int limit = -1)
         {
-            var counter = 1;
             var hashTable = new Dictionary<string, Illustration>();
-            while (pixivIterator.HasNext())
+
+            IteratingSchedule.StartNewInstance(pixivIterator);
+
+            await foreach (T illust in IteratingSchedule.CurrentItr)
             {
-                if (useCounter && counter > Settings.Global.QueryPages * 10) break;
-                await foreach (var illust in pixivIterator.MoveNextAsync())
-                    if (illust is Illustration i)
-                    {
-                        if (IllustNotMatchCondition(Settings.Global.ExceptTags, Settings.Global.ContainsTags, i))
-                            continue;
+                if (IteratingSchedule.CurrentItr.IsCancellationRequested() || limit != -1 && pixivIterator.RequestedPages > limit)
+                {
+                    break;
+                }
 
-                        if (container is Collection<Illustration> illustrationContainer)
+                if (illust is Illustration i)
+                {
+                    if (IllustNotMatchCondition(Settings.Global.ExceptTags, Settings.Global.ContainsTags, i))
+                        continue;
+
+                    if (container is Collection<Illustration> illustrationContainer)
+                    {
+                        if (hashTable.ContainsKey(i.Id)) continue;
+
+                        hashTable[i.Id] = i;
+                        IComparer<Illustration> comparer = IteratingSchedule.CurrentItr.SortOption switch
                         {
-                            if (hashTable.ContainsKey(i.Id)) continue;
-
-                            hashTable[i.Id] = i;
-                            IComparer<Illustration> comparer = pixivIterator.SortOption switch
-                            {
-                                SortOption.None        => null,
-                                SortOption.PublishDate => IllustrationPublishDateComparator.Instance,
-                                SortOption.Popularity  => IllustrationPopularityComparator.Instance,
-                                _                      => null
-                            };
-                            illustrationContainer.AddSorted(i, comparer);
-                        }
+                            SortOption.None        => null,
+                            SortOption.PublishDate => IllustrationPublishDateComparator.Instance,
+                            SortOption.Popularity  => IllustrationPopularityComparator.Instance,
+                            _                      => null
+                        };
+                        illustrationContainer.AddSorted(i, comparer);
                     }
-                    else
-                    {
-                        container.Add(illust);
-                    }
-
-                counter++;
+                }
+                else
+                {
+                    container.Add(illust);
+                }
             }
         }
 

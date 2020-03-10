@@ -15,7 +15,10 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using Pixeval.Core;
+using Pixeval.Objects;
 using PropertyChanged;
 
 namespace Pixeval.Data.ViewModel
@@ -46,5 +49,36 @@ namespace Pixeval.Data.ViewModel
 
         [JsonProperty("subcategory_label")]
         public string SubcategoryLabel { get; set; }
+
+        public async void Download()
+        {
+            var result = await Tasks<string, Illustration>.Of(await PixivClient.Instance.GetArticleWorks(Id.ToString()))
+                .Mapping(async i =>
+                {
+                    var res = await PixivHelper.IllustrationInfo(i);
+                    res.SpotlightTitle = Title;
+                    res.FromSpotlight = true;
+                    return res;
+                })
+                .Construct()
+                .WhenAll();
+
+            foreach (var illustration in result)
+            {
+                AppContext.EnqueueDownloadItem(illustration);
+            }
+        }
+
+        public string GetCover()
+        {
+            var match = Regex.Match(Thumbnail, "/(?<illust_id>\\d+)_p\\d+_master1200\\.jpg|png");
+            if (match.Success)
+            {
+                var url = Regex.Replace(Thumbnail, "/c/\\d+x\\d+_\\d+/img-master/", "/img-original/").Replace("_master1200", string.Empty);
+                return url;
+            }
+
+            return Thumbnail;
+        }
     }
 }

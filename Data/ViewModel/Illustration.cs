@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using Pixeval.Objects;
 using PropertyChanged;
 
 #pragma warning disable 8509
@@ -59,9 +60,18 @@ namespace Pixeval.Data.ViewModel
 
         public int Comments { get; set; }
 
+        public bool FromSpotlight { get; set; }
+
+        public string SpotlightTitle { get; set; }
+
         public object Clone()
         {
             return MemberwiseClone();
+        }
+
+        public string GetDownloadUrl()
+        {
+            return Origin.IsNullOrEmpty() ? Large : Origin;
         }
     }
 

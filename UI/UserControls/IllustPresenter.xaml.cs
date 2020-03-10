@@ -15,8 +15,11 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using MaterialDesignThemes.Wpf.Transitions;
 using Pixeval.Data.ViewModel;
@@ -45,10 +48,13 @@ namespace Pixeval.UI.UserControls
 
         public Illustration Illust { get; set; }
 
-        private async void CopyImageItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            Clipboard.SetImage(await PixivEx.FromUrl(Illust.Origin.IsNullOrEmpty() ? Illust.Large : Illust.Origin));
-        }
+        public bool ProcessingGif { get; private set; }
+
+        public bool PlayingGif { get; private set; }
+
+        public bool PlayButtonVisible => !ProcessingGif && !PlayingGif;
+
+        private readonly CancellationTokenSource cancellationToken = new CancellationTokenSource();
 
         private void MovePrevButton_OnClick(object sender, RoutedEventArgs e)
         {
@@ -70,9 +76,41 @@ namespace Pixeval.UI.UserControls
                 {
                     MainWindow.Instance.IllustBrowserDialogHost.DataContext = Illust;
                     var userInfo = await HttpClientFactory.AppApiService.GetUserInformation(new UserInformationRequest {Id = Illust.UserId});
-                    SetImageSource(MainWindow.Instance.IllustBrowserUserAvatar, await PixivEx.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium));
+                    SetImageSource(MainWindow.Instance.IllustBrowserUserAvatar, await IO.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium));
                 });
             });
+        }
+
+        private async void PlayGif_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ProcessingGif = true;
+            var metadata = await HttpClientFactory.AppApiService.GetUgoiraMetadata(Illust.Id);
+            var ugoiraZip = metadata.UgoiraMetadataInfo.ZipUrls.Medium;
+            var delay = metadata.UgoiraMetadataInfo.Frames.Select(f => f.Delay / 10).ToArray();
+            var streams = IO.ReadGifZipEntries(await IO.FromUrlInternal(ugoiraZip)).ToArray();
+
+            ProcessingGif = false;
+            PlayingGif = true;
+
+            #pragma warning disable 4014
+            Task.Run(async () =>
+            {
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    for (var i = 0; i < streams.Length && !cancellationToken.IsCancellationRequested; i++)
+                    {
+                        streams[i].Position = 0;
+                        ImgSource = IO.FromStream(streams[i]);
+                        await Task.Delay((int)delay[i], cancellationToken.Token);
+                    }
+                }
+            });
+            #pragma warning restore 4014
+        }
+
+        private void IllustPresenter_OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            cancellationToken.Cancel();
         }
     }
 }
