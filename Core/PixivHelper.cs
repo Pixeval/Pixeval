@@ -89,10 +89,7 @@ namespace Pixeval.Core
 
             await foreach (T illust in IteratingSchedule.CurrentItr)
             {
-                if (IteratingSchedule.CurrentItr.IsCancellationRequested() || limit != -1 && pixivIterator.RequestedPages > limit)
-                {
-                    break;
-                }
+                if (IteratingSchedule.CurrentItr.IsCancellationRequested() || limit != -1 && pixivIterator.RequestedPages > limit) break;
 
                 if (illust is Illustration i)
                 {
@@ -116,7 +113,7 @@ namespace Pixeval.Core
                 }
                 else
                 {
-                    container.Add(illust);
+                    if (illust != null) container.Add(illust);
                 }
             }
         }

@@ -13,7 +13,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
 <UserControl
     x:Class="Pixeval.UI.UserControls.IllustPresenter"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -73,7 +74,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                 Width="50"
                 Height="50"
                 Foreground="#66CCFF"
-                Visibility="{Binding ProcessingGif, Converter={StaticResource VisibleIfTrueConverter}}"/>
+                Visibility="{Binding ProcessingGif, Converter={StaticResource VisibleIfTrueConverter}}" />
         </Grid>
     </Grid>
 </UserControl>

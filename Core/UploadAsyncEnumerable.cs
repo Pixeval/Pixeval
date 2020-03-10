@@ -62,6 +62,8 @@ namespace Pixeval.Core
                 this.uid = uid;
             }
 
+            public override Illustration Current => illustrationEnumerator.Current;
+
             protected override void UpdateEnumerator()
             {
                 illustrationEnumerator = entity.ToResponse.NonNull().Select(_ => _.Parse()).GetEnumerator();
@@ -69,6 +71,7 @@ namespace Pixeval.Core
 
             public override async ValueTask<bool> MoveNextAsync()
             {
+                await Task.Delay(500);
                 if (entity == null)
                 {
                     if (await TryGetResponse() is (true, var model))
@@ -76,7 +79,10 @@ namespace Pixeval.Core
                         entity = model;
                         UpdateEnumerator();
                     }
-                    else throw new QueryNotRespondingException();
+                    else
+                    {
+                        throw new QueryNotRespondingException();
+                    }
 
                     Enumerable.ReportRequestedPages();
                 }
@@ -96,15 +102,10 @@ namespace Pixeval.Core
                 return false;
             }
 
-            public override Illustration Current => illustrationEnumerator.Current;
-
             private async Task<HttpResponse<UploadResponse>> TryGetResponse()
             {
-                var res = await HttpClientFactory.PublicApiService.GetUploads(uid, new UploadsRequest { Page = current++ });
-                if (res is { } response && !response.ToResponse.IsNullOrEmpty())
-                {
-                    return HttpResponse<UploadResponse>.Wrap(true, response);
-                }
+                var res = await HttpClientFactory.PublicApiService.GetUploads(uid, new UploadsRequest {Page = current++});
+                if (res is { } response && !response.ToResponse.IsNullOrEmpty()) return HttpResponse<UploadResponse>.Wrap(true, response);
 
                 return HttpResponse<UploadResponse>.Wrap(false);
             }

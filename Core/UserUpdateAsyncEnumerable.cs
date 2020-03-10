@@ -46,6 +46,8 @@ namespace Pixeval.Core
 
             public UserUpdateAsyncEnumerator(IPixivAsyncEnumerable<Illustration> enumerable) : base(enumerable) { }
 
+            public override Illustration Current => illustrationEnumerator.Current;
+
             protected override void UpdateEnumerator()
             {
                 illustrationEnumerator = entity.Illusts.NonNull().Select(_ => _.Parse()).GetEnumerator();
@@ -53,6 +55,7 @@ namespace Pixeval.Core
 
             public override async ValueTask<bool> MoveNextAsync()
             {
+                await Task.Delay(500);
                 if (entity == null)
                 {
                     if (await TryGetResponse("https://app-api.pixiv.net/v2/illust/follow?restrict=public") is (true, var model))
@@ -60,13 +63,16 @@ namespace Pixeval.Core
                         entity = model;
                         UpdateEnumerator();
                     }
-                    else throw new QueryNotRespondingException();
+                    else
+                    {
+                        throw new QueryNotRespondingException();
+                    }
 
                     Enumerable.ReportRequestedPages();
                 }
 
                 if (illustrationEnumerator.MoveNext()) return true;
-                
+
                 if (entity.NextUrl.IsNullOrEmpty()) return false;
 
                 if (await TryGetResponse(entity.NextUrl) is (true, var res))
@@ -80,15 +86,10 @@ namespace Pixeval.Core
                 return false;
             }
 
-            public override Illustration Current => illustrationEnumerator.Current;
-
             private static async Task<HttpResponse<UserUpdateResponse>> TryGetResponse(string url)
             {
                 var res = (await HttpClientFactory.AppApiHttpClient.GetStringAsync(url)).FromJson<UserUpdateResponse>();
-                if (res is { } response && !response.Illusts.IsNullOrEmpty())
-                {
-                    return HttpResponse<UserUpdateResponse>.Wrap(true, response);
-                }
+                if (res is { } response && !response.Illusts.IsNullOrEmpty()) return HttpResponse<UserUpdateResponse>.Wrap(true, response);
 
                 return HttpResponse<UserUpdateResponse>.Wrap(false);
             }

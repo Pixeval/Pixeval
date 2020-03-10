@@ -31,12 +31,12 @@ namespace Pixeval.Core
     {
         private readonly string uid;
 
-        public override int RequestedPages { get; protected set; }
-
         public GalleryAsyncEnumerable(string uid)
         {
             this.uid = uid;
         }
+
+        public override int RequestedPages { get; protected set; }
 
         public override SortOption SortOption { get; } = SortOption.None;
 
@@ -47,16 +47,17 @@ namespace Pixeval.Core
 
         private class GalleryAsyncEnumerator : AbstractPixivAsyncEnumerator<Illustration>
         {
+            private readonly string uid;
             private GalleryResponse entity;
 
             private IEnumerator<Illustration> illustrationsEnumerator;
-
-            private readonly string uid;
 
             public GalleryAsyncEnumerator(string uid, IPixivAsyncEnumerable<Illustration> outerInstance) : base(outerInstance)
             {
                 this.uid = uid;
             }
+
+            public override Illustration Current => illustrationsEnumerator.Current;
 
             protected override void UpdateEnumerator()
             {
@@ -65,6 +66,7 @@ namespace Pixeval.Core
 
             public override async ValueTask<bool> MoveNextAsync()
             {
+                await Task.Delay(500);
                 if (entity == null)
                 {
                     if (await TryGetResponse($"/v1/user/bookmarks/illust?user_id={uid}&restrict=public&filter=for_ios") is (true, var model))
@@ -72,15 +74,15 @@ namespace Pixeval.Core
                         entity = model;
                         UpdateEnumerator();
                     }
-                    else throw new QueryNotRespondingException();
+                    else
+                    {
+                        throw new QueryNotRespondingException();
+                    }
 
                     Enumerable.ReportRequestedPages();
                 }
 
-                if (illustrationsEnumerator.MoveNext())
-                {
-                    return true;
-                }
+                if (illustrationsEnumerator.MoveNext()) return true;
 
                 if (entity.NextUrl.IsNullOrEmpty()) return false;
 
@@ -95,16 +97,11 @@ namespace Pixeval.Core
                 return false;
             }
 
-            public override Illustration Current => illustrationsEnumerator.Current;
-
             private static async Task<HttpResponse<GalleryResponse>> TryGetResponse(string url)
             {
                 var result = (await HttpClientFactory.AppApiHttpClient.GetStringAsync(url)).FromJson<GalleryResponse>();
 
-                if (result is { } response && !response.Illusts.IsNullOrEmpty())
-                {
-                    return HttpResponse<GalleryResponse>.Wrap(true, response);
-                }
+                if (result is { } response && !response.Illusts.IsNullOrEmpty()) return HttpResponse<GalleryResponse>.Wrap(true, response);
                 return HttpResponse<GalleryResponse>.Wrap(false);
             }
         }

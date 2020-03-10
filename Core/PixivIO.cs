@@ -15,21 +15,21 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using ImageMagick;
-using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
+using Pixeval.Objects;
 
-namespace Pixeval.Objects
+namespace Pixeval.Core
 {
     // ReSharper disable once InconsistentNaming
-    internal static class IO
+    internal static class PixivIO
     {
         public static async Task<byte[]> FromUrlInternal(string url)
         {
@@ -77,15 +77,6 @@ namespace Pixeval.Objects
             return Task.Run(() => FromStream(stream));
         }
 
-        public static void SaveBitmapImage(this BitmapImage bitmapImage, string path)
-        {
-            var encoder = new PngBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(bitmapImage));
-
-            using var fs = new FileStream(path, FileMode.Create);
-            encoder.Save(fs);
-        }
-
         public static IReadOnlyList<Stream> ReadGifZipEntries(Stream stream)
         {
             var dis = new List<Stream>();
@@ -107,13 +98,6 @@ namespace Pixeval.Objects
         public static IReadOnlyList<Stream> ReadGifZipEntries(byte[] bArr)
         {
             return ReadGifZipEntries(new MemoryStream(bArr));
-        }
-
-        public static async IAsyncEnumerable<BitmapImage> ReadGifZipBitmapImages(byte[] bArr)
-        {
-            var lst = await Task.Run(() => ReadGifZipEntries(bArr));
-
-            foreach (var s in lst) yield return await FromStreamAsync(s);
         }
 
         public static Stream MergeGifStream(IReadOnlyList<Stream> streams, IReadOnlyList<long> delay)
@@ -139,31 +123,31 @@ namespace Pixeval.Objects
             return ms;
         }
 
-        public static async Task<Stream> GetGifStream(string link, IReadOnlyList<long> delay)
+        public static async Task<MemoryStream> Download(string url, IProgress<double> progress, CancellationTokenSource cancellationTokenSource = default)
         {
-            return MergeGifStream(ReadGifZipEntries(await FromUrlInternal(link)), delay);
-        }
+            using var response = await HttpClientFactory.GetResponseHeader(HttpClientFactory.PixivImage().Apply(_ => _.Timeout = TimeSpan.FromSeconds(30)), url);
 
-        public static async Task<BitmapImage> GetGifBitmap(string link, IReadOnlyList<long> delay)
-        {
-            return FromStream(MergeGifStream(ReadGifZipEntries(await FromUrlInternal(link)), delay));
-        }
+            var contentLength = response.Content.Headers.ContentLength;
+            if (!contentLength.HasValue) throw new InvalidOperationException("cannot retrieve the content length of the request uri");
 
+            response.EnsureSuccessStatusCode();
 
-        public static async Task DownloadUgoira(Illustration illustration, string rootPath)
-        {
-            if (!illustration.IsUgoira) throw new InvalidOperationException();
+            long bytesRead, totalRead = 0L;
+            var byteBuffer = ArrayPool<byte>.Shared.Rent(4096);
 
-            var metadata = await HttpClientFactory.AppApiService.GetUgoiraMetadata(illustration.Id);
-            var url = FormatGifZipUrl(metadata.UgoiraMetadataInfo.ZipUrls.Medium);
+            var memoryStream = new MemoryStream();
+            await using var contentStream = await response.Content.ReadAsStreamAsync();
+            while ((bytesRead = await contentStream.ReadAsync(byteBuffer, 0, byteBuffer.Length)) != 0)
+            {
+                cancellationTokenSource?.Token.ThrowIfCancellationRequested();
+                totalRead += bytesRead;
+                await memoryStream.WriteAsync(byteBuffer, 0, (int) bytesRead);
+                progress.Report(totalRead / (double) contentLength);
+            }
 
-            await using var img = (MemoryStream) await GetGifStream(url, metadata.UgoiraMetadataInfo.Frames.Select(f => f.Delay / 10).ToList());
-            await File.WriteAllBytesAsync(Path.Combine(rootPath, $"[{Texts.FormatPath(illustration.UserName)}]{illustration.Id}.gif"), await Task.Run(() => img.ToArray()));
-        }
+            ArrayPool<byte>.Shared.Return(byteBuffer, true);
 
-        public static string FormatGifZipUrl(string link)
-        {
-            return !link.EndsWith("ugoira1920x1080.zip") ? Regex.Replace(link, "ugoira(\\d+)x(\\d+).zip", "ugoira1920x1080.zip") : link;
+            return memoryStream;
         }
     }
 }

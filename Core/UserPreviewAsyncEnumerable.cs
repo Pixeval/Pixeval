@@ -47,9 +47,8 @@ namespace Pixeval.Core
 
         private class UserPreviewAsyncEnumerator : AbstractPixivAsyncEnumerator<User>
         {
-            private UserNavResponse entity;
-
             private readonly string keyword;
+            private UserNavResponse entity;
 
             private IEnumerator<User> userPreviewEnumerator;
 
@@ -57,6 +56,8 @@ namespace Pixeval.Core
             {
                 this.keyword = keyword;
             }
+
+            public override User Current => userPreviewEnumerator.Current;
 
             protected override void UpdateEnumerator()
             {
@@ -71,6 +72,7 @@ namespace Pixeval.Core
 
             public override async ValueTask<bool> MoveNextAsync()
             {
+                await Task.Delay(500);
                 if (entity == null)
                 {
                     if (await TryGetResponse($"https://app-api.pixiv.net/v1/search/user?filter=for_android&word={keyword}") is (true, var model))
@@ -78,7 +80,10 @@ namespace Pixeval.Core
                         entity = model;
                         UpdateEnumerator();
                     }
-                    else throw new QueryNotRespondingException();
+                    else
+                    {
+                        throw new QueryNotRespondingException();
+                    }
 
                     Enumerable.ReportRequestedPages();
                 }
@@ -98,15 +103,10 @@ namespace Pixeval.Core
                 return false;
             }
 
-            public override User Current => userPreviewEnumerator.Current;
-
             private static async Task<HttpResponse<UserNavResponse>> TryGetResponse(string url)
             {
                 var res = (await HttpClientFactory.AppApiHttpClient.GetStringAsync(url)).FromJson<UserNavResponse>();
-                if (res is { } response && !response.UserPreviews.IsNullOrEmpty())
-                {
-                    return HttpResponse<UserNavResponse>.Wrap(true, response);
-                }
+                if (res is { } response && !response.UserPreviews.IsNullOrEmpty()) return HttpResponse<UserNavResponse>.Wrap(true, response);
 
                 return HttpResponse<UserNavResponse>.Wrap(false);
             }

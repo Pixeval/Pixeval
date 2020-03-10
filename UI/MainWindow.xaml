@@ -13,7 +13,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
 
 <!--  ReSharper disable Xaml.RedundantResource  -->
 <Window
@@ -773,7 +774,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
             x:Name="ContentContainer"
             Grid.ColumnSpan="2">
             <Grid.RenderTransform>
-                <ScaleTransform CenterX="{Binding ElementName=ContentContainer, Path=ActualWidth, Converter={StaticResource DoubleDivisionConverter}, ConverterParameter={StaticResource Divide}}" CenterY="{Binding ElementName=ContentContainer, Path=ActualHeight, Converter={StaticResource DoubleDivisionConverter}, ConverterParameter={StaticResource Divide}}" ScaleX="1" ScaleY="1" />
+                <ScaleTransform
+                    CenterX="{Binding ElementName=ContentContainer, Path=ActualWidth, Converter={StaticResource DoubleDivisionConverter}, ConverterParameter={StaticResource Divide}}"
+                    CenterY="{Binding ElementName=ContentContainer, Path=ActualHeight, Converter={StaticResource DoubleDivisionConverter}, ConverterParameter={StaticResource Divide}}"
+                    ScaleX="1" ScaleY="1" />
             </Grid.RenderTransform>
             <Grid
                 x:Name="NavigatorContainer"
@@ -1874,7 +1878,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
             HorizontalScrollBarVisibility="Disabled"
             Opacity="0">
             <ScrollViewer.RenderTransform>
-                <ScaleTransform CenterX="{Binding ElementName=UserBrowserPageScrollViewer, Path=ActualWidth, Converter={StaticResource DoubleDivisionConverter}, ConverterParameter={StaticResource Divide}}" CenterY="{Binding ElementName=UserBrowserPageScrollViewer, Path=ActualHeight, Converter={StaticResource DoubleDivisionConverter}, ConverterParameter={StaticResource Divide}}" ScaleX="0" ScaleY="0" />
+                <ScaleTransform
+                    CenterX="{Binding ElementName=UserBrowserPageScrollViewer, Path=ActualWidth, Converter={StaticResource DoubleDivisionConverter}, ConverterParameter={StaticResource Divide}}"
+                    CenterY="{Binding ElementName=UserBrowserPageScrollViewer, Path=ActualHeight, Converter={StaticResource DoubleDivisionConverter}, ConverterParameter={StaticResource Divide}}"
+                    ScaleX="0" ScaleY="0" />
             </ScrollViewer.RenderTransform>
             <ScrollViewer.Resources>
                 <system:Double

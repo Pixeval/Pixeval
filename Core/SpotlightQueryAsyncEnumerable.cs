@@ -57,6 +57,8 @@ namespace Pixeval.Core
                 this.current = current;
             }
 
+            public override SpotlightArticle Current => spotlightArticleEnumerator.Current;
+
             protected override void UpdateEnumerator()
             {
                 spotlightArticleEnumerator = entity.SpotlightArticles.NonNull().GetEnumerator();
@@ -64,6 +66,7 @@ namespace Pixeval.Core
 
             public override async ValueTask<bool> MoveNextAsync()
             {
+                await Task.Delay(500);
                 if (entity == null)
                 {
                     if (await TryGetResponse() is (true, var model))
@@ -71,7 +74,10 @@ namespace Pixeval.Core
                         entity = model;
                         UpdateEnumerator();
                     }
-                    else throw new QueryNotRespondingException();
+                    else
+                    {
+                        throw new QueryNotRespondingException();
+                    }
 
                     Enumerable.ReportRequestedPages();
                 }
@@ -91,16 +97,11 @@ namespace Pixeval.Core
                 return false;
             }
 
-            public override SpotlightArticle Current => spotlightArticleEnumerator.Current;
-
             private async Task<HttpResponse<SpotlightResponse>> TryGetResponse()
             {
                 var res = await HttpClientFactory.AppApiService.GetSpotlights(current++ * 10);
 
-                if (res is { } response && !response.SpotlightArticles.IsNullOrEmpty())
-                {
-                    return HttpResponse<SpotlightResponse>.Wrap(true, response);
-                }
+                if (res is { } response && !response.SpotlightArticles.IsNullOrEmpty()) return HttpResponse<SpotlightResponse>.Wrap(true, response);
 
                 return HttpResponse<SpotlightResponse>.Wrap(false);
             }

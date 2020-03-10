@@ -13,8 +13,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
-
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
 <Application
     x:Class="Pixeval.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -136,10 +136,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                             </Grid>
                             <ControlTemplate.Triggers>
                                 <Trigger SourceName="Thumb" Property="IsMouseOver" Value="true">
-                                    <Setter TargetName="Thumb" Property="Background" Value="{DynamicResource ButtonSelectBrush}" />
+                                    <Setter TargetName="Thumb" Property="Background"
+                                            Value="{DynamicResource ButtonSelectBrush}" />
                                 </Trigger>
                                 <Trigger SourceName="Thumb" Property="IsDragging" Value="true">
-                                    <Setter TargetName="Thumb" Property="Background" Value="{DynamicResource DarkBrush}" />
+                                    <Setter TargetName="Thumb" Property="Background"
+                                            Value="{DynamicResource DarkBrush}" />
                                 </Trigger>
                                 <Trigger Property="IsEnabled" Value="false">
                                     <Setter TargetName="Thumb" Property="Visibility" Value="Collapsed" />

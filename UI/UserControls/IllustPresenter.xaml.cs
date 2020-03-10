@@ -22,10 +22,10 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using MaterialDesignThemes.Wpf.Transitions;
+using Pixeval.Core;
 using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
-using Pixeval.Objects;
 using PropertyChanged;
 using static Pixeval.Objects.UiHelper;
 
@@ -37,6 +37,8 @@ namespace Pixeval.UI.UserControls
     [AddINotifyPropertyChangedInterface]
     public partial class IllustPresenter
     {
+        private readonly CancellationTokenSource cancellationToken = new CancellationTokenSource();
+
         public IllustPresenter(ImageSource imgSource, Illustration illustration)
         {
             ImgSource = imgSource;
@@ -53,8 +55,6 @@ namespace Pixeval.UI.UserControls
         public bool PlayingGif { get; private set; }
 
         public bool PlayButtonVisible => !ProcessingGif && !PlayingGif;
-
-        private readonly CancellationTokenSource cancellationToken = new CancellationTokenSource();
 
         private void MovePrevButton_OnClick(object sender, RoutedEventArgs e)
         {
@@ -76,7 +76,7 @@ namespace Pixeval.UI.UserControls
                 {
                     MainWindow.Instance.IllustBrowserDialogHost.DataContext = Illust;
                     var userInfo = await HttpClientFactory.AppApiService.GetUserInformation(new UserInformationRequest {Id = Illust.UserId});
-                    SetImageSource(MainWindow.Instance.IllustBrowserUserAvatar, await IO.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium));
+                    SetImageSource(MainWindow.Instance.IllustBrowserUserAvatar, await PixivIO.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium));
                 });
             });
         }
@@ -87,7 +87,7 @@ namespace Pixeval.UI.UserControls
             var metadata = await HttpClientFactory.AppApiService.GetUgoiraMetadata(Illust.Id);
             var ugoiraZip = metadata.UgoiraMetadataInfo.ZipUrls.Medium;
             var delay = metadata.UgoiraMetadataInfo.Frames.Select(f => f.Delay / 10).ToArray();
-            var streams = IO.ReadGifZipEntries(await IO.FromUrlInternal(ugoiraZip)).ToArray();
+            var streams = PixivIO.ReadGifZipEntries(await PixivIO.FromUrlInternal(ugoiraZip)).ToArray();
 
             ProcessingGif = false;
             PlayingGif = true;
@@ -96,14 +96,12 @@ namespace Pixeval.UI.UserControls
             Task.Run(async () =>
             {
                 while (!cancellationToken.IsCancellationRequested)
-                {
                     for (var i = 0; i < streams.Length && !cancellationToken.IsCancellationRequested; i++)
                     {
                         streams[i].Position = 0;
-                        ImgSource = IO.FromStream(streams[i]);
-                        await Task.Delay((int)delay[i], cancellationToken.Token);
+                        ImgSource = PixivIO.FromStream(streams[i]);
+                        await Task.Delay((int) delay[i], cancellationToken.Token);
                     }
-                }
             });
             #pragma warning restore 4014
         }

@@ -58,6 +58,8 @@ namespace Pixeval.Core
                 this.userId = userId;
             }
 
+            public override User Current => followerEnumerator.Current;
+
             protected override void UpdateEnumerator()
             {
                 followerEnumerator = entity.UserPreviews.NonNull().Select(u => new User
@@ -71,6 +73,7 @@ namespace Pixeval.Core
 
             public override async ValueTask<bool> MoveNextAsync()
             {
+                await Task.Delay(500);
                 if (entity == null)
                 {
                     if (await TryGetResponse($"https://app-api.pixiv.net/v1/user/following?user_id={userId}&restrict=public") is (true, var model))
@@ -78,7 +81,10 @@ namespace Pixeval.Core
                         entity = model;
                         UpdateEnumerator();
                     }
-                    else throw new QueryNotRespondingException();
+                    else
+                    {
+                        throw new QueryNotRespondingException();
+                    }
 
                     Enumerable.ReportRequestedPages();
                 }
@@ -98,15 +104,10 @@ namespace Pixeval.Core
                 return false;
             }
 
-            public override User Current => followerEnumerator.Current;
-
             private static async Task<HttpResponse<FollowingResponse>> TryGetResponse(string url)
             {
                 var res = (await HttpClientFactory.AppApiHttpClient.GetStringAsync(url)).FromJson<FollowingResponse>();
-                if (res is { } response && !response.UserPreviews.IsNullOrEmpty())
-                {
-                    return HttpResponse<FollowingResponse>.Wrap(true, response);
-                }
+                if (res is { } response && !response.UserPreviews.IsNullOrEmpty()) return HttpResponse<FollowingResponse>.Wrap(true, response);
 
                 return HttpResponse<FollowingResponse>.Wrap(false);
             }

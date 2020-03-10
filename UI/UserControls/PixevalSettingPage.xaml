@@ -13,7 +13,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
 <UserControl
     x:Class="Pixeval.UI.UserControls.PixevalSettingPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -23,7 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:valueConverters="clr-namespace:Pixeval.Objects.ValueConverters"
     TextElement.FontFamily="Microsoft YaHei Light"
-    mc:Ignorable="d">
+    mc:Ignorable="d" d:DataContext="{d:DesignData Settings}">
     <UserControl.Resources>
         <valueConverters:StringSplitConverter
             x:Key="StringSplitConverter" />
@@ -135,7 +136,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                         Grid.Row="4"
                         Grid.Column="0"
                         VerticalAlignment="Center"
-                        Text="搜索页数, 最低为1, 最高为10" />
+                        Text="搜索页数, 最低为1, 最高为100" />
                     <Slider
                         Grid.Row="4"
                         Grid.Column="0"

@@ -140,12 +140,8 @@ namespace Pixeval.Data.Web.Response
                 }.Apply(async i =>
                 {
                     if (i != null && i.IsManga)
-                    {
                         if (await PixivHelper.IllustrationInfo(i.Id) is { } res)
-                        {
                             i.MangaMetadata = res.MangaMetadata;
-                        }
-                    }
                 });
             }
         }

@@ -46,6 +46,8 @@ namespace Pixeval.Core
 
             public RankingAsyncEnumerator(IPixivAsyncEnumerable<Illustration> enumerable) : base(enumerable) { }
 
+            public override Illustration Current => illustrationEnumerator.Current;
+
             protected override void UpdateEnumerator()
             {
                 illustrationEnumerator = entity.Illusts.NonNull().Select(_ => _.Parse()).GetEnumerator();
@@ -53,6 +55,7 @@ namespace Pixeval.Core
 
             public override async ValueTask<bool> MoveNextAsync()
             {
+                await Task.Delay(500);
                 if (entity == null)
                 {
                     if (await TryGetResponse("/v1/illust/recommended") is (true, var model))
@@ -60,7 +63,10 @@ namespace Pixeval.Core
                         entity = model;
                         UpdateEnumerator();
                     }
-                    else throw new QueryNotRespondingException();
+                    else
+                    {
+                        throw new QueryNotRespondingException();
+                    }
 
                     Enumerable.ReportRequestedPages();
                 }
@@ -80,15 +86,10 @@ namespace Pixeval.Core
                 return false;
             }
 
-            public override Illustration Current => illustrationEnumerator.Current;
-
             private static async Task<HttpResponse<RankingResponse>> TryGetResponse(string url)
             {
                 var res = (await HttpClientFactory.AppApiHttpClient.GetStringAsync(url)).FromJson<RankingResponse>();
-                if (res is { } response && !response.Illusts.IsNullOrEmpty())
-                {
-                    return HttpResponse<RankingResponse>.Wrap(true, response);
-                }
+                if (res is { } response && !response.Illusts.IsNullOrEmpty()) return HttpResponse<RankingResponse>.Wrap(true, response);
 
                 return HttpResponse<RankingResponse>.Wrap(false);
             }

@@ -17,7 +17,6 @@
 using System;
 using System.Globalization;
 using System.IO;
-using Pixeval.Persisting;
 using Refit;
 
 namespace Pixeval.Objects.Exceptions.Logger

@@ -1,5 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// Pixeval - A Strong, Fast and Flexible Pixiv Client
+// Copyright (C) 2019 Dylech30th
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+// 
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
@@ -22,6 +37,12 @@ namespace Pixeval
 
         internal static bool LogoutExit = false;
 
+        public static IDownloadPathProvider DownloadPathProvider = new DefaultDownloadPathProvider();
+
+        public static IIllustrationFileNameFormatter FileNameFormatter = new DefaultIllustrationFileNameFormatter();
+
+        public static ObservableCollection<DownloadableIllustrationViewModel> Downloading = new ObservableCollection<DownloadableIllustrationViewModel>();
+
         static AppContext()
         {
             Directory.CreateDirectory(ProjectFolder);
@@ -29,15 +50,13 @@ namespace Pixeval
             Directory.CreateDirectory(ExceptionReportFolder);
         }
 
-        public static IDownloadPathProvider DownloadPathProvider = new DefaultDownloadPathProvider();
-
-        public static IIllustrationFileNameFormatter FileNameFormatter = new DefaultIllustrationFileNameFormatter();
-
-        public static ObservableCollection<DownloadableIllustrationViewModel> Downloading = new ObservableCollection<DownloadableIllustrationViewModel>();
-
         public static void EnqueueDownloadItem(Illustration illustration)
         {
-            static void RemoveAction(DownloadableIllustrationViewModel d) => Downloading.Remove(d);
+            static void RemoveAction(DownloadableIllustrationViewModel d)
+            {
+                Downloading.Remove(d);
+            }
+
             if (illustration.IsManga)
             {
                 for (var j = 0; j < illustration.MangaMetadata.Length; j++)

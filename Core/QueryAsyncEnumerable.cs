@@ -30,9 +30,8 @@ namespace Pixeval.Core
 {
     public class QueryAsyncEnumerable : AbstractPixivAsyncEnumerable<Illustration>
     {
-        private readonly string tag;
-
         private readonly int start;
+        private readonly string tag;
 
         public QueryAsyncEnumerable(string tag, int start = 1)
         {
@@ -65,6 +64,8 @@ namespace Pixeval.Core
                 this.current = current;
             }
 
+            public override Illustration Current => illustrationsEnumerator.Current;
+
             protected override void UpdateEnumerator()
             {
                 illustrationsEnumerator = entity.ToResponse.NonNull().Select(_ => _.Parse()).GetEnumerator();
@@ -72,6 +73,7 @@ namespace Pixeval.Core
 
             public override async ValueTask<bool> MoveNextAsync()
             {
+                await Task.Delay(500);
                 if (entity == null)
                 {
                     if (await TryGetResponse() is (true, var model))
@@ -79,7 +81,10 @@ namespace Pixeval.Core
                         entity = model;
                         UpdateEnumerator();
                     }
-                    else throw new QueryNotRespondingException();
+                    else
+                    {
+                        throw new QueryNotRespondingException();
+                    }
 
                     Enumerable.ReportRequestedPages();
                 }
@@ -99,15 +104,10 @@ namespace Pixeval.Core
                 return false;
             }
 
-            public override Illustration Current => illustrationsEnumerator.Current;
-
             private async Task<HttpResponse<QueryWorksResponse>> TryGetResponse()
             {
                 var res = await HttpClientFactory.PublicApiService.QueryWorks(new QueryWorksRequest {Tag = keyword, Offset = current++, PerPage = 30});
-                if (res is { } response && !response.ToResponse.IsNullOrEmpty())
-                {
-                    return HttpResponse<QueryWorksResponse>.Wrap(true, response);
-                }
+                if (res is { } response && !response.ToResponse.IsNullOrEmpty()) return HttpResponse<QueryWorksResponse>.Wrap(true, response);
 
                 return HttpResponse<QueryWorksResponse>.Wrap(false);
             }
