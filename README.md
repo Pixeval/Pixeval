@@ -1,8 +1,6 @@
 # Pixeval
 A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF
 
-## 本人由于身体原因可能需要休整一段时间，这段时间的bug反馈我都会看，但是不一定能及时更新，希望谅解
-
 **推荐：**
 * 如果你希望找到一个Android上的免代理客户端，那么我推荐[@Notsfsssf](https://github.com/Notsfsssf)的作品[Pix-EzViewer](https://github.com/Notsfsssf/Pix-EzViewer) (本项目的免代理实现也源于此)
 * 如果你更习惯于使用UWP，那么我建议你尝试由[@tobiichiamane](https://github.com/tobiichiamane)开发的[pixivuwp](https://github.com/tobiichiamane/pixivfs-uwp)
