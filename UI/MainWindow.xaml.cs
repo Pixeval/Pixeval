@@ -68,13 +68,11 @@ namespace Pixeval.UI
 
             InitializeComponent();
 
-            // 默认选中菜单栏
             NavigatorList.SelectedItem = MenuTab;
             MainWindowSnackBar.MessageQueue = MessageQueue;
 
             if (Dispatcher != null) Dispatcher.UnhandledException += Dispatcher_UnhandledException;
 
-            // 获取推荐用户
             #pragma warning disable 4014
             AcquireRecommendUser();
             #pragma warning restore 4014
@@ -821,7 +819,7 @@ namespace Pixeval.UI
             this.GetResources<Storyboard>("ContentContainerScaleYIncreaseAnimation").Begin();
         }
 
-        private async void OpenIllustBrowser(Illustration illustration)
+        public async void OpenIllustBrowser(Illustration illustration)
         {
             IllustBrowserDialogHost.DataContext = illustration;
 

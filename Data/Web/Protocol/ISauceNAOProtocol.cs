@@ -14,18 +14,17 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace Pixeval.Data.Web
+using System.Net.Http;
+using System.Threading.Tasks;
+using Refit;
+
+namespace Pixeval.Data.Web.Protocol
 {
-    public class ProtocolBase
+    // ReSharper disable once InconsistentNaming
+    public interface ISauceNAOProtocol
     {
-        public const string PublicApiBaseUrl = "https://public-api.secure.pixiv.net/v1";
-
-        public const string AppApiBaseUrl = "https://app-api.pixiv.net";
-
-        public const string DnsServer = "https://1.0.0.1";
-
-        public const string SauceNAOUrl = "https://saucenao.com/";
-
-        public const string OAuthBaseUrl = "https://oauth.secure.pixiv.net";
+        [Multipart]
+        [Post("/search.php")]
+        Task<HttpResponseMessage> GetSauce([AliasAs("file")] StreamPart stream);
     }
 }

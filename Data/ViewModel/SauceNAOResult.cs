@@ -14,18 +14,19 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace Pixeval.Data.Web
+using PropertyChanged;
+
+namespace Pixeval.Data.ViewModel
 {
-    public class ProtocolBase
+    [AddINotifyPropertyChangedInterface]
+    public class SauceNAOResult
     {
-        public const string PublicApiBaseUrl = "https://public-api.secure.pixiv.net/v1";
+        public string PixivId { get; set; }
 
-        public const string AppApiBaseUrl = "https://app-api.pixiv.net";
+        public string Member { get; set; }
 
-        public const string DnsServer = "https://1.0.0.1";
+        public string MemberId { get; set; }
 
-        public const string SauceNAOUrl = "https://saucenao.com/";
-
-        public const string OAuthBaseUrl = "https://oauth.secure.pixiv.net";
+        public string Thumbnail { get; set; }
     }
 }

@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.AspNetCore.StaticFiles;
 using Newtonsoft.Json;
 
 namespace Pixeval.Objects
@@ -79,9 +80,10 @@ namespace Pixeval.Objects
             return string.Concat(original.Split(Path.GetInvalidFileNameChars()));
         }
 
-        public static string GetExtension(string file)
+        public static bool AssumeImageContentType(string fileName, out string contentType)
         {
-            return file[file.LastIndexOf('.')..];
+            var provider = new FileExtensionContentTypeProvider();
+            return provider.TryGetContentType(fileName, out contentType);
         }
     }
 }

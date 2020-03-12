@@ -13,8 +13,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
--->
+along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
 
 <!--  ReSharper disable Xaml.RedundantResource  -->
 <Window
@@ -1013,6 +1012,26 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                                     HorizontalContentAlignment="Center"
                                                     VerticalContentAlignment="Center"
                                                     Content="用 户 新 作"
+                                                    FontSize="15"
+                                                    FontWeight="Bold" />
+                                            </StackPanel>
+                                        </ListViewItem>
+                                        <ListViewItem
+                                            x:Name="SauceNaoTab"
+                                            Height="55">
+                                            <StackPanel
+                                                Orientation="Horizontal">
+                                                <TextBlock
+                                                    Margin="20,0,0,0"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="25"
+                                                    Text="&#xe60a;"
+                                                    TextElement.FontFamily="/Resources/#dqueue" />
+                                                <Label
+                                                    Margin="30,0,0,0"
+                                                    HorizontalContentAlignment="Center"
+                                                    VerticalContentAlignment="Center"
+                                                    Content="以 图 搜 源"
                                                     FontSize="15"
                                                     FontWeight="Bold" />
                                             </StackPanel>
@@ -2274,6 +2293,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 </Grid>
             </StackPanel>
         </ScrollViewer>
+        <userControls:SauceNAOHomePage
+            Margin="250,0,0,0"
+            Visibility="{Binding ElementName=SauceNaoTab, Path=IsSelected, Converter={StaticResource VisibleIfTrueConverter}}" />
         <materialDesign:DialogHost
             x:Name="PixevalSettingDialog"
             materialDesign:TransitionAssist.DisableTransitions="True"
