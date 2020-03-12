@@ -5,6 +5,10 @@ A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF
 * 如果你希望找到一个Android上的免代理客户端，那么我推荐[@Notsfsssf](https://github.com/Notsfsssf)的作品[Pix-EzViewer](https://github.com/Notsfsssf/Pix-EzViewer) (本项目的免代理实现也源于此)
 * 如果你更习惯于使用UWP，那么我建议你尝试由[@tobiichiamane](https://github.com/tobiichiamane)开发的[pixivuwp](https://github.com/tobiichiamane/pixivfs-uwp)
 
+**注意：**
+* 自版本1.4.0开始取消了自带的.NET Core 3.0 Runtime，因为有部分用户反馈体积太大，所以在使用之前请确保自己安装了.NET Core 3.0 Runtime
+* 自版本1.4.0开始不再使用单文件方式发布，由于单文件发布会导致一些奇怪的问题
+
 **更新：**
 * 2020/1/9
     - 将用户浏览器和作品浏览器集成到主窗口中
@@ -12,6 +16,14 @@ A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF
     - 压缩包内包含了完整的.NET Core运行环境，避免有些非常非常可爱的萌新不看说明不知道要装.net，缺点是体积大大增加
 * 2020/2/14
     - 优化了代码，删除了部分无用函数和工具类
+* 2020/3/13
+    - 现在下载时可以查看进度了
+    - 你可以即时预览GIF了
+    - 新增了使用SauceNAO作为源的搜图功能
+    - 改进了核心API，优化了异常处理
+    - 添加了500ms的请求限速，防止出现账号临时被ban的情况
+    - 优化了图片浏览弹窗的开启速度
+    - 现在可以在设置里选择不使用直连了</br>
 
 **BUG修复：**
 * 2020/1/8
@@ -25,6 +37,10 @@ A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF
     - 修复了查看某些作品时上传日期显示0001/01/01的bug
     - 修复了点击缩略图时可能无法打开大图的bug
     - 都0202年了，我依然没有女朋友，这也是个bug
+* 2020/3/13
+    - 修复了有时图片浏览底端按钮显示不全的问题
+    - 修复了屏幕分辨率较低时无法显示完整侧边栏的问题
+    - 修复了下载时容易出现空文件夹的问题</br>
 
 **下载：**
 * 前往[Release页面](https://github.com/Rinacm/Pixeval/releases)下载最新版本的Release
