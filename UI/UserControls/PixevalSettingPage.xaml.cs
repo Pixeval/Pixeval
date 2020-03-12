@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
-using MaterialDesignThemes.Wpf;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Pixeval.Objects;
 using Pixeval.Persisting;
@@ -32,11 +31,6 @@ namespace Pixeval.UI.UserControls
         public PixevalSettingPage()
         {
             InitializeComponent();
-        }
-
-        private void SettingDialog_OnDialogClosing(object sender, DialogClosingEventArgs e)
-        {
-            MainWindow.Instance.SettingsTab.IsSelected = false;
         }
 
         private void OpenFileDialogButton_OnClick(object sender, RoutedEventArgs e)

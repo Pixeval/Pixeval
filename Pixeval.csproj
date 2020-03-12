@@ -10,7 +10,6 @@
     <StartupObject>Pixeval.App</StartupObject>
     <ApplicationIcon>Resources\pxlogo.ico</ApplicationIcon>
     <Win32Resource />
-    <NoWarn>$(NoWarn);NU1701;NU1702</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,40 +21,35 @@
 
   <ItemGroup>
     <None Remove="Resources\0.jpg" />
-    <None Remove="Resources\0.png" />
     <None Remove="Resources\dqueue.ttf" />
     <None Remove="Resources\iconfont.ttf" />
     <None Remove="Resources\iconfontex.ttf" />
     <None Remove="Resources\pxlogo.ico" />
     <None Remove="Resources\pxlogo_large.png" />
+    <None Remove="Resources\SauceNAO.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AngleSharp" Version="0.14.0-alpha-798" />
+    <PackageReference Include="AngleSharp" Version="0.13.0" />
     <PackageReference Include="Autofac" Version="5.1.2" />
-    <PackageReference Include="Extended.Wpf.Toolkit" Version="3.8.1" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="3.7.0" />
     <PackageReference Include="FluentWPF" Version="0.8.0" />
-    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.15.4" />
-    <PackageReference Include="MahApps.Metro" Version="2.0.0-alpha0748" />
-    <PackageReference Include="MaterialDesignColors" Version="1.2.3-ci981" />
-    <PackageReference Include="MaterialDesignThemes" Version="3.1.0-ci981" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.2" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.2" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.14.5" />
+    <PackageReference Include="MahApps.Metro" Version="1.6.5" />
+    <PackageReference Include="MaterialDesignColors" Version="1.2.1" />
+    <PackageReference Include="MaterialDesignThemes" Version="2.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="PropertyChanged.Fody" Version="3.2.6" />
-    <PackageReference Include="ReactiveProperty" Version="6.2.0" />
-    <PackageReference Include="ReactiveUI" Version="11.2.3" />
+    <PackageReference Include="PropertyChanged.Fody" Version="3.2.1" />
     <PackageReference Include="refit" Version="5.0.23" />
-    <PackageReference Include="Syncfusion.Licensing" Version="17.4.0.55" />
-    <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="17.4.0.55" />
+    <PackageReference Include="Syncfusion.Licensing" Version="17.4.0.53" />
+    <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="17.4.0.53" />
     <PackageReference Include="System.Interactive.Async" Version="4.0.0" />
     <PackageReference Include="VirtualizingWrapPanel.NETCore" Version="1.4.0" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\0.png" />
     <Resource Include="Resources\dqueue.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -67,11 +61,11 @@
     </Resource>
     <Resource Include="Resources\pxlogo.ico" />
     <Resource Include="Resources\pxlogo_large.png" />
+    <Resource Include="Resources\SauceNAO.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Properties\PublishProfiles\" />
-    <Folder Include="Iterators\" />
   </ItemGroup>
 
 </Project>

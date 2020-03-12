@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System.IO;
 using Pixeval.Data.ViewModel;
 using Pixeval.Objects;
 
@@ -23,12 +24,12 @@ namespace Pixeval.Core
     {
         public string Format(Illustration illustration)
         {
-            return $"[{Texts.FormatPath(illustration.UserName)}]{illustration.Id}{Texts.GetExtension(illustration.Origin.IsNullOrEmpty() ? illustration.Large : illustration.Origin)}";
+            return $"[{Texts.FormatPath(illustration.UserName)}]{illustration.Id}{Path.GetExtension(illustration.Origin.IsNullOrEmpty() ? illustration.Large : illustration.Origin)}";
         }
 
         public string FormatManga(Illustration illustration, int idx)
         {
-            return $"[{Texts.FormatPath(illustration.UserName)}]{illustration.Id}_p{idx}{Texts.GetExtension(illustration.Origin.IsNullOrEmpty() ? illustration.Large : illustration.Origin)}";
+            return $"[{Texts.FormatPath(illustration.UserName)}]{illustration.Id}_p{idx}{Path.GetExtension(illustration.Origin.IsNullOrEmpty() ? illustration.Large : illustration.Origin)}";
         }
 
         public string FormatGif(Illustration illustration)
