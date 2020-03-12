@@ -73,7 +73,6 @@ namespace Pixeval.Core
 
             public override async ValueTask<bool> MoveNextAsync()
             {
-                await Task.Delay(500);
                 if (entity == null)
                 {
                     if (await TryGetResponse($"https://app-api.pixiv.net/v1/user/following?user_id={userId}&restrict=public") is (true, var model))

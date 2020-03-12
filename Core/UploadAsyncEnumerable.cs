@@ -71,7 +71,6 @@ namespace Pixeval.Core
 
             public override async ValueTask<bool> MoveNextAsync()
             {
-                await Task.Delay(500);
                 if (entity == null)
                 {
                     if (await TryGetResponse() is (true, var model))
