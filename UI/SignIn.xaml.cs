@@ -62,9 +62,6 @@ namespace Pixeval.UI
                 return;
             }
 
-            var mainWindow = new MainWindow();
-            mainWindow.Show();
-
             Close();
         }
 
@@ -86,9 +83,6 @@ namespace Pixeval.UI
                 }
 
                 DialogHost.CurrentSession.Close();
-
-                var mainWindow = new MainWindow();
-                mainWindow.Show();
                 Close();
             }
         }

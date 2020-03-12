@@ -55,6 +55,7 @@ namespace Pixeval.UI
 {
     public partial class MainWindow
     {
+        private readonly SignIn _signIn;
         public static MainWindow Instance;
 
         public static readonly SnackbarMessageQueue MessageQueue = new SnackbarMessageQueue(TimeSpan.FromSeconds(2))
@@ -62,10 +63,10 @@ namespace Pixeval.UI
             IgnoreDuplicate = true
         };
 
-        public MainWindow()
+        public MainWindow(SignIn signIn)
         {
             Instance = this;
-
+            _signIn = signIn;
             InitializeComponent();
 
             // 默认选中菜单栏
@@ -189,6 +190,14 @@ namespace Pixeval.UI
 
         private async void MainWindow_OnInitialized(object sender, EventArgs e)
         {
+            _signIn.Show();
+            _signIn.Closed += _signIn_Closed;
+                
+        }
+
+        private async void _signIn_Closed(object sender, EventArgs e)
+        {
+            Show();
             await AddUserNameAndAvatar();
         }
 

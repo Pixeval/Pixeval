@@ -17,7 +17,9 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Persisting;
+using Pixeval.UI;
 using Refit;
 
 #if RELEASE
@@ -28,8 +30,12 @@ namespace Pixeval
 {
     public partial class App
     {
+        private readonly ServiceProvider _serviceProvider;
         public App()
         {
+            var serviceCollection = new ServiceCollection();
+            Pixeval.Startup.ConfigureServices(serviceCollection);
+            _serviceProvider = serviceCollection.BuildServiceProvider();
             if (Dispatcher != null)
                 Dispatcher.UnhandledException += (sender, args) => DispatcherOnUnhandledException(args.Exception);
             AppDomain.CurrentDomain.UnhandledException += (sender, args) => DispatcherOnUnhandledException((Exception) args.ExceptionObject);
@@ -45,17 +51,17 @@ namespace Pixeval
 #endif
         }
 
-        protected override async void OnStartup(StartupEventArgs e)
+
+        private async void  App_OnStartup(object sender, StartupEventArgs e)
         {
             await Settings.Global.Restore();
-            base.OnStartup(e);
+            var mainWindow = _serviceProvider.GetService<MainWindow>();
         }
 
-        protected override async void OnExit(ExitEventArgs e)
+        private async void App_OnExit(object sender, ExitEventArgs e)
         {
             await Settings.Global.Store();
             if (!AppContext.LogoutExit && Identity.Global.AccessToken != null) await Identity.Global.Store();
-            base.OnExit(e);
         }
     }
 }

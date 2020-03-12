@@ -10,6 +10,7 @@
     <StartupObject>Pixeval.App</StartupObject>
     <ApplicationIcon>Resources\pxlogo.ico</ApplicationIcon>
     <Win32Resource />
+    <NoWarn>$(NoWarn);NU1701;NU1702</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -38,6 +39,9 @@
     <PackageReference Include="MahApps.Metro" Version="1.6.5" />
     <PackageReference Include="MaterialDesignColors" Version="1.2.1" />
     <PackageReference Include="MaterialDesignThemes" Version="2.6.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="PropertyChanged.Fody" Version="3.2.1" />
     <PackageReference Include="refit" Version="5.0.23" />
@@ -65,6 +69,7 @@
 
   <ItemGroup>
     <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="Iterators\" />
   </ItemGroup>
 
 </Project>

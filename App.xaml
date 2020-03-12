@@ -21,7 +21,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:valueConverters="clr-namespace:Pixeval.Objects.ValueConverters"
     xmlns:system="clr-namespace:System;assembly=System.Runtime"
-    StartupUri="UI/SignIn.xaml">
+    Startup="App_OnStartup"
+    Exit="App_OnExit">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
