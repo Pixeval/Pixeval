@@ -55,7 +55,7 @@ namespace Pixeval.UI
 {
     public partial class MainWindow
     {
-        private readonly SignIn _signIn;
+        private readonly SignIn signIn;
         public static MainWindow Instance;
 
         public static readonly SnackbarMessageQueue MessageQueue = new SnackbarMessageQueue(TimeSpan.FromSeconds(2))
@@ -66,7 +66,7 @@ namespace Pixeval.UI
         public MainWindow(SignIn signIn)
         {
             Instance = this;
-            _signIn = signIn;
+            this.signIn = signIn;
             InitializeComponent();
 
             // 默认选中菜单栏
@@ -188,17 +188,41 @@ namespace Pixeval.UI
             e.Handled = true;
         }
 
-        private async void MainWindow_OnInitialized(object sender, EventArgs e)
+        private void MainWindow_OnInitialized(object sender, EventArgs e)
         {
-            _signIn.Show();
-            _signIn.Closed += _signIn_Closed;
-                
+            signIn.IsVisibleChanged += SignIn_IsVisibleChanged1;
+            signIn.Show();
         }
 
-        private async void _signIn_Closed(object sender, EventArgs e)
+        private async void SignIn_IsVisibleChanged1(object sender, DependencyPropertyChangedEventArgs e)
         {
-            Show();
-            await AddUserNameAndAvatar();
+            if (signIn.IsVisible)
+            {
+                signIn.Login.Enable();
+                if (Identity.ConfExists())
+                {
+                    try
+                    {
+                        signIn.DialogHost.OpenControl();
+                        await Identity.RefreshIfRequired();
+                    }
+                    catch (ApiException exception)
+                    {
+                        signIn.SetErrorHint(exception);
+
+                        signIn.DialogHost.CurrentSession.Close();
+                        return;
+                    }
+
+                    signIn.DialogHost.CurrentSession.Close();
+                    Hide();
+                }
+            }
+            else
+            {
+                Show();
+                await AddUserNameAndAvatar();
+            }
         }
 
         private async Task AddUserNameAndAvatar()
@@ -422,9 +446,8 @@ namespace Pixeval.UI
         {
             Identity.Clear();
             Settings.Global.Initialize();
-            var login = new SignIn();
-            login.Show();
-            Close();
+            signIn.Show();
+            Hide();
         }
 
         private void NavigatorList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

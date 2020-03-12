@@ -62,32 +62,10 @@ namespace Pixeval.UI
                 return;
             }
 
-            Close();
+            Hide();
         }
 
-        private async void SignIn_OnInitialized(object sender, EventArgs e)
-        {
-            if (Identity.ConfExists())
-            {
-                try
-                {
-                    DialogHost.OpenControl();
-                    await Identity.RefreshIfRequired();
-                }
-                catch (ApiException exception)
-                {
-                    SetErrorHint(exception);
-
-                    DialogHost.CurrentSession.Close();
-                    return;
-                }
-
-                DialogHost.CurrentSession.Close();
-                Close();
-            }
-        }
-
-        private async void SetErrorHint(Exception exception)
+        public async void SetErrorHint(Exception exception)
         {
             ErrorMessage.Text = exception is ApiException aException && await IsPasswordOrAccountError(aException)
                 ? Externally.EmailOrPasswordIsWrong

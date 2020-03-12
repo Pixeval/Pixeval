@@ -28,7 +28,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     Height="550"
     Closing="SignIn_OnClosing"
     Icon="/Resources/pxlogo.ico"
-    Initialized="SignIn_OnInitialized"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
