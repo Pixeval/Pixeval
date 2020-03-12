@@ -55,7 +55,6 @@ namespace Pixeval.Core
 
             public override async ValueTask<bool> MoveNextAsync()
             {
-                await Task.Delay(500);
                 if (entity == null)
                 {
                     if (await TryGetResponse("https://app-api.pixiv.net/v2/illust/follow?restrict=public") is (true, var model))

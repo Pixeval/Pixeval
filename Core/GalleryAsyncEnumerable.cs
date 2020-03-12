@@ -66,7 +66,6 @@ namespace Pixeval.Core
 
             public override async ValueTask<bool> MoveNextAsync()
             {
-                await Task.Delay(500);
                 if (entity == null)
                 {
                     if (await TryGetResponse($"/v1/user/bookmarks/illust?user_id={uid}&restrict=public&filter=for_ios") is (true, var model))

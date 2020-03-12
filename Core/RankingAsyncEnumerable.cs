@@ -55,7 +55,6 @@ namespace Pixeval.Core
 
             public override async ValueTask<bool> MoveNextAsync()
             {
-                await Task.Delay(500);
                 if (entity == null)
                 {
                     if (await TryGetResponse("/v1/illust/recommended") is (true, var model))
