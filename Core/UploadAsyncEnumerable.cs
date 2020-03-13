@@ -103,7 +103,7 @@ namespace Pixeval.Core
 
             private async Task<HttpResponse<UploadResponse>> TryGetResponse()
             {
-                var res = await HttpClientFactory.PublicApiService.GetUploads(uid, new UploadsRequest {Page = current++});
+                var res = await HttpClientFactory.PublicApiService().GetUploads(uid, new UploadsRequest {Page = current++});
                 if (res is { } response && !response.ToResponse.IsNullOrEmpty()) return HttpResponse<UploadResponse>.Wrap(true, response);
 
                 return HttpResponse<UploadResponse>.Wrap(false);

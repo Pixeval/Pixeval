@@ -75,7 +75,7 @@ namespace Pixeval.UI.UserControls
                 (Dispatcher ?? throw new InvalidOperationException()).Invoke(async () =>
                 {
                     MainWindow.Instance.IllustBrowserDialogHost.DataContext = Illust;
-                    var userInfo = await HttpClientFactory.AppApiService.GetUserInformation(new UserInformationRequest {Id = Illust.UserId});
+                    var userInfo = await HttpClientFactory.AppApiService().GetUserInformation(new UserInformationRequest {Id = Illust.UserId});
                     SetImageSource(MainWindow.Instance.IllustBrowserUserAvatar, await PixivIO.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium));
                 });
             });
@@ -84,7 +84,7 @@ namespace Pixeval.UI.UserControls
         private async void PlayGif_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             ProcessingGif = true;
-            var metadata = await HttpClientFactory.AppApiService.GetUgoiraMetadata(Illust.Id);
+            var metadata = await HttpClientFactory.AppApiService().GetUgoiraMetadata(Illust.Id);
             var ugoiraZip = metadata.UgoiraMetadataInfo.ZipUrls.Medium;
             var delay = metadata.UgoiraMetadataInfo.Frames.Select(f => f.Delay / 10).ToArray();
             var streams = PixivIO.ReadGifZipEntries(await PixivIO.FromUrlInternal(ugoiraZip)).ToArray();

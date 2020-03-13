@@ -131,7 +131,7 @@ namespace Pixeval.UI
 
             try
             {
-                await HttpClientFactory.AppApiService.GetUserInformation(new UserInformationRequest {Id = userId});
+                await HttpClientFactory.AppApiService().GetUserInformation(new UserInformationRequest {Id = userId});
             }
             catch (ApiException e)
             {
@@ -275,7 +275,7 @@ namespace Pixeval.UI
 
             try
             {
-                var result = await HttpClientFactory.AppApiService.GetAutoCompletion(new AutoCompletionRequest {Word = word});
+                var result = await HttpClientFactory.AppApiService().GetAutoCompletion(new AutoCompletionRequest {Word = word});
                 if (result.Tags.Any())
                 {
                     AutoCompletionPopup.OpenControl();
@@ -547,7 +547,7 @@ namespace Pixeval.UI
             Task.Run(async () =>
             {
                 var link = $"https://public-api.secure.pixiv.net/v1/users/{id}/works.json?page=1&publicity=public&per_page=1&image_sizes=large";
-                var httpClient = HttpClientFactory.PixivApi(ProtocolBase.PublicApiBaseUrl);
+                var httpClient = HttpClientFactory.PixivApi(ProtocolBase.PublicApiBaseUrl, Settings.Global.DirectConnect);
                 httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer");
 
                 var res = (await httpClient.GetStringAsync(link)).FromJson<dynamic>();
@@ -787,7 +787,7 @@ namespace Pixeval.UI
 
         private async void SetUserBrowserContext(User user)
         {
-            var usr = await HttpClientFactory.AppApiService.GetUserInformation(new UserInformationRequest {Id = $"{user.Id}"});
+            var usr = await HttpClientFactory.AppApiService().GetUserInformation(new UserInformationRequest {Id = $"{user.Id}"});
             var usrEntity = new User
             {
                 Avatar = usr.UserEntity.ProfileImageUrls.Medium,
@@ -824,7 +824,7 @@ namespace Pixeval.UI
             IllustBrowserDialogHost.DataContext = illustration;
 
             IllustBrowserDialogHost.OpenControl();
-            var userInfo = await HttpClientFactory.AppApiService.GetUserInformation(new UserInformationRequest {Id = illustration.UserId});
+            var userInfo = await HttpClientFactory.AppApiService().GetUserInformation(new UserInformationRequest {Id = illustration.UserId});
             var avatar = await PixivIO.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium);
             if (avatar != null) SetImageSource(IllustBrowserUserAvatar, avatar);
         }

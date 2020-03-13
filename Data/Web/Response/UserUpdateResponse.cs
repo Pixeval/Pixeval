@@ -120,7 +120,7 @@ namespace Pixeval.Data.Web.Response
                     PublishDate = CreateDate
                 }.Apply(i =>
                 {
-                    if (!i.IsManga)
+                    if (i.IsManga)
                         i.MangaMetadata = MetaPages.Select(p =>
                         {
                             var page = (Illustration) i.Clone();

@@ -19,24 +19,25 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Pixeval.Data.Web.Protocol;
 using Pixeval.Objects;
+using Pixeval.Persisting;
 using Refit;
 
 namespace Pixeval.Data.Web.Delegation
 {
     public class HttpClientFactory
     {
-        public static HttpClient AppApiHttpClient = PixivApi(ProtocolBase.AppApiBaseUrl).Apply(h => h.DefaultRequestHeaders.Add("Authorization", "Bearer"));
+        public static HttpClient AppApiHttpClient() => PixivApi(ProtocolBase.AppApiBaseUrl, Settings.Global.DirectConnect).Apply(h => h.DefaultRequestHeaders.Add("Authorization", "Bearer"));
 
-        public static IPublicApiProtocol PublicApiService { get; } = RestService.For<IPublicApiProtocol>(PixivApi(ProtocolBase.PublicApiBaseUrl));
+        public static IPublicApiProtocol PublicApiService() => RestService.For<IPublicApiProtocol>(PixivApi(ProtocolBase.PublicApiBaseUrl, Settings.Global.DirectConnect));
 
-        public static IAppApiProtocol AppApiService { get; } = RestService.For<IAppApiProtocol>(PixivApi(ProtocolBase.AppApiBaseUrl));
+        public static IAppApiProtocol AppApiService() => RestService.For<IAppApiProtocol>(PixivApi(ProtocolBase.AppApiBaseUrl, Settings.Global.DirectConnect));
 
-        public static HttpClient PixivApi(string baseAddress, Action<HttpClient> action = null)
+        public static HttpClient PixivApi(string baseAddress, bool directConnect)
         {
-            return new HttpClient(PixivApiHttpClientHandler.Instance)
+            return new HttpClient(PixivApiHttpClientHandler.Instance(directConnect))
             {
                 BaseAddress = new Uri(baseAddress)
-            }.Apply(h => action?.Invoke(h));
+            };
         }
 
         public static HttpClient PixivImage()

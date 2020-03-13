@@ -36,7 +36,7 @@ namespace Pixeval.Core
             SingleWorkResponse.Illust response;
             try
             {
-                response = (await HttpClientFactory.AppApiService.GetSingle(id)).IllustInfo;
+                response = (await HttpClientFactory.AppApiService().GetSingle(id)).IllustInfo;
             }
             catch (ApiException e)
             {
