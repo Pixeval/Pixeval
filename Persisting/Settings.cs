@@ -46,6 +46,8 @@ namespace Pixeval.Persisting
 
         public int QueryStart { get; set; } = 1;
 
+        public bool DirectConnect { get; set; }
+
         public int SpotlightQueryStart { get; set; } = 1;
 
         public ISet<string> ExceptTags { get; set; } = new HashSet<string>();
@@ -81,6 +83,7 @@ namespace Pixeval.Persisting
             Global.SortOnInserting = false;
             Global.ContainsTags = new HashSet<string>();
             Global.ExceptTags = new HashSet<string>();
+            Global.DirectConnect = false;
             Global.MinBookmark = 0;
             Global.QueryPages = 1;
             Global.QueryStart = 1;

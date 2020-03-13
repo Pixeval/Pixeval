@@ -13,8 +13,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
--->
+along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
 <UserControl
     x:Class="Pixeval.UI.UserControls.PixevalSettingPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -23,8 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:valueConverters="clr-namespace:Pixeval.Objects.ValueConverters"
+    d:DataContext="{d:DesignData Settings}"
     TextElement.FontFamily="Microsoft YaHei Light"
-    mc:Ignorable="d" d:DataContext="{d:DesignData Settings}">
+    mc:Ignorable="d">
     <UserControl.Resources>
         <valueConverters:StringSplitConverter
             x:Key="StringSplitConverter" />
@@ -33,7 +33,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     </UserControl.Resources>
     <materialDesign:Card
         Width="800"
-        Height="580">
+        Height="620">
         <Grid>
             <TextBlock
                 Height="30"
@@ -51,6 +51,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 <Grid
                     TextElement.FontSize="15">
                     <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="40" />
                         <RowDefinition
                             Height="40" />
                         <RowDefinition
@@ -119,9 +121,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                         Grid.Row="3"
                         Grid.Column="0"
                         VerticalAlignment="Center"
+                        Text="启用直连" />
+                    <ToggleButton
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Background="#66CCFF"
+                        IsChecked="{Binding Path=DirectConnect, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock
+                        Grid.Row="4"
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
                         Text="搜索作品的最低收藏数" />
                     <Slider
-                        Grid.Row="3"
+                        Grid.Row="4"
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         Margin="200,0,0,0"
@@ -133,12 +146,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                         Minimum="0"
                         Value="{Binding Path=MinBookmark, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock
-                        Grid.Row="4"
+                        Grid.Row="5"
                         Grid.Column="0"
                         VerticalAlignment="Center"
                         Text="搜索页数, 最低为1, 最高为100" />
                     <Slider
-                        Grid.Row="4"
+                        Grid.Row="5"
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         Margin="200,0,0,0"
@@ -150,24 +163,24 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                         Minimum="1"
                         Value="{Binding QueryPages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock
-                        Grid.Row="5"
+                        Grid.Row="6"
                         Grid.Column="0"
                         VerticalAlignment="Center"
                         Text="图片搜索起始页, 最低为1" />
                     <TextBox
-                        Grid.Row="5"
+                        Grid.Row="6"
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         Margin="200,0,0,0"
                         VerticalAlignment="Center"
                         Text="{Binding QueryStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock
-                        Grid.Row="6"
+                        Grid.Row="7"
                         Grid.Column="0"
                         VerticalAlignment="Center"
                         Text="特辑搜索起始页, 最低为1" />
                     <TextBox
-                        Grid.Row="6"
+                        Grid.Row="7"
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         Margin="480,0,0,0"
@@ -175,7 +188,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                         Text="{Binding SpotlightQueryStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBox
                         x:Name="DownloadLocationTextBox"
-                        Grid.Row="7"
+                        Grid.Row="8"
                         Grid.Column="0"
                         materialDesign:HintAssist.Hint="作品下载位置"
                         FontSize="13"
@@ -183,7 +196,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                         Text="{Binding Path=DownloadLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <Button
                         x:Name="OpenFileDialogButton"
-                        Grid.Row="7"
+                        Grid.Row="8"
                         Grid.Column="1"
                         Width="30"
                         Height="30"
@@ -205,7 +218,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     </Button>
                     <TextBox
                         x:Name="ExceptTagTextBox"
-                        Grid.Row="8"
+                        Grid.Row="9"
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         materialDesign:HintAssist.Hint="请输入要排除的标签, 使用空格分隔"
@@ -215,7 +228,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                         Text="{Binding Path=ExceptTags, Converter={StaticResource StringSplitConverter}, Mode=OneWay}" />
                     <TextBox
                         x:Name="ContainsTagTextBox"
-                        Grid.Row="9"
+                        Grid.Row="10"
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         materialDesign:HintAssist.Hint="请输入作品必须包含的标签, 使用空格分隔"

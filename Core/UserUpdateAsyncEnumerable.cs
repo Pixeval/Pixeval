@@ -87,7 +87,7 @@ namespace Pixeval.Core
 
             private static async Task<HttpResponse<UserUpdateResponse>> TryGetResponse(string url)
             {
-                var res = (await HttpClientFactory.AppApiHttpClient.GetStringAsync(url)).FromJson<UserUpdateResponse>();
+                var res = (await HttpClientFactory.AppApiHttpClient().GetStringAsync(url)).FromJson<UserUpdateResponse>();
                 if (res is { } response && !response.Illusts.IsNullOrEmpty()) return HttpResponse<UserUpdateResponse>.Wrap(true, response);
 
                 return HttpResponse<UserUpdateResponse>.Wrap(false);

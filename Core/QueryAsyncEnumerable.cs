@@ -105,7 +105,7 @@ namespace Pixeval.Core
 
             private async Task<HttpResponse<QueryWorksResponse>> TryGetResponse()
             {
-                var res = await HttpClientFactory.PublicApiService.QueryWorks(new QueryWorksRequest {Tag = keyword, Offset = current++, PerPage = 30});
+                var res = await HttpClientFactory.PublicApiService().QueryWorks(new QueryWorksRequest {Tag = keyword, Offset = current++, PerPage = 30});
                 if (res is { } response && !response.ToResponse.IsNullOrEmpty()) return HttpResponse<QueryWorksResponse>.Wrap(true, response);
 
                 return HttpResponse<QueryWorksResponse>.Wrap(false);

@@ -98,7 +98,7 @@ namespace Pixeval.Core
 
             private async Task<HttpResponse<SpotlightResponse>> TryGetResponse()
             {
-                var res = await HttpClientFactory.AppApiService.GetSpotlights(current++ * 10);
+                var res = await HttpClientFactory.AppApiService().GetSpotlights(current++ * 10);
 
                 if (res is { } response && !response.SpotlightArticles.IsNullOrEmpty()) return HttpResponse<SpotlightResponse>.Wrap(true, response);
 

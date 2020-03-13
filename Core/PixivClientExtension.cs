@@ -31,13 +31,13 @@ namespace Pixeval.Core
         public static async void PostFavoriteAsync(this PixivClient _, Illustration illustration)
         {
             illustration.IsLiked = true;
-            await HttpClientFactory.AppApiService.AddBookmark(new AddBookmarkRequest {Id = illustration.Id});
+            await HttpClientFactory.AppApiService().AddBookmark(new AddBookmarkRequest {Id = illustration.Id});
         }
 
         public static async void RemoveFavoriteAsync(this PixivClient _, Illustration illustration)
         {
             illustration.IsLiked = false;
-            await HttpClientFactory.AppApiService.DeleteBookmark(new DeleteBookmarkRequest {IllustId = illustration.Id});
+            await HttpClientFactory.AppApiService().DeleteBookmark(new DeleteBookmarkRequest {IllustId = illustration.Id});
         }
 
         public static async Task<IEnumerable<string>> GetArticleWorks(this PixivClient _, string spotlightId)
@@ -55,13 +55,13 @@ namespace Pixeval.Core
         public static async Task FollowArtist(this PixivClient _, User user)
         {
             user.IsFollowed = true;
-            await HttpClientFactory.AppApiService.FollowArtist(new FollowArtistRequest {Id = user.Id});
+            await HttpClientFactory.AppApiService().FollowArtist(new FollowArtistRequest {Id = user.Id});
         }
 
         public static async Task UnFollowArtist(this PixivClient _, User user)
         {
             user.IsFollowed = false;
-            await HttpClientFactory.AppApiService.UnFollowArtist(new UnFollowArtistRequest {UserId = user.Id});
+            await HttpClientFactory.AppApiService().UnFollowArtist(new UnFollowArtistRequest {UserId = user.Id});
         }
     }
 }

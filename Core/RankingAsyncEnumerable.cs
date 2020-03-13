@@ -87,7 +87,7 @@ namespace Pixeval.Core
 
             private static async Task<HttpResponse<RankingResponse>> TryGetResponse(string url)
             {
-                var res = (await HttpClientFactory.AppApiHttpClient.GetStringAsync(url)).FromJson<RankingResponse>();
+                var res = (await HttpClientFactory.AppApiHttpClient().GetStringAsync(url)).FromJson<RankingResponse>();
                 if (res is { } response && !response.Illusts.IsNullOrEmpty()) return HttpResponse<RankingResponse>.Wrap(true, response);
 
                 return HttpResponse<RankingResponse>.Wrap(false);

@@ -102,7 +102,7 @@ namespace Pixeval.Data.ViewModel
             var path = Path.Combine(Directory.CreateDirectory(AppContext.DownloadPathProvider.GetIllustrationPath()).FullName, AppContext.FileNameFormatter.FormatGif(DownloadContent));
             try
             {
-                var metadata = await HttpClientFactory.AppApiService.GetUgoiraMetadata(DownloadContent.Id);
+                var metadata = await HttpClientFactory.AppApiService().GetUgoiraMetadata(DownloadContent.Id);
                 var ugoiraUrl = metadata.UgoiraMetadataInfo.ZipUrls.Medium;
                 ugoiraUrl = !ugoiraUrl.EndsWith("ugoira1920x1080.zip") ? Regex.Replace(ugoiraUrl, "ugoira(\\d+)x(\\d+).zip", "ugoira1920x1080.zip") : ugoiraUrl;
                 var delay = metadata.UgoiraMetadataInfo.Frames.Select(f => f.Delay / 10).ToArray();
