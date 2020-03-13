@@ -498,6 +498,7 @@ namespace Pixeval.UI
         private void DownloadSpotlightItem_OnClick(object sender, RoutedEventArgs e)
         {
             sender.GetDataContext<SpotlightArticle>().Download();
+            MessageQueue.Enqueue("已添加到下载队列");
         }
 
         #endregion
@@ -507,6 +508,7 @@ namespace Pixeval.UI
         private void DownloadNowMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             AppContext.EnqueueDownloadItem(sender.GetDataContext<Illustration>());
+            MessageQueue.Enqueue("已添加到下载队列");
         }
 
         private void DownloadAllNowMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -514,6 +516,7 @@ namespace Pixeval.UI
             foreach (var illustration in GetImageSourceCopy())
                 if (illustration != null)
                     AppContext.EnqueueDownloadItem(illustration);
+            MessageQueue.Enqueue("已全部添加到下载队列");
         }
 
         #endregion
@@ -734,6 +737,7 @@ namespace Pixeval.UI
         private void DownloadButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             AppContext.EnqueueDownloadItem(sender.GetDataContext<Illustration>());
+            MessageQueue.Enqueue("已添加到下载队列");
         }
 
         private void IllustBrowserFavorButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

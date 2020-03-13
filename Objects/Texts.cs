@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Microsoft.AspNetCore.StaticFiles;
 using Newtonsoft.Json;
 
 namespace Pixeval.Objects
@@ -80,10 +79,16 @@ namespace Pixeval.Objects
             return string.Concat(original.Split(Path.GetInvalidFileNameChars()));
         }
 
-        public static bool AssumeImageContentType(string fileName, out string contentType)
+        public static string AssumeImageContentType(string fileName)
         {
-            var provider = new FileExtensionContentTypeProvider();
-            return provider.TryGetContentType(fileName, out contentType);
+            return fileName[^3..] switch
+            {
+                "png"  => "image/png",
+                "jpg"  => "image/jpeg",
+                "jpeg" => "image/jpeg",
+                "gif"  => "image/gif",
+                _ => "image/jpeg"
+            };
         }
     }
 }
