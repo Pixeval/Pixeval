@@ -52,6 +52,8 @@ namespace Pixeval.Data.ViewModel
 
         public string ReasonPhase { get; set; }
 
+        private bool retried;
+
         [DoNotNotify]
         public Action<DownloadableIllustrationViewModel> DownloadFinished { get; set; }
 
@@ -60,6 +62,16 @@ namespace Pixeval.Data.ViewModel
             cancellationTokenSource.Cancel();
             cancellationTokenSource = new CancellationTokenSource();
         }
+
+        public void Restart()
+        {
+            Progress = 0;
+            ReasonPhase = null;
+            DownloadFailed = false;
+            Cancel();
+            Download();
+        }
+
 
         // 3/10/2020 I wish that we could both be there
         public async void Download()
@@ -93,7 +105,12 @@ namespace Pixeval.Data.ViewModel
             }
             catch (Exception e)
             {
-                HandleError(e, path);
+                if (!retried)
+                {
+                    Restart();
+                    retried = true;
+                }
+                else HandleError(e, path);
             }
         }
 
@@ -120,7 +137,12 @@ namespace Pixeval.Data.ViewModel
             }
             catch (Exception e)
             {
-                HandleError(e, path);
+                if (!retried)
+                {
+                    Restart();
+                    retried = true;
+                }
+                else HandleError(e, path);
             }
         }
 

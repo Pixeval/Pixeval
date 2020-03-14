@@ -14,19 +14,17 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using System.Net.Http;
+using PropertyChanged;
 
-namespace Pixeval.Data.Web.Delegation
+namespace Pixeval.Data.ViewModel
 {
-    public class PixivApiHttpClientHandler : DnsResolvedHttpClientHandler
+    [AddINotifyPropertyChangedInterface]
+    public class TrendingTag
     {
-        private PixivApiHttpClientHandler(bool directConnect) : base(PixivAuthenticationHttpRequestHandler.Instance, directConnect) { }
+        public string Tag { get; set; }
 
-        protected override DnsResolver DnsResolver { get; set; } = PixivApiDnsResolver.Instance;
+        public string TranslatedName { get; set; }
 
-        public static HttpMessageHandler Instance(bool directConnect)
-        {
-            return new PixivApiHttpClientHandler(directConnect);
-        }
+        public string Thumbnail { get; set; }
     }
 }

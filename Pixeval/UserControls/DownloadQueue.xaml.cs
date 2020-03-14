@@ -21,7 +21,7 @@ using Pixeval.Core;
 using Pixeval.Data.ViewModel;
 using Pixeval.Objects;
 
-namespace Pixeval.UserControls
+namespace Pixeval.UI.UserControls
 {
     /// <summary>
     ///     Interaction logic for DownloadQueue.xaml
@@ -45,8 +45,7 @@ namespace Pixeval.UserControls
         private void RetryButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var model = sender.GetDataContext<DownloadableIllustrationViewModel>();
-            model.Cancel();
-            model.Download();
+            model.Restart();
         }
     }
 }

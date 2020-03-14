@@ -21,7 +21,7 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using Pixeval.Objects;
 using Pixeval.Persisting;
 
-namespace Pixeval.UserControls
+namespace Pixeval.UI.UserControls
 {
     /// <summary>
     ///     Interaction logic for PixevalSettingPage.xaml

@@ -9,6 +9,7 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <StartupObject>Pixeval.App</StartupObject>
     <ApplicationIcon>Resources\pxlogo.ico</ApplicationIcon>
+    <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
     <Win32Resource />
     <NoWarn>$(NoWarn);NU1701;NU1702</NoWarn>
     <Platforms>AnyCPU;x64</Platforms>
@@ -33,6 +34,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AdysTech.CredentialManager.Core" Version="1.9.0" />
+    <PackageReference Include="AngleSharp" Version="0.13.0" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="3.7.0" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.14.5" />
+    <PackageReference Include="MahApps.Metro" Version="1.6.5" />
+    <PackageReference Include="MaterialDesignColors" Version="1.2.1" />
+    <PackageReference Include="MaterialDesignThemes" Version="2.6.0" />
     <PackageReference Include="AngleSharp" Version="0.14.0-alpha-798" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="3.8.1" />
     <PackageReference Include="FluentWPF" Version="0.8.0" />
@@ -50,8 +58,8 @@
     <PackageReference Include="ReactiveProperty" Version="6.2.0" />
     <PackageReference Include="ReactiveUI" Version="11.2.3" />
     <PackageReference Include="refit" Version="5.0.23" />
-    <PackageReference Include="Syncfusion.Licensing" Version="17.4.0.55" />
-    <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="17.4.0.55" />
+    <PackageReference Include="Syncfusion.Licensing" Version="17.4.0.53" />
+    <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="17.4.0.53" />
     <PackageReference Include="System.Interactive.Async" Version="4.0.0" />
     <PackageReference Include="VirtualizingWrapPanel.NETCore" Version="1.4.0" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />

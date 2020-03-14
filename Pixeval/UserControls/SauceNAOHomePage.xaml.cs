@@ -26,11 +26,10 @@ using Pixeval.Core;
 using Pixeval.Data.Web;
 using Pixeval.Data.Web.Protocol;
 using Pixeval.Objects;
-using Pixeval.Views;
 using Refit;
 using Visibility = System.Windows.Visibility;
 
-namespace Pixeval.UserControls
+namespace Pixeval.UI.UserControls
 {
     /// <summary>
     ///     Interaction logic for SauceNAOHomePage.xaml
@@ -55,19 +54,12 @@ namespace Pixeval.UserControls
                     Searching.Visibility = Visibility.Visible;
                     UploadFileTextBox.Text = fileDialog.FileName;
                     await using var memoryStream = new MemoryStream(await File.ReadAllBytesAsync(UploadFileTextBox.Text), false);
-                    if (Texts.AssumeImageContentType(fileDialog.FileName, out var contentType))
-                    {
-                        var sauceResponse = await RestService.For<ISauceNAOProtocol>(ProtocolBase.SauceNAOUrl)
-                            .GetSauce(new StreamPart(memoryStream, Path.GetFileName(fileDialog.FileName), contentType));
-                        var content = await sauceResponse.Content.ReadAsStringAsync();
-                        if ((await ParseSauce(content)).ToList() is { } sauceResults && sauceResults.Any())
-                            MainWindow.Instance.OpenIllustBrowser(await PixivHelper.IllustrationInfo(sauceResults[0]));
-                        else MainWindow.MessageQueue.Enqueue("找不到结果TAT");
-                    }
-                    else
-                    {
-                        MainWindow.MessageQueue.Enqueue("检测到不支持的文件类型");
-                    }
+                    var sauceResponse = await RestService.For<ISauceNAOProtocol>(ProtocolBase.SauceNAOUrl)
+                        .GetSauce(new StreamPart(memoryStream, Path.GetFileName(fileDialog.FileName), Texts.AssumeImageContentType(fileDialog.FileName)));
+                    var content = await sauceResponse.Content.ReadAsStringAsync();
+                    if ((await ParseSauce(content)).ToList() is { } sauceResults && sauceResults.Any())
+                        MainWindow.Instance.OpenIllustBrowser(await PixivHelper.IllustrationInfo(sauceResults[0]));
+                    else MainWindow.MessageQueue.Enqueue("找不到结果TAT");
                 }
             }
             finally

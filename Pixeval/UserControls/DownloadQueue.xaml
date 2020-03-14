@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <UserControl
-    x:Class="Pixeval.UserControls.DownloadQueue"
+    x:Class="Pixeval.UI.UserControls.DownloadQueue"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -268,7 +268,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                 Value="{Binding Progress}" />
                             <Grid
                                 Margin="5,5,5,0"
-                                TextElement.FontFamily="Microsoft JHengHei Light"
+                                TextElement.FontFamily="Microsoft YaHei Light"
                                 TextElement.FontSize="12">
                                 <TextBlock
                                     x:Name="ProgressIndicator"
@@ -347,7 +347,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     Source="{StaticResource EmptyBox}" />
                 <TextBlock
                     HorizontalAlignment="Stretch"
-                    FontFamily="Microsoft JHengHei Light"
+                    FontFamily="Microsoft YaHei Light"
                     FontSize="25"
                     Text="这里空空如也, 去下载一些作品吧！" />
             </StackPanel>

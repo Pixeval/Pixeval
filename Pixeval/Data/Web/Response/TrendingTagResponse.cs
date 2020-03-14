@@ -16,23 +16,28 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
-using Pixeval.Data.ViewModel;
-using Pixeval.Objects;
 
 namespace Pixeval.Data.Web.Response
 {
-    public class QueryWorksResponse
+    public class TrendingTagResponse
     {
-        [JsonProperty("illusts")]
-        public List<Illust> Illusts { get; set; }
+        [JsonProperty("trend_tags")]
+        public List<TrendTag> TrendTags { get; set; }
 
-        [JsonProperty("next_url")]
-        public string NextUrl { get; set; }
+        public class TrendTag
+        {
+            [JsonProperty("tag")]
+            public string Tag { get; set; }
 
-        public class Illust : IParser<Illustration>
+            [JsonProperty("translated_name")]
+            public string TranslatedName { get; set; }
+
+            [JsonProperty("illust")]
+            public Illust Illust { get; set; }
+        }
+
+        public class Illust
         {
             [JsonProperty("id")]
             public long Id { get; set; }
@@ -99,40 +104,6 @@ namespace Pixeval.Data.Web.Response
 
             [JsonProperty("is_muted")]
             public bool IsMuted { get; set; }
-
-            public Illustration Parse()
-            {
-                return new Illustration
-                {
-                    Bookmark = (int) TotalBookmarks,
-                    Id = Id.ToString(),
-                    IsLiked = IsBookmarked,
-                    IsUgoira = Type == "ugoira",
-                    IsManga = !MetaPages.IsNullOrEmpty(),
-                    Origin = MetaSinglePage.OriginalImageUrl ?? ImageUrls.Large,
-                    Large = ImageUrls.Large,
-                    Tags = Tags.Select(Unsafe.As<ViewModel.Tag>),
-                    Thumbnail = ImageUrls.Medium ?? ImageUrls.SquareMedium,
-                    Title = Title,
-                    UserId = User.Id.ToString(),
-                    UserName = User.Name,
-                    Resolution = $"{Width}x{Height}",
-                    ViewCount = (int) TotalView,
-                    PublishDate = CreateDate
-                }.Apply(i =>
-                {
-                    if (i.IsManga)
-                        i.MangaMetadata = MetaPages.Select(p =>
-                        {
-                            var page = (Illustration) i.Clone();
-                            page.Thumbnail = p.ImageUrls.Medium ?? p.ImageUrls.SquareMedium;
-                            page.Origin = p.ImageUrls.Original;
-                            page.Large = p.ImageUrls.Large;
-                            page.IsManga = false;
-                            return page;
-                        }).ToArray();
-                });
-            }
         }
 
         public class ImageUrls

@@ -43,7 +43,6 @@ using Pixeval.UserControls;
 using Refit;
 using Xceed.Wpf.AvalonDock.Controls;
 using static Pixeval.Objects.UiHelper;
-
 #if RELEASE
 using System.Net.Http;
 using Pixeval.Objects.Exceptions;
@@ -103,7 +102,7 @@ namespace Pixeval.Views
 
         private void DoQueryButton_OnClick(object sender, RoutedEventArgs e)
         {
-            CloseControls(QueryOptionPopup, AutoCompletionPopup);
+            CloseControls(TrendingTagPopup, AutoCompletionPopup);
 
             if (KeywordTextBox.Text.IsNullOrEmpty())
             {
@@ -150,7 +149,7 @@ namespace Pixeval.Views
         private void TryQueryUser(string keyword)
         {
             QueryStartUp();
-
+            AppContext.EnqueueSearchHistory(keyword);
             PixivHelper.Iterate(new UserPreviewAsyncEnumerable(keyword), NewItemsSource<User>(UserPreviewListView));
         }
 
@@ -177,6 +176,7 @@ namespace Pixeval.Views
         private void QueryWorks(string keyword)
         {
             QueryStartUp();
+            AppContext.EnqueueSearchHistory(keyword);
             PixivHelper.Iterate(new QueryAsyncEnumerable(keyword, Settings.Global.QueryStart), NewItemsSource<Illustration>(ImageListView), Settings.Global.QueryPages);
         }
 
@@ -208,6 +208,15 @@ namespace Pixeval.Views
                     {
                         signIn.SetErrorHint(exception);
 
+        private void IllustrationContainer_OnPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private async void MainWindow_OnInitialized(object sender, EventArgs e)
+        {
+            await AddUserNameAndAvatar();
+        }
                         signIn.DialogHost.CurrentSession.Close();
                         return;
                     }
@@ -296,11 +305,14 @@ namespace Pixeval.Views
 
         private void KeywordTextBox_OnGotFocus(object sender, RoutedEventArgs e)
         {
-            QueryOptionPopup.OpenControl();
+            if (AppContext.TrendingTags.IsNullOrEmpty()) PixivClient.Instance.GetTrendingTags();
+            TrendingTagPopup.OpenControl();
         }
 
         private async void KeywordTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
+            if (!KeywordTextBox.Text.IsNullOrEmpty()) TrendingTagPopup.CloseControl();
+
             if (QueryArtistToggleButton.IsChecked == true || QuerySingleArtistToggleButton.IsChecked == true || QuerySingleWorkToggleButton.IsChecked == true)
                 return;
 
@@ -377,7 +389,7 @@ namespace Pixeval.Views
         private void DeactivateControl()
         {
             ToLoseFocus.Focus();
-            CloseControls(QueryOptionPopup, AutoCompletionPopup);
+            CloseControls(TrendingTagPopup, AutoCompletionPopup);
             DownloadListTab.IsSelected = false;
         }
 
@@ -450,7 +462,7 @@ namespace Pixeval.Views
 
         private void NavigatorList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            QueryOptionPopup.CloseControl();
+            TrendingTagPopup.CloseControl();
             if (NavigatorList.SelectedItem is ListViewItem current)
             {
                 var translateTransform = (TranslateTransform) HomeDisplayContainer.RenderTransform;
@@ -530,6 +542,7 @@ namespace Pixeval.Views
         private void DownloadSpotlightItem_OnClick(object sender, RoutedEventArgs e)
         {
             sender.GetDataContext<SpotlightArticle>().Download();
+            MessageQueue.Enqueue("已添加到下载队列");
         }
 
         #endregion
@@ -539,6 +552,7 @@ namespace Pixeval.Views
         private void DownloadNowMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             AppContext.EnqueueDownloadItem(sender.GetDataContext<Illustration>());
+            MessageQueue.Enqueue("已添加到下载队列");
         }
 
         private void DownloadAllNowMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -546,6 +560,7 @@ namespace Pixeval.Views
             foreach (var illustration in GetImageSourceCopy())
                 if (illustration != null)
                     AppContext.EnqueueDownloadItem(illustration);
+            MessageQueue.Enqueue("已全部添加到下载队列");
         }
 
         #endregion
@@ -679,11 +694,6 @@ namespace Pixeval.Views
 
         #region 作品浏览器
 
-        private void IllustrationContainer_OnPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            e.Handled = true;
-        }
-
         private async void IllustBrowserDialogHost_OnDialogOpened(object sender, DialogOpenedEventArgs e)
         {
             var context = sender.GetDataContext<Illustration>();
@@ -766,6 +776,7 @@ namespace Pixeval.Views
         private void DownloadButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             AppContext.EnqueueDownloadItem(sender.GetDataContext<Illustration>());
+            MessageQueue.Enqueue("已添加到下载队列");
         }
 
         private void IllustBrowserFavorButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -833,11 +844,8 @@ namespace Pixeval.Views
                 Thumbnails = user.Thumbnails
             };
             UserBrowserPageScrollViewer.DataContext = usrEntity;
-
-            SetUserBanner(usrEntity.Id);
             SetUserBanner(usrEntity.Id);
             SetImageSource(UserBrowserUserAvatar, await PixivIO.FromUrl(usrEntity.Avatar));
-
             SetupUserUploads(usrEntity.Id);
         }
 
@@ -854,11 +862,10 @@ namespace Pixeval.Views
         public async void OpenIllustBrowser(Illustration illustration)
         {
             IllustBrowserDialogHost.DataContext = illustration;
-
+            await Task.Delay(100);
             IllustBrowserDialogHost.OpenControl();
-            var userInfo = await HttpClientFactory.AppApiService().GetUserInformation(new UserInformationRequest {Id = illustration.UserId});
-            var avatar = await PixivIO.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium);
-            if (avatar != null) SetImageSource(IllustBrowserUserAvatar, avatar);
+            var userInfo = await HttpClientFactory.AppApiService().GetUserInformation(new UserInformationRequest { Id = illustration.UserId });
+            if (await PixivIO.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium) is { } avatar) SetImageSource(IllustBrowserUserAvatar, avatar);
         }
 
         #endregion

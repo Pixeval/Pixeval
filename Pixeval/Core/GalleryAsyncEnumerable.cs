@@ -98,7 +98,7 @@ namespace Pixeval.Core
 
             private static async Task<HttpResponse<GalleryResponse>> TryGetResponse(string url)
             {
-                var result = (await HttpClientFactory.AppApiHttpClient().GetStringAsync(url)).FromJson<GalleryResponse>();
+                var result = (await HttpClientFactory.AppApiHttpClient().Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", "zh-cn")).GetStringAsync(url)).FromJson<GalleryResponse>();
 
                 if (result is { } response && !response.Illusts.IsNullOrEmpty()) return HttpResponse<GalleryResponse>.Wrap(true, response);
                 return HttpResponse<GalleryResponse>.Wrap(false);

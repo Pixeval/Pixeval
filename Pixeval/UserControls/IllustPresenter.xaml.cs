@@ -26,11 +26,10 @@ using Pixeval.Core;
 using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
-using Pixeval.Views;
 using PropertyChanged;
 using static Pixeval.Objects.UiHelper;
 
-namespace Pixeval.UserControls
+namespace Pixeval.UI.UserControls
 {
     /// <summary>
     ///     Interaction logic for IllustPresenter.xaml

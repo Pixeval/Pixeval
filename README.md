@@ -21,9 +21,12 @@ A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF
     - 你可以即时预览GIF了
     - 新增了使用SauceNAO作为源的搜图功能
     - 改进了核心API，优化了异常处理
-    - 添加了500ms的请求限速，防止出现账号临时被ban的情况
     - 优化了图片浏览弹窗的开启速度
     - 现在可以在设置里选择不使用直连了</br>
+* 2020/3/14
+    - 标签趋势
+    - 密码不再使用明文管理，而是通过Windows Credential Manager保存
+
 
 **BUG修复：**
 * 2020/1/8
@@ -41,7 +44,7 @@ A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF
     - 修复了有时图片浏览底端按钮显示不全的问题
     - 修复了屏幕分辨率较低时无法显示完整侧边栏的问题
     - 修复了下载时容易出现空文件夹的问题</br>
-
+    
 **下载：**
 * 前往[Release页面](https://github.com/Rinacm/Pixeval/releases)下载最新版本的Release
 * [百度网盘](https://pan.baidu.com/s/11dHmITNEeD6MAyzPLb052w) 提取码: 2vd8

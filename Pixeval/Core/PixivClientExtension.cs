@@ -63,5 +63,17 @@ namespace Pixeval.Core
             user.IsFollowed = false;
             await HttpClientFactory.AppApiService().UnFollowArtist(new UnFollowArtistRequest {UserId = user.Id});
         }
+
+        public static async void GetTrendingTags(this PixivClient _)
+        {
+            var result = await HttpClientFactory.AppApiService().GetTrendingTags();
+            foreach (var tag in result.TrendTags)
+                AppContext.TrendingTags.Add(new TrendingTag
+                {
+                    Tag = tag.Tag,
+                    TranslatedName = tag.TranslatedName,
+                    Thumbnail = tag.Illust.ImageUrls.SquareMedium
+                });
+        }
     }
 }

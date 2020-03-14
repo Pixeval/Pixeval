@@ -24,6 +24,7 @@ using Refit;
 
 #if RELEASE
 using Pixeval.Objects.Exceptions.Logger;
+
 #endif
 
 namespace Pixeval

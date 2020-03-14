@@ -50,7 +50,7 @@ namespace Pixeval.Data.Web.Protocol
         Task AddBookmark([Body(BodySerializationMethod.UrlEncoded)]
             AddBookmarkRequest addBookmarkRequest);
 
-        [Headers("Accept-Language: en-us")]
+        [Headers("Accept-Language: zh-cn")]
         [Get("/v2/search/autocomplete")]
         Task<AutoCompletionResponse> GetAutoCompletion(AutoCompletionRequest autoCompletionRequest);
 
@@ -61,5 +61,9 @@ namespace Pixeval.Data.Web.Protocol
         [Headers("Accept-Language: zn-cn")]
         [Get("/v1/user/recommended?filter=for_android")]
         Task<RecommendIllustratorResponse> GetRecommendIllustrators(RecommendIllustratorRequest recommendIllustratorRequest);
+
+        [Headers("Accept-Language: zh-cn")]
+        [Get("/v1/trending-tags/illust?filter=for_android")]
+        Task<TrendingTagResponse> GetTrendingTags();
     }
 }
