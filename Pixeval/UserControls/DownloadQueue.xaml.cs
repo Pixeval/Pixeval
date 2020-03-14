@@ -17,11 +17,11 @@
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Input;
-using Pixeval.Core;
-using Pixeval.Data.ViewModel;
+using Pixeval.Helpers;
+using Pixeval.Models;
 using Pixeval.Objects;
 
-namespace Pixeval.UI.UserControls
+namespace Pixeval.UserControls
 {
     /// <summary>
     ///     Interaction logic for DownloadQueue.xaml
@@ -39,7 +39,7 @@ namespace Pixeval.UI.UserControls
         private async void DownloadItemThumbnail_OnLoaded(object sender, RoutedEventArgs e)
         {
             var url = sender.GetDataContext<DownloadableIllustrationViewModel>().DownloadContent.Thumbnail;
-            UiHelper.SetImageSource(sender, await PixivIO.FromUrl(url));
+            UiHelper.SetImageSource(sender, await PixivIoHelper.FromUrl(url));
         }
 
         private void RetryButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

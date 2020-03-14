@@ -20,8 +20,9 @@ using Pixeval.Data.Web;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Protocol;
 using Pixeval.Data.Web.Request;
+using Pixeval.Exceptions;
+using Pixeval.Helpers;
 using Pixeval.Objects;
-using Pixeval.Objects.Exceptions;
 using Refit;
 
 namespace Pixeval.Persisting
@@ -41,11 +42,11 @@ namespace Pixeval.Persisting
         public static async Task Authenticate(string name, string pwd)
         {
             var time = UtcTimeNow;
-            var hash = Cipher.Md5Hex(time + ClientHash);
+            var hash = CipherHelper.Md5Hex(time + ClientHash);
 
             try
             {
-                var token = await RestService.For<ITokenProtocol>(HttpClientFactory.PixivApi(ProtocolBase.OAuthBaseUrl, true).Apply(h => h.Timeout = TimeSpan.FromSeconds(10)))
+                var token = await RestService.For<ITokenProtocol>(HttpClientFactory.PixivApi(HttpResponse.OAuthBaseUrl, true).Apply(h => h.Timeout = TimeSpan.FromSeconds(10)))
                     .GetToken(new TokenRequest {Name = name, Password = pwd}, time, hash);
 
                 Identity.Global = Identity.Parse(pwd, token);

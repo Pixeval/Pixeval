@@ -16,8 +16,8 @@
 
 using System.Net.Http;
 using System.Net.Http.Headers;
+using Pixeval.Exceptions;
 using Pixeval.Objects;
-using Pixeval.Objects.Exceptions;
 using Pixeval.Persisting;
 
 namespace Pixeval.Data.Web.Delegation

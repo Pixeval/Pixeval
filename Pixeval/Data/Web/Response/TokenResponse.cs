@@ -16,8 +16,8 @@
 
 using System;
 using Newtonsoft.Json;
+using Pixeval.Exceptions;
 using Pixeval.Objects;
-using Pixeval.Objects.Exceptions;
 
 namespace Pixeval.Data.Web.Response
 {

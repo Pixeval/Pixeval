@@ -27,9 +27,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
     xmlns:objects="clr-namespace:Pixeval.Objects"
     xmlns:persisting="clr-namespace:Pixeval.Persisting"
     xmlns:system="clr-namespace:System;assembly=System.Runtime"
-    xmlns:valueConverters="clr-namespace:Pixeval.Objects.ValueConverters"
-    xmlns:viewModel="clr-namespace:Pixeval.Data.ViewModel"
     xmlns:userControls="clr-namespace:Pixeval.UserControls"
+    xmlns:models="clr-namespace:Pixeval.Models"
+    xmlns:valueConverters="clr-namespace:Pixeval.Types.ValueConverters"
     Title="Pixeval"
     Width="1600"
     Height="900"
@@ -132,7 +132,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         </Style>
         <DataTemplate
             x:Key="IllustrationTemplate"
-            DataType="viewModel:Illustration">
+            DataType="models:Illustration">
             <materialDesign:Card
                 UniformCornerRadius="10">
                 <Grid
@@ -399,7 +399,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         </DataTemplate>
         <DataTemplate
             x:Key="SpotlightDataTemplate"
-            DataType="viewModel:SpotlightArticle">
+            DataType="models:SpotlightArticle">
             <DataTemplate.Resources>
                 <system:Double
                     x:Key="MinusPrecision">
@@ -582,7 +582,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         </DataTemplate>
         <DataTemplate
             x:Key="UserPreviewTemplate"
-            DataType="viewModel:User">
+            DataType="models:User">
             <materialDesign:TransitioningContent>
                 <materialDesign:TransitioningContent.OpeningEffects>
                     <materialDesign:TransitionEffect
@@ -1591,7 +1591,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                 ScrollViewer.CanContentScroll="False">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate
-                                        DataType="viewModel:AutoCompletion">
+                                        DataType="models:AutoCompletion">
                                         <ListBoxItem
                                             x:Name="AutoCompletionElement"
                                             Width="{Binding ElementName=AutoCompletionListBox, Path=Width}"
@@ -1641,7 +1641,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                 </ListBox.ItemsPanel>
                                 <ListBox.ItemTemplate>
                                     <DataTemplate
-                                        DataType="viewModel:User">
+                                        DataType="models:User">
                                         <materialDesign:TransitioningContent>
                                             <materialDesign:TransitioningContent.OpeningEffects>
                                                 <materialDesign:TransitionEffect
@@ -2536,7 +2536,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                         <ListView.ItemTemplate>
                                             <DataTemplate
-                                                DataType="viewModel:Tag">
+                                                DataType="models:Tag">
                                                 <StackPanel
                                                     Orientation="Horizontal">
                                                     <TextBlock

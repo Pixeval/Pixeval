@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
-using Pixeval.Data.ViewModel;
+using Pixeval.Models;
 using Pixeval.Objects;
 
 namespace Pixeval.Data.Web.Response
@@ -110,7 +110,7 @@ namespace Pixeval.Data.Web.Response
                     IsUgoira = Type == "ugoira",
                     Origin = MetaSinglePage.OriginalImageUrl,
                     Large = ImageUrls.Large,
-                    Tags = Tags.Select(t => new ViewModel.Tag {Name = t.Name, TranslatedName = t.TranslatedName}),
+                    Tags = Tags.Select(t => new Models.Tag {Name = t.Name, TranslatedName = t.TranslatedName}),
                     Thumbnail = ImageUrls.Medium.IsNullOrEmpty() ? ImageUrls.SquareMedium : ImageUrls.Medium,
                     Title = Title,
                     UserId = User.Id.ToString(),

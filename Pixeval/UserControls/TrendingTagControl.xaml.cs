@@ -17,11 +17,14 @@
 using System;
 using System.Windows;
 using System.Windows.Input;
-using Pixeval.Core;
-using Pixeval.Data.ViewModel;
+using Pixeval.Extensions;
+using Pixeval.Helpers;
+using Pixeval.Models;
+using Pixeval.Types;
+using Pixeval.Views;
 using static Pixeval.Objects.UiHelper;
 
-namespace Pixeval.UI.UserControls
+namespace Pixeval.UserControls
 {
     /// <summary>
     ///     Interaction logic for TrendingTagControl.xaml
@@ -42,7 +45,7 @@ namespace Pixeval.UI.UserControls
 
         private async void TrendingTagThumbnail_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (await PixivIO.FromUrl(sender.GetDataContext<TrendingTag>().Thumbnail) is { } image) SetImageSource(sender, image);
+            if (await PixivIoHelper.FromUrl(sender.GetDataContext<TrendingTag>().Thumbnail) is { } image) SetImageSource(sender, image);
         }
 
         private void SearchingHistoryContent_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

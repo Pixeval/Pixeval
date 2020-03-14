@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Pixeval.Objects;
 using Pixeval.Persisting;
+using Pixeval.Resources;
 using Refit;
 
 namespace Pixeval.Views
@@ -45,7 +46,7 @@ namespace Pixeval.Views
         {
             if (Email.Text.IsNullOrEmpty() || Password.Password.IsNullOrEmpty())
             {
-                ErrorMessage.Text = Externally.EmptyEmailOrPasswordIsNotAllowed;
+                ErrorMessage.Text = SR.EmptyEmailOrPasswordIsNotAllowed;
                 return;
             }
 
@@ -68,7 +69,7 @@ namespace Pixeval.Views
         public async void SetErrorHint(Exception exception)
         {
             ErrorMessage.Text = exception is ApiException aException && await IsPasswordOrAccountError(aException)
-                ? Externally.EmailOrPasswordIsWrong
+                ? SR.EmailOrPasswordIsWrong
                 : exception.Message;
         }
 

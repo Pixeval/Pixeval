@@ -22,14 +22,15 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using MaterialDesignThemes.Wpf.Transitions;
-using Pixeval.Core;
-using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
+using Pixeval.Helpers;
+using Pixeval.Models;
+using Pixeval.Views;
 using PropertyChanged;
 using static Pixeval.Objects.UiHelper;
 
-namespace Pixeval.UI.UserControls
+namespace Pixeval.UserControls
 {
     /// <summary>
     ///     Interaction logic for IllustPresenter.xaml
@@ -76,7 +77,7 @@ namespace Pixeval.UI.UserControls
                 {
                     MainWindow.Instance.IllustBrowserDialogHost.DataContext = Illust;
                     var userInfo = await HttpClientFactory.AppApiService().GetUserInformation(new UserInformationRequest {Id = Illust.UserId});
-                    SetImageSource(MainWindow.Instance.IllustBrowserUserAvatar, await PixivIO.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium));
+                    SetImageSource(MainWindow.Instance.IllustBrowserUserAvatar, await PixivIoHelper.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium));
                 });
             });
         }
@@ -87,7 +88,7 @@ namespace Pixeval.UI.UserControls
             var metadata = await HttpClientFactory.AppApiService().GetUgoiraMetadata(Illust.Id);
             var ugoiraZip = metadata.UgoiraMetadataInfo.ZipUrls.Medium;
             var delay = metadata.UgoiraMetadataInfo.Frames.Select(f => f.Delay / 10).ToArray();
-            var streams = PixivIO.ReadGifZipEntries(await PixivIO.FromUrlInternal(ugoiraZip)).ToArray();
+            var streams = PixivIoHelper.ReadGifZipEntries(await PixivIoHelper.FromUrlInternal(ugoiraZip)).ToArray();
 
             ProcessingGif = false;
             PlayingGif = true;
@@ -99,7 +100,7 @@ namespace Pixeval.UI.UserControls
                     for (var i = 0; i < streams.Length && !cancellationToken.IsCancellationRequested; i++)
                     {
                         streams[i].Position = 0;
-                        ImgSource = PixivIO.FromStream(streams[i]);
+                        ImgSource = PixivIoHelper.FromStream(streams[i]);
                         await Task.Delay((int) delay[i], cancellationToken.Token);
                     }
             });

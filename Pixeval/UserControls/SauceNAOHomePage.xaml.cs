@@ -22,14 +22,15 @@ using System.Windows;
 using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using Pixeval.Core;
 using Pixeval.Data.Web;
 using Pixeval.Data.Web.Protocol;
+using Pixeval.Helpers;
 using Pixeval.Objects;
+using Pixeval.Views;
 using Refit;
 using Visibility = System.Windows.Visibility;
 
-namespace Pixeval.UI.UserControls
+namespace Pixeval.UserControls
 {
     /// <summary>
     ///     Interaction logic for SauceNAOHomePage.xaml
@@ -54,7 +55,7 @@ namespace Pixeval.UI.UserControls
                     Searching.Visibility = Visibility.Visible;
                     UploadFileTextBox.Text = fileDialog.FileName;
                     await using var memoryStream = new MemoryStream(await File.ReadAllBytesAsync(UploadFileTextBox.Text), false);
-                    var sauceResponse = await RestService.For<ISauceNAOProtocol>(ProtocolBase.SauceNAOUrl)
+                    var sauceResponse = await RestService.For<ISauceNAOProtocol>(HttpResponse.SauceNAOUrl)
                         .GetSauce(new StreamPart(memoryStream, Path.GetFileName(fileDialog.FileName), Texts.AssumeImageContentType(fileDialog.FileName)));
                     var content = await sauceResponse.Content.ReadAsStringAsync();
                     if ((await ParseSauce(content)).ToList() is { } sauceResults && sauceResults.Any())

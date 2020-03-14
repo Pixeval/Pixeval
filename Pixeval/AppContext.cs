@@ -20,8 +20,9 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-using Pixeval.Core;
-using Pixeval.Data.ViewModel;
+using Pixeval.Interfaces;
+using Pixeval.Models;
+using Pixeval.Types;
 
 namespace Pixeval
 {

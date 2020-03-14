@@ -18,10 +18,11 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using Pixeval.Extensions;
 using Pixeval.Objects;
 using Pixeval.Persisting;
 
-namespace Pixeval.UI.UserControls
+namespace Pixeval.UserControls
 {
     /// <summary>
     ///     Interaction logic for PixevalSettingPage.xaml

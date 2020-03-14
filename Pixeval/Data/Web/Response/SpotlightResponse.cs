@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Pixeval.Data.ViewModel;
+using Pixeval.Models;
 
 namespace Pixeval.Data.Web.Response
 {

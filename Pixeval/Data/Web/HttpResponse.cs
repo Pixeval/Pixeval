@@ -14,28 +14,18 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using System;
-
 namespace Pixeval.Data.Web
 {
-    public class HttpResponse<T> : Tuple<bool, T>
+    public class HttpResponse
     {
-        private HttpResponse(bool status, T response) : base(status, response) { }
+        public const string PublicApiBaseUrl = "https://public-api.secure.pixiv.net/v1";
 
-        public static HttpResponse<T> Wrap(bool status)
-        {
-            return new HttpResponse<T>(status, default);
-        }
+        public const string AppApiBaseUrl = "https://app-api.pixiv.net";
 
-        public static HttpResponse<T> Wrap(bool status, T response)
-        {
-            return new HttpResponse<T>(status, response);
-        }
+        public const string DnsServer = "https://1.0.0.1";
 
-        public void Deconstruct(out bool status, out T response)
-        {
-            status = Item1;
-            response = Item2;
-        }
+        public const string SauceNAOUrl = "https://saucenao.com/";
+
+        public const string OAuthBaseUrl = "https://oauth.secure.pixiv.net";
     }
 }

@@ -29,7 +29,7 @@ namespace Pixeval.Data.Web.Response
         [JsonProperty("next_url")]
         public string NextUrl { get; set; }
 
-        public class UserPreview : IParser<ViewModel.User>
+        public class UserPreview : IParser<Models.User>
         {
             [JsonProperty("user")]
             public User User { get; set; }
@@ -40,9 +40,9 @@ namespace Pixeval.Data.Web.Response
             [JsonProperty("is_muted")]
             public bool IsMuted { get; set; }
 
-            public ViewModel.User Parse()
+            public Models.User Parse()
             {
-                return new ViewModel.User
+                return new Models.User
                 {
                     Avatar = Regex.Replace(User.ProfileImageUrls.Medium, "_170\\.", "_50."),
                     Id = User.Id.ToString(),
