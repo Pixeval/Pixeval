@@ -52,6 +52,8 @@ namespace Pixeval.Data.ViewModel
 
         public string ReasonPhase { get; set; }
 
+        private bool retried;
+
         [DoNotNotify]
         public Action<DownloadableIllustrationViewModel> DownloadFinished { get; set; }
 
@@ -103,7 +105,12 @@ namespace Pixeval.Data.ViewModel
             }
             catch (Exception e)
             {
-                HandleError(e, path);
+                if (!retried)
+                {
+                    Restart();
+                    retried = true;
+                }
+                else HandleError(e, path);
             }
         }
 
@@ -130,7 +137,12 @@ namespace Pixeval.Data.ViewModel
             }
             catch (Exception e)
             {
-                HandleError(e, path);
+                if (!retried)
+                {
+                    Restart();
+                    retried = true;
+                }
+                else HandleError(e, path);
             }
         }
 

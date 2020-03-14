@@ -50,8 +50,6 @@ namespace Pixeval.Core
         {
             private readonly string uid;
 
-            private int current = 1;
-
             private UploadResponse entity;
 
             private IEnumerator<Illustration> illustrationEnumerator;

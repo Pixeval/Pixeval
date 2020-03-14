@@ -182,6 +182,12 @@ namespace Pixeval.UI
         private void IllustrationContainer_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             OpenIllustBrowser(sender.GetDataContext<Illustration>());
+            e.Handled = true;
+        }
+
+        private void IllustrationContainer_OnPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
         }
 
         private async void MainWindow_OnInitialized(object sender, EventArgs e)
@@ -802,11 +808,8 @@ namespace Pixeval.UI
                 Thumbnails = user.Thumbnails
             };
             UserBrowserPageScrollViewer.DataContext = usrEntity;
-
-            SetUserBanner(usrEntity.Id);
             SetUserBanner(usrEntity.Id);
             SetImageSource(UserBrowserUserAvatar, await PixivIO.FromUrl(usrEntity.Avatar));
-
             SetupUserUploads(usrEntity.Id);
         }
 
@@ -823,9 +826,9 @@ namespace Pixeval.UI
         public async void OpenIllustBrowser(Illustration illustration)
         {
             IllustBrowserDialogHost.DataContext = illustration;
-
+            await Task.Delay(100);
             IllustBrowserDialogHost.OpenControl();
-            var userInfo = await HttpClientFactory.AppApiService().GetUserInformation(new UserInformationRequest {Id = illustration.UserId});
+            var userInfo = await HttpClientFactory.AppApiService().GetUserInformation(new UserInformationRequest { Id = illustration.UserId });
             if (await PixivIO.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium) is { } avatar) SetImageSource(IllustBrowserUserAvatar, avatar);
         }
 
