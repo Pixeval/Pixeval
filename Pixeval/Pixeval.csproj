@@ -11,6 +11,7 @@
     <ApplicationIcon>Resources\pxlogo.ico</ApplicationIcon>
     <Win32Resource />
     <NoWarn>$(NoWarn);NU1701;NU1702</NoWarn>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>

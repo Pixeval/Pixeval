@@ -26,12 +26,8 @@ namespace Pixeval
 {
     public static class AppContext
     {
-        //static AppContext()
-        //{
-        //    Configuration=new ConfigurationBuilder().AddJsonFile()
-        //}
+        
 
-        //public static readonly IConfiguration Configuration;
         public static readonly string ProjectFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "pixeval");
 
         public static readonly string ConfFolder = ProjectFolder;
@@ -41,6 +37,8 @@ namespace Pixeval
         public static readonly string ExceptionReportFolder = Path.Combine(ProjectFolder, "crash-reports");
 
         public static readonly string ConfigurationFileName = "pixeval_conf.json";
+
+        public static readonly IConfiguration Configuration;
 
         internal static bool LogoutExit = false;
 
@@ -55,6 +53,8 @@ namespace Pixeval
             Directory.CreateDirectory(ProjectFolder);
             Directory.CreateDirectory(SettingsFolder);
             Directory.CreateDirectory(ExceptionReportFolder);
+            Configuration = new ConfigurationBuilder().AddJsonFile(Path.Combine(SettingsFolder, ConfigurationFileName))
+                .Build();
         }
 
         public static void EnqueueDownloadItem(Illustration illustration)
