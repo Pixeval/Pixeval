@@ -61,6 +61,16 @@ namespace Pixeval.Data.ViewModel
             cancellationTokenSource = new CancellationTokenSource();
         }
 
+        public void Restart()
+        {
+            Progress = 0;
+            ReasonPhase = null;
+            DownloadFailed = false;
+            Cancel();
+            Download();
+        }
+
+
         // 3/10/2020 I wish that we could both be there
         public async void Download()
         {

@@ -143,7 +143,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     ClipToBounds="True"
                     Cursor="Hand"
                     MouseLeftButtonDown="IllustrationContainer_OnMouseLeftButtonDown"
-                    PreviewMouseRightButtonDown="IllustrationContainer_OnPreviewMouseRightButtonDown"
                     ToolTip="{Binding Path=Id}">
                     <Grid.ContextMenu>
                         <ContextMenu>

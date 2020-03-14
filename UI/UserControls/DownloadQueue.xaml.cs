@@ -45,8 +45,7 @@ namespace Pixeval.UI.UserControls
         private void RetryButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var model = sender.GetDataContext<DownloadableIllustrationViewModel>();
-            model.Cancel();
-            model.Download();
+            model.Restart();
         }
     }
 }

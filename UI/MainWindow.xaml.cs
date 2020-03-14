@@ -182,7 +182,6 @@ namespace Pixeval.UI
         private void IllustrationContainer_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             OpenIllustBrowser(sender.GetDataContext<Illustration>());
-            e.Handled = true;
         }
 
         private async void MainWindow_OnInitialized(object sender, EventArgs e)
@@ -652,11 +651,6 @@ namespace Pixeval.UI
         #endregion
 
         #region 作品浏览器
-
-        private void IllustrationContainer_OnPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            e.Handled = true;
-        }
 
         private async void IllustBrowserDialogHost_OnDialogOpened(object sender, DialogOpenedEventArgs e)
         {
