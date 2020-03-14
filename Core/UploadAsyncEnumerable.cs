@@ -21,7 +21,6 @@ using System.Threading.Tasks;
 using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web;
 using Pixeval.Data.Web.Delegation;
-using Pixeval.Data.Web.Request;
 using Pixeval.Data.Web.Response;
 using Pixeval.Objects;
 using Pixeval.Objects.Exceptions;
@@ -66,14 +65,14 @@ namespace Pixeval.Core
 
             protected override void UpdateEnumerator()
             {
-                illustrationEnumerator = entity.ToResponse.NonNull().Select(_ => _.Parse()).GetEnumerator();
+                illustrationEnumerator = entity.Illusts.NonNull().Select(_ => _.Parse()).GetEnumerator();
             }
 
             public override async ValueTask<bool> MoveNextAsync()
             {
                 if (entity == null)
                 {
-                    if (await TryGetResponse() is (true, var model))
+                    if (await TryGetResponse($"/v1/user/illusts?user_id={uid}&filter=for_android&type=illust") is (true, var model))
                     {
                         entity = model;
                         UpdateEnumerator();
@@ -88,9 +87,9 @@ namespace Pixeval.Core
 
                 if (illustrationEnumerator.MoveNext()) return true;
 
-                if (entity.Pages.Next == null) return false;
+                if (entity.NextUrl.IsNullOrEmpty()) return false;
 
-                if (await TryGetResponse() is (true, var res))
+                if (await TryGetResponse(entity.NextUrl) is (true, var res))
                 {
                     entity = res;
                     UpdateEnumerator();
@@ -101,10 +100,10 @@ namespace Pixeval.Core
                 return false;
             }
 
-            private async Task<HttpResponse<UploadResponse>> TryGetResponse()
+            private static async Task<HttpResponse<UploadResponse>> TryGetResponse(string url)
             {
-                var res = await HttpClientFactory.PublicApiService().GetUploads(uid, new UploadsRequest {Page = current++});
-                if (res is { } response && !response.ToResponse.IsNullOrEmpty()) return HttpResponse<UploadResponse>.Wrap(true, response);
+                var res = (await HttpClientFactory.AppApiHttpClient().Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", "zh-cn")).GetStringAsync(url)).FromJson<UploadResponse>();
+                if (res is { } response && !response.Illusts.IsNullOrEmpty()) return HttpResponse<UploadResponse>.Wrap(true, response);
 
                 return HttpResponse<UploadResponse>.Wrap(false);
             }

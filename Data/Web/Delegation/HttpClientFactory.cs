@@ -26,11 +26,15 @@ namespace Pixeval.Data.Web.Delegation
 {
     public class HttpClientFactory
     {
-        public static HttpClient AppApiHttpClient() => PixivApi(ProtocolBase.AppApiBaseUrl, Settings.Global.DirectConnect).Apply(h => h.DefaultRequestHeaders.Add("Authorization", "Bearer"));
+        public static HttpClient AppApiHttpClient()
+        {
+            return PixivApi(ProtocolBase.AppApiBaseUrl, Settings.Global.DirectConnect).Apply(h => h.DefaultRequestHeaders.Add("Authorization", "Bearer"));
+        }
 
-        public static IPublicApiProtocol PublicApiService() => RestService.For<IPublicApiProtocol>(PixivApi(ProtocolBase.PublicApiBaseUrl, Settings.Global.DirectConnect));
-
-        public static IAppApiProtocol AppApiService() => RestService.For<IAppApiProtocol>(PixivApi(ProtocolBase.AppApiBaseUrl, Settings.Global.DirectConnect));
+        public static IAppApiProtocol AppApiService()
+        {
+            return RestService.For<IAppApiProtocol>(PixivApi(ProtocolBase.AppApiBaseUrl, Settings.Global.DirectConnect));
+        }
 
         public static HttpClient PixivApi(string baseAddress, bool directConnect)
         {

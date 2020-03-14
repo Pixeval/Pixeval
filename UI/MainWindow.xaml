@@ -13,7 +13,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
 
 <!--  ReSharper disable Xaml.RedundantResource  -->
 <Window
@@ -1492,17 +1493,101 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                         </Button>
                     </StackPanel>
                     <Popup
-                        x:Name="AutoCompletionPopup"
+                        x:Name="TrendingTagPopup"
                         Grid.Row="1"
                         Width="800"
+                        objects:PopupHelper.PopupPlacementTarget="{Binding ElementName=KeywordTextBox}"
                         AllowsTransparency="True"
                         Placement="Bottom"
                         PlacementTarget="{Binding ElementName=KeywordTextBox}"
-                        PopupAnimation="Fade"
+                        StaysOpen="True">
+                        <materialDesign:Card
+                            Background="#FAFAFC"
+                            UniformCornerRadius="10">
+                            <StackPanel>
+                                <StackPanel
+                                    Height="40"
+                                    HorizontalAlignment="Center"
+                                    Orientation="Horizontal">
+                                    <ToggleButton
+                                        x:Name="QueryArtistToggleButton"
+                                        Width="30"
+                                        Height="30"
+                                        Margin="0,0,5,0"
+                                        Checked="QueryArtistToggleButton_OnChecked"
+                                        Style="{DynamicResource MaterialDesignFlatToggleButton}"
+                                        ToolTip="搜索用户"
+                                        Unchecked="QueryArtistToggleButton_OnUnchecked">
+                                        <Viewbox
+                                            Width="24"
+                                            Height="24">
+                                            <Canvas
+                                                Width="24"
+                                                Height="24">
+                                                <Path
+                                                    Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"
+                                                    Fill="Gray" />
+                                            </Canvas>
+                                        </Viewbox>
+                                    </ToggleButton>
+                                    <ToggleButton
+                                        x:Name="QuerySingleArtistToggleButton"
+                                        Width="30"
+                                        Height="30"
+                                        Margin="5,0,5,0"
+                                        Checked="QuerySingleArtistToggleButton_OnChecked"
+                                        Style="{DynamicResource MaterialDesignFlatToggleButton}"
+                                        ToolTip="搜索单个用户">
+                                        <Viewbox
+                                            Width="24"
+                                            Height="24">
+                                            <Canvas
+                                                Width="24"
+                                                Height="24">
+                                                <Path
+                                                    Data="M19,21V19H15V17H19V15L22,18L19,21M10,4A4,4 0 0,1 14,8A4,4 0 0,1 10,12A4,4 0 0,1 6,8A4,4 0 0,1 10,4M10,14C11.15,14 12.25,14.12 13.24,14.34C12.46,15.35 12,16.62 12,18C12,18.7 12.12,19.37 12.34,20H2V18C2,15.79 5.58,14 10,14Z"
+                                                    Fill="Gray" />
+                                            </Canvas>
+                                        </Viewbox>
+                                    </ToggleButton>
+                                    <ToggleButton
+                                        x:Name="QuerySingleWorkToggleButton"
+                                        Width="30"
+                                        Height="30"
+                                        Margin="5,0,0,0"
+                                        Checked="QuerySingleWorkToggleButton_OnChecked"
+                                        Style="{DynamicResource MaterialDesignFlatToggleButton}"
+                                        ToolTip="搜索单个作品">
+                                        <Viewbox
+                                            Width="24"
+                                            Height="24">
+                                            <Canvas
+                                                Width="24"
+                                                Height="24">
+                                                <Path
+                                                    Data="M10,7V9H12V17H14V7H10M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2Z"
+                                                    Fill="Gray" />
+                                            </Canvas>
+                                        </Viewbox>
+                                    </ToggleButton>
+                                </StackPanel>
+                                <userControls:TrendingTagControl />
+                            </StackPanel>
+                        </materialDesign:Card>
+                    </Popup>
+                    <Popup
+                        x:Name="AutoCompletionPopup"
+                        Grid.Row="1"
+                        Width="800"
+                        objects:PopupHelper.PopupPlacementTarget="{Binding ElementName=KeywordTextBox}"
+                        AllowsTransparency="True"
+                        Placement="Bottom"
+                        PlacementTarget="{Binding ElementName=KeywordTextBox}"
                         StaysOpen="False">
                         <materialDesign:Card
                             Width="800"
-                            Background="#FAFAFC">
+                            Background="#FAFAFC"
+                            UniformCornerRadius="15">
                             <ListBox
                                 x:Name="AutoCompletionListBox"
                                 Width="800"
@@ -1537,83 +1622,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                 </ListBox.ItemTemplate>
                             </ListBox>
                         </materialDesign:Card>
-                    </Popup>
-                    <Popup
-                        x:Name="QueryOptionPopup"
-                        Grid.Row="1"
-                        objects:PopupHelper.PopupPlacementTarget="{Binding ElementName=KeywordTextBox}"
-                        AllowsTransparency="True"
-                        HorizontalOffset="350"
-                        Placement="Bottom"
-                        PlacementTarget="{Binding ElementName=KeywordTextBox}"
-                        PopupAnimation="Fade"
-                        StaysOpen="True">
-                        <StackPanel
-                            Height="40"
-                            Background="#FAFAFC"
-                            Orientation="Horizontal">
-                            <ToggleButton
-                                x:Name="QueryArtistToggleButton"
-                                Width="30"
-                                Height="30"
-                                Margin="0,0,5,0"
-                                Checked="QueryArtistToggleButton_OnChecked"
-                                Style="{DynamicResource MaterialDesignFlatToggleButton}"
-                                ToolTip="搜索用户"
-                                Unchecked="QueryArtistToggleButton_OnUnchecked">
-                                <Viewbox
-                                    Width="24"
-                                    Height="24">
-                                    <Canvas
-                                        Width="24"
-                                        Height="24">
-                                        <Path
-                                            Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"
-                                            Fill="Gray" />
-                                    </Canvas>
-                                </Viewbox>
-                            </ToggleButton>
-                            <ToggleButton
-                                x:Name="QuerySingleArtistToggleButton"
-                                Width="30"
-                                Height="30"
-                                Margin="5,0,5,0"
-                                Checked="QuerySingleArtistToggleButton_OnChecked"
-                                Style="{DynamicResource MaterialDesignFlatToggleButton}"
-                                ToolTip="搜索单个用户">
-                                <Viewbox
-                                    Width="24"
-                                    Height="24">
-                                    <Canvas
-                                        Width="24"
-                                        Height="24">
-                                        <Path
-                                            Data="M19,21V19H15V17H19V15L22,18L19,21M10,4A4,4 0 0,1 14,8A4,4 0 0,1 10,12A4,4 0 0,1 6,8A4,4 0 0,1 10,4M10,14C11.15,14 12.25,14.12 13.24,14.34C12.46,15.35 12,16.62 12,18C12,18.7 12.12,19.37 12.34,20H2V18C2,15.79 5.58,14 10,14Z"
-                                            Fill="Gray" />
-                                    </Canvas>
-                                </Viewbox>
-                            </ToggleButton>
-                            <ToggleButton
-                                x:Name="QuerySingleWorkToggleButton"
-                                Width="30"
-                                Height="30"
-                                Margin="5,0,0,0"
-                                Checked="QuerySingleWorkToggleButton_OnChecked"
-                                Style="{DynamicResource MaterialDesignFlatToggleButton}"
-                                ToolTip="搜索单个作品">
-                                <Viewbox
-                                    Width="24"
-                                    Height="24">
-                                    <Canvas
-                                        Width="24"
-                                        Height="24">
-                                        <Path
-                                            Data="M10,7V9H12V17H14V7H10M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2Z"
-                                            Fill="Gray" />
-                                    </Canvas>
-                                </Viewbox>
-                            </ToggleButton>
-                        </StackPanel>
                     </Popup>
                     <Grid
                         Grid.Row="2">
@@ -2240,7 +2248,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Cursor="Hand"
-                            FontFamily="Microsoft JHengHei UI Light"
+                            FontFamily="Microsoft YaHei Light"
                             FontSize="20"
                             MouseLeftButtonDown="UploadChecker_OnMouseLeftButtonDown"
                             Text="插 画"
@@ -2251,7 +2259,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Cursor="Hand"
-                            FontFamily="Microsoft JHengHei UI Light"
+                            FontFamily="Microsoft YaHei Light"
                             FontSize="20"
                             MouseLeftButtonDown="GalleryChecker_OnMouseLeftButtonDown"
                             Text="收 藏"
@@ -2648,5 +2656,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
             x:Name="MainWindowSnackBar"
             HorizontalContentAlignment="Center"
             VerticalContentAlignment="Center" />
+        <Grid
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="Black"
+            Opacity="0.15"
+            Visibility="{Binding ElementName=TrendingTagPopup, Path=IsOpen, Converter={StaticResource VisibleIfTrueConverter}}" />
     </Grid>
 </Window>

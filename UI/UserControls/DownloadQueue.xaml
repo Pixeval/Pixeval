@@ -268,7 +268,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                 Value="{Binding Progress}" />
                             <Grid
                                 Margin="5,5,5,0"
-                                TextElement.FontFamily="Microsoft JHengHei Light"
+                                TextElement.FontFamily="Microsoft YaHei Light"
                                 TextElement.FontSize="12">
                                 <TextBlock
                                     x:Name="ProgressIndicator"
@@ -347,7 +347,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     Source="{StaticResource EmptyBox}" />
                 <TextBlock
                     HorizontalAlignment="Stretch"
-                    FontFamily="Microsoft JHengHei Light"
+                    FontFamily="Microsoft YaHei Light"
                     FontSize="25"
                     Text="这里空空如也, 去下载一些作品吧！" />
             </StackPanel>

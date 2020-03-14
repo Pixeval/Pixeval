@@ -16,8 +16,11 @@
 
 using System;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using AdysTech.CredentialManager;
+using Newtonsoft.Json;
 using Pixeval.Data.Web.Response;
 using Pixeval.Objects;
 
@@ -39,10 +42,12 @@ namespace Pixeval.Persisting
 
         public string Id { get; set; }
 
+        [JsonIgnore]
         public string MailAddress { get; set; }
 
         public string Account { get; set; }
 
+        [JsonIgnore]
         public string Password { get; set; }
 
         public static Identity Parse(string password, TokenResponse token)
@@ -62,11 +67,6 @@ namespace Pixeval.Persisting
             };
         }
 
-        public static bool UserDisplayIdentifierIsEmpty()
-        {
-            return Global.AvatarUrl.IsNullOrEmpty() || Global.Name.IsNullOrEmpty();
-        }
-
         public override string ToString()
         {
             return this.ToJson();
@@ -75,17 +75,21 @@ namespace Pixeval.Persisting
         public async Task Store()
         {
             await File.WriteAllTextAsync(Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName), ToString());
+            CredentialManager.SaveCredentials(AppContext.AppIdentifier, new NetworkCredential(MailAddress, Password));
         }
 
         public static async Task Restore()
         {
             Global = (await File.ReadAllTextAsync(Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName), Encoding.UTF8)).FromJson<Identity>();
+            var credential = CredentialManager.GetCredentials(AppContext.AppIdentifier);
+            Global.MailAddress = credential.UserName;
+            Global.Password = credential.Password;
         }
 
         public static bool ConfExists()
         {
             var path = Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName);
-            return File.Exists(path) && new FileInfo(path).Length != 0;
+            return File.Exists(path) && new FileInfo(path).Length != 0 && CredentialManager.GetCredentials(AppContext.AppIdentifier) != null;
         }
 
         public static async ValueTask<bool> RefreshRequired()
@@ -103,6 +107,7 @@ namespace Pixeval.Persisting
         public static void Clear()
         {
             File.Delete(Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName));
+            CredentialManager.RemoveCredentials(AppContext.AppIdentifier);
             Global = new Identity();
         }
     }

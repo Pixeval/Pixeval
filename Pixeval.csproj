@@ -31,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AdysTech.CredentialManager.Core" Version="1.9.0" />
     <PackageReference Include="AngleSharp" Version="0.13.0" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="3.7.0" />
     <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.14.5" />

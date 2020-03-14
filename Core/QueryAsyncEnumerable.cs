@@ -21,7 +21,6 @@ using System.Threading.Tasks;
 using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web;
 using Pixeval.Data.Web.Delegation;
-using Pixeval.Data.Web.Request;
 using Pixeval.Data.Web.Response;
 using Pixeval.Objects;
 using Pixeval.Objects.Exceptions;
@@ -68,14 +67,14 @@ namespace Pixeval.Core
 
             protected override void UpdateEnumerator()
             {
-                illustrationsEnumerator = entity.ToResponse.NonNull().Select(_ => _.Parse()).GetEnumerator();
+                illustrationsEnumerator = entity.Illusts.NonNull().Select(_ => _.Parse()).GetEnumerator();
             }
 
             public override async ValueTask<bool> MoveNextAsync()
             {
                 if (entity == null)
                 {
-                    if (await TryGetResponse() is (true, var model))
+                    if (await TryGetResponse($"/v1/search/illust?search_target=partial_match_for_tags&sort=date_desc&word={keyword}&filter=for_android") is (true, var model))
                     {
                         entity = model;
                         UpdateEnumerator();
@@ -90,9 +89,9 @@ namespace Pixeval.Core
 
                 if (illustrationsEnumerator.MoveNext()) return true;
 
-                if (entity.Pages.Next == null) return false;
+                if (int.Parse(entity.NextUrl[(entity.NextUrl.LastIndexOf('=') + 1)..]) >= 5000) return false;
 
-                if (await TryGetResponse() is (true, var res))
+                if (await TryGetResponse(entity.NextUrl) is (true, var res))
                 {
                     entity = res;
                     UpdateEnumerator();
@@ -103,10 +102,10 @@ namespace Pixeval.Core
                 return false;
             }
 
-            private async Task<HttpResponse<QueryWorksResponse>> TryGetResponse()
+            private static async Task<HttpResponse<QueryWorksResponse>> TryGetResponse(string url)
             {
-                var res = await HttpClientFactory.PublicApiService().QueryWorks(new QueryWorksRequest {Tag = keyword, Offset = current++, PerPage = 30});
-                if (res is { } response && !response.ToResponse.IsNullOrEmpty()) return HttpResponse<QueryWorksResponse>.Wrap(true, response);
+                var res = (await HttpClientFactory.AppApiHttpClient().Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", "zh-cn")).GetStringAsync(url)).FromJson<QueryWorksResponse>();
+                if (res is { } response && !response.Illusts.IsNullOrEmpty()) return HttpResponse<QueryWorksResponse>.Wrap(true, response);
 
                 return HttpResponse<QueryWorksResponse>.Wrap(false);
             }

@@ -14,25 +14,17 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Refit;
+using PropertyChanged;
 
-namespace Pixeval.Data.Web.Request
+namespace Pixeval.Data.ViewModel
 {
-    public class UploadsRequest
+    [AddINotifyPropertyChangedInterface]
+    public class TrendingTag
     {
-        [AliasAs("page")]
-        public int Page { get; set; }
+        public string Tag { get; set; }
 
-        [AliasAs("publicity")]
-        public string Publicity { get; set; } = "public";
+        public string TranslatedName { get; set; }
 
-        [AliasAs("per_page")]
-        public int PerPage { get; set; } = 30;
-
-        [AliasAs("image_sizes")]
-        public string ImageSizes { get; set; } = "px_128x128,px_480mw,large";
-
-        [AliasAs("include_stats")]
-        public bool IncludeStats { get; set; } = true;
+        public string Thumbnail { get; set; }
     }
 }

@@ -87,7 +87,7 @@ namespace Pixeval.Objects
                 "jpg"  => "image/jpeg",
                 "jpeg" => "image/jpeg",
                 "gif"  => "image/gif",
-                _ => "image/jpeg"
+                _      => "image/jpeg"
             };
         }
     }

@@ -17,8 +17,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
-using Pixeval.Core;
 using Pixeval.Data.ViewModel;
 using Pixeval.Objects;
 
@@ -26,40 +26,13 @@ namespace Pixeval.Data.Web.Response
 {
     public class UploadResponse
     {
-        [JsonProperty("status")]
-        public string Status { get; set; }
+        [JsonProperty("illusts")]
+        public List<Illust> Illusts { get; set; }
 
-        [JsonProperty("response")]
-        public List<Response> ToResponse { get; set; }
+        [JsonProperty("next_url")]
+        public string NextUrl { get; set; }
 
-        [JsonProperty("count")]
-        public long Count { get; set; }
-
-        [JsonProperty("pagination")]
-        public Pagination Pages { get; set; }
-
-        public class Pagination
-        {
-            [JsonProperty("previous", NullValueHandling = NullValueHandling.Include)]
-            public long? Previous { get; set; }
-
-            [JsonProperty("next", NullValueHandling = NullValueHandling.Include)]
-            public long? Next { get; set; }
-
-            [JsonProperty("current")]
-            public long Current { get; set; }
-
-            [JsonProperty("per_page")]
-            public long PerPage { get; set; }
-
-            [JsonProperty("total")]
-            public long Total { get; set; }
-
-            [JsonProperty("pages")]
-            public long Pages { get; set; }
-        }
-
-        public class Response : IParser<Illustration>
+        public class Illust : IParser<Illustration>
         {
             [JsonProperty("id")]
             public long Id { get; set; }
@@ -67,17 +40,32 @@ namespace Pixeval.Data.Web.Response
             [JsonProperty("title")]
             public string Title { get; set; }
 
+            [JsonProperty("type")]
+            public string Type { get; set; }
+
+            [JsonProperty("image_urls")]
+            public ImageUrls ImageUrls { get; set; }
+
             [JsonProperty("caption")]
             public string Caption { get; set; }
 
+            [JsonProperty("restrict")]
+            public long Restrict { get; set; }
+
+            [JsonProperty("user")]
+            public User User { get; set; }
+
             [JsonProperty("tags")]
-            public List<string> Tags { get; set; }
+            public List<Tag> Tags { get; set; }
 
             [JsonProperty("tools")]
             public List<string> Tools { get; set; }
 
-            [JsonProperty("image_urls")]
-            public ImageUrls ImageUrls { get; set; }
+            [JsonProperty("create_date")]
+            public DateTimeOffset CreateDate { get; set; }
+
+            [JsonProperty("page_count")]
+            public long PageCount { get; set; }
 
             [JsonProperty("width")]
             public long Width { get; set; }
@@ -85,108 +73,105 @@ namespace Pixeval.Data.Web.Response
             [JsonProperty("height")]
             public long Height { get; set; }
 
-            [JsonProperty("stats")]
-            public Stats Stats { get; set; }
-
-            [JsonProperty("publicity")]
-            public long Publicity { get; set; }
-
-            [JsonProperty("age_limit")]
-            public string AgeLimit { get; set; }
-
-            [JsonProperty("created_time")]
-            public DateTimeOffset CreatedTime { get; set; }
-
-            [JsonProperty("reuploaded_time")]
-            public DateTimeOffset ReuploadedTime { get; set; }
-
-            [JsonProperty("user")]
-            public User User { get; set; }
-
-            [JsonProperty("is_manga")]
-            public bool IsManga { get; set; }
-
-            [JsonProperty("is_liked")]
-            public bool IsLiked { get; set; }
-
-            [JsonProperty("favorite_id")]
-            public long FavoriteId { get; set; }
-
-            [JsonProperty("page_count")]
-            public long PageCount { get; set; }
-
-            [JsonProperty("book_style")]
-            public string BookStyle { get; set; }
-
-            [JsonProperty("type")]
-            public string Type { get; set; }
-
             [JsonProperty("sanity_level")]
-            public string SanityLevel { get; set; }
+            public long SanityLevel { get; set; }
+
+            [JsonProperty("x_restrict")]
+            public long XRestrict { get; set; }
+
+            [JsonProperty("meta_single_page")]
+            public MetaSinglePage MetaSinglePage { get; set; }
+
+            [JsonProperty("meta_pages")]
+            public List<MetaPage> MetaPages { get; set; }
+
+            [JsonProperty("total_view")]
+            public long TotalView { get; set; }
+
+            [JsonProperty("total_bookmarks")]
+            public long TotalBookmarks { get; set; }
+
+            [JsonProperty("is_bookmarked")]
+            public bool IsBookmarked { get; set; }
+
+            [JsonProperty("visible")]
+            public bool Visible { get; set; }
+
+            [JsonProperty("is_muted")]
+            public bool IsMuted { get; set; }
+
+            [JsonProperty("total_comments")]
+            public long TotalComments { get; set; }
 
             public Illustration Parse()
             {
                 return new Illustration
                 {
-                    Bookmark = (int) (Stats.FavoritedCount.Public + Stats.FavoritedCount.Private),
+                    Bookmark = (int) TotalBookmarks,
                     Id = Id.ToString(),
-                    IsLiked = FavoriteId != 0,
+                    IsLiked = IsBookmarked,
                     IsUgoira = Type == "ugoira",
-                    IsManga = IsManga,
-                    Origin = ImageUrls.Large,
+                    IsManga = !MetaPages.IsNullOrEmpty(),
+                    Origin = MetaSinglePage.OriginalImageUrl ?? ImageUrls.Large,
                     Large = ImageUrls.Large,
-                    Tags = Tags.Select(t => new Tag {Name = t}),
-                    Thumbnail = ImageUrls.Px480Mw.IsNullOrEmpty() ? ImageUrls.Px128X128 : ImageUrls.Px480Mw,
+                    Tags = Tags.Select(Unsafe.As<ViewModel.Tag>),
+                    Thumbnail = ImageUrls.Medium ?? ImageUrls.SquareMedium,
                     Title = Title,
                     UserId = User.Id.ToString(),
                     UserName = User.Name,
                     Resolution = $"{Width}x{Height}",
-                    ViewCount = (int) Stats.ViewsCount,
-                    PublishDate = CreatedTime
-                }.Apply(async i =>
+                    ViewCount = (int) TotalView,
+                    PublishDate = CreateDate
+                }.Apply(i =>
                 {
-                    if (i.IsManga) i.MangaMetadata = (await PixivHelper.IllustrationInfo(i.Id)).MangaMetadata;
+                    if (i.IsManga)
+                        i.MangaMetadata = MetaPages.Select(p =>
+                        {
+                            var page = (Illustration) i.Clone();
+                            page.Thumbnail = p.ImageUrls.Medium ?? p.ImageUrls.SquareMedium;
+                            page.Origin = p.ImageUrls.Original;
+                            page.Large = p.ImageUrls.Large;
+                            page.IsManga = false;
+                            return page;
+                        }).ToArray();
                 });
             }
         }
 
         public class ImageUrls
         {
-            [JsonProperty("px_128x128")]
-            public string Px128X128 { get; set; }
+            [JsonProperty("square_medium")]
+            public string SquareMedium { get; set; }
 
-            [JsonProperty("px_480mw")]
-            public string Px480Mw { get; set; }
+            [JsonProperty("medium")]
+            public string Medium { get; set; }
 
             [JsonProperty("large")]
             public string Large { get; set; }
+
+            [JsonProperty("original", NullValueHandling = NullValueHandling.Ignore)]
+            public string Original { get; set; }
         }
 
-        public class Stats
+        public class MetaPage
         {
-            [JsonProperty("scored_count")]
-            public long ScoredCount { get; set; }
-
-            [JsonProperty("score")]
-            public long Score { get; set; }
-
-            [JsonProperty("views_count")]
-            public long ViewsCount { get; set; }
-
-            [JsonProperty("favorited_count")]
-            public FavoritedCount FavoritedCount { get; set; }
-
-            [JsonProperty("commented_count")]
-            public long CommentedCount { get; set; }
+            [JsonProperty("image_urls")]
+            public ImageUrls ImageUrls { get; set; }
         }
 
-        public class FavoritedCount
+        public class MetaSinglePage
         {
-            [JsonProperty("public")]
-            public long Public { get; set; }
+            [JsonProperty("original_image_url", NullValueHandling = NullValueHandling.Ignore)]
+            public string OriginalImageUrl { get; set; }
+        }
 
-            [JsonProperty("private")]
-            public long Private { get; set; }
+        public class Tag
+        {
+            [JsonProperty("name")]
+            public string Name { get; set; }
+
+            [JsonProperty("translated_name")]
+            public string TranslatedName { get; set; }
         }
 
         public class User
@@ -194,29 +179,23 @@ namespace Pixeval.Data.Web.Response
             [JsonProperty("id")]
             public long Id { get; set; }
 
-            [JsonProperty("account")]
-            public string Account { get; set; }
-
             [JsonProperty("name")]
             public string Name { get; set; }
 
-            [JsonProperty("is_following")]
-            public bool IsFollowing { get; set; }
-
-            [JsonProperty("is_follower")]
-            public bool IsFollower { get; set; }
-
-            [JsonProperty("is_friend")]
-            public bool IsFriend { get; set; }
+            [JsonProperty("account")]
+            public string Account { get; set; }
 
             [JsonProperty("profile_image_urls")]
             public ProfileImageUrls ProfileImageUrls { get; set; }
+
+            [JsonProperty("is_followed")]
+            public bool IsFollowed { get; set; }
         }
 
         public class ProfileImageUrls
         {
-            [JsonProperty("px_50x50")]
-            public string Px50X50 { get; set; }
+            [JsonProperty("medium")]
+            public string Medium { get; set; }
         }
     }
 }

@@ -15,6 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
@@ -25,7 +26,9 @@ namespace Pixeval
 {
     public static class AppContext
     {
-        public static readonly string ProjectFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "pixeval");
+        public const string AppIdentifier = "Pixeval";
+
+        public static readonly string ProjectFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppIdentifier.ToLower());
 
         public static readonly string ConfFolder = ProjectFolder;
 
@@ -43,11 +46,26 @@ namespace Pixeval
 
         public static ObservableCollection<DownloadableIllustrationViewModel> Downloading = new ObservableCollection<DownloadableIllustrationViewModel>();
 
+        public static readonly ObservableCollection<TrendingTag> TrendingTags = new ObservableCollection<TrendingTag>();
+
+        private static readonly ObservableCollection<string> SearchingHistory = new ObservableCollection<string>();
+
         static AppContext()
         {
             Directory.CreateDirectory(ProjectFolder);
             Directory.CreateDirectory(SettingsFolder);
             Directory.CreateDirectory(ExceptionReportFolder);
+        }
+
+        public static void EnqueueSearchHistory(string keyword)
+        {
+            if (SearchingHistory.Count == 4) SearchingHistory.RemoveAt(SearchingHistory.Count - 1);
+            SearchingHistory.Insert(0, keyword);
+        }
+
+        public static IReadOnlyCollection<string> GetSearchingHistory()
+        {
+            return SearchingHistory;
         }
 
         public static void EnqueueDownloadItem(Illustration illustration)
