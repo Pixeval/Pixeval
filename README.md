@@ -21,7 +21,6 @@ A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF
     - 你可以即时预览GIF了
     - 新增了使用SauceNAO作为源的搜图功能
     - 改进了核心API，优化了异常处理
-    - 添加了500ms的请求限速，防止出现账号临时被ban的情况
     - 优化了图片浏览弹窗的开启速度
     - 现在可以在设置里选择不使用直连了</br>
 * 2020/3/14
