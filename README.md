@@ -50,7 +50,10 @@ A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF，[点击](h
     - 修复了下载时容易出现空文件夹的问题</br>
 * 2020/3/15
     - 修复了点击tag没有反应的bug
-    
+    - 修复了无法查看图集的bug
+* 2020/3/16
+    - 修复了用户新作页面图集不完整的bug
+
 **下载：**
 * 前往[Release页面](https://github.com/Rinacm/Pixeval/releases)下载最新版本的Release
 * [百度网盘](https://pan.baidu.com/s/11dHmITNEeD6MAyzPLb052w) 提取码: 2vd8
