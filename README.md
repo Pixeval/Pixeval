@@ -27,7 +27,7 @@ A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF，[点击](h
 * 2020/3/14
     - 标签趋势
     - 密码不再使用明文管理，而是通过Windows Credential Manager保存
-* 20203/15
+* 2020/3/15
     - 添加了自动更新功能(尚处于测试)
     - 添加了一个导航到介绍网址的超链接
 
