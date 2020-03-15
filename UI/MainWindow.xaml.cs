@@ -44,6 +44,7 @@ using Pixeval.UI.UserControls;
 using Refit;
 using Xceed.Wpf.AvalonDock.Controls;
 using static Pixeval.Objects.UiHelper;
+
 #if RELEASE
 using System.Net.Http;
 using Pixeval.Objects.Exceptions;
@@ -369,7 +370,7 @@ namespace Pixeval.UI
 
         private void Hyperlink_OnRequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Process.Start(new ProcessStartInfo("cmd", $"/c start {e.Uri.AbsoluteUri}") { CreateNoWindow = true });
+            Process.Start(new ProcessStartInfo("cmd", $"/c start {e.Uri.AbsoluteUri}") {CreateNoWindow = true});
         }
 
         #endregion
@@ -844,7 +845,7 @@ namespace Pixeval.UI
             IllustBrowserDialogHost.DataContext = illustration;
             await Task.Delay(100);
             IllustBrowserDialogHost.OpenControl();
-            var userInfo = await HttpClientFactory.AppApiService().GetUserInformation(new UserInformationRequest { Id = illustration.UserId });
+            var userInfo = await HttpClientFactory.AppApiService().GetUserInformation(new UserInformationRequest {Id = illustration.UserId});
             if (await PixivIO.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium) is { } avatar) SetImageSource(IllustBrowserUserAvatar, avatar);
         }
 

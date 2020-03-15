@@ -36,10 +36,7 @@ namespace Pixeval.Core
 
         public async Task<IEnumerable<User>> Acquire(int count)
         {
-            if (30 % count != 0)
-            {
-                throw new ArgumentException("count must be divisible by 30");
-            }
+            if (30 % count != 0) throw new ArgumentException("count must be divisible by 30");
 
             if (currentIllustrators.Count < index + count)
             {

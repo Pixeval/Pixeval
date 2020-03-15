@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using Pixeval.Data.ViewModel;
 using Pixeval.Objects;
@@ -114,7 +113,7 @@ namespace Pixeval.Data.Web.Response
                     IsManga = !MetaPages.IsNullOrEmpty(),
                     Origin = MetaSinglePage.OriginalImageUrl ?? ImageUrls.Large,
                     Large = ImageUrls.Large,
-                    Tags = Tags.Select(Unsafe.As<ViewModel.Tag>),
+                    Tags = Tags.Select(t => new ViewModel.Tag {Name = t.Name, TranslatedName = t.TranslatedName}),
                     Thumbnail = ImageUrls.Medium ?? ImageUrls.SquareMedium,
                     Title = Title,
                     UserId = User.Id.ToString(),

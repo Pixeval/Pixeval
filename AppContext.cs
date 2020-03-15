@@ -29,7 +29,7 @@ namespace Pixeval
     {
         public const string AppIdentifier = "Pixeval";
 
-        public const string CurrentVersion = "1.6.0";
+        public const string CurrentVersion = "1.6.1";
 
         public static bool LogoutExit = false;
 

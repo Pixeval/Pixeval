@@ -34,6 +34,8 @@ namespace Pixeval.Data.ViewModel
         [DoNotNotify]
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
+        private bool retried;
+
         public DownloadableIllustrationViewModel(Illustration downloadContent, bool isFromManga, int mangaIndex = -1)
         {
             DownloadContent = downloadContent;
@@ -52,8 +54,6 @@ namespace Pixeval.Data.ViewModel
         public double Progress { get; set; }
 
         public string ReasonPhase { get; set; }
-
-        private bool retried;
 
         [DoNotNotify]
         public Action<DownloadableIllustrationViewModel> DownloadFinished { get; set; }
@@ -111,7 +111,10 @@ namespace Pixeval.Data.ViewModel
                     Restart();
                     retried = true;
                 }
-                else HandleError(e, path);
+                else
+                {
+                    HandleError(e, path);
+                }
             }
         }
 
@@ -143,7 +146,10 @@ namespace Pixeval.Data.ViewModel
                     Restart();
                     retried = true;
                 }
-                else HandleError(e, path);
+                else
+                {
+                    HandleError(e, path);
+                }
             }
         }
 
