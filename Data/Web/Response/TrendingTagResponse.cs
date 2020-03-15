@@ -28,7 +28,7 @@ namespace Pixeval.Data.Web.Response
         public class TrendTag
         {
             [JsonProperty("tag")]
-            public string Tag { get; set; }
+            public string TagStr { get; set; }
 
             [JsonProperty("translated_name")]
             public string TranslatedName { get; set; }
