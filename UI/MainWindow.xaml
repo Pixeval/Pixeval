@@ -26,6 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Pixeval.Objects"
     xmlns:persisting="clr-namespace:Pixeval.Persisting"
+    xmlns:pixeval="clr-namespace:Pixeval"
     xmlns:system="clr-namespace:System;assembly=System.Runtime"
     xmlns:userControls="clr-namespace:Pixeval.UI.UserControls"
     xmlns:valueConverters="clr-namespace:Pixeval.Objects.ValueConverters"
@@ -383,8 +384,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                             Height="24"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            ToolTip="这是一个图集"
                             Visibility="{Binding IsManga, Converter={StaticResource VisibleIfTrueConverter}}">
+                            <ToolTipService.ToolTip>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding
+                                            StringFormat="{}这是一个图集, 包含了{0}张图片">
+                                            <Binding
+                                                Path="MangaMetadata.Length" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </ToolTipService.ToolTip>
                             <Canvas
                                 Width="24"
                                 Height="24">
@@ -1764,6 +1775,33 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                             </Grid>
                         </StackPanel>
                     </Grid>
+                    <StackPanel
+                        Grid.Row="2"
+                        Margin="0,0,10,10"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Orientation="Horizontal">
+                        <TextBlock
+                            Margin="0,0,10,0"
+                            FontSize="12">
+                            <TextBlock.Text>
+                                <MultiBinding
+                                    StringFormat="{}当前版本: {0}">
+                                    <Binding
+                                        Source="{x:Static pixeval:AppContext.CurrentVersion}" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <TextBlock
+                            FontSize="12">
+                            <Hyperlink
+                                Foreground="Black"
+                                NavigateUri="http://47.95.218.243/Pixeval/index.html"
+                                RequestNavigate="Hyperlink_OnRequestNavigate">
+                                关于项目
+                            </Hyperlink>
+                        </TextBlock>
+                    </StackPanel>
                 </Grid>
                 <Grid
                     x:Name="QueryDisplayContainer"

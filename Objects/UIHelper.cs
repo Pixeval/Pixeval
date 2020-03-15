@@ -29,7 +29,7 @@ using Microsoft.CSharp.RuntimeBinder;
 
 namespace Pixeval.Objects
 {
-    internal static class UiHelper
+    public static class UiHelper
     {
         public static void Disable(this FrameworkElement element)
         {
@@ -159,7 +159,7 @@ namespace Pixeval.Objects
         }
     }
 
-    internal class PopupHelper
+    public class PopupHelper
     {
         public static readonly DependencyProperty PopupPlacementTargetProperty =
             DependencyProperty.RegisterAttached("PopupPlacementTarget", typeof(DependencyObject), typeof(PopupHelper), new PropertyMetadata(null, OnPopupPlacementTargetChanged));

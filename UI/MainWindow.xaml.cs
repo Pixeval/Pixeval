@@ -28,6 +28,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Threading;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignThemes.Wpf.Transitions;
@@ -66,6 +67,16 @@ namespace Pixeval.UI
             Instance = this;
 
             InitializeComponent();
+
+            AppContext.UpdateAvailable().ContinueWith(task =>
+            {
+                if (task.Result && MessageBox.Show("有更新可用, 是否现在更新?", "更新可用", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+                {
+                    Process.Start("updater\\Pixeval.AutoUpdater.exe");
+                    Environment.Exit(0);
+                }
+            });
+
 
             NavigatorList.SelectedItem = MenuTab;
             MainWindowSnackBar.MessageQueue = MessageQueue;
@@ -354,6 +365,11 @@ namespace Pixeval.UI
             ToLoseFocus.Focus();
             CloseControls(TrendingTagPopup, AutoCompletionPopup);
             DownloadListTab.IsSelected = false;
+        }
+
+        private void Hyperlink_OnRequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo("cmd", $"/c start {e.Uri.AbsoluteUri}") { CreateNoWindow = true });
         }
 
         #endregion
@@ -713,10 +729,10 @@ namespace Pixeval.UI
                 });
 
             IllustBrowserDialogHost.CurrentSession.Close();
-            Instance.NavigatorList.SelectedItem = Instance.MenuTab;
+            NavigatorList.SelectedItem = Instance.MenuTab;
 
             await Task.Delay(300);
-            Instance.KeywordTextBox.Text = txt;
+            KeywordTextBox.Text = txt;
         }
 
         private void ShareButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

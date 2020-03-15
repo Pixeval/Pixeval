@@ -22,7 +22,7 @@ using Pixeval.Data.ViewModel;
 
 namespace Pixeval.Objects.ValueConverters
 {
-    internal class IllustSubscriptConverter : IValueConverter
+    public class IllustSubscriptConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

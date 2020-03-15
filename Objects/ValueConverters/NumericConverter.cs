@@ -20,7 +20,7 @@ using System.Windows.Data;
 
 namespace Pixeval.Objects.ValueConverters
 {
-    internal class DoublePlusConverter : IValueConverter
+    public class DoublePlusConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -34,7 +34,7 @@ namespace Pixeval.Objects.ValueConverters
         }
     }
 
-    internal class DoubleDivisionConverter : IValueConverter
+    public class DoubleDivisionConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

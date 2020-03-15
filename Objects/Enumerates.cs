@@ -22,7 +22,7 @@ using System.Linq;
 
 namespace Pixeval.Objects
 {
-    internal static class Enumerates
+    public static class Enumerates
     {
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
         {

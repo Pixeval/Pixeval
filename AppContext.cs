@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Pixeval.Core;
 using Pixeval.Data.ViewModel;
@@ -28,6 +29,10 @@ namespace Pixeval
     {
         public const string AppIdentifier = "Pixeval";
 
+        public const string CurrentVersion = "1.6.0";
+
+        public static bool LogoutExit = false;
+
         public static readonly string ProjectFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppIdentifier.ToLower());
 
         public static readonly string ConfFolder = ProjectFolder;
@@ -37,8 +42,6 @@ namespace Pixeval
         public static readonly string ExceptionReportFolder = Path.Combine(ProjectFolder, "crash-reports");
 
         public static readonly string ConfigurationFileName = "pixeval_conf.json";
-
-        internal static bool LogoutExit = false;
 
         public static IDownloadPathProvider DownloadPathProvider = new DefaultDownloadPathProvider();
 
@@ -90,6 +93,13 @@ namespace Pixeval
                 Task.Run(() => model.Download());
                 Downloading.Add(model);
             }
+        }
+
+        public static async Task<bool> UpdateAvailable()
+        {
+            const string url = "http://47.95.218.243/Pixeval/version.txt";
+            var httpClient = new HttpClient();
+            return await httpClient.GetStringAsync(url) != CurrentVersion;
         }
     }
 }

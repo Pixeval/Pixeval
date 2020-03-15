@@ -29,7 +29,7 @@ using Pixeval.Objects;
 namespace Pixeval.Core
 {
     // ReSharper disable once InconsistentNaming
-    internal static class PixivIO
+    public static class PixivIO
     {
         public static async Task<byte[]> FromUrlInternal(string url)
         {
@@ -123,7 +123,7 @@ namespace Pixeval.Core
             return ms;
         }
 
-        public static async Task<MemoryStream> Download(string url, IProgress<double> progress, CancellationTokenSource cancellationTokenSource = default)
+        public static async Task<MemoryStream> Download(string url, IProgress<double> progress, CancellationToken cancellationToken = default)
         {
             using var response = await HttpClientFactory.GetResponseHeader(HttpClientFactory.PixivImage().Apply(_ => _.Timeout = TimeSpan.FromSeconds(30)), url);
 
@@ -137,14 +137,14 @@ namespace Pixeval.Core
 
             var memoryStream = new MemoryStream();
             await using var contentStream = await response.Content.ReadAsStreamAsync();
-            while ((bytesRead = await contentStream.ReadAsync(byteBuffer, 0, byteBuffer.Length)) != 0)
+            while ((bytesRead = await contentStream.ReadAsync(byteBuffer, 0, byteBuffer.Length, cancellationToken)) != 0)
             {
-                cancellationTokenSource?.Token.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
                 totalRead += bytesRead;
-                await memoryStream.WriteAsync(byteBuffer, 0, (int) bytesRead);
+                await memoryStream.WriteAsync(byteBuffer, 0, (int) bytesRead, cancellationToken);
                 progress.Report(totalRead / (double) contentLength);
             }
-
+            cancellationToken.ThrowIfCancellationRequested();
             ArrayPool<byte>.Shared.Return(byteBuffer, true);
 
             return memoryStream;

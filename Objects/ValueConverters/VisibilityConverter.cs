@@ -22,7 +22,7 @@ using System.Windows.Data;
 
 namespace Pixeval.Objects.ValueConverters
 {
-    internal class VisibleIfTrueConverter : IValueConverter
+    public class VisibleIfTrueConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -37,7 +37,7 @@ namespace Pixeval.Objects.ValueConverters
         }
     }
 
-    internal class VisibleIfFalseConverter : IValueConverter
+    public class VisibleIfFalseConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -53,7 +53,7 @@ namespace Pixeval.Objects.ValueConverters
         }
     }
 
-    internal class ImageListViewVisibilityConverter : IMultiValueConverter
+    public class ImageListViewVisibilityConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -70,7 +70,7 @@ namespace Pixeval.Objects.ValueConverters
         }
     }
 
-    internal class UserPreviewListViewVisibilityConverter : IMultiValueConverter
+    public class UserPreviewListViewVisibilityConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {

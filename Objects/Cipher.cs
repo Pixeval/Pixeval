@@ -19,7 +19,7 @@ using System.Text;
 
 namespace Pixeval.Objects
 {
-    internal class Cipher
+    public class Cipher
     {
         public static string Md5Hex(string input)
         {

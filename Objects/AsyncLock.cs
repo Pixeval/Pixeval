@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace Pixeval.Objects
 {
-    internal class AsyncSemaphore
+    public class AsyncSemaphore
     {
         private static readonly Task SCompleted = Task.FromResult(true);
         private readonly Queue<TaskCompletionSource<bool>> mWaiters = new Queue<TaskCompletionSource<bool>>();
@@ -89,7 +89,7 @@ namespace Pixeval.Objects
         {
             private readonly AsyncLock mToRelease;
 
-            internal Release(AsyncLock toRelease)
+            public Release(AsyncLock toRelease)
             {
                 mToRelease = toRelease;
             }

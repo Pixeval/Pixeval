@@ -19,6 +19,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using MahApps.Metro.Controls;
 using Pixeval.Core;
@@ -85,7 +86,7 @@ namespace Pixeval.Data.ViewModel
             string path = null;
             try
             {
-                await using var memory = await PixivIO.Download(DownloadContent.GetDownloadUrl(), new Progress<double>(d => Progress = d), cancellationTokenSource);
+                await using var memory = await PixivIO.Download(DownloadContent.GetDownloadUrl(), new Progress<double>(d => Progress = d), cancellationTokenSource.Token);
                 if (DownloadContent.FromSpotlight)
                     path = IsFromManga
                         ? Path.Combine(Directory.CreateDirectory(AppContext.DownloadPathProvider.GetSpotlightPath(DownloadContent.SpotlightTitle)).FullName, DownloadContent.Id, AppContext.FileNameFormatter.FormatManga(DownloadContent, MangaIndex))
@@ -99,7 +100,7 @@ namespace Pixeval.Data.ViewModel
                 memory.WriteTo(fileStream);
                 Application.Current.Invoke(() => DownloadFinished?.Invoke(this));
             }
-            catch (OperationCanceledException)
+            catch (TaskCanceledException)
             {
                 if (path != null && File.Exists(path)) File.Delete(path);
             }
@@ -124,14 +125,14 @@ namespace Pixeval.Data.ViewModel
                 ugoiraUrl = !ugoiraUrl.EndsWith("ugoira1920x1080.zip") ? Regex.Replace(ugoiraUrl, "ugoira(\\d+)x(\\d+).zip", "ugoira1920x1080.zip") : ugoiraUrl;
                 var delay = metadata.UgoiraMetadataInfo.Frames.Select(f => f.Delay / 10).ToArray();
                 if (cancellationTokenSource.IsCancellationRequested) return;
-                await using var memory = await PixivIO.Download(ugoiraUrl, new Progress<double>(d => Progress = d), cancellationTokenSource);
+                await using var memory = await PixivIO.Download(ugoiraUrl, new Progress<double>(d => Progress = d), cancellationTokenSource.Token);
                 await using var gifStream = (MemoryStream) PixivIO.MergeGifStream(PixivIO.ReadGifZipEntries(memory), delay);
                 if (cancellationTokenSource.IsCancellationRequested) return;
                 await using var fileStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
                 gifStream.WriteTo(fileStream);
                 Application.Current.Invoke(() => DownloadFinished?.Invoke(this));
             }
-            catch (OperationCanceledException)
+            catch (TaskCanceledException)
             {
                 if (path != null && File.Exists(path)) File.Delete(path);
             }

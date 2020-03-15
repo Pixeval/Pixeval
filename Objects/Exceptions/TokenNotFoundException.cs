@@ -19,7 +19,7 @@ using System.Runtime.Serialization;
 
 namespace Pixeval.Objects.Exceptions
 {
-    internal class TokenNotFoundException : Exception
+    public class TokenNotFoundException : Exception
     {
         public TokenNotFoundException() { }
 

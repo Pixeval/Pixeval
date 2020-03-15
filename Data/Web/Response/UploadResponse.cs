@@ -131,7 +131,6 @@ namespace Pixeval.Data.Web.Response
                             page.Thumbnail = p.ImageUrls.Medium ?? p.ImageUrls.SquareMedium;
                             page.Origin = p.ImageUrls.Original;
                             page.Large = p.ImageUrls.Large;
-                            page.IsManga = false;
                             return page;
                         }).ToArray();
                 });

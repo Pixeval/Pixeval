@@ -19,7 +19,7 @@ using System.Runtime.Serialization;
 
 namespace Pixeval.Objects.Exceptions
 {
-    internal class QueryNotRespondingException : Exception
+    public class QueryNotRespondingException : Exception
     {
         public QueryNotRespondingException() { }
 
