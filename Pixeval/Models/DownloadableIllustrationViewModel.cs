@@ -19,19 +19,22 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using MahApps.Metro.Controls;
+using Pixeval.Core;
 using Pixeval.Data.Web.Delegation;
-using Pixeval.Helpers;
 using PropertyChanged;
 
-namespace Pixeval.Models
+namespace Pixeval.Data.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
     public class DownloadableIllustrationViewModel
     {
         [DoNotNotify]
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+        private bool retried;
 
         public DownloadableIllustrationViewModel(Illustration downloadContent, bool isFromManga, int mangaIndex = -1)
         {
@@ -51,8 +54,6 @@ namespace Pixeval.Models
         public double Progress { get; set; }
 
         public string ReasonPhase { get; set; }
-
-        private bool retried;
 
         [DoNotNotify]
         public Action<DownloadableIllustrationViewModel> DownloadFinished { get; set; }
@@ -85,7 +86,7 @@ namespace Pixeval.Models
             string path = null;
             try
             {
-                await using var memory = await PixivIoHelper.Download(DownloadContent.GetDownloadUrl(), new Progress<double>(d => Progress = d), cancellationTokenSource);
+                await using var memory = await PixivIO.Download(DownloadContent.GetDownloadUrl(), new Progress<double>(d => Progress = d), cancellationTokenSource.Token);
                 if (DownloadContent.FromSpotlight)
                     path = IsFromManga
                         ? Path.Combine(Directory.CreateDirectory(AppContext.DownloadPathProvider.GetSpotlightPath(DownloadContent.SpotlightTitle)).FullName, DownloadContent.Id, AppContext.FileNameFormatter.FormatManga(DownloadContent, MangaIndex))
@@ -99,7 +100,7 @@ namespace Pixeval.Models
                 memory.WriteTo(fileStream);
                 Application.Current.Invoke(() => DownloadFinished?.Invoke(this));
             }
-            catch (OperationCanceledException)
+            catch (TaskCanceledException)
             {
                 if (path != null && File.Exists(path)) File.Delete(path);
             }
@@ -110,7 +111,10 @@ namespace Pixeval.Models
                     Restart();
                     retried = true;
                 }
-                else HandleError(e, path);
+                else
+                {
+                    HandleError(e, path);
+                }
             }
         }
 
@@ -124,14 +128,14 @@ namespace Pixeval.Models
                 ugoiraUrl = !ugoiraUrl.EndsWith("ugoira1920x1080.zip") ? Regex.Replace(ugoiraUrl, "ugoira(\\d+)x(\\d+).zip", "ugoira1920x1080.zip") : ugoiraUrl;
                 var delay = metadata.UgoiraMetadataInfo.Frames.Select(f => f.Delay / 10).ToArray();
                 if (cancellationTokenSource.IsCancellationRequested) return;
-                await using var memory = await PixivIoHelper.Download(ugoiraUrl, new Progress<double>(d => Progress = d), cancellationTokenSource);
-                await using var gifStream = (MemoryStream) PixivIoHelper.MergeGifStream(PixivIoHelper.ReadGifZipEntries(memory), delay);
+                await using var memory = await PixivIO.Download(ugoiraUrl, new Progress<double>(d => Progress = d), cancellationTokenSource.Token);
+                await using var gifStream = (MemoryStream) PixivIO.MergeGifStream(PixivIO.ReadGifZipEntries(memory), delay);
                 if (cancellationTokenSource.IsCancellationRequested) return;
                 await using var fileStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
                 gifStream.WriteTo(fileStream);
                 Application.Current.Invoke(() => DownloadFinished?.Invoke(this));
             }
-            catch (OperationCanceledException)
+            catch (TaskCanceledException)
             {
                 if (path != null && File.Exists(path)) File.Delete(path);
             }
@@ -142,7 +146,10 @@ namespace Pixeval.Models
                     Restart();
                     retried = true;
                 }
-                else HandleError(e, path);
+                else
+                {
+                    HandleError(e, path);
+                }
             }
         }
 

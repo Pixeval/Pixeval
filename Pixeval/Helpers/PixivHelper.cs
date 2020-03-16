@@ -83,7 +83,7 @@ namespace Pixeval.Helpers
             return illust;
         }
 
-        internal static async void Iterate<T>(IPixivAsyncEnumerable<T> pixivIterator, ICollection<T> container, int limit = -1)
+        public static async void Iterate<T>(IPixivAsyncEnumerable<T> pixivIterator, ICollection<T> container, int limit = -1)
         {
             var hashTable = new Dictionary<string, Illustration>();
 
@@ -120,7 +120,7 @@ namespace Pixeval.Helpers
             }
         }
 
-        internal static bool IllustNotMatchCondition(ISet<string> exceptTag, ISet<string> containsTag, Illustration illustration)
+        public static bool IllustNotMatchCondition(ISet<string> exceptTag, ISet<string> containsTag, Illustration illustration)
         {
             if (illustration == null) return false;
             return !exceptTag.IsNullOrEmpty() && exceptTag.Any(x => !x.IsNullOrEmpty() && illustration.Tags.Any(i => i.Name.EqualsIgnoreCase(x))) ||

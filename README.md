@@ -1,13 +1,14 @@
 # Pixeval
-A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF
+A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF，[点击](http://47.95.218.243/Pixeval/index.html)查看项目网址
 
 **推荐：**
 * 如果你希望找到一个Android上的免代理客户端，那么我推荐[@Notsfsssf](https://github.com/Notsfsssf)的作品[Pix-EzViewer](https://github.com/Notsfsssf/Pix-EzViewer) (本项目的免代理实现也源于此)
 * 如果你更习惯于使用UWP，那么我建议你尝试由[@tobiichiamane](https://github.com/tobiichiamane)开发的[pixivuwp](https://github.com/tobiichiamane/pixivfs-uwp)
 
 **注意：**
-* 自版本1.4.0开始取消了自带的.NET Core 3.0 Runtime，因为有部分用户反馈体积太大，所以在使用之前请确保自己安装了.NET Core 3.0 Runtime
+* 自版本1.4.0开始取消了自带的.NET Core 3.0 Runtime，因为有部分用户反馈体积太大，所以在使用之前请确保自己安装了.NET Core 3.0 Runtime（如果你选择下载[.NET Core Runtime 3.0.0](https://dotnet.microsoft.com/download/dotnet-core/3.0)则需要注意同时下载Desktop Runtime和.NET Core Runtime,如果你下载的是3.1+的版本，则可以选择只下载Desktop Runtime）
 * 自版本1.4.0开始不再使用单文件方式发布，由于单文件发布会导致一些奇怪的问题
+* 自版本1.4.0开始可以选择是否开启直连了，默认关闭，如果自己需要直连请在设置中手动开启
 
 **更新：**
 * 2020/1/9
@@ -26,6 +27,9 @@ A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF
 * 2020/3/14
     - 标签趋势
     - 密码不再使用明文管理，而是通过Windows Credential Manager保存
+* 2020/3/15
+    - 添加了自动更新功能(尚处于测试)
+    - 添加了一个导航到介绍网址的超链接
 
 
 **BUG修复：**
@@ -44,7 +48,12 @@ A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF
     - 修复了有时图片浏览底端按钮显示不全的问题
     - 修复了屏幕分辨率较低时无法显示完整侧边栏的问题
     - 修复了下载时容易出现空文件夹的问题</br>
-    
+* 2020/3/15
+    - 修复了点击tag没有反应的bug
+    - 修复了无法查看图集的bug
+* 2020/3/16
+    - 修复了用户新作页面图集不完整的bug
+
 **下载：**
 * 前往[Release页面](https://github.com/Rinacm/Pixeval/releases)下载最新版本的Release
 * [百度网盘](https://pan.baidu.com/s/11dHmITNEeD6MAyzPLb052w) 提取码: 2vd8
@@ -55,7 +64,7 @@ A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF
 **如有遇到任何问题请通过以下方式联系作者：**
 * 提交[issue](https://github.com/Rinacm/Pixeval/issues/new)
 * 向decem0730@gmail.com发送邮件
-* 添加qq群815791942进行反馈(如果你是开发者，请加入群439964524)
+* 添加qq群815791942进行反馈
 
 **意见：**
 如果你对于某一部分的设计有不同的见解，或者你希望增加某些功能，欢迎通过提交[issue](https://github.com/Rinacm/Pixeval/issues/new)/联系decem0730@gmail.com/添加qq群439964524来进行反馈，如果你对于WPF/C#有了解并希望为该项目尽一份力，欢迎通过提交[Pull Request](https://github.com/Rinacm/Pixeval/pulls)来为本项目目前只有我一人的开发者团队添砖加瓦，谢谢

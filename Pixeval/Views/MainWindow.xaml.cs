@@ -28,6 +28,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Threading;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignThemes.Wpf.Transitions;
@@ -47,6 +48,7 @@ using Pixeval.UserControls;
 using Refit;
 using Xceed.Wpf.AvalonDock.Controls;
 using static Pixeval.Objects.UiHelper;
+
 #if RELEASE
 using System.Net.Http;
 using Pixeval.Objects.Exceptions;
@@ -71,6 +73,16 @@ namespace Pixeval.Views
             Instance = this;
             this.signIn = signIn;
             InitializeComponent();
+
+            AppContext.UpdateAvailable().ContinueWith(task =>
+            {
+                if (task.Result && MessageBox.Show("有更新可用, 是否现在更新?", "更新可用", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+                {
+                    Process.Start("updater\\Pixeval.AutoUpdater.exe");
+                    Environment.Exit(0);
+                }
+            });
+
 
             NavigatorList.SelectedItem = MenuTab;
             MainWindowSnackBar.MessageQueue = MessageQueue;
@@ -392,6 +404,11 @@ namespace Pixeval.Views
             ToLoseFocus.Focus();
             CloseControls(TrendingTagPopup, AutoCompletionPopup);
             DownloadListTab.IsSelected = false;
+        }
+
+        private void Hyperlink_OnRequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo("cmd", $"/c start {e.Uri.AbsoluteUri}") {CreateNoWindow = true});
         }
 
         #endregion
@@ -750,10 +767,10 @@ namespace Pixeval.Views
                 });
 
             IllustBrowserDialogHost.CurrentSession.Close();
-            Instance.NavigatorList.SelectedItem = Instance.MenuTab;
+            NavigatorList.SelectedItem = Instance.MenuTab;
 
             await Task.Delay(300);
-            Instance.KeywordTextBox.Text = txt;
+            KeywordTextBox.Text = txt;
         }
 
         private void ShareButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -865,8 +882,8 @@ namespace Pixeval.Views
             IllustBrowserDialogHost.DataContext = illustration;
             await Task.Delay(100);
             IllustBrowserDialogHost.OpenControl();
-            var userInfo = await HttpClientFactory.AppApiService().GetUserInformation(new UserInformationRequest { Id = illustration.UserId });
-            if (await PixivIoHelper.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium) is { } avatar) SetImageSource(IllustBrowserUserAvatar, avatar);
+            var userInfo = await HttpClientFactory.AppApiService().GetUserInformation(new UserInformationRequest {Id = illustration.UserId});
+            if (await PixivIO.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium) is { } avatar) SetImageSource(IllustBrowserUserAvatar, avatar);
         }
 
         #endregion

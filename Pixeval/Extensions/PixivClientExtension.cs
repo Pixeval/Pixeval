@@ -71,7 +71,7 @@ namespace Pixeval.Extensions
             foreach (var tag in result.TrendTags)
                 AppContext.TrendingTags.Add(new TrendingTag
                 {
-                    Tag = tag.Tag,
+                    Tag = tag.TagStr,
                     TranslatedName = tag.TranslatedName,
                     Thumbnail = tag.Illust.ImageUrls.SquareMedium
                 });

@@ -20,9 +20,9 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
 
-namespace Pixeval.Types.ValueConverters
+namespace Pixeval.Objects.ValueConverters
 {
-    internal class QueryR18ToggleButtonIsCheckedConverter : IValueConverter
+    public class QueryR18ToggleButtonIsCheckedConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

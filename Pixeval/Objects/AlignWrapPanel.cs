@@ -20,7 +20,7 @@ using System.Windows.Controls;
 
 namespace Pixeval.Objects
 {
-    internal class AlignWrapPanel : Panel
+    public class AlignWrapPanel : Panel
     {
         public static readonly DependencyProperty HorizontalContentAlignmentProperty =
             DependencyProperty.Register("HorizontalContentAlignment", typeof(HorizontalAlignment), typeof(AlignWrapPanel), new FrameworkPropertyMetadata(HorizontalAlignment.Left, FrameworkPropertyMetadataOptions.AffectsArrange));

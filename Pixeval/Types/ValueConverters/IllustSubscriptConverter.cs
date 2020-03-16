@@ -18,11 +18,11 @@ using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using Pixeval.Models;
+using Pixeval.Data.ViewModel;
 
-namespace Pixeval.Types.ValueConverters
+namespace Pixeval.Objects.ValueConverters
 {
-    internal class IllustSubscriptConverter : IValueConverter
+    public class IllustSubscriptConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

@@ -18,12 +18,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
-using Pixeval.Models;
-using Pixeval.Objects;
 
-namespace Pixeval.Types
+namespace Pixeval.Core
 {
     public class RecommendIllustratorDeferrer
     {
@@ -37,7 +36,8 @@ namespace Pixeval.Types
 
         public async Task<IEnumerable<User>> Acquire(int count)
         {
-            Contract.Requires<ArgumentException>(30 % count == 0, "count must be divisible by 30");
+            if (30 % count != 0) throw new ArgumentException("count must be divisible by 30");
+
             if (currentIllustrators.Count < index + count)
             {
                 if (requestTimes >= 9)
