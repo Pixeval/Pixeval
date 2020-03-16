@@ -26,10 +26,10 @@ using ImageMagick;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Objects;
 
-namespace Pixeval.Core
+namespace Pixeval.Helpers
 {
     // ReSharper disable once InconsistentNaming
-    public static class PixivIO
+    public static class PixivIOHelper
     {
         public static async Task<byte[]> FromUrlInternal(string url)
         {

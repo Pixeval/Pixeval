@@ -23,7 +23,7 @@ using Pixeval.Views;
 using Refit;
 
 #if RELEASE
-using Pixeval.Objects.Exceptions.Logger;
+using Pixeval.Types;
 
 #endif
 

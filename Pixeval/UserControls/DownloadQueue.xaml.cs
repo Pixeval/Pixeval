@@ -39,7 +39,7 @@ namespace Pixeval.UserControls
         private async void DownloadItemThumbnail_OnLoaded(object sender, RoutedEventArgs e)
         {
             var url = sender.GetDataContext<DownloadableIllustrationViewModel>().DownloadContent.Thumbnail;
-            UiHelper.SetImageSource(sender, await PixivIoHelper.FromUrl(url));
+            UiHelper.SetImageSource(sender, await PixivIOHelper.FromUrl(url));
         }
 
         private void RetryButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

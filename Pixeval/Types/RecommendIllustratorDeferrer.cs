@@ -18,11 +18,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
+using Pixeval.Data.Web.Response;
+using Pixeval.Models;
 
-namespace Pixeval.Core
+namespace Pixeval.Types
 {
     public class RecommendIllustratorDeferrer
     {

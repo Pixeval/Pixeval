@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
-    <UseWPF>true</UseWPF>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <UseWPF>true</UseWPF>
     <Description>A Strong, Fast and Flexible Pixiv Client</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <StartupObject>Pixeval.App</StartupObject>
@@ -12,7 +13,7 @@
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
     <Win32Resource />
     <NoWarn>$(NoWarn);NU1701;NU1702</NoWarn>
-    <Platforms>AnyCPU;x64</Platforms>
+    <Platforms>x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>

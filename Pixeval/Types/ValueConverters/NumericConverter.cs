@@ -18,7 +18,7 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Pixeval.Objects.ValueConverters
+namespace Pixeval.Types.ValueConverters
 {
     public class DoublePlusConverter : IValueConverter
     {

@@ -18,9 +18,9 @@ using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using Pixeval.Data.ViewModel;
+using Pixeval.Models;
 
-namespace Pixeval.Objects.ValueConverters
+namespace Pixeval.Types.ValueConverters
 {
     public class IllustSubscriptConverter : IValueConverter
     {

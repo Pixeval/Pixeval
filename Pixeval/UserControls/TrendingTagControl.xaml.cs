@@ -45,7 +45,7 @@ namespace Pixeval.UserControls
 
         private async void TrendingTagThumbnail_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (await PixivIoHelper.FromUrl(sender.GetDataContext<TrendingTag>().Thumbnail) is { } image) SetImageSource(sender, image);
+            if (await PixivIOHelper.FromUrl(sender.GetDataContext<TrendingTag>().Thumbnail) is { } image) SetImageSource(sender, image);
         }
 
         private void SearchingHistoryContent_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

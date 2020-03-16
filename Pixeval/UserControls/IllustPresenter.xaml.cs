@@ -77,7 +77,7 @@ namespace Pixeval.UserControls
                 {
                     MainWindow.Instance.IllustBrowserDialogHost.DataContext = Illust;
                     var userInfo = await HttpClientFactory.AppApiService().GetUserInformation(new UserInformationRequest {Id = Illust.UserId});
-                    SetImageSource(MainWindow.Instance.IllustBrowserUserAvatar, await PixivIoHelper.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium));
+                    SetImageSource(MainWindow.Instance.IllustBrowserUserAvatar, await PixivIOHelper.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium));
                 });
             });
         }
@@ -88,7 +88,7 @@ namespace Pixeval.UserControls
             var metadata = await HttpClientFactory.AppApiService().GetUgoiraMetadata(Illust.Id);
             var ugoiraZip = metadata.UgoiraMetadataInfo.ZipUrls.Medium;
             var delay = metadata.UgoiraMetadataInfo.Frames.Select(f => f.Delay / 10).ToArray();
-            var streams = PixivIoHelper.ReadGifZipEntries(await PixivIoHelper.FromUrlInternal(ugoiraZip)).ToArray();
+            var streams = PixivIOHelper.ReadGifZipEntries(await PixivIOHelper.FromUrlInternal(ugoiraZip)).ToArray();
 
             ProcessingGif = false;
             PlayingGif = true;
@@ -100,7 +100,7 @@ namespace Pixeval.UserControls
                     for (var i = 0; i < streams.Length && !cancellationToken.IsCancellationRequested; i++)
                     {
                         streams[i].Position = 0;
-                        ImgSource = PixivIoHelper.FromStream(streams[i]);
+                        ImgSource = PixivIOHelper.FromStream(streams[i]);
                         await Task.Delay((int) delay[i], cancellationToken.Token);
                     }
             });

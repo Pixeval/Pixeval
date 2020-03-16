@@ -60,8 +60,6 @@ namespace Pixeval
             Directory.CreateDirectory(ProjectFolder);
             Directory.CreateDirectory(SettingsFolder);
             Directory.CreateDirectory(ExceptionReportFolder);
-            Configuration = new ConfigurationBuilder().AddJsonFile(Path.Combine(SettingsFolder, ConfigurationFileName))
-                .Build();
         }
 
         public static void EnqueueSearchHistory(string keyword)

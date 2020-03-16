@@ -36,6 +36,8 @@ using Newtonsoft.Json.Linq;
 using Pixeval.Data.Web;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
+using Pixeval.Data.Web.Response;
+using Pixeval.Exceptions;
 using Pixeval.Extensions;
 using Pixeval.Helpers;
 using Pixeval.Iterators;
@@ -51,8 +53,6 @@ using static Pixeval.Objects.UiHelper;
 
 #if RELEASE
 using System.Net.Http;
-using Pixeval.Objects.Exceptions;
-using Pixeval.Objects.Exceptions.Logger;
 
 #endif
 
@@ -100,10 +100,10 @@ namespace Pixeval.Views
             switch (e.Exception)
             {
                 case QueryNotRespondingException _:
-                    MessageQueue.Enqueue(Externally.QueryNotResponding);
+                    MessageQueue.Enqueue(SR.QueryNotResponding);
                     break;
                 case ApiException apiException:
-                    if (apiException.StatusCode == HttpStatusCode.BadRequest) MessageQueue.Enqueue(Externally.QueryNotResponding);
+                    if (apiException.StatusCode == HttpStatusCode.BadRequest) MessageQueue.Enqueue(SR.QueryNotResponding);
                     break;
                 case HttpRequestException _:
                     break;
@@ -250,7 +250,7 @@ namespace Pixeval.Views
             if (!Identity.Global.AvatarUrl.IsNullOrEmpty() && !Identity.Global.Name.IsNullOrEmpty())
             {
                 UserName.Text = Identity.Global.Name;
-                UserAvatar.Source = await PixivIoHelper.FromUrl(Identity.Global.AvatarUrl);
+                UserAvatar.Source = await PixivIOHelper.FromUrl(Identity.Global.AvatarUrl);
             }
         }
 
@@ -271,7 +271,7 @@ namespace Pixeval.Views
             var userInfo = sender.GetDataContext<User>();
             var imageCtrl = ((StackPanel) sender).Children.Cast<Image>().ToArray();
             var result = await Tasks<string, BitmapImage>.Of(userInfo.Thumbnails.Take(3))
-                .Mapping(PixivIoHelper.FromUrl)
+                .Mapping(PixivIOHelper.FromUrl)
                 .Construct()
                 .WhenAll();
             for (var i = 0; i < result.Length; i++) imageCtrl[i].Source = result[i];
@@ -313,7 +313,7 @@ namespace Pixeval.Views
         private async void RecommendIllustratorAvatar_OnLoaded(object sender, RoutedEventArgs e)
         {
             var context = sender.GetDataContext<User>();
-            SetImageSource(sender, await PixivIoHelper.FromUrl(context.Avatar));
+            SetImageSource(sender, await PixivIOHelper.FromUrl(context.Avatar));
         }
 
         private void KeywordTextBox_OnGotFocus(object sender, RoutedEventArgs e)
@@ -511,7 +511,7 @@ namespace Pixeval.Views
             var dataContext = sender.GetDataContext<Illustration>();
 
             if (dataContext != null && Uri.IsWellFormedUriString(dataContext.Thumbnail, UriKind.Absolute))
-                SetImageSource(sender, await PixivIoHelper.FromUrl(dataContext.Thumbnail));
+                SetImageSource(sender, await PixivIOHelper.FromUrl(dataContext.Thumbnail));
 
             StartDoubleAnimationUseCubicEase(sender, "(Image.Opacity)", 0, 1, 500);
         }
@@ -534,7 +534,7 @@ namespace Pixeval.Views
 
         private async void SpotlightThumbnail_OnLoaded(object sender, RoutedEventArgs e)
         {
-            SetImageSource((Image) sender, await PixivIoHelper.FromUrl(sender.GetDataContext<SpotlightArticle>().GetCover()));
+            SetImageSource((Image) sender, await PixivIOHelper.FromUrl(sender.GetDataContext<SpotlightArticle>().GetCover()));
         }
 
         private async void SpotlightContainer_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -619,7 +619,7 @@ namespace Pixeval.Views
                 if (((IEnumerable<JToken>) res.response).Any())
                 {
                     var img = res.response[0].image_urls.large.ToString();
-                    SetImageSource(UserBanner, await PixivIoHelper.FromUrl(img));
+                    SetImageSource(UserBanner, await PixivIOHelper.FromUrl(img));
                 }
             });
         }
@@ -629,12 +629,12 @@ namespace Pixeval.Views
             var (avatar, thumbnails) = GetUserPrevImageControls(sender);
             var dataContext = sender.GetDataContext<User>();
 
-            SetImageSource(avatar, await PixivIoHelper.FromUrl(dataContext.Avatar));
+            SetImageSource(avatar, await PixivIOHelper.FromUrl(dataContext.Avatar));
 
             var counter = 0;
             foreach (var thumbnail in thumbnails)
                 if (counter < dataContext.Thumbnails.Length)
-                    SetImageSource(thumbnail, await PixivIoHelper.FromUrl(dataContext.Thumbnails[counter++]));
+                    SetImageSource(thumbnail, await PixivIOHelper.FromUrl(dataContext.Thumbnails[counter++]));
         }
 
         private void UploadChecker_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -726,7 +726,7 @@ namespace Pixeval.Views
                 if (context.MangaMetadata.IsNullOrEmpty()) context = await PixivHelper.IllustrationInfo(context.Id);
 
                 var tasks = await Tasks<Illustration, (BitmapImage image, Illustration illust)>.Of(context.MangaMetadata)
-                    .Mapping(illustration => Task.Run(async () => (await PixivIoHelper.FromUrl(illustration.Large), illustration)))
+                    .Mapping(illustration => Task.Run(async () => (await PixivIOHelper.FromUrl(illustration.Large), illustration)))
                     .Construct()
                     .WhenAll();
 
@@ -734,7 +734,7 @@ namespace Pixeval.Views
             }
             else
             {
-                list.Add(InitTransitionerSlide(await PixivIoHelper.FromUrl(context.Large), context));
+                list.Add(InitTransitionerSlide(await PixivIOHelper.FromUrl(context.Large), context));
             }
         }
 
@@ -863,7 +863,7 @@ namespace Pixeval.Views
             };
             UserBrowserPageScrollViewer.DataContext = usrEntity;
             SetUserBanner(usrEntity.Id);
-            SetImageSource(UserBrowserUserAvatar, await PixivIoHelper.FromUrl(usrEntity.Avatar));
+            SetImageSource(UserBrowserUserAvatar, await PixivIOHelper.FromUrl(usrEntity.Avatar));
             SetupUserUploads(usrEntity.Id);
         }
 
@@ -883,7 +883,7 @@ namespace Pixeval.Views
             await Task.Delay(100);
             IllustBrowserDialogHost.OpenControl();
             var userInfo = await HttpClientFactory.AppApiService().GetUserInformation(new UserInformationRequest {Id = illustration.UserId});
-            if (await PixivIO.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium) is { } avatar) SetImageSource(IllustBrowserUserAvatar, avatar);
+            if (await PixivIOHelper.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium) is { } avatar) SetImageSource(IllustBrowserUserAvatar, avatar);
         }
 
         #endregion

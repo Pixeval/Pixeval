@@ -20,7 +20,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
 
-namespace Pixeval.Objects.ValueConverters
+namespace Pixeval.Types.ValueConverters
 {
     public class QueryR18ToggleButtonIsCheckedConverter : IValueConverter
     {

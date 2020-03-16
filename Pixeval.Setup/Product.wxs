@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="*" Name="Pixeval.Setup" Language="1033" Version="1.0.0.0" Manufacturer="Summpot" UpgradeCode="48b46332-e738-4ba1-94e8-e2f764e9ea73">
+	<Product Id="*" Name="Pixeval" Language="1033" Version="1.0.0.0" Manufacturer="Summpot" UpgradeCode="48b46332-e738-4ba1-94e8-e2f764e9ea73">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
@@ -14,7 +14,7 @@
 	<Fragment>
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="ProgramFilesFolder">
-				<Directory Id="INSTALLFOLDER" Name="Pixeval.Setup" />
+				<Directory Id="INSTALLFOLDER" Name="Pixeval" />
 			</Directory>
 		</Directory>
 	</Fragment>
