@@ -1,0 +1,24 @@
+#logo-container {
+    margin: 0 auto;
+    width: 500px;
+}
+
+#logo {
+    text-align: center;
+    font-size: 20px;
+}
+
+.intro {
+    text-align: center;
+    margin-top: 7px;
+    margin-bottom: 45px;
+}
+
+.browse {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.parallax-container {
+    height: 380px;
+}
