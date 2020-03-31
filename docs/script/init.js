@@ -1,4 +1,3 @@
-$(document).ready(() => {
-    console.log('aaaaaaa');
-    $('.parallax').parallax()
+$(function () {
+    $('.parallax').parallax();
 });
