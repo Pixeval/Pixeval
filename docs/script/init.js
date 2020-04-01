@@ -1,3 +1,3 @@
-$(function () {
-    $('.parallax').parallax();
+$(function() {
+    $(".parallax").parallax();
 });
