@@ -1,0 +1,1 @@
+dotnet publish /p:Platform=x64 Pixeval.csproj -c Release -f netcoreapp3.1 --no-self-contained -r win-x64

@@ -1,0 +1,283 @@
+﻿<!--
+Pixeval - A Strong, Fast and Flexible Pixiv Client
+Copyright (C) 2019-2020 Dylech30th
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
+
+<UserControl x:Class="Pixeval.UI.UserControls.DownloadQueue" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
+             xmlns:i18N="clr-namespace:Pixeval.Objects.I18n" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:valueConverters="clr-namespace:Pixeval.Objects.ValueConverters" xmlns:viewModel="clr-namespace:Pixeval.Data.ViewModel" Width="800"
+             Height="450" mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/materialdesign.xaml" />
+                <ResourceDictionary>
+                    <!--  ReSharper disable Xaml.RedundantResource  -->
+                    <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#FFFFFF" />
+                    <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="#FFFFFF" />
+                    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#FFFFFF" />
+                    <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="#FFFFFF" />
+                    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#FFFFFF" />
+                    <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="#FFFFFF" />
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <SolidColorBrush x:Key="SecondaryAccentBrush" Color="#007CEE" />
+                    <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="#007CEE" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+            <Style BasedOn="{StaticResource MaterialDesignTabablzControlStyle}" TargetType="{x:Type dragablz:TabablzControl}" />
+            <valueConverters:DoubleToPercentConverter x:Key="DoubleToPercentConverter" />
+            <DataTemplate x:Key="DownloadItemTemplate" DataType="viewModel:DownloadableIllustration">
+                <ListBoxItem Width="780" Height="70" HorizontalContentAlignment="Stretch">
+                    <ListBoxItem.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Click="ShowDownloadIllustration" Header="{x:Static i18N:AkaI18N.DownloadQueueShowDownloadIllust}" />
+                            <MenuItem Click="RemoveFromDownloading" Header="{x:Static i18N:AkaI18N.DownloadQueueRemoveFromDownloading}" />
+                        </ContextMenu>
+                    </ListBoxItem.ContextMenu>
+                    <Grid Height="45" Margin="0,0,0,10" VerticalAlignment="Top">
+                        <Grid Width="41" Height="41" HorizontalAlignment="Left">
+                            <Ellipse Width="41" Height="41" Fill="#E1E4E8" />
+                            <Image x:Name="DownloadItemThumbnail" Width="40" Height="40"
+                                   Loaded="DownloadItemThumbnail_OnLoaded" Stretch="UniformToFill">
+                                <Image.Clip>
+                                    <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20" />
+                                </Image.Clip>
+                            </Image>
+                        </Grid>
+                        <Grid Margin="60,0,80,0">
+                            <StackPanel VerticalAlignment="Center">
+                                <ProgressBar Height="5" Background="#D4E5F9" BorderThickness="0"
+                                             Foreground="#007CEE" Maximum="1"
+                                             Style="{StaticResource RoundedCornerProgressBar}"
+                                             Value="{Binding Progress}" />
+                                <StackPanel Margin="5,5,5,0" Orientation="Horizontal" TextElement.FontFamily="Microsoft YaHei Light"
+                                            TextElement.FontSize="12">
+                                    <TextBlock x:Name="ProgressIndicator" Text="{Binding Progress, Converter={StaticResource DoubleToPercentConverter}}" />
+                                    <TextBlock Margin="10,0,0,0" Text="{Binding DownloadStat.Value, Converter={StaticResource EnumToStringConverter}}" />
+                                    <TextBlock x:Name="HintMessage" MaxWidth="500" Margin="10,0,0,0"
+                                               HorizontalAlignment="Right"
+                                               Text="{Binding ReasonPhase}"
+                                               TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"
+                                               ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                        <StackPanel Height="30" HorizontalAlignment="Right" Orientation="Horizontal">
+                            <Grid Width="30" Height="30">
+                                <TextBlock x:Name="RetryButton" HorizontalAlignment="Right" Cursor="Hand"
+                                           FontFamily="/Resources/#dqueue" FontSize="25" MouseLeftButtonDown="RetryButton_OnMouseLeftButtonDown"
+                                           Text="&#xea9e;" />
+                            </Grid>
+                            <Grid Width="30" Height="30" Margin="10,0,0,0">
+                                <TextBlock x:Name="CancelButton" HorizontalAlignment="Right" Cursor="Hand"
+                                           FontFamily="/Resources/#dqueue" FontSize="25" MouseLeftButtonDown="CancelButton_OnMouseLeftButtonDown"
+                                           Text="&#xe63a;" />
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </ListBoxItem>
+            </DataTemplate>
+            <DataTemplate x:Key="DownloadedItemTemplate" DataType="viewModel:DownloadableIllustration">
+                <ListBoxItem Width="780" Height="70" HorizontalContentAlignment="Stretch">
+                    <ListBoxItem.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Click="ShowDownloadIllustration" Header="{x:Static i18N:AkaI18N.DownloadQueueShowDownloadIllust}" />
+                            <MenuItem Click="RemoveFromDownloaded" Header="{x:Static i18N:AkaI18N.DownloadQueueRemoveFromDownloading}" />
+                        </ContextMenu>
+                    </ListBoxItem.ContextMenu>
+                    <Grid Height="50" Margin="0,0,0,10" VerticalAlignment="Top">
+                        <Grid Width="41" Height="41" HorizontalAlignment="Left">
+                            <Ellipse Width="41" Height="41" Fill="#E1E4E8" />
+                            <Image x:Name="DownloadItemThumbnail" Width="40" Height="40"
+                                   Loaded="DownloadItemThumbnail_OnLoaded" Stretch="UniformToFill">
+                                <Image.Clip>
+                                    <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20" />
+                                </Image.Clip>
+                            </Image>
+                        </Grid>
+                        <Grid Margin="60,0,50,0">
+                            <StackPanel VerticalAlignment="Center">
+                                <ProgressBar Height="5" Background="#D4E5F9" BorderThickness="0"
+                                             Foreground="#007CEE" Maximum="1"
+                                             Style="{StaticResource RoundedCornerProgressBar}"
+                                             Value="{Binding Progress}" />
+                                <StackPanel Margin="5,5,5,0" Orientation="Horizontal" TextElement.FontFamily="Microsoft YaHei Light"
+                                            TextElement.FontSize="12">
+                                    <TextBlock x:Name="ProgressIndicator" Text="{Binding Progress, Converter={StaticResource DoubleToPercentConverter}}" />
+                                    <TextBlock Margin="10,0,0,0" Text="{Binding DownloadStat.Value, Converter={StaticResource EnumToStringConverter}}" />
+                                    <TextBlock x:Name="HintMessage" MaxWidth="500" Margin="10,0,0,0"
+                                               HorizontalAlignment="Right"
+                                               Text="{Binding ReasonPhase}"
+                                               TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"
+                                               ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                        <StackPanel Height="30" HorizontalAlignment="Right" Orientation="Horizontal">
+                            <Grid x:Name="ViewDownloadLocationButton" Width="30" Height="30"
+                                  Cursor="Hand" MouseLeftButtonDown="ViewDownloadLocationButton_OnMouseLeftButtonDown">
+                                <Viewbox Width="24" Height="24">
+                                    <Canvas Width="24" Height="24">
+                                        <Path Data="M20,6A2,2 0 0,1 22,8V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4H10L12,6H20M10.75,13H14V17H16V13H19.25L15,8.75" Fill="Gray" />
+                                    </Canvas>
+                                </Viewbox>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </ListBoxItem>
+            </DataTemplate>
+            <DataTemplate x:Key="BrowsingHistoryItemTemplate" DataType="viewModel:BrowsingHistory">
+                <materialDesign:Card Width="175" Height="235" HorizontalAlignment="Center"
+                                     VerticalAlignment="Center" Background="White" UniformCornerRadius="10">
+                    <Grid>
+                        <Grid VerticalAlignment="Top">
+                            <Image x:Name="BrowsingHistoryMainImage" Width="175" Height="175"
+                                   HorizontalAlignment="Center" Cursor="Hand" Loaded="BrowsingHistoryMainImage_OnLoaded"
+                                   MouseLeftButtonDown="BrowsingHistoryMainImage_OnMouseLeftButtonDown" Stretch="UniformToFill"
+                                   Style="{StaticResource ReleaseImageStyle}" />
+                            <Grid Background="Transparent" Cursor="Hand" MouseLeftButtonDown="ReferUser_OnMouseLeftButtonDown"
+                                  Visibility="{Binding IsReferToUser, Converter={StaticResource VisibleIfTrueConverter}}">
+                                <Grid Width="80" Height="80" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" Background="Gray" Opacity="0.3">
+                                    <Grid.Clip>
+                                        <EllipseGeometry Center="40 40" RadiusX="40" RadiusY="40" />
+                                    </Grid.Clip>
+                                </Grid>
+                                <Image x:Name="BrowsingHistoryAvatarImage" Width="40" Height="40"
+                                       Loaded="BrowsingHistoryAvatarImage_OnLoaded" Stretch="UniformToFill"
+                                       Style="{StaticResource ReleaseImageStyle}">
+                                    <Image.Clip>
+                                        <RectangleGeometry RadiusX="10" RadiusY="10" Rect="0,0,40,40" />
+                                    </Image.Clip>
+                                </Image>
+                            </Grid>
+                        </Grid>
+                        <Grid Margin="0,175,0,0">
+                            <TextBlock MaxWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       FontSize="12"
+                                       Text="{Binding BrowseObjectState}"
+                                       TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"
+                                       Visibility="{Binding IsReferToUser, Converter={StaticResource VisibleIfTrueConverter}}" />
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                                        Visibility="{Binding IsReferToIllust, Converter={StaticResource VisibleIfTrueConverter}}">
+                                <TextBlock MaxWidth="150" VerticalAlignment="Bottom" FontSize="12"
+                                           Text="{Binding BrowseObjectState}"
+                                           TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+                                <TextBlock MaxWidth="80" Margin="0,5,0,0" HorizontalAlignment="Center"
+                                           VerticalAlignment="Bottom" FontSize="10"
+                                           Text="{Binding IllustratorName, StringFormat={} by {0}}"
+                                           TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+                            </StackPanel>
+                            <TextBlock MaxWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       FontSize="12"
+                                       Text="{Binding BrowseObjectState}"
+                                       TextTrimming="CharacterEllipsis" TextWrapping="Wrap"
+                                       Visibility="{Binding IsReferToSpotlight, Converter={StaticResource VisibleIfTrueConverter}}" />
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
+            </DataTemplate>
+            <DrawingImage x:Key="EmptyBox">
+                <DrawingImage.Drawing>
+                    <DrawingGroup ClipGeometry="M0,-12 V500 H512.00032 V0 H-12 Z">
+                        <GeometryDrawing Brush="Gray" Geometry="F1 M512.00032,512z M0,0z M455.074219,172.613281L509.070312,118.617188C511.296875,116.394531 512.34375,113.25 511.898438,110.136719 511.457031,107.023438 509.570312,104.296875 506.8125,102.78125L441.898438,67.136719C437.058594,64.480469 430.980469,66.25 428.320312,71.089844 425.664062,75.933594 427.429688,82.011719 432.273438,84.667969L485.507812,113.898438 439.167969,160.234375 272.5,68.714844 318.835938,22.378906 365.675781,48.101562C370.515625,50.757812 376.597656,48.992188 379.253906,44.148438 381.914062,39.308594 380.144531,33.226562 375.300781,30.570312L321.882812,1.234375C317.984375,-0.90625,313.140625,-0.214844,310,2.929688L256,56.929688 202,2.929688C198.855469,-0.214844000000001,194.011719,-0.902344000000001,190.117188,1.234375L5.18750000000017,102.78125C2.42968800000017,104.296875 0.542969000000171,107.019531 0.101562000000171,110.136719 -0.343749999999829,113.25 0.703125000000171,116.394531 2.92968800000017,118.617188L56.9257810000002,172.613281 2.92968800000017,226.605469C0.703125000000169,228.832031 -0.343749999999831,231.972656 0.101562000000169,235.089844 0.542969000000169,238.203125 2.42968800000017,240.929688 5.18750000000017,242.441406L61.0703120000002,273.128906 61.0703120000002,375.699219C61.0703120000002,379.351562,63.0585940000002,382.710938,66.2578120000002,384.46875L251.1875,486.011719C252.6875,486.835938 254.34375,487.246094 256,487.246094 257.65625,487.246094 259.3125,486.835938 260.8125,486.011719L445.742188,384.46875C448.941406,382.710938,450.929688,379.351562,450.929688,375.699219L450.929688,273.128906 506.8125,242.445312C509.570312,240.929688 511.457031,238.203125 511.898438,235.089844 512.34375,231.976562 511.296875,228.832031 509.070312,226.609375z M256,262.746094L91.847656,172.609375 256,82.46875 420.152344,172.609375z M193.167969,22.378906L239.5,68.714844 72.832031,160.234375 26.496094,113.898438z M72.839844,184.988281L239.507812,276.507812 193.167969,322.847656 26.496094,231.328125z M430.929688,369.785156L266,460.347656 266,358.125C266,352.601562 261.523438,348.125 256,348.125 250.476562,348.125 246,352.601562 246,358.125L246,460.347656 81.0703120000001,369.785156 81.0703120000001,284.113281 190.117188,343.992188C191.628906,344.820312 193.285156,345.226562 194.925781,345.226562 197.515625,345.226562 200.078125,344.21875 202,342.296875L256,288.296875 310,342.296875C311.921875,344.222656 314.484375,345.226562 317.074219,345.226562 318.714844,345.226562 320.371094,344.820312 321.882812,343.992188L430.929688,284.113281z M318.835938,322.847656L272.496094,276.503906 439.164062,184.988281 485.507812,231.324219z M318.835938,322.847656" />
+                        <GeometryDrawing Brush="Gray" Geometry="F1 M512.00032,512z M0,0z M404.800781,68.175781C407.429688,68.175781 410,67.105469 411.871094,65.242188 413.730469,63.382812 414.800781,60.804688 414.800781,58.175781 414.800781,55.542969 413.730469,52.964844 411.871094,51.105469 410.011719,49.242188 407.429688,48.175781 404.800781,48.175781 402.160156,48.175781 399.589844,49.242188 397.730469,51.105469 395.859375,52.964844 394.800781,55.542969 394.800781,58.175781 394.800781,60.804688 395.859375,63.382812 397.730469,65.242188 399.589844,67.105469 402.171875,68.175781 404.800781,68.175781z M404.800781,68.175781" />
+                        <GeometryDrawing Brush="Gray" Geometry="F1 M512.00032,512z M0,0z M256,314.925781C253.371094,314.925781 250.789062,315.992188 248.929688,317.855469 247.070312,319.722656 246,322.292969 246,324.925781 246,327.5625 247.070312,330.132812 248.929688,332.003906 250.789062,333.863281 253.371094,334.925781 256,334.925781 258.628906,334.925781 261.210938,333.863281 263.070312,332.003906 264.929688,330.132812 266,327.5625 266,324.925781 266,322.292969 264.929688,319.722656 263.070312,317.855469 261.210938,315.992188 258.628906,314.925781 256,314.925781z M256,314.925781" />
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <dragablz:TabablzControl BorderThickness="0">
+        <TabItem Background="White" Opacity="1">
+            <TabItem.Header>
+                <TextBlock FontFamily="Microsoft YaHei Light" FontSize="14"
+                           Text="{x:Static i18N:AkaI18N.DownloadQueueDownloading}" />
+            </TabItem.Header>
+            <Grid Background="White">
+                <ListBox x:Name="DownloadItemsQueue" Margin="0,10,0,0" HorizontalAlignment="Center"
+                         ItemTemplate="{StaticResource DownloadItemTemplate}"
+                         ScrollViewer.CanContentScroll="False">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel CanHorizontallyScroll="False" IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+                <Grid x:Name="EmptyNotifier1">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Image Width="120" Height="120"
+                               Source="{StaticResource EmptyBox}" />
+                        <TextBlock HorizontalAlignment="Stretch" FontFamily="Microsoft YaHei Light" FontSize="25"
+                                   Text="{x:Static i18N:AkaI18N.DownloadQueueEmptyNotifier}" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </TabItem>
+        <TabItem Background="White" Opacity="1">
+            <TabItem.Header>
+                <TextBlock FontFamily="Microsoft YaHei Light" FontSize="14"
+                           Text="{x:Static i18N:AkaI18N.DownloadQueueDownloaded}" />
+            </TabItem.Header>
+            <Grid Background="White">
+                <ListBox x:Name="DownloadedItemsQueue" Margin="0,10,0,0" HorizontalAlignment="Center"
+                         ItemTemplate="{StaticResource DownloadedItemTemplate}"
+                         ScrollViewer.CanContentScroll="False">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel CanHorizontallyScroll="False" IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+                <Grid x:Name="EmptyNotifier2">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Image Width="120" Height="120"
+                               Source="{StaticResource EmptyBox}" />
+                        <TextBlock HorizontalAlignment="Stretch" FontFamily="Microsoft YaHei Light" FontSize="25"
+                                   Text="{x:Static i18N:AkaI18N.DownloadQueueEmptyNotifier}" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </TabItem>
+        <TabItem Background="White">
+            <TabItem.Header>
+                <TextBlock FontFamily="Microsoft YaHei Light" FontSize="14"
+                           Text="{x:Static i18N:AkaI18N.DownloadQueueBrowsingHistory}" />
+            </TabItem.Header>
+            <Grid Background="White">
+                <ListView x:Name="BrowsingHistoryQueue" Margin="0,10,0,0" HorizontalAlignment="Center"
+                          ItemTemplate="{StaticResource BrowsingHistoryItemTemplate}"
+                          ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingPanel.CacheLength="0 0"
+                          VirtualizingPanel.CacheLengthUnit="Pixel" VirtualizingPanel.ScrollUnit="Pixel" VirtualizingPanel.VirtualizationMode="Standard">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <controls:VirtualizingWrapPanel Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                </ListView>
+                <Grid x:Name="EmptyNotifier3">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Image Width="120" Height="120"
+                               Source="{StaticResource EmptyBox}" />
+                        <TextBlock HorizontalAlignment="Stretch" FontFamily="Microsoft YaHei Light" FontSize="25"
+                                   Text="{x:Static i18N:AkaI18N.DownloadQueueHistoryListIsEmpty}" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </TabItem>
+    </dragablz:TabablzControl>
+</UserControl>
