@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Pixeval.Interchange": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    },
+    "newProfile1": {
+      "commandName": "Executable"
+    }
+  }
+}
