@@ -31,7 +31,7 @@ namespace Pixeval.Data.Web.Protocol
     {
         [Post("/setting_user.php")]
         Task<HttpResponseMessage> ToggleR18State([Body(BodySerializationMethod.UrlEncoded)]
-            ToggleR18StateRequest toggleR18StateRequest);
+                                                 ToggleR18StateRequest toggleR18StateRequest);
 
         [Get("/ajax/showcase/article")]
         Task<SpotlightArticleResponse> GetSpotlightArticles([AliasAs("article_id")] string articleId);

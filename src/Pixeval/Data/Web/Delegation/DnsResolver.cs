@@ -47,7 +47,7 @@ namespace Pixeval.Data.Web.Delegation
         {
             return await RestService.For<IResolveDnsProtocol>(
                     new HttpClient(new HttpClientHandler
-                            {SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls})
+                                       {SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls})
                         {BaseAddress = new Uri(ProtocolBase.DnsServer), Timeout = TimeSpan.FromSeconds(5)})
                 .ResolveDns(new DnsResolveRequest
                 {

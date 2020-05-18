@@ -35,7 +35,8 @@ namespace Pixeval.Data.ViewModel
     [AddINotifyPropertyChangedInterface]
     public class DownloadableIllustration
     {
-        [DoNotNotify] private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        [DoNotNotify]
+        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         private bool modifiable = true;
 
@@ -142,10 +143,11 @@ namespace Pixeval.Data.ViewModel
             try
             {
                 await using var memory = await PixivIO.Download(DownloadContent.GetDownloadUrl(),
-                    new Progress<double>(d => Progress = d), cancellationTokenSource.Token);
+                                                                new Progress<double>(d => Progress = d),
+                                                                cancellationTokenSource.Token);
                 if (cancellationTokenSource.IsCancellationRequested) return;
                 await using var fileStream = new FileStream(DownloadPath, FileMode.OpenOrCreate, FileAccess.ReadWrite,
-                    FileShare.None);
+                                                            FileShare.None);
                 memory.WriteTo(fileStream);
                 DownloadStat.Value = DownloadStatEnum.Finished;
             }
@@ -179,12 +181,12 @@ namespace Pixeval.Data.ViewModel
                 var delay = metadata.UgoiraMetadataInfo.Frames.Select(f => f.Delay / 10).ToArray();
                 if (cancellationTokenSource.IsCancellationRequested) return;
                 await using var memory = await PixivIO.Download(ugoiraUrl, new Progress<double>(d => Progress = d),
-                    cancellationTokenSource.Token);
+                                                                cancellationTokenSource.Token);
                 await using var gifStream =
                     (MemoryStream) InternalIO.MergeGifStream(InternalIO.ReadGifZipEntries(memory), delay);
                 if (cancellationTokenSource.IsCancellationRequested) return;
                 await using var fileStream = new FileStream(DownloadPath, FileMode.OpenOrCreate, FileAccess.ReadWrite,
-                    FileShare.None);
+                                                            FileShare.None);
                 gifStream.WriteTo(fileStream);
                 DownloadStat.Value = DownloadStatEnum.Finished;
             }

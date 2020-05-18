@@ -26,71 +26,100 @@ namespace Pixeval.Data.Web.Response
 {
     public class TrendingTagResponse
     {
-        [JsonProperty("trend_tags")] public List<TrendTag> TrendTags { get; set; }
+        [JsonProperty("trend_tags")]
+        public List<TrendTag> TrendTags { get; set; }
 
         public class TrendTag
         {
-            [JsonProperty("tag")] public string TagStr { get; set; }
+            [JsonProperty("tag")]
+            public string TagStr { get; set; }
 
-            [JsonProperty("translated_name")] public string TranslatedName { get; set; }
+            [JsonProperty("translated_name")]
+            public string TranslatedName { get; set; }
 
-            [JsonProperty("illust")] public Illust Illust { get; set; }
+            [JsonProperty("illust")]
+            public Illust Illust { get; set; }
         }
 
         public class Illust
         {
-            [JsonProperty("id")] public long Id { get; set; }
+            [JsonProperty("id")]
+            public long Id { get; set; }
 
-            [JsonProperty("title")] public string Title { get; set; }
+            [JsonProperty("title")]
+            public string Title { get; set; }
 
-            [JsonProperty("type")] public string Type { get; set; }
+            [JsonProperty("type")]
+            public string Type { get; set; }
 
-            [JsonProperty("image_urls")] public ImageUrls ImageUrls { get; set; }
+            [JsonProperty("image_urls")]
+            public ImageUrls ImageUrls { get; set; }
 
-            [JsonProperty("caption")] public string Caption { get; set; }
+            [JsonProperty("caption")]
+            public string Caption { get; set; }
 
-            [JsonProperty("restrict")] public long Restrict { get; set; }
+            [JsonProperty("restrict")]
+            public long Restrict { get; set; }
 
-            [JsonProperty("user")] public User User { get; set; }
+            [JsonProperty("user")]
+            public User User { get; set; }
 
-            [JsonProperty("tags")] public List<Tag> Tags { get; set; }
+            [JsonProperty("tags")]
+            public List<Tag> Tags { get; set; }
 
-            [JsonProperty("tools")] public List<string> Tools { get; set; }
+            [JsonProperty("tools")]
+            public List<string> Tools { get; set; }
 
-            [JsonProperty("create_date")] public DateTimeOffset CreateDate { get; set; }
+            [JsonProperty("create_date")]
+            public DateTimeOffset CreateDate { get; set; }
 
-            [JsonProperty("page_count")] public long PageCount { get; set; }
+            [JsonProperty("page_count")]
+            public long PageCount { get; set; }
 
-            [JsonProperty("width")] public long Width { get; set; }
+            [JsonProperty("width")]
+            public long Width { get; set; }
 
-            [JsonProperty("height")] public long Height { get; set; }
+            [JsonProperty("height")]
+            public long Height { get; set; }
 
-            [JsonProperty("sanity_level")] public long SanityLevel { get; set; }
+            [JsonProperty("sanity_level")]
+            public long SanityLevel { get; set; }
 
-            [JsonProperty("x_restrict")] public long XRestrict { get; set; }
+            [JsonProperty("x_restrict")]
+            public long XRestrict { get; set; }
 
-            [JsonProperty("meta_single_page")] public MetaSinglePage MetaSinglePage { get; set; }
+            [JsonProperty("meta_single_page")]
+            public MetaSinglePage MetaSinglePage { get; set; }
 
-            [JsonProperty("meta_pages")] public List<MetaPage> MetaPages { get; set; }
+            [JsonProperty("meta_pages")]
+            public List<MetaPage> MetaPages { get; set; }
 
-            [JsonProperty("total_view")] public long TotalView { get; set; }
+            [JsonProperty("total_view")]
+            public long TotalView { get; set; }
 
-            [JsonProperty("total_bookmarks")] public long TotalBookmarks { get; set; }
+            [JsonProperty("total_bookmarks")]
+            public long TotalBookmarks { get; set; }
 
-            [JsonProperty("is_bookmarked")] public bool IsBookmarked { get; set; }
+            [JsonProperty("is_bookmarked")]
+            public bool IsBookmarked { get; set; }
 
-            [JsonProperty("visible")] public bool Visible { get; set; }
+            [JsonProperty("visible")]
+            public bool Visible { get; set; }
 
-            [JsonProperty("is_muted")] public bool IsMuted { get; set; }
+            [JsonProperty("is_muted")]
+            public bool IsMuted { get; set; }
         }
 
         public class ImageUrls
         {
-            [JsonProperty("square_medium")] public string SquareMedium { get; set; }
+            [JsonProperty("square_medium")]
+            public string SquareMedium { get; set; }
 
-            [JsonProperty("medium")] public string Medium { get; set; }
+            [JsonProperty("medium")]
+            public string Medium { get; set; }
 
-            [JsonProperty("large")] public string Large { get; set; }
+            [JsonProperty("large")]
+            public string Large { get; set; }
 
             [JsonProperty("original", NullValueHandling = NullValueHandling.Ignore)]
             public string Original { get; set; }
@@ -98,7 +127,8 @@ namespace Pixeval.Data.Web.Response
 
         public class MetaPage
         {
-            [JsonProperty("image_urls")] public ImageUrls ImageUrls { get; set; }
+            [JsonProperty("image_urls")]
+            public ImageUrls ImageUrls { get; set; }
         }
 
         public class MetaSinglePage
@@ -109,27 +139,35 @@ namespace Pixeval.Data.Web.Response
 
         public class Tag
         {
-            [JsonProperty("name")] public string Name { get; set; }
+            [JsonProperty("name")]
+            public string Name { get; set; }
 
-            [JsonProperty("translated_name")] public string TranslatedName { get; set; }
+            [JsonProperty("translated_name")]
+            public string TranslatedName { get; set; }
         }
 
         public class User
         {
-            [JsonProperty("id")] public long Id { get; set; }
+            [JsonProperty("id")]
+            public long Id { get; set; }
 
-            [JsonProperty("name")] public string Name { get; set; }
+            [JsonProperty("name")]
+            public string Name { get; set; }
 
-            [JsonProperty("account")] public string Account { get; set; }
+            [JsonProperty("account")]
+            public string Account { get; set; }
 
-            [JsonProperty("profile_image_urls")] public ProfileImageUrls ProfileImageUrls { get; set; }
+            [JsonProperty("profile_image_urls")]
+            public ProfileImageUrls ProfileImageUrls { get; set; }
 
-            [JsonProperty("is_followed")] public bool IsFollowed { get; set; }
+            [JsonProperty("is_followed")]
+            public bool IsFollowed { get; set; }
         }
 
         public class ProfileImageUrls
         {
-            [JsonProperty("medium")] public string Medium { get; set; }
+            [JsonProperty("medium")]
+            public string Medium { get; set; }
         }
     }
 }

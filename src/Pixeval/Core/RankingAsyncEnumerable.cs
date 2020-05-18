@@ -49,9 +49,10 @@ namespace Pixeval.Core
 
         public override bool VerifyRationality(Illustration item, IList<Illustration> collection)
         {
-            return item != null && collection.All(t => t.Id != item.Id) &&
-                   PixivHelper.VerifyIllustRational(Settings.Global.ExcludeTag, Settings.Global.IncludeTag,
-                       Settings.Global.MinBookmark, item);
+            return item != null &&
+                collection.All(t => t.Id != item.Id) &&
+                PixivHelper.VerifyIllustRational(Settings.Global.ExcludeTag, Settings.Global.IncludeTag,
+                                                 Settings.Global.MinBookmark, item);
         }
 
         public override void InsertionPolicy(Illustration item, IList<Illustration> collection)
@@ -73,7 +74,7 @@ namespace Pixeval.Core
             private IEnumerator<Illustration> illustrationEnumerator;
 
             public RankingAsyncEnumerator(IPixivAsyncEnumerable<Illustration> enumerable, RankOption rankOption,
-                DateTime dateTime) : base(enumerable)
+                                          DateTime dateTime) : base(enumerable)
             {
                 rankOptionParameter = rankOption.GetEnumAttribute<EnumAlias>().AliasAs;
                 dateTimeParameter = dateTime.ToString("yyyy-MM-dd");

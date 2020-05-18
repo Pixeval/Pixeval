@@ -51,7 +51,8 @@ namespace Pixeval.UI.UserControls
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
                 if (e.Data.GetData(DataFormats.FileDrop) is string[] fs)
                 {
-                    if (fs.Length > 1) MainWindow.MessageQueue.Enqueue(AkaI18N.SauceNaoFileCountLimit);
+                    if (fs.Length > 1)
+                        MainWindow.MessageQueue.Enqueue(AkaI18N.SauceNaoFileCountLimit);
                     else
                         try
                         {
@@ -61,7 +62,8 @@ namespace Pixeval.UI.UserControls
                             if ((await DoQuery(fs[0])).ToList() is { } sauceResults && sauceResults.Any())
                                 MainWindow.Instance.OpenIllustBrowser(
                                     await PixivHelper.IllustrationInfo(sauceResults[0]));
-                            else MainWindow.MessageQueue.Enqueue(AkaI18N.CannotFindResult);
+                            else
+                                MainWindow.MessageQueue.Enqueue(AkaI18N.CannotFindResult);
                         }
                         finally
                         {
@@ -87,7 +89,8 @@ namespace Pixeval.UI.UserControls
                     UploadFileTextBox.Text = fileDialog.FileName;
                     if ((await DoQuery(fileDialog.FileName)).ToList() is { } sauceResults && sauceResults.Any())
                         MainWindow.Instance.OpenIllustBrowser(await PixivHelper.IllustrationInfo(sauceResults[0]));
-                    else MainWindow.MessageQueue.Enqueue(AkaI18N.CannotFindResult);
+                    else
+                        MainWindow.MessageQueue.Enqueue(AkaI18N.CannotFindResult);
                 }
             }
             finally
@@ -104,7 +107,7 @@ namespace Pixeval.UI.UserControls
                 new MemoryStream(await File.ReadAllBytesAsync(UploadFileTextBox.Text), false);
             var sauceResponse = await RestService.For<ISauceNAOProtocol>(ProtocolBase.SauceNAOUrl)
                 .GetSauce(new StreamPart(memoryStream, Path.GetFileName(fileName),
-                    Strings.AssumeImageContentType(fileName)));
+                                         Strings.AssumeImageContentType(fileName)));
             var content = await sauceResponse.Content.ReadAsStringAsync();
             return await ParseSauce(content);
         }

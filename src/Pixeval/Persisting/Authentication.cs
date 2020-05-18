@@ -69,7 +69,8 @@ namespace Pixeval.Persisting
             try
             {
                 var token = await RestService.For<ITokenProtocol>(HttpClientFactory
-                        .PixivApi(ProtocolBase.OAuthBaseUrl, true).Apply(h => h.Timeout = TimeSpan.FromSeconds(10)))
+                                                                      .PixivApi(ProtocolBase.OAuthBaseUrl, true)
+                                                                      .Apply(h => h.Timeout = TimeSpan.FromSeconds(10)))
                     .GetTokenByPassword(new PasswordTokenRequest {Name = name, Password = pwd}, time, hash);
                 Session.Current = Session.Parse(pwd, token);
             }
@@ -89,7 +90,8 @@ namespace Pixeval.Persisting
             try
             {
                 var token = await RestService.For<ITokenProtocol>(HttpClientFactory
-                        .PixivApi(ProtocolBase.OAuthBaseUrl, true).Apply(h => h.Timeout = TimeSpan.FromSeconds(10)))
+                                                                      .PixivApi(ProtocolBase.OAuthBaseUrl, true)
+                                                                      .Apply(h => h.Timeout = TimeSpan.FromSeconds(10)))
                     .RefreshToken(new RefreshTokenRequest {RefreshToken = refreshToken});
                 Session.Current = Session.Parse(Session.Current.Password, token);
             }
@@ -114,7 +116,8 @@ namespace Pixeval.Persisting
             // create https reverse proxy server for intercepting and forwarding https traffic,
             // default port is 1234
             using var proxyServer = HttpsProxyServer.Create("127.0.0.1", 1234,
-                (await new PixivApiDnsResolver().Lookup("pixiv.net"))[0].ToString(), certificate);
+                                                            (await new PixivApiDnsResolver().Lookup("pixiv.net"))[0]
+                                                            .ToString(), certificate);
             // create pac file server for providing the proxy-auto-configuration file,
             // which is driven by EmbedIO, this is because CefSharp do not accept file uri,
             // default port is 4321
@@ -154,7 +157,7 @@ namespace Pixeval.Persisting
                         cancellationTokenSource.Cancel();
                         chrome.Dispatcher.Invoke(() =>
                         {
-                            MessageBox.Show("本次登录需要手动通过验证码");
+                            MessageBox.Show(AkaI18N.ThisLoginSessionRequiresRecaptcha);
                             SignIn.Instance.BrowserDialog.IsOpen = true;
                         });
                     }
@@ -166,9 +169,9 @@ namespace Pixeval.Persisting
             // has a form like "numbers_hash"
             static bool PixivCookieRecorded(Cookie cookie)
             {
-                return Regex.IsMatch(cookie.Domain, @".*\.pixiv\.net")
-                       && cookie.Name == "PHPSESSID"
-                       && Regex.IsMatch(cookie.Value, @"\d+_.*");
+                return Regex.IsMatch(cookie.Domain, @".*\.pixiv\.net") &&
+                    cookie.Name == "PHPSESSID" &&
+                    Regex.IsMatch(cookie.Value, @"\d+_.*");
             }
 
             // create an asynchronous polling task while the authenticate process is running,
@@ -178,7 +181,7 @@ namespace Pixeval.Persisting
                 var visitor = new TaskCookieVisitor();
                 Cef.GetGlobalCookieManager().VisitAllCookies(visitor);
                 return (await visitor.Task).Any(PixivCookieRecorded);
-            }, 500, TimeSpan.FromSeconds(100));
+            }, 500, TimeSpan.FromMinutes(3));
 
             // check if we have got the Cookie when the time limit is exceeded, return successfully
             // if it does, otherwise throw an exception

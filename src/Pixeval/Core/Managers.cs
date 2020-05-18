@@ -43,11 +43,10 @@ namespace Pixeval.Core
 
         public static void EnqueueDownloadItem(Illustration illustration)
         {
-            if (Downloading.Any(i => illustration.Id == i.DownloadContent.Id))
-                return;
+            if (Downloading.Any(i => illustration.Id == i.DownloadContent.Id)) return;
 
             static DownloadableIllustration CreateDownloadableIllustration(Illustration downloadContent,
-                bool isFromMange, int index = -1)
+                                                                           bool isFromMange, int index = -1)
             {
                 var model = new DownloadableIllustration(downloadContent, isFromMange, index);
                 model.DownloadStat.ValueChanged += (sender, args) => Application.Current.Dispatcher.Invoke(() =>
@@ -58,20 +57,20 @@ namespace Pixeval.Core
                             model.Freeze();
                             Downloading.Remove(model);
                             if (Downloaded.All(i =>
-                                model.DownloadContent.GetDownloadUrl() != i.DownloadContent.GetDownloadUrl()))
+                                                   model.DownloadContent.GetDownloadUrl() !=
+                                                   i.DownloadContent.GetDownloadUrl()))
                                 Downloaded.Add(model);
                             break;
                         case DownloadStatEnum.Downloading:
                             Downloaded.Remove(model);
                             Downloading.Add(model);
                             break;
-                        case var stat when stat == DownloadStatEnum.Canceled || stat == DownloadStatEnum.Queue ||
-                                           stat == DownloadStatEnum.Exceptional:
-                            if (stat == DownloadStatEnum.Canceled)
-                                Downloading.Remove(model);
+                        case var stat when stat == DownloadStatEnum.Canceled ||
+                            stat == DownloadStatEnum.Queue ||
+                            stat == DownloadStatEnum.Exceptional:
+                            if (stat == DownloadStatEnum.Canceled) Downloading.Remove(model);
                             break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
+                        default: throw new ArgumentOutOfRangeException();
                     }
                 });
                 return model;
@@ -84,7 +83,8 @@ namespace Pixeval.Core
                     Task.Run(
                         () => CreateDownloadableIllustration(illustration.MangaMetadata[cpy], true, cpy).Download());
                 }
-            else Task.Run(() => CreateDownloadableIllustration(illustration, false).Download());
+            else
+                Task.Run(() => CreateDownloadableIllustration(illustration, false).Download());
         }
     }
 

@@ -23,6 +23,10 @@ using System.Threading.Tasks;
 
 namespace Pixeval.Core
 {
+    /// <summary>
+    ///     Provide a set of functions that support iterate an <see cref="IPixivAsyncEnumerable{T}" />
+    /// </summary>
+    /// <typeparam name="T">the correspond data type</typeparam>
     public abstract class AbstractPixivAsyncEnumerator<T> : IAsyncEnumerator<T>
     {
         protected IPixivAsyncEnumerable<T> Enumerable;

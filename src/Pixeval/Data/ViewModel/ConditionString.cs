@@ -25,7 +25,8 @@ namespace Pixeval.Data.ViewModel
     [AddINotifyPropertyChangedInterface]
     public class ConditionString
     {
-        [DoNotNotify] public static ConditionString Shared = new ConditionString();
+        [DoNotNotify]
+        public static ConditionString Shared = new ConditionString();
 
         public string Condition { get; set; }
     }

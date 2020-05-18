@@ -59,8 +59,7 @@ namespace Pixeval.Objects.Caching
 
         public override bool Equals(object? obj)
         {
-            if (obj is WeakEntry<T> weakEntry)
-                return Equals(weakEntry);
+            if (obj is WeakEntry<T> weakEntry) return Equals(weakEntry);
             return false;
         }
 

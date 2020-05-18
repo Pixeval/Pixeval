@@ -30,7 +30,7 @@ namespace Pixeval.Data.Web.Protocol
     {
         [Post("/v1/illust/bookmark/delete")]
         Task DeleteBookmark([Body(BodySerializationMethod.UrlEncoded)]
-            DeleteBookmarkRequest deleteBookmarkRequest);
+                            DeleteBookmarkRequest deleteBookmarkRequest);
 
         [Get("/v1/user/detail")]
         Task<UserInformationResponse> GetUserInformation(UserInformationRequest userInformationRequest);
@@ -40,18 +40,18 @@ namespace Pixeval.Data.Web.Protocol
 
         [Post("/v1/user/follow/add")]
         Task FollowArtist([Body(BodySerializationMethod.UrlEncoded)]
-            FollowArtistRequest followArtistRequest);
+                          FollowArtistRequest followArtistRequest);
 
         [Post("/v1/user/follow/delete")]
         Task UnFollowArtist([Body(BodySerializationMethod.UrlEncoded)]
-            UnFollowArtistRequest unFollowArtistRequest);
+                            UnFollowArtistRequest unFollowArtistRequest);
 
         [Get("/v1/ugoira/metadata")]
         Task<UgoiraMetadataResponse> GetUgoiraMetadata([AliasAs("illust_id")] string id);
 
         [Post("/v2/illust/bookmark/add")]
         Task AddBookmark([Body(BodySerializationMethod.UrlEncoded)]
-            AddBookmarkRequest addBookmarkRequest);
+                         AddBookmarkRequest addBookmarkRequest);
 
         [Get("/v2/search/autocomplete")]
         Task<AutoCompletionResponse> GetAutoCompletion(AutoCompletionRequest autoCompletionRequest);

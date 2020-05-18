@@ -40,7 +40,7 @@ namespace Pixeval
 
         public static readonly string ProjectFolder =
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                AppIdentifier.ToLower());
+                         AppIdentifier.ToLower());
 
         public static readonly string ConfFolder = ProjectFolder;
 
@@ -48,13 +48,15 @@ namespace Pixeval
 
         public static readonly string ExceptionReportFolder = Path.Combine(ProjectFolder, "crash-reports");
 
+        public static readonly string InterchangeFolder = Path.Combine(ProjectFolder, "interchange");
+
         public static readonly string CacheFolder = Path.Combine(ProjectFolder, "cache");
 
         public static readonly string ResourceFolder =
-            Path.Combine(Path.GetDirectoryName(typeof(App).Assembly.Location), "Resource");
+            Path.Combine(Path.GetDirectoryName(typeof(App).Assembly.Location)!, "Resource");
 
         public static readonly string PermanentlyFolder =
-            Path.Combine(Path.GetDirectoryName(typeof(App).Assembly.Location), "Permanent");
+            Path.Combine(Path.GetDirectoryName(typeof(App).Assembly.Location)!, "Permanent");
 
         public static readonly string BrowseHistoryDatabase = Path.Combine(ProjectFolder, "history.db");
 

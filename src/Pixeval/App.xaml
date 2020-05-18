@@ -13,11 +13,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
--->
+along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
 
-<Application x:Class="Pixeval.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<Application x:Class="Pixeval.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
@@ -39,8 +37,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             <system:Double x:Key="Two">
                 2
             </system:Double>
-            <CubicEase x:Key="CubicEase"
-                       EasingMode="EaseOut" />
+            <CubicEase x:Key="CubicEase" EasingMode="EaseOut" />
             <valueConverters:EnumToStringConverter x:Key="EnumToStringConverter" />
             <valueConverters:VisibleIfTrueConverter x:Key="VisibleIfTrueConverter" />
             <valueConverters:VisibleIfFalseConverter x:Key="VisibleIfFalseConverter" />
@@ -54,8 +51,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             <valueConverters:TrendsStatConverter x:Key="TrendsStatConverter" />
             <valueConverters:DateTimeConverter x:Key="DateTimeConverter" />
             <valueConverters:TagMatchEnumToModelConverter x:Key="TagMatchEnumToModelConverter" />
-            <Style x:Key="RoundedCornerProgressBar"
-                   TargetType="{x:Type ProgressBar}">
+            <Style x:Key="RoundedCornerProgressBar" TargetType="{x:Type ProgressBar}">
                 <Setter Property="Foreground" Value="{DynamicResource PrimaryHueDarkBrush}" />
                 <Setter Property="Background" Value="{DynamicResource PrimaryHueLightBrush}" />
                 <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueLightBrush}" />
@@ -68,30 +64,23 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                 <Storyboard x:Key="OnLoaded">
                                     <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TemplateRoot"
                                                                    Storyboard.TargetProperty="(UIElement.Opacity)">
-                                        <EasingDoubleKeyFrame KeyTime="0"
-                                                              Value="0" />
-                                        <EasingDoubleKeyFrame KeyTime="0:0:1"
-                                                              Value="1" />
+                                        <EasingDoubleKeyFrame KeyTime="0" Value="0" />
+                                        <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1" />
                                     </DoubleAnimationUsingKeyFrames>
                                     <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TemplateRoot"
                                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
-                                        <EasingDoubleKeyFrame KeyTime="0"
-                                                              Value="0" />
-                                        <EasingDoubleKeyFrame KeyTime="0:0:1"
-                                                              Value="1" />
+                                        <EasingDoubleKeyFrame KeyTime="0" Value="0" />
+                                        <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1" />
                                     </DoubleAnimationUsingKeyFrames>
                                     <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TemplateRoot"
                                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
-                                        <EasingDoubleKeyFrame KeyTime="0"
-                                                              Value="0" />
-                                        <EasingDoubleKeyFrame KeyTime="0:0:1"
-                                                              Value="1" />
+                                        <EasingDoubleKeyFrame KeyTime="0" Value="0" />
+                                        <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1" />
                                     </DoubleAnimationUsingKeyFrames>
                                 </Storyboard>
                                 <Storyboard x:Key="OnLoadedNoAnimation">
                                     <DoubleAnimation Storyboard.TargetName="TemplateRoot"
-                                                     Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                     To="1"
+                                                     Storyboard.TargetProperty="(UIElement.Opacity)" To="1"
                                                      Duration="0" />
                                     <DoubleAnimation Storyboard.TargetName="TemplateRoot"
                                                      Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)"
@@ -103,9 +92,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                                      Duration="0" />
                                 </Storyboard>
                             </ControlTemplate.Resources>
-                            <Grid x:Name="TemplateRoot"
-                                  Opacity="0"
-                                  RenderTransformOrigin="0,0.5">
+                            <Grid x:Name="TemplateRoot" Opacity="0" RenderTransformOrigin="0,0.5">
                                 <Grid.RenderTransform>
                                     <TransformGroup>
                                         <ScaleTransform ScaleX="0" ScaleY="0" />
@@ -119,18 +106,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                         BorderThickness="{TemplateBinding BorderThickness}"
                                         CornerRadius="3" />
                                 <Rectangle x:Name="PART_Track" />
-                                <Grid x:Name="PART_Indicator"
-                                      HorizontalAlignment="Left"
-                                      ClipToBounds="true">
+                                <Grid x:Name="PART_Indicator" HorizontalAlignment="Left" ClipToBounds="true">
                                     <Rectangle x:Name="Indicator"
                                                Fill="{TemplateBinding Foreground}"
-                                               RadiusX="3"
-                                               RadiusY="3" />
+                                               RadiusX="3" RadiusY="3" />
                                     <Rectangle x:Name="Animation"
                                                Fill="{TemplateBinding Foreground}"
-                                               RadiusX="3"
-                                               RadiusY="3"
-                                               RenderTransformOrigin="0.5,0.5">
+                                               RadiusX="3" RadiusY="3" RenderTransformOrigin="0.5,0.5">
                                         <Rectangle.RenderTransform>
                                             <TransformGroup>
                                                 <ScaleTransform />
@@ -148,21 +130,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                             <Storyboard RepeatBehavior="Forever">
                                                 <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Animation"
                                                                                Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
-                                                    <EasingDoubleKeyFrame KeyTime="0"
-                                                                          Value="0.25" />
-                                                    <EasingDoubleKeyFrame KeyTime="0:0:1"
-                                                                          Value="0.25" />
-                                                    <EasingDoubleKeyFrame KeyTime="0:0:2"
-                                                                          Value="0.25" />
+                                                    <EasingDoubleKeyFrame KeyTime="0" Value="0.25" />
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:1" Value="0.25" />
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:2" Value="0.25" />
                                                 </DoubleAnimationUsingKeyFrames>
                                                 <PointAnimationUsingKeyFrames Storyboard.TargetName="Animation"
                                                                               Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)">
-                                                    <EasingPointKeyFrame KeyTime="0"
-                                                                         Value="-0.5,0.5" />
-                                                    <EasingPointKeyFrame KeyTime="0:0:1"
-                                                                         Value="0.5,0.5" />
-                                                    <EasingPointKeyFrame KeyTime="0:0:2"
-                                                                         Value="1.5,0.5" />
+                                                    <EasingPointKeyFrame KeyTime="0" Value="-0.5,0.5" />
+                                                    <EasingPointKeyFrame KeyTime="0:0:1" Value="0.5,0.5" />
+                                                    <EasingPointKeyFrame KeyTime="0:0:2" Value="1.5,0.5" />
                                                 </PointAnimationUsingKeyFrames>
                                             </Storyboard>
                                         </VisualState>
@@ -208,22 +184,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     </Setter.Value>
                 </Setter>
             </Style>
-            <Style x:Key="ScrollThumbs"
-                   TargetType="{x:Type Thumb}">
+            <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Thumb}">
                             <Grid x:Name="Grid">
-                                <Rectangle Width="Auto"
-                                           Height="Auto"
-                                           HorizontalAlignment="Stretch"
-                                           VerticalAlignment="Stretch"
-                                           Fill="Transparent" />
-                                <Border x:Name="Rectangle1"
-                                        Width="Auto"
-                                        Height="Auto"
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Stretch"
+                                <Rectangle Width="Auto" Height="Auto" HorizontalAlignment="Stretch"
+                                           VerticalAlignment="Stretch" Fill="Transparent" />
+                                <Border x:Name="Rectangle1" Width="Auto" Height="Auto"
+                                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                         Background="{TemplateBinding Background}"
                                         CornerRadius="5" />
                             </Grid>
@@ -237,8 +206,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     </Setter.Value>
                 </Setter>
             </Style>
-            <Style x:Key="{x:Type ScrollBar}"
-                   TargetType="{x:Type ScrollBar}">
+            <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
                 <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
                 <Setter Property="Foreground" Value="#8C8C8C" />
                 <Setter Property="Background" Value="Transparent" />
@@ -246,15 +214,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ScrollBar}">
-                            <Grid x:Name="GridRoot"
-                                  Width="8"
+                            <Grid x:Name="GridRoot" Width="8"
                                   Background="{TemplateBinding Background}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="0.00001*" />
                                 </Grid.RowDefinitions>
-                                <Track x:Name="PART_Track"
-                                       Grid.Row="0"
-                                       Focusable="false"
+                                <Track x:Name="PART_Track" Grid.Row="0" Focusable="false"
                                        IsDirectionReversed="true">
                                     <Track.Thumb>
                                         <Thumb x:Name="Thumb"
@@ -262,14 +227,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                                Style="{DynamicResource ScrollThumbs}" />
                                     </Track.Thumb>
                                     <Track.IncreaseRepeatButton>
-                                        <RepeatButton x:Name="PageUp"
-                                                      Command="ScrollBar.PageDownCommand"
+                                        <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand"
                                                       Focusable="false"
                                                       Opacity="0" />
                                     </Track.IncreaseRepeatButton>
                                     <Track.DecreaseRepeatButton>
-                                        <RepeatButton x:Name="PageDown"
-                                                      Command="ScrollBar.PageUpCommand"
+                                        <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand"
                                                       Focusable="false"
                                                       Opacity="0" />
                                     </Track.DecreaseRepeatButton>
@@ -309,8 +272,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     </Setter.Value>
                 </Setter>
             </Style>
-            <Style x:Key="ReleaseImageStyle"
-                   TargetType="Image">
+            <Style x:Key="ReleaseImageStyle" TargetType="Image">
                 <Style.Triggers>
                     <Trigger Property="IsVisible" Value="False">
                         <Setter Property="Source" Value="{x:Null}" />

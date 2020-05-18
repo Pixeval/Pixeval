@@ -48,7 +48,7 @@ namespace Pixeval.Data.Web.Delegation
         protected abstract DnsResolver DnsResolver { get; set; }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
-            CancellationToken cancellationToken)
+                                                                     CancellationToken cancellationToken)
         {
             requestHandler?.Handle(request);
 

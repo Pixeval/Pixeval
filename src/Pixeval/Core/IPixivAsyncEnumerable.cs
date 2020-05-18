@@ -22,14 +22,35 @@ using System.Collections.Generic;
 
 namespace Pixeval.Core
 {
+    /// <summary>
+    ///     A base class provides several functions to browse the Pixiv content
+    /// </summary>
+    /// <typeparam name="T">the correspond data type</typeparam>
     public interface IPixivAsyncEnumerable<T> : IAsyncEnumerable<T>, ICancellable
     {
+        /// <summary>
+        ///     Indicates how many pages have been requested
+        /// </summary>
         int RequestedPages { get; }
 
+        /// <summary>
+        ///     Basically, this method SHOULD increase the value of <see cref="RequestedPages" />
+        /// </summary>
         void ReportRequestedPages();
 
+        /// <summary>
+        ///     Tell the <see cref="IPixivAsyncEnumerable{T}" /> how to insert current element to a <see cref="IList{T}" />
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="collection"></param>
         void InsertionPolicy(T item, IList<T> collection);
 
+        /// <summary>
+        ///     Indicate that does the item has the rationality to be inserted to the <see cref="IList{T}" />
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="collection"></param>
+        /// <returns></returns>
         bool VerifyRationality(T item, IList<T> collection);
     }
 }

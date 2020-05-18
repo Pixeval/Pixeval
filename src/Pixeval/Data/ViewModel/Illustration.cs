@@ -92,7 +92,8 @@ namespace Pixeval.Data.ViewModel
         {
             if (x == null || y == null) return 0;
 
-            return x.Bookmark < y.Bookmark ? 1 : x.Bookmark == y.Bookmark ? 0 : -1;
+            return x.Bookmark < y.Bookmark ? 1 :
+                x.Bookmark == y.Bookmark   ? 0 : -1;
         }
     }
 
@@ -103,7 +104,8 @@ namespace Pixeval.Data.ViewModel
         public int Compare(Illustration x, Illustration y)
         {
             if (x == null || y == null) return 0;
-            return x.PublishDate < y.PublishDate ? 1 : x.PublishDate == y.PublishDate ? 0 : -1;
+            return x.PublishDate < y.PublishDate ? 1 :
+                x.PublishDate == y.PublishDate   ? 0 : -1;
         }
     }
 }

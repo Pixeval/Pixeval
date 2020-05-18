@@ -24,6 +24,7 @@ namespace Pixeval.Data.Web.Request
 {
     public class UnFollowArtistRequest
     {
-        [AliasAs("user_id")] public string UserId { get; set; }
+        [AliasAs("user_id")]
+        public string UserId { get; set; }
     }
 }

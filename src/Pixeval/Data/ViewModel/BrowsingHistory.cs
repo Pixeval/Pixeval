@@ -26,7 +26,9 @@ namespace Pixeval.Data.ViewModel
     [AddINotifyPropertyChangedInterface]
     public class BrowsingHistory
     {
-        [PrimaryKey] [AutoIncrement] public int Index { get; set; }
+        [PrimaryKey]
+        [AutoIncrement]
+        public int Index { get; set; }
 
         /// <summary>
         ///     represents the string form of the <see cref="BrowsingHistory" />, by default, it is the name/title

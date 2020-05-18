@@ -34,10 +34,10 @@ namespace Pixeval.Objects.ValueConverters
             if (value is TrendType obj)
                 return obj switch
                 {
-                    TrendType.AddIllust => AkaI18N.TrendsAddIllust,
+                    TrendType.AddIllust   => AkaI18N.TrendsAddIllust,
                     TrendType.AddBookmark => AkaI18N.TrendsAddBookmark,
                     TrendType.AddFavorite => AkaI18N.TrendsAddFavorite,
-                    _ => string.Empty
+                    _                     => string.Empty
                 };
 
             return string.Empty;

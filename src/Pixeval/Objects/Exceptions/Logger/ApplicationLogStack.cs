@@ -53,14 +53,14 @@ namespace Pixeval.Objects.Exceptions.Logger
         private string GetFirstMatchRecord()
         {
             var query = new EventLogQuery("Application", PathType.LogName,
-                $"*[System/Level=2] and *[System/Provider/@Name=\"{provider}\"]") {ReverseDirection = true};
+                                          $"*[System/Level=2] and *[System/Provider/@Name=\"{provider}\"]")
+                {ReverseDirection = true};
             var reader = new EventLogReader(query);
             EventRecord record;
             while ((record = reader.ReadEvent()) != null)
             {
                 var doc = record.ToXml();
-                if (doc.Contains(id, StringComparison.OrdinalIgnoreCase))
-                    return doc;
+                if (doc.Contains(id, StringComparison.OrdinalIgnoreCase)) return doc;
             }
 
             return null;

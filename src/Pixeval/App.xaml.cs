@@ -21,6 +21,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -65,7 +66,7 @@ namespace Pixeval
 #if RELEASE
             ExceptionDumper.WriteException(e);
 #elif DEBUG
-            MessageBox.Show(e.ToString());
+            throw e;
 #endif
         }
 
@@ -87,6 +88,7 @@ namespace Pixeval
             await CheckUpdate();
 
             // This initializations are for PROCESS COMMUNICATION AND PLUGGABLE PROTOCOL
+            await InstallPluggableProtocolHandler();
             CreatePluggableProtocolRegistry();
             PluggableProtocolListener.StartServer();
 
@@ -95,21 +97,49 @@ namespace Pixeval
             base.OnStartup(e);
         }
 
+        private static async Task InstallPluggableProtocolHandler()
+        {
+            var files = Directory.GetFiles(AppContext.InterchangeFolder);
+            if (!(files.Any(f => f[(f.LastIndexOf(@"\", StringComparison.Ordinal) + 1)..] ==
+                                "Pixeval.Interchange.runtimeconfig.json") &&
+                files.Any(f => f[(f.LastIndexOf(@"\", StringComparison.Ordinal) + 1)..] == "Pixeval.Interchange.exe") &&
+                files.Any(f => f[(f.LastIndexOf(@"\", StringComparison.Ordinal) + 1)..] == "Pixeval.Interchange.dll")))
+            {
+                foreach (var file in files) File.Delete(file);
+                if (GetResourceStream(
+                        new Uri("pack://application:,,,/Pixeval;component/Resources/interchange.zip")) is { }
+                    streamResourceInfo)
+                {
+                    var interchange = Path.Combine(AppContext.InterchangeFolder, "interchange.zip");
+                    await using (var fs =
+                        new FileStream(interchange, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
+                    {
+                        await streamResourceInfo.Stream.CopyToAsync(fs);
+                    }
+
+                    ZipFile.ExtractToDirectory(interchange, AppContext.InterchangeFolder, true);
+                    File.Delete(Path.Combine(AppContext.InterchangeFolder, "interchange.zip"));
+                }
+            }
+        }
+
         private static void WriteToCurrentUserPathVariable()
         {
-            var target = EnvironmentVariableTarget.User;
-            var pathOld = Environment.GetEnvironmentVariable("PATH", target);
+            var pathOld = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User);
             if (pathOld == null)
             {
-                target = EnvironmentVariableTarget.Machine;
-                Environment.GetEnvironmentVariable("PATH", target);
+                Environment.SetEnvironmentVariable("PATH", "", EnvironmentVariableTarget.User);
+                pathOld = "";
             }
 
-            var paths = pathOld!.Split(';');
+            var paths = pathOld.Split(';').ToList();
             var location = Path.GetDirectoryName(typeof(App).Assembly.Location);
             if (paths.All(p => p != location))
-                Environment.SetEnvironmentVariable("PATH",
-                    pathOld.EndsWith(';') ? pathOld + location : $"{pathOld};{location}", target);
+            {
+                paths.RemoveAll(p => p.ToLower().Contains("pixeval"));
+                var newPath = paths.Join(';') + ';' + location;
+                Environment.SetEnvironmentVariable("PATH", newPath, EnvironmentVariableTarget.User);
+            }
         }
 
         private static void InitializeFolders()
@@ -119,6 +149,7 @@ namespace Pixeval
             Directory.CreateDirectory(AppContext.ExceptionReportFolder);
             Directory.CreateDirectory(AppContext.ResourceFolder);
             Directory.CreateDirectory(AppContext.PermanentlyFolder);
+            Directory.CreateDirectory(AppContext.InterchangeFolder);
         }
 
         private static void CreatePluggableProtocolRegistry()
@@ -133,7 +164,7 @@ namespace Pixeval
                 using var shellKey = rootKey.CreateSubKey("shell\\open\\command");
                 if (shellKey == null) throw new InvalidOperationException(nameof(shellKey));
                 shellKey.SetValue("",
-                    $"{Path.Combine(AppContext.ProjectFolder, "Interchange", "Pixeval.Interchange.exe")} %1");
+                                  $"{Path.Combine(AppContext.InterchangeFolder, "Pixeval.Interchange.exe")} %1");
             }
 
             regKey?.Dispose();
@@ -144,7 +175,7 @@ namespace Pixeval
             if (Process.GetProcessesByName(AppContext.AppIdentifier).Length > 1)
             {
                 MessageBox.Show(AkaI18N.MultiplePixevalInstanceDetected, AkaI18N.MultiplePixevalInstanceDetectedTitle,
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                                MessageBoxButton.OK, MessageBoxImage.Error);
                 Environment.Exit(-1);
             }
         }
@@ -154,7 +185,7 @@ namespace Pixeval
             if (!CppRedistributableInstalled())
             {
                 MessageBox.Show(AkaI18N.CppRedistributableRequired, AkaI18N.CppRedistributableRequiredTitle,
-                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                                MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 Clipboard.SetText(
                     "https://support.microsoft.com/zh-cn/help/2977003/the-latest-supported-visual-c-downloads");
                 Environment.Exit(-1);
@@ -165,9 +196,10 @@ namespace Pixeval
         {
             if (await AppContext.UpdateAvailable())
                 if (MessageBox.Show(AkaI18N.PixevalUpdateAvailable, AkaI18N.PixevalUpdateAvailableTitle,
-                    MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+                                    MessageBoxButton.YesNo, MessageBoxImage.Information) ==
+                    MessageBoxResult.Yes)
                 {
-                    Process.Start(@"updater\Pixeval.AutoUpdater.exe");
+                    Process.Start(@"updater\Pixeval.Updater.exe");
                     Environment.Exit(0);
                 }
         }
@@ -208,10 +240,12 @@ namespace Pixeval
             if (!certificateManager.Query(StoreName.Root, StoreLocation.CurrentUser))
             {
                 if (MessageBox.Show(AkaI18N.CertificateInstallationIsRequired,
-                    AkaI18N.CertificateInstallationIsRequiredTitle, MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                                    AkaI18N.CertificateInstallationIsRequiredTitle, MessageBoxButton.YesNo,
+                                    MessageBoxImage.Warning) ==
+                    MessageBoxResult.Yes)
                     certificateManager.Install(StoreName.Root, StoreLocation.CurrentUser);
-                else Environment.Exit(-1);
+                else
+                    Environment.Exit(-1);
             }
         }
 
@@ -221,7 +255,7 @@ namespace Pixeval
             AppContext.DefaultCacheProvider = Settings.Global.CachingPolicy == CachingPolicy.Memory
                 ? (IWeakCacheProvider<BitmapImage, Illustration>) MemoryCache<BitmapImage, Illustration>.Shared
                 : new FileCache<BitmapImage, Illustration>(AppContext.CacheFolder, image => image.ToStream(),
-                    InternalIO.CreateBitmapImageFromStream);
+                                                           InternalIO.CreateBitmapImageFromStream);
             AppContext.DefaultCacheProvider.Clear();
             BrowsingHistoryAccessor.GlobalLifeTimeScope =
                 new BrowsingHistoryAccessor(200, AppContext.BrowseHistoryDatabase);
@@ -242,16 +276,16 @@ namespace Pixeval
             scriptBuilder.AppendLine("    return \"DIRECT\";");
             scriptBuilder.AppendLine("}");
             await File.WriteAllTextAsync(Path.Combine(AppContext.ResourceFolder, "pixeval_pac.pac"),
-                scriptBuilder.ToString());
+                                         scriptBuilder.ToString());
         }
 
         protected override async void OnExit(ExitEventArgs e)
         {
-            PluggableProtocolListener.StopServer();
             CertificateManager.GetFakeCaRootCertificate().Dispose();
             CertificateManager.GetFakeServerCertificate().Dispose();
             await Settings.Global.Store();
-            if (Session.Current != null && !Session.Current.AccessToken.IsNullOrEmpty() &&
+            if (Session.Current != null &&
+                !Session.Current.AccessToken.IsNullOrEmpty() &&
                 !Session.Current.PhpSessionId.IsNullOrEmpty())
                 await Session.Current.Store();
             if (File.Exists(AppContext.BrowseHistoryDatabase))

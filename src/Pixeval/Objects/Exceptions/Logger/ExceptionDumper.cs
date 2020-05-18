@@ -89,7 +89,8 @@ namespace Pixeval.Objects.Exceptions.Logger
             sb.AppendLine(@"End Debugging Information Collection");
             await File.WriteAllTextAsync(
                 Path.Combine(AppContext.ExceptionReportFolder,
-                    $"{DateTime.Now.ToString(CultureInfo.InvariantCulture)}.txt".Replace("/", "-").Replace(":", "-")),
+                             $"{DateTime.Now.ToString(CultureInfo.InvariantCulture)}.txt".Replace("/", "-")
+                                 .Replace(":", "-")),
                 sb.ToString());
         }
 

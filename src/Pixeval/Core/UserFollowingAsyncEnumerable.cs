@@ -66,7 +66,7 @@ namespace Pixeval.Core
             private IEnumerator<User> followerEnumerator;
 
             public UserFollowingAsyncEnumerator(IPixivAsyncEnumerable<User> enumerable, string userId,
-                RestrictPolicy restrictPolicy) : base(enumerable)
+                                                RestrictPolicy restrictPolicy) : base(enumerable)
             {
                 this.userId = userId;
                 this.restrictPolicy = restrictPolicy;
@@ -91,9 +91,9 @@ namespace Pixeval.Core
                 {
                     if (await TryGetResponse(restrictPolicy switch
                     {
-                        RestrictPolicy.Public => $"/v1/user/following?user_id={userId}&restrict=public",
+                        RestrictPolicy.Public  => $"/v1/user/following?user_id={userId}&restrict=public",
                         RestrictPolicy.Private => $"/v1/user/following?user_id={userId}&restrict=private",
-                        _ => throw new ArgumentOutOfRangeException()
+                        _                      => throw new ArgumentOutOfRangeException()
                     }) is (true, var model))
                     {
                         entity = model;

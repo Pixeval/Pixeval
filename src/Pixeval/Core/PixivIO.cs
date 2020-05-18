@@ -69,15 +69,14 @@ namespace Pixeval.Core
         }
 
         public static async Task<MemoryStream> Download(string url, IProgress<double> progress,
-            CancellationToken cancellationToken = default)
+                                                        CancellationToken cancellationToken = default)
         {
             using var response =
                 await HttpClientFactory.GetResponseHeader(
                     HttpClientFactory.PixivImage().Apply(_ => _.Timeout = TimeSpan.FromSeconds(30)), url);
 
             var contentLength = response.Content.Headers.ContentLength;
-            if (!contentLength.HasValue)
-                return new MemoryStream(await GetBytes(url));
+            if (!contentLength.HasValue) return new MemoryStream(await GetBytes(url));
 
             response.EnsureSuccessStatusCode();
 
@@ -87,7 +86,7 @@ namespace Pixeval.Core
             var memoryStream = new MemoryStream();
             await using var contentStream = await response.Content.ReadAsStreamAsync();
             while ((bytesRead = await contentStream.ReadAsync(byteBuffer, 0, byteBuffer.Length, cancellationToken)) !=
-                   0)
+                0)
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 totalRead += bytesRead;

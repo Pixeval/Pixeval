@@ -29,7 +29,11 @@ using Pixeval.Objects.Generic;
 
 namespace Pixeval.Core
 {
-    // https://docs.microsoft.com/en-us/windows/apps/desktop/modernize/modernize-wpf-tutorial-4
+    /// <summary>
+    ///     Provides a set of functions to create a Windows 10 Timeline Activity,
+    ///     for more information and underlying implementation, see
+    ///     <a href="https://docs.microsoft.com/en-us/windows/apps/desktop/modernize/modernize-wpf-tutorial-4" />
+    /// </summary>
     public class WindowsUserActivityManager : ITimelineService
     {
         public static readonly WindowsUserActivityManager GlobalLifeTimeScope = new WindowsUserActivityManager();
@@ -54,10 +58,10 @@ namespace Pixeval.Core
             userActivity.VisualElements.AttributionDisplayText = "Pixeval";
             userActivity.ActivationUri = new Uri(browsingHistory.Type switch
             {
-                "illust" => $"pixeval://www.pixiv.net/artworks/{model.Id}",
-                "user" => $"pixeval://www.pixiv.net/users/{model.Id}",
+                "illust"    => $"pixeval://www.pixiv.net/artworks/{model.Id}",
+                "user"      => $"pixeval://www.pixiv.net/users/{model.Id}",
                 "spotlight" => $"pixeval://www.pixivision.net/en/a/{model.Id}",
-                _ => throw new ArgumentException(nameof(browsingHistory.Type))
+                _           => throw new ArgumentException(nameof(browsingHistory.Type))
             });
             await userActivity.SaveAsync();
             userActivitySession?.Dispose();
@@ -135,7 +139,8 @@ namespace Pixeval.Core
             {
             }
 
-            [JsonProperty("backgroundImage")] public string StringifyUrl { get; set; }
+            [JsonProperty("backgroundImage")]
+            public string StringifyUrl { get; set; }
         }
     }
 }

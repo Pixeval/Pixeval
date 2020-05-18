@@ -44,13 +44,13 @@ namespace Pixeval.Data.Web.Delegation
         public static IAppApiProtocol AppApiService()
         {
             return RestService.For<IAppApiProtocol>(PixivApi(ProtocolBase.AppApiBaseUrl,
-                Settings.Global.DirectConnect));
+                                                             Settings.Global.DirectConnect));
         }
 
         public static IWebApiProtocol WebApiService()
         {
             return RestService.For<IWebApiProtocol>(PixivApi(ProtocolBase.WebApiBaseUrl,
-                Settings.Global.DirectConnect));
+                                                             Settings.Global.DirectConnect));
         }
 
         public static HttpClient PixivApi(string baseAddress, bool directConnect)

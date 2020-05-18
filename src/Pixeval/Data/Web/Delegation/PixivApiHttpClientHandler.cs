@@ -25,7 +25,7 @@ namespace Pixeval.Data.Web.Delegation
     public class PixivApiHttpClientHandler : DnsResolvedHttpClientHandler
     {
         private PixivApiHttpClientHandler(bool directConnect) : base(PixivAuthenticationHttpRequestHandler.Instance,
-            directConnect)
+                                                                     directConnect)
         {
         }
 

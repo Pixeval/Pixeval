@@ -49,7 +49,7 @@ namespace Pixeval.UI.UserControls
             using var fileDialog = new CommonOpenFileDialog(AkaI18N.PleaseSelectLocation)
             {
                 InitialDirectory = Settings.Global.DownloadLocation ??
-                                   Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
+                    Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
                 IsFolderPicker = true
             };
 
@@ -89,7 +89,9 @@ namespace Pixeval.UI.UserControls
         {
             AppContext.DefaultCacheProvider.Clear();
             AppContext.DefaultCacheProvider = new FileCache<BitmapImage, Illustration>(AppContext.CacheFolder,
-                image => image.ToStream(), InternalIO.CreateBitmapImageFromStream);
+                                                                                       image => image.ToStream(),
+                                                                                       InternalIO
+                                                                                           .CreateBitmapImageFromStream);
         }
 
         private void ChangeCachingPolicyToggleButton_OnUnchecked(object sender, RoutedEventArgs e)
@@ -102,8 +104,8 @@ namespace Pixeval.UI.UserControls
         {
             MainWindow.MessageQueue.Enqueue(AkaI18N.TryingToToggleR18Switch);
             MainWindow.MessageQueue.Enqueue(await PixivClient.Instance.ToggleWebApiR18State(true)
-                ? AkaI18N.ToggleR18OnSuccess
-                : AkaI18N.ToggleR18OnFailed);
+                                                ? AkaI18N.ToggleR18OnSuccess
+                                                : AkaI18N.ToggleR18OnFailed);
         }
     }
 }

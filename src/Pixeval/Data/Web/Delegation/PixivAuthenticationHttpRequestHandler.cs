@@ -59,13 +59,13 @@ namespace Pixeval.Data.Web.Delegation
                             $"{nameof(Session.Current.PhpSessionId)} is empty, this exception should never be thrown, if you see this message, please send issue on github or contact me (decem0730@gmail.com)");
 
                     httpRequestMessage.Headers.TryAddWithoutValidation("Cookie",
-                        $"PHPSESSID={Session.Current.PhpSessionId}");
+                                                                       $"PHPSESSID={Session.Current.PhpSessionId}");
                     break;
             }
 
             if (!httpRequestMessage.Headers.Contains("Accept-Language"))
                 httpRequestMessage.Headers.TryAddWithoutValidation("Accept-Language",
-                    AkaI18N.GetCultureAcceptLanguage());
+                                                                   AkaI18N.GetCultureAcceptLanguage());
         }
     }
 }

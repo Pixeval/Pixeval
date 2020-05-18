@@ -27,9 +27,11 @@ namespace Pixeval.Persisting.WebApi
     public class BypassProxyResourceRequestHandler : ResourceRequestHandler
     {
         protected override CefReturnValue OnBeforeResourceLoad(IWebBrowser chromiumWebBrowser, IBrowser browser,
-            IFrame frame, IRequest request, IRequestCallback callback)
+                                                               IFrame frame, IRequest request,
+                                                               IRequestCallback callback)
         {
-            if (request.Url.Contains("Twitter", StringComparison.Ordinal) || request.Url.EndsWith("png") ||
+            if (request.Url.Contains("Twitter", StringComparison.Ordinal) ||
+                request.Url.EndsWith("png") ||
                 request.Url.EndsWith("jpg"))
             {
                 callback.Continue(false);

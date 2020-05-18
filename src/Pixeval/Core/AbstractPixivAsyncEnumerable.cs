@@ -23,6 +23,11 @@ using System.Threading;
 
 namespace Pixeval.Core
 {
+    /// <summary>
+    ///     Abstract implementation of <see cref="IPixivAsyncEnumerable{T}" />, provides the default implementation of cancel a
+    ///     running <see cref="IPixivAsyncEnumerable{T}" /> instance
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class AbstractPixivAsyncEnumerable<T> : IPixivAsyncEnumerable<T>
     {
         protected bool IsCancelled { get; private set; }

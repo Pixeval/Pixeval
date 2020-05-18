@@ -85,15 +85,14 @@ namespace Pixeval.Core
         }
 
         public static async void Enumerate<T>(IPixivAsyncEnumerable<T> pixivIterator, IList<T> container,
-            int limit = -1)
+                                              int limit = -1)
         {
             EnumeratingSchedule.StartNewInstance(pixivIterator);
             var enumerator = EnumeratingSchedule.GetCurrentEnumerator<T>();
 
             await foreach (var illust in enumerator)
             {
-                if (enumerator.IsCancellationRequested() || limit != -1 && pixivIterator.RequestedPages > limit)
-                    break;
+                if (enumerator.IsCancellationRequested() || limit != -1 && pixivIterator.RequestedPages > limit) break;
                 if (pixivIterator.VerifyRationality(illust, container))
                     pixivIterator.InsertionPolicy(illust, container);
             }
@@ -101,28 +100,37 @@ namespace Pixeval.Core
 
         public static void RecordTimeline(ITimelineService service, BrowsingHistory browsingHistory)
         {
-            if (service.VerifyRationality(browsingHistory))
-                service.Insert(browsingHistory);
+            if (service.VerifyRationality(browsingHistory)) service.Insert(browsingHistory);
         }
 
         public static void RecordTimelineInternal(BrowsingHistory browsingHistory)
         {
             RecordTimeline(WindowsUserActivityManager.GlobalLifeTimeScope, browsingHistory);
-            RecordTimeline(BrowsingHistoryAccessor.GlobalLifeTimeScope, browsingHistory);
+            if (CheckWindowsVersion()) RecordTimeline(BrowsingHistoryAccessor.GlobalLifeTimeScope, browsingHistory);
+
+            static bool CheckWindowsVersion()
+            {
+                return
+                    Environment.OSVersion
+                        .Version >= /* Windows 10 April 2018 Update(a.k.a. Redstone 4), which is the version that release Windows Timeline feature */
+                    new Version(10, 0, 17134);
+            }
         }
 
         public static bool VerifyIllustRational(ISet<string> excludeTag, ISet<string> includeTag, int minBookmark,
-            Illustration illustration)
+                                                Illustration illustration)
         {
             if (illustration == null) return false;
             bool excludeMatch = true, includeMatch = true;
             if (!excludeTag.IsNullOrEmpty())
                 excludeMatch = excludeTag.All(x =>
-                    x.IsNullOrEmpty() || illustration.Tags.All(i => !i.Name.EqualsIgnoreCase(x)));
+                                                  x.IsNullOrEmpty() ||
+                                                  illustration.Tags.All(i => !i.Name.EqualsIgnoreCase(x)));
 
             if (!includeTag.IsNullOrEmpty())
                 includeMatch = includeTag.All(x =>
-                    x.IsNullOrEmpty() || illustration.Tags.Any(i => i.Name.EqualsIgnoreCase(x)));
+                                                  x.IsNullOrEmpty() ||
+                                                  illustration.Tags.Any(i => i.Name.EqualsIgnoreCase(x)));
 
             var minBookmarkMatch = illustration.Bookmark > minBookmark;
             return excludeMatch && includeMatch && minBookmarkMatch;

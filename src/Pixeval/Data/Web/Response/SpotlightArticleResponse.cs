@@ -25,20 +25,25 @@ namespace Pixeval.Data.Web.Response
 {
     public class SpotlightArticleResponse
     {
-        [JsonProperty("body")] public List<Body> BodyList { get; set; }
+        [JsonProperty("body")]
+        public List<Body> BodyList { get; set; }
 
         public class Body
         {
-            [JsonProperty("id")] public string Id { get; set; }
+            [JsonProperty("id")]
+            public string Id { get; set; }
 
-            [JsonProperty("title")] public string Title { get; set; }
+            [JsonProperty("title")]
+            public string Title { get; set; }
 
-            [JsonProperty("illusts")] public List<Illust> Illusts { get; set; }
+            [JsonProperty("illusts")]
+            public List<Illust> Illusts { get; set; }
         }
 
         public class Illust
         {
-            [JsonProperty("illust_id")] public long IllustId { get; set; }
+            [JsonProperty("illust_id")]
+            public long IllustId { get; set; }
         }
     }
 }

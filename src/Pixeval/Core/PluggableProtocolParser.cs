@@ -25,6 +25,7 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Html.Parser;
+using MahApps.Metro.Controls;
 using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Objects.Generic;
@@ -44,14 +45,21 @@ namespace Pixeval.Core
             Match match;
             if ((match = Regex.Match(url, IllustRegex)).Success)
             {
-                if (MainWindow.Instance.IllustBrowserDialogHost.IsOpen)
-                    MainWindow.Instance.IllustBrowserDialogHost.CurrentSession.Close();
-                MainWindow.Instance.OpenIllustBrowser(await PixivHelper.IllustrationInfo(match.Groups["id"].Value));
+                var i = MainWindow.Instance;
+                await i.Invoke(async () =>
+                {
+                    if (i.IllustBrowserDialogHost.IsOpen) i.IllustBrowserDialogHost.CurrentSession.Close();
+                    i.OpenIllustBrowser(await PixivHelper.IllustrationInfo(match.Groups["id"].Value), false);
+                });
             }
             else if ((match = Regex.Match(url, UserRegex)).Success)
             {
-                MainWindow.Instance.SetUserBrowserContext(new User {Id = match.Groups["id"].Value});
-                MainWindow.Instance.OpenUserBrowser();
+                var i = MainWindow.Instance;
+                i.Invoke(() =>
+                {
+                    i.SetUserBrowserContext(new User {Id = match.Groups["id"].Value});
+                    i.OpenUserBrowser();
+                });
             }
             else if ((match = Regex.Match(url, SpotlightRegex)).Success)
             {
@@ -71,7 +79,8 @@ namespace Pixeval.Core
                     {
                         if (e.StatusCode == HttpStatusCode.NotFound)
                             title = await TryGetSpotlightEnTitle(articleId);
-                        else throw;
+                        else
+                            throw;
                     }
 
                 var tasks = await Tasks<string, Illustration>.Of(await PixivClient.Instance.GetArticleWorks(articleId))
@@ -85,7 +94,9 @@ namespace Pixeval.Core
                     i.SpotlightTitle = title;
                 }).ToArray();
 
-                MainWindow.Instance.OpenIllustBrowser(result[0].Apply(r => r.MangaMetadata = result.ToArray()));
+                MainWindow.Instance.Invoke(() =>
+                                               MainWindow.Instance.OpenIllustBrowser(
+                                                   result[0].Apply(r => r.MangaMetadata = result.ToArray()), false));
 
                 static async Task<string> TryGetSpotlightEnTitle(string id)
                 {

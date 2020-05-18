@@ -107,10 +107,11 @@ namespace Pixeval.UI.UserControls
                 {
                     var userInfo = await HttpClientFactory.AppApiService()
                         .GetUserInformation(new UserInformationRequest {Id = Illust.UserId});
-                    if (Illust.UserId == MainWindow.Instance.IllustBrowserDialogHost.GetDataContext<Illustration>()
-                        .UserId)
+                    if (Illust.UserId ==
+                        MainWindow.Instance.IllustBrowserDialogHost.GetDataContext<Illustration>()
+                            .UserId)
                         SetImageSource(MainWindow.Instance.IllustBrowserUserAvatar,
-                            await PixivIO.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium));
+                                       await PixivIO.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium));
                     MainWindow.Instance.IllustBrowserDialogHost.DataContext = Illust;
                 });
             });

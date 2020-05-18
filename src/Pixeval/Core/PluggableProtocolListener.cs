@@ -22,6 +22,8 @@ using System.Threading.Tasks;
 using EmbedIO;
 using EmbedIO.Routing;
 using EmbedIO.WebApi;
+using Pixeval.Objects.Primitive;
+using Pixeval.UI;
 
 namespace Pixeval.Core
 {
@@ -30,6 +32,7 @@ namespace Pixeval.Core
         [Route(HttpVerbs.Post, "/open")]
         public async Task DoOpen()
         {
+            MainWindow.Instance.Dispatcher.Invoke(() => MainWindow.Instance.GlobalActivate());
             await PluggableProtocolParser.Parse(await HttpContext.GetRequestBodyAsStringAsync());
         }
     }
@@ -43,13 +46,6 @@ namespace Pixeval.Core
             _server = new WebServer(o => o.WithUrlPrefix("http://127.0.0.1:12547").WithMode(HttpListenerMode.Microsoft))
                 .WithWebApi("/", m => m.WithController<TransferController>());
             _server.Start();
-        }
-
-        public static void StopServer()
-        {
-            _server?.Listener.Stop();
-            _server?.Listener.Dispose();
-            _server?.Dispose();
         }
     }
 }

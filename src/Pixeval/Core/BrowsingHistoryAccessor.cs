@@ -28,9 +28,15 @@ using SQLite;
 
 namespace Pixeval.Core
 {
+    /// <summary>
+    ///     Manages the global browsing history which lives inside application
+    ///     the underlying implementation is sqlite database
+    /// </summary>
     public class BrowsingHistoryAccessor : ITimelineService, IDisposable
     {
         public static BrowsingHistoryAccessor GlobalLifeTimeScope;
+
+        // current browsing histories
         private readonly ObservableCollection<BrowsingHistory> delegation;
         private readonly string path;
         private readonly SQLiteConnection sqLiteConnection;
@@ -53,9 +59,11 @@ namespace Pixeval.Core
 
         public bool VerifyRationality(BrowsingHistory browsingHistory)
         {
+            // if current browsing history list has elements
             if (delegation.Any())
             {
                 var prev = delegation[0];
+                // check if the last one in the browsing history list is the same as the one to be insert, return false if so
                 if (prev.Type == browsingHistory.Type && prev.BrowseObjectId == browsingHistory.BrowseObjectId)
                     return false;
             }
@@ -65,11 +73,17 @@ namespace Pixeval.Core
 
         public void Insert(BrowsingHistory browsingHistory)
         {
+            // we can simply consider the browsing histories as a double-ended queue with limited capacity, we will pop the oldest one
+            // and insert a new one if the Deque is full
             if (delegation.Count >= stackLimit) delegation.Remove(delegation.Last());
 
             delegation.Insert(0, browsingHistory);
         }
 
+        /// <summary>
+        ///     If the database file is not present, we will urgently create one and
+        ///     write all the browsing histories that we have into it
+        /// </summary>
         public void EmergencyRewrite()
         {
             if (File.Exists(path)) throw new InvalidOperationException();
@@ -78,11 +92,19 @@ namespace Pixeval.Core
             sql.InsertAll(Get());
         }
 
+        /// <summary>
+        ///     Returns currently maintained browsing histories
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<BrowsingHistory> Get()
         {
             return delegation;
         }
 
+        /// <summary>
+        ///     Rewrite the local database, you muse call <see cref="SetWritable" />
+        ///     before call this method
+        /// </summary>
         public void Rewrite()
         {
             if (!writable) throw new InvalidOperationException();
@@ -91,6 +113,9 @@ namespace Pixeval.Core
             sqLiteConnection.InsertAll(delegation);
         }
 
+        /// <summary>
+        ///     Delete the local database
+        /// </summary>
         public void DropDb()
         {
             if (File.Exists(path)) File.Delete(path);

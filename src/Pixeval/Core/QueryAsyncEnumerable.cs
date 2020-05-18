@@ -41,7 +41,7 @@ namespace Pixeval.Core
         private readonly string tag;
 
         protected AbstractQueryAsyncEnumerable(string tag, SearchTagMatchOption matchOption, bool isPremium,
-            int start = 1)
+                                               int start = 1)
         {
             this.start = start < 1 ? 1 : start;
             this.tag = tag;
@@ -55,9 +55,10 @@ namespace Pixeval.Core
 
         public override bool VerifyRationality(Illustration item, IList<Illustration> collection)
         {
-            return item != null && collection.All(t => t.Id != item.Id) &&
-                   PixivHelper.VerifyIllustRational(Settings.Global.ExcludeTag, Settings.Global.IncludeTag,
-                       Settings.Global.MinBookmark, item);
+            return item != null &&
+                collection.All(t => t.Id != item.Id) &&
+                PixivHelper.VerifyIllustRational(Settings.Global.ExcludeTag, Settings.Global.IncludeTag,
+                                                 Settings.Global.MinBookmark, item);
         }
 
         public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = default)
@@ -77,7 +78,8 @@ namespace Pixeval.Core
             private IEnumerator<Illustration> illustrationsEnumerator;
 
             public QueryAsyncEnumerator(IPixivAsyncEnumerable<Illustration> enumerable, string keyword,
-                SearchTagMatchOption matchOption, int current, bool isPremium) : base(enumerable)
+                                        SearchTagMatchOption matchOption, int current, bool isPremium) : base(
+                enumerable)
             {
                 this.keyword = keyword;
                 this.matchOption = matchOption;
@@ -142,7 +144,7 @@ namespace Pixeval.Core
     public class PopularityQueryAsyncEnumerable : AbstractQueryAsyncEnumerable
     {
         public PopularityQueryAsyncEnumerable(string tag, SearchTagMatchOption matchOption, bool isPremium,
-            int start = 1) : base(tag, matchOption, isPremium, start)
+                                              int start = 1) : base(tag, matchOption, isPremium, start)
         {
         }
 
@@ -161,7 +163,7 @@ namespace Pixeval.Core
     public class PublishDateQueryAsyncEnumerable : AbstractQueryAsyncEnumerable
     {
         public PublishDateQueryAsyncEnumerable(string tag, SearchTagMatchOption matchOption, bool isPremium,
-            int start = 1) : base(tag, matchOption, isPremium, start)
+                                               int start = 1) : base(tag, matchOption, isPremium, start)
         {
         }
 

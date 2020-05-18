@@ -307,5 +307,8 @@ namespace Pixeval.Objects.I18n
         public static string PixevalUpdateAvailable => GetResource(nameof(PixevalUpdateAvailable));
 
         public static string PixevalUpdateAvailableTitle => GetResource(nameof(PixevalUpdateAvailableTitle));
+
+        public static string ThisLoginSessionRequiresRecaptcha =>
+            GetResource(nameof(ThisLoginSessionRequiresRecaptcha));
     }
 }

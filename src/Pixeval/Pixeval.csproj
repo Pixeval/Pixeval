@@ -22,6 +22,7 @@
   <ItemGroup>
     <None Remove="Objects\I18n\Xml\resx_en-us.xml" />
     <None Remove="Objects\I18n\Xml\resx_zh-cn.xml" />
+    <None Remove="Resources\interchange.zip" />
   </ItemGroup>
 
   <ItemGroup>
@@ -65,6 +66,7 @@
     <Resource Include="Resources\dqueue.ttf" />
     <Resource Include="Resources\iconfont.ttf" />
     <Resource Include="Resources\iconfontex.ttf" />
+    <Resource Include="Resources\interchange.zip" />
     <Resource Include="Resources\logo-only.svg" />
     <Resource Include="Resources\pixeval_ca.cer" />
     <Resource Include="Resources\pixeval_server_cert.pfx" />

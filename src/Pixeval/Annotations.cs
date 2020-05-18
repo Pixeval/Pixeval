@@ -47,9 +47,15 @@ namespace Pixeval
     /// </code>
     /// </example>
     [AttributeUsage(
-        AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
-        AttributeTargets.Delegate | AttributeTargets.Field | AttributeTargets.Event |
-        AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.GenericParameter)]
+        AttributeTargets.Method |
+        AttributeTargets.Parameter |
+        AttributeTargets.Property |
+        AttributeTargets.Delegate |
+        AttributeTargets.Field |
+        AttributeTargets.Event |
+        AttributeTargets.Class |
+        AttributeTargets.Interface |
+        AttributeTargets.GenericParameter)]
     public sealed class CanBeNullAttribute : Attribute
     {
     }
@@ -65,9 +71,15 @@ namespace Pixeval
     /// </code>
     /// </example>
     [AttributeUsage(
-        AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
-        AttributeTargets.Delegate | AttributeTargets.Field | AttributeTargets.Event |
-        AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.GenericParameter)]
+        AttributeTargets.Method |
+        AttributeTargets.Parameter |
+        AttributeTargets.Property |
+        AttributeTargets.Delegate |
+        AttributeTargets.Field |
+        AttributeTargets.Event |
+        AttributeTargets.Class |
+        AttributeTargets.Interface |
+        AttributeTargets.GenericParameter)]
     public sealed class NotNullAttribute : Attribute
     {
     }
@@ -89,8 +101,11 @@ namespace Pixeval
     /// </code>
     /// </example>
     [AttributeUsage(
-        AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
-        AttributeTargets.Delegate | AttributeTargets.Field)]
+        AttributeTargets.Method |
+        AttributeTargets.Parameter |
+        AttributeTargets.Property |
+        AttributeTargets.Delegate |
+        AttributeTargets.Field)]
     public sealed class ItemNotNullAttribute : Attribute
     {
     }
@@ -113,8 +128,11 @@ namespace Pixeval
     /// </code>
     /// </example>
     [AttributeUsage(
-        AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
-        AttributeTargets.Delegate | AttributeTargets.Field)]
+        AttributeTargets.Method |
+        AttributeTargets.Parameter |
+        AttributeTargets.Property |
+        AttributeTargets.Delegate |
+        AttributeTargets.Field)]
     public sealed class ItemCanBeNullAttribute : Attribute
     {
     }
@@ -135,8 +153,10 @@ namespace Pixeval
     /// </code>
     /// </example>
     [AttributeUsage(
-        AttributeTargets.Constructor | AttributeTargets.Method |
-        AttributeTargets.Property | AttributeTargets.Delegate)]
+        AttributeTargets.Constructor |
+        AttributeTargets.Method |
+        AttributeTargets.Property |
+        AttributeTargets.Delegate)]
     public sealed class StringFormatMethodAttribute : Attribute
     {
         /// <param name="formatParameterName">
@@ -147,7 +167,8 @@ namespace Pixeval
             FormatParameterName = formatParameterName;
         }
 
-        [NotNull] public string FormatParameterName { get; }
+        [NotNull]
+        public string FormatParameterName { get; }
     }
 
     /// <summary>
@@ -189,7 +210,8 @@ namespace Pixeval
             Name = name;
         }
 
-        [NotNull] public string Name { get; }
+        [NotNull]
+        public string Name { get; }
     }
 
     /// <summary>
@@ -279,7 +301,8 @@ namespace Pixeval
             ParameterName = parameterName;
         }
 
-        [CanBeNull] public string ParameterName { get; }
+        [CanBeNull]
+        public string ParameterName { get; }
     }
 
     /// <summary>
@@ -352,7 +375,8 @@ namespace Pixeval
             ForceFullStates = forceFullStates;
         }
 
-        [NotNull] public string Contract { get; }
+        [NotNull]
+        public string Contract { get; }
 
         public bool ForceFullStates { get; }
     }
@@ -432,7 +456,8 @@ namespace Pixeval
             BaseType = baseType;
         }
 
-        [NotNull] public Type BaseType { get; }
+        [NotNull]
+        public Type BaseType { get; }
     }
 
     /// <summary>
@@ -500,9 +525,11 @@ namespace Pixeval
             TargetFlags = targetFlags;
         }
 
-        [UsedImplicitly] public ImplicitUseKindFlags UseKindFlags { get; }
+        [UsedImplicitly]
+        public ImplicitUseKindFlags UseKindFlags { get; }
 
-        [UsedImplicitly] public ImplicitUseTargetFlags TargetFlags { get; }
+        [UsedImplicitly]
+        public ImplicitUseTargetFlags TargetFlags { get; }
     }
 
     /// <summary>
@@ -563,7 +590,8 @@ namespace Pixeval
             Comment = comment;
         }
 
-        [CanBeNull] public string Comment { get; }
+        [CanBeNull]
+        public string Comment { get; }
     }
 
     /// <summary>
@@ -617,7 +645,8 @@ namespace Pixeval
             Justification = justification;
         }
 
-        [CanBeNull] public string Justification { get; }
+        [CanBeNull]
+        public string Justification { get; }
     }
 
     /// <summary>
@@ -638,8 +667,13 @@ namespace Pixeval
     /// </code>
     /// </example>
     [AttributeUsage(
-        AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Parameter | AttributeTargets.Method |
-        AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Struct |
+        AttributeTargets.Field |
+        AttributeTargets.Property |
+        AttributeTargets.Parameter |
+        AttributeTargets.Method |
+        AttributeTargets.Class |
+        AttributeTargets.Interface |
+        AttributeTargets.Struct |
         AttributeTargets.GenericParameter)]
     public sealed class ProvidesContextAttribute : Attribute
     {
@@ -661,7 +695,8 @@ namespace Pixeval
             BasePath = basePath;
         }
 
-        [CanBeNull] public string BasePath { get; }
+        [CanBeNull]
+        public string BasePath { get; }
     }
 
     /// <summary>
@@ -749,7 +784,7 @@ namespace Pixeval
     }
 
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Field | AttributeTargets.Property,
-        AllowMultiple = true)]
+                    AllowMultiple = true)]
     public sealed class AspMvcAreaMasterLocationFormatAttribute : Attribute
     {
         public AspMvcAreaMasterLocationFormatAttribute([NotNull] string format)
@@ -757,11 +792,12 @@ namespace Pixeval
             Format = format;
         }
 
-        [NotNull] public string Format { get; }
+        [NotNull]
+        public string Format { get; }
     }
 
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Field | AttributeTargets.Property,
-        AllowMultiple = true)]
+                    AllowMultiple = true)]
     public sealed class AspMvcAreaPartialViewLocationFormatAttribute : Attribute
     {
         public AspMvcAreaPartialViewLocationFormatAttribute([NotNull] string format)
@@ -769,11 +805,12 @@ namespace Pixeval
             Format = format;
         }
 
-        [NotNull] public string Format { get; }
+        [NotNull]
+        public string Format { get; }
     }
 
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Field | AttributeTargets.Property,
-        AllowMultiple = true)]
+                    AllowMultiple = true)]
     public sealed class AspMvcAreaViewLocationFormatAttribute : Attribute
     {
         public AspMvcAreaViewLocationFormatAttribute([NotNull] string format)
@@ -781,11 +818,12 @@ namespace Pixeval
             Format = format;
         }
 
-        [NotNull] public string Format { get; }
+        [NotNull]
+        public string Format { get; }
     }
 
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Field | AttributeTargets.Property,
-        AllowMultiple = true)]
+                    AllowMultiple = true)]
     public sealed class AspMvcMasterLocationFormatAttribute : Attribute
     {
         public AspMvcMasterLocationFormatAttribute([NotNull] string format)
@@ -793,11 +831,12 @@ namespace Pixeval
             Format = format;
         }
 
-        [NotNull] public string Format { get; }
+        [NotNull]
+        public string Format { get; }
     }
 
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Field | AttributeTargets.Property,
-        AllowMultiple = true)]
+                    AllowMultiple = true)]
     public sealed class AspMvcPartialViewLocationFormatAttribute : Attribute
     {
         public AspMvcPartialViewLocationFormatAttribute([NotNull] string format)
@@ -805,11 +844,12 @@ namespace Pixeval
             Format = format;
         }
 
-        [NotNull] public string Format { get; }
+        [NotNull]
+        public string Format { get; }
     }
 
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Field | AttributeTargets.Property,
-        AllowMultiple = true)]
+                    AllowMultiple = true)]
     public sealed class AspMvcViewLocationFormatAttribute : Attribute
     {
         public AspMvcViewLocationFormatAttribute([NotNull] string format)
@@ -817,7 +857,8 @@ namespace Pixeval
             Format = format;
         }
 
-        [NotNull] public string Format { get; }
+        [NotNull]
+        public string Format { get; }
     }
 
     /// <summary>
@@ -826,8 +867,10 @@ namespace Pixeval
     ///     implicitly from the context. Use this attribute for custom wrappers similar to
     ///     <c>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String)</c>.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method | AttributeTargets.Field |
-                    AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Parameter |
+        AttributeTargets.Method |
+        AttributeTargets.Field |
+        AttributeTargets.Property)]
     public sealed class AspMvcActionAttribute : Attribute
     {
         public AspMvcActionAttribute()
@@ -839,7 +882,8 @@ namespace Pixeval
             AnonymousProperty = anonymousProperty;
         }
 
-        [CanBeNull] public string AnonymousProperty { get; }
+        [CanBeNull]
+        public string AnonymousProperty { get; }
     }
 
     /// <summary>
@@ -859,7 +903,8 @@ namespace Pixeval
             AnonymousProperty = anonymousProperty;
         }
 
-        [CanBeNull] public string AnonymousProperty { get; }
+        [CanBeNull]
+        public string AnonymousProperty { get; }
     }
 
     /// <summary>
@@ -868,8 +913,10 @@ namespace Pixeval
     ///     implicitly from the context. Use this attribute for custom wrappers similar to
     ///     <c>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String, String)</c>.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method | AttributeTargets.Field |
-                    AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Parameter |
+        AttributeTargets.Method |
+        AttributeTargets.Field |
+        AttributeTargets.Property)]
     public sealed class AspMvcControllerAttribute : Attribute
     {
         public AspMvcControllerAttribute()
@@ -881,7 +928,8 @@ namespace Pixeval
             AnonymousProperty = anonymousProperty;
         }
 
-        [CanBeNull] public string AnonymousProperty { get; }
+        [CanBeNull]
+        public string AnonymousProperty { get; }
     }
 
     /// <summary>
@@ -908,8 +956,10 @@ namespace Pixeval
     ///     from the context. Use this attribute for custom wrappers similar to
     ///     <c>System.Web.Mvc.Html.RenderPartialExtensions.RenderPartial(HtmlHelper, String)</c>.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method | AttributeTargets.Field |
-                    AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Parameter |
+        AttributeTargets.Method |
+        AttributeTargets.Field |
+        AttributeTargets.Property)]
     public sealed class AspMvcPartialViewAttribute : Attribute
     {
     }
@@ -958,8 +1008,10 @@ namespace Pixeval
     ///     from the context. Use this attribute for custom wrappers similar to
     ///     <c>System.Web.Mvc.Controller.View(Object)</c>.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method | AttributeTargets.Field |
-                    AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Parameter |
+        AttributeTargets.Method |
+        AttributeTargets.Field |
+        AttributeTargets.Property)]
     public sealed class AspMvcViewAttribute : Attribute
     {
     }
@@ -977,8 +1029,10 @@ namespace Pixeval
     ///     ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter
     ///     is an MVC view component view. If applied to a method, the MVC view component view name is default.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method | AttributeTargets.Field |
-                    AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Parameter |
+        AttributeTargets.Method |
+        AttributeTargets.Field |
+        AttributeTargets.Property)]
     public sealed class AspMvcViewComponentViewAttribute : Attribute
     {
     }
@@ -1013,7 +1067,8 @@ namespace Pixeval
             Name = name;
         }
 
-        [CanBeNull] public string Name { get; }
+        [CanBeNull]
+        public string Name { get; }
     }
 
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]
@@ -1024,7 +1079,8 @@ namespace Pixeval
             Name = name;
         }
 
-        [NotNull] public string Name { get; }
+        [NotNull]
+        public string Name { get; }
     }
 
     /// <summary>
@@ -1237,9 +1293,11 @@ namespace Pixeval
             ControlType = controlType;
         }
 
-        [NotNull] public string TagName { get; }
+        [NotNull]
+        public string TagName { get; }
 
-        [NotNull] public Type ControlType { get; }
+        [NotNull]
+        public Type ControlType { get; }
     }
 
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method)]
@@ -1265,7 +1323,8 @@ namespace Pixeval
             Attribute = attribute;
         }
 
-        [NotNull] public string Attribute { get; }
+        [NotNull]
+        public string Attribute { get; }
     }
 
     [AttributeUsage(AttributeTargets.Property)]
@@ -1287,7 +1346,8 @@ namespace Pixeval
             Name = name;
         }
 
-        [NotNull] public string Name { get; }
+        [NotNull]
+        public string Name { get; }
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
@@ -1299,9 +1359,11 @@ namespace Pixeval
             FieldName = fieldName;
         }
 
-        [NotNull] public string Type { get; }
+        [NotNull]
+        public string Type { get; }
 
-        [NotNull] public string FieldName { get; }
+        [NotNull]
+        public string FieldName { get; }
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
@@ -1312,7 +1374,8 @@ namespace Pixeval
             Directive = directive;
         }
 
-        [NotNull] public string Directive { get; }
+        [NotNull]
+        public string Directive { get; }
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
@@ -1329,9 +1392,11 @@ namespace Pixeval
             PageName = pageName;
         }
 
-        [NotNull] public string BaseType { get; }
+        [NotNull]
+        public string BaseType { get; }
 
-        [CanBeNull] public string PageName { get; }
+        [CanBeNull]
+        public string PageName { get; }
     }
 
     [AttributeUsage(AttributeTargets.Method)]

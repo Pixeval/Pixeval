@@ -32,7 +32,8 @@ namespace Pixeval.Objects.I18n
 {
     public static partial class AkaI18N
     {
-        [DoNotNotify] private static IEnumerable<XmlNode> _i18NXmlNodes;
+        [DoNotNotify]
+        private static IEnumerable<XmlNode> _i18NXmlNodes;
 
         public static string GetResource(string key)
         {

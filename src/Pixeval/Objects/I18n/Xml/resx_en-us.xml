@@ -165,4 +165,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <resx key="DownloadQueueHistoryListIsEmpty" value="It is empty here, Let's go get some!" />
   <resx key="PixevalUpdateAvailable" value="An update for Pixeval is available, update now? Yes/No" />
   <resx key="PixevalUpdateAvailableTitle" value="New Release Updated" />
+  <resx key="ThisLoginSessionRequiresRecaptcha" value="This login session requires finish recaptcha manually" />
 </localization>

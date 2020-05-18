@@ -32,15 +32,14 @@ namespace Pixeval.Objects.Generic
         }
 
         public static Task AwaitAsync<T>(this T obj, Func<T, Task<bool>> on, int interval = 0,
-            TimeSpan timeout = default)
+                                         TimeSpan timeout = default)
         {
             var timer = DateTime.Now;
             return Task.Run(async () =>
             {
                 while (!await on(obj))
                 {
-                    if (timeout != default && DateTime.Now - timer >= timeout)
-                        break;
+                    if (timeout != default && DateTime.Now - timer >= timeout) break;
                     if (interval != 0) await Task.Delay(interval);
                 }
             });

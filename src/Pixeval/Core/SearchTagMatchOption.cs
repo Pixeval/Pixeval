@@ -27,19 +27,22 @@ namespace Pixeval.Core
         /// <summary>
         ///     部分一致
         /// </summary>
-        [EnumAlias("partial_match_for_tags")] [EnumLocalizedName("TagMatchingPartialMatch")]
+        [EnumAlias("partial_match_for_tags")]
+        [EnumLocalizedName("TagMatchingPartialMatch")]
         PartialMatchForTags,
 
         /// <summary>
         ///     完全一致
         /// </summary>
-        [EnumAlias("exact_match_for_tags")] [EnumLocalizedName("TagMatchingExactMatch")]
+        [EnumAlias("exact_match_for_tags")]
+        [EnumLocalizedName("TagMatchingExactMatch")]
         ExactMatchForTags,
 
         /// <summary>
         ///     标题和说明文
         /// </summary>
-        [EnumAlias("title_and_caption")] [EnumLocalizedName("TagMatchingTitleAndCaption")]
+        [EnumAlias("title_and_caption")]
+        [EnumLocalizedName("TagMatchingTitleAndCaption")]
         TitleAndCaption
     }
 }

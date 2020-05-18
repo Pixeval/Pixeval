@@ -59,7 +59,7 @@ namespace Pixeval.Objects.Native
 
         private bool IsImageSupportSpan()
         {
-            return Background.PixelWidth / Background.PixelHeight >= 2;
+            return Background.PixelWidth / (double) Background.PixelHeight >= 1.7;
         }
 
         public async ValueTask<bool> Execute()
@@ -68,7 +68,7 @@ namespace Pixeval.Objects.Native
             using var regKey = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
             if (regKey == null) return false;
             regKey.SetValue("WallpaperStyle",
-                (CheckOperatingSystemVersion() && IsImageSupportSpan() ? 22 : 10).ToString());
+                            (CheckOperatingSystemVersion() && IsImageSupportSpan() ? 22 : 10).ToString());
             regKey.SetValue("TitleWallpaper", 0.ToString());
             SystemParametersInfo(SetDeskWallpaper, 0, StoreLocation, UpdateIniFile | SendWinIniChange);
             return true;

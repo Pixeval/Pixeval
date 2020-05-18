@@ -34,8 +34,7 @@ namespace Pixeval.UI.UserControls
 
         private void ConditionTextBox_OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Oem5)
-                e.Handled = true;
+            if (e.Key == Key.Oem5) e.Handled = true;
         }
     }
 }

@@ -23,10 +23,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using Microsoft.CSharp.RuntimeBinder;
@@ -38,6 +41,40 @@ namespace Pixeval.Objects.Primitive
 {
     public static class UiHelper
     {
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr ProcessId);
+
+        [DllImport("user32.dll")]
+        private static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
+
+        [DllImport("user32.dll")]
+        public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy,
+                                               uint uFlags);
+
+        /// <summary>
+        ///     Little trick, from https://stackoverflow.com/questions/257587/bring-a-window-to-the-front-in-wpf
+        /// </summary>
+        /// <param name="w">window to active</param>
+        public static void GlobalActivate(this Window w)
+        {
+            const uint NoSize = 0x0001;
+            const uint NoMove = 0x0002;
+            const uint ShowWindow = 0x0040;
+            var interopHelper = new WindowInteropHelper(w);
+            var thisWindowThreadId = GetWindowThreadProcessId(interopHelper.Handle, IntPtr.Zero);
+            var currentForegroundWindow = GetForegroundWindow();
+            var currentForegroundWindowThreadId = GetWindowThreadProcessId(currentForegroundWindow, IntPtr.Zero);
+            AttachThreadInput(currentForegroundWindowThreadId, thisWindowThreadId, true);
+            SetWindowPos(interopHelper.Handle, new IntPtr(0), 0, 0, 0, 0, NoSize | NoMove | ShowWindow);
+            AttachThreadInput(currentForegroundWindowThreadId, thisWindowThreadId, false);
+            if (w.WindowState == WindowState.Minimized) w.WindowState = WindowState.Normal;
+            w.Show();
+            w.Activate();
+        }
+
         public static void Disable(this FrameworkElement element)
         {
             element.IsEnabled = false;
@@ -93,7 +130,7 @@ namespace Pixeval.Objects.Primitive
         }
 
         public static void StartDoubleAnimationUseCubicEase(object sender, string path, double from, double to,
-            int milliseconds)
+                                                            int milliseconds)
         {
             var sb = new Storyboard();
             var doubleAnimation = new DoubleAnimation(from, to, TimeSpan.FromMilliseconds(milliseconds))
@@ -161,13 +198,13 @@ namespace Pixeval.Objects.Primitive
             }
         }
 
-        public static async void LoadAndCacheThumbnailImageToControl(this Illustration illustration, object control)
+        public static async Task LoadAndCacheThumbnailImageToControl(this Illustration illustration, object control)
         {
             if (Settings.Global.UseCache &&
                 await AppContext.DefaultCacheProvider.TryGet(illustration) is (true, var image))
                 SetImageSource(control, image);
             else if (illustration.Thumbnail != null &&
-                     Uri.IsWellFormedUriString(illustration.Thumbnail, UriKind.Absolute))
+                Uri.IsWellFormedUriString(illustration.Thumbnail, UriKind.Absolute))
                 SetImageSource(control, await PixivIO.FromUrl(illustration.Thumbnail));
         }
     }
@@ -176,7 +213,7 @@ namespace Pixeval.Objects.Primitive
     {
         public static readonly DependencyProperty PopupPlacementTargetProperty =
             DependencyProperty.RegisterAttached("PopupPlacementTarget", typeof(DependencyObject), typeof(PopupHelper),
-                new PropertyMetadata(null, OnPopupPlacementTargetChanged));
+                                                new PropertyMetadata(null, OnPopupPlacementTargetChanged));
 
         public static DependencyObject GetPopupPlacementTarget(DependencyObject obj)
         {
@@ -211,7 +248,7 @@ namespace Pixeval.Objects.Primitive
                     w.SizeChanged += (sender, args) =>
                     {
                         var mi = typeof(Popup).GetMethod("UpdatePosition",
-                            BindingFlags.NonPublic | BindingFlags.Instance);
+                                                         BindingFlags.NonPublic | BindingFlags.Instance);
                         try
                         {
                             mi?.Invoke(pop, null);

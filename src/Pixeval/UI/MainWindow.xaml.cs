@@ -27,7 +27,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -47,8 +46,6 @@ using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
-using Pixeval.Objects.Exceptions;
-using Pixeval.Objects.Exceptions.Logger;
 using Pixeval.Objects.Generic;
 using Pixeval.Objects.I18n;
 using Pixeval.Objects.Native;
@@ -58,8 +55,10 @@ using Pixeval.UI.UserControls;
 using Refit;
 using Xceed.Wpf.AvalonDock.Controls;
 using static Pixeval.Objects.Primitive.UiHelper;
-
 #if RELEASE
+using System.Net.Http;
+using Pixeval.Objects.Exceptions;
+using Pixeval.Objects.Exceptions.Logger;
 
 #endif
 
@@ -106,8 +105,7 @@ namespace Pixeval.UI
                     if (apiException.StatusCode == HttpStatusCode.BadRequest)
                         MessageQueue.Enqueue(AkaI18N.QueryNotResponding);
                     break;
-                case HttpRequestException _:
-                    break;
+                case HttpRequestException _: break;
                 default:
                     ExceptionDumper.WriteException(e.Exception);
                     break;
@@ -187,7 +185,8 @@ namespace Pixeval.UI
                 if (exception.StatusCode == HttpStatusCode.NotFound ||
                     exception.StatusCode == HttpStatusCode.BadRequest)
                     MessageQueue.Enqueue(AkaI18N.IdDoNotExists);
-                else throw;
+                else
+                    throw;
             }
         }
 
@@ -196,11 +195,20 @@ namespace Pixeval.UI
             QueryStartUp();
             SearchingHistoryManager.EnqueueSearchHistory(keyword);
             PixivHelper.Enumerate(Settings.Global.SortOnInserting
-                    ? (AbstractQueryAsyncEnumerable) new PopularityQueryAsyncEnumerable(keyword,
-                        Settings.Global.TagMatchOption, Session.Current.IsPremium, Settings.Global.QueryStart)
-                    : new PublishDateQueryAsyncEnumerable(keyword, Settings.Global.TagMatchOption,
-                        Session.Current.IsPremium, Settings.Global.QueryStart),
-                NewItemsSource<Illustration>(ImageListView), Settings.Global.QueryPages);
+                                      ? (AbstractQueryAsyncEnumerable) new PopularityQueryAsyncEnumerable(keyword,
+                                                                                                          Settings
+                                                                                                              .Global
+                                                                                                              .TagMatchOption,
+                                                                                                          Session
+                                                                                                              .Current
+                                                                                                              .IsPremium,
+                                                                                                          Settings
+                                                                                                              .Global
+                                                                                                              .QueryStart)
+                                      : new PublishDateQueryAsyncEnumerable(keyword, Settings.Global.TagMatchOption,
+                                                                            Session.Current.IsPremium,
+                                                                            Settings.Global.QueryStart),
+                                  NewItemsSource<Illustration>(ImageListView), Settings.Global.QueryPages);
         }
 
         private void IllustrationContainer_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -312,7 +320,8 @@ namespace Pixeval.UI
         {
             if (!KeywordTextBox.Text.IsNullOrEmpty()) TrendingTagPopup.CloseControl();
 
-            if (QueryArtistToggleButton.IsChecked == true || QuerySingleArtistToggleButton.IsChecked == true ||
+            if (QueryArtistToggleButton.IsChecked == true ||
+                QuerySingleArtistToggleButton.IsChecked == true ||
                 QuerySingleWorkToggleButton.IsChecked == true)
                 return;
 
@@ -326,7 +335,9 @@ namespace Pixeval.UI
                 {
                     AutoCompletionPopup.OpenControl();
                     AutoCompletionListBox.ItemsSource = result.Tags.Select(p => new AutoCompletion
-                        {Tag = p.Name, TranslatedName = p.TranslatedName});
+                    {
+                        Tag = p.Name, TranslatedName = p.TranslatedName
+                    });
                 }
             }
             catch (ApiException)
@@ -348,7 +359,7 @@ namespace Pixeval.UI
                     ? 0
                     : AutoCompletionListBox.SelectedIndex + 1,
                 var x when x == Key.Up || x == Key.A => AutoCompletionListBox.SelectedIndex != -1 &&
-                                                        AutoCompletionListBox.SelectedIndex != 0
+                AutoCompletionListBox.SelectedIndex != 0
                     ? AutoCompletionListBox.SelectedIndex - 1
                     : AutoCompletionListBox.SelectedIndex,
                 _ => AutoCompletionListBox.SelectedIndex
@@ -435,9 +446,10 @@ namespace Pixeval.UI
             MessageQueue.Enqueue(AkaI18N.SearchingGallery);
 
             PixivHelper.Enumerate(AbstractGalleryAsyncEnumerable.Of(Session.Current.Id,
-                PublicRestrictPolicy.IsChecked is true
-                    ? RestrictPolicy.Public
-                    : RestrictPolicy.Private), NewItemsSource<Illustration>(ImageListView));
+                                                                    PublicRestrictPolicy.IsChecked is true
+                                                                        ? RestrictPolicy.Public
+                                                                        : RestrictPolicy.Private),
+                                  NewItemsSource<Illustration>(ImageListView));
         }
 
         private void RecommendTab_OnSelected(object sender, RoutedEventArgs e)
@@ -465,9 +477,10 @@ namespace Pixeval.UI
             MessageQueue.Enqueue(AkaI18N.SearchingFollower);
 
             PixivHelper.Enumerate(AbstractUserFollowingAsyncEnumerable.Of(Session.Current.Id,
-                PublicRestrictPolicy.IsChecked is true
-                    ? RestrictPolicy.Public
-                    : RestrictPolicy.Private), NewItemsSource<User>(UserPreviewListView));
+                                                                          PublicRestrictPolicy.IsChecked is true
+                                                                              ? RestrictPolicy.Public
+                                                                              : RestrictPolicy.Private),
+                                  NewItemsSource<User>(UserPreviewListView));
         }
 
         private void FollowingTab_OnUnselected(object sender, RoutedEventArgs e)
@@ -537,17 +550,19 @@ namespace Pixeval.UI
 
         #region 图片预览
 
-        private void Thumbnail_OnLoaded(object sender, RoutedEventArgs e)
+        private async void Thumbnail_OnLoaded(object sender, RoutedEventArgs e)
         {
             var dataContext = sender.GetDataContext<Illustration>();
 
             if (dataContext != null && Uri.IsWellFormedUriString(dataContext.Thumbnail, UriKind.Absolute))
             {
                 dataContextHolder.TryAdd(sender, dataContext);
-                dataContext.LoadAndCacheThumbnailImageToControl(sender);
+                await dataContext.LoadAndCacheThumbnailImageToControl(sender);
             }
 
-            StartDoubleAnimationUseCubicEase(sender, "(Image.Opacity)", 0, 1, 500);
+            StartDoubleAnimationUseCubicEase(sender, "(Image.Opacity)", 0, 1, 800);
+            StartDoubleAnimationUseCubicEase(sender, "(Image.RenderTransform).(ScaleTransform.ScaleX)", 1.2, 1, 800);
+            StartDoubleAnimationUseCubicEase(sender, "(Image.RenderTransform).(ScaleTransform.ScaleY)", 1.2, 1, 800);
         }
 
         private void Thumbnail_OnUnloaded(object sender, RoutedEventArgs e)
@@ -667,7 +682,7 @@ namespace Pixeval.UI
             {
                 MessageQueue.Enqueue(AkaI18N.SearchingGallery);
                 PixivHelper.Enumerate(AbstractGalleryAsyncEnumerable.Of(Session.Current.Id, RestrictPolicy.Private),
-                    NewItemsSource<Illustration>(ImageListView));
+                                      NewItemsSource<Illustration>(ImageListView));
             }
             else if (Navigating(FollowingTab))
             {
@@ -685,7 +700,7 @@ namespace Pixeval.UI
             {
                 MessageQueue.Enqueue(AkaI18N.SearchingGallery);
                 PixivHelper.Enumerate(AbstractGalleryAsyncEnumerable.Of(Session.Current.Id, RestrictPolicy.Public),
-                    NewItemsSource<Illustration>(ImageListView));
+                                      NewItemsSource<Illustration>(ImageListView));
             }
             else if (Navigating(FollowingTab))
             {
@@ -716,13 +731,13 @@ namespace Pixeval.UI
         private void SetupUserUploads(string id)
         {
             PixivHelper.Enumerate(new UploadAsyncEnumerable(id),
-                NewItemsSource<Illustration>(UserIllustsImageListView));
+                                  NewItemsSource<Illustration>(UserIllustsImageListView));
         }
 
         private void SetupUserGallery(string id)
         {
             PixivHelper.Enumerate(AbstractGalleryAsyncEnumerable.Of(id, RestrictPolicy.Public),
-                NewItemsSource<Illustration>(UserIllustsImageListView));
+                                  NewItemsSource<Illustration>(UserIllustsImageListView));
         }
 
         private void SetUserBanner(string id)
@@ -762,14 +777,33 @@ namespace Pixeval.UI
             if (!IsAtUploadCheckerPosition())
             {
                 UserBrowserPageScrollViewer.GetResources<Storyboard>("CheckerIncreaseWidthAnimation").Apply(s =>
-                    s.Completed += (o, args) =>
-                    {
-                        CheckerSnackBar.HorizontalAlignment = HorizontalAlignment.Left;
-                        CheckerSnackBarOpacityMask.HorizontalAlignment = HorizontalAlignment.Left;
-                        UserBrowserPageScrollViewer.GetResources<Storyboard>("CheckerDecreaseWidthAnimation").Begin();
-                        UserBrowserPageScrollViewer.GetResources<Storyboard>("CheckerOpacityMaskDecreaseWidthAnimation")
-                            .Begin();
-                    }).Begin();
+                                                                                                                s.Completed
+                                                                                                                    += (
+                                                                                                                        o,
+                                                                                                                        args) =>
+                                                                                                                    {
+                                                                                                                        CheckerSnackBar
+                                                                                                                                .HorizontalAlignment
+                                                                                                                            = HorizontalAlignment
+                                                                                                                                .Left;
+                                                                                                                        CheckerSnackBarOpacityMask
+                                                                                                                                .HorizontalAlignment
+                                                                                                                            = HorizontalAlignment
+                                                                                                                                .Left;
+                                                                                                                        UserBrowserPageScrollViewer
+                                                                                                                            .GetResources
+                                                                                                                            <Storyboard
+                                                                                                                            >(
+                                                                                                                                "CheckerDecreaseWidthAnimation")
+                                                                                                                            .Begin();
+                                                                                                                        UserBrowserPageScrollViewer
+                                                                                                                            .GetResources
+                                                                                                                            <Storyboard
+                                                                                                                            >(
+                                                                                                                                "CheckerOpacityMaskDecreaseWidthAnimation")
+                                                                                                                            .Begin();
+                                                                                                                    })
+                    .Begin();
                 UserBrowserPageScrollViewer.GetResources<Storyboard>("CheckerOpacityMaskIncreaseWidthAnimation")
                     .Begin();
             }
@@ -782,14 +816,33 @@ namespace Pixeval.UI
             if (IsAtUploadCheckerPosition())
             {
                 UserBrowserPageScrollViewer.GetResources<Storyboard>("CheckerIncreaseWidthAnimation").Apply(s =>
-                    s.Completed += (o, args) =>
-                    {
-                        CheckerSnackBar.HorizontalAlignment = HorizontalAlignment.Right;
-                        CheckerSnackBarOpacityMask.HorizontalAlignment = HorizontalAlignment.Right;
-                        UserBrowserPageScrollViewer.GetResources<Storyboard>("CheckerDecreaseWidthAnimation").Begin();
-                        UserBrowserPageScrollViewer.GetResources<Storyboard>("CheckerOpacityMaskDecreaseWidthAnimation")
-                            .Begin();
-                    }).Begin();
+                                                                                                                s.Completed
+                                                                                                                    += (
+                                                                                                                        o,
+                                                                                                                        args) =>
+                                                                                                                    {
+                                                                                                                        CheckerSnackBar
+                                                                                                                                .HorizontalAlignment
+                                                                                                                            = HorizontalAlignment
+                                                                                                                                .Right;
+                                                                                                                        CheckerSnackBarOpacityMask
+                                                                                                                                .HorizontalAlignment
+                                                                                                                            = HorizontalAlignment
+                                                                                                                                .Right;
+                                                                                                                        UserBrowserPageScrollViewer
+                                                                                                                            .GetResources
+                                                                                                                            <Storyboard
+                                                                                                                            >(
+                                                                                                                                "CheckerDecreaseWidthAnimation")
+                                                                                                                            .Begin();
+                                                                                                                        UserBrowserPageScrollViewer
+                                                                                                                            .GetResources
+                                                                                                                            <Storyboard
+                                                                                                                            >(
+                                                                                                                                "CheckerOpacityMaskDecreaseWidthAnimation")
+                                                                                                                            .Begin();
+                                                                                                                    })
+                    .Begin();
                 UserBrowserPageScrollViewer.GetResources<Storyboard>("CheckerOpacityMaskIncreaseWidthAnimation")
                     .Begin();
             }
@@ -799,7 +852,7 @@ namespace Pixeval.UI
 
         private bool IsAtUploadCheckerPosition()
         {
-            return CheckerSnackBar.HorizontalAlignment == HorizontalAlignment.Left && CheckerSnackBar.Width.Equals(90);
+            return CheckerSnackBar.HorizontalAlignment == HorizontalAlignment.Left && CheckerSnackBar.Width.Equals(120);
         }
 
         private void BackToMainPageButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -832,7 +885,8 @@ namespace Pixeval.UI
         private void ViewUserInBrowserButton_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Process.Start(new ProcessStartInfo("cmd",
-                $"/c start https://www.pixiv.net/artworks/{sender.GetDataContext<User>().Id}") {CreateNoWindow = true});
+                                               $"/c start https://www.pixiv.net/artworks/{sender.GetDataContext<User>().Id}")
+                              {CreateNoWindow = true});
         }
 
         #endregion
@@ -846,7 +900,7 @@ namespace Pixeval.UI
             var selectedIndex = transitions.ToList()[trans.IllustTransition.SelectedIndex];
             var location = Path.Combine(AppContext.PermanentlyFolder, "wallpaper.bmp");
             var wallPaper = new WallAdjudicator(location,
-                (BitmapSource) ((IllustPresenter) selectedIndex.Content).ImgSource);
+                                                (BitmapSource) ((IllustPresenter) selectedIndex.Content).ImgSource);
             await wallPaper.Execute();
         }
 
@@ -861,8 +915,7 @@ namespace Pixeval.UI
 
             if (context.IsManga)
             {
-                if (context.MangaMetadata.IsNullOrEmpty())
-                    context = await PixivHelper.IllustrationInfo(context.Id);
+                if (context.MangaMetadata.IsNullOrEmpty()) context = await PixivHelper.IllustrationInfo(context.Id);
                 list.AddRange(context.MangaMetadata.Select(InitTransitionerSlide));
             }
             else
@@ -922,8 +975,8 @@ namespace Pixeval.UI
         private void ViewInBrowserButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Process.Start(new ProcessStartInfo("cmd",
-                    $"/c start https://www.pixiv.net/artworks/{sender.GetDataContext<Illustration>().Id}")
-                {CreateNoWindow = true});
+                                               $"/c start https://www.pixiv.net/artworks/{sender.GetDataContext<Illustration>().Id}")
+                              {CreateNoWindow = true});
         }
 
         private void DownloadButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -1035,7 +1088,7 @@ namespace Pixeval.UI
             if (dateTime is { } time)
             {
                 PixivHelper.Enumerate(new RankingAsyncEnumerable(option.Corresponding, time),
-                    NewItemsSource<Illustration>(ImageListView));
+                                      NewItemsSource<Illustration>(ImageListView));
                 return;
             }
 
@@ -1150,9 +1203,9 @@ namespace Pixeval.UI
             this.GetResources<Storyboard>("ContentContainerScaleYIncreaseAnimation").Begin();
         }
 
-        public async void OpenIllustBrowser(Illustration illustration)
+        public async void OpenIllustBrowser(Illustration illustration, bool record = true)
         {
-            if (!illustration.FromSpotlight)
+            if (!illustration.FromSpotlight && record)
                 PixivHelper.RecordTimelineInternal(new BrowsingHistory
                 {
                     BrowseObjectId = illustration.Id,

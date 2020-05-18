@@ -44,9 +44,10 @@ namespace Pixeval.Core
 
         public override bool VerifyRationality(Illustration item, IList<Illustration> collection)
         {
-            return item != null && collection.All(t => t.Id != item.Id) &&
-                   PixivHelper.VerifyIllustRational(Settings.Global.ExcludeTag, Settings.Global.IncludeTag,
-                       Settings.Global.MinBookmark, item);
+            return item != null &&
+                collection.All(t => t.Id != item.Id) &&
+                PixivHelper.VerifyIllustRational(Settings.Global.ExcludeTag, Settings.Global.IncludeTag,
+                                                 Settings.Global.MinBookmark, item);
         }
 
         public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = default)
@@ -73,7 +74,7 @@ namespace Pixeval.Core
             private IEnumerator<Illustration> illustrationsEnumerator;
 
             public GalleryAsyncEnumerator(string uid, IPixivAsyncEnumerable<Illustration> outerInstance,
-                RestrictPolicy restrictPolicy) : base(outerInstance)
+                                          RestrictPolicy restrictPolicy) : base(outerInstance)
             {
                 this.uid = uid;
                 this.restrictPolicy = restrictPolicy;

@@ -33,7 +33,7 @@ namespace Pixeval.Core
     public static class PixivClientExtension
     {
         public static async void PostFavoriteAsync(this PixivClient _, Illustration illustration,
-            RestrictPolicy restrictPolicy)
+                                                   RestrictPolicy restrictPolicy)
         {
             illustration.IsLiked = true;
             await HttpClientFactory.AppApiService().AddBookmark(new AddBookmarkRequest
@@ -68,7 +68,9 @@ namespace Pixeval.Core
         {
             user.IsFollowed = true;
             await HttpClientFactory.AppApiService().FollowArtist(new FollowArtistRequest
-                {Id = user.Id, Restrict = policy == RestrictPolicy.Private ? "private" : "public"});
+            {
+                Id = user.Id, Restrict = policy == RestrictPolicy.Private ? "private" : "public"
+            });
         }
 
         public static async Task UnFollowArtist(this PixivClient _, User user)

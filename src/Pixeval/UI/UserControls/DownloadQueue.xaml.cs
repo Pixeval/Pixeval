@@ -79,7 +79,8 @@ namespace Pixeval.UI.UserControls
             var model = sender.GetDataContext<DownloadableIllustration>();
             if (!model.DownloadPath.IsNullOrEmpty() && Path.GetDirectoryName(model.DownloadPath) is var p)
                 Process.Start("explorer.exe", p);
-            else MainWindow.MessageQueue.Enqueue(AkaI18N.PathNotExist);
+            else
+                MainWindow.MessageQueue.Enqueue(AkaI18N.PathNotExist);
         }
 
         private void ShowDownloadIllustration(object sender, RoutedEventArgs e)
@@ -87,8 +88,8 @@ namespace Pixeval.UI.UserControls
             MainWindow.Instance.DownloadQueueDialogHost.CloseControl();
             var model = sender.GetDataContext<DownloadableIllustration>();
             MainWindow.Instance.OpenIllustBrowser(model.IsFromManga
-                ? model.DownloadContent.MangaMetadata[0]
-                : model.DownloadContent);
+                                                      ? model.DownloadContent.MangaMetadata[0]
+                                                      : model.DownloadContent);
         }
 
         private void RemoveFromDownloaded(object sender, RoutedEventArgs e)
@@ -165,7 +166,9 @@ namespace Pixeval.UI.UserControls
             MainWindow.Instance.DownloadQueueDialogHost.CurrentSession.Close();
             MainWindow.Instance.OpenUserBrowser();
             MainWindow.Instance.SetUserBrowserContext(new User
-                {Id = sender.GetDataContext<BrowsingHistory>().BrowseObjectId});
+            {
+                Id = sender.GetDataContext<BrowsingHistory>().BrowseObjectId
+            });
         }
     }
 }

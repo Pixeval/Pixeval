@@ -27,6 +27,7 @@ namespace Pixeval.Data.Web.Request
         [AliasAs("merge_plain_keyword_results=true")]
         public bool MergePlainKeywordResult { get; set; } = true;
 
-        [AliasAs("word")] public string Word { get; set; }
+        [AliasAs("word")]
+        public string Word { get; set; }
     }
 }

@@ -33,8 +33,7 @@ namespace Pixeval.Core
                 if (_instance == null)
                     lock (Locker)
                     {
-                        if (_instance == null)
-                            _instance = new PixivClient();
+                        if (_instance == null) _instance = new PixivClient();
                     }
 
                 return _instance;

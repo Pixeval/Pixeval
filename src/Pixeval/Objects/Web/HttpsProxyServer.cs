@@ -90,7 +90,10 @@ namespace Pixeval.Objects.Web
                         var clientSsl = new SslStream(clientStream, false);
                         // use specify certificate to establish the HTTPS connection
                         await clientSsl.AuthenticateAsServerAsync(certificate, false,
-                            SslProtocols.Tls | SslProtocols.Tls13 | SslProtocols.Tls12 | SslProtocols.Tls11, false);
+                                                                  SslProtocols.Tls |
+                                                                  SslProtocols.Tls13 |
+                                                                  SslProtocols.Tls12 |
+                                                                  SslProtocols.Tls11, false);
                         // create an HTTP connection to the target IP
                         var serverSsl = await CreateConnection(ip);
 

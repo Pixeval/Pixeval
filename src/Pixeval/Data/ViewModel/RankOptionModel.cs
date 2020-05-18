@@ -31,13 +31,16 @@ namespace Pixeval.Data.ViewModel
     [AddINotifyPropertyChangedInterface]
     public class RankOptionModel
     {
-        [DoNotNotify] public static readonly RankOptionModel[] RegularRankOptions = Enum.GetValues(typeof(RankOption))
+        [DoNotNotify]
+        public static readonly RankOptionModel[] RegularRankOptions = Enum.GetValues(typeof(RankOption))
             .Cast<RankOption>().Select(rank => new RankOptionModel(rank)).ToArray()
             .Apply(models => models[0].IsSelected = true);
 
-        [DoNotNotify] public static readonly DateTime MaxRankDateTime = DateTime.Today - TimeSpan.FromDays(2);
+        [DoNotNotify]
+        public static readonly DateTime MaxRankDateTime = DateTime.Today - TimeSpan.FromDays(2);
 
-        [DoNotNotify] public static readonly DateTime InvalidRankDateTimeStart = DateTime.Today - TimeSpan.FromDays(1);
+        [DoNotNotify]
+        public static readonly DateTime InvalidRankDateTimeStart = DateTime.Today - TimeSpan.FromDays(1);
 
         public RankOptionModel(RankOption option)
         {
