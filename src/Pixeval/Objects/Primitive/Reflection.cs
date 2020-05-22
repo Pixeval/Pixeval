@@ -34,13 +34,13 @@ namespace Pixeval.Objects.Primitive
 
         public static T GetEnumAttribute<T>(this Enum value) where T : Attribute
         {
-            return value.GetType().GetField(value.ToString()).GetCustomAttribute<T>(false) ??
+            return value.GetType().GetField(value.ToString())!.GetCustomAttribute<T>(false) ??
                 throw new AttributeNotFoundException(typeof(T).ToString());
         }
 
         public static bool AttributeAttached<T>(this Enum value) where T : Attribute
         {
-            return value.GetType().GetField(value.ToString()).GetCustomAttribute<T>(false) != null;
+            return value.GetType().GetField(value.ToString())!.GetCustomAttribute<T>(false) != null;
         }
     }
 }

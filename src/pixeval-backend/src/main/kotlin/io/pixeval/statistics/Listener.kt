@@ -16,17 +16,19 @@ import io.ktor.server.netty.Netty
 import io.ktor.util.KtorExperimentalAPI
 import io.pixeval.statistics.helper.Properties
 import java.io.File
+import java.util.ArrayList
 
 @KtorExperimentalAPI
 fun main(args: Array<String>) {
     val props = Properties.read(args[0])
-    val server = embeddedServer(Netty) {
+    embeddedServer(Netty) {
         install(ForwardedHeaderSupport)
         install(CORS) {
             anyHost()
         }
         routing {
-            static("index") {
+            static("/") {
+                ArrayList<Int>().stream()
                 staticRootFolder = File(props["pixeval.static.location"] ?: error("cannot find property pixeval.static.location"))
                 files("pixeval")
             }
@@ -37,6 +39,12 @@ fun main(args: Array<String>) {
                 LocalTracker.increment()
                 call.respondRedirect(props["pixeval.download.redirect"] ?: error("cannot find property pixeval.download.redirect"))
             }
+            get("/Pixeval/version.txt") {
+                call.respondText(File(props["pixeval.version.location"] ?: error("cannot find property pixeval.version.location")).readText())
+            }
+            get("Pixeval/checksum.txt") {
+                call.respondText(File(props["pixeval.checksum.location"] ?: error("cannot find property pixeval.checksum.location")).readText())
+            }
         }
-    }
+    }.start(true)
 }

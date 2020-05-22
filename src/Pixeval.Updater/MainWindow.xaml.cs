@@ -40,7 +40,6 @@ namespace Pixeval.Updater
     /// </summary>
     public partial class MainWindow
     {
-        private const string ResourceUri = "http://47.95.218.243/Pixeval.zip";
 
         private static readonly CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
 
@@ -56,7 +55,7 @@ namespace Pixeval.Updater
         public MainWindow()
         {
             InitializeComponent();
-            if (!CheckIsPixevalDirectory(PixevalDirectory)) Exit("Pixeval更新器必须位于Pixeval目录中");
+             if (!CheckIsPixevalDirectory(PixevalDirectory)) Exit("Pixeval更新器必须位于Pixeval目录中");
         }
 
         private void MainWindow_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -68,11 +67,15 @@ namespace Pixeval.Updater
         {
             try
             {
-                await using var memory = await Download(ResourceUri,
+                await using var memory = await Download(RelevantURL.ZipArchive,
                                                         new Progress<double>(p => DownloadProgressIndicator.Value = p),
                                                         CancellationTokenSource.Token);
+                memory.Position = 0L;
                 if (memory.Checksum<SHA256Managed>() != (await GetRemoteChecksum()).ToLower())
-                    throw new ChecksumFailedException("文件hash校验失败");
+                {
+                    Clipboard.SetText("http://119.188.246.6/dc/Pixeval.zip");
+                    throw new ChecksumFailedException("文件hash校验失败，请前往http://119.188.246.6/dc/Pixeval.zip手动下载，链接已经复制到剪切板");
+                }
                 RmFiles();
                 await using (var fileStream =
                     new FileStream(ZipTmpPath, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
@@ -100,7 +103,7 @@ namespace Pixeval.Updater
 
         private static Task<string> GetRemoteChecksum()
         {
-            return new HttpClient().GetStringAsync("http://47.95.218.243/Pixeval/checksum.txt");
+            return new HttpClient().GetStringAsync(RelevantURL.Checksum);
         }
 
         private static void RmFiles()

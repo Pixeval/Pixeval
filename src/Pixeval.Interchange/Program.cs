@@ -18,9 +18,7 @@
 
 #endregion
 
-using System;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -34,8 +32,6 @@ namespace Pixeval.Interchange
         private const string IllustRegex = "pixeval://(www\\.)?pixiv\\.net/artworks/(?<id>\\d+)";
         private const string UserRegex = "pixeval://(www\\.)?pixiv\\.net/users/(?<id>\\d+)";
         private const string SpotlightRegex = "pixeval://(www\\.)?pixivision\\.net/\\w{2}/a/(?<id>\\d+)";
-
-        private const string LogFile = "interchange-log.txt";
 
         private static readonly HttpClient HttpClient = new HttpClient();
 
@@ -54,23 +50,11 @@ namespace Pixeval.Interchange
                 if (PixevalInstanceRunning())
                 {
                     // send Pixeval custom pluggable protocol if so
-                    try
-                    {
-                        await HttpClient.PostAsync("http://127.0.0.1:12547/open",
-                                                   new StringContent(url, Encoding.UTF8));
-                        await Log(
-                            $"[REMOTE] trying to send a post request to http://127.0.0.1:12547/open, session id: {url.GetHashCode()}, post content: {url}, time: {DateTime.Now:s}");
-                    }
-                    catch (Exception e)
-                    {
-                        await Log(
-                            $"[ERROR] exception occured when trying to send a post request to http://127.0.0.1:12547/open, session id: {url.GetHashCode()}, post content: {url}, time: {DateTime.Now:s}, exception message: {e.Message}");
-                    }
+                    await HttpClient.PostAsync("http://127.0.0.1:12547/open",
+                                               new StringContent(url, Encoding.UTF8));
                 }
                 else
                 {
-                    await Log(
-                        $"[INVOKE] trying to invoke Pixeval instance, session id: {url.GetHashCode()}, argument: {url}, time: {DateTime.Now:s}");
                     // otherwise execute Pixeval and pass the protocol as argument
                     Process.Start("Pixeval", url);
                 }
@@ -80,15 +64,6 @@ namespace Pixeval.Interchange
         private static bool PixevalInstanceRunning()
         {
             return Process.GetProcessesByName("Pixeval").Length > 0;
-        }
-
-        private static async Task Log(string content)
-        {
-            var old = await File.ReadAllTextAsync(LogFile);
-            if (string.IsNullOrEmpty(old))
-                await File.WriteAllTextAsync(LogFile, content);
-            else
-                await File.WriteAllTextAsync(LogFile, old.EndsWith('\n') ? old + content : old + '\n' + content);
         }
     }
 }

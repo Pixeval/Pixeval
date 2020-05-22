@@ -1,5 +1,4 @@
 ﻿#region Copyright (C) 2019-2020 Dylech30th. All rights reserved.
-
 // Pixeval - A Strong, Fast and Flexible Pixiv Client
 // Copyright (C) 2019-2020 Dylech30th
 // 
@@ -15,12 +14,14 @@
 // 
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 #endregion
 
-namespace Pixeval.Data.ViewModel
+namespace Pixeval.Updater
 {
-    public static class ViewModelHelper
+    public static class RelevantURL
     {
+        public const string Checksum = "http://47.95.218.243/Pixeval/checksum.txt";
+
+        public const string ZipArchive = "http://47.95.218.243/Pixeval.zip";
     }
 }

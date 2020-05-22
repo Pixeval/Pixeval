@@ -31,6 +31,7 @@ using Pixeval.Data.Web;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Objects.Exceptions;
 using Pixeval.Objects.Generic;
+using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
 
 namespace Pixeval.Core
@@ -247,7 +248,7 @@ namespace Pixeval.Core
             private static async Task<HttpResponse<string>> GetResponse(string url)
             {
                 var result = await HttpClientFactory.WebApiHttpClient()
-                    .Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", "zh-cn"))
+                    .Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", AkaI18N.GetCultureAcceptLanguage()))
                     .GetStringAsync(url);
                 return !result.IsNullOrEmpty()
                     ? HttpResponse<string>.Wrap(true, result)

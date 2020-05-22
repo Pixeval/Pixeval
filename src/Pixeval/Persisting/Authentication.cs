@@ -151,7 +151,12 @@ namespace Pixeval.Persisting
                 while (!cancellationTokenSource.Token.IsCancellationRequested)
                 {
                     await Task.Delay(1000, cancellationTokenSource.Token);
-                    var src = await chrome.Dispatcher.Invoke(async () => await chrome.WebBrowser.GetSourceAsync());
+                    var src = await chrome.Dispatcher.Invoke(async () =>
+                    {
+                        if (chrome.WebBrowser != null)
+                            return await chrome.WebBrowser.GetSourceAsync();
+                        return "";
+                    });
                     if (src.Contains("error-msg-list__item"))
                     {
                         cancellationTokenSource.Cancel();
@@ -190,7 +195,7 @@ namespace Pixeval.Persisting
 
             chrome.Dispose();
             cancellationTokenSource.Cancel();
-            SignIn.Instance.BrowserDialog.CurrentSession.Close();
+            SignIn.Instance.BrowserDialog.CurrentSession?.Close();
             // finalizing objects and save the cookie to user identity
             if ((await completionVisitor.Task).FirstOrDefault(PixivCookieRecorded) is { } cookie)
             {

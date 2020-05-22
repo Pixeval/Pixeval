@@ -32,7 +32,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
                 <ResourceDictionary
                     Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
-                <!--<ResourceDictionary Source="pack://application:,,,/Pixeval;component/Objects/I18n/UI/StringResources_zh-cn.xaml" />-->
             </ResourceDictionary.MergedDictionaries>
             <system:Double x:Key="Two">
                 2

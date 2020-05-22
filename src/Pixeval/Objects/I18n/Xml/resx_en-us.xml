@@ -166,4 +166,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <resx key="PixevalUpdateAvailable" value="An update for Pixeval is available, update now? Yes/No" />
   <resx key="PixevalUpdateAvailableTitle" value="New Release Updated" />
   <resx key="ThisLoginSessionRequiresRecaptcha" value="This login session requires finish recaptcha manually" />
+  <resx key="SupportMe" value="Support Me" />
 </localization>

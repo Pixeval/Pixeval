@@ -57,6 +57,7 @@ namespace Pixeval.UI
             catch (Exception exception)
             {
                 SetErrorHint(exception);
+                ExceptionDumper.WriteException(exception);
                 Login.Enable();
                 return;
             }

@@ -164,4 +164,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <resx key="PixevalUpdateAvailable" value="有更新可用, 是否现在更新?" />
   <resx key="PixevalUpdateAvailableTitle" value="更新可用" />
   <resx key="ThisLoginSessionRequiresRecaptcha" value="本次登录需要手动通过recaptcha" />
+  <resx key="SupportMe" value="支持作者" />
 </localization>
