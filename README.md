@@ -66,6 +66,23 @@
     - 实现webapi登录
     - 作品榜单
     - 用户动态
+* 2020/5/23
+    * 现在除了可以再应用内查看浏览记录外，还可以在Windows时间线里查看了（仅支持Windows 10 1803+）用户（感谢来自[@tobiichiamane]      (https://github.com/tobiichiamane)的灵感）
+    * Pixeval现在会自动注册自定义协议到注册表，可以使用如下方法使用:
+        - 当浏览作品时，替换url的协议部分(http/https)为自定义协议(pixeval)
+（例: https://www.pixiv.net/artworks/81470442 => pixeval://www.pixiv.net/artworks/81470442）
+        - 当浏览作者时，替换url的协议部分(http/https)为自定义协议(pixeval)
+（例: https://www.pixiv.net/users/28603589 => pixeval://www.pixiv.net/users/28603589）
+        - 当浏览特辑时，替换url的协议部分(http/https)为自定义协议(pixeval)
+（例: https://www.pixivision.net/en/a/5423 => pixeval://www.pixivision.net/en/a/5423）
+    * 可以直接在图片浏览页设置图片为当前的桌面了，如果你的windows版本 >= 8 （build number: 6.2.9200)，则当图片长宽比超过1.7时会自动设置为Span样式）
+
+**优化：**
+* 2020/5/23
+    - 修改了缩略图加载的动画
+    - 优化了加载特辑封面的速度
+    - 优化了文件校验失败时的提示信息
+    - 使用了更加完整能够提供更多信息的错误快照，可以点击[这里](http://119.188.246.6/dc/dump_file.txt)查看示例
 
 **BUG修复：**
 * 2020/1/8
@@ -91,6 +108,10 @@
     - 优化了适配
 * 2020/4/17
     - 修复了浏览多图作品时无法复制的bug
+* 2020/5/23
+    - 修复了WebAPI因为recatpcha造成登录超时的问题
+    - 修复了WebAPI登录时抛出NullReferenceException的问题
+    - 修复了更新时某些情况下文件校验失败的问题
   
 **推荐：**
 * 如果你希望找到一个Android上的免代理客户端，那么我推荐[@Notsfsssf](https://github.com/Notsfsssf)的作品[Pix-EzViewer](https://github.com/Notsfsssf/Pix-EzViewer) (本项目的免代理实现也源于此)
@@ -101,7 +122,9 @@
 * 自版本1.4.0开始不再使用单文件方式发布，由于单文件发布会导致一些奇怪的问题
 * 自版本1.4.0开始可以选择是否开启直连了，默认关闭，如果自己需要直连请在设置中手动开启
 * 自版本1.7.1起添加了runtime-installation.exe作为下载.NET Core Runtime的脚本，可以直接双击下载并安装
-* WebAPI的直连方案很大程度上得益于[@鱼姐姐](https://github.com/tobiichiamane)的帮助，包括HTTPS反代服务器的实现
+* 如果你的版本在2.1.1以前，更新时请手动下载安装包，不要使用自动更新，否则可能会导致更新失败
+* WebAPI的直连方案很大程度上得益于[@tobiichiamane](https://github.com/tobiichiamane)的帮助
+* 下载服务器由[@duiweiya](https://github.com/duiweiya)提供
 
 **下载：**
 </br>
