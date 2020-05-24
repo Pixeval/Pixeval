@@ -67,7 +67,7 @@
     - 作品榜单
     - 用户动态
 * 2020/5/23
-    * 现在除了可以再应用内查看浏览记录外，还可以在Windows时间线里查看了（仅支持Windows 10 1803+）用户（感谢来自[@tobiichiamane]      (https://github.com/tobiichiamane)的灵感）
+    * 现在除了可以再应用内查看浏览记录外，还可以在Windows时间线里查看了（仅支持Windows 10 1803+）用户（感谢来自@tobiichiamane的灵感）
     * Pixeval现在会自动注册自定义协议到注册表，可以使用如下方法使用:
         - 当浏览作品时，替换url的协议部分(http/https)为自定义协议(pixeval)
 （例: https://www.pixiv.net/artworks/81470442 => pixeval://www.pixiv.net/artworks/81470442）
