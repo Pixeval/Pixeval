@@ -1294,10 +1294,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     </Storyboard>
                 </ScrollViewer.Resources>
                 <StackPanel d:DataContext="{d:DesignData User}" Background="#FAFAFC">
-                    <Grid Height="300" HorizontalAlignment="Stretch" VerticalAlignment="Top">
-                        <Image x:Name="UserBanner" HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                               Stretch="UniformToFill" />
-                    </Grid>
+                    <Image x:Name="UserBanner" MinHeight="50" MaxHeight="300"
+                           HorizontalAlignment="Stretch" VerticalAlignment="Top" Stretch="UniformToFill" />
                     <Grid Height="150" HorizontalAlignment="Stretch" VerticalAlignment="Top">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />

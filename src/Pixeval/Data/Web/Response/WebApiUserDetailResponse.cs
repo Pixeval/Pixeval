@@ -1,5 +1,4 @@
 ﻿#region Copyright (C) 2019-2020 Dylech30th. All rights reserved.
-
 // Pixeval - A Strong, Fast and Flexible Pixiv Client
 // Copyright (C) 2019-2020 Dylech30th
 // 
@@ -15,28 +14,41 @@
 // 
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 #endregion
 
-using System.Net.Http;
-using System.Threading.Tasks;
-using Pixeval.Data.Web.Request;
-using Pixeval.Data.Web.Response;
-using Refit;
+using System;
+using Newtonsoft.Json;
 
-namespace Pixeval.Data.Web.Protocol
+namespace Pixeval.Data.Web.Response
 {
-    [Headers("User-Agent: PixivAndroidApp/5.0.64 (Android 6.0)", "Content-Type: application/x-www-form-urlencoded")]
-    public interface IWebApiProtocol
+    public class WebApiUserDetailResponse
     {
-        [Post("/setting_user.php")]
-        Task<HttpResponseMessage> ToggleR18State([Body(BodySerializationMethod.UrlEncoded)]
-                                                 ToggleR18StateRequest toggleR18StateRequest);
+        [JsonProperty("body")]
+        public Body ResponseBody { get; set; }
 
-        [Get("/ajax/showcase/article")]
-        Task<SpotlightArticleResponse> GetSpotlightArticles([AliasAs("article_id")] string articleId);
+        public class Body
+        {
+            [JsonProperty("user_details")]
+            public UserDetails UserDetails { get; set; }
+        }
 
-        [Get("/touch/ajax/user/details")]
-        Task<WebApiUserDetailResponse> GetWebApiUserDetail(string id);
+        public class UserDetails
+        {
+            [JsonProperty("cover_image")]
+            public CoverImage CoverImage { get; set; }
+
+        }
+        public class CoverImage
+        {
+
+            [JsonProperty("profile_cover_image")]
+            public ProfileCoverImage ProfileCoverImage { get; set; }
+        }
+
+        public class ProfileCoverImage
+        {
+            [JsonProperty("720x360")]
+            public string The720X360 { get; set; }
+        }
     }
 }

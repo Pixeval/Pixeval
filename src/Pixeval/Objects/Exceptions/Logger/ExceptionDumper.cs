@@ -36,7 +36,15 @@ namespace Pixeval.Objects.Exceptions.Logger
     {
         public static async void WriteException(Exception e)
         {
-            var stack = new ApplicationLogStack(AppContext.AppIdentifier, ".NET Runtime").GetFirst();
+            ApplicationLog stack;
+            try
+            {
+                stack = new ApplicationLogStack(AppContext.AppIdentifier, ".NET Runtime").GetFirst();
+            }
+            catch
+            {
+                stack = null;
+            }
             var exceptionMessage = e is ApiException exception
                 ? exception.Content + Environment.NewLine + exception
                 : e.ToString();
@@ -77,9 +85,9 @@ namespace Pixeval.Objects.Exceptions.Logger
             sb.AppendLine();
             sb.AppendLine(@"    Begin Event Log");
             sb.AppendLine(@"        Represents the latest application event log related to Pixeval");
-            sb.AppendLine($"        Creation: {stack.Creation}");
+            sb.AppendLine($"        Creation: {stack?.Creation}");
             sb.AppendLine(@"        Data:");
-            sb.AppendLine(FormatMultilineData(stack.Data, 3));
+            sb.AppendLine(FormatMultilineData(stack?.Data, 3));
             sb.AppendLine(@"    End Event Log");
             sb.AppendLine();
             sb.AppendLine(@"    Begin Exception Log");

@@ -105,11 +105,11 @@ namespace Pixeval.Core
 
         public static void RecordTimelineInternal(BrowsingHistory browsingHistory)
         {
-            RecordTimeline(WindowsUserActivityManager.GlobalLifeTimeScope, browsingHistory);
-            if (CheckWindowsVersion()) RecordTimeline(BrowsingHistoryAccessor.GlobalLifeTimeScope, browsingHistory);
+            RecordTimeline(BrowsingHistoryAccessor.GlobalLifeTimeScope, browsingHistory);
+            if (CheckWindowsVersion()) RecordTimeline(WindowsUserActivityManager.GlobalLifeTimeScope, browsingHistory);
 
             static bool CheckWindowsVersion()
-            {
+            { 
                 return
                     Environment.OSVersion
                         .Version >= /* Windows 10 April 2018 Update(a.k.a. Redstone 4), which is the version that release Windows Timeline feature */

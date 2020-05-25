@@ -40,10 +40,8 @@ using System.Windows.Navigation;
 using System.Windows.Threading;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignThemes.Wpf.Transitions;
-using Newtonsoft.Json.Linq;
 using Pixeval.Core;
 using Pixeval.Data.ViewModel;
-using Pixeval.Data.Web;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
 using Pixeval.Objects.Generic;
@@ -744,18 +742,14 @@ namespace Pixeval.UI
         {
             Task.Run(async () =>
             {
-                var link =
-                    $"https://public-api.secure.pixiv.net/v1/users/{id}/works.json?page=1&publicity=public&per_page=1&image_sizes=large";
-                var httpClient =
-                    HttpClientFactory.PixivApi(ProtocolBase.PublicApiBaseUrl, Settings.Global.DirectConnect);
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer");
-
-                var res = (await httpClient.GetStringAsync(link)).FromJson<dynamic>();
-                if (((IEnumerable<JToken>) res.response).Any())
+                try
                 {
-                    var img = res.response[0].image_urls.large.ToString();
-                    SetImageSource(UserBanner, await PixivIO.FromUrl(img));
+                    SetImageSource(
+                        UserBanner,
+                        await PixivIO.FromUrl((await HttpClientFactory.WebApiService().GetWebApiUserDetail(id)).ResponseBody
+                                              .UserDetails.CoverImage.ProfileCoverImage.The720X360));
                 }
+                catch { /* ignore */ }
             });
         }
 
@@ -885,7 +879,7 @@ namespace Pixeval.UI
         private void ViewUserInBrowserButton_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Process.Start(new ProcessStartInfo("cmd",
-                                               $"/c start https://www.pixiv.net/artworks/{sender.GetDataContext<User>().Id}")
+                                               $"/c start https://www.pixiv.net/users/{sender.GetDataContext<User>().Id}")
                               {CreateNoWindow = true});
         }
 
