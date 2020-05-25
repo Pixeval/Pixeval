@@ -113,7 +113,7 @@ namespace Pixeval.Persisting
         {
             // create x.509 certificate object for intercepting https traffic, USE AT YOUR OWN RISK
             var certificate = await CertificateManager.GetFakeServerCertificate();
-            // create https reverse proxy server for intercepting and forwarding https traffic,
+            // create https proxy server for intercepting and forwarding https traffic,
             // default port is 1234
             using var proxyServer = HttpsProxyServer.Create("127.0.0.1", 1234,
                                                             (await new PixivApiDnsResolver().Lookup("pixiv.net"))[0]
