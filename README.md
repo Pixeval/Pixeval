@@ -24,6 +24,9 @@
         </a>
     </p>
 </div>
+<div align="center">
+    <p><strong>2020年5月23日Pixeval下载量突破10w，我在此感谢您的信任与支持</strong></p>
+</div>
 
 **更新：**
 * 2020/1/9
@@ -148,6 +151,7 @@
 * [@Lasm_Gratel](https://github.com/NanamiArihara)
 * [@TheRealKamisama](https://github.com/TheRealKamisama)
 * [@Summpot](https://github.com/Summpot)
+* 使用并给予积极意见的各位
 
 **支持作者：**
 如果你感觉该项目帮助到了你，欢迎前往[爱发电](https://afdian.net/@dylech30th)赞助我，你的支持是我维护项目的动力，谢谢！
