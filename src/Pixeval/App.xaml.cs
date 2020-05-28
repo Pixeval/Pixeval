@@ -23,6 +23,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -80,6 +81,9 @@ namespace Pixeval
             await InstallFakeCaCertificate();
 
             // These initializations are for WEB API LOGIN
+            PortScan(out var proxy, out var pac);
+            AppContext.ProxyPort = proxy;
+            AppContext.PacPort = pac;
             await WritePac();
             CefSharpInitialize();
 
@@ -95,6 +99,30 @@ namespace Pixeval
 
             if (e.Args.Any()) await PluggableProtocolParser.Parse(e.Args[0]);
             base.OnStartup(e);
+        }
+
+        private static void PortScan(out int proxy, out int pac)
+        {
+            var unavailablePorts = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections()
+                .Select(t => t.LocalEndPoint.Port).ToArray();
+
+            var rd = new Random();
+            proxy = RandPorts();
+            pac = RandPorts();
+            while (Array.BinarySearch(unavailablePorts, proxy) >= 0)
+            {
+                proxy = RandPorts();
+            }
+
+            while (Array.BinarySearch(unavailablePorts, pac) >= 0)
+            {
+                pac = RandPorts();
+            }
+
+            int RandPorts()
+            {
+                return rd.Next(3000, 65536);
+            }
         }
 
         private static async Task InstallPluggableProtocolHandler()
@@ -229,7 +257,7 @@ namespace Pixeval
             {
                 CefCommandLineArgs =
                 {
-                    {"proxy-pac-url", "http://127.0.0.1:4321/pixeval_pac.pac"}
+                    {"proxy-pac-url", $"http://127.0.0.1:{AppContext.PacPort}/pixeval_pac.pac"}
                 }
             }, true, browserProcessHandler: null);
         }
@@ -271,7 +299,7 @@ namespace Pixeval
             scriptBuilder.AppendLine("function FindProxyForURL(url, host) {");
             // only *.pixiv.net will request bypass proxy
             scriptBuilder.AppendLine("    if (shExpMatch(host, \"*.pixiv.net\")) {");
-            scriptBuilder.AppendLine("        return 'PROXY 127.0.0.1:1234';");
+            scriptBuilder.AppendLine($"        return 'PROXY 127.0.0.1:{AppContext.ProxyPort}';");
             scriptBuilder.AppendLine("    }");
             scriptBuilder.AppendLine("    return \"DIRECT\";");
             scriptBuilder.AppendLine("}");

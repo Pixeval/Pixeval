@@ -80,7 +80,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                     <TextBlock x:Name="ProgressIndicator"
                                                Text="{Binding Progress, Converter={StaticResource DoubleToPercentConverter}}" />
                                     <TextBlock Margin="10,0,0,0"
-                                               Text="{Binding DownloadStat.Value, Converter={StaticResource EnumToStringConverter}}" />
+                                               Text="{Binding DownloadState.Value, Converter={StaticResource EnumToStringConverter}}" />
                                     <TextBlock x:Name="HintMessage" MaxWidth="500" Margin="10,0,0,0"
                                                HorizontalAlignment="Right"
                                                Text="{Binding ReasonPhase}"
@@ -138,7 +138,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                     <TextBlock x:Name="ProgressIndicator"
                                                Text="{Binding Progress, Converter={StaticResource DoubleToPercentConverter}}" />
                                     <TextBlock Margin="10,0,0,0"
-                                               Text="{Binding DownloadStat.Value, Converter={StaticResource EnumToStringConverter}}" />
+                                               Text="{Binding DownloadState.Value, Converter={StaticResource EnumToStringConverter}}" />
                                     <TextBlock x:Name="HintMessage" MaxWidth="500" Margin="10,0,0,0"
                                                HorizontalAlignment="Right"
                                                Text="{Binding ReasonPhase}"

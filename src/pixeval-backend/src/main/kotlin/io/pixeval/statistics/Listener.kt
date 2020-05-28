@@ -16,7 +16,7 @@ import io.ktor.server.netty.Netty
 import io.ktor.util.KtorExperimentalAPI
 import io.pixeval.statistics.helper.Properties
 import java.io.File
-import java.util.ArrayList
+import java.util.*
 
 @KtorExperimentalAPI
 fun main(args: Array<String>) {
@@ -28,7 +28,6 @@ fun main(args: Array<String>) {
         }
         routing {
             static("/") {
-                ArrayList<Int>().stream()
                 staticRootFolder = File(props["pixeval.static.location"] ?: error("cannot find property pixeval.static.location"))
                 files("pixeval")
             }

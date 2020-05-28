@@ -88,7 +88,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <resx key="MultiplePixevalInstanceDetected" value="There's already a Pixeval instance running" />
   <resx key="MultiplePixevalInstanceDetectedTitle" value="You cannot running two Pixeval at the same time!" />
   <resx key="CppRedistributableRequired"
-        value="Pixeval requires Visual C++ Redistributable 2015/2017/2019 x64 support, otherwise some function will be limitedPixeval运行需要Visual C++ Redistributable 2015/2017/2019 x64. Please download the newest VC++ Redistributable at https://support.microsoft.com/zh-cn/help/2977003/the-latest-supported-visual-c-downloads, the link has been copied to clipboard" />
+        value="Pixeval requires Visual C++ Redistributable 2015/2017/2019 x64 support, otherwise some function will be limited. Please download the newest VC++ Redistributable at https://support.microsoft.com/zh-cn/help/2977003/the-latest-supported-visual-c-downloads, the link has been copied to clipboard" />
   <resx key="CppRedistributableRequiredTitle" value="No VC++ Redistributable 2015/2017/2019 detected" />
   <resx key="CertificateInstallationIsRequired"
         value="We detected that certificate is not installed yet on this machine, WebApi function will be unavailable, we will trying to install the certificate in the next few steps, there might be a popup window during the installation, please click OK, the private key of this certificate will not be distributed" />
@@ -167,4 +167,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <resx key="PixevalUpdateAvailableTitle" value="New Release Updated" />
   <resx key="ThisLoginSessionRequiresRecaptcha" value="This login session requires finish recaptcha manually" />
   <resx key="SupportMe" value="Support Me" />
+  <resx key="DownloadTo" value="Download To..." />
 </localization>

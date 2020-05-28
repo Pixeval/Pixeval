@@ -28,10 +28,7 @@ namespace Pixeval.Core
 
         public static void StartNewInstance<T>(IPixivAsyncEnumerable<T> itr)
         {
-            var iterator = _currentItr as IPixivAsyncEnumerable<T>;
-            iterator?.Cancel();
-            GC.Collect();
-            AppContext.DefaultCacheProvider.Clear();
+            CancelCurrent();
             _currentItr = itr;
         }
 

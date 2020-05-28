@@ -41,19 +41,19 @@ namespace Pixeval.Core
         public static readonly ObservableCollection<DownloadableIllustration> Downloaded =
             new ObservableCollection<DownloadableIllustration>();
 
-        public static void EnqueueDownloadItem(Illustration illustration)
+        public static void EnqueueDownloadItem(Illustration illustration, string rootDir = null)
         {
             if (Downloading.Any(i => illustration.Id == i.DownloadContent.Id)) return;
 
             static DownloadableIllustration CreateDownloadableIllustration(Illustration downloadContent,
-                                                                           bool isFromMange, int index = -1)
+                                                                           bool isFromMange, int index = -1, string rootDirCpy = null)
             {
-                var model = new DownloadableIllustration(downloadContent, isFromMange, index);
-                model.DownloadStat.ValueChanged += (sender, args) => Application.Current.Dispatcher.Invoke(() =>
+                var model = new DownloadableIllustration(downloadContent, isFromMange, index) {RootDirectory = rootDirCpy};
+                model.DownloadState.ValueChanged += (sender, args) => Application.Current.Dispatcher.Invoke(() =>
                 {
                     switch (args.NewValue)
                     {
-                        case DownloadStatEnum.Finished:
+                        case DownloadStateEnum.Finished:
                             model.Freeze();
                             Downloading.Remove(model);
                             if (Downloaded.All(i =>
@@ -61,14 +61,14 @@ namespace Pixeval.Core
                                                    i.DownloadContent.GetDownloadUrl()))
                                 Downloaded.Add(model);
                             break;
-                        case DownloadStatEnum.Downloading:
+                        case DownloadStateEnum.Downloading:
                             Downloaded.Remove(model);
                             Downloading.Add(model);
                             break;
-                        case var stat when stat == DownloadStatEnum.Canceled ||
-                            stat == DownloadStatEnum.Queue ||
-                            stat == DownloadStatEnum.Exceptional:
-                            if (stat == DownloadStatEnum.Canceled) Downloading.Remove(model);
+                        case var stat when stat == DownloadStateEnum.Canceled ||
+                            stat == DownloadStateEnum.Queue ||
+                            stat == DownloadStateEnum.Exceptional:
+                            if (stat == DownloadStateEnum.Canceled) Downloading.Remove(model);
                             break;
                         default: throw new ArgumentOutOfRangeException();
                     }
@@ -81,10 +81,10 @@ namespace Pixeval.Core
                 {
                     var cpy = j;
                     Task.Run(
-                        () => CreateDownloadableIllustration(illustration.MangaMetadata[cpy], true, cpy).Download());
+                        () => CreateDownloadableIllustration(illustration.MangaMetadata[cpy], true, cpy, rootDir).Download());
                 }
             else
-                Task.Run(() => CreateDownloadableIllustration(illustration, false).Download());
+                Task.Run(() => CreateDownloadableIllustration(illustration, false, rootDirCpy: rootDir).Download());
         }
     }
 

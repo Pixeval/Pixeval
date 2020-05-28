@@ -312,5 +312,7 @@ namespace Pixeval.Objects.I18n
             GetResource(nameof(ThisLoginSessionRequiresRecaptcha));
 
         public static string SupportMe => GetResource(nameof(SupportMe));
+
+        public static string DownloadTo => GetResource(nameof(DownloadTo));
     }
 }

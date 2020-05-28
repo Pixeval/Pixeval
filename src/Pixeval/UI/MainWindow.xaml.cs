@@ -40,6 +40,7 @@ using System.Windows.Navigation;
 using System.Windows.Threading;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignThemes.Wpf.Transitions;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using Pixeval.Core;
 using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
@@ -640,6 +641,22 @@ namespace Pixeval.UI
         {
             DownloadManager.EnqueueDownloadItem(sender.GetDataContext<Illustration>());
             MessageQueue.Enqueue(AkaI18N.QueuedDownload);
+        }
+
+        private void DownloadToMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            using var fileDialog = new CommonOpenFileDialog(AkaI18N.PleaseSelectLocation)
+            {
+                InitialDirectory = Settings.Global.DownloadLocation ??
+                    Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
+                IsFolderPicker = true
+            };
+
+            if (fileDialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                DownloadManager.EnqueueDownloadItem(sender.GetDataContext<Illustration>(), fileDialog.FileName);
+                MessageQueue.Enqueue(AkaI18N.QueuedDownload);
+            }
         }
 
         private void DownloadAllNowMenuItem_OnClick(object sender, RoutedEventArgs e)

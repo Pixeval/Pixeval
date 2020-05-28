@@ -32,9 +32,13 @@ namespace Pixeval
 {
     public static class AppContext
     {
+        public static int ProxyPort { get; set; }
+
+        public static int PacPort { get; set; }
+
         public const string AppIdentifier = "Pixeval";
 
-        public const string CurrentVersion = "2.1.3";
+        public const string CurrentVersion = "2.1.4";
 
         public const string ConfigurationFileName = "pixeval_conf.json";
 

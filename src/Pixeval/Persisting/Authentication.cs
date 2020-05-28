@@ -113,15 +113,13 @@ namespace Pixeval.Persisting
         {
             // create x.509 certificate object for intercepting https traffic, USE AT YOUR OWN RISK
             var certificate = await CertificateManager.GetFakeServerCertificate();
-            // create https proxy server for intercepting and forwarding https traffic,
-            // default port is 1234
-            using var proxyServer = HttpsProxyServer.Create("127.0.0.1", 1234,
+            // create https proxy server for intercepting and forwarding https traffic
+            using var proxyServer = HttpsProxyServer.Create("127.0.0.1", AppContext.ProxyPort,
                                                             (await new PixivApiDnsResolver().Lookup("pixiv.net"))[0]
                                                             .ToString(), certificate);
             // create pac file server for providing the proxy-auto-configuration file,
-            // which is driven by EmbedIO, this is because CefSharp do not accept file uri,
-            // default port is 4321
-            using var pacServer = PacFileServer.Create("127.0.0.1", 4321);
+            // which is driven by EmbedIO, this is because CefSharp do not accept file uri
+            using var pacServer = PacFileServer.Create("127.0.0.1", AppContext.PacPort);
             pacServer.Start();
             var chrome = SignIn.Instance.ChromiumWebBrowser;
             const string loginUrl = "https://accounts.pixiv.net/login";
