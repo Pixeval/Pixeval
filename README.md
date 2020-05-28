@@ -83,6 +83,8 @@
     - 优化了加载特辑封面的速度
     - 优化了文件校验失败时的提示信息
     - 使用了更加完整能够提供更多信息的错误快照，可以点击[这里](http://119.188.246.6/dc/dump_file.txt)查看示例
+* 2020/5/28
+    - 打开下载位置时会自动选中下载的文件
 
 **BUG修复：**
 * 2020/1/8
@@ -112,6 +114,8 @@
     - 修复了WebAPI因为recatpcha造成登录超时的问题
     - 修复了WebAPI登录时抛出NullReferenceException的问题
     - 修复了更新时某些情况下文件校验失败的问题
+* 2020/5/28
+    - 修复了1234和4321两个端口被占用时无法登陆的BUG
   
 **推荐：**
 * 如果你希望找到一个Android上的免代理客户端，那么我推荐[@Notsfsssf](https://github.com/Notsfsssf)的作品[Pix-EzViewer](https://github.com/Notsfsssf/Pix-EzViewer) (本项目的免代理实现也源于此)
