@@ -86,7 +86,7 @@ namespace Pixeval.Persisting.WebApi
             {
                 await using (streamResource.Stream)
                 {
-                    _serverCert = new X509Certificate2(await streamResource.Stream.ToBytes(), "pixeval");
+                    _serverCert = new X509Certificate2(await streamResource.Stream.ToBytes(), "pixeval", X509KeyStorageFlags.EphemeralKeySet);
                 }
 
                 return _serverCert;
