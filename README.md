@@ -24,6 +24,9 @@
         </a>
     </p>
 </div>
+<div align="center">
+    <p><strong>2020年5月23日Pixeval下载量突破10w，我在此感谢您的信任与支持</strong></p>
+</div>
 
 **更新：**
 * 2020/1/9
@@ -83,6 +86,8 @@
     - 优化了加载特辑封面的速度
     - 优化了文件校验失败时的提示信息
     - 使用了更加完整能够提供更多信息的错误快照，可以点击[这里](http://119.188.246.6/dc/dump_file.txt)查看示例
+* 2020/5/28
+    - 打开下载位置时会自动选中下载的文件
 
 **BUG修复：**
 * 2020/1/8
@@ -112,6 +117,8 @@
     - 修复了WebAPI因为recatpcha造成登录超时的问题
     - 修复了WebAPI登录时抛出NullReferenceException的问题
     - 修复了更新时某些情况下文件校验失败的问题
+* 2020/5/28
+    - 修复了1234和4321两个端口被占用时无法登陆的BUG
   
 **推荐：**
 * 如果你希望找到一个Android上的免代理客户端，那么我推荐[@Notsfsssf](https://github.com/Notsfsssf)的作品[Pix-EzViewer](https://github.com/Notsfsssf/Pix-EzViewer) (本项目的免代理实现也源于此)
@@ -144,6 +151,7 @@
 * [@Lasm_Gratel](https://github.com/NanamiArihara)
 * [@TheRealKamisama](https://github.com/TheRealKamisama)
 * [@Summpot](https://github.com/Summpot)
+* 使用并给予积极意见的各位
 
 **支持作者：**
 如果你感觉该项目帮助到了你，欢迎前往[爱发电](https://afdian.net/@dylech30th)赞助我，你的支持是我维护项目的动力，谢谢！
