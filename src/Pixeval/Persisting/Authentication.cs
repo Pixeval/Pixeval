@@ -39,9 +39,6 @@ using Pixeval.Objects.Web;
 using Pixeval.Persisting.WebApi;
 using Pixeval.UI;
 using Refit;
-#if DEBUG
-
-#endif
 
 namespace Pixeval.Persisting
 {

@@ -242,7 +242,7 @@ namespace Pixeval.UI
             var userInfo = sender.GetDataContext<User>();
             var ctrl = (UserPreviewPopupContent) sender;
             var usr = await HttpClientFactory.AppApiService()
-                .GetUserInformation(new UserInformationRequest { Id = $"{sender.GetDataContext<User>().Id}" });
+                .GetUserInformation(new UserInformationRequest {Id = $"{sender.GetDataContext<User>().Id}"});
             var usrEntity = new User
             {
                 Avatar = usr.UserEntity.ProfileImageUrls.Medium,
