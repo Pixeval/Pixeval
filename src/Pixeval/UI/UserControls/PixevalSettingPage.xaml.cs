@@ -20,9 +20,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -55,8 +53,7 @@ namespace Pixeval.UI.UserControls
                 IsFolderPicker = true
             };
 
-            if (fileDialog.ShowDialog() == CommonFileDialogResult.Ok)
-                DownloadLocationTextBox.Text = fileDialog.FileName;
+            if (fileDialog.ShowDialog() == CommonFileDialogResult.Ok) DownloadLocationTextBox.Text = fileDialog.FileName;
         }
 
         private void QueryR18_OnChecked(object sender, RoutedEventArgs e)

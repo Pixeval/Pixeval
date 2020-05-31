@@ -32,13 +32,9 @@ namespace Pixeval
 {
     public static class AppContext
     {
-        public static int ProxyPort { get; set; }
-
-        public static int PacPort { get; set; }
-
         public const string AppIdentifier = "Pixeval";
 
-        public const string CurrentVersion = "2.1.6";
+        public const string CurrentVersion = "2.2.0";
 
         public const string ConfigurationFileName = "pixeval_conf.json";
 
@@ -70,6 +66,10 @@ namespace Pixeval
 
         public static readonly IQualifier<Illustration, IllustrationQualification> DefaultQualifier =
             new IllustrationQualifier();
+
+        public static int ProxyPort { get; set; }
+
+        public static int PacPort { get; set; }
 
         public static async Task<bool> UpdateAvailable()
         {

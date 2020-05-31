@@ -130,8 +130,7 @@ namespace Pixeval.Core
                         .Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", AkaI18N.GetCultureAcceptLanguage()))
                         .GetStringAsync(url)).FromJson<RankingResponse>();
 
-                if (result is { } response && !response.Illusts.IsNullOrEmpty())
-                    return HttpResponse<RankingResponse>.Wrap(true, response);
+                if (result is { } response && !response.Illusts.IsNullOrEmpty()) return HttpResponse<RankingResponse>.Wrap(true, response);
                 return HttpResponse<RankingResponse>.Wrap(false);
             }
         }

@@ -73,8 +73,8 @@ namespace Pixeval.Updater
                 memory.Position = 0L;
                 if (memory.Checksum<SHA256Managed>() != (await GetRemoteChecksum()).ToLower())
                 {
-                    Clipboard.SetText("http://119.188.246.6/dc/Pixeval.zip");
-                    throw new ChecksumFailedException("文件hash校验失败，请前往http://119.188.246.6/dc/Pixeval.zip手动下载，链接已经复制到剪切板");
+                    Clipboard.SetDataObject("http://47.95.218.243/Pixeval.zip");
+                    throw new ChecksumFailedException("文件hash校验失败，请前往http://47.95.218.243/Pixeval.zip手动下载，链接已经复制到剪切板");
                 }
                 RmFiles();
                 await using (var fileStream =

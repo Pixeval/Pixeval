@@ -146,8 +146,7 @@ namespace Pixeval.Persisting
         /// </summary>
         public static void Initialize()
         {
-            if (File.Exists(Path.Combine(AppContext.SettingsFolder, "settings.json")))
-                File.Delete(Path.Combine(AppContext.SettingsFolder, "settings.json"));
+            if (File.Exists(Path.Combine(AppContext.SettingsFolder, "settings.json"))) File.Delete(Path.Combine(AppContext.SettingsFolder, "settings.json"));
 
             Global.downloadLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
             Global.DownloadLocation = string.Empty;

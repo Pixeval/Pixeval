@@ -20,18 +20,34 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="141c7ffe-f470-4fe3-9f88-da4ec3d9a477" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../Pixeval/Core/EnumeratingSchedule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Core/EnumeratingSchedule.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pixeval/Core/Managers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Core/Managers.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pixeval/Data/ViewModel/DownloadableIllustration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Data/ViewModel/DownloadableIllustration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pixeval/Objects/I18n/StringResources.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Objects/I18n/StringResources.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pixeval/Objects/I18n/Xml/resx_en-us.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Objects/I18n/Xml/resx_en-us.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pixeval/Objects/I18n/Xml/resx_zh-cn.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Objects/I18n/Xml/resx_zh-cn.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval.Updater/MainWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval.Updater/MainWindow.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/App.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/App.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/AppContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/AppContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Core/BrowsingHistoryAccessor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Core/BrowsingHistoryAccessor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Core/GalleryAsyncEnumerable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Core/GalleryAsyncEnumerable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Core/PixivHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Core/PixivHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Core/QueryAsyncEnumerable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Core/QueryAsyncEnumerable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Core/RankingAsyncEnumerable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Core/RankingAsyncEnumerable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Core/RecommendAsyncEnumerable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Core/RecommendAsyncEnumerable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Core/SpotlightQueryAsyncEnumerable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Core/SpotlightQueryAsyncEnumerable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Core/UploadAsyncEnumerable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Core/UploadAsyncEnumerable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Core/UserFollowingAsyncEnumerable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Core/UserFollowingAsyncEnumerable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Core/UserPreviewAsyncEnumerable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Core/UserPreviewAsyncEnumerable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Core/UserUpdateAsyncEnumerable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Core/UserUpdateAsyncEnumerable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Data/Web/Delegation/DnsResolvedHttpClientHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Data/Web/Delegation/DnsResolvedHttpClientHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Data/Web/Response/WebApiUserDetailResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Data/Web/Response/WebApiUserDetailResponse.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Objects/Exceptions/Logger/ExceptionDumper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Objects/Exceptions/Logger/ExceptionDumper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Objects/Web/HttpsProxyServer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Objects/Web/HttpsProxyServer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Persisting/Authentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Persisting/Authentication.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Persisting/Session.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Persisting/Session.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Persisting/Settings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Persisting/Settings.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Persisting/WebApi/CertificateManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Persisting/WebApi/CertificateManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Pixeval/UI/MainWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/UI/MainWindow.xaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Pixeval/UI/MainWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/UI/MainWindow.xaml.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pixeval/UI/UserControls/DownloadQueue.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/UI/UserControls/DownloadQueue.xaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Pixeval/UI/UserControls/DownloadQueue.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/UI/UserControls/DownloadQueue.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/UI/UserControls/PixevalSettingPage.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/UI/UserControls/PixevalSettingPage.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/UI/UserControls/TrendingTagControl.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/UI/UserControls/TrendingTagControl.xaml.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/io/pixeval/statistics/Listener.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/io/pixeval/statistics/Listener.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,6 +66,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Kotlin File" />
+        <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -200,6 +218,8 @@
       <workItem from="1590170784303" duration="763000" />
       <workItem from="1590171680739" duration="137000" />
       <workItem from="1590499497954" duration="804000" />
+      <workItem from="1590850087153" duration="439000" />
+      <workItem from="1590851053603" duration="1447000" />
     </task>
     <servers />
   </component>
@@ -223,10 +243,18 @@
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="479" y="211" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1589912753796" />
+    <state x="1053" y="343" key="#com.intellij.ide.util.MemberChooser" timestamp="1590850286707">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="1053" y="343" key="#com.intellij.ide.util.MemberChooser/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1590850286707" />
     <state x="754" y="345" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1589912680992">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="754" y="345" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1589912680992" />
+    <state x="755" y="302" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog" timestamp="1590851747803">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="755" y="302" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1590851747803" />
     <state x="984" y="312" key="FileChooserDialogImpl" timestamp="1589754967372">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>

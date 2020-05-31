@@ -88,6 +88,7 @@ namespace Pixeval.Data.ViewModel
     {
         public static readonly IllustrationPopularityComparator Instance = new IllustrationPopularityComparator();
 
+        // reverse-ordered(a.k.a. descend order)
         public int Compare(Illustration x, Illustration y)
         {
             if (x == null || y == null) return 0;

@@ -1086,22 +1086,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                                                TextTrimming="CharacterEllipsis" />
                                                                 </StackPanel>
                                                             </materialDesign:Card>
-                                                            <Popup Width="490" Height="160" HorizontalAlignment="Center"
+                                                            <Popup HorizontalAlignment="Center"
                                                                    primitive:PopupHelper.PopupPlacementTarget="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}}}"
-                                                                   AllowsTransparency="True" HorizontalOffset="180"
+                                                                   AllowsTransparency="True" HorizontalOffset="150"
                                                                    IsOpen="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}}, Path=IsMouseOver, Mode=OneWay}"
                                                                    Placement="Top"
                                                                    PlacementTarget="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}}}"
                                                                    PopupAnimation="Fade" StaysOpen="True">
-                                                                <Grid Width="490">
-                                                                    <materialDesign:Card Margin="5" HorizontalAlignment="Center" UniformCornerRadius="15">
-                                                                        <StackPanel x:Name="IllustratorIllustsStackPanel" Loaded="IllustratorIllustsStackPanel_OnLoaded" Orientation="Horizontal">
-                                                                            <Image Width="160" Height="160" Stretch="UniformToFill" />
-                                                                            <Image Width="160" Height="160" Stretch="UniformToFill" />
-                                                                            <Image Width="160" Height="160" Stretch="UniformToFill" />
-                                                                        </StackPanel>
-                                                                    </materialDesign:Card>
-                                                                </Grid>
+                                                                <userControls:UserPreviewPopupContent x:Name="UserPreviewPopupContent" Loaded="UserPreviewPopupContent_OnLoaded" />
                                                             </Popup>
                                                         </Grid>
                                                     </materialDesign:TransitioningContent>

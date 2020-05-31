@@ -168,4 +168,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <resx key="ThisLoginSessionRequiresRecaptcha" value="This login session requires finish recaptcha manually" />
   <resx key="SupportMe" value="Support Me" />
   <resx key="DownloadTo" value="Download To..." />
+  <resx key="UserPreviewPopupFollow" value="Follow" />
+  <resx key="UserPreviewPopupUnFollow" value="UnFollow" />
 </localization>

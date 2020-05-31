@@ -64,8 +64,7 @@ namespace Pixeval.Core
             {
                 var prev = delegation[0];
                 // check if the last one in the browsing history list is the same as the one to be insert, return false if so
-                if (prev.Type == browsingHistory.Type && prev.BrowseObjectId == browsingHistory.BrowseObjectId)
-                    return false;
+                if (prev.Type == browsingHistory.Type && prev.BrowseObjectId == browsingHistory.BrowseObjectId) return false;
             }
 
             return true;

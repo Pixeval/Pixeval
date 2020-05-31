@@ -39,14 +39,14 @@ namespace Pixeval.Core
         void ReportRequestedPages();
 
         /// <summary>
-        ///     Tell the <see cref="IPixivAsyncEnumerable{T}" /> how to insert current element to a <see cref="IList{T}" />
+        ///     Tell the <see cref="IPixivAsyncEnumerable{T}" /> how to insert <see cref="item"/> to a <see cref="IList{T}" />
         /// </summary>
         /// <param name="item"></param>
         /// <param name="collection"></param>
         void InsertionPolicy(T item, IList<T> collection);
 
         /// <summary>
-        ///     Indicate that does the item has the rationality to be inserted to the <see cref="IList{T}" />
+        ///     Check if the <see cref="item"/> has the rationality to be inserted to the <see cref="IList{T}" />
         /// </summary>
         /// <param name="item"></param>
         /// <param name="collection"></param>

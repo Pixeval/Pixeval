@@ -223,8 +223,7 @@ namespace Pixeval.Persisting
             // refresh through web-API
             static async Task RefreshWebApi()
             {
-                if (WebApiRefreshRequired(Current))
-                    await Authentication.WebApiAuthenticate(Current?.MailAddress, Current?.Password);
+                if (WebApiRefreshRequired(Current)) await Authentication.WebApiAuthenticate(Current?.MailAddress, Current?.Password);
             }
 
             // wait for both two sections to be complete
@@ -236,10 +235,8 @@ namespace Pixeval.Persisting
         /// </summary>
         public static void Clear()
         {
-            if (File.Exists(Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName)))
-                File.Delete(Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName));
-            if (CredentialManager.GetCredentials(AppContext.AppIdentifier) != null)
-                CredentialManager.RemoveCredentials(AppContext.AppIdentifier);
+            if (File.Exists(Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName))) File.Delete(Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName));
+            if (CredentialManager.GetCredentials(AppContext.AppIdentifier) != null) CredentialManager.RemoveCredentials(AppContext.AppIdentifier);
             Current = new Session();
         }
     }

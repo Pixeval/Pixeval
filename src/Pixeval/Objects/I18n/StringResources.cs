@@ -314,5 +314,9 @@ namespace Pixeval.Objects.I18n
         public static string SupportMe => GetResource(nameof(SupportMe));
 
         public static string DownloadTo => GetResource(nameof(DownloadTo));
+
+        public static string UserPreviewPopupFollow => GetResource(nameof(UserPreviewPopupFollow));
+
+        public static string UserPreviewPopupUnFollow => GetResource(nameof(UserPreviewPopupUnFollow));
     }
 }

@@ -166,4 +166,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <resx key="ThisLoginSessionRequiresRecaptcha" value="本次登录需要手动通过recaptcha" />
   <resx key="SupportMe" value="支持作者" />
   <resx key="DownloadTo" value="下载到..." />
+  <resx key="UserPreviewPopupFollow" value="关 注" />
+  <resx key="UserPreviewPopupUnFollow" value="已 关 注" />
 </localization>

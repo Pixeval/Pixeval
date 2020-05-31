@@ -18,6 +18,11 @@
 
 #endregion
 
+#if RELEASE
+using Pixeval.Objects.Exceptions.Logger;
+#elif DEBUG
+using System.Globalization;
+#endif
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -39,12 +44,6 @@ using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
 using Pixeval.Persisting;
 using Pixeval.Persisting.WebApi;
-#if RELEASE
-using Pixeval.Objects.Exceptions.Logger;
-
-#elif DEBUG
-using System.Globalization;
-#endif
 
 namespace Pixeval
 {
@@ -55,8 +54,7 @@ namespace Pixeval
 #if DEBUG
             CultureInfo.CurrentCulture = new CultureInfo("zh-CN");
 #endif
-            if (Dispatcher != null)
-                Dispatcher.UnhandledException += (sender, args) => DispatcherOnUnhandledException(args.Exception);
+            if (Dispatcher != null) Dispatcher.UnhandledException += (sender, args) => DispatcherOnUnhandledException(args.Exception);
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
                 DispatcherOnUnhandledException((Exception) args.ExceptionObject);
             TaskScheduler.UnobservedTaskException += (sender, args) => DispatcherOnUnhandledException(args.Exception);
@@ -91,7 +89,7 @@ namespace Pixeval
             await RestoreSettings();
             await CheckUpdate();
 
-            // This initializations are for PROCESS COMMUNICATION AND PLUGGABLE PROTOCOL
+            // These initializations are for PROCESS COMMUNICATION AND PLUGGABLE PROTOCOL
             await InstallPluggableProtocolHandler();
             CreatePluggableProtocolRegistry();
             PluggableProtocolListener.StartServer();
@@ -109,15 +107,9 @@ namespace Pixeval
             var rd = new Random();
             proxy = RandPorts();
             pac = RandPorts();
-            while (Array.BinarySearch(unavailablePorts, proxy) >= 0)
-            {
-                proxy = RandPorts();
-            }
+            while (Array.BinarySearch(unavailablePorts, proxy) >= 0) proxy = RandPorts();
 
-            while (Array.BinarySearch(unavailablePorts, pac) >= 0)
-            {
-                pac = RandPorts();
-            }
+            while (Array.BinarySearch(unavailablePorts, pac) >= 0) pac = RandPorts();
 
             int RandPorts()
             {
@@ -214,8 +206,7 @@ namespace Pixeval
             {
                 MessageBox.Show(AkaI18N.CppRedistributableRequired, AkaI18N.CppRedistributableRequiredTitle,
                                 MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                Clipboard.SetText(
-                    "https://support.microsoft.com/zh-cn/help/2977003/the-latest-supported-visual-c-downloads");
+                Clipboard.SetDataObject("https://support.microsoft.com/zh-cn/help/2977003/the-latest-supported-visual-c-downloads");
                 Environment.Exit(-1);
             }
         }
@@ -297,7 +288,6 @@ namespace Pixeval
         {
             var scriptBuilder = new StringBuilder();
             scriptBuilder.AppendLine("function FindProxyForURL(url, host) {");
-            // only *.pixiv.net will request bypass proxy
             scriptBuilder.AppendLine("    if (shExpMatch(host, \"*.pixiv.net\")) {");
             scriptBuilder.AppendLine($"        return 'PROXY 127.0.0.1:{AppContext.ProxyPort}';");
             scriptBuilder.AppendLine("    }");

@@ -45,6 +45,7 @@ namespace Pixeval.Objects.Exceptions.Logger
             {
                 stack = null;
             }
+
             var exceptionMessage = e is ApiException exception
                 ? exception.Content + Environment.NewLine + exception
                 : e.ToString();

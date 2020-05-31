@@ -39,9 +39,8 @@ using Pixeval.Objects.Web;
 using Pixeval.Persisting.WebApi;
 using Pixeval.UI;
 using Refit;
-
 #if DEBUG
-using System.Diagnostics;
+
 #endif
 
 namespace Pixeval.Persisting
@@ -151,8 +150,7 @@ namespace Pixeval.Persisting
                     await Task.Delay(1000, cancellationTokenSource.Token);
                     var src = await chrome.Dispatcher.Invoke(async () =>
                     {
-                        if (chrome.WebBrowser != null)
-                            return await chrome.WebBrowser.GetSourceAsync();
+                        if (chrome.WebBrowser != null) return await chrome.WebBrowser.GetSourceAsync();
                         return "";
                     });
                     if (src.Contains("error-msg-list__item"))

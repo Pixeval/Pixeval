@@ -87,7 +87,9 @@ namespace Pixeval.UI.UserControls
                 Process.Start(processInfo);
             }
             else
+            {
                 MainWindow.MessageQueue.Enqueue(AkaI18N.PathNotExist);
+            }
         }
 
         private void ShowDownloadIllustration(object sender, RoutedEventArgs e)
@@ -126,8 +128,7 @@ namespace Pixeval.UI.UserControls
         private async void BrowsingHistoryAvatarImage_OnLoaded(object sender, RoutedEventArgs e)
         {
             var browsing = sender.GetDataContext<BrowsingHistory>();
-            if (browsing.IsReferToUser)
-                UiHelper.SetImageSource(sender, await PixivIO.FromUrl(browsing.BrowseObjectThumbnail));
+            if (browsing.IsReferToUser) UiHelper.SetImageSource(sender, await PixivIO.FromUrl(browsing.BrowseObjectThumbnail));
         }
 
         private async void BrowsingHistoryMainImage_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

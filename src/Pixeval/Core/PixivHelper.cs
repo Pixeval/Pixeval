@@ -93,8 +93,7 @@ namespace Pixeval.Core
             await foreach (var illust in enumerator)
             {
                 if (enumerator.IsCancellationRequested() || limit != -1 && pixivIterator.RequestedPages > limit) break;
-                if (pixivIterator.VerifyRationality(illust, container))
-                    pixivIterator.InsertionPolicy(illust, container);
+                if (pixivIterator.VerifyRationality(illust, container)) pixivIterator.InsertionPolicy(illust, container);
             }
         }
 
@@ -109,7 +108,7 @@ namespace Pixeval.Core
             if (CheckWindowsVersion()) RecordTimeline(WindowsUserActivityManager.GlobalLifeTimeScope, browsingHistory);
 
             static bool CheckWindowsVersion()
-            { 
+            {
                 return
                     Environment.OSVersion
                         .Version >= /* Windows 10 April 2018 Update(a.k.a. Redstone 4), which is the version that release Windows Timeline feature */

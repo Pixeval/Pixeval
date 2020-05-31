@@ -134,8 +134,7 @@ namespace Pixeval.Core
                 var res = (await HttpClientFactory.AppApiHttpClient()
                     .Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", AkaI18N.GetCultureAcceptLanguage()))
                     .GetStringAsync(url)).FromJson<QueryWorksResponse>();
-                if (res is { } response && !response.Illusts.IsNullOrEmpty())
-                    return HttpResponse<QueryWorksResponse>.Wrap(true, response);
+                if (res is { } response && !response.Illusts.IsNullOrEmpty()) return HttpResponse<QueryWorksResponse>.Wrap(true, response);
 
                 return HttpResponse<QueryWorksResponse>.Wrap(false);
             }

@@ -105,8 +105,7 @@ namespace Pixeval.Core
             {
                 var res = await HttpClientFactory.AppApiService().GetSpotlights(current++ * 10);
 
-                if (res is { } response && !response.SpotlightArticles.IsNullOrEmpty())
-                    return HttpResponse<SpotlightResponse>.Wrap(true, response);
+                if (res is { } response && !response.SpotlightArticles.IsNullOrEmpty()) return HttpResponse<SpotlightResponse>.Wrap(true, response);
 
                 return HttpResponse<SpotlightResponse>.Wrap(false);
             }

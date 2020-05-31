@@ -50,9 +50,9 @@ namespace Pixeval.Core
         {
             return restrictPolicy switch
             {
-                RestrictPolicy.Public => new PublicUserFollowingAsyncEnumerable(uid),
+                RestrictPolicy.Public  => new PublicUserFollowingAsyncEnumerable(uid),
                 RestrictPolicy.Private => new PrivateUserFollowingAsyncEnumerable(uid),
-                _ => throw new ArgumentOutOfRangeException(nameof(restrictPolicy), restrictPolicy, null)
+                _                      => throw new ArgumentOutOfRangeException(nameof(restrictPolicy), restrictPolicy, null)
             };
         }
 
@@ -126,8 +126,7 @@ namespace Pixeval.Core
             {
                 var res = (await HttpClientFactory.AppApiHttpClient().GetStringAsync(url))
                     .FromJson<FollowingResponse>();
-                if (res is { } response && !response.UserPreviews.IsNullOrEmpty())
-                    return HttpResponse<FollowingResponse>.Wrap(true, response);
+                if (res is { } response && !response.UserPreviews.IsNullOrEmpty()) return HttpResponse<FollowingResponse>.Wrap(true, response);
 
                 return HttpResponse<FollowingResponse>.Wrap(false);
             }

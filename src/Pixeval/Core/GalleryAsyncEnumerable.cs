@@ -60,9 +60,9 @@ namespace Pixeval.Core
         {
             return restrictPolicy switch
             {
-                RestrictPolicy.Public => new PublicGalleryAsyncEnumerable(uid),
+                RestrictPolicy.Public  => new PublicGalleryAsyncEnumerable(uid),
                 RestrictPolicy.Private => new PrivateGalleryAsyncEnumerable(uid),
-                _ => throw new ArgumentOutOfRangeException(nameof(restrictPolicy), restrictPolicy, null)
+                _                      => throw new ArgumentOutOfRangeException(nameof(restrictPolicy), restrictPolicy, null)
             };
         }
 
@@ -134,8 +134,7 @@ namespace Pixeval.Core
                         .Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", AkaI18N.GetCultureAcceptLanguage()))
                         .GetStringAsync(url)).FromJson<GalleryResponse>();
 
-                if (result is { } response && !response.Illusts.IsNullOrEmpty())
-                    return HttpResponse<GalleryResponse>.Wrap(true, response);
+                if (result is { } response && !response.Illusts.IsNullOrEmpty()) return HttpResponse<GalleryResponse>.Wrap(true, response);
                 return HttpResponse<GalleryResponse>.Wrap(false);
             }
         }

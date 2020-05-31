@@ -134,7 +134,7 @@ namespace Pixeval.Objects.Web
         private static async Task<SslStream> CreateConnection(string ip)
         {
             var client = new TcpClient();
-            client.Connect(ip, 443);
+            await client.ConnectAsync(ip, 443);
             var netStream = client.GetStream();
             var sslStream = new SslStream(netStream, false, (sender, certificate, chain, errors) => true);
             try
