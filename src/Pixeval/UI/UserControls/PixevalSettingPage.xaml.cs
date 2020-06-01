@@ -89,8 +89,7 @@ namespace Pixeval.UI.UserControls
             AppContext.DefaultCacheProvider.Clear();
             AppContext.DefaultCacheProvider = new FileCache<BitmapImage, Illustration>(AppContext.CacheFolder,
                                                                                        image => image.ToStream(),
-                                                                                       InternalIO
-                                                                                           .CreateBitmapImageFromStream);
+                                                                                       InternalIO.CreateBitmapImageFromStream);
         }
 
         private void ChangeCachingPolicyToggleButton_OnUnchecked(object sender, RoutedEventArgs e)

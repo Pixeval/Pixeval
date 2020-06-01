@@ -29,19 +29,14 @@ namespace Pixeval.Core
         {
             return pattern switch
             {
-                { Type: ConditionType.Id } => !condition.Id.Contains(pattern.Condition),
-                { Type: ConditionType.Tag } => !condition.Title.Contains(pattern.Condition) &&
-                !(condition.Tags != null &&
-                    condition.Tags.Any(tag =>
-                                           tag?.Name != null && tag.Name.Contains(pattern.Condition) ||
-                                           tag?.TranslatedName != null &&
-                                           tag.TranslatedName.Contains(pattern.Condition))),
+                { Type: ConditionType.Id }  => !condition.Id.Contains(pattern.Condition),
+                { Type: ConditionType.Tag } => !condition.Title.Contains(pattern.Condition) && !(condition.Tags != null && condition.Tags.Any(tag => tag?.Name != null && tag.Name.ToLower().Contains(pattern.Condition.ToLower()) || tag?.TranslatedName != null && tag.TranslatedName.ToLower().Contains(pattern.Condition.ToLower()))),
                 { Type: ConditionType.ExcludeTag } => condition.Tags != null &&
                 condition.Tags.Any(tag =>
                                        tag?.Name != null &&
-                                       tag.Name.Contains(pattern.Condition[1..]) ||
+                                       tag.Name.ToLower().Contains(pattern.Condition[1..].ToLower()) ||
                                        tag?.TranslatedName != null &&
-                                       tag.TranslatedName.Contains(pattern.Condition[1..])),
+                                       tag.TranslatedName.ToLower().Contains(pattern.Condition[1..].ToLower())),
                 _ => false
             };
         }

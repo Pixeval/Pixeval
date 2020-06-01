@@ -34,13 +34,11 @@ namespace Pixeval
     {
         public const string AppIdentifier = "Pixeval";
 
-        public const string CurrentVersion = "2.2.0";
+        public const string CurrentVersion = "2.2.1";
 
         public const string ConfigurationFileName = "pixeval_conf.json";
 
-        public static readonly string ProjectFolder =
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                         AppIdentifier.ToLower());
+        public static readonly string ProjectFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppIdentifier.ToLower());
 
         public static readonly string ConfFolder = ProjectFolder;
 
@@ -52,11 +50,9 @@ namespace Pixeval
 
         public static readonly string CacheFolder = Path.Combine(ProjectFolder, "cache");
 
-        public static readonly string ResourceFolder =
-            Path.Combine(Path.GetDirectoryName(typeof(App).Assembly.Location)!, "Resource");
+        public static readonly string ResourceFolder = Path.Combine(Path.GetDirectoryName(typeof(App).Assembly.Location)!, "Resource");
 
-        public static readonly string PermanentlyFolder =
-            Path.Combine(Path.GetDirectoryName(typeof(App).Assembly.Location)!, "Permanent");
+        public static readonly string PermanentlyFolder = Path.Combine(Path.GetDirectoryName(typeof(App).Assembly.Location)!, "Permanent");
 
         public static readonly string BrowseHistoryDatabase = Path.Combine(ProjectFolder, "history.db");
 
@@ -64,8 +60,7 @@ namespace Pixeval
 
         public static readonly ObservableCollection<TrendingTag> TrendingTags = new ObservableCollection<TrendingTag>();
 
-        public static readonly IQualifier<Illustration, IllustrationQualification> DefaultQualifier =
-            new IllustrationQualifier();
+        public static readonly IQualifier<Illustration, IllustrationQualification> DefaultQualifier = new IllustrationQualifier();
 
         public static int ProxyPort { get; set; }
 

@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -128,8 +129,7 @@ namespace Pixeval.UI.UserControls
             ProcessingGif = false;
             PlayingGif = true;
 
-#pragma warning disable 4014
-            Task.Run(async () =>
+            _ = Task.Run(async () =>
             {
                 while (!cancellationToken.IsCancellationRequested)
                     for (var i = 0; i < streams.Length && !cancellationToken.IsCancellationRequested; i++)
@@ -138,13 +138,18 @@ namespace Pixeval.UI.UserControls
                         ImgSource = InternalIO.CreateBitmapImageFromStream(streams[i]);
                         await Task.Delay((int) delay[i], cancellationToken.Token);
                     }
+
+                foreach (var stream in streams)
+                {
+                    _ = stream.DisposeAsync();
+                }
             });
-#pragma warning restore 4014
         }
 
         private void IllustPresenter_OnUnloaded(object sender, RoutedEventArgs e)
         {
             cancellationToken.Cancel();
+            cancellationTokenSource.Cancel();
         }
 
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)

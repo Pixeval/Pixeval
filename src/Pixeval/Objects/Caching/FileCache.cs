@@ -88,7 +88,7 @@ namespace Pixeval.Objects.Caching
             {
                 await using var fileStream = File.OpenRead(file);
                 fileStream.Position = 0L;
-                Stream memoStream = new MemoryStream();
+                await using Stream memoStream = new MemoryStream();
                 await fileStream.CopyToAsync(memoStream);
                 return (true, restorePolicy(memoStream));
             }

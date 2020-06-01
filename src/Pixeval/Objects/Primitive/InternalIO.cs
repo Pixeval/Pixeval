@@ -50,7 +50,6 @@ namespace Pixeval.Objects.Primitive
             bmp.StreamSource = stream;
             bmp.EndInit();
             bmp.Freeze();
-            stream.DisposeAsync();
             return bmp;
         }
 

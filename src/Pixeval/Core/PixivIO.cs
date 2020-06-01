@@ -52,13 +52,13 @@ namespace Pixeval.Core
 
         public static async Task<BitmapImage> FromUrl(string url)
         {
-            return FromByteArray(await GetBytes(url));
+            return await FromByteArray(await GetBytes(url));
         }
 
-        public static BitmapImage FromByteArray(byte[] bArr)
+        public static async Task<BitmapImage> FromByteArray(byte[] bArr)
         {
             if (bArr == null || bArr.Length == 0) return null;
-            var memoryStream = new MemoryStream(bArr);
+            await using var memoryStream = new MemoryStream(bArr);
             return InternalIO.CreateBitmapImageFromStream(memoryStream);
         }
 
