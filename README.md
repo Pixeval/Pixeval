@@ -24,9 +24,6 @@
         </a>
     </p>
 </div>
-<div align="center">
-    <p><strong>2020年5月23日Pixeval下载量突破10w，我在此感谢您的信任与支持</strong></p>
-</div>
 
 **更新：**
 * 2020/1/9
@@ -70,15 +67,18 @@
     - 作品榜单
     - 用户动态
 * 2020/5/23
-    * 现在除了可以再应用内查看浏览记录外，还可以在Windows时间线里查看了（仅支持Windows 10 1803+）用户（感谢来自@tobiichiamane的灵感）
-    * Pixeval现在会自动注册自定义协议到注册表，可以使用如下方法使用:
+    - 现在除了可以再应用内查看浏览记录外，还可以在Windows时间线里查看了（仅支持Windows 10 1803+）用户（感谢来自@tobiichiamane的灵感）
+    - Pixeval现在会自动注册自定义协议到注册表，可以使用如下方法使用:
         - 当浏览作品时，替换url的协议部分(http/https)为自定义协议(pixeval)
 （例: https://www.pixiv.net/artworks/81470442 => pixeval://www.pixiv.net/artworks/81470442）
         - 当浏览作者时，替换url的协议部分(http/https)为自定义协议(pixeval)
 （例: https://www.pixiv.net/users/28603589 => pixeval://www.pixiv.net/users/28603589）
         - 当浏览特辑时，替换url的协议部分(http/https)为自定义协议(pixeval)
 （例: https://www.pixivision.net/en/a/5423 => pixeval://www.pixivision.net/en/a/5423）
-    * 可以直接在图片浏览页设置图片为当前的桌面了，如果你的windows版本 >= 8 （build number: 6.2.9200)，则当图片长宽比超过1.7时会自动设置为Span样式）
+    - 可以直接在图片浏览页设置图片为当前的桌面了，如果你的windows版本 >= 8 （build number: 6.2.9200)，则当图片长宽比超过1.7时会自动设置为Span样式）
+* 2020/6/10
+    - 可以在右键菜单中选择"下载到"来手动指定下载位置了
+    - 可以在设置中选择将作者的作品下载到一个单独文件夹了
 
 **优化：**
 * 2020/5/23
@@ -88,6 +88,8 @@
     - 使用了更加完整能够提供更多信息的错误快照，可以点击[这里](http://119.188.246.6/dc/dump_file.txt)查看示例
 * 2020/5/28
     - 打开下载位置时会自动选中下载的文件
+* 2020/6/10
+    - 优化了动画
 
 **BUG修复：**
 * 2020/1/8
@@ -119,6 +121,10 @@
     - 修复了更新时某些情况下文件校验失败的问题
 * 2020/5/28
     - 修复了1234和4321两个端口被占用时无法登陆的BUG
+* 2020/6/10
+    - 修复了有时候记录错误日志会导致应用崩溃的BUG
+    - 修复了历史记录没法看大图的bug
+    - 修复了无法下载所有作品的bug
   
 **推荐：**
 * 如果你希望找到一个Android上的免代理客户端，那么我推荐[@Notsfsssf](https://github.com/Notsfsssf)的作品[Pix-EzViewer](https://github.com/Notsfsssf/Pix-EzViewer) (本项目的免代理实现也源于此)
