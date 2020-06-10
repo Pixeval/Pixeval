@@ -58,7 +58,7 @@ namespace Pixeval.Core
                 IsLiked = response.IsBookmarked,
                 IsManga = response.PageCount != 1,
                 IsUgoira = response.Type == "ugoira",
-                Origin = response.ImageUrls.Original,
+                Origin = response.ImageUrls.Original ?? response.MetaSinglePage.OriginalImageUrl,
                 Large = response.ImageUrls.Large,
                 Tags = response.Tags.Select(t => new Tag {Name = t.Name, TranslatedName = t.TranslatedName}),
                 Thumbnail = response.ImageUrls.Medium,

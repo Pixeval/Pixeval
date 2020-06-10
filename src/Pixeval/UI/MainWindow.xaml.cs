@@ -664,9 +664,10 @@ namespace Pixeval.UI
                 };
             }
 
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
-                foreach (var illustration in GetImageSourceCopy())
+                var source = await Dispatcher.InvokeAsync(GetImageSourceCopy);
+                foreach (var illustration in source)
                     if (illustration != null)
                         DownloadManager.EnqueueDownloadItem(illustration, option);
             });

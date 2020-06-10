@@ -22,15 +22,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModel="clr-namespace:Pixeval.Data.ViewModel"
              xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
-             Initialized="TrendingTagControl_OnInitialized" mc:Ignorable="d">
+             Initialized="TrendingTagControl_OnInitialized"
+             mc:Ignorable="d">
     <UserControl.Resources>
         <Style x:Key="ListBoxItemContainerStyle1" TargetType="{x:Type ListBoxItem}">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="HorizontalContentAlignment"
-                    Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
-            <Setter Property="VerticalContentAlignment"
-                    Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+            <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+            <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
             <Setter Property="Padding" Value="8" />
             <Setter Property="SnapsToDevicePixels" Value="true" />
             <Setter Property="Template">
@@ -49,7 +48,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                 <Border x:Name="SelectedBorder"
                                         Background="{TemplateBinding Foreground,
                                                                      Converter={StaticResource BrushRoundConverter}}"
-                                        Opacity="0" RenderTransformOrigin="0.5,0.5">
+                                        Opacity="0"
+                                        RenderTransformOrigin="0.5,0.5">
                                     <Border.RenderTransform>
                                         <ScaleTransform ScaleX="1" />
                                     </Border.RenderTransform>
@@ -80,30 +80,43 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         <ListBox x:Name="SearchingHistoryListBox">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock x:Name="SearchingHistoryContent" HorizontalAlignment="Left" Cursor="Hand"
-                               FontFamily="Microsoft YaHei Light" FontSize="10"
+                    <TextBlock x:Name="SearchingHistoryContent"
+                               HorizontalAlignment="Left"
+                               Cursor="Hand"
+                               FontFamily="Microsoft YaHei Light"
+                               FontSize="10"
                                MouseLeftButtonDown="SearchingHistoryContent_OnMouseLeftButtonDown"
                                Text="{Binding}"
-                               TextTrimming="WordEllipsis" TextWrapping="NoWrap" />
+                               TextTrimming="WordEllipsis"
+                               TextWrapping="NoWrap" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <ListBox x:Name="TrendingTagListBox" MaxHeight="200" Margin="0,20,0,0"
-                 HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+        <ListBox x:Name="TrendingTagListBox"
+                 MaxHeight="200"
+                 Margin="0,20,0,0"
+                 HorizontalContentAlignment="Stretch"
+                 VerticalContentAlignment="Stretch"
                  ItemContainerStyle="{DynamicResource ListBoxItemContainerStyle1}"
                  ScrollViewer.CanContentScroll="False">
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="viewModel:TrendingTag">
-                    <Grid x:Name="TrendingTagItemContainer" Cursor="Hand"
+                    <Grid x:Name="TrendingTagItemContainer"
+                          Cursor="Hand"
                           PreviewMouseLeftButtonDown="TrendingTagItemContainer_OnPreviewMouseLeftButtonDown">
                         <Image Height="{Binding RelativeSource={RelativeSource Self}, Path=ActualWidth}"
-                               HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                               HorizontalAlignment="Stretch"
+                               VerticalAlignment="Stretch"
                                Loaded="TrendingTagThumbnail_OnLoaded"
-                               RenderOptions.BitmapScalingMode="HighQuality" Stretch="UniformToFill" />
+                               RenderOptions.BitmapScalingMode="HighQuality"
+                               Stretch="UniformToFill" />
                         <Grid Background="Black" Opacity="0.3" />
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"
+                        <TextBlock HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Foreground="White"
                                    Text="{Binding Tag}"
-                                   TextTrimming="CharacterEllipsis" TextWrapping="Wrap" />
+                                   TextTrimming="CharacterEllipsis"
+                                   TextWrapping="Wrap" />
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
