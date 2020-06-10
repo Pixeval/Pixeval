@@ -24,9 +24,6 @@
         </a>
     </p>
 </div>
-<div align="center">
-    <p><strong>2020年5月23日Pixeval下载量突破10w，我在此感谢您的信任与支持</strong></p>
-</div>
 
 **更新：**
 * 2020/1/9
@@ -126,6 +123,8 @@
     - 修复了1234和4321两个端口被占用时无法登陆的BUG
 * 2020/6/10
     - 修复了有时候记录错误日志会导致应用崩溃的BUG
+    - 修复了历史记录没法看大图的bug
+    - 修复了无法下载所有作品的bug
   
 **推荐：**
 * 如果你希望找到一个Android上的免代理客户端，那么我推荐[@Notsfsssf](https://github.com/Notsfsssf)的作品[Pix-EzViewer](https://github.com/Notsfsssf/Pix-EzViewer) (本项目的免代理实现也源于此)
