@@ -79,8 +79,7 @@ namespace Pixeval.Core
             private IEnumerator<Illustration> illustrationsEnumerator;
 
             public QueryAsyncEnumerator(IPixivAsyncEnumerable<Illustration> enumerable, string keyword,
-                                        SearchTagMatchOption matchOption, int current, bool isPremium) : base(
-                enumerable)
+                                        SearchTagMatchOption matchOption, int current, bool isPremium) : base(enumerable)
             {
                 this.keyword = keyword;
                 this.matchOption = matchOption;

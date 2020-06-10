@@ -40,9 +40,8 @@ namespace Pixeval.Objects.Generic
             {
                 if (!this.value.Equals(value))
                 {
-                    var old = this.value;
+                    ValueChanged?.Invoke(Value, new ObservableValueChangedEventArgs<T>(this.value, value));
                     this.value = value;
-                    ValueChanged?.Invoke(Value, new ObservableValueChangedEventArgs<T>(old, this.value));
                 }
             }
         }

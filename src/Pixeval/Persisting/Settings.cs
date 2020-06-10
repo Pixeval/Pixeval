@@ -25,7 +25,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Pixeval.Core;
-using Pixeval.Objects.Caching;
 using Pixeval.Objects.Primitive;
 using PropertyChanged;
 
@@ -68,21 +67,15 @@ namespace Pixeval.Persisting
         }
 
         /// <summary>
-        ///     Determines whether Pixeval should use cache
-        /// </summary>
-        public bool UseCache { get; set; }
-
-        /// <summary>
-        ///     Set the caching policy of Pixeval, accept values are Memory and File
-        /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public CachingPolicy CachingPolicy { get; set; } = CachingPolicy.Memory;
-
-        /// <summary>
         ///     Indicate the way to match tags
         /// </summary>
         [JsonConverter(typeof(StringEnumConverter))]
         public SearchTagMatchOption TagMatchOption { get; set; } = SearchTagMatchOption.PartialMatchForTags;
+
+        /// <summary>
+        ///     Specify the localization culture
+        /// </summary>
+        public string Culture { get; set; } = "zh-cn";
 
         /// <summary>
         ///     How many pages need to be queried once, minimum is 1, maximum is 10
@@ -113,6 +106,8 @@ namespace Pixeval.Persisting
         ///     Tags to be include
         /// </summary>
         public ISet<string> IncludeTag { get; set; } = new HashSet<string>();
+
+        public bool CreateNewFolderWhenDownloadFromUser { get; set; }
 
         public override string ToString()
         {
@@ -159,9 +154,9 @@ namespace Pixeval.Persisting
             Global.QueryStart = 1;
             Global.SpotlightQueryStart = 1;
             Global.RecommendIllustrator = false;
-            Global.UseCache = false;
-            Global.CachingPolicy = CachingPolicy.Memory;
+            Global.CreateNewFolderWhenDownloadFromUser = false;
             Global.TagMatchOption = SearchTagMatchOption.PartialMatchForTags;
+            Global.Culture = "zh-cn";
         }
     }
 }

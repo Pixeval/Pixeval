@@ -21,15 +21,13 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Pixeval.Core;
 using Pixeval.Data.ViewModel;
-using Pixeval.Objects.Caching;
 using Pixeval.Objects.Generic;
 using Pixeval.Objects.I18n;
-using Pixeval.Objects.Primitive;
 using Pixeval.Persisting;
 
 namespace Pixeval.UI.UserControls
@@ -84,26 +82,17 @@ namespace Pixeval.UI.UserControls
             Settings.Global.IncludeTag = new HashSet<string>(text);
         }
 
-        private void ChangeCachingPolicyToggleButton_OnChecked(object sender, RoutedEventArgs e)
-        {
-            AppContext.DefaultCacheProvider.Clear();
-            AppContext.DefaultCacheProvider = new FileCache<BitmapImage, Illustration>(AppContext.CacheFolder,
-                                                                                       image => image.ToStream(),
-                                                                                       InternalIO.CreateBitmapImageFromStream);
-        }
-
-        private void ChangeCachingPolicyToggleButton_OnUnchecked(object sender, RoutedEventArgs e)
-        {
-            AppContext.DefaultCacheProvider.Clear();
-            AppContext.DefaultCacheProvider = MemoryCache<BitmapImage, Illustration>.Shared;
-        }
-
         private async void OpenWebApiR18Button_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             MainWindow.MessageQueue.Enqueue(AkaI18N.TryingToToggleR18Switch);
             MainWindow.MessageQueue.Enqueue(await PixivClient.Instance.ToggleWebApiR18State(true)
                                                 ? AkaI18N.ToggleR18OnSuccess
                                                 : AkaI18N.ToggleR18OnFailed);
+        }
+
+        private void CultureSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AkaI18N.Reload((I18nOption) CultureSelector.SelectedItem);
         }
     }
 }

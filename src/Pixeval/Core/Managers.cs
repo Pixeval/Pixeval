@@ -30,22 +30,23 @@ namespace Pixeval.Core
 {
     public class DownloadManager
     {
-        public static readonly IDownloadPathProvider DownloadPathProvider = new DefaultDownloadPathProvider();
-
-        public static readonly IIllustrationFileNameFormatter FileNameFormatter = new DefaultIllustrationFileNameFormatter();
 
         public static readonly ObservableCollection<DownloadableIllustration> Downloading = new ObservableCollection<DownloadableIllustration>();
 
         public static readonly ObservableCollection<DownloadableIllustration> Downloaded = new ObservableCollection<DownloadableIllustration>();
 
-        public static void EnqueueDownloadItem(Illustration illustration, string rootDir = null)
+        public static void EnqueueDownloadItem(Illustration illustration, DownloadOption option = null)
         {
             if (Downloading.Any(i => illustration.Id == i.DownloadContent.Id)) return;
+            option ??= new DownloadOption();
 
-            static DownloadableIllustration CreateDownloadableIllustration(Illustration downloadContent,
-                                                                           bool isFromMange, int index = -1, string rootDirCpy = null)
+            static DownloadableIllustration CreateDownloadableIllustration(Illustration downloadContent, bool isFromMange, DownloadOption option, int index = -1)
             {
-                var model = new DownloadableIllustration(downloadContent, FileNameFormatter, DownloadPathProvider, isFromMange, index) {RootDirectory = rootDirCpy};
+                var filePathProvider = option.CreateNewWhenFromUser 
+                    ? new CreateNewFolderForUserDownloadPathProvider(downloadContent.UserName) 
+                    : (IDownloadPathProvider) new DefaultDownloadPathProvider();
+                var fileNameFormatter = new DefaultIllustrationFileNameFormatter();
+                var model = new DownloadableIllustration(downloadContent, fileNameFormatter, filePathProvider, isFromMange, index) {Option = option};
                 model.DownloadState.ValueChanged += (sender, args) => Application.Current.Dispatcher.Invoke(() =>
                 {
                     switch (args.NewValue)
@@ -73,10 +74,10 @@ namespace Pixeval.Core
                 for (var j = 0; j < illustration.MangaMetadata.Length; j++)
                 {
                     var cpy = j;
-                    Task.Run(() => CreateDownloadableIllustration(illustration.MangaMetadata[cpy], true, cpy, rootDir).Download());
+                    Task.Run(() => CreateDownloadableIllustration(illustration.MangaMetadata[cpy], true, option, cpy).Download());
                 }
             else
-                Task.Run(() => CreateDownloadableIllustration(illustration, false, rootDirCpy: rootDir).Download());
+                Task.Run(() => CreateDownloadableIllustration(illustration, false, option).Download());
         }
     }
 

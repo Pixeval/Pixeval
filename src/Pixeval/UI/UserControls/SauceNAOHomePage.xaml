@@ -37,13 +37,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         <StackPanel Grid.Row="1" Height="50" HorizontalAlignment="Center"
                     VerticalAlignment="Top" Orientation="Horizontal">
             <TextBox x:Name="UploadFileTextBox" Width="800"
-                     materialDesign:HintAssist.Hint="{x:Static i18N:AkaI18N.SauceNaoFileLocationHint}"
+                     materialDesign:HintAssist.Hint="{Binding Path=(i18N:AkaI18N.SauceNaoFileLocationHint)}"
                      IsReadOnly="True"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
             <Button x:Name="UploadFileAndQueryButton" Width="50" Height="40"
                     Margin="10,15,0,0" Click="UploadFileAndQueryButton_OnClick" IsDefault="False"
                     Style="{DynamicResource MaterialDesignToolButton}"
-                    ToolTip="{x:Static i18N:AkaI18N.SauceNaoUploadAndSearch}">
+                    ToolTip="{Binding Path=(i18N:AkaI18N.SauceNaoUploadAndSearch)}">
                 <Viewbox Width="30" Height="30">
                     <Canvas Width="24" Height="24">
                         <Path

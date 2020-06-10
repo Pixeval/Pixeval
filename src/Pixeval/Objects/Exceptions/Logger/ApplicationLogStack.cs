@@ -52,9 +52,10 @@ namespace Pixeval.Objects.Exceptions.Logger
 
         private string GetFirstMatchRecord()
         {
-            var query = new EventLogQuery("Application", PathType.LogName,
-                                          $"*[System/Level=2] and *[System/Provider/@Name=\"{provider}\"]")
-                {ReverseDirection = true};
+            var query = new EventLogQuery("Application", PathType.LogName, $"*[System/Level=2] and *[System/Provider/@Name=\"{provider}\"]")
+            {
+                ReverseDirection = true
+            };
             var reader = new EventLogReader(query);
             EventRecord record;
             while ((record = reader.ReadEvent()) != null)

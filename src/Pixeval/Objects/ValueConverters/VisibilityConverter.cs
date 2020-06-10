@@ -30,7 +30,7 @@ namespace Pixeval.Objects.ValueConverters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null) value = false;
+            value ??= false;
             var val = (bool) value;
             return val ? Visibility.Visible : Visibility.Hidden;
         }
@@ -45,7 +45,7 @@ namespace Pixeval.Objects.ValueConverters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null) value = false;
+            value ??= false;
 
             var val = (bool) value;
             return val ? Visibility.Hidden : Visibility.Visible;

@@ -26,19 +26,19 @@ namespace Pixeval.Core
 {
     public class DefaultDownloadPathProvider : IDownloadPathProvider
     {
-        public string GetSpotlightPath(string title)
+        public string GetSpotlightPath(string title, DownloadOption option = null)
         {
-            return Path.Combine(Settings.Global.DownloadLocation, "Spotlight", Strings.FormatPath(title));
+            return option?.RootDirectory ?? Path.Combine(Settings.Global.DownloadLocation, "Spotlight", Strings.FormatPath(title));
         }
 
-        public string GetIllustrationPath()
+        public string GetIllustrationPath(DownloadOption option = null)
         {
-            return Settings.Global.DownloadLocation;
+            return option?.RootDirectory ?? Settings.Global.DownloadLocation;
         }
 
-        public string GetMangaPath(string id)
+        public string GetMangaPath(string id, DownloadOption option = null)
         {
-            return Path.Combine(Settings.Global.DownloadLocation, id);
+            return option?.RootDirectory ?? Path.Combine(Settings.Global.DownloadLocation, id);
         }
     }
 }

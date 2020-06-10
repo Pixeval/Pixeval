@@ -33,13 +33,10 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media.Imaging;
 using CefSharp;
 using CefSharp.Wpf;
 using Microsoft.Win32;
 using Pixeval.Core;
-using Pixeval.Data.ViewModel;
-using Pixeval.Objects.Caching;
 using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
 using Pixeval.Persisting;
@@ -51,9 +48,6 @@ namespace Pixeval
     {
         public App()
         {
-#if DEBUG
-            CultureInfo.CurrentCulture = new CultureInfo("zh-CN");
-#endif
             if (Dispatcher != null) Dispatcher.UnhandledException += (sender, args) => DispatcherOnUnhandledException(args.Exception);
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
                 DispatcherOnUnhandledException((Exception) args.ExceptionObject);
@@ -213,14 +207,11 @@ namespace Pixeval
 
         private static async Task CheckUpdate()
         {
-            if (await AppContext.UpdateAvailable())
-                if (MessageBox.Show(AkaI18N.PixevalUpdateAvailable, AkaI18N.PixevalUpdateAvailableTitle,
-                                    MessageBoxButton.YesNo, MessageBoxImage.Information) ==
-                    MessageBoxResult.Yes)
-                {
-                    Process.Start(@"updater\Pixeval.Updater.exe");
-                    Environment.Exit(0);
-                }
+            if (await AppContext.UpdateAvailable() && MessageBox.Show(AkaI18N.PixevalUpdateAvailable, AkaI18N.PixevalUpdateAvailableTitle, MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+            {
+                Process.Start(@"updater\Pixeval.Updater.exe");
+                Environment.Exit(0);
+            }
         }
 
         /// <summary>
@@ -271,11 +262,6 @@ namespace Pixeval
         private static async Task RestoreSettings()
         {
             await Settings.Restore();
-            AppContext.DefaultCacheProvider = Settings.Global.CachingPolicy == CachingPolicy.Memory
-                ? (IWeakCacheProvider<BitmapImage, Illustration>) MemoryCache<BitmapImage, Illustration>.Shared
-                : new FileCache<BitmapImage, Illustration>(AppContext.CacheFolder, image => image.ToStream(),
-                                                           InternalIO.CreateBitmapImageFromStream);
-            AppContext.DefaultCacheProvider.Clear();
             BrowsingHistoryAccessor.GlobalLifeTimeScope =
                 new BrowsingHistoryAccessor(200, AppContext.BrowseHistoryDatabase);
         }
@@ -316,8 +302,6 @@ namespace Pixeval
             {
                 BrowsingHistoryAccessor.GlobalLifeTimeScope.EmergencyRewrite();
             }
-
-            AppContext.DefaultCacheProvider.Clear();
             base.OnExit(e);
         }
     }

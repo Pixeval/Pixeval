@@ -69,20 +69,19 @@ namespace Pixeval.Data.ViewModel
 
         public Observable<DownloadStateEnum> DownloadState { get; set; } = new Observable<DownloadStateEnum>(DownloadStateEnum.Queue);
 
-        public string RootDirectory { get; set; }
+        public DownloadOption Option { get; set; }
 
         public string GetPath()
         {
             if (DownloadContent.IsUgoira)
-                return Path.Combine(Directory.CreateDirectory(RootDirectory ?? DownloadPathProvider.GetIllustrationPath()).FullName, FileNameFormatter.FormatGif(DownloadContent));
+                return Path.Combine(Directory.CreateDirectory(DownloadPathProvider.GetIllustrationPath(Option)).FullName, FileNameFormatter.FormatGif(DownloadContent));
             if (DownloadContent.FromSpotlight)
                 return IsFromManga
-                    ? Path.Combine(Directory.CreateDirectory(RootDirectory ?? DownloadPathProvider.GetSpotlightPath(DownloadContent.SpotlightTitle)).FullName, DownloadContent.Id, FileNameFormatter.FormatManga(DownloadContent, MangaIndex))
-                    : Path.Combine(Directory.CreateDirectory(RootDirectory ?? DownloadPathProvider.GetSpotlightPath(DownloadContent.SpotlightTitle)).FullName, FileNameFormatter.Format(DownloadContent));
-            if (IsFromManga)
-                return Path.Combine(
-                    Directory.CreateDirectory(RootDirectory ?? DownloadPathProvider.GetMangaPath(DownloadContent.Id)).FullName, FileNameFormatter.FormatManga(DownloadContent, MangaIndex));
-            return Path.Combine(Directory.CreateDirectory(RootDirectory ?? DownloadPathProvider.GetIllustrationPath()).FullName, FileNameFormatter.Format(DownloadContent));
+                    ? Path.Combine(Directory.CreateDirectory(DownloadPathProvider.GetSpotlightPath(DownloadContent.SpotlightTitle, Option)).FullName, DownloadContent.Id, FileNameFormatter.FormatManga(DownloadContent, MangaIndex))
+                    : Path.Combine(Directory.CreateDirectory(DownloadPathProvider.GetSpotlightPath(DownloadContent.SpotlightTitle, Option)).FullName, FileNameFormatter.Format(DownloadContent));
+            return IsFromManga 
+                ? Path.Combine(Directory.CreateDirectory(DownloadPathProvider.GetMangaPath(DownloadContent.Id, Option)).FullName, FileNameFormatter.FormatManga(DownloadContent, MangaIndex)) 
+                : Path.Combine(Directory.CreateDirectory(DownloadPathProvider.GetIllustrationPath(Option)).FullName, FileNameFormatter.Format(DownloadContent));
         }
 
 

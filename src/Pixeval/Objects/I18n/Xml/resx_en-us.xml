@@ -170,4 +170,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <resx key="DownloadTo" value="Download To..." />
   <resx key="UserPreviewPopupFollow" value="Follow" />
   <resx key="UserPreviewPopupUnFollow" value="UnFollow" />
+  <resx key="SelectCultureInfo" value="Language" />
+  <resx key="CreateNewFolderWhenDownloadFromUser" value="Create folder when download from user" />
 </localization>

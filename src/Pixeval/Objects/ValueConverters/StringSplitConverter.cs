@@ -30,13 +30,13 @@ namespace Pixeval.Objects.ValueConverters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value == null ? string.Empty : string.Join(' ', value as IEnumerable<string>);
+            return value == null ? string.Empty : string.Join(' ', value as IEnumerable<string> ?? Array.Empty<string>());
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null || value.ToString().IsNullOrEmpty()) return new List<string>();
-            return value.ToString().Split(" ");
+            return value.ToString()?.Split(" ") ?? Array.Empty<string>();
         }
     }
 }

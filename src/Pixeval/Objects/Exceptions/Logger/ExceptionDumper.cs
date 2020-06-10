@@ -25,6 +25,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Win32;
 using Pixeval.Objects.Primitive;
@@ -34,8 +35,11 @@ namespace Pixeval.Objects.Exceptions.Logger
 {
     public class ExceptionDumper
     {
+
         public static async void WriteException(Exception e)
         {
+            using var semaphore = new SemaphoreSlim(1);
+            await semaphore.WaitAsync(TimeSpan.FromSeconds(5));
             ApplicationLog stack;
             try
             {
@@ -53,10 +57,8 @@ namespace Pixeval.Objects.Exceptions.Logger
             sb.AppendLine(@"Pixeval - A Strong, Fast and Flexible Pixiv Client");
             sb.AppendLine(@"Copyright (C) 2019-2020 Dylech30th");
             sb.AppendLine();
-            sb.AppendLine(
-                @"We have encountered an unrecoverable problem. A dump file with error snapshot has been created.");
-            sb.AppendLine(
-                @"In order to help with diagnosis and debug, Pixeval will collect some information contains: ");
+            sb.AppendLine(@"We have encountered an unrecoverable problem. A dump file with error snapshot has been created.");
+            sb.AppendLine(@"In order to help with diagnosis and debug, Pixeval will collect some information contains: ");
             sb.AppendLine(@"    ¡¤ Computer Architecture");
             sb.AppendLine(@"    ¡¤ Operating System");
             sb.AppendLine(@"    ¡¤ Event Log");
@@ -79,8 +81,7 @@ namespace Pixeval.Objects.Exceptions.Logger
             sb.AppendLine(@"    Begin Operating System");
             sb.AppendLine($"        OS Version String: {Environment.OSVersion.VersionString}");
             sb.AppendLine($"        OS Version {Environment.OSVersion.Version}");
-            sb.AppendLine(
-                $"        Service Pack Version: {(Environment.OSVersion.ServicePack.IsNullOrEmpty() ? "Not Installed" : "Environment.OSVersion.ServicePack")}");
+            sb.AppendLine($"        Service Pack Version: {(Environment.OSVersion.ServicePack.IsNullOrEmpty() ? "Not Installed" : "Environment.OSVersion.ServicePack")}");
             sb.AppendLine($"        Visual C++ Redistributable Version: {GetCppRedistributableVersion()}");
             sb.AppendLine(@"    End Operating System");
             sb.AppendLine();
@@ -96,11 +97,14 @@ namespace Pixeval.Objects.Exceptions.Logger
             sb.AppendLine(FormatMultilineData(exceptionMessage, 3));
             sb.AppendLine("     End Exception Log");
             sb.AppendLine(@"End Debugging Information Collection");
-            await File.WriteAllTextAsync(
-                Path.Combine(AppContext.ExceptionReportFolder,
-                             $"{DateTime.Now.ToString(CultureInfo.InvariantCulture)}.txt".Replace("/", "-")
-                                 .Replace(":", "-")),
-                sb.ToString());
+            try
+            {
+                await File.WriteAllTextAsync(Path.Combine(AppContext.ExceptionReportFolder, $"{DateTime.Now.ToString(CultureInfo.InvariantCulture)}.txt".Replace("/", "-").Replace(":", "-")), sb.ToString());
+            }
+            catch
+            {
+                // ignore
+            }
         }
 
         private static string FormatMultilineData(string data, int indent)

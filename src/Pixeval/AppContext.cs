@@ -23,10 +23,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
 using Pixeval.Core;
 using Pixeval.Data.ViewModel;
-using Pixeval.Objects.Caching;
 
 namespace Pixeval
 {
@@ -34,7 +32,7 @@ namespace Pixeval
     {
         public const string AppIdentifier = "Pixeval";
 
-        public const string CurrentVersion = "2.2.1";
+        public const string CurrentVersion = "2.2.2";
 
         public const string ConfigurationFileName = "pixeval_conf.json";
 
@@ -56,11 +54,11 @@ namespace Pixeval
 
         public static readonly string BrowseHistoryDatabase = Path.Combine(ProjectFolder, "history.db");
 
-        public static IWeakCacheProvider<BitmapImage, Illustration> DefaultCacheProvider;
-
         public static readonly ObservableCollection<TrendingTag> TrendingTags = new ObservableCollection<TrendingTag>();
 
         public static readonly IQualifier<Illustration, IllustrationQualification> DefaultQualifier = new IllustrationQualifier();
+
+        public static readonly I18nOption[] AvailableCultures = {I18nOption.USEnglish, I18nOption.MainlandChinese};
 
         public static int ProxyPort { get; set; }
 

@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -33,9 +32,6 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using Microsoft.CSharp.RuntimeBinder;
-using Pixeval.Core;
-using Pixeval.Data.ViewModel;
-using Pixeval.Persisting;
 
 namespace Pixeval.Objects.Primitive
 {
@@ -196,16 +192,6 @@ namespace Pixeval.Objects.Primitive
                 sender.LineDown();
                 sender.LineDown();
             }
-        }
-
-        public static async Task LoadAndCacheThumbnailImageToControl(this Illustration illustration, object control)
-        {
-            if (Settings.Global.UseCache &&
-                await AppContext.DefaultCacheProvider.TryGet(illustration) is (true, var image))
-                SetImageSource(control, image);
-            else if (illustration.Thumbnail != null &&
-                Uri.IsWellFormedUriString(illustration.Thumbnail, UriKind.Absolute))
-                SetImageSource(control, await PixivIO.FromUrl(illustration.Thumbnail));
         }
     }
 

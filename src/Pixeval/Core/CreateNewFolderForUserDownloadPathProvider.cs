@@ -1,5 +1,4 @@
 ﻿#region Copyright (C) 2019-2020 Dylech30th. All rights reserved.
-
 // Pixeval - A Strong, Fast and Flexible Pixiv Client
 // Copyright (C) 2019-2020 Dylech30th
 // 
@@ -15,33 +14,36 @@
 // 
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 #endregion
 
-using System;
+using System.IO;
+using Pixeval.Objects.Primitive;
+using Pixeval.Persisting;
 
 namespace Pixeval.Core
 {
-    public class EnumeratingSchedule
+    public class CreateNewFolderForUserDownloadPathProvider : IDownloadPathProvider
     {
-        private static object _currentItr;
+        public string UserName { get; set; }
 
-        public static void StartNewInstance<T>(IPixivAsyncEnumerable<T> itr)
+        public CreateNewFolderForUserDownloadPathProvider(string userName)
         {
-            CancelCurrent();
-            _currentItr = itr;
+            UserName = userName;
         }
 
-        public static IPixivAsyncEnumerable<T> GetCurrentEnumerator<T>()
+        public string GetSpotlightPath(string title, DownloadOption option = null)
         {
-            return _currentItr as IPixivAsyncEnumerable<T>;
+            return option?.RootDirectory ?? Path.Combine(Settings.Global.DownloadLocation, "Spotlight", Strings.FormatPath(title));
         }
 
-        public static void CancelCurrent()
+        public string GetIllustrationPath(DownloadOption option = null)
         {
-            var iterator = _currentItr as ICancellable;
-            iterator?.Cancel();
-            GC.Collect();
+            return option?.RootDirectory ?? Path.Combine(Settings.Global.DownloadLocation, UserName);
+        }
+
+        public string GetMangaPath(string id, DownloadOption option = null)
+        {
+            return option?.RootDirectory ?? Path.Combine(Settings.Global.DownloadLocation, UserName, id);
         }
     }
 }

@@ -19,10 +19,8 @@
 #endregion
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -73,9 +71,6 @@ namespace Pixeval.UI
             IgnoreDuplicate = true
         };
 
-        private readonly ConcurrentDictionary<object, Illustration> dataContextHolder =
-            new ConcurrentDictionary<object, Illustration>();
-
         public MainWindow()
         {
             Instance = this;
@@ -84,9 +79,6 @@ namespace Pixeval.UI
             MainWindowSnackBar.MessageQueue = MessageQueue;
 
             if (Dispatcher != null) Dispatcher.UnhandledException += Dispatcher_UnhandledException;
-
-            var property = DependencyPropertyDescriptor.FromProperty(ItemsControl.ItemsSourceProperty, typeof(ListBox));
-            property?.AddValueChanged(ImageListView, (sender, args) => dataContextHolder.Clear());
 
 #pragma warning disable 4014
             AcquireRecommendUser();
@@ -266,7 +258,6 @@ namespace Pixeval.UI
         private void RecommendIllustratorContainer_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             SetUserBrowserContext(sender.GetDataContext<User>());
-            OpenUserBrowser();
         }
 
         private async void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
@@ -557,8 +548,8 @@ namespace Pixeval.UI
 
             if (dataContext != null && Uri.IsWellFormedUriString(dataContext.Thumbnail, UriKind.Absolute))
             {
-                dataContextHolder.TryAdd(sender, dataContext);
-                await dataContext.LoadAndCacheThumbnailImageToControl(sender);
+                if(dataContext.Thumbnail != null && Uri.IsWellFormedUriString(dataContext.Thumbnail, UriKind.Absolute))
+                    SetImageSource(sender, await PixivIO.FromUrl(dataContext.Thumbnail));
             }
 
             StartDoubleAnimationUseCubicEase(sender, "(Image.Opacity)", 0, 1, 800);
@@ -568,13 +559,6 @@ namespace Pixeval.UI
 
         private void Thumbnail_OnUnloaded(object sender, RoutedEventArgs e)
         {
-            if (Settings.Global.UseCache)
-                if (dataContextHolder.TryGetValue(sender, out var illust))
-                {
-                    var bitmapImage = (BitmapImage) ((Image) sender).Source;
-                    AppContext.DefaultCacheProvider.Attach(ref bitmapImage, illust);
-                }
-
             ReleaseImage(sender);
         }
 
@@ -641,7 +625,15 @@ namespace Pixeval.UI
 
         private void DownloadNowMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            DownloadManager.EnqueueDownloadItem(sender.GetDataContext<Illustration>());
+            DownloadOption option = null;
+            if (BrowsingUser() && IsAtUploadCheckerPosition())
+            {
+                option = new DownloadOption
+                {
+                    CreateNewWhenFromUser = Settings.Global.CreateNewFolderWhenDownloadFromUser
+                };
+            }
+            DownloadManager.EnqueueDownloadItem(sender.GetDataContext<Illustration>(), option);
             MessageQueue.Enqueue(AkaI18N.QueuedDownload);
         }
 
@@ -656,22 +648,42 @@ namespace Pixeval.UI
 
             if (fileDialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                DownloadManager.EnqueueDownloadItem(sender.GetDataContext<Illustration>(), fileDialog.FileName);
+                DownloadManager.EnqueueDownloadItem(sender.GetDataContext<Illustration>(), new DownloadOption {RootDirectory = fileDialog.FileName});
                 MessageQueue.Enqueue(AkaI18N.QueuedDownload);
             }
         }
 
-        private void DownloadAllNowMenuItem_OnClick(object sender, RoutedEventArgs e)
+        private async void DownloadAllNowMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            foreach (var illustration in GetImageSourceCopy())
-                if (illustration != null)
-                    DownloadManager.EnqueueDownloadItem(illustration);
+            DownloadOption option = null;
+            if (BrowsingUser() && IsAtUploadCheckerPosition())
+            {
+                option = new DownloadOption
+                {
+                    CreateNewWhenFromUser = Settings.Global.CreateNewFolderWhenDownloadFromUser
+                };
+            }
+
+            await Task.Run(() =>
+            {
+                foreach (var illustration in GetImageSourceCopy())
+                    if (illustration != null)
+                        DownloadManager.EnqueueDownloadItem(illustration, option);
+            });
             MessageQueue.Enqueue(AkaI18N.QueuedAllToDownload);
         }
 
         #endregion
 
         #region 用户预览
+
+        private void Timeline_OnCompleted(object sender, EventArgs e)
+        {
+            UserBrowserPageScrollViewer.DataContext = null;
+            ReleaseImage(UserBanner);
+            ReleaseImage(UserBrowserUserAvatar);
+            ReleaseItemsSource(UserIllustsImageListView);
+        }
 
         private async void PrivateFollow_OnClick(object sender, RoutedEventArgs e)
         {
@@ -827,14 +839,6 @@ namespace Pixeval.UI
         private bool IsAtUploadCheckerPosition()
         {
             return CheckerSnackBar.HorizontalAlignment == HorizontalAlignment.Left && CheckerSnackBar.Width.Equals(120);
-        }
-
-        private void BackToMainPageButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            UserBrowserPageScrollViewer.DataContext = null;
-            ReleaseImage(UserBanner);
-            ReleaseImage(UserBrowserUserAvatar);
-            ReleaseItemsSource(UserIllustsImageListView);
         }
 
         private async void FollowButton_OnClick(object sender, RoutedEventArgs e)
@@ -1170,12 +1174,7 @@ namespace Pixeval.UI
 
         public void OpenUserBrowser()
         {
-            this.GetResources<Storyboard>("UserBrowserOpacityIncreaseAnimation").Begin();
-            this.GetResources<Storyboard>("UserBrowserScaleXIncreaseAnimation").Begin();
-            this.GetResources<Storyboard>("UserBrowserScaleYIncreaseAnimation").Begin();
-            this.GetResources<Storyboard>("ContentContainerOpacityIncreaseAnimation").Begin();
-            this.GetResources<Storyboard>("ContentContainerScaleXIncreaseAnimation").Begin();
-            this.GetResources<Storyboard>("ContentContainerScaleYIncreaseAnimation").Begin();
+            this.GetResources<Storyboard>("OpenUserBrowserAnimation").Begin();
         }
 
         public async void OpenIllustBrowser(Illustration illustration, bool record = true)

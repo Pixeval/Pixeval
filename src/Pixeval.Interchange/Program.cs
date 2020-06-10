@@ -60,7 +60,6 @@ namespace Pixeval.Interchange
                 }
             }
         }
-
         private static bool PixevalInstanceRunning()
         {
             return Process.GetProcessesByName("Pixeval").Length > 0;

@@ -20,6 +20,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using Pixeval.Objects.Primitive;
 using PropertyChanged;
 
@@ -31,6 +33,8 @@ namespace Pixeval.Data.ViewModel
         public string Id { get; set; }
 
         public bool IsUgoira { get; set; }
+
+        public bool IsR18 => Tags?.Any(x => Regex.IsMatch(x?.Name ?? string.Empty, "[Rr][-]?18[Gg]?") || Regex.IsMatch(x?.TranslatedName ?? string.Empty, "[Rr][-]?18[Gg]?")) ?? false;
 
         public string Origin { get; set; }
 

@@ -1,5 +1,4 @@
 ﻿#region Copyright (C) 2019-2020 Dylech30th. All rights reserved.
-
 // Pixeval - A Strong, Fast and Flexible Pixiv Client
 // Copyright (C) 2019-2020 Dylech30th
 // 
@@ -15,35 +14,29 @@
 // 
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 #endregion
 
-using Pixeval.Data.ViewModel;
+using PropertyChanged;
 
-namespace Pixeval.Core
+namespace Pixeval.Data.ViewModel
 {
-    public interface IIllustrationFileNameFormatter
+    [AddINotifyPropertyChangedInterface]
+    public class I18nOption
     {
-        string Format(Illustration illustration);
+        public string LocalizedName { get; set; }
 
-        string FormatManga(Illustration illustration, int idx);
+        public string Name { get; set; }
 
-        string FormatGif(Illustration illustration);
-    }
+        public I18nOption(string localizedName, string name)
+        {
+            LocalizedName = localizedName;
+            Name = name;
+        }
 
-    public interface IDownloadPathProvider
-    {
-        string GetSpotlightPath(string title, DownloadOption option = null);
+        public I18nOption() { }
 
-        string GetIllustrationPath(DownloadOption option = null);
+        public static readonly I18nOption USEnglish = new I18nOption("English(US)", "en-us");
 
-        string GetMangaPath(string id, DownloadOption option = null);
-    }
-
-    public class DownloadOption
-    {
-        public string RootDirectory { get; set; }
-
-        public bool CreateNewWhenFromUser { get; set; }
+        public static readonly I18nOption MainlandChinese = new I18nOption("简体中文(中国)", "zh-cn");
     }
 }
