@@ -10,7 +10,7 @@
         <a href="https://jq.qq.com/?_wv=1027&k=5hGmJbQ" target="_blank">
             <img src="https://img.shields.io/static/v1?label=chatting&message=qq&color=blue&style=flat-square"
         </a>
-        <a href="http://47.95.218.243/index/index.html" target="_blank">
+        <a href="http://47.95.218.243/index.html" target="_blank">
             <img src="https://img.shields.io/static/v1?label=homepage&message=pixeval&color=blueviolet&style=flat-square">
         </a>
         <a href="https://github.com/Rinacm/Pixeval/blob/master/LICENSE" target="_blank">
