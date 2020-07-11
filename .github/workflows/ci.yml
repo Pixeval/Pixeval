@@ -15,7 +15,7 @@ jobs:
     
     
     - name: Build
-      run: dotnet build ./src/Pixeval/Pixeval.csproj -p x64 --configuration Release --no-restore
+      run: dotnet build ./src/Pixeval/Pixeval.csproj -p:platform=x64 --configuration Release --no-restore
     
     
     - name: Test
