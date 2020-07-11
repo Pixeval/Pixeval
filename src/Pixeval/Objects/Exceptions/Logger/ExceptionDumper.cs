@@ -33,6 +33,22 @@ using Refit;
 
 namespace Pixeval.Objects.Exceptions.Logger
 {
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct MEMORYSTATUSEX
+    {
+        public uint dwLength;
+        public uint dwMemoryLoad;
+        public ulong ullTotalPhys;
+        public ulong ullAvailPhys;
+        public ulong ullTotalPageFile;
+        public ulong ullAvailPageFile;
+        public ulong ullTotalVirtual;
+        public ulong ullAvailVirtual;
+        public ulong ullAvailExtendedVirtual;
+    }
+    
+
     public class ExceptionDumper
     {
 
@@ -59,10 +75,10 @@ namespace Pixeval.Objects.Exceptions.Logger
             sb.AppendLine();
             sb.AppendLine(@"We have encountered an unrecoverable problem. A dump file with error snapshot has been created.");
             sb.AppendLine(@"In order to help with diagnosis and debug, Pixeval will collect some information contains: ");
-            sb.AppendLine(@"    �� Computer Architecture");
-            sb.AppendLine(@"    �� Operating System");
-            sb.AppendLine(@"    �� Event Log");
-            sb.AppendLine(@"    �� Exception Message");
+            sb.AppendLine(@"    ¡¤ Computer Architecture");
+            sb.AppendLine(@"    ¡¤ Operating System");
+            sb.AppendLine(@"    ¡¤ Event Log");
+            sb.AppendLine(@"    ¡¤ Exception Message");
             sb.AppendLine();
             sb.AppendLine(@"Begin Dump Information");
             sb.AppendLine($"    Pixeval Version: {AppContext.CurrentVersion}");
@@ -75,7 +91,7 @@ namespace Pixeval.Objects.Exceptions.Logger
             sb.AppendLine($"        Is 64-bit Platform: {Environment.Is64BitOperatingSystem}");
             sb.AppendLine($"        Is 64-bit Process: {Environment.Is64BitProcess}");
             sb.AppendLine($"        Total Installed RAM: {GetTotalInstalledMemory()} GB");
-            sb.AppendLine($"        Total Available RAM: {await GetAvailableMemory()} MB");
+            sb.AppendLine($"        Total Available RAM: {GetAvailableMemory()} MB");
             sb.AppendLine(@"    End Computer Architecture");
             sb.AppendLine();
             sb.AppendLine(@"    Begin Operating System");
@@ -120,19 +136,31 @@ namespace Pixeval.Objects.Exceptions.Logger
             return key == null ? "Not Installed" : key.GetValue("Bld").ToString();
         }
 
-        private static long GetTotalInstalledMemory()
+        private static ulong GetTotalInstalledMemory()
         {
-            GetPhysicallyInstalledSystemMemory(out var l);
-            return l / 1024 / 1024;
+            var _meminfo = new MEMORYSTATUSEX();
+            int temp;
+
+            _meminfo.dwLength = 64; //此方法为手动Hack，按照填充规则计算大小，祝我好运，希望有更好的办法（但是Unsafe的sizeof算符简直令人无力吐槽）
+            temp = GlobalMemoryStatusEx(ref _meminfo);//实践证明，必须有人接收返回值，否则会报错
+
+            return _meminfo.ullTotalPhys / 1024 / 1024 / 1024;
+
+           
         }
 
-        private static Task<long> GetAvailableMemory()
+        private static ulong GetAvailableMemory()
         {
-            return Task.Run(() => (long) new PerformanceCounter("Memory", "Available MBytes").NextValue());
+            var _meminfo = new MEMORYSTATUSEX();
+            int temp;
+
+            _meminfo.dwLength = 64; //此方法为手动Hack，按照填充规则计算大小，祝我好运
+            temp = GlobalMemoryStatusEx(ref _meminfo);//实践证明，必须有人接收返回值，否则会报错
+            return _meminfo.ullAvailPhys / 1024 / 1024;
+
         }
 
-        [DllImport("kernel32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool GetPhysicallyInstalledSystemMemory(out long totalMemoryInKilobytes);
+        [DllImport("kernel32.dll", EntryPoint ="GlobalMemoryStatusEx", CallingConvention = CallingConvention.StdCall)]//此处一定要用Ex，否则内存计算不全
+        private static extern int GlobalMemoryStatusEx(ref MEMORYSTATUSEX lpBuffer);
     }
 }
