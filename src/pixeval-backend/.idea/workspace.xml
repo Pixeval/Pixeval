@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="141c7ffe-f470-4fe3-9f88-da4ec3d9a477" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../Pixeval.Interchange/Pixeval.Interchange.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval.Interchange/Pixeval.Interchange.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/App.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/App.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/App.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/App.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/AppContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/AppContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Data/ViewModel/Illustration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Data/ViewModel/Illustration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Data/ViewModel/RankOptionModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Data/ViewModel/RankOptionModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Data/ViewModel/SearchTagMatchOptionModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Data/ViewModel/SearchTagMatchOptionModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Objects/Exceptions/Logger/ApplicationLogStack.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Objects/Exceptions/Logger/ApplicationLogStack.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Objects/Exceptions/Logger/ExceptionDumper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Objects/Exceptions/Logger/ExceptionDumper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Objects/Generic/Observable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Objects/Generic/Observable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Objects/I18n/ResouceLocator.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Objects/I18n/StringResources.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Objects/I18n/StringResources.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Objects/I18n/Xml/resx_en-us.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Objects/I18n/Xml/resx_en-us.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Objects/I18n/Xml/resx_zh-cn.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Objects/I18n/Xml/resx_zh-cn.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Objects/ValueConverters/StringSplitConverter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Objects/ValueConverters/StringSplitConverter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Objects/ValueConverters/TrendsStatConverter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Objects/ValueConverters/TrendsStatConverter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Objects/ValueConverters/VisibilityConverter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Objects/ValueConverters/VisibilityConverter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Persisting/Authentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Persisting/Authentication.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Persisting/Settings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Persisting/Settings.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Persisting/WebApi/CertificateManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Persisting/WebApi/CertificateManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/Pixeval.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/Pixeval.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/UI/MainWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/UI/MainWindow.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/UI/MainWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/UI/MainWindow.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/UI/SignIn.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/UI/SignIn.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/UI/SignIn.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/UI/SignIn.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/UI/UserControls/DownloadQueue.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/UI/UserControls/DownloadQueue.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/UI/UserControls/DownloadQueue.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/UI/UserControls/DownloadQueue.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/UI/UserControls/IllustPresenter.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/UI/UserControls/IllustPresenter.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/UI/UserControls/InputBoxControl.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/UI/UserControls/InputBoxControl.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/UI/UserControls/PixevalSettingPage.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/UI/UserControls/PixevalSettingPage.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/UI/UserControls/PixevalSettingPage.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/UI/UserControls/PixevalSettingPage.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/UI/UserControls/SauceNAOHomePage.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/UI/UserControls/SauceNAOHomePage.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/UI/UserControls/SauceNAOHomePage.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/UI/UserControls/SauceNAOHomePage.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pixeval/UI/UserControls/UserPreviewPopupContent.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/../Pixeval/UI/UserControls/UserPreviewPopupContent.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Kotlin File" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
+  </component>
+  <component name="ProjectId" id="1c3PQi6CFRVECsEVnbQOd47OsPM" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/statistics-1.0.0.jar!/" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RunManager" selected="JAR Application.pixeval-backend-1.0-SNAPSHOT.jar">
+    <configuration name="pixeval-backend [compileKotlin]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="compileKotlin" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="pixeval-backend [dependencies]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="dependencies" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="pixeval-backend [jar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="jar" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="pixeval-backend-1.0-SNAPSHOT.jar" type="JarApplication" temporary="true">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/build/libs/pixeval-backend-1.0-SNAPSHOT.jar" />
+      <method v="2" />
+    </configuration>
+    <configuration name="ListenerKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <module name="pixeval-backend.main" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="C:\Users\26532\Desktop\pixeval-props.properties" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" value="io.pixeval.statistics.ListenerKt" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Gradle.pixeval-backend [compileKotlin]" />
+      <item itemvalue="Gradle.pixeval-backend [dependencies]" />
+      <item itemvalue="Gradle.pixeval-backend [jar]" />
+      <item itemvalue="JAR Application.pixeval-backend-1.0-SNAPSHOT.jar" />
+      <item itemvalue="Kotlin.ListenerKt" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JAR Application.pixeval-backend-1.0-SNAPSHOT.jar" />
+        <item itemvalue="Gradle.pixeval-backend [jar]" />
+        <item itemvalue="Kotlin.ListenerKt" />
+        <item itemvalue="Gradle.pixeval-backend [dependencies]" />
+        <item itemvalue="Gradle.pixeval-backend [compileKotlin]" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="141c7ffe-f470-4fe3-9f88-da4ec3d9a477" name="Default Changelist" comment="" />
+      <created>1589754288855</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1589754288855</updated>
+      <workItem from="1589754294124" duration="3443000" />
+      <workItem from="1589757776813" duration="232000" />
+      <workItem from="1589758015849" duration="1954000" />
+      <workItem from="1589820596171" duration="758000" />
+      <workItem from="1589895771611" duration="177000" />
+      <workItem from="1589912117236" duration="673000" />
+      <workItem from="1589913418750" duration="2624000" />
+      <workItem from="1589998015697" duration="1616000" />
+      <workItem from="1590070673749" duration="6112000" />
+      <workItem from="1590087725620" duration="468000" />
+      <workItem from="1590170784303" duration="763000" />
+      <workItem from="1590171680739" duration="137000" />
+      <workItem from="1590499497954" duration="804000" />
+      <workItem from="1590850087153" duration="439000" />
+      <workItem from="1590851053603" duration="1447000" />
+      <workItem from="1591476884705" duration="78000" />
+      <workItem from="1591476974023" duration="98000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="479" y="211" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1589912753796">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="479" y="211" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1589912753796" />
+    <state x="1053" y="343" key="#com.intellij.ide.util.MemberChooser" timestamp="1590850286707">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="1053" y="343" key="#com.intellij.ide.util.MemberChooser/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1590850286707" />
+    <state x="754" y="345" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1589912680992">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="754" y="345" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1589912680992" />
+    <state x="755" y="302" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog" timestamp="1590851747803">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="755" y="302" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1590851747803" />
+    <state x="984" y="312" key="FileChooserDialogImpl" timestamp="1589754967372">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="984" y="312" key="FileChooserDialogImpl/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1589754967372" />
+    <state width="2005" height="310" key="GridCell.Tab.0.bottom" timestamp="1590171553706">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="2005" height="310" key="GridCell.Tab.0.bottom/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1590171553706" />
+    <state width="2005" height="310" key="GridCell.Tab.0.center" timestamp="1590171553706">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="2005" height="310" key="GridCell.Tab.0.center/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1590171553706" />
+    <state width="2005" height="310" key="GridCell.Tab.0.left" timestamp="1590171553706">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="2005" height="310" key="GridCell.Tab.0.left/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1590171553706" />
+    <state width="2005" height="310" key="GridCell.Tab.0.right" timestamp="1590171553706">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="2005" height="310" key="GridCell.Tab.0.right/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1590171553706" />
+    <state width="2005" height="320" key="GridCell.Tab.1.bottom" timestamp="1589916618914">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="2005" height="320" key="GridCell.Tab.1.bottom/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1589916618914" />
+    <state width="2005" height="320" key="GridCell.Tab.1.center" timestamp="1589916618914">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="2005" height="320" key="GridCell.Tab.1.center/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1589916618914" />
+    <state width="2005" height="320" key="GridCell.Tab.1.left" timestamp="1589916618914">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="2005" height="320" key="GridCell.Tab.1.left/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1589916618914" />
+    <state width="2005" height="320" key="GridCell.Tab.1.right" timestamp="1589916618914">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="2005" height="320" key="GridCell.Tab.1.right/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1589916618914" />
+    <state x="894" y="401" key="SettingsEditor" timestamp="1591476962624">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="-1890" y="192" key="SettingsEditor/0.0.2048.1112/-2560.0.2048.1112@-2560.0.2048.1112" timestamp="1589756549975" />
+    <state x="894" y="401" key="SettingsEditor/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1591476962624" />
+    <state x="434" y="119" key="new project wizard" timestamp="1589820638229">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="434" y="119" key="new project wizard/0.0.2048.1112/-2560.0.2048.1112@0.0.2048.1112" timestamp="1589820638229" />
+  </component>
+</project>
