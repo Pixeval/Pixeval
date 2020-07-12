@@ -12,7 +12,7 @@
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
     <Win32Resource />
     <Platforms>x64</Platforms>
-    <NoWarn>(NoWarn;)NU1701</>
+    <NoWarn>(NoWarn;)NU1701</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
