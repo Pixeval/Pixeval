@@ -33,13 +33,13 @@ jobs:
           ${{ runner.os }}-nuget-
 
     - name: Restore the application
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration -m
+      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration /m
 
     - name: Build the application
-      run: msbuild $env:Project_Path /t:build /p:Configuration=$env:Configuration /p:Platform=$env:Platform -m
+      run: msbuild $env:Project_Path /t:build /p:Configuration=$env:Configuration /p:Platform=$env:Platform /m
 
     - name: Publish the application
-      run: msbuild $env:Project_Path /t:publish /p:OutDir=./publish /p:Configuration=$env:Configuration /p:Platform=$env:Platform -m
+      run: msbuild $env:Project_Path /t:publish /p:OutDir=publish;Configuration=$env:Configuration;Platform=$env:Platform /m
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2
