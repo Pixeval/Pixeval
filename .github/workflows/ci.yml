@@ -24,17 +24,28 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.0
     
     - name: Cache nuget packages
+      id: cache-nuget
       uses: actions/cache@v2
       with:
         path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('${{env.Project_Path}}') }}
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/Pixeval.csproj') }}
         restore-keys: |
           ${{ runner.os }}-nuget-
     
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore the application
+      if: steps.cache-nuget.outputs.cache-hit != 'true'
       run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
 
     # Create the app package by building and packaging the Windows Application Packaging project
     - name: Build the application
       run: msbuild $env:Project_Path /p:Configuration=$env:Configuration /p:Platform=$env:Platform
+
+
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+    # Artifact name
+        name: Pixeval
+    # A file, directory or wildcard pattern that describes what to upload
+        path: ./bin/**/*
