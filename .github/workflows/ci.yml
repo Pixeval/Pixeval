@@ -46,4 +46,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Pixeval
-        path: '**/bin/${{env.Platform}}/${{${{env.Configuration}}}}/win-${{env.Platform}}/*'
+        path: '**/bin/${{env.Platform}}/${{env.Configuration}}/win-${{env.Platform}}/*'
