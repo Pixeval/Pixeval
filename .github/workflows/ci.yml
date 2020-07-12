@@ -31,18 +31,18 @@ jobs:
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/Pixeval.csproj') }}
         restore-keys: |
           ${{ runner.os }}-nuget-
-    
-    # Restore the application to populate the obj folder with RuntimeIdentifiers
+
     - name: Restore the application
       run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
 
-    # Create the app package by building and packaging the Windows Application Packaging project
     - name: Build the application
       run: msbuild $env:Project_Path /p:Configuration=$env:Configuration /p:Platform=$env:Platform
 
+    - name: Build the application
+      run: msbuild $env:Project_Path /t:publish /p:output=./publish /p:Configuration=$env:Configuration /p:Platform=$env:Platform
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2
       with:
         name: Pixeval
-        path: '**/bin/**/win-${{env.Platform}}/*'
+        path: './publish/*'
