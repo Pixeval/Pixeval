@@ -34,7 +34,6 @@ jobs:
     
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore the application
-      if: steps.cache-nuget.outputs.cache-hit != 'true'
       run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
 
     # Create the app package by building and packaging the Windows Application Packaging project
