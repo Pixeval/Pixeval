@@ -27,7 +27,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles(${{env.Project_Path}}) }}
+        key: ${{ runner.os }}-nuget-${{ hashFiles('${{env.Project_Path}}') }}
         restore-keys: |
           ${{ runner.os }}-nuget-
     
