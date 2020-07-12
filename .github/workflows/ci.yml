@@ -28,7 +28,15 @@ jobs:
 
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.0
-
+    
+    - name: Cache nuget packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+    
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore the application
       run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
