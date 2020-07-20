@@ -37,13 +37,13 @@ namespace Pixeval.Core
 {
     public class RankingAsyncEnumerable : AbstractPixivAsyncEnumerable<Illustration>
     {
-        private readonly DateTime dateTime;
-        private readonly RankOption rankOption;
+        private readonly DateTime _dateTime;
+        private readonly RankOption _rankOption;
 
         public RankingAsyncEnumerable(RankOption rankOption, DateTime dateTime)
         {
-            this.rankOption = rankOption;
-            this.dateTime = dateTime;
+            this._rankOption = rankOption;
+            this._dateTime = dateTime;
         }
 
         public override int RequestedPages { get; protected set; }
@@ -63,41 +63,41 @@ namespace Pixeval.Core
 
         public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = default)
         {
-            return new RankingAsyncEnumerator(this, rankOption, dateTime);
+            return new RankingAsyncEnumerator(this, _rankOption, _dateTime);
         }
 
         private class RankingAsyncEnumerator : AbstractPixivAsyncEnumerator<Illustration>
         {
-            private readonly string dateTimeParameter;
-            private readonly string rankOptionParameter;
-            private RankingResponse entity;
+            private readonly string _dateTimeParameter;
+            private readonly string _rankOptionParameter;
+            private RankingResponse _entity;
 
-            private IEnumerator<Illustration> illustrationEnumerator;
+            private IEnumerator<Illustration> _illustrationEnumerator;
 
             public RankingAsyncEnumerator(IPixivAsyncEnumerable<Illustration> enumerable, RankOption rankOption,
                                           DateTime dateTime) : base(enumerable)
             {
-                rankOptionParameter = rankOption.GetEnumAttribute<EnumAlias>().AliasAs;
-                dateTimeParameter = dateTime.ToString("yyyy-MM-dd");
+                _rankOptionParameter = rankOption.GetEnumAttribute<EnumAlias>().AliasAs;
+                _dateTimeParameter = dateTime.ToString("yyyy-MM-dd");
             }
 
-            public override Illustration Current => illustrationEnumerator.Current;
+            public override Illustration Current => _illustrationEnumerator.Current;
 
             protected override void UpdateEnumerator()
             {
-                illustrationEnumerator = entity.Illusts.NonNull().Select(_ => _.Parse()).GetEnumerator();
+                _illustrationEnumerator = _entity.Illusts.NonNull().Select(_ => _.Parse()).GetEnumerator();
             }
 
             public override async ValueTask<bool> MoveNextAsync()
             {
-                if (entity == null)
+                if (_entity == null)
                 {
                     if (await TryGetResponse(
-                            $"/v1/illust/ranking?filter=for_android&mode={rankOptionParameter}&date={dateTimeParameter}")
+                            $"/v1/illust/ranking?filter=for_android&mode={_rankOptionParameter}&date={_dateTimeParameter}")
                         is
                         (true, var result))
                     {
-                        entity = result;
+                        _entity = result;
                         UpdateEnumerator();
                     }
                     else
@@ -108,13 +108,13 @@ namespace Pixeval.Core
                     Enumerable.ReportRequestedPages();
                 }
 
-                if (illustrationEnumerator.MoveNext()) return true;
+                if (_illustrationEnumerator.MoveNext()) return true;
 
-                if (entity.NextUrl.IsNullOrEmpty()) return false;
+                if (_entity.NextUrl.IsNullOrEmpty()) return false;
 
-                if (await TryGetResponse(entity.NextUrl) is (true, var model))
+                if (await TryGetResponse(_entity.NextUrl) is (true, var model))
                 {
-                    entity = model;
+                    _entity = model;
                     UpdateEnumerator();
                     Enumerable.ReportRequestedPages();
                     return true;

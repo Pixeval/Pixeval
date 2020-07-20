@@ -37,32 +37,32 @@ namespace Pixeval.Core
         public static BrowsingHistoryAccessor GlobalLifeTimeScope;
 
         // current browsing histories
-        private readonly ObservableCollection<BrowsingHistory> delegation;
-        private readonly string path;
-        private readonly SQLiteConnection sqLiteConnection;
-        private readonly int stackLimit;
-        private bool writable;
+        private readonly ObservableCollection<BrowsingHistory> _delegation;
+        private readonly string _path;
+        private readonly SQLiteConnection _sqLiteConnection;
+        private readonly int _stackLimit;
+        private bool _writable;
 
         public BrowsingHistoryAccessor(int stackLimit, string path)
         {
-            this.stackLimit = stackLimit;
-            this.path = path;
-            sqLiteConnection = new SQLiteConnection(path, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite);
-            sqLiteConnection.CreateTable<BrowsingHistory>();
-            delegation = new ObservableCollection<BrowsingHistory>(sqLiteConnection.Table<BrowsingHistory>());
+            this._stackLimit = stackLimit;
+            this._path = path;
+            _sqLiteConnection = new SQLiteConnection(path, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite);
+            _sqLiteConnection.CreateTable<BrowsingHistory>();
+            _delegation = new ObservableCollection<BrowsingHistory>(_sqLiteConnection.Table<BrowsingHistory>());
         }
 
         public void Dispose()
         {
-            sqLiteConnection?.Dispose();
+            _sqLiteConnection?.Dispose();
         }
 
         public bool VerifyRationality(BrowsingHistory browsingHistory)
         {
             // if current browsing history list has elements
-            if (delegation.Any())
+            if (_delegation.Any())
             {
-                var prev = delegation[0];
+                var prev = _delegation[0];
                 // check if the last one in the browsing history list is the same as the one to be insert, return false if so
                 if (prev.Type == browsingHistory.Type && prev.BrowseObjectId == browsingHistory.BrowseObjectId) return false;
             }
@@ -74,9 +74,9 @@ namespace Pixeval.Core
         {
             // we can simply consider the browsing histories as a double-ended queue with limited capacity, we will pop the oldest one
             // and insert a new one if the Deque is full
-            if (delegation.Count >= stackLimit) delegation.Remove(delegation.Last());
+            if (_delegation.Count >= _stackLimit) _delegation.Remove(_delegation.Last());
 
-            delegation.Insert(0, browsingHistory);
+            _delegation.Insert(0, browsingHistory);
         }
 
         /// <summary>
@@ -85,8 +85,8 @@ namespace Pixeval.Core
         /// </summary>
         public void EmergencyRewrite()
         {
-            if (File.Exists(path)) throw new InvalidOperationException();
-            using var sql = new SQLiteConnection(path);
+            if (File.Exists(_path)) throw new InvalidOperationException();
+            using var sql = new SQLiteConnection(_path);
             sql.CreateTable<BrowsingHistory>();
             sql.InsertAll(Get());
         }
@@ -97,7 +97,7 @@ namespace Pixeval.Core
         /// <returns></returns>
         public IEnumerable<BrowsingHistory> Get()
         {
-            return delegation;
+            return _delegation;
         }
 
         /// <summary>
@@ -106,10 +106,10 @@ namespace Pixeval.Core
         /// </summary>
         public void Rewrite()
         {
-            if (!writable) throw new InvalidOperationException();
-            sqLiteConnection.DropTable<BrowsingHistory>();
-            sqLiteConnection.CreateTable<BrowsingHistory>();
-            sqLiteConnection.InsertAll(delegation);
+            if (!_writable) throw new InvalidOperationException();
+            _sqLiteConnection.DropTable<BrowsingHistory>();
+            _sqLiteConnection.CreateTable<BrowsingHistory>();
+            _sqLiteConnection.InsertAll(_delegation);
         }
 
         /// <summary>
@@ -117,12 +117,12 @@ namespace Pixeval.Core
         /// </summary>
         public void DropDb()
         {
-            if (File.Exists(path)) File.Delete(path);
+            if (File.Exists(_path)) File.Delete(_path);
         }
 
         public void SetWritable()
         {
-            writable = true;
+            _writable = true;
         }
     }
 }

@@ -58,25 +58,25 @@ namespace Pixeval.Core
 
         private class UserFollowingAsyncEnumerator : AbstractPixivAsyncEnumerator<User>
         {
-            private readonly RestrictPolicy restrictPolicy;
-            private readonly string userId;
+            private readonly RestrictPolicy _restrictPolicy;
+            private readonly string _userId;
 
-            private FollowingResponse entity;
+            private FollowingResponse _entity;
 
-            private IEnumerator<User> followerEnumerator;
+            private IEnumerator<User> _followerEnumerator;
 
             public UserFollowingAsyncEnumerator(IPixivAsyncEnumerable<User> enumerable, string userId,
                                                 RestrictPolicy restrictPolicy) : base(enumerable)
             {
-                this.userId = userId;
-                this.restrictPolicy = restrictPolicy;
+                this._userId = userId;
+                this._restrictPolicy = restrictPolicy;
             }
 
-            public override User Current => followerEnumerator.Current;
+            public override User Current => _followerEnumerator.Current;
 
             protected override void UpdateEnumerator()
             {
-                followerEnumerator = entity.UserPreviews.NonNull().Select(u => new User
+                _followerEnumerator = _entity.UserPreviews.NonNull().Select(u => new User
                 {
                     Thumbnails = u.Illusts.NonNull().Select(_ => _.ImageUrls.SquareMedium).ToArray(),
                     Id = u.User.Id.ToString(),
@@ -87,16 +87,16 @@ namespace Pixeval.Core
 
             public override async ValueTask<bool> MoveNextAsync()
             {
-                if (entity == null)
+                if (_entity == null)
                 {
-                    if (await TryGetResponse(restrictPolicy switch
+                    if (await TryGetResponse(_restrictPolicy switch
                     {
-                        RestrictPolicy.Public => $"/v1/user/following?user_id={userId}&restrict=public",
-                        RestrictPolicy.Private => $"/v1/user/following?user_id={userId}&restrict=private",
+                        RestrictPolicy.Public => $"/v1/user/following?user_id={_userId}&restrict=public",
+                        RestrictPolicy.Private => $"/v1/user/following?user_id={_userId}&restrict=private",
                         _ => throw new ArgumentOutOfRangeException()
                     }) is (true, var model))
                     {
-                        entity = model;
+                        _entity = model;
                         UpdateEnumerator();
                     }
                     else
@@ -107,13 +107,13 @@ namespace Pixeval.Core
                     Enumerable.ReportRequestedPages();
                 }
 
-                if (followerEnumerator.MoveNext()) return true;
+                if (_followerEnumerator.MoveNext()) return true;
 
-                if (entity.NextUrl.IsNullOrEmpty()) return false;
+                if (_entity.NextUrl.IsNullOrEmpty()) return false;
 
-                if (await TryGetResponse(entity.NextUrl) is (true, var res))
+                if (await TryGetResponse(_entity.NextUrl) is (true, var res))
                 {
-                    entity = res;
+                    _entity = res;
                     UpdateEnumerator();
                     Enumerable.ReportRequestedPages();
                     return true;

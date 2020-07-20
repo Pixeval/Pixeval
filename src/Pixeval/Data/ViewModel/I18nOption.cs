@@ -21,22 +21,22 @@ using PropertyChanged;
 namespace Pixeval.Data.ViewModel
 {
     [AddINotifyPropertyChangedInterface]
-    public class I18nOption
+    public class I18NOption
     {
         public string LocalizedName { get; set; }
 
         public string Name { get; set; }
 
-        public I18nOption(string localizedName, string name)
+        public I18NOption(string localizedName, string name)
         {
             LocalizedName = localizedName;
             Name = name;
         }
 
-        public I18nOption() { }
+        public I18NOption() { }
 
-        public static readonly I18nOption USEnglish = new I18nOption("English(US)", "en-us");
+        public static readonly I18NOption USEnglish = new I18NOption("English(US)", "en-us");
 
-        public static readonly I18nOption MainlandChinese = new I18nOption("简体中文(中国)", "zh-cn");
+        public static readonly I18NOption MainlandChinese = new I18NOption("简体中文(中国)", "zh-cn");
     }
 }

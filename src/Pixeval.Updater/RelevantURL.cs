@@ -18,7 +18,7 @@
 
 namespace Pixeval.Updater
 {
-    public static class RelevantURL
+    public static class RelevantUrl
     {
         public const string Checksum = "http://47.95.218.243/Pixeval/checksum.txt";
 

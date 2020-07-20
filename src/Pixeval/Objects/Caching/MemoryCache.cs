@@ -30,11 +30,11 @@ namespace Pixeval.Objects.Caching
     {
         public static readonly MemoryCache<T, THash> Shared = new MemoryCache<T, THash>();
 
-        private readonly ConcurrentDictionary<int, WeakEntry<T>> cache = new ConcurrentDictionary<int, WeakEntry<T>>();
+        private readonly ConcurrentDictionary<int, WeakEntry<T>> _cache = new ConcurrentDictionary<int, WeakEntry<T>>();
 
         public IEnumerator<KeyValuePair<int, WeakEntry<T>>> GetEnumerator()
         {
-            return cache.GetEnumerator();
+            return _cache.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -47,17 +47,17 @@ namespace Pixeval.Objects.Caching
             if (associateWith == null || key == null) return;
             var weakRef = new WeakEntry<T>(key);
             key = null;
-            cache.TryAdd(IWeakCacheProvider<T, THash>.HashKey(associateWith), weakRef);
+            _cache.TryAdd(IWeakCacheProvider<T, THash>.HashKey(associateWith), weakRef);
         }
 
         public void Detach(THash associateWith)
         {
-            cache.TryRemove(IWeakCacheProvider<T, THash>.HashKey(associateWith), out _);
+            _cache.TryRemove(IWeakCacheProvider<T, THash>.HashKey(associateWith), out _);
         }
 
         public Task<(bool, T)> TryGet([NotNull] THash key)
         {
-            return cache.TryGetValue(IWeakCacheProvider<T, THash>.HashKey(key), out var weakRef) &&
+            return _cache.TryGetValue(IWeakCacheProvider<T, THash>.HashKey(key), out var weakRef) &&
                 weakRef.Target is { } target
                     ? Task.FromResult((true, target))
                     : Task.FromResult((false, (T)null));
@@ -65,9 +65,9 @@ namespace Pixeval.Objects.Caching
 
         public void Clear()
         {
-            lock (cache)
+            lock (_cache)
             {
-                cache.Clear();
+                _cache.Clear();
             }
         }
     }

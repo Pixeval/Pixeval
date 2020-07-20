@@ -26,22 +26,22 @@ namespace Pixeval.Objects.Generic
     [AddINotifyPropertyChangedInterface]
     public class Observable<T>
     {
-        private T value;
+        private T _value;
 
         public Observable(T value)
         {
-            this.value = value;
+            this._value = value;
         }
 
         public T Value
         {
-            get => value;
+            get => _value;
             set
             {
-                if (!this.value.Equals(value))
+                if (!this._value.Equals(value))
                 {
-                    ValueChanged?.Invoke(Value, new ObservableValueChangedEventArgs<T>(this.value, value));
-                    this.value = value;
+                    ValueChanged?.Invoke(Value, new ObservableValueChangedEventArgs<T>(this._value, value));
+                    this._value = value;
                 }
             }
         }

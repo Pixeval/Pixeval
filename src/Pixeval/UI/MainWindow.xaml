@@ -1758,7 +1758,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                 </Grid>
             </Grid>
         </Grid>
-        <userControls:SauceNAOHomePage Margin="250,0,0,0"
+        <userControls:SauceNaoHomePage Margin="250,0,0,0"
                                        Background="#FAFAFC"
                                        Visibility="{Binding ElementName=SauceNaoTab, Path=IsSelected, Converter={StaticResource VisibleIfTrueConverter}}" />
         <Grid>

@@ -27,23 +27,23 @@ namespace Pixeval.Objects.Caching
 {
     public class WeakEntry<T> : IEquatable<WeakEntry<T>>, IDisposable where T : class
     {
-        private readonly int hashCode;
+        private readonly int _hashCode;
 
-        private GCHandle gcHandle;
+        private GCHandle _gcHandle;
 
         public WeakEntry(T target)
         {
-            hashCode = target.GetHashCode();
-            gcHandle = GCHandle.Alloc(target, GCHandleType.Weak);
+            _hashCode = target.GetHashCode();
+            _gcHandle = GCHandle.Alloc(target, GCHandleType.Weak);
         }
 
-        public bool IsAlive => gcHandle.Target != null;
+        public bool IsAlive => _gcHandle.Target != null;
 
-        public T? Target => gcHandle.Target as T;
+        public T? Target => _gcHandle.Target as T;
 
         public void Dispose()
         {
-            gcHandle.Free();
+            _gcHandle.Free();
             GC.SuppressFinalize(this);
         }
 
@@ -65,7 +65,7 @@ namespace Pixeval.Objects.Caching
 
         public override int GetHashCode()
         {
-            return hashCode;
+            return _hashCode;
         }
     }
 }

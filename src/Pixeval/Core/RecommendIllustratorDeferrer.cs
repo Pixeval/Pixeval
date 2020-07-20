@@ -32,38 +32,38 @@ namespace Pixeval.Core
     {
         public static readonly RecommendIllustratorDeferrer Instance = new RecommendIllustratorDeferrer();
 
-        private readonly List<User> currentIllustrators = new List<User>();
+        private readonly List<User> _currentIllustrators = new List<User>();
 
-        private int index;
+        private int _index;
 
-        private int requestTimes;
+        private int _requestTimes;
 
         public async Task<IEnumerable<User>> Acquire(int count)
         {
             if (30 % count != 0) throw new ArgumentException("count must be divisible by 30");
 
-            if (currentIllustrators.Count < index + count)
+            if (_currentIllustrators.Count < _index + count)
             {
-                if (requestTimes >= 9)
+                if (_requestTimes >= 9)
                 {
-                    index = 0;
-                    requestTimes = 0;
-                    currentIllustrators.Clear();
+                    _index = 0;
+                    _requestTimes = 0;
+                    _currentIllustrators.Clear();
                 }
 
                 await Request();
             }
 
-            var illustrators = currentIllustrators.Skip(index).Take(count);
-            index += count;
+            var illustrators = _currentIllustrators.Skip(_index).Take(count);
+            _index += count;
             return illustrators;
         }
 
         private async Task Request()
         {
             var newIllustrators = await HttpClientFactory.AppApiService()
-                .GetRecommendIllustrators(new RecommendIllustratorRequest { Offset = requestTimes++ * 30 });
-            currentIllustrators.AddRange(newIllustrators.UserPreviews.Select(i => i.Parse()));
+                .GetRecommendIllustrators(new RecommendIllustratorRequest { Offset = _requestTimes++ * 30 });
+            _currentIllustrators.AddRange(newIllustrators.UserPreviews.Select(i => i.Parse()));
         }
     }
 }

@@ -35,11 +35,11 @@ namespace Pixeval.Objects.I18n
 {
     public static partial class AkaI18N
     {
-        private static IEnumerable<XmlNode> i18NXmlNodes;
+        private static IEnumerable<XmlNode> _i18NXmlNodes;
 
         public static string GetResource(string key)
         {
-            if (i18NXmlNodes == null)
+            if (_i18NXmlNodes == null)
             {
                 // we load settings here because we need to get the culture field
                 if (File.Exists(Path.Combine(AppContext.SettingsFolder, "settings.json")))
@@ -53,7 +53,7 @@ namespace Pixeval.Objects.I18n
             return GetValueByKey(key);
         }
 
-        public static void Reload(I18nOption option)
+        public static void Reload(I18NOption option)
         {
             InitializeXmlNodes(option.Name);
             foreach (var prop in typeof(AkaI18N).GetProperties(BindingFlags.Public | BindingFlags.Static))
@@ -81,7 +81,7 @@ namespace Pixeval.Objects.I18n
 
             var xml = new XmlDocument();
             xml.Load(streamResourceInfo?.Stream);
-            i18NXmlNodes = xml.SelectSingleNode("/localization").ChildNodes.Cast<XmlNode>();
+            _i18NXmlNodes = xml.SelectSingleNode("/localization").ChildNodes.Cast<XmlNode>();
         }
 
         public static string GetCultureAcceptLanguage()
@@ -91,7 +91,7 @@ namespace Pixeval.Objects.I18n
 
         private static string GetValueByKey(string key)
         {
-            return i18NXmlNodes.First(p => p.Attributes["key"].Value == key).Attributes["value"].Value;
+            return _i18NXmlNodes.First(p => p.Attributes["key"].Value == key).Attributes["value"].Value;
         }
     }
 }

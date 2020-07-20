@@ -52,10 +52,10 @@ namespace Pixeval.Objects.Generic
             list.Insert(i, item);
         }
 
-        public static IImmutableSet<R> ToImmutableSet<T, R>(this IEnumerable<T> enumerable, Func<T, R> function)
+        public static IImmutableSet<TR> ToImmutableSet<T, TR>(this IEnumerable<T> enumerable, Func<T, TR> function)
         {
             return enumerable == null
-                ? new HashSet<R>().ToImmutableHashSet()
+                ? new HashSet<TR>().ToImmutableHashSet()
                 : enumerable.Select(function).ToImmutableHashSet();
         }
 

@@ -25,40 +25,40 @@ using System.Threading.Tasks;
 
 namespace Pixeval.Objects.Generic
 {
-    public class Tasks<T, R>
+    public class Tasks<T, TR>
     {
-        private Func<T, Task<R>> mappingFunc;
-        private IEnumerable<T> taskQueue;
+        private Func<T, Task<TR>> _mappingFunc;
+        private IEnumerable<T> _taskQueue;
 
         private Tasks()
         {
         }
 
-        public static Tasks<T, R> Of(IEnumerable<T> tasks)
+        public static Tasks<T, TR> Of(IEnumerable<T> tasks)
         {
-            return new Tasks<T, R> { taskQueue = tasks.NonNull() };
+            return new Tasks<T, TR> { _taskQueue = tasks.NonNull() };
         }
 
-        public Tasks<T, R> Mapping(Func<T, Task<R>> map)
+        public Tasks<T, TR> Mapping(Func<T, Task<TR>> map)
         {
-            mappingFunc = map;
+            _mappingFunc = map;
             return this;
         }
 
-        public IEnumerable<Task<R>> Construct()
+        public IEnumerable<Task<TR>> Construct()
         {
-            return taskQueue.Select(taskObj => mappingFunc(taskObj));
+            return _taskQueue.Select(taskObj => _mappingFunc(taskObj));
         }
     }
 
     public static class TaskHelper
     {
-        public static Task<R[]> WhenAll<R>(this IEnumerable<Task<R>> tasks)
+        public static Task<TR[]> WhenAll<TR>(this IEnumerable<Task<TR>> tasks)
         {
             return Task.WhenAll(tasks);
         }
 
-        public static Task<Task<R>> WhenAny<R>(this IEnumerable<Task<R>> tasks)
+        public static Task<Task<TR>> WhenAny<TR>(this IEnumerable<Task<TR>> tasks)
         {
             return Task.WhenAny(tasks);
         }

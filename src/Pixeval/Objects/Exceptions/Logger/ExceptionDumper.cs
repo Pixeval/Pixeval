@@ -35,7 +35,7 @@ namespace Pixeval.Objects.Exceptions.Logger
 {
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct MEMORYSTATUSEX
+    public struct Memorystatusex
     {
         public uint dwLength;
         public uint dwMemoryLoad;
@@ -66,7 +66,7 @@ namespace Pixeval.Objects.Exceptions.Logger
                 stack = null;
             }
 
-            var exceptionMessage = e is ApiException exception
+            string exceptionMessage = e is ApiException exception
                 ? exception.Content + Environment.NewLine + exception
                 : e.ToString();
             var sb = new StringBuilder();
@@ -125,7 +125,7 @@ namespace Pixeval.Objects.Exceptions.Logger
 
         private static string FormatMultilineData(string data, int indent)
         {
-            var indentation = new string(' ', indent * 4);
+            string indentation = new string(' ', indent * 4);
             return data.Split('\n').Select(s => indentation + s).Join('\n');
         }
 
@@ -138,29 +138,29 @@ namespace Pixeval.Objects.Exceptions.Logger
 
         private static ulong GetTotalInstalledMemory()
         {
-            var _meminfo = new MEMORYSTATUSEX();
+            var meminfo = new Memorystatusex();
             int temp;
 
-            _meminfo.dwLength = 64; //此方法为手动Hack，按照填充规则计算大小，祝我好运，希望有更好的办法（但是Unsafe的sizeof算符简直令人无力吐槽）
-            temp = GlobalMemoryStatusEx(ref _meminfo);//实践证明，必须有人接收返回值，否则会报错
+            meminfo.dwLength = 64; //此方法为手动Hack，按照填充规则计算大小，祝我好运，希望有更好的办法（但是Unsafe的sizeof算符简直令人无力吐槽）
+            temp = GlobalMemoryStatusEx(ref meminfo);//实践证明，必须有人接收返回值，否则会报错
 
-            return _meminfo.ullTotalPhys / 1024 / 1024 / 1024;
+            return meminfo.ullTotalPhys / 1024 / 1024 / 1024;
 
 
         }
 
         private static ulong GetAvailableMemory()
         {
-            var _meminfo = new MEMORYSTATUSEX();
+            var meminfo = new Memorystatusex();
             int temp;
 
-            _meminfo.dwLength = 64; //此方法为手动Hack，按照填充规则计算大小，祝我好运
-            temp = GlobalMemoryStatusEx(ref _meminfo);//实践证明，必须有人接收返回值，否则会报错
-            return _meminfo.ullAvailPhys / 1024 / 1024;
+            meminfo.dwLength = 64; //此方法为手动Hack，按照填充规则计算大小，祝我好运
+            temp = GlobalMemoryStatusEx(ref meminfo);//实践证明，必须有人接收返回值，否则会报错
+            return meminfo.ullAvailPhys / 1024 / 1024;
 
         }
 
         [DllImport("kernel32.dll", EntryPoint = "GlobalMemoryStatusEx", CallingConvention = CallingConvention.StdCall)]//此处一定要用Ex，否则内存计算不全
-        private static extern int GlobalMemoryStatusEx(ref MEMORYSTATUSEX lpBuffer);
+        private static extern int GlobalMemoryStatusEx(ref Memorystatusex lpBuffer);
     }
 }

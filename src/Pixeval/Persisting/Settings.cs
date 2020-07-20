@@ -38,7 +38,7 @@ namespace Pixeval.Persisting
     {
         public static Settings Global = new Settings();
 
-        private string downloadLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+        private string _downloadLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
 
         /// <summary>
         ///     Insert illustration to the sorted list, order by it's Bookmark property
@@ -60,10 +60,10 @@ namespace Pixeval.Persisting
         /// </summary>
         public string DownloadLocation
         {
-            get => downloadLocation.IsNullOrEmpty()
+            get => _downloadLocation.IsNullOrEmpty()
                 ? Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)
-                : downloadLocation;
-            set => downloadLocation = value;
+                : _downloadLocation;
+            set => _downloadLocation = value;
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace Pixeval.Persisting
         {
             if (File.Exists(Path.Combine(AppContext.SettingsFolder, "settings.json"))) File.Delete(Path.Combine(AppContext.SettingsFolder, "settings.json"));
 
-            Global.downloadLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+            Global._downloadLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
             Global.DownloadLocation = string.Empty;
             Global.SortOnInserting = false;
             Global.IncludeTag = new HashSet<string>();

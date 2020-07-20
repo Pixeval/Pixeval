@@ -41,7 +41,7 @@ namespace Pixeval.Persisting.WebApi
         private static X509Certificate2 _fakeCa;
         private static X509Certificate2 _serverCert;
 
-        private readonly X509Certificate2 cert;
+        private readonly X509Certificate2 _cert;
 
         /// <summary>
         ///     Create a <see cref="CertificateManager" /> with specified <see cref="X509Certificate2" />
@@ -49,7 +49,7 @@ namespace Pixeval.Persisting.WebApi
         /// <param name="certificate">certificate to be managed</param>
         public CertificateManager(X509Certificate2 certificate)
         {
-            cert = certificate;
+            _cert = certificate;
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace Pixeval.Persisting.WebApi
         {
             using var store = new X509Store(storeName, storeLocation);
             store.Open(OpenFlags.ReadWrite);
-            store.Add(cert);
+            store.Add(_cert);
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Pixeval.Persisting.WebApi
         {
             using var store = new X509Store(storeName, storeLocation);
             store.Open(OpenFlags.ReadWrite);
-            store.Remove(cert);
+            store.Remove(_cert);
         }
 
         /// <summary>
@@ -129,8 +129,8 @@ namespace Pixeval.Persisting.WebApi
         {
             using var store = new X509Store(storeName, storeLocation);
             store.Open(OpenFlags.ReadOnly);
-            if (cert.Thumbprint == null) return false;
-            return store.Certificates.Find(X509FindType.FindByThumbprint, cert.Thumbprint, true).Count > 0;
+            if (_cert.Thumbprint == null) return false;
+            return store.Certificates.Find(X509FindType.FindByThumbprint, _cert.Thumbprint, true).Count > 0;
         }
     }
 }

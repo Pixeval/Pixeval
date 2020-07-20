@@ -50,25 +50,25 @@ namespace Pixeval.Core
 
         private class TrendsAsyncEnumerator : AbstractPixivAsyncEnumerator<Trends>
         {
-            private TrendsRequestContext requestContext;
-            private IEnumerator<Trends> trendsEnumerable;
-            private string tt;
+            private TrendsRequestContext _requestContext;
+            private IEnumerator<Trends> _trendsEnumerable;
+            private string _tt;
 
             public TrendsAsyncEnumerator(IPixivAsyncEnumerable<Trends> enumerable) : base(enumerable)
             {
             }
 
-            public override Trends Current => trendsEnumerable.Current;
+            public override Trends Current => _trendsEnumerable.Current;
 
             public override async ValueTask<bool> MoveNextAsync()
             {
-                if (requestContext == null)
+                if (_requestContext == null)
                 {
                     if (await GetResponse(BuildRequestUrl()) is (true, var result))
                     {
-                        tt = Regex.Match(result, "tt: \"(?<tt>.*)\"").Groups["tt"].Value;
-                        trendsEnumerable = (await ParsePreloadJsonFromHtml(result)).NonNull().GetEnumerator();
-                        requestContext = ExtractRequestParametersFromHtml(result);
+                        _tt = Regex.Match(result, "tt: \"(?<tt>.*)\"").Groups["tt"].Value;
+                        _trendsEnumerable = (await ParsePreloadJsonFromHtml(result)).NonNull().GetEnumerator();
+                        _requestContext = ExtractRequestParametersFromHtml(result);
                     }
                     else
                     {
@@ -78,14 +78,14 @@ namespace Pixeval.Core
                     Enumerable.ReportRequestedPages();
                 }
 
-                if (trendsEnumerable.MoveNext()) return true;
+                if (_trendsEnumerable.MoveNext()) return true;
 
-                if (requestContext.IsLastPage) return false;
+                if (_requestContext.IsLastPage) return false;
 
                 if (await GetResponse(BuildRequestUrl()) is (true, var json))
                 {
-                    trendsEnumerable = (await ParseRawJson(json)).NonNull().GetEnumerator();
-                    requestContext = ExtractRequestParametersFromRawJson(json);
+                    _trendsEnumerable = (await ParseRawJson(json)).NonNull().GetEnumerator();
+                    _requestContext = ExtractRequestParametersFromRawJson(json);
                     Enumerable.ReportRequestedPages();
                     return true;
                 }
@@ -95,9 +95,9 @@ namespace Pixeval.Core
 
             private string BuildRequestUrl()
             {
-                return requestContext == null
+                return _requestContext == null
                     ? "/stacc?mode=unify"
-                    : $"/stacc/my/home/all/activity/{requestContext.Sid}/.json?mode={requestContext.Mode}&unify_token={requestContext.UnifyToken}&tt={tt}";
+                    : $"/stacc/my/home/all/activity/{_requestContext.Sid}/.json?mode={_requestContext.Mode}&unify_token={_requestContext.UnifyToken}&tt={_tt}";
             }
 
             private static TrendsRequestContext ExtractRequestParametersFromHtml(string html)

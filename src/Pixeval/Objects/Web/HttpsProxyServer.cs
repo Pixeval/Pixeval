@@ -35,9 +35,9 @@ namespace Pixeval.Objects.Web
     /// </summary>
     public class HttpsProxyServer : IDisposable
     {
-        private readonly X509Certificate2 certificate;
-        private readonly string ip;
-        private readonly TcpListener tcpListener;
+        private readonly X509Certificate2 _certificate;
+        private readonly string _ip;
+        private readonly TcpListener _tcpListener;
 
         /// <summary>
         ///     Create an <see cref="HttpsProxyServer" /> with specified host, port, target and certificate
@@ -48,17 +48,17 @@ namespace Pixeval.Objects.Web
         /// <param name="x509Certificate2">server certificate</param>
         private HttpsProxyServer(string host, int port, string targetIp, X509Certificate2 x509Certificate2)
         {
-            ip = targetIp;
-            certificate = x509Certificate2;
-            tcpListener = new TcpListener(IPAddress.Parse(host), port);
-            tcpListener.Start();
-            tcpListener.BeginAcceptTcpClient(AcceptTcpClientCallback, tcpListener);
+            _ip = targetIp;
+            _certificate = x509Certificate2;
+            _tcpListener = new TcpListener(IPAddress.Parse(host), port);
+            _tcpListener.Start();
+            _tcpListener.BeginAcceptTcpClient(AcceptTcpClientCallback, _tcpListener);
         }
 
         public void Dispose()
         {
-            certificate?.Dispose();
-            tcpListener.Stop();
+            _certificate?.Dispose();
+            _tcpListener.Stop();
         }
 
         public static HttpsProxyServer Create(string host, int port, string targetIp, X509Certificate2 x509Certificate2)
@@ -89,13 +89,13 @@ namespace Pixeval.Objects.Web
                         await writer.FlushAsync();
                         var clientSsl = new SslStream(clientStream, false);
                         // use specify certificate to establish the HTTPS connection
-                        await clientSsl.AuthenticateAsServerAsync(certificate, false,
+                        await clientSsl.AuthenticateAsServerAsync(_certificate, false,
                                                                   SslProtocols.Tls |
                                                                   SslProtocols.Tls13 |
                                                                   SslProtocols.Tls12 |
                                                                   SslProtocols.Tls11, false);
                         // create an HTTP connection to the target IP
-                        var serverSsl = await CreateConnection(ip);
+                        var serverSsl = await CreateConnection(_ip);
 
                         // forwarding the HTTPS connection without SNI
                         var request = Task.Run(() =>

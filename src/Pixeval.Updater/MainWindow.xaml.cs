@@ -41,21 +41,21 @@ namespace Pixeval.Updater
     public partial class MainWindow
     {
 
-        private static readonly CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
+        private static readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        private static readonly string CurrentDir =
+        private static readonly string _currentDir =
             Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase!).LocalPath);
 
-        private static readonly DirectoryInfo PixevalDirectory = Directory.GetParent(CurrentDir);
+        private static readonly DirectoryInfo _pixevalDirectory = Directory.GetParent(_currentDir);
 
-        private static readonly string ZipTmpPath = Path.Combine(PixevalDirectory.FullName, "Pixeval.zip");
+        private static readonly string _zipTmpPath = Path.Combine(_pixevalDirectory.FullName, "Pixeval.zip");
 
-        private static readonly string ExtractedTmpPath = Path.Combine(PixevalDirectory.FullName, "Pixeval");
+        private static readonly string _extractedTmpPath = Path.Combine(_pixevalDirectory.FullName, "Pixeval");
 
         public MainWindow()
         {
             InitializeComponent();
-            if (!CheckIsPixevalDirectory(PixevalDirectory)) Exit("Pixeval更新器必须位于Pixeval目录中");
+            if (!CheckIsPixevalDirectory(_pixevalDirectory)) Exit("Pixeval更新器必须位于Pixeval目录中");
         }
 
         private void MainWindow_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -67,9 +67,9 @@ namespace Pixeval.Updater
         {
             try
             {
-                await using var memory = await Download(RelevantURL.ZipArchive,
+                await using var memory = await Download(RelevantUrl.ZipArchive,
                                                         new Progress<double>(p => DownloadProgressIndicator.Value = p),
-                                                        CancellationTokenSource.Token);
+                                                        _cancellationTokenSource.Token);
                 memory.Position = 0L;
                 if (memory.Checksum<SHA256Managed>() != (await GetRemoteChecksum()).ToLower())
                 {
@@ -78,17 +78,17 @@ namespace Pixeval.Updater
                 }
                 RmFiles();
                 await using (var fileStream =
-                    new FileStream(ZipTmpPath, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
+                    new FileStream(_zipTmpPath, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
                 {
                     memory.WriteTo(fileStream);
                 }
 
                 Extract();
-                File.Delete(ZipTmpPath);
-                Directory.Delete(Path.Combine(ExtractedTmpPath, "updater"), true);
-                FileSystem.CopyDirectory(ExtractedTmpPath, PixevalDirectory.FullName);
-                Directory.Delete(ExtractedTmpPath, true);
-                Process.Start(Path.Combine(PixevalDirectory.FullName, "Pixeval.exe"));
+                File.Delete(_zipTmpPath);
+                Directory.Delete(Path.Combine(_extractedTmpPath, "updater"), true);
+                FileSystem.CopyDirectory(_extractedTmpPath, _pixevalDirectory.FullName);
+                Directory.Delete(_extractedTmpPath, true);
+                Process.Start(Path.Combine(_pixevalDirectory.FullName, "Pixeval.exe"));
                 Exit();
             }
             catch (TaskCanceledException)
@@ -103,12 +103,12 @@ namespace Pixeval.Updater
 
         private static Task<string> GetRemoteChecksum()
         {
-            return new HttpClient().GetStringAsync(RelevantURL.Checksum);
+            return new HttpClient().GetStringAsync(RelevantUrl.Checksum);
         }
 
         private static void RmFiles()
         {
-            var rmList = PixevalDirectory.GetFileSystemInfos().Where(fs => fs.FullName != CurrentDir);
+            var rmList = _pixevalDirectory.GetFileSystemInfos().Where(fs => fs.FullName != _currentDir);
             foreach (var fileSystemInfo in rmList)
                 if (File.GetAttributes(fileSystemInfo.FullName).HasFlag(FileAttributes.Directory))
                     Directory.Delete(fileSystemInfo.FullName, true);
@@ -118,7 +118,7 @@ namespace Pixeval.Updater
 
         private static void Extract()
         {
-            ZipFile.ExtractToDirectory(ZipTmpPath, PixevalDirectory.FullName);
+            ZipFile.ExtractToDirectory(_zipTmpPath, _pixevalDirectory.FullName);
         }
 
         private void Exit(string message = null)
@@ -136,7 +136,7 @@ namespace Pixeval.Updater
 
         private void CancelButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            CancellationTokenSource.Cancel();
+            _cancellationTokenSource.Cancel();
         }
 
         private static bool CheckIsPixevalDirectory(DirectoryInfo dir)

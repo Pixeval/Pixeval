@@ -24,14 +24,14 @@ namespace Pixeval.Core
     {
         private static volatile PixivClient _instance;
 
-        private static readonly object Locker = new object();
+        private static readonly object _locker = new object();
 
         public static PixivClient Instance
         {
             get
             {
                 if (_instance == null)
-                    lock (Locker)
+                    lock (_locker)
                     {
                         _instance ??= new PixivClient();
                     }

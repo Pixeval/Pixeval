@@ -37,8 +37,8 @@ namespace Pixeval.Core
     public class WindowsUserActivityManager : ITimelineService
     {
         public static readonly WindowsUserActivityManager GlobalLifeTimeScope = new WindowsUserActivityManager();
-        private readonly Uri iconUri = new Uri("http://qa23pqcql.bkt.clouddn.com/pxlogo.ico");
-        private UserActivitySession userActivitySession;
+        private readonly Uri _iconUri = new Uri("http://qa23pqcql.bkt.clouddn.com/pxlogo.ico");
+        private UserActivitySession _userActivitySession;
 
         public bool VerifyRationality(BrowsingHistory browsingHistory)
         {
@@ -54,7 +54,7 @@ namespace Pixeval.Core
             userActivity.VisualElements.DisplayText = model.Title;
             userActivity.VisualElements.Content =
                 AdaptiveCardBuilder.CreateAdaptiveCardFromJson(BuildAdaptiveCard(model));
-            userActivity.VisualElements.Attribution = new UserActivityAttribution(iconUri);
+            userActivity.VisualElements.Attribution = new UserActivityAttribution(_iconUri);
             userActivity.VisualElements.AttributionDisplayText = "Pixeval";
             userActivity.ActivationUri = new Uri(browsingHistory.Type switch
             {
@@ -64,8 +64,8 @@ namespace Pixeval.Core
                 _ => throw new ArgumentException(nameof(browsingHistory.Type))
             });
             await userActivity.SaveAsync();
-            userActivitySession?.Dispose();
-            userActivitySession = userActivity.CreateSession();
+            _userActivitySession?.Dispose();
+            _userActivitySession = userActivity.CreateSession();
         }
 
         private static async Task<PixevalTimelineModel> GetPixevalTimelineModel(BrowsingHistory history)

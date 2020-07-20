@@ -55,28 +55,28 @@ namespace Pixeval.Core
 
         private class RecommendAsyncEnumerator : AbstractPixivAsyncEnumerator<Illustration>
         {
-            private RecommendResponse entity;
+            private RecommendResponse _entity;
 
-            private IEnumerator<Illustration> illustrationEnumerator;
+            private IEnumerator<Illustration> _illustrationEnumerator;
 
             public RecommendAsyncEnumerator(IPixivAsyncEnumerable<Illustration> enumerable) : base(enumerable)
             {
             }
 
-            public override Illustration Current => illustrationEnumerator.Current;
+            public override Illustration Current => _illustrationEnumerator.Current;
 
             protected override void UpdateEnumerator()
             {
-                illustrationEnumerator = entity.Illusts.NonNull().Select(_ => _.Parse()).GetEnumerator();
+                _illustrationEnumerator = _entity.Illusts.NonNull().Select(_ => _.Parse()).GetEnumerator();
             }
 
             public override async ValueTask<bool> MoveNextAsync()
             {
-                if (entity == null)
+                if (_entity == null)
                 {
                     if (await TryGetResponse("/v1/illust/recommended") is (true, var model))
                     {
-                        entity = model;
+                        _entity = model;
                         UpdateEnumerator();
                     }
                     else
@@ -87,13 +87,13 @@ namespace Pixeval.Core
                     Enumerable.ReportRequestedPages();
                 }
 
-                if (illustrationEnumerator.MoveNext()) return true;
+                if (_illustrationEnumerator.MoveNext()) return true;
 
-                if (entity.NextUrl.IsNullOrEmpty()) return false;
+                if (_entity.NextUrl.IsNullOrEmpty()) return false;
 
-                if (await TryGetResponse(entity.NextUrl) is (true, var res))
+                if (await TryGetResponse(_entity.NextUrl) is (true, var res))
                 {
-                    entity = res;
+                    _entity = res;
                     UpdateEnumerator();
                     Enumerable.ReportRequestedPages();
                     return true;

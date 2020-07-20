@@ -26,13 +26,13 @@ namespace Pixeval.Objects.Exceptions.Logger
 {
     public class ApplicationLogStack
     {
-        private readonly string id;
-        private readonly string provider;
+        private readonly string _id;
+        private readonly string _provider;
 
         public ApplicationLogStack(string id, string provider)
         {
-            this.id = id;
-            this.provider = provider;
+            this._id = id;
+            this._provider = provider;
         }
 
         public ApplicationLog GetFirst()
@@ -52,7 +52,7 @@ namespace Pixeval.Objects.Exceptions.Logger
 
         private string GetFirstMatchRecord()
         {
-            var query = new EventLogQuery("Application", PathType.LogName, $"*[System/Level=2] and *[System/Provider/@Name=\"{provider}\"]")
+            var query = new EventLogQuery("Application", PathType.LogName, $"*[System/Level=2] and *[System/Provider/@Name=\"{_provider}\"]")
             {
                 ReverseDirection = true
             };
@@ -61,7 +61,7 @@ namespace Pixeval.Objects.Exceptions.Logger
             while ((record = reader.ReadEvent()) != null)
             {
                 var doc = record.ToXml();
-                if (doc.Contains(id, StringComparison.OrdinalIgnoreCase)) return doc;
+                if (doc.Contains(_id, StringComparison.OrdinalIgnoreCase)) return doc;
             }
 
             return null;

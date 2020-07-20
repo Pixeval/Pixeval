@@ -30,8 +30,8 @@ namespace Pixeval.Data.Web.Delegation
 {
     public abstract class DnsResolvedHttpClientHandler : HttpClientHandler
     {
-        private readonly bool directConnect;
-        private readonly IHttpRequestHandler requestHandler;
+        private readonly bool _directConnect;
+        private readonly IHttpRequestHandler _requestHandler;
 
         static DnsResolvedHttpClientHandler()
         {
@@ -40,8 +40,8 @@ namespace Pixeval.Data.Web.Delegation
 
         protected DnsResolvedHttpClientHandler(IHttpRequestHandler requestHandler = null, bool directConnect = true)
         {
-            this.requestHandler = requestHandler;
-            this.directConnect = directConnect;
+            this._requestHandler = requestHandler;
+            this._directConnect = directConnect;
             ServerCertificateCustomValidationCallback = DangerousAcceptAnyServerCertificateValidator;
         }
 
@@ -50,9 +50,9 @@ namespace Pixeval.Data.Web.Delegation
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
                                                                      CancellationToken cancellationToken)
         {
-            requestHandler?.Handle(request);
+            _requestHandler?.Handle(request);
 
-            if (directConnect)
+            if (_directConnect)
             {
                 var host = request.RequestUri.DnsSafeHost;
 

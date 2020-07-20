@@ -31,23 +31,23 @@ namespace Pixeval.Objects.Caching
     public class FileCache<T, THash> : IWeakCacheProvider<T, THash>, IEnumerable<KeyValuePair<THash, string>>
         where T : class
     {
-        private readonly Func<T, Stream> cachingPolicy;
-        private readonly ConcurrentDictionary<THash, string> fileMapping = new ConcurrentDictionary<THash, string>();
-        private readonly string initDirectory;
-        private readonly Func<Stream, T> restorePolicy;
+        private readonly Func<T, Stream> _cachingPolicy;
+        private readonly ConcurrentDictionary<THash, string> _fileMapping = new ConcurrentDictionary<THash, string>();
+        private readonly string _initDirectory;
+        private readonly Func<Stream, T> _restorePolicy;
 
         public FileCache(string initDirectory, Func<T, Stream> cachingPolicy, Func<Stream, T> restorePolicy)
         {
-            this.cachingPolicy = cachingPolicy;
-            this.restorePolicy = restorePolicy;
-            this.initDirectory = initDirectory;
+            _cachingPolicy = cachingPolicy;
+            _restorePolicy = restorePolicy;
+            _initDirectory = initDirectory;
 
             Directory.CreateDirectory(initDirectory);
         }
 
         public IEnumerator<KeyValuePair<THash, string>> GetEnumerator()
         {
-            return fileMapping.GetEnumerator();
+            return _fileMapping.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -58,14 +58,14 @@ namespace Pixeval.Objects.Caching
         public void Attach(ref T key, THash associateWith)
         {
             if (associateWith == null || key == null) return;
-            var path = Path.Combine(initDirectory, IWeakCacheProvider<T, THash>.HashKey(associateWith) + ".tmp");
+            var path = Path.Combine(_initDirectory, IWeakCacheProvider<T, THash>.HashKey(associateWith) + ".tmp");
             if (!File.Exists(path))
             {
-                var s = cachingPolicy(key);
+                var s = _cachingPolicy(key);
                 key = null;
                 Task.Run(() =>
                 {
-                    fileMapping.TryAdd(associateWith, path);
+                    _fileMapping.TryAdd(associateWith, path);
                     WriteFile(path, s);
                 });
             }
@@ -74,23 +74,23 @@ namespace Pixeval.Objects.Caching
         public void Detach(THash associateWith)
         {
             using var sem = new SemaphoreSlim(1);
-            var path = Path.Combine(initDirectory, IWeakCacheProvider<T, THash>.HashKey(associateWith) + ".");
+            var path = Path.Combine(_initDirectory, IWeakCacheProvider<T, THash>.HashKey(associateWith) + ".");
             if (File.Exists(path))
             {
-                fileMapping.TryRemove(associateWith, out _);
+                _fileMapping.TryRemove(associateWith, out _);
                 File.Delete(path);
             }
         }
 
         public async Task<(bool, T)> TryGet([NotNull] THash key)
         {
-            if (fileMapping.TryGetValue(key, out var file) && File.Exists(file))
+            if (_fileMapping.TryGetValue(key, out var file) && File.Exists(file))
             {
                 await using var fileStream = File.OpenRead(file);
                 fileStream.Position = 0L;
                 await using Stream memoStream = new MemoryStream();
                 await fileStream.CopyToAsync(memoStream);
-                return (true, restorePolicy(memoStream));
+                return (true, _restorePolicy(memoStream));
             }
 
             return (false, null);
@@ -99,7 +99,7 @@ namespace Pixeval.Objects.Caching
         public void Clear()
         {
             using var sem = new SemaphoreSlim(1);
-            foreach (var file in Directory.GetFiles(initDirectory)) File.Delete(file);
+            foreach (var file in Directory.GetFiles(_initDirectory)) File.Delete(file);
         }
 
         private static async void WriteFile(string path, Stream src)

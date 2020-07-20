@@ -41,7 +41,7 @@ namespace Pixeval.Data.Web.Delegation
 
         private static bool _dnsQueryFailed;
 
-        protected readonly ISet<IPAddress> IpList = new HashSet<IPAddress>(new IPAddressEqualityComparer());
+        protected readonly ISet<IPAddress> IpList = new HashSet<IPAddress>(new IpAddressEqualityComparer());
 
         protected async Task<DnsResolveResponse> GetDnsJson(string hostname)
         {
@@ -117,7 +117,7 @@ namespace Pixeval.Data.Web.Delegation
 
         protected abstract IEnumerable<IPAddress> UseDefaultDns();
 
-        private class IPAddressEqualityComparer : IEqualityComparer<IPAddress>
+        private class IpAddressEqualityComparer : IEqualityComparer<IPAddress>
         {
             public bool Equals(IPAddress x, IPAddress y)
             {

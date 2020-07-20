@@ -33,11 +33,11 @@ namespace Pixeval.Core
 {
     public class SpotlightQueryAsyncEnumerable : AbstractPixivAsyncEnumerable<SpotlightArticle>
     {
-        private readonly int start;
+        private readonly int _start;
 
         public SpotlightQueryAsyncEnumerable(int start)
         {
-            this.start = start < 1 ? 1 : start;
+            this._start = start < 1 ? 1 : start;
         }
 
         public override int RequestedPages { get; protected set; }
@@ -45,37 +45,37 @@ namespace Pixeval.Core
         public override IAsyncEnumerator<SpotlightArticle> GetAsyncEnumerator(
             CancellationToken cancellationToken = default)
         {
-            return new SpotlightArticleAsyncEnumerator(this, start);
+            return new SpotlightArticleAsyncEnumerator(this, _start);
         }
 
         private class SpotlightArticleAsyncEnumerator : AbstractPixivAsyncEnumerator<SpotlightArticle>
         {
-            private int current;
+            private int _current;
 
-            private SpotlightResponse entity;
+            private SpotlightResponse _entity;
 
-            private IEnumerator<SpotlightArticle> spotlightArticleEnumerator;
+            private IEnumerator<SpotlightArticle> _spotlightArticleEnumerator;
 
             public SpotlightArticleAsyncEnumerator(IPixivAsyncEnumerable<SpotlightArticle> enumerable, int current) :
                 base(enumerable)
             {
-                this.current = current;
+                this._current = current;
             }
 
-            public override SpotlightArticle Current => spotlightArticleEnumerator.Current;
+            public override SpotlightArticle Current => _spotlightArticleEnumerator.Current;
 
             protected override void UpdateEnumerator()
             {
-                spotlightArticleEnumerator = entity.SpotlightArticles.NonNull().GetEnumerator();
+                _spotlightArticleEnumerator = _entity.SpotlightArticles.NonNull().GetEnumerator();
             }
 
             public override async ValueTask<bool> MoveNextAsync()
             {
-                if (entity == null)
+                if (_entity == null)
                 {
                     if (await TryGetResponse() is (true, var model))
                     {
-                        entity = model;
+                        _entity = model;
                         UpdateEnumerator();
                     }
                     else
@@ -86,13 +86,13 @@ namespace Pixeval.Core
                     Enumerable.ReportRequestedPages();
                 }
 
-                if (spotlightArticleEnumerator.MoveNext()) return true;
+                if (_spotlightArticleEnumerator.MoveNext()) return true;
 
-                if (entity.NextUrl.IsNullOrEmpty()) return false;
+                if (_entity.NextUrl.IsNullOrEmpty()) return false;
 
                 if (await TryGetResponse() is (true, var res))
                 {
-                    entity = res;
+                    _entity = res;
                     UpdateEnumerator();
                     Enumerable.ReportRequestedPages();
                     return true;
@@ -103,7 +103,7 @@ namespace Pixeval.Core
 
             private async Task<HttpResponse<SpotlightResponse>> TryGetResponse()
             {
-                var res = await HttpClientFactory.AppApiService().GetSpotlights(current++ * 10);
+                var res = await HttpClientFactory.AppApiService().GetSpotlights(_current++ * 10);
 
                 if (res is { } response && !response.SpotlightArticles.IsNullOrEmpty()) return HttpResponse<SpotlightResponse>.Wrap(true, response);
 

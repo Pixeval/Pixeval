@@ -39,9 +39,9 @@ namespace Pixeval.UI.UserControls
     /// <summary>
     ///     Interaction logic for SauceNAOHomePage.xaml
     /// </summary>
-    public partial class SauceNAOHomePage
+    public partial class SauceNaoHomePage
     {
-        public SauceNAOHomePage()
+        public SauceNaoHomePage()
         {
             InitializeComponent();
         }
@@ -105,7 +105,7 @@ namespace Pixeval.UI.UserControls
         {
             await using var memoryStream =
                 new MemoryStream(await File.ReadAllBytesAsync(UploadFileTextBox.Text), false);
-            var sauceResponse = await RestService.For<ISauceNAOProtocol>(ProtocolBase.SauceNAOUrl)
+            var sauceResponse = await RestService.For<ISauceNAOProtocol>(ProtocolBase.SauceNaoUrl)
                 .GetSauce(new StreamPart(memoryStream, Path.GetFileName(fileName),
                                          Strings.AssumeImageContentType(fileName)));
             var content = await sauceResponse.Content.ReadAsStringAsync();

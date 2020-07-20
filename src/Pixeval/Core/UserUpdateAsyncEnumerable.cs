@@ -53,29 +53,29 @@ namespace Pixeval.Core
 
         private class UserUpdateAsyncEnumerator : AbstractPixivAsyncEnumerator<Illustration>
         {
-            private UserUpdateResponse entity;
+            private UserUpdateResponse _entity;
 
-            private IEnumerator<Illustration> illustrationEnumerator;
+            private IEnumerator<Illustration> _illustrationEnumerator;
 
             public UserUpdateAsyncEnumerator(IPixivAsyncEnumerable<Illustration> enumerable) : base(enumerable)
             {
             }
 
-            public override Illustration Current => illustrationEnumerator.Current;
+            public override Illustration Current => _illustrationEnumerator.Current;
 
             protected override void UpdateEnumerator()
             {
-                illustrationEnumerator = entity.Illusts.NonNull().Select(_ => _.Parse()).GetEnumerator();
+                _illustrationEnumerator = _entity.Illusts.NonNull().Select(_ => _.Parse()).GetEnumerator();
             }
 
             public override async ValueTask<bool> MoveNextAsync()
             {
-                if (entity == null)
+                if (_entity == null)
                 {
                     if (await TryGetResponse("https://app-api.pixiv.net/v2/illust/follow?restrict=public") is (true, var
                         model))
                     {
-                        entity = model;
+                        _entity = model;
                         UpdateEnumerator();
                     }
                     else
@@ -86,13 +86,13 @@ namespace Pixeval.Core
                     Enumerable.ReportRequestedPages();
                 }
 
-                if (illustrationEnumerator.MoveNext()) return true;
+                if (_illustrationEnumerator.MoveNext()) return true;
 
-                if (entity.NextUrl.IsNullOrEmpty()) return false;
+                if (_entity.NextUrl.IsNullOrEmpty()) return false;
 
-                if (await TryGetResponse(entity.NextUrl) is (true, var res))
+                if (await TryGetResponse(_entity.NextUrl) is (true, var res))
                 {
-                    entity = res;
+                    _entity = res;
                     UpdateEnumerator();
                     Enumerable.ReportRequestedPages();
                     return true;

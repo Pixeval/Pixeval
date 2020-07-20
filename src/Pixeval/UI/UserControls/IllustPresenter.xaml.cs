@@ -45,9 +45,9 @@ namespace Pixeval.UI.UserControls
     [AddINotifyPropertyChangedInterface]
     public partial class IllustPresenter
     {
-        private readonly CancellationTokenSource cancellationToken = new CancellationTokenSource();
+        private readonly CancellationTokenSource _cancellationToken = new CancellationTokenSource();
 
-        private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
         public IllustPresenter(Illustration illustration)
         {
@@ -82,7 +82,7 @@ namespace Pixeval.UI.UserControls
             LoadingOrigin = true;
             var progress = new Progress<double>(p => Dispatcher.Invoke(() => LoadingIndicator = p));
             await using var mem =
-                await PixivIO.Download(Illust.GetDownloadUrl(), progress, cancellationTokenSource.Token);
+                await PixivIO.Download(Illust.GetDownloadUrl(), progress, _cancellationTokenSource.Token);
             ImgSource = InternalIO.CreateBitmapImageFromStream(mem);
             LoadingOrigin = false;
             ((BlurEffect)ContentImage.Effect).Radius = 0;
@@ -131,12 +131,12 @@ namespace Pixeval.UI.UserControls
 
             _ = Task.Run(async () =>
             {
-                while (!cancellationToken.IsCancellationRequested)
-                    for (var i = 0; i < streams.Length && !cancellationToken.IsCancellationRequested; i++)
+                while (!_cancellationToken.IsCancellationRequested)
+                    for (var i = 0; i < streams.Length && !_cancellationToken.IsCancellationRequested; i++)
                     {
                         streams[i].Position = 0;
                         ImgSource = InternalIO.CreateBitmapImageFromStream(streams[i]);
-                        await Task.Delay((int)delay[i], cancellationToken.Token);
+                        await Task.Delay((int)delay[i], _cancellationToken.Token);
                     }
 
                 foreach (var stream in streams)
@@ -148,8 +148,8 @@ namespace Pixeval.UI.UserControls
 
         private void IllustPresenter_OnUnloaded(object sender, RoutedEventArgs e)
         {
-            cancellationToken.Cancel();
-            cancellationTokenSource.Cancel();
+            _cancellationToken.Cancel();
+            _cancellationTokenSource.Cancel();
         }
 
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)

@@ -41,13 +41,13 @@ namespace Pixeval.Objects.Primitive
         private static extern IntPtr GetForegroundWindow();
 
         [DllImport("user32.dll")]
-        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr ProcessId);
+        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr processId);
 
         [DllImport("user32.dll")]
         private static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
 
         [DllImport("user32.dll")]
-        public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy,
+        public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy,
                                                uint uFlags);
 
         /// <summary>
@@ -56,15 +56,15 @@ namespace Pixeval.Objects.Primitive
         /// <param name="w">window to active</param>
         public static void GlobalActivate(this Window w)
         {
-            const uint NoSize = 0x0001;
-            const uint NoMove = 0x0002;
-            const uint ShowWindow = 0x0040;
+            const uint noSize = 0x0001;
+            const uint noMove = 0x0002;
+            const uint showWindow = 0x0040;
             var interopHelper = new WindowInteropHelper(w);
             var thisWindowThreadId = GetWindowThreadProcessId(interopHelper.Handle, IntPtr.Zero);
             var currentForegroundWindow = GetForegroundWindow();
             var currentForegroundWindowThreadId = GetWindowThreadProcessId(currentForegroundWindow, IntPtr.Zero);
             AttachThreadInput(currentForegroundWindowThreadId, thisWindowThreadId, true);
-            SetWindowPos(interopHelper.Handle, new IntPtr(0), 0, 0, 0, 0, NoSize | NoMove | ShowWindow);
+            SetWindowPos(interopHelper.Handle, new IntPtr(0), 0, 0, 0, 0, noSize | noMove | showWindow);
             AttachThreadInput(currentForegroundWindowThreadId, thisWindowThreadId, false);
             if (w.WindowState == WindowState.Minimized) w.WindowState = WindowState.Normal;
             w.Show();

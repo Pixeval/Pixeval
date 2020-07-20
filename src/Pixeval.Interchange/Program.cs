@@ -33,14 +33,14 @@ namespace Pixeval.Interchange
         private const string UserRegex = "pixeval://(www\\.)?pixiv\\.net/users/(?<id>\\d+)";
         private const string SpotlightRegex = "pixeval://(www\\.)?pixivision\\.net/\\w{2}/a/(?<id>\\d+)";
 
-        private static readonly HttpClient HttpClient = new HttpClient();
+        private static readonly HttpClient _httpClient = new HttpClient();
 
         public static async Task Main(string[] args)
         {
-            using (HttpClient)
+            using (_httpClient)
             {
                 if (!args.Any()) return;
-                var url = args[0];
+                string url = args[0];
                 // check protocol rationality
                 if (!(Regex.IsMatch(url, IllustRegex) ||
                     Regex.IsMatch(url, UserRegex) ||
@@ -50,7 +50,7 @@ namespace Pixeval.Interchange
                 if (PixevalInstanceRunning())
                 {
                     // send Pixeval custom pluggable protocol if so
-                    await HttpClient.PostAsync("http://127.0.0.1:12547/open",
+                    await _httpClient.PostAsync("http://127.0.0.1:12547/open",
                                                new StringContent(url, Encoding.UTF8));
                 }
                 else

@@ -68,40 +68,40 @@ namespace Pixeval.Core
 
         private class GalleryAsyncEnumerator : AbstractPixivAsyncEnumerator<Illustration>
         {
-            private readonly RestrictPolicy restrictPolicy;
-            private readonly string uid;
-            private GalleryResponse entity;
+            private readonly RestrictPolicy _restrictPolicy;
+            private readonly string _uid;
+            private GalleryResponse _entity;
 
-            private IEnumerator<Illustration> illustrationsEnumerator;
+            private IEnumerator<Illustration> _illustrationsEnumerator;
 
             public GalleryAsyncEnumerator(string uid, IPixivAsyncEnumerable<Illustration> outerInstance,
                                           RestrictPolicy restrictPolicy) : base(outerInstance)
             {
-                this.uid = uid;
-                this.restrictPolicy = restrictPolicy;
+                this._uid = uid;
+                this._restrictPolicy = restrictPolicy;
             }
 
-            public override Illustration Current => illustrationsEnumerator.Current;
+            public override Illustration Current => _illustrationsEnumerator.Current;
 
             protected override void UpdateEnumerator()
             {
-                illustrationsEnumerator = entity.Illusts.NonNull().Select(_ => _.Parse()).GetEnumerator();
+                _illustrationsEnumerator = _entity.Illusts.NonNull().Select(_ => _.Parse()).GetEnumerator();
             }
 
             public override async ValueTask<bool> MoveNextAsync()
             {
-                if (entity == null)
+                if (_entity == null)
                 {
-                    if (await TryGetResponse(restrictPolicy switch
+                    if (await TryGetResponse(_restrictPolicy switch
                     {
                         RestrictPolicy.Public =>
-                        $"/v1/user/bookmarks/illust?user_id={uid}&restrict=public&filter=for_ios",
+                        $"/v1/user/bookmarks/illust?user_id={_uid}&restrict=public&filter=for_ios",
                         RestrictPolicy.Private =>
-                        $"/v1/user/bookmarks/illust?user_id={uid}&restrict=private&filter=for_ios",
+                        $"/v1/user/bookmarks/illust?user_id={_uid}&restrict=private&filter=for_ios",
                         _ => throw new ArgumentOutOfRangeException()
                     }) is (true, var model))
                     {
-                        entity = model;
+                        _entity = model;
                         UpdateEnumerator();
                     }
                     else
@@ -112,13 +112,13 @@ namespace Pixeval.Core
                     Enumerable.ReportRequestedPages();
                 }
 
-                if (illustrationsEnumerator.MoveNext()) return true;
+                if (_illustrationsEnumerator.MoveNext()) return true;
 
-                if (entity.NextUrl.IsNullOrEmpty()) return false;
+                if (_entity.NextUrl.IsNullOrEmpty()) return false;
 
-                if (await TryGetResponse(entity.NextUrl) is (true, var response))
+                if (await TryGetResponse(_entity.NextUrl) is (true, var response))
                 {
-                    entity = response;
+                    _entity = response;
                     UpdateEnumerator();
                     Enumerable.ReportRequestedPages();
                     return true;

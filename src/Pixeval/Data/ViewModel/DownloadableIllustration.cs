@@ -36,11 +36,11 @@ namespace Pixeval.Data.ViewModel
     public class DownloadableIllustration
     {
         [DoNotNotify]
-        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        private bool modifiable = true;
+        private bool _modifiable = true;
 
-        private bool retried;
+        private bool _retried;
 
         public DownloadableIllustration(Illustration downloadContent, IIllustrationFileNameFormatter fileNameFormatter, IDownloadPathProvider downloadPathProvider, bool isFromManga, int mangaIndex = -1)
         {
@@ -87,15 +87,15 @@ namespace Pixeval.Data.ViewModel
 
         public void Freeze()
         {
-            modifiable = false;
+            _modifiable = false;
         }
 
         public void Cancel()
         {
-            if (modifiable)
+            if (_modifiable)
             {
-                cancellationTokenSource.Cancel();
-                cancellationTokenSource = new CancellationTokenSource();
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource = new CancellationTokenSource();
                 Progress = 0;
                 ReasonPhase = null;
                 DownloadFailed = false;
@@ -105,10 +105,10 @@ namespace Pixeval.Data.ViewModel
 
         public void Restart()
         {
-            if (modifiable)
+            if (_modifiable)
             {
-                cancellationTokenSource.Cancel();
-                cancellationTokenSource = new CancellationTokenSource();
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource = new CancellationTokenSource();
                 Progress = 0;
                 ReasonPhase = null;
                 DownloadFailed = false;
@@ -118,7 +118,7 @@ namespace Pixeval.Data.ViewModel
 
         public async void Download()
         {
-            if (!modifiable) return;
+            if (!_modifiable) return;
 
             DownloadState.Value = DownloadStateEnum.Downloading;
             var downloadPath = GetPath();
@@ -132,8 +132,8 @@ namespace Pixeval.Data.ViewModel
             {
                 await using var memory = await PixivIO.Download(DownloadContent.GetDownloadUrl(),
                                                                 new Progress<double>(d => Progress = d),
-                                                                cancellationTokenSource.Token);
-                if (cancellationTokenSource.IsCancellationRequested) return;
+                                                                _cancellationTokenSource.Token);
+                if (_cancellationTokenSource.IsCancellationRequested) return;
                 await using var fileStream = new FileStream(downloadPath, FileMode.OpenOrCreate, FileAccess.ReadWrite,
                                                             FileShare.None);
                 memory.WriteTo(fileStream);
@@ -145,10 +145,10 @@ namespace Pixeval.Data.ViewModel
             }
             catch (Exception e)
             {
-                if (!retried)
+                if (!_retried)
                 {
                     Restart();
-                    retried = true;
+                    _retried = true;
                 }
                 else
                 {
@@ -168,12 +168,12 @@ namespace Pixeval.Data.ViewModel
                     ? Regex.Replace(ugoiraUrl, "ugoira(\\d+)x(\\d+).zip", "ugoira1920x1080.zip")
                     : ugoiraUrl;
                 var delay = metadata.UgoiraMetadataInfo.Frames.Select(f => f.Delay / 10).ToArray();
-                if (cancellationTokenSource.IsCancellationRequested) return;
+                if (_cancellationTokenSource.IsCancellationRequested) return;
                 await using var memory = await PixivIO.Download(ugoiraUrl, new Progress<double>(d => Progress = d),
-                                                                cancellationTokenSource.Token);
+                                                                _cancellationTokenSource.Token);
                 await using var gifStream =
                     (MemoryStream)InternalIO.MergeGifStream(InternalIO.ReadGifZipEntries(memory), delay);
-                if (cancellationTokenSource.IsCancellationRequested) return;
+                if (_cancellationTokenSource.IsCancellationRequested) return;
                 await using var fileStream = new FileStream(downloadPath, FileMode.OpenOrCreate, FileAccess.ReadWrite,
                                                             FileShare.None);
                 gifStream.WriteTo(fileStream);
@@ -185,10 +185,10 @@ namespace Pixeval.Data.ViewModel
             }
             catch (Exception e)
             {
-                if (!retried)
+                if (!_retried)
                 {
                     Restart();
-                    retried = true;
+                    _retried = true;
                 }
                 else
                 {

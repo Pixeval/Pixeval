@@ -92,7 +92,7 @@ namespace Pixeval.UI.UserControls
 
         private void CultureSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            AkaI18N.Reload((I18nOption)CultureSelector.SelectedItem);
+            AkaI18N.Reload((I18NOption)CultureSelector.SelectedItem);
         }
     }
 }

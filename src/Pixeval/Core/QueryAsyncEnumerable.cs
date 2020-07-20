@@ -37,16 +37,16 @@ namespace Pixeval.Core
     public abstract class AbstractQueryAsyncEnumerable : AbstractPixivAsyncEnumerable<Illustration>
     {
         protected readonly bool IsPremium;
-        private readonly SearchTagMatchOption matchOption;
-        private readonly int start;
-        private readonly string tag;
+        private readonly SearchTagMatchOption _matchOption;
+        private readonly int _start;
+        private readonly string _tag;
 
         protected AbstractQueryAsyncEnumerable(string tag, SearchTagMatchOption matchOption, bool isPremium,
                                                int start = 1)
         {
-            this.start = start < 1 ? 1 : start;
-            this.tag = tag;
-            this.matchOption = matchOption;
+            this._start = start < 1 ? 1 : start;
+            this._tag = tag;
+            this._matchOption = matchOption;
             IsPremium = isPremium;
         }
 
@@ -64,45 +64,45 @@ namespace Pixeval.Core
 
         public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = default)
         {
-            return new QueryAsyncEnumerator(this, tag, matchOption, start, IsPremium);
+            return new QueryAsyncEnumerator(this, _tag, _matchOption, _start, IsPremium);
         }
 
         private class QueryAsyncEnumerator : AbstractPixivAsyncEnumerator<Illustration>
         {
-            private readonly int current;
-            private readonly bool isPremium;
-            private readonly string keyword;
-            private readonly SearchTagMatchOption matchOption;
+            private readonly int _current;
+            private readonly bool _isPremium;
+            private readonly string _keyword;
+            private readonly SearchTagMatchOption _matchOption;
 
-            private QueryWorksResponse entity;
+            private QueryWorksResponse _entity;
 
-            private IEnumerator<Illustration> illustrationsEnumerator;
+            private IEnumerator<Illustration> _illustrationsEnumerator;
 
             public QueryAsyncEnumerator(IPixivAsyncEnumerable<Illustration> enumerable, string keyword,
                                         SearchTagMatchOption matchOption, int current, bool isPremium) : base(enumerable)
             {
-                this.keyword = keyword;
-                this.matchOption = matchOption;
-                this.current = current;
-                this.isPremium = isPremium;
+                this._keyword = keyword;
+                this._matchOption = matchOption;
+                this._current = current;
+                this._isPremium = isPremium;
             }
 
-            public override Illustration Current => illustrationsEnumerator.Current;
+            public override Illustration Current => _illustrationsEnumerator.Current;
 
             protected override void UpdateEnumerator()
             {
-                illustrationsEnumerator = entity.Illusts.NonNull().Select(_ => _.Parse()).GetEnumerator();
+                _illustrationsEnumerator = _entity.Illusts.NonNull().Select(_ => _.Parse()).GetEnumerator();
             }
 
             public override async ValueTask<bool> MoveNextAsync()
             {
-                if (entity == null)
+                if (_entity == null)
                 {
                     if (await TryGetResponse(
-                            $"/v1/search/illust?search_target={matchOption.GetEnumAttribute<EnumAlias>().AliasAs}&sort={(isPremium ? "date_desc" : "popular_desc")}&word={keyword}&filter=for_android&offset={(current - 1) * 30}")
+                            $"/v1/search/illust?search_target={_matchOption.GetEnumAttribute<EnumAlias>().AliasAs}&sort={(_isPremium ? "date_desc" : "popular_desc")}&word={_keyword}&filter=for_android&offset={(_current - 1) * 30}")
                         is (true, var model))
                     {
-                        entity = model;
+                        _entity = model;
                         UpdateEnumerator();
                     }
                     else
@@ -113,13 +113,13 @@ namespace Pixeval.Core
                     Enumerable.ReportRequestedPages();
                 }
 
-                if (illustrationsEnumerator.MoveNext()) return true;
+                if (_illustrationsEnumerator.MoveNext()) return true;
 
-                if (int.Parse(entity.NextUrl[(entity.NextUrl.LastIndexOf('=') + 1)..]) >= 5000) return false;
+                if (int.Parse(_entity.NextUrl[(_entity.NextUrl.LastIndexOf('=') + 1)..]) >= 5000) return false;
 
-                if (await TryGetResponse(entity.NextUrl) is (true, var res))
+                if (await TryGetResponse(_entity.NextUrl) is (true, var res))
                 {
-                    entity = res;
+                    _entity = res;
                     UpdateEnumerator();
                     Enumerable.ReportRequestedPages();
                     return true;

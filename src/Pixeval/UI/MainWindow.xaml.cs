@@ -693,11 +693,11 @@ namespace Pixeval.UI
             await PixivClient.Instance.FollowArtist(usr, RestrictPolicy.Private);
         }
 
-        private bool animating;
+        private bool _animating;
 
         private void ContentDisplay_OnMouseMove(object sender, MouseEventArgs e)
         {
-            if (!(Navigating(GalleryTab) || Navigating(FollowingTab) || Navigating(RankingTab)) || animating) return;
+            if (!(Navigating(GalleryTab) || Navigating(FollowingTab) || Navigating(RankingTab)) || _animating) return;
             var transform = (TranslateTransform)(Navigating(RankingTab)
                 ? RankOptionSelector.RenderTransform
                 : RestrictPolicySelector.RenderTransform);
@@ -1093,8 +1093,8 @@ namespace Pixeval.UI
                 {
                     EasingFunction = new CubicEase()
                 };
-                animation.Completed += (o, args) => animating = false;
-                animating = true;
+                animation.Completed += (o, args) => _animating = false;
+                _animating = true;
                 transform.BeginAnimation(TranslateTransform.YProperty, animation);
             }
         }
@@ -1107,8 +1107,8 @@ namespace Pixeval.UI
                 {
                     EasingFunction = new CubicEase()
                 };
-                animation.Completed += (o, args) => animating = false;
-                animating = true;
+                animation.Completed += (o, args) => _animating = false;
+                _animating = true;
                 transform.BeginAnimation(TranslateTransform.YProperty, animation);
             }
         }

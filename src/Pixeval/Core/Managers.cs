@@ -83,17 +83,17 @@ namespace Pixeval.Core
 
     public class SearchingHistoryManager
     {
-        private static readonly ObservableCollection<string> SearchingHistory = new ObservableCollection<string>();
+        private static readonly ObservableCollection<string> _searchingHistory = new ObservableCollection<string>();
 
         public static void EnqueueSearchHistory(string keyword)
         {
-            if (SearchingHistory.Count == 4) SearchingHistory.RemoveAt(SearchingHistory.Count - 1);
-            SearchingHistory.Insert(0, keyword);
+            if (_searchingHistory.Count == 4) _searchingHistory.RemoveAt(_searchingHistory.Count - 1);
+            _searchingHistory.Insert(0, keyword);
         }
 
         public static IEnumerable<string> GetSearchingHistory()
         {
-            return SearchingHistory;
+            return _searchingHistory;
         }
     }
 }

@@ -34,37 +34,37 @@ namespace Pixeval.Core
 {
     public class UserPreviewAsyncEnumerable : AbstractPixivAsyncEnumerable<User>
     {
-        private readonly string keyword;
+        private readonly string _keyword;
 
         public UserPreviewAsyncEnumerable(string keyword)
         {
-            this.keyword = keyword;
+            this._keyword = keyword;
         }
 
         public override int RequestedPages { get; protected set; }
 
         public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = default)
         {
-            return new UserPreviewAsyncEnumerator(this, keyword);
+            return new UserPreviewAsyncEnumerator(this, _keyword);
         }
 
         private class UserPreviewAsyncEnumerator : AbstractPixivAsyncEnumerator<User>
         {
-            private readonly string keyword;
-            private UserNavResponse entity;
+            private readonly string _keyword;
+            private UserNavResponse _entity;
 
-            private IEnumerator<User> userPreviewEnumerator;
+            private IEnumerator<User> _userPreviewEnumerator;
 
             public UserPreviewAsyncEnumerator(IPixivAsyncEnumerable<User> enumerable, string keyword) : base(enumerable)
             {
-                this.keyword = keyword;
+                this._keyword = keyword;
             }
 
-            public override User Current => userPreviewEnumerator.Current;
+            public override User Current => _userPreviewEnumerator.Current;
 
             protected override void UpdateEnumerator()
             {
-                userPreviewEnumerator = entity.UserPreviews.NonNull().Select(u => new User
+                _userPreviewEnumerator = _entity.UserPreviews.NonNull().Select(u => new User
                 {
                     Avatar = u.User.ProfileImageUrls.Medium,
                     Thumbnails = u.Illusts.NonNull().Select(_ => _.ImageUrl.SquareMedium).ToArray(),
@@ -75,13 +75,13 @@ namespace Pixeval.Core
 
             public override async ValueTask<bool> MoveNextAsync()
             {
-                if (entity == null)
+                if (_entity == null)
                 {
                     if (await TryGetResponse(
-                            $"https://app-api.pixiv.net/v1/search/user?filter=for_android&word={keyword}") is (true, var
+                            $"https://app-api.pixiv.net/v1/search/user?filter=for_android&word={_keyword}") is (true, var
                         model))
                     {
-                        entity = model;
+                        _entity = model;
                         UpdateEnumerator();
                     }
                     else
@@ -92,13 +92,13 @@ namespace Pixeval.Core
                     Enumerable.ReportRequestedPages();
                 }
 
-                if (userPreviewEnumerator.MoveNext()) return true;
+                if (_userPreviewEnumerator.MoveNext()) return true;
 
-                if (entity.NextUrl.IsNullOrEmpty()) return false;
+                if (_entity.NextUrl.IsNullOrEmpty()) return false;
 
-                if (await TryGetResponse(entity.NextUrl) is (true, var res))
+                if (await TryGetResponse(_entity.NextUrl) is (true, var res))
                 {
-                    entity = res;
+                    _entity = res;
                     UpdateEnumerator();
                     Enumerable.ReportRequestedPages();
                     return true;

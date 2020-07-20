@@ -36,11 +36,11 @@ namespace Pixeval.Core
 {
     public class UploadAsyncEnumerable : AbstractPixivAsyncEnumerable<Illustration>
     {
-        private readonly string uid;
+        private readonly string _uid;
 
         public UploadAsyncEnumerable(string uid)
         {
-            this.uid = uid;
+            this._uid = uid;
         }
 
         public override int RequestedPages { get; protected set; }
@@ -60,37 +60,37 @@ namespace Pixeval.Core
 
         public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = default)
         {
-            return new UploadAsyncEnumerator(this, uid);
+            return new UploadAsyncEnumerator(this, _uid);
         }
 
         private class UploadAsyncEnumerator : AbstractPixivAsyncEnumerator<Illustration>
         {
-            private readonly string uid;
+            private readonly string _uid;
 
-            private UploadResponse entity;
+            private UploadResponse _entity;
 
-            private IEnumerator<Illustration> illustrationEnumerator;
+            private IEnumerator<Illustration> _illustrationEnumerator;
 
             public UploadAsyncEnumerator(IPixivAsyncEnumerable<Illustration> enumerable, string uid) : base(enumerable)
             {
-                this.uid = uid;
+                this._uid = uid;
             }
 
-            public override Illustration Current => illustrationEnumerator.Current;
+            public override Illustration Current => _illustrationEnumerator.Current;
 
             protected override void UpdateEnumerator()
             {
-                illustrationEnumerator = entity.Illusts.NonNull().Select(_ => _.Parse()).GetEnumerator();
+                _illustrationEnumerator = _entity.Illusts.NonNull().Select(_ => _.Parse()).GetEnumerator();
             }
 
             public override async ValueTask<bool> MoveNextAsync()
             {
-                if (entity == null)
+                if (_entity == null)
                 {
-                    if (await TryGetResponse($"/v1/user/illusts?user_id={uid}&filter=for_android&type=illust") is (true,
+                    if (await TryGetResponse($"/v1/user/illusts?user_id={_uid}&filter=for_android&type=illust") is (true,
                         var model))
                     {
-                        entity = model;
+                        _entity = model;
                         UpdateEnumerator();
                     }
                     else
@@ -101,13 +101,13 @@ namespace Pixeval.Core
                     Enumerable.ReportRequestedPages();
                 }
 
-                if (illustrationEnumerator.MoveNext()) return true;
+                if (_illustrationEnumerator.MoveNext()) return true;
 
-                if (entity.NextUrl.IsNullOrEmpty()) return false;
+                if (_entity.NextUrl.IsNullOrEmpty()) return false;
 
-                if (await TryGetResponse(entity.NextUrl) is (true, var res))
+                if (await TryGetResponse(_entity.NextUrl) is (true, var res))
                 {
-                    entity = res;
+                    _entity = res;
                     UpdateEnumerator();
                     Enumerable.ReportRequestedPages();
                     return true;
