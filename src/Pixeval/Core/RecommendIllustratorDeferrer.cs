@@ -62,7 +62,7 @@ namespace Pixeval.Core
         private async Task Request()
         {
             var newIllustrators = await HttpClientFactory.AppApiService()
-                .GetRecommendIllustrators(new RecommendIllustratorRequest {Offset = requestTimes++ * 30});
+                .GetRecommendIllustrators(new RecommendIllustratorRequest { Offset = requestTimes++ * 30 });
             currentIllustrators.AddRange(newIllustrators.UserPreviews.Select(i => i.Parse()));
         }
     }

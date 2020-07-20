@@ -59,7 +59,7 @@ namespace Pixeval.Objects.Native
 
         private bool IsImageSupportSpan()
         {
-            return Background.PixelWidth / (double) Background.PixelHeight >= 1.7;
+            return Background.PixelWidth / (double)Background.PixelHeight >= 1.7;
         }
 
         public async ValueTask<bool> Execute()

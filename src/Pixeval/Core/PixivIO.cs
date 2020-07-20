@@ -90,8 +90,8 @@ namespace Pixeval.Core
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 totalRead += bytesRead;
-                await memoryStream.WriteAsync(byteBuffer, 0, (int) bytesRead, cancellationToken);
-                progress.Report(totalRead / (double) contentLength);
+                await memoryStream.WriteAsync(byteBuffer, 0, (int)bytesRead, cancellationToken);
+                progress.Report(totalRead / (double)contentLength);
             }
 
             cancellationToken.ThrowIfCancellationRequested();

@@ -67,7 +67,7 @@ namespace Pixeval.Persisting
                 var token = await RestService.For<ITokenProtocol>(HttpClientFactory
                                                                       .PixivApi(ProtocolBase.OAuthBaseUrl, true)
                                                                       .Apply(h => h.Timeout = TimeSpan.FromSeconds(10)))
-                    .GetTokenByPassword(new PasswordTokenRequest {Name = name, Password = pwd}, time, hash);
+                    .GetTokenByPassword(new PasswordTokenRequest { Name = name, Password = pwd }, time, hash);
                 Session.Current = Session.Parse(pwd, token);
             }
             catch (TaskCanceledException)
@@ -88,7 +88,7 @@ namespace Pixeval.Persisting
                 var token = await RestService.For<ITokenProtocol>(HttpClientFactory
                                                                       .PixivApi(ProtocolBase.OAuthBaseUrl, true)
                                                                       .Apply(h => h.Timeout = TimeSpan.FromSeconds(10)))
-                    .RefreshToken(new RefreshTokenRequest {RefreshToken = refreshToken});
+                    .RefreshToken(new RefreshTokenRequest { RefreshToken = refreshToken });
                 Session.Current = Session.Parse(Session.Current.Password, token);
             }
             catch (TaskCanceledException)

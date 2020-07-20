@@ -111,7 +111,7 @@ namespace Pixeval.Data.Web.Response
             {
                 return new Illustration
                 {
-                    Bookmark = (int) TotalBookmarks,
+                    Bookmark = (int)TotalBookmarks,
                     Id = Id.ToString(),
                     IsLiked = IsBookmarked,
                     IsManga = PageCount != 1,
@@ -120,13 +120,13 @@ namespace Pixeval.Data.Web.Response
                         ? MetaPages[0].ImageUrls.Original
                         : MetaSinglePage.OriginalImageUrl,
                     Large = ImageUrls.Large,
-                    Tags = Tags.Select(t => new ViewModel.Tag {Name = t.Name, TranslatedName = t.TranslatedName}),
+                    Tags = Tags.Select(t => new ViewModel.Tag { Name = t.Name, TranslatedName = t.TranslatedName }),
                     Thumbnail = ImageUrls.Medium,
                     Title = Title,
                     UserId = User.Id.ToString(),
                     UserName = User.Name,
                     Resolution = $"{Width}x{Height}",
-                    ViewCount = (int) TotalView,
+                    ViewCount = (int)TotalView,
                     PublishDate = CreateDate
                 }.Apply(i =>
                 {
@@ -134,7 +134,7 @@ namespace Pixeval.Data.Web.Response
                     {
                         i.MangaMetadata = MetaPages.Select(p =>
                         {
-                            var page = (Illustration) i.Clone();
+                            var page = (Illustration)i.Clone();
                             page.Thumbnail = p.ImageUrls.Medium;
                             page.Origin = p.ImageUrls.Original;
                             page.Large = p.ImageUrls.Large;

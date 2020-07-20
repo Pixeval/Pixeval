@@ -79,8 +79,8 @@ namespace Pixeval.Data.ViewModel
                 return IsFromManga
                     ? Path.Combine(Directory.CreateDirectory(DownloadPathProvider.GetSpotlightPath(DownloadContent.SpotlightTitle, Option)).FullName, DownloadContent.Id, FileNameFormatter.FormatManga(DownloadContent, MangaIndex))
                     : Path.Combine(Directory.CreateDirectory(DownloadPathProvider.GetSpotlightPath(DownloadContent.SpotlightTitle, Option)).FullName, FileNameFormatter.Format(DownloadContent));
-            return IsFromManga 
-                ? Path.Combine(Directory.CreateDirectory(DownloadPathProvider.GetMangaPath(DownloadContent.Id, Option)).FullName, FileNameFormatter.FormatManga(DownloadContent, MangaIndex)) 
+            return IsFromManga
+                ? Path.Combine(Directory.CreateDirectory(DownloadPathProvider.GetMangaPath(DownloadContent.Id, Option)).FullName, FileNameFormatter.FormatManga(DownloadContent, MangaIndex))
                 : Path.Combine(Directory.CreateDirectory(DownloadPathProvider.GetIllustrationPath(Option)).FullName, FileNameFormatter.Format(DownloadContent));
         }
 
@@ -172,7 +172,7 @@ namespace Pixeval.Data.ViewModel
                 await using var memory = await PixivIO.Download(ugoiraUrl, new Progress<double>(d => Progress = d),
                                                                 cancellationTokenSource.Token);
                 await using var gifStream =
-                    (MemoryStream) InternalIO.MergeGifStream(InternalIO.ReadGifZipEntries(memory), delay);
+                    (MemoryStream)InternalIO.MergeGifStream(InternalIO.ReadGifZipEntries(memory), delay);
                 if (cancellationTokenSource.IsCancellationRequested) return;
                 await using var fileStream = new FileStream(downloadPath, FileMode.OpenOrCreate, FileAccess.ReadWrite,
                                                             FileShare.None);

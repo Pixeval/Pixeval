@@ -47,7 +47,7 @@ namespace Pixeval.Objects.Exceptions.Logger
         public ulong ullAvailVirtual;
         public ulong ullAvailExtendedVirtual;
     }
-    
+
 
     public class ExceptionDumper
     {
@@ -146,7 +146,7 @@ namespace Pixeval.Objects.Exceptions.Logger
 
             return _meminfo.ullTotalPhys / 1024 / 1024 / 1024;
 
-           
+
         }
 
         private static ulong GetAvailableMemory()
@@ -160,7 +160,7 @@ namespace Pixeval.Objects.Exceptions.Logger
 
         }
 
-        [DllImport("kernel32.dll", EntryPoint ="GlobalMemoryStatusEx", CallingConvention = CallingConvention.StdCall)]//此处一定要用Ex，否则内存计算不全
+        [DllImport("kernel32.dll", EntryPoint = "GlobalMemoryStatusEx", CallingConvention = CallingConvention.StdCall)]//此处一定要用Ex，否则内存计算不全
         private static extern int GlobalMemoryStatusEx(ref MEMORYSTATUSEX lpBuffer);
     }
 }

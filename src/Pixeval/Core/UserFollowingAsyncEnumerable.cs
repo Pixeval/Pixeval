@@ -50,9 +50,9 @@ namespace Pixeval.Core
         {
             return restrictPolicy switch
             {
-                RestrictPolicy.Public  => new PublicUserFollowingAsyncEnumerable(uid),
+                RestrictPolicy.Public => new PublicUserFollowingAsyncEnumerable(uid),
                 RestrictPolicy.Private => new PrivateUserFollowingAsyncEnumerable(uid),
-                _                      => throw new ArgumentOutOfRangeException(nameof(restrictPolicy), restrictPolicy, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(restrictPolicy), restrictPolicy, null)
             };
         }
 
@@ -91,9 +91,9 @@ namespace Pixeval.Core
                 {
                     if (await TryGetResponse(restrictPolicy switch
                     {
-                        RestrictPolicy.Public  => $"/v1/user/following?user_id={userId}&restrict=public",
+                        RestrictPolicy.Public => $"/v1/user/following?user_id={userId}&restrict=public",
                         RestrictPolicy.Private => $"/v1/user/following?user_id={userId}&restrict=private",
-                        _                      => throw new ArgumentOutOfRangeException()
+                        _ => throw new ArgumentOutOfRangeException()
                     }) is (true, var model))
                     {
                         entity = model;

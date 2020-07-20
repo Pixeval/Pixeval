@@ -70,7 +70,7 @@ namespace Pixeval.Objects.Web
         {
             try
             {
-                var listener = (TcpListener) result.AsyncState;
+                var listener = (TcpListener)result.AsyncState;
                 if (listener != null)
                 {
                     var client = listener.EndAcceptTcpClient(result);

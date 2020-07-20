@@ -57,7 +57,7 @@ namespace Pixeval.Core
                 var i = MainWindow.Instance;
                 i.Invoke(() =>
                 {
-                    i.SetUserBrowserContext(new User {Id = match.Groups["id"].Value});
+                    i.SetUserBrowserContext(new User { Id = match.Groups["id"].Value });
                     i.OpenUserBrowser();
                 });
             }

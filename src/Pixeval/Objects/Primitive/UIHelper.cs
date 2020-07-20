@@ -95,17 +95,17 @@ namespace Pixeval.Objects.Primitive
 
         public static T DataContext<T>(this FrameworkElement element)
         {
-            return (T) element.DataContext;
+            return (T)element.DataContext;
         }
 
         public static void SetImageSource(object img, ImageSource imgSource)
         {
-            Application.Current.Dispatcher?.Invoke(() => ((Image) img).Source = imgSource);
+            Application.Current.Dispatcher?.Invoke(() => ((Image)img).Source = imgSource);
         }
 
         public static void ReleaseImage(object img)
         {
-            Application.Current.Dispatcher?.Invoke(() => ((Image) img).Source = null);
+            Application.Current.Dispatcher?.Invoke(() => ((Image)img).Source = null);
         }
 
         public static ObservableCollection<T> NewItemsSource<T>(ItemsControl itemsControl)
@@ -131,9 +131,9 @@ namespace Pixeval.Objects.Primitive
             var sb = new Storyboard();
             var doubleAnimation = new DoubleAnimation(from, to, TimeSpan.FromMilliseconds(milliseconds))
             {
-                EasingFunction = new CubicEase {EasingMode = EasingMode.EaseOut}
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
             };
-            Storyboard.SetTarget(doubleAnimation, (DependencyObject) sender);
+            Storyboard.SetTarget(doubleAnimation, (DependencyObject)sender);
             Storyboard.SetTargetProperty(doubleAnimation, new PropertyPath(path));
             sb.Children.Add(doubleAnimation);
             sb.Begin();
@@ -148,7 +148,7 @@ namespace Pixeval.Objects.Primitive
 
         public static T GetResources<T>(this FrameworkElement element, string name)
         {
-            return (T) element.Resources[name];
+            return (T)element.Resources[name];
         }
 
         public static void CloseControls(params UIElement[] controls)
@@ -160,7 +160,7 @@ namespace Pixeval.Objects.Primitive
         {
             try
             {
-                ((dynamic) control).IsOpen = false;
+                ((dynamic)control).IsOpen = false;
             }
             catch (RuntimeBinderException)
             {
@@ -172,7 +172,7 @@ namespace Pixeval.Objects.Primitive
         {
             try
             {
-                ((dynamic) control).IsOpen = true;
+                ((dynamic)control).IsOpen = true;
             }
             catch (RuntimeBinderException)
             {
@@ -203,7 +203,7 @@ namespace Pixeval.Objects.Primitive
 
         public static DependencyObject GetPopupPlacementTarget(DependencyObject obj)
         {
-            return (DependencyObject) obj.GetValue(PopupPlacementTargetProperty);
+            return (DependencyObject)obj.GetValue(PopupPlacementTargetProperty);
         }
 
         public static void SetPopupPlacementTarget(DependencyObject obj, DependencyObject value)

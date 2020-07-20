@@ -58,7 +58,7 @@ namespace Pixeval.UI.UserControls
         {
             var set = new HashSet<string>();
             if (Settings.Global.ExcludeTag != null) set.AddRange(Settings.Global.ExcludeTag);
-            set.AddRange(new[] {"R-18", "R-18G"});
+            set.AddRange(new[] { "R-18", "R-18G" });
             Settings.Global.ExcludeTag = set;
         }
 
@@ -92,7 +92,7 @@ namespace Pixeval.UI.UserControls
 
         private void CultureSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            AkaI18N.Reload((I18nOption) CultureSelector.SelectedItem);
+            AkaI18N.Reload((I18nOption)CultureSelector.SelectedItem);
         }
     }
 }

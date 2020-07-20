@@ -34,9 +34,9 @@ namespace Pixeval.Objects.ValueConverters
                 return option switch
                 {
                     SearchTagMatchOption.PartialMatchForTags => SearchTagMatchOptionModel.PartialMatchModel,
-                    SearchTagMatchOption.ExactMatchForTags   => SearchTagMatchOptionModel.ExactMatchModel,
-                    SearchTagMatchOption.TitleAndCaption     => SearchTagMatchOptionModel.TitleAndCaptionModel,
-                    _                                        => throw new ArgumentOutOfRangeException()
+                    SearchTagMatchOption.ExactMatchForTags => SearchTagMatchOptionModel.ExactMatchModel,
+                    SearchTagMatchOption.TitleAndCaption => SearchTagMatchOptionModel.TitleAndCaptionModel,
+                    _ => throw new ArgumentOutOfRangeException()
                 };
             return null;
         }

@@ -60,9 +60,9 @@ namespace Pixeval.Core
         {
             return restrictPolicy switch
             {
-                RestrictPolicy.Public  => new PublicGalleryAsyncEnumerable(uid),
+                RestrictPolicy.Public => new PublicGalleryAsyncEnumerable(uid),
                 RestrictPolicy.Private => new PrivateGalleryAsyncEnumerable(uid),
-                _                      => throw new ArgumentOutOfRangeException(nameof(restrictPolicy), restrictPolicy, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(restrictPolicy), restrictPolicy, null)
             };
         }
 

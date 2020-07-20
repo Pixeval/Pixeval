@@ -20,12 +20,12 @@
 
 using System;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.UserActivities;
-using Windows.UI.Shell;
 using AdaptiveCards;
 using Newtonsoft.Json;
 using Pixeval.Data.ViewModel;
 using Pixeval.Objects.Generic;
+using Windows.ApplicationModel.UserActivities;
+using Windows.UI.Shell;
 
 namespace Pixeval.Core
 {
@@ -58,10 +58,10 @@ namespace Pixeval.Core
             userActivity.VisualElements.AttributionDisplayText = "Pixeval";
             userActivity.ActivationUri = new Uri(browsingHistory.Type switch
             {
-                "illust"    => $"pixeval://www.pixiv.net/artworks/{model.Id}",
-                "user"      => $"pixeval://www.pixiv.net/users/{model.Id}",
+                "illust" => $"pixeval://www.pixiv.net/artworks/{model.Id}",
+                "user" => $"pixeval://www.pixiv.net/users/{model.Id}",
                 "spotlight" => $"pixeval://www.pixivision.net/en/a/{model.Id}",
-                _           => throw new ArgumentException(nameof(browsingHistory.Type))
+                _ => throw new ArgumentException(nameof(browsingHistory.Type))
             });
             await userActivity.SaveAsync();
             userActivitySession?.Dispose();

@@ -42,15 +42,15 @@ namespace Pixeval.UI.UserControls
         public DownloadQueue()
         {
             InitializeComponent();
-            ((INotifyCollectionChanged) DownloadItemsQueue.Items).CollectionChanged += (sender, args) =>
-                EmptyNotifier1.Visibility =
-                    DownloadItemsQueue.Items.Count == 0 ? Visibility.Visible : Visibility.Hidden;
-            ((INotifyCollectionChanged) DownloadedItemsQueue.Items).CollectionChanged += (sender, args) =>
-                EmptyNotifier2.Visibility =
-                    DownloadedItemsQueue.Items.Count == 0 ? Visibility.Visible : Visibility.Hidden;
-            ((INotifyCollectionChanged) BrowsingHistoryQueue.Items).CollectionChanged += (sender, args) =>
-                EmptyNotifier3.Visibility =
-                    BrowsingHistoryQueue.Items.Count == 0 ? Visibility.Visible : Visibility.Hidden;
+            ((INotifyCollectionChanged)DownloadItemsQueue.Items).CollectionChanged += (sender, args) =>
+               EmptyNotifier1.Visibility =
+                   DownloadItemsQueue.Items.Count == 0 ? Visibility.Visible : Visibility.Hidden;
+            ((INotifyCollectionChanged)DownloadedItemsQueue.Items).CollectionChanged += (sender, args) =>
+               EmptyNotifier2.Visibility =
+                   DownloadedItemsQueue.Items.Count == 0 ? Visibility.Visible : Visibility.Hidden;
+            ((INotifyCollectionChanged)BrowsingHistoryQueue.Items).CollectionChanged += (sender, args) =>
+               EmptyNotifier3.Visibility =
+                   BrowsingHistoryQueue.Items.Count == 0 ? Visibility.Visible : Visibility.Hidden;
             UiHelper.SetItemsSource(DownloadItemsQueue, DownloadManager.Downloading);
             UiHelper.SetItemsSource(DownloadedItemsQueue, DownloadManager.Downloaded);
             UiHelper.SetItemsSource(BrowsingHistoryQueue, BrowsingHistoryAccessor.GlobalLifeTimeScope.Get());
@@ -114,7 +114,7 @@ namespace Pixeval.UI.UserControls
         private async void BrowsingHistoryMainImage_OnLoaded(object sender, RoutedEventArgs e)
         {
             var browsing = sender.GetDataContext<BrowsingHistory>();
-            var img = (Image) sender;
+            var img = (Image)sender;
             if (browsing.IsReferToUser)
                 img.Effect = new BlurEffect
                 {

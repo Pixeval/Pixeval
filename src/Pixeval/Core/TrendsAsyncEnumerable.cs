@@ -170,7 +170,7 @@ namespace Pixeval.Core
                                 var type when type == "add_illust" || type == "add_bookmark" => statusObjProp[
                                     "ref_illust"]?["id"]?.Value<string>(),
                                 "add_favorite" => statusObjProp["ref_user"]?["id"]?.Value<string>(),
-                                _              => null
+                                _ => null
                             }
                         };
                         var matchingPostUser = user?.FirstOrDefault(uChild =>
@@ -189,10 +189,10 @@ namespace Pixeval.Core
 
                         trendsObj.Type = statusObjProp["type"]?.Value<string>() switch
                         {
-                            "add_illust"   => TrendType.AddIllust,
+                            "add_illust" => TrendType.AddIllust,
                             "add_bookmark" => TrendType.AddBookmark,
                             "add_favorite" => TrendType.AddFavorite,
-                            _              => (TrendType) (-1)
+                            _ => (TrendType)(-1)
                         };
                         trendsObj.TrendObjectThumbnail = trendsObj.Type switch
                         {
@@ -204,8 +204,8 @@ namespace Pixeval.Core
                                 .FirstOrDefault(uChild =>
                                                     uChild.First?["id"]?.Value<string>() == trendsObj.TrendObjectId)
                                 ?.First?["profile_image"]?.First?.First?["url"]?["s"]?.Value<string>(),
-                            (TrendType) (-1) => null,
-                            _                => throw new ArgumentOutOfRangeException()
+                            (TrendType)(-1) => null,
+                            _ => throw new ArgumentOutOfRangeException()
                         };
                         if (trendsObj.Type != TrendType.AddFavorite)
                         {

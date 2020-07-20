@@ -49,7 +49,7 @@ namespace Pixeval.Core
         {
             illustration.IsLiked = false;
             await HttpClientFactory.AppApiService()
-                .DeleteBookmark(new DeleteBookmarkRequest {IllustId = illustration.Id});
+                .DeleteBookmark(new DeleteBookmarkRequest { IllustId = illustration.Id });
         }
 
         public static async Task<IEnumerable<string>> GetArticleWorks(this PixivClient _, string spotlightId)
@@ -69,14 +69,15 @@ namespace Pixeval.Core
             user.IsFollowed = true;
             await HttpClientFactory.AppApiService().FollowArtist(new FollowArtistRequest
             {
-                Id = user.Id, Restrict = policy == RestrictPolicy.Private ? "private" : "public"
+                Id = user.Id,
+                Restrict = policy == RestrictPolicy.Private ? "private" : "public"
             });
         }
 
         public static async Task UnFollowArtist(this PixivClient _, User user)
         {
             user.IsFollowed = false;
-            await HttpClientFactory.AppApiService().UnFollowArtist(new UnFollowArtistRequest {UserId = user.Id});
+            await HttpClientFactory.AppApiService().UnFollowArtist(new UnFollowArtistRequest { UserId = user.Id });
         }
 
         public static async Task<List<TrendingTag>> GetTrendingTags(this PixivClient _)
@@ -86,7 +87,9 @@ namespace Pixeval.Core
             if (result is { } res)
                 list.AddRange(res.TrendTags.Select(tag => new TrendingTag
                 {
-                    Tag = tag.TagStr, TranslatedName = tag.TranslatedName, Thumbnail = tag.Illust.ImageUrls.SquareMedium
+                    Tag = tag.TagStr,
+                    TranslatedName = tag.TranslatedName,
+                    Thumbnail = tag.Illust.ImageUrls.SquareMedium
                 }));
             return list;
         }

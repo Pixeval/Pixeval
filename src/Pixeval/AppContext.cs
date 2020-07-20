@@ -58,7 +58,7 @@ namespace Pixeval
 
         public static readonly IQualifier<Illustration, IllustrationQualification> DefaultQualifier = new IllustrationQualifier();
 
-        public static readonly I18nOption[] AvailableCultures = {I18nOption.USEnglish, I18nOption.MainlandChinese};
+        public static readonly I18nOption[] AvailableCultures = { I18nOption.USEnglish, I18nOption.MainlandChinese };
 
         public static int ProxyPort { get; set; }
 

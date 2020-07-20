@@ -29,7 +29,7 @@ namespace Pixeval.Objects.ValueConverters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null || parameter == null) return 0;
-            return (double) value + (double) parameter;
+            return (double)value + (double)parameter;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -42,7 +42,7 @@ namespace Pixeval.Objects.ValueConverters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value != null && parameter != null) return (double) value / (double) parameter;
+            if (value != null && parameter != null) return (double)value / (double)parameter;
 
             return 0;
         }

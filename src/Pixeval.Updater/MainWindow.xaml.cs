@@ -55,7 +55,7 @@ namespace Pixeval.Updater
         public MainWindow()
         {
             InitializeComponent();
-             if (!CheckIsPixevalDirectory(PixevalDirectory)) Exit("Pixeval更新器必须位于Pixeval目录中");
+            if (!CheckIsPixevalDirectory(PixevalDirectory)) Exit("Pixeval更新器必须位于Pixeval目录中");
         }
 
         private void MainWindow_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -165,8 +165,8 @@ namespace Pixeval.Updater
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 totalRead += bytesRead;
-                await memoryStream.WriteAsync(byteBuffer, 0, (int) bytesRead, cancellationToken);
-                progress.Report(totalRead / (double) contentLength);
+                await memoryStream.WriteAsync(byteBuffer, 0, (int)bytesRead, cancellationToken);
+                progress.Report(totalRead / (double)contentLength);
             }
 
             ArrayPool<byte>.Shared.Return(byteBuffer, true);

@@ -60,7 +60,7 @@ namespace Pixeval.Objects.Caching
             return cache.TryGetValue(IWeakCacheProvider<T, THash>.HashKey(key), out var weakRef) &&
                 weakRef.Target is { } target
                     ? Task.FromResult((true, target))
-                    : Task.FromResult((false, (T) null));
+                    : Task.FromResult((false, (T)null));
         }
 
         public void Clear()

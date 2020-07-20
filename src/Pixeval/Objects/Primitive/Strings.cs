@@ -88,11 +88,11 @@ namespace Pixeval.Objects.Primitive
         {
             return fileName[^3..] switch
             {
-                "png"  => "image/png",
-                "jpg"  => "image/jpeg",
+                "png" => "image/png",
+                "jpg" => "image/jpeg",
                 "jpeg" => "image/jpeg",
-                "gif"  => "image/gif",
-                _      => "image/jpeg"
+                "gif" => "image/gif",
+                _ => "image/jpeg"
             };
         }
 

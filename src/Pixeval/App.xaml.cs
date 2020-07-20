@@ -50,7 +50,7 @@ namespace Pixeval
         {
             if (Dispatcher != null) Dispatcher.UnhandledException += (sender, args) => DispatcherOnUnhandledException(args.Exception);
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
-                DispatcherOnUnhandledException((Exception) args.ExceptionObject);
+                DispatcherOnUnhandledException((Exception)args.ExceptionObject);
             TaskScheduler.UnobservedTaskException += (sender, args) => DispatcherOnUnhandledException(args.Exception);
         }
 

@@ -53,20 +53,20 @@ namespace Pixeval.Core
 
             var illust = new Illustration
             {
-                Bookmark = (int) response.TotalBookmarks,
+                Bookmark = (int)response.TotalBookmarks,
                 Id = response.Id.ToString(),
                 IsLiked = response.IsBookmarked,
                 IsManga = response.PageCount != 1,
                 IsUgoira = response.Type == "ugoira",
                 Origin = response.ImageUrls.Original ?? response.MetaSinglePage.OriginalImageUrl,
                 Large = response.ImageUrls.Large,
-                Tags = response.Tags.Select(t => new Tag {Name = t.Name, TranslatedName = t.TranslatedName}),
+                Tags = response.Tags.Select(t => new Tag { Name = t.Name, TranslatedName = t.TranslatedName }),
                 Thumbnail = response.ImageUrls.Medium,
                 Title = response.Title,
                 UserName = response.User.Name,
                 UserId = response.User.Id.ToString(),
-                ViewCount = (int) response.TotalView,
-                Comments = (int) response.TotalComments,
+                ViewCount = (int)response.TotalView,
+                Comments = (int)response.TotalComments,
                 Resolution = $"{response.Width}x{response.Height}",
                 PublishDate = response.CreateDate
             };
@@ -74,7 +74,7 @@ namespace Pixeval.Core
             if (illust.IsManga && response.MetaPages != null)
                 illust.MangaMetadata = response.MetaPages.Select(p =>
                 {
-                    var page = (Illustration) illust.Clone();
+                    var page = (Illustration)illust.Clone();
                     page.Thumbnail = p.ImageUrls.Medium;
                     page.Origin = p.ImageUrls.Original;
                     page.Large = p.ImageUrls.Large;

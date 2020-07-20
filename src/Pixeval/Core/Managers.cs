@@ -42,11 +42,11 @@ namespace Pixeval.Core
 
             static DownloadableIllustration CreateDownloadableIllustration(Illustration downloadContent, bool isFromMange, DownloadOption option, int index = -1)
             {
-                var filePathProvider = option.CreateNewWhenFromUser 
-                    ? new CreateNewFolderForUserDownloadPathProvider(downloadContent.UserName) 
-                    : (IDownloadPathProvider) new DefaultDownloadPathProvider();
+                var filePathProvider = option.CreateNewWhenFromUser
+                    ? new CreateNewFolderForUserDownloadPathProvider(downloadContent.UserName)
+                    : (IDownloadPathProvider)new DefaultDownloadPathProvider();
                 var fileNameFormatter = new DefaultIllustrationFileNameFormatter();
-                var model = new DownloadableIllustration(downloadContent, fileNameFormatter, filePathProvider, isFromMange, index) {Option = option};
+                var model = new DownloadableIllustration(downloadContent, fileNameFormatter, filePathProvider, isFromMange, index) { Option = option };
                 model.DownloadState.ValueChanged += (sender, args) => Application.Current.Dispatcher.Invoke(() =>
                 {
                     switch (args.NewValue)

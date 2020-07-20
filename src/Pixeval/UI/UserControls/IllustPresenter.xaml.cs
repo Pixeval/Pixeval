@@ -85,7 +85,7 @@ namespace Pixeval.UI.UserControls
                 await PixivIO.Download(Illust.GetDownloadUrl(), progress, cancellationTokenSource.Token);
             ImgSource = InternalIO.CreateBitmapImageFromStream(mem);
             LoadingOrigin = false;
-            ((BlurEffect) ContentImage.Effect).Radius = 0;
+            ((BlurEffect)ContentImage.Effect).Radius = 0;
         }
 
         private void MovePrevButton_OnClick(object sender, RoutedEventArgs e)
@@ -107,7 +107,7 @@ namespace Pixeval.UI.UserControls
                 (Dispatcher ?? throw new InvalidOperationException()).Invoke(async () =>
                 {
                     var userInfo = await HttpClientFactory.AppApiService()
-                        .GetUserInformation(new UserInformationRequest {Id = Illust.UserId});
+                        .GetUserInformation(new UserInformationRequest { Id = Illust.UserId });
                     if (Illust.UserId ==
                         MainWindow.Instance.IllustBrowserDialogHost.GetDataContext<Illustration>()
                             .UserId)
@@ -136,7 +136,7 @@ namespace Pixeval.UI.UserControls
                     {
                         streams[i].Position = 0;
                         ImgSource = InternalIO.CreateBitmapImageFromStream(streams[i]);
-                        await Task.Delay((int) delay[i], cancellationToken.Token);
+                        await Task.Delay((int)delay[i], cancellationToken.Token);
                     }
 
                 foreach (var stream in streams)
@@ -154,7 +154,7 @@ namespace Pixeval.UI.UserControls
 
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            Clipboard.SetImage((BitmapImage) ImgSource);
+            Clipboard.SetImage((BitmapImage)ImgSource);
         }
 
         private void MovePrevButton_OnPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
