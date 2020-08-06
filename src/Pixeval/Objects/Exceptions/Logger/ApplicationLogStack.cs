@@ -24,47 +24,48 @@ using System.Xml;
 
 namespace Pixeval.Objects.Exceptions.Logger
 {
-    public class ApplicationLogStack
-    {
-        private readonly string _id;
-        private readonly string _provider;
+    //直接干掉了，不干掉在调用Eventlog服务的时候会莫名其妙死机
+//    public class ApplicationLogStack
+//    {
+//        private readonly string _id;
+//        private readonly string _provider;
 
-        public ApplicationLogStack(string id, string provider)
-        {
-            this._id = id;
-            this._provider = provider;
-        }
+//        public ApplicationLogStack(string id, string provider)
+//        {
+//            this._id = id;
+//            this._provider = provider;
+//        }
 
-        public ApplicationLog GetFirst()
-        {
-            var doc = GetFirstMatchRecord();
-            if (doc == null) return null;
-            var xml = new XmlDocument();
-            xml.LoadXml(doc);
-            var xmlNsManager = new XmlNamespaceManager(xml.NameTable);
-            xmlNsManager.AddNamespace("event", "http://schemas.microsoft.com/win/2004/08/events/event");
-            return new ApplicationLog
-            {
-                Data = xml.SelectSingleNode("event:Event/event:EventData/event:Data", xmlNsManager).FirstChild.Value,
-                Creation = DateTime.Parse(xml.SelectSingleNode("//@SystemTime").Value)
-            };
-        }
+//        public ApplicationLog GetFirst()
+//        {
+//            var doc = GetFirstMatchRecord();
+//            if (doc == null) return null;
+//            var xml = new XmlDocument();
+//            xml.LoadXml(doc);
+//            var xmlNsManager = new XmlNamespaceManager(xml.NameTable);
+//            xmlNsManager.AddNamespace("event", "http://schemas.microsoft.com/win/2004/08/events/event");
+//            return new ApplicationLog
+//            {
+//                Data = xml.SelectSingleNode("event:Event/event:EventData/event:Data", xmlNsManager).FirstChild.Value,
+//                Creation = DateTime.Parse(xml.SelectSingleNode("//@SystemTime").Value)
+//            };
+//        }
 
-        private string GetFirstMatchRecord()
-        {
-            var query = new EventLogQuery("Application", PathType.LogName, $"*[System/Level=2] and *[System/Provider/@Name=\"{_provider}\"]")
-            {
-                ReverseDirection = true
-            };
-            var reader = new EventLogReader(query);
-            EventRecord record;
-            while ((record = reader.ReadEvent()) != null)
-            {
-                var doc = record.ToXml();
-                if (doc.Contains(_id, StringComparison.OrdinalIgnoreCase)) return doc;
-            }
+//        private string GetFirstMatchRecord()
+//        {
+//            var query = new EventLogQuery("Application", PathType.LogName, $"*[System/Level=2] and *[System/Provider/@Name=\"{_provider}\"]")
+//            {
+//                ReverseDirection = true
+//            };
+//            var reader = new EventLogReader(query);
+//            EventRecord record;
+//            while ((record = reader.ReadEvent()) != null)
+//            {
+//                var doc = record.ToXml();
+//                if (doc.Contains(_id, StringComparison.OrdinalIgnoreCase)) return doc;
+//            }
 
-            return null;
-        }
-    }
+//            return null;
+//        }
+//    }
 }

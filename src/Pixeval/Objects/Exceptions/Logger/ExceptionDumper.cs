@@ -56,29 +56,33 @@ namespace Pixeval.Objects.Exceptions.Logger
         {
             using var semaphore = new SemaphoreSlim(1);
             await semaphore.WaitAsync(TimeSpan.FromSeconds(5));
-            ApplicationLog stack;
-            try
-            {
-                stack = new ApplicationLogStack(AppContext.AppIdentifier, ".NET Runtime").GetFirst();
-            }
-            catch
-            {
-                stack = null;
-            }
+            //直接干掉了，不干掉在调用Eventlog服务的时候会莫名其妙死机
+            //ApplicationLog stack;
+            //try
+            //{
+            //    stack = new ApplicationLogStack(AppContext.AppIdentifier, ".NET Runtime").GetFirst();
+            //}
+            //catch
+            //{
+            //    stack = null;
+            //}
 
             string exceptionMessage = e is ApiException exception
                 ? exception.Content + Environment.NewLine + exception
                 : e.ToString();
             var sb = new StringBuilder();
-            sb.AppendLine(@"Pixeval - A Strong, Fast and Flexible Pixiv Client");
-            sb.AppendLine(@"Copyright (C) 2019-2020 Dylech30th");
-            sb.AppendLine();
-            sb.AppendLine(@"We have encountered an unrecoverable problem. A dump file with error snapshot has been created.");
-            sb.AppendLine(@"In order to help with diagnosis and debug, Pixeval will collect some information contains: ");
-            sb.AppendLine(@"    ¡¤ Computer Architecture");
-            sb.AppendLine(@"    ¡¤ Operating System");
-            sb.AppendLine(@"    ¡¤ Event Log");
-            sb.AppendLine(@"    ¡¤ Exception Message");
+
+            //不需要，干掉
+            //sb.AppendLine(@"Pixeval - A Strong, Fast and Flexible Pixiv Client");
+            //sb.AppendLine(@"Copyright (C) 2019-2020 Dylech30th");
+            //sb.AppendLine();
+            //sb.AppendLine(@"We have encountered an unrecoverable problem. A dump file with error snapshot has been created.");
+            //sb.AppendLine(@"In order to help with diagnosis and debug, Pixeval will collect some information contains: ");
+            //sb.AppendLine(@"    ¡¤ Computer Architecture");
+            //sb.AppendLine(@"    ¡¤ Operating System");
+            //sb.AppendLine(@"    ¡¤ Event Log");
+            //sb.AppendLine(@"    ¡¤ Exception Message");
+            //sb.AppendLine("------------------------------------");
             sb.AppendLine();
             sb.AppendLine(@"Begin Dump Information");
             sb.AppendLine($"    Pixeval Version: {AppContext.CurrentVersion}");
@@ -101,13 +105,13 @@ namespace Pixeval.Objects.Exceptions.Logger
             sb.AppendLine($"        Visual C++ Redistributable Version: {GetCppRedistributableVersion()}");
             sb.AppendLine(@"    End Operating System");
             sb.AppendLine();
-            sb.AppendLine(@"    Begin Event Log");
-            sb.AppendLine(@"        Represents the latest application event log related to Pixeval");
-            sb.AppendLine($"        Creation: {stack?.Creation}");
-            sb.AppendLine(@"        Data:");
-            sb.AppendLine(FormatMultilineData(stack?.Data, 3));
-            sb.AppendLine(@"    End Event Log");
-            sb.AppendLine();
+            //sb.AppendLine(@"    Begin Event Log");
+            //sb.AppendLine(@"        Represents the latest application event log related to Pixeval");
+            //sb.AppendLine($"        Creation: {stack?.Creation}");
+            //sb.AppendLine(@"        Data:");
+            //sb.AppendLine(FormatMultilineData(stack?.Data, 3));
+            //sb.AppendLine(@"    End Event Log");
+            //sb.AppendLine();
             sb.AppendLine(@"    Begin Exception Log");
             sb.AppendLine(@"        Exception: ");
             sb.AppendLine(FormatMultilineData(exceptionMessage, 3));

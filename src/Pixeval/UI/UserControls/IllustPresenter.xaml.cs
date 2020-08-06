@@ -81,11 +81,26 @@ namespace Pixeval.UI.UserControls
         {
             LoadingOrigin = true;
             var progress = new Progress<double>(p => Dispatcher.Invoke(() => LoadingIndicator = p));
-            await using var mem =
-                await PixivIO.Download(Illust.GetDownloadUrl(), progress, _cancellationTokenSource.Token);
-            ImgSource = InternalIO.CreateBitmapImageFromStream(mem);
-            LoadingOrigin = false;
-            ((BlurEffect)ContentImage.Effect).Radius = 0;
+            //已知这里在Debug编译模式下有个问题，在预览一张图然后随便点击什么地方的时候会有如下异常抛出并未得到处理：
+            //引发的异常:“System.OperationCanceledException”(位于 System.Private.CoreLib.dll 中)
+            //“System.OperationCanceledException”类型的异常在 System.Private.CoreLib.dll 中发生，但未在用户代码中进行处理
+            //The operation was canceled.
+            //
+            //等待修复，或者Release编译下不会有问题所以不管了？目前处理方法就是啥也不干
+            try
+            {
+                await using var mem =
+                    await PixivIO.Download(Illust.GetDownloadUrl(), progress, _cancellationTokenSource.Token);
+                ImgSource = InternalIO.CreateBitmapImageFromStream(mem);
+                LoadingOrigin = false;
+                ((BlurEffect)ContentImage.Effect).Radius = 0;
+            }
+            catch(OperationCanceledException)
+            {
+                //无关痛痒，啥也不管
+                ;
+            }
+
         }
 
         private void MovePrevButton_OnClick(object sender, RoutedEventArgs e)
