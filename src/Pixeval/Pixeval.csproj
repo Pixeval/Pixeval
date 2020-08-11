@@ -6,8 +6,9 @@
     <UseWPF>true</UseWPF>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <Description>A Strong, Fast and Flexible Pixiv Client</Description>
+    <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <StartupObject>Pixeval.App</StartupObject>
+    <StartupObject>Pixeval.Program</StartupObject>
     <ApplicationIcon>Resources\pxlogo.ico</ApplicationIcon>
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
     <Win32Resource />
@@ -39,25 +40,29 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AdaptiveCards" Version="1.2.4" />
-    <PackageReference Include="AdysTech.CredentialManager.Core" Version="1.9.0" />
-    <PackageReference Include="AngleSharp" Version="0.14.0" />
-    <PackageReference Include="CefSharp.Wpf" Version="83.4.20" />
+    <PackageReference Include="AdaptiveCards" Version="2.0.0" />
+    <PackageReference Include="AdysTech.CredentialManager" Version="2.2.0" />
+    <PackageReference Include="AngleSharp" Version="1.0.0-alpha-827" />
+    <PackageReference Include="CefSharp.Wpf" Version="84.3.10-pre" />
     <PackageReference Include="Dragablz" Version="0.0.3.203" />
     <PackageReference Include="EmbedIO" Version="3.4.3" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.0.1" />
-    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.20.0.1" />
-    <PackageReference Include="MahApps.Metro" Version="2.1.1" />
-    <PackageReference Include="MaterialDesignColors" Version="1.2.6" />
-    <PackageReference Include="MaterialDesignThemes" Version="3.1.3" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.21.1" />
+    <PackageReference Include="MahApps.Metro" Version="2.2.0" />
+    <PackageReference Include="MaterialDesignColors" Version="1.2.7-ci1837" />
+    <PackageReference Include="MaterialDesignThemes" Version="3.2.0-ci1837" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0-preview.7.20364.11" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0-preview.7.20364.11" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0-preview.7.20364.11" />
     <PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls" Version="6.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="PropertyChanged.Fody" Version="3.2.8" />
     <PackageReference Include="refit" Version="5.1.67" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="3.1.0" />
     <PackageReference Include="SharpVectors" Version="1.0.0" />
     <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
     <PackageReference Include="System.Interactive.Async" Version="4.1.1" />
-    <PackageReference Include="VirtualizingWrapPanel.NETCore" Version="1.4.0" />
+    <PackageReference Include="VirtualizingWrapPanel" Version="1.5.0" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
   </ItemGroup>
 

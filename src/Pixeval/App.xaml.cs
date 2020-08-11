@@ -41,6 +41,7 @@ using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
 using Pixeval.Persisting;
 using Pixeval.Persisting.WebApi;
+using Pixeval.UI;
 
 namespace Pixeval
 {
@@ -48,23 +49,30 @@ namespace Pixeval
     {
         public App()
         {
-            if (Dispatcher != null) Dispatcher.UnhandledException += (sender, args) => DispatcherOnUnhandledException(args.Exception);
-            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
-                DispatcherOnUnhandledException((Exception)args.ExceptionObject);
-            TaskScheduler.UnobservedTaskException += (sender, args) => DispatcherOnUnhandledException(args.Exception);
+            InitializeComponent();
         }
+        //public App()
+        //{
+        //if (Dispatcher != null) Dispatcher.UnhandledException += (sender, args) => DispatcherOnUnhandledException(args.Exception);
+        //AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+        //    DispatcherOnUnhandledException((Exception)args.ExceptionObject);
+        //TaskScheduler.UnobservedTaskException += (sender, args) => DispatcherOnUnhandledException(args.Exception);
+        //}
 
-        private static void DispatcherOnUnhandledException(Exception e)
-        {
-#if RELEASE
-            ExceptionDumper.WriteException(e);
-#elif DEBUG
-            throw e;
-#endif
-        }
+        //        private static void DispatcherOnUnhandledException(Exception e)
+        //        {
+        //#if RELEASE
+        //            ExceptionDumper.WriteException(e);
+        //#elif DEBUG
+        //            throw e;
+        //#endif
+        //        }
+
+        
 
         protected override async void OnStartup(StartupEventArgs e)
         {
+
             // These initializations ensure Pixeval to run properly, they MUST be initialized before everything start
             WriteToCurrentUserPathVariable();
             InitializeFolders();
@@ -304,5 +312,7 @@ namespace Pixeval
             }
             base.OnExit(e);
         }
+
+        
     }
 }

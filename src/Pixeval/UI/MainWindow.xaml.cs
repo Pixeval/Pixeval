@@ -73,17 +73,23 @@ namespace Pixeval.UI
 
         public MainWindow()
         {
-            Instance = this;
-            InitializeComponent();
-            NavigatorList.SelectedItem = MenuTab;
-            MainWindowSnackBar.MessageQueue = MessageQueue;
+            //            Instance = this;
+            //            NavigatorList.SelectedItem = MenuTab;
+            
+            //            MainWindowSnackBar.MessageQueue = MessageQueue;
 
-            if (Dispatcher != null) Dispatcher.UnhandledException += Dispatcher_UnhandledException;
+            //            if (Dispatcher != null) Dispatcher.UnhandledException += Dispatcher_UnhandledException;
 
-#pragma warning disable 4014
-            AcquireRecommendUser();
-#pragma warning restore 4014
+            //#pragma warning disable 4014
+            //            AcquireRecommendUser();
+            //#pragma warning restore 4014
         }
+
+        protected override void OnInitialized(EventArgs e)
+        {
+            InitializeComponent();
+            base.OnInitialized(e);
+        } 
 
         private static void Dispatcher_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
@@ -205,7 +211,7 @@ namespace Pixeval.UI
 
         private async void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            await AddUserNameAndAvatar();
+            //await AddUserNameAndAvatar();
         }
 
         private async Task AddUserNameAndAvatar()
@@ -306,8 +312,9 @@ namespace Pixeval.UI
 
         private async void KeywordTextBox_OnGotFocus(object sender, RoutedEventArgs e)
         {
-            if (AppContext.TrendingTags.IsNullOrEmpty()) AppContext.TrendingTags.AddRange(await PixivClient.Instance.GetTrendingTags());
-            TrendingTagPopup.OpenControl();
+            //TODO
+            //if (AppContext.TrendingTags.IsNullOrEmpty()) AppContext.TrendingTags.AddRange(await PixivClient.Instance.GetTrendingTags());
+            //TrendingTagPopup.OpenControl();
         }
 
         private async void KeywordTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
