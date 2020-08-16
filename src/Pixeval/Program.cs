@@ -19,8 +19,6 @@ namespace Pixeval
                     services.AddSingleton<SignIn>();
                     services.AddSingleton<MainWindow>();
                     services.AddSingleton<App>();
-                    
-                    
                     services.AddHostedService<Worker>();
                 });
     }

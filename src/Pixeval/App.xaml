@@ -43,7 +43,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
             <valueConverters:IllustSubscriptConverter x:Key="IllustSubscriptConverter" />
             <valueConverters:DateTimeOffsetConverter x:Key="DateTimeOffsetConverter" />
             <valueConverters:DoubleDivisionConverter x:Key="DoubleDivisionConverter" />
-            <valueConverters:BoolToCachingPolicyConverter x:Key="BoolToCachingPolicyConverter" />
             <valueConverters:IllustrationMatchConditionMaskConverter x:Key="IllustrationMatchConditionMaskConverter" />
             <valueConverters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
             <valueConverters:TrendsStatConverter x:Key="TrendsStatConverter" />

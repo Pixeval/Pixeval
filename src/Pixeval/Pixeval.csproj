@@ -22,9 +22,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Objects\I18n\Xml\resx_en-us.xml" />
-    <None Remove="Objects\I18n\Xml\resx_zh-cn.xml" />
-    <None Remove="Resources\interchange.zip" />
+    <None Remove="Resources\resx_en-us.xml" />
+    <None Remove="Resources\resx_zh-cn.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,18 +44,21 @@
     <PackageReference Include="AngleSharp" Version="1.0.0-alpha-827" />
     <PackageReference Include="CefSharp.Wpf" Version="84.3.10-pre" />
     <PackageReference Include="Dragablz" Version="0.0.3.203" />
+    <PackageReference Include="DryIoc.Microsoft.DependencyInjection" Version="4.1.0" />
     <PackageReference Include="EmbedIO" Version="3.4.3" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.0.1" />
     <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.21.1" />
     <PackageReference Include="MahApps.Metro" Version="2.2.0" />
-    <PackageReference Include="MaterialDesignColors" Version="1.2.7-ci1837" />
-    <PackageReference Include="MaterialDesignThemes" Version="3.2.0-ci1837" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0-preview.7.20364.11" />
+    <PackageReference Include="MaterialDesignColors" Version="1.2.7-ci1856" />
+    <PackageReference Include="MaterialDesignThemes" Version="3.2.0-ci1856" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0-preview.7.20364.11" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0-preview.7.20364.11" />
-    <PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls" Version="6.1.1" />
+    <PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls" Version="6.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="PropertyChanged.Fody" Version="3.2.8" />
+    <PackageReference Include="ReactiveUI" Version="11.5.17" />
+    <PackageReference Include="ReactiveUI.Events.WPF" Version="11.5.17" />
+    <PackageReference Include="ReactiveUI.WPF" Version="11.5.17" />
     <PackageReference Include="refit" Version="5.1.67" />
     <PackageReference Include="Serilog.Extensions.Hosting" Version="3.1.0" />
     <PackageReference Include="SharpVectors" Version="1.0.0" />
@@ -67,17 +69,28 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Objects\I18n\Xml\resx_en-us.xml" />
-    <Resource Include="Objects\I18n\Xml\resx_zh-cn.xml" />
     <Resource Include="Resources\dqueue.ttf" />
     <Resource Include="Resources\iconfont.ttf" />
     <Resource Include="Resources\iconfontex.ttf" />
-    <Resource Include="Resources\interchange.zip" />
     <Resource Include="Resources\logo-only.svg" />
-    <Resource Include="Resources\pixeval_ca.cer" />
-    <Resource Include="Resources\pixeval_server_cert.pfx" />
     <Resource Include="Resources\pxlogo.ico" />
+    <Resource Include="Resources\resx_en-us.xml" />
+    <Resource Include="Resources\resx_zh-cn.xml" />
     <Resource Include="Resources\saucenao.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

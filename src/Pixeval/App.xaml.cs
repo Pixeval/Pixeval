@@ -76,9 +76,8 @@ namespace Pixeval
             // These initializations ensure Pixeval to run properly, they MUST be initialized before everything start
             WriteToCurrentUserPathVariable();
             InitializeFolders();
-            CheckCppRedistributable();
             CheckMultipleProcess();
-            await InstallFakeCaCertificate();
+            //await InstallFakeCaCertificate();
 
             // These initializations are for WEB API LOGIN
             PortScan(out var proxy, out var pac);
@@ -89,7 +88,6 @@ namespace Pixeval
 
             // These initializations handle USER SESSION AND PIXEVAL UPDATE
             await RestoreSettings();
-            await CheckUpdate();
 
             // These initializations are for PROCESS COMMUNICATION AND PLUGGABLE PROTOCOL
             await InstallPluggableProtocolHandler();
@@ -202,45 +200,6 @@ namespace Pixeval
             }
         }
 
-        private static void CheckCppRedistributable()
-        {
-            if (!CppRedistributableInstalled())
-            {
-                MessageBox.Show(AkaI18N.CppRedistributableRequired, AkaI18N.CppRedistributableRequiredTitle,
-                                MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                Clipboard.SetDataObject("https://support.microsoft.com/zh-cn/help/2977003/the-latest-supported-visual-c-downloads");
-                Environment.Exit(-1);
-            }
-        }
-
-        private static async Task CheckUpdate()
-        {
-            if (await AppContext.UpdateAvailable() && MessageBox.Show(AkaI18N.PixevalUpdateAvailable, AkaI18N.PixevalUpdateAvailableTitle, MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
-            {
-                Process.Start(@"updater\Pixeval.Updater.exe");
-                Environment.Exit(0);
-            }
-        }
-
-        /// <summary>
-        ///     Check if the required Visual C++ Redistributable is installed on the computer
-        /// </summary>
-        /// <returns>Cpp redistributable is installed</returns>
-        private static bool CppRedistributableInstalled()
-        {
-            using var key =
-                Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\x64");
-            if (key == null) return false;
-
-            var success = int.TryParse(key.GetValue("Bld").ToString(), out var version);
-            // visual C++ redistributable Bld table: 
-            // version   v2015    v2017    v2019
-            // ----------------------------------
-            //   Bid     23026    26020    27820
-            const int vc2015Bld = 23026;
-            return success && version >= vc2015Bld;
-        }
-
         private static void CefSharpInitialize()
         {
             Cef.Initialize(new CefSettings
@@ -250,21 +209,6 @@ namespace Pixeval
                     {"proxy-pac-url", $"http://127.0.0.1:{AppContext.PacPort}/pixeval_pac.pac"}
                 }
             }, true, browserProcessHandler: null);
-        }
-
-        private static async Task InstallFakeCaCertificate()
-        {
-            var certificateManager = new CertificateManager(await CertificateManager.GetFakeCaRootCertificate());
-            if (!certificateManager.Query(StoreName.Root, StoreLocation.CurrentUser))
-            {
-                if (MessageBox.Show(AkaI18N.CertificateInstallationIsRequired,
-                                    AkaI18N.CertificateInstallationIsRequiredTitle, MessageBoxButton.YesNo,
-                                    MessageBoxImage.Warning) ==
-                    MessageBoxResult.Yes)
-                    certificateManager.Install(StoreName.Root, StoreLocation.CurrentUser);
-                else
-                    Environment.Exit(-1);
-            }
         }
 
         private static async Task RestoreSettings()
