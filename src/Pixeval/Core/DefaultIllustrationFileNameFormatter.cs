@@ -19,10 +19,10 @@
 #endregion
 
 using System.IO;
-using Pixeval.Data.ViewModel;
-using Pixeval.Objects.Primitive;
+using Pixeval.Wpf.Objects.Primitive;
+using Pixeval.Wpf.ViewModel;
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     public class DefaultIllustrationFileNameFormatter : IIllustrationFileNameFormatter
     {

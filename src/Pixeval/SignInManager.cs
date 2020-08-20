@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Pixeval
+﻿namespace Pixeval.Wpf
 {
     class SignInManager
     {

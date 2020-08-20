@@ -21,7 +21,7 @@
 using System.Collections.Generic;
 using System.Net;
 
-namespace Pixeval.Data.Web.Delegation
+namespace Pixeval.Wpf.Data.Web.Delegation
 {
     public class PixivApiDnsResolver : DnsResolver
     {

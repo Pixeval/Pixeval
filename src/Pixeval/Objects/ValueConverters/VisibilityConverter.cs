@@ -24,7 +24,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Pixeval.Objects.ValueConverters
+namespace Pixeval.Wpf.Objects.ValueConverters
 {
     public class VisibleIfTrueConverter : IValueConverter
     {

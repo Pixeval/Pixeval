@@ -21,15 +21,15 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Pixeval.Data.ViewModel;
-using Pixeval.Data.Web;
-using Pixeval.Data.Web.Delegation;
-using Pixeval.Data.Web.Response;
-using Pixeval.Objects.Exceptions;
-using Pixeval.Objects.Generic;
-using Pixeval.Objects.Primitive;
+using Pixeval.Wpf.Data.Web;
+using Pixeval.Wpf.Data.Web.Delegation;
+using Pixeval.Wpf.Data.Web.Response;
+using Pixeval.Wpf.Objects.Exceptions;
+using Pixeval.Wpf.Objects.Generic;
+using Pixeval.Wpf.Objects.Primitive;
+using Pixeval.Wpf.ViewModel;
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     public class SpotlightQueryAsyncEnumerable : AbstractPixivAsyncEnumerable<SpotlightArticle>
     {

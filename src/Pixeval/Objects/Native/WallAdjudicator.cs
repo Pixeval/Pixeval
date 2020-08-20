@@ -23,9 +23,9 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
-using Pixeval.Objects.Primitive;
+using Pixeval.Wpf.Objects.Primitive;
 
-namespace Pixeval.Objects.Native
+namespace Pixeval.Wpf.Objects.Native
 {
     public class WallAdjudicator
     {

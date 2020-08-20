@@ -22,10 +22,10 @@ using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using Pixeval.Core;
-using Pixeval.Data.ViewModel;
+using Pixeval.Wpf.Core;
+using Pixeval.Wpf.ViewModel;
 
-namespace Pixeval.Objects.ValueConverters
+namespace Pixeval.Wpf.Objects.ValueConverters
 {
     public class IllustrationMatchConditionMaskConverter : IMultiValueConverter
     {

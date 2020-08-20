@@ -19,11 +19,11 @@
 #endregion
 
 using System.Threading.Tasks;
-using Pixeval.Data.Web.Request;
-using Pixeval.Data.Web.Response;
+using Pixeval.Wpf.Data.Web.Request;
+using Pixeval.Wpf.Data.Web.Response;
 using Refit;
 
-namespace Pixeval.Data.Web.Protocol
+namespace Pixeval.Wpf.Data.Web.Protocol
 {
     public interface IResolveDnsProtocol
     {

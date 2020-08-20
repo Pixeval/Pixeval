@@ -19,9 +19,9 @@
 #endregion
 
 using System.Linq;
-using Pixeval.Data.ViewModel;
+using Pixeval.Wpf.ViewModel;
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     public class IllustrationQualifier : IQualifier<Illustration, IllustrationQualification>
     {

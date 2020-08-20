@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Pixeval.UI;
+using Pixeval.Wpf.View;
 
-namespace Pixeval
+namespace Pixeval.Wpf
 {
     class Program
     {

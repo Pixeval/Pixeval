@@ -20,9 +20,9 @@
 
 using System;
 using System.Reflection;
-using Pixeval.Objects.Exceptions;
+using Pixeval.Wpf.Objects.Exceptions;
 
-namespace Pixeval.Objects.Primitive
+namespace Pixeval.Wpf.Objects.Primitive
 {
     public static class Reflection
     {

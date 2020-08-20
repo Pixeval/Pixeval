@@ -24,11 +24,11 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Html.Parser;
-using Pixeval.Data.ViewModel;
-using Pixeval.Data.Web.Delegation;
-using Pixeval.Data.Web.Request;
+using Pixeval.Wpf.Data.Web.Delegation;
+using Pixeval.Wpf.Data.Web.Request;
+using Pixeval.Wpf.ViewModel;
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     public static class PixivClientExtension
     {

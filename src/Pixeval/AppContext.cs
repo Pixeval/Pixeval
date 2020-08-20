@@ -22,12 +22,11 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
-using Pixeval.Core;
-using Pixeval.Data.ViewModel;
+using Pixeval.Wpf.Core;
+using Pixeval.Wpf.ViewModel;
 
-namespace Pixeval
+namespace Pixeval.Wpf
 {
     public static class AppContext
     {

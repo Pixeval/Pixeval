@@ -27,7 +27,7 @@ using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
-namespace Pixeval.Objects.Web
+namespace Pixeval.Wpf.Objects.Web
 {
     /// <summary>
     ///     Thanks <a href="https://github.com/tobiichiamane">fish</a>, for login usage only,

@@ -20,14 +20,14 @@
 
 using System;
 using System.Threading.Tasks;
-using AdaptiveCards;
-using Newtonsoft.Json;
-using Pixeval.Data.ViewModel;
-using Pixeval.Objects.Generic;
 using Windows.ApplicationModel.UserActivities;
 using Windows.UI.Shell;
+using AdaptiveCards;
+using Newtonsoft.Json;
+using Pixeval.Wpf.Objects.Generic;
+using Pixeval.Wpf.ViewModel;
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     /// <summary>
     ///     Provides a set of functions to create a Windows 10 Timeline Activity,

@@ -21,10 +21,10 @@
 using System;
 using System.Globalization;
 using System.Windows.Data;
-using Pixeval.Data.ViewModel;
-using Pixeval.Objects.I18n;
+using Pixeval.Wpf.Objects.I18n;
+using Pixeval.Wpf.ViewModel;
 
-namespace Pixeval.Objects.ValueConverters
+namespace Pixeval.Wpf.Objects.ValueConverters
 {
     [ValueConversion(typeof(TrendType), typeof(string))]
     public class TrendsStatConverter : IValueConverter

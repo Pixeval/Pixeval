@@ -26,13 +26,13 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Html.Parser;
 using MahApps.Metro.Controls;
-using Pixeval.Data.ViewModel;
-using Pixeval.Data.Web.Delegation;
-using Pixeval.Objects.Generic;
-using Pixeval.UI;
+using Pixeval.Wpf.Data.Web.Delegation;
+using Pixeval.Wpf.Objects.Generic;
+using Pixeval.Wpf.View;
+using Pixeval.Wpf.ViewModel;
 using Refit;
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     public class PluggableProtocolParser
     {

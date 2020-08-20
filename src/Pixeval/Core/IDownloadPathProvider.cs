@@ -18,9 +18,9 @@
 
 #endregion
 
-using Pixeval.Data.ViewModel;
+using Pixeval.Wpf.ViewModel;
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     public interface IIllustrationFileNameFormatter
     {

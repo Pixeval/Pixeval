@@ -22,7 +22,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Refit;
 
-namespace Pixeval.Data.Web.Protocol
+namespace Pixeval.Wpf.Data.Web.Protocol
 {
     // ReSharper disable once InconsistentNaming
     public interface ISauceNAOProtocol

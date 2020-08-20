@@ -20,7 +20,7 @@
 
 using System;
 
-namespace Pixeval.Data.Web
+namespace Pixeval.Wpf.Data.Web
 {
     public class HttpResponse<T> : Tuple<bool, T>
     {

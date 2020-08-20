@@ -23,17 +23,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Pixeval.Data.ViewModel;
-using Pixeval.Data.Web;
-using Pixeval.Data.Web.Delegation;
-using Pixeval.Data.Web.Response;
-using Pixeval.Objects.Exceptions;
-using Pixeval.Objects.Generic;
-using Pixeval.Objects.I18n;
-using Pixeval.Objects.Primitive;
-using Pixeval.Persisting;
+using Pixeval.Wpf.Data.Web;
+using Pixeval.Wpf.Data.Web.Delegation;
+using Pixeval.Wpf.Data.Web.Response;
+using Pixeval.Wpf.Objects.Exceptions;
+using Pixeval.Wpf.Objects.Generic;
+using Pixeval.Wpf.Objects.I18n;
+using Pixeval.Wpf.Objects.Primitive;
+using Pixeval.Wpf.Persisting;
+using Pixeval.Wpf.ViewModel;
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     public class RankingAsyncEnumerable : AbstractPixivAsyncEnumerable<Illustration>
     {

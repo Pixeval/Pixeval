@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
-using Pixeval.UI;
+using Pixeval.Wpf.View;
 
-namespace Pixeval
+namespace Pixeval.Wpf
 {
     class Worker:BackgroundService
     {
         private readonly App _app;
         private readonly MainWindow _mainWindow;
+        private readonly IHostApplicationLifetime _hostApplicationLifetime;
 
         public Worker(App app, MainWindow mainWindow)
         {
@@ -22,6 +20,7 @@ namespace Pixeval
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _app.Run(_mainWindow);
+            
             return Task.CompletedTask;
         }
     }

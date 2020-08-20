@@ -24,11 +24,11 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using Pixeval.Data.Web.Delegation;
-using Pixeval.Objects.Generic;
-using Pixeval.Objects.Primitive;
+using Pixeval.Wpf.Data.Web.Delegation;
+using Pixeval.Wpf.Objects.Generic;
+using Pixeval.Wpf.Objects.Primitive;
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     // ReSharper disable once InconsistentNaming
     public static class PixivIO

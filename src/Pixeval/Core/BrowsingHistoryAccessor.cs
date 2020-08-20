@@ -23,10 +23,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using Pixeval.Data.ViewModel;
+using Pixeval.Wpf.ViewModel;
 using SQLite;
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     /// <summary>
     ///     Manages the global browsing history which lives inside application

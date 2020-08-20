@@ -24,9 +24,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Pixeval.Persisting;
+using Pixeval.Wpf.Persisting;
 
-namespace Pixeval.Data.Web.Delegation
+namespace Pixeval.Wpf.Data.Web.Delegation
 {
     public abstract class DnsResolvedHttpClientHandler : HttpClientHandler
     {

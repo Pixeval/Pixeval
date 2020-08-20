@@ -19,19 +19,17 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Win32;
-using Pixeval.Objects.Primitive;
+using Pixeval.Wpf.Objects.Primitive;
 using Refit;
 
-namespace Pixeval.Objects.Exceptions.Logger
+namespace Pixeval.Wpf.Objects.Exceptions.Logger
 {
 
     [StructLayout(LayoutKind.Sequential)]

@@ -27,20 +27,20 @@ using System.Threading.Tasks;
 using System.Windows;
 using CefSharp;
 using EmbedIO;
-using Pixeval.Data.Web;
-using Pixeval.Data.Web.Delegation;
-using Pixeval.Data.Web.Protocol;
-using Pixeval.Data.Web.Request;
-using Pixeval.Objects.Exceptions;
-using Pixeval.Objects.Generic;
-using Pixeval.Objects.I18n;
-using Pixeval.Objects.Primitive;
-using Pixeval.Objects.Web;
-using Pixeval.Persisting.WebApi;
-using Pixeval.UI;
+using Pixeval.Wpf.Data.Web;
+using Pixeval.Wpf.Data.Web.Delegation;
+using Pixeval.Wpf.Data.Web.Protocol;
+using Pixeval.Wpf.Data.Web.Request;
+using Pixeval.Wpf.Objects.Exceptions;
+using Pixeval.Wpf.Objects.Generic;
+using Pixeval.Wpf.Objects.I18n;
+using Pixeval.Wpf.Objects.Primitive;
+using Pixeval.Wpf.Objects.Web;
+using Pixeval.Wpf.Persisting.WebApi;
+using Pixeval.Wpf.View;
 using Refit;
 
-namespace Pixeval.Persisting
+namespace Pixeval.Wpf.Persisting
 {
     /// <summary>
     ///     A helper class to process the Pixiv authentication

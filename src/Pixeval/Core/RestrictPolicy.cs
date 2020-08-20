@@ -18,7 +18,7 @@
 
 #endregion
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     public enum RestrictPolicy
     {

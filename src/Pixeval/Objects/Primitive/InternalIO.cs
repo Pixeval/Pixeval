@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using ImageMagick;
 
-namespace Pixeval.Objects.Primitive
+namespace Pixeval.Wpf.Objects.Primitive
 {
     // ReSharper disable once InconsistentNaming
     public static class InternalIO

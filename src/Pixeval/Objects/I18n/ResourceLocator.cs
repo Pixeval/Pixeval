@@ -18,21 +18,18 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Windows;
-using System.Windows.Resources;
 using System.Xml;
-using Pixeval.Data.ViewModel;
-using Pixeval.Objects.Primitive;
-using Pixeval.Persisting;
-using Pixeval.Properties;
+using Pixeval.Wpf.Objects.Primitive;
+using Pixeval.Wpf.Persisting;
+using Pixeval.Wpf.Properties;
+using Pixeval.Wpf.ViewModel;
 
-namespace Pixeval.Objects.I18n
+namespace Pixeval.Wpf.Objects.I18n
 {
     public static partial class AkaI18N
     {

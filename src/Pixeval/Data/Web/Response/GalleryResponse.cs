@@ -22,11 +22,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
-using Pixeval.Data.ViewModel;
-using Pixeval.Objects.Generic;
-using Pixeval.Objects.Primitive;
+using Pixeval.Wpf.Objects.Generic;
+using Pixeval.Wpf.Objects.Primitive;
+using Pixeval.Wpf.ViewModel;
 
-namespace Pixeval.Data.Web.Response
+namespace Pixeval.Wpf.Data.Web.Response
 {
     public class GalleryResponse
     {

@@ -21,7 +21,6 @@
 #if RELEASE
 using Pixeval.Objects.Exceptions.Logger;
 #elif DEBUG
-using System.Globalization;
 #endif
 using System;
 using System.Diagnostics;
@@ -29,23 +28,21 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.NetworkInformation;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using CefSharp;
 using CefSharp.Wpf;
 using Microsoft.Win32;
-using Pixeval.Core;
-using Pixeval.Objects.I18n;
-using Pixeval.Objects.Primitive;
-using Pixeval.Persisting;
-using Pixeval.Persisting.WebApi;
-using Pixeval.UI;
+using Pixeval.Wpf.Core;
+using Pixeval.Wpf.Objects.I18n;
+using Pixeval.Wpf.Objects.Primitive;
+using Pixeval.Wpf.Persisting;
+using Pixeval.Wpf.Persisting.WebApi;
 
-namespace Pixeval
+namespace Pixeval.Wpf
 {
-    public partial class App
+    public partial class App:Application
     {
         public App()
         {

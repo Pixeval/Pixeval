@@ -22,9 +22,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Data;
-using Pixeval.Objects.Primitive;
+using Pixeval.Wpf.Objects.Primitive;
 
-namespace Pixeval.Objects.ValueConverters
+namespace Pixeval.Wpf.Objects.ValueConverters
 {
     public class StringSplitConverter : IValueConverter
     {

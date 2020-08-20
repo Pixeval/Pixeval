@@ -20,7 +20,7 @@
 
 using System;
 
-namespace Pixeval.Objects.Exceptions.Logger
+namespace Pixeval.Wpf.Objects.Exceptions.Logger
 {
     public class ApplicationLog
     {

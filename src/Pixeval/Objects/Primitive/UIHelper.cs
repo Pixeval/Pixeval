@@ -33,7 +33,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using Microsoft.CSharp.RuntimeBinder;
 
-namespace Pixeval.Objects.Primitive
+namespace Pixeval.Wpf.Objects.Primitive
 {
     public static class UiHelper
     {

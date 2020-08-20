@@ -21,7 +21,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     /// <summary>
     ///     Abstract implementation of <see cref="IPixivAsyncEnumerable{T}" />, provides the default implementation of cancel a

@@ -24,11 +24,11 @@ using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Pixeval.Core;
-using Pixeval.Objects.Primitive;
+using Pixeval.Wpf.Core;
+using Pixeval.Wpf.Objects.Primitive;
 using PropertyChanged;
 
-namespace Pixeval.Persisting
+namespace Pixeval.Wpf.Persisting
 {
     /// <summary>
     ///     A class represents user preference

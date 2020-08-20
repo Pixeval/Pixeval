@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Pixeval.Objects.Generic
+namespace Pixeval.Wpf.Objects.Generic
 {
     public class Tasks<T, TR>
     {

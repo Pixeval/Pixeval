@@ -21,7 +21,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Pixeval.Objects.Generic
+namespace Pixeval.Wpf.Objects.Generic
 {
     public static class Functions
     {

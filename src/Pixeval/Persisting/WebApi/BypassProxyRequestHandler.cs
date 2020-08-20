@@ -21,7 +21,7 @@
 using CefSharp;
 using CefSharp.Handler;
 
-namespace Pixeval.Persisting.WebApi
+namespace Pixeval.Wpf.Persisting.WebApi
 {
     public class BypassProxyRequestHandler : RequestHandler
     {

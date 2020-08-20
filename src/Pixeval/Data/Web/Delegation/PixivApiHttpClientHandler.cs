@@ -20,7 +20,7 @@
 
 using System.Net.Http;
 
-namespace Pixeval.Data.Web.Delegation
+namespace Pixeval.Wpf.Data.Web.Delegation
 {
     public class PixivApiHttpClientHandler : DnsResolvedHttpClientHandler
     {

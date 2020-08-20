@@ -22,15 +22,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Pixeval.Data.ViewModel;
-using Pixeval.Data.Web.Delegation;
-using Pixeval.Data.Web.Response;
-using Pixeval.Objects.Exceptions.Logger;
-using Pixeval.Objects.Generic;
-using Pixeval.Objects.Primitive;
+using Pixeval.Wpf.Data.Web.Delegation;
+using Pixeval.Wpf.Data.Web.Response;
+using Pixeval.Wpf.Objects.Exceptions.Logger;
+using Pixeval.Wpf.Objects.Generic;
+using Pixeval.Wpf.Objects.Primitive;
+using Pixeval.Wpf.ViewModel;
 using Refit;
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     public class PixivHelper
     {

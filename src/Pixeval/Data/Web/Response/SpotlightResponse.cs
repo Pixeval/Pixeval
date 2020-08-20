@@ -20,9 +20,9 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Pixeval.Data.ViewModel;
+using Pixeval.Wpf.ViewModel;
 
-namespace Pixeval.Data.Web.Response
+namespace Pixeval.Wpf.Data.Web.Response
 {
     public class SpotlightResponse
     {

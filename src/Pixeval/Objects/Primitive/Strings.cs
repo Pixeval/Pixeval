@@ -26,7 +26,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace Pixeval.Objects.Primitive
+namespace Pixeval.Wpf.Objects.Primitive
 {
     public static class Strings
     {

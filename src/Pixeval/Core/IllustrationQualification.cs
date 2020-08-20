@@ -18,9 +18,9 @@
 
 #endregion
 
-using Pixeval.Objects.Primitive;
+using Pixeval.Wpf.Objects.Primitive;
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     public class IllustrationQualification
     {

@@ -22,7 +22,7 @@ using System;
 using System.Diagnostics.Eventing.Reader;
 using System.Xml;
 
-namespace Pixeval.Objects.Exceptions.Logger
+namespace Pixeval.Wpf.Objects.Exceptions.Logger
 {
     public class ApplicationLogStack
     {

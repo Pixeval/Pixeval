@@ -20,7 +20,7 @@
 
 using System;
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     public class EnumeratingSchedule
     {

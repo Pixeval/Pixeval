@@ -20,12 +20,12 @@
 
 using System.Net.Http;
 using System.Net.Http.Headers;
-using Pixeval.Objects.Exceptions;
-using Pixeval.Objects.I18n;
-using Pixeval.Objects.Primitive;
-using Pixeval.Persisting;
+using Pixeval.Wpf.Objects.Exceptions;
+using Pixeval.Wpf.Objects.I18n;
+using Pixeval.Wpf.Objects.Primitive;
+using Pixeval.Wpf.Persisting;
 
-namespace Pixeval.Data.Web.Delegation
+namespace Pixeval.Wpf.Data.Web.Delegation
 {
     public class PixivAuthenticationHttpRequestHandler : IHttpRequestHandler
     {

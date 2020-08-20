@@ -22,10 +22,10 @@ using System.Threading.Tasks;
 using EmbedIO;
 using EmbedIO.Routing;
 using EmbedIO.WebApi;
-using Pixeval.Objects.Primitive;
-using Pixeval.UI;
+using Pixeval.Wpf.Objects.Primitive;
+using Pixeval.Wpf.View;
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     public class TransferController : WebApiController
     {

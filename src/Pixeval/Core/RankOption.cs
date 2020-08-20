@@ -19,9 +19,9 @@
 #endregion
 
 using System;
-using Pixeval.Objects.Primitive;
+using Pixeval.Wpf.Objects.Primitive;
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class ForR18Only : Attribute

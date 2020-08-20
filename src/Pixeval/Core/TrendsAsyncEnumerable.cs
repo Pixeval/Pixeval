@@ -26,15 +26,15 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using Pixeval.Data.ViewModel;
-using Pixeval.Data.Web;
-using Pixeval.Data.Web.Delegation;
-using Pixeval.Objects.Exceptions;
-using Pixeval.Objects.Generic;
-using Pixeval.Objects.I18n;
-using Pixeval.Objects.Primitive;
+using Pixeval.Wpf.Data.Web;
+using Pixeval.Wpf.Data.Web.Delegation;
+using Pixeval.Wpf.Objects.Exceptions;
+using Pixeval.Wpf.Objects.Generic;
+using Pixeval.Wpf.Objects.I18n;
+using Pixeval.Wpf.Objects.Primitive;
+using Pixeval.Wpf.ViewModel;
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     /// <summary>
     ///     This class is piece of shit

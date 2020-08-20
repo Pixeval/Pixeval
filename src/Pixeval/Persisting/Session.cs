@@ -25,10 +25,10 @@ using System.Text;
 using System.Threading.Tasks;
 using AdysTech.CredentialManager;
 using Newtonsoft.Json;
-using Pixeval.Data.Web.Response;
-using Pixeval.Objects.Primitive;
+using Pixeval.Wpf.Data.Web.Response;
+using Pixeval.Wpf.Objects.Primitive;
 
-namespace Pixeval.Persisting
+namespace Pixeval.Wpf.Persisting
 {
     /// <summary>
     ///     A class which represents current session. etc.

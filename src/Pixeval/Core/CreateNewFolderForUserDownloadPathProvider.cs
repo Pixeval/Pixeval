@@ -17,10 +17,10 @@
 #endregion
 
 using System.IO;
-using Pixeval.Objects.Primitive;
-using Pixeval.Persisting;
+using Pixeval.Wpf.Objects.Primitive;
+using Pixeval.Wpf.Persisting;
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     public class CreateNewFolderForUserDownloadPathProvider : IDownloadPathProvider
     {

@@ -23,10 +23,10 @@ using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Windows;
-using Pixeval.Objects.I18n;
-using Pixeval.Objects.Primitive;
+using Pixeval.Wpf.Objects.I18n;
+using Pixeval.Wpf.Objects.Primitive;
 
-namespace Pixeval.Persisting.WebApi
+namespace Pixeval.Wpf.Persisting.WebApi
 {
     /// <summary>
     ///     This class is for web-API login usage only, the private key of the CA Root Certificate

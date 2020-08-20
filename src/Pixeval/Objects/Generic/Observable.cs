@@ -21,7 +21,7 @@
 using System;
 using PropertyChanged;
 
-namespace Pixeval.Objects.Generic
+namespace Pixeval.Wpf.Objects.Generic
 {
     [AddINotifyPropertyChangedInterface]
     public class Observable<T>

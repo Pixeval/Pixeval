@@ -21,12 +21,12 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Pixeval.Data.Web.Protocol;
-using Pixeval.Objects.Generic;
-using Pixeval.Persisting;
+using Pixeval.Wpf.Data.Web.Protocol;
+using Pixeval.Wpf.Objects.Generic;
+using Pixeval.Wpf.Persisting;
 using Refit;
 
-namespace Pixeval.Data.Web.Delegation
+namespace Pixeval.Wpf.Data.Web.Delegation
 {
     public class HttpClientFactory
     {

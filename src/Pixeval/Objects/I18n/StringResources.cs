@@ -21,7 +21,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Pixeval.Objects.I18n
+namespace Pixeval.Wpf.Objects.I18n
 {
     public static partial class AkaI18N
     {

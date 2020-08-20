@@ -20,7 +20,7 @@
 
 using EmbedIO;
 
-namespace Pixeval.Objects.Web
+namespace Pixeval.Wpf.Objects.Web
 {
     /// <summary>
     ///     A small server in order to represent the proxy-auto-configuration file

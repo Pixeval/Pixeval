@@ -18,9 +18,9 @@
 
 #endregion
 
-using Pixeval.Data.ViewModel;
+using Pixeval.Wpf.ViewModel;
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     /// <summary>
     ///     Provides a set of functions that support a Browsing Timeline

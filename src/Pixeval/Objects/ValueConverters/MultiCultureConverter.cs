@@ -2,9 +2,9 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
-using Pixeval.Data.ViewModel;
+using Pixeval.Wpf.ViewModel;
 
-namespace Pixeval.Objects.ValueConverters
+namespace Pixeval.Wpf.Objects.ValueConverters
 {
     public class MultiCultureConverter : IValueConverter
     {

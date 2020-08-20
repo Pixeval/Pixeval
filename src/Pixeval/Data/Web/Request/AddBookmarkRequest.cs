@@ -20,7 +20,7 @@
 
 using Refit;
 
-namespace Pixeval.Data.Web.Request
+namespace Pixeval.Wpf.Data.Web.Request
 {
     public class AddBookmarkRequest
     {

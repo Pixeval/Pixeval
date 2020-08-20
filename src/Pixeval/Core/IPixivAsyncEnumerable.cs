@@ -20,7 +20,7 @@
 
 using System.Collections.Generic;
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     /// <summary>
     ///     A base class provides several functions to browse the Pixiv content

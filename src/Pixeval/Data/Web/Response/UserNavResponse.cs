@@ -20,9 +20,9 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Pixeval.Objects.Primitive;
+using Pixeval.Wpf.Objects.Primitive;
 
-namespace Pixeval.Data.Web.Response
+namespace Pixeval.Wpf.Data.Web.Response
 {
     public class UserNavResponse
     {

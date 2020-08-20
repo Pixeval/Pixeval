@@ -22,9 +22,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Pixeval.Objects.Primitive;
+using Pixeval.Wpf.Objects.Primitive;
 
-namespace Pixeval.Objects.Generic
+namespace Pixeval.Wpf.Objects.Generic
 {
     public static class Enumerates
     {

@@ -18,7 +18,7 @@
 
 #endregion
 
-namespace Pixeval.Data.Web
+namespace Pixeval.Wpf.Data.Web
 {
     public class ProtocolBase
     {

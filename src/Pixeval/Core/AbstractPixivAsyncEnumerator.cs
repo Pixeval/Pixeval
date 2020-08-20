@@ -21,7 +21,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Pixeval.Core
+namespace Pixeval.Wpf.Core
 {
     /// <summary>
     ///     Provide a set of functions that support iterate an <see cref="IPixivAsyncEnumerable{T}" />

@@ -18,7 +18,7 @@
 
 #endregion
 
-namespace Pixeval.Data
+namespace Pixeval.Wpf.Data
 {
     public interface IParser<out T>
     {

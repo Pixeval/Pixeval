@@ -20,7 +20,7 @@
 
 using System;
 
-namespace Pixeval.Objects.Primitive
+namespace Pixeval.Wpf.Objects.Primitive
 {
     [AttributeUsage(AttributeTargets.Field)]
     public class EnumAlias : Attribute

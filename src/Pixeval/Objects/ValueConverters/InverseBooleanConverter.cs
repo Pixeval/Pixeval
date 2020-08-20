@@ -22,7 +22,7 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Pixeval.Objects.ValueConverters
+namespace Pixeval.Wpf.Objects.ValueConverters
 {
     public class InverseBooleanConverter : IValueConverter
     {
