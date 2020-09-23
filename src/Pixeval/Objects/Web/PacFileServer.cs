@@ -29,10 +29,7 @@ namespace Pixeval.Objects.Web
     {
         public static WebServer Create(string hostname, int port)
         {
-            var server = new WebServer(o => o
-                                           .WithUrlPrefix($"http://{hostname}:{port}")
-                                           .WithMode(HttpListenerMode.EmbedIO)
-            ).WithStaticFolder("/", AppContext.ResourceFolder, false);
+            var server = new WebServer(o => o.WithUrlPrefix($"http://{hostname}:{port}").WithMode(HttpListenerMode.EmbedIO)).WithStaticFolder("/", AppContext.ResourceFolder, false);
             return server;
         }
     }

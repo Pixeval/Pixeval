@@ -53,20 +53,20 @@ namespace Pixeval.Core
 
             var illust = new Illustration
             {
-                Bookmark = (int)response.TotalBookmarks,
+                Bookmark = (int) response.TotalBookmarks,
                 Id = response.Id.ToString(),
                 IsLiked = response.IsBookmarked,
                 IsManga = response.PageCount != 1,
                 IsUgoira = response.Type == "ugoira",
                 Origin = response.ImageUrls.Original ?? response.MetaSinglePage.OriginalImageUrl,
                 Large = response.ImageUrls.Large,
-                Tags = response.Tags.Select(t => new Tag { Name = t.Name, TranslatedName = t.TranslatedName }),
+                Tags = response.Tags.Select(t => new Tag {Name = t.Name, TranslatedName = t.TranslatedName}),
                 Thumbnail = response.ImageUrls.Medium,
                 Title = response.Title,
                 UserName = response.User.Name,
                 UserId = response.User.Id.ToString(),
-                ViewCount = (int)response.TotalView,
-                Comments = (int)response.TotalComments,
+                ViewCount = (int) response.TotalView,
+                Comments = (int) response.TotalComments,
                 Resolution = $"{response.Width}x{response.Height}",
                 PublishDate = response.CreateDate
             };
@@ -74,7 +74,7 @@ namespace Pixeval.Core
             if (illust.IsManga && response.MetaPages != null)
                 illust.MangaMetadata = response.MetaPages.Select(p =>
                 {
-                    var page = (Illustration)illust.Clone();
+                    var page = (Illustration) illust.Clone();
                     page.Thumbnail = p.ImageUrls.Medium;
                     page.Origin = p.ImageUrls.Original;
                     page.Large = p.ImageUrls.Large;
@@ -84,8 +84,7 @@ namespace Pixeval.Core
             return illust;
         }
 
-        public static async void Enumerate<T>(IPixivAsyncEnumerable<T> pixivIterator, IList<T> container,
-                                              int limit = -1)
+        public static async void Enumerate<T>(IPixivAsyncEnumerable<T> pixivIterator, IList<T> container, int limit = -1)
         {
             EnumeratingSchedule.StartNewInstance(pixivIterator);
             var enumerator = EnumeratingSchedule.GetCurrentEnumerator<T>();
@@ -109,27 +108,19 @@ namespace Pixeval.Core
 
             static bool CheckWindowsVersion()
             {
-                return
-                    Environment.OSVersion
-                        .Version >= /* Windows 10 April 2018 Update(a.k.a. Redstone 4), which is the version that release Windows Timeline feature */
+                return Environment.OSVersion.Version
+                    >= /* Windows 10 April 2018 Update(a.k.a. Redstone 4), which is the version that release Windows Timeline feature */
                     new Version(10, 0, 17134);
             }
         }
 
-        public static bool VerifyIllustRational(ISet<string> excludeTag, ISet<string> includeTag, int minBookmark,
-                                                Illustration illustration)
+        public static bool VerifyIllustRational(ISet<string> excludeTag, ISet<string> includeTag, int minBookmark, Illustration illustration)
         {
             if (illustration == null) return false;
             bool excludeMatch = true, includeMatch = true;
-            if (!excludeTag.IsNullOrEmpty())
-                excludeMatch = excludeTag.All(x =>
-                                                  x.IsNullOrEmpty() ||
-                                                  illustration.Tags.All(i => !i.Name.EqualsIgnoreCase(x)));
+            if (!excludeTag.IsNullOrEmpty()) excludeMatch = excludeTag.All(x => x.IsNullOrEmpty() || illustration.Tags.All(i => !i.Name.EqualsIgnoreCase(x)));
 
-            if (!includeTag.IsNullOrEmpty())
-                includeMatch = includeTag.All(x =>
-                                                  x.IsNullOrEmpty() ||
-                                                  illustration.Tags.Any(i => i.Name.EqualsIgnoreCase(x)));
+            if (!includeTag.IsNullOrEmpty()) includeMatch = includeTag.All(x => x.IsNullOrEmpty() || illustration.Tags.Any(i => i.Name.EqualsIgnoreCase(x)));
 
             var minBookmarkMatch = illustration.Bookmark > minBookmark;
             return excludeMatch && includeMatch && minBookmarkMatch;

@@ -21,13 +21,12 @@
 #if RELEASE
 using Pixeval.Objects.Exceptions.Logger;
 #elif DEBUG
-using System.Globalization;
+using System.Linq;
 #endif
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Net.NetworkInformation;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -49,8 +48,7 @@ namespace Pixeval
         public App()
         {
             if (Dispatcher != null) Dispatcher.UnhandledException += (sender, args) => DispatcherOnUnhandledException(args.Exception);
-            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
-                DispatcherOnUnhandledException((Exception)args.ExceptionObject);
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) => DispatcherOnUnhandledException((Exception) args.ExceptionObject);
             TaskScheduler.UnobservedTaskException += (sender, args) => DispatcherOnUnhandledException(args.Exception);
         }
 
@@ -95,8 +93,7 @@ namespace Pixeval
 
         private static void PortScan(out int proxy, out int pac)
         {
-            var unavailablePorts = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections()
-                .Select(t => t.LocalEndPoint.Port).ToArray();
+            var unavailablePorts = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections().Select(t => t.LocalEndPoint.Port).ToArray();
 
             var rd = new Random();
             proxy = RandPorts();
@@ -114,19 +111,13 @@ namespace Pixeval
         private static async Task InstallPluggableProtocolHandler()
         {
             var files = Directory.GetFiles(AppContext.InterchangeFolder);
-            if (!(files.Any(f => f[(f.LastIndexOf(@"\", StringComparison.Ordinal) + 1)..] ==
-                                "Pixeval.Interchange.runtimeconfig.json") &&
-                files.Any(f => f[(f.LastIndexOf(@"\", StringComparison.Ordinal) + 1)..] == "Pixeval.Interchange.exe") &&
-                files.Any(f => f[(f.LastIndexOf(@"\", StringComparison.Ordinal) + 1)..] == "Pixeval.Interchange.dll")))
+            if (!(files.Any(f => f[(f.LastIndexOf(@"\", StringComparison.Ordinal) + 1)..] == "Pixeval.Interchange.runtimeconfig.json") && files.Any(f => f[(f.LastIndexOf(@"\", StringComparison.Ordinal) + 1)..] == "Pixeval.Interchange.exe") && files.Any(f => f[(f.LastIndexOf(@"\", StringComparison.Ordinal) + 1)..] == "Pixeval.Interchange.dll")))
             {
                 foreach (var file in files) File.Delete(file);
-                if (GetResourceStream(
-                        new Uri("pack://application:,,,/Pixeval;component/Resources/interchange.zip")) is { }
-                    streamResourceInfo)
+                if (GetResourceStream(new Uri("pack://application:,,,/Pixeval;component/Resources/interchange.zip")) is { } streamResourceInfo)
                 {
                     var interchange = Path.Combine(AppContext.InterchangeFolder, "interchange.zip");
-                    await using (var fs =
-                        new FileStream(interchange, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
+                    await using (var fs = new FileStream(interchange, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
                     {
                         await streamResourceInfo.Stream.CopyToAsync(fs);
                     }
@@ -177,8 +168,7 @@ namespace Pixeval
                 rootKey.SetValue("URL Protocol", "");
                 using var shellKey = rootKey.CreateSubKey("shell\\open\\command");
                 if (shellKey == null) throw new InvalidOperationException(nameof(shellKey));
-                shellKey.SetValue("",
-                                  $"{Path.Combine(AppContext.InterchangeFolder, "Pixeval.Interchange.exe")} %1");
+                shellKey.SetValue("", $"{Path.Combine(AppContext.InterchangeFolder, "Pixeval.Interchange.exe")} %1");
             }
 
             regKey?.Dispose();
@@ -188,8 +178,7 @@ namespace Pixeval
         {
             if (Process.GetProcessesByName(AppContext.AppIdentifier).Length > 1)
             {
-                MessageBox.Show(AkaI18N.MultiplePixevalInstanceDetected, AkaI18N.MultiplePixevalInstanceDetectedTitle,
-                                MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(AkaI18N.MultiplePixevalInstanceDetected, AkaI18N.MultiplePixevalInstanceDetectedTitle, MessageBoxButton.OK, MessageBoxImage.Error);
                 Environment.Exit(-1);
             }
         }
@@ -198,8 +187,7 @@ namespace Pixeval
         {
             if (!CppRedistributableInstalled())
             {
-                MessageBox.Show(AkaI18N.CppRedistributableRequired, AkaI18N.CppRedistributableRequiredTitle,
-                                MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show(AkaI18N.CppRedistributableRequired, AkaI18N.CppRedistributableRequiredTitle, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 Clipboard.SetDataObject("https://support.microsoft.com/zh-cn/help/2977003/the-latest-supported-visual-c-downloads");
                 Environment.Exit(-1);
             }
@@ -220,8 +208,7 @@ namespace Pixeval
         /// <returns>Cpp redistributable is installed</returns>
         private static bool CppRedistributableInstalled()
         {
-            using var key =
-                Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\x64");
+            using var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\x64");
             if (key == null) return false;
 
             var success = int.TryParse(key.GetValue("Bld").ToString(), out var version);
@@ -235,13 +222,7 @@ namespace Pixeval
 
         private static void CefSharpInitialize()
         {
-            Cef.Initialize(new CefSettings
-            {
-                CefCommandLineArgs =
-                {
-                    {"proxy-pac-url", $"http://127.0.0.1:{AppContext.PacPort}/pixeval_pac.pac"}
-                }
-            }, true, browserProcessHandler: null);
+            Cef.Initialize(new CefSettings {CefCommandLineArgs = {{"proxy-pac-url", $"http://127.0.0.1:{AppContext.PacPort}/pixeval_pac.pac"}}}, true, browserProcessHandler: null);
         }
 
         private static async Task InstallFakeCaCertificate()
@@ -249,10 +230,7 @@ namespace Pixeval
             var certificateManager = new CertificateManager(await CertificateManager.GetFakeCaRootCertificate());
             if (!certificateManager.Query(StoreName.Root, StoreLocation.CurrentUser))
             {
-                if (MessageBox.Show(AkaI18N.CertificateInstallationIsRequired,
-                                    AkaI18N.CertificateInstallationIsRequiredTitle, MessageBoxButton.YesNo,
-                                    MessageBoxImage.Warning) ==
-                    MessageBoxResult.Yes)
+                if (MessageBox.Show(AkaI18N.CertificateInstallationIsRequired, AkaI18N.CertificateInstallationIsRequiredTitle, MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                     certificateManager.Install(StoreName.Root, StoreLocation.CurrentUser);
                 else
                     Environment.Exit(-1);
@@ -262,8 +240,7 @@ namespace Pixeval
         private static async Task RestoreSettings()
         {
             await Settings.Restore();
-            BrowsingHistoryAccessor.GlobalLifeTimeScope =
-                new BrowsingHistoryAccessor(200, AppContext.BrowseHistoryDatabase);
+            BrowsingHistoryAccessor.GlobalLifeTimeScope = new BrowsingHistoryAccessor(200, AppContext.BrowseHistoryDatabase);
         }
 
         /// <summary>
@@ -279,8 +256,7 @@ namespace Pixeval
             scriptBuilder.AppendLine("    }");
             scriptBuilder.AppendLine("    return \"DIRECT\";");
             scriptBuilder.AppendLine("}");
-            await File.WriteAllTextAsync(Path.Combine(AppContext.ResourceFolder, "pixeval_pac.pac"),
-                                         scriptBuilder.ToString());
+            await File.WriteAllTextAsync(Path.Combine(AppContext.ResourceFolder, "pixeval_pac.pac"), scriptBuilder.ToString());
         }
 
         protected override async void OnExit(ExitEventArgs e)
@@ -288,10 +264,7 @@ namespace Pixeval
             CertificateManager.GetFakeCaRootCertificate().Dispose();
             CertificateManager.GetFakeServerCertificate().Dispose();
             await Settings.Global.Store();
-            if (Session.Current != null &&
-                !Session.Current.AccessToken.IsNullOrEmpty() &&
-                !Session.Current.PhpSessionId.IsNullOrEmpty())
-                await Session.Current.Store();
+            if (Session.Current != null && !Session.Current.AccessToken.IsNullOrEmpty() && !Session.Current.PhpSessionId.IsNullOrEmpty()) await Session.Current.Store();
             if (File.Exists(AppContext.BrowseHistoryDatabase))
             {
                 BrowsingHistoryAccessor.GlobalLifeTimeScope.SetWritable();
@@ -302,6 +275,7 @@ namespace Pixeval
             {
                 BrowsingHistoryAccessor.GlobalLifeTimeScope.EmergencyRewrite();
             }
+
             base.OnExit(e);
         }
     }

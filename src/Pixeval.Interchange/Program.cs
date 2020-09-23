@@ -40,26 +40,19 @@ namespace Pixeval.Interchange
             using (_httpClient)
             {
                 if (!args.Any()) return;
-                string url = args[0];
+                var url = args[0];
                 // check protocol rationality
-                if (!(Regex.IsMatch(url, IllustRegex) ||
-                    Regex.IsMatch(url, UserRegex) ||
-                    Regex.IsMatch(url, SpotlightRegex)))
-                    return;
+                if (!(Regex.IsMatch(url, IllustRegex) || Regex.IsMatch(url, UserRegex) || Regex.IsMatch(url, SpotlightRegex))) return;
                 // check if there's an instance is running
                 if (PixevalInstanceRunning())
-                {
                     // send Pixeval custom pluggable protocol if so
-                    await _httpClient.PostAsync("http://127.0.0.1:12547/open",
-                                               new StringContent(url, Encoding.UTF8));
-                }
+                    await _httpClient.PostAsync("http://127.0.0.1:12547/open", new StringContent(url, Encoding.UTF8));
                 else
-                {
                     // otherwise execute Pixeval and pass the protocol as argument
                     Process.Start("Pixeval", url);
-                }
             }
         }
+
         private static bool PixevalInstanceRunning()
         {
             return Process.GetProcessesByName("Pixeval").Length > 0;

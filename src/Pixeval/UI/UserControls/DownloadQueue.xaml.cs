@@ -42,15 +42,9 @@ namespace Pixeval.UI.UserControls
         public DownloadQueue()
         {
             InitializeComponent();
-            ((INotifyCollectionChanged)DownloadItemsQueue.Items).CollectionChanged += (sender, args) =>
-               EmptyNotifier1.Visibility =
-                   DownloadItemsQueue.Items.Count == 0 ? Visibility.Visible : Visibility.Hidden;
-            ((INotifyCollectionChanged)DownloadedItemsQueue.Items).CollectionChanged += (sender, args) =>
-               EmptyNotifier2.Visibility =
-                   DownloadedItemsQueue.Items.Count == 0 ? Visibility.Visible : Visibility.Hidden;
-            ((INotifyCollectionChanged)BrowsingHistoryQueue.Items).CollectionChanged += (sender, args) =>
-               EmptyNotifier3.Visibility =
-                   BrowsingHistoryQueue.Items.Count == 0 ? Visibility.Visible : Visibility.Hidden;
+            ((INotifyCollectionChanged) DownloadItemsQueue.Items).CollectionChanged += (sender, args) => EmptyNotifier1.Visibility = DownloadItemsQueue.Items.Count == 0 ? Visibility.Visible : Visibility.Hidden;
+            ((INotifyCollectionChanged) DownloadedItemsQueue.Items).CollectionChanged += (sender, args) => EmptyNotifier2.Visibility = DownloadedItemsQueue.Items.Count == 0 ? Visibility.Visible : Visibility.Hidden;
+            ((INotifyCollectionChanged) BrowsingHistoryQueue.Items).CollectionChanged += (sender, args) => EmptyNotifier3.Visibility = BrowsingHistoryQueue.Items.Count == 0 ? Visibility.Visible : Visibility.Hidden;
             UiHelper.SetItemsSource(DownloadItemsQueue, DownloadManager.Downloading);
             UiHelper.SetItemsSource(DownloadedItemsQueue, DownloadManager.Downloaded);
             UiHelper.SetItemsSource(BrowsingHistoryQueue, BrowsingHistoryAccessor.GlobalLifeTimeScope.Get());
@@ -79,11 +73,7 @@ namespace Pixeval.UI.UserControls
             var model = sender.GetDataContext<DownloadableIllustration>();
             if (!model.GetPath().IsNullOrEmpty() && Path.GetDirectoryName(model.GetPath()) is var _)
             {
-                var processInfo = new ProcessStartInfo
-                {
-                    FileName = "explorer",
-                    Arguments = $"/select, \"{model.GetPath()}\""
-                };
+                var processInfo = new ProcessStartInfo {FileName = "explorer", Arguments = $"/select, \"{model.GetPath()}\""};
                 Process.Start(processInfo);
             }
             else
@@ -96,9 +86,7 @@ namespace Pixeval.UI.UserControls
         {
             MainWindow.Instance.DownloadQueueDialogHost.CloseControl();
             var model = sender.GetDataContext<DownloadableIllustration>();
-            MainWindow.Instance.OpenIllustBrowser(model.IsFromManga
-                                                      ? model.DownloadContent.MangaMetadata[0]
-                                                      : model.DownloadContent);
+            MainWindow.Instance.OpenIllustBrowser(model.IsFromManga ? model.DownloadContent.MangaMetadata[0] : model.DownloadContent);
         }
 
         private void RemoveFromDownloaded(object sender, RoutedEventArgs e)
@@ -114,14 +102,8 @@ namespace Pixeval.UI.UserControls
         private async void BrowsingHistoryMainImage_OnLoaded(object sender, RoutedEventArgs e)
         {
             var browsing = sender.GetDataContext<BrowsingHistory>();
-            var img = (Image)sender;
-            if (browsing.IsReferToUser)
-                img.Effect = new BlurEffect
-                {
-                    KernelType = KernelType.Gaussian,
-                    Radius = 50,
-                    RenderingBias = RenderingBias.Quality
-                };
+            var img = (Image) sender;
+            if (browsing.IsReferToUser) img.Effect = new BlurEffect {KernelType = KernelType.Gaussian, Radius = 50, RenderingBias = RenderingBias.Quality};
             UiHelper.SetImageSource(img, await PixivIO.FromUrl(browsing.BrowseObjectThumbnail));
         }
 
@@ -140,11 +122,7 @@ namespace Pixeval.UI.UserControls
                 case "spotlight":
                     MainWindow.MessageQueue.Enqueue(AkaI18N.SearchingSpotlight);
 
-                    var tasks = await Tasks<string, Illustration>
-                        .Of(await PixivClient.Instance.GetArticleWorks(ctx.BrowseObjectId))
-                        .Mapping(PixivHelper.IllustrationInfo)
-                        .Construct()
-                        .WhenAll();
+                    var tasks = await Tasks<string, Illustration>.Of(await PixivClient.Instance.GetArticleWorks(ctx.BrowseObjectId)).Mapping(PixivHelper.IllustrationInfo).Construct().WhenAll();
                     var result = tasks.Peek(i =>
                     {
                         i.IsManga = true;
@@ -173,10 +151,7 @@ namespace Pixeval.UI.UserControls
         {
             MainWindow.Instance.DownloadQueueDialogHost.CurrentSession.Close();
             MainWindow.Instance.OpenUserBrowser();
-            MainWindow.Instance.SetUserBrowserContext(new User
-            {
-                Id = sender.GetDataContext<BrowsingHistory>().BrowseObjectId
-            });
+            MainWindow.Instance.SetUserBrowserContext(new User {Id = sender.GetDataContext<BrowsingHistory>().BrowseObjectId});
         }
     }
 }

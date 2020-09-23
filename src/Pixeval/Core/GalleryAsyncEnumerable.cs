@@ -45,10 +45,7 @@ namespace Pixeval.Core
 
         public override bool VerifyRationality(Illustration item, IList<Illustration> collection)
         {
-            return item != null &&
-                collection.All(t => t.Id != item.Id) &&
-                PixivHelper.VerifyIllustRational(Settings.Global.ExcludeTag, Settings.Global.IncludeTag,
-                                                 Settings.Global.MinBookmark, item);
+            return item != null && collection.All(t => t.Id != item.Id) && PixivHelper.VerifyIllustRational(Settings.Global.ExcludeTag, Settings.Global.IncludeTag, Settings.Global.MinBookmark, item);
         }
 
         public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = default)
@@ -60,9 +57,9 @@ namespace Pixeval.Core
         {
             return restrictPolicy switch
             {
-                RestrictPolicy.Public => new PublicGalleryAsyncEnumerable(uid),
+                RestrictPolicy.Public  => new PublicGalleryAsyncEnumerable(uid),
                 RestrictPolicy.Private => new PrivateGalleryAsyncEnumerable(uid),
-                _ => throw new ArgumentOutOfRangeException(nameof(restrictPolicy), restrictPolicy, null)
+                _                      => throw new ArgumentOutOfRangeException(nameof(restrictPolicy), restrictPolicy, null)
             };
         }
 
@@ -74,11 +71,10 @@ namespace Pixeval.Core
 
             private IEnumerator<Illustration> _illustrationsEnumerator;
 
-            public GalleryAsyncEnumerator(string uid, IPixivAsyncEnumerable<Illustration> outerInstance,
-                                          RestrictPolicy restrictPolicy) : base(outerInstance)
+            public GalleryAsyncEnumerator(string uid, IPixivAsyncEnumerable<Illustration> outerInstance, RestrictPolicy restrictPolicy) : base(outerInstance)
             {
-                this._uid = uid;
-                this._restrictPolicy = restrictPolicy;
+                _uid = uid;
+                _restrictPolicy = restrictPolicy;
             }
 
             public override Illustration Current => _illustrationsEnumerator.Current;
@@ -94,11 +90,9 @@ namespace Pixeval.Core
                 {
                     if (await TryGetResponse(_restrictPolicy switch
                     {
-                        RestrictPolicy.Public =>
-                        $"/v1/user/bookmarks/illust?user_id={_uid}&restrict=public&filter=for_ios",
-                        RestrictPolicy.Private =>
-                        $"/v1/user/bookmarks/illust?user_id={_uid}&restrict=private&filter=for_ios",
-                        _ => throw new ArgumentOutOfRangeException()
+                        RestrictPolicy.Public  => $"/v1/user/bookmarks/illust?user_id={_uid}&restrict=public&filter=for_ios",
+                        RestrictPolicy.Private => $"/v1/user/bookmarks/illust?user_id={_uid}&restrict=private&filter=for_ios",
+                        _                      => throw new ArgumentOutOfRangeException()
                     }) is (true, var model))
                     {
                         _entity = model;
@@ -129,10 +123,7 @@ namespace Pixeval.Core
 
             private static async Task<HttpResponse<GalleryResponse>> TryGetResponse(string url)
             {
-                var result =
-                    (await HttpClientFactory.AppApiHttpClient()
-                        .Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", AkaI18N.GetCultureAcceptLanguage()))
-                        .GetStringAsync(url)).FromJson<GalleryResponse>();
+                var result = (await HttpClientFactory.AppApiHttpClient().Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", AkaI18N.GetCultureAcceptLanguage())).GetStringAsync(url)).FromJson<GalleryResponse>();
 
                 if (result is { } response && !response.Illusts.IsNullOrEmpty()) return HttpResponse<GalleryResponse>.Wrap(true, response);
                 return HttpResponse<GalleryResponse>.Wrap(false);

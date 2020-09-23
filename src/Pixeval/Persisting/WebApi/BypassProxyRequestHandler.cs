@@ -27,19 +27,12 @@ namespace Pixeval.Persisting.WebApi
     {
         public static readonly BypassProxyRequestHandler Instance = new BypassProxyRequestHandler();
 
-        protected override IResourceRequestHandler GetResourceRequestHandler(IWebBrowser chromiumWebBrowser,
-                                                                             IBrowser browser, IFrame frame,
-                                                                             IRequest request, bool isNavigation,
-                                                                             bool isDownload,
-                                                                             string requestInitiator,
-                                                                             ref bool disableDefaultHandling)
+        protected override IResourceRequestHandler GetResourceRequestHandler(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, bool isNavigation, bool isDownload, string requestInitiator, ref bool disableDefaultHandling)
         {
             return new BypassProxyResourceRequestHandler();
         }
 
-        protected override bool OnCertificateError(IWebBrowser chromiumWebBrowser, IBrowser browser,
-                                                   CefErrorCode errorCode, string requestUrl, ISslInfo sslInfo,
-                                                   IRequestCallback callback)
+        protected override bool OnCertificateError(IWebBrowser chromiumWebBrowser, IBrowser browser, CefErrorCode errorCode, string requestUrl, ISslInfo sslInfo, IRequestCallback callback)
         {
             callback.Continue(true);
             return true;

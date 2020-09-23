@@ -40,15 +40,14 @@ namespace Pixeval.Data.Web.Delegation
 
         protected DnsResolvedHttpClientHandler(IHttpRequestHandler requestHandler = null, bool directConnect = true)
         {
-            this._requestHandler = requestHandler;
-            this._directConnect = directConnect;
+            _requestHandler = requestHandler;
+            _directConnect = directConnect;
             ServerCertificateCustomValidationCallback = DangerousAcceptAnyServerCertificateValidator;
         }
 
         protected abstract DnsResolver DnsResolver { get; set; }
 
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
-                                                                     CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             _requestHandler?.Handle(request);
 
@@ -58,9 +57,7 @@ namespace Pixeval.Data.Web.Delegation
 
                 var isSslSession = request.RequestUri.ToString().StartsWith("https://");
 
-                request.RequestUri =
-                    new Uri(
-                        $"{(isSslSession ? "https://" : "http://")}{(await DnsResolver.Lookup(host))[0]}{request.RequestUri.PathAndQuery}");
+                request.RequestUri = new Uri($"{(isSslSession ? "https://" : "http://")}{(await DnsResolver.Lookup(host))[0]}{request.RequestUri.PathAndQuery}");
                 request.Headers.Host = host;
             }
 
@@ -75,16 +72,13 @@ namespace Pixeval.Data.Web.Delegation
                 throw;
             }
 
-            if (result.StatusCode == HttpStatusCode.BadRequest &&
-                (await result.Content.ReadAsStringAsync()).Contains("OAuth"))
+            if (result.StatusCode == HttpStatusCode.BadRequest && (await result.Content.ReadAsStringAsync()).Contains("OAuth"))
             {
                 using var semaphore = new SemaphoreSlim(1);
                 await semaphore.WaitAsync(cancellationToken);
                 await Authentication.AppApiAuthenticate(Session.Current.Account, Session.Current.Password);
                 var token = request.Headers.Authorization;
-                if (token != null)
-                    request.Headers.Authorization =
-                        new AuthenticationHeaderValue(token.Scheme, Session.Current.AccessToken);
+                if (token != null) request.Headers.Authorization = new AuthenticationHeaderValue(token.Scheme, Session.Current.AccessToken);
 
                 return await base.SendAsync(request, cancellationToken);
             }

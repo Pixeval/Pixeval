@@ -29,8 +29,7 @@ namespace Pixeval.Data.Web.Delegation
 {
     public class PixivAuthenticationHttpRequestHandler : IHttpRequestHandler
     {
-        public static readonly PixivAuthenticationHttpRequestHandler Instance =
-            new PixivAuthenticationHttpRequestHandler();
+        public static readonly PixivAuthenticationHttpRequestHandler Instance = new PixivAuthenticationHttpRequestHandler();
 
         protected PixivAuthenticationHttpRequestHandler()
         {
@@ -44,28 +43,20 @@ namespace Pixeval.Data.Web.Delegation
                     var token = httpRequestMessage.Headers.Authorization;
                     if (token != null)
                     {
-                        if (Session.Current.AccessToken.IsNullOrEmpty())
-                            throw new TokenNotFoundException(
-                                $"{nameof(Session.Current.AccessToken)} is empty, this exception should never be thrown, if you see this message, please send issue on github or contact me (decem0730@gmail.com)");
+                        if (Session.Current.AccessToken.IsNullOrEmpty()) throw new TokenNotFoundException($"{nameof(Session.Current.AccessToken)} is empty, this exception should never be thrown, if you see this message, please send issue on github or contact me (decem0730@gmail.com)");
 
-                        httpRequestMessage.Headers.Authorization =
-                            new AuthenticationHeaderValue(token.Scheme, Session.Current.AccessToken);
+                        httpRequestMessage.Headers.Authorization = new AuthenticationHeaderValue(token.Scheme, Session.Current.AccessToken);
                     }
 
                     break;
                 case var x when x == "pixiv.net" || x == "www.pixiv.net":
-                    if (Session.Current.PhpSessionId.IsNullOrEmpty())
-                        throw new TokenNotFoundException(
-                            $"{nameof(Session.Current.PhpSessionId)} is empty, this exception should never be thrown, if you see this message, please send issue on github or contact me (decem0730@gmail.com)");
+                    if (Session.Current.PhpSessionId.IsNullOrEmpty()) throw new TokenNotFoundException($"{nameof(Session.Current.PhpSessionId)} is empty, this exception should never be thrown, if you see this message, please send issue on github or contact me (decem0730@gmail.com)");
 
-                    httpRequestMessage.Headers.TryAddWithoutValidation("Cookie",
-                                                                       $"PHPSESSID={Session.Current.PhpSessionId}");
+                    httpRequestMessage.Headers.TryAddWithoutValidation("Cookie", $"PHPSESSID={Session.Current.PhpSessionId}");
                     break;
             }
 
-            if (!httpRequestMessage.Headers.Contains("Accept-Language"))
-                httpRequestMessage.Headers.TryAddWithoutValidation("Accept-Language",
-                                                                   AkaI18N.GetCultureAcceptLanguage());
+            if (!httpRequestMessage.Headers.Contains("Accept-Language")) httpRequestMessage.Headers.TryAddWithoutValidation("Accept-Language", AkaI18N.GetCultureAcceptLanguage());
         }
     }
 }

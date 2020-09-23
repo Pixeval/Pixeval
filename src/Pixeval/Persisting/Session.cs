@@ -139,8 +139,7 @@ namespace Pixeval.Persisting
         /// <returns></returns>
         public async Task Store()
         {
-            await File.WriteAllTextAsync(Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName),
-                                         ToString());
+            await File.WriteAllTextAsync(Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName), ToString());
             CredentialManager.SaveCredentials(AppContext.AppIdentifier, new NetworkCredential(MailAddress, Password));
         }
 
@@ -150,9 +149,7 @@ namespace Pixeval.Persisting
         /// <returns></returns>
         public static async Task Restore()
         {
-            Current = (await File.ReadAllTextAsync(
-                    Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName), Encoding.UTF8))
-                .FromJson<Session>();
+            Current = (await File.ReadAllTextAsync(Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName), Encoding.UTF8)).FromJson<Session>();
             var credential = CredentialManager.GetCredentials(AppContext.AppIdentifier);
             Current.MailAddress = credential.UserName;
             Current.Password = credential.Password;
@@ -165,9 +162,7 @@ namespace Pixeval.Persisting
         public static bool ConfExists()
         {
             var path = Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName);
-            return File.Exists(path) &&
-                new FileInfo(path).Length != 0 &&
-                CredentialManager.GetCredentials(AppContext.AppIdentifier) != null;
+            return File.Exists(path) && new FileInfo(path).Length != 0 && CredentialManager.GetCredentials(AppContext.AppIdentifier) != null;
         }
 
         /// <summary>
@@ -177,10 +172,7 @@ namespace Pixeval.Persisting
         /// <returns>true if needed</returns>
         public static bool AppApiRefreshRequired(Session identity)
         {
-            return identity == null ||
-                identity.AccessToken.IsNullOrEmpty() ||
-                identity.ExpireIn == default ||
-                identity.ExpireIn <= DateTime.Now;
+            return identity == null || identity.AccessToken.IsNullOrEmpty() || identity.ExpireIn == default || identity.ExpireIn <= DateTime.Now;
         }
 
         /// <summary>
@@ -191,10 +183,7 @@ namespace Pixeval.Persisting
         /// <returns>true if needed</returns>
         public static bool WebApiRefreshRequired(Session identity)
         {
-            return identity == null ||
-                identity.PhpSessionId.IsNullOrEmpty() ||
-                identity.CookieCreation == default ||
-                (DateTime.Now - identity.CookieCreation).Days >= 7;
+            return identity == null || identity.PhpSessionId.IsNullOrEmpty() || identity.CookieCreation == default || (DateTime.Now - identity.CookieCreation).Days >= 7;
         }
 
         /// <summary>

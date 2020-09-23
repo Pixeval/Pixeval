@@ -40,11 +40,9 @@ namespace Pixeval.Updater
     /// </summary>
     public partial class MainWindow
     {
-
         private static readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        private static readonly string _currentDir =
-            Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase!).LocalPath);
+        private static readonly string _currentDir = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase!).LocalPath);
 
         private static readonly DirectoryInfo _pixevalDirectory = Directory.GetParent(_currentDir);
 
@@ -67,18 +65,16 @@ namespace Pixeval.Updater
         {
             try
             {
-                await using var memory = await Download(RelevantUrl.ZipArchive,
-                                                        new Progress<double>(p => DownloadProgressIndicator.Value = p),
-                                                        _cancellationTokenSource.Token);
+                await using var memory = await Download(RelevantUrl.ZipArchive, new Progress<double>(p => DownloadProgressIndicator.Value = p), _cancellationTokenSource.Token);
                 memory.Position = 0L;
                 if (memory.Checksum<SHA256Managed>() != (await GetRemoteChecksum()).ToLower())
                 {
                     Clipboard.SetDataObject("http://47.95.218.243/Pixeval.zip");
                     throw new ChecksumFailedException("文件hash校验失败，请前往http://47.95.218.243/Pixeval.zip手动下载，链接已经复制到剪切板");
                 }
+
                 RmFiles();
-                await using (var fileStream =
-                    new FileStream(_zipTmpPath, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
+                await using (var fileStream = new FileStream(_zipTmpPath, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
                 {
                     memory.WriteTo(fileStream);
                 }
@@ -144,14 +140,12 @@ namespace Pixeval.Updater
             return dir.GetFiles().Any(_ => _.Name == "Pixeval.dll");
         }
 
-        private static async Task<MemoryStream> Download(string url, IProgress<double> progress,
-                                                         CancellationToken cancellationToken = default)
+        private static async Task<MemoryStream> Download(string url, IProgress<double> progress, CancellationToken cancellationToken = default)
         {
             using var response = await GetResponseHeader(new HttpClient(), url);
 
             var contentLength = response.Content.Headers.ContentLength;
-            if (!contentLength.HasValue)
-                throw new InvalidOperationException("cannot retrieve the content length of the request uri");
+            if (!contentLength.HasValue) throw new InvalidOperationException("cannot retrieve the content length of the request uri");
 
             response.EnsureSuccessStatusCode();
 
@@ -160,13 +154,12 @@ namespace Pixeval.Updater
 
             var memoryStream = new MemoryStream();
             await using var contentStream = await response.Content.ReadAsStreamAsync();
-            while ((bytesRead = await contentStream.ReadAsync(byteBuffer, 0, byteBuffer.Length, cancellationToken)) !=
-                0)
+            while ((bytesRead = await contentStream.ReadAsync(byteBuffer, 0, byteBuffer.Length, cancellationToken)) != 0)
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 totalRead += bytesRead;
-                await memoryStream.WriteAsync(byteBuffer, 0, (int)bytesRead, cancellationToken);
-                progress.Report(totalRead / (double)contentLength);
+                await memoryStream.WriteAsync(byteBuffer, 0, (int) bytesRead, cancellationToken);
+                progress.Report(totalRead / (double) contentLength);
             }
 
             ArrayPool<byte>.Shared.Return(byteBuffer, true);

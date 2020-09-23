@@ -51,8 +51,7 @@ namespace Pixeval.UI
 
             try
             {
-                await Task.WhenAll(Authentication.AppApiAuthenticate(Email.Text, Password.Password),
-                                   Authentication.WebApiAuthenticate(Email.Text, Password.Password));
+                await Task.WhenAll(Authentication.AppApiAuthenticate(Email.Text, Password.Password), Authentication.WebApiAuthenticate(Email.Text, Password.Password));
             }
             catch (Exception exception)
             {
@@ -95,9 +94,7 @@ namespace Pixeval.UI
 
         private async void SetErrorHint(Exception exception)
         {
-            ErrorMessage.Text = exception is ApiException aException && await IsPasswordOrAccountError(aException)
-                ? AkaI18N.EmailOrPasswordIsWrong
-                : exception.Message;
+            ErrorMessage.Text = exception is ApiException aException && await IsPasswordOrAccountError(aException) ? AkaI18N.EmailOrPasswordIsWrong : exception.Message;
         }
 
         private static async ValueTask<bool> IsPasswordOrAccountError(ApiException exception)

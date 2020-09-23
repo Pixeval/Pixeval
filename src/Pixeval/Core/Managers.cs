@@ -30,7 +30,6 @@ namespace Pixeval.Core
 {
     public class DownloadManager
     {
-
         public static readonly ObservableCollection<DownloadableIllustration> Downloading = new ObservableCollection<DownloadableIllustration>();
 
         public static readonly ObservableCollection<DownloadableIllustration> Downloaded = new ObservableCollection<DownloadableIllustration>();
@@ -42,11 +41,9 @@ namespace Pixeval.Core
 
             static DownloadableIllustration CreateDownloadableIllustration(Illustration downloadContent, bool isFromMange, DownloadOption option, int index = -1)
             {
-                var filePathProvider = option.CreateNewWhenFromUser
-                    ? new CreateNewFolderForUserDownloadPathProvider(downloadContent.UserName)
-                    : (IDownloadPathProvider)new DefaultDownloadPathProvider();
+                var filePathProvider = option.CreateNewWhenFromUser ? new CreateNewFolderForUserDownloadPathProvider(downloadContent.UserName) : (IDownloadPathProvider) new DefaultDownloadPathProvider();
                 var fileNameFormatter = new DefaultIllustrationFileNameFormatter();
-                var model = new DownloadableIllustration(downloadContent, fileNameFormatter, filePathProvider, isFromMange, index) { Option = option };
+                var model = new DownloadableIllustration(downloadContent, fileNameFormatter, filePathProvider, isFromMange, index) {Option = option};
                 model.DownloadState.ValueChanged += (sender, args) => Application.Current.Dispatcher.Invoke(() =>
                 {
                     switch (args.NewValue)
@@ -54,8 +51,7 @@ namespace Pixeval.Core
                         case DownloadStateEnum.Finished:
                             model.Freeze();
                             Downloading.Remove(model);
-                            if (Downloaded.All(i => model.DownloadContent.GetDownloadUrl() != i.DownloadContent.GetDownloadUrl()))
-                                Downloaded.Add(model);
+                            if (Downloaded.All(i => model.DownloadContent.GetDownloadUrl() != i.DownloadContent.GetDownloadUrl())) Downloaded.Add(model);
                             break;
                         case DownloadStateEnum.Downloading:
                             Downloaded.Remove(model);

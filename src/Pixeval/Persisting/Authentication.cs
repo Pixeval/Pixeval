@@ -64,10 +64,7 @@ namespace Pixeval.Persisting
 
             try
             {
-                var token = await RestService.For<ITokenProtocol>(HttpClientFactory
-                                                                      .PixivApi(ProtocolBase.OAuthBaseUrl, true)
-                                                                      .Apply(h => h.Timeout = TimeSpan.FromSeconds(10)))
-                    .GetTokenByPassword(new PasswordTokenRequest { Name = name, Password = pwd }, time, hash);
+                var token = await RestService.For<ITokenProtocol>(HttpClientFactory.PixivApi(ProtocolBase.OAuthBaseUrl, true).Apply(h => h.Timeout = TimeSpan.FromSeconds(10))).GetTokenByPassword(new PasswordTokenRequest {Name = name, Password = pwd}, time, hash);
                 Session.Current = Session.Parse(pwd, token);
             }
             catch (TaskCanceledException)
@@ -85,10 +82,7 @@ namespace Pixeval.Persisting
         {
             try
             {
-                var token = await RestService.For<ITokenProtocol>(HttpClientFactory
-                                                                      .PixivApi(ProtocolBase.OAuthBaseUrl, true)
-                                                                      .Apply(h => h.Timeout = TimeSpan.FromSeconds(10)))
-                    .RefreshToken(new RefreshTokenRequest { RefreshToken = refreshToken });
+                var token = await RestService.For<ITokenProtocol>(HttpClientFactory.PixivApi(ProtocolBase.OAuthBaseUrl, true).Apply(h => h.Timeout = TimeSpan.FromSeconds(10))).RefreshToken(new RefreshTokenRequest {RefreshToken = refreshToken});
                 Session.Current = Session.Parse(Session.Current.Password, token);
             }
             catch (TaskCanceledException)
@@ -110,9 +104,7 @@ namespace Pixeval.Persisting
             // create x.509 certificate object for intercepting https traffic, USE AT YOUR OWN RISK
             var certificate = await CertificateManager.GetFakeServerCertificate();
             // create https proxy server for intercepting and forwarding https traffic
-            using var proxyServer = HttpsProxyServer.Create("127.0.0.1", AppContext.ProxyPort,
-                                                            (await new PixivApiDnsResolver().Lookup("pixiv.net"))[0]
-                                                            .ToString(), certificate);
+            using var proxyServer = HttpsProxyServer.Create("127.0.0.1", AppContext.ProxyPort, (await new PixivApiDnsResolver().Lookup("pixiv.net"))[0].ToString(), certificate);
             // create pac file server for providing the proxy-auto-configuration file,
             // which is driven by EmbedIO, this is because CefSharp do not accept file uri
             using var pacServer = PacFileServer.Create("127.0.0.1", AppContext.PacPort);
@@ -126,8 +118,7 @@ namespace Pixeval.Persisting
                 // which is going to fill and submit the form
                 if (args.Url == loginUrl)
                     // ReSharper disable once AccessToDisposedClosure
-                    chrome.ExecuteScriptAsync(
-                        $@"
+                    chrome.ExecuteScriptAsync($@"
                                 var container_login = document.getElementById('container-login');
                                 var fields = container_login.getElementsByClassName('input-field');
                                 var account = fields[0].getElementsByTagName('input')[0];
@@ -167,9 +158,7 @@ namespace Pixeval.Persisting
             // has a form like "numbers_hash"
             static bool PixivCookieRecorded(Cookie cookie)
             {
-                return Regex.IsMatch(cookie.Domain, @".*\.pixiv\.net") &&
-                    cookie.Name == "PHPSESSID" &&
-                    Regex.IsMatch(cookie.Value, @"\d+_.*");
+                return Regex.IsMatch(cookie.Domain, @".*\.pixiv\.net") && cookie.Name == "PHPSESSID" && Regex.IsMatch(cookie.Value, @"\d+_.*");
             }
 
             // create an asynchronous polling task while the authenticate process is running,

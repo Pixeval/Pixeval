@@ -47,7 +47,10 @@ namespace Pixeval.Objects.I18n
                     var s = File.ReadAllText(Path.Combine(AppContext.SettingsFolder, "settings.json")).FromJson<Settings>();
                     InitializeXmlNodes(s.Culture);
                 }
-                else InitializeXmlNodes(CultureInfo.CurrentCulture.Name);
+                else
+                {
+                    InitializeXmlNodes(CultureInfo.CurrentCulture.Name);
+                }
             }
 
             return GetValueByKey(key);
@@ -56,17 +59,12 @@ namespace Pixeval.Objects.I18n
         public static void Reload(I18NOption option)
         {
             InitializeXmlNodes(option.Name);
-            foreach (var prop in typeof(AkaI18N).GetProperties(BindingFlags.Public | BindingFlags.Static))
-            {
-                prop.SetValue(null, GetValueByKey(prop.Name));
-            }
+            foreach (var prop in typeof(AkaI18N).GetProperties(BindingFlags.Public | BindingFlags.Static)) prop.SetValue(null, GetValueByKey(prop.Name));
         }
 
         private static void InitializeXmlNodes(string culture)
         {
-            var fileName =
-                new Uri(
-                    $"pack://application:,,,/Pixeval;component/Objects/I18n/Xml/resx_{culture.ToLower()}.xml");
+            var fileName = new Uri($"pack://application:,,,/Pixeval;component/Objects/I18n/Xml/resx_{culture.ToLower()}.xml");
             StreamResourceInfo streamResourceInfo;
             try
             {
@@ -74,9 +72,7 @@ namespace Pixeval.Objects.I18n
             }
             catch (IOException)
             {
-                streamResourceInfo =
-                    Application.GetResourceStream(
-                        new Uri("pack://application:,,,/Pixeval;component/Objects/I18n/Xml/resx_zh-cn.xml"));
+                streamResourceInfo = Application.GetResourceStream(new Uri("pack://application:,,,/Pixeval;component/Objects/I18n/Xml/resx_zh-cn.xml"));
             }
 
             var xml = new XmlDocument();

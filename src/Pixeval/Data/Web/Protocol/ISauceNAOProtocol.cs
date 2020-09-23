@@ -29,6 +29,7 @@ namespace Pixeval.Data.Web.Protocol
     {
         [Multipart]
         [Post("/search.php")]
-        Task<HttpResponseMessage> GetSauce([AliasAs("file")] StreamPart stream);
+        Task<HttpResponseMessage> GetSauce([AliasAs("file")]
+                                           StreamPart stream);
     }
 }

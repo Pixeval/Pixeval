@@ -1,4 +1,5 @@
 ﻿#region Copyright (C) 2019-2020 Dylech30th. All rights reserved.
+
 // Pixeval - A Strong, Fast and Flexible Pixiv Client
 // Copyright (C) 2019-2020 Dylech30th
 // 
@@ -14,6 +15,7 @@
 // 
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #endregion
 
 using PropertyChanged;
@@ -23,9 +25,9 @@ namespace Pixeval.Data.ViewModel
     [AddINotifyPropertyChangedInterface]
     public class I18NOption
     {
-        public string LocalizedName { get; set; }
+        public static readonly I18NOption USEnglish = new I18NOption("English(US)", "en-us");
 
-        public string Name { get; set; }
+        public static readonly I18NOption ChineseSimplified = new I18NOption("简体中文(中国)", "zh-cn");
 
         public I18NOption(string localizedName, string name)
         {
@@ -33,10 +35,12 @@ namespace Pixeval.Data.ViewModel
             Name = name;
         }
 
-        public I18NOption() { }
+        public I18NOption()
+        {
+        }
 
-        public static readonly I18NOption USEnglish = new I18NOption("English(US)", "en-us");
+        public string LocalizedName { get; set; }
 
-        public static readonly I18NOption MainlandChinese = new I18NOption("简体中文(中国)", "zh-cn");
+        public string Name { get; set; }
     }
 }

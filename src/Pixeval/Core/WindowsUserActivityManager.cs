@@ -20,12 +20,12 @@
 
 using System;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.UserActivities;
+using Windows.UI.Shell;
 using AdaptiveCards;
 using Newtonsoft.Json;
 using Pixeval.Data.ViewModel;
 using Pixeval.Objects.Generic;
-using Windows.ApplicationModel.UserActivities;
-using Windows.UI.Shell;
 
 namespace Pixeval.Core
 {
@@ -49,19 +49,17 @@ namespace Pixeval.Core
         {
             var userActivityChannel = UserActivityChannel.GetDefault();
             var model = await GetPixevalTimelineModel(browsingHistory);
-            var userActivity =
-                await userActivityChannel.GetOrCreateUserActivityAsync($"Pixeval-{model.Id}-{DateTime.Now:s}");
+            var userActivity = await userActivityChannel.GetOrCreateUserActivityAsync($"Pixeval-{model.Id}-{DateTime.Now:s}");
             userActivity.VisualElements.DisplayText = model.Title;
-            userActivity.VisualElements.Content =
-                AdaptiveCardBuilder.CreateAdaptiveCardFromJson(BuildAdaptiveCard(model));
+            userActivity.VisualElements.Content = AdaptiveCardBuilder.CreateAdaptiveCardFromJson(BuildAdaptiveCard(model));
             userActivity.VisualElements.Attribution = new UserActivityAttribution(_iconUri);
             userActivity.VisualElements.AttributionDisplayText = "Pixeval";
             userActivity.ActivationUri = new Uri(browsingHistory.Type switch
             {
-                "illust" => $"pixeval://www.pixiv.net/artworks/{model.Id}",
-                "user" => $"pixeval://www.pixiv.net/users/{model.Id}",
+                "illust"    => $"pixeval://www.pixiv.net/artworks/{model.Id}",
+                "user"      => $"pixeval://www.pixiv.net/users/{model.Id}",
                 "spotlight" => $"pixeval://www.pixivision.net/en/a/{model.Id}",
-                _ => throw new ArgumentException(nameof(browsingHistory.Type))
+                _           => throw new ArgumentException(nameof(browsingHistory.Type))
             });
             await userActivity.SaveAsync();
             _userActivitySession?.Dispose();
@@ -70,20 +68,14 @@ namespace Pixeval.Core
 
         private static async Task<PixevalTimelineModel> GetPixevalTimelineModel(BrowsingHistory history)
         {
-            var p = new PixevalTimelineModel
-            {
-                Background = await PixivIO.GetResizedBase64UriOfImageFromUrl(history.BrowseObjectThumbnail),
-                Id = history.BrowseObjectId,
-                Title = history.BrowseObjectState
-            };
+            var p = new PixevalTimelineModel {Background = await PixivIO.GetResizedBase64UriOfImageFromUrl(history.BrowseObjectThumbnail), Id = history.BrowseObjectId, Title = history.BrowseObjectState};
             switch (history.Type)
             {
                 case "illust":
                     p.Author = history.IllustratorName;
                     return p;
                 case "user":
-                case "spotlight":
-                    return p;
+                case "spotlight": return p;
             }
 
             throw new ArgumentException(nameof(history.Type));
@@ -91,10 +83,7 @@ namespace Pixeval.Core
 
         private static string BuildAdaptiveCard(PixevalTimelineModel pixevalTimelineModel)
         {
-            var card = new StringifyBackgroundAdaptiveCard("1.0")
-            {
-                StringifyUrl = pixevalTimelineModel.Background
-            };
+            var card = new StringifyBackgroundAdaptiveCard("1.0") {StringifyUrl = pixevalTimelineModel.Background};
             card.Body.Add(new AdaptiveTextBlock
             {
                 Text = pixevalTimelineModel.Title,

@@ -47,7 +47,8 @@ namespace Pixeval.Data.Web.Protocol
                             UnFollowArtistRequest unFollowArtistRequest);
 
         [Get("/v1/ugoira/metadata")]
-        Task<UgoiraMetadataResponse> GetUgoiraMetadata([AliasAs("illust_id")] string id);
+        Task<UgoiraMetadataResponse> GetUgoiraMetadata([AliasAs("illust_id")]
+                                                       string id);
 
         [Post("/v2/illust/bookmark/add")]
         Task AddBookmark([Body(BodySerializationMethod.UrlEncoded)]
@@ -57,11 +58,11 @@ namespace Pixeval.Data.Web.Protocol
         Task<AutoCompletionResponse> GetAutoCompletion(AutoCompletionRequest autoCompletionRequest);
 
         [Get("/v1/illust/detail")]
-        Task<SingleWorkResponse> GetSingle([AliasAs("illust_id")] string id);
+        Task<SingleWorkResponse> GetSingle([AliasAs("illust_id")]
+                                           string id);
 
         [Get("/v1/user/recommended?filter=for_android")]
-        Task<RecommendIllustratorResponse> GetRecommendIllustrators(
-            RecommendIllustratorRequest recommendIllustratorRequest);
+        Task<RecommendIllustratorResponse> GetRecommendIllustrators(RecommendIllustratorRequest recommendIllustratorRequest);
 
         [Get("/v1/trending-tags/illust?filter=for_android")]
         Task<TrendingTagResponse> GetTrendingTags();

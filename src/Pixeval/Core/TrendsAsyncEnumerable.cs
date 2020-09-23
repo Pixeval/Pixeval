@@ -95,33 +95,19 @@ namespace Pixeval.Core
 
             private string BuildRequestUrl()
             {
-                return _requestContext == null
-                    ? "/stacc?mode=unify"
-                    : $"/stacc/my/home/all/activity/{_requestContext.Sid}/.json?mode={_requestContext.Mode}&unify_token={_requestContext.UnifyToken}&tt={_tt}";
+                return _requestContext == null ? "/stacc?mode=unify" : $"/stacc/my/home/all/activity/{_requestContext.Sid}/.json?mode={_requestContext.Mode}&unify_token={_requestContext.UnifyToken}&tt={_tt}";
             }
 
             private static TrendsRequestContext ExtractRequestParametersFromHtml(string html)
             {
                 var json = JObject.Parse(ExtractPreloadJsonSnippet(html));
-                return new TrendsRequestContext
-                {
-                    Mode = json["param"]?["mode"]?.Value<string>(),
-                    UnifyToken = json["param"]?["unify_token"]?.Value<string>(),
-                    Sid = json["next_max_sid"]?.Value<long>().ToString(),
-                    IsLastPage = json["is_last_page"]?.Value<int>() == 1
-                };
+                return new TrendsRequestContext {Mode = json["param"]?["mode"]?.Value<string>(), UnifyToken = json["param"]?["unify_token"]?.Value<string>(), Sid = json["next_max_sid"]?.Value<long>().ToString(), IsLastPage = json["is_last_page"]?.Value<int>() == 1};
             }
 
             private static TrendsRequestContext ExtractRequestParametersFromRawJson(string json)
             {
                 var obj = JObject.Parse(json);
-                return new TrendsRequestContext
-                {
-                    Mode = obj["stacc"]?["param"]?["mode"]?.Value<string>(),
-                    UnifyToken = obj["stacc"]?["param"]?["unify_token"]?.Value<string>(),
-                    Sid = obj["stacc"]?["next_max_sid"]?.Value<long>().ToString(),
-                    IsLastPage = obj["stacc"]?["is_last_page"]?.Value<int>() == 1
-                };
+                return new TrendsRequestContext {Mode = obj["stacc"]?["param"]?["mode"]?.Value<string>(), UnifyToken = obj["stacc"]?["param"]?["unify_token"]?.Value<string>(), Sid = obj["stacc"]?["next_max_sid"]?.Value<long>().ToString(), IsLastPage = obj["stacc"]?["is_last_page"]?.Value<int>() == 1};
             }
 
             private static Task<IEnumerable<Trends>> ParsePreloadJsonFromHtml(string html)
@@ -155,31 +141,24 @@ namespace Pixeval.Core
                     var task = Task.Run(() =>
                     {
                         var timelineProp = timelineChild.First;
-                        var statusObj = status?.FirstOrDefault(sChild =>
-                                                                   sChild.First?["id"]?.Value<string>() ==
-                                                                   timelineProp?["id"]?.Value<string>());
+                        var statusObj = status?.FirstOrDefault(sChild => sChild.First?["id"]?.Value<string>() == timelineProp?["id"]?.Value<string>());
                         if (statusObj?.First == null) return null;
                         var statusObjProp = statusObj.First;
                         var trendsObj = new Trends
                         {
-                            PostDate = DateTime.Parse(statusObjProp?["post_date"]?.Value<string>()!,
-                                                      CultureInfo.CurrentCulture),
+                            PostDate = DateTime.Parse(statusObjProp?["post_date"]?.Value<string>()!, CultureInfo.CurrentCulture),
                             PostUserId = statusObjProp["post_user"]?["id"]?.Value<string>(),
                             TrendObjectId = statusObjProp["type"]?.Value<string>() switch
                             {
-                                var type when type == "add_illust" || type == "add_bookmark" => statusObjProp[
-                                    "ref_illust"]?["id"]?.Value<string>(),
-                                "add_favorite" => statusObjProp["ref_user"]?["id"]?.Value<string>(),
-                                _ => null
+                                var type when type == "add_illust" || type == "add_bookmark" => statusObjProp["ref_illust"]?["id"]?.Value<string>(),
+                                "add_favorite"                                               => statusObjProp["ref_user"]?["id"]?.Value<string>(),
+                                _                                                            => null
                             }
                         };
-                        var matchingPostUser = user?.FirstOrDefault(uChild =>
-                                                                        uChild.First?["id"]?.Value<string>() ==
-                                                                        trendsObj.PostUserId);
+                        var matchingPostUser = user?.FirstOrDefault(uChild => uChild.First?["id"]?.Value<string>() == trendsObj.PostUserId);
                         if (matchingPostUser != null)
                         {
-                            trendsObj.PostUserThumbnail =
-                                matchingPostUser.First?["profile_image"]?.First?.First?["url"]?["m"]?.Value<string>();
+                            trendsObj.PostUserThumbnail = matchingPostUser.First?["profile_image"]?.First?.First?["url"]?["m"]?.Value<string>();
                             trendsObj.PostUserName = matchingPostUser.First?["name"]?.Value<string>();
                         }
                         else
@@ -189,46 +168,30 @@ namespace Pixeval.Core
 
                         trendsObj.Type = statusObjProp["type"]?.Value<string>() switch
                         {
-                            "add_illust" => TrendType.AddIllust,
+                            "add_illust"   => TrendType.AddIllust,
                             "add_bookmark" => TrendType.AddBookmark,
                             "add_favorite" => TrendType.AddFavorite,
-                            _ => (TrendType)(-1)
+                            _              => (TrendType) (-1)
                         };
                         trendsObj.TrendObjectThumbnail = trendsObj.Type switch
                         {
-                            var type when type == TrendType.AddBookmark || type == TrendType.AddIllust => illust
-                                ?.FirstOrDefault(iChild =>
-                                                     iChild.First?["id"]?.Value<string>() == trendsObj.TrendObjectId)
-                                ?.First?["url"]?["m"]?.Value<string>(),
-                            TrendType.AddFavorite => user
-                                .FirstOrDefault(uChild =>
-                                                    uChild.First?["id"]?.Value<string>() == trendsObj.TrendObjectId)
-                                ?.First?["profile_image"]?.First?.First?["url"]?["s"]?.Value<string>(),
-                            (TrendType)(-1) => null,
-                            _ => throw new ArgumentOutOfRangeException()
+                            var type when type == TrendType.AddBookmark || type == TrendType.AddIllust => illust?.FirstOrDefault(iChild => iChild.First?["id"]?.Value<string>() == trendsObj.TrendObjectId)?.First?["url"]?["m"]?.Value<string>(),
+                            TrendType.AddFavorite                                                      => user.FirstOrDefault(uChild => uChild.First?["id"]?.Value<string>() == trendsObj.TrendObjectId)?.First?["profile_image"]?.First?.First?["url"]?["s"]?.Value<string>(),
+                            (TrendType) (-1)                                                           => null,
+                            _                                                                          => throw new ArgumentOutOfRangeException()
                         };
                         if (trendsObj.Type != TrendType.AddFavorite)
                         {
-                            var illustration = illust.FirstOrDefault(iChild =>
-                                                                         iChild.First?["id"]?.Value<string>() ==
-                                                                         trendsObj.TrendObjectId);
+                            var illustration = illust.FirstOrDefault(iChild => iChild.First?["id"]?.Value<string>() == trendsObj.TrendObjectId);
                             if (illustration != null)
                             {
-                                trendsObj.ByName = user.FirstOrDefault(uChild =>
-                                                                           uChild.First?["id"]?.Value<string>() ==
-                                                                           illustration.First?["post_user"]?["id"]
-                                                                               ?.Value<string>())?.First["name"]
-                                    .Value<string>();
+                                trendsObj.ByName = user.FirstOrDefault(uChild => uChild.First?["id"]?.Value<string>() == illustration.First?["post_user"]?["id"]?.Value<string>())?.First["name"].Value<string>();
                                 trendsObj.TrendObjName = illustration.First["title"].Value<string>();
                             }
                         }
                         else
                         {
-                            trendsObj.TrendObjName =
-                                user.FirstOrDefault(uChild =>
-                                                        uChild.First?["id"]?.Value<string>() == trendsObj.TrendObjectId)
-                                    ?.First["name"]
-                                    .Value<string>();
+                            trendsObj.TrendObjName = user.FirstOrDefault(uChild => uChild.First?["id"]?.Value<string>() == trendsObj.TrendObjectId)?.First["name"].Value<string>();
                             trendsObj.IsReferToUser = true;
                         }
 
@@ -247,12 +210,8 @@ namespace Pixeval.Core
 
             private static async Task<HttpResponse<string>> GetResponse(string url)
             {
-                var result = await HttpClientFactory.WebApiHttpClient()
-                    .Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", AkaI18N.GetCultureAcceptLanguage()))
-                    .GetStringAsync(url);
-                return !result.IsNullOrEmpty()
-                    ? HttpResponse<string>.Wrap(true, result)
-                    : HttpResponse<string>.Wrap(false);
+                var result = await HttpClientFactory.WebApiHttpClient().Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", AkaI18N.GetCultureAcceptLanguage())).GetStringAsync(url);
+                return !result.IsNullOrEmpty() ? HttpResponse<string>.Wrap(true, result) : HttpResponse<string>.Wrap(false);
             }
         }
 

@@ -28,8 +28,7 @@ using System.Threading.Tasks;
 
 namespace Pixeval.Objects.Caching
 {
-    public class FileCache<T, THash> : IWeakCacheProvider<T, THash>, IEnumerable<KeyValuePair<THash, string>>
-        where T : class
+    public class FileCache<T, THash> : IWeakCacheProvider<T, THash>, IEnumerable<KeyValuePair<THash, string>> where T : class
     {
         private readonly Func<T, Stream> _cachingPolicy;
         private readonly ConcurrentDictionary<THash, string> _fileMapping = new ConcurrentDictionary<THash, string>();
@@ -82,7 +81,8 @@ namespace Pixeval.Objects.Caching
             }
         }
 
-        public async Task<(bool, T)> TryGet([NotNull] THash key)
+        public async Task<(bool, T)> TryGet([NotNull]
+                                            THash key)
         {
             if (_fileMapping.TryGetValue(key, out var file) && File.Exists(file))
             {
@@ -104,8 +104,7 @@ namespace Pixeval.Objects.Caching
 
         private static async void WriteFile(string path, Stream src)
         {
-            await using var fileStream =
-                new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+            await using var fileStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
             src.Position = 0L;
             await src.CopyToAsync(fileStream);
         }

@@ -19,23 +19,20 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Win32;
 using Pixeval.Objects.Primitive;
 using Refit;
 
 namespace Pixeval.Objects.Exceptions.Logger
 {
-
     [StructLayout(LayoutKind.Sequential)]
-    public struct Memorystatusex
+    public struct MemoryStatusEx
     {
         public uint dwLength;
         public uint dwMemoryLoad;
@@ -51,24 +48,12 @@ namespace Pixeval.Objects.Exceptions.Logger
 
     public class ExceptionDumper
     {
-
         public static async void WriteException(Exception e)
         {
             using var semaphore = new SemaphoreSlim(1);
             await semaphore.WaitAsync(TimeSpan.FromSeconds(5));
-            ApplicationLog stack;
-            try
-            {
-                stack = new ApplicationLogStack(AppContext.AppIdentifier, ".NET Runtime").GetFirst();
-            }
-            catch
-            {
-                stack = null;
-            }
 
-            string exceptionMessage = e is ApiException exception
-                ? exception.Content + Environment.NewLine + exception
-                : e.ToString();
+            var exceptionMessage = e is ApiException exception ? exception.Content + Environment.NewLine + exception : e.ToString();
             var sb = new StringBuilder();
             sb.AppendLine(@"Pixeval - A Strong, Fast and Flexible Pixiv Client");
             sb.AppendLine(@"Copyright (C) 2019-2020 Dylech30th");
@@ -101,13 +86,6 @@ namespace Pixeval.Objects.Exceptions.Logger
             sb.AppendLine($"        Visual C++ Redistributable Version: {GetCppRedistributableVersion()}");
             sb.AppendLine(@"    End Operating System");
             sb.AppendLine();
-            sb.AppendLine(@"    Begin Event Log");
-            sb.AppendLine(@"        Represents the latest application event log related to Pixeval");
-            sb.AppendLine($"        Creation: {stack?.Creation}");
-            sb.AppendLine(@"        Data:");
-            sb.AppendLine(FormatMultilineData(stack?.Data, 3));
-            sb.AppendLine(@"    End Event Log");
-            sb.AppendLine();
             sb.AppendLine(@"    Begin Exception Log");
             sb.AppendLine(@"        Exception: ");
             sb.AppendLine(FormatMultilineData(exceptionMessage, 3));
@@ -125,42 +103,35 @@ namespace Pixeval.Objects.Exceptions.Logger
 
         private static string FormatMultilineData(string data, int indent)
         {
-            string indentation = new string(' ', indent * 4);
+            var indentation = new string(' ', indent * 4);
             return data.Split('\n').Select(s => indentation + s).Join('\n');
         }
 
         private static string GetCppRedistributableVersion()
         {
-            using var key =
-                Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\x64");
+            using var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\x64");
             return key == null ? "Not Installed" : key.GetValue("Bld").ToString();
         }
 
         private static ulong GetTotalInstalledMemory()
         {
-            var meminfo = new Memorystatusex();
-            int temp;
-
-            meminfo.dwLength = 64; //此方法为手动Hack，按照填充规则计算大小，祝我好运，希望有更好的办法（但是Unsafe的sizeof算符简直令人无力吐槽）
-            temp = GlobalMemoryStatusEx(ref meminfo);//实践证明，必须有人接收返回值，否则会报错
-
-            return meminfo.ullTotalPhys / 1024 / 1024 / 1024;
-
-
+            return GetMemoryStatusExInternal().ullTotalPhys / 1024 / 1024 / 1024;
         }
 
         private static ulong GetAvailableMemory()
         {
-            var meminfo = new Memorystatusex();
-            int temp;
-
-            meminfo.dwLength = 64; //此方法为手动Hack，按照填充规则计算大小，祝我好运
-            temp = GlobalMemoryStatusEx(ref meminfo);//实践证明，必须有人接收返回值，否则会报错
-            return meminfo.ullAvailPhys / 1024 / 1024;
-
+            return GetMemoryStatusExInternal().ullAvailPhys / 1024 / 1024;
         }
 
-        [DllImport("kernel32.dll", EntryPoint = "GlobalMemoryStatusEx", CallingConvention = CallingConvention.StdCall)]//此处一定要用Ex，否则内存计算不全
-        private static extern int GlobalMemoryStatusEx(ref Memorystatusex lpBuffer);
+        private static MemoryStatusEx GetMemoryStatusExInternal()
+        {
+            var memInfo = new MemoryStatusEx {dwLength = 64};
+            //此方法为手动Hack，按照填充规则计算大小，祝我好运
+            _ = GlobalMemoryStatusEx(ref memInfo); //实践证明，必须有人接收返回值，否则会报错
+            return memInfo;
+        }
+
+        [DllImport("kernel32.dll", EntryPoint = "GlobalMemoryStatusEx", CallingConvention = CallingConvention.StdCall)] //此处一定要用Ex，否则内存计算不全
+        private static extern int GlobalMemoryStatusEx(ref MemoryStatusEx lpBuffer);
     }
 }

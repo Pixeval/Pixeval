@@ -30,7 +30,7 @@ namespace Pixeval.Objects.ValueConverters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var val = (Illustration)value;
+            var val = (Illustration) value;
             if (val == null) return Visibility.Hidden;
 
             if (val.IsManga || val.IsUgoira) return Visibility.Visible;

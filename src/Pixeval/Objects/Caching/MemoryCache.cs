@@ -25,8 +25,7 @@ using System.Threading.Tasks;
 
 namespace Pixeval.Objects.Caching
 {
-    public class MemoryCache<T, THash> : IWeakCacheProvider<T, THash>, IEnumerable<KeyValuePair<int, WeakEntry<T>>>
-        where T : class
+    public class MemoryCache<T, THash> : IWeakCacheProvider<T, THash>, IEnumerable<KeyValuePair<int, WeakEntry<T>>> where T : class
     {
         public static readonly MemoryCache<T, THash> Shared = new MemoryCache<T, THash>();
 
@@ -55,12 +54,10 @@ namespace Pixeval.Objects.Caching
             _cache.TryRemove(IWeakCacheProvider<T, THash>.HashKey(associateWith), out _);
         }
 
-        public Task<(bool, T)> TryGet([NotNull] THash key)
+        public Task<(bool, T)> TryGet([NotNull]
+                                      THash key)
         {
-            return _cache.TryGetValue(IWeakCacheProvider<T, THash>.HashKey(key), out var weakRef) &&
-                weakRef.Target is { } target
-                    ? Task.FromResult((true, target))
-                    : Task.FromResult((false, (T)null));
+            return _cache.TryGetValue(IWeakCacheProvider<T, THash>.HashKey(key), out var weakRef) && weakRef.Target is { } target ? Task.FromResult((true, target)) : Task.FromResult((false, (T) null));
         }
 
         public void Clear()

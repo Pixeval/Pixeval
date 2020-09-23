@@ -59,8 +59,7 @@ namespace Pixeval.Persisting.WebApi
         public static async Task<X509Certificate2> GetFakeCaRootCertificate()
         {
             if (_fakeCa != null) return _fakeCa;
-            if (Application.GetResourceStream(
-                new Uri("pack://application:,,,/Pixeval;component/Resources/pixeval_ca.cer")) is { } streamResource)
+            if (Application.GetResourceStream(new Uri("pack://application:,,,/Pixeval;component/Resources/pixeval_ca.cer")) is { } streamResource)
             {
                 await using (streamResource.Stream)
                 {
@@ -80,9 +79,7 @@ namespace Pixeval.Persisting.WebApi
         public static async Task<X509Certificate2> GetFakeServerCertificate()
         {
             if (_serverCert != null) return _serverCert;
-            if (Application.GetResourceStream(
-                    new Uri("pack://application:,,,/Pixeval;component/Resources/pixeval_server_cert.pfx")) is { }
-                streamResource)
+            if (Application.GetResourceStream(new Uri("pack://application:,,,/Pixeval;component/Resources/pixeval_server_cert.pfx")) is { } streamResource)
             {
                 await using (streamResource.Stream)
                 {

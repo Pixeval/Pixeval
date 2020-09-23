@@ -42,10 +42,7 @@ namespace Pixeval.Objects.Primitive
 
         public static string ToJson<T>(this T obj)
         {
-            return JsonConvert.SerializeObject(obj, new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented
-            });
+            return JsonConvert.SerializeObject(obj, new JsonSerializerSettings {Formatting = Formatting.Indented});
         }
 
         public static T FromJson<T>(this string src)
@@ -88,11 +85,11 @@ namespace Pixeval.Objects.Primitive
         {
             return fileName[^3..] switch
             {
-                "png" => "image/png",
-                "jpg" => "image/jpeg",
+                "png"  => "image/png",
+                "jpg"  => "image/jpeg",
                 "jpeg" => "image/jpeg",
-                "gif" => "image/gif",
-                _ => "image/jpeg"
+                "gif"  => "image/gif",
+                _      => "image/jpeg"
             };
         }
 

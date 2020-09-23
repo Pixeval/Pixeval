@@ -44,7 +44,7 @@ namespace Pixeval.Objects.Primitive
         {
             stream.Seek(0, SeekOrigin.Begin);
             if (stream.Length == 0) return null;
-            var bmp = new BitmapImage { CreateOptions = BitmapCreateOptions.DelayCreation };
+            var bmp = new BitmapImage {CreateOptions = BitmapCreateOptions.DelayCreation};
             bmp.BeginInit();
             bmp.CacheOption = BitmapCacheOption.OnLoad;
             bmp.StreamSource = stream;
@@ -98,14 +98,11 @@ namespace Pixeval.Objects.Primitive
             {
                 var iStream = streams[i];
 
-                var img = new MagickImage(iStream)
-                {
-                    AnimationDelay = (int)delay[i]
-                };
+                var img = new MagickImage(iStream) {AnimationDelay = (int) delay[i]};
                 mCollection.Add(img);
             }
 
-            var settings = new QuantizeSettings { Colors = 256 };
+            var settings = new QuantizeSettings {Colors = 256};
             mCollection.Quantize(settings);
             mCollection.Optimize();
             mCollection.Write(ms, MagickFormat.Gif);
@@ -121,8 +118,7 @@ namespace Pixeval.Objects.Primitive
             return ms;
         }
 
-        public static async Task Save<TEncoder>(this BitmapSource bitmapImage, string location)
-            where TEncoder : BitmapEncoder, new()
+        public static async Task Save<TEncoder>(this BitmapSource bitmapImage, string location) where TEncoder : BitmapEncoder, new()
         {
             var encoder = new TEncoder();
             encoder.Frames.Add(BitmapFrame.Create(bitmapImage));

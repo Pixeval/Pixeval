@@ -45,8 +45,8 @@ namespace Pixeval.Core
 
         public BrowsingHistoryAccessor(int stackLimit, string path)
         {
-            this._stackLimit = stackLimit;
-            this._path = path;
+            _stackLimit = stackLimit;
+            _path = path;
             _sqLiteConnection = new SQLiteConnection(path, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite);
             _sqLiteConnection.CreateTable<BrowsingHistory>();
             _delegation = new ObservableCollection<BrowsingHistory>(_sqLiteConnection.Table<BrowsingHistory>());

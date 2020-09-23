@@ -42,10 +42,7 @@ namespace Pixeval.Core
 
         public override bool VerifyRationality(Illustration item, IList<Illustration> collection)
         {
-            return item != null &&
-                collection.All(t => t.Id != item.Id) &&
-                PixivHelper.VerifyIllustRational(Settings.Global.ExcludeTag, Settings.Global.IncludeTag,
-                                                 Settings.Global.MinBookmark, item);
+            return item != null && collection.All(t => t.Id != item.Id) && PixivHelper.VerifyIllustRational(Settings.Global.ExcludeTag, Settings.Global.IncludeTag, Settings.Global.MinBookmark, item);
         }
 
         public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = default)
@@ -104,9 +101,7 @@ namespace Pixeval.Core
 
             private static async Task<HttpResponse<RecommendResponse>> TryGetResponse(string url)
             {
-                var res = (await HttpClientFactory.AppApiHttpClient()
-                    .Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", AkaI18N.GetCultureAcceptLanguage()))
-                    .GetStringAsync(url)).FromJson<RecommendResponse>();
+                var res = (await HttpClientFactory.AppApiHttpClient().Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", AkaI18N.GetCultureAcceptLanguage())).GetStringAsync(url)).FromJson<RecommendResponse>();
                 if (res is { } response && !response.Illusts.IsNullOrEmpty()) return HttpResponse<RecommendResponse>.Wrap(true, response);
 
                 return HttpResponse<RecommendResponse>.Wrap(false);

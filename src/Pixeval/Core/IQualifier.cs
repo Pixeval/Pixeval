@@ -20,8 +20,8 @@
 
 namespace Pixeval.Core
 {
-    public interface IQualifier<in T, in TP>
+    public interface IQualifier<in T, in P>
     {
-        public bool Qualified(T condition, TP pattern);
+        public bool Qualified(T condition, P pattern);
     }
 }

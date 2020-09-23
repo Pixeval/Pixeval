@@ -50,9 +50,9 @@ namespace Pixeval.Core
         {
             return restrictPolicy switch
             {
-                RestrictPolicy.Public => new PublicUserFollowingAsyncEnumerable(uid),
+                RestrictPolicy.Public  => new PublicUserFollowingAsyncEnumerable(uid),
                 RestrictPolicy.Private => new PrivateUserFollowingAsyncEnumerable(uid),
-                _ => throw new ArgumentOutOfRangeException(nameof(restrictPolicy), restrictPolicy, null)
+                _                      => throw new ArgumentOutOfRangeException(nameof(restrictPolicy), restrictPolicy, null)
             };
         }
 
@@ -65,24 +65,17 @@ namespace Pixeval.Core
 
             private IEnumerator<User> _followerEnumerator;
 
-            public UserFollowingAsyncEnumerator(IPixivAsyncEnumerable<User> enumerable, string userId,
-                                                RestrictPolicy restrictPolicy) : base(enumerable)
+            public UserFollowingAsyncEnumerator(IPixivAsyncEnumerable<User> enumerable, string userId, RestrictPolicy restrictPolicy) : base(enumerable)
             {
-                this._userId = userId;
-                this._restrictPolicy = restrictPolicy;
+                _userId = userId;
+                _restrictPolicy = restrictPolicy;
             }
 
             public override User Current => _followerEnumerator.Current;
 
             protected override void UpdateEnumerator()
             {
-                _followerEnumerator = _entity.UserPreviews.NonNull().Select(u => new User
-                {
-                    Thumbnails = u.Illusts.NonNull().Select(_ => _.ImageUrls.SquareMedium).ToArray(),
-                    Id = u.User.Id.ToString(),
-                    Name = u.User.Name,
-                    Avatar = u.User.ProfileImageUrls.Medium
-                }).GetEnumerator();
+                _followerEnumerator = _entity.UserPreviews.NonNull().Select(u => new User {Thumbnails = u.Illusts.NonNull().Select(_ => _.ImageUrls.SquareMedium).ToArray(), Id = u.User.Id.ToString(), Name = u.User.Name, Avatar = u.User.ProfileImageUrls.Medium}).GetEnumerator();
             }
 
             public override async ValueTask<bool> MoveNextAsync()
@@ -91,9 +84,9 @@ namespace Pixeval.Core
                 {
                     if (await TryGetResponse(_restrictPolicy switch
                     {
-                        RestrictPolicy.Public => $"/v1/user/following?user_id={_userId}&restrict=public",
+                        RestrictPolicy.Public  => $"/v1/user/following?user_id={_userId}&restrict=public",
                         RestrictPolicy.Private => $"/v1/user/following?user_id={_userId}&restrict=private",
-                        _ => throw new ArgumentOutOfRangeException()
+                        _                      => throw new ArgumentOutOfRangeException()
                     }) is (true, var model))
                     {
                         _entity = model;
@@ -124,8 +117,7 @@ namespace Pixeval.Core
 
             private static async Task<HttpResponse<FollowingResponse>> TryGetResponse(string url)
             {
-                var res = (await HttpClientFactory.AppApiHttpClient().GetStringAsync(url))
-                    .FromJson<FollowingResponse>();
+                var res = (await HttpClientFactory.AppApiHttpClient().GetStringAsync(url)).FromJson<FollowingResponse>();
                 if (res is { } response && !response.UserPreviews.IsNullOrEmpty()) return HttpResponse<FollowingResponse>.Wrap(true, response);
 
                 return HttpResponse<FollowingResponse>.Wrap(false);

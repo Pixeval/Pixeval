@@ -32,24 +32,16 @@ namespace Pixeval.Core
 {
     public static class PixivClientExtension
     {
-        public static async void PostFavoriteAsync(this PixivClient _, Illustration illustration,
-                                                   RestrictPolicy restrictPolicy)
+        public static async void PostFavoriteAsync(this PixivClient _, Illustration illustration, RestrictPolicy restrictPolicy)
         {
             illustration.IsLiked = true;
-            await HttpClientFactory.AppApiService().AddBookmark(new AddBookmarkRequest
-            {
-                Id = illustration.Id,
-                Restrict = restrictPolicy == RestrictPolicy.Public
-                    ? "public"
-                    : "private"
-            });
+            await HttpClientFactory.AppApiService().AddBookmark(new AddBookmarkRequest {Id = illustration.Id, Restrict = restrictPolicy == RestrictPolicy.Public ? "public" : "private"});
         }
 
         public static async void RemoveFavoriteAsync(this PixivClient _, Illustration illustration)
         {
             illustration.IsLiked = false;
-            await HttpClientFactory.AppApiService()
-                .DeleteBookmark(new DeleteBookmarkRequest { IllustId = illustration.Id });
+            await HttpClientFactory.AppApiService().DeleteBookmark(new DeleteBookmarkRequest {IllustId = illustration.Id});
         }
 
         public static async Task<IEnumerable<string>> GetArticleWorks(this PixivClient _, string spotlightId)
@@ -59,38 +51,26 @@ namespace Pixeval.Core
 
             var doc = await new HtmlParser().ParseDocumentAsync(html);
 
-            return doc.QuerySelectorAll(".am__body .am__work")
-                .Select(element => element.Children[1].Children[0].GetAttribute("href"))
-                .Select(url => Regex.Match(url, "https://www.pixiv.net/artworks/(?<Id>\\d+)").Groups["Id"].Value);
+            return doc.QuerySelectorAll(".am__body .am__work").Select(element => element.Children[1].Children[0].GetAttribute("href")).Select(url => Regex.Match(url, "https://www.pixiv.net/artworks/(?<Id>\\d+)").Groups["Id"].Value);
         }
 
         public static async Task FollowArtist(this PixivClient _, User user, RestrictPolicy policy)
         {
             user.IsFollowed = true;
-            await HttpClientFactory.AppApiService().FollowArtist(new FollowArtistRequest
-            {
-                Id = user.Id,
-                Restrict = policy == RestrictPolicy.Private ? "private" : "public"
-            });
+            await HttpClientFactory.AppApiService().FollowArtist(new FollowArtistRequest {Id = user.Id, Restrict = policy == RestrictPolicy.Private ? "private" : "public"});
         }
 
         public static async Task UnFollowArtist(this PixivClient _, User user)
         {
             user.IsFollowed = false;
-            await HttpClientFactory.AppApiService().UnFollowArtist(new UnFollowArtistRequest { UserId = user.Id });
+            await HttpClientFactory.AppApiService().UnFollowArtist(new UnFollowArtistRequest {UserId = user.Id});
         }
 
         public static async Task<List<TrendingTag>> GetTrendingTags(this PixivClient _)
         {
             var result = await HttpClientFactory.AppApiService().GetTrendingTags();
             var list = new List<TrendingTag>();
-            if (result is { } res)
-                list.AddRange(res.TrendTags.Select(tag => new TrendingTag
-                {
-                    Tag = tag.TagStr,
-                    TranslatedName = tag.TranslatedName,
-                    Thumbnail = tag.Illust.ImageUrls.SquareMedium
-                }));
+            if (result is { } res) list.AddRange(res.TrendTags.Select(tag => new TrendingTag {Tag = tag.TagStr, TranslatedName = tag.TranslatedName, Thumbnail = tag.Illust.ImageUrls.SquareMedium}));
             return list;
         }
 
@@ -98,17 +78,11 @@ namespace Pixeval.Core
         {
             try
             {
-                var html = await HttpClientFactory.WebApiHttpClient()
-                    .GetStringAsync("https://www.pixiv.net/setting_user.php");
+                var html = await HttpClientFactory.WebApiHttpClient().GetStringAsync("https://www.pixiv.net/setting_user.php");
                 var doc = await new HtmlParser().ParseDocumentAsync(html);
 
                 var tt = doc.QuerySelectorAll(".settingContent form input")[1].GetAttribute("value");
-                await HttpClientFactory.WebApiService().ToggleR18State(new ToggleR18StateRequest
-                {
-                    R18 = isR18On ? "show" : "hide",
-                    R18G = isR18On ? "2" : "1",
-                    Tt = tt
-                });
+                await HttpClientFactory.WebApiService().ToggleR18State(new ToggleR18StateRequest {R18 = isR18On ? "show" : "hide", R18G = isR18On ? "2" : "1", Tt = tt});
                 return true;
             }
             catch

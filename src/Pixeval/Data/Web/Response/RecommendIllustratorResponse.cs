@@ -46,13 +46,7 @@ namespace Pixeval.Data.Web.Response
 
             public ViewModel.User Parse()
             {
-                return new ViewModel.User
-                {
-                    Avatar = Regex.Replace(User.ProfileImageUrls.Medium, "_170\\.", "_50."),
-                    Id = User.Id.ToString(),
-                    Name = User.Name,
-                    Thumbnails = Illusts.Select(i => i.ImageUrls.SquareMedium).ToArray()
-                };
+                return new ViewModel.User {Avatar = Regex.Replace(User.ProfileImageUrls.Medium, "_170\\.", "_50."), Id = User.Id.ToString(), Name = User.Name, Thumbnails = Illusts.Select(i => i.ImageUrls.SquareMedium).ToArray()};
             }
         }
 

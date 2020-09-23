@@ -34,7 +34,8 @@ namespace Pixeval.Data.Web.Protocol
                                                  ToggleR18StateRequest toggleR18StateRequest);
 
         [Get("/ajax/showcase/article")]
-        Task<SpotlightArticleResponse> GetSpotlightArticles([AliasAs("article_id")] string articleId);
+        Task<SpotlightArticleResponse> GetSpotlightArticles([AliasAs("article_id")]
+                                                            string articleId);
 
         [Get("/touch/ajax/user/details")]
         Task<WebApiUserDetailResponse> GetWebApiUserDetail(string id);

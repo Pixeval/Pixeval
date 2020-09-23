@@ -42,18 +42,15 @@ namespace Pixeval.Core
 
         public RankingAsyncEnumerable(RankOption rankOption, DateTime dateTime)
         {
-            this._rankOption = rankOption;
-            this._dateTime = dateTime;
+            _rankOption = rankOption;
+            _dateTime = dateTime;
         }
 
         public override int RequestedPages { get; protected set; }
 
         public override bool VerifyRationality(Illustration item, IList<Illustration> collection)
         {
-            return item != null &&
-                collection.All(t => t.Id != item.Id) &&
-                PixivHelper.VerifyIllustRational(Settings.Global.ExcludeTag, Settings.Global.IncludeTag,
-                                                 Settings.Global.MinBookmark, item);
+            return item != null && collection.All(t => t.Id != item.Id) && PixivHelper.VerifyIllustRational(Settings.Global.ExcludeTag, Settings.Global.IncludeTag, Settings.Global.MinBookmark, item);
         }
 
         public override void InsertionPolicy(Illustration item, IList<Illustration> collection)
@@ -74,8 +71,7 @@ namespace Pixeval.Core
 
             private IEnumerator<Illustration> _illustrationEnumerator;
 
-            public RankingAsyncEnumerator(IPixivAsyncEnumerable<Illustration> enumerable, RankOption rankOption,
-                                          DateTime dateTime) : base(enumerable)
+            public RankingAsyncEnumerator(IPixivAsyncEnumerable<Illustration> enumerable, RankOption rankOption, DateTime dateTime) : base(enumerable)
             {
                 _rankOptionParameter = rankOption.GetEnumAttribute<EnumAlias>().AliasAs;
                 _dateTimeParameter = dateTime.ToString("yyyy-MM-dd");
@@ -92,10 +88,7 @@ namespace Pixeval.Core
             {
                 if (_entity == null)
                 {
-                    if (await TryGetResponse(
-                            $"/v1/illust/ranking?filter=for_android&mode={_rankOptionParameter}&date={_dateTimeParameter}")
-                        is
-                        (true, var result))
+                    if (await TryGetResponse($"/v1/illust/ranking?filter=for_android&mode={_rankOptionParameter}&date={_dateTimeParameter}") is (true, var result))
                     {
                         _entity = result;
                         UpdateEnumerator();
@@ -125,10 +118,7 @@ namespace Pixeval.Core
 
             private static async Task<HttpResponse<RankingResponse>> TryGetResponse(string url)
             {
-                var result =
-                    (await HttpClientFactory.AppApiHttpClient()
-                        .Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", AkaI18N.GetCultureAcceptLanguage()))
-                        .GetStringAsync(url)).FromJson<RankingResponse>();
+                var result = (await HttpClientFactory.AppApiHttpClient().Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", AkaI18N.GetCultureAcceptLanguage())).GetStringAsync(url)).FromJson<RankingResponse>();
 
                 if (result is { } response && !response.Illusts.IsNullOrEmpty()) return HttpResponse<RankingResponse>.Wrap(true, response);
                 return HttpResponse<RankingResponse>.Wrap(false);

@@ -55,16 +55,13 @@ namespace Pixeval.Data.ViewModel
 
         public async void Download()
         {
-            var result = await Tasks<string, Illustration>.Of(await PixivClient.Instance.GetArticleWorks(Id.ToString()))
-                .Mapping(async i =>
-                {
-                    var res = await PixivHelper.IllustrationInfo(i);
-                    res.SpotlightTitle = Title;
-                    res.FromSpotlight = true;
-                    return res;
-                })
-                .Construct()
-                .WhenAll();
+            var result = await Tasks<string, Illustration>.Of(await PixivClient.Instance.GetArticleWorks(Id.ToString())).Mapping(async i =>
+            {
+                var res = await PixivHelper.IllustrationInfo(i);
+                res.SpotlightTitle = Title;
+                res.FromSpotlight = true;
+                return res;
+            }).Construct().WhenAll();
 
             foreach (var illustration in result) DownloadManager.EnqueueDownloadItem(illustration);
         }

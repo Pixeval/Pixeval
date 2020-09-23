@@ -45,7 +45,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     <BlurEffect KernelType="Gaussian" Radius="15" />
                 </Image.Effect>
             </Image>
-            <Grid x:Name="LoadingMask" Visibility="{Binding LoadingOrigin, Converter={StaticResource VisibleIfTrueConverter}}">
+            <Grid x:Name="LoadingMask"
+                  Visibility="{Binding LoadingOrigin, Converter={StaticResource VisibleIfTrueConverter}}">
                 <ProgressBar x:Name="OriginalLoadIndicator"
                              Width="200"
                              Height="10"

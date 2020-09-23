@@ -37,13 +37,12 @@ namespace Pixeval.Core
 
         public SpotlightQueryAsyncEnumerable(int start)
         {
-            this._start = start < 1 ? 1 : start;
+            _start = start < 1 ? 1 : start;
         }
 
         public override int RequestedPages { get; protected set; }
 
-        public override IAsyncEnumerator<SpotlightArticle> GetAsyncEnumerator(
-            CancellationToken cancellationToken = default)
+        public override IAsyncEnumerator<SpotlightArticle> GetAsyncEnumerator(CancellationToken cancellationToken = default)
         {
             return new SpotlightArticleAsyncEnumerator(this, _start);
         }
@@ -56,10 +55,9 @@ namespace Pixeval.Core
 
             private IEnumerator<SpotlightArticle> _spotlightArticleEnumerator;
 
-            public SpotlightArticleAsyncEnumerator(IPixivAsyncEnumerable<SpotlightArticle> enumerable, int current) :
-                base(enumerable)
+            public SpotlightArticleAsyncEnumerator(IPixivAsyncEnumerable<SpotlightArticle> enumerable, int current) : base(enumerable)
             {
-                this._current = current;
+                _current = current;
             }
 
             public override SpotlightArticle Current => _spotlightArticleEnumerator.Current;

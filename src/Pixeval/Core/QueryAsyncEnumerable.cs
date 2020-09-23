@@ -36,17 +36,16 @@ namespace Pixeval.Core
 {
     public abstract class AbstractQueryAsyncEnumerable : AbstractPixivAsyncEnumerable<Illustration>
     {
-        protected readonly bool IsPremium;
         private readonly SearchTagMatchOption _matchOption;
         private readonly int _start;
         private readonly string _tag;
+        protected readonly bool IsPremium;
 
-        protected AbstractQueryAsyncEnumerable(string tag, SearchTagMatchOption matchOption, bool isPremium,
-                                               int start = 1)
+        protected AbstractQueryAsyncEnumerable(string tag, SearchTagMatchOption matchOption, bool isPremium, int start = 1)
         {
-            this._start = start < 1 ? 1 : start;
-            this._tag = tag;
-            this._matchOption = matchOption;
+            _start = start < 1 ? 1 : start;
+            _tag = tag;
+            _matchOption = matchOption;
             IsPremium = isPremium;
         }
 
@@ -56,10 +55,7 @@ namespace Pixeval.Core
 
         public override bool VerifyRationality(Illustration item, IList<Illustration> collection)
         {
-            return item != null &&
-                collection.All(t => t.Id != item.Id) &&
-                PixivHelper.VerifyIllustRational(Settings.Global.ExcludeTag, Settings.Global.IncludeTag,
-                                                 Settings.Global.MinBookmark, item);
+            return item != null && collection.All(t => t.Id != item.Id) && PixivHelper.VerifyIllustRational(Settings.Global.ExcludeTag, Settings.Global.IncludeTag, Settings.Global.MinBookmark, item);
         }
 
         public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = default)
@@ -78,13 +74,12 @@ namespace Pixeval.Core
 
             private IEnumerator<Illustration> _illustrationsEnumerator;
 
-            public QueryAsyncEnumerator(IPixivAsyncEnumerable<Illustration> enumerable, string keyword,
-                                        SearchTagMatchOption matchOption, int current, bool isPremium) : base(enumerable)
+            public QueryAsyncEnumerator(IPixivAsyncEnumerable<Illustration> enumerable, string keyword, SearchTagMatchOption matchOption, int current, bool isPremium) : base(enumerable)
             {
-                this._keyword = keyword;
-                this._matchOption = matchOption;
-                this._current = current;
-                this._isPremium = isPremium;
+                _keyword = keyword;
+                _matchOption = matchOption;
+                _current = current;
+                _isPremium = isPremium;
             }
 
             public override Illustration Current => _illustrationsEnumerator.Current;
@@ -98,9 +93,7 @@ namespace Pixeval.Core
             {
                 if (_entity == null)
                 {
-                    if (await TryGetResponse(
-                            $"/v1/search/illust?search_target={_matchOption.GetEnumAttribute<EnumAlias>().AliasAs}&sort={(_isPremium ? "date_desc" : "popular_desc")}&word={_keyword}&filter=for_android&offset={(_current - 1) * 30}")
-                        is (true, var model))
+                    if (await TryGetResponse($"/v1/search/illust?search_target={_matchOption.GetEnumAttribute<EnumAlias>().AliasAs}&sort={(_isPremium ? "date_desc" : "popular_desc")}&word={_keyword}&filter=for_android&offset={(_current - 1) * 30}") is (true, var model))
                     {
                         _entity = model;
                         UpdateEnumerator();
@@ -130,9 +123,7 @@ namespace Pixeval.Core
 
             private static async Task<HttpResponse<QueryWorksResponse>> TryGetResponse(string url)
             {
-                var res = (await HttpClientFactory.AppApiHttpClient()
-                    .Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", AkaI18N.GetCultureAcceptLanguage()))
-                    .GetStringAsync(url)).FromJson<QueryWorksResponse>();
+                var res = (await HttpClientFactory.AppApiHttpClient().Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", AkaI18N.GetCultureAcceptLanguage())).GetStringAsync(url)).FromJson<QueryWorksResponse>();
                 if (res is { } response && !response.Illusts.IsNullOrEmpty()) return HttpResponse<QueryWorksResponse>.Wrap(true, response);
 
                 return HttpResponse<QueryWorksResponse>.Wrap(false);
@@ -142,8 +133,7 @@ namespace Pixeval.Core
 
     public class PopularityQueryAsyncEnumerable : AbstractQueryAsyncEnumerable
     {
-        public PopularityQueryAsyncEnumerable(string tag, SearchTagMatchOption matchOption, bool isPremium,
-                                              int start = 1) : base(tag, matchOption, isPremium, start)
+        public PopularityQueryAsyncEnumerable(string tag, SearchTagMatchOption matchOption, bool isPremium, int start = 1) : base(tag, matchOption, isPremium, start)
         {
         }
 
@@ -161,8 +151,7 @@ namespace Pixeval.Core
 
     public class PublishDateQueryAsyncEnumerable : AbstractQueryAsyncEnumerable
     {
-        public PublishDateQueryAsyncEnumerable(string tag, SearchTagMatchOption matchOption, bool isPremium,
-                                               int start = 1) : base(tag, matchOption, isPremium, start)
+        public PublishDateQueryAsyncEnumerable(string tag, SearchTagMatchOption matchOption, bool isPremium, int start = 1) : base(tag, matchOption, isPremium, start)
         {
         }
 

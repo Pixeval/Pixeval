@@ -36,8 +36,7 @@ namespace Pixeval.Data.Web.Delegation
 {
     public abstract class DnsResolver
     {
-        public static readonly ThreadLocal<Dictionary<string, List<IPAddress>>> DnsCache =
-            new ThreadLocal<Dictionary<string, List<IPAddress>>>(() => new Dictionary<string, List<IPAddress>>());
+        public static readonly ThreadLocal<Dictionary<string, List<IPAddress>>> DnsCache = new ThreadLocal<Dictionary<string, List<IPAddress>>>(() => new Dictionary<string, List<IPAddress>>());
 
         private static bool _dnsQueryFailed;
 
@@ -45,18 +44,14 @@ namespace Pixeval.Data.Web.Delegation
 
         protected async Task<DnsResolveResponse> GetDnsJson(string hostname)
         {
-            return await RestService.For<IResolveDnsProtocol>(
-                    new HttpClient(new HttpClientHandler
-                    { SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls })
-                    { BaseAddress = new Uri(ProtocolBase.DnsServer), Timeout = TimeSpan.FromSeconds(5) })
-                .ResolveDns(new DnsResolveRequest
-                {
-                    Ct = "application/dns-json",
-                    Cd = "false",
-                    Do = "false",
-                    Name = hostname,
-                    Type = "A"
-                });
+            return await RestService.For<IResolveDnsProtocol>(new HttpClient(new HttpClientHandler {SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls}) {BaseAddress = new Uri(ProtocolBase.DnsServer), Timeout = TimeSpan.FromSeconds(5)}).ResolveDns(new DnsResolveRequest
+            {
+                Ct = "application/dns-json",
+                Cd = "false",
+                Do = "false",
+                Name = hostname,
+                Type = "A"
+            });
         }
 
         public async Task<IReadOnlyList<IPAddress>> Lookup(string hostname)

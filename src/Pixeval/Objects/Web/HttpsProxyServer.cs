@@ -70,7 +70,7 @@ namespace Pixeval.Objects.Web
         {
             try
             {
-                var listener = (TcpListener)result.AsyncState;
+                var listener = (TcpListener) result.AsyncState;
                 if (listener != null)
                 {
                     var client = listener.EndAcceptTcpClient(result);
@@ -89,11 +89,7 @@ namespace Pixeval.Objects.Web
                         await writer.FlushAsync();
                         var clientSsl = new SslStream(clientStream, false);
                         // use specify certificate to establish the HTTPS connection
-                        await clientSsl.AuthenticateAsServerAsync(_certificate, false,
-                                                                  SslProtocols.Tls |
-                                                                  SslProtocols.Tls13 |
-                                                                  SslProtocols.Tls12 |
-                                                                  SslProtocols.Tls11, false);
+                        await clientSsl.AuthenticateAsServerAsync(_certificate, false, SslProtocols.Tls | SslProtocols.Tls13 | SslProtocols.Tls12 | SslProtocols.Tls11, false);
                         // create an HTTP connection to the target IP
                         var serverSsl = await CreateConnection(_ip);
 

@@ -25,14 +25,297 @@ namespace Pixeval.Objects.I18n
 {
     public static partial class AkaI18N
     {
-        public static event PropertyChangedEventHandler StaticPropertyChanged;
-
-        private static void OnStaticPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            StaticPropertyChanged?.Invoke(null, new PropertyChangedEventArgs(propertyName));
-        }
-
         public static string emptyEmailOrPasswordIsNotAllowed = GetResource(nameof(EmptyEmailOrPasswordIsNotAllowed));
+
+        public static string idDoNotExists = GetResource(nameof(IdDoNotExists));
+
+        public static string cannotFindUser = GetResource(nameof(CannotFindUser));
+
+        public static string inputIsEmpty = GetResource(nameof(InputIsEmpty));
+
+        public static string queryNotResponding = GetResource(nameof(QueryNotResponding));
+
+        public static string idIllegal = GetResource(nameof(IdIllegal));
+
+        public static string userIdIllegal = GetResource(nameof(UserIdIllegal));
+
+        public static string appApiAuthenticateTimeout = GetResource(nameof(AppApiAuthenticateTimeout));
+
+        public static string webApiAuthenticateTimeout = GetResource(nameof(WebApiAuthenticateTimeout));
+
+        public static string multiplePixevalInstanceDetected = GetResource(nameof(MultiplePixevalInstanceDetected));
+
+        public static string multiplePixevalInstanceDetectedTitle = GetResource(nameof(MultiplePixevalInstanceDetectedTitle));
+
+        public static string cppRedistributableRequired = GetResource(nameof(CppRedistributableRequired));
+
+        public static string cppRedistributableRequiredTitle = GetResource(nameof(CppRedistributableRequiredTitle));
+
+        public static string certificateInstallationIsRequired = GetResource(nameof(CertificateInstallationIsRequired));
+
+        public static string certificateInstallationIsRequiredTitle = GetResource(nameof(CertificateInstallationIsRequiredTitle));
+
+        public static string trendsAddIllust = GetResource(nameof(TrendsAddIllust));
+
+        public static string trendsAddBookmark = GetResource(nameof(TrendsAddBookmark));
+
+        public static string trendsAddFavorite = GetResource(nameof(TrendsAddFavorite));
+
+        public static string searchingTrends = GetResource(nameof(SearchingTrends));
+
+        public static string searchingUserUpdates = GetResource(nameof(SearchingUserUpdates));
+
+        public static string searchingGallery = GetResource(nameof(SearchingGallery));
+
+        public static string searchingRecommend = GetResource(nameof(SearchingRecommend));
+
+        public static string searchingFollower = GetResource(nameof(SearchingFollower));
+
+        public static string searchingSpotlight = GetResource(nameof(SearchingSpotlight));
+
+        public static string queuedDownload = GetResource(nameof(QueuedDownload));
+
+        public static string queuedAllToDownload = GetResource(nameof(QueuedAllToDownload));
+
+        public static string shareLinkCopiedToClipboard = GetResource(nameof(ShareLinkCopiedToClipboard));
+
+        public static string pathNotExist = GetResource(nameof(PathNotExist));
+
+        public static string sauceNaoFileCountLimit = GetResource(nameof(SauceNaoFileCountLimit));
+
+        public static string cannotFindResult = GetResource(nameof(CannotFindResult));
+
+        public static string pleaseSelectFile = GetResource(nameof(PleaseSelectFile));
+
+        public static string pleaseSelectLocation = GetResource(nameof(PleaseSelectLocation));
+
+        public static string cannotRetrieveContentLengthHeader = GetResource(nameof(CannotRetrieveContentLengthHeader));
+
+        public static string toggleR18OnSuccess = GetResource(nameof(ToggleR18OnSuccess));
+
+        public static string toggleR18OnFailed = GetResource(nameof(ToggleR18OnFailed));
+
+        public static string tryingToToggleR18Switch = GetResource(nameof(TryingToToggleR18Switch));
+
+        public static string rankOptionDay = GetResource(nameof(RankOptionDay));
+
+        public static string rankOptionWeek = GetResource(nameof(RankOptionWeek));
+
+        public static string rankOptionMonth = GetResource(nameof(RankOptionMonth));
+
+        public static string rankOptionDayMale = GetResource(nameof(RankOptionDayMale));
+
+        public static string rankOptionDayFemale = GetResource(nameof(RankOptionDayFemale));
+
+        public static string rankOptionDayManga = GetResource(nameof(RankOptionDayManga));
+
+        public static string rankOptionWeekManga = GetResource(nameof(RankOptionWeekManga));
+
+        public static string rankOptionWeekOriginal = GetResource(nameof(RankOptionWeekOriginal));
+
+        public static string rankOptionWeekRookie = GetResource(nameof(RankOptionWeekRookie));
+
+        public static string rankOptionDayR18 = GetResource(nameof(RankOptionDayR18));
+
+        public static string rankOptionDayMaleR18 = GetResource(nameof(RankOptionDayMaleR18));
+
+        public static string rankOptionDayFemaleR18 = GetResource(nameof(RankOptionDayFemaleR18));
+
+        public static string rankOptionWeekR18 = GetResource(nameof(RankOptionWeekR18));
+
+        public static string rankOptionWeekR18G = GetResource(nameof(RankOptionWeekR18G));
+
+        public static string rankDateCannotBeNull = GetResource(nameof(RankDateCannotBeNull));
+
+        public static string rankNeedR18On = GetResource(nameof(RankNeedR18On));
+
+        public static string cannotFindSpecifiedCertificate = GetResource(nameof(CannotFindSpecifiedCertificate));
+
+        public static string gifIllustrationHint = GetResource(nameof(GifIllustrationHint));
+
+        public static string mangaIllustrationHintFormat = GetResource(nameof(MangaIllustrationHintFormat));
+
+        public static string userIdHintFormat = GetResource(nameof(UserIdHintFormat));
+
+        public static string downloadSingleIllustration = GetResource(nameof(DownloadSingleIllustration));
+
+        public static string downloadAllInCurrentList = GetResource(nameof(DownloadAllInCurrentList));
+
+        public static string downloadSpotlight = GetResource(nameof(DownloadSpotlight));
+
+        public static string retractSidebar = GetResource(nameof(RetractSidebar));
+
+        public static string restrictPolicy = GetResource(nameof(RestrictPolicy));
+
+        public static string _private = GetResource(nameof(Private));
+
+        public static string _public = GetResource(nameof(Public));
+
+        public static string homePage = GetResource(nameof(HomePage));
+
+        public static string myGallery = GetResource(nameof(MyGallery));
+
+        public static string myFollowing = GetResource(nameof(MyFollowing));
+
+        public static string spotlight = GetResource(nameof(Spotlight));
+
+        public static string recommend = GetResource(nameof(Recommend));
+
+        public static string illustRanking = GetResource(nameof(IllustRanking));
+
+        public static string userTrend = GetResource(nameof(UserTrend));
+
+        public static string userUpdate = GetResource(nameof(UserUpdate));
+
+        public static string searchImageBySource = GetResource(nameof(SearchImageBySource));
+
+        public static string downloadQueueAndHistory = GetResource(nameof(DownloadQueueAndHistory));
+
+        public static string setting = GetResource(nameof(Setting));
+
+        public static string logout = GetResource(nameof(Logout));
+
+        public static string searchHint = GetResource(nameof(SearchHint));
+
+        public static string queryUser = GetResource(nameof(QueryUser));
+
+        public static string querySingleUser = GetResource(nameof(QuerySingleUser));
+
+        public static string querySingleIllust = GetResource(nameof(QuerySingleIllust));
+
+        public static string recommendIllustratorTurnPage = GetResource(nameof(RecommendIllustratorTurnPage));
+
+        public static string pixevalVersionFormat = GetResource(nameof(PixevalVersionFormat));
+
+        public static string aboutPixeval = GetResource(nameof(AboutPixeval));
+
+        public static string userBrowserFollowCountHint = GetResource(nameof(UserBrowserFollowCountHint));
+
+        public static string userBrowserFollow = GetResource(nameof(UserBrowserFollow));
+
+        public static string userBrowserUnFollow = GetResource(nameof(UserBrowserUnFollow));
+
+        public static string userBrowserPrivateFollow = GetResource(nameof(UserBrowserPrivateFollow));
+
+        public static string userBrowserIllustSelector = GetResource(nameof(UserBrowserIllustSelector));
+
+        public static string userBrowserGallerySelector = GetResource(nameof(UserBrowserGallerySelector));
+
+        public static string illustBrowserIllustId = GetResource(nameof(IllustBrowserIllustId));
+
+        public static string illustBrowserTotalViews = GetResource(nameof(IllustBrowserTotalViews));
+
+        public static string illustBrowserTotalBookmarks = GetResource(nameof(IllustBrowserTotalBookmarks));
+
+        public static string illustBrowserResolution = GetResource(nameof(IllustBrowserResolution));
+
+        public static string illustBrowserUploadDate = GetResource(nameof(IllustBrowserUploadDate));
+
+        public static string illustBrowserIllustTag = GetResource(nameof(IllustBrowserIllustTag));
+
+        public static string illustBrowserSetWallpaper = GetResource(nameof(IllustBrowserSetWallpaper));
+
+        public static string illustBrowserShareLink = GetResource(nameof(IllustBrowserShareLink));
+
+        public static string illustBrowserViewInBrowser = GetResource(nameof(IllustBrowserViewInBrowser));
+
+        public static string illustBrowserDownload = GetResource(nameof(IllustBrowserDownload));
+
+        public static string illustBrowserPrivateBookmark = GetResource(nameof(IllustBrowserPrivateBookmark));
+
+        public static string illustBrowserBookmark = GetResource(nameof(IllustBrowserBookmark));
+
+        public static string illustBrowserRemoveBookmark = GetResource(nameof(IllustBrowserRemoveBookmark));
+
+        public static string downloadQueueShowDownloadIllust = GetResource(nameof(DownloadQueueShowDownloadIllust));
+
+        public static string downloadQueueRemoveFromDownloading = GetResource(nameof(DownloadQueueRemoveFromDownloading));
+
+        public static string downloadQueueDownloading = GetResource(nameof(DownloadQueueDownloading));
+
+        public static string downloadQueueEmptyNotifier = GetResource(nameof(DownloadQueueEmptyNotifier));
+
+        public static string downloadQueueDownloaded = GetResource(nameof(DownloadQueueDownloaded));
+
+        public static string emailOrPasswordIsWrong = GetResource(nameof(EmailOrPasswordIsWrong));
+
+        public static string copy = GetResource(nameof(Copy));
+
+        public static string conditionBoxHint = GetResource(nameof(ConditionBoxHint));
+
+        public static string pixevalSettings = GetResource(nameof(PixevalSettings));
+
+        public static string sortByPopulation = GetResource(nameof(SortByPopulation));
+
+        public static string turnOffR18 = GetResource(nameof(TurnOffR18));
+
+        public static string turnOnIllustratorRecommend = GetResource(nameof(TurnOnIllustratorRecommend));
+
+        public static string turnOnDirectConnect = GetResource(nameof(TurnOnDirectConnect));
+
+        public static string tagMatchOption = GetResource(nameof(TagMatchOption));
+
+        public static string turnOnCache = GetResource(nameof(TurnOnCache));
+
+        public static string memoryCachePolicy = GetResource(nameof(MemoryCachePolicy));
+
+        public static string fileCachePolicy = GetResource(nameof(FileCachePolicy));
+
+        public static string minBookmarkRequired = GetResource(nameof(MinBookmarkRequired));
+
+        public static string searchPageCountHint = GetResource(nameof(SearchPageCountHint));
+
+        public static string searchPageStart = GetResource(nameof(SearchPageStart));
+
+        public static string spotlightSearchPageStart = GetResource(nameof(SpotlightSearchPageStart));
+
+        public static string downloadLocation = GetResource(nameof(DownloadLocation));
+
+        public static string tagsToBeExclude = GetResource(nameof(TagsToBeExclude));
+
+        public static string tagsToBeInclude = GetResource(nameof(TagsToBeInclude));
+
+        public static string searchPerPageCountHint = GetResource(nameof(SearchPerPageCountHint));
+
+        public static string turnOnWebR18 = GetResource(nameof(TurnOnWebR18));
+
+        public static string sauceNaoFileLocationHint = GetResource(nameof(SauceNaoFileLocationHint));
+
+        public static string sauceNaoUploadAndSearch = GetResource(nameof(SauceNaoUploadAndSearch));
+
+        public static string signIn = GetResource(nameof(SignIn));
+
+        public static string signInAccount = GetResource(nameof(SignInAccount));
+
+        public static string signInPassword = GetResource(nameof(SignInPassword));
+
+        public static string signInButtonText = GetResource(nameof(SignInButtonText));
+
+        public static string signInUpdatingSession = GetResource(nameof(SignInUpdatingSession));
+
+        public static string browsingHistoryCount = GetResource(nameof(BrowsingHistoryCount));
+
+        public static string downloadQueueBrowsingHistory = GetResource(nameof(DownloadQueueBrowsingHistory));
+
+        public static string downloadQueueHistoryListIsEmpty = GetResource(nameof(DownloadQueueHistoryListIsEmpty));
+
+        public static string pixevalUpdateAvailable = GetResource(nameof(PixevalUpdateAvailable));
+
+        public static string pixevalUpdateAvailableTitle = GetResource(nameof(PixevalUpdateAvailableTitle));
+
+        public static string thisLoginSessionRequiresRecaptcha = GetResource(nameof(ThisLoginSessionRequiresRecaptcha));
+
+        public static string supportMe = GetResource(nameof(SupportMe));
+
+        public static string downloadTo = GetResource(nameof(DownloadTo));
+
+        public static string userPreviewPopupFollow = GetResource(nameof(UserPreviewPopupFollow));
+
+        public static string userPreviewPopupUnFollow = GetResource(nameof(UserPreviewPopupUnFollow));
+
+        public static string selectCultureInfo = GetResource(nameof(SelectCultureInfo));
+
+        public static string createNewFolderWhenDownloadFromUser = GetResource(nameof(CreateNewFolderWhenDownloadFromUser));
 
         public static string EmptyEmailOrPasswordIsNotAllowed
         {
@@ -44,8 +327,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string idDoNotExists = GetResource(nameof(IdDoNotExists));
-
         public static string IdDoNotExists
         {
             get => idDoNotExists;
@@ -55,8 +336,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string cannotFindUser = GetResource(nameof(CannotFindUser));
 
         public static string CannotFindUser
         {
@@ -68,8 +347,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string inputIsEmpty = GetResource(nameof(InputIsEmpty));
-
         public static string InputIsEmpty
         {
             get => inputIsEmpty;
@@ -79,8 +356,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string queryNotResponding = GetResource(nameof(QueryNotResponding));
 
         public static string QueryNotResponding
         {
@@ -92,8 +367,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string idIllegal = GetResource(nameof(IdIllegal));
-
         public static string IdIllegal
         {
             get => idIllegal;
@@ -103,8 +376,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string userIdIllegal = GetResource(nameof(UserIdIllegal));
 
         public static string UserIdIllegal
         {
@@ -116,8 +387,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string appApiAuthenticateTimeout = GetResource(nameof(AppApiAuthenticateTimeout));
-
         public static string AppApiAuthenticateTimeout
         {
             get => appApiAuthenticateTimeout;
@@ -127,8 +396,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string webApiAuthenticateTimeout = GetResource(nameof(WebApiAuthenticateTimeout));
 
         public static string WebApiAuthenticateTimeout
         {
@@ -140,8 +407,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string multiplePixevalInstanceDetected = GetResource(nameof(MultiplePixevalInstanceDetected));
-
         public static string MultiplePixevalInstanceDetected
         {
             get => multiplePixevalInstanceDetected;
@@ -151,8 +416,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string multiplePixevalInstanceDetectedTitle = GetResource(nameof(MultiplePixevalInstanceDetectedTitle));
 
         public static string MultiplePixevalInstanceDetectedTitle
         {
@@ -164,8 +427,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string cppRedistributableRequired = GetResource(nameof(CppRedistributableRequired));
-
         public static string CppRedistributableRequired
         {
             get => cppRedistributableRequired;
@@ -175,8 +436,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string cppRedistributableRequiredTitle = GetResource(nameof(CppRedistributableRequiredTitle));
 
         public static string CppRedistributableRequiredTitle
         {
@@ -188,8 +447,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string certificateInstallationIsRequired = GetResource(nameof(CertificateInstallationIsRequired));
-
         public static string CertificateInstallationIsRequired
         {
             get => certificateInstallationIsRequired;
@@ -199,8 +456,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string certificateInstallationIsRequiredTitle = GetResource(nameof(CertificateInstallationIsRequiredTitle));
 
         public static string CertificateInstallationIsRequiredTitle
         {
@@ -212,8 +467,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string trendsAddIllust = GetResource(nameof(TrendsAddIllust));
-
         public static string TrendsAddIllust
         {
             get => trendsAddIllust;
@@ -223,8 +476,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string trendsAddBookmark = GetResource(nameof(TrendsAddBookmark));
 
         public static string TrendsAddBookmark
         {
@@ -236,8 +487,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string trendsAddFavorite = GetResource(nameof(TrendsAddFavorite));
-
         public static string TrendsAddFavorite
         {
             get => trendsAddFavorite;
@@ -247,8 +496,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string searchingTrends = GetResource(nameof(SearchingTrends));
 
         public static string SearchingTrends
         {
@@ -260,8 +507,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string searchingUserUpdates = GetResource(nameof(SearchingUserUpdates));
-
         public static string SearchingUserUpdates
         {
             get => searchingUserUpdates;
@@ -271,8 +516,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string searchingGallery = GetResource(nameof(SearchingGallery));
 
         public static string SearchingGallery
         {
@@ -284,8 +527,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string searchingRecommend = GetResource(nameof(SearchingRecommend));
-
         public static string SearchingRecommend
         {
             get => searchingRecommend;
@@ -295,8 +536,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string searchingFollower = GetResource(nameof(SearchingFollower));
 
         public static string SearchingFollower
         {
@@ -308,8 +547,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string searchingSpotlight = GetResource(nameof(SearchingSpotlight));
-
         public static string SearchingSpotlight
         {
             get => searchingSpotlight;
@@ -319,8 +556,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string queuedDownload = GetResource(nameof(QueuedDownload));
 
         public static string QueuedDownload
         {
@@ -332,8 +567,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string queuedAllToDownload = GetResource(nameof(QueuedAllToDownload));
-
         public static string QueuedAllToDownload
         {
             get => queuedAllToDownload;
@@ -343,8 +576,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string shareLinkCopiedToClipboard = GetResource(nameof(ShareLinkCopiedToClipboard));
 
         public static string ShareLinkCopiedToClipboard
         {
@@ -356,8 +587,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string pathNotExist = GetResource(nameof(PathNotExist));
-
         public static string PathNotExist
         {
             get => pathNotExist;
@@ -367,8 +596,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string sauceNaoFileCountLimit = GetResource(nameof(SauceNaoFileCountLimit));
 
         public static string SauceNaoFileCountLimit
         {
@@ -380,8 +607,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string cannotFindResult = GetResource(nameof(CannotFindResult));
-
         public static string CannotFindResult
         {
             get => cannotFindResult;
@@ -391,8 +616,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string pleaseSelectFile = GetResource(nameof(PleaseSelectFile));
 
         public static string PleaseSelectFile
         {
@@ -404,8 +627,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string pleaseSelectLocation = GetResource(nameof(PleaseSelectLocation));
-
         public static string PleaseSelectLocation
         {
             get => pleaseSelectLocation;
@@ -415,8 +636,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string cannotRetrieveContentLengthHeader = GetResource(nameof(CannotRetrieveContentLengthHeader));
 
         public static string CannotRetrieveContentLengthHeader
         {
@@ -428,8 +647,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string toggleR18OnSuccess = GetResource(nameof(ToggleR18OnSuccess));
-
         public static string ToggleR18OnSuccess
         {
             get => toggleR18OnSuccess;
@@ -439,8 +656,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string toggleR18OnFailed = GetResource(nameof(ToggleR18OnFailed));
 
         public static string ToggleR18OnFailed
         {
@@ -452,8 +667,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string tryingToToggleR18Switch = GetResource(nameof(TryingToToggleR18Switch));
-
         public static string TryingToToggleR18Switch
         {
             get => tryingToToggleR18Switch;
@@ -463,8 +676,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string rankOptionDay = GetResource(nameof(RankOptionDay));
 
         public static string RankOptionDay
         {
@@ -476,8 +687,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string rankOptionWeek = GetResource(nameof(RankOptionWeek));
-
         public static string RankOptionWeek
         {
             get => rankOptionWeek;
@@ -487,8 +696,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string rankOptionMonth = GetResource(nameof(RankOptionMonth));
 
         public static string RankOptionMonth
         {
@@ -500,8 +707,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string rankOptionDayMale = GetResource(nameof(RankOptionDayMale));
-
         public static string RankOptionDayMale
         {
             get => rankOptionDayMale;
@@ -511,8 +716,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string rankOptionDayFemale = GetResource(nameof(RankOptionDayFemale));
 
         public static string RankOptionDayFemale
         {
@@ -524,8 +727,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string rankOptionDayManga = GetResource(nameof(RankOptionDayManga));
-
         public static string RankOptionDayManga
         {
             get => rankOptionDayManga;
@@ -535,8 +736,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string rankOptionWeekManga = GetResource(nameof(RankOptionWeekManga));
 
         public static string RankOptionWeekManga
         {
@@ -548,8 +747,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string rankOptionWeekOriginal = GetResource(nameof(RankOptionWeekOriginal));
-
         public static string RankOptionWeekOriginal
         {
             get => rankOptionWeekOriginal;
@@ -559,8 +756,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string rankOptionWeekRookie = GetResource(nameof(RankOptionWeekRookie));
 
         public static string RankOptionWeekRookie
         {
@@ -572,8 +767,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string rankOptionDayR18 = GetResource(nameof(RankOptionDayR18));
-
         public static string RankOptionDayR18
         {
             get => rankOptionDayR18;
@@ -583,8 +776,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string rankOptionDayMaleR18 = GetResource(nameof(RankOptionDayMaleR18));
 
         public static string RankOptionDayMaleR18
         {
@@ -596,8 +787,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string rankOptionDayFemaleR18 = GetResource(nameof(RankOptionDayFemaleR18));
-
         public static string RankOptionDayFemaleR18
         {
             get => rankOptionDayFemaleR18;
@@ -607,8 +796,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string rankOptionWeekR18 = GetResource(nameof(RankOptionWeekR18));
 
         public static string RankOptionWeekR18
         {
@@ -620,8 +807,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string rankOptionWeekR18G = GetResource(nameof(RankOptionWeekR18G));
-
         public static string RankOptionWeekR18G
         {
             get => rankOptionWeekR18G;
@@ -631,8 +816,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string rankDateCannotBeNull = GetResource(nameof(RankDateCannotBeNull));
 
         public static string RankDateCannotBeNull
         {
@@ -644,8 +827,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string rankNeedR18On = GetResource(nameof(RankNeedR18On));
-
         public static string RankNeedR18On
         {
             get => rankNeedR18On;
@@ -655,8 +836,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string cannotFindSpecifiedCertificate = GetResource(nameof(CannotFindSpecifiedCertificate));
 
         public static string CannotFindSpecifiedCertificate
         {
@@ -668,8 +847,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string gifIllustrationHint = GetResource(nameof(GifIllustrationHint));
-
         public static string GifIllustrationHint
         {
             get => gifIllustrationHint;
@@ -679,8 +856,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string mangaIllustrationHintFormat = GetResource(nameof(MangaIllustrationHintFormat));
 
         public static string MangaIllustrationHintFormat
         {
@@ -692,8 +867,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string userIdHintFormat = GetResource(nameof(UserIdHintFormat));
-
         public static string UserIdHintFormat
         {
             get => userIdHintFormat;
@@ -703,8 +876,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string downloadSingleIllustration = GetResource(nameof(DownloadSingleIllustration));
 
         public static string DownloadSingleIllustration
         {
@@ -716,8 +887,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string downloadAllInCurrentList = GetResource(nameof(DownloadAllInCurrentList));
-
         public static string DownloadAllInCurrentList
         {
             get => downloadAllInCurrentList;
@@ -727,8 +896,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string downloadSpotlight = GetResource(nameof(DownloadSpotlight));
 
         public static string DownloadSpotlight
         {
@@ -740,8 +907,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string retractSidebar = GetResource(nameof(RetractSidebar));
-
         public static string RetractSidebar
         {
             get => retractSidebar;
@@ -751,8 +916,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string restrictPolicy = GetResource(nameof(RestrictPolicy));
 
         public static string RestrictPolicy
         {
@@ -764,8 +927,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string _private = GetResource(nameof(Private));
-
         public static string Private
         {
             get => _private;
@@ -775,8 +936,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string _public = GetResource(nameof(Public));
 
         public static string Public
         {
@@ -788,8 +947,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string homePage = GetResource(nameof(HomePage));
-
         public static string HomePage
         {
             get => homePage;
@@ -799,8 +956,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string myGallery = GetResource(nameof(MyGallery));
 
         public static string MyGallery
         {
@@ -812,8 +967,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string myFollowing = GetResource(nameof(MyFollowing));
-
         public static string MyFollowing
         {
             get => myFollowing;
@@ -823,8 +976,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string spotlight = GetResource(nameof(Spotlight));
 
         public static string Spotlight
         {
@@ -836,8 +987,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string recommend = GetResource(nameof(Recommend));
-
         public static string Recommend
         {
             get => recommend;
@@ -847,8 +996,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string illustRanking = GetResource(nameof(IllustRanking));
 
         public static string IllustRanking
         {
@@ -860,8 +1007,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string userTrend = GetResource(nameof(UserTrend));
-
         public static string UserTrend
         {
             get => userTrend;
@@ -871,8 +1016,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string userUpdate = GetResource(nameof(UserUpdate));
 
         public static string UserUpdate
         {
@@ -884,8 +1027,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string searchImageBySource = GetResource(nameof(SearchImageBySource));
-
         public static string SearchImageBySource
         {
             get => searchImageBySource;
@@ -895,8 +1036,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string downloadQueueAndHistory = GetResource(nameof(DownloadQueueAndHistory));
 
         public static string DownloadQueueAndHistory
         {
@@ -908,8 +1047,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string setting = GetResource(nameof(Setting));
-
         public static string Setting
         {
             get => setting;
@@ -919,8 +1056,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string logout = GetResource(nameof(Logout));
 
         public static string Logout
         {
@@ -932,8 +1067,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string searchHint = GetResource(nameof(SearchHint));
-
         public static string SearchHint
         {
             get => searchHint;
@@ -943,8 +1076,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string queryUser = GetResource(nameof(QueryUser));
 
         public static string QueryUser
         {
@@ -956,8 +1087,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string querySingleUser = GetResource(nameof(QuerySingleUser));
-
         public static string QuerySingleUser
         {
             get => querySingleUser;
@@ -967,8 +1096,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string querySingleIllust = GetResource(nameof(QuerySingleIllust));
 
         public static string QuerySingleIllust
         {
@@ -980,8 +1107,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string recommendIllustratorTurnPage = GetResource(nameof(RecommendIllustratorTurnPage));
-
         public static string RecommendIllustratorTurnPage
         {
             get => recommendIllustratorTurnPage;
@@ -991,8 +1116,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string pixevalVersionFormat = GetResource(nameof(PixevalVersionFormat));
 
         public static string PixevalVersionFormat
         {
@@ -1004,8 +1127,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string aboutPixeval = GetResource(nameof(AboutPixeval));
-
         public static string AboutPixeval
         {
             get => aboutPixeval;
@@ -1015,8 +1136,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string userBrowserFollowCountHint = GetResource(nameof(UserBrowserFollowCountHint));
 
         public static string UserBrowserFollowCountHint
         {
@@ -1028,8 +1147,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string userBrowserFollow = GetResource(nameof(UserBrowserFollow));
-
         public static string UserBrowserFollow
         {
             get => userBrowserFollow;
@@ -1039,8 +1156,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string userBrowserUnFollow = GetResource(nameof(UserBrowserUnFollow));
 
         public static string UserBrowserUnFollow
         {
@@ -1052,8 +1167,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string userBrowserPrivateFollow = GetResource(nameof(UserBrowserPrivateFollow));
-
         public static string UserBrowserPrivateFollow
         {
             get => userBrowserPrivateFollow;
@@ -1063,8 +1176,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string userBrowserIllustSelector = GetResource(nameof(UserBrowserIllustSelector));
 
         public static string UserBrowserIllustSelector
         {
@@ -1076,8 +1187,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string userBrowserGallerySelector = GetResource(nameof(UserBrowserGallerySelector));
-
         public static string UserBrowserGallerySelector
         {
             get => userBrowserGallerySelector;
@@ -1087,8 +1196,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string illustBrowserIllustId = GetResource(nameof(IllustBrowserIllustId));
 
         public static string IllustBrowserIllustId
         {
@@ -1100,8 +1207,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string illustBrowserTotalViews = GetResource(nameof(IllustBrowserTotalViews));
-
         public static string IllustBrowserTotalViews
         {
             get => illustBrowserTotalViews;
@@ -1111,8 +1216,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string illustBrowserTotalBookmarks = GetResource(nameof(IllustBrowserTotalBookmarks));
 
         public static string IllustBrowserTotalBookmarks
         {
@@ -1124,8 +1227,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string illustBrowserResolution = GetResource(nameof(IllustBrowserResolution));
-
         public static string IllustBrowserResolution
         {
             get => illustBrowserResolution;
@@ -1135,8 +1236,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string illustBrowserUploadDate = GetResource(nameof(IllustBrowserUploadDate));
 
         public static string IllustBrowserUploadDate
         {
@@ -1148,8 +1247,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string illustBrowserIllustTag = GetResource(nameof(IllustBrowserIllustTag));
-
         public static string IllustBrowserIllustTag
         {
             get => illustBrowserIllustTag;
@@ -1159,8 +1256,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string illustBrowserSetWallpaper = GetResource(nameof(IllustBrowserSetWallpaper));
 
         public static string IllustBrowserSetWallpaper
         {
@@ -1172,8 +1267,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string illustBrowserShareLink = GetResource(nameof(IllustBrowserShareLink));
-
         public static string IllustBrowserShareLink
         {
             get => illustBrowserShareLink;
@@ -1183,8 +1276,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string illustBrowserViewInBrowser = GetResource(nameof(IllustBrowserViewInBrowser));
 
         public static string IllustBrowserViewInBrowser
         {
@@ -1196,8 +1287,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string illustBrowserDownload = GetResource(nameof(IllustBrowserDownload));
-
         public static string IllustBrowserDownload
         {
             get => illustBrowserDownload;
@@ -1207,8 +1296,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string illustBrowserPrivateBookmark = GetResource(nameof(IllustBrowserPrivateBookmark));
 
         public static string IllustBrowserPrivateBookmark
         {
@@ -1220,8 +1307,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string illustBrowserBookmark = GetResource(nameof(IllustBrowserBookmark));
-
         public static string IllustBrowserBookmark
         {
             get => illustBrowserBookmark;
@@ -1231,8 +1316,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string illustBrowserRemoveBookmark = GetResource(nameof(IllustBrowserRemoveBookmark));
 
         public static string IllustBrowserRemoveBookmark
         {
@@ -1244,8 +1327,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string downloadQueueShowDownloadIllust = GetResource(nameof(DownloadQueueShowDownloadIllust));
-
         public static string DownloadQueueShowDownloadIllust
         {
             get => downloadQueueShowDownloadIllust;
@@ -1255,8 +1336,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string downloadQueueRemoveFromDownloading = GetResource(nameof(DownloadQueueRemoveFromDownloading));
 
         public static string DownloadQueueRemoveFromDownloading
         {
@@ -1268,8 +1347,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string downloadQueueDownloading = GetResource(nameof(DownloadQueueDownloading));
-
         public static string DownloadQueueDownloading
         {
             get => downloadQueueDownloading;
@@ -1279,8 +1356,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string downloadQueueEmptyNotifier = GetResource(nameof(DownloadQueueEmptyNotifier));
 
         public static string DownloadQueueEmptyNotifier
         {
@@ -1292,8 +1367,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string downloadQueueDownloaded = GetResource(nameof(DownloadQueueDownloaded));
-
         public static string DownloadQueueDownloaded
         {
             get => downloadQueueDownloaded;
@@ -1303,8 +1376,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string emailOrPasswordIsWrong = GetResource(nameof(EmailOrPasswordIsWrong));
 
         public static string EmailOrPasswordIsWrong
         {
@@ -1316,8 +1387,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string copy = GetResource(nameof(Copy));
-
         public static string Copy
         {
             get => copy;
@@ -1327,8 +1396,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string conditionBoxHint = GetResource(nameof(ConditionBoxHint));
 
         public static string ConditionBoxHint
         {
@@ -1340,8 +1407,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string pixevalSettings = GetResource(nameof(PixevalSettings));
-
         public static string PixevalSettings
         {
             get => pixevalSettings;
@@ -1351,8 +1416,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string sortByPopulation = GetResource(nameof(SortByPopulation));
 
         public static string SortByPopulation
         {
@@ -1364,8 +1427,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string turnOffR18 = GetResource(nameof(TurnOffR18));
-
         public static string TurnOffR18
         {
             get => turnOffR18;
@@ -1375,8 +1436,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string turnOnIllustratorRecommend = GetResource(nameof(TurnOnIllustratorRecommend));
 
         public static string TurnOnIllustratorRecommend
         {
@@ -1388,8 +1447,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string turnOnDirectConnect = GetResource(nameof(TurnOnDirectConnect));
-
         public static string TurnOnDirectConnect
         {
             get => turnOnDirectConnect;
@@ -1399,8 +1456,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string tagMatchOption = GetResource(nameof(TagMatchOption));
 
         public static string TagMatchOption
         {
@@ -1412,8 +1467,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string turnOnCache = GetResource(nameof(TurnOnCache));
-
         public static string TurnOnCache
         {
             get => turnOnCache;
@@ -1423,8 +1476,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string memoryCachePolicy = GetResource(nameof(MemoryCachePolicy));
 
         public static string MemoryCachePolicy
         {
@@ -1436,8 +1487,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string fileCachePolicy = GetResource(nameof(FileCachePolicy));
-
         public static string FileCachePolicy
         {
             get => fileCachePolicy;
@@ -1447,8 +1496,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string minBookmarkRequired = GetResource(nameof(MinBookmarkRequired));
 
         public static string MinBookmarkRequired
         {
@@ -1460,8 +1507,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string searchPageCountHint = GetResource(nameof(SearchPageCountHint));
-
         public static string SearchPageCountHint
         {
             get => searchPageCountHint;
@@ -1471,8 +1516,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string searchPageStart = GetResource(nameof(SearchPageStart));
 
         public static string SearchPageStart
         {
@@ -1484,8 +1527,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string spotlightSearchPageStart = GetResource(nameof(SpotlightSearchPageStart));
-
         public static string SpotlightSearchPageStart
         {
             get => spotlightSearchPageStart;
@@ -1495,8 +1536,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string downloadLocation = GetResource(nameof(DownloadLocation));
 
         public static string DownloadLocation
         {
@@ -1508,8 +1547,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string tagsToBeExclude = GetResource(nameof(TagsToBeExclude));
-
         public static string TagsToBeExclude
         {
             get => tagsToBeExclude;
@@ -1519,8 +1556,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string tagsToBeInclude = GetResource(nameof(TagsToBeInclude));
 
         public static string TagsToBeInclude
         {
@@ -1532,8 +1567,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string searchPerPageCountHint = GetResource(nameof(SearchPerPageCountHint));
-
         public static string SearchPerPageCountHint
         {
             get => searchPerPageCountHint;
@@ -1543,8 +1576,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string turnOnWebR18 = GetResource(nameof(TurnOnWebR18));
 
         public static string TurnOnWebR18
         {
@@ -1556,8 +1587,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string sauceNaoFileLocationHint = GetResource(nameof(SauceNaoFileLocationHint));
-
         public static string SauceNaoFileLocationHint
         {
             get => sauceNaoFileLocationHint;
@@ -1567,8 +1596,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string sauceNaoUploadAndSearch = GetResource(nameof(SauceNaoUploadAndSearch));
 
         public static string SauceNaoUploadAndSearch
         {
@@ -1580,8 +1607,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string signIn = GetResource(nameof(SignIn));
-
         public static string SignIn
         {
             get => signIn;
@@ -1591,8 +1616,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string signInAccount = GetResource(nameof(SignInAccount));
 
         public static string SignInAccount
         {
@@ -1604,8 +1627,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string signInPassword = GetResource(nameof(SignInPassword));
-
         public static string SignInPassword
         {
             get => signInPassword;
@@ -1615,8 +1636,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string signInButtonText = GetResource(nameof(SignInButtonText));
 
         public static string SignInButtonText
         {
@@ -1628,8 +1647,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string signInUpdatingSession = GetResource(nameof(SignInUpdatingSession));
-
         public static string SignInUpdatingSession
         {
             get => signInUpdatingSession;
@@ -1639,8 +1656,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string browsingHistoryCount = GetResource(nameof(BrowsingHistoryCount));
 
         public static string BrowsingHistoryCount
         {
@@ -1652,8 +1667,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string downloadQueueBrowsingHistory = GetResource(nameof(DownloadQueueBrowsingHistory));
-
         public static string DownloadQueueBrowsingHistory
         {
             get => downloadQueueBrowsingHistory;
@@ -1663,8 +1676,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string downloadQueueHistoryListIsEmpty = GetResource(nameof(DownloadQueueHistoryListIsEmpty));
 
         public static string DownloadQueueHistoryListIsEmpty
         {
@@ -1676,8 +1687,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string pixevalUpdateAvailable = GetResource(nameof(PixevalUpdateAvailable));
-
         public static string PixevalUpdateAvailable
         {
             get => pixevalUpdateAvailable;
@@ -1687,8 +1696,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string pixevalUpdateAvailableTitle = GetResource(nameof(PixevalUpdateAvailableTitle));
 
         public static string PixevalUpdateAvailableTitle
         {
@@ -1700,8 +1707,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string thisLoginSessionRequiresRecaptcha = GetResource(nameof(ThisLoginSessionRequiresRecaptcha));
-
         public static string ThisLoginSessionRequiresRecaptcha
         {
             get => thisLoginSessionRequiresRecaptcha;
@@ -1711,8 +1716,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string supportMe = GetResource(nameof(SupportMe));
 
         public static string SupportMe
         {
@@ -1724,8 +1727,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string downloadTo = GetResource(nameof(DownloadTo));
-
         public static string DownloadTo
         {
             get => downloadTo;
@@ -1735,8 +1736,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string userPreviewPopupFollow = GetResource(nameof(UserPreviewPopupFollow));
 
         public static string UserPreviewPopupFollow
         {
@@ -1748,8 +1747,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string userPreviewPopupUnFollow = GetResource(nameof(UserPreviewPopupUnFollow));
-
         public static string UserPreviewPopupUnFollow
         {
             get => userPreviewPopupUnFollow;
@@ -1759,8 +1756,6 @@ namespace Pixeval.Objects.I18n
                 OnStaticPropertyChanged();
             }
         }
-
-        public static string selectCultureInfo = GetResource(nameof(SelectCultureInfo));
 
         public static string SelectCultureInfo
         {
@@ -1772,8 +1767,6 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string createNewFolderWhenDownloadFromUser = GetResource(nameof(CreateNewFolderWhenDownloadFromUser));
-
         public static string CreateNewFolderWhenDownloadFromUser
         {
             get => createNewFolderWhenDownloadFromUser;
@@ -1782,6 +1775,14 @@ namespace Pixeval.Objects.I18n
                 createNewFolderWhenDownloadFromUser = value;
                 OnStaticPropertyChanged();
             }
+        }
+
+        public static event PropertyChangedEventHandler StaticPropertyChanged;
+
+        private static void OnStaticPropertyChanged([CallerMemberName]
+                                                    string propertyName = null)
+        {
+            StaticPropertyChanged?.Invoke(null, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

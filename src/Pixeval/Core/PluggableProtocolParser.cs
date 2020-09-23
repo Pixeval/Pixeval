@@ -57,7 +57,7 @@ namespace Pixeval.Core
                 var i = MainWindow.Instance;
                 i.Invoke(() =>
                 {
-                    i.SetUserBrowserContext(new User { Id = match.Groups["id"].Value });
+                    i.SetUserBrowserContext(new User {Id = match.Groups["id"].Value});
                     i.OpenUserBrowser();
                 });
             }
@@ -72,8 +72,7 @@ namespace Pixeval.Core
                 else // otherwise, we will try to access the spotlight web API, and analyze html if failed
                     try
                     {
-                        title = (await HttpClientFactory.WebApiService().GetSpotlightArticles(articleId)).BodyList[0]
-                            .Title;
+                        title = (await HttpClientFactory.WebApiService().GetSpotlightArticles(articleId)).BodyList[0].Title;
                     }
                     catch (ApiException e)
                     {
@@ -83,10 +82,7 @@ namespace Pixeval.Core
                             throw;
                     }
 
-                var tasks = await Tasks<string, Illustration>.Of(await PixivClient.Instance.GetArticleWorks(articleId))
-                    .Mapping(PixivHelper.IllustrationInfo)
-                    .Construct()
-                    .WhenAll();
+                var tasks = await Tasks<string, Illustration>.Of(await PixivClient.Instance.GetArticleWorks(articleId)).Mapping(PixivHelper.IllustrationInfo).Construct().WhenAll();
                 var result = tasks.Peek(i =>
                 {
                     i.IsManga = true;
@@ -94,9 +90,7 @@ namespace Pixeval.Core
                     i.SpotlightTitle = title;
                 }).ToArray();
 
-                MainWindow.Instance.Invoke(() =>
-                                               MainWindow.Instance.OpenIllustBrowser(
-                                                   result[0].Apply(r => r.MangaMetadata = result.ToArray()), false));
+                MainWindow.Instance.Invoke(() => MainWindow.Instance.OpenIllustBrowser(result[0].Apply(r => r.MangaMetadata = result.ToArray()), false));
 
                 static async Task<string> TryGetSpotlightEnTitle(string id)
                 {

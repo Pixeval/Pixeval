@@ -38,7 +38,7 @@ namespace Pixeval.Core
 
         public UserPreviewAsyncEnumerable(string keyword)
         {
-            this._keyword = keyword;
+            _keyword = keyword;
         }
 
         public override int RequestedPages { get; protected set; }
@@ -57,29 +57,21 @@ namespace Pixeval.Core
 
             public UserPreviewAsyncEnumerator(IPixivAsyncEnumerable<User> enumerable, string keyword) : base(enumerable)
             {
-                this._keyword = keyword;
+                _keyword = keyword;
             }
 
             public override User Current => _userPreviewEnumerator.Current;
 
             protected override void UpdateEnumerator()
             {
-                _userPreviewEnumerator = _entity.UserPreviews.NonNull().Select(u => new User
-                {
-                    Avatar = u.User.ProfileImageUrls.Medium,
-                    Thumbnails = u.Illusts.NonNull().Select(_ => _.ImageUrl.SquareMedium).ToArray(),
-                    Id = u.User.Id.ToString(),
-                    Name = u.User.Name
-                }).GetEnumerator();
+                _userPreviewEnumerator = _entity.UserPreviews.NonNull().Select(u => new User {Avatar = u.User.ProfileImageUrls.Medium, Thumbnails = u.Illusts.NonNull().Select(_ => _.ImageUrl.SquareMedium).ToArray(), Id = u.User.Id.ToString(), Name = u.User.Name}).GetEnumerator();
             }
 
             public override async ValueTask<bool> MoveNextAsync()
             {
                 if (_entity == null)
                 {
-                    if (await TryGetResponse(
-                            $"https://app-api.pixiv.net/v1/search/user?filter=for_android&word={_keyword}") is (true, var
-                        model))
+                    if (await TryGetResponse($"https://app-api.pixiv.net/v1/search/user?filter=for_android&word={_keyword}") is (true, var model))
                     {
                         _entity = model;
                         UpdateEnumerator();

@@ -50,7 +50,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
             2
         </system:Double>
         <Storyboard x:Key="CloseUserBrowserAnimation"
-                    Completed="Timeline_OnCompleted"
+                    Completed="CloseUserBrowserAnimation_OnCompleted"
                     Duration="00:00:00.2">
             <DoubleAnimationUsingKeyFrames BeginTime="0"
                                            Storyboard.Target="{Binding ElementName=UserBrowserPageScrollViewer}"
@@ -223,7 +223,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                    TextWrapping="NoWrap" />
                                     </Hyperlink>
                                 </TextBlock>
-                                <TextBlock FontSize="12" Text="{Binding Type, Converter={StaticResource TrendsStatConverter}, StringFormat={} {0}}" />
+                                <TextBlock FontSize="12"
+                                           Text="{Binding Type, Converter={StaticResource TrendsStatConverter}, StringFormat={} {0}}" />
                             </StackPanel>
                             <TextBlock MaxWidth="125"
                                        Margin="0,5,0,0"
@@ -263,7 +264,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     <Grid.Triggers>
                         <EventTrigger RoutedEvent="Grid.MouseEnter">
                             <BeginStoryboard>
-                                <Storyboard TargetProperty="(ScaleTransform.ScaleX)" TargetName="IllustrationThumbnailScaleTransform">
+                                <Storyboard TargetProperty="(ScaleTransform.ScaleX)"
+                                            TargetName="IllustrationThumbnailScaleTransform">
                                     <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
                                                      From="1"
                                                      To="1.2"
@@ -271,7 +273,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                 </Storyboard>
                             </BeginStoryboard>
                             <BeginStoryboard>
-                                <Storyboard TargetProperty="(ScaleTransform.ScaleY)" TargetName="IllustrationThumbnailScaleTransform">
+                                <Storyboard TargetProperty="(ScaleTransform.ScaleY)"
+                                            TargetName="IllustrationThumbnailScaleTransform">
                                     <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
                                                      From="1"
                                                      To="1.2"
@@ -281,7 +284,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                         </EventTrigger>
                         <EventTrigger RoutedEvent="Grid.MouseLeave">
                             <BeginStoryboard>
-                                <Storyboard TargetProperty="(ScaleTransform.ScaleX)" TargetName="IllustrationThumbnailScaleTransform">
+                                <Storyboard TargetProperty="(ScaleTransform.ScaleX)"
+                                            TargetName="IllustrationThumbnailScaleTransform">
                                     <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
                                                      From="1.2"
                                                      To="1"
@@ -289,7 +293,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                 </Storyboard>
                             </BeginStoryboard>
                             <BeginStoryboard>
-                                <Storyboard TargetProperty="(ScaleTransform.ScaleY)" TargetName="IllustrationThumbnailScaleTransform">
+                                <Storyboard TargetProperty="(ScaleTransform.ScaleY)"
+                                            TargetName="IllustrationThumbnailScaleTransform">
                                     <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
                                                      From="1.2"
                                                      To="1"
@@ -306,7 +311,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                            Stretch="UniformToFill"
                            Unloaded="Thumbnail_OnUnloaded">
                         <Image.RenderTransform>
-                            <ScaleTransform x:Name="IllustrationThumbnailScaleTransform" CenterX="140" CenterY="100" ScaleX="1.2" ScaleY="1.2" />
+                            <ScaleTransform x:Name="IllustrationThumbnailScaleTransform" CenterX="140" CenterY="100"
+                                            ScaleX="1.2" ScaleY="1.2" />
                         </Image.RenderTransform>
                     </Image>
                     <Grid>
@@ -321,7 +327,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                 Visibility="{Binding Path=IsLiked, Converter={StaticResource VisibleIfFalseConverter}}">
                             <Viewbox Width="24" Height="24">
                                 <Canvas Width="24" Height="24">
-                                    <Path Data="M12.1,18.55L12,18.65L11.89,18.55C7.14,14.24 4,11.39 4,8.5C4,6.5 5.5,5 7.5,5C9.04,5 10.54,6 11.07,7.36H12.93C13.46,6 14.96,5 16.5,5C18.5,5 20,6.5 20,8.5C20,11.39 16.86,14.24 12.1,18.55M16.5,3C14.76,3 13.09,3.81 12,5.08C10.91,3.81 9.24,3 7.5,3C4.42,3 2,5.41 2,8.5C2,12.27 5.4,15.36 10.55,20.03L12,21.35L13.45,20.03C18.6,15.36 22,12.27 22,8.5C22,5.41 19.58,3 16.5,3Z" Fill="Gray" />
+                                    <Path
+                                        Data="M12.1,18.55L12,18.65L11.89,18.55C7.14,14.24 4,11.39 4,8.5C4,6.5 5.5,5 7.5,5C9.04,5 10.54,6 11.07,7.36H12.93C13.46,6 14.96,5 16.5,5C18.5,5 20,6.5 20,8.5C20,11.39 16.86,14.24 12.1,18.55M16.5,3C14.76,3 13.09,3.81 12,5.08C10.91,3.81 9.24,3 7.5,3C4.42,3 2,5.41 2,8.5C2,12.27 5.4,15.36 10.55,20.03L12,21.35L13.45,20.03C18.6,15.36 22,12.27 22,8.5C22,5.41 19.58,3 16.5,3Z"
+                                        Fill="Gray" />
                                 </Canvas>
                             </Viewbox>
                         </Button>
@@ -336,7 +344,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                 Visibility="{Binding Path=IsLiked, Converter={StaticResource VisibleIfTrueConverter}}">
                             <Viewbox Width="24" Height="24">
                                 <Canvas Width="24" Height="24">
-                                    <Path Data="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z" Fill="Crimson" />
+                                    <Path
+                                        Data="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"
+                                        Fill="Crimson" />
                                 </Canvas>
                             </Viewbox>
                         </Button>
@@ -374,7 +384,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                  ToolTip="{Binding Path=(i18N:AkaI18N.GifIllustrationHint)}"
                                  Visibility="{Binding IsUgoira, Converter={StaticResource VisibleIfTrueConverter}}">
                             <Canvas Width="24" Height="24">
-                                <Path Data="M11,8H13V16H11V8M7.67,8H4.33C3.53,8 3,8.67 3,9.33V14.67C3,15.33 3.53,16 4.33,16H7.67C8.47,16 9,15.33 9,14.67V12H7V14H5V10H9V9.33C9,8.67 8.47,8 7.67,8M21,10V8H15V16H17V14H19.5V12H17V10H21Z" Fill="Gray" />
+                                <Path
+                                    Data="M11,8H13V16H11V8M7.67,8H4.33C3.53,8 3,8.67 3,9.33V14.67C3,15.33 3.53,16 4.33,16H7.67C8.47,16 9,15.33 9,14.67V12H7V14H5V10H9V9.33C9,8.67 8.47,8 7.67,8M21,10V8H15V16H17V14H19.5V12H17V10H21Z"
+                                    Fill="Gray" />
                             </Canvas>
                         </Viewbox>
                         <Viewbox Width="24"
@@ -383,10 +395,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                  VerticalAlignment="Center"
                                  Visibility="{Binding IsManga, Converter={StaticResource VisibleIfTrueConverter}}">
                             <ToolTipService.ToolTip>
-                                <TextBlock Text="{Binding MangaMetadata.Length, StringFormat={x:Static i18N:AkaI18N.MangaIllustrationHintFormat}}" />
+                                <TextBlock
+                                    Text="{Binding MangaMetadata.Length, StringFormat={x:Static i18N:AkaI18N.MangaIllustrationHintFormat}}" />
                             </ToolTipService.ToolTip>
                             <Canvas Width="24" Height="24">
-                                <Path Data="M22,16V4A2,2 0 0,0 20,2H8A2,2 0 0,0 6,4V16A2,2 0 0,0 8,18H20A2,2 0 0,0 22,16M11,12L13.03,14.71L16,11L20,16H8M2,6V20A2,2 0 0,0 4,22H18V20H4V6" Fill="Gray" />
+                                <Path
+                                    Data="M22,16V4A2,2 0 0,0 20,2H8A2,2 0 0,0 6,4V16A2,2 0 0,0 8,18H20A2,2 0 0,0 22,16M11,12L13.03,14.71L16,11L20,16H8M2,6V20A2,2 0 0,0 4,22H18V20H4V6"
+                                    Fill="Gray" />
                             </Canvas>
                         </Viewbox>
                     </Grid>
@@ -646,7 +661,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid x:Name="ContentContainer" Grid.ColumnSpan="2">
             <Grid.RenderTransform>
-                <ScaleTransform CenterX="{Binding ElementName=ContentContainer, Path=ActualWidth, Converter={StaticResource DoubleDivisionConverter}, ConverterParameter={StaticResource Divide}}" CenterY="{Binding ElementName=ContentContainer, Path=ActualHeight, Converter={StaticResource DoubleDivisionConverter}, ConverterParameter={StaticResource Divide}}" ScaleX="1" ScaleY="1" />
+                <ScaleTransform
+                    CenterX="{Binding ElementName=ContentContainer, Path=ActualWidth, Converter={StaticResource DoubleDivisionConverter}, ConverterParameter={StaticResource Divide}}"
+                    CenterY="{Binding ElementName=ContentContainer, Path=ActualHeight, Converter={StaticResource DoubleDivisionConverter}, ConverterParameter={StaticResource Divide}}"
+                    ScaleX="1" ScaleY="1" />
             </Grid.RenderTransform>
             <Grid x:Name="NavigatorContainer"
                   Width="250"
@@ -674,14 +692,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                 <Setter Property="Width" Value="120" />
                                                 <Setter Property="Height" Value="120" />
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding ElementName=ExpandToggleButton, Path=IsChecked}" Value="False">
+                                                    <DataTrigger
+                                                        Binding="{Binding ElementName=ExpandToggleButton, Path=IsChecked}"
+                                                        Value="False">
                                                         <Setter Property="RenderTransform">
                                                             <Setter.Value>
                                                                 <RotateTransform Angle="0" CenterX="35" CenterY="35" />
                                                             </Setter.Value>
                                                         </Setter>
                                                     </DataTrigger>
-                                                    <DataTrigger Binding="{Binding ElementName=ExpandToggleButton, Path=IsChecked}" Value="True">
+                                                    <DataTrigger
+                                                        Binding="{Binding ElementName=ExpandToggleButton, Path=IsChecked}"
+                                                        Value="True">
                                                         <Setter Property="RenderTransform">
                                                             <Setter.Value>
                                                                 <RotateTransform Angle="0" CenterX="60" CenterY="60" />
@@ -694,7 +716,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                         <Image.Triggers>
                                             <EventTrigger RoutedEvent="Mouse.MouseEnter">
                                                 <BeginStoryboard>
-                                                    <Storyboard TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)" TargetName="UserAvatar">
+                                                    <Storyboard
+                                                        TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
+                                                        TargetName="UserAvatar">
                                                         <DoubleAnimation x:Name="UserAvatarPositiveRotationAnimation"
                                                                          EasingFunction="{StaticResource CubicEase}"
                                                                          From="0"
@@ -705,7 +729,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                             </EventTrigger>
                                             <EventTrigger RoutedEvent="Mouse.MouseLeave">
                                                 <BeginStoryboard>
-                                                    <Storyboard TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)" TargetName="UserAvatar">
+                                                    <Storyboard
+                                                        TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
+                                                        TargetName="UserAvatar">
                                                         <DoubleAnimation x:Name="UserAvatarNegativeRotationAnimation"
                                                                          EasingFunction="{StaticResource CubicEase}"
                                                                          From="360"
@@ -971,7 +997,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                             </Storyboard>
                                         </BeginStoryboard>
                                         <BeginStoryboard>
-                                            <Storyboard TargetProperty="(materialDesign:Card.Width)" TargetName="NavigatorCard">
+                                            <Storyboard TargetProperty="(materialDesign:Card.Width)"
+                                                        TargetName="NavigatorCard">
                                                 <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
                                                                  From="250"
                                                                  To="90"
@@ -1003,7 +1030,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                             </Storyboard>
                                         </BeginStoryboard>
                                         <BeginStoryboard>
-                                            <Storyboard TargetProperty="(EllipseGeometry.RadiusX)" TargetName="AvatarEllipseGeometry">
+                                            <Storyboard TargetProperty="(EllipseGeometry.RadiusX)"
+                                                        TargetName="AvatarEllipseGeometry">
                                                 <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
                                                                  From="60"
                                                                  To="35"
@@ -1011,7 +1039,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                             </Storyboard>
                                         </BeginStoryboard>
                                         <BeginStoryboard>
-                                            <Storyboard TargetProperty="(EllipseGeometry.RadiusY)" TargetName="AvatarEllipseGeometry">
+                                            <Storyboard TargetProperty="(EllipseGeometry.RadiusY)"
+                                                        TargetName="AvatarEllipseGeometry">
                                                 <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
                                                                  From="60"
                                                                  To="35"
@@ -1019,7 +1048,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                             </Storyboard>
                                         </BeginStoryboard>
                                         <BeginStoryboard>
-                                            <Storyboard TargetProperty="(EllipseGeometry.Center)" TargetName="AvatarEllipseGeometry">
+                                            <Storyboard TargetProperty="(EllipseGeometry.Center)"
+                                                        TargetName="AvatarEllipseGeometry">
                                                 <PointAnimation EasingFunction="{StaticResource CubicEase}"
                                                                 From="60 60"
                                                                 To="35 35"
@@ -1053,7 +1083,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                             </Storyboard>
                                         </BeginStoryboard>
                                         <BeginStoryboard>
-                                            <Storyboard TargetProperty="(materialDesign:Card.Width)" TargetName="NavigatorCard">
+                                            <Storyboard TargetProperty="(materialDesign:Card.Width)"
+                                                        TargetName="NavigatorCard">
                                                 <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
                                                                  From="90"
                                                                  To="250"
@@ -1085,7 +1116,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                             </Storyboard>
                                         </BeginStoryboard>
                                         <BeginStoryboard>
-                                            <Storyboard TargetProperty="(EllipseGeometry.RadiusX)" TargetName="AvatarEllipseGeometry">
+                                            <Storyboard TargetProperty="(EllipseGeometry.RadiusX)"
+                                                        TargetName="AvatarEllipseGeometry">
                                                 <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
                                                                  From="35"
                                                                  To="60"
@@ -1093,7 +1125,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                             </Storyboard>
                                         </BeginStoryboard>
                                         <BeginStoryboard>
-                                            <Storyboard TargetProperty="(EllipseGeometry.RadiusY)" TargetName="AvatarEllipseGeometry">
+                                            <Storyboard TargetProperty="(EllipseGeometry.RadiusY)"
+                                                        TargetName="AvatarEllipseGeometry">
                                                 <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
                                                                  From="35"
                                                                  To="60"
@@ -1101,7 +1134,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                             </Storyboard>
                                         </BeginStoryboard>
                                         <BeginStoryboard>
-                                            <Storyboard TargetProperty="(EllipseGeometry.Center)" TargetName="AvatarEllipseGeometry">
+                                            <Storyboard TargetProperty="(EllipseGeometry.Center)"
+                                                        TargetName="AvatarEllipseGeometry">
                                                 <PointAnimation EasingFunction="{StaticResource CubicEase}"
                                                                 From="35 35"
                                                                 To=" 60 60"
@@ -1181,7 +1215,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                         <materialDesign:Card.Resources>
                             <ResourceDictionary>
                                 <ResourceDictionary.MergedDictionaries>
-                                    <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/materialdesign.xaml" />
+                                    <ResourceDictionary
+                                        Source="pack://application:,,,/Dragablz;component/Themes/materialdesign.xaml" />
                                     <ResourceDictionary>
                                         <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#FFFFFF" />
                                         <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="#FFFFFF" />
@@ -1195,7 +1230,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                         <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="#007CEE" />
                                     </ResourceDictionary>
                                 </ResourceDictionary.MergedDictionaries>
-                                <Style BasedOn="{StaticResource MaterialDesignTabablzControlStyle}" TargetType="{x:Type dragablz:TabablzControl}" />
+                                <Style BasedOn="{StaticResource MaterialDesignTabablzControlStyle}"
+                                       TargetType="{x:Type dragablz:TabablzControl}" />
                             </ResourceDictionary>
                         </materialDesign:Card.Resources>
                         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
@@ -1206,15 +1242,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                         SelectedDate="{x:Static viewModel:RankOptionModel.MaxRankDateTime}"
                                         SelectedDateChanged="RankDatePicker_OnSelectedDateChanged">
                                 <DatePicker.BlackoutDates>
-                                    <CalendarDateRange End="{x:Static system:DateTime.MaxValue}" Start="{x:Static viewModel:RankOptionModel.InvalidRankDateTimeStart}" />
+                                    <CalendarDateRange End="{x:Static system:DateTime.MaxValue}"
+                                                       Start="{x:Static viewModel:RankOptionModel.InvalidRankDateTimeStart}" />
                                 </DatePicker.BlackoutDates>
                                 <DatePicker.Resources>
                                     <ResourceDictionary>
                                         <ResourceDictionary.MergedDictionaries>
-                                            <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
-                                            <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                                            <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml" />
-                                            <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Purple.xaml" />
+                                            <ResourceDictionary
+                                                Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                                            <ResourceDictionary
+                                                Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                                            <ResourceDictionary
+                                                Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml" />
+                                            <ResourceDictionary
+                                                Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Purple.xaml" />
                                         </ResourceDictionary.MergedDictionaries>
                                         <Style TargetType="DatePickerTextBox">
                                             <Setter Property="IsReadOnly" Value="True" />
@@ -1232,72 +1273,86 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                      SelectionChanged="RankOptionPicker_OnSelectionChanged"
                                                      TextElement.FontFamily="Microsoft YaHei Light"
                                                      TextElement.FontSize="10">
-                                <TabItem IsSelected="{Binding Path=[0].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <TabItem
+                                    IsSelected="{Binding Path=[0].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                     <TabItem.Header>
                                         <TextBlock Text="{Binding Path=[0].Name}" />
                                     </TabItem.Header>
                                 </TabItem>
-                                <TabItem IsSelected="{Binding Path=[1].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <TabItem
+                                    IsSelected="{Binding Path=[1].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                     <TabItem.Header>
                                         <TextBlock Text="{Binding Path=[1].Name}" />
                                     </TabItem.Header>
                                 </TabItem>
-                                <TabItem IsSelected="{Binding Path=[2].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <TabItem
+                                    IsSelected="{Binding Path=[2].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                     <TabItem.Header>
                                         <TextBlock Text="{Binding Path=[2].Name}" />
                                     </TabItem.Header>
                                 </TabItem>
-                                <TabItem IsSelected="{Binding Path=[3].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <TabItem
+                                    IsSelected="{Binding Path=[3].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                     <TabItem.Header>
                                         <TextBlock Text="{Binding Path=[3].Name}" />
                                     </TabItem.Header>
                                 </TabItem>
-                                <TabItem IsSelected="{Binding Path=[4].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <TabItem
+                                    IsSelected="{Binding Path=[4].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                     <TabItem.Header>
                                         <TextBlock Text="{Binding Path=[4].Name}" />
                                     </TabItem.Header>
                                 </TabItem>
-                                <TabItem IsSelected="{Binding Path=[5].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <TabItem
+                                    IsSelected="{Binding Path=[5].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                     <TabItem.Header>
                                         <TextBlock Text="{Binding Path=[5].Name}" />
                                     </TabItem.Header>
                                 </TabItem>
-                                <TabItem IsSelected="{Binding Path=[6].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <TabItem
+                                    IsSelected="{Binding Path=[6].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                     <TabItem.Header>
                                         <TextBlock Text="{Binding Path=[6].Name}" />
                                     </TabItem.Header>
                                 </TabItem>
-                                <TabItem IsSelected="{Binding Path=[7].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <TabItem
+                                    IsSelected="{Binding Path=[7].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                     <TabItem.Header>
                                         <TextBlock Text="{Binding Path=[7].Name}" />
                                     </TabItem.Header>
                                 </TabItem>
-                                <TabItem IsSelected="{Binding Path=[8].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <TabItem
+                                    IsSelected="{Binding Path=[8].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                     <TabItem.Header>
                                         <TextBlock Text="{Binding Path=[8].Name}" />
                                     </TabItem.Header>
                                 </TabItem>
-                                <TabItem IsSelected="{Binding Path=[9].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <TabItem
+                                    IsSelected="{Binding Path=[9].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                     <TabItem.Header>
                                         <TextBlock Text="{Binding Path=[9].Name}" />
                                     </TabItem.Header>
                                 </TabItem>
-                                <TabItem IsSelected="{Binding Path=[10].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <TabItem
+                                    IsSelected="{Binding Path=[10].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                     <TabItem.Header>
                                         <TextBlock Text="{Binding Path=[10].Name}" />
                                     </TabItem.Header>
                                 </TabItem>
-                                <TabItem IsSelected="{Binding Path=[11].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <TabItem
+                                    IsSelected="{Binding Path=[11].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                     <TabItem.Header>
                                         <TextBlock Text="{Binding Path=[11].Name}" />
                                     </TabItem.Header>
                                 </TabItem>
-                                <TabItem IsSelected="{Binding Path=[12].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <TabItem
+                                    IsSelected="{Binding Path=[12].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                     <TabItem.Header>
                                         <TextBlock Text="{Binding Path=[12].Name}" />
                                     </TabItem.Header>
                                 </TabItem>
-                                <TabItem IsSelected="{Binding Path=[13].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <TabItem
+                                    IsSelected="{Binding Path=[13].IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                     <TabItem.Header>
                                         <TextBlock Text="{Binding Path=[13].Name}" />
                                     </TabItem.Header>
@@ -1346,7 +1401,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                     <svgc:SvgViewbox.Triggers>
                                         <EventTrigger RoutedEvent="Mouse.MouseEnter">
                                             <BeginStoryboard>
-                                                <Storyboard TargetProperty="(RotateTransform.Angle)" TargetName="PixivLogoTransform">
+                                                <Storyboard TargetProperty="(RotateTransform.Angle)"
+                                                            TargetName="PixivLogoTransform">
                                                     <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
                                                                      From="0"
                                                                      To="360"
@@ -1356,7 +1412,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                         </EventTrigger>
                                         <EventTrigger RoutedEvent="Mouse.MouseLeave">
                                             <BeginStoryboard>
-                                                <Storyboard TargetProperty="(RotateTransform.Angle)" TargetName="PixivLogoTransform">
+                                                <Storyboard TargetProperty="(RotateTransform.Angle)"
+                                                            TargetName="PixivLogoTransform">
                                                     <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
                                                                      From="360"
                                                                      To="0"
@@ -1366,7 +1423,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                         </EventTrigger>
                                     </svgc:SvgViewbox.Triggers>
                                     <svgc:SvgViewbox.RenderTransform>
-                                        <RotateTransform x:Name="PixivLogoTransform" Angle="0" CenterX="50" CenterY="50" />
+                                        <RotateTransform x:Name="PixivLogoTransform" Angle="0" CenterX="50"
+                                                         CenterY="50" />
                                     </svgc:SvgViewbox.RenderTransform>
                                     <svgc:SvgViewbox.Clip>
                                         <EllipseGeometry Center="50 50"
@@ -1399,9 +1457,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                             Style="{DynamicResource MaterialDesignToolButton}">
                                         <Viewbox Width="34" Height="30">
                                             <Canvas Width="24" Height="24">
-                                                <Path Data="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
-                                                      Fill="Black"
-                                                      Opacity="0.6" />
+                                                <Path
+                                                    Data="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
+                                                    Fill="Black"
+                                                    Opacity="0.6" />
                                             </Canvas>
                                         </Viewbox>
                                     </Button>
@@ -1429,7 +1488,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                               Unchecked="QueryArtistToggleButton_OnUnchecked">
                                                     <Viewbox Width="24" Height="24">
                                                         <Canvas Width="24" Height="24">
-                                                            <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" Fill="Gray" />
+                                                            <Path
+                                                                Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"
+                                                                Fill="Gray" />
                                                         </Canvas>
                                                     </Viewbox>
                                                 </ToggleButton>
@@ -1442,7 +1503,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                               ToolTip="{Binding Path=(i18N:AkaI18N.QuerySingleUser)}">
                                                     <Viewbox Width="24" Height="24">
                                                         <Canvas Width="24" Height="24">
-                                                            <Path Data="M19,21V19H15V17H19V15L22,18L19,21M10,4A4,4 0 0,1 14,8A4,4 0 0,1 10,12A4,4 0 0,1 6,8A4,4 0 0,1 10,4M10,14C11.15,14 12.25,14.12 13.24,14.34C12.46,15.35 12,16.62 12,18C12,18.7 12.12,19.37 12.34,20H2V18C2,15.79 5.58,14 10,14Z" Fill="Gray" />
+                                                            <Path
+                                                                Data="M19,21V19H15V17H19V15L22,18L19,21M10,4A4,4 0 0,1 14,8A4,4 0 0,1 10,12A4,4 0 0,1 6,8A4,4 0 0,1 10,4M10,14C11.15,14 12.25,14.12 13.24,14.34C12.46,15.35 12,16.62 12,18C12,18.7 12.12,19.37 12.34,20H2V18C2,15.79 5.58,14 10,14Z"
+                                                                Fill="Gray" />
                                                         </Canvas>
                                                     </Viewbox>
                                                 </ToggleButton>
@@ -1455,7 +1518,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                               ToolTip="{Binding Path=(i18N:AkaI18N.QuerySingleIllust)}">
                                                     <Viewbox Width="24" Height="24">
                                                         <Canvas Width="24" Height="24">
-                                                            <Path Data="M10,7V9H12V17H14V7H10M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2Z" Fill="Gray" />
+                                                            <Path
+                                                                Data="M10,7V9H12V17H14V7H10M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2Z"
+                                                                Fill="Gray" />
                                                         </Canvas>
                                                     </Viewbox>
                                                 </ToggleButton>
@@ -1526,10 +1591,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                         <materialDesign:TransitioningContent.OpeningEffects>
                                                             <materialDesign:TransitionEffect Kind="FadeIn" />
                                                         </materialDesign:TransitioningContent.OpeningEffects>
-                                                        <Grid x:Name="RecommendIllustratorContainer" MouseLeftButtonDown="RecommendIllustratorContainer_OnMouseLeftButtonDown">
+                                                        <Grid x:Name="RecommendIllustratorContainer"
+                                                              MouseLeftButtonDown="RecommendIllustratorContainer_OnMouseLeftButtonDown">
                                                             <Grid.Triggers>
                                                                 <EventTrigger RoutedEvent="Grid.MouseLeftButtonDown">
-                                                                    <BeginStoryboard Storyboard="{StaticResource OpenUserBrowserAnimation}" />
+                                                                    <BeginStoryboard
+                                                                        Storyboard="{StaticResource OpenUserBrowserAnimation}" />
                                                                 </EventTrigger>
                                                             </Grid.Triggers>
                                                             <materialDesign:Card Width="120"
@@ -1563,7 +1630,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                                    PlacementTarget="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}}}"
                                                                    PopupAnimation="Fade"
                                                                    StaysOpen="True">
-                                                                <userControls:UserPreviewPopupContent x:Name="UserPreviewPopupContent" Loaded="UserPreviewPopupContent_OnLoaded" />
+                                                                <userControls:UserPreviewPopupContent
+                                                                    x:Name="UserPreviewPopupContent"
+                                                                    Loaded="UserPreviewPopupContent_OnLoaded" />
                                                             </Popup>
                                                         </Grid>
                                                     </materialDesign:TransitioningContent>
@@ -1574,21 +1643,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                             <Grid.Triggers>
                                                 <EventTrigger RoutedEvent="Grid.MouseEnter">
                                                     <BeginStoryboard>
-                                                        <Storyboard TargetProperty="(Grid.Opacity)" TargetName="ReloadRecommendIllustratorButton">
-                                                            <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                             From="0"
-                                                                             To="1"
-                                                                             Duration="00:00:00.3" />
+                                                        <Storyboard TargetProperty="(Grid.Opacity)"
+                                                                    TargetName="ReloadRecommendIllustratorButton">
+                                                            <DoubleAnimation
+                                                                EasingFunction="{StaticResource CubicEase}"
+                                                                From="0"
+                                                                To="1"
+                                                                Duration="00:00:00.3" />
                                                         </Storyboard>
                                                     </BeginStoryboard>
                                                 </EventTrigger>
                                                 <EventTrigger RoutedEvent="Grid.MouseLeave">
                                                     <BeginStoryboard>
-                                                        <Storyboard TargetProperty="(Grid.Opacity)" TargetName="ReloadRecommendIllustratorButton">
-                                                            <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                             From="1"
-                                                                             To="0"
-                                                                             Duration="00:00:00.3" />
+                                                        <Storyboard TargetProperty="(Grid.Opacity)"
+                                                                    TargetName="ReloadRecommendIllustratorButton">
+                                                            <DoubleAnimation
+                                                                EasingFunction="{StaticResource CubicEase}"
+                                                                From="1"
+                                                                To="0"
+                                                                Duration="00:00:00.3" />
                                                         </Storyboard>
                                                     </BeginStoryboard>
                                                 </EventTrigger>
@@ -1643,7 +1716,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                             <ListView.Style>
                                 <Style BasedOn="{StaticResource MaterialDesignListView}" TargetType="ListView">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ElementName=TrendsTab, Path=IsSelected}" Value="False">
+                                        <DataTrigger Binding="{Binding ElementName=TrendsTab, Path=IsSelected}"
+                                                     Value="False">
                                             <Setter Property="ItemsSource" Value="{x:Null}" />
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -1666,7 +1740,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                             <ListView.Style>
                                 <Style BasedOn="{StaticResource MaterialDesignListView}" TargetType="ListView">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ElementName=SpotlightTab, Path=IsSelected}" Value="False">
+                                        <DataTrigger Binding="{Binding ElementName=SpotlightTab, Path=IsSelected}"
+                                                     Value="False">
                                             <Setter Property="ItemsSource" Value="{x:Null}" />
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -1674,7 +1749,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                             </ListView.Style>
                             <ListView.Template>
                                 <ControlTemplate>
-                                    <ScrollViewer VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
+                                    <ScrollViewer VirtualizingStackPanel.IsVirtualizing="True"
+                                                  VirtualizingStackPanel.VirtualizationMode="Recycling">
                                         <ItemsPresenter />
                                     </ScrollViewer>
                                 </ControlTemplate>
@@ -1693,7 +1769,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                   VirtualizingPanel.ScrollUnit="Pixel"
                                   VirtualizingPanel.VirtualizationMode="Standard">
                             <ListView.Resources>
-                                <valueConverters:UserPreviewListViewVisibilityConverter x:Key="UserPreviewListViewVisibilityConverter" />
+                                <valueConverters:UserPreviewListViewVisibilityConverter
+                                    x:Key="UserPreviewListViewVisibilityConverter" />
                             </ListView.Resources>
                             <ListView.Visibility>
                                 <MultiBinding Converter="{StaticResource UserPreviewListViewVisibilityConverter}">
@@ -1704,7 +1781,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                             </ListView.Visibility>
                             <ListView.Template>
                                 <ControlTemplate>
-                                    <ScrollViewer VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
+                                    <ScrollViewer VirtualizingStackPanel.IsVirtualizing="True"
+                                                  VirtualizingStackPanel.VirtualizationMode="Recycling">
                                         <ItemsPresenter />
                                     </ScrollViewer>
                                 </ControlTemplate>
@@ -1727,14 +1805,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                             <ListView.Style>
                                 <Style BasedOn="{StaticResource MaterialDesignListView}" TargetType="ListView">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ElementName=MenuTab, Path=IsSelected}" Value="True">
+                                        <DataTrigger Binding="{Binding ElementName=MenuTab, Path=IsSelected}"
+                                                     Value="True">
                                             <Setter Property="ItemsSource" Value="{x:Null}" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </ListView.Style>
                             <ListView.Resources>
-                                <valueConverters:ImageListViewVisibilityConverter x:Key="ImageListViewVisibilityConverter" />
+                                <valueConverters:ImageListViewVisibilityConverter
+                                    x:Key="ImageListViewVisibilityConverter" />
                             </ListView.Resources>
                             <ListView.Visibility>
                                 <MultiBinding Converter="{StaticResource ImageListViewVisibilityConverter}">
@@ -1768,7 +1848,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                           MouseLeftButtonDown="UserBrowserPageScrollViewer_OnMouseLeftButtonDown"
                           Opacity="0">
                 <ScrollViewer.RenderTransform>
-                    <ScaleTransform CenterX="{Binding ElementName=UserBrowserPageScrollViewer, Path=ActualWidth, Converter={StaticResource DoubleDivisionConverter}, ConverterParameter={StaticResource Divide}}" CenterY="{Binding ElementName=UserBrowserPageScrollViewer, Path=ActualHeight, Converter={StaticResource DoubleDivisionConverter}, ConverterParameter={StaticResource Divide}}" ScaleX="0" ScaleY="0" />
+                    <ScaleTransform
+                        CenterX="{Binding ElementName=UserBrowserPageScrollViewer, Path=ActualWidth, Converter={StaticResource DoubleDivisionConverter}, ConverterParameter={StaticResource Divide}}"
+                        CenterY="{Binding ElementName=UserBrowserPageScrollViewer, Path=ActualHeight, Converter={StaticResource DoubleDivisionConverter}, ConverterParameter={StaticResource Divide}}"
+                        ScaleX="0" ScaleY="0" />
                 </ScrollViewer.RenderTransform>
                 <ScrollViewer.Resources>
                     <system:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">
@@ -1941,7 +2024,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                             </Button>
                                         </Border>
                                     </Grid>
-                                    <materialDesign:PopupBox IsEnabled="{Binding IsFollowed, Converter={StaticResource InverseBooleanConverter}}" PopupMode="Click">
+                                    <materialDesign:PopupBox
+                                        IsEnabled="{Binding IsFollowed, Converter={StaticResource InverseBooleanConverter}}"
+                                        PopupMode="Click">
                                         <materialDesign:PopupBox.PopupContent>
                                             <Menu>
                                                 <Menu.ItemsPanel>
@@ -1949,7 +2034,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                         <StackPanel />
                                                     </ItemsPanelTemplate>
                                                 </Menu.ItemsPanel>
-                                                <MenuItem Click="PrivateFollow_OnClick" Header="{Binding Path=(i18N:AkaI18N.UserBrowserPrivateFollow)}" />
+                                                <MenuItem Click="PrivateFollow_OnClick"
+                                                          Header="{Binding Path=(i18N:AkaI18N.UserBrowserPrivateFollow)}" />
                                             </Menu>
                                         </materialDesign:PopupBox.PopupContent>
                                     </materialDesign:PopupBox>

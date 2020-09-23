@@ -31,8 +31,7 @@ namespace Pixeval.Objects.Generic
             return receiver;
         }
 
-        public static Task AwaitAsync<T>(this T obj, Func<T, Task<bool>> on, int interval = 0,
-                                         TimeSpan timeout = default)
+        public static Task AwaitAsync<T>(this T obj, Func<T, Task<bool>> on, int interval = 0, TimeSpan timeout = default)
         {
             var timer = DateTime.Now;
             return Task.Run(async () =>

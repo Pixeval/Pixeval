@@ -64,16 +64,12 @@ namespace Pixeval.Core
 
         public static async Task<string> GetResizedBase64UriOfImageFromUrl(string url, string type = null)
         {
-            return
-                $"data:image/{type ?? url[(url.LastIndexOf('.') + 1)..]};base64,{Convert.ToBase64String(await GetBytes(url))}";
+            return $"data:image/{type ?? url[(url.LastIndexOf('.') + 1)..]};base64,{Convert.ToBase64String(await GetBytes(url))}";
         }
 
-        public static async Task<MemoryStream> Download(string url, IProgress<double> progress,
-                                                        CancellationToken cancellationToken = default)
+        public static async Task<MemoryStream> Download(string url, IProgress<double> progress, CancellationToken cancellationToken = default)
         {
-            using var response =
-                await HttpClientFactory.GetResponseHeader(
-                    HttpClientFactory.PixivImage().Apply(_ => _.Timeout = TimeSpan.FromSeconds(30)), url);
+            using var response = await HttpClientFactory.GetResponseHeader(HttpClientFactory.PixivImage().Apply(_ => _.Timeout = TimeSpan.FromSeconds(30)), url);
 
             var contentLength = response.Content.Headers.ContentLength;
             if (!contentLength.HasValue) return new MemoryStream(await GetBytes(url));
@@ -85,13 +81,12 @@ namespace Pixeval.Core
 
             var memoryStream = new MemoryStream();
             await using var contentStream = await response.Content.ReadAsStreamAsync();
-            while ((bytesRead = await contentStream.ReadAsync(byteBuffer, 0, byteBuffer.Length, cancellationToken)) !=
-                0)
+            while ((bytesRead = await contentStream.ReadAsync(byteBuffer, 0, byteBuffer.Length, cancellationToken)) != 0)
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 totalRead += bytesRead;
-                await memoryStream.WriteAsync(byteBuffer, 0, (int)bytesRead, cancellationToken);
-                progress.Report(totalRead / (double)contentLength);
+                await memoryStream.WriteAsync(byteBuffer, 0, (int) bytesRead, cancellationToken);
+                progress.Report(totalRead / (double) contentLength);
             }
 
             cancellationToken.ThrowIfCancellationRequested();

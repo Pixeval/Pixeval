@@ -43,8 +43,7 @@ namespace Pixeval.Core
 
         public static void StartServer()
         {
-            _server = new WebServer(o => o.WithUrlPrefix("http://127.0.0.1:12547").WithMode(HttpListenerMode.Microsoft))
-                .WithWebApi("/", m => m.WithController<TransferController>());
+            _server = new WebServer(o => o.WithUrlPrefix("http://127.0.0.1:12547").WithMode(HttpListenerMode.Microsoft)).WithWebApi("/", m => m.WithController<TransferController>());
             _server.Start();
         }
     }

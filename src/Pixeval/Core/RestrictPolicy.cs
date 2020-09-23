@@ -22,7 +22,6 @@ namespace Pixeval.Core
 {
     public enum RestrictPolicy
     {
-        Public,
-        Private
+        Public, Private
     }
 }

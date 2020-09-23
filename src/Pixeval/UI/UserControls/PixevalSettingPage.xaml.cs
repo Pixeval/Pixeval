@@ -44,12 +44,7 @@ namespace Pixeval.UI.UserControls
 
         private void OpenFileDialogButton_OnClick(object sender, RoutedEventArgs e)
         {
-            using var fileDialog = new CommonOpenFileDialog(AkaI18N.PleaseSelectLocation)
-            {
-                InitialDirectory = Settings.Global.DownloadLocation ??
-                    Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
-                IsFolderPicker = true
-            };
+            using var fileDialog = new CommonOpenFileDialog(AkaI18N.PleaseSelectLocation) {InitialDirectory = Settings.Global.DownloadLocation ?? Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), IsFolderPicker = true};
 
             if (fileDialog.ShowDialog() == CommonFileDialogResult.Ok) DownloadLocationTextBox.Text = fileDialog.FileName;
         }
@@ -58,7 +53,7 @@ namespace Pixeval.UI.UserControls
         {
             var set = new HashSet<string>();
             if (Settings.Global.ExcludeTag != null) set.AddRange(Settings.Global.ExcludeTag);
-            set.AddRange(new[] { "R-18", "R-18G" });
+            set.AddRange(new[] {"R-18", "R-18G"});
             Settings.Global.ExcludeTag = set;
         }
 
@@ -85,14 +80,12 @@ namespace Pixeval.UI.UserControls
         private async void OpenWebApiR18Button_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             MainWindow.MessageQueue.Enqueue(AkaI18N.TryingToToggleR18Switch);
-            MainWindow.MessageQueue.Enqueue(await PixivClient.Instance.ToggleWebApiR18State(true)
-                                                ? AkaI18N.ToggleR18OnSuccess
-                                                : AkaI18N.ToggleR18OnFailed);
+            MainWindow.MessageQueue.Enqueue(await PixivClient.Instance.ToggleWebApiR18State(true) ? AkaI18N.ToggleR18OnSuccess : AkaI18N.ToggleR18OnFailed);
         }
 
         private void CultureSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            AkaI18N.Reload((I18NOption)CultureSelector.SelectedItem);
+            AkaI18N.Reload((I18NOption) CultureSelector.SelectedItem);
         }
     }
 }

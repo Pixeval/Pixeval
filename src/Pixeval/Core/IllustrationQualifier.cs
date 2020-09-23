@@ -29,15 +29,10 @@ namespace Pixeval.Core
         {
             return pattern switch
             {
-                { Type: ConditionType.Id } => !condition.Id.Contains(pattern.Condition),
-                { Type: ConditionType.Tag } => !condition.Title.Contains(pattern.Condition) && !(condition.Tags != null && condition.Tags.Any(tag => tag?.Name != null && tag.Name.ToLower().Contains(pattern.Condition.ToLower()) || tag?.TranslatedName != null && tag.TranslatedName.ToLower().Contains(pattern.Condition.ToLower()))),
-                { Type: ConditionType.ExcludeTag } => condition.Tags != null &&
-                condition.Tags.Any(tag =>
-                                       tag?.Name != null &&
-                                       tag.Name.ToLower().Contains(pattern.Condition[1..].ToLower()) ||
-                                       tag?.TranslatedName != null &&
-                                       tag.TranslatedName.ToLower().Contains(pattern.Condition[1..].ToLower())),
-                _ => false
+                { Type: ConditionType.Id }         => !condition.Id.Contains(pattern.Condition),
+                { Type: ConditionType.Tag }        => !condition.Title.Contains(pattern.Condition) && !(condition.Tags != null && condition.Tags.Any(tag => tag?.Name != null && tag.Name.ToLower().Contains(pattern.Condition.ToLower()) || tag?.TranslatedName != null && tag.TranslatedName.ToLower().Contains(pattern.Condition.ToLower()))),
+                { Type: ConditionType.ExcludeTag } => condition.Tags != null && condition.Tags.Any(tag => tag?.Name != null && tag.Name.ToLower().Contains(pattern.Condition[1..].ToLower()) || tag?.TranslatedName != null && tag.TranslatedName.ToLower().Contains(pattern.Condition[1..].ToLower())),
+                _                                  => false
             };
         }
     }

@@ -40,7 +40,7 @@ namespace Pixeval.Core
 
         public UploadAsyncEnumerable(string uid)
         {
-            this._uid = uid;
+            _uid = uid;
         }
 
         public override int RequestedPages { get; protected set; }
@@ -52,10 +52,7 @@ namespace Pixeval.Core
 
         public override bool VerifyRationality(Illustration item, IList<Illustration> collection)
         {
-            return item != null &&
-                collection.All(t => t.Id != item.Id) &&
-                PixivHelper.VerifyIllustRational(Settings.Global.ExcludeTag, Settings.Global.IncludeTag,
-                                                 Settings.Global.MinBookmark, item);
+            return item != null && collection.All(t => t.Id != item.Id) && PixivHelper.VerifyIllustRational(Settings.Global.ExcludeTag, Settings.Global.IncludeTag, Settings.Global.MinBookmark, item);
         }
 
         public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = default)
@@ -73,7 +70,7 @@ namespace Pixeval.Core
 
             public UploadAsyncEnumerator(IPixivAsyncEnumerable<Illustration> enumerable, string uid) : base(enumerable)
             {
-                this._uid = uid;
+                _uid = uid;
             }
 
             public override Illustration Current => _illustrationEnumerator.Current;
@@ -87,8 +84,7 @@ namespace Pixeval.Core
             {
                 if (_entity == null)
                 {
-                    if (await TryGetResponse($"/v1/user/illusts?user_id={_uid}&filter=for_android&type=illust") is (true,
-                        var model))
+                    if (await TryGetResponse($"/v1/user/illusts?user_id={_uid}&filter=for_android&type=illust") is (true, var model))
                     {
                         _entity = model;
                         UpdateEnumerator();
@@ -118,9 +114,7 @@ namespace Pixeval.Core
 
             private static async Task<HttpResponse<UploadResponse>> TryGetResponse(string url)
             {
-                var res = (await HttpClientFactory.AppApiHttpClient()
-                    .Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", AkaI18N.GetCultureAcceptLanguage()))
-                    .GetStringAsync(url)).FromJson<UploadResponse>();
+                var res = (await HttpClientFactory.AppApiHttpClient().Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", AkaI18N.GetCultureAcceptLanguage())).GetStringAsync(url)).FromJson<UploadResponse>();
                 if (res is { } response && !response.Illusts.IsNullOrEmpty()) return HttpResponse<UploadResponse>.Wrap(true, response);
 
                 return HttpResponse<UploadResponse>.Wrap(false);

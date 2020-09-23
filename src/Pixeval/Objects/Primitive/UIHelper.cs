@@ -47,8 +47,7 @@ namespace Pixeval.Objects.Primitive
         private static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
 
         [DllImport("user32.dll")]
-        public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy,
-                                               uint uFlags);
+        public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, uint uFlags);
 
         /// <summary>
         ///     Little trick, from https://stackoverflow.com/questions/257587/bring-a-window-to-the-front-in-wpf
@@ -95,17 +94,17 @@ namespace Pixeval.Objects.Primitive
 
         public static T DataContext<T>(this FrameworkElement element)
         {
-            return (T)element.DataContext;
+            return (T) element.DataContext;
         }
 
         public static void SetImageSource(object img, ImageSource imgSource)
         {
-            Application.Current.Dispatcher?.Invoke(() => ((Image)img).Source = imgSource);
+            Application.Current.Dispatcher?.Invoke(() => ((Image) img).Source = imgSource);
         }
 
         public static void ReleaseImage(object img)
         {
-            Application.Current.Dispatcher?.Invoke(() => ((Image)img).Source = null);
+            Application.Current.Dispatcher?.Invoke(() => ((Image) img).Source = null);
         }
 
         public static ObservableCollection<T> NewItemsSource<T>(ItemsControl itemsControl)
@@ -125,15 +124,11 @@ namespace Pixeval.Objects.Primitive
             listView.ItemsSource = null;
         }
 
-        public static void StartDoubleAnimationUseCubicEase(object sender, string path, double from, double to,
-                                                            int milliseconds)
+        public static void StartDoubleAnimationUseCubicEase(object sender, string path, double from, double to, int milliseconds)
         {
             var sb = new Storyboard();
-            var doubleAnimation = new DoubleAnimation(from, to, TimeSpan.FromMilliseconds(milliseconds))
-            {
-                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
-            };
-            Storyboard.SetTarget(doubleAnimation, (DependencyObject)sender);
+            var doubleAnimation = new DoubleAnimation(from, to, TimeSpan.FromMilliseconds(milliseconds)) {EasingFunction = new CubicEase {EasingMode = EasingMode.EaseOut}};
+            Storyboard.SetTarget(doubleAnimation, (DependencyObject) sender);
             Storyboard.SetTargetProperty(doubleAnimation, new PropertyPath(path));
             sb.Children.Add(doubleAnimation);
             sb.Begin();
@@ -148,7 +143,7 @@ namespace Pixeval.Objects.Primitive
 
         public static T GetResources<T>(this FrameworkElement element, string name)
         {
-            return (T)element.Resources[name];
+            return (T) element.Resources[name];
         }
 
         public static void CloseControls(params UIElement[] controls)
@@ -160,7 +155,7 @@ namespace Pixeval.Objects.Primitive
         {
             try
             {
-                ((dynamic)control).IsOpen = false;
+                ((dynamic) control).IsOpen = false;
             }
             catch (RuntimeBinderException)
             {
@@ -172,7 +167,7 @@ namespace Pixeval.Objects.Primitive
         {
             try
             {
-                ((dynamic)control).IsOpen = true;
+                ((dynamic) control).IsOpen = true;
             }
             catch (RuntimeBinderException)
             {
@@ -197,13 +192,11 @@ namespace Pixeval.Objects.Primitive
 
     public class PopupHelper
     {
-        public static readonly DependencyProperty PopupPlacementTargetProperty =
-            DependencyProperty.RegisterAttached("PopupPlacementTarget", typeof(DependencyObject), typeof(PopupHelper),
-                                                new PropertyMetadata(null, OnPopupPlacementTargetChanged));
+        public static readonly DependencyProperty PopupPlacementTargetProperty = DependencyProperty.RegisterAttached("PopupPlacementTarget", typeof(DependencyObject), typeof(PopupHelper), new PropertyMetadata(null, OnPopupPlacementTargetChanged));
 
         public static DependencyObject GetPopupPlacementTarget(DependencyObject obj)
         {
-            return (DependencyObject)obj.GetValue(PopupPlacementTargetProperty);
+            return (DependencyObject) obj.GetValue(PopupPlacementTargetProperty);
         }
 
         public static void SetPopupPlacementTarget(DependencyObject obj, DependencyObject value)
@@ -233,8 +226,7 @@ namespace Pixeval.Objects.Primitive
 
                     w.SizeChanged += (sender, args) =>
                     {
-                        var mi = typeof(Popup).GetMethod("UpdatePosition",
-                                                         BindingFlags.NonPublic | BindingFlags.Instance);
+                        var mi = typeof(Popup).GetMethod("UpdatePosition", BindingFlags.NonPublic | BindingFlags.Instance);
                         try
                         {
                             mi?.Invoke(pop, null);

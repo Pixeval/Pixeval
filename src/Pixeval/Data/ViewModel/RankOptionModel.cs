@@ -32,9 +32,7 @@ namespace Pixeval.Data.ViewModel
     public class RankOptionModel
     {
         [DoNotNotify]
-        public static readonly RankOptionModel[] RegularRankOptions = Enum.GetValues(typeof(RankOption))
-            .Cast<RankOption>().Select(rank => new RankOptionModel(rank)).ToArray()
-            .Apply(models => models[0].IsSelected = true);
+        public static readonly RankOptionModel[] RegularRankOptions = Enum.GetValues(typeof(RankOption)).Cast<RankOption>().Select(rank => new RankOptionModel(rank)).ToArray().Apply(models => models[0].IsSelected = true);
 
         [DoNotNotify]
         public static readonly DateTime MaxRankDateTime = DateTime.Today - TimeSpan.FromDays(2);

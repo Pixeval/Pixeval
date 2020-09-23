@@ -60,8 +60,7 @@ namespace Pixeval.UI.UserControls
                             Searching.Visibility = Visibility.Visible;
                             UploadFileTextBox.Text = fs[0];
                             if ((await DoQuery(fs[0])).ToList() is { } sauceResults && sauceResults.Any())
-                                MainWindow.Instance.OpenIllustBrowser(
-                                    await PixivHelper.IllustrationInfo(sauceResults[0]));
+                                MainWindow.Instance.OpenIllustBrowser(await PixivHelper.IllustrationInfo(sauceResults[0]));
                             else
                                 MainWindow.MessageQueue.Enqueue(AkaI18N.CannotFindResult);
                         }
@@ -76,10 +75,7 @@ namespace Pixeval.UI.UserControls
 
         private async void UploadFileAndQueryButton_OnClick(object sender, RoutedEventArgs e)
         {
-            using var fileDialog = new CommonOpenFileDialog(AkaI18N.PleaseSelectFile)
-            {
-                Multiselect = false
-            };
+            using var fileDialog = new CommonOpenFileDialog(AkaI18N.PleaseSelectFile) {Multiselect = false};
             try
             {
                 if (fileDialog.ShowDialog() == CommonFileDialogResult.Ok)
@@ -103,11 +99,8 @@ namespace Pixeval.UI.UserControls
 
         private async Task<IEnumerable<string>> DoQuery(string fileName)
         {
-            await using var memoryStream =
-                new MemoryStream(await File.ReadAllBytesAsync(UploadFileTextBox.Text), false);
-            var sauceResponse = await RestService.For<ISauceNAOProtocol>(ProtocolBase.SauceNaoUrl)
-                .GetSauce(new StreamPart(memoryStream, Path.GetFileName(fileName),
-                                         Strings.AssumeImageContentType(fileName)));
+            await using var memoryStream = new MemoryStream(await File.ReadAllBytesAsync(UploadFileTextBox.Text), false);
+            var sauceResponse = await RestService.For<ISauceNAOProtocol>(ProtocolBase.SauceNaoUrl).GetSauce(new StreamPart(memoryStream, Path.GetFileName(fileName), Strings.AssumeImageContentType(fileName)));
             var content = await sauceResponse.Content.ReadAsStringAsync();
             return await ParseSauce(content);
         }
@@ -115,13 +108,7 @@ namespace Pixeval.UI.UserControls
         private static async Task<IEnumerable<string>> ParseSauce(string sauceResult)
         {
             var doc = await new HtmlParser().ParseDocumentAsync(sauceResult);
-            var results = doc.QuerySelectorAll("div.result")
-                .Where(div => div.Attributes.Length == 1)
-                .Where(div => div.ClassName == "result")
-                .Select(div => div.QuerySelectorAll(".resultcontentcolumn"))
-                .Where(i => i.Length == 1)
-                .Select(i => i[0])
-                .Select(i => i.QuerySelectorAll("div > a"));
+            var results = doc.QuerySelectorAll("div.result").Where(div => div.Attributes.Length == 1).Where(div => div.ClassName == "result").Select(div => div.QuerySelectorAll(".resultcontentcolumn")).Where(i => i.Length == 1).Select(i => i[0]).Select(i => i.QuerySelectorAll("div > a"));
             return results.Where(r => r.Any()).Select(r => r[0].Text());
         }
     }

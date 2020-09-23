@@ -36,7 +36,7 @@ namespace Pixeval.Objects.Generic
 
         public static Tasks<T, TR> Of(IEnumerable<T> tasks)
         {
-            return new Tasks<T, TR> { _taskQueue = tasks.NonNull() };
+            return new Tasks<T, TR> {_taskQueue = tasks.NonNull()};
         }
 
         public Tasks<T, TR> Mapping(Func<T, Task<TR>> map)

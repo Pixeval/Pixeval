@@ -122,7 +122,7 @@ namespace Pixeval.Data.Web.Response
                     return;
                 }
 
-                var value = (long)untypedValue;
+                var value = (long) untypedValue;
                 serializer.Serialize(writer, value.ToString());
             }
         }

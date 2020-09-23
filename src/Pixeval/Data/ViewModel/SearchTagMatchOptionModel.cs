@@ -29,19 +29,13 @@ namespace Pixeval.Data.ViewModel
     [AddINotifyPropertyChangedInterface]
     public class SearchTagMatchOptionModel
     {
-        public static readonly SearchTagMatchOptionModel PartialMatchModel =
-            new SearchTagMatchOptionModel(SearchTagMatchOption.PartialMatchForTags);
+        public static readonly SearchTagMatchOptionModel PartialMatchModel = new SearchTagMatchOptionModel(SearchTagMatchOption.PartialMatchForTags);
 
-        public static readonly SearchTagMatchOptionModel ExactMatchModel =
-            new SearchTagMatchOptionModel(SearchTagMatchOption.ExactMatchForTags);
+        public static readonly SearchTagMatchOptionModel ExactMatchModel = new SearchTagMatchOptionModel(SearchTagMatchOption.ExactMatchForTags);
 
-        public static readonly SearchTagMatchOptionModel TitleAndCaptionModel =
-            new SearchTagMatchOptionModel(SearchTagMatchOption.TitleAndCaption);
+        public static readonly SearchTagMatchOptionModel TitleAndCaptionModel = new SearchTagMatchOptionModel(SearchTagMatchOption.TitleAndCaption);
 
-        public static readonly IEnumerable<SearchTagMatchOptionModel> AllPossibleMatchOptions = new[]
-        {
-            PartialMatchModel, ExactMatchModel, TitleAndCaptionModel
-        };
+        public static readonly IEnumerable<SearchTagMatchOptionModel> AllPossibleMatchOptions = new[] {PartialMatchModel, ExactMatchModel, TitleAndCaptionModel};
 
         public SearchTagMatchOptionModel(SearchTagMatchOption corresponding)
         {

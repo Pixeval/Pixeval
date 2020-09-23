@@ -45,10 +45,7 @@ namespace Pixeval.Core
 
         public override bool VerifyRationality(Illustration item, IList<Illustration> collection)
         {
-            return item != null &&
-                collection.All(t => t.Id != item.Id) &&
-                PixivHelper.VerifyIllustRational(Settings.Global.ExcludeTag, Settings.Global.IncludeTag,
-                                                 Settings.Global.MinBookmark, item);
+            return item != null && collection.All(t => t.Id != item.Id) && PixivHelper.VerifyIllustRational(Settings.Global.ExcludeTag, Settings.Global.IncludeTag, Settings.Global.MinBookmark, item);
         }
 
         private class UserUpdateAsyncEnumerator : AbstractPixivAsyncEnumerator<Illustration>
@@ -72,8 +69,7 @@ namespace Pixeval.Core
             {
                 if (_entity == null)
                 {
-                    if (await TryGetResponse("https://app-api.pixiv.net/v2/illust/follow?restrict=public") is (true, var
-                        model))
+                    if (await TryGetResponse("https://app-api.pixiv.net/v2/illust/follow?restrict=public") is (true, var model))
                     {
                         _entity = model;
                         UpdateEnumerator();
@@ -103,9 +99,7 @@ namespace Pixeval.Core
 
             private static async Task<HttpResponse<UserUpdateResponse>> TryGetResponse(string url)
             {
-                var res = (await HttpClientFactory.AppApiHttpClient()
-                    .Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", AkaI18N.GetCultureAcceptLanguage()))
-                    .GetStringAsync(url)).FromJson<UserUpdateResponse>();
+                var res = (await HttpClientFactory.AppApiHttpClient().Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", AkaI18N.GetCultureAcceptLanguage())).GetStringAsync(url)).FromJson<UserUpdateResponse>();
                 if (res is { } response && !response.Illusts.IsNullOrEmpty()) return HttpResponse<UserUpdateResponse>.Wrap(true, response);
 
                 return HttpResponse<UserUpdateResponse>.Wrap(false);

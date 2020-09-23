@@ -27,13 +27,13 @@ using Pixeval.Objects.Primitive;
 
 namespace Pixeval.Objects.Native
 {
-    public class WallAdjudicator
+    public class WallpaperManager
     {
         private const int SetDeskWallpaper = 20;
         private const int UpdateIniFile = 0x01;
         private const int SendWinIniChange = 0x02;
 
-        public WallAdjudicator(string storeLocation, BitmapSource background)
+        public WallpaperManager(string storeLocation, BitmapSource background)
         {
             StoreLocation = storeLocation;
             Background = background;
@@ -59,7 +59,7 @@ namespace Pixeval.Objects.Native
 
         private bool IsImageSupportSpan()
         {
-            return Background.PixelWidth / (double)Background.PixelHeight >= 1.7;
+            return Background.PixelWidth / (double) Background.PixelHeight >= 1.7;
         }
 
         public async ValueTask<bool> Execute()
@@ -67,9 +67,7 @@ namespace Pixeval.Objects.Native
             await CreateBmpFile();
             using var regKey = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
             if (regKey == null) return false;
-            regKey.SetValue("WallpaperStyle",
-                            (CheckOperatingSystemVersion() && IsImageSupportSpan() ? /* span */ 22 : /* normal */ 10)
-                            .ToString());
+            regKey.SetValue("WallpaperStyle", (CheckOperatingSystemVersion() && IsImageSupportSpan() ? /* span */ 22 : /* normal */ 10).ToString());
             regKey.SetValue("TitleWallpaper", 0.ToString());
             SystemParametersInfo(SetDeskWallpaper, 0, StoreLocation, UpdateIniFile | SendWinIniChange);
             return true;

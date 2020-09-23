@@ -25,10 +25,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <system:Double x:Key="Two">
                 2
@@ -62,15 +66,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                         <ControlTemplate TargetType="{x:Type ProgressBar}">
                             <ControlTemplate.Resources>
                                 <Storyboard x:Key="OnLoaded">
-                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TemplateRoot" Storyboard.TargetProperty="(UIElement.Opacity)">
+                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TemplateRoot"
+                                                                   Storyboard.TargetProperty="(UIElement.Opacity)">
                                         <EasingDoubleKeyFrame KeyTime="0" Value="0" />
                                         <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1" />
                                     </DoubleAnimationUsingKeyFrames>
-                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TemplateRoot" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TemplateRoot"
+                                                                   Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
                                         <EasingDoubleKeyFrame KeyTime="0" Value="0" />
                                         <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1" />
                                     </DoubleAnimationUsingKeyFrames>
-                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TemplateRoot" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TemplateRoot"
+                                                                   Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
                                         <EasingDoubleKeyFrame KeyTime="0" Value="0" />
                                         <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1" />
                                     </DoubleAnimationUsingKeyFrames>
@@ -133,12 +140,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                         <VisualState x:Name="Determinate" />
                                         <VisualState x:Name="Indeterminate">
                                             <Storyboard RepeatBehavior="Forever">
-                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Animation" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Animation"
+                                                                               Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
                                                     <EasingDoubleKeyFrame KeyTime="0" Value="0.25" />
                                                     <EasingDoubleKeyFrame KeyTime="0:0:1" Value="0.25" />
                                                     <EasingDoubleKeyFrame KeyTime="0:0:2" Value="0.25" />
                                                 </DoubleAnimationUsingKeyFrames>
-                                                <PointAnimationUsingKeyFrames Storyboard.TargetName="Animation" Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)">
+                                                <PointAnimationUsingKeyFrames Storyboard.TargetName="Animation"
+                                                                              Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)">
                                                     <EasingPointKeyFrame KeyTime="0" Value="-0.5,0.5" />
                                                     <EasingPointKeyFrame KeyTime="0:0:1" Value="0.5,0.5" />
                                                     <EasingPointKeyFrame KeyTime="0:0:2" Value="1.5,0.5" />
@@ -151,7 +160,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                             <ControlTemplate.Triggers>
                                 <Trigger Property="materialDesign:TransitionAssist.DisableTransitions" Value="True">
                                     <Trigger.EnterActions>
-                                        <BeginStoryboard Name="BeginStoryboardOnLoadedNoAnimation" Storyboard="{StaticResource OnLoadedNoAnimation}" />
+                                        <BeginStoryboard Name="BeginStoryboardOnLoadedNoAnimation"
+                                                         Storyboard="{StaticResource OnLoadedNoAnimation}" />
                                     </Trigger.EnterActions>
                                     <Trigger.ExitActions>
                                         <RemoveStoryboard BeginStoryboardName="BeginStoryboardOnLoadedNoAnimation" />
@@ -160,10 +170,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                 <MultiTrigger>
                                     <MultiTrigger.Conditions>
                                         <Condition Property="IsVisible" Value="True" />
-                                        <Condition Property="materialDesign:TransitionAssist.DisableTransitions" Value="False" />
+                                        <Condition Property="materialDesign:TransitionAssist.DisableTransitions"
+                                                   Value="False" />
                                     </MultiTrigger.Conditions>
                                     <MultiTrigger.EnterActions>
-                                        <BeginStoryboard Name="BeginStoryboardOnLoaded" Storyboard="{StaticResource OnLoaded}" />
+                                        <BeginStoryboard Name="BeginStoryboardOnLoaded"
+                                                         Storyboard="{StaticResource OnLoaded}" />
                                     </MultiTrigger.EnterActions>
                                     <MultiTrigger.ExitActions>
                                         <RemoveStoryboard BeginStoryboardName="BeginStoryboardOnLoaded" />
@@ -251,10 +263,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                             </Grid>
                             <ControlTemplate.Triggers>
                                 <Trigger SourceName="Thumb" Property="IsMouseOver" Value="true">
-                                    <Setter TargetName="Thumb" Property="Background" Value="{DynamicResource ButtonSelectBrush}" />
+                                    <Setter TargetName="Thumb" Property="Background"
+                                            Value="{DynamicResource ButtonSelectBrush}" />
                                 </Trigger>
                                 <Trigger SourceName="Thumb" Property="IsDragging" Value="true">
-                                    <Setter TargetName="Thumb" Property="Background" Value="{DynamicResource DarkBrush}" />
+                                    <Setter TargetName="Thumb" Property="Background"
+                                            Value="{DynamicResource DarkBrush}" />
                                 </Trigger>
                                 <Trigger Property="IsEnabled" Value="false">
                                     <Setter TargetName="Thumb" Property="Visibility" Value="Collapsed" />

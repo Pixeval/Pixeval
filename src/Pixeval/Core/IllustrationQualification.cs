@@ -38,19 +38,16 @@ namespace Pixeval.Core
         {
             return new IllustrationQualification(input switch
             {
-                _ when input.IsNumber() => ConditionType.Id,
-                _ when input.StartsWith("!") => ConditionType.ExcludeTag,
+                _ when input.IsNumber()       => ConditionType.Id,
+                _ when input.StartsWith("!")  => ConditionType.ExcludeTag,
                 _ when !input.IsNullOrEmpty() => ConditionType.Tag,
-                _ => ConditionType.None
+                _                             => ConditionType.None
             }, input);
         }
     }
 
     public enum ConditionType
     {
-        Id,
-        Tag,
-        ExcludeTag,
-        None
+        Id, Tag, ExcludeTag, None
     }
 }
