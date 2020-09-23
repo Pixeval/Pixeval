@@ -20,9 +20,8 @@
 
 #if RELEASE
 using Pixeval.Objects.Exceptions.Logger;
-#elif DEBUG
-using System.Linq;
 #endif
+using System.Linq;
 using System;
 using System.Diagnostics;
 using System.IO;
