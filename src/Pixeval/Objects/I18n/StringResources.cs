@@ -317,6 +317,8 @@ namespace Pixeval.Objects.I18n
 
         public static string createNewFolderWhenDownloadFromUser = GetResource(nameof(CreateNewFolderWhenDownloadFromUser));
 
+        public static string imageServerUri = GetResource(nameof(ImageServerUri));
+
         public static string EmptyEmailOrPasswordIsNotAllowed
         {
             get => emptyEmailOrPasswordIsNotAllowed;
@@ -1773,6 +1775,16 @@ namespace Pixeval.Objects.I18n
             set
             {
                 createNewFolderWhenDownloadFromUser = value;
+                OnStaticPropertyChanged();
+            }
+        }
+
+        public static string ImageServerUri
+        {
+            get => imageServerUri;
+            set
+            {
+                imageServerUri = value;
                 OnStaticPropertyChanged();
             }
         }

@@ -107,6 +107,8 @@ namespace Pixeval.Persisting
 
         public bool CreateNewFolderWhenDownloadFromUser { get; set; }
 
+        public string ImageServerUri { get; set; }
+
         public override string ToString()
         {
             return this.ToJson();

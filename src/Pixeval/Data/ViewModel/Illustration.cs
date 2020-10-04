@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Pixeval.Objects.Primitive;
+using Pixeval.Persisting;
 using PropertyChanged;
 
 namespace Pixeval.Data.ViewModel
@@ -35,12 +36,6 @@ namespace Pixeval.Data.ViewModel
         public bool IsUgoira { get; set; }
 
         public bool IsR18 => Tags?.Any(x => Regex.IsMatch(x?.Name ?? string.Empty, "[Rr][-]?18[Gg]?") || Regex.IsMatch(x?.TranslatedName ?? string.Empty, "[Rr][-]?18[Gg]?")) ?? false;
-
-        public string Origin { get; set; }
-
-        public string Large { get; set; }
-
-        public string Thumbnail { get; set; }
 
         public int Bookmark { get; set; }
 
@@ -69,6 +64,48 @@ namespace Pixeval.Data.ViewModel
         public bool FromSpotlight { get; set; }
 
         public string SpotlightTitle { get; set; }
+
+        private string _orgin;
+
+        public string Origin
+        {
+            get
+            {
+                return _orgin;
+            }
+            set
+            {
+                _orgin = Settings.Global.ImageServerUri.IsNullOrEmpty() ? value : value.Replace("i.pximg.net", Settings.Global.ImageServerUri);
+            }
+        }
+
+        private string _large;
+
+        public string Large
+        {
+            get
+            {
+                return _large;
+            }
+            set
+            {
+                _large = Settings.Global.ImageServerUri.IsNullOrEmpty() ? value : value.Replace("i.pximg.net", Settings.Global.ImageServerUri);
+            }
+        }
+
+        private string _thumbnail;
+
+        public string Thumbnail
+        {
+            get
+            {
+                return _thumbnail;
+            }
+            set
+            {
+                _thumbnail = Settings.Global.ImageServerUri.IsNullOrEmpty() ? value : value.Replace("i.pximg.net", Settings.Global.ImageServerUri);
+            }
+        }
 
         public object Clone()
         {

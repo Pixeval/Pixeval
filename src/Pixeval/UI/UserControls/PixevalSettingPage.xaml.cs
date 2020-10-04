@@ -87,5 +87,10 @@ namespace Pixeval.UI.UserControls
         {
             AkaI18N.Reload((I18NOption) CultureSelector.SelectedItem);
         }
+
+        private void ImageServerUriTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            Settings.Global.ImageServerUri = ImageServerUriTextBox.Text;
+        }
     }
 }

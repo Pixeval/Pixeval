@@ -170,4 +170,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <resx key="UserPreviewPopupUnFollow" value="已 关 注" />
   <resx key="SelectCultureInfo" value="语言" />
   <resx key="CreateNewFolderWhenDownloadFromUser" value="下载作者作品时使用单独文件夹" />
+  <resx key="ImageServerUri" value="图片服务器地址"/>
 </localization>
