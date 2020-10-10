@@ -10,7 +10,7 @@
         <a href="https://jq.qq.com/?_wv=1027&k=5hGmJbQ" target="_blank">
             <img src="https://img.shields.io/static/v1?label=chatting&message=qq&color=blue&style=flat-square"
         </a>
-        <a href="http://47.95.218.243/index.html" target="_blank">
+        <a href="http://dylech30th.moe:2082/index.html" target="_blank">
             <img src="https://img.shields.io/static/v1?label=homepage&message=pixeval&color=blueviolet&style=flat-square">
         </a>
         <a href="https://github.com/Rinacm/Pixeval/blob/master/LICENSE" target="_blank">
@@ -141,7 +141,7 @@
 
 **下载：**
 </br>
-前往[Release页面](https://github.com/Rinacm/Pixeval/releases)下载最新版本的Release或者在项目[主页](http://47.95.218.243/index.html)下载，为统一考虑，将不再开放Google Drive, Onedrive与百度网盘的下载渠道
+前往[Release页面](https://github.com/Rinacm/Pixeval/releases)下载最新版本的Release或者在项目[主页](http://dylech30th.moe:2082/index.html)下载，为统一考虑，将不再开放Google Drive, Onedrive与百度网盘的下载渠道
 
 **如有遇到任何问题/有任何建议请通过以下方式联系作者：**
 * 提交[issue](https://github.com/Rinacm/Pixeval/issues/new)
