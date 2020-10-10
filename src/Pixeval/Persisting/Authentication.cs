@@ -104,7 +104,7 @@ namespace Pixeval.Persisting
             // create x.509 certificate object for intercepting https traffic, USE AT YOUR OWN RISK
             var certificate = await CertificateManager.GetFakeServerCertificate();
             // create https proxy server for intercepting and forwarding https traffic
-            using var proxyServer = HttpsProxyServer.Create("127.0.0.1", AppContext.ProxyPort, (await new PixivApiDnsResolver().Lookup("pixiv.net"))[0].ToString(), certificate);
+            using var proxyServer = HttpsProxyServer.Create("127.0.0.1", AppContext.ProxyPort, new PixivApiDnsResolver().Lookup()[0].ToString(), certificate);
             // create pac file server for providing the proxy-auto-configuration file,
             // which is driven by EmbedIO, this is because CefSharp do not accept file uri
             using var pacServer = PacFileServer.Create("127.0.0.1", AppContext.PacPort);

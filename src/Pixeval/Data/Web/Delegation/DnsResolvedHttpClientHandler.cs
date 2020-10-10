@@ -57,7 +57,7 @@ namespace Pixeval.Data.Web.Delegation
 
                 var isSslSession = request.RequestUri.ToString().StartsWith("https://");
 
-                request.RequestUri = new Uri($"{(isSslSession ? "https://" : "http://")}{(await DnsResolver.Lookup(host))[0]}{request.RequestUri.PathAndQuery}");
+                request.RequestUri = new Uri($"{(isSslSession ? "https://" : "http://")}{DnsResolver.Lookup()[0]}{request.RequestUri.PathAndQuery}");
                 request.Headers.Host = host;
             }
 

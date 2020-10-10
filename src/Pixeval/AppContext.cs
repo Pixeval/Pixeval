@@ -32,7 +32,7 @@ namespace Pixeval
     {
         public const string AppIdentifier = "Pixeval";
 
-        public const string CurrentVersion = "2.2.4";
+        public const string CurrentVersion = "2.2.5";
 
         public const string ConfigurationFileName = "pixeval_conf.json";
 

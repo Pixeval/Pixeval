@@ -30,12 +30,10 @@ namespace Pixeval.Data.Web.Protocol
     public interface IWebApiProtocol
     {
         [Post("/setting_user.php")]
-        Task<HttpResponseMessage> ToggleR18State([Body(BodySerializationMethod.UrlEncoded)]
-                                                 ToggleR18StateRequest toggleR18StateRequest);
+        Task<HttpResponseMessage> ToggleR18State([Body(BodySerializationMethod.UrlEncoded)] ToggleR18StateRequest toggleR18StateRequest);
 
         [Get("/ajax/showcase/article")]
-        Task<SpotlightArticleResponse> GetSpotlightArticles([AliasAs("article_id")]
-                                                            string articleId);
+        Task<SpotlightArticleResponse> GetSpotlightArticles([AliasAs("article_id")] string articleId);
 
         [Get("/touch/ajax/user/details")]
         Task<WebApiUserDetailResponse> GetWebApiUserDetail(string id);

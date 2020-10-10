@@ -29,7 +29,6 @@ using System.Threading.Tasks;
 using Pixeval.Data.Web.Protocol;
 using Pixeval.Data.Web.Request;
 using Pixeval.Data.Web.Response;
-using Pixeval.Objects.Generic;
 using Refit;
 
 namespace Pixeval.Data.Web.Delegation
@@ -37,8 +36,6 @@ namespace Pixeval.Data.Web.Delegation
     public abstract class DnsResolver
     {
         public static readonly ThreadLocal<Dictionary<string, List<IPAddress>>> DnsCache = new ThreadLocal<Dictionary<string, List<IPAddress>>>(() => new Dictionary<string, List<IPAddress>>());
-
-        private static bool _dnsQueryFailed;
 
         protected async Task<DnsResolveResponse> GetDnsJson(string hostname)
         {
@@ -52,7 +49,7 @@ namespace Pixeval.Data.Web.Delegation
             });
         }
 
-        public async Task<IReadOnlyList<IPAddress>> Lookup(string hostname)
+        /*public async Task<IReadOnlyList<IPAddress>> Lookup(string hostname)
         {
             const string OAuthUrl = "oauth.secure.pixiv.net";
             if (hostname == OAuthUrl)
@@ -104,15 +101,20 @@ namespace Pixeval.Data.Web.Delegation
             ipList.AddRange(UseDefaultDns());
             CacheDns(hostname, ipList);
             return ipList.ToImmutableList();
+        }*/
+
+        public IReadOnlyList<IPAddress> Lookup()
+        {
+            return UseDefaultDns().ToImmutableList();
         }
 
-        private static void CacheDns(string hostname, IEnumerable<IPAddress> ipList)
-        {
-            if (DnsCache.Value.ContainsKey(hostname))
-                DnsCache.Value[hostname].AddRange(ipList);
-            else
-                DnsCache.Value[hostname] = new List<IPAddress>(ipList);
-        }
+        // private static void CacheDns(string hostname, IEnumerable<IPAddress> ipList)
+        // {
+        //     if (DnsCache.Value.ContainsKey(hostname))
+        //         DnsCache.Value[hostname].AddRange(ipList);
+        //     else
+        //         DnsCache.Value[hostname] = new List<IPAddress>(ipList);
+        // }
 
         protected abstract IEnumerable<IPAddress> UseDefaultDns();
 

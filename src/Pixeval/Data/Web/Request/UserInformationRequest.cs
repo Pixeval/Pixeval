@@ -28,6 +28,6 @@ namespace Pixeval.Data.Web.Request
         public string Id { get; set; }
 
         [AliasAs("filter")]
-        public string Filter { get; set; } = "for_ios";
+        public string Filter { get; set; } = "for_android";
     }
 }
