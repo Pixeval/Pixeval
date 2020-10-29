@@ -22,22 +22,10 @@ using Pixeval.Data.ViewModel;
 
 namespace Pixeval.Core
 {
-    /// <summary>
-    ///     Provides a set of functions that support a Browsing Timeline
-    /// </summary>
     public interface ITimelineService
     {
-        /// <summary>
-        ///     Check if the <see cref="BrowsingHistory" /> has the rationality to be insert to timeline
-        /// </summary>
-        /// <param name="browsingHistory"></param>
-        /// <returns></returns>
         bool VerifyRationality(BrowsingHistory browsingHistory);
 
-        /// <summary>
-        ///     Insert a <see cref="BrowsingHistory" /> to timeline
-        /// </summary>
-        /// <param name="browsingHistory"></param>
         void Insert(BrowsingHistory browsingHistory);
     }
 }

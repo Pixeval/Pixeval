@@ -31,14 +31,14 @@ namespace Pixeval.Data.ViewModel
         public int Index { get; set; }
 
         /// <summary>
-        /// 提供当前<see cref="BrowsingHistory"/>的<see cref="string"/>视图，默认的值是名称/标题
+        ///     提供当前<see cref="BrowsingHistory" />的<see cref="string" />视图，默认的值是名称/标题
         /// </summary>
         public string BrowseObjectState { get; set; }
 
         public string BrowseObjectThumbnail { get; set; }
 
         /// <summary>
-        /// <see cref="IsReferToIllust"/>有效仅当此属性有效
+        ///     <see cref="IsReferToIllust" />有效仅当此属性有效
         /// </summary>
         public string IllustratorName { get; set; }
 
@@ -49,7 +49,7 @@ namespace Pixeval.Data.ViewModel
         public bool IsReferToSpotlight { get; set; }
 
         /// <summary>
-        /// 提供当前<see cref="BrowsingHistory"/>的id的<see cref="string"/>视图，默认的值是作品ID/用户ID/特辑ID
+        ///     提供当前<see cref="BrowsingHistory" />的id的<see cref="string" />视图，默认的值是作品ID/用户ID/特辑ID
         /// </summary>
         public string BrowseObjectId { get; set; }
 

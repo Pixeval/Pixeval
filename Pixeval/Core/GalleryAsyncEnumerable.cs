@@ -29,7 +29,6 @@ using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Response;
 using Pixeval.Objects.Exceptions;
 using Pixeval.Objects.Generic;
-using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
 using Pixeval.Persisting;
 

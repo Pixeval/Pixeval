@@ -177,7 +177,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     <TextBox Grid.Row="9"
                              Grid.Column="0"
                              Grid.ColumnSpan="2"
-                             Margin="200,0,0,0"
+                             Margin="215,0,0,0"
                              VerticalAlignment="Center"
                              Text="{Binding QueryStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock Grid.Row="10"

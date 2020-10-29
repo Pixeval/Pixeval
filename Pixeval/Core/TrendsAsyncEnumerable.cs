@@ -31,7 +31,6 @@ using Pixeval.Data.Web;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Objects.Exceptions;
 using Pixeval.Objects.Generic;
-using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
 
 namespace Pixeval.Core

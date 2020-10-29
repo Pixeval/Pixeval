@@ -58,7 +58,7 @@ namespace Pixeval
 
         public static int PacPort { get; set; }
 
-        public static async Task<bool> UpdateAvailable()
+        public static async ValueTask<bool> UpdateAvailable()
         {
             const string Url = "http://47.95.218.243/Pixeval/version.txt";
             var httpClient = new HttpClient();
