@@ -1,0 +1,91 @@
+﻿#region Copyright (C) 2019-2020 Dylech30th. All rights reserved.
+
+// Pixeval - A Strong, Fast and Flexible Pixiv Client
+// Copyright (C) 2019-2020 Dylech30th
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+// 
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using Pixeval.Core;
+using Pixeval.Data.ViewModel;
+using Pixeval.Objects.Generic;
+using Pixeval.Objects.I18n;
+using Pixeval.Persisting;
+
+namespace Pixeval.UI.UserControls
+{
+    /// <summary>
+    ///     Interaction logic for PixevalSettingPage.xaml
+    /// </summary>
+    public partial class SettingsControl
+    {
+        public SettingsControl()
+        {
+            InitializeComponent();
+        }
+
+        private void OpenFileDialogButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            using var fileDialog = new CommonOpenFileDialog(AkaI18N.PleaseSelectLocation) { InitialDirectory = Settings.Global.DownloadLocation ?? Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), IsFolderPicker = true };
+
+            if (fileDialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                DownloadLocationTextBox.Text = fileDialog.FileName;
+            }
+        }
+
+        private void QueryR18_OnChecked(object sender, RoutedEventArgs e)
+        {
+            var set = new HashSet<string>();
+            if (Settings.Global.ExcludeTag != null)
+            {
+                set.AddRange(Settings.Global.ExcludeTag);
+            }
+            set.AddRange(new[] { "R-18", "R-18G" });
+            Settings.Global.ExcludeTag = set;
+        }
+
+        private void QueryR18_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            var set = new HashSet<string>(Settings.Global.ExcludeTag);
+            set.Remove("R-18");
+            set.Remove("R-18G");
+            Settings.Global.ExcludeTag = set;
+        }
+
+        private void ExcludeTagTextBox_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            var text = ExcludeTagTextBox.Text.Split(" ");
+            Settings.Global.ExcludeTag = new HashSet<string>(text);
+        }
+
+        private void IncludeTagTextBox_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            var text = IncludeTagTextBox.Text.Split(" ");
+            Settings.Global.IncludeTag = new HashSet<string>(text);
+        }
+
+        private void CultureSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AkaI18N.Reload((I18NOption) CultureSelector.SelectedItem);
+        }
+    }
+}
