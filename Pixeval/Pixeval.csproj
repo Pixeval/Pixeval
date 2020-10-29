@@ -18,6 +18,7 @@
   <PropertyGroup>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Version>3.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="RIDER_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$/../.." />
+    <content url="file://$USER_HOME$/.nuget/packages/cef.redist.x64/83.4.2/CEF/README.txt" />
+    <content url="file://$USER_HOME$/.nuget/packages/cef.redist.x64/83.4.2/CEF/cef.pak" />
+    <content url="file://$USER_HOME$/.nuget/packages/cef.redist.x64/83.4.2/CEF/cef_100_percent.pak" />
+    <content url="file://$USER_HOME$/.nuget/packages/cef.redist.x64/83.4.2/CEF/cef_200_percent.pak" />
+    <content url="file://$USER_HOME$/.nuget/packages/cef.redist.x64/83.4.2/CEF/cef_extensions.pak" />
+    <content url="file://$USER_HOME$/.nuget/packages/cef.redist.x64/83.4.2/CEF/chrome_elf.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/cef.redist.x64/83.4.2/CEF/d3dcompiler_47.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/cef.redist.x64/83.4.2/CEF/devtools_resources.pak" />
+    <content url="file://$USER_HOME$/.nuget/packages/cef.redist.x64/83.4.2/CEF/icudtl.dat" />
+    <content url="file://$USER_HOME$/.nuget/packages/cef.redist.x64/83.4.2/CEF/libEGL.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/cef.redist.x64/83.4.2/CEF/libGLESv2.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/cef.redist.x64/83.4.2/CEF/libcef.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/cef.redist.x64/83.4.2/CEF/locales" />
+    <content url="file://$USER_HOME$/.nuget/packages/cef.redist.x64/83.4.2/CEF/snapshot_blob.bin" />
+    <content url="file://$USER_HOME$/.nuget/packages/cef.redist.x64/83.4.2/CEF/swiftshader" />
+    <content url="file://$USER_HOME$/.nuget/packages/cef.redist.x64/83.4.2/CEF/v8_context_snapshot.bin" />
+    <content url="file://$USER_HOME$/.nuget/packages/cefsharp.common/83.4.20/CefSharp/x64/CefSharp.BrowserSubprocess.Core.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/cefsharp.common/83.4.20/CefSharp/x64/CefSharp.BrowserSubprocess.Core.pdb" />
+    <content url="file://$USER_HOME$/.nuget/packages/cefsharp.common/83.4.20/CefSharp/x64/CefSharp.BrowserSubprocess.exe" />
+    <content url="file://$USER_HOME$/.nuget/packages/cefsharp.common/83.4.20/CefSharp/x64/CefSharp.BrowserSubprocess.pdb" />
+    <content url="file://$USER_HOME$/.nuget/packages/cefsharp.common/83.4.20/CefSharp/x64/CefSharp.Core.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/cefsharp.common/83.4.20/CefSharp/x64/CefSharp.Core.pdb" />
+    <content url="file://$USER_HOME$/.nuget/packages/cefsharp.common/83.4.20/CefSharp/x64/CefSharp.Core.xml" />
+    <content url="file://$USER_HOME$/.nuget/packages/cefsharp.common/83.4.20/CefSharp/x64/CefSharp.XML" />
+    <content url="file://$USER_HOME$/.nuget/packages/cefsharp.common/83.4.20/CefSharp/x64/CefSharp.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/cefsharp.common/83.4.20/CefSharp/x64/CefSharp.pdb" />
+    <content url="file://$USER_HOME$/.nuget/packages/cefsharp.wpf/83.4.20/CefSharp/x64/CefSharp.Wpf.XML" />
+    <content url="file://$USER_HOME$/.nuget/packages/cefsharp.wpf/83.4.20/CefSharp/x64/CefSharp.Wpf.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/cefsharp.wpf/83.4.20/CefSharp/x64/CefSharp.Wpf.pdb" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
