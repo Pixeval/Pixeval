@@ -209,14 +209,16 @@ namespace Pixeval.Persisting
                 }
             }
 
-            // refresh through web-API
-            static async Task RefreshWebApi()
-            {
-                if (WebApiRefreshRequired(Current)) await Authentication.WebApiAuthenticate(Current?.MailAddress, Current?.Password);
-            }
+            //// refresh through web-API
+            //static async Task RefreshWebApi()
+            //{
+            //    if (WebApiRefreshRequired(Current)) await Authentication.WebApiAuthenticate(Current?.MailAddress, Current?.Password);
+            //}
 
             // wait for both two sections to be complete
-            await Task.WhenAll(RefreshAppApi(), RefreshWebApi());
+            await Task.WhenAll(RefreshAppApi()
+                //, RefreshWebApi()
+                );
         }
 
         /// <summary>

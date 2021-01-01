@@ -51,7 +51,9 @@ namespace Pixeval.UI
 
             try
             {
-                await Task.WhenAll(Authentication.AppApiAuthenticate(Email.Text, Password.Password), Authentication.WebApiAuthenticate(Email.Text, Password.Password));
+                await Task.WhenAll(Authentication.AppApiAuthenticate(Email.Text, Password.Password)
+                    //, Authentication.WebApiAuthenticate(Email.Text, Password.Password)
+                    );
             }
             catch (Exception exception)
             {

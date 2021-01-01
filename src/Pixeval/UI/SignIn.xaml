@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:webApi="clr-namespace:Pixeval.Persisting.WebApi"
-        xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         Title="{Binding Path=(i18N:AkaI18N.SignIn)}"
         Width="450"
@@ -140,12 +139,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                               VerticalContentAlignment="Center"
                               HorizontalScrollBarVisibility="Visible"
                               VerticalScrollBarVisibility="Visible">
-                    <wpf:ChromiumWebBrowser x:Name="ChromiumWebBrowser"
+                    <!--<wpf:ChromiumWebBrowser x:Name="ChromiumWebBrowser"
                                             Width="1000"
                                             Height="700"
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Stretch"
-                                            RequestHandler="{x:Static webApi:BypassProxyRequestHandler.Instance}" />
+                                            RequestHandler="{x:Static webApi:BypassProxyRequestHandler.Instance}" />-->
                 </ScrollViewer>
             </materialDesign:DialogHost.DialogContent>
         </materialDesign:DialogHost>

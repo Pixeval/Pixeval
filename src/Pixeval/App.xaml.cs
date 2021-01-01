@@ -31,8 +31,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using CefSharp;
-using CefSharp.Wpf;
 using Microsoft.Win32;
 using Pixeval.Core;
 using Pixeval.Objects.I18n;
@@ -74,7 +72,7 @@ namespace Pixeval
             AppContext.ProxyPort = proxy;
             AppContext.PacPort = pac;
             await WritePac();
-            CefSharpInitialize();
+            //CefSharpInitialize();
 
             // These initializations handle USER SESSION AND PIXEVAL UPDATE
             await RestoreSettings();
@@ -219,10 +217,10 @@ namespace Pixeval
             return success && version >= vc2015Bld;
         }
 
-        private static void CefSharpInitialize()
-        {
-            Cef.Initialize(new CefSettings {CefCommandLineArgs = {{"proxy-pac-url", $"http://127.0.0.1:{AppContext.PacPort}/pixeval_pac.pac"}}}, true, browserProcessHandler: null);
-        }
+        //private static void CefSharpInitialize()
+        //{
+        //    Cef.Initialize(new CefSettings {CefCommandLineArgs = {{"proxy-pac-url", $"http://127.0.0.1:{AppContext.PacPort}/pixeval_pac.pac"}}}, true, browserProcessHandler: null);
+        //}
 
         private static async Task InstallFakeCaCertificate()
         {
