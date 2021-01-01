@@ -1,6 +1,7 @@
 name: CI
 
 on:
+    workflow_dispatch:
     pull_request:
         types: [assigned, opened, synchronize, reopened]
     pull_request_review:
