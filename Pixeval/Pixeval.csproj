@@ -34,22 +34,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AdaptiveCards" Version="1.2.4" />
+    <PackageReference Include="AdaptiveCards" Version="2.4.0" />
     <PackageReference Include="AdysTech.CredentialManager.Core" Version="1.9.0" />
     <PackageReference Include="AngleSharp" Version="0.14.0" />
-    <PackageReference Include="Dragablz" Version="0.0.3.203" />
-    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.0.1" />
-    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.20.0.1" />
-    <PackageReference Include="MahApps.Metro" Version="2.1.1" />
-    <PackageReference Include="MaterialDesignColors" Version="1.2.6" />
-    <PackageReference Include="MaterialDesignThemes" Version="3.1.3" />
-    <PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls" Version="6.1.1" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.22.2.2" />
+    <PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls" Version="6.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="PropertyChanged.Fody" Version="3.2.8" />
-    <PackageReference Include="refit" Version="5.1.67" />
-    <PackageReference Include="SharpVectors" Version="1.0.0" />
+    <PackageReference Include="PropertyChanged.Fody" Version="3.3.1" />
+    <PackageReference Include="refit" Version="5.2.4" />
+    <PackageReference Include="SharpVectors" Version="1.7.1" />
     <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
-    <PackageReference Include="System.Interactive.Async" Version="4.1.1" />
+    <PackageReference Include="System.Interactive.Async" Version="5.0.0" />
     <PackageReference Include="VirtualizingWrapPanel.NETCore" Version="1.4.0" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
   </ItemGroup>
@@ -57,12 +52,13 @@
   <ItemGroup>
     <Resource Include="Resources\resx_en-us.xml" />
     <Resource Include="Resources\resx_zh-cn.xml" />
-    <Resource Include="Resources\dqueue.ttf" />
-    <Resource Include="Resources\iconfont.ttf" />
-    <Resource Include="Resources\iconfontex.ttf" />
     <Resource Include="Resources\logo-only.svg" />
     <Resource Include="Resources\pxlogo.ico" />
     <Resource Include="Resources\saucenao.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.VCRTForwarders.140" Version="1.0.7" />
   </ItemGroup>
 
 </Project>

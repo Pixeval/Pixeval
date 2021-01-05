@@ -83,14 +83,14 @@ namespace Pixeval.Persisting
 
         public async Task Store()
         {
-            await File.WriteAllTextAsync(Path.Combine(AppContext.SettingsFolder, "settings.json"), Global.ToString());
+            await File.WriteAllTextAsync(Path.Combine(PixevalContext.SettingsFolder, "settings.json"), Global.ToString());
         }
 
         public static async Task Restore()
         {
-            if (File.Exists(Path.Combine(AppContext.SettingsFolder, "settings.json")))
+            if (File.Exists(Path.Combine(PixevalContext.SettingsFolder, "settings.json")))
             {
-                Global = (await File.ReadAllTextAsync(Path.Combine(AppContext.SettingsFolder, "settings.json"))).FromJson<Settings>();
+                Global = (await File.ReadAllTextAsync(Path.Combine(PixevalContext.SettingsFolder, "settings.json"))).FromJson<Settings>();
             }
             else
             {
@@ -100,10 +100,7 @@ namespace Pixeval.Persisting
 
         public static void Initialize()
         {
-            if (File.Exists(Path.Combine(AppContext.SettingsFolder, "settings.json")))
-            {
-                File.Delete(Path.Combine(AppContext.SettingsFolder, "settings.json"));
-            }
+            File.Delete(Path.Combine(PixevalContext.SettingsFolder, "settings.json"));
 
             Global.downloadLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
             Global.DownloadLocation = string.Empty;

@@ -18,20 +18,12 @@
 
 #endregion
 
-namespace Pixeval.Data.Web
+using System.Net.Http;
+
+namespace Pixeval.Data.Web.Delegation
 {
-    public class ProtocolBase
+    public interface IHttpRequestInterceptor
     {
-        public const string PublicApiBaseUrl = "https://public-api.secure.pixiv.net/v1";
-
-        public const string AppApiBaseUrl = "https://app-api.pixiv.net";
-
-        public const string DnsServer = "https://1.0.0.1";
-
-        public const string SauceNaoUrl = "https://saucenao.com/";
-
-        public const string OAuthBaseUrl = "https://oauth.secure.pixiv.net";
-
-        public const string WebApiBaseUrl = "https://www.pixiv.net";
+        void Intercept(DnsResolvedHttpClientHandler httpClientHandler, HttpRequestMessage httpRequestMessage);
     }
 }

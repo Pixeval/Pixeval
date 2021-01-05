@@ -55,9 +55,9 @@ namespace Pixeval.Data.ViewModel
 
         public async void Download()
         {
-            var result = await Tasks<string, Illustration>.Of(await PixivClient.Instance.GetArticleWorks(Id.ToString())).Mapping(async i =>
+            var result = await Tasks<string, Illustration>.Of(await PixivClient.GetArticleWorks(Id.ToString())).Mapping(async i =>
             {
-                var res = await PixivHelper.IllustrationInfo(i);
+                var res = await PixivClient.IllustrationInfo(i);
                 res.SpotlightTitle = Title;
                 res.FromSpotlight = true;
                 return res;

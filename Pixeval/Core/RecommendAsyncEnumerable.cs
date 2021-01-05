@@ -39,9 +39,9 @@ namespace Pixeval.Core
 
         public abstract override void InsertionPolicy(Illustration item, IList<Illustration> collection);
 
-        public override bool VerifyRationality(Illustration item, IList<Illustration> collection)
+        public override bool Verify(Illustration item, IList<Illustration> collection)
         {
-            return item != null && collection.All(t => t.Id != item.Id) && PixivHelper.VerifyIllust(Settings.Global.ExcludeTag, Settings.Global.IncludeTag, Settings.Global.MinBookmark, item);
+            return item != null && collection.All(t => t.Id != item.Id) && PixivClient.VerifyIllust(Settings.Global.ExcludeTag, Settings.Global.IncludeTag, Settings.Global.MinBookmark, item);
         }
 
         public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = default)

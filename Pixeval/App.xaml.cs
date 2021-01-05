@@ -75,9 +75,9 @@ namespace Pixeval
 
         private static void InitializeFolders()
         {
-            Directory.CreateDirectory(AppContext.ProjectFolder);
-            Directory.CreateDirectory(AppContext.SettingsFolder);
-            Directory.CreateDirectory(AppContext.ExceptionReportFolder);
+            Directory.CreateDirectory(PixevalContext.ProjectFolder);
+            Directory.CreateDirectory(PixevalContext.SettingsFolder);
+            Directory.CreateDirectory(PixevalContext.ExceptionReportFolder);
         }
 
         private static void CheckMultipleProcess()
@@ -91,7 +91,7 @@ namespace Pixeval
 
         private static async Task CheckUpdate()
         {
-            if (await AppContext.UpdateAvailable() && MessageBox.Show(AkaI18N.PixevalUpdateAvailable, AkaI18N.PixevalUpdateAvailableTitle, MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+            if (await PixevalContext.UpdateAvailable() && MessageBox.Show(AkaI18N.PixevalUpdateAvailable, AkaI18N.PixevalUpdateAvailableTitle, MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
             {
                 Process.Start(@"updater\Pixeval.Updater.exe");
                 Environment.Exit(0);
@@ -101,7 +101,7 @@ namespace Pixeval
         private static async Task RestoreSettings()
         {
             await Settings.Restore();
-            BrowsingHistoryAccessor.GlobalLifeTimeScope = new BrowsingHistoryAccessor(200, AppContext.BrowseHistoryDatabase);
+            BrowsingHistoryAccessor.GlobalLifeTimeScope = new BrowsingHistoryAccessor(200, PixevalContext.BrowseHistoryDatabase);
         }
 
         protected override async void OnExit(ExitEventArgs e)
@@ -111,7 +111,7 @@ namespace Pixeval
             {
                 await Session.Current.Store();
             }
-            if (File.Exists(AppContext.BrowseHistoryDatabase))
+            if (File.Exists(PixevalContext.BrowseHistoryDatabase))
             {
                 BrowsingHistoryAccessor.GlobalLifeTimeScope.SetWritable();
                 BrowsingHistoryAccessor.GlobalLifeTimeScope.Rewrite();

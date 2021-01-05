@@ -33,7 +33,7 @@ namespace Pixeval.Objects.ValueConverters
         {
             if (values[0] is string v && values[1] is Illustration illustration)
             {
-                return AppContext.DefaultQualifier.Qualified(illustration, IllustrationQualification.Parse(v)) ? Visibility.Visible : Visibility.Hidden;
+                return PixevalContext.DefaultQualifier.Qualified(illustration, IllustrationQualification.Parse(v)) ? Visibility.Visible : Visibility.Hidden;
             }
 
             return Visibility.Hidden;
