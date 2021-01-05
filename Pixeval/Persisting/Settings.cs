@@ -81,12 +81,12 @@ namespace Pixeval.Persisting
             return this.ToJson();
         }
 
-        public async Task Store()
+        public async Task Save()
         {
             await File.WriteAllTextAsync(Path.Combine(PixevalContext.SettingsFolder, "settings.json"), Global.ToString());
         }
 
-        public static async Task Restore()
+        public static async Task Load()
         {
             if (File.Exists(Path.Combine(PixevalContext.SettingsFolder, "settings.json")))
             {
@@ -94,11 +94,11 @@ namespace Pixeval.Persisting
             }
             else
             {
-                Initialize();
+                Reset();
             }
         }
 
-        public static void Initialize()
+        public static void Reset()
         {
             File.Delete(Path.Combine(PixevalContext.SettingsFolder, "settings.json"));
 

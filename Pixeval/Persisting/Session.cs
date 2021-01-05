@@ -84,7 +84,7 @@ namespace Pixeval.Persisting
             return this.ToJson();
         }
 
-        public async Task Store()
+        public async Task Save()
         {
             await File.WriteAllTextAsync(Path.Combine(PixevalContext.ConfFolder, PixevalContext.ConfigurationFileName), ToString());
         }
@@ -94,12 +94,12 @@ namespace Pixeval.Persisting
             return Current == null || Current.AccessToken.IsNullOrEmpty() || DateTime.Now - Current.TokenRefreshed >= TimeSpan.FromMinutes(50);
         }
 
-        public static async Task Restore()
+        public static async Task Load()
         {
             Current = (await File.ReadAllTextAsync(Path.Combine(PixevalContext.ConfFolder, PixevalContext.ConfigurationFileName), Encoding.UTF8)).FromJson<Session>();
         }
 
-        public static bool ConfExists()
+        public static bool IsPresent()
         {
             var path = Path.Combine(PixevalContext.ConfFolder, PixevalContext.ConfigurationFileName);
             return File.Exists(path) && new FileInfo(path).Length != 0;
@@ -113,7 +113,7 @@ namespace Pixeval.Persisting
             }
         }
 
-        public static void Clear()
+        public static void Reset()
         {
             File.Delete(Path.Combine(PixevalContext.ConfFolder, PixevalContext.ConfigurationFileName));
             Current = new Session();
