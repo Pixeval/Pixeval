@@ -18,31 +18,27 @@
 
 #endregion
 
-using System;
-using System.Globalization;
-using System.Windows;
-using System.Windows.Data;
-using Pixeval.Core;
-using Pixeval.Core.Validation;
-using Pixeval.Data.ViewModel;
+using System.IO;
+using Pixeval.Objects.Primitive;
+using Pixeval.Persisting;
 
-namespace Pixeval.Objects.ValueConverters
+namespace Pixeval.Core.Download
 {
-    public class IllustrationMatchConditionMaskConverter : IMultiValueConverter
+    public class DefaultDownloadPathProvider : IDownloadPathProvider
     {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        public string GetSpotlightPath(string title, DownloadOption option = null)
         {
-            if (values[0] is string v && values[1] is Illustration illustration)
-            {
-                return PixevalContext.DefaultQualifier.Qualified(illustration, IllustrationQualification.Parse(v)) ? Visibility.Visible : Visibility.Hidden;
-            }
-
-            return Visibility.Hidden;
+            return option?.RootDirectory ?? Path.Combine(Settings.Global.DownloadLocation, "Spotlight", Strings.FormatPath(title));
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        public string GetIllustrationPath(DownloadOption option = null)
         {
-            throw new NotImplementedException();
+            return option?.RootDirectory ?? Settings.Global.DownloadLocation;
+        }
+
+        public string GetMangaPath(string id, DownloadOption option = null)
+        {
+            return option?.RootDirectory ?? Path.Combine(Settings.Global.DownloadLocation, id);
         }
     }
 }

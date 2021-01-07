@@ -39,6 +39,7 @@ namespace Pixeval.Data.Web.Delegation
 
         public virtual void Intercept(DnsResolvedHttpClientHandler dnsResolvedHttpClientHandler, HttpRequestMessage httpRequestMessage)
         {
+            // Regex is rather slower than multiple case-and-when clauses, but it can significantly improve the readability
             const string ApiHost = "^app-api\\.pixiv\\.net$";
             const string WebApiHost = "^(pixiv\\.net)|(www\\.pixiv\\.net)$";
             const string OAuthHost = "^oauth\\.secure\\.pixiv\\.net$";
@@ -46,7 +47,7 @@ namespace Pixeval.Data.Web.Delegation
 
             switch (httpRequestMessage.RequestUri.IdnHost)
             {
-                case var x when Regex.IsMatch(x, ApiHost) :
+                case var x when Regex.IsMatch(x, ApiHost):
                     var token = httpRequestMessage.Headers.Authorization;
                     if (token == null)
                     {

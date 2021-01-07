@@ -18,31 +18,14 @@
 
 #endregion
 
-using System;
-using System.Globalization;
-using System.Windows;
-using System.Windows.Data;
-using Pixeval.Core;
-using Pixeval.Core.Validation;
 using Pixeval.Data.ViewModel;
 
-namespace Pixeval.Objects.ValueConverters
+namespace Pixeval.Core.Dispatch
 {
-    public class IllustrationMatchConditionMaskConverter : IMultiValueConverter
+    public interface ITimelineService
     {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (values[0] is string v && values[1] is Illustration illustration)
-            {
-                return PixevalContext.DefaultQualifier.Qualified(illustration, IllustrationQualification.Parse(v)) ? Visibility.Visible : Visibility.Hidden;
-            }
+        bool Verify(BrowsingHistory browsingHistory);
 
-            return Visibility.Hidden;
-        }
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        void Insert(BrowsingHistory browsingHistory);
     }
 }

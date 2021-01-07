@@ -19,30 +19,30 @@
 #endregion
 
 using System;
-using System.Globalization;
-using System.Windows;
-using System.Windows.Data;
-using Pixeval.Core;
-using Pixeval.Core.Validation;
-using Pixeval.Data.ViewModel;
+using Pixeval.Core.Enumerates;
 
-namespace Pixeval.Objects.ValueConverters
+namespace Pixeval.Core.Dispatch
 {
-    public class IllustrationMatchConditionMaskConverter : IMultiValueConverter
+    public class EnumeratingSchedule
     {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (values[0] is string v && values[1] is Illustration illustration)
-            {
-                return PixevalContext.DefaultQualifier.Qualified(illustration, IllustrationQualification.Parse(v)) ? Visibility.Visible : Visibility.Hidden;
-            }
+        private static object _currentItr;
 
-            return Visibility.Hidden;
+        public static void StartNewInstance<T>(IPixivAsyncEnumerable<T> itr)
+        {
+            CancelCurrent();
+            _currentItr = itr;
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        public static IPixivAsyncEnumerable<T> GetCurrentEnumerator<T>()
         {
-            throw new NotImplementedException();
+            return _currentItr as IPixivAsyncEnumerable<T>;
+        }
+
+        public static void CancelCurrent()
+        {
+            var iterator = _currentItr as ICancellable;
+            iterator?.Cancel();
+            GC.Collect();
         }
     }
 }

@@ -26,6 +26,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Pixeval.Core;
+using Pixeval.Core.Timeline;
 using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
 using Pixeval.Persisting;
@@ -100,16 +101,16 @@ namespace Pixeval
 
         private static async Task RestoreSettings()
         {
-            await Settings.Restore();
+            await Settings.Load();
             BrowsingHistoryAccessor.GlobalLifeTimeScope = new BrowsingHistoryAccessor(200, PixevalContext.BrowseHistoryDatabase);
         }
 
         protected override async void OnExit(ExitEventArgs e)
         {
-            await Settings.Global.Store();
+            await Settings.Global.Save();
             if (Session.Current != null && !Session.Current.AccessToken.IsNullOrEmpty())
             {
-                await Session.Current.Store();
+                await Session.Current.Save();
             }
             if (File.Exists(PixevalContext.BrowseHistoryDatabase))
             {

@@ -21,6 +21,7 @@
 using System;
 using System.Linq;
 using Pixeval.Core;
+using Pixeval.Core.Options;
 using Pixeval.Objects.Generic;
 using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;

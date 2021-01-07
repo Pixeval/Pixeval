@@ -21,6 +21,7 @@
 using System;
 using Newtonsoft.Json;
 using Pixeval.Core;
+using Pixeval.Core.Dispatch;
 using Pixeval.Objects.Generic;
 using PropertyChanged;
 

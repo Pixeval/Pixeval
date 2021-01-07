@@ -18,33 +18,10 @@
 
 #endregion
 
-using System;
-
-namespace Pixeval.Data.Web
+namespace Pixeval.Core.Validation
 {
-    public class HttpResponse<T> : Tuple<bool, T>
+    public interface IQualifier<in T, in P>
     {
-        // fast path 
-        public static HttpResponse<T> Failure => OfEmpty(false);
-        
-        private HttpResponse(bool status, T response) : base(status, response)
-        {
-        }
-
-        public static HttpResponse<T> OfEmpty(bool status)
-        {
-            return new HttpResponse<T>(status, default);
-        }
-
-        public static HttpResponse<T> Success(T response)
-        {
-            return new HttpResponse<T>(true, response);
-        }
-
-        public void Deconstruct(out bool status, out T response)
-        {
-            status = Item1;
-            response = Item2;
-        }
+        public bool Qualified(T condition, P pattern);
     }
 }

@@ -18,31 +18,27 @@
 
 #endregion
 
-using System;
-using System.Globalization;
-using System.Windows;
-using System.Windows.Data;
-using Pixeval.Core;
-using Pixeval.Core.Validation;
+using System.IO;
 using Pixeval.Data.ViewModel;
+using Pixeval.Objects.Primitive;
 
-namespace Pixeval.Objects.ValueConverters
+namespace Pixeval.Core.Download
 {
-    public class IllustrationMatchConditionMaskConverter : IMultiValueConverter
+    public class DefaultIllustrationFileNameFormatter : IIllustrationFileNameFormatter
     {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        public string Format(Illustration illustration)
         {
-            if (values[0] is string v && values[1] is Illustration illustration)
-            {
-                return PixevalContext.DefaultQualifier.Qualified(illustration, IllustrationQualification.Parse(v)) ? Visibility.Visible : Visibility.Hidden;
-            }
-
-            return Visibility.Hidden;
+            return $"[{Strings.FormatPath(illustration.UserName)}]{illustration.Id}{Path.GetExtension(illustration.Origin.IsNullOrEmpty() ? illustration.Large : illustration.Origin)}";
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        public string FormatManga(Illustration illustration, int idx)
         {
-            throw new NotImplementedException();
+            return $"[{Strings.FormatPath(illustration.UserName)}]{illustration.Id}_p{idx}{Path.GetExtension(illustration.Origin.IsNullOrEmpty() ? illustration.Large : illustration.Origin)}";
+        }
+
+        public string FormatGif(Illustration illustration)
+        {
+            return $"[{Strings.FormatPath(illustration.UserName)}]{illustration.Id}.gif";
         }
     }
 }

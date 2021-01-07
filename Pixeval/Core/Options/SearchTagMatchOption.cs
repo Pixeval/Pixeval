@@ -18,33 +18,31 @@
 
 #endregion
 
-using System;
+using Pixeval.Objects.Primitive;
 
-namespace Pixeval.Data.Web
+namespace Pixeval.Core.Options
 {
-    public class HttpResponse<T> : Tuple<bool, T>
+    public enum SearchTagMatchOption
     {
-        // fast path 
-        public static HttpResponse<T> Failure => OfEmpty(false);
-        
-        private HttpResponse(bool status, T response) : base(status, response)
-        {
-        }
+        /// <summary>
+        ///     部分一致
+        /// </summary>
+        [EnumAlias("partial_match_for_tags")]
+        [EnumLocalizedName("TagMatchingPartialMatch")]
+        PartialMatchForTags,
 
-        public static HttpResponse<T> OfEmpty(bool status)
-        {
-            return new HttpResponse<T>(status, default);
-        }
+        /// <summary>
+        ///     完全一致
+        /// </summary>
+        [EnumAlias("exact_match_for_tags")]
+        [EnumLocalizedName("TagMatchingExactMatch")]
+        ExactMatchForTags,
 
-        public static HttpResponse<T> Success(T response)
-        {
-            return new HttpResponse<T>(true, response);
-        }
-
-        public void Deconstruct(out bool status, out T response)
-        {
-            status = Item1;
-            response = Item2;
-        }
+        /// <summary>
+        ///     标题和说明文
+        /// </summary>
+        [EnumAlias("title_and_caption")]
+        [EnumLocalizedName("TagMatchingTitleAndCaption")]
+        TitleAndCaption
     }
 }

@@ -18,33 +18,34 @@
 
 #endregion
 
-using System;
+using System.IO;
+using Pixeval.Objects.Primitive;
+using Pixeval.Persisting;
 
-namespace Pixeval.Data.Web
+namespace Pixeval.Core.Download
 {
-    public class HttpResponse<T> : Tuple<bool, T>
+    public class CreateNewFolderForUserDownloadPathProvider : IDownloadPathProvider
     {
-        // fast path 
-        public static HttpResponse<T> Failure => OfEmpty(false);
-        
-        private HttpResponse(bool status, T response) : base(status, response)
+        public CreateNewFolderForUserDownloadPathProvider(string userName)
         {
+            UserName = userName;
         }
 
-        public static HttpResponse<T> OfEmpty(bool status)
+        public string UserName { get; set; }
+
+        public string GetSpotlightPath(string title, DownloadOption option = null)
         {
-            return new HttpResponse<T>(status, default);
+            return option?.RootDirectory ?? Path.Combine(Settings.Global.DownloadLocation, "Spotlight", Strings.FormatPath(title));
         }
 
-        public static HttpResponse<T> Success(T response)
+        public string GetIllustrationPath(DownloadOption option = null)
         {
-            return new HttpResponse<T>(true, response);
+            return option?.RootDirectory ?? Path.Combine(Settings.Global.DownloadLocation, UserName);
         }
 
-        public void Deconstruct(out bool status, out T response)
+        public string GetMangaPath(string id, DownloadOption option = null)
         {
-            status = Item1;
-            response = Item2;
+            return option?.RootDirectory ?? Path.Combine(Settings.Global.DownloadLocation, UserName, id);
         }
     }
 }

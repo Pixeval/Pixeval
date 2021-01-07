@@ -28,6 +28,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using AngleSharp.Html.Parser;
+using Pixeval.Core.Dispatch;
+using Pixeval.Core.Enumerates;
+using Pixeval.Core.Options;
+using Pixeval.Core.Timeline;
 using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web;
 using Pixeval.Data.Web.Delegation;
@@ -133,7 +137,7 @@ namespace Pixeval.Core
 
         public static void RecordTimeline(ITimelineService service, BrowsingHistory browsingHistory)
         {
-            if (service.VerifyRationality(browsingHistory))
+            if (service.Verify(browsingHistory))
             {
                 Application.Current.Dispatcher.Invoke(DispatcherPriority.Loaded, (Action) (() => service.Insert(browsingHistory)));
             }

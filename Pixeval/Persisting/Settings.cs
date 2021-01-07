@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Pixeval.Core;
+using Pixeval.Core.Options;
 using Pixeval.Objects.Primitive;
 using PropertyChanged;
 

@@ -20,6 +20,7 @@
 
 using System.Collections.Generic;
 using Pixeval.Core;
+using Pixeval.Core.Options;
 using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
 using PropertyChanged;

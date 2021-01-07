@@ -18,33 +18,19 @@
 
 #endregion
 
-using System;
+using System.Collections.Generic;
+using Pixeval.Core.Dispatch;
 
-namespace Pixeval.Data.Web
+namespace Pixeval.Core.Enumerates
 {
-    public class HttpResponse<T> : Tuple<bool, T>
+    public interface IPixivAsyncEnumerable<T> : IAsyncEnumerable<T>, ICancellable
     {
-        // fast path 
-        public static HttpResponse<T> Failure => OfEmpty(false);
-        
-        private HttpResponse(bool status, T response) : base(status, response)
-        {
-        }
+        int RequestedPages { get; }
 
-        public static HttpResponse<T> OfEmpty(bool status)
-        {
-            return new HttpResponse<T>(status, default);
-        }
+        void ReportRequestedPages();
 
-        public static HttpResponse<T> Success(T response)
-        {
-            return new HttpResponse<T>(true, response);
-        }
+        void InsertionPolicy(T item, IList<T> collection);
 
-        public void Deconstruct(out bool status, out T response)
-        {
-            status = Item1;
-            response = Item2;
-        }
+        bool Verify(T item, IList<T> collection);
     }
 }

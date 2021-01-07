@@ -18,31 +18,33 @@
 
 #endregion
 
-using System;
-using System.Globalization;
-using System.Windows;
-using System.Windows.Data;
-using Pixeval.Core;
-using Pixeval.Core.Validation;
-using Pixeval.Data.ViewModel;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Pixeval.Objects.ValueConverters
+namespace Pixeval.Core.Enumerates
 {
-    public class IllustrationMatchConditionMaskConverter : IMultiValueConverter
+    /// <summary>
+    ///     Provide a set of functions that support iterate an <see cref="IPixivAsyncEnumerable{T}" />
+    /// </summary>
+    /// <typeparam name="T">the correspond data type</typeparam>
+    public abstract class AbstractPixivAsyncEnumerator<T> : IAsyncEnumerator<T>
     {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (values[0] is string v && values[1] is Illustration illustration)
-            {
-                return PixevalContext.DefaultQualifier.Qualified(illustration, IllustrationQualification.Parse(v)) ? Visibility.Visible : Visibility.Hidden;
-            }
+        protected IPixivAsyncEnumerable<T> Enumerable;
 
-            return Visibility.Hidden;
+        protected AbstractPixivAsyncEnumerator(IPixivAsyncEnumerable<T> enumerable)
+        {
+            Enumerable = enumerable;
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        public ValueTask DisposeAsync()
         {
-            throw new NotImplementedException();
+            return default;
         }
+
+        public abstract ValueTask<bool> MoveNextAsync();
+
+        public abstract T Current { get; }
+
+        protected abstract void UpdateEnumerator();
     }
 }

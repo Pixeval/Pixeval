@@ -1,5 +1,4 @@
 ﻿#region Copyright (C) 2019-2020 Dylech30th. All rights reserved.
-
 // Pixeval - A Strong, Fast and Flexible Pixiv Client
 // Copyright (C) 2019-2020 Dylech30th
 // 
@@ -15,34 +14,29 @@
 // 
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 #endregion
 
-using System;
-using System.Globalization;
-using System.Windows;
-using System.Windows.Data;
-using Pixeval.Core;
-using Pixeval.Core.Validation;
-using Pixeval.Data.ViewModel;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
-namespace Pixeval.Objects.ValueConverters
+namespace Pixeval.Core.Dispatch
 {
-    public class IllustrationMatchConditionMaskConverter : IMultiValueConverter
+    public class SearchingHistoryManager
     {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (values[0] is string v && values[1] is Illustration illustration)
-            {
-                return PixevalContext.DefaultQualifier.Qualified(illustration, IllustrationQualification.Parse(v)) ? Visibility.Visible : Visibility.Hidden;
-            }
+        private static readonly ObservableCollection<string> SearchingHistory = new ObservableCollection<string>();
 
-            return Visibility.Hidden;
+        public static void EnqueueSearchHistory(string keyword)
+        {
+            if (SearchingHistory.Count == 4)
+            {
+                SearchingHistory.RemoveAt(SearchingHistory.Count - 1);
+            }
+            SearchingHistory.Insert(0, keyword);
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        public static IEnumerable<string> GetSearchingHistory()
         {
-            throw new NotImplementedException();
+            return SearchingHistory;
         }
     }
 }
