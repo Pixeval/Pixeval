@@ -25,6 +25,8 @@
     </p>
 </div>
 
+**Pixeval is subject to be refactored by using WinUI 3, however, this has to be delayed due to the unstability of the preview version of WinUI 3 preview 3(which is the newest available version of WinUI library). I've been trying to refactor this for around one week and yet meet several unresolvable problems such as Storyboard reported cannot find TargetName when I'm trying to animate a control, I'm STILL going to rewrite the UI layer, but with WPF as its foundation instead of WinUI until WinUI being general available**
+
 更多详细信息请前往[项目主页](https://sora.ink/pixeval/)查看
 
 **下载：**
