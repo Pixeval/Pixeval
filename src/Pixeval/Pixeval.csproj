@@ -16,6 +16,8 @@
 	<ItemGroup>
 		<None Remove="Objects\I18n\Xml\resx_en-us.xml" />
 		<None Remove="Objects\I18n\Xml\resx_zh-cn.xml" />
+		<None Remove="View\MainWindow.xaml" />
+		<None Remove="View\NavMenu.xaml" />
 	</ItemGroup>
 
 	<ItemGroup>

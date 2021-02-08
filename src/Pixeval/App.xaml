@@ -21,7 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
              xmlns:valueConverters="clr-namespace:Pixeval.Objects.ValueConverters"
-             StartupUri="UI/SignIn.xaml">
+             StartupUri="View/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

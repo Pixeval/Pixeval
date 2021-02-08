@@ -49,6 +49,7 @@ using Pixeval.Objects.Native;
 using Pixeval.Objects.Primitive;
 using Pixeval.Persisting;
 using Pixeval.UI.UserControls;
+using Pixeval.ViewModel;
 using Refit;
 using Xceed.Wpf.AvalonDock.Controls;
 using static Pixeval.Objects.Primitive.UiHelper;
@@ -72,36 +73,14 @@ namespace Pixeval.UI
         {
             Instance = this;
             InitializeComponent();
+            MainWindowViewModel mainWindowViewModel = new ();
+            this.DataContext = mainWindowViewModel;
             NavigatorList.SelectedItem = MenuTab;
             MainWindowSnackBar.MessageQueue = MessageQueue;
-
-            if (Dispatcher != null) Dispatcher.UnhandledException += Dispatcher_UnhandledException;
 
 #pragma warning disable 4014
             AcquireRecommendUser();
 #pragma warning restore 4014
-        }
-
-        private static void Dispatcher_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
-        {
-#if RELEASE
-            switch (e.Exception)
-            {
-                case QueryNotRespondingException _:
-                    MessageQueue.Enqueue(AkaI18N.QueryNotResponding);
-                    break;
-                case ApiException apiException:
-                    if (apiException.StatusCode == HttpStatusCode.BadRequest)
-                        MessageQueue.Enqueue(AkaI18N.QueryNotResponding);
-                    break;
-                case HttpRequestException _: break;
-                default:
-                    ExceptionDumper.WriteException(e.Exception);
-                    break;
-            }
-
-            e.Handled = true;
-#endif
         }
 
         private void DoQueryButton_OnClick(object sender, RoutedEventArgs e)
