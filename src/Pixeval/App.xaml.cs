@@ -62,21 +62,20 @@ namespace Pixeval
         {
             // These initializations ensure Pixeval to run properly, they MUST be initialized before everything start
             WriteToCurrentUserPathVariable();
-            InitializeFolders();
-            CheckCppRedistributable();
-            CheckMultipleProcess();
-            await InstallFakeCaCertificate();
+            //InitializeFolders();
+            //CheckMultipleProcess();
+            //await InstallFakeCaCertificate();
 
             // These initializations are for WEB API LOGIN
-            PortScan(out var proxy, out var pac);
-            AppContext.ProxyPort = proxy;
-            AppContext.PacPort = pac;
-            await WritePac();
+            //PortScan(out var proxy, out var pac);
+            //AppContext.ProxyPort = proxy;
+            //AppContext.PacPort = pac;
+            //await WritePac();
             //CefSharpInitialize();
 
             // These initializations handle USER SESSION AND PIXEVAL UPDATE
             await RestoreSettings();
-            await CheckUpdate();
+            //await CheckUpdate();
 
             // These initializations are for PROCESS COMMUNICATION AND PLUGGABLE PROTOCOL
             await InstallPluggableProtocolHandler();
@@ -144,15 +143,15 @@ namespace Pixeval
             }
         }
 
-        private static void InitializeFolders()
-        {
-            Directory.CreateDirectory(AppContext.ProjectFolder);
-            Directory.CreateDirectory(AppContext.SettingsFolder);
-            Directory.CreateDirectory(AppContext.ExceptionReportFolder);
-            Directory.CreateDirectory(AppContext.ResourceFolder);
-            Directory.CreateDirectory(AppContext.PermanentlyFolder);
-            Directory.CreateDirectory(AppContext.InterchangeFolder);
-        }
+        //private static void InitializeFolders()
+        //{
+        //    Directory.CreateDirectory(AppContext.ProjectFolder);
+        //    Directory.CreateDirectory(AppContext.SettingsFolder);
+        //    Directory.CreateDirectory(AppContext.ExceptionReportFolder);
+        //    Directory.CreateDirectory(AppContext.ResourceFolder);
+        //    Directory.CreateDirectory(AppContext.PermanentlyFolder);
+        //    Directory.CreateDirectory(AppContext.InterchangeFolder);
+        //}
 
         private static void CreatePluggableProtocolRegistry()
         {
@@ -171,33 +170,33 @@ namespace Pixeval
             regKey?.Dispose();
         }
 
-        private static void CheckMultipleProcess()
-        {
-            if (Process.GetProcessesByName(AppContext.AppIdentifier).Length > 1)
-            {
-                MessageBox.Show(AkaI18N.MultiplePixevalInstanceDetected, AkaI18N.MultiplePixevalInstanceDetectedTitle, MessageBoxButton.OK, MessageBoxImage.Error);
-                Environment.Exit(-1);
-            }
-        }
+        //private static void CheckMultipleProcess()
+        //{
+        //    if (Process.GetProcessesByName(AppContext.AppIdentifier).Length > 1)
+        //    {
+        //        MessageBox.Show(AkaI18N.MultiplePixevalInstanceDetected, AkaI18N.MultiplePixevalInstanceDetectedTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+        //        Environment.Exit(-1);
+        //    }
+        //}
 
-        private static void CheckCppRedistributable()
-        {
-            if (!CppRedistributableInstalled())
-            {
-                MessageBox.Show(AkaI18N.CppRedistributableRequired, AkaI18N.CppRedistributableRequiredTitle, MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                Clipboard.SetDataObject("https://support.microsoft.com/zh-cn/help/2977003/the-latest-supported-visual-c-downloads");
-                Environment.Exit(-1);
-            }
-        }
+        //private static void CheckCppRedistributable()
+        //{
+        //    if (!CppRedistributableInstalled())
+        //    {
+        //        MessageBox.Show(AkaI18N.CppRedistributableRequired, AkaI18N.CppRedistributableRequiredTitle, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+        //        Clipboard.SetDataObject("https://support.microsoft.com/zh-cn/help/2977003/the-latest-supported-visual-c-downloads");
+        //        Environment.Exit(-1);
+        //    }
+        //}
 
-        private static async Task CheckUpdate()
-        {
-            if (await AppContext.UpdateAvailable() && MessageBox.Show(AkaI18N.PixevalUpdateAvailable, AkaI18N.PixevalUpdateAvailableTitle, MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
-            {
-                Process.Start(@"updater\Pixeval.Updater.exe");
-                Environment.Exit(0);
-            }
-        }
+        //private static async Task CheckUpdate()
+        //{
+        //    if (await AppContext.UpdateAvailable() && MessageBox.Show(AkaI18N.PixevalUpdateAvailable, AkaI18N.PixevalUpdateAvailableTitle, MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+        //    {
+        //        Process.Start(@"updater\Pixeval.Updater.exe");
+        //        Environment.Exit(0);
+        //    }
+        //}
 
         /// <summary>
         ///     Check if the required Visual C++ Redistributable is installed on the computer
