@@ -30,6 +30,11 @@
 		<PackageReference Include="MaterialDesignColors" Version="2.0.0-ci2312" />
 		<PackageReference Include="MaterialDesignThemes" Version="4.0.0-ci2312" />
 		<PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0-3.final" />
 		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.721-prerelease" />
 		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
 		<PackageReference Include="PropertyChanged.Fody" Version="3.3.1" />
