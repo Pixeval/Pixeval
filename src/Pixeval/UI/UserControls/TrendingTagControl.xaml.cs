@@ -42,7 +42,8 @@ namespace Pixeval.UI.UserControls
 
         private async void TrendingTagControl_OnInitialized(object sender, EventArgs e)
         {
-            AppContext.TrendingTags.AddRange(await PixivClient.Instance.GetTrendingTags());
+            //TODO: 设计器异常,暂时注释
+            //AppContext.TrendingTags.AddRange(await PixivClient.Instance.GetTrendingTags());
         }
 
         private async void TrendingTagThumbnail_OnLoaded(object sender, RoutedEventArgs e)

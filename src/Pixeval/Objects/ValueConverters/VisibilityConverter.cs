@@ -61,11 +61,13 @@ namespace Pixeval.Objects.ValueConverters
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            var val = values.Cast<bool>().ToArray();
+            //TODO: 设计器异常
+            //var val = values.Cast<bool>().ToArray();
 
-            if (!(val[0] || val[1] || val[2] || val[3])) return Visibility.Visible;
+            //if (!(val[0] || val[1] || val[2] || val[3])) return Visibility.Visible;
 
-            return Visibility.Hidden;
+            //return Visibility.Hidden;
+            return Visibility.Visible;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
@@ -78,11 +80,15 @@ namespace Pixeval.Objects.ValueConverters
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            var val = values.Cast<bool>().ToArray();
+            //TODO: 设计器异常
 
-            if (!val[0] && !val[1] || val[2]) return Visibility.Visible;
+            //var val = values.Cast<bool>().ToArray();
 
-            return Visibility.Hidden;
+            //if (!val[0] && !val[1] || val[2]) return Visibility.Visible;
+
+            //return Visibility.Hidden;
+
+            return Visibility.Visible;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
