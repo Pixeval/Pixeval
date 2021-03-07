@@ -29,5 +29,7 @@ namespace Pixeval.Data.Web.Delegation
         private PixivImageHttpClientHandler() : base(PixivHttpRequestHandler.Instance)
         {
         }
+
+        protected override DnsResolver DnsResolver { get; set; } = PixivImageDnsResolver.Instance;
     }
 }

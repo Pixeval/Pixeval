@@ -25,7 +25,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Pixeval.Core;
-using Pixeval.Core.Download;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Objects.Generic;
 using Pixeval.Objects.Primitive;

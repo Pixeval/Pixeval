@@ -22,11 +22,14 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Net.Http;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Microsoft.Win32;
 using Pixeval.Core;
-using Pixeval.Core.Timeline;
+using Pixeval.Objects;
 using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
 using Pixeval.Persisting;
@@ -64,10 +67,45 @@ namespace Pixeval
             throw e;
 #endif
         }
+        
+        private static bool CheckWebViewVersion()
+        {
+            var regKey = Registry.LocalMachine.OpenSubKey(
+                Environment.Is64BitOperatingSystem
+                    ? "SOFTWARE\\WOW6432Node\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
+                    : "SOFTWARE\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
+            );
+            return regKey != null && !(regKey.GetValue("pv") as string).IsNullOrEmpty();
+        }
 
+        private static async Task RootCaCertInstallation()
+        {
+            using var cert = await CertificateManager.GetFakeCaRootCertificate();
+            var fakeCertMgr = new CertificateManager(cert);
+            if (!fakeCertMgr.Query(StoreName.Root, StoreLocation.CurrentUser))
+            {
+                if (MessageBox.Show(AkaI18N.CertificateInstallationIsRequired, AkaI18N.CertificateInstallationIsRequiredTitle, MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    fakeCertMgr.Install(StoreName.Root, StoreLocation.CurrentUser);
+                }
+                else
+                {
+                    Environment.Exit(-1);
+                }
+            }
+        }
+
+        
         protected override async void OnStartup(StartupEventArgs e)
         {
             InitializeFolders();
+            if (!CheckWebViewVersion())
+            {
+                MessageBox.Show(AkaI18N.WebView2DownloadIsRequired);
+                Clipboard.SetText("https://go.microsoft.com/fwlink/p/?LinkId=2124703");
+                Environment.Exit(0);
+            }
+            await RootCaCertInstallation();
             CheckMultipleProcess();
             await RestoreSettings();
             await CheckUpdate();
@@ -76,9 +114,9 @@ namespace Pixeval
 
         private static void InitializeFolders()
         {
-            Directory.CreateDirectory(PixevalContext.ProjectFolder);
-            Directory.CreateDirectory(PixevalContext.SettingsFolder);
-            Directory.CreateDirectory(PixevalContext.ExceptionReportFolder);
+            Directory.CreateDirectory(AppContext.ProjectFolder);
+            Directory.CreateDirectory(AppContext.SettingsFolder);
+            Directory.CreateDirectory(AppContext.ExceptionReportFolder);
         }
 
         private static void CheckMultipleProcess()
@@ -92,7 +130,7 @@ namespace Pixeval
 
         private static async Task CheckUpdate()
         {
-            if (await PixevalContext.UpdateAvailable() && MessageBox.Show(AkaI18N.PixevalUpdateAvailable, AkaI18N.PixevalUpdateAvailableTitle, MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+            if (await AppContext.UpdateAvailable() && MessageBox.Show(AkaI18N.PixevalUpdateAvailable, AkaI18N.PixevalUpdateAvailableTitle, MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
             {
                 Process.Start(@"updater\Pixeval.Updater.exe");
                 Environment.Exit(0);
@@ -101,18 +139,18 @@ namespace Pixeval
 
         private static async Task RestoreSettings()
         {
-            await Settings.Load();
-            BrowsingHistoryAccessor.GlobalLifeTimeScope = new BrowsingHistoryAccessor(200, PixevalContext.BrowseHistoryDatabase);
+            await Settings.Restore();
+            BrowsingHistoryAccessor.GlobalLifeTimeScope = new BrowsingHistoryAccessor(200, AppContext.BrowseHistoryDatabase);
         }
 
         protected override async void OnExit(ExitEventArgs e)
         {
-            await Settings.Global.Save();
+            await Settings.Global.Store();
             if (Session.Current != null && !Session.Current.AccessToken.IsNullOrEmpty())
             {
-                await Session.Current.Save();
+                await Session.Current.Store();
             }
-            if (File.Exists(PixevalContext.BrowseHistoryDatabase))
+            if (File.Exists(AppContext.BrowseHistoryDatabase))
             {
                 BrowsingHistoryAccessor.GlobalLifeTimeScope.SetWritable();
                 BrowsingHistoryAccessor.GlobalLifeTimeScope.Rewrite();

@@ -99,5 +99,10 @@ namespace Pixeval.Objects.Primitive
             var hashBytes = crypt.ComputeHash(str.GetBytes());
             return hashBytes.Select(b => b.ToString("x2")).Aggregate((s1, s2) => s1 + s2);
         }
+
+        public static string ToUrlSafeBase64String(this byte[] bytes)
+        {
+            return Convert.ToBase64String(bytes).TrimEnd(new[] { '=' }).Replace("+", "-").Replace("/", "_");
+        }
     }
 }

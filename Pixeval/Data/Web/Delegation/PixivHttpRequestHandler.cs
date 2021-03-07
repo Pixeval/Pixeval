@@ -19,17 +19,16 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text.RegularExpressions;
+using Pixeval.Objects.Exceptions;
 using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
 using Pixeval.Persisting;
 
 namespace Pixeval.Data.Web.Delegation
 {
-    public class PixivHttpRequestHandler : IHttpRequestInterceptor
+    public class PixivHttpRequestHandler : IHttpRequestHandler
     {
         public static readonly PixivHttpRequestHandler Instance = new PixivHttpRequestHandler();
 
@@ -37,50 +36,37 @@ namespace Pixeval.Data.Web.Delegation
         {
         }
 
-        public virtual void Intercept(DnsResolvedHttpClientHandler dnsResolvedHttpClientHandler, HttpRequestMessage httpRequestMessage)
+        public virtual void Handle(HttpRequestMessage httpRequestMessage)
         {
-            // Regex is rather slower than multiple case-and-when clauses, but it can significantly improve the readability
-            const string ApiHost = "^app-api\\.pixiv\\.net$";
-            const string WebApiHost = "^(pixiv\\.net)|(www\\.pixiv\\.net)$";
-            const string OAuthHost = "^oauth\\.secure\\.pixiv\\.net$";
-            const string BypassHost = ApiHost + "|" + WebApiHost;
-
-            switch (httpRequestMessage.RequestUri.IdnHost)
+            switch (httpRequestMessage.RequestUri.DnsSafeHost)
             {
-                case var x when Regex.IsMatch(x, ApiHost):
+                case "app-api.pixiv.net":
                     var token = httpRequestMessage.Headers.Authorization;
-                    if (token == null)
+                    if (token != null)
                     {
-                        httpRequestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Session.Current.AccessToken);
+                        if (Session.Current.AccessToken.IsNullOrEmpty())
+                        {
+                            throw new TokenNotFoundException($"{nameof(Session.Current.AccessToken)} is empty, this exception should never be thrown, if you see this message, please send issue on github or contact me (decem0730@gmail.com)");
+                        }
+
+                        httpRequestMessage.Headers.Authorization = new AuthenticationHeaderValue(token.Scheme, Session.Current.AccessToken);
                     }
+
                     break;
-                
-                case var x when Regex.IsMatch(x, BypassHost) && Settings.Global.DirectConnect || Regex.IsMatch(x, OAuthHost):
-                    ReplaceApiRequest(httpRequestMessage);
-                    if (Regex.IsMatch(x, WebApiHost))
-                    {
-                        httpRequestMessage.Headers.TryAddWithoutValidation("Cookie", Settings.Global.Cookie);
-                    }
-                    break;
-                
-                case "i.pximg.net" when !Settings.Global.MirrorServer.IsNullOrEmpty():
-                    httpRequestMessage.RequestUri = new Uri(httpRequestMessage.RequestUri.ToString().Replace("https://i.pximg.net", Settings.Global.MirrorServer));
+                case var x when x == "pixiv.net" || x == "www.pixiv.net":
+                    httpRequestMessage.Headers.TryAddWithoutValidation("Cookie", Settings.Global.Cookie);
                     break;
             }
+
+            if (httpRequestMessage.RequestUri.DnsSafeHost == "i.pximg.net" && !Settings.Global.MirrorServer.IsNullOrEmpty())
+            {
+                httpRequestMessage.RequestUri = new Uri(httpRequestMessage.RequestUri.ToString().Replace("i.pximg.net", Settings.Global.MirrorServer));
+            }
+
             if (!httpRequestMessage.Headers.Contains("Accept-Language"))
             {
                 httpRequestMessage.Headers.TryAddWithoutValidation("Accept-Language", AkaI18N.GetCultureAcceptLanguage());
             }
-        }
-
-        private static void ReplaceApiRequest(HttpRequestMessage request)
-        {
-            var host = request.RequestUri.IdnHost;
-
-            var isSslSession = request.RequestUri.ToString().StartsWith("https://");
-
-            request.RequestUri = new Uri($"{(isSslSession ? "https://" : "http://")}{PixivApiDnsResolver.Instance.Lookup().First()}{request.RequestUri.PathAndQuery}");
-            request.Headers.Host = host;
         }
     }
 }

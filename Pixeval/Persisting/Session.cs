@@ -20,9 +20,11 @@
 
 using System;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Pixeval.Core;
+using AdysTech.CredentialManager;
+using Newtonsoft.Json;
 using Pixeval.Data.Web.Response;
 using Pixeval.Objects.Primitive;
 
@@ -46,25 +48,24 @@ namespace Pixeval.Persisting
         public string AvatarUrl { get; set; }
 
         public string Id { get; set; }
-        
+
+        [JsonIgnore]
         public string MailAddress { get; set; }
 
         public string Account { get; set; }
-        
+
+        [JsonIgnore]
         public string Password { get; set; }
 
         public DateTime CookieCreation { get; set; }
 
         public bool IsPremium { get; set; }
-        
-        public DateTime TokenRefreshed { get; set; }
 
         public static Session Parse(string password, TokenResponse token)
         {
             var response = token.ToResponse;
             return new Session
             {
-                TokenRefreshed = DateTime.Now,
                 Name = response.User.Name,
                 ExpireIn = DateTime.Now + TimeSpan.FromSeconds(response.ExpiresIn),
                 AccessToken = response.AccessToken,
@@ -84,38 +85,61 @@ namespace Pixeval.Persisting
             return this.ToJson();
         }
 
-        public async Task Save()
+        public async Task Store()
         {
-            await File.WriteAllTextAsync(Path.Combine(PixevalContext.ConfFolder, PixevalContext.ConfigurationFileName), ToString());
+            await File.WriteAllTextAsync(Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName), ToString());
+            CredentialManager.SaveCredentials(AppContext.AppIdentifier, new NetworkCredential(MailAddress, Password));
         }
 
-        public static bool RefreshRequired()
+        public static async Task Restore()
         {
-            return Current == null || Current.AccessToken.IsNullOrEmpty() || DateTime.Now - Current.TokenRefreshed >= TimeSpan.FromMinutes(50);
+            Current = (await File.ReadAllTextAsync(Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName), Encoding.UTF8)).FromJson<Session>();
+            var credential = CredentialManager.GetCredentials(AppContext.AppIdentifier);
+            Current.MailAddress = credential.UserName;
+            Current.Password = credential.Password;
         }
 
-        public static async Task Load()
+        public static bool ConfExists()
         {
-            Current = (await File.ReadAllTextAsync(Path.Combine(PixevalContext.ConfFolder, PixevalContext.ConfigurationFileName), Encoding.UTF8)).FromJson<Session>();
+            var path = Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName);
+            return File.Exists(path) && new FileInfo(path).Length != 0 && CredentialManager.GetCredentials(AppContext.AppIdentifier) != null;
         }
 
-        public static bool IsPresent()
+        public static bool AppApiRefreshRequired(Session identity)
         {
-            var path = Path.Combine(PixevalContext.ConfFolder, PixevalContext.ConfigurationFileName);
-            return File.Exists(path) && new FileInfo(path).Length != 0;
+            return identity == null || identity.AccessToken.IsNullOrEmpty() || identity.ExpireIn == default || identity.ExpireIn <= DateTime.Now;
         }
 
         public static async Task RefreshIfRequired()
         {
-            if (RefreshRequired())
+            if (Current == null)
             {
-                await PixivClient.Refresh();
+                await Restore();
+            }
+
+            if (AppApiRefreshRequired(Current))
+            {
+                if (Current?.RefreshToken.IsNullOrEmpty() is true)
+                {
+                    await Authentication.Authenticate(Current?.MailAddress, Current?.Password);
+                }
+                else
+                {
+                    await Authentication.AppApiAuthenticate(Current?.RefreshToken);
+                }
             }
         }
 
-        public static void Reset()
+        public static void Clear()
         {
-            File.Delete(Path.Combine(PixevalContext.ConfFolder, PixevalContext.ConfigurationFileName));
+            if (File.Exists(Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName)))
+            {
+                File.Delete(Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName));
+            }
+            if (CredentialManager.GetCredentials(AppContext.AppIdentifier) != null)
+            {
+                CredentialManager.RemoveCredentials(AppContext.AppIdentifier);
+            }
             Current = new Session();
         }
     }

@@ -23,80 +23,46 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Pixeval.Data.Web.Protocol;
 using Pixeval.Objects.Generic;
+using Pixeval.Persisting;
 using Refit;
 
 namespace Pixeval.Data.Web.Delegation
 {
     public class HttpClientFactory
     {
-        public const string AppApiBaseUrl = "https://app-api.pixiv.net";
-
-        public const string DnsServer = "https://1.0.0.1";
-
-        public const string SauceNaoUrl = "https://saucenao.com/";
-
-        public const string OAuthBaseUrl = "https://oauth.secure.pixiv.net";
-
-        public const string WebApiBaseUrl = "https://www.pixiv.net";
-
         public static HttpClient AppApiHttpClient()
         {
-            return PixivApi().Apply(h => h.DefaultRequestHeaders.Add("Authorization", "Bearer"));
+            return PixivApi(ProtocolBase.AppApiBaseUrl, Settings.Global.DirectConnect).Apply(h => h.DefaultRequestHeaders.Add("Authorization", "Bearer"));
         }
 
         public static HttpClient WebApiHttpClient()
         {
-            return PixivWebApi();
+            return PixivApi(ProtocolBase.WebApiBaseUrl, Settings.Global.DirectConnect);
         }
 
         public static IAppApiProtocol AppApiService()
         {
-            return RestService.For<IAppApiProtocol>(PixivApi());
+            return RestService.For<IAppApiProtocol>(PixivApi(ProtocolBase.AppApiBaseUrl, Settings.Global.DirectConnect));
         }
 
         public static IWebApiProtocol WebApiService()
         {
-            return RestService.For<IWebApiProtocol>(PixivWebApi());
+            return RestService.For<IWebApiProtocol>(PixivApi(ProtocolBase.WebApiBaseUrl, Settings.Global.DirectConnect));
         }
 
-        public static HttpClient PixivApi()
+        public static HttpClient PixivApi(string baseAddress, bool directConnect)
         {
-            return PixivApiHttpClient;
+            return new HttpClient(PixivApiHttpClientHandler.Instance(directConnect)) { BaseAddress = new Uri(baseAddress) };
         }
 
         public static HttpClient PixivImage()
         {
-            return PixivImageHttpClient;
+            return new HttpClient(PixivImageHttpClientHandler.Instance).Apply(client =>
+            {
+                client.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "http://www.pixiv.net");
+                client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "PixivIOSApp/5.8.7");
+            });
         }
-
-        public static HttpClient PixivWebApi()
-        {
-            return PixivWebApiHttpClient;
-        }
-
-        public static HttpClient PixivAuthApi()
-        {
-            return PixivAuthHttpClient;
-        }
-
-        // -------------------------- Could you please using dependency injection? --------------------------
-
-        // from author of Pixeval: the following code is awful at no matter extensibility, maintainability or
-        // readability, it's horrible because it's designed for using per instance instead of a application-
-        // lifecycle, static object
-        private static readonly HttpClient PixivApiHttpClient = new HttpClient(PixivApiHttpClientHandler.Instance()) { BaseAddress = new Uri(AppApiBaseUrl) };
-
-        private static readonly HttpClient PixivWebApiHttpClient = new HttpClient(PixivApiHttpClientHandler.Instance()) { BaseAddress = new Uri(WebApiBaseUrl) };
-
-        private static readonly HttpClient PixivAuthHttpClient = new HttpClient(PixivApiHttpClientHandler.Instance()) { BaseAddress = new Uri(OAuthBaseUrl) };
-
-        private static readonly HttpClient PixivImageHttpClient = new HttpClient(PixivImageHttpClientHandler.Instance).Apply(client =>
-        {
-            client.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "http://www.pixiv.net");
-            client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "PixivIOSApp/5.8.7");
-        });
-
-        // --------------------- Thank the god I don't have to watch this piece of shit ---------------------
 
         public static Task<HttpResponseMessage> GetResponseHeader(HttpClient client, string uri)
         {

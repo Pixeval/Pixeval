@@ -19,48 +19,77 @@
 #endregion
 
 using System;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Pixeval.Core;
-using Pixeval.Objects.Exceptions;
 using Pixeval.Persisting;
 
 namespace Pixeval.Data.Web.Delegation
 {
     public abstract class DnsResolvedHttpClientHandler : HttpClientHandler
     {
-        private readonly IHttpRequestInterceptor interceptor;
-        private readonly ManualResetEvent refreshing = new ManualResetEvent(true);
-        
+        private readonly bool directConnect;
+        private readonly IHttpRequestHandler requestHandler;
+
         static DnsResolvedHttpClientHandler()
         {
-            AppContext.SetSwitch("System.Net.Http.UseSocketsHttpHandler", false);
+            System.AppContext.SetSwitch("System.Net.Http.UseSocketsHttpHandler", false);
         }
 
-        protected DnsResolvedHttpClientHandler(IHttpRequestInterceptor interceptor = null)
+        protected DnsResolvedHttpClientHandler(IHttpRequestHandler requestHandler = null, bool directConnect = true)
         {
-            this.interceptor = interceptor;
+            this.requestHandler = requestHandler;
+            this.directConnect = directConnect;
             ServerCertificateCustomValidationCallback = DangerousAcceptAnyServerCertificateValidator;
         }
 
+        protected abstract DnsResolver DnsResolver { get; set; }
+
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            if (!refreshing.WaitOne(TimeSpan.FromSeconds(10)))
+            requestHandler?.Handle(request);
+
+            if (directConnect)
             {
-                throw new AuthenticateFailedException("timeout"); // TODO localization
+                var host = request.RequestUri.DnsSafeHost;
+
+                var isSslSession = request.RequestUri.ToString().StartsWith("https://");
+
+                request.RequestUri = new Uri($"{(isSslSession ? "https://" : "http://")}{DnsResolver.Lookup()[0]}{request.RequestUri.PathAndQuery}");
+                request.Headers.Host = host;
             }
 
-            if (Session.RefreshRequired())
+            HttpResponseMessage result;
+            try
             {
-                refreshing.Reset();
-                await PixivClient.Refresh();
-                refreshing.Set();
+                result = await base.SendAsync(request, cancellationToken);
             }
-            
-            interceptor?.Intercept(this, request);
+            catch (HttpRequestException e)
+            {
+                if (e.InnerException != null && e.InnerException.Message.ToLower().Contains("winhttp"))
+                {
+                    return new HttpResponseMessage(HttpStatusCode.OK);
+                }
+                throw;
+            }
 
-            return await base.SendAsync(request, cancellationToken);
+            if (result.StatusCode == HttpStatusCode.BadRequest && (await result.Content.ReadAsStringAsync()).Contains("OAuth"))
+            {
+                using var semaphore = new SemaphoreSlim(1);
+                await semaphore.WaitAsync(cancellationToken);
+                await Authentication.Authenticate(Session.Current.Account, Session.Current.Password);
+                var token = request.Headers.Authorization;
+                if (token != null)
+                {
+                    request.Headers.Authorization = new AuthenticationHeaderValue(token.Scheme, Session.Current.AccessToken);
+                }
+
+                return await base.SendAsync(request, cancellationToken);
+            }
+
+            return result;
         }
     }
 }

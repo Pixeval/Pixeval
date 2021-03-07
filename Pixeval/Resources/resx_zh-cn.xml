@@ -89,7 +89,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         value="Pixeval运行需要Visual C++ Redistributable 2015/2017/2019 x64支持, 否则部分功能将会受到影响, 请前往https://support.microsoft.com/zh-cn/help/2977003/the-latest-supported-visual-c-downloads下载最新的Visual C++ Redistributable, 链接已经复制到剪切板" />
   <resx key="CppRedistributableRequiredTitle" value="未检测到版本大于2015的64位VC++ Redistributable" />
   <resx key="CertificateInstallationIsRequired"
-        value="检测到本机尚未安装证书, 若不安装该证书则会导致WebApi登录无法使用, 接下来将会执行安装证书进程, 过程中也许会有弹窗, 请点击确定/OK, 该证书私钥将不会被泄露和分发" />
+        value="检测到本机尚未安装证书, 若不安装该证书则会导致无法直连登陆, 接下来将会执行安装证书进程, 过程中也许会有弹窗, 请点击确定/OK, 该证书私钥将不会被泄露和分发" />
   <resx key="CertificateInstallationIsRequiredTitle" value="安装根证书" />
   <resx key="TrendsAddIllust" value="已投稿" />
   <resx key="TrendsAddBookmark" value="已收藏" />
@@ -181,4 +181,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <resx key="ImageMirrorServerUrlHint" value="如果你想使用另外的图片下载镜像站而非默认(i.pximg.net)，请将服务器地址填在这里，如果你不知道这是什么意思，请不要操作此栏" />
   <resx key="ImageMirrorServerUrl" value="图片镜像站地址(请勿带协议头与末尾的/)" />
   <resx key="BatchDownloadAcknowledgment" value="你真的想要下载全部作品吗?在下载任务过多的时候可能会导致程序发生顿卡" />
+  <resx key="WebView2DownloadIsRequired" value="Pixeval需要使用WebView2 Runtime作为Pixiv新鉴权方法的反制手段, 请前往https://go.microsoft.com/fwlink/p/?LinkId=2124703下载并安装, 链接已经复制到剪切板, 安装完成后请重启Pixeval"/>
 </localization>

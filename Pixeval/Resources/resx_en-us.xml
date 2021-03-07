@@ -91,7 +91,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         value="Pixeval requires Visual C++ Redistributable 2015/2017/2019 x64 support, otherwise some function will be limited. Please download the newest VC++ Redistributable at https://support.microsoft.com/zh-cn/help/2977003/the-latest-supported-visual-c-downloads, the link has been copied to clipboard" />
   <resx key="CppRedistributableRequiredTitle" value="No VC++ Redistributable 2015/2017/2019 detected" />
   <resx key="CertificateInstallationIsRequired"
-        value="We detected that certificate is not installed yet on this machine, WebApi function will be unavailable, we will trying to install the certificate in the next few steps, there might be a popup window during the installation, please click OK, the private key of this certificate will not be distributed" />
+        value="We detected that required certificate is not installed yet on this machine which will causing the login procedure becomes invalid, we will try to install the certificate in the next few steps, there might be a popup window during the installation, please click OK, the private key of this certificate is guaranteed not to be distributed" />
   <resx key="CertificateInstallationIsRequiredTitle" value="Install CA Root Certificate" />
   <resx key="TrendsAddIllust" value="Posted" />
   <resx key="TrendsAddBookmark" value="Collected" />
@@ -186,4 +186,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <resx key="ImageMirrorServerUrl" value="Image mirror server url(without url scheme and / at the end of the url)" />
   <resx key="BatchDownloadAcknowledgment"
         value="Do you really want to download all the illustrations, this may lead the program into a temporarily unresponsive" />
+  <resx key="WebView2DownloadIsRequired" value="Pixeval requires WebView2 Runtime as a countermeasure of the new auth method of Pixiv, go to https://go.microsoft.com/fwlink/p/?LinkId=2124703 to download the runtime and install it, the link has been copied to your clipboard, restart Pixeval after your installation"/>
 </localization>

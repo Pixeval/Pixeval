@@ -21,7 +21,6 @@
 using System;
 using System.Linq;
 using Pixeval.Core;
-using Pixeval.Core.Options;
 using Pixeval.Objects.Generic;
 using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
@@ -39,7 +38,7 @@ namespace Pixeval.Data.ViewModel
         public static readonly DateTime MaxRankDateTime = DateTime.Today - TimeSpan.FromDays(2);
 
         [DoNotNotify]
-        public static readonly DateTime InvalidRankDateTimeFrom = DateTime.Today - TimeSpan.FromDays(1);
+        public static readonly DateTime InvalidRankDateTimeStart = DateTime.Today - TimeSpan.FromDays(1);
 
         public RankOptionModel(RankOption option)
         {

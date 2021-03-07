@@ -66,7 +66,7 @@ namespace Pixeval.Objects.Exceptions.Logger
             sb.AppendLine(@"    ¡¤ Exception Message");
             sb.AppendLine();
             sb.AppendLine(@"Begin Dump Information");
-            sb.AppendLine($"    Pixeval Version: {PixevalContext.CurrentVersion}");
+            sb.AppendLine($"    Pixeval Version: {AppContext.CurrentVersion}");
             sb.AppendLine($"    Creation: {DateTime.Now}");
             sb.AppendLine(@"End Dump Information");
             sb.AppendLine();
@@ -93,7 +93,7 @@ namespace Pixeval.Objects.Exceptions.Logger
             sb.AppendLine(@"End Debugging Information Collection");
             try
             {
-                await File.WriteAllTextAsync(Path.Combine(PixevalContext.ExceptionReportFolder, $"{DateTime.Now.ToString(CultureInfo.InvariantCulture)}.txt".Replace("/", "-").Replace(":", "-")), sb.ToString());
+                await File.WriteAllTextAsync(Path.Combine(AppContext.ExceptionReportFolder, $"{DateTime.Now.ToString(CultureInfo.InvariantCulture)}.txt".Replace("/", "-").Replace(":", "-")), sb.ToString());
             }
             catch
             {

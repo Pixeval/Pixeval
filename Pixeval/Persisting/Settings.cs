@@ -25,7 +25,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Pixeval.Core;
-using Pixeval.Core.Options;
 using Pixeval.Objects.Primitive;
 using PropertyChanged;
 
@@ -82,26 +81,29 @@ namespace Pixeval.Persisting
             return this.ToJson();
         }
 
-        public async Task Save()
+        public async Task Store()
         {
-            await File.WriteAllTextAsync(Path.Combine(PixevalContext.SettingsFolder, "settings.json"), Global.ToString());
+            await File.WriteAllTextAsync(Path.Combine(AppContext.SettingsFolder, "settings.json"), Global.ToString());
         }
 
-        public static async Task Load()
+        public static async Task Restore()
         {
-            if (File.Exists(Path.Combine(PixevalContext.SettingsFolder, "settings.json")))
+            if (File.Exists(Path.Combine(AppContext.SettingsFolder, "settings.json")))
             {
-                Global = (await File.ReadAllTextAsync(Path.Combine(PixevalContext.SettingsFolder, "settings.json"))).FromJson<Settings>();
+                Global = (await File.ReadAllTextAsync(Path.Combine(AppContext.SettingsFolder, "settings.json"))).FromJson<Settings>();
             }
             else
             {
-                Reset();
+                Initialize();
             }
         }
 
-        public static void Reset()
+        public static void Initialize()
         {
-            File.Delete(Path.Combine(PixevalContext.SettingsFolder, "settings.json"));
+            if (File.Exists(Path.Combine(AppContext.SettingsFolder, "settings.json")))
+            {
+                File.Delete(Path.Combine(AppContext.SettingsFolder, "settings.json"));
+            }
 
             Global.downloadLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
             Global.DownloadLocation = string.Empty;

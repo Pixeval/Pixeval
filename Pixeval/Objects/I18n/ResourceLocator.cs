@@ -42,9 +42,9 @@ namespace Pixeval.Objects.I18n
             if (_i18NXmlNodes == null)
             {
                 // we load settings here because we need to get the culture field
-                if (File.Exists(Path.Combine(PixevalContext.SettingsFolder, "settings.json")))
+                if (File.Exists(Path.Combine(AppContext.SettingsFolder, "settings.json")))
                 {
-                    var s = File.ReadAllText(Path.Combine(PixevalContext.SettingsFolder, "settings.json")).FromJson<Settings>();
+                    var s = File.ReadAllText(Path.Combine(AppContext.SettingsFolder, "settings.json")).FromJson<Settings>();
                     InitializeXmlNodes(s.Culture);
                 }
                 else

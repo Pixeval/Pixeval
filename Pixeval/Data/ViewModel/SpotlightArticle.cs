@@ -21,7 +21,6 @@
 using System;
 using Newtonsoft.Json;
 using Pixeval.Core;
-using Pixeval.Core.Dispatch;
 using Pixeval.Objects.Generic;
 using PropertyChanged;
 
@@ -56,9 +55,9 @@ namespace Pixeval.Data.ViewModel
 
         public async void Download()
         {
-            var result = await Tasks<string, Illustration>.Of(await PixivClient.GetArticleWorks(Id.ToString())).Mapping(async i =>
+            var result = await Tasks<string, Illustration>.Of(await PixivClient.Instance.GetArticleWorks(Id.ToString())).Mapping(async i =>
             {
-                var res = await PixivClient.IllustrationInfo(i);
+                var res = await PixivHelper.IllustrationInfo(i);
                 res.SpotlightTitle = Title;
                 res.FromSpotlight = true;
                 return res;

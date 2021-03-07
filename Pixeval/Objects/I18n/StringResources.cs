@@ -180,6 +180,7 @@ namespace Pixeval.Objects.I18n
         private static string _imageMirrorServerUrlHint = GetResource(nameof(ImageMirrorServerUrlHint));
         private static string _conditionBoxTooltip = GetResource(nameof(ConditionBoxTooltip));
         private static string _batchDownloadAcknowledgment = GetResource(nameof(BatchDownloadAcknowledgment));
+        private static string _webView2DownloadIsRequired = GetResource(nameof(WebView2DownloadIsRequired));
 
         public static string EmptyEmailOrPasswordIsNotAllowed
         {
@@ -1727,6 +1728,16 @@ namespace Pixeval.Objects.I18n
             set
             {
                 _batchDownloadAcknowledgment = value;
+                OnStaticPropertyChanged();
+            }
+        }
+
+        public static string WebView2DownloadIsRequired
+        {
+            get => _webView2DownloadIsRequired;
+            set
+            {
+                _webView2DownloadIsRequired = value;
                 OnStaticPropertyChanged();
             }
         }

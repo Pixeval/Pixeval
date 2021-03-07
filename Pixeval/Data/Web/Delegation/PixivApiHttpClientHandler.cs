@@ -24,13 +24,15 @@ namespace Pixeval.Data.Web.Delegation
 {
     public class PixivApiHttpClientHandler : DnsResolvedHttpClientHandler
     {
-        private PixivApiHttpClientHandler() : base(PixivHttpRequestHandler.Instance)
+        private PixivApiHttpClientHandler(bool directConnect) : base(PixivHttpRequestHandler.Instance, directConnect)
         {
         }
 
-        public static HttpMessageHandler Instance()
+        protected override DnsResolver DnsResolver { get; set; } = PixivApiDnsResolver.Instance;
+
+        public static HttpMessageHandler Instance(bool directConnect)
         {
-            return new PixivApiHttpClientHandler();
+            return new PixivApiHttpClientHandler(directConnect);
         }
     }
 }

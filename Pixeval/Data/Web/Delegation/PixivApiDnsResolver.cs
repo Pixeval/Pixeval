@@ -34,4 +34,16 @@ namespace Pixeval.Data.Web.Delegation
             yield return IPAddress.Parse("210.140.131.226");
         }
     }
+    
+    public class PixivImageDnsResolver : DnsResolver
+    {
+        public static readonly DnsResolver Instance = new PixivImageDnsResolver();
+
+        protected override IEnumerable<IPAddress> UseDefaultDns()
+        {
+            yield return IPAddress.Parse("210.140.92.138");
+            yield return IPAddress.Parse("210.140.92.139");
+            yield return IPAddress.Parse("210.140.92.140");
+        }
+    }
 }

@@ -24,14 +24,14 @@ namespace Pixeval.Data.Web.Request
 {
     public class PasswordTokenRequest
     {
-        [AliasAs("username")]
-        public string Name { get; set; }
+        [AliasAs("code")]
+        public string Code { get; set; }
 
-        [AliasAs("password")]
-        public string Password { get; set; }
+        [AliasAs("redirect_uri")]
+        public string RedirectUri => "https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback";
 
         [AliasAs("grant_type")]
-        public string GrantType => "password";
+        public string GrantType => "authorization_code";
 
         [AliasAs("client_id")]
         public string ClientId => "MOBrBDS8blbauoSck0ZfDbtuzpyT";
@@ -39,7 +39,7 @@ namespace Pixeval.Data.Web.Request
         [AliasAs("client_secret")]
         public string ClientSecret => "lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj";
 
-        [AliasAs("get_secure_url")]
-        public string GetSecureUrl => "1";
+        [AliasAs("code_verifier")]
+        public string CodeVerifier { get; set; }
     }
 }

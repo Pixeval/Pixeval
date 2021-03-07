@@ -23,7 +23,6 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using Pixeval.Core;
-using Pixeval.Core.Validation;
 using Pixeval.Data.ViewModel;
 
 namespace Pixeval.Objects.ValueConverters
@@ -34,7 +33,7 @@ namespace Pixeval.Objects.ValueConverters
         {
             if (values[0] is string v && values[1] is Illustration illustration)
             {
-                return PixevalContext.DefaultQualifier.Qualified(illustration, IllustrationQualification.Parse(v)) ? Visibility.Visible : Visibility.Hidden;
+                return AppContext.DefaultQualifier.Qualified(illustration, IllustrationQualification.Parse(v)) ? Visibility.Visible : Visibility.Hidden;
             }
 
             return Visibility.Hidden;

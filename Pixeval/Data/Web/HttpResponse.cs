@@ -24,21 +24,18 @@ namespace Pixeval.Data.Web
 {
     public class HttpResponse<T> : Tuple<bool, T>
     {
-        // fast path 
-        public static HttpResponse<T> Failure => OfEmpty(false);
-        
         private HttpResponse(bool status, T response) : base(status, response)
         {
         }
 
-        public static HttpResponse<T> OfEmpty(bool status)
+        public static HttpResponse<T> Wrap(bool status)
         {
             return new HttpResponse<T>(status, default);
         }
 
-        public static HttpResponse<T> Success(T response)
+        public static HttpResponse<T> Wrap(bool status, T response)
         {
-            return new HttpResponse<T>(true, response);
+            return new HttpResponse<T>(status, response);
         }
 
         public void Deconstruct(out bool status, out T response)

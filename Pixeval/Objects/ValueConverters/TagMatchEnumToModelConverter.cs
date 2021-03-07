@@ -22,7 +22,6 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 using Pixeval.Core;
-using Pixeval.Core.Options;
 using Pixeval.Data.ViewModel;
 
 namespace Pixeval.Objects.ValueConverters
