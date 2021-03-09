@@ -22,6 +22,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.Core.Raw;
 using Pixeval.Objects.Primitive;
 
 namespace Pixeval.Objects.Generic
@@ -82,6 +84,11 @@ namespace Pixeval.Objects.Generic
         public static IEnumerable<T> NonNull<T>(this IEnumerable<T> source)
         {
             return source.Where(s => s != null);
+        }
+
+        public static string AsString(this IEnumerable<CoreWebView2Cookie> cookies)
+        {
+            return cookies.Aggregate("", (s, cookie) => s + $"{cookie.Name}={cookie.Value};");
         }
     }
 }

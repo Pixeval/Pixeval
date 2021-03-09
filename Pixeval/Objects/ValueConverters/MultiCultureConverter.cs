@@ -32,7 +32,7 @@ namespace Pixeval.Objects.ValueConverters
         {
             if (value is string s)
             {
-                return AppContext.AvailableCultures.FirstOrDefault(cul => cul.Name == s) ?? I18NOption.ChineseSimplified;
+                return PixevalContext.AvailableCultures.FirstOrDefault(cul => cul.Name == s) ?? I18NOption.ChineseSimplified;
             }
 
             return I18NOption.ChineseSimplified;

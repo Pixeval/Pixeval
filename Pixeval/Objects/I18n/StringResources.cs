@@ -181,6 +181,7 @@ namespace Pixeval.Objects.I18n
         private static string _conditionBoxTooltip = GetResource(nameof(ConditionBoxTooltip));
         private static string _batchDownloadAcknowledgment = GetResource(nameof(BatchDownloadAcknowledgment));
         private static string _webView2DownloadIsRequired = GetResource(nameof(WebView2DownloadIsRequired));
+        private static string _signInLoggingIn = GetResource(nameof(SignInLoggingIn));
 
         public static string EmptyEmailOrPasswordIsNotAllowed
         {
@@ -1738,6 +1739,16 @@ namespace Pixeval.Objects.I18n
             set
             {
                 _webView2DownloadIsRequired = value;
+                OnStaticPropertyChanged();
+            }
+        }
+        
+        public static string SignInLoggingIn
+        {
+            get => _signInLoggingIn;
+            set
+            {
+                _signInLoggingIn = value;
                 OnStaticPropertyChanged();
             }
         }

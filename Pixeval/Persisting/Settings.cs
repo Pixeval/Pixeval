@@ -72,8 +72,6 @@ namespace Pixeval.Persisting
 
         public bool CreateNewFolderWhenDownloadFromUser { get; set; }
 
-        public string Cookie { get; set; }
-
         public string MirrorServer { get; set; }
 
         public override string ToString()
@@ -83,14 +81,14 @@ namespace Pixeval.Persisting
 
         public async Task Store()
         {
-            await File.WriteAllTextAsync(Path.Combine(AppContext.SettingsFolder, "settings.json"), Global.ToString());
+            await File.WriteAllTextAsync(Path.Combine(PixevalContext.SettingsFolder, "settings.json"), Global.ToString());
         }
 
         public static async Task Restore()
         {
-            if (File.Exists(Path.Combine(AppContext.SettingsFolder, "settings.json")))
+            if (File.Exists(Path.Combine(PixevalContext.SettingsFolder, "settings.json")))
             {
-                Global = (await File.ReadAllTextAsync(Path.Combine(AppContext.SettingsFolder, "settings.json"))).FromJson<Settings>();
+                Global = (await File.ReadAllTextAsync(Path.Combine(PixevalContext.SettingsFolder, "settings.json"))).FromJson<Settings>();
             }
             else
             {
@@ -100,9 +98,9 @@ namespace Pixeval.Persisting
 
         public static void Initialize()
         {
-            if (File.Exists(Path.Combine(AppContext.SettingsFolder, "settings.json")))
+            if (File.Exists(Path.Combine(PixevalContext.SettingsFolder, "settings.json")))
             {
-                File.Delete(Path.Combine(AppContext.SettingsFolder, "settings.json"));
+                File.Delete(Path.Combine(PixevalContext.SettingsFolder, "settings.json"));
             }
 
             Global.downloadLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
@@ -119,7 +117,6 @@ namespace Pixeval.Persisting
             Global.CreateNewFolderWhenDownloadFromUser = false;
             Global.TagMatchOption = SearchTagMatchOption.PartialMatchForTags;
             Global.Culture = "zh-cn";
-            Global.Cookie = string.Empty;
             Global.MirrorServer = string.Empty;
         }
     }

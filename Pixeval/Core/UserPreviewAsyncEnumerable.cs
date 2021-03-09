@@ -113,7 +113,7 @@ namespace Pixeval.Core
 
             private static async Task<HttpResponse<UserNavResponse>> TryGetResponse(string url)
             {
-                var res = (await HttpClientFactory.AppApiHttpClient().GetStringAsync(url)).FromJson<UserNavResponse>();
+                var res = (await HttpClientFactory.AppApi.GetStringAsync(url)).FromJson<UserNavResponse>();
                 if (res is { } response && !response.UserPreviews.IsNullOrEmpty())
                 {
                     return HttpResponse<UserNavResponse>.Wrap(true, response);

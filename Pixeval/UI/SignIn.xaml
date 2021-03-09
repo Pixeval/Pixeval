@@ -20,29 +20,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:i18N="clr-namespace:Pixeval.Objects.I18n"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         Title="{Binding Path=(i18N:AkaI18N.SignIn)}"
         Width="1280"
         Height="720"
         ResizeMode="NoResize"
         Icon="/Resources/pxlogo.ico"
-        Initialized="SignIn_OnInitialized"
+        WindowStartupLocation="CenterScreen"
         Closed="SignIn_OnClosed"
         Loaded="SignIn_OnLoaded"
         mc:Ignorable="d">
-    <Grid>
-        <wpf:WebView2 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="LoginWebView" NavigationStarting="LoginWebView_OnNavigationStarting"/>
-        <materialDesign:DialogHost x:Name="UpdatingSessionDialogHost"
-                                   Grid.Row="0"
-                                   Style="{DynamicResource MaterialDesignEmbeddedDialogHost}">
-            <materialDesign:DialogHost.DialogContent>
-                <Grid Margin="20">
-                    <TextBlock Foreground="White" Text="{Binding Path=(i18N:AkaI18N.SignInUpdatingSession)}" />
-                </Grid>
-            </materialDesign:DialogHost.DialogContent>
-        </materialDesign:DialogHost>
-    </Grid>
+    <wpf:WebView2 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="LoginWebView" NavigationStarting="LoginWebView_OnNavigationStarting"/>
 </Window>

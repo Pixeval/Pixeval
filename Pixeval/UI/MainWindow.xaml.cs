@@ -146,7 +146,7 @@ namespace Pixeval.UI
 
             try
             {
-                await HttpClientFactory.AppApiService().GetUserInformation(new UserInformationRequest { Id = userId });
+                await HttpClientFactory.AppApiService.GetUserInformation(new UserInformationRequest { Id = userId });
             }
             catch (ApiException e)
             {
@@ -241,7 +241,7 @@ namespace Pixeval.UI
         {
             var userInfo = sender.GetDataContext<User>();
             var ctrl = (UserPreviewPopupContent) sender;
-            var usr = await HttpClientFactory.AppApiService().GetUserInformation(new UserInformationRequest { Id = $"{sender.GetDataContext<User>().Id}" });
+            var usr = await HttpClientFactory.AppApiService.GetUserInformation(new UserInformationRequest { Id = $"{sender.GetDataContext<User>().Id}" });
             var usrEntity = new User
             {
                 Avatar = usr.UserEntity.ProfileImageUrls.Medium,
@@ -334,9 +334,9 @@ namespace Pixeval.UI
 
         private async void KeywordTextBox_OnGotFocus(object sender, RoutedEventArgs e)
         {
-            if (AppContext.TrendingTags.IsNullOrEmpty())
+            if (PixevalContext.TrendingTags.IsNullOrEmpty())
             {
-                AppContext.TrendingTags.AddRange(await PixivClient.Instance.GetTrendingTags());
+                PixevalContext.TrendingTags.AddRange(await PixivClient.GetTrendingTags());
             }
             TrendingTagPopup.OpenControl();
         }
@@ -357,7 +357,7 @@ namespace Pixeval.UI
 
             try
             {
-                var result = await HttpClientFactory.AppApiService().GetAutoCompletion(new AutoCompletionRequest { Word = word });
+                var result = await HttpClientFactory.AppApiService.GetAutoCompletion(new AutoCompletionRequest { Word = word });
                 if (result.Tags.Any())
                 {
                     AutoCompletionPopup.OpenControl();
@@ -572,13 +572,13 @@ namespace Pixeval.UI
 
         private void FavorButton_OnPreviewMouseLeftButtonDown(object sender, RoutedEventArgs e)
         {
-            PixivClient.Instance.PostFavoriteAsync(sender.GetDataContext<Illustration>(), RestrictPolicy.Public);
+            PixivClient.PostFavoriteAsync(sender.GetDataContext<Illustration>(), RestrictPolicy.Public);
             e.Handled = true;
         }
 
         private void DisfavorButton_OnPreviewMouseLeftButtonDown(object sender, RoutedEventArgs e)
         {
-            PixivClient.Instance.RemoveFavoriteAsync(sender.GetDataContext<Illustration>());
+            PixivClient.RemoveFavoriteAsync(sender.GetDataContext<Illustration>());
             e.Handled = true;
         }
 
@@ -597,7 +597,7 @@ namespace Pixeval.UI
 
             var article = sender.GetDataContext<SpotlightArticle>();
 
-            var tasks = await Tasks<string, Illustration>.Of(await PixivClient.Instance.GetArticleWorks(article.Id.ToString())).Mapping(PixivHelper.IllustrationInfo).Construct().WhenAll();
+            var tasks = await Tasks<string, Illustration>.Of(await PixivClient.GetArticleWorks(article.Id.ToString())).Mapping(PixivHelper.IllustrationInfo).Construct().WhenAll();
             var result = tasks.Peek(i =>
             {
                 i.IsManga = true;
@@ -693,7 +693,7 @@ namespace Pixeval.UI
         private async void PrivateFollow_OnClick(object sender, RoutedEventArgs e)
         {
             var usr = sender.GetDataContext<User>();
-            await PixivClient.Instance.FollowArtist(usr, RestrictPolicy.Private);
+            await PixivClient.FollowArtist(usr, RestrictPolicy.Private);
         }
 
         private bool animating;
@@ -826,13 +826,13 @@ namespace Pixeval.UI
         private async void FollowButton_OnClick(object sender, RoutedEventArgs e)
         {
             var usr = sender.GetDataContext<User>();
-            await PixivClient.Instance.FollowArtist(usr, RestrictPolicy.Public);
+            await PixivClient.FollowArtist(usr, RestrictPolicy.Public);
         }
 
         private async void UnFollowButton_OnClick(object sender, RoutedEventArgs e)
         {
             var usr = sender.GetDataContext<User>();
-            await PixivClient.Instance.UnFollowArtist(usr);
+            await PixivClient.UnFollowArtist(usr);
         }
 
         private void ShareUserButton_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -856,7 +856,7 @@ namespace Pixeval.UI
             var trans = (IllustTransitioner) IllustBrowserContainer.Children[1];
             var transitions = (IEnumerable<TransitionerSlide>) trans.IllustTransition.ItemsSource;
             var selectedIndex = transitions.ToList()[trans.IllustTransition.SelectedIndex];
-            var location = Path.Combine(AppContext.PermanentlyFolder, "wallpaper.bmp");
+            var location = Path.Combine(PixevalContext.PermanentlyFolder, "wallpaper.bmp");
             var wallPaper = new WallpaperManager(location, (BitmapSource) ((IllustPresenter) selectedIndex.Content).ImgSource);
             await wallPaper.Execute();
         }
@@ -915,17 +915,17 @@ namespace Pixeval.UI
 
         private void IllustBrowserFavorButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            PixivClient.Instance.PostFavoriteAsync(sender.GetDataContext<Illustration>(), RestrictPolicy.Public);
+            PixivClient.PostFavoriteAsync(sender.GetDataContext<Illustration>(), RestrictPolicy.Public);
         }
 
         private void IllustBrowserPrivateFavorButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            PixivClient.Instance.PostFavoriteAsync(sender.GetDataContext<Illustration>(), RestrictPolicy.Private);
+            PixivClient.PostFavoriteAsync(sender.GetDataContext<Illustration>(), RestrictPolicy.Private);
         }
 
         private void IllustBrowserDisfavorButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            PixivClient.Instance.RemoveFavoriteAsync(sender.GetDataContext<Illustration>());
+            PixivClient.RemoveFavoriteAsync(sender.GetDataContext<Illustration>());
         }
 
         #endregion
@@ -958,15 +958,8 @@ namespace Pixeval.UI
             UiHelper.SetImageSource(sender, await PixivIO.FromUrl(sender.GetDataContext<Trends>().PostUserThumbnail));
         }
 
-        private async void TrendsTab_OnSelected(object sender, RoutedEventArgs e)
+        private void TrendsTab_OnSelected(object sender, RoutedEventArgs e)
         {
-            if (Settings.Global.Cookie.IsNullOrEmpty())
-            {
-                await MessageDialog.Warning(WarningDialog, AkaI18N.RequiresWebCookie);
-                MoveUpHomePage();
-                return;
-            }
-
             MoveDownHomePage();
             MessageQueue.Enqueue(AkaI18N.SearchingTrends);
 
@@ -1113,7 +1106,7 @@ namespace Pixeval.UI
 
         public async void SetUserBrowserContext(User user)
         {
-            var usr = await HttpClientFactory.AppApiService().GetUserInformation(new UserInformationRequest { Id = $"{user.Id}" });
+            var usr = await HttpClientFactory.AppApiService.GetUserInformation(new UserInformationRequest { Id = $"{user.Id}" });
             var usrEntity = new User
             {
                 Avatar = usr.UserEntity.ProfileImageUrls.Medium,
@@ -1163,7 +1156,7 @@ namespace Pixeval.UI
             disableKeyEvent = true;
             Task.WhenAll(Task.Run(async () =>
             {
-                var userInfo = await HttpClientFactory.AppApiService().GetUserInformation(new UserInformationRequest { Id = illustration.UserId });
+                var userInfo = await HttpClientFactory.AppApiService.GetUserInformation(new UserInformationRequest { Id = illustration.UserId });
                 if (await PixivIO.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium) is { } avatar)
                 {
                     UiHelper.SetImageSource(IllustBrowserUserAvatar, avatar);

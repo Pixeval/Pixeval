@@ -36,7 +36,7 @@ namespace Pixeval.Data.Web.Request
         [AliasAs("client_secret")]
         public string ClientSecret => "lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj";
 
-        [AliasAs("get_secure_url")]
-        public string GetSecureUrl => "1";
+        [AliasAs("include_policy")]
+        public string IncludePolicy => "true";
     }
 }

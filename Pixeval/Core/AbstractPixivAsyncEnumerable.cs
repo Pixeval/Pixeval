@@ -36,7 +36,7 @@ namespace Pixeval.Core
 
         public abstract IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default);
 
-        public virtual bool VerifyRationality(T item, IList<T> collection)
+        public virtual bool Verify(T item, IList<T> collection)
         {
             return item != null && !collection.Contains(item);
         }

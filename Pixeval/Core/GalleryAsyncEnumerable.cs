@@ -42,7 +42,7 @@ namespace Pixeval.Core
 
         public override int RequestedPages { get; protected set; }
 
-        public override bool VerifyRationality(Illustration item, IList<Illustration> collection)
+        public override bool Verify(Illustration item, IList<Illustration> collection)
         {
             return item != null && collection.All(t => t.Id != item.Id) && PixivHelper.VerifyIllust(Settings.Global.ExcludeTag, Settings.Global.IncludeTag, Settings.Global.MinBookmark, item);
         }
@@ -128,7 +128,7 @@ namespace Pixeval.Core
 
             private static async Task<HttpResponse<GalleryResponse>> TryGetResponse(string url)
             {
-                var result = (await HttpClientFactory.AppApiHttpClient().GetStringAsync(url)).FromJson<GalleryResponse>();
+                var result = (await HttpClientFactory.AppApi.GetStringAsync(url)).FromJson<GalleryResponse>();
 
                 if (result is { } response && !response.Illusts.IsNullOrEmpty())
                 {

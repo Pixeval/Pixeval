@@ -1,1 +1,1 @@
-dotnet publish /p:Platform=x64 Pixeval.csproj -c Release -f netcoreapp3.1 --no-self-contained -r win-x64
+dotnet publish /p:Platform="Any CPU" Pixeval.csproj -c Release -f netcoreapp3.1 --self-contained false -r win-x86

@@ -128,7 +128,7 @@ namespace Pixeval.UI.UserControls
                 case "spotlight":
                     MainWindow.MessageQueue.Enqueue(AkaI18N.SearchingSpotlight);
 
-                    var tasks = await Tasks<string, Illustration>.Of(await PixivClient.Instance.GetArticleWorks(ctx.BrowseObjectId)).Mapping(PixivHelper.IllustrationInfo).Construct().WhenAll();
+                    var tasks = await Tasks<string, Illustration>.Of(await PixivClient.GetArticleWorks(ctx.BrowseObjectId)).Mapping(PixivHelper.IllustrationInfo).Construct().WhenAll();
                     var result = tasks.Peek(i =>
                     {
                         i.IsManga = true;

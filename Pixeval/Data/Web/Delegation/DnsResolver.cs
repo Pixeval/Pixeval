@@ -39,7 +39,7 @@ namespace Pixeval.Data.Web.Delegation
 
         protected async Task<DnsResolveResponse> GetDnsJson(string hostname)
         {
-            return await RestService.For<IResolveDnsProtocol>(new HttpClient(new HttpClientHandler { SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls }) { BaseAddress = new Uri(ProtocolBase.DnsServer), Timeout = TimeSpan.FromSeconds(5) }).ResolveDns(new DnsResolveRequest
+            return await RestService.For<IResolveDnsProtocol>(new HttpClient(new HttpClientHandler { SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls }) { BaseAddress = new Uri(HttpClientFactory.DnsServer), Timeout = TimeSpan.FromSeconds(5) }).ResolveDns(new DnsResolveRequest
             {
                 Ct = "application/dns-json",
                 Cd = "false",
@@ -117,22 +117,5 @@ namespace Pixeval.Data.Web.Delegation
         // }
 
         protected abstract IEnumerable<IPAddress> UseDefaultDns();
-
-        private class IpAddressEqualityComparer : IEqualityComparer<IPAddress>
-        {
-            public bool Equals(IPAddress x, IPAddress y)
-            {
-                if (x == null || y == null)
-                {
-                    return false;
-                }
-                return x.ToString() == y.ToString();
-            }
-
-            public int GetHashCode(IPAddress obj)
-            {
-                return obj.GetHashCode();
-            }
-        }
     }
 }

@@ -30,6 +30,6 @@ namespace Pixeval.Core
 
         void InsertionPolicy(T item, IList<T> collection);
 
-        bool VerifyRationality(T item, IList<T> collection);
+        bool Verify(T item, IList<T> collection);
     }
 }

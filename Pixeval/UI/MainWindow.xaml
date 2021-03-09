@@ -1683,7 +1683,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                             Orientation="Horizontal">
                                     <TextBlock Margin="0,0,10,0"
                                                FontSize="12"
-                                               Text="{Binding Source={x:Static pixeval:AppContext.CurrentVersion}, StringFormat={x:Static i18N:AkaI18N.PixevalVersionFormat}}" />
+                                               Text="{Binding Source={x:Static pixeval:PixevalContext.CurrentVersion}, StringFormat={x:Static i18N:AkaI18N.PixevalVersionFormat}}" />
                                     <TextBlock Margin="0,0,10,0" FontSize="12">
                                         <Hyperlink Foreground="Black"
                                                    NavigateUri="http://47.95.218.243/index.html"

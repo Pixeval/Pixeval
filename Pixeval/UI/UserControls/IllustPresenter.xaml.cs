@@ -105,7 +105,7 @@ namespace Pixeval.UI.UserControls
         {
             Task.Run(async () =>
             {
-                var userInfo = await HttpClientFactory.AppApiService().GetUserInformation(new UserInformationRequest { Id = Illust.UserId });
+                var userInfo = await HttpClientFactory.AppApiService.GetUserInformation(new UserInformationRequest { Id = Illust.UserId });
                 if (Dispatcher.Invoke(() => Illust.UserId == MainWindow.Instance.IllustBrowserDialogHost.GetDataContext<Illustration>().UserId))
                 {
                     var img = await PixivIO.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium);
@@ -121,7 +121,7 @@ namespace Pixeval.UI.UserControls
         private async void PlayGif_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             ProcessingGif = true;
-            var metadata = await HttpClientFactory.AppApiService().GetUgoiraMetadata(Illust.Id);
+            var metadata = await HttpClientFactory.AppApiService.GetUgoiraMetadata(Illust.Id);
             var ugoiraZip = metadata.UgoiraMetadataInfo.ZipUrls.Medium;
             var delay = metadata.UgoiraMetadataInfo.Frames.Select(f => f.Delay / 10).ToArray();
             var streams = InternalIO.ReadGifZipEntries(await PixivIO.GetBytes(ugoiraZip)).ToArray();

@@ -233,7 +233,7 @@ namespace Pixeval.Core
 
             private static async Task<HttpResponse<string>> GetResponse(string url)
             {
-                var result = await HttpClientFactory.WebApiHttpClient().GetStringAsync(url);
+                var result = await HttpClientFactory.WebApi.GetStringAsync(url);
                 return !result.IsNullOrEmpty() ? HttpResponse<string>.Wrap(true, result) : HttpResponse<string>.Wrap(false);
             }
         }

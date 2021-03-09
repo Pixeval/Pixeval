@@ -20,53 +20,39 @@
 
 using System;
 using Newtonsoft.Json;
-using Pixeval.Objects.Exceptions;
-using Pixeval.Objects.Primitive;
 
 namespace Pixeval.Data.Web.Response
 {
-    public class TokenResponse
+    public partial class TokenResponse
     {
-        [JsonProperty("response")]
-        public Response ToResponse { get; set; }
+        [JsonProperty("access_token")]
+        public string AccessToken { get; set; }
 
-        public override string ToString()
-        {
-            return this.ToJson();
-        }
+        [JsonProperty("expires_in")]
+        public long ExpiresIn { get; set; }
 
-        public class Response
-        {
-            [JsonProperty("access_token")]
-            public string AccessToken { get; set; }
+        [JsonProperty("token_type")]
+        public string TokenType { get; set; }
 
-            [JsonProperty("expires_in")]
-            public long ExpiresIn { get; set; }
+        [JsonProperty("scope")]
+        public string Scope { get; set; }
 
-            [JsonProperty("token_type")]
-            public string TokenType { get; set; }
+        [JsonProperty("refresh_token")]
+        public string RefreshToken { get; set; }
 
-            [JsonProperty("scope")]
-            public string Scope { get; set; }
+        [JsonProperty("user")]
+        public Usr User { get; set; }
 
-            [JsonProperty("refresh_token")]
-            public string RefreshToken { get; set; }
+        [JsonProperty("response", NullValueHandling = NullValueHandling.Ignore)]
+        public TokenResponse Response { get; set; }
 
-            [JsonProperty("user")]
-            public User User { get; set; }
-
-            [JsonProperty("device_token")]
-            public string DeviceToken { get; set; }
-        }
-
-        public class User
+        public class Usr
         {
             [JsonProperty("profile_image_urls")]
             public ProfileImageUrls ProfileImageUrls { get; set; }
 
             [JsonProperty("id")]
-            [JsonConverter(typeof(ParseStringConverter))]
-            public long Id { get; set; }
+            public string Id { get; set; }
 
             [JsonProperty("name")]
             public string Name { get; set; }
@@ -85,6 +71,9 @@ namespace Pixeval.Data.Web.Response
 
             [JsonProperty("is_mail_authorized")]
             public bool IsMailAuthorized { get; set; }
+
+            [JsonProperty("require_policy_agreement")]
+            public bool RequirePolicyAgreement { get; set; }
         }
 
         public class ProfileImageUrls
@@ -97,40 +86,6 @@ namespace Pixeval.Data.Web.Response
 
             [JsonProperty("px_170x170")]
             public string Px170X170 { get; set; }
-        }
-
-        private class ParseStringConverter : JsonConverter
-        {
-            public override bool CanConvert(Type t)
-            {
-                return t == typeof(long) || t == typeof(long?);
-            }
-
-            public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
-            {
-                if (reader.TokenType == JsonToken.Null)
-                {
-                    return null;
-                }
-                var value = serializer.Deserialize<string>(reader);
-                if (long.TryParse(value, out var l))
-                {
-                    return l;
-                }
-                throw new TypeMismatchException("Cannot unmarshal type long");
-            }
-
-            public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
-            {
-                if (untypedValue == null)
-                {
-                    serializer.Serialize(writer, null);
-                    return;
-                }
-
-                var value = (long) untypedValue;
-                serializer.Serialize(writer, value.ToString());
-            }
         }
     }
 }

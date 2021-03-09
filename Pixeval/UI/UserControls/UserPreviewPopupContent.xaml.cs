@@ -42,7 +42,7 @@ namespace Pixeval.UI.UserControls
             UiHelper.SetImageSource(UserAvatar, await PixivIO.FromUrl(this.GetDataContext<User>().Avatar));
             try
             {
-                UiHelper.SetImageSource(Banner, await PixivIO.FromUrl((await HttpClientFactory.WebApiService().GetWebApiUserDetail(this.GetDataContext<User>().Id)).ResponseBody.UserDetails.CoverImage.ProfileCoverImage.The720X360));
+                UiHelper.SetImageSource(Banner, await PixivIO.FromUrl((await HttpClientFactory.WebApiService.GetWebApiUserDetail(this.GetDataContext<User>().Id)).ResponseBody.UserDetails.CoverImage.ProfileCoverImage.The720X360));
             }
             catch
             {
@@ -53,13 +53,13 @@ namespace Pixeval.UI.UserControls
         private async void FollowButton_OnClick(object sender, RoutedEventArgs e)
         {
             var usr = sender.GetDataContext<User>();
-            await PixivClient.Instance.FollowArtist(usr, RestrictPolicy.Public);
+            await PixivClient.FollowArtist(usr, RestrictPolicy.Public);
         }
 
         private async void UnFollowButton_OnClick(object sender, RoutedEventArgs e)
         {
             var usr = sender.GetDataContext<User>();
-            await PixivClient.Instance.UnFollowArtist(usr);
+            await PixivClient.UnFollowArtist(usr);
         }
     }
 }

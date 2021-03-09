@@ -31,7 +31,7 @@ using Pixeval.Data.Web.Delegation;
 
 namespace Pixeval.Objects
 {
-    public class ProxyServer : IDisposable
+    internal class ProxyServer : IDisposable
     {
         private readonly X509Certificate2 certificate;
         private readonly TcpListener tcpListener;

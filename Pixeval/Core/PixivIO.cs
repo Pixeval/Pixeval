@@ -35,12 +35,10 @@ namespace Pixeval.Core
     {
         public static async Task<byte[]> GetBytes(string url)
         {
-            var client = HttpClientFactory.PixivImage();
-
             byte[] res;
             try
             {
-                res = await client.GetByteArrayAsync(url);
+                res = await HttpClientFactory.Image.GetByteArrayAsync(url);
             }
             catch
             {
@@ -72,7 +70,7 @@ namespace Pixeval.Core
 
         public static async Task<MemoryStream> Download(string url, IProgress<double> progress, CancellationToken cancellationToken = default)
         {
-            using var response = await HttpClientFactory.GetResponseHeader(HttpClientFactory.PixivImage().Apply(_ => _.Timeout = TimeSpan.FromSeconds(30)), url);
+            using var response = await HttpClientFactory.Image.Apply(_ => _.Timeout = TimeSpan.FromSeconds(30)).GetResponseHeader(url);
 
             var contentLength = response.Content.Headers.ContentLength;
             if (!contentLength.HasValue)

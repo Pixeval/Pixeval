@@ -28,11 +28,11 @@ using Pixeval.Data.ViewModel;
 
 namespace Pixeval
 {
-    public static class AppContext
+    public static class PixevalContext
     {
         public const string AppIdentifier = "Pixeval";
 
-        public const string CurrentVersion = "3.0.3";
+        public const string CurrentVersion = "3.1.0";
 
         public const string ConfigurationFileName = "pixeval_conf.json";
 

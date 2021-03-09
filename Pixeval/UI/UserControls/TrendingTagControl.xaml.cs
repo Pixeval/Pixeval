@@ -36,13 +36,13 @@ namespace Pixeval.UI.UserControls
         public TrendingTagControl()
         {
             InitializeComponent();
-            TrendingTagListBox.ItemsSource = AppContext.TrendingTags;
+            TrendingTagListBox.ItemsSource = PixevalContext.TrendingTags;
             SearchingHistoryListBox.ItemsSource = SearchingHistoryManager.GetSearchingHistory();
         }
 
         private async void TrendingTagControl_OnInitialized(object sender, EventArgs e)
         {
-            AppContext.TrendingTags.AddRange(await PixivClient.Instance.GetTrendingTags());
+           PixevalContext.TrendingTags.AddRange(await PixivClient.GetTrendingTags());
         }
 
         private async void TrendingTagThumbnail_OnLoaded(object sender, RoutedEventArgs e)

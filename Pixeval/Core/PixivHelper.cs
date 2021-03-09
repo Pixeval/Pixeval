@@ -41,7 +41,7 @@ namespace Pixeval.Core
             SingleWorkResponse.Illust response;
             try
             {
-                response = (await HttpClientFactory.AppApiService().GetSingle(id)).IllustInfo;
+                response = (await HttpClientFactory.AppApiService.GetSingle(id)).IllustInfo;
             }
             catch (ApiException e)
             {
@@ -99,7 +99,7 @@ namespace Pixeval.Core
                 {
                     break;
                 }
-                if (pixivIterator.VerifyRationality(illust, container))
+                if (pixivIterator.Verify(illust, container))
                 {
                     pixivIterator.InsertionPolicy(illust, container);
                 }

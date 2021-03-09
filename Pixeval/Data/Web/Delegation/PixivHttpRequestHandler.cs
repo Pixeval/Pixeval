@@ -38,23 +38,20 @@ namespace Pixeval.Data.Web.Delegation
 
         public virtual void Handle(HttpRequestMessage httpRequestMessage)
         {
-            switch (httpRequestMessage.RequestUri.DnsSafeHost)
+            switch (httpRequestMessage.RequestUri.IdnHost)
             {
                 case "app-api.pixiv.net":
-                    var token = httpRequestMessage.Headers.Authorization;
-                    if (token != null)
+                    if (Session.Current.AccessToken.IsNullOrEmpty())
                     {
-                        if (Session.Current.AccessToken.IsNullOrEmpty())
-                        {
-                            throw new TokenNotFoundException($"{nameof(Session.Current.AccessToken)} is empty, this exception should never be thrown, if you see this message, please send issue on github or contact me (decem0730@gmail.com)");
-                        }
-
-                        httpRequestMessage.Headers.Authorization = new AuthenticationHeaderValue(token.Scheme, Session.Current.AccessToken);
+                        throw new TokenNotFoundException($"{nameof(Session.Current.AccessToken)} is empty");
                     }
+
+                    httpRequestMessage.Headers.Authorization = null;
+                    httpRequestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Session.Current.AccessToken);
 
                     break;
                 case var x when x == "pixiv.net" || x == "www.pixiv.net":
-                    httpRequestMessage.Headers.TryAddWithoutValidation("Cookie", Settings.Global.Cookie);
+                    httpRequestMessage.Headers.TryAddWithoutValidation("Cookie", Session.Current.Cookie);
                     break;
             }
 

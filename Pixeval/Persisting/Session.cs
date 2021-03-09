@@ -20,11 +20,8 @@
 
 using System;
 using System.IO;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using AdysTech.CredentialManager;
-using Newtonsoft.Json;
 using Pixeval.Data.Web.Response;
 using Pixeval.Objects.Primitive;
 
@@ -49,21 +46,15 @@ namespace Pixeval.Persisting
 
         public string Id { get; set; }
 
-        [JsonIgnore]
-        public string MailAddress { get; set; }
-
-        public string Account { get; set; }
-
-        [JsonIgnore]
-        public string Password { get; set; }
-
         public DateTime CookieCreation { get; set; }
 
         public bool IsPremium { get; set; }
+        
+        public string Cookie { get; set; }
 
-        public static Session Parse(string password, TokenResponse token)
+        public static Session Parse(TokenResponse token, string cookie = "")
         {
-            var response = token.ToResponse;
+            var response = token.Response;
             return new Session
             {
                 Name = response.User.Name,
@@ -71,12 +62,10 @@ namespace Pixeval.Persisting
                 AccessToken = response.AccessToken,
                 RefreshToken = response.RefreshToken,
                 AvatarUrl = response.User.ProfileImageUrls.Px170X170,
-                Id = response.User.Id.ToString(),
-                MailAddress = response.User.MailAddress,
-                Account = response.User.Account,
-                Password = password,
+                Id = response.User.Id,
                 CookieCreation = Current?.CookieCreation ?? default,
-                IsPremium = token.ToResponse.User.IsPremium
+                IsPremium = token.Response.User.IsPremium,
+                Cookie = cookie
             };
         }
 
@@ -87,58 +76,32 @@ namespace Pixeval.Persisting
 
         public async Task Store()
         {
-            await File.WriteAllTextAsync(Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName), ToString());
-            CredentialManager.SaveCredentials(AppContext.AppIdentifier, new NetworkCredential(MailAddress, Password));
+            await File.WriteAllTextAsync(Path.Combine(PixevalContext.ConfFolder, PixevalContext.ConfigurationFileName), ToString());
         }
 
         public static async Task Restore()
         {
-            Current = (await File.ReadAllTextAsync(Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName), Encoding.UTF8)).FromJson<Session>();
-            var credential = CredentialManager.GetCredentials(AppContext.AppIdentifier);
-            Current.MailAddress = credential.UserName;
-            Current.Password = credential.Password;
+            Current = ConfExists()
+                ? (await File.ReadAllTextAsync(Path.Combine(PixevalContext.ConfFolder, PixevalContext.ConfigurationFileName), Encoding.UTF8)).FromJson<Session>()
+                : null;
         }
 
         public static bool ConfExists()
         {
-            var path = Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName);
-            return File.Exists(path) && new FileInfo(path).Length != 0 && CredentialManager.GetCredentials(AppContext.AppIdentifier) != null;
+            var path = Path.Combine(PixevalContext.ConfFolder, PixevalContext.ConfigurationFileName);
+            return File.Exists(path) && new FileInfo(path).Length != 0;
         }
 
-        public static bool AppApiRefreshRequired(Session identity)
+        public static bool RefreshRequired(Session identity)
         {
-            return identity == null || identity.AccessToken.IsNullOrEmpty() || identity.ExpireIn == default || identity.ExpireIn <= DateTime.Now;
-        }
-
-        public static async Task RefreshIfRequired()
-        {
-            if (Current == null)
-            {
-                await Restore();
-            }
-
-            if (AppApiRefreshRequired(Current))
-            {
-                if (Current?.RefreshToken.IsNullOrEmpty() is true)
-                {
-                    await Authentication.Authenticate(Current?.MailAddress, Current?.Password);
-                }
-                else
-                {
-                    await Authentication.AppApiAuthenticate(Current?.RefreshToken);
-                }
-            }
+            return identity == null || identity.AccessToken.IsNullOrEmpty() || DateTime.Now - identity.ExpireIn >= TimeSpan.FromMinutes(50);
         }
 
         public static void Clear()
         {
-            if (File.Exists(Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName)))
+            if (File.Exists(Path.Combine(PixevalContext.ConfFolder, PixevalContext.ConfigurationFileName)))
             {
-                File.Delete(Path.Combine(AppContext.ConfFolder, AppContext.ConfigurationFileName));
-            }
-            if (CredentialManager.GetCredentials(AppContext.AppIdentifier) != null)
-            {
-                CredentialManager.RemoveCredentials(AppContext.AppIdentifier);
+                File.Delete(Path.Combine(PixevalContext.ConfFolder, PixevalContext.ConfigurationFileName));
             }
             Current = new Session();
         }

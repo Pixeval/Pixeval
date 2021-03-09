@@ -22,7 +22,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,7 +34,9 @@ using Pixeval.Objects.Primitive;
 using Pixeval.Persisting;
 #if RELEASE
 using System.Net;
+using Pixeval.Objects.Exceptions;
 using Pixeval.Objects.Exceptions.Logger;
+using Pixeval.UI.UserControls;
 
 #endif
 
@@ -58,13 +59,18 @@ namespace Pixeval
         private static void DispatcherOnUnhandledException(Exception e)
         {
 #if RELEASE
-            if (e is WebException || e is TaskCanceledException)
+            switch (e)
             {
-                return;
+                case WebException _:
+                case TaskCanceledException _:
+                    return;
+                case AuthenticateFailedException _:
+                    MessageDialog.Warning(UI.MainWindow.Instance.WarningDialog, AkaI18N.AppApiAuthenticateTimeout);
+                    break;
             }
             ExceptionDumper.WriteException(e);
 #elif DEBUG
-            throw e;
+            throw new Exception(e.Message, e);
 #endif
         }
         
@@ -107,16 +113,16 @@ namespace Pixeval
             }
             await RootCaCertInstallation();
             CheckMultipleProcess();
-            await RestoreSettings();
+            await RestoreSettingsAndSession();
             await CheckUpdate();
             base.OnStartup(e);
         }
 
         private static void InitializeFolders()
         {
-            Directory.CreateDirectory(AppContext.ProjectFolder);
-            Directory.CreateDirectory(AppContext.SettingsFolder);
-            Directory.CreateDirectory(AppContext.ExceptionReportFolder);
+            Directory.CreateDirectory(PixevalContext.ProjectFolder);
+            Directory.CreateDirectory(PixevalContext.SettingsFolder);
+            Directory.CreateDirectory(PixevalContext.ExceptionReportFolder);
         }
 
         private static void CheckMultipleProcess()
@@ -130,27 +136,28 @@ namespace Pixeval
 
         private static async Task CheckUpdate()
         {
-            if (await AppContext.UpdateAvailable() && MessageBox.Show(AkaI18N.PixevalUpdateAvailable, AkaI18N.PixevalUpdateAvailableTitle, MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+            if (await PixevalContext.UpdateAvailable() && MessageBox.Show(AkaI18N.PixevalUpdateAvailable, AkaI18N.PixevalUpdateAvailableTitle, MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
             {
                 Process.Start(@"updater\Pixeval.Updater.exe");
                 Environment.Exit(0);
             }
         }
 
-        private static async Task RestoreSettings()
+        private static async Task RestoreSettingsAndSession()
         {
             await Settings.Restore();
-            BrowsingHistoryAccessor.GlobalLifeTimeScope = new BrowsingHistoryAccessor(200, AppContext.BrowseHistoryDatabase);
+            await Session.Restore();
+            BrowsingHistoryAccessor.GlobalLifeTimeScope = new BrowsingHistoryAccessor(200, PixevalContext.BrowseHistoryDatabase);
         }
 
         protected override async void OnExit(ExitEventArgs e)
         {
             await Settings.Global.Store();
-            if (Session.Current != null && !Session.Current.AccessToken.IsNullOrEmpty())
+            if (Session.Current != null)
             {
                 await Session.Current.Store();
             }
-            if (File.Exists(AppContext.BrowseHistoryDatabase))
+            if (File.Exists(PixevalContext.BrowseHistoryDatabase))
             {
                 BrowsingHistoryAccessor.GlobalLifeTimeScope.SetWritable();
                 BrowsingHistoryAccessor.GlobalLifeTimeScope.Rewrite();

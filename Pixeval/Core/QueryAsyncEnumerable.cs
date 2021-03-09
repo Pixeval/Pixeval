@@ -52,7 +52,7 @@ namespace Pixeval.Core
 
         public abstract override void InsertionPolicy(Illustration item, IList<Illustration> collection);
 
-        public override bool VerifyRationality(Illustration item, IList<Illustration> collection)
+        public override bool Verify(Illustration item, IList<Illustration> collection)
         {
             return item != null && collection.All(t => t.Id != item.Id) && PixivHelper.VerifyIllust(Settings.Global.ExcludeTag, Settings.Global.IncludeTag, Settings.Global.MinBookmark, item);
         }
@@ -128,7 +128,7 @@ namespace Pixeval.Core
 
             private static async Task<HttpResponse<QueryWorksResponse>> TryGetResponse(string url)
             {
-                var res = (await HttpClientFactory.AppApiHttpClient().GetStringAsync(url)).FromJson<QueryWorksResponse>();
+                var res = (await HttpClientFactory.AppApi.GetStringAsync(url)).FromJson<QueryWorksResponse>();
                 if (res is { } response && !response.Illusts.IsNullOrEmpty())
                 {
                     return HttpResponse<QueryWorksResponse>.Wrap(true, response);

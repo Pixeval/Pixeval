@@ -34,7 +34,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
             <valueConverters:QueryR18ToggleButtonIsCheckedConverter x:Key="QueryR18ToggleButtonIsCheckedConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
-    <materialDesign:Card Width="1000" Height="750">
+    <materialDesign:Card Width="1000" Height="710">
         <Grid>
             <TextBlock Height="30"
                        Margin="0,30,0,0"
@@ -57,7 +57,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                         <RowDefinition Height="35" />
                         <RowDefinition Height="35" />
                         <RowDefinition Height="35" />
-                        <RowDefinition Height="42" />
                         <RowDefinition Height="42" />
                         <RowDefinition Height="42" />
                         <RowDefinition Height="42" />
@@ -126,7 +125,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                               VerticalAlignment="Center"
                               DisplayMemberPath="LocalizedName"
                               FontSize="15"
-                              ItemsSource="{x:Static pixeval:AppContext.AvailableCultures}"
+                              ItemsSource="{x:Static pixeval:PixevalContext.AvailableCultures}"
                               SelectedItem="{Binding Culture, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource MultiCultureConverter}}"
                               SelectionChanged="CultureSelector_OnSelectionChanged" />
                     <TextBlock Grid.Row="6"
@@ -218,17 +217,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                             </Canvas>
                         </Viewbox>
                     </Button>
-                    <TextBox x:Name="CookieTextBox"
-                             Grid.Row="12"
-                             Grid.Column="0"
-                             Grid.ColumnSpan="2"
-                             VerticalAlignment="Center"
-                             materialDesign:HintAssist.Hint="{Binding Path=(i18N:AkaI18N.FillWithWebCookie)}"
-                             FontSize="12"
-                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                             Text="{Binding Path=Cookie, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBox x:Name="ExcludeTagTextBox"
-                             Grid.Row="13"
+                             Grid.Row="12"
                              Grid.Column="0"
                              Grid.ColumnSpan="2"
                              VerticalAlignment="Center"
@@ -238,7 +228,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                              Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                              Text="{Binding Path=ExcludeTag, Converter={StaticResource StringSplitConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBox x:Name="IncludeTagTextBox"
-                             Grid.Row="14"
+                             Grid.Row="13"
                              Grid.Column="0"
                              Grid.ColumnSpan="2"
                              VerticalAlignment="Center"
@@ -248,7 +238,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                              Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                              Text="{Binding Path=IncludeTag, Converter={StaticResource StringSplitConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBox x:Name="ImageServerMirrorUrl"
-                             Grid.Row="15"
+                             Grid.Row="14"
                              Grid.Column="0"
                              Grid.ColumnSpan="2"
                              VerticalAlignment="Center"

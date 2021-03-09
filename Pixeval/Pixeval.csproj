@@ -4,29 +4,40 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <Description>A Strong, Fast and Flexible Pixiv Client</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <StartupObject>Pixeval.App</StartupObject>
     <ApplicationIcon>Resources\pxlogo.ico</ApplicationIcon>
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
     <Win32Resource />
-    <Platforms>x64;AnyCPU</Platforms>
+    <Platforms>x86;AnyCPU</Platforms>
     <NoWarn>$(NoWarn);NU1701</NoWarn>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
   <PropertyGroup>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>3.0.3</Version>
+    <Version>3.1.0</Version>
+    <PackageProjectUrl>https://sora.ink/Pixeval</PackageProjectUrl>
   </PropertyGroup>
 
-  <ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <PlatformTarget>x64</PlatformTarget>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Prefer32Bit>true</Prefer32Bit>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+	<ItemGroup>
     <None Remove="Resources\pixeval_ca.cer" />
     <None Remove="Resources\pixeval_server_cert.pfx" />
   </ItemGroup>
 
-  <ItemGroup>
+	<ItemGroup>
     <Reference Update="CefSharp">
       <Private>true</Private>
     </Reference>
@@ -40,7 +51,6 @@
 
   <ItemGroup>
     <PackageReference Include="AdaptiveCards" Version="1.2.4" />
-    <PackageReference Include="AdysTech.CredentialManager.Core" Version="1.9.0" />
     <PackageReference Include="AngleSharp" Version="0.14.0" />
     <PackageReference Include="Dragablz" Version="0.0.3.203" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.0.1" />

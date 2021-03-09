@@ -24,22 +24,25 @@ namespace Pixeval.Data.Web.Request
 {
     public class PasswordTokenRequest
     {
-        [AliasAs("code")]
-        public string Code { get; set; }
-
-        [AliasAs("redirect_uri")]
-        public string RedirectUri => "https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback";
-
-        [AliasAs("grant_type")]
-        public string GrantType => "authorization_code";
-
         [AliasAs("client_id")]
         public string ClientId => "MOBrBDS8blbauoSck0ZfDbtuzpyT";
 
         [AliasAs("client_secret")]
         public string ClientSecret => "lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj";
 
+        [AliasAs("code")]
+        public string Code { get; set; }
+
+        [AliasAs("grant_type")]
+        public string GrantType => "authorization_code";
+
+        [AliasAs("include_policy")]
+        public string IncludePolicy => "true";
+
         [AliasAs("code_verifier")]
         public string CodeVerifier { get; set; }
+
+        [AliasAs("redirect_uri")]
+        public string RedirectUri => "https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback";
     }
 }

@@ -81,7 +81,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <resx key="QueryNotResponding" value="抱歉, Pixeval无法根据当前的设置找到任何作品, 或许是您的页码设置过大/关键字不存在/没有收藏任何作品, 请检查后再尝试吧~" />
   <resx key="IdIllegal" value="搜索ID时必须输入纯数字哟~" />
   <resx key="UserIdIllegal" value="搜索用户ID时必须输入纯数字哟~" />
-  <resx key="AppApiAuthenticateTimeout" value="AppApi登录请求超时, 请仔细检查您的网络环境" />
+  <resx key="AppApiAuthenticateTimeout" value="登录请求超时, 请仔细检查您的网络环境" />
   <resx key="WebApiAuthenticateTimeout" value="WebApi登录请求超时, 请仔细检查您的网络环境" />
   <resx key="MultiplePixevalInstanceDetected" value="已经有一个Pixeval实例在运行了" />
   <resx key="MultiplePixevalInstanceDetectedTitle" value="不能同时运行两个Pixeval实例!" />
@@ -182,4 +182,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <resx key="ImageMirrorServerUrl" value="图片镜像站地址(请勿带协议头与末尾的/)" />
   <resx key="BatchDownloadAcknowledgment" value="你真的想要下载全部作品吗?在下载任务过多的时候可能会导致程序发生顿卡" />
   <resx key="WebView2DownloadIsRequired" value="Pixeval需要使用WebView2 Runtime作为Pixiv新鉴权方法的反制手段, 请前往https://go.microsoft.com/fwlink/p/?LinkId=2124703下载并安装, 链接已经复制到剪切板, 安装完成后请重启Pixeval"/>
+  <resx key="SignInLoggingIn" value="正在登入..."/>
 </localization>

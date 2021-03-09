@@ -65,7 +65,7 @@ namespace Pixeval.UI.UserControls
             messageDialog.TitleContent = AkaI18N.Warning;
             messageDialog.MessageContent = content;
             messageDialog.Acknowledge = acknowledge;
-            attached.OpenControl();
+            attached.IsOpen = true;
             Task.Run(() =>
             {
                 while (messageDialog.Result == null)

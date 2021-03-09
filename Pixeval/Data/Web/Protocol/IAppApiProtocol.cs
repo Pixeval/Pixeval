@@ -25,7 +25,6 @@ using Refit;
 
 namespace Pixeval.Data.Web.Protocol
 {
-    [Headers("Authorization: Bearer")]
     public interface IAppApiProtocol
     {
         [Post("/v1/illust/bookmark/delete")]

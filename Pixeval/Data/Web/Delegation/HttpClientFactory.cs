@@ -28,43 +28,29 @@ using Refit;
 
 namespace Pixeval.Data.Web.Delegation
 {
-    public class HttpClientFactory
+    public static class HttpClientFactory
     {
-        public static HttpClient AppApiHttpClient()
-        {
-            return PixivApi(ProtocolBase.AppApiBaseUrl, Settings.Global.DirectConnect).Apply(h => h.DefaultRequestHeaders.Add("Authorization", "Bearer"));
-        }
+        private static bool DirectConnect => Settings.Global.DirectConnect;
 
-        public static HttpClient WebApiHttpClient()
-        {
-            return PixivApi(ProtocolBase.WebApiBaseUrl, Settings.Global.DirectConnect);
-        }
+        public const string PublicApiBaseUrl = "https://public-api.secure.pixiv.net/v1";
+        public const string AppApiBaseUrl = "https://app-api.pixiv.net";
+        public const string DnsServer = "https://1.0.0.1";
+        public const string SauceNaoUrl = "https://saucenao.com/";
+        public const string OAuthBaseUrl = "https://oauth.secure.pixiv.net";
+        public const string WebApiBaseUrl = "https://www.pixiv.net";
 
-        public static IAppApiProtocol AppApiService()
+        public static readonly HttpClient AppApi = new HttpClient(PixivApiHttpClientHandler.Instance(DirectConnect)) { BaseAddress = new Uri(AppApiBaseUrl) };
+        public static readonly HttpClient WebApi = new HttpClient(PixivApiHttpClientHandler.Instance(DirectConnect)) { BaseAddress = new Uri(WebApiBaseUrl) };
+        public static readonly HttpClient Image = new HttpClient(PixivImageHttpClientHandler.Instance).Apply(client =>
         {
-            return RestService.For<IAppApiProtocol>(PixivApi(ProtocolBase.AppApiBaseUrl, Settings.Global.DirectConnect));
-        }
+            client.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "http://www.pixiv.net");
+            client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "PixivIOSApp/5.8.7");
+        });
+        
+        public static readonly IAppApiProtocol AppApiService = RestService.For<IAppApiProtocol>(AppApi);
+        public static readonly IWebApiProtocol WebApiService = RestService.For<IWebApiProtocol>(WebApi);
 
-        public static IWebApiProtocol WebApiService()
-        {
-            return RestService.For<IWebApiProtocol>(PixivApi(ProtocolBase.WebApiBaseUrl, Settings.Global.DirectConnect));
-        }
-
-        public static HttpClient PixivApi(string baseAddress, bool directConnect)
-        {
-            return new HttpClient(PixivApiHttpClientHandler.Instance(directConnect)) { BaseAddress = new Uri(baseAddress) };
-        }
-
-        public static HttpClient PixivImage()
-        {
-            return new HttpClient(PixivImageHttpClientHandler.Instance).Apply(client =>
-            {
-                client.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "http://www.pixiv.net");
-                client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "PixivIOSApp/5.8.7");
-            });
-        }
-
-        public static Task<HttpResponseMessage> GetResponseHeader(HttpClient client, string uri)
+        public static Task<HttpResponseMessage> GetResponseHeader(this HttpClient client, string uri)
         {
             return client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
         }

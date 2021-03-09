@@ -5,11 +5,11 @@
         Title="MainWindow"
         Width="600"
         Height="100"
-        AllowsTransparency="True"
-        Background="Transparent"
         Icon="Resources/pxlogo.ico"
         Loaded="MainWindow_OnLoaded"
         MouseDown="MainWindow_OnMouseDown"
+        AllowsTransparency="True"
+        Background="Transparent"
         ResizeMode="NoResize"
         WindowStyle="None">
     <Window.Resources>

@@ -24,6 +24,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using Pixeval.Objects.Exceptions;
+using Pixeval.Objects.I18n;
 using Pixeval.Persisting;
 
 namespace Pixeval.Data.Web.Delegation
@@ -32,6 +34,7 @@ namespace Pixeval.Data.Web.Delegation
     {
         private readonly bool directConnect;
         private readonly IHttpRequestHandler requestHandler;
+        private readonly ManualResetEvent refreshing = new ManualResetEvent(true);
 
         static DnsResolvedHttpClientHandler()
         {
@@ -49,6 +52,20 @@ namespace Pixeval.Data.Web.Delegation
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            if (!refreshing.WaitOne(TimeSpan.FromSeconds(10)))
+            {
+                throw new AuthenticateFailedException(AkaI18N.AppApiAuthenticateTimeout);
+            }
+
+            if (Session.RefreshRequired(Session.Current) && request.RequestUri.Host != "oauth.secure.pixiv.net")
+            {
+                using var semaphore = new SemaphoreSlim(1);
+                await semaphore.WaitAsync(cancellationToken);
+                refreshing.Reset();
+                await Authentication.Refresh(Session.Current.RefreshToken);
+                refreshing.Set();
+            }
+
             requestHandler?.Handle(request);
 
             if (directConnect)
@@ -61,35 +78,7 @@ namespace Pixeval.Data.Web.Delegation
                 request.Headers.Host = host;
             }
 
-            HttpResponseMessage result;
-            try
-            {
-                result = await base.SendAsync(request, cancellationToken);
-            }
-            catch (HttpRequestException e)
-            {
-                if (e.InnerException != null && e.InnerException.Message.ToLower().Contains("winhttp"))
-                {
-                    return new HttpResponseMessage(HttpStatusCode.OK);
-                }
-                throw;
-            }
-
-            if (result.StatusCode == HttpStatusCode.BadRequest && (await result.Content.ReadAsStringAsync()).Contains("OAuth"))
-            {
-                using var semaphore = new SemaphoreSlim(1);
-                await semaphore.WaitAsync(cancellationToken);
-                await Authentication.Authenticate(Session.Current.Account, Session.Current.Password);
-                var token = request.Headers.Authorization;
-                if (token != null)
-                {
-                    request.Headers.Authorization = new AuthenticationHeaderValue(token.Scheme, Session.Current.AccessToken);
-                }
-
-                return await base.SendAsync(request, cancellationToken);
-            }
-
-            return result;
+            return await base.SendAsync(request, cancellationToken);
         }
     }
 }

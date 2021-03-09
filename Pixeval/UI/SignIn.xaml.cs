@@ -19,17 +19,15 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Web;
 using System.Windows;
 using Microsoft.Web.WebView2.Core;
 using Pixeval.Objects;
-using Pixeval.Objects.Exceptions.Logger;
-using Pixeval.Objects.I18n;
-using Pixeval.Objects.Primitive;
+using Pixeval.Objects.Generic;
 using Pixeval.Persisting;
-using Refit;
 
 namespace Pixeval.UI
 {
@@ -37,15 +35,29 @@ namespace Pixeval.UI
     {
         private static ProxyServer _proxyServer;
 
-        private readonly TaskCompletionSource<string> webViewCompletion = new TaskCompletionSource<string>();
+        private readonly TaskCompletionSource<(string, string)> webViewCompletion = new TaskCompletionSource<(string, string)>();
 
         public SignIn()
         {
             InitializeComponent();
         }
 
+        private static bool RefreshAvailable()
+        {
+            if (Session.Current == null)
+                return false;
+            return Session.Current.RefreshToken != null && DateTime.Now - Session.Current.CookieCreation <= TimeSpan.FromDays(7);
+        }
+        
         private async void SignIn_OnLoaded(object sender, RoutedEventArgs e)
         {
+            if (RefreshAvailable())
+            {
+                new SessionRefreshing(Session.Current.RefreshToken, await GetCookies(), refreshing: true).Show();
+                Close();
+                return;
+            }
+            
             var port = ProxyServer.NegotiatePort();
             _proxyServer = ProxyServer.Create("127.0.0.1", port, await CertificateManager.GetFakeServerCertificate());
             await LoginWebView.EnsureCoreWebView2Async(
@@ -60,64 +72,36 @@ namespace Pixeval.UI
             LoginWebView.CoreWebView2.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All);
             LoginWebView.CoreWebView2.WebResourceRequested += (o, args) =>
             {
-                args.Request.Headers.SetHeader("Accept-Language", Settings.Global.DirectConnect ? "zh-cn" : Settings.Global.Culture);
+                args.Request.Headers.SetHeader("Accept-Language", "zh-cn");
             };
             var codeVerifier = Authentication.GetCodeVer();
-            LoginWebView.Source = new Uri(await Authentication.GenerateWebPageUrl(codeVerifier));
+            LoginWebView.Source = new Uri(Authentication.GenerateWebPageUrl(codeVerifier));
 
-            var url = await webViewCompletion.Task;
+            var (url, cookie) = await webViewCompletion.Task;
             var code = HttpUtility.ParseQueryString(new Uri(url).Query)["code"];
-            
-            // TODO send request
-            
-            var mainWindow = new MainWindow();
-            mainWindow.Show();
+
+            new SessionRefreshing(code, cookie, codeVerifier).Show();
 
             Close();
-        }
-
-        private async void SignIn_OnInitialized(object sender, EventArgs e)
-        {
-            /*if (Session.ConfExists())
-            {
-                try
-                {
-                    UpdatingSessionDialogHost.OpenControl();
-                    await Session.RefreshIfRequired();
-                }
-                catch (Exception exception)
-                {
-                    SetErrorHint(exception);
-                    ExceptionDumper.WriteException(exception);
-                    UpdatingSessionDialogHost.CurrentSession.Close();
-                    return;
-                }
-
-                UpdatingSessionDialogHost.CurrentSession.Close();
-
-                var mainWindow = new MainWindow();
-                mainWindow.Show();
-                Close();
-            }*/
-        }
-
-        private static async ValueTask<bool> IsPasswordOrAccountError(ApiException exception)
-        {
-            var eMess = await exception.GetContentAsAsync<dynamic>();
-            return eMess.errors.system.code == 1508;
-        }
+}
 
         private void SignIn_OnClosed(object sender, EventArgs e)
         {
-            _proxyServer.Dispose();
+            LoginWebView.Dispose();
+            _proxyServer?.Dispose();
         }
 
-        private void LoginWebView_OnNavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
+        private async void LoginWebView_OnNavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
         {
             if (e.Uri.StartsWith("pixiv://"))
             {
-                webViewCompletion.SetResult(e.Uri);
+                webViewCompletion.SetResult((e.Uri, await GetCookies()));
             }
+        }
+
+        private async Task<string> GetCookies()
+        {
+            return Session.Current?.Cookie ?? (await LoginWebView.CoreWebView2.CookieManager.GetCookiesAsync("https://www.pixiv.net"))?.AsString();
         }
     }
 }

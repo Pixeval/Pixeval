@@ -42,7 +42,7 @@ namespace Pixeval.Core
             return new UserUpdateAsyncEnumerator(this);
         }
 
-        public override bool VerifyRationality(Illustration item, IList<Illustration> collection)
+        public override bool Verify(Illustration item, IList<Illustration> collection)
         {
             return item != null && collection.All(t => t.Id != item.Id) && PixivHelper.VerifyIllust(Settings.Global.ExcludeTag, Settings.Global.IncludeTag, Settings.Global.MinBookmark, item);
         }
@@ -104,7 +104,7 @@ namespace Pixeval.Core
 
             private static async Task<HttpResponse<UserUpdateResponse>> TryGetResponse(string url)
             {
-                var res = (await HttpClientFactory.AppApiHttpClient().GetStringAsync(url)).FromJson<UserUpdateResponse>();
+                var res = (await HttpClientFactory.AppApi.GetStringAsync(url)).FromJson<UserUpdateResponse>();
                 if (res is { } response && !response.Illusts.IsNullOrEmpty())
                 {
                     return HttpResponse<UserUpdateResponse>.Wrap(true, response);

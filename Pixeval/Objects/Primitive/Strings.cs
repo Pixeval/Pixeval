@@ -93,11 +93,16 @@ namespace Pixeval.Objects.Primitive
             };
         }
 
-        public static string Hash<T>(this string str) where T : HashAlgorithm, new()
+        public static string Hash<T>(this string str, Encoding encoding = null) where T : HashAlgorithm, new()
+        {
+            return str.HashBytes<T>(encoding).Select(b => b.ToString("x2")).Aggregate((s1, s2) => s1 + s2);
+        }
+
+        public static byte[] HashBytes<T>(this string str, Encoding encoding = null) where T : HashAlgorithm, new()
         {
             using var crypt = new T();
-            var hashBytes = crypt.ComputeHash(str.GetBytes());
-            return hashBytes.Select(b => b.ToString("x2")).Aggregate((s1, s2) => s1 + s2);
+            var hashBytes = crypt.ComputeHash(str.GetBytes(encoding));
+            return hashBytes;
         }
 
         public static string ToUrlSafeBase64String(this byte[] bytes)

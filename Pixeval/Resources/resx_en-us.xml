@@ -83,7 +83,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         value="Sorry, Pixeval cannot find any illust according to current settings, maybe the page number you specified is too big/keyword does not exist/did not collect any illust, please check and try again~" />
   <resx key="IdIllegal" value="You must enter pure number when searching illust ID~" />
   <resx key="UserIdIllegal" value="You must enter pure number when searching user ID~" />
-  <resx key="AppApiAuthenticateTimeout" value="AppApi login timeout, please check your network environment" />
+  <resx key="AppApiAuthenticateTimeout" value="Authentication timeout, please check your network environment" />
   <resx key="WebApiAuthenticateTimeout" value="WebApi login timeout, please check your network environment" />
   <resx key="MultiplePixevalInstanceDetected" value="There's already a Pixeval instance running" />
   <resx key="MultiplePixevalInstanceDetectedTitle" value="You cannot running two Pixeval at the same time!" />
@@ -187,4 +187,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <resx key="BatchDownloadAcknowledgment"
         value="Do you really want to download all the illustrations, this may lead the program into a temporarily unresponsive" />
   <resx key="WebView2DownloadIsRequired" value="Pixeval requires WebView2 Runtime as a countermeasure of the new auth method of Pixiv, go to https://go.microsoft.com/fwlink/p/?LinkId=2124703 to download the runtime and install it, the link has been copied to your clipboard, restart Pixeval after your installation"/>
+  <resx key="SignInLoggingIn" value="Logging in..."/>
 </localization>

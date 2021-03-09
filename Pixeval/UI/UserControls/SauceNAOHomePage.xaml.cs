@@ -28,6 +28,7 @@ using AngleSharp.Html.Parser;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Pixeval.Core;
 using Pixeval.Data.Web;
+using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Protocol;
 using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
@@ -114,7 +115,7 @@ namespace Pixeval.UI.UserControls
         private async Task<IEnumerable<string>> DoQuery(string fileName)
         {
             await using var memoryStream = new MemoryStream(await File.ReadAllBytesAsync(UploadFileTextBox.Text), false);
-            var sauceResponse = await RestService.For<ISauceNAOProtocol>(ProtocolBase.SauceNaoUrl).GetSauce(new StreamPart(memoryStream, Path.GetFileName(fileName), Strings.AssumeImageContentType(fileName)));
+            var sauceResponse = await RestService.For<ISauceNAOProtocol>(HttpClientFactory.SauceNaoUrl).GetSauce(new StreamPart(memoryStream, Path.GetFileName(fileName), Strings.AssumeImageContentType(fileName)));
             var content = await sauceResponse.Content.ReadAsStringAsync();
             return await ParseSauce(content);
         }
