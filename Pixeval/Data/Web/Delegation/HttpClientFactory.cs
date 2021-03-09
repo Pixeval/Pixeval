@@ -26,13 +26,13 @@ using Pixeval.Objects.Generic;
 using Pixeval.Persisting;
 using Refit;
 
+// ReSharper disable MemberCanBePrivate.Global
 namespace Pixeval.Data.Web.Delegation
 {
     public static class HttpClientFactory
     {
         private static bool DirectConnect => Settings.Global.DirectConnect;
 
-        public const string PublicApiBaseUrl = "https://public-api.secure.pixiv.net/v1";
         public const string AppApiBaseUrl = "https://app-api.pixiv.net";
         public const string DnsServer = "https://1.0.0.1";
         public const string SauceNaoUrl = "https://saucenao.com/";
@@ -45,6 +45,7 @@ namespace Pixeval.Data.Web.Delegation
         {
             client.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "http://www.pixiv.net");
             client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "PixivIOSApp/5.8.7");
+            client.Timeout = TimeSpan.FromSeconds(30);
         });
         
         public static readonly IAppApiProtocol AppApiService = RestService.For<IAppApiProtocol>(AppApi);

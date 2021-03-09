@@ -2,6 +2,9 @@
 <module type="RIDER_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$/../.." />
+    <content url="file://$USER_HOME$/.nuget/packages/microsoft.web.webview2/1.0.705.50/runtimes/win-arm/native/WebView2Loader.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/microsoft.web.webview2/1.0.705.50/runtimes/win-x64/native/WebView2Loader.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/microsoft.web.webview2/1.0.705.50/runtimes/win-x86/native/WebView2Loader.dll" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

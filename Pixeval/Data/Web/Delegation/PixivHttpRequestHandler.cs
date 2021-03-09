@@ -55,9 +55,15 @@ namespace Pixeval.Data.Web.Delegation
                     break;
             }
 
-            if (httpRequestMessage.RequestUri.DnsSafeHost == "i.pximg.net" && !Settings.Global.MirrorServer.IsNullOrEmpty())
+            if (httpRequestMessage.RequestUri.Host == "i.pximg.net" && !Settings.Global.MirrorServer.IsNullOrEmpty())
             {
-                httpRequestMessage.RequestUri = new Uri(httpRequestMessage.RequestUri.ToString().Replace("i.pximg.net", Settings.Global.MirrorServer));
+                var server = new Uri(Settings.Global.MirrorServer);
+                httpRequestMessage.RequestUri = new UriBuilder(httpRequestMessage.RequestUri)
+                {
+                    Host = server.Host,
+                    Scheme = server.Scheme,
+                    Port = server.Port
+                }.Uri;
             }
 
             if (!httpRequestMessage.Headers.Contains("Accept-Language"))

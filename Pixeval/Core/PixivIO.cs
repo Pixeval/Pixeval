@@ -65,12 +65,12 @@ namespace Pixeval.Core
 
         public static async Task<string> GetResizedBase64UriOfImageFromUrl(string url, string type = null)
         {
-            return $"data:image/{type ?? url[(url.LastIndexOf('.') + 1)..]};base64,{Convert.ToBase64String(await GetBytes(url))}";
+            return url != null ? $"data:image/{type ?? url[(url.LastIndexOf('.') + 1)..]};base64,{Convert.ToBase64String(await GetBytes(url))}" : "";
         }
 
         public static async Task<MemoryStream> Download(string url, IProgress<double> progress, CancellationToken cancellationToken = default)
         {
-            using var response = await HttpClientFactory.Image.Apply(_ => _.Timeout = TimeSpan.FromSeconds(30)).GetResponseHeader(url);
+            using var response = await HttpClientFactory.Image.GetResponseHeader(url);
 
             var contentLength = response.Content.Headers.ContentLength;
             if (!contentLength.HasValue)

@@ -47,11 +47,11 @@ namespace Pixeval.Core
                 var filePathProvider = option.CreateNewWhenFromUser ? new CreateNewFolderForUserDownloadPathProvider(downloadContent.UserName) : (IDownloadPathProvider) new DefaultDownloadPathProvider();
                 var fileNameFormatter = new DefaultIllustrationFileNameFormatter();
                 var model = new DownloadableIllustration(downloadContent, fileNameFormatter, filePathProvider, isFromMange, index) { Option = option };
-                model.DownloadState.ValueChanged += (sender, args) => Application.Current.Dispatcher.Invoke(() =>
+                model.State.ValueChanged += (sender, args) => Application.Current.Dispatcher.Invoke(() =>
                 {
                     switch (args.NewValue)
                     {
-                        case DownloadStateEnum.Finished:
+                        case DownloadState.Finished:
                             model.Freeze();
                             Downloading.Remove(model);
                             if (Downloaded.All(i => model.DownloadContent.GetDownloadUrl() != i.DownloadContent.GetDownloadUrl()))
@@ -59,12 +59,12 @@ namespace Pixeval.Core
                                 Downloaded.Add(model);
                             }
                             break;
-                        case DownloadStateEnum.Downloading:
+                        case DownloadState.Downloading:
                             Downloaded.Remove(model);
                             Downloading.Add(model);
                             break;
-                        case var stat when stat == DownloadStateEnum.Canceled || stat == DownloadStateEnum.Queue || stat == DownloadStateEnum.Exceptional:
-                            if (stat == DownloadStateEnum.Canceled)
+                        case var stat when stat == DownloadState.Canceled || stat == DownloadState.Queue || stat == DownloadState.Exceptional:
+                            if (stat == DownloadState.Canceled)
                             {
                                 Downloading.Remove(model);
                             }

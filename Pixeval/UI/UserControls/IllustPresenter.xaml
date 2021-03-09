@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
              xmlns:i18N="clr-namespace:Pixeval.Objects.I18n"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              Width="1000"
              Height="600"
              DataContext="{Binding RelativeSource={RelativeSource Self}}"
@@ -48,6 +49,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
             <Grid x:Name="LoadingMask"
                   Visibility="{Binding LoadingOrigin, Converter={StaticResource VisibleIfTrueConverter}}">
                 <ProgressBar x:Name="OriginalLoadIndicator"
+                             materialDesign:TransitionAssist.DisableTransitions="True"
                              Width="200"
                              Height="10"
                              HorizontalAlignment="Center"

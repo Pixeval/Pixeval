@@ -20,7 +20,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -28,6 +30,7 @@ using Pixeval.Core;
 using Pixeval.Objects.Primitive;
 using PropertyChanged;
 
+// ReSharper disable MemberCanBePrivate.Global
 namespace Pixeval.Persisting
 {
     /// <summary>
@@ -74,12 +77,14 @@ namespace Pixeval.Persisting
 
         public string MirrorServer { get; set; }
 
+        public bool TurnOffAnimation { get; set; }
+
         public override string ToString()
         {
             return this.ToJson();
         }
 
-        public async Task Store()
+        public static async Task Store()
         {
             await File.WriteAllTextAsync(Path.Combine(PixevalContext.SettingsFolder, "settings.json"), Global.ToString());
         }
@@ -118,6 +123,7 @@ namespace Pixeval.Persisting
             Global.TagMatchOption = SearchTagMatchOption.PartialMatchForTags;
             Global.Culture = "zh-cn";
             Global.MirrorServer = string.Empty;
+            Global.TurnOffAnimation = false;
         }
     }
 }

@@ -19,15 +19,18 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Web;
 using System.Windows;
 using Microsoft.Web.WebView2.Core;
 using Pixeval.Objects;
 using Pixeval.Objects.Generic;
+using Pixeval.Objects.I18n;
 using Pixeval.Persisting;
+using Pixeval.UI.UserControls;
 
 namespace Pixeval.UI
 {
@@ -48,21 +51,51 @@ namespace Pixeval.UI
                 return false;
             return Session.Current.RefreshToken != null && DateTime.Now - Session.Current.CookieCreation <= TimeSpan.FromDays(7);
         }
-        
-        private async void SignIn_OnLoaded(object sender, RoutedEventArgs e)
+
+        private async Task CheckUpdate()
+        {
+            if (await PixevalContext.UpdateAvailable() && await MessageDialog.Show(MessageDialogHost,AkaI18N.PixevalUpdateAvailable, AkaI18N.PixevalUpdateAvailableTitle, true) == MessageDialogResult.Yes)
+            {
+                Process.Start(@"updater\Pixeval.Updater.exe");
+                Environment.Exit(0);
+            }
+            MessageDialogHost.Visibility = Visibility.Hidden;
+        }
+
+        private async Task LoginAndClose(string token, string cookie, string codeVer = null, bool refresh = false)
+        {
+            LoginWebView.Visibility = Visibility.Hidden;
+            LoggingInGrid.Visibility = Visibility.Visible;
+            LoggingInHintTextBlock.Text = refresh ? AkaI18N.SignInUpdatingSession : AkaI18N.SignInLoggingIn;
+            if (refresh)
+            {
+                await Authentication.Refresh(token);
+            }
+            else
+            {
+                await Authentication.AuthorizationCodeToToken(token, codeVer);
+            }
+            Session.Current.Cookie = cookie;
+            Session.Current.CookieCreation = DateTime.Now;
+
+            new MainWindow().Show();
+            Close();
+        }
+
+        private async Task PerformLogin()
         {
             if (RefreshAvailable())
             {
-                new SessionRefreshing(Session.Current.RefreshToken, await GetCookies(), refreshing: true).Show();
-                Close();
+                await LoginAndClose(Session.Current.RefreshToken, await GetCookies(), refresh: true);
                 return;
             }
-            
+
+            LoginWebView.Visibility = Visibility.Visible;
             var port = ProxyServer.NegotiatePort();
             _proxyServer = ProxyServer.Create("127.0.0.1", port, await CertificateManager.GetFakeServerCertificate());
             await LoginWebView.EnsureCoreWebView2Async(
                 await CoreWebView2Environment.CreateAsync(
-                    null, null, new CoreWebView2EnvironmentOptions
+                    null, Path.Combine(Directory.GetParent(Assembly.GetExecutingAssembly().Location).FullName, "pwData"), new CoreWebView2EnvironmentOptions
                     {
                         AdditionalBrowserArguments = $"--proxy-server=127.0.0.1:{port}"
                     }
@@ -80,10 +113,25 @@ namespace Pixeval.UI
             var (url, cookie) = await webViewCompletion.Task;
             var code = HttpUtility.ParseQueryString(new Uri(url).Query)["code"];
 
-            new SessionRefreshing(code, cookie, codeVerifier).Show();
+            await LoginAndClose(code, cookie, codeVerifier);
+        }
 
-            Close();
-}
+        private async void SignIn_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                await CheckUpdate();
+                await PerformLogin();
+            }
+            catch (Exception exception)
+            {
+                LoginWebView.Visibility = Visibility.Hidden;
+                if (await MessageDialog.Warning(MessageDialogHost, exception.Message) == MessageDialogResult.Yes)
+                {
+                    Environment.Exit(-1);
+                }
+            }
+        }
 
         private void SignIn_OnClosed(object sender, EventArgs e)
         {

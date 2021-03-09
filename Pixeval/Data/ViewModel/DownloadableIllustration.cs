@@ -67,7 +67,7 @@ namespace Pixeval.Data.ViewModel
 
         public string ReasonPhase { get; set; }
 
-        public Observable<DownloadStateEnum> DownloadState { get; set; } = new Observable<DownloadStateEnum>(DownloadStateEnum.Queue);
+        public Observable<DownloadState> State { get; set; } = new Observable<DownloadState>(DownloadState.Queue);
 
         public DownloadOption Option { get; set; }
 
@@ -99,7 +99,7 @@ namespace Pixeval.Data.ViewModel
                 Progress = 0;
                 ReasonPhase = null;
                 DownloadFailed = false;
-                DownloadState.Value = DownloadStateEnum.Canceled;
+                State.Value = DownloadState.Canceled;
             }
         }
 
@@ -123,7 +123,7 @@ namespace Pixeval.Data.ViewModel
                 return;
             }
 
-            DownloadState.Value = DownloadStateEnum.Downloading;
+            State.Value = DownloadState.Downloading;
             var downloadPath = GetPath();
             if (DownloadContent.IsUgoira)
             {
@@ -140,7 +140,7 @@ namespace Pixeval.Data.ViewModel
                 }
                 await using var fileStream = new FileStream(downloadPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
                 memory.WriteTo(fileStream);
-                DownloadState.Value = DownloadStateEnum.Finished;
+                State.Value = DownloadState.Finished;
             }
             catch (OperationCanceledException)
             {
@@ -172,19 +172,13 @@ namespace Pixeval.Data.ViewModel
                 var ugoiraUrl = metadata.UgoiraMetadataInfo.ZipUrls.Medium;
                 ugoiraUrl = !ugoiraUrl.EndsWith("ugoira1920x1080.zip") ? Regex.Replace(ugoiraUrl, "ugoira(\\d+)x(\\d+).zip", "ugoira1920x1080.zip") : ugoiraUrl;
                 var delay = metadata.UgoiraMetadataInfo.Frames.Select(f => f.Delay / 10).ToArray();
-                if (cancellationTokenSource.IsCancellationRequested)
-                {
-                    return;
-                }
+                if (cancellationTokenSource.IsCancellationRequested) return;
                 await using var memory = await PixivIO.Download(ugoiraUrl, new Progress<double>(d => Progress = d), cancellationTokenSource.Token);
                 await using var gifStream = (MemoryStream) InternalIO.MergeGifStream(InternalIO.ReadGifZipEntries(memory), delay);
-                if (cancellationTokenSource.IsCancellationRequested)
-                {
-                    return;
-                }
+                if (cancellationTokenSource.IsCancellationRequested) return;
                 await using var fileStream = new FileStream(downloadPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
                 gifStream.WriteTo(fileStream);
-                DownloadState.Value = DownloadStateEnum.Finished;
+                State.Value = DownloadState.Finished;
             }
             catch (TaskCanceledException)
             {
@@ -209,7 +203,7 @@ namespace Pixeval.Data.ViewModel
 
         private void HandleError(Exception e, string path)
         {
-            DownloadState.Value = DownloadStateEnum.Exceptional;
+            State.Value = DownloadState.Exceptional;
             DownloadFailed = true;
             ReasonPhase = e.Message;
             if (path != null && File.Exists(path))
@@ -220,7 +214,7 @@ namespace Pixeval.Data.ViewModel
     }
 
     [Flags]
-    public enum DownloadStateEnum
+    public enum DownloadState
     {
         Queue, Downloading, Exceptional, Finished, Canceled
     }

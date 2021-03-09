@@ -70,7 +70,7 @@ namespace Pixeval.Data.Web.Delegation
 
             if (directConnect)
             {
-                var host = request.RequestUri.DnsSafeHost;
+                var host = request.RequestUri.Host;
 
                 var isSslSession = request.RequestUri.ToString().StartsWith("https://");
 

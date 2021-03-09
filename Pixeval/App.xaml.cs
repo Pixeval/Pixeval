@@ -70,7 +70,7 @@ namespace Pixeval
             }
             ExceptionDumper.WriteException(e);
 #elif DEBUG
-            throw new Exception(e.Message, e);
+            Debug.WriteLine(e.ToString());
 #endif
         }
         
@@ -114,7 +114,6 @@ namespace Pixeval
             await RootCaCertInstallation();
             CheckMultipleProcess();
             await RestoreSettingsAndSession();
-            await CheckUpdate();
             base.OnStartup(e);
         }
 
@@ -133,16 +132,6 @@ namespace Pixeval
                 Environment.Exit(-1);
             }
         }
-
-        private static async Task CheckUpdate()
-        {
-            if (await PixevalContext.UpdateAvailable() && MessageBox.Show(AkaI18N.PixevalUpdateAvailable, AkaI18N.PixevalUpdateAvailableTitle, MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
-            {
-                Process.Start(@"updater\Pixeval.Updater.exe");
-                Environment.Exit(0);
-            }
-        }
-
         private static async Task RestoreSettingsAndSession()
         {
             await Settings.Restore();
@@ -152,7 +141,7 @@ namespace Pixeval
 
         protected override async void OnExit(ExitEventArgs e)
         {
-            await Settings.Global.Store();
+            await Settings.Store();
             if (Session.Current != null)
             {
                 await Session.Current.Store();

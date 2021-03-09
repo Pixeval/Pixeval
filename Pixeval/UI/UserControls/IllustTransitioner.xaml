@@ -21,6 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:persisting="clr-namespace:Pixeval.Persisting"
              Width="1000"
              Height="600"
              DataContext="{Binding RelativeSource={RelativeSource Self}}"
@@ -28,7 +29,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
     <Grid>
         <materialDesign:Transitioner x:Name="IllustTransition"
                                      Width="1000"
-                                     materialDesign:TransitionAssist.DisableTransitions="True"
+                                     Height="600"
+                                     materialDesign:TransitionAssist.DisableTransitions="{Binding Source={x:Static persisting:Settings.Global}, Path=TurnOffAnimation}"
                                      ItemsSource="{Binding Slides}"
                                      SelectedIndex="0" />
     </Grid>

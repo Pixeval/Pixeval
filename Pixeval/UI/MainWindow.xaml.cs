@@ -43,6 +43,7 @@ using Pixeval.Core;
 using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
+using Pixeval.Objects;
 using Pixeval.Objects.Generic;
 using Pixeval.Objects.I18n;
 using Pixeval.Objects.Native;
@@ -651,7 +652,7 @@ namespace Pixeval.UI
 
         private async void DownloadAllNowMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            if (await MessageDialog.Warning(WarningDialog, AkaI18N.BatchDownloadAcknowledgment, true) == Objects.DialogResult.Yes)
+            if (await MessageDialog.Warning(WarningDialog, AkaI18N.BatchDownloadAcknowledgment, true) == MessageDialogResult.Yes)
             {
                 DownloadOption option = null;
                 if (BrowsingUser() && IsAtUploadCheckerPosition())

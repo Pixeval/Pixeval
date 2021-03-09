@@ -188,4 +188,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         value="Do you really want to download all the illustrations, this may lead the program into a temporarily unresponsive" />
   <resx key="WebView2DownloadIsRequired" value="Pixeval requires WebView2 Runtime as a countermeasure of the new auth method of Pixiv, go to https://go.microsoft.com/fwlink/p/?LinkId=2124703 to download the runtime and install it, the link has been copied to your clipboard, restart Pixeval after your installation"/>
   <resx key="SignInLoggingIn" value="Logging in..."/>
+  <resx key="TurnOffAnimation" value="Turn off dialog animation"/>
+  <resx key="ValueIsNotInteger" value="Input value is not integer"/>
 </localization>

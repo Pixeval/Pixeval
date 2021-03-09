@@ -45,7 +45,7 @@ namespace Pixeval.UI.UserControls
             set => SetValue(AcknowledgeProperty, value);
         }
 
-        public DialogResult? Result { get; set; }
+        public MessageDialogResult? Result { get; set; }
 
         private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -57,34 +57,38 @@ namespace Pixeval.UI.UserControls
         }
 
         [MethodImpl(MethodImplOptions.NoOptimization)]
-        public static Task<DialogResult> Warning(DialogHost attached, string content, bool acknowledge = false)
+        public static Task<MessageDialogResult> Warning(DialogHost attached, string content, bool acknowledge = false)
         {
-            var taskCompletionSource = new TaskCompletionSource<DialogResult>(TaskCreationOptions.AttachedToParent);
+            return Show(attached, content, AkaI18N.Warning, acknowledge);
+        }
+
+        public static Task<MessageDialogResult> Show(DialogHost attached, string content, string titleContent, bool acknowledge = false)
+        {
             var messageDialog = (MessageDialog) attached.DialogContent;
+            attached.Visibility = Visibility.Visible;
             messageDialog.Result = null;
-            messageDialog.TitleContent = AkaI18N.Warning;
+            messageDialog.TitleContent = titleContent;
             messageDialog.MessageContent = content;
             messageDialog.Acknowledge = acknowledge;
             attached.IsOpen = true;
-            Task.Run(() =>
+            return Task.Run(() =>
             {
                 while (messageDialog.Result == null)
                 {
                 }
                 attached.CloseControl();
-                taskCompletionSource.SetResult(messageDialog.Result.Value);
+                return messageDialog.Result.Value;
             });
-            return taskCompletionSource.Task;
         }
 
         private void YesButton_OnClick(object sender, RoutedEventArgs e)
         {
-            Result = DialogResult.Yes;
+            Result = MessageDialogResult.Yes;
         }
 
         private void NoButton_OnClick(object sender, RoutedEventArgs e)
         {
-            Result = DialogResult.No;
+            Result = MessageDialogResult.No;
         }
     }
 }

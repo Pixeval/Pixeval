@@ -22,14 +22,35 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         xmlns:i18N="clr-namespace:Pixeval.Objects.I18n"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:userControls="clr-namespace:Pixeval.UI.UserControls"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:persisting="clr-namespace:Pixeval.Persisting"
         Title="{Binding Path=(i18N:AkaI18N.SignIn)}"
-        Width="1280"
-        Height="720"
+        Width="500"
+        Height="600"
         ResizeMode="NoResize"
         Icon="/Resources/pxlogo.ico"
         WindowStartupLocation="CenterScreen"
+        TextElement.FontFamily="Microsoft YaHei UI Light"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Closed="SignIn_OnClosed"
         Loaded="SignIn_OnLoaded"
         mc:Ignorable="d">
-    <wpf:WebView2 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="LoginWebView" NavigationStarting="LoginWebView_OnNavigationStarting"/>
+    <Grid>
+        <materialDesign:DialogHost x:Name="MessageDialogHost" Visibility="Hidden"
+                                   materialDesign:TransitionAssist.DisableTransitions="{Binding Source={x:Static persisting:Settings.Global}, Path=TurnOffAnimation}"
+                                   IsOpen="True" Style="{DynamicResource MaterialDesignEmbeddedDialogHost}">
+            <materialDesign:DialogHost.DialogContent>
+                <userControls:MessageDialog Width="250"/>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+        <Grid x:Name="LoggingInGrid" Background="White" Visibility="Hidden" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                <mah:ProgressRing Height="50" Width="50" Foreground="#007CEE"/>
+                <TextBlock Margin="0,10,0,0" x:Name="LoggingInHintTextBlock" HorizontalAlignment="Center" FontSize="18" Text="{Binding Path=(i18N:AkaI18N.SignInLoggingIn)}"/>
+            </StackPanel>
+        </Grid>
+        <wpf:WebView2 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Hidden" x:Name="LoginWebView" NavigationStarting="LoginWebView_OnNavigationStarting" />
+    </Grid>
 </Window>

@@ -182,6 +182,9 @@ namespace Pixeval.Objects.I18n
         private static string _batchDownloadAcknowledgment = GetResource(nameof(BatchDownloadAcknowledgment));
         private static string _webView2DownloadIsRequired = GetResource(nameof(WebView2DownloadIsRequired));
         private static string _signInLoggingIn = GetResource(nameof(SignInLoggingIn));
+        private static string _turnOffAnimation = GetResource(nameof(TurnOffAnimation));
+        private static string _valueIsNotInteger = GetResource(nameof(ValueIsNotInteger));
+        private static string _uriFormIncorrect = GetResource(nameof(UriFormIncorrect));
 
         public static string EmptyEmailOrPasswordIsNotAllowed
         {
@@ -1749,6 +1752,36 @@ namespace Pixeval.Objects.I18n
             set
             {
                 _signInLoggingIn = value;
+                OnStaticPropertyChanged();
+            }
+        }
+
+        public static string TurnOffAnimation
+        {
+            get => _turnOffAnimation;
+            set
+            {
+                _turnOffAnimation = value;
+                OnStaticPropertyChanged();
+            }
+        }
+
+        public static string ValueIsNotInteger
+        {
+            get => _valueIsNotInteger;
+            set
+            {
+                _valueIsNotInteger = value;
+                OnStaticPropertyChanged();
+            }
+        }
+
+        public static string UriFormIncorrect
+        {
+            get => _uriFormIncorrect;
+            set
+            {
+                _uriFormIncorrect = value;
                 OnStaticPropertyChanged();
             }
         }

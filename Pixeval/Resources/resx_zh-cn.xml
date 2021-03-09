@@ -183,4 +183,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <resx key="BatchDownloadAcknowledgment" value="你真的想要下载全部作品吗?在下载任务过多的时候可能会导致程序发生顿卡" />
   <resx key="WebView2DownloadIsRequired" value="Pixeval需要使用WebView2 Runtime作为Pixiv新鉴权方法的反制手段, 请前往https://go.microsoft.com/fwlink/p/?LinkId=2124703下载并安装, 链接已经复制到剪切板, 安装完成后请重启Pixeval"/>
   <resx key="SignInLoggingIn" value="正在登入..."/>
+  <resx key="TurnOffAnimation" value="关闭对话框动画"/>
+  <resx key="UriFormIncorrect" value="链接格式不正确"/>
+  <resx key="ValueIsNotInteger" value="输入不是整数"/>
 </localization>

@@ -34,7 +34,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         xmlns:valueConverters="clr-namespace:Pixeval.Objects.ValueConverters"
         xmlns:viewModel="clr-namespace:Pixeval.Data.ViewModel"
         Title="Pixeval"
-        Width="1480"
+        Width="1550"
         Height="900"
         Deactivated="MainWindow_OnDeactivated"
         Icon="/Resources/pxlogo.ico"
@@ -2134,7 +2134,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                           Visibility="Hidden" />
         </Grid>
         <materialDesign:DialogHost x:Name="PixevalSettingDialog"
-                                   materialDesign:TransitionAssist.DisableTransitions="True"
+                                   materialDesign:TransitionAssist.DisableTransitions="{Binding Source={x:Static persisting:Settings.Global}, Path=TurnOffAnimation}"
                                    CloseOnClickAway="True"
                                    DataContext="{x:Static persisting:Settings.Global}"
                                    DialogClosing="PixevalSettingDialog_OnDialogClosing"
@@ -2147,7 +2147,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         </materialDesign:DialogHost>
         <materialDesign:DialogHost x:Name="IllustBrowserDialogHost"
                                    d:DataContext="{d:DesignData Illustration}"
-                                   materialDesign:TransitionAssist.DisableTransitions="True"
+                                   materialDesign:TransitionAssist.DisableTransitions="{Binding Source={x:Static persisting:Settings.Global}, Path=TurnOffAnimation}"
                                    CloseOnClickAway="True"
                                    DialogClosing="IllustBrowserDialogHost_OnDialogClosing"
                                    DialogMargin="0"
@@ -2155,12 +2155,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
             <materialDesign:DialogHost.DialogContent>
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                     <materialDesign:Card MinWidth="1000"
-                                         MinHeight="840"
+                                         Height="850"
                                          Background="#FAFAFC"
                                          BorderBrush="#FAFAFC">
                         <StackPanel x:Name="IllustBrowserContainer"
                                     Width="1000"
-                                    MinHeight="840"
+                                    Height="850"
                                     Background="#FAFAFC">
                             <materialDesign:Card x:Name="Banner"
                                                  Height="100"
@@ -2245,6 +2245,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                             <materialDesign:Card Width="{Binding ElementName=Banner, Path=ActualWidth}"
                                                  MaxWidth="{Binding ElementName=Banner, Path=ActualWidth}"
                                                  Background="#FAFAFC"
+                                                 Height="750"
                                                  StackPanel.ZIndex="1">
                                 <StackPanel Margin="0,0,0,10">
                                     <StackPanel Margin="20"
@@ -2367,7 +2368,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         </materialDesign:DialogHost>
         <materialDesign:DialogHost x:Name="DownloadQueueDialogHost"
                                    d:DataContext="{d:DesignData DownloadableIllustrationViewModel}"
-                                   materialDesign:TransitionAssist.DisableTransitions="True"
+                                   materialDesign:TransitionAssist.DisableTransitions="{Binding Source={x:Static persisting:Settings.Global}, Path=TurnOffAnimation}"
                                    CloseOnClickAway="True"
                                    DialogClosing="DownloadQueueDialogHost_OnDialogClosing"
                                    Style="{DynamicResource MaterialDesignEmbeddedDialogHost}">
@@ -2376,7 +2377,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
             </materialDesign:DialogHost.DialogContent>
         </materialDesign:DialogHost>
         <materialDesign:DialogHost x:Name="WarningDialog"
-                                   materialDesign:TransitionAssist.DisableTransitions="True"
+                                   materialDesign:TransitionAssist.DisableTransitions="{Binding Source={x:Static persisting:Settings.Global}, Path=TurnOffAnimation}"
                                    Style="{DynamicResource MaterialDesignEmbeddedDialogHost}">
             <materialDesign:DialogHost.DialogContent>
                 <userControls:MessageDialog Width="250" />
