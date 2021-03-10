@@ -107,7 +107,7 @@ namespace Pixeval.UI
             {
                 args.Request.Headers.SetHeader("Accept-Language", "zh-cn");
             };
-            var codeVerifier = Authentication.GetCodeVer();
+            var codeVerifier = Authentication.GetCodeVerify();
             LoginWebView.Source = new Uri(Authentication.GenerateWebPageUrl(codeVerifier));
 
             var (url, cookie) = await webViewCompletion.Task;

@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -147,6 +148,36 @@ namespace Pixeval.Core
 
             var minBookmarkMatch = illustration.Bookmark > minBookmark;
             return excludeMatch && includeMatch && minBookmarkMatch;
+        }
+
+        public static string FormatDownloadPath(string pathWithMacro, Illustration illustration)
+        {
+            const string MacroIllustId = "{illust.id}";
+            const string MacroIllustTitle = "{illust.title}";
+            const string MacroIllustExt = "{illust.ext}";
+            const string MacroMangaTitle = "{manga.title}";
+            const string MacroMangaIndex = "{manga.index}";
+            const string MacroUserId = "{user.id}";
+            const string MacroUserName = "{user.name}";
+            const char Separator = '\\';
+            if (!pathWithMacro.EndsWith(MacroIllustExt))
+            {
+                pathWithMacro += $".{MacroIllustExt}";
+            }
+            var segments = pathWithMacro.Split(Separator, StringSplitOptions.RemoveEmptyEntries);
+            return Path.Combine(segments.Select(ReplaceMacro).ToArray());
+
+
+            string ReplaceMacro(string s)
+            {
+                return s.Replace(MacroIllustId, illustration.Id)
+                    .Replace(MacroIllustTitle, illustration.IsManga ? string.Empty : Strings.FormatPath(illustration.Title))
+                    .Replace(MacroIllustExt, Path.GetExtension(illustration.GetDownloadUrl())![1..])
+                    .Replace(MacroMangaTitle, Strings.FormatPath(illustration.IsManga ? illustration.Title : string.Empty))
+                    .Replace(MacroMangaIndex, (illustration.IsManga ? illustration.MangaMetadata.ToList().IndexOf(illustration) : 0).ToString())
+                    .Replace(MacroUserId, illustration.UserId)
+                    .Replace(MacroUserName, Strings.FormatPath(illustration.UserName));
+            }
         }
     }
 }

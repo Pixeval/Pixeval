@@ -90,6 +90,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                              BorderThickness="0"
                                              Foreground="#007CEE"
                                              Maximum="1"
+                                             materialDesign:TransitionAssist.DisableTransitions="True"
                                              Style="{StaticResource RoundedCornerProgressBar}"
                                              Value="{Binding Progress}" />
                                 <StackPanel Margin="5,5,5,0"
@@ -178,6 +179,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                              BorderThickness="0"
                                              Foreground="#007CEE"
                                              Maximum="1"
+                                             materialDesign:TransitionAssist.DisableTransitions="True"
                                              Style="{StaticResource RoundedCornerProgressBar}"
                                              Value="{Binding Progress}" />
                                 <StackPanel Margin="5,5,5,0"

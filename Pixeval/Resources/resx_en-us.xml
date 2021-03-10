@@ -139,24 +139,24 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <resx key="ConditionBoxTooltip"
         value="Format: &lt;capture&gt;&#x000A;Allowed queries: &lt;ID&gt;/&lt;Tag&gt;/&lt;Title&gt;/&lt;!tag-to-be-excluded&gt;/&lt;&lt;desire-width&gt;x&lt;desire-height&gt;&gt;" />
   <resx key="PixevalSettings" value="Pixeval Settings" />
-  <resx key="SortByPopulation" value="Sort By Population" />
-  <resx key="TurnOffR18" value="Turn Off R-18/R-18G" />
-  <resx key="TurnOnIllustratorRecommend" value="Recommend Illustration" />
+  <resx key="SortByPopulation" value="Sort by population" />
+  <resx key="TurnOffR18" value="Turn off R-18/R-18G" />
+  <resx key="TurnOnIllustratorRecommend" value="Recommend illustrator" />
   <resx key="TurnOnDirectConnect"
-        value="Turn On Direct Connect(otherwise proxy is required if you're currently at China mainland)" />
-  <resx key="TagMatchOption" value="Tag Matching" />
+        value="Turn on SNI bypass(otherwise proxy is required if you're currently at China mainland)" />
+  <resx key="TagMatchOption" value="Tag matching" />
   <resx key="TurnOnCache" value="Use Cache (Not recommended)" />
   <resx key="MemoryCachePolicy" value="Caching Policy: Memory (Prefer load speed)" />
   <resx key="FileCachePolicy" value="Caching Policy: File (Prefer reduce memory usage)" />
-  <resx key="MinBookmarkRequired" value="Minimum Bookmark" />
-  <resx key="SearchPageCountHint" value="Search Pages, 1-100" />
-  <resx key="SearchPageStart" value="Search Start, Minimum is 1" />
-  <resx key="SpotlightSearchPageStart" value="Spotlight Search Start, Minimum is 1" />
-  <resx key="DownloadLocation" value="Illust Download Location" />
+  <resx key="MinBookmarkRequired" value="Minimum bookmark" />
+  <resx key="SearchPageCountHint" value="How many pages will be included when searching" />
+  <resx key="SearchPageStart" value="Search starts from..." />
+  <resx key="SpotlightSearchPageStart" value="Spotlight search starts from..." />
+  <resx key="DownloadLocation" value="Illust download location" />
   <resx key="TagsToBeExclude" value="Please enter the tags to be exclude, separate them with space" />
   <resx key="TagsToBeInclude" value="Please enter the tags to be include, separate them with space" />
   <resx key="SearchPerPageCountHint" value="Note: Spotlight search 10 items once, illustration search 30 items once" />
-  <resx key="TurnOnWebR18" value="Turn On WebApi R18/R18G" />
+  <resx key="TurnOnWebR18" value="Turn on WebApi R18/R18G" />
   <resx key="SauceNaoFileLocationHint" value="File Location" />
   <resx key="SauceNaoUploadAndSearch" value="Upload And Search" />
   <resx key="SignIn" value="Sign In" />
@@ -183,11 +183,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <resx key="FillWithWebCookie" value="Please fill with your Cookie" />
   <resx key="ImageMirrorServerUrlHint"
         value="If you want to use another image server instead of default one(i.pximg.net), fill it here, please do nothing if you don't know what does it means" />
-  <resx key="ImageMirrorServerUrl" value="Image mirror server url(without url scheme and / at the end of the url)" />
+  <resx key="ImageMirrorServerUrl" value="Image mirror server url" />
   <resx key="BatchDownloadAcknowledgment"
         value="Do you really want to download all the illustrations, this may lead the program into a temporarily unresponsive" />
   <resx key="WebView2DownloadIsRequired" value="Pixeval requires WebView2 Runtime as a countermeasure of the new auth method of Pixiv, go to https://go.microsoft.com/fwlink/p/?LinkId=2124703 to download the runtime and install it, the link has been copied to your clipboard, restart Pixeval after your installation"/>
   <resx key="SignInLoggingIn" value="Logging in..."/>
   <resx key="TurnOffAnimation" value="Turn off dialog animation"/>
   <resx key="ValueIsNotInteger" value="Input value is not integer"/>
+  <resx key="UriFormIncorrect" value="Specified uri is incorrect"/>
+  <resx key="SearchPageCountToolTip" value="Indicates how many pages will be searched during an illust searching, each page contains 30 illusts, acceptable value range: [1,100]" />
+  <resx key="SearchPageStartToolTip" value="Indicates which page index will be used as start index when performing an illust searching, each page contains 30 illusts, acceptable value range: [1,+∞)" />
+  <resx key="SpotlightSearchPageStartToolTip" value="Indicates which page index will be used as start index when performing a spotlight traversal, each page contains 10 spotlights, acceptable value range: [1,+∞)" />
+  <resx key="MinimumBookmarkToolTip" value="Indicates the minimum bookmark requirement when performing a search operation, only valid when the operation is UserUpdate/Gallery/Upload/Ranking/Search/Recommend, all illusts of which has a lesser bookmarks will be filtered out" />
+  <resx key="SortByPopulationToolTip" value="Indicates Pixeval should sorted illusts by popularity(bookmarks) when performing a search operation, only valid when the operation is Recommend/UserUpdate/Ranking/Gallery/Search/Upload" />
+  <resx key="RecommendIllustrationToolTip" value="Show recommended illustrators at homepage" />
+  <resx key="InvalidDirectoryPath" value="The given path is not a valid directory path" />
+  <resx key="TurnOffAnimationToolTip" value="Turn off the animation of DialogHost, which may improve the overall performance on some computers" />
+  <resx key="DownloadPathSyntaxToolTip" value="You can use the following macros as placeholders of actual corresponding values:&#x0a;    {illust.title} referring to the name of the illust&#x0a;    {illust.id} referring to the ID of the illust&#x0a;    {illust.ext} The file extension of current illust(e.g. gif png jpg)&#x0a;                    !Caution: The periods before extension needs to be add manually, this macro will be append to path automatically if it's not present at the end of path)&#x0a;    {manga.index} referring to the index of current picture in a manga(starting at 0, use default value 0 if current illust is not manga)&#x0a;    {manga.title} referring to the title if current illust is manga, returns empty string if not(!Caution: {illust.title}'s value will be ignored if this macro returns non-empty value)&#x0a;    {user.id} referring to the creator's id of this illust&#x0a;    {user.name} referring to the creator's name of this illust&#x0a;Please be noticed:&#x0a;    1. The invalid characters in the actual value of above macros will be removed&#x0a;    2. All the empty segment in path will be removed, e.g. if {manga.title} is empty, aa\{manga.title}\bb will result in aa\bb&#x0a;    3. Use backslash('\') as path separator"/>
 </localization>

@@ -20,9 +20,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -42,7 +40,7 @@ namespace Pixeval.Persisting
         [JsonIgnore]
         public static Settings Global = new Settings();
 
-        private string downloadLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+        private string downloadPath;
 
         public bool SortOnInserting { get; set; }
 
@@ -50,10 +48,10 @@ namespace Pixeval.Persisting
 
         public bool RecommendIllustrator { get; set; }
 
-        public string DownloadLocation
+        public string DownloadPath
         {
-            get => downloadLocation.IsNullOrEmpty() ? Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) : downloadLocation;
-            set => downloadLocation = value;
+            get => downloadPath.IsNullOrEmpty() ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "{manga.title}", "{illust.id}_{manga.index}.{illust.ext}") : downloadPath;
+            set => downloadPath = value;
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
@@ -108,8 +106,7 @@ namespace Pixeval.Persisting
                 File.Delete(Path.Combine(PixevalContext.SettingsFolder, "settings.json"));
             }
 
-            Global.downloadLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
-            Global.DownloadLocation = string.Empty;
+            Global.downloadPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "{manga.title}", "{illust.id}_{manga.index}.{illust.ext}");
             Global.SortOnInserting = false;
             Global.IncludeTag = new HashSet<string>();
             Global.ExcludeTag = new HashSet<string>();

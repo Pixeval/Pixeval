@@ -23,7 +23,7 @@ using Pixeval.Objects.I18n;
 
 namespace Pixeval.Objects.Validation
 {
-    public class IntegerValidationRules : ValidationRule
+    public class IntegerValidator : ValidationRule
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {

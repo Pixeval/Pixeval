@@ -146,9 +146,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <resx key="MemoryCachePolicy" value="缓存策略: 内存 (加载速度优先)" />
   <resx key="FileCachePolicy" value="缓存策略: 文件 (减少内存占用优先)" />
   <resx key="MinBookmarkRequired" value="高级搜索: 最低收藏数" />
-  <resx key="SearchPageCountHint" value="搜索页数(1-100)" />
-  <resx key="SearchPageStart" value="从第几页开始搜索作品, 最低为1" />
-  <resx key="SpotlightSearchPageStart" value="从第几页开始搜索特辑, 最低为1" />
+  <resx key="SearchPageCountHint" value="搜索页数" />
+  <resx key="SearchPageStart" value="从第几页开始搜索作品" />
+  <resx key="SpotlightSearchPageStart" value="从第几页开始搜索特辑" />
   <resx key="DownloadLocation" value="作品下载位置" />
   <resx key="TagsToBeExclude" value="高级搜索: 标签排除，使用空格分隔" />
   <resx key="TagsToBeInclude" value="高级搜索: 标签过滤, 使用空格分隔" />
@@ -179,11 +179,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         value="本功能需要WebAPI的Cookie, 如果你不知道如何获取请前往https://sora.ink/pixiv-cookie学习如何获取你的Cookie并将其粘贴到设置页面的对应文本框" />
   <resx key="FillWithWebCookie" value="请输入你的Cookie" />
   <resx key="ImageMirrorServerUrlHint" value="如果你想使用另外的图片下载镜像站而非默认(i.pximg.net)，请将服务器地址填在这里，如果你不知道这是什么意思，请不要操作此栏" />
-  <resx key="ImageMirrorServerUrl" value="图片镜像站地址(请勿带协议头与末尾的/)" />
+  <resx key="ImageMirrorServerUrl" value="图片镜像站地址" />
   <resx key="BatchDownloadAcknowledgment" value="你真的想要下载全部作品吗?在下载任务过多的时候可能会导致程序发生顿卡" />
   <resx key="WebView2DownloadIsRequired" value="Pixeval需要使用WebView2 Runtime作为Pixiv新鉴权方法的反制手段, 请前往https://go.microsoft.com/fwlink/p/?LinkId=2124703下载并安装, 链接已经复制到剪切板, 安装完成后请重启Pixeval"/>
   <resx key="SignInLoggingIn" value="正在登入..."/>
   <resx key="TurnOffAnimation" value="关闭对话框动画"/>
   <resx key="UriFormIncorrect" value="链接格式不正确"/>
   <resx key="ValueIsNotInteger" value="输入不是整数"/>
+  <resx key="SearchPageCountToolTip" value="指定搜索作品时搜索多少页, 每页30张, 取值范围[1,100]" />
+  <resx key="SearchPageStartToolTip" value="指定搜索作品时从第几页开始搜索, 每页30张，取值范围[1,+∞)" />
+  <resx key="SpotlightSearchPageStartToolTip" value="指定搜索特辑时从第几页开始搜索, 每页10条, 取值范围[1,+∞)" />
+  <resx key="MinimumBookmarkToolTip" value="指定所有收藏数低于该值的作品将会被过滤掉, 只在搜索用户更新/上传/收藏/榜单/日推/关键字搜索时起作用" />
+  <resx key="SortByPopulationToolTip" value="搜索作品时按照热度(收藏数)排序, 只在搜索日推/收藏/用户更新/上传/关键字搜索时起作用" />
+  <resx key="RecommendIllustrationToolTip" value="在主页显示推荐的创作者" />
+  <resx key="InvalidDirectoryPath" value="给定的路径不是合法的文件夹路径" />
+  <resx key="DownloadPathSyntaxToolTip" value="你可以使用以下的宏作为其对应值的占位符:&#x0a;    {illust.title} 作品名&#x0a;    {illust.id} 作品ID&#x0a;    {illust.ext} 作品文件的后缀名(e.g. gif png jpg)&#x0a;                    !注意: 后缀名前的点号要自行添加, 如果在路径中不包含，该宏会被自动添加到路径末尾)&#x0a;    {manga.index} 该页在一副多图作品中的索引(从0开始, 如果不是多图则使用默认值0)&#x0a;    {manga.title} 如果当前作品是多图则返回标题, 否则返回空字符串(如果该值不为空则会忽略{illust.title}的值)&#x0a;    {user.id} 作者ID&#x0a;    {user.name} 作者名&#x0a;请注意:&#x0a;    1. 以上宏的对应值所包含的不应在文件路径中出现的非法字符将会被移除&#x0a;    2. 如果路径中的一段子目录求值结果为空则其会被忽略, 例: 如果{manga.title}为空则aa\{manga.title}\bb结果将会是aa\bb&#x0a;    3. 路径分隔符请使用反斜杠('\')"/>
 </localization>

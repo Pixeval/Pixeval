@@ -71,9 +71,9 @@ namespace Pixeval.UI.UserControls
         private void ViewDownloadLocationButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var model = sender.GetDataContext<DownloadableIllustration>();
-            if (!model.GetPath().IsNullOrEmpty() && Path.GetDirectoryName(model.GetPath()) is var _)
+            if (!model.Path.IsNullOrEmpty() && Path.GetDirectoryName(model.Path) is var _)
             {
-                var processInfo = new ProcessStartInfo { FileName = "explorer", Arguments = $"/select, \"{model.GetPath()}\"" };
+                var processInfo = new ProcessStartInfo { FileName = "explorer", Arguments = $"/select, \"{model.Path}\"" };
                 Process.Start(processInfo);
             }
             else

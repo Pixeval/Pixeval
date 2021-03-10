@@ -42,11 +42,11 @@ namespace Pixeval.UI.UserControls
 
         private void OpenFileDialogButton_OnClick(object sender, RoutedEventArgs e)
         {
-            using var fileDialog = new CommonOpenFileDialog(AkaI18N.PleaseSelectLocation) { InitialDirectory = Settings.Global.DownloadLocation ?? Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), IsFolderPicker = true };
+            using var fileDialog = new CommonOpenFileDialog(AkaI18N.PleaseSelectLocation) { InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), IsFolderPicker = true };
 
             if (fileDialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                DownloadLocationTextBox.Text = fileDialog.FileName;
+                DownloadPathTextBox.Text = fileDialog.FileName;
             }
         }
 

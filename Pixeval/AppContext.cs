@@ -32,7 +32,7 @@ namespace Pixeval
     {
         public const string AppIdentifier = "Pixeval";
 
-        public const string CurrentVersion = "3.1.0";
+        public const string CurrentVersion = "3.1.1";
 
         public const string ConfigurationFileName = "pixeval_conf.json";
 
@@ -61,7 +61,7 @@ namespace Pixeval
         public static async ValueTask<bool> UpdateAvailable()
         {
             const string Url = "http://47.95.218.243/Pixeval/version.txt";
-            var httpClient = new HttpClient();
+            using var httpClient = new HttpClient();
             return await httpClient.GetStringAsync(Url) != CurrentVersion;
         }
     }

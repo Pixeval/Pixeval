@@ -185,6 +185,14 @@ namespace Pixeval.Objects.I18n
         private static string _turnOffAnimation = GetResource(nameof(TurnOffAnimation));
         private static string _valueIsNotInteger = GetResource(nameof(ValueIsNotInteger));
         private static string _uriFormIncorrect = GetResource(nameof(UriFormIncorrect));
+        private static string _searchPageCountToolTip = GetResource(nameof(SearchPageCountToolTip));
+        private static string _searchPageStartToolTip = GetResource(nameof(SearchPageStartToolTip));
+        private static string _spotlightSearchPageStartToolTip = GetResource(nameof(SpotlightSearchPageStartToolTip));
+        private static string _minimumBookmarkToolTip = GetResource(nameof(MinimumBookmarkToolTip));
+        private static string _sortByPopulationToolTip = GetResource(nameof(SortByPopulationToolTip));
+        private static string _recommendIllustrationToolTip = GetResource(nameof(RecommendIllustrationToolTip));
+        private static string _invalidDirectoryPath = GetResource(nameof(InvalidDirectoryPath));
+        private static string _downloadPathSyntaxToolTip = GetResource(nameof(DownloadPathSyntaxToolTip));
 
         public static string EmptyEmailOrPasswordIsNotAllowed
         {
@@ -1782,6 +1790,86 @@ namespace Pixeval.Objects.I18n
             set
             {
                 _uriFormIncorrect = value;
+                OnStaticPropertyChanged();
+            }
+        }
+
+        public static string SearchPageCountToolTip
+        {
+            get => _searchPageCountToolTip;
+            set
+            {
+                _searchPageCountToolTip = value;
+                OnStaticPropertyChanged();
+            }
+        }
+        
+        public static string SearchPageStartToolTip
+        {
+            get => _searchPageStartToolTip;
+            set
+            {
+                _searchPageStartToolTip = value;
+                OnStaticPropertyChanged();
+            }
+        }
+
+        public static string SpotlightSearchPageStartToolTip
+        {
+            get => _spotlightSearchPageStartToolTip;
+            set
+            {
+                _spotlightSearchPageStartToolTip = value;
+                OnStaticPropertyChanged();
+            }
+        } 
+        
+        public static string MinimumBookmarkToolTip
+        {
+            get => _minimumBookmarkToolTip;
+            set
+            {
+                _minimumBookmarkToolTip = value;
+                OnStaticPropertyChanged();
+            }
+        }
+        
+        public static string SortByPopulationToolTip
+        {
+            get => _sortByPopulationToolTip;
+            set
+            {
+                _sortByPopulationToolTip = value;
+                OnStaticPropertyChanged();
+            }
+        }
+        
+        public static string RecommendIllustrationToolTip
+        {
+            get => _recommendIllustrationToolTip;
+            set
+            {
+                _recommendIllustrationToolTip = value;
+                OnStaticPropertyChanged();
+            }
+        }
+        
+        public static string InvalidDirectoryPath
+        {
+            get => _invalidDirectoryPath;
+            set
+            {
+                _invalidDirectoryPath = value;
+                OnStaticPropertyChanged();
+            }
+        }
+        
+        public static string DownloadPathSyntaxToolTip
+        {
+            get => _downloadPathSyntaxToolTip;
+            set
+            {
+                _downloadPathSyntaxToolTip = value;
                 OnStaticPropertyChanged();
             }
         }

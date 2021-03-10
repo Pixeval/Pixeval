@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Data;
 using Pixeval.Objects.Primitive;
 
@@ -39,7 +40,7 @@ namespace Pixeval.Objects.ValueConverters
             {
                 return new List<string>();
             }
-            return value.ToString()?.Split(" ") ?? Array.Empty<string>();
+            return (value.ToString()?.Split(" ") ?? Array.Empty<string>()).ToHashSet();
         }
     }
 }

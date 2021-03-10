@@ -69,7 +69,7 @@ namespace Pixeval.Data.ViewModel
         public bool FromSpotlight { get; set; }
 
         public string SpotlightTitle { get; set; }
-
+        
         public object Clone()
         {
             return MemberwiseClone();

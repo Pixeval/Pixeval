@@ -2141,7 +2141,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                    Style="{DynamicResource MaterialDesignEmbeddedDialogHost}">
             <materialDesign:DialogHost.DialogContent>
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                    <userControls:SettingsControl MinWidth="1000" MinHeight="750" />
+                    <userControls:SettingsControl MinWidth="1000" MinHeight="710" />
                 </ScrollViewer>
             </materialDesign:DialogHost.DialogContent>
         </materialDesign:DialogHost>

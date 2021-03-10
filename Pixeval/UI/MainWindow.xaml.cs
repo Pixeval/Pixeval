@@ -297,14 +297,14 @@ namespace Pixeval.UI
                         PixevalSettingDialog.CurrentSession.Close();
                     }
                     break;
-                case var x when x == Key.PageDown || x == Key.Right || x == Key.Space && browsing && !disableKeyEvent:
+                case var x when (x == Key.PageDown || x == Key.Right || x == Key.Space) && browsing && !disableKeyEvent:
                     var nextIndex = lst!.IndexOf(dataContext) + 1;
                     if (nextIndex <= lst!.Count - 1)
                     {
                         SetIllustBrowserIllustrationDataContext(lst[nextIndex]);
                     }
                     break;
-                case var x when x == Key.PageUp || x == Key.Left && browsing && !disableKeyEvent:
+                case var x when (x == Key.PageUp || x == Key.Left) && browsing && !disableKeyEvent:
                     var prevIndex = lst!.IndexOf(dataContext) - 1;
                     if (prevIndex >= 0)
                     {
@@ -630,22 +630,24 @@ namespace Pixeval.UI
 
         private void DownloadNowMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            DownloadOption option = null;
-            if (BrowsingUser() && IsAtUploadCheckerPosition())
-            {
-                option = new DownloadOption { CreateNewWhenFromUser = Settings.Global.CreateNewFolderWhenDownloadFromUser };
-            }
-            DownloadManager.EnqueueDownloadItem(sender.GetDataContext<Illustration>(), option);
+            DownloadManager.EnqueueDownloadItem(sender.GetDataContext<Illustration>());
             MessageQueue.Enqueue(AkaI18N.QueuedDownload);
         }
 
         private void DownloadToMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            using var fileDialog = new CommonOpenFileDialog(AkaI18N.PleaseSelectLocation) { InitialDirectory = Settings.Global.DownloadLocation ?? Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), IsFolderPicker = true };
+            var illust = sender.GetDataContext<Illustration>();
+            using var fileDialog = new CommonSaveFileDialog(AkaI18N.PleaseSelectLocation)
+            {
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
+                DefaultExtension = illust.IsUgoira ? "gif" : Path.GetExtension(illust.GetDownloadUrl())![1..],
+                AlwaysAppendDefaultExtension = true,
+                DefaultFileName = illust.Id
+            };
 
             if (fileDialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                DownloadManager.EnqueueDownloadItem(sender.GetDataContext<Illustration>(), new DownloadOption { RootDirectory = fileDialog.FileName });
+                DownloadManager.EnqueueDownloadItem(illust, fileDialog.FileName);
                 MessageQueue.Enqueue(AkaI18N.QueuedDownload);
             }
         }
@@ -654,12 +656,6 @@ namespace Pixeval.UI
         {
             if (await MessageDialog.Warning(WarningDialog, AkaI18N.BatchDownloadAcknowledgment, true) == MessageDialogResult.Yes)
             {
-                DownloadOption option = null;
-                if (BrowsingUser() && IsAtUploadCheckerPosition())
-                {
-                    option = new DownloadOption { CreateNewWhenFromUser = Settings.Global.CreateNewFolderWhenDownloadFromUser };
-                }
-
                 await Task.Run(async () =>
                 {
                     var source = await Dispatcher.InvokeAsync(GetImageSourceCopy);
@@ -667,7 +663,7 @@ namespace Pixeval.UI
                     {
                         if (illustration != null)
                         {
-                            DownloadManager.EnqueueDownloadItem(illustration, option);
+                            DownloadManager.EnqueueDownloadItem(illustration);
                         }
                     }
                 });

@@ -35,7 +35,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
             <valueConverters:QueryR18ToggleButtonIsCheckedConverter x:Key="QueryR18ToggleButtonIsCheckedConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
-    <materialDesign:Card Width="1000" Height="750">
+    <materialDesign:Card Width="1000" Height="710">
         <Grid>
             <TextBlock Height="30"
                        Margin="0,30,0,0"
@@ -47,7 +47,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
             <StackPanel Margin="100,90,100,0" VerticalAlignment="Top">
                 <Grid TextElement.FontSize="15">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="35" />
                         <RowDefinition Height="35" />
                         <RowDefinition Height="35" />
                         <RowDefinition Height="35" />
@@ -71,6 +70,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     <TextBlock Grid.Row="0"
                                Grid.Column="0"
                                VerticalAlignment="Center"
+                               ToolTip="{Binding Path=(i18N:AkaI18N.SortByPopulationToolTip)}"
                                Text="{Binding Path=(i18N:AkaI18N.SortByPopulation)}" />
                     <ToggleButton Grid.Row="0"
                                   Grid.Column="1"
@@ -91,6 +91,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     <TextBlock Grid.Row="2"
                                Grid.Column="0"
                                VerticalAlignment="Center"
+                               ToolTip="{Binding Path=(i18N:AkaI18N.RecommendIllustrationToolTip)}"
                                Text="{Binding Path=(i18N:AkaI18N.TurnOnIllustratorRecommend)}" />
                     <ToggleButton Grid.Row="2"
                                   Grid.Column="1"
@@ -100,36 +101,27 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     <TextBlock Grid.Row="3"
                                Grid.Column="0"
                                VerticalAlignment="Center"
-                               Text="{Binding Path=(i18N:AkaI18N.CreateNewFolderWhenDownloadFromUser)}" />
+                               Text="{Binding Path=(i18N:AkaI18N.TurnOnDirectConnect)}" />
                     <ToggleButton Grid.Row="3"
                                   Grid.Column="1"
                                   HorizontalAlignment="Right"
                                   VerticalAlignment="Center"
-                                  IsChecked="{Binding CreateNewFolderWhenDownloadFromUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                  IsChecked="{Binding DirectConnect, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock Grid.Row="4"
                                Grid.Column="0"
                                VerticalAlignment="Center"
-                               Text="{Binding Path=(i18N:AkaI18N.TurnOnDirectConnect)}" />
+                               Text="{Binding Path=(i18N:AkaI18N.TurnOffAnimation)}" />
                     <ToggleButton Grid.Row="4"
                                   Grid.Column="1"
                                   HorizontalAlignment="Right"
                                   VerticalAlignment="Center"
-                                  IsChecked="{Binding DirectConnect, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock Grid.Row="5"
-                               Grid.Column="0"
-                               VerticalAlignment="Center"
-                               Text="{Binding Path=(i18N:AkaI18N.TurnOffAnimation)}" />
-                    <ToggleButton Grid.Row="5"
-                                  Grid.Column="1"
-                                  HorizontalAlignment="Right"
-                                  VerticalAlignment="Center"
                                   IsChecked="{Binding TurnOffAnimation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock Grid.Row="6"
+                    <TextBlock Grid.Row="5"
                                Grid.Column="0"
                                VerticalAlignment="Center"
                                Text="{Binding Path=(i18N:AkaI18N.SelectCultureInfo)}" />
                     <ComboBox x:Name="CultureSelector"
-                              Grid.Row="6"
+                              Grid.Row="5"
                               Grid.Column="1"
                               Width="120"
                               HorizontalAlignment="Right"
@@ -139,11 +131,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                               ItemsSource="{x:Static pixeval:PixevalContext.AvailableCultures}"
                               SelectedItem="{Binding Culture, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource MultiCultureConverter}}"
                               SelectionChanged="CultureSelector_OnSelectionChanged" />
-                    <TextBlock Grid.Row="7"
+                    <TextBlock Grid.Row="6"
                                Grid.Column="0"
                                VerticalAlignment="Center"
                                Text="{Binding Path=(i18N:AkaI18N.TagMatchOption)}" />
-                    <ComboBox Grid.Row="7"
+                    <ComboBox Grid.Row="6"
                               Grid.Column="1"
                               Width="120"
                               HorizontalAlignment="Right"
@@ -152,39 +144,42 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                               FontSize="15"
                               ItemsSource="{x:Static viewModel:SearchTagMatchOptionModel.AllPossibleMatchOptions}"
                               SelectedItem="{Binding TagMatchOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TagMatchEnumToModelConverter}}" />
-                    <TextBlock Grid.Row="8"
+                    <TextBlock Grid.Row="7"
                                Grid.Column="0"
                                VerticalAlignment="Center"
+                               ToolTip="{Binding Path=(i18N:AkaI18N.MinimumBookmarkToolTip)}"
                                Text="{Binding Path=(i18N:AkaI18N.MinBookmarkRequired)}" />
-                    <Slider Grid.Row="8"
+                    <Slider Grid.Row="7"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
-                            Margin="200,0,0,0"
+                            Margin="350,0,0,0"
                             VerticalAlignment="Center"
                             AutoToolTipPlacement="BottomRight"
                             AutoToolTipPrecision="0"
                             Maximum="2000"
                             Minimum="1"
                             Value="{Binding MinBookmark, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock Grid.Row="9"
+                    <TextBlock Grid.Row="8"
                                Grid.Column="0"
                                VerticalAlignment="Center"
+                               ToolTip="{Binding Path=(i18N:AkaI18N.SearchPageCountToolTip)}"
                                Text="{Binding Path=(i18N:AkaI18N.SearchPageCountHint)}" />
-                    <Slider Grid.Row="9"
+                    <Slider Grid.Row="8"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
-                            Margin="200,0,0,0"
+                            Margin="350,0,0,0"
                             VerticalAlignment="Center"
                             AutoToolTipPlacement="BottomRight"
                             AutoToolTipPrecision="0"
                             Maximum="100"
                             Minimum="1"
                             Value="{Binding QueryPages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock Grid.Row="10"
+                    <TextBlock Grid.Row="9"
                                Grid.Column="0"
                                VerticalAlignment="Center"
+                               ToolTip="{Binding Path=(i18N:AkaI18N.SearchPageStartToolTip)}"
                                Text="{Binding Path=(i18N:AkaI18N.SearchPageStart)}" />
-                    <TextBox Grid.Row="10"
+                    <TextBox Grid.Row="9"
                              Grid.Column="0"
                              Grid.ColumnSpan="2"
                              Margin="480,0,0,0"
@@ -192,16 +187,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                         <TextBox.Text>
                             <Binding Path="QueryStart" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                                 <Binding.ValidationRules>
-                                    <validation:IntegerValidationRules />
+                                    <validation:IntegerValidator />
                                 </Binding.ValidationRules>
                             </Binding>
                         </TextBox.Text>
                     </TextBox>
-                    <TextBlock Grid.Row="11"
+                    <TextBlock Grid.Row="10"
                                Grid.Column="0"
                                VerticalAlignment="Center"
+                               ToolTip="{Binding Path=(i18N:AkaI18N.SpotlightSearchPageStartToolTip)}"
                                Text="{Binding Path=(i18N:AkaI18N.SpotlightSearchPageStart)}" />
-                    <TextBox Grid.Row="11"
+                    <TextBox Grid.Row="10"
                              Grid.Column="0"
                              Grid.ColumnSpan="2"
                              Margin="480,0,0,0"
@@ -209,23 +205,26 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                         <TextBox.Text>
                             <Binding Path="SpotlightQueryStart" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                                 <Binding.ValidationRules>
-                                    <validation:IntegerValidationRules />
+                                    <validation:IntegerValidator />
                                 </Binding.ValidationRules>
                             </Binding>
                         </TextBox.Text>
                     </TextBox>
-                    <TextBox x:Name="DownloadLocationTextBox"
-                             Grid.Row="12"
+                    <TextBox x:Name="DownloadPathTextBox"
+                             Grid.Row="11"
                              Grid.Column="0"
                              Grid.ColumnSpan="2"
                              Height="42"
                              Margin="0,0,70,0"
                              VerticalAlignment="Center"
+                             ToolTipService.ShowDuration="30000"
+                             ToolTip="{Binding Path=(i18N:AkaI18N.DownloadPathSyntaxToolTip)}"
                              materialDesign:HintAssist.Hint="{Binding Path=(i18N:AkaI18N.DownloadLocation)}"
                              FontSize="12"
                              Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                             Text="{Binding Path=DownloadLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <Button Grid.Row="12"
+                             Text="{Binding Path=DownloadPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    </TextBox>
+                    <Button Grid.Row="11"
                             Grid.Column="1"
                             Width="30"
                             Height="30"
@@ -243,7 +242,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                         </Viewbox>
                     </Button>
                     <TextBox x:Name="ExcludeTagTextBox"
-                             Grid.Row="13"
+                             Grid.Row="12"
                              Grid.Column="0"
                              Grid.ColumnSpan="2"
                              VerticalAlignment="Center"
@@ -253,7 +252,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                              Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                              Text="{Binding Path=ExcludeTag, Converter={StaticResource StringSplitConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBox x:Name="IncludeTagTextBox"
-                             Grid.Row="14"
+                             Grid.Row="13"
                              Grid.Column="0"
                              Grid.ColumnSpan="2"
                              VerticalAlignment="Center"
@@ -263,7 +262,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                              Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                              Text="{Binding Path=IncludeTag, Converter={StaticResource StringSplitConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBox x:Name="ImageServerMirrorUrl"
-                             Grid.Row="15"
+                             Grid.Row="14"
                              Grid.Column="0"
                              Grid.ColumnSpan="2"
                              VerticalAlignment="Center"
@@ -274,7 +273,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                         <TextBox.Text>
                             <Binding Path="MirrorServer" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                                 <Binding.ValidationRules>
-                                    <validation:UriValidationRules />
+                                    <validation:UriValidator />
                                 </Binding.ValidationRules>
                             </Binding>
                         </TextBox.Text>

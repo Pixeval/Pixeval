@@ -35,11 +35,11 @@ namespace Pixeval.Persisting
     {
         private static readonly ITokenProtocol TokenProtocol = RestService.For<ITokenProtocol>(new HttpClient(PixivApiHttpClientHandler.Instance(true)) { BaseAddress = new Uri(HttpClientFactory.OAuthBaseUrl) });
 
-        public static string GetCodeVer()
+        public static string GetCodeVerify()
         {
             var bytes = new byte[32];
             var rng = new RNGCryptoServiceProvider();
-            rng.GetBytes(bytes); // hope for an async version :(
+            rng.GetBytes(bytes); // hoping for an async version :(
             return bytes.ToUrlSafeBase64String();
         }
 
