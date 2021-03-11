@@ -1,5 +1,4 @@
 ﻿#region Copyright (C) 2019-2020 Dylech30th. All rights reserved.
-
 // Pixeval - A Strong, Fast and Flexible Pixiv Client
 // Copyright (C) 2019-2020 Dylech30th
 // 
@@ -15,17 +14,29 @@
 // 
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 #endregion
 
-using Pixeval.Data.ViewModel;
+using System;
+using System.Collections.Generic;
+using MaterialDesignExtensions.Model;
+using Pixeval.Core;
 
-namespace Pixeval.Core
+namespace Pixeval.Objects.SuggestionProvider
 {
-    public interface ITimelineService
+    public class DownloadPathSuggestionProvider : TextBoxSuggestionsSource
     {
-        bool Verify(BrowsingHistory browsingHistory);
-
-        void Insert(BrowsingHistory browsingHistory);
+        public static DownloadPathSuggestionProvider Instance = new DownloadPathSuggestionProvider();
+        
+        public static Lazy<IReadOnlyList<string>> Macros = new Lazy<IReadOnlyList<string>>(DownloadPathMacros.GetMacros);
+        
+        /// <summary>
+        /// Find the nearest left curly brace relative to the end of <see cref="searchTerm"/>
+        /// </summary>
+        /// <param name="searchTerm"></param>
+        /// <returns></returns>
+        public override IEnumerable<string> Search(string searchTerm)
+        {
+            return Macros.Value;
+        }
     }
 }

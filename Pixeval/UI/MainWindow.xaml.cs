@@ -432,7 +432,6 @@ namespace Pixeval.UI
         {
             ConditionInputBox.Visibility = Visibility.Hidden;
             UserBrowserConditionInputBox.Visibility = Visibility.Hidden;
-            ToLoseFocus.Focus();
             UiHelper.CloseControls(TrendingTagPopup, AutoCompletionPopup);
             DownloadListTab.IsSelected = false;
         }
@@ -604,6 +603,7 @@ namespace Pixeval.UI
                 i.IsManga = true;
                 i.FromSpotlight = true;
                 i.SpotlightTitle = article.Title;
+                i.SpotlightArticleId = article.Id.ToString();
             }).ToArray();
 
             PixivHelper.RecordTimelineInternal(new BrowsingHistory
@@ -987,6 +987,8 @@ namespace Pixeval.UI
 
         #region 榜单
 
+        private volatile RankOptionModel currentSelected;
+
         private void RankDatePicker_OnSelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             if (Navigating(RankingTab))
@@ -994,11 +996,25 @@ namespace Pixeval.UI
                 GetRanking();
             }
         }
-
+        
         private void RankOptionPicker_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (Navigating(RankingTab))
             {
+                var option = e.AddedItems[0].GetDataContext<RankOptionModel[]>().First(p => p.IsSelected);
+                if (option == currentSelected)
+                    return;
+                if (option.Corresponding.AttributeAttached<ForR18Only>() && Settings.Global.ExcludeTag.Any(t => t.ToUpper() == "R-18" || t.ToUpper() == "R-18G"))
+                {
+                    MessageQueue.Enqueue(AkaI18N.RankNeedR18On);
+                    // 用这方法解决问题真tm傻逼
+                    Task.Run(async () =>
+                    {
+                        await Task.Delay(100);
+                        Dispatcher.Invoke(() => currentSelected.IsSelected = true);
+                    });
+                    return;
+                }
                 GetRanking();
             }
         }
@@ -1007,13 +1023,7 @@ namespace Pixeval.UI
         {
             var option = RankOptionPicker.SelectedItem.GetDataContext<RankOptionModel[]>().First(p => p.IsSelected);
             var dateTime = RankDatePicker.SelectedDate;
-
-            if (option.Corresponding.AttributeAttached<ForR18Only>() && Settings.Global.ExcludeTag.Any(t => t.ToUpper() == "R-18" || t.ToUpper() == "R-18G"))
-            {
-                MessageQueue.Enqueue(AkaI18N.RankNeedR18On);
-                UiHelper.NewItemsSource<Illustration>(ImageListView);
-                return;
-            }
+            currentSelected = option;
 
             if (dateTime is { } time)
             {
@@ -1158,13 +1168,9 @@ namespace Pixeval.UI
                 {
                     UiHelper.SetImageSource(IllustBrowserUserAvatar, avatar);
                 }
-            }), Task.Run(async () =>
+            }), Task.Run(() =>
             {
                 var list = new ObservableCollection<TransitionerSlide>();
-                if (illustration.IsManga)
-                {
-                    illustration = await PixivHelper.IllustrationInfo(illustration.Id);
-                }
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     var template = new IllustTransitioner(list);

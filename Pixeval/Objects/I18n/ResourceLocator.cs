@@ -94,7 +94,8 @@ namespace Pixeval.Objects.I18n
 
         private static string GetValueByKey(string key)
         {
-            return _i18NXmlNodes.First(p => p.Attributes!["key"].Value == key).Attributes!["value"].Value;
+            var node = _i18NXmlNodes.First(p => p.Attributes!["key"].Value == key);
+            return (node.Attributes!["value"] ?? node.ChildNodes.Cast<XmlNode>().First(p => p.Name == "value")).Value;
         }
     }
 }

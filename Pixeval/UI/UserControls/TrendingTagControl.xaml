@@ -79,14 +79,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         </Style>
     </UserControl.Resources>
     <StackPanel>
-        <ListBox x:Name="SearchingHistoryListBox">
+        <ListBox x:Name="SearchingHistoryListBox" HorizontalAlignment="Stretch">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock x:Name="SearchingHistoryContent"
                                HorizontalAlignment="Left"
+                               Margin="0,5"
                                Cursor="Hand"
                                FontFamily="Microsoft YaHei Light"
-                               FontSize="10"
+                               FontSize="13"
                                MouseLeftButtonDown="SearchingHistoryContent_OnMouseLeftButtonDown"
                                Text="{Binding}"
                                TextTrimming="WordEllipsis"
@@ -95,8 +96,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
             </ListBox.ItemTemplate>
         </ListBox>
         <ListBox x:Name="TrendingTagListBox"
+                 HorizontalAlignment="Stretch"
                  MaxHeight="200"
-                 Margin="0,20,0,0"
                  HorizontalContentAlignment="Stretch"
                  VerticalContentAlignment="Stretch"
                  ItemContainerStyle="{DynamicResource ListBoxItemContainerStyle1}"

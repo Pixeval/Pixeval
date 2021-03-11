@@ -50,7 +50,7 @@ namespace Pixeval.Persisting
 
         public string DownloadPath
         {
-            get => downloadPath.IsNullOrEmpty() ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "{manga.title}", "{illust.id}_{manga.index}.{illust.ext}") : downloadPath;
+            get => downloadPath.IsNullOrEmpty() ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "{if:spot:{spot.title}}", "{if:manga:{illust.title}}", "{illust.id}{if:manga:_p{manga.index}}.{illust.ext}") : downloadPath;
             set => downloadPath = value;
         }
 
@@ -106,7 +106,7 @@ namespace Pixeval.Persisting
                 File.Delete(Path.Combine(PixevalContext.SettingsFolder, "settings.json"));
             }
 
-            Global.downloadPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "{manga.title}", "{illust.id}_{manga.index}.{illust.ext}");
+            Global.downloadPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "{if:spot:{spot.title}}", "{if:manga:{illust.title}}", "{illust.id}{if:manga:_p{manga.index}}.{illust.ext}");
             Global.SortOnInserting = false;
             Global.IncludeTag = new HashSet<string>();
             Global.ExcludeTag = new HashSet<string>();

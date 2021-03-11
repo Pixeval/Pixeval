@@ -26,6 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
              xmlns:valueConverters="clr-namespace:Pixeval.Objects.ValueConverters"
              xmlns:viewModel="clr-namespace:Pixeval.Data.ViewModel"
              xmlns:validation="clr-namespace:Pixeval.Objects.Validation"
+             xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
              d:DataContext="{d:DesignData Settings}"
              TextElement.FontFamily="Microsoft YaHei Light"
              mc:Ignorable="d">

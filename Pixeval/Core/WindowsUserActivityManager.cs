@@ -37,10 +37,10 @@ namespace Pixeval.Core
     public class WindowsUserActivityManager : ITimelineService
     {
         public static readonly WindowsUserActivityManager GlobalLifeTimeScope = new WindowsUserActivityManager();
-        private readonly Uri iconUri = new Uri("http://qa23pqcql.bkt.clouddn.com/pxlogo.ico");
+        private readonly Uri iconUri = new Uri("http://119.188.246.39/dc/pxlogo.ico");
         private UserActivitySession userActivitySession;
 
-        public bool VerifyRationality(BrowsingHistory browsingHistory)
+        public bool Verify(BrowsingHistory browsingHistory)
         {
             return true;
         }

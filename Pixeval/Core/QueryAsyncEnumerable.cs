@@ -110,7 +110,7 @@ namespace Pixeval.Core
                     return true;
                 }
 
-                if (int.Parse(entity.NextUrl[(entity.NextUrl.LastIndexOf('=') + 1)..]) >= 5000)
+                if (entity.NextUrl.IsNullOrEmpty() || int.Parse(entity.NextUrl[(entity.NextUrl.LastIndexOf('=') + 1)..]) >= 5000)
                 {
                     return false;
                 }

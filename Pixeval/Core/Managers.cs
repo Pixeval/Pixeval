@@ -44,7 +44,7 @@ namespace Pixeval.Core
             
             static DownloadableIllustration CreateDownloadableIllustration(Illustration downloadContent, bool isFromMange, string downloadPath)
             {
-                var model = new DownloadableIllustration(downloadContent, downloadPath ?? PixivHelper.FormatDownloadPath(Settings.Global.DownloadPath, downloadContent), isFromMange);
+                var model = new DownloadableIllustration(downloadContent, downloadPath ?? DownloadPathMacros.FormatDownloadPath(Settings.Global.DownloadPath, downloadContent), isFromMange);
                 model.State.ValueChanged += (sender, args) => Application.Current.Dispatcher.Invoke(() =>
                 {
                     switch (args.NewValue)

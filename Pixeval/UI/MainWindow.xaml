@@ -34,12 +34,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         xmlns:valueConverters="clr-namespace:Pixeval.Objects.ValueConverters"
         xmlns:viewModel="clr-namespace:Pixeval.Data.ViewModel"
         Title="Pixeval"
-        Width="1550"
+        Width="1600"
         Height="900"
         Deactivated="MainWindow_OnDeactivated"
         Icon="/Resources/pxlogo.ico"
         Loaded="MainWindow_OnLoaded"
-        MouseDown="MainWindow_OnMouseDown"
+        PreviewMouseDown="MainWindow_OnMouseDown"
         PreviewKeyDown="MainWindow_OnPreviewKeyDown"
         TextElement.FontFamily="Microsoft YaHei UI Light"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -1443,15 +1443,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                              PreviewKeyDown="KeywordTextBox_OnPreviewKeyDown"
                                              Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                                              TextChanged="KeywordTextBox_OnTextChanged" />
-                                    <TextBox x:Name="ToLoseFocus"
-                                             Width="0"
-                                             Height="0" />
                                     <Button x:Name="DoQueryButton"
                                             Width="50"
                                             Height="40"
                                             Margin="10,15,0,0"
                                             Click="DoQueryButton_OnClick"
-                                            IsDefault="False"
+                                            IsDefault="True"
                                             Style="{DynamicResource MaterialDesignToolButtonWithGrayWaveEffect}">
                                         <Viewbox Width="34" Height="30">
                                             <Canvas Width="24" Height="24">
@@ -1463,105 +1460,124 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                         </Viewbox>
                                     </Button>
                                 </StackPanel>
-                                <Popup x:Name="TrendingTagPopup"
-                                       Grid.Row="1"
-                                       Width="800"
-                                       primitive:PopupHelper.PopupPlacementTarget="{Binding ElementName=KeywordTextBox}"
-                                       AllowsTransparency="True"
-                                       Placement="Bottom"
-                                       PlacementTarget="{Binding ElementName=KeywordTextBox}"
-                                       StaysOpen="True">
-                                    <materialDesign:Card Background="#FAFAFC" UniformCornerRadius="10">
-                                        <StackPanel>
-                                            <StackPanel Height="40"
+                                <Grid Grid.Row="1" Height="30" Margin="0,75, 0, 0"
                                                         HorizontalAlignment="Center"
-                                                        Orientation="Horizontal">
-                                                <ToggleButton x:Name="QueryArtistToggleButton"
-                                                              Width="30"
-                                                              Height="30"
-                                                              Margin="0,0,5,0"
-                                                              Checked="QueryArtistToggleButton_OnChecked"
-                                                              Style="{DynamicResource MaterialDesignFlatToggleButton}"
-                                                              ToolTip="{Binding Path=(i18N:AkaI18N.QueryUser)}"
-                                                              Unchecked="QueryArtistToggleButton_OnUnchecked">
-                                                    <Viewbox Width="24" Height="24">
-                                                        <Canvas Width="24" Height="24">
-                                                            <Path
+                                                        VerticalAlignment="Top"
+                                                        Background="#FAFAFC"
+                                                        Opacity="0">
+                                    <Grid.Triggers>
+                                        <EventTrigger RoutedEvent="Grid.MouseEnter">
+                                            <BeginStoryboard>
+                                                <Storyboard TargetProperty="(Grid.Opacity)">
+                                                    <DoubleAnimation From="0" To="1" Duration="0:0:0.3" EasingFunction="{StaticResource CubicEase}" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="Grid.MouseLeave">
+                                            <BeginStoryboard>
+                                                <Storyboard TargetProperty="(Grid.Opacity)">
+                                                    <DoubleAnimation From="1" To="0" Duration="0:0:0.3" EasingFunction="{StaticResource CubicEase}" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Grid.Triggers>
+                                    <StackPanel Orientation="Horizontal">
+                                        <ToggleButton x:Name="QueryArtistToggleButton"
+                                                  Width="30"
+                                                  Height="30"
+                                                  Margin="0,0,5,0"
+                                                  Checked="QueryArtistToggleButton_OnChecked"
+                                                  Style="{DynamicResource MaterialDesignFlatToggleButton}"
+                                                  ToolTip="{Binding Path=(i18N:AkaI18N.QueryUser)}"
+                                                  Unchecked="QueryArtistToggleButton_OnUnchecked">
+                                            <Viewbox Width="24" Height="24">
+                                                <Canvas Width="24" Height="24">
+                                                    <Path
                                                                 Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"
                                                                 Fill="Gray" />
-                                                        </Canvas>
-                                                    </Viewbox>
-                                                </ToggleButton>
-                                                <ToggleButton x:Name="QuerySingleArtistToggleButton"
+                                                </Canvas>
+                                            </Viewbox>
+                                        </ToggleButton>
+                                        <ToggleButton x:Name="QuerySingleArtistToggleButton"
                                                               Width="30"
                                                               Height="30"
                                                               Margin="5,0,5,0"
                                                               Checked="QuerySingleArtistToggleButton_OnChecked"
                                                               Style="{DynamicResource MaterialDesignFlatToggleButton}"
                                                               ToolTip="{Binding Path=(i18N:AkaI18N.QuerySingleUser)}">
-                                                    <Viewbox Width="24" Height="24">
-                                                        <Canvas Width="24" Height="24">
-                                                            <Path
+                                            <Viewbox Width="24" Height="24">
+                                                <Canvas Width="24" Height="24">
+                                                    <Path
                                                                 Data="M19,21V19H15V17H19V15L22,18L19,21M10,4A4,4 0 0,1 14,8A4,4 0 0,1 10,12A4,4 0 0,1 6,8A4,4 0 0,1 10,4M10,14C11.15,14 12.25,14.12 13.24,14.34C12.46,15.35 12,16.62 12,18C12,18.7 12.12,19.37 12.34,20H2V18C2,15.79 5.58,14 10,14Z"
                                                                 Fill="Gray" />
-                                                        </Canvas>
-                                                    </Viewbox>
-                                                </ToggleButton>
-                                                <ToggleButton x:Name="QuerySingleWorkToggleButton"
+                                                </Canvas>
+                                            </Viewbox>
+                                        </ToggleButton>
+                                        <ToggleButton x:Name="QuerySingleWorkToggleButton"
                                                               Width="30"
                                                               Height="30"
                                                               Margin="5,0,0,0"
                                                               Checked="QuerySingleWorkToggleButton_OnChecked"
                                                               Style="{DynamicResource MaterialDesignFlatToggleButton}"
                                                               ToolTip="{Binding Path=(i18N:AkaI18N.QuerySingleIllust)}">
-                                                    <Viewbox Width="24" Height="24">
-                                                        <Canvas Width="24" Height="24">
-                                                            <Path
+                                            <Viewbox Width="24" Height="24">
+                                                <Canvas Width="24" Height="24">
+                                                    <Path
                                                                 Data="M10,7V9H12V17H14V7H10M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2Z"
                                                                 Fill="Gray" />
-                                                        </Canvas>
-                                                    </Viewbox>
-                                                </ToggleButton>
-                                            </StackPanel>
-                                            <userControls:TrendingTagControl />
-                                        </StackPanel>
+                                                </Canvas>
+                                            </Viewbox>
+                                        </ToggleButton>
+                                    </StackPanel>
+                                </Grid>
+                                <Popup x:Name="TrendingTagPopup"
+                                       Grid.Row="1"
+                                       Width="820"
+                                       Height="210"
+                                       Margin="-10,0,0,0"
+                                       primitive:PopupHelper.PopupPlacementTarget="{Binding ElementName=KeywordTextBox}"
+                                       AllowsTransparency="True"
+                                       Placement="Bottom"
+                                       PlacementTarget="{Binding ElementName=KeywordTextBox}">
+                                    <materialDesign:Card Background="#FAFAFC" UniformCornerRadius="10" Width="800" Height="200">
+                                        <userControls:TrendingTagControl />
                                     </materialDesign:Card>
                                 </Popup>
                                 <Popup x:Name="AutoCompletionPopup"
                                        Grid.Row="1"
-                                       Width="800"
+                                       Width="820"
+                                       Height="400"
                                        primitive:PopupHelper.PopupPlacementTarget="{Binding ElementName=KeywordTextBox}"
                                        AllowsTransparency="True"
                                        Placement="Bottom"
+                                       Margin="-10,0,0,0"
                                        PlacementTarget="{Binding ElementName=KeywordTextBox}"
                                        StaysOpen="False">
                                     <materialDesign:Card Width="800"
+                                                         Height="390"
                                                          Background="#FAFAFC"
+                                                         HorizontalAlignment="Center"
                                                          UniformCornerRadius="15">
                                         <ListBox x:Name="AutoCompletionListBox"
-                                                 Width="800"
-                                                 MaxHeight="400"
                                                  ScrollViewer.CanContentScroll="False">
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate DataType="viewModel:AutoCompletion">
-                                                    <ListBoxItem x:Name="AutoCompletionElement"
-                                                                 Width="{Binding ElementName=AutoCompletionListBox, Path=Width}"
-                                                                 HorizontalAlignment="Stretch"
-                                                                 PreviewMouseLeftButtonDown="AutoCompletionElement_OnPreviewMouseLeftButtonDown">
-                                                        <StackPanel HorizontalAlignment="Stretch">
-                                                            <TextBlock Margin="0,0,0,5"
+                                                    <StackPanel HorizontalAlignment="Stretch" 
+                                                                x:Name="AutoCompletionElement"
+                                                                Width="{Binding ElementName=AutoCompletionListBox, Path=Width}"
+                                                                PreviewMouseLeftButtonDown="AutoCompletionElement_OnPreviewMouseLeftButtonDown">
+                                                        <TextBlock Margin="0,0,0,5"
                                                                        HorizontalAlignment="Left"
                                                                        FontSize="12"
                                                                        Text="{Binding Tag}"
                                                                        TextTrimming="WordEllipsis"
                                                                        TextWrapping="NoWrap" />
-                                                            <TextBlock HorizontalAlignment="Left"
+                                                        <TextBlock HorizontalAlignment="Left"
                                                                        FontSize="10"
                                                                        Text="{Binding TranslatedName}"
                                                                        TextTrimming="WordEllipsis"
                                                                        TextWrapping="NoWrap" />
-                                                        </StackPanel>
-                                                    </ListBoxItem>
+                                                    </StackPanel>
                                                 </DataTemplate>
                                             </ListBox.ItemTemplate>
                                         </ListBox>
@@ -1622,15 +1638,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                             <Popup HorizontalAlignment="Center"
                                                                    primitive:PopupHelper.PopupPlacementTarget="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}}}"
                                                                    AllowsTransparency="True"
-                                                                   HorizontalOffset="150"
+                                                                   HorizontalOffset="-150"
+                                                                   VerticalOffset="-10"
                                                                    IsOpen="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}}, Path=IsMouseOver, Mode=OneWay}"
                                                                    Placement="Top"
                                                                    PlacementTarget="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}}}"
                                                                    PopupAnimation="Fade"
                                                                    StaysOpen="True">
-                                                                <userControls:UserPreviewPopupContent
-                                                                    x:Name="UserPreviewPopupContent"
-                                                                    Loaded="UserPreviewPopupContent_OnLoaded" />
+                                                                <userControls:UserPreviewPopupContent Loaded="UserPreviewPopupContent_OnLoaded" />
                                                             </Popup>
                                                         </Grid>
                                                     </materialDesign:TransitioningContent>
@@ -2386,10 +2401,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         <materialDesign:Snackbar x:Name="MainWindowSnackBar"
                                  HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Center" />
-        <Grid HorizontalAlignment="Stretch"
-              VerticalAlignment="Stretch"
-              Background="Black"
-              Opacity="0.15"
-              Visibility="{Binding ElementName=TrendingTagPopup, Path=IsOpen, Converter={StaticResource VisibleIfTrueConverter}}" />
     </Grid>
 </Window>

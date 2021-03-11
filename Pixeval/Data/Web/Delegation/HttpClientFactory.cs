@@ -40,7 +40,10 @@ namespace Pixeval.Data.Web.Delegation
         public const string WebApiBaseUrl = "https://www.pixiv.net";
 
         public static readonly HttpClient AppApi = new HttpClient(PixivApiHttpClientHandler.Instance(DirectConnect)) { BaseAddress = new Uri(AppApiBaseUrl) };
-        public static readonly HttpClient WebApi = new HttpClient(PixivApiHttpClientHandler.Instance(DirectConnect)) { BaseAddress = new Uri(WebApiBaseUrl) };
+        public static readonly HttpClient WebApi = new HttpClient(PixivApiHttpClientHandler.Instance(DirectConnect))
+        {
+            BaseAddress = new Uri(WebApiBaseUrl)
+        }.Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36 Edg/89.0.774.45"));
         public static readonly HttpClient Image = new HttpClient(PixivImageHttpClientHandler.Instance).Apply(client =>
         {
             client.DefaultRequestHeaders.TryAddWithoutValidation("Referer", "http://www.pixiv.net");

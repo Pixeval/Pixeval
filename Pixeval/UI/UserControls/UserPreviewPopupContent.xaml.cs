@@ -49,17 +49,5 @@ namespace Pixeval.UI.UserControls
                 /* ignore */
             }
         }
-
-        private async void FollowButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            var usr = sender.GetDataContext<User>();
-            await PixivClient.FollowArtist(usr, RestrictPolicy.Public);
-        }
-
-        private async void UnFollowButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            var usr = sender.GetDataContext<User>();
-            await PixivClient.UnFollowArtist(usr);
-        }
     }
 }

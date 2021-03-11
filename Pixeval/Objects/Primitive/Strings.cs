@@ -24,6 +24,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 
 namespace Pixeval.Objects.Primitive
@@ -108,6 +109,11 @@ namespace Pixeval.Objects.Primitive
         public static string ToUrlSafeBase64String(this byte[] bytes)
         {
             return Convert.ToBase64String(bytes).TrimEnd(new[] { '=' }).Replace("+", "-").Replace("/", "_");
+        }
+        
+        public static string RegexReplace(this string str, Regex regex, string pattern)
+        {
+            return regex.Replace(str, pattern);
         }
     }
 }

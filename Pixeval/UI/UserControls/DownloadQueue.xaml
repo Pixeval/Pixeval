@@ -51,17 +51,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                    TargetType="{x:Type dragablz:TabablzControl}" />
             <valueConverters:DoubleToPercentConverter x:Key="DoubleToPercentConverter" />
             <DataTemplate x:Key="DownloadItemTemplate" DataType="viewModel:DownloadableIllustration">
-                <ListBoxItem Width="780"
-                             Height="70"
-                             HorizontalContentAlignment="Stretch">
-                    <ListBoxItem.ContextMenu>
+                <Grid Width="780" Height="70">
+                    <Grid.ContextMenu>
                         <ContextMenu>
                             <MenuItem Click="ShowDownloadIllustration"
                                       Header="{Binding Path=(i18N:AkaI18N.DownloadQueueShowDownloadIllust)}" />
                             <MenuItem Click="RemoveFromDownloading"
                                       Header="{Binding Path=(i18N:AkaI18N.DownloadQueueRemoveFromDownloading)}" />
                         </ContextMenu>
-                    </ListBoxItem.ContextMenu>
+                    </Grid.ContextMenu>
                     <Grid Height="45"
                           Margin="0,0,0,10"
                           VerticalAlignment="Top">
@@ -137,7 +135,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                             </Grid>
                         </StackPanel>
                     </Grid>
-                </ListBoxItem>
+                </Grid>
             </DataTemplate>
             <DataTemplate x:Key="DownloadedItemTemplate" DataType="viewModel:DownloadableIllustration">
                 <ListBoxItem Width="780"

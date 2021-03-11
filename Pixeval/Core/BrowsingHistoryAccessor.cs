@@ -52,7 +52,7 @@ namespace Pixeval.Core
             sqLiteConnection?.Dispose();
         }
 
-        public bool VerifyRationality(BrowsingHistory browsingHistory)
+        public bool Verify(BrowsingHistory browsingHistory)
         {
             if (delegation.Any())
             {

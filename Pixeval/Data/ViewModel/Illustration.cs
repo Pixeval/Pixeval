@@ -70,6 +70,8 @@ namespace Pixeval.Data.ViewModel
 
         public string SpotlightTitle { get; set; }
         
+        public string SpotlightArticleId { get; set; }
+        
         public object Clone()
         {
             return MemberwiseClone();
