@@ -24,6 +24,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using Pixeval.Core.Persistent;
 using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Response;
@@ -83,6 +84,11 @@ namespace Pixeval.Core
                     page.Large = p.ImageUrls.Large;
                     return page;
                 }).ToArray();
+
+                foreach (var illustration in illust.MangaMetadata)
+                {
+                    illustration.MangaMetadata = illust.MangaMetadata;
+                }
             }
 
             return illust;
@@ -106,11 +112,11 @@ namespace Pixeval.Core
             }
         }
 
-        public static void RecordTimeline(ITimelineService service, BrowsingHistory browsingHistory)
+        public static void RecordTimeline<T>(ITimelineService<T> service, T entity)
         {
-            if (service.Verify(browsingHistory))
+            if (service.Verify(entity))
             {
-                Application.Current.Dispatcher.Invoke(DispatcherPriority.Loaded, (Action) (() => service.Insert(browsingHistory)));
+                Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (Action) (() => service.Insert(entity)));
             }
         }
 

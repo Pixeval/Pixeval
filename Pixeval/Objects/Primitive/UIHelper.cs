@@ -108,14 +108,14 @@ namespace Pixeval.Objects.Primitive
             return (T) element.DataContext;
         }
 
-        public static void SetImageSource(object img, ImageSource imgSource)
+        public static async void SetImageSource(object img, ImageSource imgSource)
         {
-            Application.Current.Dispatcher.Invoke(() => ((Image) img).Source = imgSource);
+            await Application.Current.Dispatcher.InvokeAsync(() => ((Image) img).Source = imgSource);
         }
 
-        public static void ReleaseImage(object img)
+        public static async void ReleaseImage(object img)
         {
-            Application.Current.Dispatcher.Invoke(() => ((Image) img).Source = null);
+            await Application.Current.Dispatcher.InvokeAsync(() => ((Image) img).Source = null);
         }
 
         public static ObservableCollection<T> NewItemsSource<T>(ItemsControl itemsControl)
@@ -152,7 +152,7 @@ namespace Pixeval.Objects.Primitive
                 return element.DataContext<T>();
             }
 
-            throw new NotSupportedException($"parameter must be derive class of {nameof(FrameworkElement)}");
+            throw new NotSupportedException($"parameter must be a derived class of {nameof(FrameworkElement)}");
         }
 
         public static T GetResources<T>(this FrameworkElement element, string name)

@@ -39,7 +39,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         Deactivated="MainWindow_OnDeactivated"
         Icon="/Resources/pxlogo.ico"
         Loaded="MainWindow_OnLoaded"
-        PreviewMouseDown="MainWindow_OnMouseDown"
         PreviewKeyDown="MainWindow_OnPreviewKeyDown"
         TextElement.FontFamily="Microsoft YaHei UI Light"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -427,20 +426,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                 </system:Double>
             </DataTemplate.Resources>
             <Grid x:Name="SpotlightContainer"
-                  Width="{Binding ElementName=SpotlightListView, Path=ActualWidth, Converter={StaticResource DoublePlusConverter}, ConverterParameter={StaticResource MinusPrecision}}"
                   Height="300"
                   HorizontalAlignment="Stretch"
                   Cursor="Hand"
                   MouseLeftButtonDown="SpotlightContainer_OnMouseLeftButtonDown">
                 <Grid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem x:Name="DownloadSpotlightItem"
-                                  Click="DownloadSpotlightItem_OnClick"
+                        <MenuItem Click="DownloadSpotlightItem_OnClick"
                                   Header="{Binding Path=(i18N:AkaI18N.DownloadSpotlight)}" />
+                        <MenuItem Click="AddSpotlightToFavorite_OnClick"
+                                  Header="{Binding Path=(i18N:AkaI18N.AddSpotlightToFavorite)}" />
                     </ContextMenu>
                 </Grid.ContextMenu>
                 <Grid.Triggers>
-                    <EventTrigger RoutedEvent="ListViewItem.MouseEnter">
+                    <EventTrigger RoutedEvent="Grid.MouseEnter">
                         <BeginStoryboard>
                             <Storyboard TargetProperty="(ScaleTransform.ScaleX)" TargetName="SpotlightScaleTransform">
                                 <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
@@ -482,7 +481,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                             </Storyboard>
                         </BeginStoryboard>
                     </EventTrigger>
-                    <EventTrigger RoutedEvent="ListViewItem.MouseLeave">
+                    <EventTrigger RoutedEvent="Grid.MouseLeave">
                         <BeginStoryboard>
                             <Storyboard TargetProperty="(ScaleTransform.ScaleX)" TargetName="SpotlightScaleTransform">
                                 <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
@@ -543,7 +542,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     </Image.RenderTransform>
                 </Image>
                 <Grid x:Name="SpotlightMask"
-                      MaxWidth="{Binding ElementName=SpotlightListView, Path=ActualWidth}"
                       HorizontalAlignment="Stretch"
                       VerticalAlignment="Stretch"
                       Background="Black"
@@ -659,7 +657,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         </DataTemplate>
     </Window.Resources>
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <Grid x:Name="ContentContainer" Grid.ColumnSpan="2">
+        <Grid x:Name="ContentContainer" Grid.ColumnSpan="2" PreviewMouseDown="ContentContainer_OnPreviewMouseDown">
             <Grid.RenderTransform>
                 <ScaleTransform
                     CenterX="{Binding ElementName=ContentContainer, Path=ActualWidth, Converter={StaticResource DoubleDivisionConverter}, ConverterParameter={StaticResource Divide}}"
@@ -1559,13 +1557,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                          HorizontalAlignment="Center"
                                                          UniformCornerRadius="15">
                                         <ListBox x:Name="AutoCompletionListBox"
+                                                 SelectionMode="Single"
                                                  ScrollViewer.CanContentScroll="False">
+                                            <ListBox.ItemContainerStyle>
+                                                <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                                                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="AutoCompletionListBox_OnSelectionChanged"/>
+                                                </Style>
+                                            </ListBox.ItemContainerStyle>
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate DataType="viewModel:AutoCompletion">
                                                     <StackPanel HorizontalAlignment="Stretch" 
                                                                 x:Name="AutoCompletionElement"
-                                                                Width="{Binding ElementName=AutoCompletionListBox, Path=Width}"
-                                                                PreviewMouseLeftButtonDown="AutoCompletionElement_OnPreviewMouseLeftButtonDown">
+                                                                Width="{Binding ElementName=AutoCompletionListBox, Path=Width}">
                                                         <TextBlock Margin="0,0,0,5"
                                                                        HorizontalAlignment="Left"
                                                                        FontSize="12"
@@ -2156,7 +2159,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                    Style="{DynamicResource MaterialDesignEmbeddedDialogHost}">
             <materialDesign:DialogHost.DialogContent>
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                    <userControls:SettingsControl MinWidth="1000" MinHeight="710" />
+                    <userControls:SettingsControl x:Name="SettingsControl" MinWidth="1000" MinHeight="710" IsOpen="{Binding ElementName=PixevalSettingDialog, Path=IsOpen}"/>
                 </ScrollViewer>
             </materialDesign:DialogHost.DialogContent>
         </materialDesign:DialogHost>
@@ -2385,6 +2388,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                    d:DataContext="{d:DesignData DownloadableIllustrationViewModel}"
                                    materialDesign:TransitionAssist.DisableTransitions="{Binding Source={x:Static persisting:Settings.Global}, Path=TurnOffAnimation}"
                                    CloseOnClickAway="True"
+                                   DialogOpened="DownloadQueueDialogHost_OnDialogOpened"
                                    DialogClosing="DownloadQueueDialogHost_OnDialogClosing"
                                    Style="{DynamicResource MaterialDesignEmbeddedDialogHost}">
             <materialDesign:DialogHost.DialogContent>

@@ -106,7 +106,7 @@ namespace Pixeval.UI.UserControls
             Task.Run(async () =>
             {
                 var userInfo = await HttpClientFactory.AppApiService.GetUserInformation(new UserInformationRequest { Id = Illust.UserId });
-                if (Dispatcher.Invoke(() => Illust.UserId == MainWindow.Instance.IllustBrowserDialogHost.GetDataContext<Illustration>().UserId))
+                if (Dispatcher.Invoke(() => Illust.UserId != MainWindow.Instance.IllustBrowserDialogHost.GetDataContext<Illustration>().UserId))
                 {
                     var img = await PixivIO.FromUrl(userInfo.UserEntity.ProfileImageUrls.Medium);
                     Dispatcher.Invoke(() =>

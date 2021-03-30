@@ -20,12 +20,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using Pixeval.Core;
 using Pixeval.Data.ViewModel;
 using Pixeval.Objects.Generic;
 using Pixeval.Objects.I18n;
+using Pixeval.Objects.Primitive;
 using Pixeval.Persisting;
 
 namespace Pixeval.UI.UserControls
@@ -39,7 +43,22 @@ namespace Pixeval.UI.UserControls
         {
             InitializeComponent();
         }
+        
+        public static DependencyProperty IsOpenProperty = DependencyProperty.Register("IsOpen", typeof(bool), typeof(SettingsControl), new FrameworkPropertyMetadata(false, IsOpenPropertyChanged));
 
+        public bool IsOpen
+        {
+            get => (bool) GetValue(IsOpenProperty);
+            set => SetValue(IsOpenProperty, value);
+        }
+
+        private static void IsOpenPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+        {
+            var control = (SettingsControl) dependencyObject;
+            if (!(bool) e.NewValue)
+                control.MacroCompletionPopup.CloseControl();
+        }
+        
         private void OpenFileDialogButton_OnClick(object sender, RoutedEventArgs e)
         {
             using var fileDialog = new CommonOpenFileDialog(AkaI18N.PleaseSelectLocation) { InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), IsFolderPicker = true };
@@ -84,6 +103,56 @@ namespace Pixeval.UI.UserControls
         private void CultureSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             AkaI18N.Reload((I18NOption) CultureSelector.SelectedItem);
+        }
+
+        private async void DownloadPathTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!IsOpen)
+                return;
+            var caretIndex = DownloadPathTextBox.CaretIndex;
+            var text = DownloadPathTextBox.Text;
+            var beforeCaret = text.Substring(0, caretIndex);
+            var lastIndex = beforeCaret.LastIndexOf("{", StringComparison.Ordinal);
+            if (lastIndex != -1)
+            {
+                var filtered = await Task.Run(() =>
+                {
+                    var macros = DownloadPathMacros.GetEscapedMacros();
+                    var substringFromFirstLeftCurlyBrace = beforeCaret.Substring(lastIndex);
+                    return macros.Where(p => p.Macro.StartsWith(substringFromFirstLeftCurlyBrace)).ToArray();
+                });
+                if (!filtered.IsNullOrEmpty())
+                {
+                    MacroCompletionPopup.OpenControl();
+                    UiHelper.NewItemsSource<DownloadPathMacros.MacroToken>(MacroCompletionBox).AddRange(filtered);
+                }
+                else
+                {
+                    MacroCompletionPopup.CloseControl();
+                }
+            }
+        }
+
+        private void MacroCompletionBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var token = (DownloadPathMacros.MacroToken) (sender as ListBox)!.SelectedItem;
+            if (token == null)
+                return;
+            var caretIndex = DownloadPathTextBox.CaretIndex;
+            var text = DownloadPathTextBox.Text;
+            var beforeCaret = text.Substring(0, caretIndex);
+            var afterCaret = text.Replace(beforeCaret, string.Empty);
+            var lastIndexBeforeCaret = beforeCaret.LastIndexOf("{", StringComparison.Ordinal);
+            var substringFromFirstLeftCurlyBrace = beforeCaret.Substring(lastIndexBeforeCaret);
+            DownloadPathTextBox.Text = beforeCaret
+                + token.Macro.Replace(substringFromFirstLeftCurlyBrace, string.Empty)
+                + (token.IsConditional
+                    ? afterCaret.RemoveUntil('}', afterCaret.Substring(0, afterCaret.IndexOf('}') is { } i ? i == -1 ? 0 : i : 0).Count(c => c == '{') + 1, '\\')
+                    : token.Macro.RemoveCommonSubstringFromEnd(afterCaret));
+            var newText = DownloadPathTextBox.Text;
+            MacroCompletionPopup.CloseControl();
+            DownloadPathTextBox.Focus();
+            DownloadPathTextBox.CaretIndex = beforeCaret.Length + newText.Substring(beforeCaret.Length).IndexOf("}", StringComparison.Ordinal);
         }
     }
 }

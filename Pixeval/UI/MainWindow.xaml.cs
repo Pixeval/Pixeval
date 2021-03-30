@@ -40,6 +40,7 @@ using MaterialDesignThemes.Wpf;
 using MaterialDesignThemes.Wpf.Transitions;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Pixeval.Core;
+using Pixeval.Core.Persistent;
 using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
@@ -56,7 +57,6 @@ using Xceed.Wpf.AvalonDock.Controls;
 using System.Net.Http;
 using Pixeval.Objects.Exceptions;
 using Pixeval.Objects.Exceptions.Logger;
-
 #endif
 
 namespace Pixeval.UI
@@ -231,8 +231,22 @@ namespace Pixeval.UI
             SettingsTab.IsSelected = false;
         }
 
+        private void DownloadQueueDialogHost_OnDialogOpened(object sender, DialogOpenedEventArgs e)
+        {
+            var content = (DownloadQueue) DownloadQueueDialogHost.DialogContent;
+            if (content.BrowsingHistoryTab.IsSelected)
+            {
+                content.RefreshBrowsingHistory();
+            }
+            else if (content.FavoriteSpotlightTab.IsSelected)
+            {
+                content.RefreshFavoriteSpotlight();
+            }
+        }
+
         private void DownloadQueueDialogHost_OnDialogClosing(object sender, DialogClosingEventArgs e)
         {
+            UiHelper.ReleaseItemsSource(((DownloadQueue) DownloadQueueDialogHost.DialogContent).BrowsingHistoryQueue);
             DownloadListTab.IsSelected = false;
         }
 
@@ -276,6 +290,8 @@ namespace Pixeval.UI
             switch (e.Key)
             {
                 case Key.Oem5:
+                    if (SettingsControl.IsOpen)
+                        break;
                     var inputBoxControl = BrowsingUser() ? UserBrowserConditionInputBox : ConditionInputBox;
                     inputBoxControl.Visibility = ConditionInputBox.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
                     await Task.Delay(100);
@@ -349,7 +365,7 @@ namespace Pixeval.UI
                 TrendingTagPopup.CloseControl();
             }
 
-            if (QueryArtistToggleButton.IsChecked == true || QuerySingleArtistToggleButton.IsChecked == true || QuerySingleWorkToggleButton.IsChecked == true)
+            if (QueryArtistToggleButton.IsChecked == true || QuerySingleArtistToggleButton.IsChecked == true || QuerySingleWorkToggleButton.IsChecked == true || !doAutoCompletionQuery)
             {
                 return;
             }
@@ -378,7 +394,7 @@ namespace Pixeval.UI
             {
                 if (AutoCompletionListBox.SelectedIndex != -1)
                 {
-                    KeywordTextBox.Text = ((AutoCompletion) AutoCompletionListBox.SelectedItem).Tag;
+                    SetAutoCompletedResultAndClosePopup(((AutoCompletion) AutoCompletionListBox.SelectedItem).Tag);
                 }
             }
 
@@ -390,9 +406,9 @@ namespace Pixeval.UI
             };
         }
 
-        private void AutoCompletionElement_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void AutoCompletionListBox_OnSelectionChanged(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
-            KeywordTextBox.Text = sender.GetDataContext<AutoCompletion>().Tag;
+            SetAutoCompletedResultAndClosePopup(sender.GetDataContext<AutoCompletion>().Tag);
         }
 
         private void QuerySingleWorkToggleButton_OnChecked(object sender, RoutedEventArgs e)
@@ -418,7 +434,7 @@ namespace Pixeval.UI
             QueryArtistToggleButton.IsChecked = false;
         }
 
-        private void MainWindow_OnMouseDown(object sender, MouseButtonEventArgs e)
+        private void ContentContainer_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             DeactivateControl();
         }
@@ -506,6 +522,8 @@ namespace Pixeval.UI
             Settings.Initialize();
             BrowsingHistoryAccessor.GlobalLifeTimeScope.Dispose();
             BrowsingHistoryAccessor.GlobalLifeTimeScope.DropDb();
+            FavoriteSpotlightAccessor.GlobalLifeTimeScope.Dispose();
+            FavoriteSpotlightAccessor.GlobalLifeTimeScope.DropDb();
             var login = new SignIn();
             login.Show();
             Close();
@@ -598,10 +616,10 @@ namespace Pixeval.UI
             var article = sender.GetDataContext<SpotlightArticle>();
 
             var tasks = await Tasks<string, Illustration>.Of(await PixivClient.GetArticleWorks(article.Id.ToString())).Mapping(PixivHelper.IllustrationInfo).Construct().WhenAll();
-            var result = tasks.Peek(i =>
+            var result = tasks.Where(i => i != null).SelectMany(i => i.IsManga ? i.MangaMetadata : new[] { i }).Peek(i =>
             {
-                i.IsManga = true;
                 i.FromSpotlight = true;
+                i.IsManga = true;
                 i.SpotlightTitle = article.Title;
                 i.SpotlightArticleId = article.Id.ToString();
             }).ToArray();
@@ -615,13 +633,24 @@ namespace Pixeval.UI
                 Type = "spotlight"
             });
 
-            OpenIllustBrowser(result[0].Apply(r => r.MangaMetadata = result.ToArray()));
+            OpenIllustBrowser(result[0].Apply(r => r.MangaMetadata = result));
         }
 
         private void DownloadSpotlightItem_OnClick(object sender, RoutedEventArgs e)
         {
             sender.GetDataContext<SpotlightArticle>().Download();
             MessageQueue.Enqueue(AkaI18N.QueuedDownload);
+        }
+
+        private void AddSpotlightToFavorite_OnClick(object sender, RoutedEventArgs e)
+        {
+            var article = sender.GetDataContext<SpotlightArticle>();
+            FavoriteSpotlightAccessor.GlobalLifeTimeScope.Insert(new FavoriteSpotlight
+            {
+                SpotlightArticleId = article.Id.ToString(),
+                SpotlightThumbnail = article.Thumbnail,
+                SpotlightTitle = article.Title
+            });
         }
 
         #endregion
@@ -1043,6 +1072,22 @@ namespace Pixeval.UI
 
         #region 工具
 
+        // indicates whether to query new auto completion results when KeywordTextBox's text changes
+        private bool doAutoCompletionQuery = true;
+        private static readonly object AutoCompletionLock = new object();
+        
+        // Sets the keyword text-box's value to the selected auto completion result
+        private void SetAutoCompletedResultAndClosePopup(string text)
+        {
+            lock (AutoCompletionLock)
+            {
+                doAutoCompletionQuery = false;
+                KeywordTextBox.Text = text;
+                doAutoCompletionQuery = true;
+                AutoCompletionPopup.CloseControl();
+            }
+        }
+        
         private bool disableKeyEvent;
 
         private void TopBarRetract(TranslateTransform transform)
@@ -1174,7 +1219,11 @@ namespace Pixeval.UI
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     var template = new IllustTransitioner(list);
-
+                    if (IllustBrowserContainer.Children[1] is IllustTransitioner)
+                    {
+                        IllustBrowserContainer.Children.RemoveAt(1);
+                    }
+                    IllustBrowserContainer.Children.Insert(1, template);
                     if (illustration.IsManga)
                     {
                         list.AddRange(illustration.MangaMetadata.Select(InitTransitionerSlide));
@@ -1183,11 +1232,6 @@ namespace Pixeval.UI
                     {
                         list.Add(InitTransitionerSlide(illustration));
                     }
-                    if (IllustBrowserContainer.Children[1] is IllustTransitioner)
-                    {
-                        IllustBrowserContainer.Children.RemoveAt(1);
-                    }
-                    IllustBrowserContainer.Children.Insert(1, template);
                 });
             })).ContinueWith(_ => disableKeyEvent = false, TaskScheduler.FromCurrentSynchronizationContext());
         }

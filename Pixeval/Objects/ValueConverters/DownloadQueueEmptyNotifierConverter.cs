@@ -1,5 +1,4 @@
 ﻿#region Copyright (C) 2019-2020 Dylech30th. All rights reserved.
-
 // Pixeval - A Strong, Fast and Flexible Pixiv Client
 // Copyright (C) 2019-2020 Dylech30th
 // 
@@ -15,17 +14,30 @@
 // 
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 #endregion
 
-using Pixeval.Data.ViewModel;
+using System;
+using System.Collections;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
 
-namespace Pixeval.Core
+namespace Pixeval.Objects.ValueConverters
 {
-    public interface ITimelineService<in T>
+    public class DownloadQueueEmptyNotifierConverter : IMultiValueConverter
     {
-        bool Verify(T entity);
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values[0] is int itemsCount && values[1] is bool b)
+            {
+                return itemsCount == 0 && b ? Visibility.Visible : Visibility.Hidden;
+            }
+            return Visibility.Hidden;
+        }
 
-        void Insert(T entity);
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

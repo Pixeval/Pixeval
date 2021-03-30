@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -90,5 +91,26 @@ namespace Pixeval.Objects.Generic
         {
             return cookies.Aggregate("", (s, cookie) => s + $"{cookie.Name}={cookie.Value};");
         }
+
+        public static IReadOnlyCollection<T> AsReadOnly<T>(this ICollection<T> collection)
+        {
+            return new ReadOnlyCollectionAdapter<T>(collection);
+        }
+    }
+    
+    public class ReadOnlyCollectionAdapter<T> : IReadOnlyCollection<T>
+    {
+        private readonly ICollection<T> collection;
+
+        public ReadOnlyCollectionAdapter(ICollection<T> collection)
+        {
+            this.collection = collection;
+        }
+
+        public IEnumerator<T> GetEnumerator() => collection.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public int Count => collection.Count;
     }
 }

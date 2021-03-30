@@ -53,6 +53,7 @@ namespace Pixeval.Data.ViewModel
         /// </summary>
         public string BrowseObjectId { get; set; }
 
+        // it is unwise to use hard-coded string, but I'm lazy
         public string Type { get; set; }
     }
 }

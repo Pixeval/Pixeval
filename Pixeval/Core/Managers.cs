@@ -35,52 +35,56 @@ namespace Pixeval.Core
 
         public static readonly ObservableCollection<DownloadableIllustration> Downloaded = new ObservableCollection<DownloadableIllustration>();
 
+        private static void StartDownload(Illustration illustration, string path)
+        {
+            Task.Run(() => CreateDownloadableIllustration(illustration, path).Download());
+        }
+
+        private static DownloadableIllustration CreateDownloadableIllustration(Illustration downloadContent, string downloadPath)
+        {
+            var model = new DownloadableIllustration(downloadContent, downloadPath ?? DownloadPathMacros.FormatDownloadPath(Settings.Global.DownloadPath, downloadContent));
+            model.State.ValueChanged += (sender, args) => Application.Current.Dispatcher.Invoke(() =>
+            {
+                switch (args.NewValue)
+                {
+                    case DownloadState.Finished:
+                        model.Freeze();
+                        Downloading.Remove(model);
+                        if (Downloaded.All(i => model.DownloadContent.GetDownloadUrl() != i.DownloadContent.GetDownloadUrl()))
+                            Downloaded.Add(model);
+                        break;
+                    case DownloadState.Downloading:
+                        Downloaded.Remove(model);
+                        Downloading.Add(model);
+                        break;
+                    case DownloadState.Canceled:
+                        Downloading.Remove(model);
+                        break;
+                    case DownloadState.Queue:
+                    case DownloadState.Exceptional:
+                        break;
+                    default: throw new ArgumentOutOfRangeException();
+                }
+            });
+            return model;
+        }
+
         public static void EnqueueDownloadItem(Illustration illustration, string path = null)
         {
             if (Downloading.Any(i => illustration.Id == i.DownloadContent.Id))
             {
                 return;
             }
-            
-            static DownloadableIllustration CreateDownloadableIllustration(Illustration downloadContent, bool isFromMange, string downloadPath)
-            {
-                var model = new DownloadableIllustration(downloadContent, downloadPath ?? DownloadPathMacros.FormatDownloadPath(Settings.Global.DownloadPath, downloadContent), isFromMange);
-                model.State.ValueChanged += (sender, args) => Application.Current.Dispatcher.Invoke(() =>
-                {
-                    switch (args.NewValue)
-                    {
-                        case DownloadState.Finished:
-                            model.Freeze();
-                            Downloading.Remove(model);
-                            if (Downloaded.All(i => model.DownloadContent.GetDownloadUrl() != i.DownloadContent.GetDownloadUrl()))
-                                Downloaded.Add(model);
-                            break;
-                        case DownloadState.Downloading:
-                            Downloaded.Remove(model);
-                            Downloading.Add(model);
-                            break;
-                        case DownloadState.Canceled:
-                            Downloading.Remove(model);
-                            break;
-                        case DownloadState.Queue:
-                        case DownloadState.Exceptional:
-                            break;
-                        default: throw new ArgumentOutOfRangeException();
-                    }
-                });
-                return model;
-            }
-
             if (illustration.IsManga)
             {
                 foreach (var t in illustration.MangaMetadata)
                 {
-                    Task.Run(() => CreateDownloadableIllustration(t, true, path).Download());
+                    StartDownload(t, path);
                 }
             }
             else
             {
-                Task.Run(() => CreateDownloadableIllustration(illustration, false, path).Download());
+                StartDownload(illustration, path);
             }
         }
     }

@@ -138,41 +138,41 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                 </Grid>
             </DataTemplate>
             <DataTemplate x:Key="DownloadedItemTemplate" DataType="viewModel:DownloadableIllustration">
-                <ListBoxItem Width="780"
-                             Height="70"
-                             HorizontalContentAlignment="Stretch">
-                    <ListBoxItem.ContextMenu>
+                <Grid Width="780"
+                          Height="70"
+                          Margin="0,0,0,10"
+                          VerticalAlignment="Top">
+                    <Grid.ContextMenu>
                         <ContextMenu>
                             <MenuItem Click="ShowDownloadIllustration"
                                       Header="{Binding Path=(i18N:AkaI18N.DownloadQueueShowDownloadIllust)}" />
+                            <MenuItem Click="CopyDownloadPathMenuItem_OnClick"
+                                      Header="{Binding Path=(i18N:AkaI18N.CopyDownloadPath)}" />
                             <MenuItem Click="RemoveFromDownloaded"
                                       Header="{Binding Path=(i18N:AkaI18N.DownloadQueueRemoveFromDownloading)}" />
                         </ContextMenu>
-                    </ListBoxItem.ContextMenu>
-                    <Grid Height="50"
-                          Margin="0,0,0,10"
-                          VerticalAlignment="Top">
-                        <Grid Width="41"
+                    </Grid.ContextMenu>
+                    <Grid Width="41"
                               Height="41"
                               HorizontalAlignment="Left">
-                            <Ellipse Width="41"
+                        <Ellipse Width="41"
                                      Height="41"
                                      Fill="#E1E4E8" />
-                            <Image x:Name="DownloadItemThumbnail"
+                        <Image x:Name="DownloadItemThumbnail"
                                    Width="40"
                                    Height="40"
                                    Loaded="DownloadItemThumbnail_OnLoaded"
                                    Stretch="UniformToFill">
-                                <Image.Clip>
-                                    <EllipseGeometry Center="20,20"
+                            <Image.Clip>
+                                <EllipseGeometry Center="20,20"
                                                      RadiusX="20"
                                                      RadiusY="20" />
-                                </Image.Clip>
-                            </Image>
-                        </Grid>
-                        <Grid Margin="60,0,50,0">
-                            <StackPanel VerticalAlignment="Center">
-                                <ProgressBar Height="5"
+                            </Image.Clip>
+                        </Image>
+                    </Grid>
+                    <Grid Margin="60,0,50,0">
+                        <StackPanel VerticalAlignment="Center">
+                            <ProgressBar Height="5"
                                              Background="#D4E5F9"
                                              BorderThickness="0"
                                              Foreground="#007CEE"
@@ -180,15 +180,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                              materialDesign:TransitionAssist.DisableTransitions="True"
                                              Style="{StaticResource RoundedCornerProgressBar}"
                                              Value="{Binding Progress}" />
-                                <StackPanel Margin="5,5,5,0"
+                            <StackPanel Margin="5,5,5,0"
                                             Orientation="Horizontal"
                                             TextElement.FontFamily="Microsoft YaHei Light"
                                             TextElement.FontSize="12">
-                                    <TextBlock x:Name="ProgressIndicator"
+                                <TextBlock x:Name="ProgressIndicator"
                                                Text="{Binding Progress, Converter={StaticResource DoubleToPercentConverter}}" />
-                                    <TextBlock Margin="10,0,0,0"
+                                <TextBlock Margin="10,0,0,0"
                                                Text="{Binding State.Value, Converter={StaticResource EnumToStringConverter}}" />
-                                    <TextBlock x:Name="HintMessage"
+                                <TextBlock x:Name="HintMessage"
                                                MaxWidth="500"
                                                Margin="10,0,0,0"
                                                HorizontalAlignment="Right"
@@ -196,28 +196,27 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                TextTrimming="CharacterEllipsis"
                                                TextWrapping="NoWrap"
                                                ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}" />
-                                </StackPanel>
                             </StackPanel>
-                        </Grid>
-                        <StackPanel Height="30"
+                        </StackPanel>
+                    </Grid>
+                    <StackPanel Height="30"
                                     HorizontalAlignment="Right"
                                     Orientation="Horizontal">
-                            <Grid x:Name="ViewDownloadLocationButton"
+                        <Grid x:Name="ViewDownloadLocationButton"
                                   Width="30"
                                   Height="30"
                                   Cursor="Hand"
                                   MouseLeftButtonDown="ViewDownloadLocationButton_OnMouseLeftButtonDown">
-                                <Viewbox Width="24" Height="24">
-                                    <Canvas Width="24" Height="24">
-                                        <Path
+                            <Viewbox Width="24" Height="24">
+                                <Canvas Width="24" Height="24">
+                                    <Path
                                             Data="M20,6A2,2 0 0,1 22,8V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4H10L12,6H20M10.75,13H14V17H16V13H19.25L15,8.75"
                                             Fill="Gray" />
-                                    </Canvas>
-                                </Viewbox>
-                            </Grid>
-                        </StackPanel>
-                    </Grid>
-                </ListBoxItem>
+                                </Canvas>
+                            </Viewbox>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
             </DataTemplate>
             <DataTemplate x:Key="BrowsingHistoryItemTemplate" DataType="viewModel:BrowsingHistory">
                 <materialDesign:Card Width="175"
@@ -226,6 +225,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                      VerticalAlignment="Center"
                                      Background="White"
                                      UniformCornerRadius="10">
+                    <materialDesign:Card.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="{Binding Path=(i18N:AkaI18N.DownloadQueueRemoveFromList)}" Click="RemoveFromListMenuItem_OnClick"/>
+                            <MenuItem Header="{Binding Path=(i18N:AkaI18N.DownloadQueueRemoveAllFromList)}" Click="RemoveAllFromListMenuItem_OnClick" />
+                        </ContextMenu>
+                    </materialDesign:Card.ContextMenu>
                     <Grid>
                         <Grid VerticalAlignment="Top">
                             <Image x:Name="BrowsingHistoryMainImage"
@@ -236,10 +241,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                    Loaded="BrowsingHistoryMainImage_OnLoaded"
                                    MouseLeftButtonDown="BrowsingHistoryMainImage_OnMouseLeftButtonDown"
                                    Stretch="UniformToFill"
-                                   Style="{StaticResource ReleaseImageStyle}" />
+                                   Style="{StaticResource ReleaseImageStyle}"
+                                   DataContext="{Binding}"/>
                             <Grid Background="Transparent"
                                   Cursor="Hand"
                                   MouseLeftButtonDown="ReferUser_OnMouseLeftButtonDown"
+                                  DataContext="{Binding}"
                                   Visibility="{Binding IsReferToUser, Converter={StaticResource VisibleIfTrueConverter}}">
                                 <Grid Width="80"
                                       Height="80"
@@ -320,14 +327,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
             </DrawingImage>
         </ResourceDictionary>
     </UserControl.Resources>
-    <dragablz:TabablzControl BorderThickness="0">
-        <TabItem Background="White" Opacity="1">
+    <dragablz:TabablzControl x:Name="DownloadQueueTabControl" BorderThickness="0" SelectionChanged="DownloadQueueTabControl_OnSelectionChanged">
+        <TabItem x:Name="DownloadTab" Background="White" Opacity="1">
             <TabItem.Header>
                 <TextBlock FontFamily="Microsoft YaHei Light"
                            FontSize="14"
                            Text="{Binding Path=(i18N:AkaI18N.DownloadQueueDownloading)}" />
             </TabItem.Header>
-            <Grid Background="White">
+            <Grid Background="White" Opacity="1">
                 <ListBox x:Name="DownloadItemsQueue"
                          Margin="0,10,0,0"
                          HorizontalAlignment="Center"
@@ -340,6 +347,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     </ListBox.ItemsPanel>
                 </ListBox>
                 <Grid x:Name="EmptyNotifier1">
+                    <Grid.Visibility>
+                        <MultiBinding Converter="{StaticResource DownloadQueueEmptyNotifierConverter}">
+                            <!-- https://stackoverflow.com/questions/5583830/multibinding-with-multivalueconverter-does-not-update -->
+                            <Binding ElementName="DownloadItemsQueue" Path="Items.Count" UpdateSourceTrigger="PropertyChanged" />
+                            <Binding ElementName="DownloadTab" Path="IsSelected" />
+                        </MultiBinding>
+                    </Grid.Visibility>
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Image Width="120"
                                Height="120"
@@ -352,13 +366,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                 </Grid>
             </Grid>
         </TabItem>
-        <TabItem Background="White" Opacity="1">
+        <TabItem x:Name="DownloadedTab" Background="White" Opacity="1">
             <TabItem.Header>
                 <TextBlock FontFamily="Microsoft YaHei Light"
                            FontSize="14"
                            Text="{Binding Path=(i18N:AkaI18N.DownloadQueueDownloaded)}" />
             </TabItem.Header>
-            <Grid Background="White">
+            <Grid Background="White" Opacity="1">
                 <ListBox x:Name="DownloadedItemsQueue"
                          Margin="0,10,0,0"
                          HorizontalAlignment="Center"
@@ -371,6 +385,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     </ListBox.ItemsPanel>
                 </ListBox>
                 <Grid x:Name="EmptyNotifier2">
+                    <Grid.Visibility>
+                        <MultiBinding Converter="{StaticResource DownloadQueueEmptyNotifierConverter}">
+                            <Binding ElementName="DownloadedItemsQueue" Path="Items.Count" UpdateSourceTrigger="PropertyChanged" />
+                            <Binding ElementName="DownloadedTab" Path="IsSelected" />
+                        </MultiBinding>
+                    </Grid.Visibility>
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Image Width="120"
                                Height="120"
@@ -383,13 +403,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                 </Grid>
             </Grid>
         </TabItem>
-        <TabItem Background="White">
+        <TabItem Background="White" x:Name="BrowsingHistoryTab" Opacity="1">
             <TabItem.Header>
                 <TextBlock FontFamily="Microsoft YaHei Light"
                            FontSize="14"
                            Text="{Binding Path=(i18N:AkaI18N.DownloadQueueBrowsingHistory)}" />
             </TabItem.Header>
-            <Grid Background="White">
+            <Grid Background="White" Opacity="1">
                 <ListView x:Name="BrowsingHistoryQueue"
                           Margin="0,10,0,0"
                           HorizontalAlignment="Center"
@@ -407,6 +427,54 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     </ListView.ItemsPanel>
                 </ListView>
                 <Grid x:Name="EmptyNotifier3">
+                    <Grid.Visibility>
+                        <MultiBinding Converter="{StaticResource DownloadQueueEmptyNotifierConverter}">
+                            <Binding ElementName="BrowsingHistoryQueue" Path="Items.Count" UpdateSourceTrigger="PropertyChanged" />
+                            <Binding ElementName="BrowsingHistoryTab" Path="IsSelected" />
+                        </MultiBinding>
+                    </Grid.Visibility>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Image Width="120"
+                               Height="120"
+                               Source="{StaticResource EmptyBox}" />
+                        <TextBlock HorizontalAlignment="Stretch"
+                                   FontFamily="Microsoft YaHei Light"
+                                   FontSize="25"
+                                   Text="{Binding Path=(i18N:AkaI18N.DownloadQueueHistoryListIsEmpty)}" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </TabItem>
+        <TabItem Background="White" x:Name="FavoriteSpotlightTab" Opacity="1">
+            <TabItem.Header>
+                <TextBlock FontFamily="Microsoft YaHei Light"
+                           FontSize="14"
+                           Text="{Binding Path=(i18N:AkaI18N.FavoriteSpotlights)}" />
+            </TabItem.Header>
+            <Grid Background="White" Opacity="1">
+                <ListView x:Name="FavoriteSpotlightsQueue"
+                          Margin="0,10,0,0"
+                          HorizontalAlignment="Center"
+                          ItemTemplate="{StaticResource BrowsingHistoryItemTemplate}"
+                          ScrollViewer.CanContentScroll="False"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          VirtualizingPanel.CacheLength="0 0"
+                          VirtualizingPanel.CacheLengthUnit="Pixel"
+                          VirtualizingPanel.ScrollUnit="Pixel"
+                          VirtualizingPanel.VirtualizationMode="Standard">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <controls:VirtualizingWrapPanel Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                </ListView>
+                <Grid x:Name="EmptyNotifier4">
+                    <Grid.Visibility>
+                        <MultiBinding Converter="{StaticResource DownloadQueueEmptyNotifierConverter}" UpdateSourceTrigger="PropertyChanged">
+                            <Binding ElementName="FavoriteSpotlightsQueue" Path="Items.Count" UpdateSourceTrigger="PropertyChanged" />
+                            <Binding ElementName="FavoriteSpotlightTab" Path="IsSelected" />
+                        </MultiBinding>
+                    </Grid.Visibility>
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Image Width="120"
                                Height="120"

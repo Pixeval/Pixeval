@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Win32;
 using Pixeval.Core;
+using Pixeval.Core.Persistent;
 using Pixeval.Objects;
 using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
@@ -137,6 +138,7 @@ namespace Pixeval
             await Settings.Restore();
             await Session.Restore();
             BrowsingHistoryAccessor.GlobalLifeTimeScope = new BrowsingHistoryAccessor(200, PixevalContext.BrowseHistoryDatabase);
+            FavoriteSpotlightAccessor.GlobalLifeTimeScope = new FavoriteSpotlightAccessor(PixevalContext.BrowseHistoryDatabase);
         }
 
         protected override async void OnExit(ExitEventArgs e)
@@ -148,13 +150,16 @@ namespace Pixeval
             }
             if (File.Exists(PixevalContext.BrowseHistoryDatabase))
             {
-                BrowsingHistoryAccessor.GlobalLifeTimeScope.SetWritable();
+                // TODO Dependency injection can magnificently clarify these template codes, But I'm planning to ship it on WinUI version instead of this old one
                 BrowsingHistoryAccessor.GlobalLifeTimeScope.Rewrite();
                 BrowsingHistoryAccessor.GlobalLifeTimeScope.Dispose();
+                FavoriteSpotlightAccessor.GlobalLifeTimeScope.Rewrite();
+                FavoriteSpotlightAccessor.GlobalLifeTimeScope.Dispose();
             }
             else
             {
                 BrowsingHistoryAccessor.GlobalLifeTimeScope.EmergencyRewrite();
+                FavoriteSpotlightAccessor.GlobalLifeTimeScope.EmergencyRewrite();
             }
 
             base.OnExit(e);

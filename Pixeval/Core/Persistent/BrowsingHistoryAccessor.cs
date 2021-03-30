@@ -24,11 +24,12 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using Pixeval.Data.ViewModel;
+using Pixeval.Objects;
 using SQLite;
 
-namespace Pixeval.Core
+namespace Pixeval.Core.Persistent
 {
-    public class BrowsingHistoryAccessor : ITimelineService, IDisposable
+    public class BrowsingHistoryAccessor : ITimelineService<BrowsingHistory>, IDisposable
     {
         public static BrowsingHistoryAccessor GlobalLifeTimeScope;
 
@@ -36,7 +37,6 @@ namespace Pixeval.Core
         private readonly string path;
         private readonly SQLiteConnection sqLiteConnection;
         private readonly int stackLimit;
-        private bool writable;
 
         public BrowsingHistoryAccessor(int stackLimit, string path)
         {
@@ -52,12 +52,11 @@ namespace Pixeval.Core
             sqLiteConnection?.Dispose();
         }
 
-        public bool Verify(BrowsingHistory browsingHistory)
+        public bool Verify(BrowsingHistory entity)
         {
-            if (delegation.Any())
+            if (delegation.FirstOrDefault() is { } prev)
             {
-                var prev = delegation[0];
-                if (prev.Type == browsingHistory.Type && prev.BrowseObjectId == browsingHistory.BrowseObjectId)
+                if (prev.Type == entity.Type && prev.BrowseObjectId == entity.BrowseObjectId)
                 {
                     return false;
                 }
@@ -66,14 +65,14 @@ namespace Pixeval.Core
             return true;
         }
 
-        public void Insert(BrowsingHistory browsingHistory)
+        public void Insert(BrowsingHistory entity)
         {
             if (delegation.Count >= stackLimit)
             {
                 delegation.Remove(delegation.Last());
             }
 
-            delegation.Insert(0, browsingHistory);
+            delegation.Insert(0, entity);
         }
 
         public void EmergencyRewrite()
@@ -87,17 +86,13 @@ namespace Pixeval.Core
             sql.InsertAll(Get());
         }
 
-        public IEnumerable<BrowsingHistory> Get()
+        public ICollection<BrowsingHistory> Get()
         {
             return delegation;
         }
 
         public void Rewrite()
         {
-            if (!writable)
-            {
-                throw new InvalidOperationException();
-            }
             sqLiteConnection.DropTable<BrowsingHistory>();
             sqLiteConnection.CreateTable<BrowsingHistory>();
             sqLiteConnection.InsertAll(delegation);
@@ -109,11 +104,6 @@ namespace Pixeval.Core
             {
                 File.Delete(path);
             }
-        }
-
-        public void SetWritable()
-        {
-            writable = true;
         }
     }
 }

@@ -34,32 +34,32 @@ namespace Pixeval.Core
     ///     for more information and underlying implementation, see
     ///     <a href="https://docs.microsoft.com/en-us/windows/apps/desktop/modernize/modernize-wpf-tutorial-4" />
     /// </summary>
-    public class WindowsUserActivityManager : ITimelineService
+    public class WindowsUserActivityManager : ITimelineService<BrowsingHistory>
     {
         public static readonly WindowsUserActivityManager GlobalLifeTimeScope = new WindowsUserActivityManager();
         private readonly Uri iconUri = new Uri("http://119.188.246.39/dc/pxlogo.ico");
         private UserActivitySession userActivitySession;
 
-        public bool Verify(BrowsingHistory browsingHistory)
+        public bool Verify(BrowsingHistory entity)
         {
             return true;
         }
 
-        public async void Insert(BrowsingHistory browsingHistory)
+        public async void Insert(BrowsingHistory entity)
         {
             var userActivityChannel = UserActivityChannel.GetDefault();
-            var model = await GetPixevalTimelineModel(browsingHistory);
+            var model = await GetPixevalTimelineModel(entity);
             var userActivity = await userActivityChannel.GetOrCreateUserActivityAsync($"Pixeval-{model.Id}-{DateTime.Now:s}");
             userActivity.VisualElements.DisplayText = model.Title;
             userActivity.VisualElements.Content = AdaptiveCardBuilder.CreateAdaptiveCardFromJson(BuildAdaptiveCard(model));
             userActivity.VisualElements.Attribution = new UserActivityAttribution(iconUri);
             userActivity.VisualElements.AttributionDisplayText = "Pixeval";
-            userActivity.ActivationUri = new Uri(browsingHistory.Type switch
+            userActivity.ActivationUri = new Uri(entity.Type switch
             {
                 "illust"    => $"pixeval://www.pixiv.net/artworks/{model.Id}",
                 "user"      => $"pixeval://www.pixiv.net/users/{model.Id}",
                 "spotlight" => $"pixeval://www.pixivision.net/en/a/{model.Id}",
-                _           => throw new ArgumentException(nameof(browsingHistory.Type))
+                _           => throw new ArgumentException(nameof(entity.Type))
             });
             await userActivity.SaveAsync();
             userActivitySession?.Dispose();

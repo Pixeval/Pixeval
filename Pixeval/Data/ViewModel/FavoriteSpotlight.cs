@@ -1,5 +1,4 @@
 ﻿#region Copyright (C) 2019-2020 Dylech30th. All rights reserved.
-
 // Pixeval - A Strong, Fast and Flexible Pixiv Client
 // Copyright (C) 2019-2020 Dylech30th
 // 
@@ -15,17 +14,23 @@
 // 
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 #endregion
 
-using Pixeval.Data.ViewModel;
+using SQLite;
 
-namespace Pixeval.Core
+namespace Pixeval.Data.ViewModel
 {
-    public interface ITimelineService<in T>
+    public class FavoriteSpotlight
     {
-        bool Verify(T entity);
+        [PrimaryKey]
+        [AutoIncrement]
+        public int Index { get; set; }
+        
+        public string SpotlightArticleId { get; set; }
+        
+        public string SpotlightTitle { get; set; }
 
-        void Insert(T entity);
+        public string SpotlightThumbnail { get; set; }
+
     }
 }

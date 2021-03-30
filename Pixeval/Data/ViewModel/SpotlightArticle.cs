@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using Newtonsoft.Json;
 using Pixeval.Core;
 using Pixeval.Objects.Generic;
@@ -58,12 +59,21 @@ namespace Pixeval.Data.ViewModel
             var result = await Tasks<string, Illustration>.Of(await PixivClient.GetArticleWorks(Id.ToString())).Mapping(async i =>
             {
                 var res = await PixivHelper.IllustrationInfo(i);
+                if (res == null)
+                    return null;
                 res.SpotlightTitle = Title;
+                res.SpotlightArticleId = Id.ToString();
                 res.FromSpotlight = true;
+                res.MangaMetadata?.Peek(m =>
+                {
+                    m.FromSpotlight = true;
+                    m.SpotlightTitle = Title;
+                    m.SpotlightArticleId = Id.ToString();
+                });
                 return res;
             }).Construct().WhenAll();
 
-            foreach (var illustration in result)
+            foreach (var illustration in result.Where(i => i != null))
             {
                 DownloadManager.EnqueueDownloadItem(illustration);
             }

@@ -42,19 +42,16 @@ namespace Pixeval.Data.ViewModel
 
         private bool retried;
 
-        public DownloadableIllustration(Illustration downloadContent,string path, bool isFromManga)
+        public DownloadableIllustration(Illustration downloadContent,string path)
         {
-            Path = path;
-            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(Path));
+            
+            Path = System.IO.Path.Combine(Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path)).FullName, System.IO.Path.GetFileName(path)!);
             DownloadContent = downloadContent;
-            IsFromManga = isFromManga;
         }
 
         public Illustration DownloadContent { get; set; }
         
         public string Path { get; set; }
-
-        public bool IsFromManga { get; set; }
 
         public bool DownloadFailed { get; set; }
 
@@ -62,7 +59,7 @@ namespace Pixeval.Data.ViewModel
 
         public string ReasonPhase { get; set; }
 
-        public Observable<DownloadState> State { get; set; } = new Observable<DownloadState>(DownloadState.Queue);
+        public Observable<DownloadState> State { get; } = new Observable<DownloadState>(DownloadState.Queue);
 
 
         public void Freeze()

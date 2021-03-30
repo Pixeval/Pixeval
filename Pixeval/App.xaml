@@ -53,6 +53,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                        EasingMode="EaseInOut"
                        Power="1" />
             <valueConverters:EnumToStringConverter x:Key="EnumToStringConverter" />
+            <valueConverters:DownloadQueueEmptyNotifierConverter x:Key="DownloadQueueEmptyNotifierConverter" />
             <valueConverters:VisibleIfTrueConverter x:Key="VisibleIfTrueConverter" />
             <valueConverters:VisibleIfFalseConverter x:Key="VisibleIfFalseConverter" />
             <valueConverters:DoublePlusConverter x:Key="DoublePlusConverter" />

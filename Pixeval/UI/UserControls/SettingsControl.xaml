@@ -26,7 +26,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
              xmlns:valueConverters="clr-namespace:Pixeval.Objects.ValueConverters"
              xmlns:viewModel="clr-namespace:Pixeval.Data.ViewModel"
              xmlns:validation="clr-namespace:Pixeval.Objects.Validation"
-             xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
+             xmlns:primitive="clr-namespace:Pixeval.Objects.Primitive" 
+             xmlns:core="clr-namespace:Pixeval.Core"
              d:DataContext="{d:DesignData Settings}"
              TextElement.FontFamily="Microsoft YaHei Light"
              mc:Ignorable="d">
@@ -222,9 +223,32 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                              ToolTip="{Binding Path=(i18N:AkaI18N.DownloadPathSyntaxToolTip)}"
                              materialDesign:HintAssist.Hint="{Binding Path=(i18N:AkaI18N.DownloadLocation)}"
                              FontSize="12"
+                             TextChanged="DownloadPathTextBox_OnTextChanged"
                              Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                              Text="{Binding Path=DownloadPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     </TextBox>
+                    <Popup x:Name="MacroCompletionPopup" Grid.Row="11" 
+                           Grid.Column="0"
+                           Grid.ColumnSpan="2" 
+                           Width="750"
+                           Height="310" 
+                           AllowsTransparency="True"
+                           PlacementTarget="{Binding ElementName=DownloadPathTextBox}"
+                           primitive:PopupHelper.PopupPlacementTarget="{Binding ElementName=DownloadPathTextBox}"
+                           Placement="Bottom"
+                           StaysOpen="False">
+                        <materialDesign:Card Width="730" Height="300" Margin="10, 5">
+                            <ListBox x:Name="MacroCompletionBox" SelectionChanged="MacroCompletionBox_OnSelectionChanged">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate DataType="core:DownloadPathMacros+MacroToken">
+                                        <Grid Height="25" Margin="10,0,0,0">
+                                            <TextBlock FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Macro}" ></TextBlock>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </materialDesign:Card>
+                    </Popup>
                     <Button Grid.Row="11"
                             Grid.Column="1"
                             Width="30"

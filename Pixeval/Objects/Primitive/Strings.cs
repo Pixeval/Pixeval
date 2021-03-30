@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -79,7 +80,7 @@ namespace Pixeval.Objects.Primitive
         // see https://stackoverflow.com/questions/146134/how-to-remove-illegal-characters-from-path-and-filenames
         public static string FormatPath(string original)
         {
-            return string.Concat(original.Split(Path.GetInvalidFileNameChars()));
+            return string.Concat(original?.Split(Path.GetInvalidFileNameChars()) ?? Array.Empty<string>());
         }
 
         public static string AssumeImageContentType(string fileName)
@@ -114,6 +115,51 @@ namespace Pixeval.Objects.Primitive
         public static string RegexReplace(this string str, Regex regex, string pattern)
         {
             return regex.Replace(str, pattern);
+        }
+
+        public static string RemoveCommonSubstringFromEnd(this string s1, string s2)
+        {
+            var sb = new StringBuilder();
+            if (s1 == s2) return s2;
+            for (var i = 0; i < s1.Length;)
+            {
+                var j = i++;
+                foreach (var c in s2)
+                {
+                    if (j >= s1.Length)
+                    {
+                        return sb.Length == 0 ? s2 : new Regex(Regex.Escape(sb.ToString())).Replace(s2, string.Empty, 1);
+                    }
+                    if (c == s1[j++])
+                    {
+                        sb.Append(c);
+                    }
+                    else
+                    {
+                        sb.Clear();
+                        break;
+                    }
+                }
+            }
+            return sb.Length == 0 ? s2 : new Regex(Regex.Escape(sb.ToString())).Replace(s2, string.Empty, 1);
+        }
+
+        public static string RemoveUntil(this string str, char ch, int time = 1, char? before = null)
+        {
+            if (!str.Contains(ch))
+                return str;
+            if (before.HasValue && str.IndexOf(before.Value) is { } bIndex && bIndex != -1 && !str.Substring(0, bIndex).Contains(ch))
+                return str;
+            var t = 0;
+            var sb = new StringBuilder();
+            foreach (var c in str)
+            {
+                if (t >= time)
+                    sb.Append(c);
+                else if (c == ch)
+                    ++t;
+            }
+            return sb.ToString();
         }
     }
 }

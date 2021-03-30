@@ -18,15 +18,18 @@
 
 #endregion
 
-using System.Collections.Specialized;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Effects;
+using Dragablz;
 using Pixeval.Core;
+using Pixeval.Core.Persistent;
 using Pixeval.Data.ViewModel;
 using Pixeval.Objects.Generic;
 using Pixeval.Objects.I18n;
@@ -42,18 +45,15 @@ namespace Pixeval.UI.UserControls
         public DownloadQueue()
         {
             InitializeComponent();
-            ((INotifyCollectionChanged) DownloadItemsQueue.Items).CollectionChanged += (sender, args) => EmptyNotifier1.Visibility = DownloadItemsQueue.Items.Count == 0 ? Visibility.Visible : Visibility.Hidden;
-            ((INotifyCollectionChanged) DownloadedItemsQueue.Items).CollectionChanged += (sender, args) => EmptyNotifier2.Visibility = DownloadedItemsQueue.Items.Count == 0 ? Visibility.Visible : Visibility.Hidden;
-            ((INotifyCollectionChanged) BrowsingHistoryQueue.Items).CollectionChanged += (sender, args) => EmptyNotifier3.Visibility = BrowsingHistoryQueue.Items.Count == 0 ? Visibility.Visible : Visibility.Hidden;
             UiHelper.SetItemsSource(DownloadItemsQueue, DownloadManager.Downloading);
             UiHelper.SetItemsSource(DownloadedItemsQueue, DownloadManager.Downloaded);
-            UiHelper.SetItemsSource(BrowsingHistoryQueue, BrowsingHistoryAccessor.GlobalLifeTimeScope.Get());
+            UiHelper.SetItemsSource(FavoriteSpotlightsQueue, FavoriteSpotlightAccessor.GlobalLifeTimeScope.Get());
         }
 
-        private async void DownloadItemThumbnail_OnLoaded(object sender, RoutedEventArgs e)
+        private void DownloadItemThumbnail_OnLoaded(object sender, RoutedEventArgs e)
         {
             var url = sender.GetDataContext<DownloadableIllustration>().DownloadContent.Thumbnail;
-            UiHelper.SetImageSource(sender, await PixivIO.FromUrl(url));
+            Task.Run(async () => UiHelper.SetImageSource(sender, await PixivIO.FromUrl(url)));
         }
 
         private void RetryButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -71,7 +71,7 @@ namespace Pixeval.UI.UserControls
         private void ViewDownloadLocationButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var model = sender.GetDataContext<DownloadableIllustration>();
-            if (!model.Path.IsNullOrEmpty() && Path.GetDirectoryName(model.Path) is var _)
+            if (!model.Path.IsNullOrEmpty() && Path.GetDirectoryName(model.Path) != string.Empty)
             {
                 var processInfo = new ProcessStartInfo { FileName = "explorer", Arguments = $"/select, \"{model.Path}\"" };
                 Process.Start(processInfo);
@@ -86,7 +86,7 @@ namespace Pixeval.UI.UserControls
         {
             MainWindow.Instance.DownloadQueueDialogHost.CloseControl();
             var model = sender.GetDataContext<DownloadableIllustration>();
-            MainWindow.Instance.OpenIllustBrowser(model.IsFromManga ? model.DownloadContent.MangaMetadata[0] : model.DownloadContent);
+            MainWindow.Instance.OpenIllustBrowser(model.DownloadContent.IsManga ? model.DownloadContent.MangaMetadata[0] : model.DownloadContent);
         }
 
         private void RemoveFromDownloaded(object sender, RoutedEventArgs e)
@@ -158,6 +158,76 @@ namespace Pixeval.UI.UserControls
             MainWindow.Instance.DownloadQueueDialogHost.CurrentSession.Close();
             MainWindow.Instance.OpenUserBrowser();
             MainWindow.Instance.SetUserBrowserContext(new User { Id = sender.GetDataContext<BrowsingHistory>().BrowseObjectId });
+        }
+
+        private void CopyDownloadPathMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(sender.GetDataContext<DownloadableIllustration>().Path);
+        }
+
+        private void RemoveFromListMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            (DownloadQueueTabControl.SelectedItem switch
+            {
+                var x when x.Equals(BrowsingHistoryTab)   => BrowsingHistoryAccessor.GlobalLifeTimeScope.Get(),
+                var x when x.Equals(FavoriteSpotlightTab) => FavoriteSpotlightAccessor.GlobalLifeTimeScope.Get(),
+                _                                         => null
+            })?.Apply(list => list.Remove(sender.GetDataContext<BrowsingHistory>()));
+        }
+
+        private void RemoveAllFromListMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            (DownloadQueueTabControl.SelectedItem switch
+            {
+                var x when x.Equals(BrowsingHistoryTab)   => BrowsingHistoryAccessor.GlobalLifeTimeScope.Get(),
+                var x when x.Equals(FavoriteSpotlightTab) => FavoriteSpotlightAccessor.GlobalLifeTimeScope.Get(),
+                _                                         => null
+            })?.Apply(list => list.Clear());
+        }
+
+        private void DownloadQueueTabControl_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!e.OriginalSource.Equals(DownloadQueueTabControl)) // tab control's SelectionChanged event will fired when it's elements' SelectionChanged event is triggered
+            {
+                return;
+            }
+            
+            if (sender is TabablzControl tabControl)
+            {
+                switch (tabControl.SelectedItem)
+                {
+                    case var x when x.Equals(BrowsingHistoryTab):
+                        RefreshBrowsingHistory();
+                        break;
+                    case var x when x.Equals(FavoriteSpotlightTab):
+                        RefreshFavoriteSpotlight();
+                        break;
+                }
+                
+            }
+        }
+        
+        // Performance consideration
+        public async void RefreshBrowsingHistory()
+        {
+            BrowsingHistoryQueue.ItemsSource = null;
+            var collection = UiHelper.NewItemsSource<BrowsingHistory>(BrowsingHistoryQueue);
+            foreach (var browsingHistory in BrowsingHistoryAccessor.GlobalLifeTimeScope.Get())
+            {
+                await Task.Delay(5);
+                collection.Add(browsingHistory);
+            }
+        }
+
+        public async void RefreshFavoriteSpotlight()
+        {
+            FavoriteSpotlightsQueue.ItemsSource = null;
+            var collection = UiHelper.NewItemsSource<BrowsingHistory>(FavoriteSpotlightsQueue);
+            foreach (var browsingHistory in FavoriteSpotlightAccessor.GlobalLifeTimeScope.Get())
+            {
+                await Task.Delay(5);
+                collection.Add(browsingHistory);
+            }
         }
     }
 }

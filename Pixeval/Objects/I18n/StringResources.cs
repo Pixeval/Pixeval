@@ -193,6 +193,11 @@ namespace Pixeval.Objects.I18n
         private static string _recommendIllustrationToolTip = GetResource(nameof(RecommendIllustrationToolTip));
         private static string _invalidDirectoryPath = GetResource(nameof(InvalidDirectoryPath));
         private static string _downloadPathSyntaxToolTip = GetResource(nameof(DownloadPathSyntaxToolTip));
+        private static string _copyDownloadPath = GetResource(nameof(CopyDownloadPath));
+        private static string _downloadQueueRemoveFromList = GetResource(nameof(DownloadQueueRemoveFromList));
+        private static string _downloadQueueRemoveAllFromList = GetResource(nameof(DownloadQueueRemoveAllFromList));
+        private static string _addSpotlightToFavorite = GetResource(nameof(AddSpotlightToFavorite));
+        private static string _favoriteSpotlights = GetResource(nameof(FavoriteSpotlights));
 
         public static string EmptyEmailOrPasswordIsNotAllowed
         {
@@ -1870,6 +1875,55 @@ namespace Pixeval.Objects.I18n
             set
             {
                 _downloadPathSyntaxToolTip = value;
+                OnStaticPropertyChanged();
+            }
+        }
+        
+        public static string CopyDownloadPath
+        {
+            get => _copyDownloadPath;
+            set
+            {
+                _copyDownloadPath = value;
+                OnStaticPropertyChanged();
+            }
+        }
+        
+        public static string DownloadQueueRemoveFromList
+        {
+            get => _downloadQueueRemoveFromList;
+            set
+            {
+                _downloadQueueRemoveFromList = value;
+                OnStaticPropertyChanged();
+            }
+        }
+        public static string DownloadQueueRemoveAllFromList
+        {
+            get => _downloadQueueRemoveAllFromList;
+            set
+            {
+                _downloadQueueRemoveAllFromList = value;
+                OnStaticPropertyChanged();
+            }
+        }
+        
+        public static string AddSpotlightToFavorite
+        {
+            get => _addSpotlightToFavorite;
+            set
+            {
+                _addSpotlightToFavorite = value;
+                OnStaticPropertyChanged();
+            }
+        }
+        
+        public static string FavoriteSpotlights
+        {
+            get => _favoriteSpotlights;
+            set
+            {
+                _favoriteSpotlights = value;
                 OnStaticPropertyChanged();
             }
         }
