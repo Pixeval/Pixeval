@@ -36,6 +36,8 @@ using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Threading;
+using MaterialDesignExtensions.Controls;
+using MaterialDesignExtensions.Model;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignThemes.Wpf.Transitions;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -53,6 +55,8 @@ using Pixeval.Persisting;
 using Pixeval.UI.UserControls;
 using Refit;
 using Xceed.Wpf.AvalonDock.Controls;
+using MessageDialog = Pixeval.UI.UserControls.MessageDialog;
+
 #if RELEASE
 using System.Net.Http;
 using Pixeval.Objects.Exceptions;
@@ -65,14 +69,14 @@ namespace Pixeval.UI
     {
         public static MainWindow Instance;
 
-        public static readonly SnackbarMessageQueue MessageQueue = new SnackbarMessageQueue(TimeSpan.FromSeconds(2)) { IgnoreDuplicate = true };
-
+        public static readonly SnackbarMessageQueue MessageQueue = new SnackbarMessageQueue(TimeSpan.FromSeconds(2));
+        
         public MainWindow()
         {
             Instance = this;
             InitializeComponent();
-            NavigatorList.SelectedItem = MenuTab;
             MainWindowSnackBar.MessageQueue = MessageQueue;
+            previewNavigationItem = HomePageNavigationItem;
 
             if (Dispatcher != null)
             {
@@ -82,6 +86,22 @@ namespace Pixeval.UI
 #pragma warning disable 4014
             AcquireRecommendUser();
 #pragma warning restore 4014
+        }
+        
+        public static void UpdateNavigationLanguage()
+        {
+            Instance.HomePageNavigationItem.Label = AkaI18N.HomePage;
+            Instance.GalleryNavigationItem.Label = AkaI18N.MyGallery;
+            Instance.FollowingNavigationItem.Label = AkaI18N.MyFollowing;
+            Instance.SpotlightNavigationItem.Label = AkaI18N.Spotlight;
+            Instance.RecommendNavigationItem.Label = AkaI18N.Recommend;
+            Instance.IllustRankingNavigationItem.Label = AkaI18N.IllustRanking;
+            Instance.FeedNavigationItem.Label = AkaI18N.Feed;
+            Instance.UserUpdateNavigationItem.Label = AkaI18N.UserUpdate;
+            Instance.SauceNaoNavigationItem.Label = AkaI18N.SearchImageBySource;
+            Instance.DownloadQueueNavigationItem.Label = AkaI18N.DownloadQueueAndHistory;
+            Instance.SettingNavigationItem.Label = AkaI18N.Setting;
+            Instance.LogoutNavigationItem.Label = AkaI18N.Logout;
         }
 
         private static void Dispatcher_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
@@ -214,6 +234,7 @@ namespace Pixeval.UI
 
         private async void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
+            UpdateNavigationLanguage();
             await AddUserNameAndAvatar();
         }
 
@@ -228,12 +249,14 @@ namespace Pixeval.UI
 
         private void PixevalSettingDialog_OnDialogClosing(object sender, DialogClosingEventArgs e)
         {
-            SettingsTab.IsSelected = false;
+            NavigatorList.SelectedItem = previewNavigationItem;
         }
 
         private void DownloadQueueDialogHost_OnDialogOpened(object sender, DialogOpenedEventArgs e)
         {
             var content = (DownloadQueue) DownloadQueueDialogHost.DialogContent;
+            if (content == null)
+                return;
             if (content.BrowsingHistoryTab.IsSelected)
             {
                 content.RefreshBrowsingHistory();
@@ -246,8 +269,8 @@ namespace Pixeval.UI
 
         private void DownloadQueueDialogHost_OnDialogClosing(object sender, DialogClosingEventArgs e)
         {
-            UiHelper.ReleaseItemsSource(((DownloadQueue) DownloadQueueDialogHost.DialogContent).BrowsingHistoryQueue);
-            DownloadListTab.IsSelected = false;
+            UiHelper.ReleaseItemsSource(((DownloadQueue) DownloadQueueDialogHost.DialogContent)?.BrowsingHistoryQueue);
+            NavigatorList.SelectedItem = previewNavigationItem;
         }
 
         #region 主窗口
@@ -305,12 +328,12 @@ namespace Pixeval.UI
                     }
                     return;
                 case Key.Escape when IllustBrowserDialogHost.IsOpen:
-                    IllustBrowserDialogHost.CurrentSession.Close();
+                    IllustBrowserDialogHost.CurrentSession?.Close();
                     return;
                 case Key.Escape when PixevalSettingDialog.IsOpen:
                     if (PixevalSettingDialog.IsOpen)
                     {
-                        PixevalSettingDialog.CurrentSession.Close();
+                        PixevalSettingDialog.CurrentSession?.Close();
                     }
                     break;
                 case var x when (x == Key.PageDown || x == Key.Right || x == Key.Space) && browsing && !disableKeyEvent:
@@ -449,7 +472,7 @@ namespace Pixeval.UI
             ConditionInputBox.Visibility = Visibility.Hidden;
             UserBrowserConditionInputBox.Visibility = Visibility.Hidden;
             UiHelper.CloseControls(TrendingTagPopup, AutoCompletionPopup);
-            DownloadListTab.IsSelected = false;
+            DownloadQueueNavigationItem.IsSelected = false;
         }
 
         private void Hyperlink_OnRequestNavigate(object sender, RequestNavigateEventArgs e)
@@ -461,105 +484,139 @@ namespace Pixeval.UI
 
         #region 导航栏
 
-        private void SettingsTab_OnSelected(object sender, RoutedEventArgs e)
+        private bool onEffectivelyUnselectableItems;
+
+        private INavigationItem previewNavigationItem;
+        
+        private void NavigatorList_OnNavigationItemSelected(object sender, NavigationItemSelectedEventArgs args)
         {
-            PixevalSettingDialog.IsOpen = true;
-        }
+            // the only possibility of which the onEffectivelyUnselectableItems is true while this event firing
+            // is that the DownloadQueueDialogHost or SettingsDialogHost is closing, we do nothing here because
+            // it's just a reset
+            if (onEffectivelyUnselectableItems)
+            {
+                onEffectivelyUnselectableItems = false;
+                return;
+            }
 
-        private void DownloadListTab_OnSelected(object sender, RoutedEventArgs e)
-        {
-            DownloadQueueDialogHost.IsOpen = true;
-        }
-
-        private void UpdateIllustTab_OnSelected(object sender, RoutedEventArgs e)
-        {
-            MoveDownHomePage();
-            MessageQueue.Enqueue(AkaI18N.SearchingUserUpdates);
-
-            PixivHelper.Enumerate(new UserUpdateAsyncEnumerable(), UiHelper.NewItemsSource<Illustration>(ImageListView));
-        }
-
-        private void GalleryTab_OnSelected(object sender, RoutedEventArgs e)
-        {
-            MoveDownHomePage();
-            MessageQueue.Enqueue(AkaI18N.SearchingGallery);
-
-            PixivHelper.Enumerate(AbstractGalleryAsyncEnumerable.Of(Session.Current.Id, PublicRestrictPolicy.IsChecked is true ? RestrictPolicy.Public : RestrictPolicy.Private), UiHelper.NewItemsSource<Illustration>(ImageListView));
-        }
-
-        private void RecommendTab_OnSelected(object sender, RoutedEventArgs e)
-        {
-            MoveDownHomePage();
-            MessageQueue.Enqueue(AkaI18N.SearchingRecommend);
-
-            PixivHelper.Enumerate(Settings.Global.SortOnInserting ? (AbstractRecommendAsyncEnumerable) new PopularityRecommendAsyncEnumerable() : new PlainRecommendAsyncEnumerable(), UiHelper.NewItemsSource<Illustration>(ImageListView), 10);
-        }
-
-        private void SpotlightTab_OnSelected(object sender, RoutedEventArgs e)
-        {
-            MoveDownHomePage();
-
-            var iterator = new SpotlightQueryAsyncEnumerable(Settings.Global.SpotlightQueryStart);
-            PixivHelper.Enumerate(iterator, UiHelper.NewItemsSource<SpotlightArticle>(SpotlightListView), 10);
-        }
-
-        private void FollowingTab_OnSelected(object sender, RoutedEventArgs e)
-        {
-            MoveDownHomePage();
-            MessageQueue.Enqueue(AkaI18N.SearchingFollower);
-
-            PixivHelper.Enumerate(AbstractUserFollowingAsyncEnumerable.Of(Session.Current.Id, PublicRestrictPolicy.IsChecked is true ? RestrictPolicy.Public : RestrictPolicy.Private), UiHelper.NewItemsSource<User>(UserPreviewListView));
-        }
-
-        private void FollowingTab_OnUnselected(object sender, RoutedEventArgs e)
-        {
-            UiHelper.ReleaseItemsSource(UserPreviewListView);
-        }
-
-        private void SignOutTab_OnSelected(object sender, RoutedEventArgs e)
-        {
-            Session.Clear();
-            Settings.Initialize();
-            BrowsingHistoryAccessor.GlobalLifeTimeScope.Dispose();
-            BrowsingHistoryAccessor.GlobalLifeTimeScope.DropDb();
-            FavoriteSpotlightAccessor.GlobalLifeTimeScope.Dispose();
-            FavoriteSpotlightAccessor.GlobalLifeTimeScope.DropDb();
-            var login = new SignIn();
-            login.Show();
-            Close();
-        }
-
-        private void NavigatorList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
             TopBarRetract((TranslateTransform) RestrictPolicySelector.RenderTransform);
             TopBarRetract((TranslateTransform) RankOptionSelector.RenderTransform);
             TrendingTagPopup.CloseControl();
-            if (NavigatorList.SelectedItem is ListViewItem current)
+
+            var item = args.NavigationItem;
+
+            if (item != SettingNavigationItem && item != DownloadQueueNavigationItem)
             {
-                var translateTransform = (TranslateTransform) HomeDisplayContainer.RenderTransform;
-                if (current == MenuTab && !translateTransform.Y.Equals(0))
+                previewNavigationItem = item;
+            }
+            else
+            {
+                onEffectivelyUnselectableItems = true;
+            }
+            var translateTransform = (TranslateTransform) HomeDisplayContainer.RenderTransform;
+            if (item == HomePageNavigationItem && !translateTransform.Y.Equals(0))
+            {
+                UiHelper.ReleaseItemsSource(SpotlightListView);
+                UiHelper.ReleaseItemsSource(ImageListView);
+                UiHelper.ReleaseItemsSource(UserPreviewListView);
+                EnumeratingSchedule.CancelCurrent();
+                MoveUpHomePage();
+            }
+            else if (item != HomePageNavigationItem && translateTransform.Y.Equals(0) && !onEffectivelyUnselectableItems)
+            {
+                MoveDownHomePage();
+            }
+
+            switch (args.NavigationItem)
+            {
+                case var x when x == IllustRankingNavigationItem:
+                    SetVisibility(ImageListView);
+                    GetRanking();
+                    break;
+                case var x when x == FeedNavigationItem:
+                    SetVisibility(FeedsListView);
+                    MoveDownHomePage();
+                    MessageQueue.Enqueue(AkaI18N.SearchingTrends);
+                    PixivHelper.Enumerate(new FeedsAsyncEnumerable(), UiHelper.NewItemsSource<Trends>(FeedsListView), 20);
+                    break;
+                // these two tabs is considered effectively unselectable, they participate 
+                // as buttons in the navigation list
+                // ----------------------------------------------------------
+                case var x when x == SettingNavigationItem:
+                    PixevalSettingDialog.IsOpen = true;
+                    break;
+                case var x when x == DownloadQueueNavigationItem:
+                    DownloadQueueDialogHost.IsOpen = true;
+                    break;
+                // ----------------------------------------------------------
+                case var x when x == UserUpdateNavigationItem:
+                    SetVisibility(ImageListView);
+                    MoveDownHomePage();
+                    MessageQueue.Enqueue(AkaI18N.SearchingUserUpdates);
+                    PixivHelper.Enumerate(new UserUpdateAsyncEnumerable(), UiHelper.NewItemsSource<Illustration>(ImageListView));
+                    break;
+                case var x when x == GalleryNavigationItem:
+                    SetVisibility(ImageListView);
+                    MoveDownHomePage();
+                    MessageQueue.Enqueue(AkaI18N.SearchingGallery);
+                    PixivHelper.Enumerate(AbstractGalleryAsyncEnumerable.Of(Session.Current.Id, PublicRestrictPolicy.IsChecked is true ? RestrictPolicy.Public : RestrictPolicy.Private), UiHelper.NewItemsSource<Illustration>(ImageListView));
+                    break;
+                case var x when x == RecommendNavigationItem:
+                    SetVisibility(ImageListView);
+                    MoveDownHomePage();
+                    MessageQueue.Enqueue(AkaI18N.SearchingRecommend);
+                    PixivHelper.Enumerate(Settings.Global.SortOnInserting ? (AbstractRecommendAsyncEnumerable) new PopularityRecommendAsyncEnumerable() : new PlainRecommendAsyncEnumerable(), UiHelper.NewItemsSource<Illustration>(ImageListView), 10);
+                    break;
+                case var x when x == SpotlightNavigationItem:
+                    SetVisibility(SpotlightListView);
+                    MoveDownHomePage();
+                    var iterator = new SpotlightQueryAsyncEnumerable(Settings.Global.SpotlightQueryStart);
+                    PixivHelper.Enumerate(iterator, UiHelper.NewItemsSource<SpotlightArticle>(SpotlightListView), 10);
+                    break;
+                case var x when x == FollowingNavigationItem:
+                    SetVisibility(UserPreviewListView);
+                    MoveDownHomePage();
+                    MessageQueue.Enqueue(AkaI18N.SearchingFollower);
+                    PixivHelper.Enumerate(AbstractUserFollowingAsyncEnumerable.Of(Session.Current.Id, PublicRestrictPolicy.IsChecked is true ? RestrictPolicy.Public : RestrictPolicy.Private), UiHelper.NewItemsSource<User>(UserPreviewListView));
+                    break;
+                case var x when x == LogoutNavigationItem:
+                    Session.Clear();
+                    Settings.Initialize();
+                    BrowsingHistoryAccessor.GlobalLifeTimeScope.Dispose();
+                    BrowsingHistoryAccessor.GlobalLifeTimeScope.DropDb();
+                    FavoriteSpotlightAccessor.GlobalLifeTimeScope.Dispose();
+                    FavoriteSpotlightAccessor.GlobalLifeTimeScope.DropDb();
+                    var login = new SignIn();
+                    login.Show();
+                    Close();
+                    break;
+            }
+            
+            // if the selected items is not download queue or settings or some sort of effectively
+            // unselectable items, clear the lists because it refers to an efficient tab switching
+            if (!onEffectivelyUnselectableItems)
+            {
+                if (item != SpotlightNavigationItem)
                 {
                     UiHelper.ReleaseItemsSource(SpotlightListView);
-                    UiHelper.ReleaseItemsSource(ImageListView);
-                    UiHelper.ReleaseItemsSource(UserPreviewListView);
-                    EnumeratingSchedule.CancelCurrent();
-                    MoveUpHomePage();
                 }
-                else if (current != MenuTab && translateTransform.Y.Equals(0))
+                else if (item != FollowingNavigationItem)
                 {
-                    MoveDownHomePage();
+                    UiHelper.ReleaseItemsSource(UserPreviewListView);
+                }
+                else if (item != FeedNavigationItem)
+                {
+                    UiHelper.ReleaseItemsSource(FeedsListView);
                 }
             }
-        }
-
-        private void NavigatorList_OnPreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        private void ExternalNavigatorList_OnPreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            e.Handled = true;
+            
+            void SetVisibility(ListView listView)
+            {
+                listView.Visibility = Visibility.Visible;
+                var lists = new List<ListView> { FeedsListView, ImageListView, UserPreviewListView, SpotlightListView };
+                lists.Remove(listView);
+                lists.ForEach(lv => lv.Visibility = Visibility.Hidden);
+            }
         }
 
         #endregion
@@ -726,11 +783,11 @@ namespace Pixeval.UI
 
         private void ContentDisplay_OnMouseMove(object sender, MouseEventArgs e)
         {
-            if (!(Navigating(GalleryTab) || Navigating(FollowingTab) || Navigating(RankingTab)) || animating)
+            if (!(Navigating(GalleryNavigationItem) || Navigating(FollowingNavigationItem) || Navigating(IllustRankingNavigationItem)) || animating)
             {
                 return;
             }
-            var transform = (TranslateTransform) (Navigating(RankingTab) ? RankOptionSelector.RenderTransform : RestrictPolicySelector.RenderTransform);
+            var transform = (TranslateTransform) (Navigating(IllustRankingNavigationItem) ? RankOptionSelector.RenderTransform : RestrictPolicySelector.RenderTransform);
             if (e.GetPosition(this).Y <= 40 && Width - e.GetPosition(this).X >= 60)
             {
                 TopBarExpand(transform);
@@ -747,12 +804,12 @@ namespace Pixeval.UI
             {
                 return;
             }
-            if (Navigating(GalleryTab))
+            if (Navigating(GalleryNavigationItem))
             {
                 MessageQueue.Enqueue(AkaI18N.SearchingGallery);
                 PixivHelper.Enumerate(AbstractGalleryAsyncEnumerable.Of(Session.Current.Id, RestrictPolicy.Private), UiHelper.NewItemsSource<Illustration>(ImageListView));
             }
-            else if (Navigating(FollowingTab))
+            else if (Navigating(FollowingNavigationItem))
             {
                 MessageQueue.Enqueue(AkaI18N.SearchingFollower);
                 PixivHelper.Enumerate(AbstractUserFollowingAsyncEnumerable.Of(Session.Current.Id, RestrictPolicy.Private), UiHelper.NewItemsSource<User>(UserPreviewListView));
@@ -765,12 +822,12 @@ namespace Pixeval.UI
             {
                 return;
             }
-            if (Navigating(GalleryTab))
+            if (Navigating(GalleryNavigationItem))
             {
                 MessageQueue.Enqueue(AkaI18N.SearchingGallery);
                 PixivHelper.Enumerate(AbstractGalleryAsyncEnumerable.Of(Session.Current.Id, RestrictPolicy.Public), UiHelper.NewItemsSource<Illustration>(ImageListView));
             }
-            else if (Navigating(FollowingTab))
+            else if (Navigating(FollowingNavigationItem))
             {
                 MessageQueue.Enqueue(AkaI18N.SearchingFollower);
                 PixivHelper.Enumerate(AbstractUserFollowingAsyncEnumerable.Of(Session.Current.Id, RestrictPolicy.Public), UiHelper.NewItemsSource<User>(UserPreviewListView));
@@ -908,8 +965,8 @@ namespace Pixeval.UI
                 BackToMainPageButton.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left) { RoutedEvent = Mouse.MouseDownEvent, Source = this });
             }
 
-            IllustBrowserDialogHost.CurrentSession.Close();
-            NavigatorList.SelectedItem = Instance.MenuTab;
+            IllustBrowserDialogHost.CurrentSession?.Close();
+            NavigatorList.SelectedItem = HomePageNavigationItem;
 
             await Task.Delay(300);
             KeywordTextBox.Text = txt;
@@ -924,7 +981,7 @@ namespace Pixeval.UI
         private void ImageBrowserUserAvatar_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var usr = new User { Id = sender.GetDataContext<Illustration>().UserId };
-            IllustBrowserDialogHost.CurrentSession.Close();
+            IllustBrowserDialogHost.CurrentSession?.Close();
             SetUserBrowserContext(usr);
         }
 
@@ -984,14 +1041,6 @@ namespace Pixeval.UI
             UiHelper.SetImageSource(sender, await PixivIO.FromUrl(sender.GetDataContext<Trends>().PostUserThumbnail));
         }
 
-        private void TrendsTab_OnSelected(object sender, RoutedEventArgs e)
-        {
-            MoveDownHomePage();
-            MessageQueue.Enqueue(AkaI18N.SearchingTrends);
-
-            PixivHelper.Enumerate(new TrendsAsyncEnumerable(), UiHelper.NewItemsSource<Trends>(TrendsListView), 20);
-        }
-
         private async void ReferImage_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             OpenIllustBrowser(await PixivHelper.IllustrationInfo(sender.GetDataContext<Trends>().TrendObjectId));
@@ -1020,7 +1069,7 @@ namespace Pixeval.UI
 
         private void RankDatePicker_OnSelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (Navigating(RankingTab))
+            if (Navigating(IllustRankingNavigationItem))
             {
                 GetRanking();
             }
@@ -1028,7 +1077,7 @@ namespace Pixeval.UI
         
         private void RankOptionPicker_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (Navigating(RankingTab))
+            if (Navigating(IllustRankingNavigationItem))
             {
                 var option = e.AddedItems[0].GetDataContext<RankOptionModel[]>().First(p => p.IsSelected);
                 if (option == currentSelected)
@@ -1061,11 +1110,6 @@ namespace Pixeval.UI
             }
 
             MessageQueue.Enqueue(AkaI18N.RankDateCannotBeNull);
-        }
-
-        private void RankingTab_OnSelected(object sender, RoutedEventArgs e)
-        {
-            GetRanking();
         }
 
         #endregion
@@ -1126,7 +1170,7 @@ namespace Pixeval.UI
 
         private void MoveUpHomePage()
         {
-            NavigateTo(MenuTab);
+            NavigateTo(HomePageNavigationItem);
             DoQueryButton.Enable();
             if (!((TranslateTransform) HomeDisplayContainer.RenderTransform).Y.Equals(0))
             {
@@ -1136,7 +1180,7 @@ namespace Pixeval.UI
 
         private void MoveDownHomePage()
         {
-            MenuTab.IsSelected = false;
+            HomePageNavigationItem.IsSelected = false;
             DoQueryButton.Disable();
             if (((TranslateTransform) HomeDisplayContainer.RenderTransform).Y.Equals(0))
             {
@@ -1243,12 +1287,12 @@ namespace Pixeval.UI
             IllustBrowserDialogHost.OpenControl();
         }
 
-        private bool Navigating(ListViewItem item)
+        private bool Navigating(INavigationItem item)
         {
             return NavigatorList.SelectedItem?.Equals(item) is true;
         }
 
-        private void NavigateTo(ListViewItem item)
+        private void NavigateTo(INavigationItem item)
         {
             NavigatorList.SelectedItem = item;
         }

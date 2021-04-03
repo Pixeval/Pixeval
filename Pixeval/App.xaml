@@ -25,14 +25,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <materialDesign:CustomColorTheme BaseTheme="Light" PrimaryColor="#007CEE" SecondaryColor="#3D9CF2" />
                 <ResourceDictionary
                     Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
-                <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignExtensions;component/Themes/Generic.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignExtensions;component/Themes/MaterialDesignLightTheme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
                 <ResourceDictionary>
                     <!--  ReSharper disable Xaml.RedundantResource  -->
                     <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#007CEE" />
@@ -56,6 +54,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
             <valueConverters:DownloadQueueEmptyNotifierConverter x:Key="DownloadQueueEmptyNotifierConverter" />
             <valueConverters:VisibleIfTrueConverter x:Key="VisibleIfTrueConverter" />
             <valueConverters:VisibleIfFalseConverter x:Key="VisibleIfFalseConverter" />
+            <valueConverters:VisibleIfTrueMultiConverter x:Key="VisibleIfTrueMultiConverter" />
+            <valueConverters:VisibleIfFalseMultiConverter x:Key="VisibleIfFalseMultiConverter" />
             <valueConverters:DoublePlusConverter x:Key="DoublePlusConverter" />
             <valueConverters:IllustSubscriptConverter x:Key="IllustSubscriptConverter" />
             <valueConverters:DateTimeOffsetConverter x:Key="DateTimeOffsetConverter" />

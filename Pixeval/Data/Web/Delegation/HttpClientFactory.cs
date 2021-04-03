@@ -31,16 +31,16 @@ namespace Pixeval.Data.Web.Delegation
 {
     public static class HttpClientFactory
     {
-        private static bool DirectConnect => Settings.Global.DirectConnect;
-
         public const string AppApiBaseUrl = "https://app-api.pixiv.net";
         public const string DnsServer = "https://1.0.0.1";
         public const string SauceNaoUrl = "https://saucenao.com/";
         public const string OAuthBaseUrl = "https://oauth.secure.pixiv.net";
         public const string WebApiBaseUrl = "https://www.pixiv.net";
 
-        public static readonly HttpClient AppApi = new HttpClient(PixivApiHttpClientHandler.Instance(DirectConnect)) { BaseAddress = new Uri(AppApiBaseUrl) };
-        public static readonly HttpClient WebApi = new HttpClient(PixivApiHttpClientHandler.Instance(DirectConnect))
+        public static readonly HttpMessageHandler PixivHandler = PixivApiHttpClientHandler.Instance(Settings.Global.DirectConnect);
+
+        public static HttpClient AppApi = new HttpClient(PixivHandler) { BaseAddress = new Uri(AppApiBaseUrl) };
+        public static HttpClient WebApi = new HttpClient(PixivHandler)
         {
             BaseAddress = new Uri(WebApiBaseUrl)
         }.Apply(h => h.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36 Edg/89.0.774.45"));

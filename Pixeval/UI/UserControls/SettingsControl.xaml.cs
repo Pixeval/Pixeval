@@ -103,6 +103,12 @@ namespace Pixeval.UI.UserControls
         private void CultureSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             AkaI18N.Reload((I18NOption) CultureSelector.SelectedItem);
+            MainWindow.UpdateNavigationLanguage();
+        }
+
+        private void DirectConnectToggleButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Settings.Global.DirectConnectObservable.Value = DirectConnectToggleButton.IsChecked is true;
         }
 
         private async void DownloadPathTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
@@ -118,7 +124,7 @@ namespace Pixeval.UI.UserControls
                 var filtered = await Task.Run(() =>
                 {
                     var macros = DownloadPathMacros.GetEscapedMacros();
-                    var substringFromFirstLeftCurlyBrace = beforeCaret.Substring(lastIndex);
+                    var substringFromFirstLeftCurlyBrace = beforeCaret[lastIndex..];
                     return macros.Where(p => p.Macro.StartsWith(substringFromFirstLeftCurlyBrace)).ToArray();
                 });
                 if (!filtered.IsNullOrEmpty())
@@ -143,7 +149,7 @@ namespace Pixeval.UI.UserControls
             var beforeCaret = text.Substring(0, caretIndex);
             var afterCaret = text.Replace(beforeCaret, string.Empty);
             var lastIndexBeforeCaret = beforeCaret.LastIndexOf("{", StringComparison.Ordinal);
-            var substringFromFirstLeftCurlyBrace = beforeCaret.Substring(lastIndexBeforeCaret);
+            var substringFromFirstLeftCurlyBrace = beforeCaret[lastIndexBeforeCaret..];
             DownloadPathTextBox.Text = beforeCaret
                 + token.Macro.Replace(substringFromFirstLeftCurlyBrace, string.Empty)
                 + (token.IsConditional
@@ -152,7 +158,7 @@ namespace Pixeval.UI.UserControls
             var newText = DownloadPathTextBox.Text;
             MacroCompletionPopup.CloseControl();
             DownloadPathTextBox.Focus();
-            DownloadPathTextBox.CaretIndex = beforeCaret.Length + newText.Substring(beforeCaret.Length).IndexOf("}", StringComparison.Ordinal);
+            DownloadPathTextBox.CaretIndex = beforeCaret.Length + newText[beforeCaret.Length..].IndexOf("}", StringComparison.Ordinal);
         }
     }
 }

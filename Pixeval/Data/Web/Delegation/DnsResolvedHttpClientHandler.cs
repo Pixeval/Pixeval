@@ -19,9 +19,7 @@
 #endregion
 
 using System;
-using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Pixeval.Objects.Exceptions;
@@ -32,19 +30,19 @@ namespace Pixeval.Data.Web.Delegation
 {
     public abstract class DnsResolvedHttpClientHandler : HttpClientHandler
     {
-        private readonly bool directConnect;
+        public bool DirectConnect { get; set; }
         private readonly IHttpRequestHandler requestHandler;
         private readonly ManualResetEvent refreshing = new ManualResetEvent(true);
 
         static DnsResolvedHttpClientHandler()
         {
-            System.AppContext.SetSwitch("System.Net.Http.UseSocketsHttpHandler", false);
+            AppContext.SetSwitch("System.Net.Http.UseSocketsHttpHandler", false);
         }
 
         protected DnsResolvedHttpClientHandler(IHttpRequestHandler requestHandler = null, bool directConnect = true)
         {
             this.requestHandler = requestHandler;
-            this.directConnect = directConnect;
+            DirectConnect = directConnect;
             ServerCertificateCustomValidationCallback = DangerousAcceptAnyServerCertificateValidator;
         }
 
@@ -68,7 +66,7 @@ namespace Pixeval.Data.Web.Delegation
 
             requestHandler?.Handle(request);
 
-            if (directConnect)
+            if (DirectConnect)
             {
                 var host = request.RequestUri.Host;
 

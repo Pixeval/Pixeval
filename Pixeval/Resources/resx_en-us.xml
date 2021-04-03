@@ -35,7 +35,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <resx key="Spotlight" value="Spotlight" />
   <resx key="Recommend" value="Recommend" />
   <resx key="IllustRanking" value="Ranking" />
-  <resx key="UserTrend" value="Feeds" />
+  <resx key="Feed" value="Feeds" />
   <resx key="UserUpdate" value="Updates" />
   <resx key="SearchImageBySource" value="SauceNAO" />
   <resx key="DownloadQueueAndHistory" value="Download&amp;Browse" />

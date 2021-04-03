@@ -57,6 +57,40 @@ namespace Pixeval.Objects.ValueConverters
         }
     }
 
+    public class VisibleIfTrueMultiConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var invertFirst = parameter is bool[] o && o[0];
+            var invertSecond = parameter is bool[] b && b[1];
+            var val = (bool) values[0];
+            var param = (bool) values[1];
+            return (invertFirst ? !val : val) && (invertSecond ? !param : param) ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class VisibleIfFalseMultiConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var invertFirst = parameter is bool[] o && o[0];
+            var invertSecond = parameter is bool[] b && b[1];
+            var val = (bool)values[0];
+            var param = (bool)values[1];
+            return (invertFirst ? !val : val) && (invertSecond ? !param : param) ? Visibility.Hidden : Visibility.Visible;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class ImageListViewVisibilityConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)

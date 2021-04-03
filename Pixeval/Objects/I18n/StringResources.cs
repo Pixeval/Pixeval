@@ -94,7 +94,7 @@ namespace Pixeval.Objects.I18n
         private static string _spotlight = GetResource(nameof(Spotlight));
         private static string _recommend = GetResource(nameof(Recommend));
         private static string _illustRanking = GetResource(nameof(IllustRanking));
-        private static string _userTrend = GetResource(nameof(UserTrend));
+        private static string _feed = GetResource(nameof(Feed));
         private static string _userUpdate = GetResource(nameof(UserUpdate));
         private static string _searchImageBySource = GetResource(nameof(SearchImageBySource));
         private static string _downloadQueueAndHistory = GetResource(nameof(DownloadQueueAndHistory));
@@ -889,12 +889,12 @@ namespace Pixeval.Objects.I18n
             }
         }
 
-        public static string UserTrend
+        public static string Feed
         {
-            get => _userTrend;
+            get => _feed;
             set
             {
-                _userTrend = value;
+                _feed = value;
                 OnStaticPropertyChanged();
             }
         }

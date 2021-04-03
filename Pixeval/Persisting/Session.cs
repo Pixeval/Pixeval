@@ -52,7 +52,7 @@ namespace Pixeval.Persisting
         
         public string Cookie { get; set; }
 
-        public static Session Parse(TokenResponse token, string cookie = "")
+        public static Session Parse(TokenResponse token)
         {
             var response = token.Response;
             return new Session
@@ -65,7 +65,6 @@ namespace Pixeval.Persisting
                 Id = response.User.Id,
                 CookieCreation = Current?.CookieCreation ?? default,
                 IsPremium = token.Response.User.IsPremium,
-                Cookie = cookie
             };
         }
 

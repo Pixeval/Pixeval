@@ -84,9 +84,9 @@ namespace Pixeval.UI
 
         private async Task PerformLogin()
         {
-            if (RefreshAvailable())
+            if (RefreshAvailable() && GetCookiesFromSettings() is { } cookies)
             {
-                await LoginAndClose(Session.Current.RefreshToken, await GetCookies(), refresh: true);
+                await LoginAndClose(Session.Current.RefreshToken, cookies, refresh: true);
                 return;
             }
 
@@ -143,13 +143,18 @@ namespace Pixeval.UI
         {
             if (e.Uri.StartsWith("pixiv://"))
             {
-                webViewCompletion.SetResult((e.Uri, await GetCookies()));
+                webViewCompletion.SetResult((e.Uri, await GetCookiesFromWebView()));
             }
         }
 
-        private async Task<string> GetCookies()
+        private static string GetCookiesFromSettings()
         {
-            return Session.Current?.Cookie ?? (await LoginWebView.CoreWebView2.CookieManager.GetCookiesAsync("https://www.pixiv.net"))?.AsString();
+            return Session.Current?.Cookie;
+        }
+        
+        private async Task<string> GetCookiesFromWebView()
+        {
+            return (await LoginWebView.CoreWebView2.CookieManager.GetCookiesAsync("https://www.pixiv.net"))?.AsString();
         }
     }
 }

@@ -23,6 +23,8 @@ using PropertyChanged;
 
 namespace Pixeval.Objects.Generic
 {
+    public delegate void ObservableValueChangedCallback<T>(object sender, ObservableValueChangedEventArgs<T> args);
+    
     [AddINotifyPropertyChangedInterface]
     public class Observable<T>
     {
@@ -31,6 +33,12 @@ namespace Pixeval.Objects.Generic
         public Observable(T value)
         {
             this.value = value;
+        }
+        
+        public Observable(T value, ObservableValueChangedCallback<T> onValueChanged)
+        {
+            this.value = value;
+            ValueChanged += new EventHandler<ObservableValueChangedEventArgs<T>>(onValueChanged);
         }
 
         public T Value

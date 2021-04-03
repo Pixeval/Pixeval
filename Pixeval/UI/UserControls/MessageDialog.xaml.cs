@@ -66,7 +66,7 @@ namespace Pixeval.UI.UserControls
         {
             var messageDialog = (MessageDialog) attached.DialogContent;
             attached.Visibility = Visibility.Visible;
-            messageDialog.Result = null;
+            messageDialog!.Result = null;
             messageDialog.TitleContent = titleContent;
             messageDialog.MessageContent = content;
             messageDialog.Acknowledge = acknowledge;

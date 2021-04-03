@@ -35,7 +35,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   <resx key="Spotlight" value="特          辑" />
   <resx key="Recommend" value="每 日 推 荐" />
   <resx key="IllustRanking" value="作 品 榜 单" />
-  <resx key="UserTrend" value="用 户 动 态" />
+  <resx key="Feed" value="用 户 动 态" />
   <resx key="UserUpdate" value="用 户 新 作" />
   <resx key="SearchImageBySource" value="以 图 搜 源" />
   <resx key="DownloadQueueAndHistory" value="下载与历史" />

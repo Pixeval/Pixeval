@@ -104,10 +104,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                Grid.Column="0"
                                VerticalAlignment="Center"
                                Text="{Binding Path=(i18N:AkaI18N.TurnOnDirectConnect)}" />
-                    <ToggleButton Grid.Row="3"
+                    <ToggleButton x:Name="DirectConnectToggleButton"  
+                                  Grid.Row="3"
+                                  IsThreeState="False"
                                   Grid.Column="1"
                                   HorizontalAlignment="Right"
                                   VerticalAlignment="Center"
+                                  Click="DirectConnectToggleButton_OnClick"
                                   IsChecked="{Binding DirectConnect, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock Grid.Row="4"
                                Grid.Column="0"
@@ -242,7 +245,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                 <ListBox.ItemTemplate>
                                     <DataTemplate DataType="core:DownloadPathMacros+MacroToken">
                                         <Grid Height="25" Margin="10,0,0,0">
-                                            <TextBlock FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Macro}" ></TextBlock>
+                                            <TextBlock FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Macro}" />
                                         </Grid>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>

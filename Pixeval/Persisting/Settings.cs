@@ -25,6 +25,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Pixeval.Core;
+using Pixeval.Data.Web.Delegation;
+using Pixeval.Objects.Generic;
 using Pixeval.Objects.Primitive;
 using PropertyChanged;
 
@@ -64,6 +66,10 @@ namespace Pixeval.Persisting
         public int QueryStart { get; set; } = 1;
 
         public bool DirectConnect { get; set; }
+        
+        [DoNotNotify]
+        [JsonIgnore]
+        public Observable<bool> DirectConnectObservable { get; private set; }
 
         public int SpotlightQueryStart { get; set; } = 1;
 
@@ -97,6 +103,8 @@ namespace Pixeval.Persisting
             {
                 Initialize();
             }
+            Global.DirectConnectObservable = new Observable<bool>(Global.DirectConnect);
+            Global.DirectConnectObservable.ValueChanged += (sender, args) => ((DnsResolvedHttpClientHandler)HttpClientFactory.PixivHandler).DirectConnect = args.NewValue;
         }
 
         public static void Initialize()

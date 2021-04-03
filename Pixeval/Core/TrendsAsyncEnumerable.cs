@@ -38,22 +38,22 @@ namespace Pixeval.Core
     /// <summary>
     ///     This class is piece of shit
     /// </summary>
-    public class TrendsAsyncEnumerable : AbstractPixivAsyncEnumerable<Trends>
+    public class FeedsAsyncEnumerable : AbstractPixivAsyncEnumerable<Trends>
     {
         public override int RequestedPages { get; protected set; }
 
         public override IAsyncEnumerator<Trends> GetAsyncEnumerator(CancellationToken cancellationToken = default)
         {
-            return new TrendsAsyncEnumerator(this);
+            return new FeedsAsyncEnumerator(this);
         }
 
-        private class TrendsAsyncEnumerator : AbstractPixivAsyncEnumerator<Trends>
+        private class FeedsAsyncEnumerator : AbstractPixivAsyncEnumerator<Trends>
         {
             private TrendsRequestContext requestContext;
             private IEnumerator<Trends> trendsEnumerable;
             private string tt;
 
-            public TrendsAsyncEnumerator(IPixivAsyncEnumerable<Trends> enumerable) : base(enumerable)
+            public FeedsAsyncEnumerator(IPixivAsyncEnumerable<Trends> enumerable) : base(enumerable)
             {
             }
 

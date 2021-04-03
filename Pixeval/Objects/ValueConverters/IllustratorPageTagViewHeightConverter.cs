@@ -1,5 +1,4 @@
 ﻿#region Copyright (C) 2019-2020 Dylech30th. All rights reserved.
-
 // Pixeval - A Strong, Fast and Flexible Pixiv Client
 // Copyright (C) 2019-2020 Dylech30th
 // 
@@ -15,32 +14,30 @@
 // 
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 #endregion
 
 using System;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Media;
 
-namespace Pixeval.Objects.Primitive
+namespace Pixeval.Objects.ValueConverters
 {
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-    public class EnumAlias : Attribute
+    public class IllustratorPageTagViewHeightConverter : IValueConverter
     {
-        public EnumAlias(string aliasAs)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            AliasAs = aliasAs;
+            var tb = (UIElement) value;
+            var stackPanel = (StackPanel) VisualTreeHelper.GetParent(tb!);
+            var relativePoint = tb.TranslatePoint(new Point(0, 0), stackPanel);
+            return stackPanel!.ActualHeight - relativePoint.Y - 25;
         }
 
-        public string AliasAs { get; set; }
-    }
-
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-    public class EnumLocalizedName : Attribute
-    {
-        public EnumLocalizedName(string name)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Name = name;
+            throw new NotImplementedException();
         }
-
-        public string Name { get; set; }
     }
 }

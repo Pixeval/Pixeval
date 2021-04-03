@@ -33,8 +33,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         xmlns:userControls="clr-namespace:Pixeval.UI.UserControls"
         xmlns:valueConverters="clr-namespace:Pixeval.Objects.ValueConverters"
         xmlns:viewModel="clr-namespace:Pixeval.Data.ViewModel"
+        xmlns:controls1="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
+        xmlns:model="clr-namespace:MaterialDesignExtensions.Model;assembly=MaterialDesignExtensions"
+        xmlns:collections="clr-namespace:System.Collections;assembly=System.Runtime.Extensions"
         Title="Pixeval"
-        Width="1600"
+        Width="1450"
         Height="900"
         Deactivated="MainWindow_OnDeactivated"
         Icon="/Resources/pxlogo.ico"
@@ -657,6 +660,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         </DataTemplate>
     </Window.Resources>
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid ZIndex="999">
+            <userControls:IllustratorPage HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        </Grid>
         <Grid x:Name="ContentContainer" Grid.ColumnSpan="2" PreviewMouseDown="ContentContainer_OnPreviewMouseDown">
             <Grid.RenderTransform>
                 <ScaleTransform
@@ -665,11 +671,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     ScaleX="1" ScaleY="1" />
             </Grid.RenderTransform>
             <Grid x:Name="NavigatorContainer"
-                  Width="250"
+                  Width="210"
                   HorizontalAlignment="Left"
                   VerticalAlignment="Stretch">
                 <materialDesign:Card x:Name="NavigatorCard"
-                                     Width="250"
+                                     Width="210"
                                      HorizontalAlignment="Left"
                                      VerticalAlignment="Stretch">
                     <ScrollViewer x:Name="NavigatorScrollViewer"
@@ -681,490 +687,53 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                         Height="800"
                                         Margin="0,0,0,60"
                                         VerticalAlignment="Top">
-                                <Grid x:Name="UserInformation" Margin="0,40,0,0">
-                                    <Image x:Name="UserAvatar"
+                                <Grid x:Name="UserInformation" Margin="0,25,0,0">
+                                    <Image x:Name="UserAvatar" Height="100" Width="100"
+                                           Stretch="Uniform"
+                                           StretchDirection="Both"
                                            HorizontalAlignment="Stretch"
                                            VerticalAlignment="Top">
-                                        <Image.Style>
-                                            <Style TargetType="Image">
-                                                <Setter Property="Width" Value="120" />
-                                                <Setter Property="Height" Value="120" />
-                                                <Style.Triggers>
-                                                    <DataTrigger
-                                                        Binding="{Binding ElementName=ExpandToggleButton, Path=IsChecked}"
-                                                        Value="False">
-                                                        <Setter Property="RenderTransform">
-                                                            <Setter.Value>
-                                                                <RotateTransform Angle="0" CenterX="35" CenterY="35" />
-                                                            </Setter.Value>
-                                                        </Setter>
-                                                    </DataTrigger>
-                                                    <DataTrigger
-                                                        Binding="{Binding ElementName=ExpandToggleButton, Path=IsChecked}"
-                                                        Value="True">
-                                                        <Setter Property="RenderTransform">
-                                                            <Setter.Value>
-                                                                <RotateTransform Angle="0" CenterX="60" CenterY="60" />
-                                                            </Setter.Value>
-                                                        </Setter>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Image.Style>
-                                        <Image.Triggers>
-                                            <EventTrigger RoutedEvent="Mouse.MouseEnter">
-                                                <BeginStoryboard>
-                                                    <Storyboard
-                                                        TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
-                                                        TargetName="UserAvatar">
-                                                        <DoubleAnimation x:Name="UserAvatarPositiveRotationAnimation"
-                                                                         EasingFunction="{StaticResource CubicEase}"
-                                                                         From="0"
-                                                                         To="360"
-                                                                         Duration="00:00:01" />
-                                                    </Storyboard>
-                                                </BeginStoryboard>
-                                            </EventTrigger>
-                                            <EventTrigger RoutedEvent="Mouse.MouseLeave">
-                                                <BeginStoryboard>
-                                                    <Storyboard
-                                                        TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
-                                                        TargetName="UserAvatar">
-                                                        <DoubleAnimation x:Name="UserAvatarNegativeRotationAnimation"
-                                                                         EasingFunction="{StaticResource CubicEase}"
-                                                                         From="360"
-                                                                         To="0"
-                                                                         Duration="00:00:01" />
-                                                    </Storyboard>
-                                                </BeginStoryboard>
-                                            </EventTrigger>
-                                        </Image.Triggers>
                                         <Image.Clip>
                                             <EllipseGeometry x:Name="AvatarEllipseGeometry"
-                                                             Center="60 60"
-                                                             RadiusX="60"
-                                                             RadiusY="60" />
+                                                             Center="50 50"
+                                                             RadiusX="50"
+                                                             RadiusY="50" />
                                         </Image.Clip>
                                     </Image>
                                     <TextBlock x:Name="UserName"
-                                               Height="60"
-                                               Margin="5,125,5,0"
+                                               Height="30"
+                                               Margin="5,115,5,0"
                                                VerticalAlignment="Center"
-                                               FontSize="18"
+                                               FontSize="15"
                                                TextAlignment="Center"
                                                TextWrapping="NoWrap" />
                                 </Grid>
-                                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                    <ListView x:Name="NavigatorList"
-                                              PreviewKeyDown="NavigatorList_OnPreviewKeyDown"
-                                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                              SelectionChanged="NavigatorList_OnSelectionChanged"
-                                              Style="{DynamicResource MaterialDesignListView}">
-                                        <ListViewItem x:Name="MenuTab" Height="45">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Margin="30,0,0,0"
-                                                           VerticalAlignment="Center"
-                                                           FontSize="20"
-                                                           Text="&#xe608;"
-                                                           TextElement.FontFamily="/Resources/#iconfont" />
-                                                <Label Margin="30,0,0,0"
-                                                       HorizontalContentAlignment="Center"
-                                                       VerticalContentAlignment="Center"
-                                                       Content="{Binding Path=(i18N:AkaI18N.HomePage)}"
-                                                       FontSize="14"
-                                                       FontWeight="Bold" />
-                                            </StackPanel>
-                                        </ListViewItem>
-                                        <ListViewItem x:Name="GalleryTab"
-                                                      Height="45"
-                                                      Selected="GalleryTab_OnSelected">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Margin="30,0,0,0"
-                                                           VerticalAlignment="Center"
-                                                           FontSize="20"
-                                                           Text="&#xe628;"
-                                                           TextElement.FontFamily="/Resources/#iconfont" />
-                                                <Label Margin="30,0,0,0"
-                                                       HorizontalContentAlignment="Center"
-                                                       VerticalContentAlignment="Center"
-                                                       Content="{Binding Path=(i18N:AkaI18N.MyGallery)}"
-                                                       FontSize="14"
-                                                       FontWeight="Bold" />
-                                            </StackPanel>
-                                        </ListViewItem>
-                                        <ListViewItem x:Name="FollowingTab"
-                                                      Height="45"
-                                                      Selected="FollowingTab_OnSelected"
-                                                      Unselected="FollowingTab_OnUnselected">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Margin="30,0,0,0"
-                                                           VerticalAlignment="Center"
-                                                           FontSize="20"
-                                                           Text="&#xe604;"
-                                                           TextElement.FontFamily="/Resources/#iconfont" />
-                                                <Label Margin="30,0,0,0"
-                                                       HorizontalContentAlignment="Center"
-                                                       VerticalContentAlignment="Center"
-                                                       Content="{Binding Path=(i18N:AkaI18N.MyFollowing)}"
-                                                       FontSize="14"
-                                                       FontWeight="Bold" />
-                                            </StackPanel>
-                                        </ListViewItem>
-                                        <ListViewItem x:Name="SpotlightTab"
-                                                      Height="45"
-                                                      Selected="SpotlightTab_OnSelected">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Margin="30,0,0,0"
-                                                           VerticalAlignment="Center"
-                                                           FontSize="20"
-                                                           Text="&#xe659;"
-                                                           TextElement.FontFamily="/Resources/#iconfont" />
-                                                <Label Margin="30,0,0,0"
-                                                       HorizontalContentAlignment="Center"
-                                                       VerticalContentAlignment="Center"
-                                                       Content="{Binding Path=(i18N:AkaI18N.Spotlight)}"
-                                                       FontSize="14"
-                                                       FontWeight="Bold" />
-                                            </StackPanel>
-                                        </ListViewItem>
-                                        <ListViewItem Height="45" Selected="RecommendTab_OnSelected">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Margin="30,0,0,0"
-                                                           VerticalAlignment="Center"
-                                                           FontSize="20"
-                                                           Text="&#xe6ad;"
-                                                           TextElement.FontFamily="/Resources/#iconfont" />
-                                                <Label Margin="30,0,0,0"
-                                                       HorizontalContentAlignment="Center"
-                                                       VerticalContentAlignment="Center"
-                                                       Content="{Binding Path=(i18N:AkaI18N.Recommend)}"
-                                                       FontSize="14"
-                                                       FontWeight="Bold" />
-                                            </StackPanel>
-                                        </ListViewItem>
-                                        <ListViewItem x:Name="RankingTab"
-                                                      Height="45"
-                                                      Selected="RankingTab_OnSelected">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Margin="30,0,0,0"
-                                                           VerticalAlignment="Center"
-                                                           FontSize="20"
-                                                           Text="&#xe645;"
-                                                           TextElement.FontFamily="/Resources/#dqueue" />
-                                                <Label Margin="30,0,0,0"
-                                                       HorizontalContentAlignment="Center"
-                                                       VerticalContentAlignment="Center"
-                                                       Content="{Binding Path=(i18N:AkaI18N.IllustRanking)}"
-                                                       FontSize="14"
-                                                       FontWeight="Bold" />
-                                            </StackPanel>
-                                        </ListViewItem>
-                                        <ListViewItem x:Name="TrendsTab"
-                                                      Height="45"
-                                                      Selected="TrendsTab_OnSelected">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Margin="30,0,0,0"
-                                                           VerticalAlignment="Center"
-                                                           FontSize="20"
-                                                           Text="&#xe728;"
-                                                           TextElement.FontFamily="/Resources/#dqueue" />
-                                                <Label Margin="30,0,0,0"
-                                                       HorizontalContentAlignment="Center"
-                                                       VerticalContentAlignment="Center"
-                                                       Content="{Binding Path=(i18N:AkaI18N.UserTrend)}"
-                                                       FontSize="14"
-                                                       FontWeight="Bold" />
-                                            </StackPanel>
-                                        </ListViewItem>
-                                        <ListViewItem Height="45" Selected="UpdateIllustTab_OnSelected">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Margin="30,0,0,0"
-                                                           VerticalAlignment="Center"
-                                                           FontSize="20"
-                                                           Text="&#xe60d;"
-                                                           TextElement.FontFamily="/Resources/#iconfont" />
-                                                <Label Margin="30,0,0,0"
-                                                       HorizontalContentAlignment="Center"
-                                                       VerticalContentAlignment="Center"
-                                                       Content="{Binding Path=(i18N:AkaI18N.UserUpdate)}"
-                                                       FontSize="14"
-                                                       FontWeight="Bold" />
-                                            </StackPanel>
-                                        </ListViewItem>
-                                        <ListViewItem x:Name="SauceNaoTab" Height="45">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Margin="30,0,0,0"
-                                                           VerticalAlignment="Center"
-                                                           FontSize="20"
-                                                           Text="&#xe60a;"
-                                                           TextElement.FontFamily="/Resources/#dqueue" />
-                                                <Label Margin="30,0,0,0"
-                                                       HorizontalContentAlignment="Center"
-                                                       VerticalContentAlignment="Center"
-                                                       Content="{Binding Path=(i18N:AkaI18N.SearchImageBySource)}"
-                                                       FontSize="14"
-                                                       FontWeight="Bold" />
-                                            </StackPanel>
-                                        </ListViewItem>
-                                    </ListView>
-                                    <Separator x:Name="Separator"
-                                               Width="230"
-                                               Height="1"
-                                               Margin="10,10,0,10"
-                                               HorizontalAlignment="Left"
-                                               VerticalAlignment="Top" />
-                                    <ListView x:Name="ExternalNavigatorList"
-                                              PreviewKeyDown="ExternalNavigatorList_OnPreviewKeyDown"
-                                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                              Style="{DynamicResource MaterialDesignListView}">
-                                        <ListViewItem x:Name="DownloadListTab"
-                                                      Height="45"
-                                                      HorizontalAlignment="Stretch"
-                                                      Selected="DownloadListTab_OnSelected">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Margin="30,0,0,0"
-                                                           VerticalAlignment="Center"
-                                                           FontSize="20"
-                                                           Text="&#xe64b;"
-                                                           TextElement.FontFamily="/Resources/#iconfont" />
-                                                <Label Margin="30,0,0,0"
-                                                       HorizontalContentAlignment="Center"
-                                                       VerticalContentAlignment="Center"
-                                                       Content="{Binding Path=(i18N:AkaI18N.DownloadQueueAndHistory)}"
-                                                       FontSize="14"
-                                                       FontWeight="Bold" />
-                                            </StackPanel>
-                                        </ListViewItem>
-                                        <ListViewItem x:Name="SettingsTab"
-                                                      Height="45"
-                                                      HorizontalAlignment="Stretch"
-                                                      Selected="SettingsTab_OnSelected">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Margin="30,0,0,0"
-                                                           VerticalAlignment="Center"
-                                                           FontSize="20"
-                                                           Text="&#xe643;"
-                                                           TextElement.FontFamily="/Resources/#iconfont" />
-                                                <Label Margin="30,0,0,0"
-                                                       HorizontalContentAlignment="Center"
-                                                       VerticalContentAlignment="Center"
-                                                       Content="{Binding Path=(i18N:AkaI18N.Setting)}"
-                                                       FontSize="14"
-                                                       FontWeight="Bold" />
-                                            </StackPanel>
-                                        </ListViewItem>
-                                        <ListViewItem x:Name="SignOutTab"
-                                                      Height="45"
-                                                      HorizontalAlignment="Stretch"
-                                                      Selected="SignOutTab_OnSelected">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Margin="30,0,0,0"
-                                                           VerticalAlignment="Center"
-                                                           FontSize="20"
-                                                           Text="&#xe6ce;"
-                                                           TextElement.FontFamily="/Resources/#iconfont" />
-                                                <Label Margin="30,0,0,0"
-                                                       HorizontalContentAlignment="Center"
-                                                       VerticalContentAlignment="Center"
-                                                       Content="{Binding Path=(i18N:AkaI18N.Logout)}"
-                                                       FontSize="14"
-                                                       FontWeight="Bold" />
-                                            </StackPanel>
-                                        </ListViewItem>
-                                    </ListView>
-                                </StackPanel>
+                                <controls1:SideNavigation x:Name="NavigatorList" NavigationItemSelected="NavigatorList_OnNavigationItemSelected">
+                                    <controls1:SideNavigation.Items>
+                                        <collections:ArrayList>
+                                            <model:FirstLevelNavigationItem x:Name="HomePageNavigationItem" Icon="{x:Static materialDesign:PackIconKind.Home}" IsSelected="True" />
+                                            <model:FirstLevelNavigationItem x:Name="GalleryNavigationItem" Icon="{x:Static materialDesign:PackIconKind.Collection}" />
+                                            <model:FirstLevelNavigationItem x:Name="FollowingNavigationItem" Icon="{x:Static materialDesign:PackIconKind.AccountCheckOutline}" />
+                                            <model:FirstLevelNavigationItem x:Name="SpotlightNavigationItem" Icon="{x:Static materialDesign:PackIconKind.ImageEditOutline}" />
+                                            <model:FirstLevelNavigationItem x:Name="RecommendNavigationItem" Icon="{x:Static materialDesign:PackIconKind.ChartBoxOutline}" />
+                                            <model:FirstLevelNavigationItem x:Name="IllustRankingNavigationItem" Icon="{x:Static materialDesign:PackIconKind.ChartGantt}" />
+                                            <model:FirstLevelNavigationItem x:Name="FeedNavigationItem" Icon="{x:Static materialDesign:PackIconKind.Broadcast}" />
+                                            <model:FirstLevelNavigationItem x:Name="UserUpdateNavigationItem" Icon="{x:Static materialDesign:PackIconKind.Update}" />
+                                            <model:FirstLevelNavigationItem x:Name="SauceNaoNavigationItem" Icon="{x:Static materialDesign:PackIconKind.MapMarkerOutline}" />
+                                            <model:DividerNavigationItem />
+                                            <model:FirstLevelNavigationItem x:Name="DownloadQueueNavigationItem" Icon="{x:Static materialDesign:PackIconKind.FormatListText}" />
+                                            <model:FirstLevelNavigationItem x:Name="SettingNavigationItem" Icon="{x:Static materialDesign:PackIconKind.CogOutline}" />
+                                            <model:FirstLevelNavigationItem x:Name="LogoutNavigationItem" Icon="{x:Static materialDesign:PackIconKind.LogoutVariant}" />
+                                        </collections:ArrayList>
+                                    </controls1:SideNavigation.Items>
+                                </controls1:SideNavigation>
                             </StackPanel>
-                            <ToggleButton x:Name="ExpandToggleButton"
-                                          Width="25"
-                                          Height="25"
-                                          Margin="30,0,0,23"
-                                          HorizontalAlignment="Left"
-                                          VerticalAlignment="Bottom"
-                                          Foreground="Gray"
-                                          IsChecked="True"
-                                          Style="{DynamicResource MaterialDesignHamburgerToggleButton}"
-                                          ToolTip="{Binding Path=(i18N:AkaI18N.RetractSidebar)}">
-                                <ToggleButton.Triggers>
-                                    <EventTrigger RoutedEvent="ToggleButton.Unchecked">
-                                        <BeginStoryboard>
-                                            <Storyboard TargetProperty="(Grid.Margin)" TargetName="ContentDisplay">
-                                                <ThicknessAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                    From="250 0 0 0"
-                                                                    To="90 0 0 0"
-                                                                    Duration="00:00:00.3" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                        <BeginStoryboard>
-                                            <Storyboard TargetProperty="(materialDesign:Card.Width)"
-                                                        TargetName="NavigatorCard">
-                                                <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                 From="250"
-                                                                 To="90"
-                                                                 Duration="00:00:00.3" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                        <BeginStoryboard>
-                                            <Storyboard TargetProperty="(Grid.Width)" TargetName="NavigatorContainer">
-                                                <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                 From="250"
-                                                                 To="90"
-                                                                 Duration="00:00:00.3" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                        <BeginStoryboard>
-                                            <Storyboard TargetProperty="(Separator.Width)" TargetName="Separator">
-                                                <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                 From="230"
-                                                                 To="70"
-                                                                 Duration="00:00:00.3" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                        <BeginStoryboard>
-                                            <Storyboard TargetProperty="(Image.Width)" TargetName="UserAvatar">
-                                                <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                 From="120"
-                                                                 To="70"
-                                                                 Duration="00:00:00.3" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                        <BeginStoryboard>
-                                            <Storyboard TargetProperty="(EllipseGeometry.RadiusX)"
-                                                        TargetName="AvatarEllipseGeometry">
-                                                <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                 From="60"
-                                                                 To="35"
-                                                                 Duration="00:00:00.3" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                        <BeginStoryboard>
-                                            <Storyboard TargetProperty="(EllipseGeometry.RadiusY)"
-                                                        TargetName="AvatarEllipseGeometry">
-                                                <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                 From="60"
-                                                                 To="35"
-                                                                 Duration="00:00:00.3" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                        <BeginStoryboard>
-                                            <Storyboard TargetProperty="(EllipseGeometry.Center)"
-                                                        TargetName="AvatarEllipseGeometry">
-                                                <PointAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                From="60 60"
-                                                                To="35 35"
-                                                                Duration="00:00:00.3" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                        <BeginStoryboard>
-                                            <Storyboard TargetProperty="(TextBlock.Opacity)" TargetName="UserName">
-                                                <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                 From="1"
-                                                                 To="0"
-                                                                 Duration="00:00:00.3" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                        <BeginStoryboard>
-                                            <Storyboard TargetProperty="(TextBlock.Margin)" TargetName="UserName">
-                                                <ThicknessAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                    From="5 125 5 0"
-                                                                    To="5 35 5 0"
-                                                                    Duration="00:00:00.3" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </EventTrigger>
-                                    <EventTrigger RoutedEvent="ToggleButton.Checked">
-                                        <BeginStoryboard>
-                                            <Storyboard TargetProperty="(Grid.Margin)" TargetName="ContentDisplay">
-                                                <ThicknessAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                    From="90 0 0 0"
-                                                                    To="250 0 0 0"
-                                                                    Duration="00:00:00.3" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                        <BeginStoryboard>
-                                            <Storyboard TargetProperty="(materialDesign:Card.Width)"
-                                                        TargetName="NavigatorCard">
-                                                <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                 From="90"
-                                                                 To="250"
-                                                                 Duration="00:00:00.3" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                        <BeginStoryboard>
-                                            <Storyboard TargetProperty="(Grid.Width)" TargetName="NavigatorContainer">
-                                                <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                 From="90"
-                                                                 To="250"
-                                                                 Duration="00:00:00.3" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                        <BeginStoryboard>
-                                            <Storyboard TargetProperty="(Separator.Width)" TargetName="Separator">
-                                                <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                 From="70"
-                                                                 To="230"
-                                                                 Duration="00:00:00.3" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                        <BeginStoryboard>
-                                            <Storyboard TargetProperty="(Image.Width)" TargetName="UserAvatar">
-                                                <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                 From="70"
-                                                                 To="120"
-                                                                 Duration="00:00:00.3" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                        <BeginStoryboard>
-                                            <Storyboard TargetProperty="(EllipseGeometry.RadiusX)"
-                                                        TargetName="AvatarEllipseGeometry">
-                                                <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                 From="35"
-                                                                 To="60"
-                                                                 Duration="00:00:00.3" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                        <BeginStoryboard>
-                                            <Storyboard TargetProperty="(EllipseGeometry.RadiusY)"
-                                                        TargetName="AvatarEllipseGeometry">
-                                                <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                 From="35"
-                                                                 To="60"
-                                                                 Duration="00:00:00.3" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                        <BeginStoryboard>
-                                            <Storyboard TargetProperty="(EllipseGeometry.Center)"
-                                                        TargetName="AvatarEllipseGeometry">
-                                                <PointAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                From="35 35"
-                                                                To=" 60 60"
-                                                                Duration="00:00:00.3" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                        <BeginStoryboard>
-                                            <Storyboard TargetProperty="(TextBlock.Opacity)" TargetName="UserName">
-                                                <DoubleAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                 From="0"
-                                                                 To="1"
-                                                                 Duration="00:00:00.3" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                        <BeginStoryboard>
-                                            <Storyboard TargetProperty="(TextBlock.Margin)" TargetName="UserName">
-                                                <ThicknessAnimation EasingFunction="{StaticResource CubicEase}"
-                                                                    From="5 35 5 0"
-                                                                    To="5 125 5 0"
-                                                                    Duration="00:00:00.3" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </EventTrigger>
-                                </ToggleButton.Triggers>
-                            </ToggleButton>
                         </Grid>
                     </ScrollViewer>
                 </materialDesign:Card>
             </Grid>
             <Grid x:Name="ContentDisplay"
-                  Margin="250,0,0,0"
+                  Margin="210,0,0,0"
                   MouseMove="ContentDisplay_OnMouseMove">
                 <Grid x:Name="RestrictPolicySelector"
                       Height="60"
@@ -1436,6 +1005,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                             Orientation="Horizontal">
                                     <TextBox x:Name="KeywordTextBox"
                                              Width="800"
+                                             Height="40"
+                                             VerticalAlignment="Bottom"
                                              materialDesign:HintAssist.Hint="{Binding Path=(i18N:AkaI18N.SearchHint)}"
                                              GotFocus="KeywordTextBox_OnGotFocus"
                                              PreviewKeyDown="KeywordTextBox_OnPreviewKeyDown"
@@ -1721,24 +1292,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                         </ScrollViewer>
                     </Grid>
                     <Grid Background="#FAFAFC">
-                        <ListView x:Name="TrendsListView"
+                        <ListView x:Name="FeedsListView"
                                   ItemTemplate="{StaticResource TrendsTemplate}"
                                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                   VirtualizingPanel.CacheLength="0 0"
                                   VirtualizingPanel.CacheLengthUnit="Pixel"
                                   VirtualizingPanel.ScrollUnit="Pixel"
-                                  VirtualizingPanel.VirtualizationMode="Standard"
-                                  Visibility="{Binding ElementName=TrendsTab, Path=IsSelected, Converter={StaticResource VisibleIfTrueConverter}}">
-                            <ListView.Style>
-                                <Style BasedOn="{StaticResource MaterialDesignListView}" TargetType="ListView">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ElementName=TrendsTab, Path=IsSelected}"
-                                                     Value="False">
-                                            <Setter Property="ItemsSource" Value="{x:Null}" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ListView.Style>
+                                  VirtualizingPanel.VirtualizationMode="Standard">
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <controls:VirtualizingWrapPanel Orientation="Vertical" />
@@ -1751,18 +1311,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                   VirtualizingPanel.CacheLength="0 0"
                                   VirtualizingPanel.CacheLengthUnit="Pixel"
                                   VirtualizingPanel.ScrollUnit="Pixel"
-                                  VirtualizingPanel.VirtualizationMode="Standard"
-                                  Visibility="{Binding ElementName=SpotlightTab, Path=IsSelected, Converter={StaticResource VisibleIfTrueConverter}}">
-                            <ListView.Style>
-                                <Style BasedOn="{StaticResource MaterialDesignListView}" TargetType="ListView">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ElementName=SpotlightTab, Path=IsSelected}"
-                                                     Value="False">
-                                            <Setter Property="ItemsSource" Value="{x:Null}" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ListView.Style>
+                                  VirtualizingPanel.VirtualizationMode="Standard">
                             <ListView.Template>
                                 <ControlTemplate>
                                     <ScrollViewer VirtualizingStackPanel.IsVirtualizing="True"
@@ -1788,13 +1337,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                 <valueConverters:UserPreviewListViewVisibilityConverter
                                     x:Key="UserPreviewListViewVisibilityConverter" />
                             </ListView.Resources>
-                            <ListView.Visibility>
-                                <MultiBinding Converter="{StaticResource UserPreviewListViewVisibilityConverter}">
-                                    <Binding ElementName="SpotlightTab" Path="IsSelected" />
-                                    <Binding ElementName="TrendsTab" Path="IsSelected" />
-                                    <Binding ElementName="QueryArtistToggleButton" Path="IsChecked" />
-                                </MultiBinding>
-                            </ListView.Visibility>
                             <ListView.Template>
                                 <ControlTemplate>
                                     <ScrollViewer VirtualizingStackPanel.IsVirtualizing="True"
@@ -1818,28 +1360,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                   VirtualizingPanel.CacheLengthUnit="Pixel"
                                   VirtualizingPanel.ScrollUnit="Pixel"
                                   VirtualizingPanel.VirtualizationMode="Standard">
-                            <ListView.Style>
-                                <Style BasedOn="{StaticResource MaterialDesignListView}" TargetType="ListView">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ElementName=MenuTab, Path=IsSelected}"
-                                                     Value="True">
-                                            <Setter Property="ItemsSource" Value="{x:Null}" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ListView.Style>
-                            <ListView.Resources>
-                                <valueConverters:ImageListViewVisibilityConverter
-                                    x:Key="ImageListViewVisibilityConverter" />
-                            </ListView.Resources>
-                            <ListView.Visibility>
-                                <MultiBinding Converter="{StaticResource ImageListViewVisibilityConverter}">
-                                    <Binding ElementName="SpotlightTab" Path="IsSelected" />
-                                    <Binding ElementName="FollowingTab" Path="IsSelected" />
-                                    <Binding ElementName="QueryArtistToggleButton" Path="IsChecked" />
-                                    <Binding ElementName="TrendsTab" Path="IsSelected" />
-                                </MultiBinding>
-                            </ListView.Visibility>
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <controls:VirtualizingWrapPanel Orientation="Vertical" />
@@ -1854,9 +1374,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                 </Grid>
             </Grid>
         </Grid>
-        <userControls:SauceNaoHomePage Margin="250,0,0,0"
+        <userControls:SauceNaoHomePage Margin="210,0,0,0"
                                        Background="#FAFAFC"
-                                       Visibility="{Binding ElementName=SauceNaoTab, Path=IsSelected, Converter={StaticResource VisibleIfTrueConverter}}" />
+                                       Visibility="{Binding ElementName=SauceNaoNavigationItem, Path=IsSelected, Converter={StaticResource VisibleIfTrueConverter}}" />
         <Grid>
             <ScrollViewer x:Name="UserBrowserPageScrollViewer"
                           Grid.Column="0"

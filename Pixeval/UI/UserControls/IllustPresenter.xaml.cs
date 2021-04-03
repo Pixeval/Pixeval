@@ -83,10 +83,16 @@ namespace Pixeval.UI.UserControls
         {
             LoadingOrigin = true;
             var progress = new Progress<double>(p => Dispatcher.Invoke(() => LoadingIndicator = p));
-            await using var mem = await PixivIO.Download(Illust.GetDownloadUrl(), progress, cancellationTokenSource.Token);
-            ImgSource = InternalIO.CreateBitmapImageFromStream(mem);
-            LoadingOrigin = false;
-            ((BlurEffect) ContentImage.Effect).Radius = 0;
+            try
+            {
+                await using var mem = await PixivIO.Download(Illust.GetDownloadUrl(), progress, cancellationTokenSource.Token);
+                ImgSource = InternalIO.CreateBitmapImageFromStream(mem);
+                LoadingOrigin = false;
+                ((BlurEffect) ContentImage.Effect).Radius = 0;
+            }
+            catch (ObjectDisposedException)
+            {
+            }
         }
 
         private void MovePrevButton_OnClick(object sender, RoutedEventArgs e)

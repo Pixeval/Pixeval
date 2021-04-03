@@ -23,11 +23,11 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Win32;
-using Pixeval.Core;
 using Pixeval.Core.Persistent;
 using Pixeval.Objects;
 using Pixeval.Objects.I18n;
@@ -35,6 +35,7 @@ using Pixeval.Objects.Primitive;
 using Pixeval.Persisting;
 #if RELEASE
 using System.Net;
+using System.Net.Http;
 using Pixeval.Objects.Exceptions;
 using Pixeval.Objects.Exceptions.Logger;
 using Pixeval.UI.UserControls;
@@ -62,8 +63,15 @@ namespace Pixeval
 #if RELEASE
             switch (e)
             {
-                case WebException _:
-                case TaskCanceledException _:
+                case OperationCanceledException _:
+                    return;
+                case var exception when exception is WebException || exception is HttpRequestException:
+                    var reason = new StringBuilder(exception.Message);
+                    if (exception.InnerException != null)
+                    {
+                        reason.Append(":").Append(exception.InnerException.Message);
+                    }
+                    UI.MainWindow.MessageQueue.Enqueue(reason.ToString());
                     return;
                 case AuthenticateFailedException _:
                     MessageDialog.Warning(UI.MainWindow.Instance.WarningDialog, AkaI18N.AppApiAuthenticateTimeout);
