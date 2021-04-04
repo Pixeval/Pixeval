@@ -71,6 +71,10 @@ namespace Pixeval.Data.ViewModel
         public string SpotlightTitle { get; set; }
         
         public string SpotlightArticleId { get; set; }
+
+        public bool Incomplete { get; set; }
+
+        public int PageCount { get; set; } = 1;
         
         public object Clone()
         {

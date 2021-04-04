@@ -398,7 +398,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                  Visibility="{Binding IsManga, Converter={StaticResource VisibleIfTrueConverter}}">
                             <ToolTipService.ToolTip>
                                 <TextBlock
-                                    Text="{Binding MangaMetadata.Length, StringFormat={x:Static i18N:AkaI18N.MangaIllustrationHintFormat}}" />
+                                    Text="{Binding PageCount, StringFormat={x:Static i18N:AkaI18N.MangaIllustrationHintFormat}}" />
                             </ToolTipService.ToolTip>
                             <Canvas Width="24" Height="24">
                                 <Path

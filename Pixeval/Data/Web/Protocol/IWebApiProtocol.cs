@@ -37,5 +37,11 @@ namespace Pixeval.Data.Web.Protocol
 
         [Get("/touch/ajax/user/details")]
         Task<WebApiUserDetailResponse> GetWebApiUserDetail(string id);
+
+        [Get("/ajax/user/{id}/illusts/bookmark/tags")]
+        Task<BookmarkTagResponse> GetBookmarkTagsForUser(string id, [AliasAs("lang")] string language);
+
+        [Get("/ajax/user/{id}/illusts/tags?lang=en")]
+        Task<UploadTagResponse> GetUploadTagsForUser(string id, [AliasAs("lang")] string language);
     }
 }

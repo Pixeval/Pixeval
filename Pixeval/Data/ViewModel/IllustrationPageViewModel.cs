@@ -19,10 +19,16 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
+using Pixeval.Core;
+using Pixeval.Data.Web.Delegation;
 using Pixeval.Objects.Generic;
 using Pixeval.Objects.Primitive;
+using Pixeval.Persisting;
 using PropertyChanged;
 
 namespace Pixeval.Data.ViewModel
@@ -30,6 +36,7 @@ namespace Pixeval.Data.ViewModel
     [AddINotifyPropertyChangedInterface]
     public class IllustrationPageViewModel
     {
+        
         public enum BrowseKind
         {
             [EnumLocalizedName("UserBrowserIllustSelector")]
@@ -41,7 +48,7 @@ namespace Pixeval.Data.ViewModel
 
         // Filter a collection of illustrations using provided tags
         // it tests whether an illustration has all the tags in Accepts
-        // and does not contains any of the Rejects
+        // and does not contains any of tags in Rejects
         private class SelectedTagCollectionCondition : ICollectionCondition<Illustration>
         {
             private ISet<string> Accepts { get; }
@@ -60,64 +67,154 @@ namespace Pixeval.Data.ViewModel
             }
         }
 
-        private readonly ObservableCollection<string> allPossibleTagsForUpload = new ObservableCollection<string>();
+        public IllustrationPageViewModel()
+        {
+            Browsing = new Observable<BrowseKind>(BrowseKind.Bookmark, (sender, args) =>
+            {
+                CurrentlyViewing = args.NewValue switch
+                {
+                    BrowseKind.Upload   => Uploads,
+                    BrowseKind.Bookmark => Bookmarks,
+                    _                   => throw new ArgumentOutOfRangeException()
+                };
+                SelectedTags.Clear();
+            });
+        }
 
-        public IReadOnlyList<string> AllPossibleTagsForUpload => allPossibleTagsForUpload;
+        private readonly ObservableCollection<CountedTag> allPossibleTagsForUpload = new ObservableCollection<CountedTag>();
 
-        private readonly ObservableCollection<string> allPossibleTagsForBookmark = new ObservableCollection<string>();
+        public IReadOnlyList<CountedTag> AllPossibleTagsForUpload => allPossibleTagsForUpload;
 
-        public IReadOnlyList<string> AllPossibleTagsForBookmark => allPossibleTagsForBookmark;
+        private readonly ObservableCollection<CountedTag> allPossibleTagsForBookmark = new ObservableCollection<CountedTag>();
+
+        public IReadOnlyList<CountedTag> AllPossibleTagsForBookmark => allPossibleTagsForBookmark;
 
         public ConditionalObservableCollection<Illustration> Uploads { get; set; }
         
-        public ConditionalObservableCollection<Illustration> Bookmarks { get; set; }
+        // Bookmarks use custom tags
+        public ObservableCollection<Illustration> Bookmarks { get; set; }
+        
+        public ObservableCollection<Illustration> CurrentlyViewing { get; set; }
 
         // it's mostly Settings.Global.ExcludeTags, since the illustrator page does not provide such functionality that allows
         // user to add exclude tags
         public IReadOnlyList<string> RejectTags { get; set; }
         
-        public ObservableCollection<string> SelectedTags { get; set; }
+        public ObservableCollection<CountedTag> SelectedTags { get; set; }
+
+        public Observable<BrowseKind> Browsing { get; }
         
-        public BrowseKind Browsing { get; set; }
+        public BitmapImage IllustratorAvatar { get; set; }
         
         public User Illustrator { get; set; }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public void AddTagToFilter(string tag)
+        public IEnumerable<CountedTag> GetSuggestionTags(string input)
         {
-            if (SelectedTags.Contains(tag))
+            return (Browsing.Value switch
             {
-                SelectedTags.Add(tag);
-                OnFilterTagChanged();
-            }
+                BrowseKind.Upload   => AllPossibleTagsForUpload,
+                BrowseKind.Bookmark => AllPossibleTagsForBookmark,
+                _                   => throw new ArgumentOutOfRangeException()
+            }).Where(t => t.Name.Contains(input) || t.TranslatedName?.Contains(input) is true);
+        }
+        
+        public async Task SetIllustratorAvatar()
+        {
+            IllustratorAvatar = await PixivIO.FromUrl(Illustrator.Avatar);
+        }
+        
+        public async Task FillBookmarkTags()
+        {
+            var tags = await HttpClientFactory.WebApiService.GetBookmarkTagsForUser(Illustrator.Id, new CultureInfo(Settings.Global.Culture).TwoLetterISOLanguageName);
+            var hashset = new HashSet<CountedTag>(new CountedTagEqualityComparer());
+            hashset.AddRange(tags.ResponseBody.PublicTags.Select(tag => new CountedTag(tag.Tag, null, tag.Count)));
+            hashset.AddRange(tags.ResponseBody.PrivateTags.Select(tag => new CountedTag(tag.Tag, null, tag.Count)));
+            allPossibleTagsForBookmark.AddRange(hashset);
         }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public void RemoveTagFromFilter(string tag)
+        public async Task FillUploadTags()
         {
-            if (SelectedTags.Remove(tag))
+            var tags = await HttpClientFactory.WebApiService.GetUploadTagsForUser(Illustrator.Id, new CultureInfo(Settings.Global.Culture).TwoLetterISOLanguageName);
+            allPossibleTagsForUpload.AddRange(tags.ResponseBody.Select(tag => new CountedTag(tag.Tag, tag.TagTranslation, tag.Count)));
+        }
+        
+        public async Task AddTagToFilter(CountedTag tag)
+        {
+            using var semaphore = new SemaphoreSlim(1, 1);
+            await semaphore.WaitAsync();
+            switch (Browsing.Value)
             {
-                OnFilterTagChanged();
+                case BrowseKind.Upload:
+                    if (SelectedTags.Contains(tag))
+                    {
+                        SelectedTags.Add(tag);
+                        await OnFilterTagChanged();
+                    }
+                    break;
+                case BrowseKind.Bookmark:
+                    if (SelectedTags[0].Equals(tag))
+                    {
+                        SelectedTags.Clear();
+                        SelectedTags.Add(tag);
+                        await OnFilterTagChanged();
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
         
-        // invokes when tag list is updated, it refresh the condition by using 
-        // updated tags
-        private void OnFilterTagChanged()
+        public async Task RemoveTagFromFilter(CountedTag tag)
         {
-            var list = Browsing switch
+            using var semaphore = new SemaphoreSlim(1, 1);
+            await semaphore.WaitAsync();
+            if (SelectedTags.Remove(tag))
             {
-                BrowseKind.Upload   => Uploads,
-                BrowseKind.Bookmark => Bookmarks,
-                _                   => throw new ArgumentOutOfRangeException()
-            };
-            list.Predicate = BuildCondition();
-            list.Refresh();
+                await OnFilterTagChanged();
+            }
+        }
+        
+        // invokes when tag list is updated
+        private async Task OnFilterTagChanged()
+        {
+            switch (Browsing.Value)
+            {
+                case BrowseKind.Upload:
+                    Uploads.Predicate = BuildCondition();
+                    Uploads.Refresh();
+                    break;
+                case BrowseKind.Bookmark:
+                    Bookmarks = new ObservableCollection<Illustration>(await PixivClient.GetBookmarksWithTag(Illustrator.Id, SelectedTags[0].Name, new CultureInfo(Settings.Global.Culture).TwoLetterISOLanguageName));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
         
         private ICollectionCondition<Illustration> BuildCondition()
         {
-            return new SelectedTagCollectionCondition(SelectedTags.ToHashSet(), RejectTags.ToHashSet());
+            return new SelectedTagCollectionCondition(SelectedTags.Select(tag => tag.Name).Where(tag => !tag.IsNullOrEmpty()).ToHashSet(), RejectTags.Where(tag => !tag.IsNullOrEmpty()).ToHashSet());
+        }
+
+        private class CountedTagEqualityComparer : IEqualityComparer<CountedTag>
+        {
+            public bool Equals(CountedTag x, CountedTag y)
+            {
+                if (ReferenceEquals(x, y))
+                {
+                    return true;
+                }
+                if (ReferenceEquals(x, null) || ReferenceEquals(y, null) || x.GetType() != y.GetType())
+                {
+                    return false;
+                }
+                return x.Name == y.Name;
+            }
+
+            public int GetHashCode(CountedTag obj)
+            {
+                return obj.Name != null ? obj.Name.GetHashCode() : 0;
+            }
         }
     }
 }

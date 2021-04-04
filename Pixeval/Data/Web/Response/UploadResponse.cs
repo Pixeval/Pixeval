@@ -141,6 +141,7 @@ namespace Pixeval.Data.Web.Response
                         {
                             illustration.MangaMetadata = i.MangaMetadata;
                         }
+                        i.PageCount = i.MangaMetadata.Length;
                     }
                 });
             }

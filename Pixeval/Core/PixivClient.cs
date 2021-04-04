@@ -24,10 +24,14 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using AngleSharp.Html.Parser;
 using Pixeval.Data.ViewModel;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
+using Pixeval.Data.Web.Response;
+using Pixeval.Objects.Generic;
+using Pixeval.Objects.Primitive;
 
 namespace Pixeval.Core
 {
@@ -94,6 +98,19 @@ namespace Pixeval.Core
             {
                 return false;
             }
+        }
+
+        public static async Task<List<Illustration>> GetBookmarksWithTag(string uid, string tag, string twoLetterCulture)
+        {
+            var url = $"https://www.pixiv.net/ajax/user/{uid}/illusts/bookmarks?tag={HttpUtility.HtmlEncode(tag)}&offset=0&limit=30&rest=show&lang={twoLetterCulture}";
+            TaggedBookmarkResponse result;
+            var list = new List<Illustration>();
+            do
+            {
+                result = (await HttpClientFactory.WebApi.GetStringAsync(url)).FromJson<TaggedBookmarkResponse>();
+                list.AddRange(result.ResponseBody.Works.Select(p => p.Parse()));
+            } while (result.ResponseBody.Works.IsNullOrEmpty());
+            return list;
         }
     }
 }

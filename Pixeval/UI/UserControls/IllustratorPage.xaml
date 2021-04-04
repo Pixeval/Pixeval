@@ -8,9 +8,9 @@
              xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
              xmlns:collections="clr-namespace:System.Collections;assembly=System.Runtime.Extensions"
              xmlns:model="clr-namespace:MaterialDesignExtensions.Model;assembly=MaterialDesignExtensions"
-             xmlns:valueConverters="clr-namespace:Pixeval.Objects.ValueConverters"
+             xmlns:viewModel="clr-namespace:Pixeval.Data.ViewModel"
              mc:Ignorable="d" 
-             d:DesignHeight="900" d:DesignWidth="1450">
+             d:DesignHeight="900" d:DesignWidth="1450" d:DataContext="{d:DesignData IllustrationPageViewModel}">
     <Grid Background="#FAFAFC">
         <Grid HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="210">
             <materialDesign:Card Width="210" HorizontalAlignment="Left" VerticalAlignment="Stretch">
@@ -21,12 +21,12 @@
                         <RowDefinition Height="2*" />
                     </Grid.RowDefinitions>
                     <Grid Margin="0,25,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top">
-                        <Image Height="100" Width="100" HorizontalAlignment="Stretch" VerticalAlignment="Top" Stretch="Uniform" StretchDirection="Both" Source="../../Resources/saucenao.png">
+                        <Image Height="100" Width="100" HorizontalAlignment="Stretch" VerticalAlignment="Top" Stretch="Uniform" StretchDirection="Both" Source="{Binding IllustratorAvatar}">
                             <Image.Clip>
                                 <EllipseGeometry Center="50,50" RadiusX="50" RadiusY="50" />
                             </Image.Clip>
                         </Image>
-                        <TextBlock Height="30" Margin="5,115,5,0" Text="asdasdasd" VerticalAlignment="Center" FontSize="15" TextAlignment="Center" TextWrapping="NoWrap" />
+                        <TextBlock Height="30" Margin="5,115,5,0" Text="{Binding Illustrator.Name}" VerticalAlignment="Center" FontSize="15" TextAlignment="Center" TextWrapping="NoWrap" />
                     </Grid>
                     <controls:SideNavigation Grid.Row="1" VerticalAlignment="Top">
                         <controls:SideNavigation.Items>
@@ -39,46 +39,20 @@
                             </collections:ArrayList>
                         </controls:SideNavigation.Items>
                     </controls:SideNavigation>
-                    <controls:TextBoxSuggestions Grid.Row="1">
+                    <controls:TextBoxSuggestions x:Name="SuggestionTagsTextBox" Grid.Row="1">
                         <TextBox x:Name="TagFilterInputTextBox" Margin="17,200,17,0" Height="50" VerticalAlignment="Top" Style="{StaticResource MaterialDesignFilledTextBox}" materialDesign:HintAssist.Hint="Filter" />
                     </controls:TextBoxSuggestions>
-                    <ListView Grid.Row="2" Height="460" x:Name="TagFilterListBox" Margin="17,10,17,0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                        <materialDesign:Card Background="Wheat" Height="40">
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0" TextElement.FontFamily="Microsoft YaHei" Width="140">
-                                <TextBlock MaxWidth="120" TextTrimming="CharacterEllipsis" FontSize="10" FontWeight="SemiBold" Text="SAMPLE TEXT SAMPLE TEXT SAMPLE TEXT" />
-                                <TextBlock FontSize="8" Text="SAMPLE TRANSLATION" HorizontalAlignment="Center" Margin="0,5,0,0" />
-                            </StackPanel>
-                        </materialDesign:Card>
-                        <materialDesign:Card Background="Wheat" Height="40">
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0" TextElement.FontFamily="Microsoft YaHei" Width="140">
-                                <TextBlock MaxWidth="120" TextTrimming="CharacterEllipsis" FontSize="10" FontWeight="SemiBold" Text="SAMPLE TEXT SAMPLE TEXT SAMPLE TEXT" />
-                                <TextBlock FontSize="8" Text="SAMPLE TRANSLATION" HorizontalAlignment="Center" Margin="0,5,0,0" />
-                            </StackPanel>
-                        </materialDesign:Card>
-                        <materialDesign:Card Background="Wheat" Height="40">
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0" TextElement.FontFamily="Microsoft YaHei" Width="140">
-                                <TextBlock MaxWidth="120" TextTrimming="CharacterEllipsis" FontSize="10" FontWeight="SemiBold" Text="SAMPLE TEXT SAMPLE TEXT SAMPLE TEXT" />
-                                <TextBlock FontSize="8" Text="SAMPLE TRANSLATION" HorizontalAlignment="Center" Margin="0,5,0,0" />
-                            </StackPanel>
-                        </materialDesign:Card>
-                        <materialDesign:Card Background="Wheat" Height="40">
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0" TextElement.FontFamily="Microsoft YaHei" Width="140">
-                                <TextBlock MaxWidth="120" TextTrimming="CharacterEllipsis" FontSize="10" FontWeight="SemiBold" Text="SAMPLE TEXT SAMPLE TEXT SAMPLE TEXT" />
-                                <TextBlock FontSize="8" Text="SAMPLE TRANSLATION" HorizontalAlignment="Center" Margin="0,5,0,0" />
-                            </StackPanel>
-                        </materialDesign:Card>
-                        <materialDesign:Card Background="Wheat" Height="40">
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0" TextElement.FontFamily="Microsoft YaHei" Width="140">
-                                <TextBlock MaxWidth="120" TextTrimming="CharacterEllipsis" FontSize="10" FontWeight="SemiBold" Text="SAMPLE TEXT SAMPLE TEXT SAMPLE TEXT" />
-                                <TextBlock FontSize="8" Text="SAMPLE TRANSLATION" HorizontalAlignment="Center" Margin="0,5,0,0" />
-                            </StackPanel>
-                        </materialDesign:Card>
-                        <materialDesign:Card Background="Wheat" Height="40">
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0" TextElement.FontFamily="Microsoft YaHei" Width="140">
-                                <TextBlock MaxWidth="120" TextTrimming="CharacterEllipsis" FontSize="10" FontWeight="SemiBold" Text="SAMPLE TEXT SAMPLE TEXT SAMPLE TEXT" />
-                                <TextBlock FontSize="8" Text="SAMPLE TRANSLATION" HorizontalAlignment="Center" Margin="0,5,0,0" />
-                            </StackPanel>
-                        </materialDesign:Card>
+                    <ListView Grid.Row="2" Height="460" x:Name="TagFilterListBox" Margin="17,10,17,0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemsSource="{Binding SelectedTags}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate DataType="viewModel:CountedTag">
+                                <materialDesign:Card Background="Wheat" Height="40">
+                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0" TextElement.FontFamily="Microsoft YaHei" Width="140">
+                                        <TextBlock Text="{Binding Name}" MaxWidth="120" TextTrimming="CharacterEllipsis" FontSize="10" FontWeight="SemiBold" />
+                                        <TextBlock FontSize="8" Text="{Binding TranslatedName}" HorizontalAlignment="Center" Margin="0,5,0,0" />
+                                    </StackPanel>
+                                </materialDesign:Card>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
                     </ListView>
                 </Grid>
             </materialDesign:Card>

@@ -71,7 +71,7 @@ namespace Pixeval.Core
                 ViewCount = (int) response.TotalView,
                 Comments = (int) response.TotalComments,
                 Resolution = $"{response.Width}x{response.Height}",
-                PublishDate = response.CreateDate
+                PublishDate = response.CreateDate,
             };
 
             if (illust.IsManga && response.MetaPages != null)
@@ -84,6 +84,7 @@ namespace Pixeval.Core
                     page.Large = p.ImageUrls.Large;
                     return page;
                 }).ToArray();
+                illust.PageCount = illust.MangaMetadata.Length;
 
                 foreach (var illustration in illust.MangaMetadata)
                 {

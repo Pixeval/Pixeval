@@ -626,13 +626,14 @@ namespace Pixeval.UI
         private async void Thumbnail_OnLoaded(object sender, RoutedEventArgs e)
         {
             var dataContext = sender.GetDataContext<Illustration>();
-
-            if (dataContext != null && Uri.IsWellFormedUriString(dataContext.Thumbnail, UriKind.Absolute))
+            if (dataContext.Incomplete)
             {
-                if (dataContext.Thumbnail != null && Uri.IsWellFormedUriString(dataContext.Thumbnail, UriKind.Absolute))
-                {
-                    UiHelper.SetImageSource(sender, await PixivIO.FromUrl(dataContext.Thumbnail));
-                }
+                dataContext = await PixivHelper.IllustrationInfo(dataContext.Id);
+            }
+
+            if (dataContext?.Thumbnail is { } url && Uri.IsWellFormedUriString(url, UriKind.Absolute))
+            {
+                UiHelper.SetImageSource(sender, await PixivIO.FromUrl(url));
             }
 
             UiHelper.StartDoubleAnimationUseCubicEase(sender, "(Image.Opacity)", 0, 1, 800);
