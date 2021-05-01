@@ -36,6 +36,7 @@ using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Threading;
+using AvalonDock.Controls;
 using MaterialDesignExtensions.Controls;
 using MaterialDesignExtensions.Model;
 using MaterialDesignThemes.Wpf;
@@ -54,7 +55,6 @@ using Pixeval.Objects.Primitive;
 using Pixeval.Persisting;
 using Pixeval.UI.UserControls;
 using Refit;
-using Xceed.Wpf.AvalonDock.Controls;
 using MessageDialog = Pixeval.UI.UserControls.MessageDialog;
 
 #if RELEASE

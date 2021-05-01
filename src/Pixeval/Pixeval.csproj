@@ -11,7 +11,7 @@
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
     <Win32Resource />
     <Platforms>x86;AnyCPU</Platforms>
-    <NoWarn>$(NoWarn);NU1701</NoWarn>
+    <NoWarn>$(NoWarn);NU1608</NoWarn>
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
@@ -61,13 +61,15 @@
   <ItemGroup>
     <PackageReference Include="AdaptiveCards" Version="2.7.1" />
     <PackageReference Include="AngleSharp" Version="0.15.0" />
+    <PackageReference Include="Dirkster.AvalonDock" Version="4.50.3" />
+    <PackageReference Include="DotNetProjects.Extended.Wpf.Toolkit" Version="4.6.97" />
     <PackageReference Include="Dragablz" Version="0.0.3.223" />
-    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.0.2" />
     <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.23.4" />
     <PackageReference Include="MahApps.Metro" Version="2.4.5" />
     <PackageReference Include="MaterialDesignColors" Version="2.0.0" />
     <PackageReference Include="MaterialDesignExtensions" Version="3.3.0" />
     <PackageReference Include="MaterialDesignThemes" Version="4.0.0" />
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.818.41" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="PropertyChanged.Fody" PrivateAssets="All" Version="3.3.3" />
@@ -75,7 +77,6 @@
     <PackageReference Include="SharpVectors" Version="1.7.1" />
     <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
     <PackageReference Include="VirtualizingWrapPanel.NETCore" Version="1.4.0" />
-    <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>
