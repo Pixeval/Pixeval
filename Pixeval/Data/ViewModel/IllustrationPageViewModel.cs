@@ -36,12 +36,12 @@ namespace Pixeval.Data.ViewModel
     [AddINotifyPropertyChangedInterface]
     public class IllustrationPageViewModel
     {
-        
+
         public enum BrowseKind
         {
             [EnumLocalizedName("UserBrowserIllustSelector")]
-            Upload, 
-            
+            Upload,
+
             [EnumLocalizedName("UserBrowserGallerySelector")]
             Bookmark
         }
@@ -73,9 +73,9 @@ namespace Pixeval.Data.ViewModel
             {
                 CurrentlyViewing = args.NewValue switch
                 {
-                    BrowseKind.Upload   => Uploads,
+                    BrowseKind.Upload => Uploads,
                     BrowseKind.Bookmark => Bookmarks,
-                    _                   => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException()
                 };
                 SelectedTags.Clear();
             });
@@ -90,39 +90,39 @@ namespace Pixeval.Data.ViewModel
         public IReadOnlyList<CountedTag> AllPossibleTagsForBookmark => allPossibleTagsForBookmark;
 
         public ConditionalObservableCollection<Illustration> Uploads { get; set; }
-        
+
         // Bookmarks use custom tags
         public ObservableCollection<Illustration> Bookmarks { get; set; }
-        
+
         public ObservableCollection<Illustration> CurrentlyViewing { get; set; }
 
         // it's mostly Settings.Global.ExcludeTags, since the illustrator page does not provide such functionality that allows
         // user to add exclude tags
         public IReadOnlyList<string> RejectTags { get; set; }
-        
+
         public ObservableCollection<CountedTag> SelectedTags { get; set; }
 
         public Observable<BrowseKind> Browsing { get; }
-        
+
         public BitmapImage IllustratorAvatar { get; set; }
-        
+
         public User Illustrator { get; set; }
 
         public IEnumerable<CountedTag> GetSuggestionTags(string input)
         {
             return (Browsing.Value switch
             {
-                BrowseKind.Upload   => AllPossibleTagsForUpload,
+                BrowseKind.Upload => AllPossibleTagsForUpload,
                 BrowseKind.Bookmark => AllPossibleTagsForBookmark,
-                _                   => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException()
             }).Where(t => t.Name.Contains(input) || t.TranslatedName?.Contains(input) is true);
         }
-        
+
         public async Task SetIllustratorAvatar()
         {
             IllustratorAvatar = await PixivIO.FromUrl(Illustrator.Avatar);
         }
-        
+
         public async Task FillBookmarkTags()
         {
             var tags = await HttpClientFactory.WebApiService.GetBookmarkTagsForUser(Illustrator.Id, new CultureInfo(Settings.Global.Culture).TwoLetterISOLanguageName);
@@ -137,7 +137,7 @@ namespace Pixeval.Data.ViewModel
             var tags = await HttpClientFactory.WebApiService.GetUploadTagsForUser(Illustrator.Id, new CultureInfo(Settings.Global.Culture).TwoLetterISOLanguageName);
             allPossibleTagsForUpload.AddRange(tags.ResponseBody.Select(tag => new CountedTag(tag.Tag, tag.TagTranslation, tag.Count)));
         }
-        
+
         public async Task AddTagToFilter(CountedTag tag)
         {
             using var semaphore = new SemaphoreSlim(1, 1);
@@ -148,7 +148,7 @@ namespace Pixeval.Data.ViewModel
                     if (SelectedTags.Contains(tag))
                     {
                         SelectedTags.Add(tag);
-                        await OnFilterTagChanged();
+                        OnFilterTagChanged();
                     }
                     break;
                 case BrowseKind.Bookmark:
@@ -156,26 +156,27 @@ namespace Pixeval.Data.ViewModel
                     {
                         SelectedTags.Clear();
                         SelectedTags.Add(tag);
-                        await OnFilterTagChanged();
+                        OnFilterTagChanged();
                     }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
-        
+
         public async Task RemoveTagFromFilter(CountedTag tag)
         {
             using var semaphore = new SemaphoreSlim(1, 1);
             await semaphore.WaitAsync();
             if (SelectedTags.Remove(tag))
             {
-                await OnFilterTagChanged();
+                OnFilterTagChanged();
             }
         }
-        
+
         // invokes when tag list is updated
-        private async Task OnFilterTagChanged()
+        [SuppressPropertyChangedWarnings]
+        private async void OnFilterTagChanged()
         {
             switch (Browsing.Value)
             {
@@ -190,7 +191,7 @@ namespace Pixeval.Data.ViewModel
                     throw new ArgumentOutOfRangeException();
             }
         }
-        
+
         private ICollectionCondition<Illustration> BuildCondition()
         {
             return new SelectedTagCollectionCondition(SelectedTags.Select(tag => tag.Name).Where(tag => !tag.IsNullOrEmpty()).ToHashSet(), RejectTags.Where(tag => !tag.IsNullOrEmpty()).ToHashSet());

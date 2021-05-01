@@ -20,12 +20,12 @@
 
 using System;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.UserActivities;
-using Windows.UI.Shell;
 using AdaptiveCards;
 using Newtonsoft.Json;
 using Pixeval.Data.ViewModel;
 using Pixeval.Objects.Generic;
+using Windows.ApplicationModel.UserActivities;
+using Windows.UI.Shell;
 
 namespace Pixeval.Core
 {
