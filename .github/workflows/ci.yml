@@ -12,7 +12,6 @@ jobs:
             Solution_Name: ./Pixeval.sln
             Project_Path: ./src/Pixeval/Pixeval.csproj
             Configuration: Release
-            Platform: x64
 
         steps:
             - name: Checkout
@@ -30,13 +29,13 @@ jobs:
                       ${{ runner.os }}-nuget-
 
             - name: Restore the application
-              run: dotnet msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration /m
+              run: dotnet restore $env:Solution_Name -c $env:Configuration
 
             - name: Build the application
-              run: dotnet msbuild $env:Project_Path /t:build /p:Configuration=$env:Configuration /p:Platform=$env:Platform /m
+              run: dotnet build $env:Project_Path -c $env:Configuration
 
             - name: Publish the application
-              run: dotnet msbuild $env:Project_Path /t:publish /p:OutDir="$PWD/publish" /p:Configuration=$env:Configuration /p:Platform=$env:Platform /m
+              run: dotnet publish $env:Project_Path -p:OutDir="$PWD/publish" -c $env:Configuration
 
             - name: Upload a Build Artifact
               uses: actions/upload-artifact@v2

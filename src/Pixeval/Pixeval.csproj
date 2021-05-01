@@ -7,9 +7,7 @@
     <Description>A Strong, Fast and Flexible Pixiv Client</Description>
     <StartupObject>Pixeval.App</StartupObject>
     <ApplicationIcon>Resources\pxlogo.ico</ApplicationIcon>
-    <Win32Resource />
     <NoWarn>$(NoWarn);NU1608</NoWarn>
-    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
   <PropertyGroup>
