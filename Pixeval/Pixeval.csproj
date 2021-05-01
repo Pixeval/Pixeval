@@ -1,0 +1,99 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Description>A Strong, Fast and Flexible Pixiv Client</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <StartupObject>Pixeval.App</StartupObject>
+    <ApplicationIcon>Resources\pxlogo.ico</ApplicationIcon>
+    <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
+    <Win32Resource />
+    <Platforms>x86;AnyCPU</Platforms>
+    <NoWarn>$(NoWarn);NU1701</NoWarn>
+    <Configurations>Debug;Release</Configurations>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Version>3.1.0</Version>
+    <PackageProjectUrl>https://sora.ink/Pixeval</PackageProjectUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <PlatformTarget>x64</PlatformTarget>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Prefer32Bit>true</Prefer32Bit>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <Prefer32bit>true</Prefer32bit>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <Prefer32bit>true</Prefer32bit>
+  </PropertyGroup>
+
+	<ItemGroup>
+    <None Remove="Resources\pixeval_ca.cer" />
+    <None Remove="Resources\pixeval_server_cert.pfx" />
+  </ItemGroup>
+
+	<ItemGroup>
+    <Reference Update="CefSharp">
+      <Private>true</Private>
+    </Reference>
+    <Reference Update="CefSharp.Core">
+      <Private>true</Private>
+    </Reference>
+    <Reference Update="CefSharp.Wpf">
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AdaptiveCards" Version="1.2.4" />
+    <PackageReference Include="AngleSharp" Version="0.14.0" />
+    <PackageReference Include="Dragablz" Version="0.0.3.203" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.0.1" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.20.0.1" />
+    <PackageReference Include="MahApps.Metro" Version="2.1.1" />
+    <PackageReference Include="MaterialDesignColors" Version="2.0.0" />
+    <PackageReference Include="MaterialDesignExtensions" Version="3.2.0" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.0.0" />
+    <PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls" Version="6.1.1" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.705.50" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="PropertyChanged.Fody" Version="3.2.8" />
+    <PackageReference Include="refit" Version="5.1.67" />
+    <PackageReference Include="SharpVectors" Version="1.0.0" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
+    <PackageReference Include="VirtualizingWrapPanel.NETCore" Version="1.4.0" />
+    <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\pixeval_ca.cer" />
+    <Resource Include="Resources\pixeval_server_cert.pfx" />
+    <Resource Include="Resources\resx_en-us.xml" />
+    <Resource Include="Resources\resx_zh-cn.xml" />
+    <Resource Include="Resources\dqueue.ttf" />
+    <Resource Include="Resources\iconfont.ttf" />
+    <Resource Include="Resources\iconfontex.ttf" />
+    <Resource Include="Resources\logo-only.svg" />
+    <Resource Include="Resources\pxlogo.ico" />
+    <Resource Include="Resources\saucenao.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="UI\Themes\" />
+  </ItemGroup>
+
+</Project>
