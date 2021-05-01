@@ -36,6 +36,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         xmlns:model="clr-namespace:MaterialDesignExtensions.Model;assembly=MaterialDesignExtensions"
         xmlns:collections="clr-namespace:System.Collections;assembly=System.Runtime.Extensions"
         xmlns:res="clr-namespace:Pixeval.Resources"
+        xmlns:global="clr-namespace:"
         Title="Pixeval"
         Width="1450"
         Height="900"
@@ -1272,7 +1273,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                             Orientation="Horizontal">
                                     <TextBlock Margin="0,0,10,0"
                                                FontSize="12"
-                                               Text="{Binding Source={x:Static pixeval:PixevalContext.CurrentVersion}, StringFormat={x:Static res:Resources.PixevalVersionFormat}}" />
+                                               Text="{Binding Source={x:Static global:ThisAssembly.AssemblyFileVersion}, StringFormat={x:Static res:Resources.PixevalVersionFormat}}" />
                                     <TextBlock Margin="0,0,10,0" FontSize="12">
                                         <Hyperlink Foreground="Black"
                                                    NavigateUri="http://47.95.218.243/index.html"
