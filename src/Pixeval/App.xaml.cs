@@ -38,7 +38,7 @@ using System.Net.Http;
 using Pixeval.Objects.Exceptions;
 using Pixeval.Objects.Exceptions.Logger;
 using Pixeval.UI.UserControls;
-
+using System.Text;
 #endif
 
 namespace Pixeval

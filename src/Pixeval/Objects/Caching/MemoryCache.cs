@@ -57,7 +57,7 @@ namespace Pixeval.Objects.Caching
             cache.TryRemove(IWeakCacheProvider<T, THash>.HashKey(associateWith), out _);
         }
 
-        public Task<(bool, T)> TryGet([NotNull] THash key)
+        public Task<(bool, T)> TryGet(THash key)
         {
             return cache.TryGetValue(IWeakCacheProvider<T, THash>.HashKey(key), out var weakRef) && weakRef.Target is { } target ? Task.FromResult((true, target)) : Task.FromResult((false, (T) null));
         }

@@ -5,12 +5,9 @@
     <TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <Description>A Strong, Fast and Flexible Pixiv Client</Description>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <StartupObject>Pixeval.App</StartupObject>
     <ApplicationIcon>Resources\pxlogo.ico</ApplicationIcon>
-    <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
     <Win32Resource />
-    <Platforms>x86;AnyCPU</Platforms>
     <NoWarn>$(NoWarn);NU1608</NoWarn>
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
@@ -22,18 +19,7 @@
     <PackageProjectUrl>https://sora.ink/Pixeval</PackageProjectUrl>
   </PropertyGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Remove="Resources\Resources.resx" />
-  </ItemGroup>
-
-
 	<ItemGroup>
-    <None Remove="Resources\pixeval_ca.cer" />
-    <None Remove="Resources\pixeval_server_cert.pfx" />
-    <None Remove="Resources\pxlogo.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AdaptiveCards" Version="2.7.1" />
     <PackageReference Include="AngleSharp" Version="0.15.0" />
     <PackageReference Include="Dirkster.AvalonDock" Version="4.50.3" />
@@ -62,22 +48,14 @@
     <Resource Include="Resources\iconfontex.ttf" />
     <Resource Include="Resources\logo-only.svg" />
     <Resource Include="Resources\pxlogo.ico" />
-    <Resource Include="Resources\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </Resource>
     <Resource Include="Resources\saucenao.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Resources\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
+    <EmbeddedResource Update="Resources\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources\Resources.zh-CN.resx">
     </EmbeddedResource>
   </ItemGroup>

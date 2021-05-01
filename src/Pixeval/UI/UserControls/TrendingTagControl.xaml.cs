@@ -39,7 +39,7 @@ namespace Pixeval.UI.UserControls
             SearchingHistoryListBox.ItemsSource = SearchingHistoryManager.GetSearchingHistory();
         }
 
-        private async void TrendingTagControl_OnInitialized(object sender, EventArgs e)
+        private void TrendingTagControl_OnInitialized(object sender, EventArgs e)
         {
             //TODO uncomment
             //var tags = await PixivClient.GetTrendingTags();

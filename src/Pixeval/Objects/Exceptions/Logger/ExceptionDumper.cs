@@ -66,7 +66,7 @@ namespace Pixeval.Objects.Exceptions.Logger
             sb.AppendLine(@"    ¡¤ Exception Message");
             sb.AppendLine();
             sb.AppendLine(@"Begin Dump Information");
-            sb.AppendLine($"    Pixeval Version: {PixevalContext.CurrentVersion}");
+            sb.AppendLine($"    Pixeval Version: {ThisAssembly.AssemblyFileVersion}");
             sb.AppendLine($"    Creation: {DateTime.Now}");
             sb.AppendLine(@"End Dump Information");
             sb.AppendLine();

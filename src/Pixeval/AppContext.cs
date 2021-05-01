@@ -32,9 +32,7 @@ namespace Pixeval
     public static class PixevalContext
     {
         public const string AppIdentifier = "Pixeval";
-
-        public const string CurrentVersion = "3.1.2";
-
+        
         public const string ConfigurationFileName = "pixeval_conf.json";
 
         public static readonly string ProjectFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppIdentifier.ToLower());
@@ -63,7 +61,7 @@ namespace Pixeval
         {
             const string Url = "http://47.95.218.243/Pixeval/version.txt";
             using var httpClient = new HttpClient();
-            return await httpClient.GetStringAsync(Url) != CurrentVersion;
+            return await httpClient.GetStringAsync(Url) != ThisAssembly.AssemblyFileVersion;
         }
     }
 }

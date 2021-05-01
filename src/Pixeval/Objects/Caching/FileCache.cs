@@ -84,7 +84,7 @@ namespace Pixeval.Objects.Caching
             }
         }
 
-        public async Task<(bool, T)> TryGet([NotNull] THash key)
+        public async Task<(bool, T)> TryGet(THash key)
         {
             if (fileMapping.TryGetValue(key, out var file) && File.Exists(file))
             {
