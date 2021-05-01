@@ -29,7 +29,7 @@ jobs:
                       ${{ runner.os }}-nuget-
 
             - name: Restore the application
-              run: dotnet restore $env:Solution_Name -c $env:Configuration
+              run: dotnet restore $env:Solution_Name
 
             - name: Build the application
               run: dotnet build $env:Project_Path -c $env:Configuration
