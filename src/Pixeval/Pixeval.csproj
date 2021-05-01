@@ -22,40 +22,15 @@
     <PackageProjectUrl>https://sora.ink/Pixeval</PackageProjectUrl>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-    <PlatformTarget>x64</PlatformTarget>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="Resources\Resources.resx" />
+  </ItemGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <Prefer32Bit>true</Prefer32Bit>
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x64</PlatformTarget>
-    <Prefer32bit>true</Prefer32bit>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <Prefer32bit>true</Prefer32bit>
-  </PropertyGroup>
 
 	<ItemGroup>
     <None Remove="Resources\pixeval_ca.cer" />
     <None Remove="Resources\pixeval_server_cert.pfx" />
-  </ItemGroup>
-
-	<ItemGroup>
-    <Reference Update="CefSharp">
-      <Private>true</Private>
-    </Reference>
-    <Reference Update="CefSharp.Core">
-      <Private>true</Private>
-    </Reference>
-    <Reference Update="CefSharp.Wpf">
-      <Private>true</Private>
-    </Reference>
+    <None Remove="Resources\pxlogo.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -82,22 +57,29 @@
   <ItemGroup>
     <Resource Include="Resources\pixeval_ca.cer" />
     <Resource Include="Resources\pixeval_server_cert.pfx" />
-    <Resource Include="Resources\resx_en-us.xml" />
-    <Resource Include="Resources\resx_zh-cn.xml" />
     <Resource Include="Resources\dqueue.ttf" />
     <Resource Include="Resources\iconfont.ttf" />
     <Resource Include="Resources\iconfontex.ttf" />
     <Resource Include="Resources\logo-only.svg" />
     <Resource Include="Resources\pxlogo.ico" />
+    <Resource Include="Resources\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </Resource>
     <Resource Include="Resources\saucenao.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="UI\Themes\" />
+    <Compile Update="Resources\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Microsoft.VCRTForwarders.140" Version="1.0.7" />
+    <EmbeddedResource Update="Resources\Resources.zh-CN.resx">
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

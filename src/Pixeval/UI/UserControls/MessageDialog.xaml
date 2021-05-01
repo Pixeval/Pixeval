@@ -2,7 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:i18N="clr-namespace:Pixeval.Objects.I18n"
+             xmlns:res="clr-namespace:Pixeval.Resources"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              x:Name="MessageDialogUserControl"
@@ -36,7 +36,7 @@
                         Height="45"
                         Click="YesButton_OnClick"
                         Style="{DynamicResource MaterialDesignToolButtonWithGrayWaveEffect}">
-                    <TextBlock FontSize="15" Text="{Binding Path=(i18N:AkaI18N.Yes)}" />
+                    <TextBlock FontSize="15" Text="{Binding Path=(res:Resources.Yes)}" />
                 </Button>
                 <Button x:Name="NoButton"
                         Grid.Column="1"
@@ -44,7 +44,7 @@
                         Height="45"
                         Click="NoButton_OnClick"
                         Style="{DynamicResource MaterialDesignToolButtonWithGrayWaveEffect}">
-                    <TextBlock FontSize="15" Text="{Binding Path=(i18N:AkaI18N.No)}" />
+                    <TextBlock FontSize="15" Text="{Binding Path=(res:Resources.No)}" />
                 </Button>
             </Grid>
         </StackPanel>

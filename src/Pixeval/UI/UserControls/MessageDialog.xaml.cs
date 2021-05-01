@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Controls;
 using MaterialDesignThemes.Wpf;
 using Pixeval.Objects;
-using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
 using PropertyChanged;
 
@@ -16,7 +15,7 @@ namespace Pixeval.UI.UserControls
     [AddINotifyPropertyChangedInterface]
     public partial class MessageDialog
     {
-        public static readonly DependencyProperty TitleContentProperty = DependencyProperty.Register(nameof(TitleContent), typeof(string), typeof(MessageDialog), new PropertyMetadata(AkaI18N.Warning));
+        public static readonly DependencyProperty TitleContentProperty = DependencyProperty.Register(nameof(TitleContent), typeof(string), typeof(MessageDialog), new PropertyMetadata(Pixeval.Resources.Resources.Warning));
 
         public static readonly DependencyProperty MessageContentProperty = DependencyProperty.Register(nameof(MessageContent), typeof(string), typeof(MessageDialog), new PropertyMetadata(string.Empty));
 
@@ -59,7 +58,7 @@ namespace Pixeval.UI.UserControls
         [MethodImpl(MethodImplOptions.NoOptimization)]
         public static Task<MessageDialogResult> Warning(DialogHost attached, string content, bool acknowledge = false)
         {
-            return Show(attached, content, AkaI18N.Warning, acknowledge);
+            return Show(attached, content, Pixeval.Resources.Resources.Warning, acknowledge);
         }
 
         public static Task<MessageDialogResult> Show(DialogHost attached, string content, string titleContent, bool acknowledge = false)

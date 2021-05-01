@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.Web.WebView2.Core;
-using Microsoft.Web.WebView2.Core.Raw;
 using Pixeval.Objects.Primitive;
 
 namespace Pixeval.Objects.Generic

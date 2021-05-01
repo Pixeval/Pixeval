@@ -21,16 +21,15 @@
 
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Win32;
 using Pixeval.Core.Persistent;
 using Pixeval.Objects;
-using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
 using Pixeval.Persisting;
 #if RELEASE
@@ -74,7 +73,7 @@ namespace Pixeval
                     UI.MainWindow.MessageQueue.Enqueue(reason.ToString());
                     return;
                 case AuthenticateFailedException _:
-                    MessageDialog.Warning(UI.MainWindow.Instance.WarningDialog, AkaI18N.AppApiAuthenticateTimeout);
+                    MessageDialog.Warning(UI.MainWindow.Instance.WarningDialog, Pixeval.Resources.Resources.AppApiAuthenticateTimeout);
                     break;
             }
             ExceptionDumper.WriteException(e);
@@ -99,7 +98,7 @@ namespace Pixeval
             var fakeCertMgr = new CertificateManager(cert);
             if (!fakeCertMgr.Query(StoreName.Root, StoreLocation.CurrentUser))
             {
-                if (MessageBox.Show(AkaI18N.CertificateInstallationIsRequired, AkaI18N.CertificateInstallationIsRequiredTitle, MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                if (MessageBox.Show(Pixeval.Resources.Resources.CertificateInstallationIsRequired, Pixeval.Resources.Resources.CertificateInstallationIsRequiredTitle, MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
                     fakeCertMgr.Install(StoreName.Root, StoreLocation.CurrentUser);
                 }
@@ -114,9 +113,10 @@ namespace Pixeval
         protected override async void OnStartup(StartupEventArgs e)
         {
             InitializeFolders();
+            Pixeval.Resources.Resources.Culture = new CultureInfo("zh-CN");
             if (!CheckWebViewVersion())
             {
-                MessageBox.Show(AkaI18N.WebView2DownloadIsRequired);
+                MessageBox.Show(Pixeval.Resources.Resources.WebView2DownloadIsRequired);
                 Clipboard.SetText("https://go.microsoft.com/fwlink/p/?LinkId=2124703");
                 Environment.Exit(0);
             }
@@ -137,7 +137,7 @@ namespace Pixeval
         {
             if (!UniqueMutex.WaitOne(0, false))
             {
-                MessageBox.Show(AkaI18N.MultiplePixevalInstanceDetected, AkaI18N.MultiplePixevalInstanceDetectedTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Pixeval.Resources.Resources.MultiplePixevalInstanceDetected, Pixeval.Resources.Resources.MultiplePixevalInstanceDetectedTitle, MessageBoxButton.OK, MessageBoxImage.Error);
                 Environment.Exit(-1);
             }
         }

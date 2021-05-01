@@ -21,7 +21,6 @@ using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Windows;
-using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
 
 namespace Pixeval.Objects
@@ -53,7 +52,7 @@ namespace Pixeval.Objects
                 }
             }
 
-            throw new FileNotFoundException(AkaI18N.CannotFindSpecifiedCertificate);
+            throw new FileNotFoundException(Pixeval.Resources.Resources.CannotFindSpecifiedCertificate);
         }
 
         /// <summary>
@@ -70,7 +69,7 @@ namespace Pixeval.Objects
                 }
             }
 
-            throw new FileNotFoundException(AkaI18N.CannotFindSpecifiedCertificate);
+            throw new FileNotFoundException(Pixeval.Resources.Resources.CannotFindSpecifiedCertificate);
         }
 
         /// <summary>

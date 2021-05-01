@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -28,7 +29,6 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using Pixeval.Core;
 using Pixeval.Data.ViewModel;
 using Pixeval.Objects.Generic;
-using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
 using Pixeval.Persisting;
 
@@ -61,7 +61,7 @@ namespace Pixeval.UI.UserControls
         
         private void OpenFileDialogButton_OnClick(object sender, RoutedEventArgs e)
         {
-            using var fileDialog = new CommonOpenFileDialog(AkaI18N.PleaseSelectLocation) { InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), IsFolderPicker = true };
+            using var fileDialog = new CommonOpenFileDialog(Pixeval.Resources.Resources.PleaseSelectLocation) { InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), IsFolderPicker = true };
 
             if (fileDialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
@@ -102,7 +102,7 @@ namespace Pixeval.UI.UserControls
 
         private void CultureSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            AkaI18N.Reload((I18NOption) CultureSelector.SelectedItem);
+            Pixeval.Resources.Resources.Culture =(CultureInfo) CultureSelector.SelectedItem;
             MainWindow.UpdateNavigationLanguage();
         }
 

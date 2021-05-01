@@ -1,0 +1,849 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- Microsoft ResX Schema
+
+		Version 1.3
+
+		The primary goals of this format is to allow a simple XML format 
+		that is mostly human readable. The generation and parsing of the 
+		various data types are done through the TypeConverter classes 
+		associated with the data types.
+
+		Example:
+
+		... ado.net/XML headers & schema ...
+		<resheader name="resmimetype">text/microsoft-resx</resheader>
+		<resheader name="version">1.3</resheader>
+		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+		<data name="Name1">this is my long string</data>
+		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+			[base64 mime encoded serialized .NET Framework object]
+		</data>
+		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+			[base64 mime encoded string representing a byte array form of the .NET Framework object]
+		</data>
+
+		There are any number of "resheader" rows that contain simple 
+		name/value pairs.
+
+		Each data row contains a name, and value. The row also contains a 
+		type or mimetype. Type corresponds to a .NET class that support 
+		text/value conversion through the TypeConverter architecture. 
+		Classes that don't support this are serialized and stored with the 
+		mimetype set.
+
+		The mimetype is used for serialized objects, and tells the 
+		ResXResourceReader how to depersist the object. This is currently not 
+		extensible. For a given mimetype the value must be set accordingly:
+
+		Note - application/x-microsoft.net.object.binary.base64 is the format 
+		that the ResXResourceWriter will generate, however the reader can 
+		read any of the formats listed below.
+
+		mimetype: application/x-microsoft.net.object.binary.base64
+		value   : The object must be serialized with 
+			: System.Serialization.Formatters.Binary.BinaryFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.soap.base64
+		value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.bytearray.base64
+		value   : The object must be serialized into a byte array 
+			: using a System.ComponentModel.TypeConverter
+			: and then encoded with base64 encoding. -->
+  <xsd:schema id="root"
+              xmlns=""
+              xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+              xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root"
+                 msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value"
+                             type="xsd:string"
+                             minOccurs="0"
+                             msdata:Ordinal="1" />
+                <xsd:element name="comment"
+                             type="xsd:string"
+                             minOccurs="0"
+                             msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name"
+                             type="xsd:string"
+                             msdata:Ordinal="1" />
+              <xsd:attribute name="type"
+                             type="xsd:string"
+                             msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype"
+                             type="xsd:string"
+                             msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value"
+                             type="xsd:string"
+                             minOccurs="0"
+                             msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name"
+                             type="xsd:string"
+                             use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutPixeval"
+        xml:space="preserve">
+    <value>关于项目</value>
+  </data>
+  <data name="AddSpotlightToFavorite"
+        xml:space="preserve">
+    <value>将该特辑添加到收藏列表</value>
+  </data>
+  <data name="AppApiAuthenticateTimeout"
+        xml:space="preserve">
+    <value>登录请求超时, 请仔细检查您的网络环境</value>
+  </data>
+  <data name="BatchDownloadAcknowledgment"
+        xml:space="preserve">
+    <value>你真的想要下载全部作品吗?在下载任务过多的时候可能会导致程序发生顿卡</value>
+  </data>
+  <data name="BrowsingHistoryCount"
+        xml:space="preserve">
+    <value>浏览历史记录数量</value>
+  </data>
+  <data name="CannotFindResult"
+        xml:space="preserve">
+    <value>找不到结果TAT</value>
+  </data>
+  <data name="CannotFindSpecifiedCertificate"
+        xml:space="preserve">
+    <value>找不到指定的证书</value>
+  </data>
+  <data name="CannotFindUser"
+        xml:space="preserve">
+    <value>抱歉, Pixeval找不到您搜索的用户呢, 请仔细检查用户ID后再来一次吧~</value>
+  </data>
+  <data name="CannotRetrieveContentLengthHeader"
+        xml:space="preserve">
+    <value>找不到对应的ContentLength参数</value>
+  </data>
+  <data name="CertificateInstallationIsRequired"
+        xml:space="preserve">
+    <value>检测到本机尚未安装证书, 若不安装该证书则会导致无法直连登陆, 接下来将会执行安装证书进程, 过程中也许会有弹窗, 请点击确定/OK, 该证书私钥将不会被泄露和分发</value>
+  </data>
+  <data name="CertificateInstallationIsRequiredTitle"
+        xml:space="preserve">
+    <value>安装根证书</value>
+  </data>
+  <data name="ConditionBoxHint"
+        xml:space="preserve">
+    <value>输入高级搜索表达式</value>
+  </data>
+  <data name="ConditionBoxTooltip"
+        xml:space="preserve">
+    <value>格式: &lt;关键字&gt;
+允许的表达式: &lt;ID&gt;/&lt;Tag&gt;/&lt;标题&gt;/&lt;!不想要的Tag&gt;/&lt;&lt;最低横向像素数&gt;x&lt;最低纵向像素数&gt;&gt;</value>
+  </data>
+  <data name="Copy"
+        xml:space="preserve">
+    <value>复制</value>
+  </data>
+  <data name="CopyDownloadPath"
+        xml:space="preserve">
+    <value>复制下载地址</value>
+  </data>
+  <data name="CppRedistributableRequired"
+        xml:space="preserve">
+    <value>Pixeval运行需要Visual C++ Redistributable 2015/2017/2019 x64支持, 否则部分功能将会受到影响, 请前往https://support.microsoft.com/zh-cn/help/2977003/the-latest-supported-visual-c-downloads下载最新的Visual C++ Redistributable, 链接已经复制到剪切板</value>
+  </data>
+  <data name="CppRedistributableRequiredTitle"
+        xml:space="preserve">
+    <value>未检测到版本大于2015的64位VC++ Redistributable</value>
+  </data>
+  <data name="CreateNewFolderWhenDownloadFromUser"
+        xml:space="preserve">
+    <value>下载作者作品时使用单独文件夹</value>
+  </data>
+  <data name="DownloadAllInCurrentList"
+        xml:space="preserve">
+    <value>下载当前列表中的所有作品</value>
+  </data>
+  <data name="DownloadLocation"
+        xml:space="preserve">
+    <value>作品下载位置</value>
+  </data>
+  <data name="DownloadPathSyntaxToolTip"
+        xml:space="preserve">
+    <value>
+你可以使用以下的宏作为其对应值的占位符: 
+1. 通用宏
+1. {illust.ext} 作品的文件的后缀名(比如jpg,png,gif,后缀名前的点号要自己加, 如果你的路径中不以该宏结尾, 则其会被自动追加到结尾处)
+2. {illust.id} 作品名
+3. {illust.title} 作品ID
+4. {user.id} 作品作者的ID
+5. {user.name} 作品作者的用户名
+2. 特定宏, 以下的宏只有在特定条件中才会起作用, 否则将会返回默认值:
+1. {manga.index} 当前图片在一幅多图作品列表中的位置, 从0开始, 如果不是多图作品则返回默认值0
+2. {spot.id} 特辑ID, 如果当前作品不属于特辑则返回空字符串
+3. {spot.title} 特辑标题, 如果当前作品不属于特辑则返回空字符串
+3. 条件宏, 如果条件为真则返回一定值, 否则返回空字符串, 有以下两种预设的条件:
+1. {if:manga:&lt;stmt&gt;}/{ifn:manga:&lt;stmt&gt;} 如果作品是多图则返回&lt;stmt&gt;的内容, 否则返回空字符串; {ifn}作用相反, 如果作品不是多图则返回&lt;stmt&gt;内容, 否则返回空字符串
+2. {if:illust:&lt;stmt&gt;}/{ifn:illust:&lt;stmt&gt;} 如果作品是单图则返回&lt;stmt&gt;的内容，否则返回空字符串; {ifn}作用相反, 如果作品不是单图则返回&lt;stmt&gt;内容, 否则返回空字符串
+3. {if:ugo:&lt;stmt&gt;}/{ifn:ugo:&lt;stmt&gt;} 如果作品是动图则返回&lt;stmt&gt;的内容, 否则返回空字符串; {ifn}作用相反, 如果作品不是动图则返回&lt;stmt&gt;内容, 否则返回空字符串
+4. {if:spot:&lt;stmt&gt;}/{ifn:spot:&lt;stmt&gt;} 如果作品属于特辑则返回&lt;stmt&gt;的内容, 否则返回空字符串; {ifn}作用相反, 如果作品不属于特辑则返回&lt;stmt&gt;内容, 否则返回空字符串
+注意事项:
+1. 以上宏的求值过程中若包含Windows文件系统所不允许的非法字符则那些字符会被移除    
+2. 如果路径中的一段子目录求值结果是空字符串, 则这段子目录会被直接忽略, 例: 如果{manga.title}求值为空则aa\{manga.title}\bb会被求值为aa\bb而非aa\\bb
+3. 路径分隔符请使用反斜杠('\')
+4. 条件宏的&lt;stmt&gt;部分可以使用其他非条件宏以外的宏</value>
+  </data>
+  <data name="DownloadQueueAndHistory"
+        xml:space="preserve">
+    <value>下载与历史</value>
+  </data>
+  <data name="DownloadQueueBrowsingHistory"
+        xml:space="preserve">
+    <value>浏览历史</value>
+  </data>
+  <data name="DownloadQueueDownloaded"
+        xml:space="preserve">
+    <value>已下载</value>
+  </data>
+  <data name="DownloadQueueDownloading"
+        xml:space="preserve">
+    <value>下载中</value>
+  </data>
+  <data name="DownloadQueueEmptyNotifier"
+        xml:space="preserve">
+    <value>这里空空如也, 去下载一些作品吧！</value>
+  </data>
+  <data name="DownloadQueueHistoryListIsEmpty"
+        xml:space="preserve">
+    <value>这里空空如也, 去浏览一些作品吧！</value>
+  </data>
+  <data name="DownloadQueueRemoveAllFromList"
+        xml:space="preserve">
+    <value>清空列表</value>
+  </data>
+  <data name="DownloadQueueRemoveFromDownloading"
+        xml:space="preserve">
+    <value>从列表中移除</value>
+  </data>
+  <data name="DownloadQueueRemoveFromList"
+        xml:space="preserve">
+    <value>从列表中移除</value>
+  </data>
+  <data name="DownloadQueueShowDownloadIllust"
+        xml:space="preserve">
+    <value>查看作品</value>
+  </data>
+  <data name="DownloadSingleIllustration"
+        xml:space="preserve">
+    <value>下载该作品</value>
+  </data>
+  <data name="DownloadSpotlight"
+        xml:space="preserve">
+    <value>下载特辑</value>
+  </data>
+  <data name="DownloadTo"
+        xml:space="preserve">
+    <value>下载到...</value>
+  </data>
+  <data name="EmailOrPasswordIsWrong"
+        xml:space="preserve">
+    <value>用户名或密码错误</value>
+  </data>
+  <data name="EmptyEmailOrPasswordIsNotAllowed"
+        xml:space="preserve">
+    <value>用户名或密码不能为空</value>
+  </data>
+  <data name="FavoriteSpotlights"
+        xml:space="preserve">
+    <value>特辑收藏</value>
+  </data>
+  <data name="Feed"
+        xml:space="preserve">
+    <value>用 户 动 态</value>
+  </data>
+  <data name="FileCachePolicy"
+        xml:space="preserve">
+    <value>缓存策略: 文件 (减少内存占用优先)</value>
+  </data>
+  <data name="FillWithWebCookie"
+        xml:space="preserve">
+    <value>请输入你的Cookie</value>
+  </data>
+  <data name="GifIllustrationHint"
+        xml:space="preserve">
+    <value>这是一个GIF动图</value>
+  </data>
+  <data name="HomePage"
+        xml:space="preserve">
+    <value>主          页</value>
+  </data>
+  <data name="IdDoNotExists"
+        xml:space="preserve">
+    <value>您所输入的ID不存在, 请检查后再试一次吧~</value>
+  </data>
+  <data name="IdIllegal"
+        xml:space="preserve">
+    <value>搜索ID时必须输入纯数字哟~</value>
+  </data>
+  <data name="IllustBrowserBookmark"
+        xml:space="preserve">
+    <value>添加到收藏</value>
+  </data>
+  <data name="IllustBrowserDownload"
+        xml:space="preserve">
+    <value>下载</value>
+  </data>
+  <data name="IllustBrowserIllustId"
+        xml:space="preserve">
+    <value>作品ID: </value>
+  </data>
+  <data name="IllustBrowserIllustTag"
+        xml:space="preserve">
+    <value>#作品标签: </value>
+  </data>
+  <data name="IllustBrowserPrivateBookmark"
+        xml:space="preserve">
+    <value>悄悄收藏</value>
+  </data>
+  <data name="IllustBrowserRemoveBookmark"
+        xml:space="preserve">
+    <value>移除收藏</value>
+  </data>
+  <data name="IllustBrowserResolution"
+        xml:space="preserve">
+    <value>分辨率: </value>
+  </data>
+  <data name="IllustBrowserSetWallpaper"
+        xml:space="preserve">
+    <value>设为壁纸</value>
+  </data>
+  <data name="IllustBrowserShareLink"
+        xml:space="preserve">
+    <value>分享链接</value>
+  </data>
+  <data name="IllustBrowserTotalBookmarks"
+        xml:space="preserve">
+    <value>收藏数: </value>
+  </data>
+  <data name="IllustBrowserTotalViews"
+        xml:space="preserve">
+    <value>总浏览量: </value>
+  </data>
+  <data name="IllustBrowserUploadDate"
+        xml:space="preserve">
+    <value>上传日期: </value>
+  </data>
+  <data name="IllustBrowserViewInBrowser"
+        xml:space="preserve">
+    <value>在浏览器中查看</value>
+  </data>
+  <data name="IllustRanking"
+        xml:space="preserve">
+    <value>作 品 榜 单</value>
+  </data>
+  <data name="ImageMirrorServerUrl"
+        xml:space="preserve">
+    <value>图片镜像站地址</value>
+  </data>
+  <data name="ImageMirrorServerUrlHint"
+        xml:space="preserve">
+    <value>如果你想使用另外的图片下载镜像站而非默认(i.pximg.net)，请将服务器地址填在这里，如果你不知道这是什么意思，请不要操作此栏</value>
+  </data>
+  <data name="InputIsEmpty"
+        xml:space="preserve">
+    <value>请在输入搜索关键字后再进行搜索~</value>
+  </data>
+  <data name="InvalidDirectoryPath"
+        xml:space="preserve">
+    <value>给定的路径不是合法的文件夹路径</value>
+  </data>
+  <data name="Logout"
+        xml:space="preserve">
+    <value>登          出</value>
+  </data>
+  <data name="MangaIllustrationHintFormat"
+        xml:space="preserve">
+    <value>这是一个图集, 包含了{0}张图片</value>
+  </data>
+  <data name="MemoryCachePolicy"
+        xml:space="preserve">
+    <value>缓存策略: 内存 (加载速度优先)</value>
+  </data>
+  <data name="MinBookmarkRequired"
+        xml:space="preserve">
+    <value>高级搜索: 最低收藏数</value>
+  </data>
+  <data name="MinimumBookmarkToolTip"
+        xml:space="preserve">
+    <value>指定所有收藏数低于该值的作品将会被过滤掉, 只在搜索用户更新/上传/收藏/榜单/日推/关键字搜索时起作用</value>
+  </data>
+  <data name="MultiplePixevalInstanceDetected"
+        xml:space="preserve">
+    <value>已经有一个Pixeval实例在运行了</value>
+  </data>
+  <data name="MultiplePixevalInstanceDetectedTitle"
+        xml:space="preserve">
+    <value>不能同时运行两个Pixeval实例!</value>
+  </data>
+  <data name="MyFollowing"
+        xml:space="preserve">
+    <value>我 的 关 注</value>
+  </data>
+  <data name="MyGallery"
+        xml:space="preserve">
+    <value>我 的 收 藏</value>
+  </data>
+  <data name="No"
+        xml:space="preserve">
+    <value>不</value>
+  </data>
+  <data name="PathNotExist"
+        xml:space="preserve">
+    <value>找不到目录, 请检查文件是否已经被删除</value>
+  </data>
+  <data name="PixevalSettings"
+        xml:space="preserve">
+    <value>Pixeval设置</value>
+  </data>
+  <data name="PixevalUpdateAvailable"
+        xml:space="preserve">
+    <value>有更新可用, 是否现在更新?</value>
+  </data>
+  <data name="PixevalUpdateAvailableTitle"
+        xml:space="preserve">
+    <value>更新可用</value>
+  </data>
+  <data name="PixevalVersionFormat"
+        xml:space="preserve">
+    <value>当前版本: {0}</value>
+  </data>
+  <data name="PleaseSelectFile"
+        xml:space="preserve">
+    <value>选择文件</value>
+  </data>
+  <data name="PleaseSelectLocation"
+        xml:space="preserve">
+    <value>选择位置</value>
+  </data>
+  <data name="Private"
+        xml:space="preserve">
+    <value>私人</value>
+  </data>
+  <data name="Public"
+        xml:space="preserve">
+    <value>公开</value>
+  </data>
+  <data name="QueryNotResponding"
+        xml:space="preserve">
+    <value>抱歉, Pixeval无法根据当前的设置找到任何作品, 或许是您的页码设置过大/关键字不存在/没有收藏任何作品, 请检查后再尝试吧~</value>
+  </data>
+  <data name="QuerySingleIllust"
+        xml:space="preserve">
+    <value>搜索单个作品</value>
+  </data>
+  <data name="QuerySingleUser"
+        xml:space="preserve">
+    <value>搜索单个用户</value>
+  </data>
+  <data name="QueryUser"
+        xml:space="preserve">
+    <value>搜索用户</value>
+  </data>
+  <data name="QueuedAllToDownload"
+        xml:space="preserve">
+    <value>已全部添加到下载队列</value>
+  </data>
+  <data name="QueuedDownload"
+        xml:space="preserve">
+    <value>已添加到下载队列</value>
+  </data>
+  <data name="RankDateCannotBeNull"
+        xml:space="preserve">
+    <value>榜单日期不能为空</value>
+  </data>
+  <data name="RankNeedR18On"
+        xml:space="preserve">
+    <value>根据您的偏好设置, Pixeval不能为您展示这些作品</value>
+  </data>
+  <data name="RankOptionDay"
+        xml:space="preserve">
+    <value>每日榜单</value>
+  </data>
+  <data name="RankOptionDayFemale"
+        xml:space="preserve">
+    <value>女性向日榜</value>
+  </data>
+  <data name="RankOptionDayFemaleR18"
+        xml:space="preserve">
+    <value>女性向R-18日榜</value>
+  </data>
+  <data name="RankOptionDayMale"
+        xml:space="preserve">
+    <value>男性向日榜</value>
+  </data>
+  <data name="RankOptionDayMaleR18"
+        xml:space="preserve">
+    <value>男性向R-18日榜</value>
+  </data>
+  <data name="RankOptionDayManga"
+        xml:space="preserve">
+    <value>多图/漫画日榜</value>
+  </data>
+  <data name="RankOptionDayR18"
+        xml:space="preserve">
+    <value>R-18日榜</value>
+  </data>
+  <data name="RankOptionMonth"
+        xml:space="preserve">
+    <value>每月榜单</value>
+  </data>
+  <data name="RankOptionWeek"
+        xml:space="preserve">
+    <value>每周榜单</value>
+  </data>
+  <data name="RankOptionWeekManga"
+        xml:space="preserve">
+    <value>多图/漫画周榜</value>
+  </data>
+  <data name="RankOptionWeekOriginal"
+        xml:space="preserve">
+    <value>原创</value>
+  </data>
+  <data name="RankOptionWeekR18"
+        xml:space="preserve">
+    <value>R-18周榜</value>
+  </data>
+  <data name="RankOptionWeekR18G"
+        xml:space="preserve">
+    <value>R-18G周榜</value>
+  </data>
+  <data name="RankOptionWeekRookie"
+        xml:space="preserve">
+    <value>新人</value>
+  </data>
+  <data name="Recommend"
+        xml:space="preserve">
+    <value>每 日 推 荐</value>
+  </data>
+  <data name="RecommendIllustrationToolTip"
+        xml:space="preserve">
+    <value>在主页显示推荐的创作者</value>
+  </data>
+  <data name="RecommendIllustratorTurnPage"
+        xml:space="preserve">
+    <value>换一批</value>
+  </data>
+  <data name="RequiresWebCookie"
+        xml:space="preserve">
+    <value>本功能需要WebAPI的Cookie, 如果你不知道如何获取请前往https://sora.ink/pixiv-cookie学习如何获取你的Cookie并将其粘贴到设置页面的对应文本框</value>
+  </data>
+  <data name="RestrictPolicy"
+        xml:space="preserve">
+    <value>隐私策略</value>
+  </data>
+  <data name="RetractSidebar"
+        xml:space="preserve">
+    <value>折叠侧边栏</value>
+  </data>
+  <data name="SauceNaoFileCountLimit"
+        xml:space="preserve">
+    <value>最多只允许上传一个文件</value>
+  </data>
+  <data name="SauceNaoFileLocationHint"
+        xml:space="preserve">
+    <value>文件位置</value>
+  </data>
+  <data name="SauceNaoUploadAndSearch"
+        xml:space="preserve">
+    <value>上传并搜索</value>
+  </data>
+  <data name="SearchHint"
+        xml:space="preserve">
+    <value>请输入要搜索的内容~(￣▽￣)~*</value>
+  </data>
+  <data name="SearchImageBySource"
+        xml:space="preserve">
+    <value>以 图 搜 源</value>
+  </data>
+  <data name="SearchingFollower"
+        xml:space="preserve">
+    <value>正在获取关注列表...</value>
+  </data>
+  <data name="SearchingGallery"
+        xml:space="preserve">
+    <value>正在获取收藏夹...</value>
+  </data>
+  <data name="SearchingRecommend"
+        xml:space="preserve">
+    <value>正在获取每日推荐的作品...</value>
+  </data>
+  <data name="SearchingSpotlight"
+        xml:space="preserve">
+    <value>正在搜索特辑...</value>
+  </data>
+  <data name="SearchingTrends"
+        xml:space="preserve">
+    <value>正在获取动态...</value>
+  </data>
+  <data name="SearchingUserUpdates"
+        xml:space="preserve">
+    <value>正在获取关注用户的最新作品...</value>
+  </data>
+  <data name="SearchPageCountHint"
+        xml:space="preserve">
+    <value>搜索页数</value>
+  </data>
+  <data name="SearchPageCountToolTip"
+        xml:space="preserve">
+    <value>指定搜索作品时搜索多少页, 每页30张, 取值范围[1,100]</value>
+  </data>
+  <data name="SearchPageStart"
+        xml:space="preserve">
+    <value>从第几页开始搜索作品</value>
+  </data>
+  <data name="SearchPageStartToolTip"
+        xml:space="preserve">
+    <value>指定搜索作品时从第几页开始搜索, 每页30张，取值范围[1,+∞)</value>
+  </data>
+  <data name="SearchPerPageCountHint"
+        xml:space="preserve">
+    <value>注: 特辑一页搜索10条, 图片一页搜索30张</value>
+  </data>
+  <data name="SelectCultureInfo"
+        xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="Setting"
+        xml:space="preserve">
+    <value>设          置</value>
+  </data>
+  <data name="ShareLinkCopiedToClipboard"
+        xml:space="preserve">
+    <value>链接已复制到剪切板</value>
+  </data>
+  <data name="SignIn"
+        xml:space="preserve">
+    <value>登录</value>
+  </data>
+  <data name="SignInAccount"
+        xml:space="preserve">
+    <value>邮箱/Pixiv ID</value>
+  </data>
+  <data name="SignInButtonText"
+        xml:space="preserve">
+    <value>登       录</value>
+  </data>
+  <data name="SignInLoggingIn"
+        xml:space="preserve">
+    <value>正在登入...</value>
+  </data>
+  <data name="SignInPassword"
+        xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="SignInUpdatingSession"
+        xml:space="preserve">
+    <value>正在更新个人资料...</value>
+  </data>
+  <data name="SortByPopulation"
+        xml:space="preserve">
+    <value>按照收藏数排序</value>
+  </data>
+  <data name="SortByPopulationToolTip"
+        xml:space="preserve">
+    <value>搜索作品时按照热度(收藏数)排序, 只在搜索日推/收藏/用户更新/上传/关键字搜索时起作用</value>
+  </data>
+  <data name="Spotlight"
+        xml:space="preserve">
+    <value>特          辑</value>
+  </data>
+  <data name="SpotlightSearchPageStart"
+        xml:space="preserve">
+    <value>从第几页开始搜索特辑</value>
+  </data>
+  <data name="SpotlightSearchPageStartToolTip"
+        xml:space="preserve">
+    <value>指定搜索特辑时从第几页开始搜索, 每页10条, 取值范围[1,+∞)</value>
+  </data>
+  <data name="SupportMe"
+        xml:space="preserve">
+    <value>支持作者</value>
+  </data>
+  <data name="TagMatchingExactMatch"
+        xml:space="preserve">
+    <value>完全一致</value>
+  </data>
+  <data name="TagMatchingPartialMatch"
+        xml:space="preserve">
+    <value>部分一致</value>
+  </data>
+  <data name="TagMatchingTitleAndCaption"
+        xml:space="preserve">
+    <value>标题与说明文</value>
+  </data>
+  <data name="TagMatchOption"
+        xml:space="preserve">
+    <value>搜索匹配模式</value>
+  </data>
+  <data name="TagsToBeExclude"
+        xml:space="preserve">
+    <value>高级搜索: 标签排除，使用空格分隔</value>
+  </data>
+  <data name="TagsToBeInclude"
+        xml:space="preserve">
+    <value>高级搜索: 标签过滤, 使用空格分隔</value>
+  </data>
+  <data name="ThisLoginSessionRequiresRecaptcha"
+        xml:space="preserve">
+    <value>本次登录需要手动通过recaptcha</value>
+  </data>
+  <data name="ToggleR18OnFailed"
+        xml:space="preserve">
+    <value>开启失败</value>
+  </data>
+  <data name="ToggleR18OnSuccess"
+        xml:space="preserve">
+    <value>成功开启WEB端R-18/R-18G开关</value>
+  </data>
+  <data name="TrendsAddBookmark"
+        xml:space="preserve">
+    <value>已收藏</value>
+  </data>
+  <data name="TrendsAddFavorite"
+        xml:space="preserve">
+    <value>已关注</value>
+  </data>
+  <data name="TrendsAddIllust"
+        xml:space="preserve">
+    <value>已投稿</value>
+  </data>
+  <data name="TryingToToggleR18Switch"
+        xml:space="preserve">
+    <value>正在尝试开启WEB端R-18/R-18G</value>
+  </data>
+  <data name="TurnOffAnimation"
+        xml:space="preserve">
+    <value>关闭对话框动画</value>
+  </data>
+  <data name="TurnOffAnimationToolTip"
+        xml:space="preserve">
+    <value>关闭DialogHost的动画，这可能会提高某些计算机上的整体性能</value>
+  </data>
+  <data name="TurnOffR18"
+        xml:space="preserve">
+    <value>关闭R-18/R-18G搜索</value>
+  </data>
+  <data name="TurnOnCache"
+        xml:space="preserve">
+    <value>使用缓存 (不建议开启)</value>
+  </data>
+  <data name="TurnOnDirectConnect"
+        xml:space="preserve">
+    <value>启用直连(如果在大陆则此选项关闭时必须挂梯子才能正常使用)</value>
+  </data>
+  <data name="TurnOnIllustratorRecommend"
+        xml:space="preserve">
+    <value>开启推荐作者</value>
+  </data>
+  <data name="TurnOnWebR18"
+        xml:space="preserve">
+    <value>一键开启网页端R18/R18G</value>
+  </data>
+  <data name="UriFormIncorrect"
+        xml:space="preserve">
+    <value>链接格式不正确</value>
+  </data>
+  <data name="UserBrowserFollow"
+        xml:space="preserve">
+    <value>关  注</value>
+  </data>
+  <data name="UserBrowserFollowCountHint"
+        xml:space="preserve">
+    <value>关注</value>
+  </data>
+  <data name="UserBrowserGallerySelector"
+        xml:space="preserve">
+    <value>收 藏</value>
+  </data>
+  <data name="UserBrowserIllustSelector"
+        xml:space="preserve">
+    <value>插 画</value>
+  </data>
+  <data name="UserBrowserPrivateFollow"
+        xml:space="preserve">
+    <value>悄悄关注</value>
+  </data>
+  <data name="UserBrowserUnFollow"
+        xml:space="preserve">
+    <value>已  关  注</value>
+  </data>
+  <data name="UserIdHintFormat"
+        xml:space="preserve">
+    <value>用户ID: {0}</value>
+  </data>
+  <data name="UserIdIllegal"
+        xml:space="preserve">
+    <value>搜索用户ID时必须输入纯数字哟~</value>
+  </data>
+  <data name="UserPreviewPopupFollow"
+        xml:space="preserve">
+    <value>关 注</value>
+  </data>
+  <data name="UserPreviewPopupUnFollow"
+        xml:space="preserve">
+    <value>已 关 注</value>
+  </data>
+  <data name="UserUpdate"
+        xml:space="preserve">
+    <value>用 户 新 作</value>
+  </data>
+  <data name="ValueIsNotInteger"
+        xml:space="preserve">
+    <value>输入不是整数</value>
+  </data>
+  <data name="Warning"
+        xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="WebApiAuthenticateTimeout"
+        xml:space="preserve">
+    <value>WebApi登录请求超时, 请仔细检查您的网络环境</value>
+  </data>
+  <data name="WebView2DownloadIsRequired"
+        xml:space="preserve">
+    <value>Pixeval需要使用WebView2 Runtime作为Pixiv新鉴权方法的反制手段, 请前往https://go.microsoft.com/fwlink/p/?LinkId=2124703下载并安装, 链接已经复制到剪切板, 安装完成后请重启Pixeval</value>
+  </data>
+  <data name="Yes"
+        xml:space="preserve">
+    <value>好的</value>
+  </data>
+</root>

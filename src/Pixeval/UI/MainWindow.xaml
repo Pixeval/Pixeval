@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         xmlns:controls="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
-        xmlns:i18N="clr-namespace:Pixeval.Objects.I18n"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:persisting="clr-namespace:Pixeval.Persisting"
@@ -36,6 +35,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         xmlns:controls1="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
         xmlns:model="clr-namespace:MaterialDesignExtensions.Model;assembly=MaterialDesignExtensions"
         xmlns:collections="clr-namespace:System.Collections;assembly=System.Runtime.Extensions"
+        xmlns:res="clr-namespace:Pixeval.Resources"
         Title="Pixeval"
         Width="1450"
         Height="900"
@@ -254,13 +254,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                         <ContextMenu>
                             <MenuItem x:Name="DownloadNowMenuItem"
                                       Click="DownloadNowMenuItem_OnClick"
-                                      Header="{Binding Path=(i18N:AkaI18N.DownloadSingleIllustration)}" />
+                                      Header="{Binding Path=(res:Resources.DownloadSingleIllustration)}" />
                             <MenuItem x:Name="DownloadAllNowMenuItem"
                                       Click="DownloadAllNowMenuItem_OnClick"
-                                      Header="{Binding Path=(i18N:AkaI18N.DownloadAllInCurrentList)}" />
+                                      Header="{Binding Path=(res:Resources.DownloadAllInCurrentList)}" />
                             <MenuItem x:Name="DownloadToMenuItem"
                                       Click="DownloadToMenuItem_OnClick"
-                                      Header="{Binding Path=(i18N:AkaI18N.DownloadTo)}" />
+                                      Header="{Binding Path=(res:Resources.DownloadTo)}" />
                         </ContextMenu>
                     </Grid.ContextMenu>
                     <Grid.Triggers>
@@ -383,7 +383,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                  Height="24"
                                  HorizontalAlignment="Center"
                                  VerticalAlignment="Center"
-                                 ToolTip="{Binding Path=(i18N:AkaI18N.GifIllustrationHint)}"
+                                 ToolTip="{Binding Path=(res:Resources.GifIllustrationHint)}"
                                  Visibility="{Binding IsUgoira, Converter={StaticResource VisibleIfTrueConverter}}">
                             <Canvas Width="24" Height="24">
                                 <Path
@@ -398,7 +398,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                  Visibility="{Binding IsManga, Converter={StaticResource VisibleIfTrueConverter}}">
                             <ToolTipService.ToolTip>
                                 <TextBlock
-                                    Text="{Binding PageCount, StringFormat={x:Static i18N:AkaI18N.MangaIllustrationHintFormat}}" />
+                                    Text="{Binding PageCount, StringFormat={x:Static res:Resources.MangaIllustrationHintFormat}}" />
                             </ToolTipService.ToolTip>
                             <Canvas Width="24" Height="24">
                                 <Path
@@ -436,9 +436,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                 <Grid.ContextMenu>
                     <ContextMenu>
                         <MenuItem Click="DownloadSpotlightItem_OnClick"
-                                  Header="{Binding Path=(i18N:AkaI18N.DownloadSpotlight)}" />
+                                  Header="{Binding Path=(res:Resources.DownloadSpotlight)}" />
                         <MenuItem Click="AddSpotlightToFavorite_OnClick"
-                                  Header="{Binding Path=(i18N:AkaI18N.AddSpotlightToFavorite)}" />
+                                  Header="{Binding Path=(res:Resources.AddSpotlightToFavorite)}" />
                     </ContextMenu>
                 </Grid.ContextMenu>
                 <Grid.Triggers>
@@ -620,7 +620,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                            TextWrapping="Wrap" />
                                 <TextBlock Margin="15,25,0,0"
                                            FontSize="20"
-                                           Text="{Binding Id, StringFormat={x:Static i18N:AkaI18N.UserIdHintFormat}}" />
+                                           Text="{Binding Id, StringFormat={x:Static res:Resources.UserIdHintFormat}}" />
                             </StackPanel>
                         </StackPanel>
                         <StackPanel Width="660"
@@ -749,17 +749,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                     Orientation="Horizontal">
                             <TextBlock FontFamily="Microsoft YaHei Light"
                                        FontSize="12"
-                                       Text="{Binding Path=(i18N:AkaI18N.RestrictPolicy), StringFormat={}{0}:}" />
+                                       Text="{Binding Path=(res:Resources.RestrictPolicy), StringFormat={}{0}:}" />
                             <RadioButton x:Name="PublicRestrictPolicy"
                                          Margin="20,0,0,0"
                                          Checked="PublicRestrictPolicy_OnChecked"
-                                         Content="{Binding Path=(i18N:AkaI18N.Public)}"
+                                         Content="{Binding Path=(res:Resources.Public)}"
                                          IsChecked="True"
                                          Style="{DynamicResource MaterialDesignRadioButton}" />
                             <RadioButton x:Name="PrivateRestrictPolicy"
                                          Margin="20,0,0,0"
                                          Checked="PrivateRestrictPolicy_OnChecked"
-                                         Content="{Binding Path=(i18N:AkaI18N.Private)}"
+                                         Content="{Binding Path=(res:Resources.Private)}"
                                          Style="{DynamicResource MaterialDesignRadioButton}" />
                         </StackPanel>
                     </materialDesign:Card>
@@ -1007,7 +1007,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                              Width="800"
                                              Height="40"
                                              VerticalAlignment="Bottom"
-                                             materialDesign:HintAssist.Hint="{Binding Path=(i18N:AkaI18N.SearchHint)}"
+                                             materialDesign:HintAssist.Hint="{Binding Path=(res:Resources.SearchHint)}"
                                              GotFocus="KeywordTextBox_OnGotFocus"
                                              PreviewKeyDown="KeywordTextBox_OnPreviewKeyDown"
                                              Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
@@ -1057,7 +1057,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                   Margin="0,0,5,0"
                                                   Checked="QueryArtistToggleButton_OnChecked"
                                                   Style="{DynamicResource MaterialDesignFlatToggleButton}"
-                                                  ToolTip="{Binding Path=(i18N:AkaI18N.QueryUser)}"
+                                                  ToolTip="{Binding Path=(res:Resources.QueryUser)}"
                                                   Unchecked="QueryArtistToggleButton_OnUnchecked">
                                             <Viewbox Width="24" Height="24">
                                                 <Canvas Width="24" Height="24">
@@ -1073,7 +1073,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                               Margin="5,0,5,0"
                                                               Checked="QuerySingleArtistToggleButton_OnChecked"
                                                               Style="{DynamicResource MaterialDesignFlatToggleButton}"
-                                                              ToolTip="{Binding Path=(i18N:AkaI18N.QuerySingleUser)}">
+                                                              ToolTip="{Binding Path=(res:Resources.QuerySingleUser)}">
                                             <Viewbox Width="24" Height="24">
                                                 <Canvas Width="24" Height="24">
                                                     <Path
@@ -1088,7 +1088,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                               Margin="5,0,0,0"
                                                               Checked="QuerySingleWorkToggleButton_OnChecked"
                                                               Style="{DynamicResource MaterialDesignFlatToggleButton}"
-                                                              ToolTip="{Binding Path=(i18N:AkaI18N.QuerySingleIllust)}">
+                                                              ToolTip="{Binding Path=(res:Resources.QuerySingleIllust)}">
                                             <Viewbox Width="24" Height="24">
                                                 <Canvas Width="24" Height="24">
                                                     <Path
@@ -1261,7 +1261,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                        MouseLeftButtonDown="ReloadRecommendIllustratorButton_OnMouseLeftButtonDown"
                                                        Opacity="0"
                                                        Text="&#xe696;"
-                                                       ToolTip="{Binding Path=(i18N:AkaI18N.RecommendIllustratorTurnPage)}" />
+                                                       ToolTip="{Binding Path=(res:Resources.RecommendIllustratorTurnPage)}" />
                                         </Grid>
                                     </StackPanel>
                                 </Grid>
@@ -1272,19 +1272,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                             Orientation="Horizontal">
                                     <TextBlock Margin="0,0,10,0"
                                                FontSize="12"
-                                               Text="{Binding Source={x:Static pixeval:PixevalContext.CurrentVersion}, StringFormat={x:Static i18N:AkaI18N.PixevalVersionFormat}}" />
+                                               Text="{Binding Source={x:Static pixeval:PixevalContext.CurrentVersion}, StringFormat={x:Static res:Resources.PixevalVersionFormat}}" />
                                     <TextBlock Margin="0,0,10,0" FontSize="12">
                                         <Hyperlink Foreground="Black"
                                                    NavigateUri="http://47.95.218.243/index.html"
                                                    RequestNavigate="Hyperlink_OnRequestNavigate">
-                                            <TextBlock Text="{Binding Path=(i18N:AkaI18N.AboutPixeval)}" />
+                                            <TextBlock Text="{Binding Path=(res:Resources.AboutPixeval)}" />
                                         </Hyperlink>
                                     </TextBlock>
                                     <TextBlock FontSize="12">
                                         <Hyperlink Foreground="Black"
                                                    NavigateUri="https://afdian.net/@dylech30th"
                                                    RequestNavigate="Hyperlink_OnRequestNavigate">
-                                            <TextBlock Text="{Binding Path=(i18N:AkaI18N.SupportMe)}" />
+                                            <TextBlock Text="{Binding Path=(res:Resources.SupportMe)}" />
                                         </Hyperlink>
                                     </TextBlock>
                                 </StackPanel>
@@ -1506,7 +1506,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                     <TextBlock Margin="5,0,0,0"
                                                VerticalAlignment="Center"
                                                FontSize="15"
-                                               Text="{Binding Path=(i18N:AkaI18N.UserBrowserFollowCountHint)}" />
+                                               Text="{Binding Path=(res:Resources.UserBrowserFollowCountHint)}" />
                                     <Button x:Name="ShareUserButton"
                                             Width="30"
                                             Height="30"
@@ -1544,7 +1544,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                     Padding="30,0"
                                                     Click="FollowButton_OnClick"
                                                     Style="{DynamicResource MaterialDesignToolButtonWithGrayWaveEffect}">
-                                                <TextBlock Text="{Binding Path=(i18N:AkaI18N.UserBrowserFollow)}" />
+                                                <TextBlock Text="{Binding Path=(res:Resources.UserBrowserFollow)}" />
                                             </Button>
                                         </Border>
                                         <Border Background="#FFCBCBCB"
@@ -1556,7 +1556,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                     Padding="30,0"
                                                     Click="UnFollowButton_OnClick"
                                                     Style="{DynamicResource MaterialDesignToolButtonWithGrayWaveEffect}">
-                                                <TextBlock Text="{Binding Path=(i18N:AkaI18N.UserBrowserUnFollow)}" />
+                                                <TextBlock Text="{Binding Path=(res:Resources.UserBrowserUnFollow)}" />
                                             </Button>
                                         </Border>
                                     </Grid>
@@ -1571,7 +1571,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                     </ItemsPanelTemplate>
                                                 </Menu.ItemsPanel>
                                                 <MenuItem Click="PrivateFollow_OnClick"
-                                                          Header="{Binding Path=(i18N:AkaI18N.UserBrowserPrivateFollow)}" />
+                                                          Header="{Binding Path=(res:Resources.UserBrowserPrivateFollow)}" />
                                             </Menu>
                                         </materialDesign:PopupBox.PopupContent>
                                     </materialDesign:PopupBox>
@@ -1622,7 +1622,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                        FontFamily="Microsoft YaHei Light"
                                        FontSize="20"
                                        MouseLeftButtonDown="UploadChecker_OnMouseLeftButtonDown"
-                                       Text="{Binding Path=(i18N:AkaI18N.UserBrowserIllustSelector)}"
+                                       Text="{Binding Path=(res:Resources.UserBrowserIllustSelector)}"
                                        TextAlignment="Center" />
                             <TextBlock x:Name="GalleryChecker"
                                        Grid.Column="1"
@@ -1633,7 +1633,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                        FontFamily="Microsoft YaHei Light"
                                        FontSize="20"
                                        MouseLeftButtonDown="GalleryChecker_OnMouseLeftButtonDown"
-                                       Text="{Binding Path=(i18N:AkaI18N.UserBrowserGallerySelector)}"
+                                       Text="{Binding Path=(res:Resources.UserBrowserGallerySelector)}"
                                        TextAlignment="Center" />
                         </Grid>
                         <Grid Width="240"
@@ -1739,7 +1739,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                 <TextBlock Margin="50,0,0,0"
                                                            FontFamily="Microsoft YaHei Light"
                                                            FontSize="12"
-                                                           Text="{Binding Path=(i18N:AkaI18N.IllustBrowserIllustId)}" />
+                                                           Text="{Binding Path=(res:Resources.IllustBrowserIllustId)}" />
                                                 <TextBlock Margin="0,0,30,0"
                                                            FontFamily="Microsoft YaHei Light"
                                                            FontSize="12"
@@ -1749,7 +1749,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                             <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                                                 <TextBlock FontFamily="Microsoft YaHei Light"
                                                            FontSize="12"
-                                                           Text="{Binding Path=(i18N:AkaI18N.IllustBrowserTotalViews)}" />
+                                                           Text="{Binding Path=(res:Resources.IllustBrowserTotalViews)}" />
                                                 <TextBlock Margin="0,0,30,0"
                                                            FontFamily="Microsoft YaHei Light"
                                                            FontSize="12"
@@ -1759,7 +1759,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                             <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                                                 <TextBlock FontFamily="Microsoft YaHei Light"
                                                            FontSize="12"
-                                                           Text="{Binding Path=(i18N:AkaI18N.IllustBrowserTotalBookmarks)}" />
+                                                           Text="{Binding Path=(res:Resources.IllustBrowserTotalBookmarks)}" />
                                                 <TextBlock Margin="0,0,30,0"
                                                            FontFamily="Microsoft YaHei Light"
                                                            FontSize="12"
@@ -1769,7 +1769,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                             <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                                                 <TextBlock FontFamily="Microsoft YaHei Light"
                                                            FontSize="12"
-                                                           Text="{Binding Path=(i18N:AkaI18N.IllustBrowserResolution)}" />
+                                                           Text="{Binding Path=(res:Resources.IllustBrowserResolution)}" />
                                                 <TextBlock Margin="0,0,30,0"
                                                            FontFamily="Microsoft YaHei Light"
                                                            FontSize="12"
@@ -1791,7 +1791,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                 Orientation="Horizontal">
                                         <TextBlock FontFamily="Microsoft YaHei Light"
                                                    FontSize="12"
-                                                   Text="{Binding Path=(i18N:AkaI18N.IllustBrowserUploadDate)}" />
+                                                   Text="{Binding Path=(res:Resources.IllustBrowserUploadDate)}" />
                                         <TextBlock FontFamily="Microsoft YaHei Light"
                                                    FontSize="12"
                                                    Foreground="#03A9F4"
@@ -1800,7 +1800,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                     <TextBlock Margin="20,0,0,0"
                                                FontFamily="Microsoft YaHei Light"
                                                FontSize="12"
-                                               Text="{Binding Path=(i18N:AkaI18N.IllustBrowserIllustTag)}" />
+                                               Text="{Binding Path=(res:Resources.IllustBrowserIllustTag)}" />
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="2.5*" />
@@ -1856,23 +1856,23 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                        MouseLeftButtonDown="SetAsWallPaperButton_OnMouseLeftButtonDown"
                                                        Style="{StaticResource TextBlockStyle}"
                                                        Text="&#xe635;"
-                                                       ToolTip="{Binding Path=(i18N:AkaI18N.IllustBrowserSetWallpaper)}" />
+                                                       ToolTip="{Binding Path=(res:Resources.IllustBrowserSetWallpaper)}" />
                                             <TextBlock x:Name="ShareButton"
                                                        MouseLeftButtonDown="ShareButton_OnMouseLeftButtonDown"
                                                        Style="{StaticResource TextBlockStyle}"
                                                        Text="&#xe661;"
-                                                       ToolTip="{Binding Path=(i18N:AkaI18N.IllustBrowserShareLink)}" />
+                                                       ToolTip="{Binding Path=(res:Resources.IllustBrowserShareLink)}" />
                                             <TextBlock x:Name="ViewInBrowserButton"
                                                        MouseLeftButtonDown="ViewInBrowserButton_OnMouseLeftButtonDown"
                                                        Style="{StaticResource TextBlockStyle}"
                                                        Text="&#xe606;"
-                                                       ToolTip="{Binding Path=(i18N:AkaI18N.IllustBrowserViewInBrowser)}" />
+                                                       ToolTip="{Binding Path=(res:Resources.IllustBrowserViewInBrowser)}" />
                                             <Grid>
                                                 <TextBlock x:Name="DownloadButton"
                                                            MouseLeftButtonDown="DownloadButton_OnMouseLeftButtonDown"
                                                            Style="{StaticResource TextBlockStyle}"
                                                            Text="&#xe60a;"
-                                                           ToolTip="{Binding Path=(i18N:AkaI18N.IllustBrowserDownload)}" />
+                                                           ToolTip="{Binding Path=(res:Resources.IllustBrowserDownload)}" />
                                             </Grid>
                                             <TextBlock x:Name="IllustBrowserPrivateFavorButton"
                                                        FontFamily="/Resources/#dqueue"
@@ -1880,19 +1880,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                                        MouseLeftButtonDown="IllustBrowserPrivateFavorButton_OnMouseLeftButtonDown"
                                                        Style="{StaticResource TextBlockStyle}"
                                                        Text="&#xebc2;"
-                                                       ToolTip="{Binding Path=(i18N:AkaI18N.IllustBrowserPrivateBookmark)}" />
+                                                       ToolTip="{Binding Path=(res:Resources.IllustBrowserPrivateBookmark)}" />
                                             <Grid>
                                                 <TextBlock x:Name="IllustBrowserFavorButton"
                                                            MouseLeftButtonDown="IllustBrowserFavorButton_OnMouseLeftButtonDown"
                                                            Style="{StaticResource TextBlockStyle}"
                                                            Text="&#xe63e;"
-                                                           ToolTip="{Binding Path=(i18N:AkaI18N.IllustBrowserBookmark)}"
+                                                           ToolTip="{Binding Path=(res:Resources.IllustBrowserBookmark)}"
                                                            Visibility="{Binding IsLiked, Converter={StaticResource VisibleIfFalseConverter}}" />
                                                 <TextBlock x:Name="IllustBrowserDisfavorButton"
                                                            MouseLeftButtonDown="IllustBrowserDisfavorButton_OnMouseLeftButtonDown"
                                                            Style="{StaticResource TextBlockStyle}"
                                                            Text="&#xeb4c;"
-                                                           ToolTip="{Binding Path=(i18N:AkaI18N.IllustBrowserRemoveBookmark)}"
+                                                           ToolTip="{Binding Path=(res:Resources.IllustBrowserRemoveBookmark)}"
                                                            Visibility="{Binding IsLiked, Converter={StaticResource VisibleIfTrueConverter}}" />
                                             </Grid>
                                         </StackPanel>

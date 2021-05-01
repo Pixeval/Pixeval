@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:i18N="clr-namespace:Pixeval.Objects.I18n"
+             xmlns:res="clr-namespace:Pixeval.Resources"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -39,7 +39,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                    Stretch="Uniform">
                 <Image.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Click="MenuItem_OnClick" Header="{Binding Path=(i18N:AkaI18N.Copy)}" />
+                        <MenuItem Click="MenuItem_OnClick" Header="{Binding Path=(res:Resources.Copy)}" />
                     </ContextMenu>
                 </Image.ContextMenu>
                 <Image.Effect>

@@ -21,7 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
              xmlns:controls="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
-             xmlns:i18N="clr-namespace:Pixeval.Objects.I18n"
+             xmlns:res="clr-namespace:Pixeval.Resources"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:valueConverters="clr-namespace:Pixeval.Objects.ValueConverters"
@@ -55,9 +55,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     <Grid.ContextMenu>
                         <ContextMenu>
                             <MenuItem Click="ShowDownloadIllustration"
-                                      Header="{Binding Path=(i18N:AkaI18N.DownloadQueueShowDownloadIllust)}" />
+                                      Header="{Binding Path=(res:Resources.DownloadQueueShowDownloadIllust)}" />
                             <MenuItem Click="RemoveFromDownloading"
-                                      Header="{Binding Path=(i18N:AkaI18N.DownloadQueueRemoveFromDownloading)}" />
+                                      Header="{Binding Path=(res:Resources.DownloadQueueRemoveFromDownloading)}" />
                         </ContextMenu>
                     </Grid.ContextMenu>
                     <Grid Height="45"
@@ -145,11 +145,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     <Grid.ContextMenu>
                         <ContextMenu>
                             <MenuItem Click="ShowDownloadIllustration"
-                                      Header="{Binding Path=(i18N:AkaI18N.DownloadQueueShowDownloadIllust)}" />
+                                      Header="{Binding Path=(res:Resources.DownloadQueueShowDownloadIllust)}" />
                             <MenuItem Click="CopyDownloadPathMenuItem_OnClick"
-                                      Header="{Binding Path=(i18N:AkaI18N.CopyDownloadPath)}" />
+                                      Header="{Binding Path=(res:Resources.CopyDownloadPath)}" />
                             <MenuItem Click="RemoveFromDownloaded"
-                                      Header="{Binding Path=(i18N:AkaI18N.DownloadQueueRemoveFromDownloading)}" />
+                                      Header="{Binding Path=(res:Resources.DownloadQueueRemoveFromDownloading)}" />
                         </ContextMenu>
                     </Grid.ContextMenu>
                     <Grid Width="41"
@@ -227,8 +227,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                                      UniformCornerRadius="10">
                     <materialDesign:Card.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="{Binding Path=(i18N:AkaI18N.DownloadQueueRemoveFromList)}" Click="RemoveFromListMenuItem_OnClick"/>
-                            <MenuItem Header="{Binding Path=(i18N:AkaI18N.DownloadQueueRemoveAllFromList)}" Click="RemoveAllFromListMenuItem_OnClick" />
+                            <MenuItem Header="{Binding Path=(res:Resources.DownloadQueueRemoveFromList)}" Click="RemoveFromListMenuItem_OnClick"/>
+                            <MenuItem Header="{Binding Path=(res:Resources.DownloadQueueRemoveAllFromList)}" Click="RemoveAllFromListMenuItem_OnClick" />
                         </ContextMenu>
                     </materialDesign:Card.ContextMenu>
                     <Grid>
@@ -332,7 +332,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
             <TabItem.Header>
                 <TextBlock FontFamily="Microsoft YaHei Light"
                            FontSize="14"
-                           Text="{Binding Path=(i18N:AkaI18N.DownloadQueueDownloading)}" />
+                           Text="{Binding Path=(res:Resources.DownloadQueueDownloading)}" />
             </TabItem.Header>
             <Grid Background="White" Opacity="1">
                 <ListBox x:Name="DownloadItemsQueue"
@@ -361,7 +361,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                         <TextBlock HorizontalAlignment="Stretch"
                                    FontFamily="Microsoft YaHei Light"
                                    FontSize="25"
-                                   Text="{Binding Path=(i18N:AkaI18N.DownloadQueueEmptyNotifier)}" />
+                                   Text="{Binding Path=(res:Resources.DownloadQueueEmptyNotifier)}" />
                     </StackPanel>
                 </Grid>
             </Grid>
@@ -370,7 +370,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
             <TabItem.Header>
                 <TextBlock FontFamily="Microsoft YaHei Light"
                            FontSize="14"
-                           Text="{Binding Path=(i18N:AkaI18N.DownloadQueueDownloaded)}" />
+                           Text="{Binding Path=(res:Resources.DownloadQueueDownloaded)}" />
             </TabItem.Header>
             <Grid Background="White" Opacity="1">
                 <ListBox x:Name="DownloadedItemsQueue"
@@ -398,7 +398,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                         <TextBlock HorizontalAlignment="Stretch"
                                    FontFamily="Microsoft YaHei Light"
                                    FontSize="25"
-                                   Text="{Binding Path=(i18N:AkaI18N.DownloadQueueEmptyNotifier)}" />
+                                   Text="{Binding Path=(res:Resources.DownloadQueueEmptyNotifier)}" />
                     </StackPanel>
                 </Grid>
             </Grid>
@@ -407,7 +407,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
             <TabItem.Header>
                 <TextBlock FontFamily="Microsoft YaHei Light"
                            FontSize="14"
-                           Text="{Binding Path=(i18N:AkaI18N.DownloadQueueBrowsingHistory)}" />
+                           Text="{Binding Path=(res:Resources.DownloadQueueBrowsingHistory)}" />
             </TabItem.Header>
             <Grid Background="White" Opacity="1">
                 <ListView x:Name="BrowsingHistoryQueue"
@@ -440,7 +440,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                         <TextBlock HorizontalAlignment="Stretch"
                                    FontFamily="Microsoft YaHei Light"
                                    FontSize="25"
-                                   Text="{Binding Path=(i18N:AkaI18N.DownloadQueueHistoryListIsEmpty)}" />
+                                   Text="{Binding Path=(res:Resources.DownloadQueueHistoryListIsEmpty)}" />
                     </StackPanel>
                 </Grid>
             </Grid>
@@ -449,7 +449,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
             <TabItem.Header>
                 <TextBlock FontFamily="Microsoft YaHei Light"
                            FontSize="14"
-                           Text="{Binding Path=(i18N:AkaI18N.FavoriteSpotlights)}" />
+                           Text="{Binding Path=(res:Resources.FavoriteSpotlights)}" />
             </TabItem.Header>
             <Grid Background="White" Opacity="1">
                 <ListView x:Name="FavoriteSpotlightsQueue"
@@ -482,7 +482,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                         <TextBlock HorizontalAlignment="Stretch"
                                    FontFamily="Microsoft YaHei Light"
                                    FontSize="25"
-                                   Text="{Binding Path=(i18N:AkaI18N.DownloadQueueHistoryListIsEmpty)}" />
+                                   Text="{Binding Path=(res:Resources.DownloadQueueHistoryListIsEmpty)}" />
                     </StackPanel>
                 </Grid>
             </Grid>

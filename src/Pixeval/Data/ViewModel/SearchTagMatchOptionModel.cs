@@ -20,7 +20,6 @@
 
 using System.Collections.Generic;
 using Pixeval.Core;
-using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
 using PropertyChanged;
 
@@ -39,7 +38,7 @@ namespace Pixeval.Data.ViewModel
 
         public SearchTagMatchOptionModel(SearchTagMatchOption corresponding)
         {
-            Description = AkaI18N.GetResource(corresponding.GetEnumAttribute<EnumLocalizedName>().Name);
+            Description = Pixeval.Resources.Resources.ResourceManager.GetString(corresponding.GetEnumAttribute<EnumLocalizedName>().Name);
             Corresponding = corresponding;
         }
 

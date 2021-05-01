@@ -18,7 +18,6 @@
 
 #endregion
 
-using System.Windows;
 using System.Windows.Media.Imaging;
 using Pixeval.Core;
 using Pixeval.Data.ViewModel;

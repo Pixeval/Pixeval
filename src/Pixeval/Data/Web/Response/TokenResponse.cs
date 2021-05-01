@@ -18,7 +18,6 @@
 
 #endregion
 
-using System;
 using Newtonsoft.Json;
 
 namespace Pixeval.Data.Web.Response

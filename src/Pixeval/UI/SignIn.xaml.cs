@@ -28,7 +28,6 @@ using System.Windows;
 using Microsoft.Web.WebView2.Core;
 using Pixeval.Objects;
 using Pixeval.Objects.Generic;
-using Pixeval.Objects.I18n;
 using Pixeval.Persisting;
 using Pixeval.UI.UserControls;
 
@@ -54,7 +53,7 @@ namespace Pixeval.UI
 
         private async Task CheckUpdate()
         {
-            if (await PixevalContext.UpdateAvailable() && await MessageDialog.Show(MessageDialogHost,AkaI18N.PixevalUpdateAvailable, AkaI18N.PixevalUpdateAvailableTitle, true) == MessageDialogResult.Yes)
+            if (await PixevalContext.UpdateAvailable() && await MessageDialog.Show(MessageDialogHost,Pixeval.Resources.Resources.PixevalUpdateAvailable, Pixeval.Resources.Resources.PixevalUpdateAvailableTitle, true) == MessageDialogResult.Yes)
             {
                 Process.Start(@"updater\Pixeval.Updater.exe");
                 Environment.Exit(0);
@@ -66,7 +65,7 @@ namespace Pixeval.UI
         {
             LoginWebView.Visibility = Visibility.Hidden;
             LoggingInGrid.Visibility = Visibility.Visible;
-            LoggingInHintTextBlock.Text = refresh ? AkaI18N.SignInUpdatingSession : AkaI18N.SignInLoggingIn;
+            LoggingInHintTextBlock.Text = refresh ? Pixeval.Resources.Resources.SignInUpdatingSession : Pixeval.Resources.Resources.SignInLoggingIn;
             if (refresh)
             {
                 await Authentication.Refresh(token);

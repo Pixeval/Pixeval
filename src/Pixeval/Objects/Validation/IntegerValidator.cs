@@ -19,7 +19,6 @@
 using System.Globalization;
 using System.Linq;
 using System.Windows.Controls;
-using Pixeval.Objects.I18n;
 
 namespace Pixeval.Objects.Validation
 {
@@ -28,7 +27,7 @@ namespace Pixeval.Objects.Validation
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             var result = value?.ToString()?.All(char.IsDigit) ?? false;
-            return new ValidationResult(result, result ? string.Empty : AkaI18N.ValueIsNotInteger);
+            return new ValidationResult(result, result ? string.Empty : Pixeval.Resources.Resources.ValueIsNotInteger);
         }
     }
 }

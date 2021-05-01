@@ -23,7 +23,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Pixeval.Objects.Exceptions;
-using Pixeval.Objects.I18n;
 using Pixeval.Persisting;
 
 namespace Pixeval.Data.Web.Delegation
@@ -52,7 +51,7 @@ namespace Pixeval.Data.Web.Delegation
         {
             if (!refreshing.WaitOne(TimeSpan.FromSeconds(10)))
             {
-                throw new AuthenticateFailedException(AkaI18N.AppApiAuthenticateTimeout);
+                throw new AuthenticateFailedException(Pixeval.Resources.Resources.AppApiAuthenticateTimeout);
             }
 
             if (Session.RefreshRequired(Session.Current) && request.RequestUri.Host != "oauth.secure.pixiv.net")

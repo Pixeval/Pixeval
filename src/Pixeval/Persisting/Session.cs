@@ -61,7 +61,7 @@ namespace Pixeval.Persisting
                 ExpireIn = DateTime.Now + TimeSpan.FromSeconds(response.ExpiresIn),
                 AccessToken = response.AccessToken,
                 RefreshToken = response.RefreshToken,
-                AvatarUrl = response.User.ProfileImageUrls.Px170X170,
+                AvatarUrl = response.User.ProfileImageUrls?.Px170X170,
                 Id = response.User.Id,
                 CookieCreation = Current?.CookieCreation ?? default,
                 IsPremium = token.Response.User.IsPremium,

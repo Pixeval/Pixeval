@@ -22,7 +22,6 @@ using System;
 using System.Linq;
 using Pixeval.Core;
 using Pixeval.Objects.Generic;
-using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
 using PropertyChanged;
 
@@ -43,7 +42,7 @@ namespace Pixeval.Data.ViewModel
         public RankOptionModel(RankOption option)
         {
             Corresponding = option;
-            Name = AkaI18N.GetResource(option.GetEnumAttribute<EnumLocalizedName>().Name);
+            Name = Pixeval.Resources.Resources.ResourceManager.GetString(option.GetEnumAttribute<EnumLocalizedName>().Name);
         }
 
         public string Name { get; set; }

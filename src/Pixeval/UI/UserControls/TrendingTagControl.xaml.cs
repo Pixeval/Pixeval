@@ -23,7 +23,6 @@ using System.Windows;
 using System.Windows.Input;
 using Pixeval.Core;
 using Pixeval.Data.ViewModel;
-using Pixeval.Objects.Generic;
 using static Pixeval.Objects.Primitive.UiHelper;
 
 namespace Pixeval.UI.UserControls
@@ -42,7 +41,12 @@ namespace Pixeval.UI.UserControls
 
         private async void TrendingTagControl_OnInitialized(object sender, EventArgs e)
         {
-           PixevalContext.TrendingTags.AddRange(await PixivClient.GetTrendingTags());
+            //TODO uncomment
+            //var tags = await PixivClient.GetTrendingTags();
+            //if (tags is not null)
+            //{
+            //    PixevalContext.TrendingTags.AddRange(tags);
+            //}
         }
 
         private async void TrendingTagThumbnail_OnLoaded(object sender, RoutedEventArgs e)

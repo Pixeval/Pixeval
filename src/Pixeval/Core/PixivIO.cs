@@ -25,7 +25,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using Pixeval.Data.Web.Delegation;
-using Pixeval.Objects.Generic;
 using Pixeval.Objects.Primitive;
 
 namespace Pixeval.Core

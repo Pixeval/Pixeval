@@ -19,7 +19,6 @@
 using System;
 using System.Globalization;
 using System.Windows.Controls;
-using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
 
 namespace Pixeval.Objects.Validation
@@ -31,7 +30,7 @@ namespace Pixeval.Objects.Validation
             if (value == null)
                 return new ValidationResult(true, null);
             var result = value.ToString().IsNullOrEmpty() || Uri.IsWellFormedUriString(value.ToString(), UriKind.Absolute);
-            return new ValidationResult(result, AkaI18N.UriFormIncorrect);
+            return new ValidationResult(result, Pixeval.Resources.Resources.UriFormIncorrect);
         }
     }
 }

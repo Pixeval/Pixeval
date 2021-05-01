@@ -22,7 +22,6 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 using Pixeval.Data.ViewModel;
-using Pixeval.Objects.I18n;
 
 namespace Pixeval.Objects.ValueConverters
 {
@@ -35,9 +34,9 @@ namespace Pixeval.Objects.ValueConverters
             {
                 return obj switch
                 {
-                    TrendType.AddIllust   => AkaI18N.TrendsAddIllust,
-                    TrendType.AddBookmark => AkaI18N.TrendsAddBookmark,
-                    TrendType.AddFavorite => AkaI18N.TrendsAddFavorite,
+                    TrendType.AddIllust   => Pixeval.Resources.Resources.TrendsAddIllust,
+                    TrendType.AddBookmark => Pixeval.Resources.Resources.TrendsAddBookmark,
+                    TrendType.AddFavorite => Pixeval.Resources.Resources.TrendsAddFavorite,
                     _                     => string.Empty
                 };
             }

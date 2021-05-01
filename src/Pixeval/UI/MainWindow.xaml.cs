@@ -49,7 +49,6 @@ using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Request;
 using Pixeval.Objects;
 using Pixeval.Objects.Generic;
-using Pixeval.Objects.I18n;
 using Pixeval.Objects.Native;
 using Pixeval.Objects.Primitive;
 using Pixeval.Persisting;
@@ -90,18 +89,18 @@ namespace Pixeval.UI
         
         public static void UpdateNavigationLanguage()
         {
-            Instance.HomePageNavigationItem.Label = AkaI18N.HomePage;
-            Instance.GalleryNavigationItem.Label = AkaI18N.MyGallery;
-            Instance.FollowingNavigationItem.Label = AkaI18N.MyFollowing;
-            Instance.SpotlightNavigationItem.Label = AkaI18N.Spotlight;
-            Instance.RecommendNavigationItem.Label = AkaI18N.Recommend;
-            Instance.IllustRankingNavigationItem.Label = AkaI18N.IllustRanking;
-            Instance.FeedNavigationItem.Label = AkaI18N.Feed;
-            Instance.UserUpdateNavigationItem.Label = AkaI18N.UserUpdate;
-            Instance.SauceNaoNavigationItem.Label = AkaI18N.SearchImageBySource;
-            Instance.DownloadQueueNavigationItem.Label = AkaI18N.DownloadQueueAndHistory;
-            Instance.SettingNavigationItem.Label = AkaI18N.Setting;
-            Instance.LogoutNavigationItem.Label = AkaI18N.Logout;
+            Instance.HomePageNavigationItem.Label = Pixeval.Resources.Resources.HomePage;
+            Instance.GalleryNavigationItem.Label = Pixeval.Resources.Resources.MyGallery;
+            Instance.FollowingNavigationItem.Label = Pixeval.Resources.Resources.MyFollowing;
+            Instance.SpotlightNavigationItem.Label = Pixeval.Resources.Resources.Spotlight;
+            Instance.RecommendNavigationItem.Label = Pixeval.Resources.Resources.Recommend;
+            Instance.IllustRankingNavigationItem.Label = Pixeval.Resources.Resources.IllustRanking;
+            Instance.FeedNavigationItem.Label = Pixeval.Resources.Resources.Feed;
+            Instance.UserUpdateNavigationItem.Label = Pixeval.Resources.Resources.UserUpdate;
+            Instance.SauceNaoNavigationItem.Label = Pixeval.Resources.Resources.SearchImageBySource;
+            Instance.DownloadQueueNavigationItem.Label = Pixeval.Resources.Resources.DownloadQueueAndHistory;
+            Instance.SettingNavigationItem.Label = Pixeval.Resources.Resources.Setting;
+            Instance.LogoutNavigationItem.Label = Pixeval.Resources.Resources.Logout;
         }
 
         private static void Dispatcher_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
@@ -110,12 +109,12 @@ namespace Pixeval.UI
             switch (e.Exception)
             {
                 case QueryNotRespondingException _:
-                    MessageQueue.Enqueue(AkaI18N.QueryNotResponding);
+                    MessageQueue.Enqueue(Pixeval.Resources.Resources.QueryNotResponding);
                     break;
                 case ApiException apiException:
                     if (apiException.StatusCode == HttpStatusCode.BadRequest)
                     {
-                        MessageQueue.Enqueue(AkaI18N.QueryNotResponding);
+                        MessageQueue.Enqueue(Pixeval.Resources.Resources.QueryNotResponding);
                     }
                     break;
                 case HttpRequestException _: break;
@@ -134,7 +133,7 @@ namespace Pixeval.UI
 
             if (KeywordTextBox.Text.IsNullOrEmpty())
             {
-                MessageQueue.Enqueue(AkaI18N.InputIsEmpty);
+                MessageQueue.Enqueue(Pixeval.Resources.Resources.InputIsEmpty);
                 return;
             }
 
@@ -161,7 +160,7 @@ namespace Pixeval.UI
         {
             if (!userId.IsNumber())
             {
-                MessageQueue.Enqueue(AkaI18N.UserIdIllegal);
+                MessageQueue.Enqueue(Pixeval.Resources.Resources.UserIdIllegal);
                 return;
             }
 
@@ -173,7 +172,7 @@ namespace Pixeval.UI
             {
                 if (e.StatusCode == HttpStatusCode.NotFound)
                 {
-                    MessageQueue.Enqueue(AkaI18N.CannotFindUser);
+                    MessageQueue.Enqueue(Pixeval.Resources.Resources.CannotFindUser);
                     return;
                 }
             }
@@ -193,7 +192,7 @@ namespace Pixeval.UI
         {
             if (!int.TryParse(illustId, out _))
             {
-                MessageQueue.Enqueue(AkaI18N.IdIllegal);
+                MessageQueue.Enqueue(Pixeval.Resources.Resources.IdIllegal);
                 return;
             }
 
@@ -205,7 +204,7 @@ namespace Pixeval.UI
             {
                 if (exception.StatusCode == HttpStatusCode.NotFound || exception.StatusCode == HttpStatusCode.BadRequest)
                 {
-                    MessageQueue.Enqueue(AkaI18N.IdDoNotExists);
+                    MessageQueue.Enqueue(Pixeval.Resources.Resources.IdDoNotExists);
                 }
                 else
                 {
@@ -536,7 +535,7 @@ namespace Pixeval.UI
                 case var x when x == FeedNavigationItem:
                     SetVisibility(FeedsListView);
                     MoveDownHomePage();
-                    MessageQueue.Enqueue(AkaI18N.SearchingTrends);
+                    MessageQueue.Enqueue(Pixeval.Resources.Resources.SearchingTrends);
                     PixivHelper.Enumerate(new FeedsAsyncEnumerable(), UiHelper.NewItemsSource<Trends>(FeedsListView), 20);
                     break;
                 // these two tabs is considered effectively unselectable, they participate 
@@ -552,19 +551,19 @@ namespace Pixeval.UI
                 case var x when x == UserUpdateNavigationItem:
                     SetVisibility(ImageListView);
                     MoveDownHomePage();
-                    MessageQueue.Enqueue(AkaI18N.SearchingUserUpdates);
+                    MessageQueue.Enqueue(Pixeval.Resources.Resources.SearchingUserUpdates);
                     PixivHelper.Enumerate(new UserUpdateAsyncEnumerable(), UiHelper.NewItemsSource<Illustration>(ImageListView));
                     break;
                 case var x when x == GalleryNavigationItem:
                     SetVisibility(ImageListView);
                     MoveDownHomePage();
-                    MessageQueue.Enqueue(AkaI18N.SearchingGallery);
+                    MessageQueue.Enqueue(Pixeval.Resources.Resources.SearchingGallery);
                     PixivHelper.Enumerate(AbstractGalleryAsyncEnumerable.Of(Session.Current.Id, PublicRestrictPolicy.IsChecked is true ? RestrictPolicy.Public : RestrictPolicy.Private), UiHelper.NewItemsSource<Illustration>(ImageListView));
                     break;
                 case var x when x == RecommendNavigationItem:
                     SetVisibility(ImageListView);
                     MoveDownHomePage();
-                    MessageQueue.Enqueue(AkaI18N.SearchingRecommend);
+                    MessageQueue.Enqueue(Pixeval.Resources.Resources.SearchingRecommend);
                     PixivHelper.Enumerate(Settings.Global.SortOnInserting ? (AbstractRecommendAsyncEnumerable) new PopularityRecommendAsyncEnumerable() : new PlainRecommendAsyncEnumerable(), UiHelper.NewItemsSource<Illustration>(ImageListView), 10);
                     break;
                 case var x when x == SpotlightNavigationItem:
@@ -576,7 +575,7 @@ namespace Pixeval.UI
                 case var x when x == FollowingNavigationItem:
                     SetVisibility(UserPreviewListView);
                     MoveDownHomePage();
-                    MessageQueue.Enqueue(AkaI18N.SearchingFollower);
+                    MessageQueue.Enqueue(Pixeval.Resources.Resources.SearchingFollower);
                     PixivHelper.Enumerate(AbstractUserFollowingAsyncEnumerable.Of(Session.Current.Id, PublicRestrictPolicy.IsChecked is true ? RestrictPolicy.Public : RestrictPolicy.Private), UiHelper.NewItemsSource<User>(UserPreviewListView));
                     break;
                 case var x when x == LogoutNavigationItem:
@@ -669,7 +668,7 @@ namespace Pixeval.UI
 
         private async void SpotlightContainer_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            MessageQueue.Enqueue(AkaI18N.SearchingSpotlight);
+            MessageQueue.Enqueue(Pixeval.Resources.Resources.SearchingSpotlight);
 
             var article = sender.GetDataContext<SpotlightArticle>();
 
@@ -697,7 +696,7 @@ namespace Pixeval.UI
         private void DownloadSpotlightItem_OnClick(object sender, RoutedEventArgs e)
         {
             sender.GetDataContext<SpotlightArticle>().Download();
-            MessageQueue.Enqueue(AkaI18N.QueuedDownload);
+            MessageQueue.Enqueue(Pixeval.Resources.Resources.QueuedDownload);
         }
 
         private void AddSpotlightToFavorite_OnClick(object sender, RoutedEventArgs e)
@@ -718,13 +717,13 @@ namespace Pixeval.UI
         private void DownloadNowMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             DownloadManager.EnqueueDownloadItem(sender.GetDataContext<Illustration>());
-            MessageQueue.Enqueue(AkaI18N.QueuedDownload);
+            MessageQueue.Enqueue(Pixeval.Resources.Resources.QueuedDownload);
         }
 
         private void DownloadToMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             var illust = sender.GetDataContext<Illustration>();
-            using var fileDialog = new CommonSaveFileDialog(AkaI18N.PleaseSelectLocation)
+            using var fileDialog = new CommonSaveFileDialog(Pixeval.Resources.Resources.PleaseSelectLocation)
             {
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
                 DefaultExtension = illust.IsUgoira ? "gif" : Path.GetExtension(illust.GetDownloadUrl())![1..],
@@ -735,13 +734,13 @@ namespace Pixeval.UI
             if (fileDialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 DownloadManager.EnqueueDownloadItem(illust, fileDialog.FileName);
-                MessageQueue.Enqueue(AkaI18N.QueuedDownload);
+                MessageQueue.Enqueue(Pixeval.Resources.Resources.QueuedDownload);
             }
         }
 
         private async void DownloadAllNowMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            if (await MessageDialog.Warning(WarningDialog, AkaI18N.BatchDownloadAcknowledgment, true) == MessageDialogResult.Yes)
+            if (await MessageDialog.Warning(WarningDialog, Pixeval.Resources.Resources.BatchDownloadAcknowledgment, true) == MessageDialogResult.Yes)
             {
                 await Task.Run(async () =>
                 {
@@ -754,7 +753,7 @@ namespace Pixeval.UI
                         }
                     }
                 });
-                MessageQueue.Enqueue(AkaI18N.QueuedAllToDownload);
+                MessageQueue.Enqueue(Pixeval.Resources.Resources.QueuedAllToDownload);
             }
         }
 
@@ -807,12 +806,12 @@ namespace Pixeval.UI
             }
             if (Navigating(GalleryNavigationItem))
             {
-                MessageQueue.Enqueue(AkaI18N.SearchingGallery);
+                MessageQueue.Enqueue(Pixeval.Resources.Resources.SearchingGallery);
                 PixivHelper.Enumerate(AbstractGalleryAsyncEnumerable.Of(Session.Current.Id, RestrictPolicy.Private), UiHelper.NewItemsSource<Illustration>(ImageListView));
             }
             else if (Navigating(FollowingNavigationItem))
             {
-                MessageQueue.Enqueue(AkaI18N.SearchingFollower);
+                MessageQueue.Enqueue(Pixeval.Resources.Resources.SearchingFollower);
                 PixivHelper.Enumerate(AbstractUserFollowingAsyncEnumerable.Of(Session.Current.Id, RestrictPolicy.Private), UiHelper.NewItemsSource<User>(UserPreviewListView));
             }
         }
@@ -825,12 +824,12 @@ namespace Pixeval.UI
             }
             if (Navigating(GalleryNavigationItem))
             {
-                MessageQueue.Enqueue(AkaI18N.SearchingGallery);
+                MessageQueue.Enqueue(Pixeval.Resources.Resources.SearchingGallery);
                 PixivHelper.Enumerate(AbstractGalleryAsyncEnumerable.Of(Session.Current.Id, RestrictPolicy.Public), UiHelper.NewItemsSource<Illustration>(ImageListView));
             }
             else if (Navigating(FollowingNavigationItem))
             {
-                MessageQueue.Enqueue(AkaI18N.SearchingFollower);
+                MessageQueue.Enqueue(Pixeval.Resources.Resources.SearchingFollower);
                 PixivHelper.Enumerate(AbstractUserFollowingAsyncEnumerable.Of(Session.Current.Id, RestrictPolicy.Public), UiHelper.NewItemsSource<User>(UserPreviewListView));
             }
         }
@@ -922,7 +921,7 @@ namespace Pixeval.UI
         private void ShareUserButton_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Clipboard.SetDataObject($"https://www.pixiv.net/users/{sender.GetDataContext<User>().Id}");
-            MessageQueue.Enqueue(AkaI18N.ShareLinkCopiedToClipboard);
+            MessageQueue.Enqueue(Pixeval.Resources.Resources.ShareLinkCopiedToClipboard);
         }
 
 
@@ -976,7 +975,7 @@ namespace Pixeval.UI
         private void ShareButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Clipboard.SetDataObject($"https://www.pixiv.net/artworks/{sender.GetDataContext<Illustration>().Id}");
-            MessageQueue.Enqueue(AkaI18N.ShareLinkCopiedToClipboard);
+            MessageQueue.Enqueue(Pixeval.Resources.Resources.ShareLinkCopiedToClipboard);
         }
 
         private void ImageBrowserUserAvatar_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -994,7 +993,7 @@ namespace Pixeval.UI
         private void DownloadButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             DownloadManager.EnqueueDownloadItem(sender.GetDataContext<Illustration>());
-            MessageQueue.Enqueue(AkaI18N.QueuedDownload);
+            MessageQueue.Enqueue(Pixeval.Resources.Resources.QueuedDownload);
         }
 
         private void IllustBrowserFavorButton_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -1085,7 +1084,7 @@ namespace Pixeval.UI
                     return;
                 if (option.Corresponding.AttributeAttached<ForR18Only>() && Settings.Global.ExcludeTag.Any(t => t.ToUpper() == "R-18" || t.ToUpper() == "R-18G"))
                 {
-                    MessageQueue.Enqueue(AkaI18N.RankNeedR18On);
+                    MessageQueue.Enqueue(Pixeval.Resources.Resources.RankNeedR18On);
                     // 用这方法解决问题真tm傻逼
                     Task.Run(async () =>
                     {
@@ -1110,7 +1109,7 @@ namespace Pixeval.UI
                 return;
             }
 
-            MessageQueue.Enqueue(AkaI18N.RankDateCannotBeNull);
+            MessageQueue.Enqueue(Pixeval.Resources.Resources.RankDateCannotBeNull);
         }
 
         #endregion

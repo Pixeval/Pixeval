@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:i18N="clr-namespace:Pixeval.Objects.I18n"
+             xmlns:res="clr-namespace:Pixeval.Resources"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:pixeval="clr-namespace:Pixeval"
@@ -44,7 +44,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                        HorizontalAlignment="Center"
                        VerticalAlignment="Top"
                        FontSize="20"
-                       Text="{Binding Path=(i18N:AkaI18N.PixevalSettings)}" />
+                       Text="{Binding Path=(res:Resources.PixevalSettings)}" />
             <Separator Margin="50,70,50,0" VerticalAlignment="Top" />
             <StackPanel Margin="100,90,100,0" VerticalAlignment="Top">
                 <Grid TextElement.FontSize="15">
@@ -72,8 +72,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     <TextBlock Grid.Row="0"
                                Grid.Column="0"
                                VerticalAlignment="Center"
-                               ToolTip="{Binding Path=(i18N:AkaI18N.SortByPopulationToolTip)}"
-                               Text="{Binding Path=(i18N:AkaI18N.SortByPopulation)}" />
+                               ToolTip="{Binding Path=(res:Resources.SortByPopulationToolTip)}"
+                               Text="{Binding Path=(res:Resources.SortByPopulation)}" />
                     <ToggleButton Grid.Row="0"
                                   Grid.Column="1"
                                   HorizontalAlignment="Right"
@@ -82,7 +82,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     <TextBlock Grid.Row="1"
                                Grid.Column="0"
                                VerticalAlignment="Center"
-                               Text="{Binding Path=(i18N:AkaI18N.TurnOffR18)}" />
+                               Text="{Binding Path=(res:Resources.TurnOffR18)}" />
                     <ToggleButton Grid.Row="1"
                                   Grid.Column="1"
                                   HorizontalAlignment="Right"
@@ -93,8 +93,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     <TextBlock Grid.Row="2"
                                Grid.Column="0"
                                VerticalAlignment="Center"
-                               ToolTip="{Binding Path=(i18N:AkaI18N.RecommendIllustrationToolTip)}"
-                               Text="{Binding Path=(i18N:AkaI18N.TurnOnIllustratorRecommend)}" />
+                               ToolTip="{Binding Path=(res:Resources.RecommendIllustrationToolTip)}"
+                               Text="{Binding Path=(res:Resources.TurnOnIllustratorRecommend)}" />
                     <ToggleButton Grid.Row="2"
                                   Grid.Column="1"
                                   HorizontalAlignment="Right"
@@ -103,7 +103,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     <TextBlock Grid.Row="3"
                                Grid.Column="0"
                                VerticalAlignment="Center"
-                               Text="{Binding Path=(i18N:AkaI18N.TurnOnDirectConnect)}" />
+                               Text="{Binding Path=(res:Resources.TurnOnDirectConnect)}" />
                     <ToggleButton x:Name="DirectConnectToggleButton"  
                                   Grid.Row="3"
                                   IsThreeState="False"
@@ -115,7 +115,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     <TextBlock Grid.Row="4"
                                Grid.Column="0"
                                VerticalAlignment="Center"
-                               Text="{Binding Path=(i18N:AkaI18N.TurnOffAnimation)}" />
+                               Text="{Binding Path=(res:Resources.TurnOffAnimation)}" />
                     <ToggleButton Grid.Row="4"
                                   Grid.Column="1"
                                   HorizontalAlignment="Right"
@@ -124,7 +124,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     <TextBlock Grid.Row="5"
                                Grid.Column="0"
                                VerticalAlignment="Center"
-                               Text="{Binding Path=(i18N:AkaI18N.SelectCultureInfo)}" />
+                               Text="{Binding Path=(res:Resources.SelectCultureInfo)}" />
                     <ComboBox x:Name="CultureSelector"
                               Grid.Row="5"
                               Grid.Column="1"
@@ -139,7 +139,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     <TextBlock Grid.Row="6"
                                Grid.Column="0"
                                VerticalAlignment="Center"
-                               Text="{Binding Path=(i18N:AkaI18N.TagMatchOption)}" />
+                               Text="{Binding Path=(res:Resources.TagMatchOption)}" />
                     <ComboBox Grid.Row="6"
                               Grid.Column="1"
                               Width="120"
@@ -152,8 +152,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     <TextBlock Grid.Row="7"
                                Grid.Column="0"
                                VerticalAlignment="Center"
-                               ToolTip="{Binding Path=(i18N:AkaI18N.MinimumBookmarkToolTip)}"
-                               Text="{Binding Path=(i18N:AkaI18N.MinBookmarkRequired)}" />
+                               ToolTip="{Binding Path=(res:Resources.MinimumBookmarkToolTip)}"
+                               Text="{Binding Path=(res:Resources.MinBookmarkRequired)}" />
                     <Slider Grid.Row="7"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
@@ -167,8 +167,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     <TextBlock Grid.Row="8"
                                Grid.Column="0"
                                VerticalAlignment="Center"
-                               ToolTip="{Binding Path=(i18N:AkaI18N.SearchPageCountToolTip)}"
-                               Text="{Binding Path=(i18N:AkaI18N.SearchPageCountHint)}" />
+                               ToolTip="{Binding Path=(res:Resources.SearchPageCountToolTip)}"
+                               Text="{Binding Path=(res:Resources.SearchPageCountHint)}" />
                     <Slider Grid.Row="8"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
@@ -182,8 +182,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     <TextBlock Grid.Row="9"
                                Grid.Column="0"
                                VerticalAlignment="Center"
-                               ToolTip="{Binding Path=(i18N:AkaI18N.SearchPageStartToolTip)}"
-                               Text="{Binding Path=(i18N:AkaI18N.SearchPageStart)}" />
+                               ToolTip="{Binding Path=(res:Resources.SearchPageStartToolTip)}"
+                               Text="{Binding Path=(res:Resources.SearchPageStart)}" />
                     <TextBox Grid.Row="9"
                              Grid.Column="0"
                              Grid.ColumnSpan="2"
@@ -200,8 +200,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                     <TextBlock Grid.Row="10"
                                Grid.Column="0"
                                VerticalAlignment="Center"
-                               ToolTip="{Binding Path=(i18N:AkaI18N.SpotlightSearchPageStartToolTip)}"
-                               Text="{Binding Path=(i18N:AkaI18N.SpotlightSearchPageStart)}" />
+                               ToolTip="{Binding Path=(res:Resources.SpotlightSearchPageStartToolTip)}"
+                               Text="{Binding Path=(res:Resources.SpotlightSearchPageStart)}" />
                     <TextBox Grid.Row="10"
                              Grid.Column="0"
                              Grid.ColumnSpan="2"
@@ -223,8 +223,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                              Margin="0,0,70,0"
                              VerticalAlignment="Center"
                              ToolTipService.ShowDuration="30000"
-                             ToolTip="{Binding Path=(i18N:AkaI18N.DownloadPathSyntaxToolTip)}"
-                             materialDesign:HintAssist.Hint="{Binding Path=(i18N:AkaI18N.DownloadLocation)}"
+                             ToolTip="{Binding Path=(res:Resources.DownloadPathSyntaxToolTip)}"
+                             materialDesign:HintAssist.Hint="{Binding Path=(res:Resources.DownloadLocation)}"
                              FontSize="12"
                              TextChanged="DownloadPathTextBox_OnTextChanged"
                              Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
@@ -274,7 +274,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                              Grid.Column="0"
                              Grid.ColumnSpan="2"
                              VerticalAlignment="Center"
-                             materialDesign:HintAssist.Hint="{Binding Path=(i18N:AkaI18N.TagsToBeExclude)}"
+                             materialDesign:HintAssist.Hint="{Binding Path=(res:Resources.TagsToBeExclude)}"
                              FontSize="12"
                              LostFocus="ExcludeTagTextBox_OnLostFocus"
                              Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
@@ -284,7 +284,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                              Grid.Column="0"
                              Grid.ColumnSpan="2"
                              VerticalAlignment="Center"
-                             materialDesign:HintAssist.Hint="{Binding Path=(i18N:AkaI18N.TagsToBeInclude)}"
+                             materialDesign:HintAssist.Hint="{Binding Path=(res:Resources.TagsToBeInclude)}"
                              FontSize="12"
                              LostFocus="IncludeTagTextBox_OnLostFocus"
                              Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
@@ -294,10 +294,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                              Grid.Column="0"
                              Grid.ColumnSpan="2"
                              VerticalAlignment="Center"
-                             materialDesign:HintAssist.Hint="{Binding Path=(i18N:AkaI18N.ImageMirrorServerUrl)}"
+                             materialDesign:HintAssist.Hint="{Binding Path=(res:Resources.ImageMirrorServerUrl)}"
                              FontSize="12"
                              Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                             ToolTip="{Binding Path=(i18N:AkaI18N.ImageMirrorServerUrlHint)}">
+                             ToolTip="{Binding Path=(res:Resources.ImageMirrorServerUrlHint)}">
                         <TextBox.Text>
                             <Binding Path="MirrorServer" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                                 <Binding.ValidationRules>
@@ -310,7 +310,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
                 <Grid Margin="0,30,0,0">
                     <TextBlock VerticalAlignment="Bottom"
                                FontSize="12"
-                               Text="{Binding Path=(i18N:AkaI18N.SearchPerPageCountHint)}" />
+                               Text="{Binding Path=(res:Resources.SearchPerPageCountHint)}" />
                 </Grid>
             </StackPanel>
         </Grid>

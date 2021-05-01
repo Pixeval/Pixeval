@@ -31,7 +31,6 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using MaterialDesignExtensions.Model;
 using Microsoft.CSharp.RuntimeBinder;
 
 namespace Pixeval.Objects.Primitive

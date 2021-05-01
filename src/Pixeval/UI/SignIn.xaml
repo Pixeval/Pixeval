@@ -19,14 +19,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:i18N="clr-namespace:Pixeval.Objects.I18n"
+        xmlns:res="clr-namespace:Pixeval.Resources"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:userControls="clr-namespace:Pixeval.UI.UserControls"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:persisting="clr-namespace:Pixeval.Persisting"
-        Title="{Binding Path=(i18N:AkaI18N.SignIn)}"
+        Title="{Binding Path=(res:Resources.SignIn)}"
         Width="500"
         Height="600"
         ResizeMode="NoResize"
@@ -48,7 +48,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.-->
         <Grid x:Name="LoggingInGrid" Background="White" Visibility="Hidden" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch">
                 <mah:ProgressRing Height="50" Width="50" Foreground="#007CEE"/>
-                <TextBlock Margin="0,10,0,0" x:Name="LoggingInHintTextBlock" HorizontalAlignment="Center" FontSize="18" Text="{Binding Path=(i18N:AkaI18N.SignInLoggingIn)}"/>
+                <TextBlock Margin="0,10,0,0" x:Name="LoggingInHintTextBlock" HorizontalAlignment="Center" FontSize="18" Text="{Binding Path=(res:Resources.SignInLoggingIn)}"/>
             </StackPanel>
         </Grid>
         <wpf:WebView2 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Hidden" x:Name="LoginWebView" NavigationStarting="LoginWebView_OnNavigationStarting" />

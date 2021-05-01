@@ -18,8 +18,6 @@
 
 #endregion
 
-using Pixeval.Data.ViewModel;
-
 namespace Pixeval.Core
 {
     public interface ITimelineService<in T>

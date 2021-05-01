@@ -32,20 +32,20 @@ namespace Pixeval.Objects.ValueConverters
         {
             if (value is string s)
             {
-                return PixevalContext.AvailableCultures.FirstOrDefault(cul => cul.Name == s) ?? I18NOption.ChineseSimplified;
+                return PixevalContext.AvailableCultures.FirstOrDefault(cul => cul.Name == s) ?? PixevalContext.AvailableCultures[0];
             }
 
-            return I18NOption.ChineseSimplified;
+            return PixevalContext.AvailableCultures[0];
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is I18NOption option)
+            if (value is CultureInfo cul)
             {
-                return option.Name;
+                return cul.Name;
             }
 
-            return I18NOption.ChineseSimplified.Name;
+            return PixevalContext.AvailableCultures[0].Name;
         }
     }
 }

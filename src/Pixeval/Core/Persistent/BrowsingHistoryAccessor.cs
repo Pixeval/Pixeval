@@ -24,7 +24,6 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using Pixeval.Data.ViewModel;
-using Pixeval.Objects;
 using SQLite;
 
 namespace Pixeval.Core.Persistent

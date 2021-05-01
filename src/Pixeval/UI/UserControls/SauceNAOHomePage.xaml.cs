@@ -27,10 +27,8 @@ using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Pixeval.Core;
-using Pixeval.Data.Web;
 using Pixeval.Data.Web.Delegation;
 using Pixeval.Data.Web.Protocol;
-using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
 using Refit;
 using Visibility = System.Windows.Visibility;
@@ -55,7 +53,7 @@ namespace Pixeval.UI.UserControls
                 {
                     if (fs.Length > 1)
                     {
-                        MainWindow.MessageQueue.Enqueue(AkaI18N.SauceNaoFileCountLimit);
+                        MainWindow.MessageQueue.Enqueue(Pixeval.Resources.Resources.SauceNaoFileCountLimit);
                     }
                     else
                     {
@@ -70,7 +68,7 @@ namespace Pixeval.UI.UserControls
                             }
                             else
                             {
-                                MainWindow.MessageQueue.Enqueue(AkaI18N.CannotFindResult);
+                                MainWindow.MessageQueue.Enqueue(Pixeval.Resources.Resources.CannotFindResult);
                             }
                         }
                         finally
@@ -86,7 +84,7 @@ namespace Pixeval.UI.UserControls
 
         private async void UploadFileAndQueryButton_OnClick(object sender, RoutedEventArgs e)
         {
-            using var fileDialog = new CommonOpenFileDialog(AkaI18N.PleaseSelectFile) { Multiselect = false };
+            using var fileDialog = new CommonOpenFileDialog(Pixeval.Resources.Resources.PleaseSelectFile) { Multiselect = false };
             try
             {
                 if (fileDialog.ShowDialog() == CommonFileDialogResult.Ok)
@@ -100,7 +98,7 @@ namespace Pixeval.UI.UserControls
                     }
                     else
                     {
-                        MainWindow.MessageQueue.Enqueue(AkaI18N.CannotFindResult);
+                        MainWindow.MessageQueue.Enqueue(Pixeval.Resources.Resources.CannotFindResult);
                     }
                 }
             }

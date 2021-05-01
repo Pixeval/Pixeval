@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.Windows;
-
-namespace Pixeval.UI.UserControls
+﻿namespace Pixeval.UI.UserControls
 {
     public partial class IllustratorPage
     {

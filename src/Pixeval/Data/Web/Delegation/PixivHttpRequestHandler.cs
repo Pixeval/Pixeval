@@ -22,7 +22,6 @@ using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Pixeval.Objects.Exceptions;
-using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
 using Pixeval.Persisting;
 
@@ -68,7 +67,7 @@ namespace Pixeval.Data.Web.Delegation
 
             if (!httpRequestMessage.Headers.Contains("Accept-Language"))
             {
-                httpRequestMessage.Headers.TryAddWithoutValidation("Accept-Language", AkaI18N.GetCultureAcceptLanguage());
+                httpRequestMessage.Headers.TryAddWithoutValidation("Accept-Language", Pixeval.Resources.Resources.Culture.Name);
             }
         }
     }

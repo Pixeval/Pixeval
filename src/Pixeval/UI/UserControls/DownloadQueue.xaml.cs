@@ -18,7 +18,6 @@
 
 #endregion
 
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -32,7 +31,6 @@ using Pixeval.Core;
 using Pixeval.Core.Persistent;
 using Pixeval.Data.ViewModel;
 using Pixeval.Objects.Generic;
-using Pixeval.Objects.I18n;
 using Pixeval.Objects.Primitive;
 
 namespace Pixeval.UI.UserControls
@@ -78,7 +76,7 @@ namespace Pixeval.UI.UserControls
             }
             else
             {
-                MainWindow.MessageQueue.Enqueue(AkaI18N.PathNotExist);
+                MainWindow.MessageQueue.Enqueue(Pixeval.Resources.Resources.PathNotExist);
             }
         }
 
@@ -126,7 +124,7 @@ namespace Pixeval.UI.UserControls
             switch (ctx.Type)
             {
                 case "spotlight":
-                    MainWindow.MessageQueue.Enqueue(AkaI18N.SearchingSpotlight);
+                    MainWindow.MessageQueue.Enqueue(Pixeval.Resources.Resources.SearchingSpotlight);
 
                     var tasks = await Tasks<string, Illustration>.Of(await PixivClient.GetArticleWorks(ctx.BrowseObjectId)).Mapping(PixivHelper.IllustrationInfo).Construct().WhenAll();
                     var result = tasks.Peek(i =>

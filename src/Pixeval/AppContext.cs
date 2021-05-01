@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -52,7 +53,7 @@ namespace Pixeval
 
         public static readonly IQualifier<Illustration, IllustrationQualification> DefaultQualifier = new IllustrationQualifier();
 
-        public static readonly I18NOption[] AvailableCultures = { I18NOption.UsEnglish, I18NOption.ChineseSimplified };
+        public static readonly CultureInfo[] AvailableCultures = { new CultureInfo("zh-CN"),new CultureInfo("en-US")};
 
         public static int ProxyPort { get; set; }
 
