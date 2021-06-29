@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
+  <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)microsoft.projectreunion.winui\0.8.0\buildTransitive\Microsoft.ProjectReunion.WinUI.targets" Condition="Exists('$(NuGetPackageRoot)microsoft.projectreunion.winui\0.8.0\buildTransitive\Microsoft.ProjectReunion.WinUI.targets')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.projectreunion.interactiveexperiences\0.8.0\build\net5.0-windows10.0.17763.0\Microsoft.ProjectReunion.InteractiveExperiences.targets" Condition="Exists('$(NuGetPackageRoot)microsoft.projectreunion.interactiveexperiences\0.8.0\build\net5.0-windows10.0.17763.0\Microsoft.ProjectReunion.InteractiveExperiences.targets')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.projectreunion.foundation\0.8.0\build\Microsoft.ProjectReunion.Foundation.targets" Condition="Exists('$(NuGetPackageRoot)microsoft.projectreunion.foundation\0.8.0\build\Microsoft.ProjectReunion.Foundation.targets')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.projectreunion.dwrite\0.8.0\build\Microsoft.ProjectReunion.DWrite.targets" Condition="Exists('$(NuGetPackageRoot)microsoft.projectreunion.dwrite\0.8.0\build\Microsoft.ProjectReunion.DWrite.targets')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.projectreunion\0.8.0\build\Microsoft.ProjectReunion.targets" Condition="Exists('$(NuGetPackageRoot)microsoft.projectreunion\0.8.0\build\Microsoft.ProjectReunion.targets')" />
+  </ImportGroup>
+</Project>

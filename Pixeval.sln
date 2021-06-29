@@ -1,58 +1,61 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.30104.148
+VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D044DAED-2EF7-43B0-9C75-7714DC021F3B}"
-	ProjectSection(SolutionItems) = preProject
-		.github\workflows\ci.yml = .github\workflows\ci.yml
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pixeval", "Pixeval.Wpf\src\Pixeval\Pixeval.csproj", "{FC45610A-42DF-47CD-AE3D-05DA90715F6A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pixeval", "src\Pixeval\Pixeval.csproj", "{0B1716C0-A814-4864-8C9B-F3B8288E49F6}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pixeval.Updater", "src\Pixeval.Updater\Pixeval.Updater.csproj", "{F0F842EE-5668-49AA-8070-1B9B4F08A67F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pixeval.Updater", "Pixeval.Wpf\src\Pixeval.Updater\Pixeval.Updater.csproj", "{AC97DAAA-0241-43A9-8242-8108A22E0221}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|arm64 = Debug|arm64
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|arm64 = Release|arm64
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0B1716C0-A814-4864-8C9B-F3B8288E49F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0B1716C0-A814-4864-8C9B-F3B8288E49F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0B1716C0-A814-4864-8C9B-F3B8288E49F6}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{0B1716C0-A814-4864-8C9B-F3B8288E49F6}.Debug|x64.Build.0 = Debug|Any CPU
-		{0B1716C0-A814-4864-8C9B-F3B8288E49F6}.Debug|x86.ActiveCfg = Debug|x86
-		{0B1716C0-A814-4864-8C9B-F3B8288E49F6}.Debug|x86.Build.0 = Debug|x86
-		{0B1716C0-A814-4864-8C9B-F3B8288E49F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0B1716C0-A814-4864-8C9B-F3B8288E49F6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0B1716C0-A814-4864-8C9B-F3B8288E49F6}.Release|x64.ActiveCfg = Release|Any CPU
-		{0B1716C0-A814-4864-8C9B-F3B8288E49F6}.Release|x64.Build.0 = Release|Any CPU
-		{0B1716C0-A814-4864-8C9B-F3B8288E49F6}.Release|x86.ActiveCfg = Release|x86
-		{0B1716C0-A814-4864-8C9B-F3B8288E49F6}.Release|x86.Build.0 = Release|x86
-		{F0F842EE-5668-49AA-8070-1B9B4F08A67F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F0F842EE-5668-49AA-8070-1B9B4F08A67F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F0F842EE-5668-49AA-8070-1B9B4F08A67F}.Debug|x64.ActiveCfg = Debug|x64
-		{F0F842EE-5668-49AA-8070-1B9B4F08A67F}.Debug|x64.Build.0 = Debug|x64
-		{F0F842EE-5668-49AA-8070-1B9B4F08A67F}.Debug|x86.ActiveCfg = Debug|x86
-		{F0F842EE-5668-49AA-8070-1B9B4F08A67F}.Debug|x86.Build.0 = Debug|x86
-		{F0F842EE-5668-49AA-8070-1B9B4F08A67F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F0F842EE-5668-49AA-8070-1B9B4F08A67F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F0F842EE-5668-49AA-8070-1B9B4F08A67F}.Release|x64.ActiveCfg = Release|x64
-		{F0F842EE-5668-49AA-8070-1B9B4F08A67F}.Release|x64.Build.0 = Release|x64
-		{F0F842EE-5668-49AA-8070-1B9B4F08A67F}.Release|x86.ActiveCfg = Release|x86
-		{F0F842EE-5668-49AA-8070-1B9B4F08A67F}.Release|x86.Build.0 = Release|x86
+		{FC45610A-42DF-47CD-AE3D-05DA90715F6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC45610A-42DF-47CD-AE3D-05DA90715F6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC45610A-42DF-47CD-AE3D-05DA90715F6A}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{FC45610A-42DF-47CD-AE3D-05DA90715F6A}.Debug|arm64.Build.0 = Debug|Any CPU
+		{FC45610A-42DF-47CD-AE3D-05DA90715F6A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FC45610A-42DF-47CD-AE3D-05DA90715F6A}.Debug|x64.Build.0 = Debug|Any CPU
+		{FC45610A-42DF-47CD-AE3D-05DA90715F6A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FC45610A-42DF-47CD-AE3D-05DA90715F6A}.Debug|x86.Build.0 = Debug|Any CPU
+		{FC45610A-42DF-47CD-AE3D-05DA90715F6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC45610A-42DF-47CD-AE3D-05DA90715F6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC45610A-42DF-47CD-AE3D-05DA90715F6A}.Release|arm64.ActiveCfg = Release|Any CPU
+		{FC45610A-42DF-47CD-AE3D-05DA90715F6A}.Release|arm64.Build.0 = Release|Any CPU
+		{FC45610A-42DF-47CD-AE3D-05DA90715F6A}.Release|x64.ActiveCfg = Release|Any CPU
+		{FC45610A-42DF-47CD-AE3D-05DA90715F6A}.Release|x64.Build.0 = Release|Any CPU
+		{FC45610A-42DF-47CD-AE3D-05DA90715F6A}.Release|x86.ActiveCfg = Release|Any CPU
+		{FC45610A-42DF-47CD-AE3D-05DA90715F6A}.Release|x86.Build.0 = Release|Any CPU
+		{AC97DAAA-0241-43A9-8242-8108A22E0221}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC97DAAA-0241-43A9-8242-8108A22E0221}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC97DAAA-0241-43A9-8242-8108A22E0221}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{AC97DAAA-0241-43A9-8242-8108A22E0221}.Debug|arm64.Build.0 = Debug|Any CPU
+		{AC97DAAA-0241-43A9-8242-8108A22E0221}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AC97DAAA-0241-43A9-8242-8108A22E0221}.Debug|x64.Build.0 = Debug|Any CPU
+		{AC97DAAA-0241-43A9-8242-8108A22E0221}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AC97DAAA-0241-43A9-8242-8108A22E0221}.Debug|x86.Build.0 = Debug|Any CPU
+		{AC97DAAA-0241-43A9-8242-8108A22E0221}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC97DAAA-0241-43A9-8242-8108A22E0221}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC97DAAA-0241-43A9-8242-8108A22E0221}.Release|arm64.ActiveCfg = Release|Any CPU
+		{AC97DAAA-0241-43A9-8242-8108A22E0221}.Release|arm64.Build.0 = Release|Any CPU
+		{AC97DAAA-0241-43A9-8242-8108A22E0221}.Release|x64.ActiveCfg = Release|Any CPU
+		{AC97DAAA-0241-43A9-8242-8108A22E0221}.Release|x64.Build.0 = Release|Any CPU
+		{AC97DAAA-0241-43A9-8242-8108A22E0221}.Release|x86.ActiveCfg = Release|Any CPU
+		{AC97DAAA-0241-43A9-8242-8108A22E0221}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {747C49AC-2EF9-4D7C-9656-89B512F213A1}
-		RESX_NeutralResourcesLanguage = en-US
-		RESX_SortFileContentOnSave = True
+		SolutionGuid = {ABF7140A-7681-4E06-96AD-A61728D1BAA5}
 	EndGlobalSection
 EndGlobal
