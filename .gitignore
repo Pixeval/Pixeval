@@ -674,3 +674,4 @@ gradle-app.setting
 # User defined
 obj
 bin
+.idea
