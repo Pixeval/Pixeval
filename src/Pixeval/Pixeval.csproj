@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows10.0.19041</TargetFramework>
@@ -9,14 +9,19 @@
     <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
     <Nullable>enable</Nullable>
+    <DefaultLanguage>zh-CN</DefaultLanguage>
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="Assets\Certs\pixeval_ca.cer" />
     <Content Remove="Assets\Certs\pixeval_server_cert.pfx" />
     <Content Remove="Assets\Images\60544664.png" />
     <Content Remove="Assets\Images\logo.png" />
+    <Content Remove="Assets\Strings\zh-CN\LoginPage.resw" />
+    <Content Remove="Assets\Strings\zh-CN\MainPage.resw" />
+    <Content Remove="Assets\Strings\zh-CN\MessageContentDialog.resw" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Assets\Strings\zh-CN\MessageContentDialog.resw" />
     <None Remove="Pages\LoginPage.xaml" />
     <None Remove="Pages\MainPage.xaml" />
   </ItemGroup>
@@ -34,7 +39,28 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+    <PRIResource Include="Assets\Strings\zh-CN\MessageContentDialog.resw">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </PRIResource>
+  </ItemGroup>
+
+  <!-- region Exposes PRI resources to the source generator -->
+
+  <Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
+    <ItemGroup>
+      <AdditionalFiles Include="@(PRIResource)" SourceItemGroup="PRIResource" />
+    </ItemGroup>
+  </Target>
+
+  <ItemGroup>
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
+  </ItemGroup>
+
+  <!-- endregion Exposes PRI resources to the source generator -->
+
+  <ItemGroup>
+    <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
 

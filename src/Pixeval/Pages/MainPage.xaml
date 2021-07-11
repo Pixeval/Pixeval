@@ -37,65 +37,65 @@
             </Grid>
         </NavigationView.PaneHeader>
         <NavigationView.MenuItems>
-            <NavigationViewItem x:Uid="RecommendationsTab">
+            <NavigationViewItem x:Uid="/MainPage/RecommendationsTab">
                 <NavigationViewItem.Icon>
                     <!-- Calendar -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE787;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
-            <NavigationViewItem x:Uid="RankingsTab">
+            <NavigationViewItem x:Uid="/MainPage/RankingsTab">
                 <NavigationViewItem.Icon>
                     <!-- Market -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEAFC;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
-            <NavigationViewItem x:Uid="BookmarksTab">
+            <NavigationViewItem x:Uid="/MainPage/BookmarksTab">
                 <NavigationViewItem.Icon>
                     <!-- Library -->
                     <!-- Alternative: E74C(OEM) -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8F1;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
-            <NavigationViewItem x:Uid="FollowingsTab">
+            <NavigationViewItem x:Uid="/MainPage/FollowingsTab">
                 <NavigationViewItem.Icon>
                     <!-- People -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE716;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
-            <NavigationViewItem x:Uid="SpotlightsTab">
+            <NavigationViewItem x:Uid="/MainPage/SpotlightsTab">
                 <NavigationViewItem.Icon>
                     <!-- MapLayers -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE81E;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
-            <NavigationViewItem x:Uid="FeedsTab">
+            <NavigationViewItem x:Uid="/MainPage/FeedsTab">
                 <NavigationViewItem.Icon>
                     <!-- MobLocation -->
                     <!-- Alternative: E81D(Location) -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEC43;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
-            <NavigationViewItem x:Uid="NewPostsTab">
+            <NavigationViewItem x:Uid="/MainPage/NewPostsTab">
                 <NavigationViewItem.Icon>
                     <!-- DevUpdate -->
                     <!-- Alternative: E777(UpdateRestore) -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xECC5;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
-            <NavigationViewItem x:Uid="ReverseSearchTab">
+            <NavigationViewItem x:Uid="/MainPage/ReverseSearchTab">
                 <NavigationViewItem.Icon>
                     <!-- SearchAndApps -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE773;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
-            <NavigationViewItemHeader x:Uid="DownloadAndHistoriesTab" />
-            <NavigationViewItem x:Uid="HistoriesTab">
+            <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />
+            <NavigationViewItem x:Uid="/MainPage/HistoriesTab">
                 <NavigationViewItem.Icon>
                     <!-- History -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE81C;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
-            <NavigationViewItem x:Uid="DownloadListTab">
+            <NavigationViewItem x:Uid="/MainPage/DownloadListTab">
                 <NavigationViewItem.Icon>
                     <!-- CheckList -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE9D5;" />
@@ -106,16 +106,16 @@
             <NavigationViewItem>
                 <StackPanel Margin="-6,0,0,0" Orientation="Horizontal">
                     <!--<PersonPicture Height="20" Width="20" ProfilePicture="../Assets/Images/60544664.png" BadgeText="DC" />-->
-                    <TextBlock x:Uid="AccountTab" Margin="10,0,0,0" />
+                    <TextBlock x:Uid="/MainPage/AccountTab" Margin="10,0,0,0" />
                 </StackPanel>
             </NavigationViewItem>
-            <NavigationViewItem x:Uid="HelpTab">
+            <NavigationViewItem x:Uid="/MainPage/HelpTab">
                 <NavigationViewItem.Icon>
                     <!-- Help -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE897;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
-            <NavigationViewItem x:Uid="SettingsTab">
+            <NavigationViewItem x:Uid="/MainPage/SettingsTab">
                 <NavigationViewItem.Icon>
                     <!-- Setting -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE713;" />
@@ -127,7 +127,7 @@
                   VerticalAlignment="Top"
                   HorizontalAlignment="Stretch"
                   Background="{ThemeResource NavigationViewTopPaneBackground}">
-                <AutoSuggestBox x:Uid="MainPageAutoSuggestionBox"
+                <AutoSuggestBox x:Uid="/MainPage/MainPageAutoSuggestionBox"
                                 x:Name="MainPageAutoSuggestionBox"
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Left"

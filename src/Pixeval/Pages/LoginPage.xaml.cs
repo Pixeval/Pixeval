@@ -33,15 +33,6 @@ namespace Pixeval.Pages
 
         private async void LoginPage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            _ = await MessageDialogBuilder.Create()
-                .WithTitle(UIHelper.GetLocalizedString("RefreshingSessionIsNotPresentTitle"))
-                .WithContent(UIHelper.GetLocalizedString("RefreshingSessionIsNotPresentContent"))
-                .WithPrimaryButtonText(UIHelper.GetLocalizedString("OkButtonContent"))
-                .WithDefaultButton(ContentDialogButton.Primary)
-                .Build()
-                .ShowAsync();
-            Directory.Delete(AppContext.AppConfigurationFolder, true);
-            Application.Current.Exit();
             _viewModel.RefreshAvailable = await _viewModel.CheckRefreshAvailable();
             if (_viewModel.RefreshAvailable)
             {
