@@ -13,6 +13,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.Util;
 using Pixeval.ViewModel;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -32,6 +33,15 @@ namespace Pixeval.Pages
 
         private async void LoginPage_OnLoaded(object sender, RoutedEventArgs e)
         {
+            _ = await MessageDialogBuilder.Create()
+                .WithTitle(UIHelper.GetLocalizedString("RefreshingSessionIsNotPresentTitle"))
+                .WithContent(UIHelper.GetLocalizedString("RefreshingSessionIsNotPresentContent"))
+                .WithPrimaryButtonText(UIHelper.GetLocalizedString("OkButtonContent"))
+                .WithDefaultButton(ContentDialogButton.Primary)
+                .Build()
+                .ShowAsync();
+            Directory.Delete(AppContext.AppConfigurationFolder, true);
+            Application.Current.Exit();
             _viewModel.RefreshAvailable = await _viewModel.CheckRefreshAvailable();
             if (_viewModel.RefreshAvailable)
             {

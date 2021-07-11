@@ -40,10 +40,7 @@ namespace Pixeval.Util
 
         public MessageDialogBuilder WithContent(string message)
         {
-            _contentDialog.Content = new TextBlock
-            {
-                Text = message
-            };
+            _contentDialog.Content = message;
             return this;
         }
 
