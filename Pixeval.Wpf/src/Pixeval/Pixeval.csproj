@@ -38,6 +38,10 @@
     <PackageReference Include="VirtualizingWrapPanel.NETCore" Version="1.4.0" />
   </ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\Pixeval.WinUI\src\Pixeval\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+	</ItemGroup>
+
   <ItemGroup>
     <Resource Include="Resources\pixeval_ca.cer" />
     <Resource Include="Resources\pixeval_server_cert.pfx" />
