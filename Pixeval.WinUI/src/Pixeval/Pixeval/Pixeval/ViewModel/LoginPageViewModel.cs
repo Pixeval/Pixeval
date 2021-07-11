@@ -40,7 +40,7 @@ namespace Pixeval.ViewModel
                 await App.PixevalAppClient.RefreshSessionAsync();
             }
             else
-            {
+            { 
                 _ = await MessageDialogBuilder.Create()
                     .WithTitle(UIHelper.GetLocalizedString("RefreshingSessionIsNotPresentTitle"))
                     .WithContent(UIHelper.GetLocalizedString("RefreshingSessionIsNotPresentContent"))

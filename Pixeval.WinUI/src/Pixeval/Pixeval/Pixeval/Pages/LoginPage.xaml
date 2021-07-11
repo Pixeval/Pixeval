@@ -7,6 +7,7 @@
     xmlns:viewModel="using:Pixeval.ViewModel"
     xmlns:converters="using:CommunityToolkit.WinUI.UI.Converters"
     mc:Ignorable="d"
+    Loaded="LoginPage_OnLoaded"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" d:DataContext="{d:DesignInstance viewModel:LoginPageViewModel}">
     <Page.Resources>
         <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
