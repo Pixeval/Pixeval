@@ -23,6 +23,7 @@ namespace Pixeval
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
+            // Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", "--proxy-server=\"127.0.0.1:1080\"", EnvironmentVariableTarget.Process);
             _window = new MainWindow();
             _window.Activate();
         }

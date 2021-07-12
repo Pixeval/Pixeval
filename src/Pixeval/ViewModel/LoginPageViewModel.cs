@@ -29,7 +29,7 @@ namespace Pixeval.ViewModel
             }
 
             var session = (await File.ReadAllTextAsync(AppContext.AppSessionFileName)).FromJson<Session>();
-            return session is not null && session.RefreshToken.IsNotNullOrEmpty() && CookieNotExpired(session);
+            return session is not null && session.RefreshToken.IsNotNullOrEmpty() && session.Cookie.IsNotNullOrEmpty() && CookieNotExpired(session);
         }
 
         public async Task Refresh()
@@ -42,9 +42,9 @@ namespace Pixeval.ViewModel
             else
             { 
                 _ = await MessageDialogBuilder.Create()
-                    .WithTitle(UIHelper.GetLocalizedString("RefreshingSessionIsNotPresentTitle"))
-                    .WithContent(UIHelper.GetLocalizedString("RefreshingSessionIsNotPresentContent"))
-                    .WithPrimaryButtonText(UIHelper.GetLocalizedString("OkButtonContent"))
+                    .WithTitle(LoginPageResources.RefreshingSessionIsNotPresentTitle)
+                    .WithContent(LoginPageResources.RefreshingSessionIsNotPresentContent)
+                    .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
                     .WithDefaultButton(ContentDialogButton.Primary)
                     .Build()
                     .ShowAsync();

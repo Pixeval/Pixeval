@@ -13,13 +13,13 @@
         <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
     </Page.Resources>
     <Grid>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{x:Bind _viewModel.RefreshAvailable}">
             <Image Source="../Assets/Images/logo.png" Width="150" Height="150" />
             <ProgressRing Height="30" Width="30" />
             <TextBlock x:Uid="/LoginPage/RefreshingSessionTextBox" HorizontalAlignment="Center" FontSize="10" Margin="0,15,0,0" />
         </StackPanel>
-        <WebView2 HorizontalAlignment="Stretch" 
-                  VerticalAlignment="Stretch" 
+        <WebView2 x:Name="LoginWebView" HorizontalAlignment="Stretch" 
+                  VerticalAlignment="Stretch" Source="https://pixiv.net"
                   Visibility="{Binding RefreshAvailable, Converter={StaticResource BoolNegationConverter}}" />
     </Grid>
 </Page>

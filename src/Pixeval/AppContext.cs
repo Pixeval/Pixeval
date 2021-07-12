@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 
 namespace Pixeval
 {
@@ -15,5 +16,7 @@ namespace Pixeval
         public static string AppSessionFileName = Path.Combine(AppConfigurationFolder, "Session.json");
 
         public static string AppConfigurationFileName = Path.Combine(AppConfigurationFolder, "Settings.json");
+
+        public static string AppFolder => Directory.GetParent(Assembly.GetExecutingAssembly().Location)!.FullName;
     }
 }

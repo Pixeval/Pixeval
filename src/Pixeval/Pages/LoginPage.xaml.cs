@@ -7,12 +7,16 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.Web.WebView2.Core;
 using Pixeval.Util;
 using Pixeval.ViewModel;
 
@@ -24,6 +28,8 @@ namespace Pixeval.Pages
     public sealed partial class LoginPage
     {
         private readonly LoginPageViewModel _viewModel = new();
+
+        private PixivProxyServer? _proxyServer;
 
         public LoginPage()
         {
@@ -41,13 +47,25 @@ namespace Pixeval.Pages
             }
             else
             {
-
+                await PrepareForLogin();
             }
         }
 
-        private void PrepareForLogin()
+        private async Task PrepareForLogin()
         {
-
+            await LoginWebView.EnsureCoreWebView2Async();
+            LoginWebView.CoreWebView2.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All);
+            LoginWebView.CoreWebView2.WebResourceRequested += (o, args) =>
+            {
+                if (args.Request.Uri == "https://www.baidu.com/")
+                {
+                    args.Request.Uri = "http://www.bilibili.com/";
+                }
+            };
+            LoginWebView.Source = new Uri("https://www.baidu.com");
+            Debug.WriteLine(LoginWebView.Source);
+            var port = PixivProxyServer.NegotiatePort();
+            // _proxyServer = PixivProxyServer.Create(IPAddress.Loopback, port, await CertificateManager.GetFakeServerCertificate());
         }
     }
 }

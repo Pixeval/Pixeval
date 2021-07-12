@@ -11,20 +11,6 @@
     <Nullable>enable</Nullable>
     <DefaultLanguage>zh-CN</DefaultLanguage>
   </PropertyGroup>
-  <ItemGroup>
-    <Content Remove="Assets\Certs\pixeval_ca.cer" />
-    <Content Remove="Assets\Certs\pixeval_server_cert.pfx" />
-    <Content Remove="Assets\Images\60544664.png" />
-    <Content Remove="Assets\Images\logo.png" />
-    <Content Remove="Assets\Strings\zh-CN\LoginPage.resw" />
-    <Content Remove="Assets\Strings\zh-CN\MainPage.resw" />
-    <Content Remove="Assets\Strings\zh-CN\MessageContentDialog.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Assets\Strings\zh-CN\MessageContentDialog.resw" />
-    <None Remove="Pages\LoginPage.xaml" />
-    <None Remove="Pages\MainPage.xaml" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.0.3" />
