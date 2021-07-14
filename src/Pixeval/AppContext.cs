@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
-using System.Reflection;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.Storage;
 using CommunityToolkit.WinUI.Helpers;
 using Pixeval.Util;
@@ -17,48 +17,56 @@ namespace Pixeval
     {
         public const string AppIdentifier = "Pixeval";
 
-        public static string AppConfigurationFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppIdentifier);
+        public static StorageFolder AppLocalFolder = ApplicationData.Current.LocalFolder;
 
-        public static string AppSessionFileName = Path.Combine(AppConfigurationFolder, "Session.json");
+        public static string AppSessionFileName = "Session.json";
 
-        public static string AppConfigurationFileName = Path.Combine(AppConfigurationFolder, "Settings.json");
+        public static string AppConfigurationFileName = "Setting.json";
 
-        public static string AppLoginProxyFolder = Path.Combine(AppConfigurationFolder, "LoginProxy");
+        public static string AppLoginProxyFolder = "LoginProxy";
 
+        /// <summary>
+        /// Copy and extract the LoginProxy to the application data folder
+        /// </summary>
+        /// <returns></returns>
         public static async Task CopyLoginProxyIfRequired()
         {
             var assetFile = await GetAssetBytes("Binary/Pixeval.LoginProxy.zip");
             var assetChecksum = await assetFile.HashAsync<SHA256CryptoServiceProvider>();
-            if (Directory.Exists(AppLoginProxyFolder))
+            if (await TryGetFolderRelativeToLocalFolderAsync(AppLoginProxyFolder) is { } folder
+                && await folder.TryGetItemAsync("checksum.sha256") is StorageFile checksum)
             {
-                var checksumPath = Path.Combine(AppLoginProxyFolder, "checksum.sha256");
-                if (File.Exists(checksumPath))
+                if (await checksum.ReadStringAsync() != assetChecksum)
                 {
-                    var localChecksum = await File.ReadAllTextAsync(checksumPath);
-                    if (assetChecksum != localChecksum)
-                    {
-                        await CopyLoginProxyZipFileAndExtractInternal(assetFile, assetChecksum);
-                        return;
-                    }
+                    await CopyLoginProxyZipFileAndExtractInternal(assetFile, assetChecksum);
                 }
+                return;
             }
             await CopyLoginProxyZipFileAndExtractInternal(assetFile, assetChecksum);
         }
 
         private static async Task CopyLoginProxyZipFileAndExtractInternal(byte[] assetFile, string checksum)
         {
-            IOHelper.ReinitializeDirectory(AppLoginProxyFolder);
-            var zipFilePath = Path.Combine(AppLoginProxyFolder, "Pixeval.LoginProxy.zip");
-            await File.WriteAllBytesAsync(zipFilePath, assetFile);
-            ZipFile.ExtractToDirectory(zipFilePath, AppLoginProxyFolder);
-            File.Delete(zipFilePath);
-            await File.WriteAllTextAsync(Path.Combine(AppLoginProxyFolder, "checksum.sha256"), checksum);
+            var loginProxyFolder = await TryGetFolderRelativeToLocalFolderAsync(AppLoginProxyFolder);
+            if (loginProxyFolder is { } folder)
+            {
+                await folder.ClearDirectoryAsync();
+            }
+            else
+            {
+                loginProxyFolder = await AppLocalFolder.CreateFolderAsync(AppLoginProxyFolder);
+            }
+            
+            await using var memoryStream = new MemoryStream(assetFile);
+            using var zipArchive = new ZipArchive(memoryStream);
+            zipArchive.ExtractToDirectory(loginProxyFolder.Path);
+            await (await loginProxyFolder.CreateFileAsync("checksum.sha256")).WriteStringAsync(checksum);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="relativeToAssetsFolder">Without slash at the beginning</param>
+        /// <param name="relativeToAssetsFolder">With beginning slash removed</param>
         /// <returns></returns>
         public static Task<byte[]> GetAssetBytes(string relativeToAssetsFolder)
         {
@@ -70,6 +78,19 @@ namespace Pixeval
             return await (await StorageFile.GetFileFromApplicationUriAsync(new Uri(path))).ReadBytesAsync();
         }
 
-        private static void
+        public static IAsyncOperation<IStorageItem?> TryGetItemRelativeToLocalFolderAsync(string pathWithoutSlash)
+        {
+            return AppLocalFolder.TryGetItemAsync(pathWithoutSlash);
+        }
+
+        public static async Task<StorageFile?> TryGetFileRelativeToLocalFolderAsync(string pathWithoutSlash)
+        {
+            return await AppLocalFolder.TryGetItemAsync(pathWithoutSlash) as StorageFile;
+        }
+
+        public static async Task<StorageFolder?> TryGetFolderRelativeToLocalFolderAsync(string pathWithoutSlash)
+        {
+            return await AppLocalFolder.TryGetItemAsync(pathWithoutSlash) as StorageFolder;
+        }
     }
 }

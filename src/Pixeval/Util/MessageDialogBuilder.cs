@@ -1,4 +1,6 @@
-﻿using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Pixeval.Pages;
 
 namespace Pixeval.Util
 {
@@ -40,12 +42,19 @@ namespace Pixeval.Util
 
         public MessageDialogBuilder WithContent(string message)
         {
-            _contentDialog.Content = message;
+            _contentDialog.Content = new MessageDialogContent(message);
             return this;
         }
 
-        public ContentDialog Build()
+        public ContentDialog Build(Page owner) // the owner argument is a workaround for issue #4870
         {
+            _contentDialog.XamlRoot = owner.Content.XamlRoot;
+            return _contentDialog;
+        }
+
+        public ContentDialog Build(Window owner) // the owner argument is a workaround for issue #4870
+        {
+            _contentDialog.XamlRoot = owner.Content.XamlRoot;
             return _contentDialog;
         }
     }

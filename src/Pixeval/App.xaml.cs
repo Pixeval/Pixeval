@@ -1,21 +1,16 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using Windows.Storage;
-using CommunityToolkit.WinUI.Helpers;
-using Mako;
+﻿using Mako;
 using Microsoft.UI.Xaml;
+using Pixeval.Interop;
+using Pixeval.Util;
+using WinRT;
 
 namespace Pixeval
 {
-    /// <summary>
-    /// Provides application-specific behavior to supplement the default Application class.
-    /// </summary>
     public partial class App
     {
         public static MakoClient? PixevalAppClient { get; set; }
 
-        private MainWindow? _window;
+        public static MainWindow Window = null!;
 
         public App()
         {
@@ -24,8 +19,10 @@ namespace Pixeval
 
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
         { 
-            _window = new MainWindow();
-            _window.Activate();
+            Window = new MainWindow();
+            var windowHandle = Window.As<IWindowNative>(); // see https://github.com/microsoft/WinUI-3-Demos/blob/master/src/Build2020Demo/DemoBuildCs/DemoBuildCs/DemoBuildCs/App.xaml.cs
+            UIHelper.SetWindowSize(windowHandle.WindowHandle, 800, 600);
+            Window.Activate();
             await AppContext.CopyLoginProxyIfRequired();
         }
     }

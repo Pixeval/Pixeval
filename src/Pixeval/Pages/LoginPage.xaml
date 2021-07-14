@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModel="using:Pixeval.ViewModel"
+    xmlns:util="using:Pixeval.Util"
     mc:Ignorable="d"
     Loaded="LoginPage_OnLoaded"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" d:DataContext="{d:DesignInstance viewModel:LoginPageViewModel}">
@@ -12,7 +13,7 @@
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <Image Source="../Assets/Images/logo.png" Width="150" Height="150" />
             <ProgressRing Height="30" Width="30" />
-            <TextBlock x:Uid="/LoginPage/RefreshingSessionTextBox" HorizontalAlignment="Center" FontSize="10" Margin="0,15,0,0" />
+            <TextBlock Text="{x:Bind util:MetadataHelper.GetMetadataOnEnumMember(_viewModel.LoginPhase), Mode=OneWay}" HorizontalAlignment="Center" FontSize="10" Margin="0,15,0,0" />
         </StackPanel>
     </Grid>
 </Page>

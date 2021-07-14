@@ -117,8 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CannotFindLoginProxyServerExecutable" xml:space="preserve">
+    <value>找不到用于登录的可执行文件，请重新打开应用或者联系开发者</value>
+  </data>
   <data name="ProxyServerConnectToTargetHostFailedFormatted" xml:space="preserve">
-    <value>Failed to connect to target host: {0}</value>
-    <comment>!formatted string</comment>
+    <value>尝试连接到主机{0}失败</value>
+    <comment>{0}: 主机名</comment>
   </data>
 </root>

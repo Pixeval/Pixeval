@@ -31,5 +31,12 @@ namespace Pixeval.Util
         {
             return bytes.Select(b => b.ToString("X2")).Aggregate((s1, s2) => s1 + s2);
         }
+
+        /// <summary>
+        /// Prevent XAML compiler from complaining
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public static string StringIdentity(string o) => o;
     }
 }
