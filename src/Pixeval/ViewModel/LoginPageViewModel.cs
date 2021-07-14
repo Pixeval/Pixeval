@@ -14,8 +14,6 @@ namespace Pixeval.ViewModel
     [AddINotifyPropertyChangedInterface]
     public class LoginPageViewModel
     {
-        public bool RefreshAvailable { get; set; }
-
         public async Task<bool> CheckRefreshAvailable()
         {
             static bool CookieNotExpired(Session session)

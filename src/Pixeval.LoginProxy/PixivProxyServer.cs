@@ -91,9 +91,12 @@ namespace Pixeval.LoginProxy
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
-                // ignore
+                if (e is PixivWebLoginException pixivWebLoginException)
+                {
+                    throw pixivWebLoginException;
+                }
             }
         }
         

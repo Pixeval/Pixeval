@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using CommunityToolkit.WinUI.Helpers;
@@ -21,16 +22,11 @@ namespace Pixeval
             InitializeComponent();
         }
 
-        protected override void OnLaunched(LaunchActivatedEventArgs args)
-        {
-            // Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", "--proxy-server=\"127.0.0.1:1080\"", EnvironmentVariableTarget.Process);
+        protected override async void OnLaunched(LaunchActivatedEventArgs args)
+        { 
             _window = new MainWindow();
             _window.Activate();
-        }
-
-        public static async Task<byte[]> GetResourceBytes(string path)
-        {
-            return await (await StorageFile.GetFileFromApplicationUriAsync(new Uri(path))).ReadBytesAsync();
+            await AppContext.CopyLoginProxyIfRequired();
         }
     }
 }

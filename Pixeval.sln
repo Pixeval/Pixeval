@@ -9,6 +9,10 @@ Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "Pixeval (Package)", "src\Pi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pixeval.SourceGen", "src\Pixeval.SourceGen\Pixeval.SourceGen.csproj", "{29F8F1E7-1B87-4030-B9E8-1DDEF7A552B5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pixeval.LoginProxy", "src\Pixeval.LoginProxy\Pixeval.LoginProxy.csproj", "{9508EEE4-A7F4-44A8-BE11-E7A25857D443}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixeval.Build", "src\build\Pixeval.Build\Pixeval.Build.csproj", "{95FD9066-A693-4421-8A01-28AD760978E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +75,38 @@ Global
 		{29F8F1E7-1B87-4030-B9E8-1DDEF7A552B5}.Release|x64.Build.0 = Release|Any CPU
 		{29F8F1E7-1B87-4030-B9E8-1DDEF7A552B5}.Release|x86.ActiveCfg = Release|Any CPU
 		{29F8F1E7-1B87-4030-B9E8-1DDEF7A552B5}.Release|x86.Build.0 = Release|Any CPU
+		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Debug|arm64.Build.0 = Debug|Any CPU
+		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Debug|x64.Build.0 = Debug|Any CPU
+		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Debug|x86.Build.0 = Debug|Any CPU
+		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Release|arm64.ActiveCfg = Release|Any CPU
+		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Release|arm64.Build.0 = Release|Any CPU
+		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Release|x64.ActiveCfg = Release|Any CPU
+		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Release|x64.Build.0 = Release|Any CPU
+		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Release|x86.ActiveCfg = Release|Any CPU
+		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Release|x86.Build.0 = Release|Any CPU
+		{95FD9066-A693-4421-8A01-28AD760978E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95FD9066-A693-4421-8A01-28AD760978E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95FD9066-A693-4421-8A01-28AD760978E6}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{95FD9066-A693-4421-8A01-28AD760978E6}.Debug|arm64.Build.0 = Debug|Any CPU
+		{95FD9066-A693-4421-8A01-28AD760978E6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{95FD9066-A693-4421-8A01-28AD760978E6}.Debug|x64.Build.0 = Debug|Any CPU
+		{95FD9066-A693-4421-8A01-28AD760978E6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{95FD9066-A693-4421-8A01-28AD760978E6}.Debug|x86.Build.0 = Debug|Any CPU
+		{95FD9066-A693-4421-8A01-28AD760978E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95FD9066-A693-4421-8A01-28AD760978E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95FD9066-A693-4421-8A01-28AD760978E6}.Release|arm64.ActiveCfg = Release|Any CPU
+		{95FD9066-A693-4421-8A01-28AD760978E6}.Release|arm64.Build.0 = Release|Any CPU
+		{95FD9066-A693-4421-8A01-28AD760978E6}.Release|x64.ActiveCfg = Release|Any CPU
+		{95FD9066-A693-4421-8A01-28AD760978E6}.Release|x64.Build.0 = Release|Any CPU
+		{95FD9066-A693-4421-8A01-28AD760978E6}.Release|x86.ActiveCfg = Release|Any CPU
+		{95FD9066-A693-4421-8A01-28AD760978E6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

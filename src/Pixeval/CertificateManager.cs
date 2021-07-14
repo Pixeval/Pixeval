@@ -14,14 +14,9 @@ namespace Pixeval
 
         public static async Task<X509Certificate2> GetFakeCaRootCertificate()
         {
-            return new(await App.GetResourceBytes("ms-appx:///Assets/pixeval_ca.cer"));
+            return new(await AppContext.GetAssetBytes("Certs/pixeval_ca.cer"));
         }
-        
-        public static async Task<X509Certificate2> GetFakeServerCertificate()
-        {
-            return new(await App.GetResourceBytes("ms-appx:///Assets/pixeval_server_cert.cer"));
-        }
-        
+
         public void Install(StoreName storeName, StoreLocation storeLocation)
         {
             using var store = new X509Store(storeName, storeLocation);

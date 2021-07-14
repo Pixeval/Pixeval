@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -22,7 +23,7 @@ namespace Pixeval.SourceGen
             if (context.AdditionalFiles.Where(
                     f => context.AnalyzerConfigOptions.GetOptions(f).TryGetValue(SourceItemGroupMetadata, out var sourceItemGroup)
                          && sourceItemGroup == "PRIResource"
-                         && f.Path.EndsWith(".resw")).ToImmutableArray() is var resources
+                         && f.Path.EndsWith(".resw")).Distinct(new AdditionalTextEqualityComparer()).ToImmutableArray() is var resources
                 && resources.Any())
             {
                 const char open = '{';
@@ -43,7 +44,7 @@ namespace Pixeval.SourceGen
                             foreach (var node in elements)
                             {
                                 var name = node.GetAttribute("name");
-                                if (node.ChildNodes.Cast<object>().FirstOrDefault(n => n is XmlElement {Name: "value"}) is XmlElement ele)
+                                if (node.ChildNodes.Cast<object>().FirstOrDefault(n => n is XmlElement { Name: "value" }) is XmlElement ele)
                                 {
                                     classBuilder.AppendLine(@$"public const string {name.Replace(".", string.Empty)} = ""{ele.FirstChild.Value}"";");
                                 }
