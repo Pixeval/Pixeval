@@ -105,7 +105,7 @@
         <NavigationView.FooterMenuItems>
             <NavigationViewItem>
                 <StackPanel Margin="-6,0,0,0" Orientation="Horizontal">
-                    <!--<PersonPicture Height="20" Width="20" ProfilePicture="../Assets/Images/60544664.png" BadgeText="DC" />-->
+                    <PersonPicture Height="20" Width="20" />
                     <TextBlock x:Uid="/MainPage/AccountTab" Margin="10,0,0,0" />
                 </StackPanel>
             </NavigationViewItem>

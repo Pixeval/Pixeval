@@ -2,7 +2,7 @@
 
 namespace Pixeval.LoginProxy
 {
-    public class LoginTokenResponse
+    public class LoginTokenRequest
     {
         [JsonPropertyName("errno")]
         public int Errno { get; set; }
@@ -12,5 +12,8 @@ namespace Pixeval.LoginProxy
 
         [JsonPropertyName("code")]
         public string? Code { get; set; }
+
+        [JsonPropertyName("verifier")]
+        public string? Verifier { get; set; }
     }
 }

@@ -12,27 +12,24 @@
     <DefaultLanguage>zh-CN</DefaultLanguage>
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="Assets\Texts\PACTemplate.template" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Pages\MessageDialogContent.xaml" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.0.3" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.0.3" />
-    <PackageReference Include="Mako" Version="1.0.1" />
+    <PackageReference Include="Mako" Version="1.0.2" />
     <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.0" />
     <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.0" />
     <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.4" />
     <PackageReference Include="PInvoke.User32" Version="0.7.104" />
     <PackageReference Include="PropertyChanged.Fody" Version="3.4.0" />
+    <PackageReference Include="System.Linq.Async" Version="5.0.0" />
     <Manifest Include="$(ApplicationManifest)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PRIResource Include="Assets\Strings\zh-CN\MessageContentDialog.resw">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </PRIResource>
   </ItemGroup>
 
   <!-- region Exposes PRI resources to the source generator -->

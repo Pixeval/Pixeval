@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
 using CommunityToolkit.WinUI.Helpers;
+using Pixeval.Events;
 using Pixeval.Util;
 
 namespace Pixeval
@@ -31,6 +32,8 @@ namespace Pixeval
         /// <returns></returns>
         public static async Task CopyLoginProxyIfRequired()
         {
+            var tcs = new TaskCompletionSource();
+            await App.PixevalEventChannel.Publish(new ScanningLoginProxyEvent(tcs.Task));
             var assetFile = await GetAssetBytes("Binary/Pixeval.LoginProxy.zip");
             var assetChecksum = await assetFile.HashAsync<SHA256CryptoServiceProvider>();
             if (await TryGetFolderRelativeToLocalFolderAsync(AppLoginProxyFolder) is { } folder
@@ -40,9 +43,11 @@ namespace Pixeval
                 {
                     await CopyLoginProxyZipFileAndExtractInternal(assetFile, assetChecksum);
                 }
+                tcs.SetResult();
                 return;
             }
             await CopyLoginProxyZipFileAndExtractInternal(assetFile, assetChecksum);
+            tcs.SetResult();
         }
 
         private static async Task CopyLoginProxyZipFileAndExtractInternal(byte[] assetFile, string checksum)

@@ -120,8 +120,7 @@
   <data name="CannotFindLoginProxyServerExecutable" xml:space="preserve">
     <value>找不到用于登录的可执行文件，请重新打开应用或者联系开发者</value>
   </data>
-  <data name="ProxyServerConnectToTargetHostFailedFormatted" xml:space="preserve">
-    <value>尝试连接到主机{0}失败</value>
-    <comment>{0}: 主机名</comment>
+  <data name="UnexpectedBehavior" xml:space="preserve">
+    <value>发生了未定义的行为，如果你看到了该信息，请联系开发者寻求帮助</value>
   </data>
 </root>

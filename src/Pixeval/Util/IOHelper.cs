@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 using System.Text;
@@ -62,6 +65,21 @@ namespace Pixeval.Util
         public static async Task<string> ReadStringAsync(this StorageFile storageFile, Encoding? encoding = null)
         {
             return (await storageFile.ReadBytesAsync()).GetString(encoding);
+        }
+
+        public static Task<HttpResponseMessage> PostFormAsync(this HttpClient httpClient, string url, params (string key, string value)[] parameters)
+        {
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = new FormUrlEncodedContent(parameters.Select(tuple => new KeyValuePair<string?, string?>(tuple.key, tuple.value)))
+                {
+                    Headers =
+                    {
+                        ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded")
+                    }
+                }
+            };
+            return httpClient.SendAsync(httpRequestMessage);
         }
     }
 }

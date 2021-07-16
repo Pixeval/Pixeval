@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.UI.Xaml;
-using System.Globalization;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.Events;
 using Pixeval.Util;
 using Pixeval.ViewModel;
 
@@ -22,21 +22,18 @@ namespace Pixeval.Pages
         {
             try
             {
-                _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.CheckingRefreshAvailable);
                 if (await _viewModel.CheckRefreshAvailable())
                 {
-                    _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.Refreshing);
                     await _viewModel.Refresh();
                     Frame.Navigate(typeof(MainPage), null, new SlideNavigationTransitionInfo());
                 }
                 else
                 {
-                    _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.NegotiatingPort);
-                    var port = IOHelper.NegotiatePort();
-                    _viewModel.AdvancePhase(LoginPageViewModel.LoginPhaseEnum.ExecutingLoginProxy);
-                    LoginPageViewModel.CallLoginProxy(CultureInfo.CurrentCulture.Name, port);
-                    var (cookie, token) = await LoginPageViewModel.WhenLoginTokenRequestedAsync(port);
+                    await _viewModel.WebLogin();
+                    Frame.Navigate(typeof(MainPage), null, new SlideNavigationTransitionInfo());
                 }
+
+                await App.PixevalEventChannel.Publish(new LoginCompletedEvent(this, App.PixevalAppClient!.Session));
             }
             catch (Exception exception)
             {

@@ -136,6 +136,12 @@
   <data name="LoginPhaseRefreshing" xml:space="preserve">
     <value>正在刷新现有会话...</value>
   </data>
+  <data name="LoginProxyCannotFindCertificate" xml:space="preserve">
+    <value>找不到对应的证书文件，请重新启动应用程序\n如果该问题反复出现，请联系开发者寻求解决</value>
+  </data>
+  <data name="LoginProxyConnectToHostFailed" xml:space="preserve">
+    <value>连接到主机失败</value>
+  </data>
   <data name="RefreshingSessionIsNotPresentContent" xml:space="preserve">
     <value>已经删除损坏的文件，请重新启动应用程序\n如果该问题反复出现，请联系开发者寻求解决</value>
   </data>

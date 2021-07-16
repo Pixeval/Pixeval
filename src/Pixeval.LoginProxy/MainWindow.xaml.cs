@@ -92,10 +92,11 @@ namespace Pixeval.LoginProxy
 
             var (url, cookie) = await _webViewCompletion.Task;
             var code = HttpUtility.ParseQueryString(new Uri(url).Query)["code"];
-            await Interop.PostJsonToPixevalClient("/login/token", new LoginTokenResponse
+            await Interop.PostJsonToPixevalClient("/login/token", new LoginTokenRequest
             {
                 Cookie = cookie,
-                Code = code
+                Code = code,
+                Verifier = codeVerifier
             });
             Close();
         }

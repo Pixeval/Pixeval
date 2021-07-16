@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using Pixeval.ViewModel;
 
 namespace Pixeval.Pages
@@ -28,6 +29,15 @@ namespace Pixeval.Pages
         private void MainPageRootNavigationView_OnDisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)
         {
             RearrangeMainPageAutoSuggestionBoxMargin();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            if (e.SourcePageType == typeof(LoginPage)) // The login is completed 
+            {
+                // _viewModel.Setup();
+            } 
         }
 
         #region Helper Functions

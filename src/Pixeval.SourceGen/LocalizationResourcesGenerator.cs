@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -35,7 +34,7 @@ namespace Pixeval.SourceGen
                     {
                         var className = $"{Path.GetFileNameWithoutExtension(additionalText.Path)}Resources";
                         using var classBuilder = namespaceBuilder.Block($"public static class {className}", open, close);
-                        classBuilder.AppendLine(@$"public static readonly Microsoft.ApplicationModel.Resources.ResourceLoader ResourceLoader = new(""{Path.GetFileNameWithoutExtension(additionalText.Path)}"");");
+                        classBuilder.AppendLine(@$"public static readonly Microsoft.ApplicationModel.Resources.ResourceLoader ResourceLoader = new(Microsoft.ApplicationModel.Resources.ResourceLoader.GetDefaultResourceFilePath(), ""{Path.GetFileNameWithoutExtension(additionalText.Path)}"");");
                         var doc = new XmlDocument();
                         doc.Load(additionalText.Path);
                         if (doc.SelectNodes("//data") is { } nodes)
@@ -44,10 +43,7 @@ namespace Pixeval.SourceGen
                             foreach (var node in elements)
                             {
                                 var name = node.GetAttribute("name");
-                                if (node.ChildNodes.Cast<object>().FirstOrDefault(n => n is XmlElement { Name: "value" }) is XmlElement ele)
-                                {
-                                    classBuilder.AppendLine(@$"public const string {name.Replace(".", string.Empty)} = ""{ele.FirstChild.Value}"";");
-                                }
+                                classBuilder.AppendLine(@$"public static readonly string {name.Replace(".", string.Empty)} = ResourceLoader.GetString(""{name}"");");
                             }
                         }
                     }

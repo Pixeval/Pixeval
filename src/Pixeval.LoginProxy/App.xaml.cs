@@ -13,6 +13,10 @@ namespace Pixeval.LoginProxy
 
         protected override void OnStartup(StartupEventArgs e)
         {
+#if DEBUG
+            Culture = "zh-CN";
+            Port = 6133;
+#else
             if (e.Args.Length >= 2 && int.TryParse(e.Args[0], out _))
             {
                 Culture = e.Args[1];
@@ -22,7 +26,7 @@ namespace Pixeval.LoginProxy
                 {
                     if (args.ExceptionObject is PixivWebLoginException webLoginException)
                     {
-                        Interop.PostJsonToPixevalClient("/login/token", new LoginTokenResponse
+                        Interop.PostJsonToPixevalClient("/login/token", new LoginTokenRequest
                         {
                             Errno = (int) webLoginException.Reason
                         }).ContinueWith(t =>
@@ -35,10 +39,12 @@ namespace Pixeval.LoginProxy
                     }
                 };
                 return;
+
             }
 
             MessageBox.Show("Illegal Arguments", "Unexpected Error", MessageBoxButton.OK, MessageBoxImage.Error);
             Environment.Exit(-1);
+#endif
         }
     }
 }

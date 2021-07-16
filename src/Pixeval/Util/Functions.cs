@@ -28,7 +28,5 @@ namespace Pixeval.Util
                 // ignore
             }
         }
-
-        public static T Identity<T>(T o) => o;
     }
 }
