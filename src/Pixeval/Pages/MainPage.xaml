@@ -32,7 +32,7 @@
         </NavigationView.Resources>
         <NavigationView.PaneHeader>
             <Grid>
-                <Grid Margin="10,-80,0,0" Height="40" Background="{ThemeResource NavigationViewTopPaneBackground}" />
+                <Grid Margin="0,-80,0,0" Height="40" Background="{ThemeResource NavigationViewTopPaneBackground}" />
                 <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Text="Pixeval" />
             </Grid>
         </NavigationView.PaneHeader>
