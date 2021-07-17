@@ -22,18 +22,19 @@ namespace Pixeval.Pages
         {
             try
             {
-                if (await _viewModel.CheckRefreshAvailable())
+                if (_viewModel.CheckRefreshAvailable())
                 {
-                    await _viewModel.Refresh();
+                    await _viewModel.RefreshAsync();
                     Frame.Navigate(typeof(MainPage), null, new SlideNavigationTransitionInfo());
                 }
                 else
                 {
-                    await _viewModel.WebLogin();
+                    await _viewModel.WebLoginAsync();
                     Frame.Navigate(typeof(MainPage), null, new SlideNavigationTransitionInfo());
                 }
 
-                await App.PixevalEventChannel.Publish(new LoginCompletedEvent(this, App.PixevalAppClient!.Session));
+                AppContext.SaveContext();
+                await App.PixevalEventChannel.PublishAsync(new LoginCompletedEvent(this, App.PixevalAppClient!.Session));
             }
             catch (Exception exception)
             {

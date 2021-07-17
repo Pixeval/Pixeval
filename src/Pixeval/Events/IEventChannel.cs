@@ -8,7 +8,7 @@ namespace Pixeval.Events
     {
         void Subscribe<T>(Action<T> eventHandler) where T : IEvent;
 
-        ValueTask Publish<T>(T eventObj) where T : IEvent;
+        ValueTask PublishAsync<T>(T eventObj) where T : IEvent;
 
         void Start();
 

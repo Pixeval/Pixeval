@@ -1,6 +1,0 @@
-﻿function FindProxyForURL(url, host) {
-	if (dnsDomainIs(host, ".pixiv.net")) {
-		return "PROXY 127.0.0.1:{0};DIRECT;"
-	}
-	return "DIRECT";
-}

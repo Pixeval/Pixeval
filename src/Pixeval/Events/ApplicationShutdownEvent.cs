@@ -2,7 +2,11 @@
 
 namespace Pixeval.Events
 {
-    public class ApplicationShutdownEvent : IEvent
+    /// <summary>
+    /// This event will be published if the application encounters an unrecoverable error.
+    /// See <see cref="App()"/>
+    /// </summary>
+    public class ApplicationShutdownAbnormallyEvent : IEvent
     {
         public object? Sender => Application.Current;
     }

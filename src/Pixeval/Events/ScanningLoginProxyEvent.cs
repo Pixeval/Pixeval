@@ -3,19 +3,16 @@
 namespace Pixeval.Events
 {
     /// <summary>
-    /// Raises before the scanning of the LoginProxy files, and completes the <see cref="ScanTask"/>
-    /// when the scan completes
+    /// This event will be published once the scan process of the login proxy's zip file is completed.
+    /// See <see cref="AppContext.CopyLoginProxyIfRequiredAsync"/>
     /// </summary>
     public class ScanningLoginProxyEvent : IEvent
     {
-        public ScanningLoginProxyEvent(Task scanTask)
+        public ScanningLoginProxyEvent()
         {
             Sender = null;
-            ScanTask = scanTask;
         }
 
         public object? Sender { get; }
-
-        public Task ScanTask { get; }
     }
 }

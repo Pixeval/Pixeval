@@ -23,16 +23,17 @@ namespace Pixeval.ViewModel
 {
     public class LoginPageViewModel : INotifyPropertyChanged
     {
-        private static readonly Task ScanLoginProxyTask;
+        // A Task that completes when the scan process of the Pixeval.LoginProxy completes
+        // Note: the scan process consist of checksum matching and optionally file unzipping, see AppContext.CopyLoginProxyIfRequired()
+        private static readonly TaskCompletionSource ScanLoginProxyTask = new();
 
         private static Process? _loginProxyProcess;
 
         static LoginPageViewModel()
         {
-            ScanLoginProxyTask = App.PixevalEventChannel.SubscribeTask<ScanningLoginProxyEvent>((evt, source) =>
-            {
-                evt.ScanTask.ContinueWith(_ => source.SetResult());
-            });
+            App.PixevalEventChannel.Subscribe<ScanningLoginProxyEvent>(_ => ScanLoginProxyTask.SetResult());
+            // Kill the login proxy process if the application encounters exception
+            App.PixevalEventChannel.Subscribe<ApplicationShutdownAbnormallyEvent>(_ => _loginProxyProcess?.Kill());
         }
 
         public class LoginTokenResponse
@@ -83,30 +84,43 @@ namespace Pixeval.ViewModel
             LoginPhase = newPhase;
         }
 
-        public async Task<bool> CheckRefreshAvailable()
+        public static string GetLoginPhaseString(LoginPhaseEnum loginPhase)
+        {
+            return (string)typeof(LoginPageResources).GetField(loginPhase.GetMetadataOnEnumMember()!)?.GetValue(null)!;
+        }
+
+
+        /// <summary>
+        /// Check if the session file exists and satisfies the following four conditions: <br></br>
+        /// 1. The <see cref="Session"/> object deserialized from the file is not null <br></br>
+        /// 2. The <see cref="Session.RefreshToken"/> is not null <br></br>
+        /// 3. The <see cref="Session.Cookie"/> is not null <br></br>
+        /// 4. The <see cref="Session.CookieCreation"/> is within last seven days <br></br>
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckRefreshAvailable()
         {
             AdvancePhase(LoginPhaseEnum.CheckingRefreshAvailable);
 
-            if (!File.Exists(AppContext.AppConfigurationFileName))
-            {
-                return false;
-            }
+            return AppContext.LoadSession() is { } session && CheckRefreshAvailableInternal(session);
+        }
 
-            var session = (await File.ReadAllTextAsync(AppContext.AppSessionFileName)).FromJson<Session>();
+        private static bool CheckRefreshAvailableInternal(Session? session)
+        {
             return session is not null && session.RefreshToken.IsNotNullOrEmpty() && session.Cookie.IsNotNullOrEmpty() && CookieNotExpired(session);
 
             static bool CookieNotExpired(Session session)
             {
-                return DateTime.Now - session.CookieCreation <= TimeSpan.FromDays(7); // check if the cookie is created within the last one week
+                return DateTimeOffset.Now - session.CookieCreation <= TimeSpan.FromDays(7); // check if the cookie is created within the last one week
             }
         }
 
-        public async Task Refresh()
+        public async Task RefreshAsync()
         {
             AdvancePhase(LoginPhaseEnum.Refreshing);
-            if ((await File.ReadAllTextAsync(AppContext.AppSessionFileName)).FromJson<Session>() is { } session && session.RefreshToken.IsNotNullOrEmpty() && session.Cookie.IsNotNullOrEmpty())
+            if (AppContext.LoadSession() is { } session && CheckRefreshAvailableInternal(session))
             {
-                App.PixevalAppClient = new MakoClient(session, await LoadMakoClientConfiguration() ?? new MakoClientConfiguration(), new RefreshTokenSessionUpdate());
+                App.PixevalAppClient = new MakoClient(session, AppContext.LoadConfiguration() ?? new MakoClientConfiguration(), new RefreshTokenSessionUpdate());
                 await App.PixevalAppClient.RefreshSessionAsync();
             }
             else
@@ -118,31 +132,31 @@ namespace Pixeval.ViewModel
                     .WithDefaultButton(ContentDialogButton.Primary)
                     .Build(App.Window)
                     .ShowAsync();
-                await AppContext.AppLocalFolder.ClearDirectoryAsync();
+                await AppContext.ClearAppLocalFolderAsync();
                 Application.Current.Exit();
             }
         }
 
-        public async Task WebLogin()
+        public async Task WebLoginAsync()
         {
-            await AppContext.CopyLoginProxyIfRequired();
+            // the web login requires another process to be created and started from this process
+            // so check its presence before starts the login procedure
+            await AppContext.CopyLoginProxyIfRequiredAsync();
             AdvancePhase(LoginPhaseEnum.NegotiatingPort);
             var port = IOHelper.NegotiatePort();
             AdvancePhase(LoginPhaseEnum.ExecutingLoginProxy);
-            await ScanLoginProxyTask;
-            _loginProxyProcess = await CallLoginProxy(ApplicationLanguages.ManifestLanguages[0], port);
-            var (cookie, code, verifier) = await WhenLoginTokenRequestedAsync(port);
-            var session = await AuthCodeToSession(code, verifier, cookie);
-            _loginProxyProcess = null;
-            App.PixevalAppClient = new MakoClient(session, await LoadMakoClientConfiguration() ?? new MakoClientConfiguration(), new RefreshTokenSessionUpdate());
+            await ScanLoginProxyTask.Task; // awaits the copy and extract operations to complete
+            _loginProxyProcess = await CallLoginProxyAsync(ApplicationLanguages.ManifestLanguages[0], port); // calls the login proxy process and passes the language and IPC server port
+            var (cookie, code, verifier) = await WhenLoginTokenRequestedAsync(port); // awaits the login proxy to sends the post request which contains the login result
+            var session = await AuthCodeToSessionAsync(code, verifier, cookie);
+            _loginProxyProcess = null; // if we reach here then the login procedure completes successfully, the login proxy process has been closed by itself, we do not need the control over it
+            App.PixevalAppClient = new MakoClient(session, AppContext.LoadConfiguration() ?? new MakoClientConfiguration(), new RefreshTokenSessionUpdate());
         }
 
-        public static string GetLoginPhaseString(LoginPhaseEnum loginPhase)
-        {
-            return (string) typeof(LoginPageResources).GetField(loginPhase.GetMetadataOnEnumMember()!)?.GetValue(null)!;
-        }
-
-        public static async Task<Process> CallLoginProxy(string culture, int port)
+        /// <summary>
+        /// Starts the login proxy's executable. and passes the required parameters
+        /// </summary>
+        public static async Task<Process> CallLoginProxyAsync(string culture, int port)
         {
             if (await AppContext.TryGetFileRelativeToLocalFolderAsync(Path.Combine(AppContext.AppLoginProxyFolder, "Pixeval.LoginProxy.exe")) is { } file)
             {
@@ -152,6 +166,7 @@ namespace Pixeval.ViewModel
             throw new FileNotFoundException(MiscResources.CannotFindLoginProxyServerExecutable, "Pixeval.LoginProxy.exe");
         }
 
+        [ContractAnnotation("=> halt")]
         public static async Task<(string cookie, string code, string verifier)> WhenLoginTokenRequestedAsync(int port)
         {
             // shit code
@@ -195,7 +210,7 @@ namespace Pixeval.ViewModel
             }
         }
 
-        public static async Task<Session> AuthCodeToSession(string code, string verifier, string cookie)
+        public static async Task<Session> AuthCodeToSessionAsync(string code, string verifier, string cookie)
         {
             // HttpClient is designed to be used through whole application lifetime, create and
             // dispose it in a function is a commonly misused anti-pattern, but this function
@@ -215,13 +230,14 @@ namespace Pixeval.ViewModel
             result.EnsureSuccessStatusCode();
             return (await result.Content.ReadAsStringAsync()).FromJson<TokenResponse>()!.ToSession() with
             {
-                Cookie = cookie
+                Cookie = cookie,
+                CookieCreation = DateTimeOffset.Now
             };
         }
 
-        private static async Task<MakoClientConfiguration?> LoadMakoClientConfiguration()
+        public static void Cleanup()
         {
-            return await AppContext.TryGetFileRelativeToLocalFolderAsync(AppContext.AppConfigurationFileName) is { } file ? (await file.ReadStringAsync()).FromJson<MakoClientConfiguration>() : null;
+            _loginProxyProcess?.Kill();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

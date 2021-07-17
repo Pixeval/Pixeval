@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
@@ -32,11 +33,10 @@ namespace Pixeval.Util
             return bytes.Select(b => b.ToString("X2")).Aggregate((s1, s2) => s1 + s2);
         }
 
-        /// <summary>
-        /// Prevent XAML compiler from complaining
-        /// </summary>
-        /// <param name="o"></param>
-        /// <returns></returns>
-        public static string StringIdentity(string o) => o;
+        public static T CastOrThrow<T>(this object? obj)
+        {
+            // Debugger compliant: NullReferenceException will cause debugger to break, meanwhile the NRE is not supposed to be thrown by developer
+            return (T) (obj ?? throw new InvalidCastException());
+        }
     }
 }

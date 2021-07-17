@@ -121,7 +121,8 @@
     <value>登录过程出现异常</value>
   </data>
   <data name="ErrorWhileLogginInContentFormatted" xml:space="preserve">
-    <value>应用程序即将退出，以下是异常信息：\n {0}</value>
+    <value>应用程序即将退出，以下是异常信息：
+{0}</value>
     <comment>{0}: error message</comment>
   </data>
   <data name="LoginPhaseCheckingRefreshAvailable" xml:space="preserve">
@@ -137,13 +138,15 @@
     <value>正在刷新现有会话...</value>
   </data>
   <data name="LoginProxyCannotFindCertificate" xml:space="preserve">
-    <value>找不到对应的证书文件，请重新启动应用程序\n如果该问题反复出现，请联系开发者寻求解决</value>
+    <value>找不到对应的证书文件，请重新启动应用程序
+如果该问题反复出现，请联系开发者寻求解决</value>
   </data>
   <data name="LoginProxyConnectToHostFailed" xml:space="preserve">
     <value>连接到主机失败</value>
   </data>
   <data name="RefreshingSessionIsNotPresentContent" xml:space="preserve">
-    <value>已经删除损坏的文件，请重新启动应用程序\n如果该问题反复出现，请联系开发者寻求解决</value>
+    <value>已经删除损坏的文件，请重新启动应用程序
+如果该问题反复出现，请联系开发者寻求解决</value>
   </data>
   <data name="RefreshingSessionIsNotPresentTitle" xml:space="preserve">
     <value>必要的配置文件不存在</value>

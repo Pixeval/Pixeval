@@ -32,36 +32,29 @@ namespace Pixeval.Events
 
         public void Subscribe<T>(Action<T> eventHandler) where T : IEvent
         {
-            void Wrapper(IEvent evt) => eventHandler((T) evt);
-            if (_registeredSubscribers.TryGetValue(typeof(T), out var list))
-            {
-                list.Add(Wrapper);
-            }
-
-            _registeredSubscribers[typeof(T)] = new List<Action<IEvent>> {Wrapper};
+            GetOrCreateSubscriber<T>(evt => eventHandler((T) evt));
         }
 
-        /// <summary>
-        /// Exposes the control-flow inside the callee to the caller by using <see cref="TaskCompletionSource"/>
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="eventHandler"></param>
-        /// <returns></returns>
-        public Task SubscribeTask<T>(Action<T, TaskCompletionSource> eventHandler) where T : IEvent
+        public Task SubscribeAsync<T>(Func<T, Task> eventHandler) where T : IEvent
         {
             var tcs = new TaskCompletionSource();
-            void Wrapper(IEvent evt) => eventHandler((T) evt, tcs);
-            if (_registeredSubscribers.TryGetValue(typeof(T), out var list))
-            {
-                list.Add(Wrapper);
-            }
-
-            _registeredSubscribers[typeof(T)] = new List<Action<IEvent>> { Wrapper };
+            GetOrCreateSubscriber<T>(evt => eventHandler((T) evt).ContinueWith(_ => tcs.SetResult()));
             return tcs.Task;
         }
 
+        private void GetOrCreateSubscriber<T>(Action<IEvent> handler) where T : IEvent
+        {
+            if (_registeredSubscribers.TryGetValue(typeof(T), out var list))
+            {
+                list.Add(handler);
+                return;
+            }
 
-        public ValueTask Publish<T>(T eventObj) where T : IEvent
+            _registeredSubscribers[typeof(T)] = new List<Action<IEvent>> {handler};
+        }
+
+
+        public ValueTask PublishAsync<T>(T eventObj) where T : IEvent
         {
             return _eventChannel.Writer.WriteAsync(eventObj);
         }
@@ -70,17 +63,17 @@ namespace Pixeval.Events
         {
             // Start a event loop that runs at background
             Task.Run(async () =>
-            {
-                var reader = _eventChannel.Reader;
-                while (!reader.Completion.IsCompleted)
-                {
-                    var evt = await reader.ReadAsync();
-                    if (_registeredSubscribers.TryGetValue(evt.GetType(), out var list))
-                    {
-                        list.ForEach(action => action(evt));
-                    }
-                }
-            });
+              {
+                  var reader = _eventChannel.Reader;
+                  while (!reader.Completion.IsCompleted)
+                  {
+                      var evt = await reader.ReadAsync();
+                      if (_registeredSubscribers.TryGetValue(evt.GetType(), out var list))
+                      {
+                          list.ForEach(action => action(evt));
+                      }
+                  }
+              });
         }
 
         public void Close()
