@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Windows.Globalization;
@@ -16,6 +17,7 @@ using Mako.Preference;
 using Mako.Util;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.Win32;
 using Pixeval.Events;
 using Pixeval.Util;
 
@@ -33,7 +35,7 @@ namespace Pixeval.ViewModel
         {
             App.PixevalEventChannel.Subscribe<ScanningLoginProxyEvent>(_ => ScanLoginProxyTask.SetResult());
             // Kill the login proxy process if the application encounters exception
-            App.PixevalEventChannel.Subscribe<ApplicationShutdownAbnormallyEvent>(_ => _loginProxyProcess?.Kill());
+            App.PixevalEventChannel.Subscribe<ApplicationExitingEvent>(_ => _loginProxyProcess?.Kill());
         }
 
         public class LoginTokenResponse
@@ -63,7 +65,16 @@ namespace Pixeval.ViewModel
             NegotiatingPort,
 
             [Metadata(nameof(LoginPageResources.LoginPhaseExecutingLoginProxy))]
-            ExecutingLoginProxy
+            ExecutingLoginProxy,
+
+            [Metadata(nameof(LoginPageResources.LoginPhaseCheckingCertificateInstallation))]
+            CheckingCertificateInstallation,
+
+            [Metadata(nameof(LoginPageResources.LoginPhaseInstallingCertificate))]
+            InstallingCertificate,
+
+            [Metadata(nameof(LoginPageResources.LoginPhaseCheckingWebView2Installation))]
+            CheckingWebView2Installation
         }
 
         private LoginPhaseEnum _loginPhase;
@@ -89,6 +100,31 @@ namespace Pixeval.ViewModel
             return (string)typeof(LoginPageResources).GetField(loginPhase.GetMetadataOnEnumMember()!)?.GetValue(null)!;
         }
 
+        public bool CheckWebView2Installation()
+        {
+            AdvancePhase(LoginPhaseEnum.CheckingWebView2Installation);
+            var regKey = Registry.LocalMachine.OpenSubKey(
+                Environment.Is64BitOperatingSystem
+                    ? "SOFTWARE\\WOW6432Node\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
+                    : "SOFTWARE\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}");
+            return regKey != null && !(regKey.GetValue("pv") as string).IsNullOrEmpty();
+        }
+
+        public async Task<bool> CheckFakeRootCertificateInstallationAsync()
+        {
+            AdvancePhase(LoginPhaseEnum.CheckingCertificateInstallation);
+            using var cert = await AppContext.GetFakeCaRootCertificateAsync();
+            var fakeCertMgr = new CertificateManager(cert);
+            return fakeCertMgr.Query(StoreName.Root, StoreLocation.CurrentUser);
+        }
+
+        public async Task InstallFakeRootCertificateAsync()
+        {
+            AdvancePhase(LoginPhaseEnum.InstallingCertificate);
+            using var cert = await AppContext.GetFakeCaRootCertificateAsync();
+            var fakeCertMgr = new CertificateManager(cert);
+            fakeCertMgr.Install(StoreName.Root, StoreLocation.CurrentUser);
+        }
 
         /// <summary>
         /// Check if the session file exists and satisfies the following four conditions: <br></br>
@@ -225,8 +261,7 @@ namespace Pixeval.ViewModel
                 ("client_secret", "lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj"),
                 ("grant_type", "authorization_code"),
                 ("include_policy", "true"),
-                ("redirect_uri", "https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback")
-            );
+                ("redirect_uri", "https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback"));
             result.EnsureSuccessStatusCode();
             return (await result.Content.ReadAsStringAsync()).FromJson<TokenResponse>()!.ToSession() with
             {

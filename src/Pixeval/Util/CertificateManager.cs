@@ -1,5 +1,4 @@
 ﻿using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 
 namespace Pixeval
 {
@@ -10,11 +9,6 @@ namespace Pixeval
         public CertificateManager(X509Certificate2 certificate)
         {
             _cert = certificate;
-        }
-
-        public static async Task<X509Certificate2> GetFakeCaRootCertificateAsync()
-        {
-            return new(await AppContext.GetAssetBytesAsync("Certs/pixeval_ca.cer"));
         }
 
         public void Install(StoreName storeName, StoreLocation storeLocation)

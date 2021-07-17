@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
@@ -35,11 +36,7 @@ namespace Pixeval
             SessionContainer = ApplicationData.Current.LocalSettings.Containers[SessionContainerKey];
             ConfigurationContainer = ApplicationData.Current.RoamingSettings.Containers[ConfigurationContainerKey];
 
-            App.PixevalEventChannel.Subscribe<ApplicationShutdownAbnormallyEvent>(_ =>
-            {
-                SaveConfiguration();
-                SaveSession();
-            });
+            App.PixevalEventChannel.Subscribe<ApplicationExitingEvent>(_ => SaveContext());
         }
 
         public const string AppIdentifier = "Pixeval";
@@ -140,6 +137,11 @@ namespace Pixeval
             return AppLocalFolder.ClearDirectoryAsync();
         }
 
+        public static async Task<X509Certificate2> GetFakeCaRootCertificateAsync()
+        {
+            return new(await GetAssetBytesAsync("Certs/pixeval_ca.cer"));
+        }
+
         public static void SaveContext()
         {
             SaveSession();
@@ -193,7 +195,7 @@ namespace Pixeval
                     RefreshToken = values[nameof(Session.RefreshToken)].CastOrThrow<string>()
                 };
             }
-            catch (Exception e)
+            catch
             {
                 return null;
             }

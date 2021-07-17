@@ -125,11 +125,20 @@
 {0}</value>
     <comment>{0}: error message</comment>
   </data>
+  <data name="LoginPhaseCheckingCertificateInstallation" xml:space="preserve">
+    <value>正在检查证书安装情况...</value>
+  </data>
   <data name="LoginPhaseCheckingRefreshAvailable" xml:space="preserve">
     <value>正在检查是否可以刷新现有会话...</value>
   </data>
+  <data name="LoginPhaseCheckingWebView2Installation" xml:space="preserve">
+    <value>正在检查WebView2安装情况...</value>
+  </data>
   <data name="LoginPhaseExecutingLoginProxy" xml:space="preserve">
     <value>正在调用登录代理，请在新打开的窗口中完成登录...</value>
+  </data>
+  <data name="LoginPhaseInstallingCertificate" xml:space="preserve">
+    <value>正在安装证书，请在打开的对话框中点击确认...</value>
   </data>
   <data name="LoginPhaseNegotiatingPort" xml:space="preserve">
     <value>正在协商登录代理端口...</value>
@@ -150,5 +159,17 @@
   </data>
   <data name="RefreshingSessionIsNotPresentTitle" xml:space="preserve">
     <value>必要的配置文件不存在</value>
+  </data>
+  <data name="RootCertificateInstallationRequiredContent" xml:space="preserve">
+    <value>如不安装证书则无法正常登录，本证书的私钥不会被分发，选择确认即代表您将会安装该证书，请在接下来弹出的对话框中选择确认/OK，如果您拒绝安装则无法继续使用本应用</value>
+  </data>
+  <data name="RootCertificateInstallationRequiredTitle" xml:space="preserve">
+    <value>检测到本用户尚未安装证书</value>
+  </data>
+  <data name="WebView2InstallationRequiredContent" xml:space="preserve">
+    <value>如不安装WebView2则无法正常登录，选择确认将会自动打开浏览器为您下载WebView2 Runtime，请您双击exe文件安装后重启应用。如果选择取消则无法继续使用本应用</value>
+  </data>
+  <data name="WebView2InstallationRequiredTitle" xml:space="preserve">
+    <value>检测到本机尚未安装WebView2 Runtime</value>
   </data>
 </root>

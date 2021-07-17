@@ -10,6 +10,16 @@ namespace Pixeval.Util
 
         public static MessageDialogBuilder Create() => new();
 
+        public static ContentDialog CreateOkCancel(UserControl owner, string title, string content, string okButtonText, string cancelButtonText)
+        {
+            return Create().WithTitle(title)
+                .WithContent(content)
+                .WithPrimaryButtonText(okButtonText)
+                .WithCloseButtonText(cancelButtonText)
+                .WithDefaultButton(ContentDialogButton.Primary)
+                .Build(owner);
+        }
+
         public MessageDialogBuilder WithTitle(string title)
         {
             _contentDialog.Title = title;
@@ -46,7 +56,7 @@ namespace Pixeval.Util
             return this;
         }
 
-        public ContentDialog Build(Page owner) // the owner argument is a workaround for issue #4870
+        public ContentDialog Build(UserControl owner) // the owner argument is a workaround for issue #4870
         {
             _contentDialog.XamlRoot = owner.Content.XamlRoot;
             return _contentDialog;

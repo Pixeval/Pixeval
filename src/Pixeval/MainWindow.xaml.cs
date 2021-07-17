@@ -1,6 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
 using Pixeval.Pages;
-using Pixeval.ViewModel;
 
 namespace Pixeval
 {
@@ -17,7 +16,7 @@ namespace Pixeval
             PixevalAppRootFrame.Navigate(typeof(LoginPage));
         }
 
-        private void MainWindow_OnClosed(object sender, WindowEventArgs args)
+        private async void MainWindow_OnClosed(object sender, WindowEventArgs args)
         {
             // This trick sucks, I doubt that the coupling here is inevitable unless one day in the future the 
             // WebView2 of WinUI will support proxy
@@ -25,8 +24,8 @@ namespace Pixeval
             // to publish the event and the subscriber to execute the callback, if we publish an event here, it is impossible
             // to guarantee the subscriber will receive this event, because the whole CLR might already shutdown before that
             // happens, the same logic also applies to the next line
-            LoginPageViewModel.Cleanup();
-            AppContext.SaveContext();
+            args.Handled = true;
+            await App.ExitWithPushedNotification();
         }
     }
 }

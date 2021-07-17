@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Mako;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -24,7 +25,6 @@ namespace Pixeval
             UnhandledException += async (_, args) =>
             {
                 args.Handled = true;
-                await PixevalEventChannel.PublishAsync(new ApplicationShutdownAbnormallyEvent());
                 await MessageDialogBuilder.Create()
                     .WithTitle(MiscResources.ExceptionEncountered)
                     .WithContent(args.Message)
@@ -32,7 +32,7 @@ namespace Pixeval
                     .WithDefaultButton(ContentDialogButton.Primary)
                     .Build(Window)
                     .ShowAsync();
-                Current.Exit();
+                await ExitWithPushedNotification();
             };
         }
 
@@ -42,6 +42,18 @@ namespace Pixeval
             var windowHandle = Window.As<IWindowNative>(); // see https://github.com/microsoft/WinUI-3-Demos/blob/master/src/Build2020Demo/DemoBuildCs/DemoBuildCs/DemoBuildCs/App.xaml.cs
             UIHelper.SetWindowSize(windowHandle.WindowHandle, 800, 600);
             Window.Activate();
+        }
+
+        /// <summary>
+        /// Exit the notification after pushing an <see cref="ApplicationExitingEvent"/>
+        /// to the <see cref="PixevalEventChannel"/>
+        /// </summary>
+        /// <returns></returns>
+        public static async Task ExitWithPushedNotification()
+        {
+            await PixevalEventChannel.PublishAsync(new ApplicationExitingEvent());
+            await Task.Delay(200); // well...just wait a second to let those subscribers handle the event
+            Current.Exit(); // TODO fixme: access violation when closing the app
         }
     }
 }
