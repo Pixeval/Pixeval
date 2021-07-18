@@ -4,11 +4,11 @@ using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Events;
+using Pixeval.Event;
 using Pixeval.Util;
 using Pixeval.ViewModel;
 
-namespace Pixeval.Pages
+namespace Pixeval.Page
 {
     public sealed partial class LoginPage
     {

@@ -9,7 +9,7 @@ using Windows.Foundation;
 using Windows.Storage;
 using CommunityToolkit.WinUI.Helpers;
 using Mako.Preference;
-using Pixeval.Events;
+using Pixeval.Event;
 using Pixeval.Util;
 
 namespace Pixeval

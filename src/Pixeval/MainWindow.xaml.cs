@@ -1,5 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
-using Pixeval.Pages;
+using Pixeval.Page;
 
 namespace Pixeval
 {
