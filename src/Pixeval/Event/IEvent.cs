@@ -1,4 +1,4 @@
-﻿namespace Pixeval.Events
+﻿namespace Pixeval.Event
 {
     public interface IEvent
     {

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Pixeval.Events
+namespace Pixeval.Event
 {
     /// <summary>
     /// This event will be published once the scan process of the login proxy's zip file is completed.

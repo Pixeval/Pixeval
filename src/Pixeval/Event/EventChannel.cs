@@ -7,7 +7,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using Mako.Util;
 
-namespace Pixeval.Events
+namespace Pixeval.Event
 {
     /// <summary>
     /// An uber-lightweight implementation of an event bus

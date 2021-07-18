@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 using Mako.Util;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.Events;
+using Pixeval.Event;
 
 namespace Pixeval.ViewModel
 {

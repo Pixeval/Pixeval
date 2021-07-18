@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Mako;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Events;
+using Pixeval.Event;
 using Pixeval.Interop;
 using Pixeval.Util;
 using WinRT;

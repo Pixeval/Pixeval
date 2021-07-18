@@ -18,7 +18,7 @@ using Mako.Util;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Win32;
-using Pixeval.Events;
+using Pixeval.Event;
 using Pixeval.Util;
 
 namespace Pixeval.ViewModel

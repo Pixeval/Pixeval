@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Pixeval.Events
+namespace Pixeval.Event
 {
     public interface IEventChannel : IAsyncEnumerable<IEvent>
     {

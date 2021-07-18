@@ -1,7 +1,7 @@
 ﻿using Mako.Preference;
-using Pixeval.Pages;
+using Pixeval.Page;
 
-namespace Pixeval.Events
+namespace Pixeval.Event
 {
     /// <summary>
     /// This event will be published once the login procedure is finished successfully.
