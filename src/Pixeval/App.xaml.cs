@@ -53,7 +53,6 @@ namespace Pixeval
         {
             await PixevalEventChannel.PublishAsync(new ApplicationExitingEvent());
             await Task.Delay(200); // well...just wait a second to let those subscribers handle the event
-            Current.Exit(); // TODO fixme: access violation when closing the app
         }
     }
 }

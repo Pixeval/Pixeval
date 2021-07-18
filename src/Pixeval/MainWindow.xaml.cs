@@ -24,7 +24,6 @@ namespace Pixeval
             // to publish the event and the subscriber to execute the callback, if we publish an event here, it is impossible
             // to guarantee the subscriber will receive this event, because the whole CLR might already shutdown before that
             // happens, the same logic also applies to the next line
-            args.Handled = true;
             await App.ExitWithPushedNotification();
         }
     }
