@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Mako;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Event;
+using Pixeval.Events;
 using Pixeval.Interop;
 using Pixeval.Util;
 using WinRT;
@@ -14,9 +14,9 @@ namespace Pixeval
     {
         public static MainWindow Window = null!;
 
-        public static readonly EventChannel PixevalEventChannel = EventChannel.CreateStarted();
+        public static readonly EventChannel EventChannel = EventChannel.CreateStarted();
 
-        public static MakoClient? PixevalAppClient { get; set; }
+        public static MakoClient? MakoClient { get; set; }
 
         public App()
         {
@@ -46,12 +46,12 @@ namespace Pixeval
 
         /// <summary>
         /// Exit the notification after pushing an <see cref="ApplicationExitingEvent"/>
-        /// to the <see cref="PixevalEventChannel"/>
+        /// to the <see cref="EventChannel"/>
         /// </summary>
         /// <returns></returns>
         public static async Task ExitWithPushedNotification()
         {
-            await PixevalEventChannel.PublishAsync(new ApplicationExitingEvent());
+            await EventChannel.PublishAsync(new ApplicationExitingEvent());
             await Task.Delay(200); // well...just wait a second to let those subscribers handle the event
         }
     }

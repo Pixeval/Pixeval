@@ -18,7 +18,7 @@ using Mako.Util;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Win32;
-using Pixeval.Event;
+using Pixeval.Events;
 using Pixeval.Util;
 
 namespace Pixeval.ViewModel
@@ -33,9 +33,9 @@ namespace Pixeval.ViewModel
 
         static LoginPageViewModel()
         {
-            App.PixevalEventChannel.Subscribe<ScanningLoginProxyEvent>(_ => ScanLoginProxyTask.SetResult());
+            App.EventChannel.Subscribe<ScanningLoginProxyEvent>(_ => ScanLoginProxyTask.SetResult());
             // Kill the login proxy process if the application encounters exception
-            App.PixevalEventChannel.Subscribe<ApplicationExitingEvent>(_ => _loginProxyProcess?.Kill());
+            App.EventChannel.Subscribe<ApplicationExitingEvent>(_ => _loginProxyProcess?.Kill());
         }
 
         public class LoginTokenResponse
@@ -97,7 +97,7 @@ namespace Pixeval.ViewModel
 
         public static string GetLoginPhaseString(LoginPhaseEnum loginPhase)
         {
-            return (string)typeof(LoginPageResources).GetField(loginPhase.GetMetadataOnEnumMember()!)?.GetValue(null)!;
+            return (string) typeof(LoginPageResources).GetField(loginPhase.GetMetadataOnEnumMember()!)?.GetValue(null)!;
         }
 
         public bool CheckWebView2Installation()
@@ -105,8 +105,8 @@ namespace Pixeval.ViewModel
             AdvancePhase(LoginPhaseEnum.CheckingWebView2Installation);
             var regKey = Registry.LocalMachine.OpenSubKey(
                 Environment.Is64BitOperatingSystem
-                    ? "SOFTWARE\\WOW6432Node\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
-                    : "SOFTWARE\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}");
+                    ? @"SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
+                    : @"SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}");
             return regKey != null && !(regKey.GetValue("pv") as string).IsNullOrEmpty();
         }
 
@@ -156,8 +156,8 @@ namespace Pixeval.ViewModel
             AdvancePhase(LoginPhaseEnum.Refreshing);
             if (AppContext.LoadSession() is { } session && CheckRefreshAvailableInternal(session))
             {
-                App.PixevalAppClient = new MakoClient(session, AppContext.LoadConfiguration() ?? new MakoClientConfiguration(), new RefreshTokenSessionUpdate());
-                await App.PixevalAppClient.RefreshSessionAsync();
+                App.MakoClient = new MakoClient(session, AppContext.LoadConfiguration() ?? new MakoClientConfiguration(), new RefreshTokenSessionUpdate());
+                await App.MakoClient.RefreshSessionAsync();
             }
             else
             {
@@ -186,7 +186,7 @@ namespace Pixeval.ViewModel
             var (cookie, code, verifier) = await WhenLoginTokenRequestedAsync(port); // awaits the login proxy to sends the post request which contains the login result
             var session = await AuthCodeToSessionAsync(code, verifier, cookie);
             _loginProxyProcess = null; // if we reach here then the login procedure completes successfully, the login proxy process has been closed by itself, we do not need the control over it
-            App.PixevalAppClient = new MakoClient(session, AppContext.LoadConfiguration() ?? new MakoClientConfiguration(), new RefreshTokenSessionUpdate());
+            App.MakoClient = new MakoClient(session, AppContext.LoadConfiguration() ?? new MakoClientConfiguration(), new RefreshTokenSessionUpdate());
         }
 
         /// <summary>

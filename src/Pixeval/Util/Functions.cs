@@ -28,5 +28,17 @@ namespace Pixeval.Util
                 // ignore
             }
         }
+
+        public static Task<TResult> TryCatchAsync<TResult>(Func<Task<TResult>> function, Func<Exception, Task<TResult>> onException)
+        {
+            try
+            {
+                return function();
+            }
+            catch (Exception e)
+            {
+                return onException(e);
+            }
+        }
     }
 }

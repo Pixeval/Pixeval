@@ -4,11 +4,11 @@ using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Event;
+using Pixeval.Events;
 using Pixeval.Util;
 using Pixeval.ViewModel;
 
-namespace Pixeval.Page
+namespace Pixeval.Pages
 {
     public sealed partial class LoginPage
     {
@@ -38,7 +38,7 @@ namespace Pixeval.Page
                 }
 
                 AppContext.SaveContext();
-                await App.PixevalEventChannel.PublishAsync(new LoginCompletedEvent(this, App.PixevalAppClient!.Session));
+                await App.EventChannel.PublishAsync(new LoginCompletedEvent(this, App.MakoClient!.Session));
             }
             catch (Exception exception)
             {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 
-namespace Pixeval.Event
+namespace Pixeval.Events
 {
     /// <summary>
     /// This event will be published if the application is going to shutdown programmatically.

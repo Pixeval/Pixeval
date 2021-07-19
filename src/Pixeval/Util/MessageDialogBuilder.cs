@@ -1,6 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Page;
+using Pixeval.Pages;
 
 namespace Pixeval.Util
 {

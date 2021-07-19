@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 using Mako.Util;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.Event;
+using Pixeval.Events;
 
 namespace Pixeval.ViewModel
 {
@@ -13,7 +13,7 @@ namespace Pixeval.ViewModel
     {
         public MainPageViewModel()
         {
-            App.PixevalEventChannel.Subscribe<LoginCompletedEvent>(evt  =>
+            App.EventChannel.Subscribe<LoginCompletedEvent>(evt  =>
             {
                 Debug.WriteLine(evt.Session.ToJson());
             });

@@ -9,7 +9,7 @@ using Windows.Foundation;
 using Windows.Storage;
 using CommunityToolkit.WinUI.Helpers;
 using Mako.Preference;
-using Pixeval.Event;
+using Pixeval.Events;
 using Pixeval.Util;
 
 namespace Pixeval
@@ -37,7 +37,7 @@ namespace Pixeval
             ConfigurationContainer = ApplicationData.Current.RoamingSettings.Containers[ConfigurationContainerKey];
 
             // Save the context information when application closing
-            App.PixevalEventChannel.Subscribe<ApplicationExitingEvent>(_ => SaveContext());
+            App.EventChannel.Subscribe<ApplicationExitingEvent>(_ => SaveContext());
         }
 
         public const string AppIdentifier = "Pixeval";
@@ -72,12 +72,12 @@ namespace Pixeval
                     await CopyLoginProxyZipFileAndExtractInternalAsync(assetFile, assetChecksum);
                 }
 
-                await App.PixevalEventChannel.PublishAsync(new ScanningLoginProxyEvent());
+                await App.EventChannel.PublishAsync(new ScanningLoginProxyEvent());
                 return;
             }
 
             await CopyLoginProxyZipFileAndExtractInternalAsync(assetFile, assetChecksum);
-            await App.PixevalEventChannel.PublishAsync(new ScanningLoginProxyEvent());
+            await App.EventChannel.PublishAsync(new ScanningLoginProxyEvent());
         }
 
         private static async Task CopyLoginProxyZipFileAndExtractInternalAsync(byte[] assetFile, string checksum)
@@ -151,7 +151,7 @@ namespace Pixeval
 
         public static void SaveSession()
         {
-            if (App.PixevalAppClient?.Session is { } session)
+            if (App.MakoClient?.Session is { } session)
             {
                 var values = SessionContainer.Values;
                 values[nameof(Session.AccessToken)] = session.AccessToken;
@@ -169,7 +169,7 @@ namespace Pixeval
 
         public static void SaveConfiguration()
         {
-            if (App.PixevalAppClient?.Configuration is { } configuration)
+            if (App.MakoClient?.Configuration is { } configuration)
             {
                 ConfigurationContainer.Values[nameof(configuration.Bypass)] = configuration.Bypass;
                 ConfigurationContainer.Values[nameof(configuration.ConnectionTimeout)] = configuration.ConnectionTimeout;

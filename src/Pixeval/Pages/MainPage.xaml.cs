@@ -4,7 +4,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.ViewModel;
 
-namespace Pixeval.Page
+namespace Pixeval.Pages
 {
     public sealed partial class MainPage
     {

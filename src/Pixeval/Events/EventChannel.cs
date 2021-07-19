@@ -7,7 +7,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using Mako.Util;
 
-namespace Pixeval.Event
+namespace Pixeval.Events
 {
     /// <summary>
     /// An uber-lightweight implementation of an event bus
@@ -52,7 +52,6 @@ namespace Pixeval.Event
 
             _registeredSubscribers[typeof(T)] = new List<Action<IEvent>> {handler};
         }
-
 
         public ValueTask PublishAsync<T>(T eventObj) where T : IEvent
         {

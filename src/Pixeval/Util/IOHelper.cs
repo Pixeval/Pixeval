@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Security.Cryptography;
 using Windows.Storage;
@@ -16,7 +17,7 @@ using Mako.Util;
 namespace Pixeval.Util
 {
     // ReSharper disable once InconsistentNaming
-    public static class IOHelper
+    public static partial class IOHelper
     {
         public static async Task<string> CalculateChecksumAsync<T>(string fullnameOfFile) where T : HashAlgorithm, new()
         {
