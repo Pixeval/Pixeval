@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Storage.Streams;
 using Mako.Util;
 using Microsoft.IO;
 
@@ -51,14 +52,14 @@ namespace Pixeval.Util
         /// </summary>
         public static Task<Result<Memory<byte>>> DownloadByteArrayAsync(this HttpClient httpClient, string url)
         {
-            return Functions.TryCatchAsync(async () => Result<Memory<byte>>.OfSuccess((await httpClient.GetByteArrayAsync(url)).AsMemory()), e => Task.FromResult(Result<Memory<byte>>.OfFailure(e)));
+            return Functions.TryCatchAsync(async () => Result<Memory<byte>>.OfSuccess(await httpClient.GetByteArrayAsync(url)), e => Task.FromResult(Result<Memory<byte>>.OfFailure(e)));
         }
 
         /// <summary>
-        /// Attempts to download the content that are located by the <paramref name="url"/> to a <see cref="MemoryStream"/> with
+        /// Attempts to download the content that are located by the <paramref name="url"/> to a <see cref="IRandomAccessStream"/> with
         /// progress support
         /// </summary>
-        public static async Task<Result<MemoryStream>> DownloadMemoryStreamAsync(
+        public static async Task<Result<IRandomAccessStream>> DownloadAsIRandomAccessStreamAsync(
             this HttpClient httpClient,
             string url,
             IProgress<double>? progress = null,
@@ -76,7 +77,7 @@ namespace Pixeval.Util
                 {
                     if (cancellationToken.IsCancellationRequested)
                     {
-                        return Result<MemoryStream>.OfFailure();
+                        return Result<IRandomAccessStream>.OfFailure();
                     }
 
                     resultStream.Advance(bytesRead);
@@ -85,10 +86,10 @@ namespace Pixeval.Util
                 }
 
                 resultStream.Seek(0, SeekOrigin.Begin);
-                return Result<MemoryStream>.OfSuccess(resultStream);
+                return Result<IRandomAccessStream>.OfSuccess(resultStream.AsRandomAccessStream());
             }
 
-            return (await httpClient.DownloadByteArrayAsync(url)).Bind(RecyclableMemoryStreamManager.GetStream);
+            return (await httpClient.DownloadByteArrayAsync(url)).Bind(m => RecyclableMemoryStreamManager.GetStream(m).AsRandomAccessStream());
         }
     }
 }

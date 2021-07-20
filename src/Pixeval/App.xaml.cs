@@ -39,8 +39,7 @@ namespace Pixeval
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         { 
             Window = new MainWindow();
-            var windowHandle = Window.As<IWindowNative>(); // see https://github.com/microsoft/WinUI-3-Demos/blob/master/src/Build2020Demo/DemoBuildCs/DemoBuildCs/DemoBuildCs/App.xaml.cs
-            UIHelper.SetWindowSize(windowHandle.WindowHandle, 800, 600);
+            Window.SetWindowSize(800, 600);
             Window.Activate();
         }
 

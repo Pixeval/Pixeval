@@ -1,8 +1,6 @@
 ﻿using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Events;
 using Pixeval.ViewModel;
 
 namespace Pixeval.Pages
@@ -25,31 +23,12 @@ namespace Pixeval.Pages
         private void MainPageRootNavigationView_OnLoaded(object sender, RoutedEventArgs e)
         {
             RearrangeMainPageAutoSuggestionBoxMargin();
-            
-            // update user avatar when it is downloaded.
-            App.EventChannel.Subscribe<UserAvatarDownloadedEvent>(evt =>
-            {
-                DispatcherQueue.TryEnqueue(() =>
-                {
-                    UserAvatar.ProfilePicture = (evt.Sender as MainPageViewModel)?.Avatar;
-                });
-            });
-            // download the user avatar
-            _viewModel.DownloadAvatar();
+            SetMainPageRootNavigationViewItem(RecommendationTab);
         }
 
         private void MainPageRootNavigationView_OnDisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)
         {
             RearrangeMainPageAutoSuggestionBoxMargin();
-        }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            if (e.SourcePageType == typeof(LoginPage)) // The login is completed 
-            {
-                // _viewModel.Setup();
-            } 
         }
 
         #region Helper Functions
@@ -58,11 +37,16 @@ namespace Pixeval.Pages
         {
             MainPageAutoSuggestionBox.Margin = _viewModel.RearrangeMainPageAutoSuggestionBoxMargin(MainPageRootNavigationView.ActualWidth, MainPageRootNavigationView.DisplayMode switch
             {
-                NavigationViewDisplayMode.Minimal  => 0,
-                NavigationViewDisplayMode.Compact  => MainPageRootNavigationView.CompactPaneLength,
+                NavigationViewDisplayMode.Minimal => 0,
+                NavigationViewDisplayMode.Compact => MainPageRootNavigationView.CompactPaneLength,
                 NavigationViewDisplayMode.Expanded => MainPageRootNavigationView.OpenPaneLength,
-                _                                  => throw new ArgumentOutOfRangeException(nameof(MainPageRootNavigationView))
+                _ => throw new ArgumentOutOfRangeException(nameof(MainPageRootNavigationView))
             });
+        }
+
+        private void SetMainPageRootNavigationViewItem(NavigationViewItem navigationViewItem)
+        {
+            MainPageRootNavigationView.SelectedItem = navigationViewItem;
         }
 
         #endregion

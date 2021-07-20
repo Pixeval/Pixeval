@@ -37,7 +37,7 @@ namespace Pixeval
             ConfigurationContainer = ApplicationData.Current.RoamingSettings.Containers[ConfigurationContainerKey];
 
             // Save the context information when application closing
-            App.EventChannel.Subscribe<ApplicationExitingEvent>(_ => SaveContext());
+            App.EventChannel.Subscribe<ApplicationExitingEvent>(SaveContext);
         }
 
         public const string AppIdentifier = "Pixeval";

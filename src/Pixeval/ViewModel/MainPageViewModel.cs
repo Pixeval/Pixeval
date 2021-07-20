@@ -1,17 +1,9 @@
-﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Storage.Streams;
 using JetBrains.Annotations;
 using Mako.Net;
-using Mako.Util;
-using Microsoft.Toolkit.HighPerformance;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Events;
 using Pixeval.Util;
 
@@ -21,10 +13,7 @@ namespace Pixeval.ViewModel
     {
         public MainPageViewModel()
         {
-            App.EventChannel.Subscribe<LoginCompletedEvent>(evt  =>
-            {
-                Debug.WriteLine(evt.Session.ToJson());
-            });
+            App.EventChannel.SubscribeOnUIThread<LoginCompletedEvent>(DownloadAndSetAvatar);
         }
 
         public double MainPageRootNavigationViewOpenPanelLength => 200;
@@ -52,18 +41,14 @@ namespace Pixeval.ViewModel
         /// <summary>
         /// Download user's avatar and set to the Avatar property.
         /// </summary>
-        public async void DownloadAvatar()
+        public async void DownloadAndSetAvatar()
         {
-            // get byte array of avatar
             var makoClient = App.MakoClient!;
-            var byteArray = (await makoClient
-                    .GetMakoHttpClient(MakoApiKind.ImageApi)
-                    .DownloadMemoryStreamAsync(makoClient.Session.AvatarUrl!))
-                .GetOrThrow();
-            // set to the bitmap image
-            var bitmapImage = new BitmapImage();
-            await bitmapImage.SetSourceAsync(byteArray.AsRandomAccessStream());
-            Avatar = bitmapImage;
+            // get byte array of avatar
+            // and set to the bitmap image
+            var imageStream = await makoClient.GetMakoHttpClient(MakoApiKind.ImageApi)
+                .DownloadAsIRandomAccessStreamAsync(makoClient.Session.AvatarUrl!);
+            Avatar = await imageStream.GetOrThrow().GetImageSourceAsync();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

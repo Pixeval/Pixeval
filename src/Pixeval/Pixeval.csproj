@@ -12,6 +12,9 @@
     <DefaultLanguage>zh-CN</DefaultLanguage>
     <EnableNETAnalyzers>false</EnableNETAnalyzers>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Pages\IllustrationGridPage.xaml" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.0.3" />
@@ -45,6 +48,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\IllustrationGridPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

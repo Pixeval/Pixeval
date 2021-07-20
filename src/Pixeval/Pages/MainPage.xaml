@@ -37,7 +37,7 @@
             </Grid>
         </NavigationView.PaneHeader>
         <NavigationView.MenuItems>
-            <NavigationViewItem x:Uid="/MainPage/RecommendationsTab">
+            <NavigationViewItem x:Name="RecommendationTab" x:Uid="/MainPage/RecommendationsTab">
                 <NavigationViewItem.Icon>
                     <!-- Calendar -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE787;" />

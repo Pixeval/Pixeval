@@ -35,6 +35,11 @@ namespace Pixeval.Events
             GetOrCreateSubscriber<T>(evt => eventHandler((T) evt));
         }
 
+        public void Subscribe<T>(Action eventHandler) where T : IEvent
+        {
+            GetOrCreateSubscriber<T>(_ => eventHandler());
+        }
+
         public Task SubscribeAsync<T>(Func<T, Task> eventHandler) where T : IEvent
         {
             var tcs = new TaskCompletionSource();

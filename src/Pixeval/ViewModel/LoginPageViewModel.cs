@@ -33,9 +33,9 @@ namespace Pixeval.ViewModel
 
         static LoginPageViewModel()
         {
-            App.EventChannel.Subscribe<ScanningLoginProxyEvent>(_ => ScanLoginProxyTask.SetResult());
+            App.EventChannel.Subscribe<ScanningLoginProxyEvent>(ScanLoginProxyTask.SetResult);
             // Kill the login proxy process if the application encounters exception
-            App.EventChannel.Subscribe<ApplicationExitingEvent>(_ => _loginProxyProcess?.Kill());
+            App.EventChannel.Subscribe<ApplicationExitingEvent>(() => _loginProxyProcess?.Kill());
         }
 
         public class LoginTokenResponse
