@@ -1,11 +1,17 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+using Mako.Net;
 using Mako.Util;
+using Microsoft.Toolkit.HighPerformance;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Events;
+using Pixeval.Util;
 
 namespace Pixeval.ViewModel
 {
@@ -41,9 +47,22 @@ namespace Pixeval.ViewModel
             return new(windowWidth / 2 - leftControlWidth - MainPageAutoSuggestionBoxWidth / 2, 0, 0, 0);
         }
 
-        public void DownloadAvatar()
+        /// <summary>
+        /// Download user's avatar and set to the Avatar property.
+        /// </summary>
+        public async void DownloadAvatar()
         {
-            
+            // get byte array of avatar
+            var makoClient = App.MakoClient!;
+            var byteArray = await makoClient
+                .GetMakoHttpClient(MakoApiKind.ImageApi)
+                .DownloadByteArrayAsync(makoClient.Session.AvatarUrl!);
+            // set to the bitmap image
+            var bitmapImage = new BitmapImage();
+            await bitmapImage.SetSourceAsync(byteArray.GetOrThrow().AsStream().AsRandomAccessStream());
+            Avatar = bitmapImage;
+            // publish an event to update the UI
+            await App.EventChannel.PublishAsync(new UserAvatarDownloadedEvent(this));
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

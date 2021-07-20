@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Events;
 using Pixeval.ViewModel;
 
 namespace Pixeval.Pages
@@ -24,6 +25,17 @@ namespace Pixeval.Pages
         private void MainPageRootNavigationView_OnLoaded(object sender, RoutedEventArgs e)
         {
             RearrangeMainPageAutoSuggestionBoxMargin();
+            
+            // update user avatar when it is downloaded.
+            App.EventChannel.Subscribe<UserAvatarDownloadedEvent>(evt =>
+            {
+                DispatcherQueue.TryEnqueue(() =>
+                {
+                    UserAvatar.ProfilePicture = (evt.Sender as MainPageViewModel)?.Avatar;
+                });
+            });
+            // download the user avatar
+            _viewModel.DownloadAvatar();
         }
 
         private void MainPageRootNavigationView_OnDisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)
