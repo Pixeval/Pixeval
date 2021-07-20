@@ -13,7 +13,7 @@ namespace Pixeval.ViewModel
     {
         public MainPageViewModel()
         {
-            App.EventChannel.SubscribeOnUIThread<LoginCompletedEvent>(DownloadAndSetAvatar);
+            EventChannel.Default.SubscribeOnUIThread<LoginCompletedEvent>(DownloadAndSetAvatar);
         }
 
         public double MainPageRootNavigationViewOpenPanelLength => 200;

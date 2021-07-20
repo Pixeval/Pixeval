@@ -14,6 +14,13 @@ namespace Pixeval.Events
     /// </summary>
     public class EventChannel : IEventChannel
     {
+        static EventChannel()
+        {
+            Default = CreateStarted();
+        }
+
+        public static EventChannel Default;
+
         public static EventChannel CreateStarted()
         {
             var eventChannel = new EventChannel();

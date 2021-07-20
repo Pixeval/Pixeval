@@ -14,9 +14,7 @@ namespace Pixeval
     {
         public static MainWindow Window = null!;
 
-        public static readonly EventChannel EventChannel = EventChannel.CreateStarted();
-
-        public static MakoClient? MakoClient { get; set; }
+        public static MakoClient MakoClient { get; set; } = null!; // The null-state of MakoClient is transient
 
         public App()
         {
@@ -50,7 +48,7 @@ namespace Pixeval
         /// <returns></returns>
         public static async Task ExitWithPushedNotification()
         {
-            await EventChannel.PublishAsync(new ApplicationExitingEvent());
+            await EventChannel.Default.PublishAsync(new ApplicationExitingEvent());
             await Task.Delay(200); // well...just wait a second to let those subscribers handle the event
         }
     }

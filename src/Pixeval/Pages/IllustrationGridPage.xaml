@@ -4,10 +4,152 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:media="using:Microsoft.Xaml.Interactions.Media"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-        
-    </Grid>
+    <controls:AdaptiveGridView animations:ItemsReorderAnimation.Duration="0:0:0.4"
+                               ItemHeight="250"
+                               DesiredWidth="180"
+                               SelectionMode="Single"
+                               IsItemClickEnabled="True"
+                               StretchContentForSingleRow="True">
+        <controls:AdaptiveGridView.ItemTemplate>
+            <DataTemplate>
+                <Grid x:Name="RootGrid" Width="180" Height="250">
+                    <Grid.Resources>
+                        <ExponentialEase x:Key="EasingFunction" Exponent="12" EasingMode="EaseOut" />
+                        <Storyboard x:Name="ImageScaleOutStoryboard">
+                            <DoubleAnimation Duration="0:0:2" 
+                                     To="1.1"
+                                     Storyboard.TargetName="Thumbnail" 
+                                     Storyboard.TargetProperty="(Image.RenderTransform).(ScaleTransform.ScaleX)"
+                                     EasingFunction="{StaticResource EasingFunction}" />
+                            <DoubleAnimation Duration="0:0:2" 
+                                     To="1.1"
+                                     Storyboard.TargetName="Thumbnail" 
+                                     Storyboard.TargetProperty="(Image.RenderTransform).(ScaleTransform.ScaleY)"
+                                     EasingFunction="{StaticResource EasingFunction}" />
+                            <DoubleAnimation Duration="0:0:2" 
+                                     To="1"
+                                     Storyboard.TargetName="ImageSelectionButtonGrid" 
+                                     Storyboard.TargetProperty="Opacity"
+                                     EasingFunction="{StaticResource EasingFunction}" />
+                            <DoubleAnimation Duration="0:0:2" 
+                                     To="1"
+                                     Storyboard.TargetName="ImageSelectionButtonGrid" 
+                                     Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleX)"
+                                     EasingFunction="{StaticResource EasingFunction}" />
+                            <DoubleAnimation Duration="0:0:2" 
+                                     To="1"
+                                     Storyboard.TargetName="ImageSelectionButtonGrid" 
+                                     Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleY)"
+                                     EasingFunction="{StaticResource EasingFunction}" />
+                            <DoubleAnimation Duration="0:0:2" 
+                                     To="1"
+                                     Storyboard.TargetName="ImageBookmarkButtonGrid" 
+                                     Storyboard.TargetProperty="Opacity"
+                                     EasingFunction="{StaticResource EasingFunction}" />
+                            <DoubleAnimation Duration="0:0:2" 
+                                     To="1"
+                                     Storyboard.TargetName="ImageBookmarkButtonGrid" 
+                                     Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleX)"
+                                     EasingFunction="{StaticResource EasingFunction}" />
+                            <DoubleAnimation Duration="0:0:2" 
+                                     To="1"
+                                     Storyboard.TargetName="ImageBookmarkButtonGrid" 
+                                     Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleY)"
+                                     EasingFunction="{StaticResource EasingFunction}" />
+                        </Storyboard>
+                        <Storyboard x:Name="ImageScaleInStoryboard">
+                            <DoubleAnimation Duration="0:0:2"
+                                     To="1.0"
+                                     Storyboard.TargetName="Thumbnail"
+                                     Storyboard.TargetProperty="(Image.RenderTransform).(ScaleTransform.ScaleX)"
+                                     EasingFunction="{StaticResource EasingFunction}" />
+                            <DoubleAnimation Duration="0:0:2" 
+                                     To="1.0"
+                                     Storyboard.TargetName="Thumbnail"
+                                     Storyboard.TargetProperty="(Image.RenderTransform).(ScaleTransform.ScaleY)"
+                                     EasingFunction="{StaticResource EasingFunction}" />
+                            <DoubleAnimation Duration="0:0:2" 
+                                     To="0"
+                                     Storyboard.TargetName="ImageSelectionButtonGrid" 
+                                     Storyboard.TargetProperty="Opacity"
+                                     EasingFunction="{StaticResource EasingFunction}" />
+                            <DoubleAnimation Duration="0:0:2" 
+                                     To="0"
+                                     Storyboard.TargetName="ImageSelectionButtonGrid" 
+                                     Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleX)"
+                                     EasingFunction="{StaticResource EasingFunction}" />
+                            <DoubleAnimation Duration="0:0:2" 
+                                     To="0"
+                                     Storyboard.TargetName="ImageSelectionButtonGrid" 
+                                     Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleY)"
+                                     EasingFunction="{StaticResource EasingFunction}" />
+                            <DoubleAnimation Duration="0:0:2" 
+                                     To="0"
+                                     Storyboard.TargetName="ImageBookmarkButtonGrid" 
+                                     Storyboard.TargetProperty="Opacity"
+                                     EasingFunction="{StaticResource EasingFunction}" />
+                            <DoubleAnimation Duration="0:0:2" 
+                                     To="0"
+                                     Storyboard.TargetName="ImageBookmarkButtonGrid" 
+                                     Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleX)"
+                                     EasingFunction="{StaticResource EasingFunction}" />
+                            <DoubleAnimation Duration="0:0:2" 
+                                     To="0"
+                                     Storyboard.TargetName="ImageBookmarkButtonGrid" 
+                                     Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleY)"
+                                     EasingFunction="{StaticResource EasingFunction}" />
+                        </Storyboard>
+                    </Grid.Resources>
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="PointerEntered">
+                            <media:ControlStoryboardAction Storyboard="{StaticResource ImageScaleOutStoryboard}" />
+                        </core:EventTriggerBehavior>
+                        <core:EventTriggerBehavior EventName="PointerExited">
+                            <media:ControlStoryboardAction Storyboard="{StaticResource ImageScaleInStoryboard}" ControlStoryboardOption="Play" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                    <Grid.Clip>
+                        <RectangleGeometry Rect="0,0,180,250" />
+                    </Grid.Clip>
+                    <Image x:Name="Thumbnail" 
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Center" 
+                           Width="180" Height="250"
+                           Stretch="UniformToFill">
+                        <Image.RenderTransform>
+                            <ScaleTransform CenterX="90" CenterY="125" />
+                        </Image.RenderTransform>
+                    </Image>
+                    <Grid x:Name="ImageBookmarkButtonGrid"
+                          Opacity="0" HorizontalAlignment="Left"
+                          VerticalAlignment="Top" Width="20"
+                          Height="20" Margin="10,10,0,0">
+                        <Grid.RenderTransform>
+                            <ScaleTransform CenterX="10" CenterY="10" ScaleX="0" ScaleY="0"/>
+                        </Grid.RenderTransform>
+                        <FontIcon Width="20" Height="20" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB51;" />
+                        <FontIcon Width="20" Height="20" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB52;" Foreground="Crimson" />
+                    </Grid>
+                    <Grid x:Name="ImageSelectionButtonGrid" 
+                          Opacity="0" HorizontalAlignment="Right"
+                          VerticalAlignment="Top" Width="20" 
+                          Height="20" Margin="0,10,10,0" >
+                        <Grid.RenderTransform>
+                            <ScaleTransform CenterX="10" CenterY="10" ScaleX="0" ScaleY="0"/>
+                        </Grid.RenderTransform>
+                        <Grid CornerRadius="5" Background="White" Opacity="0.8"/>
+                        <CheckBox />
+                    </Grid>
+                </Grid>
+            </DataTemplate>
+        </controls:AdaptiveGridView.ItemTemplate>
+    </controls:AdaptiveGridView>
 </Page>
