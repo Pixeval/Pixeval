@@ -65,25 +65,7 @@ namespace Pixeval.LoginProxy
                         await clientSsl.AuthenticateAsServerAsync(_certificate!, false, SslProtocols.Tls | SslProtocols.Tls13 | SslProtocols.Tls12 | SslProtocols.Tls11, false);
                         // create an HTTP connection to the target IP
                         var host = Regex.Match(content, "CONNECT (?<host>.+)\\:\\d+").Groups["host"].Value;
-                        SslStream? serverSsl = null;
-                        foreach (var ip in await GetTargetIp(host))
-                        {
-                            try
-                            {
-                                serverSsl = await CreateConnection(ip.ToString());
-                                break;
-                            }
-                            catch
-                            {
-                                // ignored
-                            }
-                        }
-
-                        if (serverSsl is null)
-                        {
-                            throw new PixivWebLoginException(Reason.ConnectToHostFailed);
-                        }
-
+                        var serverSsl = await CreateConnection(await GetTargetIp(host));
                         var request = Functions.IgnoreExceptionAsync(async () => await clientSsl.CopyToAsync(serverSsl));
                         var response = Functions.IgnoreExceptionAsync(async () => await serverSsl.CopyToAsync(clientSsl));
                         await Task.WhenAny(request, response);
@@ -101,10 +83,10 @@ namespace Pixeval.LoginProxy
         }
         
 
-        private static async Task<SslStream> CreateConnection(string ip)
+        private static async Task<SslStream> CreateConnection(IPAddress[] ipAddresses)
         {
             var client = new TcpClient();
-            await client.ConnectAsync(ip, 443);
+            await client.ConnectAsync(ipAddresses, 443);
             var netStream = client.GetStream();
             var sslStream = new SslStream(netStream, false, (_, _, _, _) => true);
             try

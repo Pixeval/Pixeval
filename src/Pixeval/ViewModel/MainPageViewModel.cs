@@ -3,6 +3,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Storage.Streams;
 using JetBrains.Annotations;
 using Mako.Net;
 using Mako.Util;
@@ -54,15 +56,14 @@ namespace Pixeval.ViewModel
         {
             // get byte array of avatar
             var makoClient = App.MakoClient!;
-            var byteArray = await makoClient
-                .GetMakoHttpClient(MakoApiKind.ImageApi)
-                .DownloadByteArrayAsync(makoClient.Session.AvatarUrl!);
+            var byteArray = (await makoClient
+                    .GetMakoHttpClient(MakoApiKind.ImageApi)
+                    .DownloadMemoryStreamAsync(makoClient.Session.AvatarUrl!))
+                .GetOrThrow();
             // set to the bitmap image
             var bitmapImage = new BitmapImage();
-            await bitmapImage.SetSourceAsync(byteArray.GetOrThrow().AsStream().AsRandomAccessStream());
+            await bitmapImage.SetSourceAsync(byteArray.AsRandomAccessStream());
             Avatar = bitmapImage;
-            // publish an event to update the UI
-            await App.EventChannel.PublishAsync(new UserAvatarDownloadedEvent(this));
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

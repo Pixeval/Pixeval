@@ -36,7 +36,7 @@ namespace Pixeval.Pages
                     await _viewModel.WebLoginAsync();
                     Frame.Navigate(typeof(MainPage), null, new SlideNavigationTransitionInfo());
                 }
-
+                
                 AppContext.SaveContext();
                 await App.EventChannel.PublishAsync(new LoginCompletedEvent(this, App.MakoClient!.Session));
             }

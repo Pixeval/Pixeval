@@ -61,7 +61,7 @@ namespace Pixeval.Util
         public static async Task<Result<MemoryStream>> DownloadMemoryStreamAsync(
             this HttpClient httpClient,
             string url,
-            IProgress<double> progress,
+            IProgress<double>? progress = null,
             CancellationToken cancellationToken = default)
         {
             using var response = await httpClient.GetResponseHeader(url);
@@ -69,8 +69,8 @@ namespace Pixeval.Util
             {
                 response.EnsureSuccessStatusCode();
 
-                await using var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken);
-                await using var resultStream = (RecyclableMemoryStream) RecyclableMemoryStreamManager.GetStream();
+                await using var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken); 
+                var resultStream = (RecyclableMemoryStream) RecyclableMemoryStreamManager.GetStream();
                 int bytesRead, totalRead = 0;
                 while ((bytesRead = await contentStream.ReadAsync(resultStream.GetMemory(1024), cancellationToken)) != 0)
                 {
@@ -81,9 +81,10 @@ namespace Pixeval.Util
 
                     resultStream.Advance(bytesRead);
                     totalRead += bytesRead;
-                    progress.Report(totalRead / (double) responseLength);
+                    progress?.Report(totalRead / (double) responseLength);
                 }
 
+                resultStream.Seek(0, SeekOrigin.Begin);
                 return Result<MemoryStream>.OfSuccess(resultStream);
             }
 

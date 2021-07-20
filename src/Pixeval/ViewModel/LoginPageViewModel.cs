@@ -156,7 +156,10 @@ namespace Pixeval.ViewModel
             AdvancePhase(LoginPhaseEnum.Refreshing);
             if (AppContext.LoadSession() is { } session && CheckRefreshAvailableInternal(session))
             {
-                App.MakoClient = new MakoClient(session, AppContext.LoadConfiguration() ?? new MakoClientConfiguration(), new RefreshTokenSessionUpdate());
+                App.MakoClient = new MakoClient(session, AppContext.LoadConfiguration() ?? new MakoClientConfiguration
+                {
+                    Bypass = true
+                }, new RefreshTokenSessionUpdate());
                 await App.MakoClient.RefreshSessionAsync();
             }
             else
@@ -186,7 +189,10 @@ namespace Pixeval.ViewModel
             var (cookie, code, verifier) = await WhenLoginTokenRequestedAsync(port); // awaits the login proxy to sends the post request which contains the login result
             var session = await AuthCodeToSessionAsync(code, verifier, cookie);
             _loginProxyProcess = null; // if we reach here then the login procedure completes successfully, the login proxy process has been closed by itself, we do not need the control over it
-            App.MakoClient = new MakoClient(session, AppContext.LoadConfiguration() ?? new MakoClientConfiguration(), new RefreshTokenSessionUpdate());
+            App.MakoClient = new MakoClient(session, AppContext.LoadConfiguration() ?? new MakoClientConfiguration
+            {
+                Bypass = true
+            }, new RefreshTokenSessionUpdate());
         }
 
         /// <summary>
@@ -263,11 +269,12 @@ namespace Pixeval.ViewModel
                 ("include_policy", "true"),
                 ("redirect_uri", "https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback"));
             result.EnsureSuccessStatusCode();
-            return (await result.Content.ReadAsStringAsync()).FromJson<TokenResponse>()!.ToSession() with
+            var session = (await result.Content.ReadAsStringAsync()).FromJson<TokenResponse>()!.ToSession() with
             {
                 Cookie = cookie,
                 CookieCreation = DateTimeOffset.Now
             };
+            return session;
         }
 
         public static void Cleanup()

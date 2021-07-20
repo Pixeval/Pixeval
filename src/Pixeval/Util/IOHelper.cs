@@ -9,8 +9,10 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Security.Cryptography;
 using Windows.Storage;
+using Windows.Storage.Streams;
 using CommunityToolkit.WinUI.Helpers;
 using Mako.Util;
 
