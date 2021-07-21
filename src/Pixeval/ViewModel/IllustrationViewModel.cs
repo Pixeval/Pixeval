@@ -48,8 +48,15 @@ namespace Pixeval.ViewModel
             ThumbnailSource = UIHelper.GetImageSourceFromUriRelativeToAssetsImageFolder("image-not-available.png");
         }
 
+        public Task RemoveBookmarkAsync()
+        {
+            IsBookmarked = false;
+            return App.MakoClient.RemoveBookmarkAsync(Id);
+        }
+
         public Task PostPublicBookmarkAsync()
         {
+            IsBookmarked = true;
             return App.MakoClient.PostBookmarkAsync(Id, PrivacyPolicy.Public);
         }
     }

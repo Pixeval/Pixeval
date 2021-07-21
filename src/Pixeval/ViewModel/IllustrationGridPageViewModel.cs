@@ -40,15 +40,8 @@ namespace Pixeval.ViewModel
             }
         }
 
-        public void Reset()
+        public async Task Fill(IFetchEngine<Illustration?>? newEngine)
         {
-            FetchEngine?.EngineHandle.Cancel();
-            Illustrations.Clear();
-        }
-
-        public async Task ResetAndFill(IFetchEngine<Illustration?>? newEngine)
-        {
-            Reset();
             FetchEngine = newEngine;
             await Fill();
         }
