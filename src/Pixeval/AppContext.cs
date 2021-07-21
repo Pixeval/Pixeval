@@ -37,7 +37,7 @@ namespace Pixeval
             ConfigurationContainer = ApplicationData.Current.RoamingSettings.Containers[ConfigurationContainerKey];
 
             // Save the context information when application closing
-            App.EventChannel.Subscribe<ApplicationExitingEvent>(SaveContext);
+            EventChannel.Default.Subscribe<ApplicationExitingEvent>(SaveContext);
         }
 
         public const string AppIdentifier = "Pixeval";
@@ -72,12 +72,12 @@ namespace Pixeval
                     await CopyLoginProxyZipFileAndExtractInternalAsync(assetFile, assetChecksum);
                 }
 
-                await App.EventChannel.PublishAsync(new ScanningLoginProxyEvent());
+                await EventChannel.Default.PublishAsync(new ScanningLoginProxyEvent());
                 return;
             }
 
             await CopyLoginProxyZipFileAndExtractInternalAsync(assetFile, assetChecksum);
-            await App.EventChannel.PublishAsync(new ScanningLoginProxyEvent());
+            await EventChannel.Default.PublishAsync(new ScanningLoginProxyEvent());
         }
 
         private static async Task CopyLoginProxyZipFileAndExtractInternalAsync(byte[] assetFile, string checksum)

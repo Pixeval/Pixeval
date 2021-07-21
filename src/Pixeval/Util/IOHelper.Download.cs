@@ -82,7 +82,7 @@ namespace Pixeval.Util
 
                     resultStream.Advance(bytesRead);
                     totalRead += bytesRead;
-                    progress?.Report(totalRead / (double) responseLength);
+                    progress?.Report(totalRead / (double)responseLength * 100); // percentage
                 }
 
                 resultStream.Seek(0, SeekOrigin.Begin);

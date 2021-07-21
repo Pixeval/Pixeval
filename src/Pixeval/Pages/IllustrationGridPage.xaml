@@ -9,21 +9,24 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
+    xmlns:viewModel="using:Pixeval.ViewModel"
+    xmlns:ui="using:CommunityToolkit.WinUI.UI"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <controls:AdaptiveGridView animations:ItemsReorderAnimation.Duration="0:0:0.4"
+    <controls:AdaptiveGridView animations:ItemsReorderAnimation.Duration="0:0:0.2"
                                ItemHeight="250"
                                DesiredWidth="180"
                                SelectionMode="Single"
                                IsItemClickEnabled="True"
-                               StretchContentForSingleRow="True">
+                               StretchContentForSingleRow="True"
+                               ItemsSource="{x:Bind _viewModel.Illustrations}">
         <controls:AdaptiveGridView.ItemTemplate>
-            <DataTemplate>
+            <DataTemplate x:DataType="viewModel:IllustrationViewModel">
                 <Grid x:Name="RootGrid" Width="180" Height="250">
                     <Grid.Resources>
                         <ExponentialEase x:Key="EasingFunction" Exponent="12" EasingMode="EaseOut" />
-                        <Storyboard x:Name="ImageScaleOutStoryboard">
+                        <Storyboard x:Key="ThumbnailScaleOutStoryboard">
                             <DoubleAnimation Duration="0:0:2" 
                                      To="1.1"
                                      Storyboard.TargetName="Thumbnail" 
@@ -65,7 +68,7 @@
                                      Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleY)"
                                      EasingFunction="{StaticResource EasingFunction}" />
                         </Storyboard>
-                        <Storyboard x:Name="ImageScaleInStoryboard">
+                        <Storyboard x:Key="ThumbnailScaleInStoryboard">
                             <DoubleAnimation Duration="0:0:2"
                                      To="1.0"
                                      Storyboard.TargetName="Thumbnail"
@@ -110,10 +113,10 @@
                     </Grid.Resources>
                     <interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="PointerEntered">
-                            <media:ControlStoryboardAction Storyboard="{StaticResource ImageScaleOutStoryboard}" />
+                            <media:ControlStoryboardAction Storyboard="{StaticResource ThumbnailScaleOutStoryboard}" />
                         </core:EventTriggerBehavior>
                         <core:EventTriggerBehavior EventName="PointerExited">
-                            <media:ControlStoryboardAction Storyboard="{StaticResource ImageScaleInStoryboard}" ControlStoryboardOption="Play" />
+                            <media:ControlStoryboardAction Storyboard="{StaticResource ThumbnailScaleInStoryboard}" ControlStoryboardOption="Play" />
                         </core:EventTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
                     <Grid.Clip>
@@ -123,10 +126,14 @@
                            HorizontalAlignment="Center" 
                            VerticalAlignment="Center" 
                            Width="180" Height="250"
-                           Stretch="UniformToFill">
+                           Stretch="UniformToFill"
+                           Source="{x:Bind ThumbnailSource, Mode=OneWay}">
                         <Image.RenderTransform>
                             <ScaleTransform CenterX="90" CenterY="125" />
                         </Image.RenderTransform>
+                        <ToolTipService.ToolTip>
+                            <ToolTip Content="{x:Bind Id, Mode=OneWay}" Placement="Right" />
+                        </ToolTipService.ToolTip>
                     </Image>
                     <Grid x:Name="ImageBookmarkButtonGrid"
                           Opacity="0" HorizontalAlignment="Left"
@@ -135,8 +142,15 @@
                         <Grid.RenderTransform>
                             <ScaleTransform CenterX="10" CenterY="10" ScaleX="0" ScaleY="0"/>
                         </Grid.RenderTransform>
-                        <FontIcon Width="20" Height="20" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB51;" />
-                        <FontIcon Width="20" Height="20" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB52;" Foreground="Crimson" />
+                        <FontIcon Width="20" Height="20" 
+                                  FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                  ui:FrameworkElementExtensions.Cursor="Hand"
+                                  Glyph="&#xEB51;"/>
+                        <FontIcon Width="20" Height="20"
+                                  FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                  Glyph="&#xEB52;" Foreground="Crimson" 
+                                  ui:FrameworkElementExtensions.Cursor="Hand"
+                                  Visibility="{x:Bind IsBookmarked, Mode=OneWay}"/>
                     </Grid>
                     <Grid x:Name="ImageSelectionButtonGrid" 
                           Opacity="0" HorizontalAlignment="Right"
@@ -146,7 +160,7 @@
                             <ScaleTransform CenterX="10" CenterY="10" ScaleX="0" ScaleY="0"/>
                         </Grid.RenderTransform>
                         <Grid CornerRadius="5" Background="White" Opacity="0.8"/>
-                        <CheckBox />
+                        <CheckBox IsChecked="{x:Bind IsSelected, Mode=TwoWay}"/>
                     </Grid>
                 </Grid>
             </DataTemplate>

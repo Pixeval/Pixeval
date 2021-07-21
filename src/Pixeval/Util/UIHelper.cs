@@ -28,9 +28,27 @@ namespace Pixeval.Util
 
         public static async Task<ImageSource> GetImageSourceAsync(this IRandomAccessStream randomAccessStream)
         {
-            var bitmapImage = new BitmapImage();
-            await bitmapImage.SetSourceAsync(randomAccessStream);
-            return bitmapImage;
+            using (randomAccessStream)
+            {
+                var bitmapImage = new BitmapImage();
+                await bitmapImage.SetSourceAsync(randomAccessStream);
+                return bitmapImage;
+            }
+        }
+
+        public static T? GetDataContext<T>(this FrameworkElement element) where T : class
+        {
+            return element.DataContext as T;
+        }
+
+        public static T? GetDataContext<T>(this object element) where T : class
+        {
+            return ((FrameworkElement) element).GetDataContext<T>(); // direct cast will throw exception if the type check failed, and that's exactly what we want
+        }
+
+        public static ImageSource GetImageSourceFromUriRelativeToAssetsImageFolder(string relativeToAssetsImageFolder)
+        {
+            return new BitmapImage(new Uri($"ms-appx:///Assets/Images/{relativeToAssetsImageFolder}"));
         }
     }
 }

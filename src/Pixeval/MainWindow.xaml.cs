@@ -16,7 +16,7 @@ namespace Pixeval
         private void PixevalAppRootFrame_OnLoaded(object sender, RoutedEventArgs e)
         {
             PixevalAppRootFrame.Navigate(typeof(LoginPage));
-            App.EventChannel.SubscribeOnUIThread<LoginCompletedEvent>(RearrangeToDefaultWindowSize);
+            EventChannel.Default.SubscribeOnUIThread<LoginCompletedEvent>(RearrangeToDefaultWindowSize);
         }
 
         private async void MainWindow_OnClosed(object sender, WindowEventArgs args)

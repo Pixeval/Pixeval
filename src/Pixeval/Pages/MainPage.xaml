@@ -5,39 +5,26 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModel="using:Pixeval.ViewModel"
-    xmlns:ui="using:Windows.UI"
+    xmlns:mainPage="using:Pixeval.Pages"
     mc:Ignorable="d"
-    SizeChanged="MainPage_OnSizeChanged"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <NavigationView x:Name="MainPageRootNavigationView"
                     Loaded="MainPageRootNavigationView_OnLoaded"
-                    DisplayModeChanged="MainPageRootNavigationView_OnDisplayModeChanged"
+                    SelectionChanged="MainPageRootNavigationView_OnSelectionChanged"
                     IsSettingsVisible="False"
                     OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}"
                     d:DataContext="{d:DesignInstance viewModel:MainPageViewModel}">
-        <NavigationView.Resources>
-            <ResourceDictionary>
-                <ResourceDictionary.ThemeDictionaries>
-                    <!-- See https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/Common_themeresources_any.xaml -->
-                    <ResourceDictionary x:Key="Light">
-                        <ui:Color x:Key="NavigationViewTopPaneBackground">#BEBEBE</ui:Color>
-                    </ResourceDictionary>
-                    <ResourceDictionary x:Key="Dark">
-                    </ResourceDictionary>
-                    <ResourceDictionary x:Key="HighContrast">
-                    </ResourceDictionary>
-                </ResourceDictionary.ThemeDictionaries>
-            </ResourceDictionary>
-        </NavigationView.Resources>
         <NavigationView.PaneHeader>
-            <Grid>
-                <Grid Margin="0,-80,0,0" Height="40" Background="{ThemeResource NavigationViewTopPaneBackground}" />
-                <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Text="Pixeval" />
-            </Grid>
+            <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Text="Pixeval" />
         </NavigationView.PaneHeader>
+        <NavigationView.AutoSuggestBox>
+            <AutoSuggestBox x:Uid="/MainPage/MainPageAutoSuggestionBox" QueryIcon="Find" />
+        </NavigationView.AutoSuggestBox>
         <NavigationView.MenuItems>
-            <NavigationViewItem x:Name="RecommendationTab" x:Uid="/MainPage/RecommendationsTab">
+            <NavigationViewItem Tag="{x:Bind mainPage:MainPageRootNavigationViewTag.Recommendation}"
+                                x:Name="RecommendationTab"
+                                x:Uid="/MainPage/RecommendationsTab">
                 <NavigationViewItem.Icon>
                     <!-- Calendar -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE787;" />
@@ -105,7 +92,7 @@
         <NavigationView.FooterMenuItems>
             <NavigationViewItem>
                 <StackPanel Margin="-6,0,0,0" Orientation="Horizontal">
-                    <PersonPicture Height="20" Width="20" x:Name="UserAvatar" ProfilePicture="{x:Bind _viewModel.Avatar, Mode=OneWay}" />
+                    <PersonPicture Height="20" Width="20" ProfilePicture="{x:Bind _viewModel.Avatar, Mode=OneWay}" />
                     <TextBlock x:Uid="/MainPage/AccountTab" Margin="10,0,0,0" />
                 </StackPanel>
             </NavigationViewItem>
@@ -122,19 +109,7 @@
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
         </NavigationView.FooterMenuItems>
-        <Grid>
-            <Grid Height="40" 
-                  VerticalAlignment="Top"
-                  HorizontalAlignment="Stretch"
-                  Background="{ThemeResource NavigationViewTopPaneBackground}">
-                <AutoSuggestBox x:Uid="/MainPage/MainPageAutoSuggestionBox"
-                                x:Name="MainPageAutoSuggestionBox"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Left"
-                                Width="{x:Bind _viewModel.MainPageAutoSuggestionBoxWidth}"
-                                QueryIcon="Find" />
-            </Grid>
-        </Grid>
+        <Frame x:Name="MainPageRootFrame" />
     </NavigationView>
 </Page>
 

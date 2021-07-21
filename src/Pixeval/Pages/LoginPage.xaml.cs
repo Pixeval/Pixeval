@@ -27,18 +27,18 @@ namespace Pixeval.Pages
                 if (_viewModel.CheckRefreshAvailable())
                 {
                     await _viewModel.RefreshAsync();
-                    Frame.Navigate(typeof(MainPage), null, new SlideNavigationTransitionInfo());
+                    Frame.Navigate(typeof(MainPage), null, new DrillInNavigationTransitionInfo());
                 }
                 else
                 {
                     await EnsureCertificateIsInstalled();
                     await EnsureWebView2IsInstalled();
                     await _viewModel.WebLoginAsync();
-                    Frame.Navigate(typeof(MainPage), null, new SlideNavigationTransitionInfo());
+                    Frame.Navigate(typeof(MainPage), null, new DrillInNavigationTransitionInfo());
                 }
                 
                 AppContext.SaveContext();
-                await App.EventChannel.PublishAsync(new LoginCompletedEvent(this, App.MakoClient!.Session));
+                await EventChannel.Default.PublishAsync(new LoginCompletedEvent(this, App.MakoClient!.Session));
             }
             catch (Exception exception)
             {

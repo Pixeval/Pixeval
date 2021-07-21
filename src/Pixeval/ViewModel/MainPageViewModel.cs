@@ -16,9 +16,7 @@ namespace Pixeval.ViewModel
             EventChannel.Default.SubscribeOnUIThread<LoginCompletedEvent>(DownloadAndSetAvatar);
         }
 
-        public double MainPageRootNavigationViewOpenPanelLength => 200;
-
-        public double MainPageAutoSuggestionBoxWidth => 300;
+        public double MainPageRootNavigationViewOpenPanelLength => 250;
 
         private ImageSource? _avatar;
 
@@ -31,11 +29,6 @@ namespace Pixeval.ViewModel
                 _avatar = value;
                 OnPropertyChanged();
             }
-        }
-
-        public Thickness RearrangeMainPageAutoSuggestionBoxMargin(double windowWidth, double leftControlWidth)
-        {
-            return new(windowWidth / 2 - leftControlWidth - MainPageAutoSuggestionBoxWidth / 2, 0, 0, 0);
         }
 
         /// <summary>

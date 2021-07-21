@@ -142,7 +142,7 @@
     <value>浏览历史</value>
   </data>
   <data name="MainPageAutoSuggestionBox.PlaceholderText" xml:space="preserve">
-    <value>输入关键字/设置项/作品ID/用户ID</value>
+    <value>关键字/设置项/作品ID/用户ID</value>
   </data>
   <data name="NewPostsTab.Content" xml:space="preserve">
     <value>关注新作</value>
