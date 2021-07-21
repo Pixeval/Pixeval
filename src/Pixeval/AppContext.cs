@@ -151,7 +151,7 @@ namespace Pixeval
 
         public static void SaveSession()
         {
-            if (App.MakoClient?.Session is { } session)
+            if (App.MakoClient.Session is { } session)
             {
                 var values = SessionContainer.Values;
                 values[nameof(Session.AccessToken)] = session.AccessToken;
@@ -169,7 +169,7 @@ namespace Pixeval
 
         public static void SaveConfiguration()
         {
-            if (App.MakoClient?.Configuration is { } configuration)
+            if (App.MakoClient.Configuration is { } configuration)
             {
                 ConfigurationContainer.Values[nameof(configuration.Bypass)] = configuration.Bypass;
                 ConfigurationContainer.Values[nameof(configuration.ConnectionTimeout)] = configuration.ConnectionTimeout;

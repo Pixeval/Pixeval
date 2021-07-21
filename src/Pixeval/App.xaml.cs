@@ -4,9 +4,7 @@ using Mako;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Events;
-using Pixeval.Interop;
 using Pixeval.Util;
-using WinRT;
 
 namespace Pixeval
 {
