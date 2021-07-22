@@ -19,7 +19,7 @@ namespace Pixeval.Pages
             Parameter = parameter;
         }
 
-        public static readonly MainPageRootNavigationViewTag Recommendation = new(typeof(IllustrationGridPage), App.MakoClient.Recommends());
+        public static readonly MainPageRootNavigationViewTag Recommends = new(typeof(RecommendsPage), App.MakoClient.Recommends());
     }
 
     public sealed partial class MainPage

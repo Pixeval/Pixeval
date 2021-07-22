@@ -22,7 +22,7 @@
             <AutoSuggestBox x:Uid="/MainPage/MainPageAutoSuggestionBox" QueryIcon="Find" />
         </NavigationView.AutoSuggestBox>
         <NavigationView.MenuItems>
-            <NavigationViewItem Tag="{x:Bind mainPage:MainPageRootNavigationViewTag.Recommendation}"
+            <NavigationViewItem Tag="{x:Bind mainPage:MainPageRootNavigationViewTag.Recommends}"
                                 x:Name="RecommendationTab"
                                 x:Uid="/MainPage/RecommendationsTab">
                 <NavigationViewItem.Icon>

@@ -14,6 +14,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Pages\IllustrationGridPage.xaml" />
+    <None Remove="Pages\RecommendsPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,7 +54,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Pages\IllustrationGridPage.xaml">
+    <Page Update="Pages\RecommendsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UserControls\IllustrationGrid.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

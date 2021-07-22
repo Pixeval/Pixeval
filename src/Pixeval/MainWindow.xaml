@@ -5,5 +5,5 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" Closed="MainWindow_OnClosed">
-    <Frame x:Name="PixevalAppRootFrame" Loaded="PixevalAppRootFrame_OnLoaded"/>
+    <Frame x:Name="PixevalAppRootFrame" Loaded="PixevalAppRootFrame_OnLoaded" NavigationFailed="PixevalAppRootFrame_OnNavigationFailed" />
 </Window>

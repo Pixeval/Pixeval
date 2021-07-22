@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Mako.Global.Enum;
 using Mako.Model;
 using Mako.Net;
@@ -20,7 +21,18 @@ namespace Pixeval.ViewModel
             set => SetProperty(_illustration.IsBookmarked, value, m => _illustration.IsBookmarked = m);
         }
 
-        public bool IsSelected { get; set; }
+
+        private bool _isSelected;
+
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set => SetProperty(_isSelected, value, this, (_, b) =>
+            {
+                _isSelected = b;
+                OnIsSelectedChanged?.Invoke(this, this);
+            });
+        }
 
         private ImageSource? _imageSource;
 
@@ -35,6 +47,8 @@ namespace Pixeval.ViewModel
             _illustration = illustration;
             _ = LoadThumbnail();
         }
+
+        public event EventHandler<IllustrationViewModel>? OnIsSelectedChanged;
 
         public async Task LoadThumbnail()
         {

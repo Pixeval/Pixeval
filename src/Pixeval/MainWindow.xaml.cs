@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Events;
 using Pixeval.Pages;
 using Pixeval.Util;
@@ -32,5 +33,11 @@ namespace Pixeval
         }
 
         #endregion
+
+        private void PixevalAppRootFrame_OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        {
+            e.Handled = true;
+            throw e.Exception;
+        }
     }
 }

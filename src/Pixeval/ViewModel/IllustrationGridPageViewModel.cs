@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Mako.Engine;
 using Mako.Model;
@@ -12,8 +13,20 @@ namespace Pixeval.ViewModel
 
         public ObservableCollection<IllustrationViewModel> Illustrations { get; }
 
+        public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; }
+
+
+        private bool _isAnyIllustrationSelected;
+
+        public bool IsAnyIllustrationSelected
+        {
+            get => _isAnyIllustrationSelected;
+            set => SetProperty(ref _isAnyIllustrationSelected, value);
+        }
+
         public IllustrationGridPageViewModel()
         {
+            SelectedIllustrations = new ObservableCollection<IllustrationViewModel>();
             Illustrations = new ObservableCollection<IllustrationViewModel>();
         }
 
@@ -35,7 +48,20 @@ namespace Pixeval.ViewModel
                 // }
                 if (illustration is not null)
                 {
-                    Illustrations.Add(new IllustrationViewModel(illustration));
+                    var i = new IllustrationViewModel(illustration);
+                    i.OnIsSelectedChanged += (_, model) =>
+                    {
+                        if (model.IsSelected)
+                        {
+                            SelectedIllustrations.Add(model);
+                        }
+                        else
+                        {
+                            SelectedIllustrations.Remove(model);
+                        }
+                        IsAnyIllustrationSelected = SelectedIllustrations.Any();
+                    };
+                    Illustrations.Add(i);
                 }
             }
         }

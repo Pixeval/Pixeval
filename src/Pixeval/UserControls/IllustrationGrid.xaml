@@ -1,5 +1,5 @@
-﻿<Page
-    x:Class="Pixeval.Pages.IllustrationGridPage"
+﻿<UserControl
+    x:Class="Pixeval.UserControls.IllustrationGrid"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -15,20 +15,14 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <CommandBar x:Name="IllustrationGridPageCommandBar" Grid.Row="0">
-
-        </CommandBar>
-        <controls:AdaptiveGridView Grid.Row="1" animations:ItemsReorderAnimation.Duration="0:0:0.2"
+        <controls:AdaptiveGridView x:Name="IllustrationsGridView"
+                                   animations:ItemsReorderAnimation.Duration="0:0:0.2"
                                    ItemHeight="250"
                                    DesiredWidth="180"
                                    SelectionMode="Single"
                                    IsItemClickEnabled="True"
                                    StretchContentForSingleRow="True"
-                                   ItemsSource="{x:Bind _viewModel.Illustrations}">
+                                   ItemsSource="{x:Bind ViewModel.Illustrations}">
             <controls:AdaptiveGridView.ItemTemplate>
                 <DataTemplate x:DataType="viewModel:IllustrationViewModel">
                     <Grid x:Name="RootGrid" Width="180" Height="250">
@@ -179,4 +173,4 @@
             </controls:AdaptiveGridView.ItemTemplate>
         </controls:AdaptiveGridView>
     </Grid>
-</Page>
+</UserControl>
