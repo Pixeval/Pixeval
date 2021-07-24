@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Mako.Engine;
 using Mako.Model;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Pixeval.Util;
 
 namespace Pixeval.ViewModel
 {
@@ -12,9 +13,9 @@ namespace Pixeval.ViewModel
     {
         public IFetchEngine<Illustration?>? FetchEngine { get; set; }
 
-        public ObservableCollection<IllustrationViewModel> Illustrations { get; }
+        public ConditionalObservableCollection<IllustrationViewModel> Illustrations { get; }
 
-        public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; }
+        public ConditionalObservableCollection<IllustrationViewModel> SelectedIllustrations { get; }
 
 
         private bool _isAnyIllustrationSelected;
@@ -27,8 +28,8 @@ namespace Pixeval.ViewModel
 
         public IllustrationGridViewModel()
         {
-            SelectedIllustrations = new ObservableCollection<IllustrationViewModel>();
-            Illustrations = new ObservableCollection<IllustrationViewModel>();
+            SelectedIllustrations = new ConditionalObservableCollection<IllustrationViewModel>();
+            Illustrations = new ConditionalObservableCollection<IllustrationViewModel>();
         }
 
         public async Task Fill(Action<ObservableCollection<IllustrationViewModel>, IllustrationViewModel> insertAction)

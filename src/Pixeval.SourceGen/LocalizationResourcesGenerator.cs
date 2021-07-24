@@ -43,7 +43,7 @@ namespace Pixeval.SourceGen
                             foreach (var node in elements)
                             {
                                 var name = node.GetAttribute("name");
-                                classBuilder.AppendLine(@$"public static readonly string {name.Replace(".", string.Empty)} = ResourceLoader.GetString(""{name}"");");
+                                classBuilder.AppendLine(@$"public static readonly string {name.Replace(".", string.Empty)} = ResourceLoader.GetString(""{name.Replace('.', '/')}"");");
                             }
                         }
                     }

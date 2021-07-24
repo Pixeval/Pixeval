@@ -21,7 +21,7 @@ namespace Pixeval.Pages
         {
             base.OnNavigatedTo(e);
             PrivacyPolicyComboBox.SelectedItem = PrivacyPolicyComboBoxIllustItem;
-            SortOptionComboBox.SelectedItem = SortOptionComboBoxUndecidedItem;
+            SortOptionComboBox.SelectedItem = SortOptionComboBoxPublishDateDescendingItem;
         }
 
         private async void RecommendsPage_OnLoaded(object sender, RoutedEventArgs e)
@@ -69,18 +69,17 @@ namespace Pixeval.Pages
                 return true;
             }
 
-            type = IllustrationSortOption.Undecided;
+            type = IllustrationSortOption.PublishDateDescending;
             return false;
         }
 
-        private static Action<ObservableCollection<IllustrationViewModel>, IllustrationViewModel?>? GetInsertAction(IllustrationSortOption sortOption)
+        private static Action<ObservableCollection<IllustrationViewModel>, IllustrationViewModel?> GetInsertAction(IllustrationSortOption sortOption)
         {
             return sortOption switch
             {
-                IllustrationSortOption.Undecided             => null,
                 IllustrationSortOption.PublishDateAscending  => (models, model) => models!.AddSorted(model, (m1, m2) => IllustrationViewModel.Compare(m1, m2, m => m.PublishDate)),
                 IllustrationSortOption.PublishDateDescending => (models, model) => models!.AddSorted(model, (m1, m2) => -IllustrationViewModel.Compare(m1, m2, m => m.PublishDate)),
-                IllustrationSortOption.BookmarkDescending    => (models, model) => models!.AddSorted(model, (m1, m2) => -IllustrationViewModel.Compare(m1, m2, m => m.Bookmark)),
+                IllustrationSortOption.PopularityDescending  => (models, model) => models!.AddSorted(model, (m1, m2) => -IllustrationViewModel.Compare(m1, m2, m => m.Bookmark)),
                 _                                            => throw new ArgumentOutOfRangeException(nameof(sortOption), sortOption, null)
             };
         }

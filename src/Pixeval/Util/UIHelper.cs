@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
+using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -51,9 +52,22 @@ namespace Pixeval.Util
             return new BitmapImage(new Uri($"ms-appx:///Assets/Images/{relativeToAssetsImageFolder}"));
         }
 
-        public static Visibility ToVisibility(this bool value)
+        public static void ShowTextToastNotification(string title, string content, string? logoUrl = null)
         {
-            return value ? Visibility.Visible : Visibility.Collapsed;
+            var builder = new ToastContentBuilder()
+                .AddText(title, AdaptiveTextStyle.Header)
+                .AddText(content, AdaptiveTextStyle.Caption);
+            if (logoUrl is not null)
+            {
+                builder.AddAppLogoOverride(new Uri(logoUrl), ToastGenericAppLogoCrop.Default);
+            }
+
+            builder.Show();
+        }
+
+        public static double ToDouble(this bool value)
+        {
+            return value ? 1 : 0;
         }
     }
 }

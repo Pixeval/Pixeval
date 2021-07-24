@@ -46,6 +46,10 @@ namespace Pixeval
 
         private const string ConfigurationContainerKey = "Config";
 
+        public static readonly string AppLogoUri = "ms-appx:///Assets/Images/logo.png";
+
+        public static readonly string AppLogoNoCaptionUri = "ms-appx:///Assets/Images/logo-no-caption.png";
+
         public static StorageFolder AppLocalFolder;
 
         public static ApplicationDataContainer SessionContainer;

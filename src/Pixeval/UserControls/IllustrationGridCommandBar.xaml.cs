@@ -7,6 +7,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using Mako.Util;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.Util;
 using Pixeval.ViewModel;
 
 namespace Pixeval.UserControls
@@ -143,22 +144,31 @@ namespace Pixeval.UserControls
 
         private void CommandBarAddAllToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            foreach (var viewModelSelectedIllustration in ViewModel.SelectedIllustrations)
+            var notBookmarked = ViewModel.SelectedIllustrations.Where(i => !i.IsBookmarked);
+            var viewModelSelectedIllustrations = notBookmarked as IllustrationViewModel[] ?? notBookmarked.ToArray();
+            foreach (var viewModelSelectedIllustration in viewModelSelectedIllustrations)
             {
                 viewModelSelectedIllustration.PostPublicBookmarkAsync();
             }
+
+            if (viewModelSelectedIllustrations.Length is var c and > 0)
+            {
+                UIHelper.ShowTextToastNotification(
+                    IllustrationGridCommandBarResources.IllustrationGridCommandBarAddAllToBookmarkToastTitle,
+                    IllustrationGridCommandBarResources.IllustrationGridCommandBarAddAllToBookmarkToastContentFormatted.Format(c),
+                    AppContext.AppLogoNoCaptionUri);
+            }
         }
 
-        private void CommandBarDownloadAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        private void CommandBarSaveAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             // TODO
             throw new NotImplementedException();
         }
 
-        private void CommandBarOpenAllInPhotoViewerAppButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        private void CommandBarOpenAllInBrowserButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            // TODO
-            throw new NotImplementedException();
+            
         }
 
         private void CommandBarShareButton_OnTapped(object sender, TappedRoutedEventArgs e)

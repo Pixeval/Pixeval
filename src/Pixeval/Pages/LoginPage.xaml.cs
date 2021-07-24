@@ -44,7 +44,7 @@ namespace Pixeval.Pages
             {
                 _ = await MessageDialogBuilder.Create()
                     .WithTitle(LoginPageResources.ErrorWhileLoggingInTitle)
-                    .WithContent(string.Format(LoginPageResources.ErrorWhileLogginInContentFormatted, exception.Message))
+                    .WithContent(LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.Message))
                     .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
                     .WithDefaultButton(ContentDialogButton.Primary)
                     .Build(this)

@@ -120,11 +120,20 @@
   <data name="IllustrationGridCommandBarAddAllToBookmarkButton.Label" xml:space="preserve">
     <value>收藏</value>
   </data>
-  <data name="IllustrationGridCommandBarDownloadAllButton.Label" xml:space="preserve">
-    <value>下载</value>
+  <data name="IllustrationGridCommandBarAddAllToBookmarkToastContentFormatted" xml:space="preserve">
+    <value>收藏了{0}张图片</value>
   </data>
-  <data name="IllustrationGridCommandBarOpenAllInPhotoViewerAppButton.Label" xml:space="preserve">
+  <data name="IllustrationGridCommandBarAddAllToBookmarkToastTitle" xml:space="preserve">
+    <value>成功添加到收藏</value>
+  </data>
+  <data name="IllustrationGridCommandBarOpenAllInBrowserButton.Label" xml:space="preserve">
     <value>在照片中打开</value>
+  </data>
+  <data name="IllustrationGridCommandBarOpenConditionDialogButton.Label" xml:space="preserve">
+    <value>过滤</value>
+  </data>
+  <data name="IllustrationGridCommandBarSaveAllButton.Label" xml:space="preserve">
+    <value>保存</value>
   </data>
   <data name="IllustrationGridCommandBarSelectAllToggleButton.Label" xml:space="preserve">
     <value>全选</value>

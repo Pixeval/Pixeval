@@ -21,15 +21,29 @@ namespace Pixeval
             UnhandledException += async (_, args) =>
             {
                 args.Handled = true;
+                await UncaughtExceptionHandler(args.Exception);
+            };
+            AppDomain.CurrentDomain.UnhandledException += async (_, args) =>
+            {
+                if (args.ExceptionObject is Exception e)
+                {
+                    await UncaughtExceptionHandler(e);
+                }
+
+                await ExitWithPushedNotification();
+            };
+
+            static async Task UncaughtExceptionHandler(Exception e)
+            {
                 await MessageDialogBuilder.Create()
                     .WithTitle(MiscResources.ExceptionEncountered)
-                    .WithContent(args.Message)
+                    .WithContent(e.ToString())
                     .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
                     .WithDefaultButton(ContentDialogButton.Primary)
                     .Build(Window)
                     .ShowAsync();
                 await ExitWithPushedNotification();
-            };
+            }
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)
