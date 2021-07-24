@@ -15,6 +15,10 @@ namespace Pixeval.ViewModel
 
         public string Id => _illustration.Id.ToString();
 
+        public int Bookmark => _illustration.TotalBookmarks;
+
+        public DateTimeOffset PublishDate => _illustration.CreateDate;
+
         public bool IsBookmarked
         {
             get => _illustration.IsBookmarked;
@@ -72,6 +76,19 @@ namespace Pixeval.ViewModel
         {
             IsBookmarked = true;
             return App.MakoClient.PostBookmarkAsync(Id, PrivacyPolicy.Public);
+        }
+
+        public static int Compare<K>(IllustrationViewModel? m1, IllustrationViewModel? m2, Func<IllustrationViewModel, K> keySelector)
+            where K : IComparable<K>
+        {
+            if (m1 is null || m2 is null)
+            {
+                return 0;
+            }
+
+            var key1 = keySelector(m1);
+            var key2 = keySelector(m2);
+            return key1.CompareTo(key2);
         }
     }
 }

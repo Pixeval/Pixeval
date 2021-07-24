@@ -1,5 +1,4 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Input;
+﻿using Microsoft.UI.Xaml.Input;
 using Pixeval.Util;
 using Pixeval.ViewModel;
 
@@ -7,12 +6,12 @@ namespace Pixeval.UserControls
 {
     public sealed partial class IllustrationGrid
     {
-        public IllustrationGridPageViewModel ViewModel { get; }
+        public IllustrationGridViewModel ViewModel { get; set; }
 
         public IllustrationGrid()
         {
             InitializeComponent();
-            ViewModel = new IllustrationGridPageViewModel();
+            ViewModel = new IllustrationGridViewModel();
         }
 
         private async void RemoveBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)

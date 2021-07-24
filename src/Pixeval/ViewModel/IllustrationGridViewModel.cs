@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Mako.Engine;
@@ -7,7 +8,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace Pixeval.ViewModel
 {
-    public class IllustrationGridPageViewModel : ObservableObject
+    public class IllustrationGridViewModel : ObservableObject
     {
         public IFetchEngine<Illustration?>? FetchEngine { get; set; }
 
@@ -24,13 +25,13 @@ namespace Pixeval.ViewModel
             set => SetProperty(ref _isAnyIllustrationSelected, value);
         }
 
-        public IllustrationGridPageViewModel()
+        public IllustrationGridViewModel()
         {
             SelectedIllustrations = new ObservableCollection<IllustrationViewModel>();
             Illustrations = new ObservableCollection<IllustrationViewModel>();
         }
 
-        public async Task Fill()
+        public async Task Fill(Action<ObservableCollection<IllustrationViewModel>, IllustrationViewModel> insertAction)
         {
             // TODO: The cache system should be take into our considerations
             // The cache system MIGHT improve the fluency of the UI, but it may
@@ -61,7 +62,7 @@ namespace Pixeval.ViewModel
                         }
                         IsAnyIllustrationSelected = SelectedIllustrations.Any();
                     };
-                    Illustrations.Add(i);
+                    insertAction(Illustrations, i);
                 }
             }
         }
@@ -69,7 +70,24 @@ namespace Pixeval.ViewModel
         public async Task Fill(IFetchEngine<Illustration?>? newEngine)
         {
             FetchEngine = newEngine;
-            await Fill();
+            await Fill((models, model) => models.Add(model));
+        }
+
+        public async Task ResetAndFill(IFetchEngine<Illustration?>? newEngine, Action<ObservableCollection<IllustrationViewModel>, IllustrationViewModel>? insertAction = null)
+        {
+            FetchEngine?.EngineHandle.Cancel();
+            FetchEngine = newEngine;
+            lock (Illustrations)
+            {
+                Illustrations.Clear();
+            }
+
+            lock (SelectedIllustrations)
+            {
+                SelectedIllustrations.Clear();
+            }
+
+            await Fill(insertAction ?? ((models, model) => models.Add(model)));
         }
     }
 }

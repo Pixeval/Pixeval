@@ -15,8 +15,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <controls:AdaptiveGridView x:Name="IllustrationsGridView"
-                                   animations:ItemsReorderAnimation.Duration="0:0:0.2"
+        <controls:AdaptiveGridView animations:ItemsReorderAnimation.Duration="0:0:0.2"
                                    ItemHeight="250"
                                    DesiredWidth="180"
                                    SelectionMode="Single"

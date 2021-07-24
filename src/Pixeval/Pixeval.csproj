@@ -13,8 +13,13 @@
     <EnableNETAnalyzers>false</EnableNETAnalyzers>
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="Assets\Strings\zh-CN\IllustrationGridCommandBar.resw" />
+    <Content Remove="Assets\Strings\zh-CN\RecommendsPage.resw" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Pages\IllustrationGridPage.xaml" />
     <None Remove="Pages\RecommendsPage.xaml" />
+    <None Remove="UserControls\IllustrationGridCommandBar.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,6 +56,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UserControls\IllustrationGridCommandBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

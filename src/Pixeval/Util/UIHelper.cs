@@ -50,5 +50,10 @@ namespace Pixeval.Util
         {
             return new BitmapImage(new Uri($"ms-appx:///Assets/Images/{relativeToAssetsImageFolder}"));
         }
+
+        public static Visibility ToVisibility(this bool value)
+        {
+            return value ? Visibility.Visible : Visibility.Collapsed;
+        }
     }
 }
