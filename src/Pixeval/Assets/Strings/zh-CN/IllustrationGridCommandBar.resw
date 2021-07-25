@@ -141,6 +141,12 @@
   <data name="IllustrationGridCommandBarShareButton.Label" xml:space="preserve">
     <value>分享</value>
   </data>
+  <data name="SelectedTooManyItemsForBookmarkContent" xml:space="preserve">
+    <value>一旦完成该操作不可撤销，请确认你是否真的想要这么做</value>
+  </data>
+  <data name="SelectedTooManyItemsForBookmarkTitle" xml:space="preserve">
+    <value>检测到批量收藏的操作</value>
+  </data>
   <data name="SelectedTooManyItemsForOpenInBrowserContent" xml:space="preserve">
     <value>你选择了超过15张图片并决定在浏览器中打开，这可能会在内存不足的计算机上导致系统资源耗尽，请问您确定要这么做吗？</value>
   </data>

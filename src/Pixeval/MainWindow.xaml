@@ -1,9 +1,11 @@
-﻿<Window
-    x:Class="Pixeval.MainWindow"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" Closed="MainWindow_OnClosed">
-    <Frame x:Name="PixevalAppRootFrame" Loaded="PixevalAppRootFrame_OnLoaded" NavigationFailed="PixevalAppRootFrame_OnNavigationFailed" />
+﻿<Window x:Class="Pixeval.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Closed="MainWindow_OnClosed"
+        mc:Ignorable="d">
+    <Frame x:Name="PixevalAppRootFrame"
+           Loaded="PixevalAppRootFrame_OnLoaded"
+           NavigationFailed="PixevalAppRootFrame_OnNavigationFailed" />
 </Window>

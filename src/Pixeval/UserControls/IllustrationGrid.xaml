@@ -14,9 +14,7 @@
              mc:Ignorable="d">
 
     <Grid>
-        <controls:AdaptiveGridView animations:Connected.ListItemElementName="Thumbnail"
-                                   animations:Connected.ListItemKey="IllustrationGridViewItem"
-                                   animations:ItemsReorderAnimation.Duration="0:0:0.2"
+        <controls:AdaptiveGridView animations:ItemsReorderAnimation.Duration="0:0:0.2"
                                    DesiredWidth="180"
                                    IsItemClickEnabled="True"
                                    IsMultiSelectCheckBoxEnabled="False"
@@ -132,7 +130,8 @@
                                    HorizontalAlignment="Stretch"
                                    VerticalAlignment="Stretch"
                                    Source="{x:Bind ThumbnailSource, Mode=OneWay}"
-                                   Stretch="UniformToFill">
+                                   Stretch="UniformToFill"
+                                   Tapped="Thumbnail_OnTapped">
                                 <Image.RenderTransform>
                                     <ScaleTransform CenterX="90" CenterY="125" />
                                 </Image.RenderTransform>

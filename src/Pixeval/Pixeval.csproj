@@ -18,9 +18,11 @@
     <Content Remove="Assets\Strings\zh-CN\RecommendsPage.resw" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Pages\DownloadListPage.xaml" />
     <None Remove="Pages\IllustrationGridPage.xaml" />
     <None Remove="Pages\IllustrationViewerPage.xaml" />
     <None Remove="Pages\RecommendsPage.xaml" />
+    <None Remove="Pages\SettingsPage.xaml" />
     <None Remove="UserControls\IllustrationGridCommandBar.xaml" />
   </ItemGroup>
 
@@ -59,6 +61,18 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\SettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\DownloadListPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

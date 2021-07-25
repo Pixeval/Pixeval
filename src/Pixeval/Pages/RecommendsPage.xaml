@@ -42,6 +42,8 @@
                 </StackPanel>
             </userControls:IllustrationGridCommandBar.CommandBarContent>
         </userControls:IllustrationGridCommandBar>
-        <userControls:IllustrationGrid x:Name="IllustrationGrid" Margin="0,40,0,0" />
+        <userControls:IllustrationGrid x:Name="IllustrationGrid"
+                                       Margin="0,40,0,0"
+                                       Owner="{x:Bind}" />
     </Grid>
 </Page>

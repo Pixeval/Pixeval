@@ -143,13 +143,22 @@ namespace Pixeval.UserControls
             }
         }
 
-        private void CommandBarAddAllToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        private async void CommandBarAddAllToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             var notBookmarked = ViewModel.SelectedIllustrations.Where(i => !i.IsBookmarked);
             var viewModelSelectedIllustrations = notBookmarked as IllustrationViewModel[] ?? notBookmarked.ToArray();
+            if (viewModelSelectedIllustrations.Length > 5 && await MessageDialogBuilder.CreateOkCancel(
+                    this,
+                    IllustrationGridCommandBarResources.SelectedTooManyItemsForBookmarkTitle,
+                    IllustrationGridCommandBarResources.SelectedTooManyItemsForBookmarkContent)
+                .ShowAsync() != ContentDialogResult.Primary)
+            {
+                return;
+            }
+
             foreach (var viewModelSelectedIllustration in viewModelSelectedIllustrations)
             {
-                viewModelSelectedIllustration.PostPublicBookmarkAsync();
+                _ = viewModelSelectedIllustration.PostPublicBookmarkAsync(); // discard the result
             }
 
             if (viewModelSelectedIllustrations.Length is var c and > 0)
@@ -161,9 +170,14 @@ namespace Pixeval.UserControls
             }
         }
 
-        private async void CommandBarSaveAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        private void CommandBarSaveAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            if (ViewModel.SelectedIllustrations is {Count: >= 15} selected)
+            throw new NotImplementedException();
+        }
+
+        private async void CommandBarOpenAllInBrowserButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (ViewModel.SelectedIllustrations is {Count: > 15} selected)
             {
                 if (await MessageDialogBuilder.CreateOkCancel(
                         this,
@@ -177,11 +191,6 @@ namespace Pixeval.UserControls
                     }
                 }
             }
-        }
-
-        private void CommandBarOpenAllInBrowserButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            
         }
 
         private void CommandBarShareButton_OnTapped(object sender, TappedRoutedEventArgs e)
