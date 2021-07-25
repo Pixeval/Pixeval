@@ -19,6 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Pages\IllustrationGridPage.xaml" />
+    <None Remove="Pages\IllustrationViewerPage.xaml" />
     <None Remove="Pages\RecommendsPage.xaml" />
     <None Remove="UserControls\IllustrationGridCommandBar.xaml" />
   </ItemGroup>
@@ -58,6 +59,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\IllustrationViewerPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

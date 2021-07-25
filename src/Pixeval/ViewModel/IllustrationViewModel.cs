@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using CommunityToolkit.WinUI.UI;
 using Mako.Global.Enum;
 using Mako.Model;
 using Mako.Net;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Util;
 
@@ -78,23 +76,6 @@ namespace Pixeval.ViewModel
         {
             IsBookmarked = true;
             return App.MakoClient.PostBookmarkAsync(Id, PrivacyPolicy.Public);
-        }
-
-        public static void ForceSetBookmarkAndSelectionGridOpacityAndScale(FrameworkElement root, int value)
-        {
-            if (root.FindChild("ImageBookmarkButtonGrid") is { } bookmarkGrid)
-            {
-                bookmarkGrid.Opacity = value;
-                ((ScaleTransform) bookmarkGrid.RenderTransform).ScaleX = value;
-                ((ScaleTransform) bookmarkGrid.RenderTransform).ScaleY = value;
-            }
-
-            if (root.FindChild("ImageSelectionButtonGrid") is { } selectionGrid)
-            {
-                selectionGrid.Opacity = value;
-                ((ScaleTransform) selectionGrid.RenderTransform).ScaleX = value;
-                ((ScaleTransform) selectionGrid.RenderTransform).ScaleY = value;
-            }
         }
 
         public static int Compare<K>(IllustrationViewModel? m1, IllustrationViewModel? m2, Func<IllustrationViewModel, K> keySelector)

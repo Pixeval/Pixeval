@@ -1,18 +1,23 @@
-﻿<Page
-    x:Class="Pixeval.Pages.LoginPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModel="using:Pixeval.ViewModel"
-    mc:Ignorable="d"
-    Loaded="LoginPage_OnLoaded"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" d:DataContext="{d:DesignInstance viewModel:LoginPageViewModel}">
+﻿<Page x:Class="Pixeval.Pages.LoginPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:viewModel="using:Pixeval.ViewModel"
+      d:DataContext="{d:DesignInstance viewModel:LoginPageViewModel}"
+      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+      Loaded="LoginPage_OnLoaded"
+      mc:Ignorable="d">
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Image Source="../Assets/Images/logo.png" Width="150" Height="150" />
-            <ProgressRing Height="30" Width="30" />
-            <TextBlock Text="{x:Bind viewModel:LoginPageViewModel.GetLoginPhaseString(_viewModel.LoginPhase), Mode=OneWay}" HorizontalAlignment="Center" FontSize="10" Margin="0,15,0,0" />
+            <Image Width="150"
+                   Height="150"
+                   Source="../Assets/Images/logo.png" />
+            <ProgressRing Width="30" Height="30" />
+            <TextBlock Margin="0,15,0,0"
+                       HorizontalAlignment="Center"
+                       FontSize="10"
+                       Text="{x:Bind viewModel:LoginPageViewModel.GetLoginPhaseString(_viewModel.LoginPhase), Mode=OneWay}" />
         </StackPanel>
     </Grid>
 </Page>

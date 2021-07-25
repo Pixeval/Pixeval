@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using Windows.System;
 using Mako.Util;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Util;
@@ -160,10 +161,22 @@ namespace Pixeval.UserControls
             }
         }
 
-        private void CommandBarSaveAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        private async void CommandBarSaveAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            // TODO
-            throw new NotImplementedException();
+            if (ViewModel.SelectedIllustrations is {Count: >= 15} selected)
+            {
+                if (await MessageDialogBuilder.CreateOkCancel(
+                        this,
+                        IllustrationGridCommandBarResources.SelectedTooManyItemsTitle,
+                        IllustrationGridCommandBarResources.SelectedTooManyItemsForOpenInBrowserContent)
+                    .ShowAsync() == ContentDialogResult.Primary)
+                {
+                    foreach (var illustrationViewModel in selected)
+                    {
+                        await Launcher.LaunchUriAsync(new Uri(IllustrationHelper.GetWebUrl(illustrationViewModel.Id)));
+                    }
+                }
+            }
         }
 
         private void CommandBarOpenAllInBrowserButton_OnTapped(object sender, TappedRoutedEventArgs e)

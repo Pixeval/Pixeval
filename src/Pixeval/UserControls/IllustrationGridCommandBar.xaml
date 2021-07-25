@@ -1,45 +1,44 @@
-﻿<UserControl
-    x:Class="Pixeval.UserControls.IllustrationGridCommandBar"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+﻿<UserControl x:Class="Pixeval.UserControls.IllustrationGridCommandBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d">
 
-    <CommandBar HorizontalContentAlignment="Center" x:Name="CommandBar" HorizontalAlignment="Stretch" DefaultLabelPosition="Right" Background="Transparent">
+    <CommandBar x:Name="CommandBar"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                Background="Transparent"
+                DefaultLabelPosition="Right">
         <AppBarToggleButton x:Uid="/IllustrationGridCommandBar/IllustrationGridCommandBarOpenConditionDialogButton">
             <AppBarToggleButton.Icon>
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE71C;" />
             </AppBarToggleButton.Icon>
         </AppBarToggleButton>
         <AppBarToggleButton x:Uid="/IllustrationGridCommandBar/IllustrationGridCommandBarSelectAllToggleButton"
-                            Unchecked="CommandBarSelectAllToggleButton_OnUnchecked"
-                            Checked="CommandBarSelectAllToggleButton_OnChecked">
+                            Checked="CommandBarSelectAllToggleButton_OnChecked"
+                            Unchecked="CommandBarSelectAllToggleButton_OnUnchecked">
             <AppBarToggleButton.Icon>
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8B3;" />
             </AppBarToggleButton.Icon>
         </AppBarToggleButton>
         <AppBarSeparator />
-        <AppBarButton x:Uid="/IllustrationGridCommandBar/IllustrationGridCommandBarAddAllToBookmarkButton"
-                      Tapped="CommandBarAddAllToBookmarkButton_OnTapped">
+        <AppBarButton x:Uid="/IllustrationGridCommandBar/IllustrationGridCommandBarAddAllToBookmarkButton" Tapped="CommandBarAddAllToBookmarkButton_OnTapped">
             <AppBarButton.Icon>
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB51;" />
             </AppBarButton.Icon>
         </AppBarButton>
-        <AppBarButton x:Uid="/IllustrationGridCommandBar/IllustrationGridCommandBarSaveAllButton"
-                      Tapped="CommandBarSaveAllButton_OnTapped">
+        <AppBarButton x:Uid="/IllustrationGridCommandBar/IllustrationGridCommandBarSaveAllButton" Tapped="CommandBarSaveAllButton_OnTapped">
             <AppBarButton.Icon>
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
             </AppBarButton.Icon>
         </AppBarButton>
-        <AppBarButton x:Uid="/IllustrationGridCommandBar/IllustrationGridCommandBarOpenAllInBrowserButton"
-                      Tapped="CommandBarOpenAllInBrowserButton_OnTapped">
+        <AppBarButton x:Uid="/IllustrationGridCommandBar/IllustrationGridCommandBarOpenAllInBrowserButton" Tapped="CommandBarOpenAllInBrowserButton_OnTapped">
             <AppBarButton.Icon>
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xF6FA;" />
             </AppBarButton.Icon>
         </AppBarButton>
-        <AppBarButton x:Uid="/IllustrationGridCommandBar/IllustrationGridCommandBarShareButton"
-                      Tapped="CommandBarShareButton_OnTapped">
+        <AppBarButton x:Uid="/IllustrationGridCommandBar/IllustrationGridCommandBarShareButton" Tapped="CommandBarShareButton_OnTapped">
             <AppBarButton.Icon>
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
             </AppBarButton.Icon>

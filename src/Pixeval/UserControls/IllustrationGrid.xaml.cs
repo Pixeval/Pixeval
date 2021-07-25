@@ -22,6 +22,7 @@ namespace Pixeval.UserControls
 
         private async void PostBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
+            e.Handled = true;
             var viewModel = sender.GetDataContext<IllustrationViewModel>();
             await viewModel!.PostPublicBookmarkAsync();
         }

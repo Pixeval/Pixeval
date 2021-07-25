@@ -1,5 +1,6 @@
 ﻿using System;
 using Mako.Model;
+using Pixeval.ViewModel;
 
 namespace Pixeval.Util
 {
@@ -19,6 +20,11 @@ namespace Pixeval.Util
                 ThumbnailUrlOptions.SquareMedium => illustration.ImageUrls?.SquareMedium,
                 _                                => throw new ArgumentOutOfRangeException(nameof(option), option, null)
             };
+        }
+
+        public static string GetWebUrl(string id)
+        {
+            return $"https://www.pixiv.net/artworks/{id}";
         }
     }
 }

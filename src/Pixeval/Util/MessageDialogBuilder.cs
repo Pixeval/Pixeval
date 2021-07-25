@@ -10,12 +10,40 @@ namespace Pixeval.Util
 
         public static MessageDialogBuilder Create() => new();
 
-        public static ContentDialog CreateOkCancel(UserControl owner, string title, string content, string okButtonText, string cancelButtonText)
+        public static ContentDialog CreateOkCancel(UserControl owner, string title, string content)
         {
             return Create().WithTitle(title)
                 .WithContent(content)
-                .WithPrimaryButtonText(okButtonText)
-                .WithCloseButtonText(cancelButtonText)
+                .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
+                .WithCloseButtonText(MessageContentDialogResources.CancelButtonContent)
+                .WithDefaultButton(ContentDialogButton.Primary)
+                .Build(owner);
+        }
+
+        public static ContentDialog CreateOkCancel(Window owner, string title, string content)
+        {
+            return Create().WithTitle(title)
+                .WithContent(content)
+                .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
+                .WithCloseButtonText(MessageContentDialogResources.CancelButtonContent)
+                .WithDefaultButton(ContentDialogButton.Primary)
+                .Build(owner);
+        }
+
+        public static ContentDialog CreateAcknowledgement(UserControl owner, string title, string content)
+        {
+            return Create().WithTitle(title)
+                .WithContent(content)
+                .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
+                .WithDefaultButton(ContentDialogButton.Primary)
+                .Build(owner);
+        }
+
+        public static ContentDialog CreateAcknowledgement(Window owner, string title, string content)
+        {
+            return Create().WithTitle(title)
+                .WithContent(content)
+                .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
                 .WithDefaultButton(ContentDialogButton.Primary)
                 .Build(owner);
         }

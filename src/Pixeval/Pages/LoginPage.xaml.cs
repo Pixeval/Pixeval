@@ -36,18 +36,16 @@ namespace Pixeval.Pages
                     await _viewModel.WebLoginAsync();
                     Frame.Navigate(typeof(MainPage), null, new DrillInNavigationTransitionInfo());
                 }
-                
+
                 AppContext.SaveContext();
                 await EventChannel.Default.PublishAsync(new LoginCompletedEvent(this, App.MakoClient!.Session));
             }
             catch (Exception exception)
             {
-                _ = await MessageDialogBuilder.Create()
-                    .WithTitle(LoginPageResources.ErrorWhileLoggingInTitle)
-                    .WithContent(LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.Message))
-                    .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
-                    .WithDefaultButton(ContentDialogButton.Primary)
-                    .Build(this)
+                _ = await MessageDialogBuilder.CreateAcknowledgement(
+                        this,
+                        LoginPageResources.ErrorWhileLoggingInTitle,
+                        LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.Message))
                     .ShowAsync();
                 Application.Current.Exit();
             }
@@ -59,9 +57,7 @@ namespace Pixeval.Pages
             {
                 var dialogResult = await MessageDialogBuilder.CreateOkCancel(this,
                     LoginPageResources.RootCertificateInstallationRequiredTitle,
-                    LoginPageResources.RootCertificateInstallationRequiredContent,
-                    MessageContentDialogResources.OkButtonContent,
-                    MessageContentDialogResources.CancelButtonContent).ShowAsync();
+                    LoginPageResources.RootCertificateInstallationRequiredContent).ShowAsync();
                 if (dialogResult == ContentDialogResult.Primary)
                 {
                     await _viewModel.InstallFakeRootCertificateAsync();
@@ -79,9 +75,7 @@ namespace Pixeval.Pages
             {
                 var dialogResult = await MessageDialogBuilder.CreateOkCancel(this,
                     LoginPageResources.WebView2InstallationRequiredTitle,
-                    LoginPageResources.WebView2InstallationRequiredContent,
-                    MessageContentDialogResources.OkButtonContent,
-                    MessageContentDialogResources.CancelButtonContent).ShowAsync();
+                    LoginPageResources.WebView2InstallationRequiredContent).ShowAsync();
                 if (dialogResult == ContentDialogResult.Primary)
                 {
                     await Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/p/?LinkId=2124703"));

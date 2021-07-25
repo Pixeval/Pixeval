@@ -16,7 +16,6 @@ using Mako.Net;
 using Mako.Preference;
 using Mako.Util;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.Win32;
 using Pixeval.Events;
 using Pixeval.Util;
@@ -164,12 +163,10 @@ namespace Pixeval.ViewModel
             }
             else
             {
-                _ = await MessageDialogBuilder.Create()
-                    .WithTitle(LoginPageResources.RefreshingSessionIsNotPresentTitle)
-                    .WithContent(LoginPageResources.RefreshingSessionIsNotPresentContent)
-                    .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
-                    .WithDefaultButton(ContentDialogButton.Primary)
-                    .Build(App.Window)
+                await MessageDialogBuilder.CreateAcknowledgement(
+                        App.Window,
+                        LoginPageResources.RefreshingSessionIsNotPresentTitle,
+                        LoginPageResources.RefreshingSessionIsNotPresentContent)
                     .ShowAsync();
                 await AppContext.ClearAppLocalFolderAsync();
                 Application.Current.Exit();

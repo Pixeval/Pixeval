@@ -1,90 +1,91 @@
-﻿<Page
-    x:Class="Pixeval.Pages.MainPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModel="using:Pixeval.ViewModel"
-    xmlns:mainPage="using:Pixeval.Pages"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+﻿<Page x:Class="Pixeval.Pages.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mainPage="using:Pixeval.Pages"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:viewModel="using:Pixeval.ViewModel"
+      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+      mc:Ignorable="d">
 
     <NavigationView x:Name="MainPageRootNavigationView"
-                    Loaded="MainPageRootNavigationView_OnLoaded"
-                    SelectionChanged="MainPageRootNavigationView_OnSelectionChanged"
+                    d:DataContext="{d:DesignInstance viewModel:MainPageViewModel}"
                     IsSettingsVisible="False"
+                    Loaded="MainPageRootNavigationView_OnLoaded"
                     OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}"
-                    d:DataContext="{d:DesignInstance viewModel:MainPageViewModel}">
+                    SelectionChanged="MainPageRootNavigationView_OnSelectionChanged">
         <NavigationView.PaneHeader>
-            <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Text="Pixeval" />
+            <TextBlock Margin="10,0,0,0"
+                       VerticalAlignment="Center"
+                       Text="Pixeval" />
         </NavigationView.PaneHeader>
         <NavigationView.AutoSuggestBox>
             <AutoSuggestBox x:Uid="/MainPage/MainPageAutoSuggestionBox" QueryIcon="Find" />
         </NavigationView.AutoSuggestBox>
         <NavigationView.MenuItems>
-            <NavigationViewItem Tag="{x:Bind mainPage:MainPageRootNavigationViewTag.Recommends}"
-                                x:Name="RecommendationTab"
-                                x:Uid="/MainPage/RecommendationsTab">
+            <NavigationViewItem x:Name="RecommendationTab"
+                                x:Uid="/MainPage/RecommendationsTab"
+                                Tag="{x:Bind mainPage:MainPageRootNavigationViewTag.Recommends}">
                 <NavigationViewItem.Icon>
-                    <!-- Calendar -->
+                    <!--  Calendar  -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE787;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
             <NavigationViewItem x:Uid="/MainPage/RankingsTab">
                 <NavigationViewItem.Icon>
-                    <!-- Market -->
+                    <!--  Market  -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEAFC;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
             <NavigationViewItem x:Uid="/MainPage/BookmarksTab">
                 <NavigationViewItem.Icon>
-                    <!-- Library -->
-                    <!-- Alternative: E74C(OEM) -->
+                    <!--  Library  -->
+                    <!--  Alternative: E74C(OEM)  -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8F1;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
             <NavigationViewItem x:Uid="/MainPage/FollowingsTab">
                 <NavigationViewItem.Icon>
-                    <!-- People -->
+                    <!--  People  -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE716;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
             <NavigationViewItem x:Uid="/MainPage/SpotlightsTab">
                 <NavigationViewItem.Icon>
-                    <!-- MapLayers -->
+                    <!--  MapLayers  -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE81E;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
             <NavigationViewItem x:Uid="/MainPage/FeedsTab">
                 <NavigationViewItem.Icon>
-                    <!-- MobLocation -->
-                    <!-- Alternative: E81D(Location) -->
+                    <!--  MobLocation  -->
+                    <!--  Alternative: E81D(Location)  -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEC43;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
             <NavigationViewItem x:Uid="/MainPage/NewPostsTab">
                 <NavigationViewItem.Icon>
-                    <!-- DevUpdate -->
-                    <!-- Alternative: E777(UpdateRestore) -->
+                    <!--  DevUpdate  -->
+                    <!--  Alternative: E777(UpdateRestore)  -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xECC5;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
             <NavigationViewItem x:Uid="/MainPage/ReverseSearchTab">
                 <NavigationViewItem.Icon>
-                    <!-- SearchAndApps -->
+                    <!--  SearchAndApps  -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE773;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
             <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />
             <NavigationViewItem x:Uid="/MainPage/HistoriesTab">
                 <NavigationViewItem.Icon>
-                    <!-- History -->
+                    <!--  History  -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE81C;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
             <NavigationViewItem x:Uid="/MainPage/DownloadListTab">
                 <NavigationViewItem.Icon>
-                    <!-- CheckList -->
+                    <!--  CheckList  -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE9D5;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
@@ -92,19 +93,21 @@
         <NavigationView.FooterMenuItems>
             <NavigationViewItem>
                 <StackPanel Margin="-6,0,0,0" Orientation="Horizontal">
-                    <PersonPicture Height="20" Width="20" ProfilePicture="{x:Bind _viewModel.Avatar, Mode=OneWay}" />
+                    <PersonPicture Width="20"
+                                   Height="20"
+                                   ProfilePicture="{x:Bind _viewModel.Avatar, Mode=OneWay}" />
                     <TextBlock x:Uid="/MainPage/AccountTab" Margin="10,0,0,0" />
                 </StackPanel>
             </NavigationViewItem>
             <NavigationViewItem x:Uid="/MainPage/HelpTab">
                 <NavigationViewItem.Icon>
-                    <!-- Help -->
+                    <!--  Help  -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE897;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
             <NavigationViewItem x:Uid="/MainPage/SettingsTab">
                 <NavigationViewItem.Icon>
-                    <!-- Setting -->
+                    <!--  Setting  -->
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE713;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>

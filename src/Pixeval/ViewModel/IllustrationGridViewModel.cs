@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,24 +35,18 @@ namespace Pixeval.ViewModel
 
         public async Task Fill(Action<ObservableCollection<IllustrationViewModel>, IllustrationViewModel> insertAction)
         {
-            // TODO: The cache system should be take into our considerations
-            // The cache system MIGHT improve the fluency of the UI, but it may
-            // also not worth the efforts
+            var added = new HashSet<long>(); 
             await foreach (var illustration in FetchEngine!)
             {
-                // TODO: Use a global static object (by using IoC or a static property)
-                // to manage all the filter options, such as minimum bookmark, maximum
-                // images that are allowed to be loaded at the same time, required tags
-                // and excluded tags, etc.
-                //
-                // if (FetchEngine.RequestedPages >= 20)
-                // {
-                //     FetchEngine.EngineHandle.Cancel();
-                // }
-                if (illustration is not null)
+                if (illustration is not null && !added.Contains(illustration.Id) /* Check for the repetition */)
                 {
-                    var i = new IllustrationViewModel(illustration);
-                    i.OnIsSelectedChanged += (_, model) =>
+                    if (added.Count >= 500)
+                    {
+                        break;
+                    }
+                    added.Add(illustration.Id); // add to the already-added-illustration list
+                    var viewModel = new IllustrationViewModel(illustration);
+                    viewModel.OnIsSelectedChanged += (_, model) => // add/remove the viewModel to/from SelectedIllustrations according to the IsSelected Property
                     {
                         if (model.IsSelected)
                         {
@@ -61,9 +56,10 @@ namespace Pixeval.ViewModel
                         {
                             SelectedIllustrations.Remove(model);
                         }
+                        // Update the IsAnyIllustrationSelected Property if any of the viewModel's IsSelected property changes
                         IsAnyIllustrationSelected = SelectedIllustrations.Any();
                     };
-                    insertAction(Illustrations, i);
+                    insertAction(Illustrations, viewModel);
                 }
             }
         }
