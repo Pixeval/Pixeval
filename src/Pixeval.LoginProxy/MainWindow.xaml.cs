@@ -81,7 +81,7 @@ namespace Pixeval.LoginProxy
                     AdditionalBrowserArguments = $"--proxy-server=127.0.0.1:{port}"
                 })
             );
-            await LoginWebView.CoreWebView2.CallDevToolsProtocolMethodAsync("Security.setIgnoreCertificateErrors", @"{ ""ignore"": true }");
+            await LoginWebView.CoreWebView2.CallDevToolsProtocolMethodAsync("Security.setIgnoreCertificateErrors", "{ \"ignore\": true }");
             LoginWebView.CoreWebView2.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All);
             LoginWebView.CoreWebView2.WebResourceRequested += (_, args) =>
             {
