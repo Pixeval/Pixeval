@@ -2,11 +2,13 @@ name: CI
 
 on:
     pull_request:
-        branches-ignore:
-            - winui3
+        branches:
+            - master
+            - remake
     push:
-        branches-ignore:
-            - winui3
+        branches:
+            - master
+            - remake
 
 jobs:
     build:

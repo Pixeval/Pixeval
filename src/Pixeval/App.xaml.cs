@@ -15,6 +15,14 @@ namespace Pixeval
 
         public static AppSetting AppSetting { get; set; } = null!;
 
+        /// <summary>
+        /// A global env class for some global variables
+        /// </summary>
+        public static class Global
+        {
+            public static string? Uid => MakoClient.Session.Id;
+        }
+
         public App()
         {
             InitializeComponent();
@@ -32,11 +40,11 @@ namespace Pixeval
         {
             UnhandledException += (_, args) =>
             {
-                args.Handled = true; 
+                args.Handled = true;
                 UncaughtExceptionHandler(args.Exception);
             };
             TaskScheduler.UnobservedTaskException += (_, args) =>
-            { 
+            {
                 UncaughtExceptionHandler(args.Exception);
                 args.SetObserved();
             };
@@ -57,14 +65,15 @@ namespace Pixeval
             {
                 Window.DispatcherQueue.TryEnqueue(async () =>
                 {
-                    await MessageDialogBuilder.CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
+                    await MessageDialogBuilder
+                        .CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
                     await ExitWithPushedNotification();
                 });
             }
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)
-        { 
+        {
             Window = new MainWindow();
             Window.SetWindowSize(800, 600);
             Window.Activate();
