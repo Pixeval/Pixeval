@@ -14,12 +14,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="Assets\Images\logo-no-caption.png" />
+    <Content Remove="Assets\Strings\zh-CN\BookmarksPage.resw" />
     <Content Remove="Assets\Strings\zh-CN\IllustrationGridCommandBar.resw" />
     <Content Remove="Assets\Strings\zh-CN\RecommendsPage.resw" />
     <Content Remove="Assets\Strings\zh-CN\SettingsPage.resw" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\Certs\pixeval_server_cert.pfx" />
+    <None Remove="Assets\Strings\zh-CN\BookmarksPage.resw" />
+    <None Remove="Pages\BookMarksPage.xaml" />
     <None Remove="Pages\DownloadListPage.xaml" />
     <None Remove="Pages\IllustrationGridPage.xaml" />
     <None Remove="Pages\IllustrationViewerPage.xaml" />
@@ -122,5 +125,15 @@
 
   <ItemGroup>
     <Folder Include="Assets\Binary\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PRIResource Include="Assets\Strings\zh-CN\BookmarksPage.resw" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\BookMarksPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 </Project>
