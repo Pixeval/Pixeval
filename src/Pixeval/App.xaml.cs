@@ -13,29 +13,38 @@ namespace Pixeval
 
         public static MakoClient MakoClient { get; set; } = null!; // The null-state of MakoClient is transient
 
+        public static AppSetting AppSetting { get; set; } = null!;
+
         public App()
         {
             InitializeComponent();
             RegisterUnhandledExceptionHandler();
+            AppSetting = AppContext.LoadConfiguration() ?? AppSetting.CreateDefault();
+            RequestedTheme = AppSetting.Theme switch
+            {
+                ApplicationTheme.Dark  => Microsoft.UI.Xaml.ApplicationTheme.Dark,
+                ApplicationTheme.Light => Microsoft.UI.Xaml.ApplicationTheme.Dark,
+                _                      => RequestedTheme
+            };
         }
 
         private void RegisterUnhandledExceptionHandler()
         {
-            UnhandledException += async (_, args) =>
+            UnhandledException += (_, args) =>
             {
-                args.Handled = true;
-                await UncaughtExceptionHandler(args.Exception);
+                args.Handled = true; 
+                UncaughtExceptionHandler(args.Exception);
             };
-            TaskScheduler.UnobservedTaskException += async (sender, args) =>
-            {
-                await UncaughtExceptionHandler(args.Exception);
+            TaskScheduler.UnobservedTaskException += (_, args) =>
+            { 
+                UncaughtExceptionHandler(args.Exception);
                 args.SetObserved();
             };
             AppDomain.CurrentDomain.UnhandledException += async (_, args) =>
             {
                 if (args.ExceptionObject is Exception e)
                 {
-                    await UncaughtExceptionHandler(e);
+                    UncaughtExceptionHandler(e);
                 }
 
                 if (args.IsTerminating)
@@ -44,10 +53,13 @@ namespace Pixeval
                 }
             };
 
-            static async Task UncaughtExceptionHandler(Exception e)
+            static void UncaughtExceptionHandler(Exception e)
             {
-                await MessageDialogBuilder.CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
-                await ExitWithPushedNotification();
+                Window.DispatcherQueue.TryEnqueue(async () =>
+                {
+                    await MessageDialogBuilder.CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
+                    await ExitWithPushedNotification();
+                });
             }
         }
 

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Pixeval.Util
 {
@@ -14,6 +16,19 @@ namespace Pixeval.Util
             }
 
             list.Insert(i, item);
+        }
+
+        public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> source)
+        {
+            return new(source);
+        }
+
+        public static void AddIfNotPresent<T>(this ObservableCollection<T> source, T value, IEqualityComparer<T> comparer)
+        {
+            if (!source.Contains(value, comparer))
+            {
+                source.Add(value);
+            }
         }
     }
 }

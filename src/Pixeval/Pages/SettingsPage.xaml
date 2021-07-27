@@ -11,6 +11,7 @@
       xmlns:ui="using:CommunityToolkit.WinUI.UI"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
       mc:Ignorable="d">
+    <!--  ReSharper disable UnusedMember.Local  -->
     <Page.Resources>
         <!--  Gap between different entries  -->
         <Thickness x:Key="SettingsEntriesMargin">0,20,0,0</Thickness>
@@ -71,7 +72,6 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
             </Grid.ColumnDefinitions>
-            <!--  ReSharper disable once UnusedMember.Local  -->
             <StackPanel x:Name="SettingEntriesPanel"
                         Grid.Row="1"
                         Grid.Column="1"
@@ -86,13 +86,18 @@
                 <!--  Application Theme  -->
                 <TextBlock x:Uid="/SettingsPage/ApplicationThemeTextBlock"
                            Style="{StaticResource SectionHeaderTextBlockStyle}" />
-                <RadioButtons MaxColumns="1">
+                <RadioButtons x:Name="ApplicationThemeRadioButtons"
+                              MaxColumns="1"
+                              SelectedItem="{x:Bind GetApplicationThemeRadioButtonsSelectedItem()}">
                     <RadioButtons.Items>
                         <RadioButton x:Uid="/SettingsPage/ApplicationThemeSystemDefaultRadioButton"
+                                     Checked="ApplicationThemeSystemDefaultRadioButton_OnChecked"
                                      Tag="{x:Bind pixeval:ApplicationTheme.SystemDefault}" />
                         <RadioButton x:Uid="/SettingsPage/ApplicationThemeLightRadioButton"
+                                     Checked="ApplicationThemeLightRadioButton_OnChecked"
                                      Tag="{x:Bind pixeval:ApplicationTheme.Light}" />
                         <RadioButton x:Uid="/SettingsPage/ApplicationThemeDarkRadioButton"
+                                     Checked="ApplicationThemeDarkRadioButton_OnChecked"
                                      Tag="{x:Bind pixeval:ApplicationTheme.Dark}" />
                     </RadioButtons.Items>
                 </RadioButtons>
@@ -106,7 +111,8 @@
                 <ToggleSwitch x:Name="SwitchSensitiveContentFilteringToggleSwitch"
                               x:Uid="/SettingsPage/SwitchSensitiveContentFilteringToggleSwitch"
                               Margin="{StaticResource SettingsEntriesMargin}"
-                              FontSize="{StaticResource PixevalContentFontSize}" />
+                              FontSize="{StaticResource PixevalContentFontSize}"
+                              Toggled="SwitchSensitiveContentFilteringToggleSwitch_OnToggled" />
                 <InfoBar x:Uid="/SettingsPage/SwitchSensitiveContentFilteringInfoBar"
                          IsOpen="{x:Bind SwitchSensitiveContentFilteringToggleSwitch.IsOn, Mode=OneWay}"
                          Style="{StaticResource SectionInfoBarStyle}">
@@ -119,7 +125,8 @@
                 <ToggleSwitch x:Name="DisableSniBypassToggleSwitch"
                               x:Uid="/SettingsPage/DisableSNIBypassToggleSwitch"
                               Margin="{StaticResource SettingsEntriesMargin}"
-                              FontSize="{StaticResource PixevalContentFontSize}" />
+                              FontSize="{StaticResource PixevalContentFontSize}"
+                              IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=TwoWay}" />
                 <HyperlinkButton x:Uid="/SettingsPage/AboutSNIBypassHyperlinkButton"
                                  FontSize="{StaticResource PixevalSubscriptFontSize}"
                                  NavigateUri="https://en.wikipedia.org/wiki/Domain_fronting" />
@@ -131,8 +138,11 @@
                 <TextBlock x:Uid="/SettingsPage/DefaultSortOptionTextBlock"
                            Margin="0,10,0,0"
                            Style="{StaticResource SectionHeaderTextBlockStyle}" />
-                <ComboBox x:Uid="/Misc/SortOptionComboBox"
-                          Margin="{StaticResource SettingsEntryPadding}">
+                <ComboBox x:Name="DefaultSortOptionComboBox"
+                          x:Uid="/Misc/SortOptionComboBox"
+                          Margin="{StaticResource SettingsEntryPadding}"
+                          SelectedItem="{x:Bind GetDefaultSortOptionComboBoxSelectedItem()}"
+                          SelectionChanged="DefaultSortOptionComboBox_OnSelectionChanged">
                     <ComboBox.Items>
                         <ComboBoxItem x:Uid="/Misc/SortOptionComboBoxPublishDateDescendingComboBoxItem"
                                       Tag="{x:Bind mako:IllustrationSortOption.PublishDateDescending}" />
@@ -147,8 +157,11 @@
                 <!--  Search Keyword Match Section  -->
                 <TextBlock x:Uid="/SettingsPage/SearchKeywordMatchOptionTextBlock"
                            Style="{StaticResource SectionHeaderTextBlockStyle}" />
-                <ComboBox x:Uid="/SettingsPage/SearchKeywordMatchOptionComboBox"
-                          Margin="{StaticResource SettingsEntryPadding}">
+                <ComboBox x:Name="SearchKeywordMatchOptionComboBox"
+                          x:Uid="/SettingsPage/SearchKeywordMatchOptionComboBox"
+                          Margin="{StaticResource SettingsEntryPadding}"
+                          SelectedItem="{x:Bind GetSearchKeywordMatchOptionComboBoxSelectedItem()}"
+                          SelectionChanged="SearchKeywordMatchOptionComboBox_OnSelectionChanged">
                     <ComboBox.Items>
                         <ComboBoxItem x:Uid="/SettingsPage/SearchKeywordMatchOptionComboBoxPartialMatchComboBoxItem"
                                       Tag="{x:Bind mako:SearchTagMatchOption.PartialMatchForTags}" />
@@ -170,7 +183,8 @@
                             Maximum="100"
                             Minimum="1"
                             TickFrequency="10"
-                            TickPlacement="Outside" />
+                            TickPlacement="Outside"
+                            Value="{x:Bind _viewModel.PageLimitForKeywordSearch, Mode=TwoWay}" />
                     <NumberBox x:Name="PageLimitForSearchNumberBox"
                                x:Uid="/SettingsPage/PageLimitForSearchNumberBox"
                                Margin="15,0,0,0"
@@ -179,12 +193,13 @@
                                Maximum="100"
                                Minimum="1"
                                Style="{StaticResource SettingsNumberBoxStyle}"
-                               Value="1" />
+                               Value="{x:Bind _viewModel.PageLimitForKeywordSearch, Mode=TwoWay}" />
                 </StackPanel>
                 <InfoBar x:Uid="/SettingsPage/PageLimitForSearchInfoBar"
                          Style="{StaticResource SectionInfoBarStyle}" />
                 <TeachingTip x:Name="PageLimitForSearchNumberBoxValueNotInRangeTeachingTip"
                              x:Uid="/SettingsPage/PageLimitForSearchNumberBoxValueNotInRangeTeachingTip"
+                             IsLightDismissEnabled="True"
                              PreferredPlacement="TopRight"
                              Target="{x:Bind PageLimitForSearchNumberBox}">
                     <TeachingTip.IconSource>
@@ -195,22 +210,50 @@
                 <!--  Search Starts From  -->
                 <TextBlock x:Uid="/SettingsPage/SearchStartsFromPageNumberTextBlock"
                            Style="{StaticResource SectionHeaderTextBlockStyle}" />
-                <NumberBox x:Uid="/SettingsPage/SearchStartsFromPageNumberNumberBox"
+                <NumberBox x:Name="SearchStartsFromPageNumberNumberBox"
+                           x:Uid="/SettingsPage/SearchStartsFromPageNumberNumberBox"
                            Margin="{StaticResource SettingsEntryPadding}"
+                           GotFocus="SearchStartsFromPageNumberNumberBox_OnGotFocus"
+                           LostFocus="SearchStartsFromPageNumberNumberBox_OnLostFocus"
+                           Maximum="150"
                            Minimum="1"
                            Style="{StaticResource SettingsNumberBoxStyle}"
-                           Value="1" />
+                           Value="{x:Bind _viewModel.SearchStartingFromPageNumber, Mode=TwoWay}" />
+                <TeachingTip x:Name="SearchStartsFromPageNumberNumberBoxValueNotInRangeTeachingTip"
+                             x:Uid="/SettingsPage/SearchStartsFromPageNumberNumberBoxValueNotInRangeTeachingTip"
+                             IsLightDismissEnabled="True"
+                             PreferredPlacement="TopRight"
+                             Target="{x:Bind SearchStartsFromPageNumberNumberBox}">
+                    <TeachingTip.IconSource>
+                        <FontIconSource FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                        Glyph="&#xE783;" />
+                    </TeachingTip.IconSource>
+                </TeachingTip>
                 <InfoBar x:Uid="/SettingsPage/SearchStartsFromPageNumberInfoBar"
                          Style="{StaticResource SectionInfoBarStyle}" />
                 <!--  Spotlight Search Page Limit  -->
-                <TextBlock x:Uid="/SettingsPage/SpotlightSearchPageLimitTextBlock"
+                <TextBlock x:Uid="/SettingsPage/PageLimitForSpotlightTextBlock"
                            Style="{StaticResource SectionHeaderTextBlockStyle}" />
-                <NumberBox x:Uid="/SettingsPage/SpotlightSearchPageLimitNumberBox"
+                <NumberBox x:Name="PageLimitForSpotlightNumberBox"
+                           x:Uid="/SettingsPage/PageLimitForSpotlightNumberBox"
                            Margin="{StaticResource SettingsEntryPadding}"
+                           GotFocus="PageLimitForSpotlightNumberBox_OnGotFocus"
+                           LostFocus="PageLimitForSpotlightNumberBox_OnLostFocus"
+                           Maximum="100"
                            Minimum="1"
                            Style="{StaticResource SettingsNumberBoxStyle}"
-                           Value="1" />
-                <InfoBar x:Uid="/SettingsPage/SpotlightSearchPageLimitInfoBar"
+                           Value="{x:Bind _viewModel.PageLimitForSpotlight, Mode=TwoWay}" />
+                <TeachingTip x:Name="PageLimitForSpotlightNumberBoxValueNotInRangeTeachingTip"
+                             x:Uid="/SettingsPage/PageLimitForSpotlightNumberBoxValueNotInRangeTeachingTip"
+                             IsLightDismissEnabled="True"
+                             PreferredPlacement="TopRight"
+                             Target="{x:Bind PageLimitForSpotlightNumberBox}">
+                    <TeachingTip.IconSource>
+                        <FontIconSource FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                        Glyph="&#xE783;" />
+                    </TeachingTip.IconSource>
+                </TeachingTip>
+                <InfoBar x:Uid="/SettingsPage/PageLimitForSpotlightInfoBar"
                          Style="{StaticResource SectionInfoBarStyle}" />
                 <!--  Sensitive Tag  -->
                 <TextBlock x:Uid="/SettingsPage/SensitiveTagTextBlock"
@@ -221,18 +264,37 @@
                                             MaxHeight="50"
                                             Margin="{StaticResource SettingsEntryPadding}"
                                             HorizontalAlignment="Left"
-                                            QueryIcon="{ui:SymbolIconSource Symbol=Tag}" />
+                                            ItemsSource="{x:Bind _viewModel.ExcludeTags}"
+                                            QueryIcon="{ui:SymbolIconSource Symbol=Tag}"
+                                            TokenItemAdded="SensitiveTagTokenizingTextBox_OnTokenItemAdded"
+                                            TokenItemAdding="SensitiveTagTokenizingTextBox_OnTokenItemAdding"
+                                            TokenItemRemoved="SensitiveTagTokenizingTextBox_OnTokenItemRemoved" />
                 <InfoBar x:Uid="/SettingsPage/SensitiveTagInfoBar"
                          Style="{StaticResource SectionInfoBarStyle}" />
                 <!--  Image Mirror Server  -->
                 <TextBlock x:Uid="/SettingsPage/ImageMirrorServerTextBlock"
                            Style="{StaticResource SectionHeaderTextBlockStyle}" />
-                <TextBox x:Uid="/SettingsPage/ImageMirrorServerTextBox"
+                <TextBox x:Name="ImageMirrorServerTextBox"
+                         x:Uid="/SettingsPage/ImageMirrorServerTextBox"
+                         MinWidth="100"
                          MaxWidth="415"
                          Margin="{StaticResource SettingsEntryPadding}"
-                         HorizontalAlignment="Left" />
+                         HorizontalAlignment="Left"
+                         GotFocus="ImageMirrorServerTextBox_OnGotFocus"
+                         Text="{x:Bind _viewModel.MirrorHost, Mode=TwoWay}"
+                         TextChanged="ImageMirrorServerTextBox_OnTextChanged" />
                 <InfoBar x:Uid="/SettingsPage/ImageMirrorServerInfoBar"
                          Style="{StaticResource SectionInfoBarStyle}" />
+                <TeachingTip x:Name="ImageMirrorServerTeachingTip"
+                             x:Uid="/SettingsPage/ImageMirrorServerTeachingTip"
+                             IsLightDismissEnabled="True"
+                             PreferredPlacement="TopRight"
+                             Target="{x:Bind ImageMirrorServerTextBox}">
+                    <TeachingTip.IconSource>
+                        <FontIconSource FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                        Glyph="&#xE783;" />
+                    </TeachingTip.IconSource>
+                </TeachingTip>
                 <TextBlock x:Uid="/SettingsPage/DownloadSectionSubtitleTextBlock"
                            Margin="0,15,0,0"
                            FontSize="{StaticResource PixevalSubtitleFontSize}" />
@@ -247,11 +309,12 @@
                            Maximum="{x:Bind system:Environment.ProcessorCount}"
                            Minimum="1"
                            Style="{StaticResource SettingsNumberBoxStyle}"
-                           Value="{x:Bind system:Environment.ProcessorCount}" />
+                           Value="{x:Bind _viewModel.MaxDownloadTaskConcurrencyLevel, Mode=TwoWay}" />
                 <InfoBar x:Uid="/SettingsPage/DownloadConcurrencyLevelInfoBar"
                          Style="{StaticResource SectionInfoBarStyle}" />
                 <TeachingTip x:Name="DownloadConcurrencyLevelValueNotInRangeTeachingTip"
                              x:Uid="/SettingsPage/DownloadConcurrencyLevelValueNotInRangeTeachingTip"
+                             IsLightDismissEnabled="True"
                              PreferredPlacement="TopRight"
                              Target="{x:Bind DownloadConcurrencyLevelNumberBox}">
                     <TeachingTip.IconSource>
@@ -260,7 +323,6 @@
                     </TeachingTip.IconSource>
                 </TeachingTip>
             </StackPanel>
-            <!--  ReSharper disable once UnusedMember.Local  -->
             <StackPanel x:Name="InformationSidePanel"
                         Grid.Row="1"
                         Grid.Column="3"

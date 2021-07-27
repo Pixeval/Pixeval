@@ -19,6 +19,7 @@
     <Content Remove="Assets\Strings\zh-CN\SettingsPage.resw" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Assets\Certs\pixeval_server_cert.pfx" />
     <None Remove="Pages\DownloadListPage.xaml" />
     <None Remove="Pages\IllustrationGridPage.xaml" />
     <None Remove="Pages\IllustrationViewerPage.xaml" />
@@ -117,5 +118,9 @@
     <Page Update="Pages\LoginPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\Binary\" />
   </ItemGroup>
 </Project>

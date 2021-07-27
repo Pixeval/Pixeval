@@ -136,7 +136,7 @@
     <value>跟随系统主题</value>
   </data>
   <data name="ApplicationThemeTextBlock.Text" xml:space="preserve">
-    <value>应用程序主题</value>
+    <value>应用程序主题(重启应用后生效)</value>
   </data>
   <data name="ApplicationWideSectionSubtitleTextBlock.Text" xml:space="preserve">
     <value>应用程序相关设置</value>
@@ -193,6 +193,12 @@
   <data name="ImageMirrorServerInfoBar.Title" xml:space="preserve">
     <value>提示</value>
   </data>
+  <data name="ImageMirrorServerTeachingTip.Subtitle" xml:space="preserve">
+    <value>镜像服务器要求填写合法的主机名或带有协议的URL，如果你不清楚该填写什么，请在这一栏留空</value>
+  </data>
+  <data name="ImageMirrorServerTeachingTip.Title" xml:space="preserve">
+    <value>主机名不正确</value>
+  </data>
   <data name="ImageMirrorServerTextBlock.Text" xml:space="preserve">
     <value>图片镜像站的主机名</value>
   </data>
@@ -222,6 +228,24 @@
   </data>
   <data name="PageLimitForSearchTextBlock.Text" xml:space="preserve">
     <value>最大搜索页数限制</value>
+  </data>
+  <data name="PageLimitForSpotlightInfoBar.Message" xml:space="preserve">
+    <value>在搜索特辑时，最多会搜索该设置项指定的页数，其中每一页包含10条结果</value>
+  </data>
+  <data name="PageLimitForSpotlightInfoBar.Title" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="PageLimitForSpotlightNumberBox.PlaceholderText" xml:space="preserve">
+    <value>页码</value>
+  </data>
+  <data name="PageLimitForSpotlightNumberBoxValueNotInRangeTeachingTip.Subtitle" xml:space="preserve">
+    <value>该值不能大于100</value>
+  </data>
+  <data name="PageLimitForSpotlightNumberBoxValueNotInRangeTeachingTip.Title" xml:space="preserve">
+    <value>输入的值不合法</value>
+  </data>
+  <data name="PageLimitForSpotlightTextBlock.Text" xml:space="preserve">
+    <value>特辑搜索页数限制</value>
   </data>
   <data name="SearchKeywordMatchOptionComboBox.PlaceholderText" xml:space="preserve">
     <value>匹配模式</value>
@@ -253,6 +277,12 @@
   <data name="SearchStartsFromPageNumberNumberBox.PlaceholderText" xml:space="preserve">
     <value>页码</value>
   </data>
+  <data name="SearchStartsFromPageNumberNumberBoxValueNotInRangeTeachingTip.Subtitle" xml:space="preserve">
+    <value>该值不能大于150</value>
+  </data>
+  <data name="SearchStartsFromPageNumberNumberBoxValueNotInRangeTeachingTip.Title" xml:space="preserve">
+    <value>输入的值不合法</value>
+  </data>
   <data name="SearchStartsFromPageNumberTextBlock.Text" xml:space="preserve">
     <value>从第几页开始搜索作品</value>
   </data>
@@ -270,18 +300,6 @@
   </data>
   <data name="SensitiveTagTokenizingTextBox.PlaceholderText" xml:space="preserve">
     <value>添加Tag，按回车确认</value>
-  </data>
-  <data name="SpotlightSearchPageLimitInfoBar.Message" xml:space="preserve">
-    <value>在搜索特辑时，最多会搜索该设置项指定的页数，其中每一页包含10条结果</value>
-  </data>
-  <data name="SpotlightSearchPageLimitInfoBar.Title" xml:space="preserve">
-    <value>提示</value>
-  </data>
-  <data name="SpotlightSearchPageLimitNumberBox.PlaceholderText" xml:space="preserve">
-    <value>页码</value>
-  </data>
-  <data name="SpotlightSearchPageLimitTextBlock.Text" xml:space="preserve">
-    <value>特辑搜索页数限制</value>
   </data>
   <data name="SwitchSensitiveContentFilteringInfoBar.Message" xml:space="preserve">
     <value>开启该选项后，任何搜索结果(不仅仅是关键字搜索)都不会包含敏感内容(R-18以及R-18G，您可以在设置中自行添加敏感词tag)</value>

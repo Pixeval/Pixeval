@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Security.Cryptography;
@@ -8,7 +7,9 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
 using CommunityToolkit.WinUI.Helpers;
+using Mako.Global.Enum;
 using Mako.Preference;
+using Mako.Util;
 using Pixeval.Events;
 using Pixeval.Util;
 
@@ -173,11 +174,18 @@ namespace Pixeval
 
         public static void SaveConfiguration()
         {
-            if (App.MakoClient.Configuration is { } configuration)
+            if (App.AppSetting is { } appSetting)
             {
-                ConfigurationContainer.Values[nameof(configuration.Bypass)] = configuration.Bypass;
-                ConfigurationContainer.Values[nameof(configuration.ConnectionTimeout)] = configuration.ConnectionTimeout;
-                ConfigurationContainer.Values[nameof(configuration.MirrorHost)] = configuration.MirrorHost;
+                ConfigurationContainer.Values[nameof(AppSetting.Theme)] = appSetting.Theme.CastOrThrow<int>();
+                ConfigurationContainer.Values[nameof(AppSetting.ExcludeTags)] = appSetting.ExcludeTags.ToJson();
+                ConfigurationContainer.Values[nameof(AppSetting.DisableDomainFronting)] = appSetting.DisableDomainFronting;
+                ConfigurationContainer.Values[nameof(AppSetting.DefaultSortOption)] = appSetting.DefaultSortOption.CastOrThrow<int>();
+                ConfigurationContainer.Values[nameof(AppSetting.SearchTagMatchOption)] = appSetting.SearchTagMatchOption.CastOrThrow<int>();
+                ConfigurationContainer.Values[nameof(AppSetting.PageLimitForKeywordSearch)] = appSetting.PageLimitForKeywordSearch;
+                ConfigurationContainer.Values[nameof(AppSetting.SearchStartingFromPageNumber)] = appSetting.SearchStartingFromPageNumber;
+                ConfigurationContainer.Values[nameof(AppSetting.PageLimitForSpotlight)] = appSetting.PageLimitForSpotlight;
+                ConfigurationContainer.Values[nameof(AppSetting.MirrorHost)] = appSetting.MirrorHost ?? string.Empty;
+                ConfigurationContainer.Values[nameof(AppSetting.MaxDownloadTaskConcurrencyLevel)] = appSetting.MaxDownloadTaskConcurrencyLevel;
             }
         }
 
@@ -206,17 +214,21 @@ namespace Pixeval
             }
         }
 
-        public static MakoClientConfiguration? LoadConfiguration()
+        public static AppSetting? LoadConfiguration()
         {
             try
             {
-                var values = ConfigurationContainer.Values;
-                return new MakoClientConfiguration(
-                    values[nameof(MakoClientConfiguration.ConnectionTimeout)].CastOrThrow<int>(),
-                    values[nameof(MakoClientConfiguration.Bypass)].CastOrThrow<bool>(),
-                    values[nameof(MakoClientConfiguration.MirrorHost)].CastOrThrow<string>(),
-                    CultureInfo.CurrentUICulture
-                );
+                return new AppSetting(
+                    ConfigurationContainer.Values[nameof(AppSetting.Theme)].CastOrThrow<ApplicationTheme>(),
+                    (ConfigurationContainer.Values[nameof(AppSetting.ExcludeTags)].CastOrThrow<string>().FromJson<string[]>() ?? Array.Empty<string>()).ToObservableCollection(),
+                    ConfigurationContainer.Values[nameof(AppSetting.DisableDomainFronting)].CastOrThrow<bool>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.DefaultSortOption)].CastOrThrow<IllustrationSortOption>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.SearchTagMatchOption)].CastOrThrow<SearchTagMatchOption>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.PageLimitForKeywordSearch)].CastOrThrow<int>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.SearchStartingFromPageNumber)].CastOrThrow<int>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.PageLimitForSpotlight)].CastOrThrow<int>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.MirrorHost)].CastOrThrow<string>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.MaxDownloadTaskConcurrencyLevel)].CastOrThrow<int>());
             }
             catch
             {
