@@ -1,4 +1,5 @@
 ﻿using System;
+using Mako.Global.Enum;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -20,6 +21,8 @@ namespace Pixeval.Pages
         }
 
         public static readonly MainPageRootNavigationViewTag Recommends = new(typeof(RecommendsPage), App.MakoClient.Recommends());
+        
+        public static readonly MainPageRootNavigationViewTag Bookmarks = new(typeof(BookMarksPage), App.MakoClient.Bookmarks(App.Global.Uid!, PrivacyPolicy.Public));
 
         public static readonly MainPageRootNavigationViewTag Settings = new(typeof(SettingsPage), App.MakoClient.Configuration);
     }
