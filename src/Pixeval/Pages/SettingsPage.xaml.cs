@@ -20,22 +20,7 @@ namespace Pixeval.Pages
             InitializeComponent();
         }
 
-        // We use LostFocus event instead of ValueChanged because the ValueChanged event also
-        // occurs when the value is a floating-point number and is about to be rounded down to 
-        // fall into the valid range, e.g. 100.3
-        private void PageLimitForSearchNumberBox_OnLostFocus(object sender, RoutedEventArgs e)
-        {
-            switch (sender)
-            {
-                case NumberBox {Value: double.NaN} nan:
-                    nan.Value = 1;
-                    return;
-                case NumberBox {Value: > 100 or < 1} invalid:
-                    invalid.Value = Objects.CoerceIn(invalid.Value, (1, 100));
-                    PageLimitForSearchNumberBoxValueNotInRangeTeachingTip.IsOpen = true;
-                    break;
-            }
-        }
+        #region TeachingTips Got and Lost Focus
 
         private void PageLimitForSearchNumberBox_OnGotFocus(object sender, RoutedEventArgs e)
         {
@@ -43,10 +28,12 @@ namespace Pixeval.Pages
             PageLimitForSearchNumberBoxValueNotInRangeTeachingTip.IsOpen = false;
         }
 
-        // HyperlinkButton.NavigateUri is not working
-        private async void ApplicationThemeOpenSystemThemeSettingHyperlinkButton_OnClick(object sender, RoutedEventArgs e)
+        // We use LostFocus event instead of ValueChanged because the ValueChanged event also
+        // occurs when the value is a floating-point number and is about to be rounded down to 
+        // fall into the valid range, e.g. 100.3
+        private void PageLimitForSearchNumberBox_OnLostFocus(object sender, RoutedEventArgs e)
         {
-            await Launcher.LaunchUriAsync(new Uri("ms-settings:themes"));
+            NumberBoxCoerceValueInAndShowTeachingTip(sender, PageLimitForSpotlightNumberBoxValueNotInRangeTeachingTip, 1, 100);
         }
 
         private void DownloadConcurrencyLevelNumberBox_OnGotFocus(object sender, RoutedEventArgs e)
@@ -58,14 +45,15 @@ namespace Pixeval.Pages
         {
             NumberBoxCoerceValueInAndShowTeachingTip(sender, DownloadConcurrencyLevelValueNotInRangeTeachingTip, 1, Environment.ProcessorCount);
         }
-        private void SearchStartsFromPageNumberNumberBox_OnLostFocus(object sender, RoutedEventArgs e)
-        {
-            NumberBoxCoerceValueInAndShowTeachingTip(sender, SearchStartsFromPageNumberNumberBoxValueNotInRangeTeachingTip, 1, 150);
-        }
 
         private void SearchStartsFromPageNumberNumberBox_OnGotFocus(object sender, RoutedEventArgs e)
         {
             DownloadConcurrencyLevelValueNotInRangeTeachingTip.IsOpen = false;
+        }
+
+        private void SearchStartsFromPageNumberNumberBox_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            NumberBoxCoerceValueInAndShowTeachingTip(sender, SearchStartsFromPageNumberNumberBoxValueNotInRangeTeachingTip, 1, 150);
         }
 
         private void PageLimitForSpotlightNumberBox_OnGotFocus(object sender, RoutedEventArgs e)
@@ -78,27 +66,14 @@ namespace Pixeval.Pages
             NumberBoxCoerceValueInAndShowTeachingTip(sender, PageLimitForSpotlightNumberBoxValueNotInRangeTeachingTip, 1, 100);
         }
 
-        private void SwitchSensitiveContentFilteringInfoBarActionButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            SettingsPageRootScrollViewer.ScrollToElement(SensitiveTagTokenizingTextBox);
-        }
+        #endregion
 
-        private async void SendFeedbackHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            await Launcher.LaunchUriAsync(new Uri("mailto:decem0730@hotmail.com"));
-        }
+        #region Application Theme Switch
 
-        private void SwitchSensitiveContentFilteringToggleSwitch_OnToggled(object sender, RoutedEventArgs e)
+        // HyperlinkButton.NavigateUri is not working
+        private async void ApplicationThemeOpenSystemThemeSettingHyperlinkButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var toggleSwitch = (ToggleSwitch) sender;
-            if (toggleSwitch.IsOn)
-            {
-                _viewModel.AddR18Filtering();
-            }
-            else
-            {
-                _viewModel.RemoveR18Filtering();
-            }
+            await Launcher.LaunchUriAsync(new Uri("ms-settings:themes"));
         }
 
         // The RadioButtons.SelectionChanged always returns null, so we have to handle them separately
@@ -118,22 +93,26 @@ namespace Pixeval.Pages
             _viewModel.Theme = ApplicationTheme.Dark;
         }
 
-        private void DefaultSortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            _viewModel.DefaultSortOption = (IllustrationSortOption) ((ComboBoxItem) DefaultSortOptionComboBox.SelectedItem).Tag;
-        }
+        #endregion
 
-        private void SearchKeywordMatchOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            _viewModel.SearchTagMatchOption = (SearchTagMatchOption) ((ComboBoxItem) SearchKeywordMatchOptionComboBox.SelectedItem).Tag;
-        }
+        #region Sensitive Tags
 
-        private void SensitiveTagTokenizingTextBox_OnTokenItemAdding(TokenizingTextBox sender, TokenItemAddingEventArgs args)
+        private void SwitchSensitiveContentFilteringToggleSwitch_OnToggled(object sender, RoutedEventArgs e)
         {
-            if (_viewModel.ExcludeTags.Contains(args.TokenText, StringComparer.OrdinalIgnoreCase))
+            var toggleSwitch = (ToggleSwitch)sender;
+            if (toggleSwitch.IsOn)
             {
-                args.Cancel = true;
+                _viewModel.AddR18Filtering();
             }
+            else
+            {
+                _viewModel.RemoveR18Filtering();
+            }
+        }
+
+        private void SwitchSensitiveContentFilteringInfoBarActionButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            SettingsPageRootScrollViewer.ScrollToElement(SensitiveTagTokenizingTextBox);
         }
 
         private void SensitiveTagTokenizingTextBox_OnTokenItemAdded(TokenizingTextBox sender, object args)
@@ -152,6 +131,18 @@ namespace Pixeval.Pages
             }
         }
 
+        private void SensitiveTagTokenizingTextBox_OnTokenItemAdding(TokenizingTextBox sender, TokenItemAddingEventArgs args)
+        {
+            if (_viewModel.ExcludeTags.Contains(args.TokenText, StringComparer.OrdinalIgnoreCase))
+            {
+                args.Cancel = true;
+            }
+        }
+
+        #endregion
+
+        #region Image Mirror Server
+
         private void ImageMirrorServerTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             if (Uri.CheckHostName(_viewModel.MirrorHost) == UriHostNameType.Unknown && !Uri.IsWellFormedUriString(_viewModel.MirrorHost, UriKind.Absolute))
@@ -163,6 +154,23 @@ namespace Pixeval.Pages
         private void ImageMirrorServerTextBox_OnGotFocus(object sender, RoutedEventArgs e)
         {
             ImageMirrorServerTeachingTip.IsOpen = false;
+        }
+
+        #endregion
+
+        private async void SendFeedbackHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri("mailto:decem0730@hotmail.com"));
+        }
+
+        private void DefaultSortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _viewModel.DefaultSortOption = (IllustrationSortOption) ((ComboBoxItem) DefaultSortOptionComboBox.SelectedItem).Tag;
+        }
+
+        private void SearchKeywordMatchOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _viewModel.SearchTagMatchOption = (SearchTagMatchOption) ((ComboBoxItem) SearchKeywordMatchOptionComboBox.SelectedItem).Tag;
         }
 
         #region Helper Functions
