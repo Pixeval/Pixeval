@@ -16,6 +16,7 @@
     <Content Remove="Assets\Images\logo-no-caption.png" />
     <Content Remove="Assets\Strings\zh-CN\IllustrationGridCommandBar.resw" />
     <Content Remove="Assets\Strings\zh-CN\RecommendsPage.resw" />
+    <Content Remove="Assets\Strings\zh-CN\SettingsPage.resw" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Pages\DownloadListPage.xaml" />

@@ -21,22 +21,25 @@
                               SelectionChanged="PrivacyPolicyComboBox_OnSelectionChanged">
                         <ComboBox.Items>
                             <ComboBoxItem x:Name="PrivacyPolicyComboBoxIllustItem"
-                                          x:Uid="/RecommendsPage/PrivacyPolicyComboBoxIllustItem"
+                                          x:Uid="/RecommendsPage/PrivacyPolicyComboBoxIllustComboBoxItem"
                                           Tag="{x:Bind mako:RecommendContentType.Illust}" />
-                            <ComboBoxItem x:Uid="/RecommendsPage/PrivacyPolicyComboBoxMangaItem" Tag="{x:Bind mako:RecommendContentType.Manga}" />
+                            <ComboBoxItem x:Uid="/RecommendsPage/PrivacyPolicyComboBoxMangaComboBoxItem"
+                                          Tag="{x:Bind mako:RecommendContentType.Manga}" />
                         </ComboBox.Items>
                     </ComboBox>
 
                     <ComboBox x:Name="SortOptionComboBox"
-                              x:Uid="/RecommendsPage/SortOptionComboBox"
+                              x:Uid="/Misc/SortOptionComboBox"
                               Margin="10,0,0,0"
                               SelectionChanged="SortOptionComboBox_OnSelectionChanged">
                         <ComboBox.Items>
-                            <ComboBoxItem x:Name="SortOptionComboBoxPublishDateDescendingItem"
-                                          x:Uid="/RecommendsPage/SortOptionComboBoxPublishDateDescendingItem"
+                            <ComboBoxItem x:Name="SortOptionComboBoxPublishDateDescendingComboBoxItem"
+                                          x:Uid="/Misc/SortOptionComboBoxPublishDateDescendingComboBoxItem"
                                           Tag="{x:Bind mako:IllustrationSortOption.PublishDateDescending}" />
-                            <ComboBoxItem x:Uid="/RecommendsPage/SortOptionComboBoxPublishDateAscendingItem" Tag="{x:Bind mako:IllustrationSortOption.PublishDateAscending}" />
-                            <ComboBoxItem x:Uid="/RecommendsPage/SortOptionComboBoxBookmarkDescendingItem" Tag="{x:Bind mako:IllustrationSortOption.PopularityDescending}" />
+                            <ComboBoxItem x:Uid="/Misc/SortOptionComboBoxPublishDateAscendingComboBoxItem"
+                                          Tag="{x:Bind mako:IllustrationSortOption.PublishDateAscending}" />
+                            <ComboBoxItem x:Uid="/Misc/SortOptionComboBoxBookmarkDescendingComboBoxItem"
+                                          Tag="{x:Bind mako:IllustrationSortOption.PopularityDescending}" />
                         </ComboBox.Items>
                     </ComboBox>
                 </StackPanel>

@@ -43,5 +43,20 @@ namespace Pixeval.Util
         {
             return string.Format(str, args);
         }
+
+        /// <summary>
+        /// Start inclusive, end inclusive
+        /// </summary>
+        public static bool InRange(this double i, (double, double) range)
+        {
+            var (startInclusive, endInclusive) = range;
+            return i >= startInclusive && i <= endInclusive;
+        }
+
+        public static double CoerceIn(double i, (double, double) range)
+        {
+            var (startInclusive, endInclusive) = range;
+            return Math.Max(startInclusive, Math.Min(i, endInclusive));
+        }
     }
 }

@@ -4,8 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
-        mc:Ignorable="d" Closed="MainWindow_OnClosed"
+        Title="Pixeval Login"
+        Width="800"
+        Height="450"
+        Closed="MainWindow_OnClosed"
         Loaded="MainWindow_OnLoaded"
-        Title="Pixeval Login" Height="450" Width="800">
-    <wpf:WebView2 x:Name="LoginWebView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" NavigationStarting="LoginWebView_OnNavigationStarting"/>
+        mc:Ignorable="d">
+    <wpf:WebView2 x:Name="LoginWebView"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  NavigationStarting="LoginWebView_OnNavigationStarting" />
 </Window>

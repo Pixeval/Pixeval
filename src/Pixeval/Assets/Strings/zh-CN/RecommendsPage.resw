@@ -120,22 +120,10 @@
   <data name="PrivacyPolicyComboBox.PlaceholderText" xml:space="preserve">
     <value>日推选项</value>
   </data>
-  <data name="PrivacyPolicyComboBoxIllustItem.Content" xml:space="preserve">
+  <data name="PrivacyPolicyComboBoxIllustComboBoxItem.Content" xml:space="preserve">
     <value>插画</value>
   </data>
-  <data name="PrivacyPolicyComboBoxMangaItem.Content" xml:space="preserve">
+  <data name="PrivacyPolicyComboBoxMangaComboBoxItem.Content" xml:space="preserve">
     <value>漫画</value>
-  </data>
-  <data name="SortOptionComboBox.PlaceholderText" xml:space="preserve">
-    <value>排序选项</value>
-  </data>
-  <data name="SortOptionComboBoxBookmarkDescendingItem.Content" xml:space="preserve">
-    <value>收藏数降序</value>
-  </data>
-  <data name="SortOptionComboBoxPublishDateAscendingItem.Content" xml:space="preserve">
-    <value>发布日期升序</value>
-  </data>
-  <data name="SortOptionComboBoxPublishDateDescendingItem.Content" xml:space="preserve">
-    <value>发布日期降序</value>
   </data>
 </root>

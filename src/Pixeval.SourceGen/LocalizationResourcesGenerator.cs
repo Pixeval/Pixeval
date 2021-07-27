@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
 using Microsoft.CodeAnalysis;
 
@@ -43,7 +44,7 @@ namespace Pixeval.SourceGen
                             foreach (var node in elements)
                             {
                                 var name = node.GetAttribute("name");
-                                classBuilder.AppendLine(@$"public static readonly string {name.Replace(".", string.Empty)} = ResourceLoader.GetString(""{name.Replace('.', '/')}"");");
+                                classBuilder.AppendLine(@$"public static readonly string {Regex.Replace(name, "\\.|\\:|\\[|\\]", string.Empty)} = ResourceLoader.GetString(""{name.Replace('.', '/')}"");");
                             }
                         }
                     }

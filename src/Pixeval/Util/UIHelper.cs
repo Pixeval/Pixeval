@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.Storage.Streams;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using PInvoke;
@@ -65,9 +67,11 @@ namespace Pixeval.Util
             builder.Show();
         }
 
-        public static double ToDouble(this bool value)
+        public static void ScrollToElement(this ScrollViewer scrollViewer, UIElement element)
         {
-            return value ? 1 : 0;
+            var transform = element.TransformToVisual((UIElement) scrollViewer.Content);
+            var position = transform.TransformPoint(new Point(0, 0));
+            scrollViewer.ChangeView(null, position.Y, null, false);
         }
     }
 }

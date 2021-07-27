@@ -6,5 +6,6 @@
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
       mc:Ignorable="d">
 
-    <TextBlock Text="{x:Bind ContentText}" TextWrapping="Wrap" />
+    <TextBlock Text="{x:Bind ContentText}"
+               TextWrapping="Wrap" />
 </Page>

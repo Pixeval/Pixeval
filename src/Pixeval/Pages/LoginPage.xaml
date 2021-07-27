@@ -9,11 +9,13 @@
       Loaded="LoginPage_OnLoaded"
       mc:Ignorable="d">
     <Grid>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
             <Image Width="150"
                    Height="150"
                    Source="../Assets/Images/logo.png" />
-            <ProgressRing Width="30" Height="30" />
+            <ProgressRing Width="30"
+                          Height="30" />
             <TextBlock Margin="0,15,0,0"
                        HorizontalAlignment="Center"
                        FontSize="10"

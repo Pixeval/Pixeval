@@ -20,6 +20,8 @@ namespace Pixeval.Pages
         }
 
         public static readonly MainPageRootNavigationViewTag Recommends = new(typeof(RecommendsPage), App.MakoClient.Recommends());
+
+        public static readonly MainPageRootNavigationViewTag Settings = new(typeof(SettingsPage), App.MakoClient.Configuration);
     }
 
     public sealed partial class MainPage

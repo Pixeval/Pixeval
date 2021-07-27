@@ -25,7 +25,8 @@
             <controls:AdaptiveGridView.ItemTemplate>
                 <DataTemplate x:DataType="viewModel:IllustrationViewModel">
                     <GridViewItem IsSelected="{x:Bind IsSelected, Mode=TwoWay}">
-                        <Grid Width="180" Height="250">
+                        <Grid Width="180"
+                              Height="250">
                             <Grid.Resources>
                                 <ExponentialEase x:Key="EasingFunction"
                                                  EasingMode="EaseOut"
@@ -120,7 +121,8 @@
                                     <media:ControlStoryboardAction Storyboard="{StaticResource ThumbnailScaleOutStoryboard}" />
                                 </core:EventTriggerBehavior>
                                 <core:EventTriggerBehavior EventName="PointerExited">
-                                    <media:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource ThumbnailScaleInStoryboard}" />
+                                    <media:ControlStoryboardAction ControlStoryboardOption="Play"
+                                                                   Storyboard="{StaticResource ThumbnailScaleInStoryboard}" />
                                 </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
                             <Grid.Clip>
@@ -136,7 +138,8 @@
                                     <ScaleTransform CenterX="90" CenterY="125" />
                                 </Image.RenderTransform>
                                 <ToolTipService.ToolTip>
-                                    <ToolTip Content="{x:Bind Id, Mode=OneWay}" Placement="Right" />
+                                    <ToolTip Content="{x:Bind Id, Mode=OneWay}"
+                                             Placement="Right" />
                                 </ToolTipService.ToolTip>
                             </Image>
                             <Grid x:Name="ImageBookmarkButtonGrid"

@@ -21,7 +21,7 @@ namespace Pixeval.Pages
         {
             base.OnNavigatedTo(e);
             PrivacyPolicyComboBox.SelectedItem = PrivacyPolicyComboBoxIllustItem;
-            SortOptionComboBox.SelectedItem = SortOptionComboBoxPublishDateDescendingItem;
+            SortOptionComboBox.SelectedItem = SortOptionComboBoxPublishDateDescendingComboBoxItem;
         }
 
         private async void RecommendsPage_OnLoaded(object sender, RoutedEventArgs e)

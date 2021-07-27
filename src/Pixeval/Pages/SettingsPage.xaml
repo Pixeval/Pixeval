@@ -1,19 +1,341 @@
 ﻿<Page x:Class="Pixeval.Pages.SettingsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="using:Pixeval.Pages"
+      xmlns:mako="using:Mako.Global.Enum"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:numberFormatting="using:Windows.Globalization.NumberFormatting"
+      xmlns:pixeval="using:Pixeval"
+      xmlns:system="using:System"
+      xmlns:ui="using:CommunityToolkit.WinUI.UI"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
       mc:Ignorable="d">
-    
+    <Page.Resources>
+        <!--  Gap between different entries  -->
+        <Thickness x:Key="SettingsEntriesMargin">0,20,0,0</Thickness>
+        <!--  Gap between the same entry's different component  -->
+        <Thickness x:Key="SettingsEntryPadding">0,5,0,0</Thickness>
+        <Style x:Key="SectionHeaderTextBlockStyle"
+               TargetType="TextBlock">
+            <Style.Setters>
+                <Setter Property="Margin" Value="{StaticResource SettingsEntriesMargin}" />
+                <Setter Property="FontSize" Value="{StaticResource PixevalContentFontSize}" />
+            </Style.Setters>
+        </Style>
+        <Style x:Key="SectionInfoBarStyle"
+               TargetType="InfoBar">
+            <Style.Setters>
+                <Setter Property="Margin" Value="{StaticResource SettingsEntryPadding}" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="IsOpen" Value="True" />
+                <Setter Property="IsClosable" Value="False" />
+                <Setter Property="Severity" Value="Informational" />
+            </Style.Setters>
+        </Style>
+        <Style x:Key="SettingsNumberBoxStyle"
+               TargetType="NumberBox">
+            <Style.Setters>
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="Width" Value="100" />
+                <Setter Property="IsWrapEnabled" Value="True" />
+                <Setter Property="LargeChange" Value="10" />
+                <Setter Property="NumberFormatter" Value="{StaticResource IntegerRoundedDecimalFormatter}" />
+                <Setter Property="SmallChange" Value="1" />
+                <Setter Property="SpinButtonPlacementMode" Value="Compact" />
+                <Setter Property="ValidationMode" Value="Disabled" />
+            </Style.Setters>
+        </Style>
+        <numberFormatting:DecimalFormatter x:Key="IntegerRoundedDecimalFormatter"
+                                           FractionDigits="0">
+            <numberFormatting:DecimalFormatter.NumberRounder>
+                <numberFormatting:IncrementNumberRounder Increment="1"
+                                                         RoundingAlgorithm="RoundHalfUp" />
+            </numberFormatting:DecimalFormatter.NumberRounder>
+        </numberFormatting:DecimalFormatter>
+    </Page.Resources>
+    <ScrollViewer x:Name="SettingsPageRootScrollViewer"
+                  HorizontalScrollBarVisibility="Disabled"
+                  HorizontalScrollMode="Disabled">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10" />
+                <RowDefinition />
+                <RowDefinition Height="10" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+            </Grid.ColumnDefinitions>
+            <!--  ReSharper disable once UnusedMember.Local  -->
+            <StackPanel x:Name="SettingEntriesPanel"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        VerticalAlignment="Top">
+                <!--  Title Section  -->
+                <TextBlock x:Uid="/SettingsPage/TitleTextBlock"
+                           FontSize="{StaticResource PixevalTitleFontSize}"
+                           FontWeight="Bold" />
+                <TextBlock x:Uid="/SettingsPage/ApplicationWideSectionSubtitleTextBlock"
+                           Margin="0,15,0,0"
+                           FontSize="{StaticResource PixevalSubtitleFontSize}" />
+                <!--  Application Theme  -->
+                <TextBlock x:Uid="/SettingsPage/ApplicationThemeTextBlock"
+                           Style="{StaticResource SectionHeaderTextBlockStyle}" />
+                <RadioButtons MaxColumns="1">
+                    <RadioButtons.Items>
+                        <RadioButton x:Uid="/SettingsPage/ApplicationThemeSystemDefaultRadioButton"
+                                     Tag="{x:Bind pixeval:ApplicationTheme.SystemDefault}" />
+                        <RadioButton x:Uid="/SettingsPage/ApplicationThemeLightRadioButton"
+                                     Tag="{x:Bind pixeval:ApplicationTheme.Light}" />
+                        <RadioButton x:Uid="/SettingsPage/ApplicationThemeDarkRadioButton"
+                                     Tag="{x:Bind pixeval:ApplicationTheme.Dark}" />
+                    </RadioButtons.Items>
+                </RadioButtons>
+                <HyperlinkButton x:Uid="/SettingsPage/ApplicationThemeOpenSystemThemeSettingHyperlinkButton"
+                                 Click="ApplicationThemeOpenSystemThemeSettingHyperlinkButton_OnClick"
+                                 FontSize="{StaticResource PixevalSubscriptFontSize}" />
+                <TextBlock x:Uid="/SettingsPage/BrowsingExperienceSectionSubtitleTextBlock"
+                           Margin="0,15,0,0"
+                           FontSize="{StaticResource PixevalSubtitleFontSize}" />
+                <!--  Sensitive Content Switch  -->
+                <ToggleSwitch x:Name="SwitchSensitiveContentFilteringToggleSwitch"
+                              x:Uid="/SettingsPage/SwitchSensitiveContentFilteringToggleSwitch"
+                              Margin="{StaticResource SettingsEntriesMargin}"
+                              FontSize="{StaticResource PixevalContentFontSize}" />
+                <InfoBar x:Uid="/SettingsPage/SwitchSensitiveContentFilteringInfoBar"
+                         IsOpen="{x:Bind SwitchSensitiveContentFilteringToggleSwitch.IsOn, Mode=OneWay}"
+                         Style="{StaticResource SectionInfoBarStyle}">
+                    <InfoBar.ActionButton>
+                        <Button x:Uid="/SettingsPage/SwitchSensitiveContentFilteringInfoBarActionButton"
+                                Tapped="SwitchSensitiveContentFilteringInfoBarActionButton_OnTapped" />
+                    </InfoBar.ActionButton>
+                </InfoBar>
+                <!--  Disable Sni Bypass Switch  -->
+                <ToggleSwitch x:Name="DisableSniBypassToggleSwitch"
+                              x:Uid="/SettingsPage/DisableSNIBypassToggleSwitch"
+                              Margin="{StaticResource SettingsEntriesMargin}"
+                              FontSize="{StaticResource PixevalContentFontSize}" />
+                <HyperlinkButton x:Uid="/SettingsPage/AboutSNIBypassHyperlinkButton"
+                                 FontSize="{StaticResource PixevalSubscriptFontSize}"
+                                 NavigateUri="https://en.wikipedia.org/wiki/Domain_fronting" />
+                <InfoBar x:Uid="/SettingsPage/DisableSNIBypassInfoBar"
+                         IsOpen="{x:Bind DisableSniBypassToggleSwitch.IsOn, Mode=OneWay}"
+                         Style="{StaticResource SectionInfoBarStyle}" />
+                <!--  TODO add relative link to AboutSNIBypassHyperlinkButton.NavigateUri, awaiting @ControlNet's job on website  -->
+                <!--  Default Sort Option Section  -->
+                <TextBlock x:Uid="/SettingsPage/DefaultSortOptionTextBlock"
+                           Margin="0,10,0,0"
+                           Style="{StaticResource SectionHeaderTextBlockStyle}" />
+                <ComboBox x:Uid="/Misc/SortOptionComboBox"
+                          Margin="{StaticResource SettingsEntryPadding}">
+                    <ComboBox.Items>
+                        <ComboBoxItem x:Uid="/Misc/SortOptionComboBoxPublishDateDescendingComboBoxItem"
+                                      Tag="{x:Bind mako:IllustrationSortOption.PublishDateDescending}" />
+                        <ComboBoxItem x:Uid="/Misc/SortOptionComboBoxPublishDateAscendingComboBoxItem"
+                                      Tag="{x:Bind mako:IllustrationSortOption.PublishDateAscending}" />
+                        <ComboBoxItem x:Uid="/Misc/SortOptionComboBoxBookmarkDescendingComboBoxItem"
+                                      Tag="{x:Bind mako:IllustrationSortOption.PopularityDescending}" />
+                    </ComboBox.Items>
+                </ComboBox>
+                <InfoBar x:Uid="/SettingsPage/DefaultSortOptionInfoBar"
+                         Style="{StaticResource SectionInfoBarStyle}" />
+                <!--  Search Keyword Match Section  -->
+                <TextBlock x:Uid="/SettingsPage/SearchKeywordMatchOptionTextBlock"
+                           Style="{StaticResource SectionHeaderTextBlockStyle}" />
+                <ComboBox x:Uid="/SettingsPage/SearchKeywordMatchOptionComboBox"
+                          Margin="{StaticResource SettingsEntryPadding}">
+                    <ComboBox.Items>
+                        <ComboBoxItem x:Uid="/SettingsPage/SearchKeywordMatchOptionComboBoxPartialMatchComboBoxItem"
+                                      Tag="{x:Bind mako:SearchTagMatchOption.PartialMatchForTags}" />
+                        <ComboBoxItem x:Uid="/SettingsPage/SearchKeywordMatchOptionComboBoxExactMatchComboBoxItem"
+                                      Tag="{x:Bind mako:SearchTagMatchOption.ExactMatchForTags}" />
+                        <ComboBoxItem x:Uid="/SettingsPage/SearchKeywordMatchOptionComboBoxTitleAndCaptionMatchComboBoxItem"
+                                      Tag="{x:Bind mako:SearchTagMatchOption.TitleAndCaption}" />
+                    </ComboBox.Items>
+                </ComboBox>
+                <InfoBar x:Uid="/SettingsPage/SearchKeywordMatchOptionInfoBar"
+                         Style="{StaticResource SectionInfoBarStyle}" />
+                <!--  Page Limit for Search Section  -->
+                <TextBlock x:Uid="/SettingsPage/PageLimitForSearchTextBlock"
+                           Style="{StaticResource SectionHeaderTextBlockStyle}" />
+                <StackPanel Margin="{StaticResource SettingsEntryPadding}"
+                            Orientation="Horizontal">
+                    <Slider Width="300"
+                            HorizontalAlignment="Left"
+                            Maximum="100"
+                            Minimum="1"
+                            TickFrequency="10"
+                            TickPlacement="Outside" />
+                    <NumberBox x:Name="PageLimitForSearchNumberBox"
+                               x:Uid="/SettingsPage/PageLimitForSearchNumberBox"
+                               Margin="15,0,0,0"
+                               GotFocus="PageLimitForSearchNumberBox_OnGotFocus"
+                               LostFocus="PageLimitForSearchNumberBox_OnLostFocus"
+                               Maximum="100"
+                               Minimum="1"
+                               Style="{StaticResource SettingsNumberBoxStyle}"
+                               Value="1" />
+                </StackPanel>
+                <InfoBar x:Uid="/SettingsPage/PageLimitForSearchInfoBar"
+                         Style="{StaticResource SectionInfoBarStyle}" />
+                <TeachingTip x:Name="PageLimitForSearchNumberBoxValueNotInRangeTeachingTip"
+                             x:Uid="/SettingsPage/PageLimitForSearchNumberBoxValueNotInRangeTeachingTip"
+                             PreferredPlacement="TopRight"
+                             Target="{x:Bind PageLimitForSearchNumberBox}">
+                    <TeachingTip.IconSource>
+                        <FontIconSource FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                        Glyph="&#xE783;" />
+                    </TeachingTip.IconSource>
+                </TeachingTip>
+                <!--  Search Starts From  -->
+                <TextBlock x:Uid="/SettingsPage/SearchStartsFromPageNumberTextBlock"
+                           Style="{StaticResource SectionHeaderTextBlockStyle}" />
+                <NumberBox x:Uid="/SettingsPage/SearchStartsFromPageNumberNumberBox"
+                           Margin="{StaticResource SettingsEntryPadding}"
+                           Minimum="1"
+                           Style="{StaticResource SettingsNumberBoxStyle}"
+                           Value="1" />
+                <InfoBar x:Uid="/SettingsPage/SearchStartsFromPageNumberInfoBar"
+                         Style="{StaticResource SectionInfoBarStyle}" />
+                <!--  Spotlight Search Page Limit  -->
+                <TextBlock x:Uid="/SettingsPage/SpotlightSearchPageLimitTextBlock"
+                           Style="{StaticResource SectionHeaderTextBlockStyle}" />
+                <NumberBox x:Uid="/SettingsPage/SpotlightSearchPageLimitNumberBox"
+                           Margin="{StaticResource SettingsEntryPadding}"
+                           Minimum="1"
+                           Style="{StaticResource SettingsNumberBoxStyle}"
+                           Value="1" />
+                <InfoBar x:Uid="/SettingsPage/SpotlightSearchPageLimitInfoBar"
+                         Style="{StaticResource SectionInfoBarStyle}" />
+                <!--  Sensitive Tag  -->
+                <TextBlock x:Uid="/SettingsPage/SensitiveTagTextBlock"
+                           Style="{StaticResource SectionHeaderTextBlockStyle}" />
+                <controls:TokenizingTextBox x:Name="SensitiveTagTokenizingTextBox"
+                                            x:Uid="/SettingsPage/SensitiveTagTokenizingTextBox"
+                                            MaxWidth="415"
+                                            MaxHeight="50"
+                                            Margin="{StaticResource SettingsEntryPadding}"
+                                            HorizontalAlignment="Left"
+                                            QueryIcon="{ui:SymbolIconSource Symbol=Tag}" />
+                <InfoBar x:Uid="/SettingsPage/SensitiveTagInfoBar"
+                         Style="{StaticResource SectionInfoBarStyle}" />
+                <!--  Image Mirror Server  -->
+                <TextBlock x:Uid="/SettingsPage/ImageMirrorServerTextBlock"
+                           Style="{StaticResource SectionHeaderTextBlockStyle}" />
+                <TextBox x:Uid="/SettingsPage/ImageMirrorServerTextBox"
+                         MaxWidth="415"
+                         Margin="{StaticResource SettingsEntryPadding}"
+                         HorizontalAlignment="Left" />
+                <InfoBar x:Uid="/SettingsPage/ImageMirrorServerInfoBar"
+                         Style="{StaticResource SectionInfoBarStyle}" />
+                <TextBlock x:Uid="/SettingsPage/DownloadSectionSubtitleTextBlock"
+                           Margin="0,15,0,0"
+                           FontSize="{StaticResource PixevalSubtitleFontSize}" />
+                <!--  Download Concurrency Level  -->
+                <TextBlock x:Uid="/SettingsPage/DownloadConcurrencyLevelTextBlock"
+                           Style="{StaticResource SectionHeaderTextBlockStyle}" />
+                <NumberBox x:Name="DownloadConcurrencyLevelNumberBox"
+                           x:Uid="/SettingsPage/DownloadConcurrencyLevelNumberBox"
+                           Margin="{StaticResource SettingsEntryPadding}"
+                           GotFocus="DownloadConcurrencyLevelNumberBox_OnGotFocus"
+                           LostFocus="DownloadConcurrencyLevelNumberBox_OnLostFocus"
+                           Maximum="{x:Bind system:Environment.ProcessorCount}"
+                           Minimum="1"
+                           Style="{StaticResource SettingsNumberBoxStyle}"
+                           Value="{x:Bind system:Environment.ProcessorCount}" />
+                <InfoBar x:Uid="/SettingsPage/DownloadConcurrencyLevelInfoBar"
+                         Style="{StaticResource SectionInfoBarStyle}" />
+                <TeachingTip x:Name="DownloadConcurrencyLevelValueNotInRangeTeachingTip"
+                             x:Uid="/SettingsPage/DownloadConcurrencyLevelValueNotInRangeTeachingTip"
+                             PreferredPlacement="TopRight"
+                             Target="{x:Bind DownloadConcurrencyLevelNumberBox}">
+                    <TeachingTip.IconSource>
+                        <FontIconSource FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                        Glyph="&#xE783;" />
+                    </TeachingTip.IconSource>
+                </TeachingTip>
+            </StackPanel>
+            <!--  ReSharper disable once UnusedMember.Local  -->
+            <StackPanel x:Name="InformationSidePanel"
+                        Grid.Row="1"
+                        Grid.Column="3"
+                        Width="200"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top">
+                <StackPanel x:Name="IntroductionPanel"
+                            VerticalAlignment="Top"
+                            Orientation="Vertical">
+                    <TextBlock x:Uid="/SettingsPage/InformationPanelHeaderTextBlock"
+                               Margin="0,40,0,0"
+                               FontSize="{StaticResource PixevalSubtitleFontSize}"
+                               TextWrapping="Wrap" />
+                    <TextBlock x:Uid="/SettingsPage/AboutPixevalTextBlock"
+                               Margin="0,5,0,0"
+                               FontSize="{StaticResource PixevalContentFontSize}"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+                <StackPanel Margin="0,20,0,0"
+                            VerticalAlignment="Top"
+                            Orientation="Vertical">
+                    <HyperlinkButton x:Uid="/SettingsPage/ViewPixevalWebSiteHyperlinkButton"
+                                     FontSize="{StaticResource PixevalSubscriptFontSize}"
+                                     NavigateUri="https://sora.ink/archives/391" />
+                    <HyperlinkButton x:Uid="/SettingsPage/ViewPixevalProjectRepositoryHyperlinkButton"
+                                     Margin="0,5,0,0"
+                                     FontSize="{StaticResource PixevalSubscriptFontSize}"
+                                     NavigateUri="https://github.com/Pixeval/Pixeval" />
+                    <!--  TODO  -->
+                    <HyperlinkButton x:Uid="/SettingsPage/DonatingMeHyperlinkButton"
+                                     Margin="0,5,0,0"
+                                     FontSize="{StaticResource PixevalSubscriptFontSize}" />
+                    <HyperlinkButton x:Uid="/SettingsPage/SendFeedbackHyperlinkButton"
+                                     Margin="0,5,0,0"
+                                     FontSize="{StaticResource PixevalSubscriptFontSize}"
+                                     Tapped="SendFeedbackHyperlinkButton_OnTapped" />
+                    <HyperlinkButton x:Uid="/SettingsPage/JoinFeedbackGroupHyperlinkButton"
+                                     Margin="0,5,0,0"
+                                     FontSize="{StaticResource PixevalSubscriptFontSize}"
+                                     NavigateUri="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog" />
+                </StackPanel>
+            </StackPanel>
 
-    <Grid>
-        <Grid.RowDefinitions>
-
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-
-        </Grid.ColumnDefinitions>
-    </Grid>
+        </Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="ExpandedVisualStates">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1000" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="InformationSidePanel.(Grid.Row)" Value="1" />
+                        <Setter Target="InformationSidePanel.(Grid.Column)" Value="3" />
+                        <Setter Target="InformationSidePanel.Orientation" Value="Vertical" />
+                        <Setter Target="InformationSidePanel.Width" Value="200" />
+                        <Setter Target="InformationSidePanel.Height" Value="Auto" />
+                        <Setter Target="IntroductionPanel.Width" Value="Auto" />
+                        <Setter Target="IntroductionPanel.Margin" Value="0" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="NarrowedVisualStates">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="InformationSidePanel.(Grid.Row)" Value="4" />
+                        <Setter Target="InformationSidePanel.(Grid.Column)" Value="1" />
+                        <Setter Target="InformationSidePanel.Orientation" Value="Horizontal" />
+                        <Setter Target="InformationSidePanel.Width" Value="Auto" />
+                        <Setter Target="InformationSidePanel.Height" Value="300" />
+                        <Setter Target="IntroductionPanel.Width" Value="200" />
+                        <Setter Target="IntroductionPanel.Margin" Value="0,0,50,0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </ScrollViewer>
 </Page>
