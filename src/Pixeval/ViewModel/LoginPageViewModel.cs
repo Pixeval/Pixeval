@@ -54,25 +54,25 @@ namespace Pixeval.ViewModel
 
         public enum LoginPhaseEnum
         {
-            [Metadata(nameof(LoginPageResources.LoginPhaseCheckingRefreshAvailable))]
+            [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseCheckingRefreshAvailable))]
             CheckingRefreshAvailable,
 
-            [Metadata(nameof(LoginPageResources.LoginPhaseRefreshing))]
+            [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseRefreshing))]
             Refreshing,
 
-            [Metadata(nameof(LoginPageResources.LoginPhaseNegotiatingPort))]
+            [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseNegotiatingPort))]
             NegotiatingPort,
 
-            [Metadata(nameof(LoginPageResources.LoginPhaseExecutingLoginProxy))]
+            [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseExecutingLoginProxy))]
             ExecutingLoginProxy,
 
-            [Metadata(nameof(LoginPageResources.LoginPhaseCheckingCertificateInstallation))]
+            [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseCheckingCertificateInstallation))]
             CheckingCertificateInstallation,
 
-            [Metadata(nameof(LoginPageResources.LoginPhaseInstallingCertificate))]
+            [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseInstallingCertificate))]
             InstallingCertificate,
 
-            [Metadata(nameof(LoginPageResources.LoginPhaseCheckingWebView2Installation))]
+            [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseCheckingWebView2Installation))]
             CheckingWebView2Installation
         }
 
@@ -92,11 +92,6 @@ namespace Pixeval.ViewModel
         public void AdvancePhase(LoginPhaseEnum newPhase)
         {
             LoginPhase = newPhase;
-        }
-
-        public static string GetLoginPhaseString(LoginPhaseEnum loginPhase)
-        {
-            return (string) typeof(LoginPageResources).GetField(loginPhase.GetMetadataOnEnumMember()!)?.GetValue(null)!;
         }
 
         public bool CheckWebView2Installation()

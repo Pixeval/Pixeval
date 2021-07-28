@@ -5,7 +5,6 @@ using System;
 using System.Linq;
 using Windows.System;
 using CommunityToolkit.WinUI.UI.Controls;
-using Mako.Global.Enum;
 using Pixeval.Util;
 using Pixeval.ViewModel;
 
@@ -74,23 +73,6 @@ namespace Pixeval.Pages
         private async void ApplicationThemeOpenSystemThemeSettingHyperlinkButton_OnClick(object sender, RoutedEventArgs e)
         {
             await Launcher.LaunchUriAsync(new Uri("ms-settings:themes"));
-        }
-
-        // The RadioButtons.SelectionChanged always returns null, so we have to handle them separately
-        // See issue https://github.com/microsoft/microsoft-ui-xaml/issues/3268
-        private void ApplicationThemeSystemDefaultRadioButton_OnChecked(object sender, RoutedEventArgs e)
-        {
-            _viewModel.Theme = ApplicationTheme.SystemDefault;
-        }
-
-        private void ApplicationThemeLightRadioButton_OnChecked(object sender, RoutedEventArgs e)
-        {
-            _viewModel.Theme = ApplicationTheme.Light;
-        }
-
-        private void ApplicationThemeDarkRadioButton_OnChecked(object sender, RoutedEventArgs e)
-        {
-            _viewModel.Theme = ApplicationTheme.Dark;
         }
 
         #endregion
@@ -163,32 +145,14 @@ namespace Pixeval.Pages
             await Launcher.LaunchUriAsync(new Uri("mailto:decem0730@hotmail.com"));
         }
 
-        private void DefaultSortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        // We cannot use RadioButtons.SelectionChanged since it always returns null
+        // see https://github.com/microsoft/microsoft-ui-xaml/issues/3268
+        private void ApplicationThemeRadioButton_OnChecked(object sender, RoutedEventArgs e)
         {
-            _viewModel.DefaultSortOption = (IllustrationSortOption) ((ComboBoxItem) DefaultSortOptionComboBox.SelectedItem).Tag;
-        }
-
-        private void SearchKeywordMatchOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            _viewModel.SearchTagMatchOption = (SearchTagMatchOption) ((ComboBoxItem) SearchKeywordMatchOptionComboBox.SelectedItem).Tag;
+            _viewModel.Theme = sender.GetDataContext<ApplicationTheme>();
         }
 
         #region Helper Functions
-
-        private object GetApplicationThemeRadioButtonsSelectedItem()
-        {
-            return ApplicationThemeRadioButtons.Items.Cast<RadioButton>().First(i => i.Tag.Equals(_viewModel.Theme));
-        }
-
-        private object GetDefaultSortOptionComboBoxSelectedItem()
-        {
-            return DefaultSortOptionComboBox.Items.Cast<ComboBoxItem>().First(i => i.Tag.Equals(_viewModel.DefaultSortOption));
-        }
-
-        private object GetSearchKeywordMatchOptionComboBoxSelectedItem()
-        {
-            return SearchKeywordMatchOptionComboBox.Items.Cast<ComboBoxItem>().First(i => i.Tag.Equals(_viewModel.SearchTagMatchOption));
-        }
 
         // TODO: use attached property
         private static void NumberBoxCoerceValueInAndShowTeachingTip(object sender, TeachingTip teachingTip, double startInclusive, double endInclusive)

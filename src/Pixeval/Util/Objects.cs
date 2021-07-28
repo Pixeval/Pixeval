@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -57,6 +58,11 @@ namespace Pixeval.Util
         {
             var (startInclusive, endInclusive) = range;
             return Math.Max(startInclusive, Math.Min(i, endInclusive));
+        }
+
+        public static IEnumerable<TEnum> GetEnumValues<TEnum>(this Type type)
+        {
+            return type.GetEnumValues().Cast<TEnum>();
         }
     }
 }

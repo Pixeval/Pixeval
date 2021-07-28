@@ -3,12 +3,13 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:mako="using:Mako.Global.Enum"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:numberFormatting="using:Windows.Globalization.NumberFormatting"
       xmlns:pixeval="using:Pixeval"
       xmlns:system="using:System"
       xmlns:ui="using:CommunityToolkit.WinUI.UI"
+      xmlns:util="using:Pixeval.Util"
+      xmlns:viewModel="using:Pixeval.ViewModel"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
       mc:Ignorable="d">
     <!--  ReSharper disable UnusedMember.Local  -->
@@ -87,19 +88,16 @@
                 <TextBlock x:Uid="/SettingsPage/ApplicationThemeTextBlock"
                            Style="{StaticResource SectionHeaderTextBlockStyle}" />
                 <RadioButtons x:Name="ApplicationThemeRadioButtons"
+                              ItemsSource="{x:Bind viewModel:SettingsPageViewModel.AvailableApplicationThemes}"
                               MaxColumns="1"
-                              SelectedItem="{x:Bind GetApplicationThemeRadioButtonsSelectedItem()}">
-                    <RadioButtons.Items>
-                        <RadioButton x:Uid="/SettingsPage/ApplicationThemeSystemDefaultRadioButton"
-                                     Checked="ApplicationThemeSystemDefaultRadioButton_OnChecked"
-                                     Tag="{x:Bind pixeval:ApplicationTheme.SystemDefault}" />
-                        <RadioButton x:Uid="/SettingsPage/ApplicationThemeLightRadioButton"
-                                     Checked="ApplicationThemeLightRadioButton_OnChecked"
-                                     Tag="{x:Bind pixeval:ApplicationTheme.Light}" />
-                        <RadioButton x:Uid="/SettingsPage/ApplicationThemeDarkRadioButton"
-                                     Checked="ApplicationThemeDarkRadioButton_OnChecked"
-                                     Tag="{x:Bind pixeval:ApplicationTheme.Dark}" />
-                    </RadioButtons.Items>
+                              SelectedItem="{x:Bind _viewModel.Theme}">
+                    <RadioButtons.ItemTemplate>
+                        <DataTemplate x:DataType="pixeval:ApplicationTheme">
+                            <RadioButton Checked="ApplicationThemeRadioButton_OnChecked"
+                                         Content="{x:Bind util:AttributeHelper.GetLocalizedResources((pixeval:ApplicationTheme))}"
+                                         DataContext="{x:Bind}" />
+                        </DataTemplate>
+                    </RadioButtons.ItemTemplate>
                 </RadioButtons>
                 <HyperlinkButton x:Uid="/SettingsPage/ApplicationThemeOpenSystemThemeSettingHyperlinkButton"
                                  Click="ApplicationThemeOpenSystemThemeSettingHyperlinkButton_OnClick"
@@ -141,16 +139,13 @@
                 <ComboBox x:Name="DefaultSortOptionComboBox"
                           x:Uid="/Misc/SortOptionComboBox"
                           Margin="{StaticResource SettingsEntryPadding}"
-                          SelectedItem="{x:Bind GetDefaultSortOptionComboBoxSelectedItem()}"
-                          SelectionChanged="DefaultSortOptionComboBox_OnSelectionChanged">
-                    <ComboBox.Items>
-                        <ComboBoxItem x:Uid="/Misc/SortOptionComboBoxPublishDateDescendingComboBoxItem"
-                                      Tag="{x:Bind mako:IllustrationSortOption.PublishDateDescending}" />
-                        <ComboBoxItem x:Uid="/Misc/SortOptionComboBoxPublishDateAscendingComboBoxItem"
-                                      Tag="{x:Bind mako:IllustrationSortOption.PublishDateAscending}" />
-                        <ComboBoxItem x:Uid="/Misc/SortOptionComboBoxBookmarkDescendingComboBoxItem"
-                                      Tag="{x:Bind mako:IllustrationSortOption.PopularityDescending}" />
-                    </ComboBox.Items>
+                          ItemsSource="{x:Bind viewModel:SettingsPageViewModel.AvailableIllustrationSortOptions}"
+                          SelectedItem="{x:Bind _viewModel.BoxSortOption(), BindBack=_viewModel.UnboxSortOption, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="viewModel:IllustrationSortOptionWrapper">
+                            <TextBlock Text="{x:Bind LocalizedString}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
                 </ComboBox>
                 <InfoBar x:Uid="/SettingsPage/DefaultSortOptionInfoBar"
                          Style="{StaticResource SectionInfoBarStyle}" />
@@ -160,16 +155,13 @@
                 <ComboBox x:Name="SearchKeywordMatchOptionComboBox"
                           x:Uid="/SettingsPage/SearchKeywordMatchOptionComboBox"
                           Margin="{StaticResource SettingsEntryPadding}"
-                          SelectedItem="{x:Bind GetSearchKeywordMatchOptionComboBoxSelectedItem()}"
-                          SelectionChanged="SearchKeywordMatchOptionComboBox_OnSelectionChanged">
-                    <ComboBox.Items>
-                        <ComboBoxItem x:Uid="/SettingsPage/SearchKeywordMatchOptionComboBoxPartialMatchComboBoxItem"
-                                      Tag="{x:Bind mako:SearchTagMatchOption.PartialMatchForTags}" />
-                        <ComboBoxItem x:Uid="/SettingsPage/SearchKeywordMatchOptionComboBoxExactMatchComboBoxItem"
-                                      Tag="{x:Bind mako:SearchTagMatchOption.ExactMatchForTags}" />
-                        <ComboBoxItem x:Uid="/SettingsPage/SearchKeywordMatchOptionComboBoxTitleAndCaptionMatchComboBoxItem"
-                                      Tag="{x:Bind mako:SearchTagMatchOption.TitleAndCaption}" />
-                    </ComboBox.Items>
+                          ItemsSource="{x:Bind viewModel:SettingsPageViewModel.AvailableSearchTagMatchOption}"
+                          SelectedItem="{x:Bind _viewModel.BoxSearchTagMatchOption(), BindBack=_viewModel.UnboxSearchTagMatchOption, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="viewModel:SearchTagMatchOptionWrapper">
+                            <TextBlock Text="{x:Bind LocalizedString}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
                 </ComboBox>
                 <InfoBar x:Uid="/SettingsPage/SearchKeywordMatchOptionInfoBar"
                          Style="{StaticResource SectionInfoBarStyle}" />

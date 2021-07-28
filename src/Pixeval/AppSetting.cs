@@ -37,7 +37,7 @@ namespace Pixeval
         /// <summary>
         /// The tag match option for keyword search
         /// </summary>
-        public SearchTagMatchOption SearchTagMatchOption { get; set; }
+        public SearchTagMatchOption TagMatchOption { get; set; }
 
         /// <summary>
         /// Indicates the maximum page count that are allowed to be retrieved during
@@ -82,7 +82,7 @@ namespace Pixeval
             ExcludeTags = excludeTags;
             DisableDomainFronting = disableDomainFronting;
             DefaultSortOption = defaultSortOption;
-            SearchTagMatchOption = searchTagMatchOption;
+            TagMatchOption = searchTagMatchOption;
             PageLimitForKeywordSearch = pageLimitForKeywordSearch;
             SearchStartingFromPageNumber = searchStartingFromPageNumber;
             PageLimitForSpotlight = pageLimitForSpotlight;

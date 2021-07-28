@@ -39,12 +39,12 @@ namespace Pixeval.Util
             }
         }
 
-        public static T? GetDataContext<T>(this FrameworkElement element) where T : class
+        public static T GetDataContext<T>(this FrameworkElement element)
         {
-            return element.DataContext as T;
+            return (T) element.DataContext;
         }
 
-        public static T? GetDataContext<T>(this object element) where T : class
+        public static T GetDataContext<T>(this object element)
         {
             return ((FrameworkElement) element).GetDataContext<T>(); // direct cast will throw exception if the type check failed, and that's exactly what we want
         }

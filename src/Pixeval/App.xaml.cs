@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Mako;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Pixeval.Events;
 using Pixeval.Util;
@@ -43,32 +46,23 @@ namespace Pixeval
                 args.Handled = true;
                 UncaughtExceptionHandler(args.Exception);
             };
+
             TaskScheduler.UnobservedTaskException += (_, args) =>
             {
-                UncaughtExceptionHandler(args.Exception);
                 args.SetObserved();
-            };
-            AppDomain.CurrentDomain.UnhandledException += async (_, args) =>
-            {
-                if (args.ExceptionObject is Exception e)
-                {
-                    UncaughtExceptionHandler(e);
-                }
-
-                if (args.IsTerminating)
-                {
-                    await ExitWithPushedNotification();
-                }
+                UncaughtExceptionHandler(args.Exception);
             };
 
-            static void UncaughtExceptionHandler(Exception e)
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {
-                Window.DispatcherQueue.TryEnqueue(async () =>
-                {
-                    await MessageDialogBuilder
-                        .CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
-                    await ExitWithPushedNotification();
-                });
+                Debugger.Break();
+            };
+
+            static async void UncaughtExceptionHandler(Exception e)
+            {
+                await MessageDialogBuilder
+                    .CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
+                await ExitWithPushedNotification();
             }
         }
 
