@@ -18,13 +18,7 @@ namespace Pixeval
 
         public static AppSetting AppSetting { get; set; } = null!;
 
-        /// <summary>
-        /// A global env class for some global variables
-        /// </summary>
-        public static class Global
-        {
-            public static string? Uid => MakoClient.Session.Id;
-        }
+        public static string? Uid => MakoClient.Session.Id;
 
         public App()
         {

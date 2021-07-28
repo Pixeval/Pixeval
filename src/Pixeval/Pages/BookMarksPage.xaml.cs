@@ -51,7 +51,7 @@ namespace Pixeval.Pages
             if (TryGetPrivacyPolicy(PrivacyPolicyComboBox, out var type)
                 && TryGetIllustrationSortOption(SortOptionComboBox, out var option))
             {
-                await IllustrationGrid.ViewModel.ResetAndFill(App.MakoClient.Bookmarks(App.Global.Uid!, type), GetInsertAction(option));
+                await IllustrationGrid.ViewModel.ResetAndFill(App.MakoClient.Bookmarks(App.Uid!, type), GetInsertAction(option));
             }
         }
 
