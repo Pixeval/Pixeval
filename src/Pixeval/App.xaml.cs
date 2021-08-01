@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
 using Mako;
-using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Pixeval.Events;
 using Pixeval.Util;
@@ -28,7 +26,7 @@ namespace Pixeval
             RequestedTheme = AppSetting.Theme switch
             {
                 ApplicationTheme.Dark  => Microsoft.UI.Xaml.ApplicationTheme.Dark,
-                ApplicationTheme.Light => Microsoft.UI.Xaml.ApplicationTheme.Dark,
+                ApplicationTheme.Light => Microsoft.UI.Xaml.ApplicationTheme.Light,
                 _                      => RequestedTheme
             };
         }
@@ -47,15 +45,14 @@ namespace Pixeval
                 UncaughtExceptionHandler(args.Exception);
             };
 
-            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+            AppDomain.CurrentDomain.UnhandledException += (_, _) =>
             {
                 Debugger.Break();
             };
 
             static async void UncaughtExceptionHandler(Exception e)
             {
-                await MessageDialogBuilder
-                    .CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
+                await MessageDialogBuilder.CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
                 await ExitWithPushedNotification();
             }
         }
