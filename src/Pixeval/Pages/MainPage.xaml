@@ -40,8 +40,7 @@
                               Glyph="&#xEAFC;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
-            <NavigationViewItem x:Name="BookmarksTab" 
-                                x:Uid="/MainPage/BookmarksTab"
+            <NavigationViewItem x:Uid="/MainPage/BookmarksTab"
                                 Tag="{x:Bind mainPage:MainPageRootNavigationViewTag.Bookmarks}">
                 <NavigationViewItem.Icon>
                     <!--  Library  -->

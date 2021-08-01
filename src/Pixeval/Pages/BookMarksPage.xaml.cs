@@ -2,24 +2,17 @@
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Mako.Global.Enum;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Util;
 using Pixeval.ViewModel;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace Pixeval.Pages
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class BookMarksPage : Page
+    public sealed partial class BookmarksPage
     {
-        public BookMarksPage()
+        public BookmarksPage()
         {
             InitializeComponent();
         }
@@ -31,7 +24,7 @@ namespace Pixeval.Pages
             SortOptionComboBox.SelectedItem = SortOptionComboBoxPublishDateDescendingComboBoxItem;
         }
 
-        private async void BookMarksPage_OnLoaded(object sender, RoutedEventArgs e)
+        private async void BookmarksPage_OnLoaded(object sender, RoutedEventArgs e)
         {
             await ChangeSource();
         }

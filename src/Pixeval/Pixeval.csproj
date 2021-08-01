@@ -135,7 +135,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Pages\BookMarksPage.xaml">
+    <Page Update="Pages\BookmarksPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
