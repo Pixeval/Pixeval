@@ -22,7 +22,7 @@ namespace Pixeval.Pages
 
         public static readonly MainPageRootNavigationViewTag Recommends = new(typeof(RecommendsPage), App.MakoClient.Recommends());
         
-        public static readonly MainPageRootNavigationViewTag Bookmarks = new(typeof(BookMarksPage), App.MakoClient.Bookmarks(App.Uid!, PrivacyPolicy.Public));
+        public static readonly MainPageRootNavigationViewTag Bookmarks = new(typeof(BookmarksPage), App.MakoClient.Bookmarks(App.Uid!, PrivacyPolicy.Public));
 
         public static readonly MainPageRootNavigationViewTag Settings = new(typeof(SettingsPage), App.MakoClient.Configuration);
     }

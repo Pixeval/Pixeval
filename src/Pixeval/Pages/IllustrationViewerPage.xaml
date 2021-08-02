@@ -6,11 +6,27 @@
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
       mc:Ignorable="d">
 
-    <Grid>
+    <ScrollViewer x:Name="IllustrationOriginalImageContainerScrollViewer"
+                  Width="800"
+                  Height="400"
+                  HorizontalScrollBarVisibility="Auto"
+                  HorizontalScrollMode="Enabled"
+                  MaxZoomFactor="8"
+                  MinZoomFactor="1"
+                  VerticalScrollBarVisibility="Auto"
+                  ZoomMode="Enabled"
+                  ZoomSnapPointsType="Optional">
         <Image x:Name="IllustrationOriginalImage"
-               Width="1000"
-               Height="1000"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               ManipulationDelta="IllustrationOriginalImage_OnManipulationDelta"
+               ManipulationCompleted="IllustrationOriginalImage_OnManipulationCompleted"
+               ManipulationMode="TranslateX,TranslateY"
                Source="../Assets/Images/image-not-available.png"
-               Stretch="Uniform" />
-    </Grid>
+               Stretch="Uniform">
+            <Image.RenderTransform>
+                <CompositeTransform x:Name="IllustrationOriginalImageRenderTransform" />
+            </Image.RenderTransform>
+        </Image>
+    </ScrollViewer>
 </Page>
