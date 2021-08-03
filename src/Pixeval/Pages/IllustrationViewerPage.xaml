@@ -5,27 +5,46 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
       mc:Ignorable="d">
-
+    <Page.Resources>
+        <Storyboard x:Name="ResetImageScaleStoryboard"
+                    Completed="ResetImageScaleStoryboard_OnCompleted">
+            <DoubleAnimation EasingFunction="{x:Bind _easingFunction}"
+                             Storyboard.TargetName="IllustrationOriginalImageRenderTransform"
+                             Storyboard.TargetProperty="ScaleX"
+                             To="1"
+                             Duration="0:0:0.1" />
+            <DoubleAnimation EasingFunction="{x:Bind _easingFunction}"
+                             Storyboard.TargetName="IllustrationOriginalImageRenderTransform"
+                             Storyboard.TargetProperty="ScaleY"
+                             To="1"
+                             Duration="0:0:0.1" />
+        </Storyboard>
+    </Page.Resources>
     <ScrollViewer x:Name="IllustrationOriginalImageContainerScrollViewer"
                   Width="800"
                   Height="400"
-                  HorizontalScrollBarVisibility="Auto"
-                  HorizontalScrollMode="Enabled"
+                  HorizontalScrollBarVisibility="Disabled"
+                  HorizontalScrollMode="Disabled"
                   MaxZoomFactor="8"
                   MinZoomFactor="1"
-                  VerticalScrollBarVisibility="Auto"
+                  VerticalScrollBarVisibility="Disabled"
+                  VerticalScrollMode="Disabled"
                   ZoomMode="Enabled"
                   ZoomSnapPointsType="Optional">
         <Image x:Name="IllustrationOriginalImage"
-               HorizontalAlignment="Left"
-               VerticalAlignment="Top"
-               ManipulationDelta="IllustrationOriginalImage_OnManipulationDelta"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               DoubleTapped="IllustrationOriginalImage_OnDoubleTapped"
+               IsDoubleTapEnabled="True"
                ManipulationCompleted="IllustrationOriginalImage_OnManipulationCompleted"
+               ManipulationDelta="IllustrationOriginalImage_OnManipulationDelta"
                ManipulationMode="TranslateX,TranslateY"
                Source="../Assets/Images/image-not-available.png"
                Stretch="Uniform">
             <Image.RenderTransform>
-                <CompositeTransform x:Name="IllustrationOriginalImageRenderTransform" />
+                <CompositeTransform x:Name="IllustrationOriginalImageRenderTransform"
+                                    CenterX="{x:Bind CalculateMediumWidth()}"
+                                    CenterY="{x:Bind CalculateMediumHeight()}" />
             </Image.RenderTransform>
         </Image>
     </ScrollViewer>

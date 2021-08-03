@@ -64,5 +64,7 @@ namespace Pixeval.Util
         {
             return type.GetEnumValues().Cast<TEnum>();
         }
+
+        public static bool Inverse(ref this bool b) => b = !b;
     }
 }
