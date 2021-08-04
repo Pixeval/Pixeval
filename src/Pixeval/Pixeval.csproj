@@ -16,6 +16,7 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="Assets\Images\77032538.png" />
     <Content Remove="Assets\Images\logo-no-caption.png" />
     <Content Remove="Assets\Strings\zh-CN\BookmarksPage.resw" />
     <Content Remove="Assets\Strings\zh-CN\IllustrationGridCommandBar.resw" />

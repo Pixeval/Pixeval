@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
+using ABI.Microsoft.UI.Xaml.Controls;
 using CommunityToolkit.WinUI.UI.Animations;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -151,7 +150,8 @@ namespace Pixeval.Pages
             {
                 await TranslateImage(0, 0);
             }
-            IllustrationOriginalImageContainerScrollViewer.ChangeView(IllustrationOriginalImageContainerScrollViewer.ExtentWidth / 2, IllustrationOriginalImageContainerScrollViewer.ExtentHeight / 2, _tappedScaled ? 1 : 2, false);
+            IllustrationOriginalImageContainerScrollViewer.ChangeView(0, 0, _tappedScaled ? 1 : 2, false);
+            IllustrationOriginalImage.UpdateLayout();
             _tappedScaled.Inverse();
         }
 

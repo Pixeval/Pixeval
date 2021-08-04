@@ -1,51 +1,107 @@
 ﻿<Page x:Class="Pixeval.Pages.IllustrationViewerPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
       mc:Ignorable="d">
     <Page.Resources>
-        <Storyboard x:Name="ResetImageScaleStoryboard"
-                    Completed="ResetImageScaleStoryboard_OnCompleted">
-            <DoubleAnimation EasingFunction="{x:Bind _easingFunction}"
-                             Storyboard.TargetName="IllustrationOriginalImageRenderTransform"
-                             Storyboard.TargetProperty="ScaleX"
-                             To="1"
-                             Duration="0:0:0.1" />
-            <DoubleAnimation EasingFunction="{x:Bind _easingFunction}"
-                             Storyboard.TargetName="IllustrationOriginalImageRenderTransform"
-                             Storyboard.TargetProperty="ScaleY"
-                             To="1"
-                             Duration="0:0:0.1" />
-        </Storyboard>
+        <ResourceDictionary>
+            <Storyboard x:Name="ResetImageScaleStoryboard"
+                        Completed="ResetImageScaleStoryboard_OnCompleted">
+                <DoubleAnimation EasingFunction="{x:Bind _easingFunction}"
+                                 Storyboard.TargetName="IllustrationOriginalImageRenderTransform"
+                                 Storyboard.TargetProperty="ScaleX"
+                                 To="1"
+                                 Duration="0:0:0.1" />
+                <DoubleAnimation EasingFunction="{x:Bind _easingFunction}"
+                                 Storyboard.TargetName="IllustrationOriginalImageRenderTransform"
+                                 Storyboard.TargetProperty="ScaleY"
+                                 To="1"
+                                 Duration="0:0:0.1" />
+            </Storyboard>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <AcrylicBrush x:Key="ImageMaskAcrylicBrush"
+                                  FallbackColor="#E6E6E6"
+                                  TintColor="#E6E6E6"
+                                  TintLuminosityOpacity="0.4"
+                                  TintOpacity="0.3" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <AcrylicBrush x:Key="ImageMaskAcrylicBrush"
+                                  FallbackColor="#E6E6E6"
+                                  TintColor="#E6E6E6"
+                                  TintLuminosityOpacity="0.4"
+                                  TintOpacity="0.3" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <AcrylicBrush x:Key="ImageMaskAcrylicBrush"
+                                  FallbackColor="#515151"
+                                  TintColor="#515151"
+                                  TintLuminosityOpacity="0.4"
+                                  TintOpacity="0.3" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <SolidColorBrush x:Key="ImageMaskAcrylicBrush"
+                                     Color="{ThemeResource SystemColorWindowColor}" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
     </Page.Resources>
-    <ScrollViewer x:Name="IllustrationOriginalImageContainerScrollViewer"
-                  Width="800"
-                  Height="400"
-                  HorizontalScrollBarVisibility="Disabled"
-                  HorizontalScrollMode="Disabled"
-                  MaxZoomFactor="8"
-                  MinZoomFactor="1"
-                  VerticalScrollBarVisibility="Disabled"
-                  VerticalScrollMode="Disabled"
-                  ZoomMode="Enabled"
-                  ZoomSnapPointsType="Optional">
-        <Image x:Name="IllustrationOriginalImage"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"
-               DoubleTapped="IllustrationOriginalImage_OnDoubleTapped"
-               IsDoubleTapEnabled="True"
-               ManipulationCompleted="IllustrationOriginalImage_OnManipulationCompleted"
-               ManipulationDelta="IllustrationOriginalImage_OnManipulationDelta"
-               ManipulationMode="TranslateX,TranslateY"
-               Source="../Assets/Images/image-not-available.png"
-               Stretch="Uniform">
-            <Image.RenderTransform>
-                <CompositeTransform x:Name="IllustrationOriginalImageRenderTransform"
-                                    CenterX="{x:Bind CalculateMediumWidth()}"
-                                    CenterY="{x:Bind CalculateMediumHeight()}" />
-            </Image.RenderTransform>
-        </Image>
-    </ScrollViewer>
+
+    <controls:DockPanel HorizontalAlignment="Stretch"
+                        LastChildFill="True">
+        <CommandBar x:Name="IllustrationViewerCommandBar"
+                    controls:DockPanel.Dock="Top" />
+        <Grid x:Name="LeftNavigationButtonGrid"
+              Width="30"
+              controls:DockPanel.Dock="Left" />
+        <Grid x:Name="RightNavigationButtonGrid"
+              Width="30"
+              controls:DockPanel.Dock="Right" />
+        <Grid Height="30"
+              controls:DockPanel.Dock="Bottom" />
+        <Grid>
+            <!--  Disable the scroll bar will cause weird arrange issues  -->
+            <ScrollViewer x:Name="IllustrationOriginalImageContainerScrollViewer"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          HorizontalScrollBarVisibility="Auto"
+                          HorizontalScrollMode="Enabled"
+                          MaxZoomFactor="8"
+                          MinZoomFactor="1"
+                          VerticalScrollBarVisibility="Auto"
+                          VerticalScrollMode="Enabled"
+                          ZoomMode="Enabled"
+                          ZoomSnapPointsType="Optional">
+                <Image x:Name="IllustrationOriginalImage"
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch"
+                       DoubleTapped="IllustrationOriginalImage_OnDoubleTapped"
+                       IsDoubleTapEnabled="True"
+                       ManipulationCompleted="IllustrationOriginalImage_OnManipulationCompleted"
+                       ManipulationDelta="IllustrationOriginalImage_OnManipulationDelta"
+                       ManipulationMode="TranslateX,TranslateY"
+                       Source="../Assets/Images/77032538.png"
+                       Stretch="Uniform">
+                    <Image.RenderTransform>
+                        <CompositeTransform x:Name="IllustrationOriginalImageRenderTransform"
+                                            CenterX="{x:Bind CalculateMediumWidth()}"
+                                            CenterY="{x:Bind CalculateMediumHeight()}" />
+                    </Image.RenderTransform>
+                </Image>
+            </ScrollViewer>
+            <Grid HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch">
+                <Rectangle Fill="{ThemeResource ImageMaskAcrylicBrush}" />
+                <ProgressRing Width="50"
+                              Height="50"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              IsIndeterminate="False" />
+            </Grid>
+        </Grid>
+    </controls:DockPanel>
 </Page>
