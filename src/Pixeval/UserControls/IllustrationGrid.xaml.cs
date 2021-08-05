@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml.Controls;
+﻿using System.Linq;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Pages;
@@ -7,6 +8,7 @@ using Pixeval.ViewModel;
 
 namespace Pixeval.UserControls
 {
+    // TODO loading thumbnail on-demand
     public sealed partial class IllustrationGrid
     {
         public IllustrationGridViewModel ViewModel { get; set; }
@@ -39,7 +41,8 @@ namespace Pixeval.UserControls
             var animation = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(ConnectedAnimationKey, sender as Image);
             animation.Configuration = new DirectConnectedAnimationConfiguration();
             // TODO use App.Window.RootFrame
-            Owner!.Frame.Navigate(typeof(IllustrationViewerPage), sender.GetDataContext<IllustrationViewModel>(), new SuppressNavigationTransitionInfo());
+            var viewModel = sender.GetDataContext<IllustrationViewModel>().Illustration.GetMangaIllustrations().Select(p => new IllustrationViewModel(p)).ToArray();
+            Owner!.Frame.Navigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModel), new SuppressNavigationTransitionInfo());
         }
     }
 }

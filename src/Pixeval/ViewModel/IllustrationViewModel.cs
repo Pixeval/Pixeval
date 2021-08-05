@@ -11,18 +11,20 @@ namespace Pixeval.ViewModel
 {
     public class IllustrationViewModel : ObservableObject
     {
-        private readonly Illustration _illustration;
+        public Illustration Illustration { get; }
 
-        public string Id => _illustration.Id.ToString();
+        public string Id => Illustration.Id.ToString();
 
-        public int Bookmark => _illustration.TotalBookmarks;
+        public int Bookmark => Illustration.TotalBookmarks;
 
-        public DateTimeOffset PublishDate => _illustration.CreateDate;
+        public DateTimeOffset PublishDate => Illustration.CreateDate;
+
+        public string? OriginalSourceUrl => Illustration.GetOriginalUrl();
 
         public bool IsBookmarked
         {
-            get => _illustration.IsBookmarked;
-            set => SetProperty(_illustration.IsBookmarked, value, m => _illustration.IsBookmarked = m);
+            get => Illustration.IsBookmarked;
+            set => SetProperty(Illustration.IsBookmarked, value, m => Illustration.IsBookmarked = m);
         }
 
 
@@ -48,7 +50,7 @@ namespace Pixeval.ViewModel
 
         public IllustrationViewModel(Illustration illustration)
         {
-            _illustration = illustration;
+            Illustration = illustration;
             _ = LoadThumbnail();
         }
 
@@ -56,7 +58,7 @@ namespace Pixeval.ViewModel
 
         public async Task LoadThumbnail()
         {
-            if (_illustration.GetThumbnailUrl(ThumbnailUrlOptions.Medium) is { } url)
+            if (Illustration.GetThumbnailUrl(ThumbnailUrlOptions.Medium) is { } url)
             {
                 var ras = (await App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url)).GetOrThrow();
                 ThumbnailSource = await ras.GetImageSourceAsync();
@@ -76,19 +78,6 @@ namespace Pixeval.ViewModel
         {
             IsBookmarked = true;
             return App.MakoClient.PostBookmarkAsync(Id, PrivacyPolicy.Public);
-        }
-
-        public static int Compare<K>(IllustrationViewModel? m1, IllustrationViewModel? m2, Func<IllustrationViewModel, K> keySelector)
-            where K : IComparable<K>
-        {
-            if (m1 is null || m2 is null)
-            {
-                return 0;
-            }
-
-            var key1 = keySelector(m1);
-            var key2 = keySelector(m2);
-            return key1.CompareTo(key2);
         }
     }
 }

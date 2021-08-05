@@ -20,6 +20,7 @@
     <Content Remove="Assets\Images\logo-no-caption.png" />
     <Content Remove="Assets\Strings\zh-CN\BookmarksPage.resw" />
     <Content Remove="Assets\Strings\zh-CN\IllustrationGridCommandBar.resw" />
+    <Content Remove="Assets\Strings\zh-CN\ImageViewerPage.resw" />
     <Content Remove="Assets\Strings\zh-CN\RecommendsPage.resw" />
     <Content Remove="Assets\Strings\zh-CN\SettingsPage.resw" />
   </ItemGroup>
@@ -30,6 +31,7 @@
     <None Remove="Pages\DownloadListPage.xaml" />
     <None Remove="Pages\IllustrationGridPage.xaml" />
     <None Remove="Pages\IllustrationViewerPage.xaml" />
+    <None Remove="Pages\ImageViewerPage.xaml" />
     <None Remove="Pages\RecommendsPage.xaml" />
     <None Remove="Pages\SettingsPage.xaml" />
     <None Remove="UserControls\IllustrationGridCommandBar.xaml" />
@@ -133,6 +135,12 @@
 
   <ItemGroup>
     <PRIResource Include="Assets\Strings\zh-CN\BookmarksPage.resw" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\ImageViewerPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

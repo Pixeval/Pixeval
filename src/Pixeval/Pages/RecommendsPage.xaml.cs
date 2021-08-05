@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Mako.Global.Enum;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Util;
-using Pixeval.ViewModel;
 
 namespace Pixeval.Pages
 {
@@ -43,7 +40,7 @@ namespace Pixeval.Pages
         {
             if (TryGetRecommendContentType(PrivacyPolicyComboBox, out var type) && TryGetIllustrationSortOption(SortOptionComboBox, out var option))
             {
-                await IllustrationGrid.ViewModel.ResetAndFill(App.MakoClient.Recommends(type), GetInsertAction(option));
+                await IllustrationGrid.ViewModel.ResetAndFill(App.MakoClient.Recommends(type), IllustrationHelper.Insert(option));
             }
         }
 
@@ -71,17 +68,6 @@ namespace Pixeval.Pages
 
             type = IllustrationSortOption.PublishDateDescending;
             return false;
-        }
-
-        private static Action<ObservableCollection<IllustrationViewModel>, IllustrationViewModel?> GetInsertAction(IllustrationSortOption sortOption)
-        {
-            return sortOption switch
-            {
-                IllustrationSortOption.PublishDateAscending  => (models, model) => models!.AddSorted(model, (m1, m2) => IllustrationViewModel.Compare(m1, m2, m => m.PublishDate)),
-                IllustrationSortOption.PublishDateDescending => (models, model) => models!.AddSorted(model, (m1, m2) => -IllustrationViewModel.Compare(m1, m2, m => m.PublishDate)),
-                IllustrationSortOption.PopularityDescending  => (models, model) => models!.AddSorted(model, (m1, m2) => -IllustrationViewModel.Compare(m1, m2, m => m.Bookmark)),
-                _                                            => throw new ArgumentOutOfRangeException(nameof(sortOption), sortOption, null)
-            };
         }
 
         #endregion

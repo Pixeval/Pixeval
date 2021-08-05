@@ -22,7 +22,7 @@ namespace Pixeval.Util
         // We maintain an approximately 2:1 of large to small buffer pool size ratio, because
         // the full-sized images may get up to more than 20MB, and the thumbnails are comparatively
         // far more smaller. Let's assume that the thumbnails have an average size of 512K(this is
-        // already a pessimistic estimate), there would be at most 50 thumbnails appear at the same
+        // already a pessimistic estimation), there would be at most 50 thumbnails appear at the same
         // time, so the total size would be 25MB. As for the large images, there would be at most one
         // on the screen at the same time, so 24MB is just more than sufficient
         private const int MaximumLargeBufferPoolSizeInBytes = 24 * 1024 * BlockSizeInBytes; // 24MB
@@ -82,7 +82,7 @@ namespace Pixeval.Util
 
                     resultStream.Advance(bytesRead);
                     totalRead += bytesRead;
-                    progress?.Report(totalRead / (double)responseLength * 100); // percentage
+                    progress?.Report(totalRead / (double) responseLength * 100); // percentage
                 }
 
                 resultStream.Seek(0, SeekOrigin.Begin);
