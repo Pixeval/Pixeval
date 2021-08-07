@@ -34,7 +34,8 @@
                                  To="2"
                                  Duration="0:0:1" />
             </Storyboard>
-            <Storyboard x:Name="ResetImageTranslationStoryboard" Completed="ResetImageTranslationStoryboard_OnCompleted">
+            <Storyboard x:Name="ResetImageTranslationStoryboard"
+                        Completed="ResetImageTranslationStoryboard_OnCompleted">
                 <DoubleAnimation EasingFunction="{x:Bind _easingFunction}"
                                  Storyboard.TargetName="IllustrationOriginalImageRenderTransform"
                                  Storyboard.TargetProperty="TranslateX"
@@ -88,6 +89,8 @@
                    IsDoubleTapEnabled="True"
                    ManipulationDelta="IllustrationOriginalImage_OnManipulationDelta"
                    ManipulationMode="TranslateX,TranslateY"
+                   PointerWheelChanged="IllustrationOriginalImage_OnPointerWheelChanged"
+                   RenderTransformOrigin="0.5,0.5"
                    Stretch="Uniform">
                 <Image.RenderTransform>
                     <CompositeTransform x:Name="IllustrationOriginalImageRenderTransform" />

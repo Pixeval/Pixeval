@@ -2,10 +2,12 @@
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage.Streams;
+using CommunityToolkit.WinUI.UI.Animations;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using PInvoke;
 using Pixeval.Interop;
@@ -72,6 +74,17 @@ namespace Pixeval.Util
             var transform = element.TransformToVisual((UIElement) scrollViewer.Content);
             var position = transform.TransformPoint(new Point(0, 0));
             scrollViewer.ChangeView(null, position.Y, null, false);
+        }
+
+        public static Storyboard CreateStoryboard(params Timeline[] animations)
+        {
+            var sb = new Storyboard();
+            foreach (var animation in animations)
+            {
+                sb.Children.Add(animation);
+            }
+
+            return sb;
         }
     }
 }
