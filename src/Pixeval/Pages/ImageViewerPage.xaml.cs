@@ -1,7 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+using System.Threading.Channels;
+using System.Threading.Tasks;
 using Windows.Foundation;
+using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.UI.Animations;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
@@ -45,15 +46,31 @@ namespace Pixeval.Pages
             var (deltaX, deltaY) = (e.Delta.Translation.X, e.Delta.Translation.Y);
             if (GetZoomFactor() > 1)
             {
+                var renderedImageWidth = IllustrationOriginalImage.ActualWidth * GetZoomFactor();
+                var renderedImageHeight = IllustrationOriginalImage.ActualHeight * GetZoomFactor();
+                var containerWidth = IllustrationOriginalImageContainer.ActualWidth;
+                var containerHeight = IllustrationOriginalImageContainer.ActualHeight;
                 var pos = IllustrationOriginalImage.TransformToVisual(IllustrationOriginalImageContainer).TransformPoint(new Point(0, 0));
-                if (HorizontallyDraggable((int) pos.X))
+                if (renderedImageWidth > containerWidth)
                 {
-                    IllustrationOriginalImageRenderTransform.TranslateX += deltaX;
+                    switch (deltaX)
+                    {
+                        case < 0 when pos.X > -(renderedImageWidth - containerWidth):
+                        case > 0 when pos.X < 0:
+                            IllustrationOriginalImageRenderTransform.TranslateX += deltaX;
+                            break;
+                    }
                 }
 
-                if (VerticallyDraggable((int) pos.Y))
+                if (renderedImageHeight > containerHeight)
                 {
-                    IllustrationOriginalImageRenderTransform.TranslateY += deltaY;
+                    switch (deltaY)
+                    {
+                        case < 0 when pos.Y > -(renderedImageHeight - containerHeight):
+                        case > 0 when pos.Y < 0:
+                            IllustrationOriginalImageRenderTransform.TranslateY += deltaY;
+                            break;
+                    }
                 }
             }
         }
@@ -97,18 +114,9 @@ namespace Pixeval.Pages
             IllustrationOriginalImageRenderTransform.TranslateY = 0;
         }
 
-        private void IllustrationOriginalImage_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        private void IllustrationOriginalImageContainer_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
-            var delta = e.GetCurrentPoint(null).Properties.MouseWheelDelta;
-            switch (delta)
-            {
-                case > 0 when GetZoomFactor() < MaxZoomFactor:
-                    Zoom(delta / 500d);
-                    break;
-                case < 0 when GetZoomFactor() > MinZoomFactor:
-                    Zoom(delta / 500d);
-                    break;
-            }
+            Zoom(e.GetCurrentPoint(null).Properties.MouseWheelDelta / 500d);
         }
 
         #region Helper Functions
@@ -121,16 +129,9 @@ namespace Pixeval.Pages
 
         private bool _tappedScaled;
 
-        private readonly Queue<Storyboard> _zoomAnimationQueue = new();
-
         private void SetSource(ImageSource imageSource)
         {
             IllustrationOriginalImage.Source = imageSource;
-        }
-
-        private double GetZoomedManipulationBound()
-        {
-            return 100 / GetZoomFactor();
         }
 
         private double GetZoomFactor()
@@ -138,26 +139,8 @@ namespace Pixeval.Pages
             return IllustrationOriginalImageRenderTransform.ScaleX;
         }
 
-        private bool HorizontallyDraggable(int x)
-        {
-            var renderedImageWidth = IllustrationOriginalImage.ActualWidth * GetZoomFactor();
-            var containerWidth = IllustrationOriginalImageContainer.ActualWidth;
-            return renderedImageWidth > containerWidth && x < 0 && x > -(renderedImageWidth - containerWidth);
-        }
-
-        private bool VerticallyDraggable(int y)
-        {
-            var renderedImageHeight = IllustrationOriginalImage.ActualHeight * GetZoomFactor();
-            var containerHeight = IllustrationOriginalImageContainer.ActualHeight;
-            return renderedImageHeight > containerHeight && y < 0 && y > -(renderedImageHeight - containerHeight);
-        }
-
         private void Zoom(double delta)
         {
-            var currentScaleX = IllustrationOriginalImageRenderTransform.ScaleX;
-            var currentScaleY = IllustrationOriginalImageRenderTransform.ScaleY;
-            var computedScaleX = currentScaleX + delta;
-            var computedScaleY = currentScaleY + delta;
             if (IllustrationOriginalImageRenderTransform.TranslateX != 0)
             {
                 UIHelper.CreateStoryboard(IllustrationOriginalImageRenderTransform.CreateDoubleAnimation("TranslateX", 0, null, null, TimeSpan.FromMilliseconds(100), _easingFunction)).Begin();
@@ -167,10 +150,16 @@ namespace Pixeval.Pages
             {
                 UIHelper.CreateStoryboard(IllustrationOriginalImageRenderTransform.CreateDoubleAnimation("TranslateY", 0, null, null, TimeSpan.FromMilliseconds(100), _easingFunction)).Begin();
             }
-            var sb = UIHelper.CreateStoryboard(
-                IllustrationOriginalImageRenderTransform.CreateDoubleAnimation("ScaleX", computedScaleX, null, null, TimeSpan.FromMilliseconds(500), _easingFunction),
-                IllustrationOriginalImageRenderTransform.CreateDoubleAnimation("ScaleY", computedScaleY, null, null, TimeSpan.FromMilliseconds(500), _easingFunction)); ;
-            sb.Begin();
+
+            var factor = GetZoomFactor();
+            switch (delta)
+            {
+                case < 0 when factor > MinZoomFactor:
+                case > 0 when factor < MaxZoomFactor:
+                    IllustrationOriginalImageRenderTransform.ScaleX += delta;
+                    IllustrationOriginalImageRenderTransform.ScaleY += delta;
+                    break;
+            }
         }
 
         #endregion

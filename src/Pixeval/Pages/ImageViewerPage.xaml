@@ -81,7 +81,8 @@
         <Grid x:Name="IllustrationOriginalImageContainer"
               HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch"
-              util:ClipService.ClipToBounds="True">
+              util:ClipService.ClipToBounds="True"
+              PointerWheelChanged="IllustrationOriginalImageContainer_OnPointerWheelChanged">
             <Image x:Name="IllustrationOriginalImage"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
@@ -89,7 +90,6 @@
                    IsDoubleTapEnabled="True"
                    ManipulationDelta="IllustrationOriginalImage_OnManipulationDelta"
                    ManipulationMode="TranslateX,TranslateY"
-                   PointerWheelChanged="IllustrationOriginalImage_OnPointerWheelChanged"
                    RenderTransformOrigin="0.5,0.5"
                    Stretch="Uniform">
                 <Image.RenderTransform>
