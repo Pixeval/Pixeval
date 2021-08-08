@@ -131,6 +131,15 @@
                 <InfoBar x:Uid="/SettingsPage/DisableSNIBypassInfoBar"
                          IsOpen="{x:Bind DisableSniBypassToggleSwitch.IsOn, Mode=OneWay}"
                          Style="{StaticResource SectionInfoBarStyle}" />
+                <!--  Dispose Thumbnails Outside Of Viewport  -->
+                <ToggleSwitch x:Name="DisposeThumbnailsAtOutsideOfViewportSwitch"
+                              x:Uid="/SettingsPage/DisposeThumbnailsAtOutsideOfViewportSwitch"
+                              Margin="{StaticResource SettingsEntriesMargin}"
+                              FontSize="{StaticResource PixevalContentFontSize}"
+                              IsOn="{x:Bind _viewModel.DisposeThumbnailsAtOutsideOfViewport, Mode=TwoWay}" />
+                <InfoBar x:Uid="/SettingsPage/DisposeThumbnailsAtOutsideOfViewportInfoBar"
+                         IsOpen="{x:Bind DisposeThumbnailsAtOutsideOfViewportSwitch.IsOn, Mode=OneWay}"
+                         Style="{StaticResource SectionInfoBarStyle}" />
                 <!--  TODO add relative link to AboutSNIBypassHyperlinkButton.NavigateUri, awaiting @ControlNet's job on website  -->
                 <!--  Default Sort Option Section  -->
                 <TextBlock x:Uid="/SettingsPage/DefaultSortOptionTextBlock"
@@ -139,10 +148,10 @@
                 <ComboBox x:Name="DefaultSortOptionComboBox"
                           x:Uid="/Misc/SortOptionComboBox"
                           Margin="{StaticResource SettingsEntryPadding}"
-                          ItemsSource="{x:Bind viewModel:SettingsPageViewModel.AvailableIllustrationSortOptions}"
+                          ItemsSource="{x:Bind util:MakoHelper.AvailableIllustrationSortOptions}"
                           SelectedItem="{x:Bind _viewModel.BoxSortOption(), BindBack=_viewModel.UnboxSortOption, Mode=TwoWay}">
                     <ComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="viewModel:IllustrationSortOptionWrapper">
+                        <DataTemplate x:DataType="util:IllustrationSortOptionWrapper">
                             <TextBlock Text="{x:Bind LocalizedString}" />
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
@@ -155,15 +164,31 @@
                 <ComboBox x:Name="SearchKeywordMatchOptionComboBox"
                           x:Uid="/SettingsPage/SearchKeywordMatchOptionComboBox"
                           Margin="{StaticResource SettingsEntryPadding}"
-                          ItemsSource="{x:Bind viewModel:SettingsPageViewModel.AvailableSearchTagMatchOption}"
+                          ItemsSource="{x:Bind util:MakoHelper.AvailableSearchTagMatchOption}"
                           SelectedItem="{x:Bind _viewModel.BoxSearchTagMatchOption(), BindBack=_viewModel.UnboxSearchTagMatchOption, Mode=TwoWay}">
                     <ComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="viewModel:SearchTagMatchOptionWrapper">
+                        <DataTemplate x:DataType="util:SearchTagMatchOptionWrapper">
                             <TextBlock Text="{x:Bind LocalizedString}" />
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
                 <InfoBar x:Uid="/SettingsPage/SearchKeywordMatchOptionInfoBar"
+                         Style="{StaticResource SectionInfoBarStyle}" />
+                <!--  Target Filter Section  -->
+                <TextBlock x:Uid="/SettingsPage/TargetFilterTextBlock"
+                           Style="{StaticResource SectionHeaderTextBlockStyle}" />
+                <ComboBox x:Name="TargetFilterComboBox"
+                          x:Uid="/SettingsPage/TargetFilterComboBox"
+                          Margin="{StaticResource SettingsEntryPadding}"
+                          ItemsSource="{x:Bind util:MakoHelper.AvailableTargetFilters}"
+                          SelectedItem="{x:Bind _viewModel.BoxTargetFilter(), BindBack=_viewModel.UnboxTargetFilter, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="util:TargetFilterWrapper">
+                            <TextBlock Text="{x:Bind LocalizedString}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <InfoBar x:Uid="/SettingsPage/TargetFilterInfoBar"
                          Style="{StaticResource SectionInfoBarStyle}" />
                 <!--  Page Limit for Search Section  -->
                 <TextBlock x:Uid="/SettingsPage/PageLimitForSearchTextBlock"

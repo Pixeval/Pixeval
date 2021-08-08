@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using Mako.Global.Enum;
@@ -40,6 +39,11 @@ namespace Pixeval
         public SearchTagMatchOption TagMatchOption { get; set; }
 
         /// <summary>
+        /// The target filter that indicates the type of the client
+        /// </summary>
+        public TargetFilter TargetFilter { get; set; }
+
+        /// <summary>
         /// Indicates the maximum page count that are allowed to be retrieved during
         /// keyword search(30 entries per page)
         /// </summary>
@@ -67,41 +71,49 @@ namespace Pixeval
         /// </summary>
         public int MaxDownloadTaskConcurrencyLevel { get; set; }
 
+        public bool DisposeThumbnailsAtOutsideOfViewport { get; set; }
+
         public AppSetting(ApplicationTheme theme,
             ObservableCollection<string> excludeTags,
             bool disableDomainFronting,
             IllustrationSortOption defaultSortOption,
             SearchTagMatchOption searchTagMatchOption,
+            TargetFilter targetFilter,
             int pageLimitForKeywordSearch,
             int searchStartingFromPageNumber,
             int pageLimitForSpotlight,
             string? mirrorHost,
-            int maxDownloadTaskConcurrencyLevel)
+            int maxDownloadTaskConcurrencyLevel,
+            bool disposeThumbnailsAtOutsideOfViewport)
         {
             Theme = theme;
             ExcludeTags = excludeTags;
             DisableDomainFronting = disableDomainFronting;
             DefaultSortOption = defaultSortOption;
             TagMatchOption = searchTagMatchOption;
+            TargetFilter = targetFilter;
             PageLimitForKeywordSearch = pageLimitForKeywordSearch;
             SearchStartingFromPageNumber = searchStartingFromPageNumber;
             PageLimitForSpotlight = pageLimitForSpotlight;
             MirrorHost = mirrorHost;
             MaxDownloadTaskConcurrencyLevel = maxDownloadTaskConcurrencyLevel;
+            DisposeThumbnailsAtOutsideOfViewport = disposeThumbnailsAtOutsideOfViewport;
         }
 
         public static AppSetting CreateDefault()
         {
-            return new(ApplicationTheme.SystemDefault, 
+            return new(ApplicationTheme.SystemDefault,
                 new ObservableCollection<string>(),
-                false, 
+                false,
                 IllustrationSortOption.PublishDateDescending,
                 SearchTagMatchOption.PartialMatchForTags,
+                TargetFilter.ForAndroid,
                 100,
                 1,
                 50,
                 null,
-                Environment.ProcessorCount);
+                Environment.ProcessorCount,
+                false);
         }
 
         public MakoClientConfiguration ToMakoClientConfiguration()

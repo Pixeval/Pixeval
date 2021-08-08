@@ -18,7 +18,7 @@ namespace Pixeval.Pages
         {
             base.OnNavigatedTo(e);
             PrivacyPolicyComboBox.SelectedItem = PrivacyPolicyComboBoxPublicItem;
-            SortOptionComboBox.SelectedItem = SortOptionComboBoxPublishDateDescendingComboBoxItem;
+            SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
         }
 
         private async void BookmarksPage_OnLoaded(object sender, RoutedEventArgs e)
@@ -38,10 +38,9 @@ namespace Pixeval.Pages
 
         private async Task ChangeSource()
         {
-            if (TryGetPrivacyPolicy(PrivacyPolicyComboBox, out var type)
-                && TryGetIllustrationSortOption(SortOptionComboBox, out var option))
+            if (TryGetPrivacyPolicy(PrivacyPolicyComboBox, out var policy))
             {
-                await IllustrationGrid.ViewModel.ResetAndFill(App.MakoClient.Bookmarks(App.Uid!, type), IllustrationHelper.Insert(option));
+                await IllustrationGrid.ViewModel.ResetAndFill(App.MakoClient.Bookmarks(App.Uid!, policy), MakoHelper.Insert(GetIllustrationSortOption()));
             }
         }
 
@@ -59,16 +58,9 @@ namespace Pixeval.Pages
             return false;
         }
 
-        private static bool TryGetIllustrationSortOption(object sender, out IllustrationSortOption type)
+        private IllustrationSortOption GetIllustrationSortOption()
         {
-            if (sender is ComboBox { SelectedItem: ComboBoxItem { Tag: IllustrationSortOption t } })
-            {
-                type = t;
-                return true;
-            }
-
-            type = IllustrationSortOption.PublishDateDescending;
-            return false;
+            return ((IllustrationSortOptionWrapper) SortOptionComboBox.SelectedItem).Value;
         }
 
         #endregion

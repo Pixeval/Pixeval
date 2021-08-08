@@ -12,6 +12,8 @@ namespace Pixeval.ViewModel
 {
     public class IllustrationGridViewModel : ObservableObject
     {
+        public bool DisposeThumbnailsOutsideOfViewport => App.AppSetting.DisposeThumbnailsAtOutsideOfViewport;
+
         public IFetchEngine<Illustration?>? FetchEngine { get; set; }
 
         public ConditionalObservableCollection<IllustrationViewModel> Illustrations { get; }

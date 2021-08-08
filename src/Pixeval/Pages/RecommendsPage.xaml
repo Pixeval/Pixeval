@@ -5,6 +5,7 @@
       xmlns:mako="using:Mako.Global.Enum"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:userControls="using:Pixeval.UserControls"
+      xmlns:util="using:Pixeval.Util"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
       Loaded="RecommendsPage_OnLoaded"
       mc:Ignorable="d">
@@ -16,14 +17,14 @@
                 <StackPanel Margin="10,5,0,0"
                             VerticalAlignment="Center"
                             Orientation="Horizontal">
-                    <ComboBox x:Name="PrivacyPolicyComboBox"
-                              x:Uid="/RecommendsPage/PrivacyPolicyComboBox"
-                              SelectionChanged="PrivacyPolicyComboBox_OnSelectionChanged">
+                    <ComboBox x:Name="ModeSelectionComboBox"
+                              x:Uid="/RecommendsPage/ModeSelectionComboBox"
+                              SelectionChanged="ModeSelectionComboBox_OnSelectionChanged">
                         <ComboBox.Items>
-                            <ComboBoxItem x:Name="PrivacyPolicyComboBoxIllustItem"
-                                          x:Uid="/RecommendsPage/PrivacyPolicyComboBoxIllustComboBoxItem"
+                            <ComboBoxItem x:Name="ModeSelectionComboBoxIllustComboBoxItem"
+                                          x:Uid="/RecommendsPage/ModeSelectionComboBoxIllustComboBoxItem"
                                           Tag="{x:Bind mako:RecommendContentType.Illust}" />
-                            <ComboBoxItem x:Uid="/RecommendsPage/PrivacyPolicyComboBoxMangaComboBoxItem"
+                            <ComboBoxItem x:Uid="/RecommendsPage/ModeSelectionComboBoxMangaComboBoxItem"
                                           Tag="{x:Bind mako:RecommendContentType.Manga}" />
                         </ComboBox.Items>
                     </ComboBox>
@@ -31,22 +32,18 @@
                     <ComboBox x:Name="SortOptionComboBox"
                               x:Uid="/Misc/SortOptionComboBox"
                               Margin="10,0,0,0"
+                              ItemsSource="{x:Bind util:MakoHelper.AvailableIllustrationSortOptions}"
                               SelectionChanged="SortOptionComboBox_OnSelectionChanged">
-                        <ComboBox.Items>
-                            <ComboBoxItem x:Name="SortOptionComboBoxPublishDateDescendingComboBoxItem"
-                                          x:Uid="/Misc/SortOptionComboBoxPublishDateDescendingComboBoxItem"
-                                          Tag="{x:Bind mako:IllustrationSortOption.PublishDateDescending}" />
-                            <ComboBoxItem x:Uid="/Misc/SortOptionComboBoxPublishDateAscendingComboBoxItem"
-                                          Tag="{x:Bind mako:IllustrationSortOption.PublishDateAscending}" />
-                            <ComboBoxItem x:Uid="/Misc/SortOptionComboBoxBookmarkDescendingComboBoxItem"
-                                          Tag="{x:Bind mako:IllustrationSortOption.PopularityDescending}" />
-                        </ComboBox.Items>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="util:IllustrationSortOptionWrapper">
+                                <TextBlock Text="{x:Bind LocalizedString}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                     </ComboBox>
                 </StackPanel>
             </userControls:IllustrationGridCommandBar.CommandBarContent>
         </userControls:IllustrationGridCommandBar>
         <userControls:IllustrationGrid x:Name="IllustrationGrid"
-                                       Margin="0,40,0,0"
-                                       Owner="{x:Bind}" />
+                                       Margin="0,40,0,0" />
     </Grid>
 </Page>

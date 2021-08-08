@@ -73,18 +73,18 @@ namespace Pixeval.Events
         public void Start()
         {
             // Start a event loop that runs at background
-            Task.Run(async () =>
-              {
-                  var reader = _eventChannel.Reader;
-                  while (!reader.Completion.IsCompleted)
-                  {
-                      var evt = await reader.ReadAsync();
-                      if (_registeredSubscribers.TryGetValue(evt.GetType(), out var list))
-                      {
-                          list.ForEach(action => action(evt));
-                      }
-                  }
-              });
+            Task.Factory.StartNew(async () =>
+            {
+                var reader = _eventChannel.Reader;
+                while (!reader.Completion.IsCompleted)
+                {
+                    var evt = await reader.ReadAsync();
+                    if (_registeredSubscribers.TryGetValue(evt.GetType(), out var list))
+                    {
+                        list.ForEach(action => action(evt));
+                    }
+                }
+            }, TaskCreationOptions.LongRunning);
         }
 
         public void Close()

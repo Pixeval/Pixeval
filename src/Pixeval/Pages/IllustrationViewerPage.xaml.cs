@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.WinUI.UI;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -20,7 +21,7 @@ namespace Pixeval.Pages
         {
             base.OnNavigatedTo(e);
             _viewModel = (IllustrationViewerPageViewModel) e.Parameter;
-            IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), new ImageViewerPageViewModel(_viewModel.Current));
+            IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), _viewModel.Current);
 
             if (ConnectedAnimationService.GetForCurrentView().GetAnimation(IllustrationGrid.ConnectedAnimationKey) is { } animation)
             {
@@ -32,12 +33,33 @@ namespace Pixeval.Pages
 
         private void NextImage()
         {
-            IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), new ImageViewerPageViewModel(_viewModel.Next()));
+            IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), _viewModel.Next(), new SlideNavigationTransitionInfo
+            {
+                Effect = SlideNavigationTransitionEffect.FromRight
+            });
         }
 
         private void PrevImage()
         {
-            IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), new ImageViewerPageViewModel(_viewModel.Prev()));
+            IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), _viewModel.Prev(), new SlideNavigationTransitionInfo
+            {
+                Effect = SlideNavigationTransitionEffect.FromLeft
+            });
+        }
+
+        private void NextImageAppBarButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            NextImage();
+        }
+
+        private void PrevImageAppBarButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            PrevImage();
+        }
+
+        private void BackButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            App.AppWindowRootFrame.GoBack(new DrillInNavigationTransitionInfo());
         }
     }
 }

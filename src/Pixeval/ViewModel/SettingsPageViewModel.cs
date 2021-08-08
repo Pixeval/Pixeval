@@ -8,32 +8,6 @@ using Pixeval.Util;
 
 namespace Pixeval.ViewModel
 {
-    public record IllustrationSortOptionWrapper
-    {
-        public IllustrationSortOption Option { get; }
-
-        public string LocalizedString { get; }
-
-        public IllustrationSortOptionWrapper(IllustrationSortOption option, string localizedString)
-        {
-            Option = option;
-            LocalizedString = localizedString;
-        }
-    }
-
-    public record SearchTagMatchOptionWrapper
-    {
-        public SearchTagMatchOption Option { get; }
-
-        public string LocalizedString { get; }
-
-        public SearchTagMatchOptionWrapper(SearchTagMatchOption option, string localizedString)
-        {
-            Option = option;
-            LocalizedString = localizedString;
-        }
-    }
-
     public class SettingsPageViewModel : ObservableObject
     {
         private readonly AppSetting _appSetting;
@@ -45,45 +19,34 @@ namespace Pixeval.ViewModel
 
         public static readonly IEnumerable<ApplicationTheme> AvailableApplicationThemes = typeof(ApplicationTheme).GetEnumValues<ApplicationTheme>();
 
-        /// <summary>
-        /// The <see cref="IllustrationSortOption"/> is welded into Mako, we cannot add <see cref="LocalizedResource"/> on its fields
-        /// so an alternative way is chosen
-        /// </summary>
-        public static readonly IEnumerable<IllustrationSortOptionWrapper> AvailableIllustrationSortOptions = new IllustrationSortOptionWrapper[]
-        {
-            new(IllustrationSortOption.PublishDateDescending, MiscResources.IllustrationSortOptionPublishDateDescending),
-            new(IllustrationSortOption.PublishDateAscending, MiscResources.IllustrationSortOptionPublishDateAscending),
-            new(IllustrationSortOption.PopularityDescending, MiscResources.IllustrationSortOptionPopularityDescending)
-        };
-
-        /// <summary>
-        /// The same reason as <see cref="AvailableIllustrationSortOptions"/>
-        /// </summary>
-        public static readonly IEnumerable<SearchTagMatchOptionWrapper> AvailableSearchTagMatchOption = new SearchTagMatchOptionWrapper[]
-        {
-            new(SearchTagMatchOption.PartialMatchForTags, MiscResources.SearchTagMatchOptionPartialMatchForTags),
-            new(SearchTagMatchOption.ExactMatchForTags, MiscResources.SearchTagMatchOptionExactMatchForTags),
-            new(SearchTagMatchOption.TitleAndCaption, MiscResources.SearchTagMatchOptionTitleAndCaption)
-        };
-
         public IllustrationSortOptionWrapper BoxSortOption()
         {
-            return AvailableIllustrationSortOptions.First(s => s.Option == DefaultSortOption);
+            return MakoHelper.AvailableIllustrationSortOptions.First(s => s.Value == DefaultSortOption);
         }
 
         public void UnboxSortOption(object wrapper)
         {
-            DefaultSortOption = ((IllustrationSortOptionWrapper) wrapper).Option;
+            DefaultSortOption = ((IllustrationSortOptionWrapper) wrapper).Value;
         }
 
         public SearchTagMatchOptionWrapper BoxSearchTagMatchOption()
         {
-            return AvailableSearchTagMatchOption.First(s => s.Option == TagMatchOption);
+            return MakoHelper.AvailableSearchTagMatchOption.First(s => s.Value == TagMatchOption);
         }
 
         public void UnboxSearchTagMatchOption(object wrapper)
         {
-            TagMatchOption = ((SearchTagMatchOptionWrapper) wrapper).Option;
+            TagMatchOption = ((SearchTagMatchOptionWrapper) wrapper).Value;
+        }
+
+        public TargetFilterWrapper BoxTargetFilter()
+        {
+            return MakoHelper.AvailableTargetFilters.First(s => s.Value == TargetFilter);
+        }
+
+        public void UnboxTargetFilter(object wrapper)
+        {
+            TargetFilter = ((TargetFilterWrapper) wrapper).Value;
         }
 
         public ApplicationTheme Theme
@@ -120,6 +83,12 @@ namespace Pixeval.ViewModel
             set => SetProperty(_appSetting.TagMatchOption, value, _appSetting, (setting, value) => setting.TagMatchOption = value);
         }
 
+        public TargetFilter TargetFilter
+        {
+            get => _appSetting.TargetFilter;
+            set => SetProperty(_appSetting.TargetFilter, value, _appSetting, (setting, value) => setting.TargetFilter = value);
+        }
+
         public int PageLimitForKeywordSearch
         {
             get => _appSetting.PageLimitForKeywordSearch;
@@ -152,6 +121,12 @@ namespace Pixeval.ViewModel
         {
             get => _appSetting.MaxDownloadTaskConcurrencyLevel;
             set => SetProperty(_appSetting.MaxDownloadTaskConcurrencyLevel, value, _appSetting, (setting, value) => setting.MaxDownloadTaskConcurrencyLevel = value);
+        }
+
+        public bool DisposeThumbnailsAtOutsideOfViewport
+        {
+            get => _appSetting.DisposeThumbnailsAtOutsideOfViewport;
+            set => SetProperty(_appSetting.DisposeThumbnailsAtOutsideOfViewport, value, _appSetting, (setting, value) => setting.DisposeThumbnailsAtOutsideOfViewport = value);
         }
 
         public void AddR18Filtering()

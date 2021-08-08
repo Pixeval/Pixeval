@@ -24,7 +24,9 @@
                                    StretchContentForSingleRow="True">
             <controls:AdaptiveGridView.ItemTemplate>
                 <DataTemplate x:DataType="viewModel:IllustrationViewModel">
-                    <GridViewItem IsSelected="{x:Bind IsSelected, Mode=TwoWay}">
+                    <GridViewItem x:Name="IllustrationThumbnailContainerItem"
+                                  EffectiveViewportChanged="IllustrationThumbnailContainerItem_OnEffectiveViewportChanged"
+                                  IsSelected="{x:Bind IsSelected, Mode=TwoWay}">
                         <Grid Width="180"
                               Height="250">
                             <Grid.Resources>
@@ -138,7 +140,7 @@
                                     <ScaleTransform CenterX="90" CenterY="125" />
                                 </Image.RenderTransform>
                                 <ToolTipService.ToolTip>
-                                    <ToolTip Content="{x:Bind Id, Mode=OneWay}"
+                                    <ToolTip Content="{x:Bind GetTooltip()}"
                                              Placement="Right" />
                                 </ToolTipService.ToolTip>
                             </Image>

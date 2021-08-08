@@ -1,4 +1,6 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using System.Linq;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml;
 
 namespace Pixeval.ViewModel
 {
@@ -10,11 +12,11 @@ namespace Pixeval.ViewModel
         /// </summary>
         public IllustrationViewerPageViewModel(params IllustrationViewModel[] illustrations)
         {
-            Illustrations = illustrations;
+            Illustrations = illustrations.Select(i => new ImageViewerPageViewModel(i)).ToArray();
             Current = Illustrations[CurrentIndex];
         }
 
-        public IllustrationViewModel[] Illustrations { get; }
+        public ImageViewerPageViewModel[] Illustrations { get; }
 
         private int _currentIndex;
 
@@ -24,9 +26,9 @@ namespace Pixeval.ViewModel
             private set => SetProperty(ref _currentIndex, value);
         }
 
-        private IllustrationViewModel _current = null!;
+        private ImageViewerPageViewModel _current = null!;
 
-        public IllustrationViewModel Current
+        public ImageViewerPageViewModel Current
         {
             get => _current;
             set => SetProperty(ref _current, value);
@@ -34,15 +36,25 @@ namespace Pixeval.ViewModel
 
         public bool IsManga => Illustrations.Length > 1;
 
-        public IllustrationViewModel Next()
+        public Visibility CalculateNextImageButtonVisibility(int index)
         {
-            Current = Illustrations[CurrentIndex + 1 >= Illustrations.Length ? CurrentIndex : ++CurrentIndex];
+            return index < Illustrations.Length - 1 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public Visibility CalculatePrevImageButtonVisibility(int index)
+        {
+            return index > 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public ImageViewerPageViewModel Next()
+        {
+            Current = Illustrations[++CurrentIndex];
             return Current;
         }
 
-        public IllustrationViewModel Prev()
+        public ImageViewerPageViewModel Prev()
         {
-            Current = Illustrations[CurrentIndex - 1 < 0 ? CurrentIndex : --CurrentIndex];
+            Current = Illustrations[--CurrentIndex];
             return Current;
         }
     }

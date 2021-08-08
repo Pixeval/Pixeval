@@ -8,15 +8,47 @@
       mc:Ignorable="d">
     <controls:DockPanel HorizontalAlignment="Stretch"
                         LastChildFill="True">
-        <CommandBar x:Name="IllustrationViewerCommandBar"
-                    controls:DockPanel.Dock="Top"
-                    Background="{ThemeResource SystemColorWindowColor}" />
-        <Grid x:Name="LeftNavigationButtonGrid"
-              Width="30"
-              controls:DockPanel.Dock="Left" />
-        <Grid x:Name="RightNavigationButtonGrid"
-              Width="30"
-              controls:DockPanel.Dock="Right" />
+        <CommandBar controls:DockPanel.Dock="Top"
+                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                    DefaultLabelPosition="Right">
+            <CommandBar.Content>
+                <AppBarButton Width="40"
+                              Click="BackButton_OnClick"
+                              Icon="Back"
+                              LabelPosition="Collapsed" />
+            </CommandBar.Content>
+        </CommandBar>
+        <Grid Width="40"
+              controls:DockPanel.Dock="Left">
+            <AppBarButton Width="35"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Click="PrevImageAppBarButton_OnClick"
+                          LabelPosition="Collapsed"
+                          Visibility="{x:Bind _viewModel.CalculatePrevImageButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}">
+                <AppBarButton.Icon>
+                    <!--  CheveronLeft20  -->
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
+                              Glyph="&#xF743;" />
+                </AppBarButton.Icon>
+            </AppBarButton>
+
+        </Grid>
+        <Grid Width="40"
+              controls:DockPanel.Dock="Right">
+            <AppBarButton Width="35"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Click="NextImageAppBarButton_OnClick"
+                          LabelPosition="Collapsed"
+                          Visibility="{x:Bind _viewModel.CalculateNextImageButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}">
+                <AppBarButton.Icon>
+                    <!--  CheveronRight20  -->
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
+                              Glyph="&#xF745;" />
+                </AppBarButton.Icon>
+            </AppBarButton>
+        </Grid>
         <Grid Height="30"
               controls:DockPanel.Dock="Bottom" />
         <Frame x:Name="IllustrationImageShowcaseFrame" />

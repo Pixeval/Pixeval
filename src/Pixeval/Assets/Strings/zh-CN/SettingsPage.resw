@@ -154,6 +154,15 @@
   <data name="DisableSNIBypassToggleSwitch.Header" xml:space="preserve">
     <value>禁用域前置直连</value>
   </data>
+  <data name="DisposeThumbnailsAtOutsideOfViewportInfoBar.Message" xml:space="preserve">
+    <value>打开该选项后，浏览图片列表时超出可视范围的图片将会被清除，该策略可以减小内存压力，但每次图片进入可视范围内时都会重新从网络上下载，浏览体验将会下降，网络流量消耗则会对应的略微上升</value>
+  </data>
+  <data name="DisposeThumbnailsAtOutsideOfViewportInfoBar.Title" xml:space="preserve">
+    <value>注意</value>
+  </data>
+  <data name="DisposeThumbnailsAtOutsideOfViewportSwitch.Header" xml:space="preserve">
+    <value>释放超出可视范围的缩略图</value>
+  </data>
   <data name="DonatingMeHyperlinkButton.Content" xml:space="preserve">
     <value>支持作者</value>
   </data>
@@ -241,15 +250,6 @@
   <data name="SearchKeywordMatchOptionComboBox.PlaceholderText" xml:space="preserve">
     <value>匹配模式</value>
   </data>
-  <data name="SearchKeywordMatchOptionComboBoxExactMatchComboBoxItem.Content" xml:space="preserve">
-    <value>与关键字完全一致</value>
-  </data>
-  <data name="SearchKeywordMatchOptionComboBoxPartialMatchComboBoxItem.Content" xml:space="preserve">
-    <value>与关键字部分一致</value>
-  </data>
-  <data name="SearchKeywordMatchOptionComboBoxTitleAndCaptionMatchComboBoxItem.Content" xml:space="preserve">
-    <value>匹配标题与说明文</value>
-  </data>
   <data name="SearchKeywordMatchOptionInfoBar.Message" xml:space="preserve">
     <value>在使用侧边导航栏进行关键字搜索时，会使用该选项中对应的匹配方式来与Pixiv数据库中的作品匹配</value>
   </data>
@@ -303,6 +303,18 @@
   </data>
   <data name="SwitchSensitiveContentFilteringToggleSwitch.Header" xml:space="preserve">
     <value>过滤敏感内容(R-18以及R-18G)</value>
+  </data>
+  <data name="TargetFilterComboBox.PlaceholderText" xml:space="preserve">
+    <value>API平台</value>
+  </data>
+  <data name="TargetFilterInfoBar.Message" xml:space="preserve">
+    <value>该选项指示Pixeval将会使用哪个平台的API接口，如果不知道如何选择请保持默认设置不变</value>
+  </data>
+  <data name="TargetFilterInfoBar.Title" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="TargetFilterTextBlock.Text" xml:space="preserve">
+    <value>使用的API平台</value>
   </data>
   <data name="TitleTextBlock.Text" xml:space="preserve">
     <value>Pixeval设置</value>

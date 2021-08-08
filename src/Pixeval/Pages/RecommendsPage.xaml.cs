@@ -17,16 +17,19 @@ namespace Pixeval.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            PrivacyPolicyComboBox.SelectedItem = PrivacyPolicyComboBoxIllustItem;
-            SortOptionComboBox.SelectedItem = SortOptionComboBoxPublishDateDescendingComboBoxItem;
+            ModeSelectionComboBox.SelectedItem = ModeSelectionComboBoxIllustComboBoxItem;
+            SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
         }
 
         private async void RecommendsPage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            await ChangeSource();
+            if (App.Window.NavigationMode != NavigationMode.Back)
+            {
+                await ChangeSource();
+            }
         }
 
-        private async void PrivacyPolicyComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void ModeSelectionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             await ChangeSource();
         }
@@ -38,9 +41,9 @@ namespace Pixeval.Pages
 
         private async Task ChangeSource()
         {
-            if (TryGetRecommendContentType(PrivacyPolicyComboBox, out var type) && TryGetIllustrationSortOption(SortOptionComboBox, out var option))
+            if (TryGetRecommendContentType(ModeSelectionComboBox, out var type))
             {
-                await IllustrationGrid.ViewModel.ResetAndFill(App.MakoClient.Recommends(type), IllustrationHelper.Insert(option));
+                await IllustrationGrid.ViewModel.ResetAndFill(App.MakoClient.Recommends(type), MakoHelper.Insert(GetIllustrationSortOption()));
             }
         }
 
@@ -58,16 +61,9 @@ namespace Pixeval.Pages
             return false;
         }
 
-        private static bool TryGetIllustrationSortOption(object sender, out IllustrationSortOption type)
+        private IllustrationSortOption GetIllustrationSortOption()
         {
-            if (sender is ComboBox {SelectedItem: ComboBoxItem {Tag: IllustrationSortOption t}})
-            {
-                type = t;
-                return true;
-            }
-
-            type = IllustrationSortOption.PublishDateDescending;
-            return false;
+            return ((IllustrationSortOptionWrapper) SortOptionComboBox.SelectedItem).Value;
         }
 
         #endregion

@@ -117,13 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="PrivacyPolicyComboBox.PlaceholderText" xml:space="preserve">
+  <data name="ModeSelectionComboBox.PlaceholderText" xml:space="preserve">
     <value>日推选项</value>
   </data>
-  <data name="PrivacyPolicyComboBoxIllustComboBoxItem.Content" xml:space="preserve">
+  <data name="ModeSelectionComboBoxIllustComboBoxItem.Content" xml:space="preserve">
     <value>插画</value>
   </data>
-  <data name="PrivacyPolicyComboBoxMangaComboBoxItem.Content" xml:space="preserve">
+  <data name="ModeSelectionComboBoxMangaComboBoxItem.Content" xml:space="preserve">
     <value>漫画</value>
   </data>
 </root>

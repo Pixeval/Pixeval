@@ -82,7 +82,7 @@ namespace Pixeval.Util
 
                     resultStream.Advance(bytesRead);
                     totalRead += bytesRead;
-                    progress?.Report(totalRead / (double) responseLength * 100); // percentage
+                    progress?.Report(totalRead / (double) responseLength * 100); // percentage, 100 as base
                 }
 
                 resultStream.Seek(0, SeekOrigin.Begin);
@@ -90,6 +90,31 @@ namespace Pixeval.Util
             }
 
             return (await httpClient.DownloadByteArrayAsync(url)).Bind(m => RecyclableMemoryStreamManager.GetStream(m).AsRandomAccessStream());
+        }
+
+        public static async Task<Result<IRandomAccessStream>> DownloadAsIRandomAccessStreamAndRevealProgressInTaskBarIconAsync(
+            this HttpClient httpClient,
+            string url,
+            IProgress<double>? progress = null,
+            CancellationToken cancellationToken = default)
+        {
+            UIHelper.SetTaskBarIconProgressState(UIHelper.TaskBarState.Normal);
+            var newProgress = new Progress<double>(d =>
+            {
+                progress?.Report(d);
+                UIHelper.SetTaskBarIconProgressValue((ulong) d, 100);
+            });
+            try
+            {
+                var result = await httpClient.DownloadAsIRandomAccessStreamAsync(url, newProgress, cancellationToken);
+                UIHelper.SetTaskBarIconProgressState(UIHelper.TaskBarState.NoProgress);
+                return result;
+            }
+            catch
+            {
+                UIHelper.SetTaskBarIconProgressState(UIHelper.TaskBarState.Error);
+                throw;
+            }
         }
     }
 }

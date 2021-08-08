@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using Mako.Global.Enum;
 using Mako.Model;
@@ -40,24 +41,27 @@ namespace Pixeval.ViewModel
             });
         }
 
-        private ImageSource? _imageSource;
+        private ImageSource? _thumbnailSource;
 
         public ImageSource? ThumbnailSource
         {
-            get => _imageSource;
-            set => SetProperty(ref _imageSource, value);
+            get => _thumbnailSource;
+            set => SetProperty(ref _thumbnailSource, value);
         }
 
         public IllustrationViewModel(Illustration illustration)
         {
             Illustration = illustration;
-            _ = LoadThumbnail();
         }
 
         public event EventHandler<IllustrationViewModel>? OnIsSelectedChanged;
 
-        public async Task LoadThumbnail()
+        public async Task LoadThumbnailIfRequired()
         {
+            if (ThumbnailSource is not null)
+            {
+                return;
+            }
             if (Illustration.GetThumbnailUrl(ThumbnailUrlOptions.Medium) is { } url)
             {
                 var ras = (await App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url)).GetOrThrow();
@@ -66,6 +70,11 @@ namespace Pixeval.ViewModel
             }
 
             ThumbnailSource = UIHelper.GetImageSourceFromUriRelativeToAssetsImageFolder("image-not-available.png");
+        }
+
+        public void UnloadThumbnail()
+        {
+            ThumbnailSource = null;
         }
 
         public Task RemoveBookmarkAsync()
@@ -78,6 +87,24 @@ namespace Pixeval.ViewModel
         {
             IsBookmarked = true;
             return App.MakoClient.PostBookmarkAsync(Id, PrivacyPolicy.Public);
+        }
+
+        public string GetTooltip()
+        {
+            var sb = new StringBuilder(Id);
+            if (Illustration.IsUgoira())
+            {
+                sb.AppendLine();
+                sb.AppendLine("这是一张动图");
+            }
+
+            if (Illustration.IsManga())
+            {
+                sb.AppendLine();
+                sb.AppendLine($"这是一副图集，内含{Illustration.PageCount}张图片");
+            }
+
+            return sb.ToString();
         }
     }
 }

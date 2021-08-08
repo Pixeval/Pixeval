@@ -132,6 +132,9 @@
   <data name="ExceptionEncountered" xml:space="preserve">
     <value>应用程序遇到了异常，即将关闭</value>
   </data>
+  <data name="IllustrationSortOptionDoNotSort" xml:space="preserve">
+    <value>不进行任何排序</value>
+  </data>
   <data name="IllustrationSortOptionPopularityDescending" xml:space="preserve">
     <value>收藏数降序</value>
   </data>
@@ -161,6 +164,12 @@
   </data>
   <data name="SortOptionComboBoxPublishDateDescendingComboBoxItem.Content" xml:space="preserve">
     <value>发布日期降序</value>
+  </data>
+  <data name="TargetFilterForAndroid" xml:space="preserve">
+    <value>Android</value>
+  </data>
+  <data name="TargetFilterForIOS" xml:space="preserve">
+    <value>IOS</value>
   </data>
   <data name="UnexpectedBehavior" xml:space="preserve">
     <value>发生了未定义的行为，如果你看到了该信息，请联系开发者寻求帮助</value>

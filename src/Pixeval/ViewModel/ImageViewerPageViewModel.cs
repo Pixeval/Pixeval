@@ -14,15 +14,7 @@ namespace Pixeval.ViewModel
         {
             IllustrationViewModel = illustrationViewModel;
             ImageLoadingCancellationTokenSource = new CancellationTokenSource();
-            Loading = true;
-        }
-
-        private bool _loading ;
-
-        public bool Loading
-        {
-            get => _loading;
-            set => SetProperty(ref _loading, value);
+            _ = LoadImage();
         }
 
         private double _loadingProgress;
@@ -33,20 +25,46 @@ namespace Pixeval.ViewModel
             set => SetProperty(ref _loadingProgress, value);
         }
 
+        private bool _loading;
+
+        public bool Loading
+        {
+            get => _loading;
+            set => SetProperty(ref _loading, value);
+        }
+
+        private ImageSource? _originalImageSource;
+
+        public ImageSource? OriginalImageSource
+        {
+            get => _originalImageSource;
+            set => SetProperty(ref _originalImageSource, value);
+        }
+
         public IllustrationViewModel IllustrationViewModel { get; }
 
         public CancellationTokenSource ImageLoadingCancellationTokenSource { get; }
 
-        public async Task<ImageSource> LoadOriginalImage()
+        private async Task LoadImage()
+        {
+            _ = IllustrationViewModel.LoadThumbnailIfRequired().ContinueWith(_ =>
+            {
+                App.Window.DispatcherQueue.TryEnqueue(() => OriginalImageSource = IllustrationViewModel.ThumbnailSource);
+            });
+            await LoadOriginalImage();
+        }
+
+        public async Task LoadOriginalImage()
         {
             if (IllustrationViewModel.OriginalSourceUrl is { } src)
             {
-                var image = await (await App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi)
+                Loading = true;
+                OriginalImageSource = await (await App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi)
                         .DownloadAsIRandomAccessStreamAsync(src, new Progress<double>(d => LoadingProgress = d), ImageLoadingCancellationTokenSource.Token))
                     .GetOrThrow()
                     .GetImageSourceAsync();
                 Loading = false;
-                return image;
+                return;
             }
 
             throw new IllustrationSourceNotFoundException(ImageViewerPageResources.CannotFindImageSourceContent);

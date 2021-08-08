@@ -15,7 +15,6 @@ using Mako.Util;
 
 namespace Pixeval.Util
 {
-    // ReSharper disable once InconsistentNaming
     public static partial class IOHelper
     {
         public static async Task<string> CalculateChecksumAsync<T>(string fullnameOfFile) where T : HashAlgorithm, new()
@@ -27,6 +26,7 @@ namespace Pixeval.Util
         {
             await Task.WhenAll((await dir.GetItemsAsync()).Select(f => f.DeleteAsync().AsTask()));
         }
+
         public static async Task WriteBytesAsync(this Stream stream, byte[] bytes)
         {
             await stream.WriteAsync(bytes);

@@ -47,9 +47,7 @@ namespace Pixeval
 
         private const string ConfigurationContainerKey = "Config";
 
-        public static readonly string AppLogoUri = "ms-appx:///Assets/Images/logo.png";
-
-        public static readonly string AppLogoNoCaptionUri = "ms-appx:///Assets/Images/logo-no-caption.png";
+        public const string AppLogoNoCaptionUri = "ms-appx:///Assets/Images/logo-no-caption.png";
 
         public static StorageFolder AppLocalFolder;
 
@@ -83,6 +81,22 @@ namespace Pixeval
 
             await CopyLoginProxyZipFileAndExtractInternalAsync(assetFile, assetChecksum);
             await EventChannel.Default.PublishAsync(new ScanningLoginProxyEvent());
+        }
+
+        public static async Task WriteLogoIcoIfNotExist()
+        {
+            const string iconName = "logo44x44.ico";
+            if (await TryGetFileRelativeToLocalFolderAsync(iconName) is null)
+            {
+                var bytes = await GetAssetBytesAsync($"Images/{iconName}");
+                await (await AppLocalFolder.CreateFileAsync(iconName)).WriteBytesAsync(bytes);
+            }
+        }
+
+        public static async Task<string> GetIconAbsolutePath()
+        {
+            const string iconName = "logo44x44.ico";
+            return (await AppLocalFolder.GetFileAsync(iconName)).Path;
         }
 
         private static async Task CopyLoginProxyZipFileAndExtractInternalAsync(byte[] assetFile, string checksum)
@@ -181,11 +195,13 @@ namespace Pixeval
                 ConfigurationContainer.Values[nameof(AppSetting.DisableDomainFronting)] = appSetting.DisableDomainFronting;
                 ConfigurationContainer.Values[nameof(AppSetting.DefaultSortOption)] = appSetting.DefaultSortOption.CastOrThrow<int>();
                 ConfigurationContainer.Values[nameof(AppSetting.TagMatchOption)] = appSetting.TagMatchOption.CastOrThrow<int>();
+                ConfigurationContainer.Values[nameof(AppSetting.TargetFilter)] = appSetting.TargetFilter.CastOrThrow<int>();
                 ConfigurationContainer.Values[nameof(AppSetting.PageLimitForKeywordSearch)] = appSetting.PageLimitForKeywordSearch;
                 ConfigurationContainer.Values[nameof(AppSetting.SearchStartingFromPageNumber)] = appSetting.SearchStartingFromPageNumber;
                 ConfigurationContainer.Values[nameof(AppSetting.PageLimitForSpotlight)] = appSetting.PageLimitForSpotlight;
                 ConfigurationContainer.Values[nameof(AppSetting.MirrorHost)] = appSetting.MirrorHost ?? string.Empty;
                 ConfigurationContainer.Values[nameof(AppSetting.MaxDownloadTaskConcurrencyLevel)] = appSetting.MaxDownloadTaskConcurrencyLevel;
+                ConfigurationContainer.Values[nameof(AppSetting.DisposeThumbnailsAtOutsideOfViewport)] = appSetting.DisposeThumbnailsAtOutsideOfViewport;
             }
         }
 
@@ -224,11 +240,13 @@ namespace Pixeval
                     ConfigurationContainer.Values[nameof(AppSetting.DisableDomainFronting)].CastOrThrow<bool>(),
                     ConfigurationContainer.Values[nameof(AppSetting.DefaultSortOption)].CastOrThrow<IllustrationSortOption>(),
                     ConfigurationContainer.Values[nameof(AppSetting.TagMatchOption)].CastOrThrow<SearchTagMatchOption>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.TargetFilter)].CastOrThrow<TargetFilter>(),
                     ConfigurationContainer.Values[nameof(AppSetting.PageLimitForKeywordSearch)].CastOrThrow<int>(),
                     ConfigurationContainer.Values[nameof(AppSetting.SearchStartingFromPageNumber)].CastOrThrow<int>(),
                     ConfigurationContainer.Values[nameof(AppSetting.PageLimitForSpotlight)].CastOrThrow<int>(),
                     ConfigurationContainer.Values[nameof(AppSetting.MirrorHost)].CastOrThrow<string>(),
-                    ConfigurationContainer.Values[nameof(AppSetting.MaxDownloadTaskConcurrencyLevel)].CastOrThrow<int>());
+                    ConfigurationContainer.Values[nameof(AppSetting.MaxDownloadTaskConcurrencyLevel)].CastOrThrow<int>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.DisposeThumbnailsAtOutsideOfViewport)].CastOrThrow<bool>());
             }
             catch
             {

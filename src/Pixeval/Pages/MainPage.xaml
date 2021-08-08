@@ -6,6 +6,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:viewModel="using:Pixeval.ViewModel"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+      NavigationCacheMode="Required"
       mc:Ignorable="d">
 
     <NavigationView x:Name="MainPageRootNavigationView"

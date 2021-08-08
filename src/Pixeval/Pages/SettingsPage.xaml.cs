@@ -10,6 +10,7 @@ using Pixeval.ViewModel;
 
 namespace Pixeval.Pages
 {
+    // TODO add settings entry for TargetFilter
     public sealed partial class SettingsPage
     {
         private readonly SettingsPageViewModel _viewModel = new(App.AppSetting);

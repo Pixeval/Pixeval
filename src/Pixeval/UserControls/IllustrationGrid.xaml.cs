@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -8,12 +9,9 @@ using Pixeval.ViewModel;
 
 namespace Pixeval.UserControls
 {
-    // TODO loading thumbnail on-demand
     public sealed partial class IllustrationGrid
     {
         public IllustrationGridViewModel ViewModel { get; set; }
-
-        public Page? Owner { get; set; }
 
         public const string ConnectedAnimationKey = "IllustrationGridForwardAnimation";
 
@@ -40,9 +38,21 @@ namespace Pixeval.UserControls
         {
             var animation = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(ConnectedAnimationKey, sender as Image);
             animation.Configuration = new DirectConnectedAnimationConfiguration();
-            // TODO use App.Window.RootFrame
             var viewModel = sender.GetDataContext<IllustrationViewModel>().Illustration.GetMangaIllustrations().Select(p => new IllustrationViewModel(p)).ToArray();
-            Owner!.Frame.Navigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModel), new SuppressNavigationTransitionInfo());
+            App.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModel), new SuppressNavigationTransitionInfo());
+        }
+
+        private void IllustrationThumbnailContainerItem_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
+        {
+            var context = sender.GetDataContext<IllustrationViewModel>();
+            if (args.BringIntoViewDistanceY <= sender.ActualHeight) // one element ahead
+            {
+                _ = context.LoadThumbnailIfRequired();
+            }
+            else if (ViewModel.DisposeThumbnailsOutsideOfViewport)
+            {
+                context.UnloadThumbnail();
+            }
         }
     }
 }
