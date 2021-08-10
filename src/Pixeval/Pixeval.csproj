@@ -87,6 +87,18 @@
 
   <!-- endregion Exposes PRI resources to the source generator -->
 
+	<Target Name="PackageLoginProxy" BeforeTargets="PrepareForBuild">
+		<PropertyGroup>
+			<LoginProxyAssetsPath>$(MSBuildProjectDirectory)\Assets\Binary\Pixeval.LoginProxy.zip</LoginProxyAssetsPath>
+			<LoginProxyTempPath>$(TEMP)\LoginProxy</LoginProxyTempPath>
+		</PropertyGroup>
+		<RemoveDir Directories="$(LoginProxyTempPath)"></RemoveDir>
+		<MSBuild Projects="$(MSBuildProjectDirectory)\..\Pixeval.LoginProxy\Pixeval.LoginProxy.csproj" Targets="publish" Properties="PublishDir=$(LoginProxyTempPath)"></MSBuild>
+		<Delete Files="$(LoginProxyAssetsPath)"></Delete>
+		<MakeDir Directories="$(MSBuildProjectDirectory)\Assets\Binary"></MakeDir>
+		<ZipDirectory DestinationFile="$(LoginProxyAssetsPath)" SourceDirectory="$(LoginProxyTempPath)"></ZipDirectory>
+	</Target>
+
   <ItemGroup>
     <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
