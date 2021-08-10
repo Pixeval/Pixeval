@@ -131,15 +131,6 @@
                 <InfoBar x:Uid="/SettingsPage/DisableSNIBypassInfoBar"
                          IsOpen="{x:Bind DisableSniBypassToggleSwitch.IsOn, Mode=OneWay}"
                          Style="{StaticResource SectionInfoBarStyle}" />
-                <!--  Dispose Thumbnails Outside Of Viewport  -->
-                <ToggleSwitch x:Name="DisposeThumbnailsAtOutsideOfViewportSwitch"
-                              x:Uid="/SettingsPage/DisposeThumbnailsAtOutsideOfViewportSwitch"
-                              Margin="{StaticResource SettingsEntriesMargin}"
-                              FontSize="{StaticResource PixevalContentFontSize}"
-                              IsOn="{x:Bind _viewModel.DisposeThumbnailsAtOutsideOfViewport, Mode=TwoWay}" />
-                <InfoBar x:Uid="/SettingsPage/DisposeThumbnailsAtOutsideOfViewportInfoBar"
-                         IsOpen="{x:Bind DisposeThumbnailsAtOutsideOfViewportSwitch.IsOn, Mode=OneWay}"
-                         Style="{StaticResource SectionInfoBarStyle}" />
                 <!--  TODO add relative link to AboutSNIBypassHyperlinkButton.NavigateUri, awaiting @ControlNet's job on website  -->
                 <!--  Default Sort Option Section  -->
                 <TextBlock x:Uid="/SettingsPage/DefaultSortOptionTextBlock"

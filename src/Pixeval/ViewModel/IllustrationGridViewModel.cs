@@ -12,14 +12,13 @@ namespace Pixeval.ViewModel
 {
     public class IllustrationGridViewModel : ObservableObject
     {
-        public bool DisposeThumbnailsOutsideOfViewport => App.AppSetting.DisposeThumbnailsAtOutsideOfViewport;
+        private static readonly object Lock = new();
 
         public IFetchEngine<Illustration?>? FetchEngine { get; set; }
 
-        public ConditionalObservableCollection<IllustrationViewModel> Illustrations { get; }
+        public ConditionalObservableCollection<IllustrationViewModel> Illustrations { get; private set; }
 
-        public ConditionalObservableCollection<IllustrationViewModel> SelectedIllustrations { get; }
-
+        public ConditionalObservableCollection<IllustrationViewModel> SelectedIllustrations { get; private set; }
 
         private bool _isAnyIllustrationSelected;
 
@@ -76,17 +75,18 @@ namespace Pixeval.ViewModel
         {
             FetchEngine?.EngineHandle.Cancel();
             FetchEngine = newEngine;
-            lock (Illustrations)
+            lock (Lock)
             {
                 Illustrations.Clear();
-            }
-
-            lock (SelectedIllustrations)
-            {
                 SelectedIllustrations.Clear();
             }
-
             await Fill(insertAction ?? ((models, model) => models.Add(model)));
+        }
+
+        public void Dispose()
+        {
+            SelectedIllustrations = new ConditionalObservableCollection<IllustrationViewModel>();
+            Illustrations = new ConditionalObservableCollection<IllustrationViewModel>();
         }
     }
 }

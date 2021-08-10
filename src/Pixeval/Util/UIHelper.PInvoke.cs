@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+using Windows.ApplicationModel.DataTransfer;
 using Microsoft.UI.Xaml;
 using PInvoke;
 using Pixeval.Interop;
@@ -22,53 +22,6 @@ namespace Pixeval.Util
                 User32.SetWindowPosFlags.SWP_NOMOVE);
         }
 
-        // ReSharper disable UnusedMember.Global
-        public enum TaskBarState
-        {
-            NoProgress = 0,
-            Indeterminate = 1 << 0,
-            Normal = 1 << 1,
-            Error = 1 << 2,
-            Paused = 1 << 3
-        }
-
-        [ComImport]
-        [Guid("ea1afb91-9e28-4b86-90e9-9e9f8a5eefaf")]
-        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        private interface ITaskBarList3
-        {
-            [PreserveSig]
-            void HrInit();
-
-            [PreserveSig]
-            void AddTab(IntPtr hWnd);
-
-            [PreserveSig]
-            void DeleteTab(IntPtr hWnd);
-
-            [PreserveSig]
-            void ActivateTab(IntPtr hWnd);
-
-            [PreserveSig]
-            void SetActiveAlt(IntPtr hWnd);
-
-            [PreserveSig]
-            void MarkFullscreenWindow(IntPtr hWnd, [MarshalAs(UnmanagedType.Bool)] bool fFullscreen);
-
-            [PreserveSig]
-            void SetProgressValue(IntPtr hWnd, ulong ullCompleted, ulong ullTotal);
-
-            [PreserveSig]
-            void SetProgressState(IntPtr hWnd, TaskBarState state);
-        }
-
-        [ComImport()]
-        [Guid("56fdf344-fd6d-11d0-958a-006097c9a090")]
-        [ClassInterface(ClassInterfaceType.None)]
-        private class TaskBarInstance
-        {
-        }
-
         public static bool TaskBarCustomizationSupported => Environment.OSVersion.Version >= new Version(6, 1);
 
         // ReSharper disable once SuspiciousTypeConversion.Global
@@ -88,6 +41,28 @@ namespace Pixeval.Util
             {
                 TaskBarList3Instance.SetProgressValue(App.GetMainWindowHandle(), progressValue, max);
             }
+        }
+
+        // see https://github.com/microsoft/Windows-classic-samples/blob/main/Samples/ShareSource/wpf/DataTransferManagerHelper.cs
+        private static readonly Guid RiId = new(0xa5caee9b, 0x8708, 0x49d1, 0x8d, 0x36, 0x67, 0xd2, 0x5a, 0x8d, 0xa0, 0x0c);
+
+        public static IDataTransferManagerInterop DataTransferManagerInterop => DataTransferManager.As<IDataTransferManagerInterop>();
+
+        // see https://github.com/microsoft/microsoft-ui-xaml/issues/4886
+        public static unsafe DataTransferManager GetDataTransferManager()
+        {
+            var interop = DataTransferManager.As<IDataTransferManagerInterop>();
+            var manager = IntPtr.Zero;
+            fixed (Guid* id = &RiId)
+            {
+                interop.GetForWindow(App.GetMainWindowHandle(), id, (void**) &manager);
+                return DataTransferManager.FromAbi(manager);
+            }
+        }
+
+        public static void ShowShareUI()
+        {
+            DataTransferManagerInterop.ShowShareUIForWindow(App.GetMainWindowHandle());
         }
     }
 }

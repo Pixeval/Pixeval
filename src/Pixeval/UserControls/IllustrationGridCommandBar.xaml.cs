@@ -111,13 +111,13 @@ namespace Pixeval.UserControls
             }
         }
 
-        private void CommandBarSelectAllToggleButton_OnChecked(object sender, RoutedEventArgs e)
+        private void SelectAllToggleButton_OnChecked(object sender, RoutedEventArgs e)
         {
             ViewModel.Illustrations.ForEach(v => v.IsSelected = true);
             ViewModel.Illustrations.CollectionChanged += OnIllustrationsCollectionChanged;
         }
 
-        private void CommandBarSelectAllToggleButton_OnUnchecked(object sender, RoutedEventArgs e)
+        private void SelectAllToggleButton_OnUnchecked(object sender, RoutedEventArgs e)
         {
             ViewModel.Illustrations.ForEach(v => v.IsSelected = false);
             ViewModel.Illustrations.CollectionChanged -= OnIllustrationsCollectionChanged;
@@ -143,7 +143,7 @@ namespace Pixeval.UserControls
             }
         }
 
-        private async void CommandBarAddAllToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        private async void AddAllToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             var notBookmarked = ViewModel.SelectedIllustrations.Where(i => !i.IsBookmarked);
             var viewModelSelectedIllustrations = notBookmarked as IllustrationViewModel[] ?? notBookmarked.ToArray();
@@ -164,18 +164,18 @@ namespace Pixeval.UserControls
             if (viewModelSelectedIllustrations.Length is var c and > 0)
             {
                 UIHelper.ShowTextToastNotification(
-                    IllustrationGridCommandBarResources.IllustrationGridCommandBarAddAllToBookmarkToastTitle,
-                    IllustrationGridCommandBarResources.IllustrationGridCommandBarAddAllToBookmarkToastContentFormatted.Format(c),
+                    IllustrationGridCommandBarResources.AddAllToBookmarkToastTitle,
+                    IllustrationGridCommandBarResources.AddAllToBookmarkToastContentFormatted.Format(c),
                     AppContext.AppLogoNoCaptionUri);
             }
         }
 
-        private void CommandBarSaveAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        private void SaveAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             throw new NotImplementedException();
         }
 
-        private async void CommandBarOpenAllInBrowserButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        private async void OpenAllInBrowserButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             if (ViewModel.SelectedIllustrations is {Count: > 15} selected)
             {
@@ -187,13 +187,13 @@ namespace Pixeval.UserControls
                 {
                     foreach (var illustrationViewModel in selected)
                     {
-                        await Launcher.LaunchUriAsync(new Uri(MakoHelper.GetWebUrl(illustrationViewModel.Id)));
+                        await Launcher.LaunchUriAsync(new Uri(MakoHelper.GetIllustrationWebUrl(illustrationViewModel.Id)));
                     }
                 }
             }
         }
 
-        private void CommandBarShareButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        private void ShareButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             // TODO
             throw new NotImplementedException();

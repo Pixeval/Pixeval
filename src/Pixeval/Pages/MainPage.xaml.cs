@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Runtime;
 using Mako.Global.Enum;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Navigation;
 using Pixeval.ViewModel;
 
 namespace Pixeval.Pages
@@ -48,6 +50,12 @@ namespace Pixeval.Pages
             {
                 MainPageRootFrame.Navigate(tag.NavigateTo, tag.Parameter, new DrillInNavigationTransitionInfo());
             }
+        }
+
+        private void MainPageRootFrame_OnNavigated(object sender, NavigationEventArgs e)
+        {
+            GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+            GC.Collect();
         }
 
         #region Helper Functions

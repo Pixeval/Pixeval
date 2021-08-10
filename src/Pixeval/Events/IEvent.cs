@@ -2,6 +2,6 @@
 {
     public interface IEvent
     {
-        public object? Sender { get; }
+        object? Sender { get; }
     }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Mako.Util;
 using Microsoft.IO;
+using Pixeval.Interop;
 
 namespace Pixeval.Util
 {
@@ -55,29 +56,45 @@ namespace Pixeval.Util
             return Functions.TryCatchAsync(async () => Result<Memory<byte>>.OfSuccess(await httpClient.GetByteArrayAsync(url)), e => Task.FromResult(Result<Memory<byte>>.OfFailure(e)));
         }
 
+        // avoid stack trace collections
+        private static readonly OperationCanceledException CancellationMark = new();
+
         /// <summary>
+        /// <para>
         /// Attempts to download the content that are located by the <paramref name="url"/> to a <see cref="IRandomAccessStream"/> with
         /// progress support
+        /// </para>
+        /// <remarks>
+        /// A <see cref="CancellationHandle"/> is used instead of <see cref="CancellationToken"/>, since this function will be called in
+        /// such a frequent manner that the default behavior of <see cref="CancellationToken"/> will brings a huge impact on performance
+        /// </remarks>
         /// </summary>
         public static async Task<Result<IRandomAccessStream>> DownloadAsIRandomAccessStreamAsync(
             this HttpClient httpClient,
             string url,
             IProgress<double>? progress = null,
-            CancellationToken cancellationToken = default)
+            CancellationHandle cancellationHandle = default)
         {
             using var response = await httpClient.GetResponseHeader(url);
             if (response.Content.Headers.ContentLength is { } responseLength)
             {
                 response.EnsureSuccessStatusCode();
 
-                await using var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken); 
+                await using var contentStream = await response.Content.ReadAsStreamAsync();
+                // Most cancellation happens when users are panning the ScrollViewer, where the
+                // cancellation occurs while the `await response.Content.ReadAsStreamAsync()` is 
+                // running, so we check the state right after the completion of that statement
+                if (cancellationHandle.IsCancelled)
+                {
+                    return Result<IRandomAccessStream>.OfFailure(CancellationMark);
+                }
                 var resultStream = (RecyclableMemoryStream) RecyclableMemoryStreamManager.GetStream();
                 int bytesRead, totalRead = 0;
-                while ((bytesRead = await contentStream.ReadAsync(resultStream.GetMemory(1024), cancellationToken)) != 0)
+                while ((bytesRead = await contentStream.ReadAsync(resultStream.GetMemory(1024))) != 0)
                 {
-                    if (cancellationToken.IsCancellationRequested)
+                    if (cancellationHandle.IsCancelled)
                     {
-                        return Result<IRandomAccessStream>.OfFailure();
+                        return Result<IRandomAccessStream>.OfFailure(CancellationMark);
                     }
 
                     resultStream.Advance(bytesRead);
@@ -96,9 +113,9 @@ namespace Pixeval.Util
             this HttpClient httpClient,
             string url,
             IProgress<double>? progress = null,
-            CancellationToken cancellationToken = default)
+            CancellationHandle cancellationHandle = default)
         {
-            UIHelper.SetTaskBarIconProgressState(UIHelper.TaskBarState.Normal);
+            UIHelper.SetTaskBarIconProgressState(TaskBarState.Normal);
             var newProgress = new Progress<double>(d =>
             {
                 progress?.Report(d);
@@ -106,13 +123,13 @@ namespace Pixeval.Util
             });
             try
             {
-                var result = await httpClient.DownloadAsIRandomAccessStreamAsync(url, newProgress, cancellationToken);
-                UIHelper.SetTaskBarIconProgressState(UIHelper.TaskBarState.NoProgress);
+                var result = await httpClient.DownloadAsIRandomAccessStreamAsync(url, newProgress, cancellationHandle);
+                UIHelper.SetTaskBarIconProgressState(TaskBarState.NoProgress);
                 return result;
             }
             catch
             {
-                UIHelper.SetTaskBarIconProgressState(UIHelper.TaskBarState.Error);
+                UIHelper.SetTaskBarIconProgressState(TaskBarState.Error);
                 throw;
             }
         }

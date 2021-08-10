@@ -15,9 +15,8 @@ namespace Pixeval
         public MainWindow()
         {
             InitializeComponent();
-            Title = "Pixeval";
             // TODO awaiting WinUI3 fix: see https://github.com/microsoft/microsoft-ui-xaml/issues/3689
-            LoadIcon();
+            Title = "Pixeval";
         }
 
         // TODO awaiting WinUI3 fix: see https://github.com/microsoft/microsoft-ui-xaml/issues/4056
@@ -29,6 +28,7 @@ namespace Pixeval
 
         private void PixevalAppRootFrame_OnLoaded(object sender, RoutedEventArgs e)
         {
+            LoadIcon();
             PixevalAppRootFrame.Navigate(typeof(LoginPage));
         }
 

@@ -117,29 +117,26 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="IllustrationGridCommandBarAddAllToBookmarkButton.Label" xml:space="preserve">
+  <data name="AddAllToBookmarkButton.Label" xml:space="preserve">
     <value>收藏</value>
   </data>
-  <data name="IllustrationGridCommandBarAddAllToBookmarkToastContentFormatted" xml:space="preserve">
+  <data name="AddAllToBookmarkToastContentFormatted" xml:space="preserve">
     <value>收藏了{0}张图片</value>
   </data>
-  <data name="IllustrationGridCommandBarAddAllToBookmarkToastTitle" xml:space="preserve">
+  <data name="AddAllToBookmarkToastTitle" xml:space="preserve">
     <value>成功添加到收藏</value>
   </data>
-  <data name="IllustrationGridCommandBarOpenAllInBrowserButton.Label" xml:space="preserve">
+  <data name="OpenAllInBrowserButton.Label" xml:space="preserve">
     <value>在浏览器中打开</value>
   </data>
-  <data name="IllustrationGridCommandBarOpenConditionDialogButton.Label" xml:space="preserve">
+  <data name="OpenConditionDialogButton.Label" xml:space="preserve">
     <value>过滤</value>
   </data>
-  <data name="IllustrationGridCommandBarSaveAllButton.Label" xml:space="preserve">
+  <data name="SaveAllButton.Label" xml:space="preserve">
     <value>保存</value>
   </data>
-  <data name="IllustrationGridCommandBarSelectAllToggleButton.Label" xml:space="preserve">
+  <data name="SelectAllToggleButton.Label" xml:space="preserve">
     <value>全选</value>
-  </data>
-  <data name="IllustrationGridCommandBarShareButton.Label" xml:space="preserve">
-    <value>分享</value>
   </data>
   <data name="SelectedTooManyItemsForBookmarkContent" xml:space="preserve">
     <value>一旦完成该操作不可撤销，请确认你是否真的想要这么做</value>
@@ -155,5 +152,8 @@
   </data>
   <data name="SelectedTooManyItemsTitle" xml:space="preserve">
     <value>该操作可能会导致性能问题</value>
+  </data>
+  <data name="ShareButton.Label" xml:space="preserve">
+    <value>分享</value>
   </data>
 </root>

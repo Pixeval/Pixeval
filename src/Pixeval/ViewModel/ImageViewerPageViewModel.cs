@@ -13,7 +13,7 @@ namespace Pixeval.ViewModel
         public ImageViewerPageViewModel(IllustrationViewModel illustrationViewModel)
         {
             IllustrationViewModel = illustrationViewModel;
-            ImageLoadingCancellationTokenSource = new CancellationTokenSource();
+            ImageLoadingCancellationHandle = new CancellationHandle();
             _ = LoadImage();
         }
 
@@ -43,7 +43,7 @@ namespace Pixeval.ViewModel
 
         public IllustrationViewModel IllustrationViewModel { get; }
 
-        public CancellationTokenSource ImageLoadingCancellationTokenSource { get; }
+        public CancellationHandle ImageLoadingCancellationHandle { get; }
 
         private async Task LoadImage()
         {
@@ -60,7 +60,7 @@ namespace Pixeval.ViewModel
             {
                 Loading = true;
                 OriginalImageSource = await (await App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi)
-                        .DownloadAsIRandomAccessStreamAsync(src, new Progress<double>(d => LoadingProgress = d), ImageLoadingCancellationTokenSource.Token))
+                        .DownloadAsIRandomAccessStreamAsync(src, new Progress<double>(d => LoadingProgress = d), ImageLoadingCancellationHandle))
                     .GetOrThrow()
                     .GetImageSourceAsync();
                 Loading = false;

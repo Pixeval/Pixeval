@@ -2,7 +2,6 @@
 using Microsoft.UI.Xaml.Controls;
 using System.Threading.Tasks;
 using Mako.Global.Enum;
-using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Util;
 
 namespace Pixeval.Pages
@@ -13,10 +12,14 @@ namespace Pixeval.Pages
         {
             InitializeComponent();
         }
-        
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+
+        public override void Dispose()
         {
-            base.OnNavigatedTo(e);
+            IllustrationGrid.ViewModel.Dispose();
+        }
+
+        public override void Prepare()
+        {
             PrivacyPolicyComboBox.SelectedItem = PrivacyPolicyComboBoxPublicItem;
             SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
         }

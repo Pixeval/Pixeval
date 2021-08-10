@@ -71,8 +71,6 @@ namespace Pixeval
         /// </summary>
         public int MaxDownloadTaskConcurrencyLevel { get; set; }
 
-        public bool DisposeThumbnailsAtOutsideOfViewport { get; set; }
-
         public AppSetting(ApplicationTheme theme,
             ObservableCollection<string> excludeTags,
             bool disableDomainFronting,
@@ -83,8 +81,7 @@ namespace Pixeval
             int searchStartingFromPageNumber,
             int pageLimitForSpotlight,
             string? mirrorHost,
-            int maxDownloadTaskConcurrencyLevel,
-            bool disposeThumbnailsAtOutsideOfViewport)
+            int maxDownloadTaskConcurrencyLevel)
         {
             Theme = theme;
             ExcludeTags = excludeTags;
@@ -97,7 +94,6 @@ namespace Pixeval
             PageLimitForSpotlight = pageLimitForSpotlight;
             MirrorHost = mirrorHost;
             MaxDownloadTaskConcurrencyLevel = maxDownloadTaskConcurrencyLevel;
-            DisposeThumbnailsAtOutsideOfViewport = disposeThumbnailsAtOutsideOfViewport;
         }
 
         public static AppSetting CreateDefault()
@@ -112,8 +108,7 @@ namespace Pixeval
                 1,
                 50,
                 null,
-                Environment.ProcessorCount,
-                false);
+                Environment.ProcessorCount);
         }
 
         public MakoClientConfiguration ToMakoClientConfiguration()

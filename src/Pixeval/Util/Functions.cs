@@ -40,5 +40,10 @@ namespace Pixeval.Util
                 return onException(e);
             }
         }
+
+        public static TResult Block<TResult>(Func<TResult> block)
+        {
+            return block();
+        }
     }
 }

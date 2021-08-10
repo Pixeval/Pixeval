@@ -17,6 +17,68 @@
                               Icon="Back"
                               LabelPosition="Collapsed" />
             </CommandBar.Content>
+            <AppBarButton Width="40"
+                          LabelPosition="Collapsed">
+                <AppBarButton.Icon>
+                    <SymbolIcon Symbol="ZoomIn" />
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton Width="40"
+                          LabelPosition="Collapsed">
+                <AppBarButton.Icon>
+                    <SymbolIcon Symbol="ZoomOut" />
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarSeparator />
+            <AppBarButton x:Uid="/IllustrationViewerPage/SaveCurrentImageButton">
+                <AppBarButton.Icon>
+                    <!--  Save  -->
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
+                              Glyph="&#xE74E;" />
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton x:Uid="/IllustrationViewerPage/SaveAsCurrentImageButton">
+                <AppBarButton.Icon>
+                    <!--  SaveAs  -->
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
+                              Glyph="&#xE792;" />
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton x:Uid="/IllustrationViewerPage/SaveMangaButton"
+                          IsEnabled="{x:Bind _viewModel.IsManga}">
+                <AppBarButton.Icon>
+                    <!--  SaveCopy  -->
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
+                              Glyph="&#xEA35;" />
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton x:Uid="/IllustrationViewerPage/SaveMangaAsButton"
+                          IsEnabled="{x:Bind _viewModel.IsManga}">
+                <AppBarButton.Icon>
+                    <!--  SaveAs  -->
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
+                              Glyph="&#xE792;" />
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarSeparator />
+            <AppBarButton x:Uid="/IllustrationViewerPage/OpenInWebBrowserButton">
+                <AppBarButton.Icon>
+                    <!--  WebSearch  -->
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
+                              Glyph="&#xF6FA;" />
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton x:Uid="/IllustrationViewerPage/GenerateLinkToThisPageButton">
+                <AppBarButton.Icon>
+                    <SymbolIcon Symbol="Link" />
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton x:Uid="/IllustrationViewerPage/ShareButton" Click="ShareButton_OnClick">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
+                              Glyph="&#xE72D;" />
+                </AppBarButton.Icon>
+            </AppBarButton>
         </CommandBar>
         <Grid Width="40"
               controls:DockPanel.Dock="Left">

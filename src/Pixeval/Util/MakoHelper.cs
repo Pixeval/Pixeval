@@ -98,7 +98,7 @@ namespace Pixeval.Util
             };
         }
 
-        public static string GetWebUrl(string id)
+        public static string GetIllustrationWebUrl(string id)
         {
             return $"https://www.pixiv.net/artworks/{id}";
         }

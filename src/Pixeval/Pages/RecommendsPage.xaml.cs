@@ -14,9 +14,13 @@ namespace Pixeval.Pages
             InitializeComponent();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        public override void Dispose()
         {
-            base.OnNavigatedTo(e);
+            IllustrationGrid.ViewModel.Dispose();
+        }
+
+        public override void Prepare()
+        {
             ModeSelectionComboBox.SelectedItem = ModeSelectionComboBoxIllustComboBoxItem;
             SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
         }

@@ -10,44 +10,45 @@
                 HorizontalContentAlignment="Center"
                 Background="Transparent"
                 DefaultLabelPosition="Right">
-        <AppBarToggleButton x:Uid="/IllustrationGridCommandBar/IllustrationGridCommandBarOpenConditionDialogButton">
+        <AppBarToggleButton x:Uid="/IllustrationGridCommandBar/OpenConditionDialogButton">
             <AppBarToggleButton.Icon>
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
                           Glyph="&#xE71C;" />
             </AppBarToggleButton.Icon>
         </AppBarToggleButton>
-        <AppBarToggleButton x:Uid="/IllustrationGridCommandBar/IllustrationGridCommandBarSelectAllToggleButton"
-                            Checked="CommandBarSelectAllToggleButton_OnChecked"
-                            Unchecked="CommandBarSelectAllToggleButton_OnUnchecked">
+        <AppBarToggleButton x:Uid="/IllustrationGridCommandBar/SelectAllToggleButton"
+                            Checked="SelectAllToggleButton_OnChecked"
+                            Unchecked="SelectAllToggleButton_OnUnchecked">
             <AppBarToggleButton.Icon>
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
                           Glyph="&#xE8B3;" />
             </AppBarToggleButton.Icon>
         </AppBarToggleButton>
         <AppBarSeparator />
-        <AppBarButton x:Uid="/IllustrationGridCommandBar/IllustrationGridCommandBarAddAllToBookmarkButton"
-                      Tapped="CommandBarAddAllToBookmarkButton_OnTapped">
+        <AppBarButton x:Uid="/IllustrationGridCommandBar/AddAllToBookmarkButton"
+                      Tapped="AddAllToBookmarkButton_OnTapped">
             <AppBarButton.Icon>
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
                           Glyph="&#xEB51;" />
             </AppBarButton.Icon>
         </AppBarButton>
-        <AppBarButton x:Uid="/IllustrationGridCommandBar/IllustrationGridCommandBarSaveAllButton"
-                      Tapped="CommandBarSaveAllButton_OnTapped">
+        <AppBarButton x:Uid="/IllustrationGridCommandBar/SaveAllButton"
+                      Tapped="SaveAllButton_OnTapped">
             <AppBarButton.Icon>
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
                           Glyph="&#xE74E;" />
             </AppBarButton.Icon>
         </AppBarButton>
-        <AppBarButton x:Uid="/IllustrationGridCommandBar/IllustrationGridCommandBarOpenAllInBrowserButton"
-                      Tapped="CommandBarOpenAllInBrowserButton_OnTapped">
+        <AppBarButton x:Uid="/IllustrationGridCommandBar/OpenAllInBrowserButton"
+                      Tapped="OpenAllInBrowserButton_OnTapped">
             <AppBarButton.Icon>
+                <!--  WebSearch  -->
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
                           Glyph="&#xF6FA;" />
             </AppBarButton.Icon>
         </AppBarButton>
-        <AppBarButton x:Uid="/IllustrationGridCommandBar/IllustrationGridCommandBarShareButton"
-                      Tapped="CommandBarShareButton_OnTapped">
+        <AppBarButton x:Uid="/IllustrationGridCommandBar/ShareButton"
+                      Tapped="ShareButton_OnTapped">
             <AppBarButton.Icon>
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
                           Glyph="&#xE72D;" />

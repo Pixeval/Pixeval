@@ -49,10 +49,6 @@ namespace Pixeval.UserControls
             {
                 _ = context.LoadThumbnailIfRequired();
             }
-            else if (ViewModel.DisposeThumbnailsOutsideOfViewport)
-            {
-                context.UnloadThumbnail();
-            }
         }
     }
 }

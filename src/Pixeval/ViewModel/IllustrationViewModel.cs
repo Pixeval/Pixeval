@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage.Streams;
 using Mako.Global.Enum;
 using Mako.Model;
 using Mako.Net;
+using Mako.Util;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Util;
+using Functions = Pixeval.Util.Functions;
 
 namespace Pixeval.ViewModel
 {
@@ -49,9 +52,14 @@ namespace Pixeval.ViewModel
             set => SetProperty(ref _thumbnailSource, value);
         }
 
+        public CancellationHandle LoadingThumbnailCancellationHandle { get; }
+
+        public bool LoadingThumbnail { get; private set; }
+
         public IllustrationViewModel(Illustration illustration)
         {
             Illustration = illustration;
+            LoadingThumbnailCancellationHandle = new CancellationHandle();
         }
 
         public event EventHandler<IllustrationViewModel>? OnIsSelectedChanged;
@@ -64,17 +72,23 @@ namespace Pixeval.ViewModel
             }
             if (Illustration.GetThumbnailUrl(ThumbnailUrlOptions.Medium) is { } url)
             {
-                var ras = (await App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url)).GetOrThrow();
-                ThumbnailSource = await ras.GetImageSourceAsync();
+                LoadingThumbnail = true;
+                var ras = await App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle) switch
+                {
+                    Result<IRandomAccessStream>.Success (var stream) => stream,
+                    Result<IRandomAccessStream>.Failure (OperationCanceledException) => Functions.Block<IRandomAccessStream?>(() =>
+                    {
+                        LoadingThumbnailCancellationHandle.Reset();
+                        return null;
+                    }),
+                    var other => other.GetOrThrow()
+                };
+                ThumbnailSource = ras == null ? null : await ras.GetImageSourceAsync();
+                LoadingThumbnail = false;
                 return;
             }
 
             ThumbnailSource = UIHelper.GetImageSourceFromUriRelativeToAssetsImageFolder("image-not-available.png");
-        }
-
-        public void UnloadThumbnail()
-        {
-            ThumbnailSource = null;
         }
 
         public Task RemoveBookmarkAsync()

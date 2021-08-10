@@ -201,7 +201,6 @@ namespace Pixeval
                 ConfigurationContainer.Values[nameof(AppSetting.PageLimitForSpotlight)] = appSetting.PageLimitForSpotlight;
                 ConfigurationContainer.Values[nameof(AppSetting.MirrorHost)] = appSetting.MirrorHost ?? string.Empty;
                 ConfigurationContainer.Values[nameof(AppSetting.MaxDownloadTaskConcurrencyLevel)] = appSetting.MaxDownloadTaskConcurrencyLevel;
-                ConfigurationContainer.Values[nameof(AppSetting.DisposeThumbnailsAtOutsideOfViewport)] = appSetting.DisposeThumbnailsAtOutsideOfViewport;
             }
         }
 
@@ -245,8 +244,7 @@ namespace Pixeval
                     ConfigurationContainer.Values[nameof(AppSetting.SearchStartingFromPageNumber)].CastOrThrow<int>(),
                     ConfigurationContainer.Values[nameof(AppSetting.PageLimitForSpotlight)].CastOrThrow<int>(),
                     ConfigurationContainer.Values[nameof(AppSetting.MirrorHost)].CastOrThrow<string>(),
-                    ConfigurationContainer.Values[nameof(AppSetting.MaxDownloadTaskConcurrencyLevel)].CastOrThrow<int>(),
-                    ConfigurationContainer.Values[nameof(AppSetting.DisposeThumbnailsAtOutsideOfViewport)].CastOrThrow<bool>());
+                    ConfigurationContainer.Values[nameof(AppSetting.MaxDownloadTaskConcurrencyLevel)].CastOrThrow<int>());
             }
             catch
             {

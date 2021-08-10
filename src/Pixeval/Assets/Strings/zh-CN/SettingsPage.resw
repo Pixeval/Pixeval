@@ -154,15 +154,6 @@
   <data name="DisableSNIBypassToggleSwitch.Header" xml:space="preserve">
     <value>禁用域前置直连</value>
   </data>
-  <data name="DisposeThumbnailsAtOutsideOfViewportInfoBar.Message" xml:space="preserve">
-    <value>打开该选项后，浏览图片列表时超出可视范围的图片将会被清除，该策略可以减小内存压力，但每次图片进入可视范围内时都会重新从网络上下载，浏览体验将会下降，网络流量消耗则会对应的略微上升</value>
-  </data>
-  <data name="DisposeThumbnailsAtOutsideOfViewportInfoBar.Title" xml:space="preserve">
-    <value>注意</value>
-  </data>
-  <data name="DisposeThumbnailsAtOutsideOfViewportSwitch.Header" xml:space="preserve">
-    <value>释放超出可视范围的缩略图</value>
-  </data>
   <data name="DonatingMeHyperlinkButton.Content" xml:space="preserve">
     <value>支持作者</value>
   </data>

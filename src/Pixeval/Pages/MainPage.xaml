@@ -16,8 +16,7 @@
                     OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}"
                     SelectionChanged="MainPageRootNavigationView_OnSelectionChanged">
         <NavigationView.PaneHeader>
-            <TextBlock Margin="10,0,0,0"
-                       VerticalAlignment="Center"
+            <TextBlock VerticalAlignment="Center"
                        Text="Pixeval" />
         </NavigationView.PaneHeader>
         <NavigationView.AutoSuggestBox>
@@ -130,7 +129,8 @@
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
         </NavigationView.FooterMenuItems>
-        <Frame x:Name="MainPageRootFrame" />
+        <Frame x:Name="MainPageRootFrame"
+               Navigated="MainPageRootFrame_OnNavigated" />
     </NavigationView>
 </Page>
 

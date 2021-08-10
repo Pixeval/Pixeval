@@ -117,4 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="GenerateLinkToThisPageButton.Label" xml:space="preserve">
+    <value>生成本页链接</value>
+  </data>
+  <data name="OpenInWebBrowserButton.Label" xml:space="preserve">
+    <value>在浏览器中查看</value>
+  </data>
+  <data name="SaveAsCurrentImageButton.Label" xml:space="preserve">
+    <value>另存为</value>
+  </data>
+  <data name="SaveCurrentImageButton.Label" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="SaveMangaAsButton.Label" xml:space="preserve">
+    <value>图集另存为</value>
+  </data>
+  <data name="SaveMangaButton.Label" xml:space="preserve">
+    <value>保存图集</value>
+  </data>
+  <data name="ShareButton.Label" xml:space="preserve">
+    <value>分享</value>
+  </data>
+  <data name="ShareTitleFormatted" xml:space="preserve">
+    <value>分享{0}</value>
+  </data>
 </root>

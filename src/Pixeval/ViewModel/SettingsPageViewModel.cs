@@ -123,12 +123,6 @@ namespace Pixeval.ViewModel
             set => SetProperty(_appSetting.MaxDownloadTaskConcurrencyLevel, value, _appSetting, (setting, value) => setting.MaxDownloadTaskConcurrencyLevel = value);
         }
 
-        public bool DisposeThumbnailsAtOutsideOfViewport
-        {
-            get => _appSetting.DisposeThumbnailsAtOutsideOfViewport;
-            set => SetProperty(_appSetting.DisposeThumbnailsAtOutsideOfViewport, value, _appSetting, (setting, value) => setting.DisposeThumbnailsAtOutsideOfViewport = value);
-        }
-
         public void AddR18Filtering()
         {
             ExcludeTags.AddIfNotPresent("R-18", StringComparer.OrdinalIgnoreCase);
