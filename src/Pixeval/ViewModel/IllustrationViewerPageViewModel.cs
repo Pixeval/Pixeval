@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Pixeval.Util;
@@ -39,6 +40,8 @@ namespace Pixeval.ViewModel
 
         public bool IsUgoira => Current.IllustrationViewModel.Illustration.IsUgoira();
 
+        public IllustrationViewModel First => Illustrations[0].IllustrationViewModel;
+
         public Visibility CalculateNextImageButtonVisibility(int index)
         {
             return index < Illustrations.Length - 1 ? Visibility.Visible : Visibility.Collapsed;
@@ -60,5 +63,17 @@ namespace Pixeval.ViewModel
             Current = Illustrations[--CurrentIndex];
             return Current;
         }
+
+        public Task PostPublicBookmarkAsync()
+        {
+            return Illustrations[0].IllustrationViewModel.PostPublicBookmarkAsync();
+        }
+
+        public Task RemoveBookmarkAsync()
+        {
+            return Illustrations[0].IllustrationViewModel.RemoveBookmarkAsync();
+        }
+
+        public bool IsBookmarked => Illustrations[0].IllustrationViewModel.IsBookmarked;
     }
 }

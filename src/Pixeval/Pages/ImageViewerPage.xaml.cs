@@ -40,13 +40,13 @@ namespace Pixeval.Pages
                 var renderedImageHeight = IllustrationOriginalImage.ActualHeight * GetZoomFactor();
                 var containerWidth = IllustrationOriginalImageContainer.ActualWidth;
                 var containerHeight = IllustrationOriginalImageContainer.ActualHeight;
-                var pos = IllustrationOriginalImage.TransformToVisual(IllustrationOriginalImageContainer).TransformPoint(new Point(0, 0));
+                var imagePos = IllustrationOriginalImage.TransformToVisual(IllustrationOriginalImageContainer).TransformPoint(new Point(0, 0));
                 if (renderedImageWidth > containerWidth)
                 {
                     switch (deltaX)
                     {
-                        case < 0 when pos.X > -(renderedImageWidth - containerWidth) - overflowPermittedInPixel:
-                        case > 0 when pos.X < overflowPermittedInPixel:
+                        case < 0 when imagePos.X > -(renderedImageWidth - containerWidth) - overflowPermittedInPixel:
+                        case > 0 when imagePos.X < overflowPermittedInPixel:
                             IllustrationOriginalImageRenderTransform.TranslateX += deltaX;
                             break;
                     }
@@ -56,8 +56,8 @@ namespace Pixeval.Pages
                 {
                     switch (deltaY)
                     {
-                        case < 0 when pos.Y > -(renderedImageHeight - containerHeight) - overflowPermittedInPixel:
-                        case > 0 when pos.Y < overflowPermittedInPixel:
+                        case < 0 when imagePos.Y > -(renderedImageHeight - containerHeight) - overflowPermittedInPixel:
+                        case > 0 when imagePos.Y < overflowPermittedInPixel:
                             IllustrationOriginalImageRenderTransform.TranslateY += deltaY;
                             break;
                     }

@@ -3,15 +3,17 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Streams;
 using Windows.System;
 using CommunityToolkit.WinUI.UI;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.ViewModel;
-using BitmapImage = Microsoft.UI.Xaml.Media.Imaging.BitmapImage;
 
 namespace Pixeval.Pages
 {
@@ -79,7 +81,7 @@ namespace Pixeval.Pages
                 var image = GetImage(); // See ImageViewerPage
                 animation.TryStart(image);
                 animation.TryStart(image);
-            }
+            } 
         }
 
         private void NextImage()
@@ -199,11 +201,45 @@ namespace Pixeval.Pages
             }
         }
 
+        private void BookmarkButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (_viewModel.IsBookmarked)
+            {
+                _viewModel.RemoveBookmarkAsync();
+            }
+            else
+            {
+                _viewModel.PostPublicBookmarkAsync();
+            }
+        }
+
         #region Helper Functions
 
         private Image GetImage()
         {
             return (Image) IllustrationImageShowcaseFrame.FindChild(typeof(Image))!;
+        }
+
+        public static IconElement GetBookmarkButtonIcon(bool isBookmarked)
+        {
+            var systemThemeFontFamily = new FontFamily("Segoe MDL2 Assets");
+            return isBookmarked
+                ? new FontIcon
+                {
+                    Glyph = "\xEB52", // HeartFill
+                    Foreground = new SolidColorBrush(Colors.Crimson),
+                    FontFamily = systemThemeFontFamily
+                }
+                : new FontIcon
+                {
+                    Glyph = "\xEB51", // Heart
+                    FontFamily = systemThemeFontFamily
+                };
+        }
+
+        public static string GetBookmarkButtonLabel(bool isBookmarked)
+        {
+            return isBookmarked ? IllustrationViewerPageResources.RemoveBookmark : IllustrationViewerPageResources.Bookmark;
         }
 
         #endregion

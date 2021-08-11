@@ -4,8 +4,17 @@
       xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:page="using:Pixeval.Pages"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
       mc:Ignorable="d">
+    <Page.Resources>
+        <FontIcon x:Name="HeartIcon"
+                  FontFamily="{StaticResource SymbolThemeFontFamily}"
+                  Glyph="&#xEB52;" />
+        <FontIcon x:Name="HeartIconOutlined"
+                  FontFamily="{StaticResource SymbolThemeFontFamily}"
+                  Glyph="&#xEB51;" />
+    </Page.Resources>
     <controls:DockPanel HorizontalAlignment="Stretch"
                         LastChildFill="True">
         <CommandBar controls:DockPanel.Dock="Top"
@@ -17,6 +26,10 @@
                               Icon="Back"
                               LabelPosition="Collapsed" />
             </CommandBar.Content>
+            <AppBarButton Click="BookmarkButton_OnClick"
+                          Icon="{x:Bind page:IllustrationViewerPage.GetBookmarkButtonIcon(_viewModel.First.IsBookmarked), Mode=OneWay}"
+                          Label="{x:Bind page:IllustrationViewerPage.GetBookmarkButtonLabel(_viewModel.First.IsBookmarked), Mode=OneWay}" />
+            <AppBarSeparator />
             <AppBarButton Width="40"
                           Click="ZoomInButton_OnClick"
                           LabelPosition="Collapsed">

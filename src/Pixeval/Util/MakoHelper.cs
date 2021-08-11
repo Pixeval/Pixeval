@@ -55,7 +55,7 @@ namespace Pixeval.Util
     {
         /// <summary>
         /// The <see cref="IllustrationSortOption"/> is welded into Mako, we cannot add <see cref="LocalizedResource"/> on its fields
-        /// so an alternative way is chosen
+        /// so an alternative is chosen
         /// And we cannot use generic since the xaml compiler will refuse to compile
         /// </summary>
         public static readonly IEnumerable<IllustrationSortOptionWrapper> AvailableIllustrationSortOptions = new IllustrationSortOptionWrapper[]

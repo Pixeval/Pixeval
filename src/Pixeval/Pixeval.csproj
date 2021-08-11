@@ -35,6 +35,7 @@
     <Content Remove="Assets\Images\77032538.png" />
     <Content Remove="Assets\Images\logo-no-caption.png" />
     <Content Remove="Assets\Strings\zh-CN\BookmarksPage.resw" />
+    <Content Remove="Assets\Strings\zh-CN\DownloadAndHistoryListPage.resw" />
     <Content Remove="Assets\Strings\zh-CN\IllustrationGridCommandBar.resw" />
     <Content Remove="Assets\Strings\zh-CN\IllustrationViewerPage.resw" />
     <Content Remove="Assets\Strings\zh-CN\ImageViewerPage.resw" />
@@ -46,7 +47,7 @@
     <None Remove="Assets\Images\logo44x44.ico" />
     <None Remove="Assets\Strings\zh-CN\BookmarksPage.resw" />
     <None Remove="Pages\BookMarksPage.xaml" />
-    <None Remove="Pages\DownloadListPage.xaml" />
+    <None Remove="Pages\DownloadAndHistoryListPage.xaml" />
     <None Remove="Pages\IllustrationGridPage.xaml" />
     <None Remove="Pages\IllustrationViewerPage.xaml" />
     <None Remove="Pages\ImageViewerPage.xaml" />
@@ -111,7 +112,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Pages\DownloadListPage.xaml">
+    <Page Update="Pages\DownloadAndHistoryListPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
