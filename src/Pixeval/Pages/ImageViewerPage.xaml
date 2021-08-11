@@ -21,8 +21,8 @@
                                  To="1"
                                  Duration="0:0:1" />
             </Storyboard>
-            <Storyboard x:Name="ImageScaledOut200PercentStoryboard"
-                        Completed="ImageScaledOut200PercentStoryboard_OnCompleted">
+            <Storyboard x:Name="ImageScaledIn200PercentStoryboard"
+                        Completed="ImageScaledIn200PercentStoryboard_OnCompleted">
                 <DoubleAnimation EasingFunction="{x:Bind _easingFunction}"
                                  Storyboard.TargetName="IllustrationOriginalImageRenderTransform"
                                  Storyboard.TargetProperty="ScaleX"
@@ -92,7 +92,7 @@
                    ManipulationDelta="IllustrationOriginalImage_OnManipulationDelta"
                    ManipulationMode="TranslateX,TranslateY"
                    RenderTransformOrigin="0.5,0.5"
-                   Source="{x:Bind _viewModel.OriginalImageSource, Mode=OneWay}"
+                   Source="{x:Bind _viewModel.IllustrationViewModel.OriginalImageSource, Mode=OneWay}"
                    Stretch="Uniform">
                 <Image.RenderTransform>
                     <CompositeTransform x:Name="IllustrationOriginalImageRenderTransform" />
@@ -101,7 +101,7 @@
         </Grid>
         <Grid HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch"
-              Visibility="{x:Bind _viewModel.Loading, Mode=OneWay}">
+              Visibility="{x:Bind _viewModel.GetLoadingMaskVisibility(_viewModel.LoadingOriginalSourceTask), Mode=OneWay}">
             <Rectangle Fill="{ThemeResource ImageMaskAcrylicBrush}" />
             <ProgressRing Width="50"
                           Height="50"

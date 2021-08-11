@@ -187,7 +187,7 @@ namespace Pixeval.UserControls
                 {
                     foreach (var illustrationViewModel in selected)
                     {
-                        await Launcher.LaunchUriAsync(new Uri(MakoHelper.GetIllustrationWebUrl(illustrationViewModel.Id)));
+                        await Launcher.LaunchUriAsync(MakoHelper.GetIllustrationWebUri(illustrationViewModel.Id));
                     }
                 }
             }

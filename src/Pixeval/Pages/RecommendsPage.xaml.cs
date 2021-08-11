@@ -27,7 +27,7 @@ namespace Pixeval.Pages
 
         private async void RecommendsPage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (App.Window.NavigationMode != NavigationMode.Back)
+            if (App.Window.GetNavigationModeAndReset() is not NavigationMode.Back)
             {
                 await ChangeSource();
             }

@@ -71,6 +71,8 @@ namespace Pixeval
         /// </summary>
         public int MaxDownloadTaskConcurrencyLevel { get; set; }
 
+        public bool DisplayTeachingTipWhenGeneratingAppLink { get; set; }
+
         public AppSetting(ApplicationTheme theme,
             ObservableCollection<string> excludeTags,
             bool disableDomainFronting,
@@ -81,7 +83,8 @@ namespace Pixeval
             int searchStartingFromPageNumber,
             int pageLimitForSpotlight,
             string? mirrorHost,
-            int maxDownloadTaskConcurrencyLevel)
+            int maxDownloadTaskConcurrencyLevel,
+            bool displayTeachingTipWhenGeneratingAppLink)
         {
             Theme = theme;
             ExcludeTags = excludeTags;
@@ -94,6 +97,7 @@ namespace Pixeval
             PageLimitForSpotlight = pageLimitForSpotlight;
             MirrorHost = mirrorHost;
             MaxDownloadTaskConcurrencyLevel = maxDownloadTaskConcurrencyLevel;
+            DisplayTeachingTipWhenGeneratingAppLink = displayTeachingTipWhenGeneratingAppLink;
         }
 
         public static AppSetting CreateDefault()
@@ -108,7 +112,8 @@ namespace Pixeval
                 1,
                 50,
                 null,
-                Environment.ProcessorCount);
+                Environment.ProcessorCount,
+                true);
         }
 
         public MakoClientConfiguration ToMakoClientConfiguration()

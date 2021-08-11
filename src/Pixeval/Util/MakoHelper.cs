@@ -7,7 +7,7 @@ using Pixeval.ViewModel;
 
 namespace Pixeval.Util
 {
-    public enum ThumbnailUrlOptions
+    public enum ThumbnailUrlOption
     {
         Large, Medium, SquareMedium
     }
@@ -87,20 +87,20 @@ namespace Pixeval.Util
             return AvailableIllustrationSortOptions.First(it => it.Value == App.AppSetting.DefaultSortOption);
         }
 
-        public static string? GetThumbnailUrl(this Illustration illustration, ThumbnailUrlOptions option)
+        public static string? GetThumbnailUrl(this Illustration illustration, ThumbnailUrlOption option)
         {
             return option switch
             {
-                ThumbnailUrlOptions.Large        => illustration.ImageUrls?.Large,
-                ThumbnailUrlOptions.Medium       => illustration.ImageUrls?.Medium,
-                ThumbnailUrlOptions.SquareMedium => illustration.ImageUrls?.SquareMedium,
+                ThumbnailUrlOption.Large        => illustration.ImageUrls?.Large,
+                ThumbnailUrlOption.Medium       => illustration.ImageUrls?.Medium,
+                ThumbnailUrlOption.SquareMedium => illustration.ImageUrls?.SquareMedium,
                 _                                => throw new ArgumentOutOfRangeException(nameof(option), option, null)
             };
         }
 
-        public static string GetIllustrationWebUrl(string id)
+        public static Uri GetIllustrationWebUri(string id)
         {
-            return $"https://www.pixiv.net/artworks/{id}";
+            return new($"https://www.pixiv.net/artworks/{id}");
         }
 
         public static string? GetOriginalUrl(this Illustration illustration)

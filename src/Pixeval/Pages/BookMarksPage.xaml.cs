@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml.Controls;
 using System.Threading.Tasks;
 using Mako.Global.Enum;
+using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Util;
 
 namespace Pixeval.Pages
@@ -26,7 +27,10 @@ namespace Pixeval.Pages
 
         private async void BookmarksPage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            await ChangeSource();
+            if (App.Window.GetNavigationModeAndReset() is not NavigationMode.Back)
+            {
+                await ChangeSource();
+            }
         }
 
         private async void PrivacyPolicyComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

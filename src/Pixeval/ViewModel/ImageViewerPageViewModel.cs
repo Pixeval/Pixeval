@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Mako.Net;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml;
 using Pixeval.Util;
 
 namespace Pixeval.ViewModel
@@ -25,20 +24,12 @@ namespace Pixeval.ViewModel
             set => SetProperty(ref _loadingProgress, value);
         }
 
-        private bool _loading;
+        private TaskNotifier? _loadingOriginalSourceTask;
 
-        public bool Loading
+        public Task? LoadingOriginalSourceTask
         {
-            get => _loading;
-            set => SetProperty(ref _loading, value);
-        }
-
-        private ImageSource? _originalImageSource;
-
-        public ImageSource? OriginalImageSource
-        {
-            get => _originalImageSource;
-            set => SetProperty(ref _originalImageSource, value);
+            get => _loadingOriginalSourceTask!;
+            set => SetPropertyAndNotifyOnCompletion(ref _loadingOriginalSourceTask!, value);
         }
 
         public IllustrationViewModel IllustrationViewModel { get; }
@@ -49,25 +40,39 @@ namespace Pixeval.ViewModel
         {
             _ = IllustrationViewModel.LoadThumbnailIfRequired().ContinueWith(_ =>
             {
-                App.Window.DispatcherQueue.TryEnqueue(() => OriginalImageSource = IllustrationViewModel.ThumbnailSource);
+                App.Window.DispatcherQueue.TryEnqueue(() => IllustrationViewModel.OriginalImageSource = IllustrationViewModel.ThumbnailSource);
             });
             await LoadOriginalImage();
         }
 
         public async Task LoadOriginalImage()
         {
+            var imageClient = App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi);
+            if (IllustrationViewModel.Illustration.IsUgoira())
+            {
+                var ugoiraMetadata = await App.MakoClient.GetUgoiraMetadata(IllustrationViewModel.Id);
+                if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Medium is { } url)
+                {
+                    var task = imageClient.DownloadAsStreamAsync(url, new Progress<double>(d => LoadingProgress = d), ImageLoadingCancellationHandle);
+                    LoadingOriginalSourceTask = task;
+                    var zipStream = (await task).GetOrThrow();
+                    var randomAccessStream = (await IOHelper.GetGifStreamResultAsync(zipStream, ugoiraMetadata)).GetOrThrow();
+                    IllustrationViewModel.OriginalImageSource = await randomAccessStream.GetImageSourceAsync();
+                    return;
+                }
+            }
+
             if (IllustrationViewModel.OriginalSourceUrl is { } src)
             {
-                Loading = true;
-                OriginalImageSource = await (await App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi)
-                        .DownloadAsIRandomAccessStreamAsync(src, new Progress<double>(d => LoadingProgress = d), ImageLoadingCancellationHandle))
-                    .GetOrThrow()
-                    .GetImageSourceAsync();
-                Loading = false;
+                var task = imageClient.DownloadAsIRandomAccessStreamAsync(src, new Progress<double>(d => LoadingProgress = d), ImageLoadingCancellationHandle);
+                LoadingOriginalSourceTask = task;
+                IllustrationViewModel.OriginalImageSource = await (await task).GetOrThrow().GetImageSourceAsync();
                 return;
             }
 
             throw new IllustrationSourceNotFoundException(ImageViewerPageResources.CannotFindImageSourceContent);
         }
+
+        public Visibility GetLoadingMaskVisibility(Task? loadingTask) => !(loadingTask?.IsCompletedSuccessfully ?? false) ? Visibility.Visible : Visibility.Collapsed;
     }
 }

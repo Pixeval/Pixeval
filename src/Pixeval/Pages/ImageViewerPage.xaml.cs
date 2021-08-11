@@ -10,6 +10,7 @@ using Pixeval.ViewModel;
 
 namespace Pixeval.Pages
 {
+    // TODO add context menu and bookmark button
     public sealed partial class ImageViewerPage
     {
         private ImageViewerPageViewModel _viewModel = null!;
@@ -120,7 +121,7 @@ namespace Pixeval.Pages
             }
             else
             {
-                ImageScaledOut200PercentStoryboard.Begin();
+                ImageScaledIn200PercentStoryboard.Begin();
                 _tappedScaled.Inverse();
             }
         }
@@ -132,9 +133,9 @@ namespace Pixeval.Pages
             IllustrationOriginalImageRenderTransform.ScaleY = 1;
         }
 
-        private void ImageScaledOut200PercentStoryboard_OnCompleted(object? sender, object e)
+        private void ImageScaledIn200PercentStoryboard_OnCompleted(object? sender, object e)
         {
-            ImageScaledOut200PercentStoryboard.Stop();
+            ImageScaledIn200PercentStoryboard.Stop();
             IllustrationOriginalImageRenderTransform.ScaleX = 2;
             IllustrationOriginalImageRenderTransform.ScaleY = 2;
         }
@@ -166,7 +167,7 @@ namespace Pixeval.Pages
             return IllustrationOriginalImageRenderTransform.ScaleX;
         }
 
-        private void Zoom(double delta)
+        public void Zoom(double delta)
         {
             if (IllustrationOriginalImageRenderTransform.TranslateX != 0)
             {
@@ -193,6 +194,12 @@ namespace Pixeval.Pages
             {
                 case < 0 when factor > MinZoomFactor:
                 case > 0 when factor < MaxZoomFactor:
+                    delta = (factor + delta) switch
+                    {
+                        > MaxZoomFactor => MaxZoomFactor - factor,
+                        < MinZoomFactor => -(factor - MinZoomFactor),
+                        _ => delta
+                    };
                     IllustrationOriginalImageRenderTransform.ScaleX += delta;
                     IllustrationOriginalImageRenderTransform.ScaleY += delta;
                     break;

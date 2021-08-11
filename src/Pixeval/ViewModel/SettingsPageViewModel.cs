@@ -123,6 +123,12 @@ namespace Pixeval.ViewModel
             set => SetProperty(_appSetting.MaxDownloadTaskConcurrencyLevel, value, _appSetting, (setting, value) => setting.MaxDownloadTaskConcurrencyLevel = value);
         }
 
+        public bool DisplayTeachingTipWhenGeneratingAppLink
+        {
+            get => _appSetting.DisplayTeachingTipWhenGeneratingAppLink;
+            set => SetProperty(_appSetting.DisplayTeachingTipWhenGeneratingAppLink, value, _appSetting, (setting, value) => setting.DisplayTeachingTipWhenGeneratingAppLink = value);
+        }
+
         public void AddR18Filtering()
         {
             ExcludeTags.AddIfNotPresent("R-18", StringComparer.OrdinalIgnoreCase);

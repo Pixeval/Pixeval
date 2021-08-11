@@ -6,6 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
+using Windows.Storage.Streams;
 using CommunityToolkit.WinUI.Helpers;
 using Mako.Global.Enum;
 using Mako.Preference;
@@ -42,6 +43,8 @@ namespace Pixeval
         }
 
         public const string AppIdentifier = "Pixeval";
+
+        public const string AppProtocol = "pixeval";
 
         private const string SessionContainerKey = "Session";
 
@@ -81,6 +84,11 @@ namespace Pixeval
 
             await CopyLoginProxyZipFileAndExtractInternalAsync(assetFile, assetChecksum);
             await EventChannel.Default.PublishAsync(new ScanningLoginProxyEvent());
+        }
+
+        public static Uri GenerateAppLinkToIllustration(string id)
+        {
+            return new($"{AppProtocol}://illust/{id}");
         }
 
         public static async Task WriteLogoIcoIfNotExist()
@@ -127,10 +135,21 @@ namespace Pixeval
             return GetResourceBytesAsync($"ms-appx:///Assets/{relativeToAssetsFolder}");
         }
 
+        public static Task<IRandomAccessStreamWithContentType> GetAssetStreamAsync(string relativeToAssetsFolder)
+        {
+            return GetResourceStreamAsync($"ms-appx:///Assets/{relativeToAssetsFolder}");
+        }
+
         public static async Task<byte[]> GetResourceBytesAsync(string path)
         {
             return await (await StorageFile.GetFileFromApplicationUriAsync(new Uri(path))).ReadBytesAsync();
         }
+
+        public static async Task<IRandomAccessStreamWithContentType> GetResourceStreamAsync(string path)
+        {
+            return await (await StorageFile.GetFileFromApplicationUriAsync(new Uri(path))).OpenReadAsync();
+        }
+
 
         /// <summary>
         /// Get an item relative to <see cref="AppLocalFolder"/>
@@ -201,6 +220,7 @@ namespace Pixeval
                 ConfigurationContainer.Values[nameof(AppSetting.PageLimitForSpotlight)] = appSetting.PageLimitForSpotlight;
                 ConfigurationContainer.Values[nameof(AppSetting.MirrorHost)] = appSetting.MirrorHost ?? string.Empty;
                 ConfigurationContainer.Values[nameof(AppSetting.MaxDownloadTaskConcurrencyLevel)] = appSetting.MaxDownloadTaskConcurrencyLevel;
+                ConfigurationContainer.Values[nameof(AppSetting.DisplayTeachingTipWhenGeneratingAppLink)] = appSetting.DisplayTeachingTipWhenGeneratingAppLink;
             }
         }
 
@@ -244,7 +264,8 @@ namespace Pixeval
                     ConfigurationContainer.Values[nameof(AppSetting.SearchStartingFromPageNumber)].CastOrThrow<int>(),
                     ConfigurationContainer.Values[nameof(AppSetting.PageLimitForSpotlight)].CastOrThrow<int>(),
                     ConfigurationContainer.Values[nameof(AppSetting.MirrorHost)].CastOrThrow<string>(),
-                    ConfigurationContainer.Values[nameof(AppSetting.MaxDownloadTaskConcurrencyLevel)].CastOrThrow<int>());
+                    ConfigurationContainer.Values[nameof(AppSetting.MaxDownloadTaskConcurrencyLevel)].CastOrThrow<int>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.DisplayTeachingTipWhenGeneratingAppLink)].CastOrThrow<bool>());
             }
             catch
             {

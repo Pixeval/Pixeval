@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
+using Pixeval.Util;
 
 namespace Pixeval.ViewModel
 {
@@ -35,6 +36,8 @@ namespace Pixeval.ViewModel
         }
 
         public bool IsManga => Illustrations.Length > 1;
+
+        public bool IsUgoira => Current.IllustrationViewModel.Illustration.IsUgoira();
 
         public Visibility CalculateNextImageButtonVisibility(int index)
         {

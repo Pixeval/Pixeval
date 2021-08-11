@@ -12,7 +12,6 @@
     <NavigationView x:Name="MainPageRootNavigationView"
                     d:DataContext="{d:DesignInstance viewModel:MainPageViewModel}"
                     IsSettingsVisible="False"
-                    Loaded="MainPageRootNavigationView_OnLoaded"
                     OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}"
                     SelectionChanged="MainPageRootNavigationView_OnSelectionChanged">
         <NavigationView.PaneHeader>
@@ -26,6 +25,7 @@
         <NavigationView.MenuItems>
             <NavigationViewItem x:Name="RecommendationTab"
                                 x:Uid="/MainPage/RecommendationsTab"
+                                IsSelected="True"
                                 Tag="{x:Bind mainPage:MainPageRootNavigationViewTag.Recommends}">
                 <NavigationViewItem.Icon>
                     <!--  Calendar  -->

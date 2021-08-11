@@ -154,6 +154,9 @@
   <data name="DisableSNIBypassToggleSwitch.Header" xml:space="preserve">
     <value>禁用域前置直连</value>
   </data>
+  <data name="DisplayTeachingTipWhenGeneratingAppLinkToggleSwitch.Header" xml:space="preserve">
+    <value>生成应用页面链接时显示使用方法提示</value>
+  </data>
   <data name="DonatingMeHyperlinkButton.Content" xml:space="preserve">
     <value>支持作者</value>
   </data>

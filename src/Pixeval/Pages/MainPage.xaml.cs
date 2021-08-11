@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime;
 using Mako.Global.Enum;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
@@ -39,11 +38,6 @@ namespace Pixeval.Pages
             DataContext = _viewModel;
         }
 
-        private void MainPageRootNavigationView_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            SetMainPageRootNavigationViewItem(RecommendationTab);
-        }
-
         private void MainPageRootNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
             if (args.SelectedItem is NavigationViewItem {Tag: MainPageRootNavigationViewTag tag})
@@ -56,15 +50,6 @@ namespace Pixeval.Pages
         {
             GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect();
-        }
-
-        #region Helper Functions
-
-        private void SetMainPageRootNavigationViewItem(NavigationViewItem navigationViewItem)
-        {
-            MainPageRootNavigationView.SelectedItem = navigationViewItem;
-        }
-
-        #endregion
+        } 
     }
 }

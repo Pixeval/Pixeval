@@ -45,5 +45,10 @@ namespace Pixeval.Util
         {
             return block();
         }
+
+        public static Task<TResult> BlockAsync<TResult>(Func<Task<TResult>> block)
+        {
+            return block();
+        }
     }
 }
