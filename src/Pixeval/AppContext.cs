@@ -39,7 +39,7 @@ namespace Pixeval
             ConfigurationContainer = ApplicationData.Current.RoamingSettings.Containers[ConfigurationContainerKey];
 
             // Save the context information when application closing
-            EventChannel.Default.SubscribeOnUIThread<ApplicationExitingEvent>(SaveContext);
+            EventChannel.Default.Subscribe<ApplicationExitingEvent>(SaveContext);
         }
 
         public const string AppIdentifier = "Pixeval";
@@ -78,12 +78,12 @@ namespace Pixeval
                     await CopyLoginProxyZipFileAndExtractInternalAsync(assetFile, assetChecksum);
                 }
 
-                await EventChannel.Default.PublishAsync(new ScanningLoginProxyEvent());
+                EventChannel.Default.Publish(new ScanningLoginProxyEvent());
                 return;
             }
 
             await CopyLoginProxyZipFileAndExtractInternalAsync(assetFile, assetChecksum);
-            await EventChannel.Default.PublishAsync(new ScanningLoginProxyEvent());
+            EventChannel.Default.Publish(new ScanningLoginProxyEvent());
         }
 
         public static Uri GenerateAppLinkToIllustration(string id)
@@ -171,6 +171,16 @@ namespace Pixeval
             return await AppLocalFolder.TryGetItemAsync(pathWithoutSlash) as StorageFolder;
         }
 
+        public static Task ClearTemporaryDirectory()
+        {
+            return ApplicationData.Current.TemporaryFolder.ClearDirectoryAsync();
+        }
+
+        public static IAsyncOperation<StorageFile> CreateTemporaryFileWithRandomNameAsync(string? extension = null)
+        {
+            return ApplicationData.Current.TemporaryFolder.CreateFileAsync($"{Guid.NewGuid().ToString()}.{extension ?? string.Empty}", CreationCollisionOption.ReplaceExisting);
+        }
+
         public static Task ClearAppLocalFolderAsync()
         {
             return AppLocalFolder.ClearDirectoryAsync();
@@ -221,6 +231,8 @@ namespace Pixeval
                 ConfigurationContainer.Values[nameof(AppSetting.MirrorHost)] = appSetting.MirrorHost ?? string.Empty;
                 ConfigurationContainer.Values[nameof(AppSetting.MaxDownloadTaskConcurrencyLevel)] = appSetting.MaxDownloadTaskConcurrencyLevel;
                 ConfigurationContainer.Values[nameof(AppSetting.DisplayTeachingTipWhenGeneratingAppLink)] = appSetting.DisplayTeachingTipWhenGeneratingAppLink;
+                ConfigurationContainer.Values[nameof(AppSetting.ItemsNumberLimitForDailyRecommendations)] = appSetting.ItemsNumberLimitForDailyRecommendations;
+                ConfigurationContainer.Values[nameof(AppSetting.FiltrateRestrictedContent)] = appSetting.FiltrateRestrictedContent;
             }
         }
 
@@ -265,7 +277,9 @@ namespace Pixeval
                     ConfigurationContainer.Values[nameof(AppSetting.PageLimitForSpotlight)].CastOrThrow<int>(),
                     ConfigurationContainer.Values[nameof(AppSetting.MirrorHost)].CastOrThrow<string>(),
                     ConfigurationContainer.Values[nameof(AppSetting.MaxDownloadTaskConcurrencyLevel)].CastOrThrow<int>(),
-                    ConfigurationContainer.Values[nameof(AppSetting.DisplayTeachingTipWhenGeneratingAppLink)].CastOrThrow<bool>());
+                    ConfigurationContainer.Values[nameof(AppSetting.DisplayTeachingTipWhenGeneratingAppLink)].CastOrThrow<bool>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.ItemsNumberLimitForDailyRecommendations)].CastOrThrow<int>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.FiltrateRestrictedContent)].CastOrThrow<bool>());
             }
             catch
             {

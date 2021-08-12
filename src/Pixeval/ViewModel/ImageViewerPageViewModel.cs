@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Windows.Storage.Streams;
 using Mako.Net;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
@@ -7,7 +8,7 @@ using Pixeval.Util;
 
 namespace Pixeval.ViewModel
 {
-    public class ImageViewerPageViewModel : ObservableObject
+    public class ImageViewerPageViewModel : ObservableObject, IDisposable
     {
         public ImageViewerPageViewModel(IllustrationViewModel illustrationViewModel)
         {
@@ -23,6 +24,8 @@ namespace Pixeval.ViewModel
             get => _loadingProgress;
             set => SetProperty(ref _loadingProgress, value);
         }
+
+        public IRandomAccessStream? OriginalImageStream { get; private set; }
 
         private TaskNotifier? _loadingOriginalSourceTask;
 
@@ -56,8 +59,8 @@ namespace Pixeval.ViewModel
                     var task = imageClient.DownloadAsStreamAsync(url, new Progress<double>(d => LoadingProgress = d), ImageLoadingCancellationHandle);
                     LoadingOriginalSourceTask = task;
                     var zipStream = (await task).GetOrThrow();
-                    var randomAccessStream = (await IOHelper.GetGifStreamResultAsync(zipStream, ugoiraMetadata)).GetOrThrow();
-                    IllustrationViewModel.OriginalImageSource = await randomAccessStream.GetImageSourceAsync();
+                    OriginalImageStream = (await IOHelper.GetGifStreamResultAsync(zipStream, ugoiraMetadata)).GetOrThrow();
+                    IllustrationViewModel.OriginalImageSource = await OriginalImageStream.GetImageSourceAsync();
                     return;
                 }
             }
@@ -66,7 +69,8 @@ namespace Pixeval.ViewModel
             {
                 var task = imageClient.DownloadAsIRandomAccessStreamAsync(src, new Progress<double>(d => LoadingProgress = d), ImageLoadingCancellationHandle);
                 LoadingOriginalSourceTask = task;
-                IllustrationViewModel.OriginalImageSource = await (await task).GetOrThrow().GetImageSourceAsync();
+                OriginalImageStream = (await task).GetOrThrow();
+                IllustrationViewModel.OriginalImageSource = await OriginalImageStream.GetImageSourceAsync();
                 return;
             }
 
@@ -74,5 +78,10 @@ namespace Pixeval.ViewModel
         }
 
         public Visibility GetLoadingMaskVisibility(Task? loadingTask) => !(loadingTask?.IsCompletedSuccessfully ?? false) ? Visibility.Visible : Visibility.Collapsed;
+
+        public void Dispose()
+        {
+            OriginalImageStream?.Dispose();
+        }
     }
 }

@@ -17,6 +17,10 @@ namespace Pixeval.ViewModel
     {
         public Illustration Illustration { get; }
 
+        public bool IsRestricted => Illustration.IsRestricted();
+
+        public string RestrictionCaption => Illustration.RestrictLevel().GetMetadataOnEnumMember()!;
+
         public string Id => Illustration.Id.ToString();
 
         public int Bookmark => Illustration.TotalBookmarks;
@@ -79,7 +83,7 @@ namespace Pixeval.ViewModel
                 return;
             }
             LoadingThumbnail = true;
-            var ras = await GetThumbnail(ThumbnailUrlOption.Medium);
+            using var ras = await GetThumbnail(ThumbnailUrlOption.Medium);
             ThumbnailSource = ras == null ? null : await ras.GetImageSourceAsync();
             LoadingThumbnail = false;
         }

@@ -73,7 +73,7 @@ namespace Pixeval.Util
             this HttpClient httpClient,
             string url,
             IProgress<double>? progress = null,
-            CancellationHandle cancellationHandle = default)
+            CancellationHandle? cancellationHandle = default)
         {
             return (await httpClient.DownloadAsStreamAsync(url, progress, cancellationHandle)).Bind(stream => stream.AsRandomAccessStream());
         }
@@ -82,7 +82,7 @@ namespace Pixeval.Util
             this HttpClient httpClient,
             string url,
             IProgress<double>? progress = null,
-            CancellationHandle cancellationHandle = default)
+            CancellationHandle? cancellationHandle = default)
         {
             using var response = await httpClient.GetResponseHeader(url);
             if (response.Content.Headers.ContentLength is { } responseLength)
@@ -93,7 +93,7 @@ namespace Pixeval.Util
                 // Most cancellation happens when users are panning the ScrollViewer, where the
                 // cancellation occurs while the `await response.Content.ReadAsStreamAsync()` is 
                 // running, so we check the state right after the completion of that statement
-                if (cancellationHandle.IsCancelled)
+                if (cancellationHandle?.IsCancelled is true)
                 {
                     return Result<Stream>.OfFailure(CancellationMark);
                 }
@@ -102,8 +102,9 @@ namespace Pixeval.Util
                 int bytesRead, totalRead = 0;
                 while ((bytesRead = await contentStream.ReadAsync(resultStream.GetMemory(1024))) != 0)
                 {
-                    if (cancellationHandle.IsCancelled)
+                    if (cancellationHandle?.IsCancelled is true)
                     {
+                        await resultStream.DisposeAsync();
                         return Result<Stream>.OfFailure(CancellationMark);
                     }
 
@@ -123,7 +124,7 @@ namespace Pixeval.Util
             this HttpClient httpClient,
             string url,
             IProgress<double>? progress = null,
-            CancellationHandle cancellationHandle = default)
+            CancellationHandle? cancellationHandle = default)
         {
             UIHelper.SetTaskBarIconProgressState(TaskBarState.Normal);
             var newProgress = new Progress<double>(d =>

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Mako.Global.Enum;
@@ -53,6 +52,12 @@ namespace Pixeval.ViewModel
         {
             get => _appSetting.Theme;
             set => SetProperty(_appSetting.Theme, value, _appSetting, (setting, value) => setting.Theme = value);
+        }
+
+        public bool FiltrateRestrictedContent
+        {
+            get => _appSetting.FiltrateRestrictedContent;
+            set => SetProperty(_appSetting.FiltrateRestrictedContent, value, _appSetting, (setting, value) => setting.FiltrateRestrictedContent = value);
         }
 
         public ObservableCollection<string> ExcludeTags
@@ -129,16 +134,10 @@ namespace Pixeval.ViewModel
             set => SetProperty(_appSetting.DisplayTeachingTipWhenGeneratingAppLink, value, _appSetting, (setting, value) => setting.DisplayTeachingTipWhenGeneratingAppLink = value);
         }
 
-        public void AddR18Filtering()
+        public int ItemsNumberLimitForDailyRecommendations
         {
-            ExcludeTags.AddIfNotPresent("R-18", StringComparer.OrdinalIgnoreCase);
-            ExcludeTags.AddIfNotPresent("R-18G", StringComparer.OrdinalIgnoreCase);
-        }
-
-        public void RemoveR18Filtering()
-        {
-            ExcludeTags.Remove("R-18");
-            ExcludeTags.Remove("R-18G");
+            get => _appSetting.ItemsNumberLimitForDailyRecommendations;
+            set => SetProperty(_appSetting.ItemsNumberLimitForDailyRecommendations, value, _appSetting, (settings, value) => settings.ItemsNumberLimitForDailyRecommendations = value);
         }
     }
 }

@@ -21,12 +21,9 @@ namespace Pixeval.Util
     {
         public static async Task<ImageSource> GetImageSourceAsync(this IRandomAccessStream randomAccessStream)
         {
-            using (randomAccessStream)
-            {
-                var bitmapImage = new BitmapImage();
-                await bitmapImage.SetSourceAsync(randomAccessStream);
-                return bitmapImage;
-            }
+            var bitmapImage = new BitmapImage();
+            await bitmapImage.SetSourceAsync(randomAccessStream);
+            return bitmapImage;
         }
 
         public static async Task<IRandomAccessStream> GetUnderlyingStreamAsync(this Image image, bool isGif = false)

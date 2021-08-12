@@ -21,7 +21,17 @@ namespace Pixeval.Pages
     {
         private IllustrationViewerPageViewModel _viewModel = null!;
 
-        private readonly StandardUICommand _copyCommand = new(StandardUICommandKind.Copy);
+        private readonly StandardUICommand _copyCommand = new(StandardUICommandKind.Copy)
+        {
+            KeyboardAccelerators =
+            {
+                new KeyboardAccelerator
+                {
+                    Key = VirtualKey.C,
+                    Modifiers = VirtualKeyModifiers.Control
+                }
+            }
+        };
 
         public IllustrationViewerPage()
         {
@@ -32,12 +42,45 @@ namespace Pixeval.Pages
             _copyCommand.ExecuteRequested += CopyCommandOnExecuteRequested;
         }
 
+        public override void Dispose(NavigatingCancelEventArgs e)
+        {
+            foreach (var imageViewerPageViewModel in _viewModel.Illustrations)
+            {
+                imageViewerPageViewModel.ImageLoadingCancellationHandle.Cancel();
+                imageViewerPageViewModel.Dispose();
+            }
+        }
+
+        public override void Prepare(NavigationEventArgs e)
+        {
+            _viewModel = (IllustrationViewerPageViewModel) e.Parameter;
+            IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), _viewModel.Current);
+
+            if (ConnectedAnimationService.GetForCurrentView().GetAnimation(IllustrationGrid.ConnectedAnimationKey) is { } animation)
+            {
+                var image = GetImage(); // See ImageViewerPage
+                animation.TryStart(image);
+                animation.TryStart(image);
+            }
+        }
+
         private async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
         {
             await UIHelper.SetClipboardContentAsync(async package =>
             {
                 package.RequestedOperation = DataPackageOperation.Copy;
-                package.SetBitmap(RandomAccessStreamReference.CreateFromStream(await GetImage().GetUnderlyingStreamAsync(_viewModel.Current.IllustrationViewModel.Illustration.IsUgoira())));
+                if (_viewModel.IsUgoira)
+                {
+                    var file = await AppContext.CreateTemporaryFileWithRandomNameAsync("gif");
+                    await _viewModel.Current.OriginalImageStream!.SaveToFile(file);
+                    package.SetStorageItems(Enumerates.ArrayOf(file), true);
+                }
+                else
+                {
+                    _viewModel.Current.OriginalImageStream!.Seek(0);
+                    // OriginalImageStream won't work here, I don't know why for now
+                    package.SetBitmap(RandomAccessStreamReference.CreateFromStream(await GetImage().GetUnderlyingStreamAsync()));
+                }
             });
         }
 
@@ -68,20 +111,6 @@ namespace Pixeval.Pages
             request.Data.SetWebLink(webLink);
             request.Data.SetApplicationLink(AppContext.GenerateAppLinkToIllustration(vm.Id));
             deferral.Complete();
-        }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            _viewModel = (IllustrationViewerPageViewModel) e.Parameter;
-            IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), _viewModel.Current);
-
-            if (ConnectedAnimationService.GetForCurrentView().GetAnimation(IllustrationGrid.ConnectedAnimationKey) is { } animation)
-            {
-                var image = GetImage(); // See ImageViewerPage
-                animation.TryStart(image);
-                animation.TryStart(image);
-            } 
         }
 
         private void NextImage()

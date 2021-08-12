@@ -51,7 +51,7 @@
     <None Remove="Pages\IllustrationGridPage.xaml" />
     <None Remove="Pages\IllustrationViewerPage.xaml" />
     <None Remove="Pages\ImageViewerPage.xaml" />
-    <None Remove="Pages\RecommendsPage.xaml" />
+    <None Remove="Pages\RecommendationPage.xaml" />
     <None Remove="Pages\SettingsPage.xaml" />
     <None Remove="UserControls\IllustrationGridCommandBar.xaml" />
   </ItemGroup>
@@ -130,7 +130,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Pages\RecommendsPage.xaml">
+    <Page Update="Pages\RecommendationPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

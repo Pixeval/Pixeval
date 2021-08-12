@@ -1,28 +1,27 @@
-﻿using System;
-using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace Pixeval.Util
 {
-    public class EnhancedPage : Page, IDisposable
+    public class EnhancedPage : Page
     {
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            Prepare();
+            Prepare(e);
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             base.OnNavigatingFrom(e);
-            Dispose();
+            Dispose(e);
         }
 
-        public virtual void Dispose()
+        public virtual void Dispose(NavigatingCancelEventArgs e)
         {
         }
 
-        public virtual void Prepare()
+        public virtual void Prepare(NavigationEventArgs e)
         {
         }
     }

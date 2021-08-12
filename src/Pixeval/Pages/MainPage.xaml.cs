@@ -4,6 +4,7 @@ using Mako.Global.Enum;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Events;
 using Pixeval.ViewModel;
 
 namespace Pixeval.Pages
@@ -21,7 +22,7 @@ namespace Pixeval.Pages
             Parameter = parameter;
         }
 
-        public static readonly MainPageRootNavigationViewTag Recommends = new(typeof(RecommendsPage), App.MakoClient.Recommends(targetFilter: App.AppSetting.TargetFilter));
+        public static readonly MainPageRootNavigationViewTag Recommends = new(typeof(RecommendationPage), App.MakoClient.Recommends(targetFilter: App.AppSetting.TargetFilter));
         
         public static readonly MainPageRootNavigationViewTag Bookmarks = new(typeof(BookmarksPage), App.MakoClient.Bookmarks(App.Uid!, PrivacyPolicy.Public, App.AppSetting.TargetFilter));
 
@@ -48,6 +49,7 @@ namespace Pixeval.Pages
 
         private void MainPageRootFrame_OnNavigated(object sender, NavigationEventArgs e)
         {
+            EventChannel.Default.Publish(new MainPageFrameNavigatingEvent(this));
             GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect();
         } 

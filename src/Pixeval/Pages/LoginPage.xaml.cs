@@ -38,7 +38,7 @@ namespace Pixeval.Pages
                 }
 
                 AppContext.SaveContext();
-                await EventChannel.Default.PublishAsync(new LoginCompletedEvent(this, App.MakoClient!.Session));
+                EventChannel.Default.Publish(new LoginCompletedEvent(this, App.MakoClient!.Session));
             }
             catch (Exception exception)
             {

@@ -6,6 +6,7 @@ using Pixeval.Util;
 
 namespace Pixeval.ViewModel
 {
+    // TODO use each ImageViewerPageViewModel for each Illustration, for spotlight purpose
     public class IllustrationViewerPageViewModel : ObservableObject
     {
         /// <summary>

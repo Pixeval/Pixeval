@@ -1,20 +1,13 @@
-﻿<Page x:Class="Pixeval.Pages.IllustrationViewerPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:page="using:Pixeval.Pages"
-      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-      mc:Ignorable="d">
-    <Page.Resources>
-        <FontIcon x:Name="HeartIcon"
-                  FontFamily="{StaticResource SymbolThemeFontFamily}"
-                  Glyph="&#xEB52;" />
-        <FontIcon x:Name="HeartIconOutlined"
-                  FontFamily="{StaticResource SymbolThemeFontFamily}"
-                  Glyph="&#xEB51;" />
-    </Page.Resources>
+﻿<util:EnhancedPage x:Class="Pixeval.Pages.IllustrationViewerPage"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:page="using:Pixeval.Pages"
+                   xmlns:util="using:Pixeval.Util"
+                   Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                   mc:Ignorable="d">
     <controls:DockPanel HorizontalAlignment="Stretch"
                         LastChildFill="True">
         <CommandBar controls:DockPanel.Dock="Top"
@@ -170,4 +163,4 @@
               controls:DockPanel.Dock="Bottom" />
         <Frame x:Name="IllustrationImageShowcaseFrame" />
     </controls:DockPanel>
-</Page>
+</util:EnhancedPage>

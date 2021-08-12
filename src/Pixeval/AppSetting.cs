@@ -21,6 +21,12 @@ namespace Pixeval
         public ObservableCollection<string> ExcludeTags { get; set; }
 
         /// <summary>
+        /// Indicates whether the restricted content are permitted to be included
+        /// in the searching results, including R-18 and R-18G
+        /// </summary>
+        public bool FiltrateRestrictedContent { get; set; }
+
+        /// <summary>
         /// Disable the domain fronting technology, once disabled, the users
         /// from China mainland are required to have other countermeasures to bypass
         /// GFW
@@ -73,6 +79,8 @@ namespace Pixeval
 
         public bool DisplayTeachingTipWhenGeneratingAppLink { get; set; }
 
+        public int ItemsNumberLimitForDailyRecommendations { get; set; }
+
         public AppSetting(ApplicationTheme theme,
             ObservableCollection<string> excludeTags,
             bool disableDomainFronting,
@@ -84,7 +92,9 @@ namespace Pixeval
             int pageLimitForSpotlight,
             string? mirrorHost,
             int maxDownloadTaskConcurrencyLevel,
-            bool displayTeachingTipWhenGeneratingAppLink)
+            bool displayTeachingTipWhenGeneratingAppLink,
+            int itemsNumberLimitForDailyRecommendations, 
+            bool filtrateRestrictedContent)
         {
             Theme = theme;
             ExcludeTags = excludeTags;
@@ -98,6 +108,8 @@ namespace Pixeval
             MirrorHost = mirrorHost;
             MaxDownloadTaskConcurrencyLevel = maxDownloadTaskConcurrencyLevel;
             DisplayTeachingTipWhenGeneratingAppLink = displayTeachingTipWhenGeneratingAppLink;
+            ItemsNumberLimitForDailyRecommendations = itemsNumberLimitForDailyRecommendations;
+            FiltrateRestrictedContent = filtrateRestrictedContent;
         }
 
         public static AppSetting CreateDefault()
@@ -105,7 +117,7 @@ namespace Pixeval
             return new(ApplicationTheme.SystemDefault,
                 new ObservableCollection<string>(),
                 false,
-                IllustrationSortOption.PublishDateDescending,
+                IllustrationSortOption.DoNotSort,
                 SearchTagMatchOption.PartialMatchForTags,
                 TargetFilter.ForAndroid,
                 100,
@@ -113,7 +125,9 @@ namespace Pixeval
                 50,
                 null,
                 Environment.ProcessorCount,
-                true);
+                true, 
+                500, 
+                false);
         }
 
         public MakoClientConfiguration ToMakoClientConfiguration()

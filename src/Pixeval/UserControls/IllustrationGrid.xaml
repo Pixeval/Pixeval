@@ -19,7 +19,7 @@
                                    IsItemClickEnabled="True"
                                    IsMultiSelectCheckBoxEnabled="False"
                                    ItemHeight="250"
-                                   ItemsSource="{x:Bind ViewModel.Illustrations}"
+                                   ItemsSource="{x:Bind ViewModel.IllustrationsView}"
                                    SelectionMode="Extended"
                                    StretchContentForSingleRow="True">
             <controls:AdaptiveGridView.ItemTemplate>
@@ -183,6 +183,18 @@
                                       CornerRadius="5"
                                       Opacity="0.8" />
                                 <CheckBox IsChecked="{x:Bind IsSelected, Mode=TwoWay}" />
+                            </Grid>
+                            <Grid Margin="10,0,0,10"
+                                  HorizontalAlignment="Left"
+                                  VerticalAlignment="Bottom"
+                                  Background="Crimson"
+                                  CornerRadius="5"
+                                  Visibility="{x:Bind IsRestricted}">
+                                <TextBlock Margin="3"
+                                           FontSize="9"
+                                           FontWeight="Bold"
+                                           Foreground="White"
+                                           Text="{x:Bind RestrictionCaption}" />
                             </Grid>
                         </Grid>
                     </GridViewItem>

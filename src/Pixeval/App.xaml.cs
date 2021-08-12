@@ -97,6 +97,7 @@ namespace Pixeval
             Window = new MainWindow();
             Window.SetWindowSize(800, 600);
             Window.Activate();
+            await AppContext.ClearTemporaryDirectory();
         }
 
         /// <summary>
@@ -106,7 +107,7 @@ namespace Pixeval
         /// <returns></returns>
         public static async Task ExitWithPushedNotification()
         {
-            await EventChannel.Default.PublishAsync(new ApplicationExitingEvent());
+            EventChannel.Default.Publish(new ApplicationExitingEvent());
             await Task.Delay(200); // well...just wait a second to let those subscribers handle the event
         }
     }

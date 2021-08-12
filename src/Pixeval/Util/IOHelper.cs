@@ -29,7 +29,7 @@ namespace Pixeval.Util
         {
             return await (await File.ReadAllBytesAsync(fullnameOfFile)).HashAsync<T>();
         }
-        
+
         public static async Task ClearDirectoryAsync(this StorageFolder dir)
         {
             await Task.WhenAll((await dir.GetItemsAsync()).Select(f => f.DeleteAsync().AsTask()));
@@ -49,8 +49,8 @@ namespace Pixeval.Util
 
         public static async Task<string> ToBase64StringAsync(this IRandomAccessStream randomAccessStream)
         {
-            var array = ArrayPool<byte>.Shared.Rent((int)randomAccessStream.Size);
-            var buffer = await randomAccessStream.ReadAsync(array.AsBuffer(), (uint)randomAccessStream.Size, InputStreamOptions.None);
+            var array = ArrayPool<byte>.Shared.Rent((int) randomAccessStream.Size);
+            var buffer = await randomAccessStream.ReadAsync(array.AsBuffer(), (uint) randomAccessStream.Size, InputStreamOptions.None);
             ArrayPool<byte>.Shared.Return(array);
             return Convert.ToBase64String(buffer.ToArray());
         }
@@ -164,6 +164,14 @@ namespace Pixeval.Util
             }
 
             return Result<IRandomAccessStream>.OfFailure(new ArgumentNullException(nameof(ugoiraMetadataResponse), @"ugoiraMetadataResponse.UgoiraMetadataInfo.Frames is null"));
+        }
+
+        public static async Task SaveToFile(this IRandomAccessStream stream, StorageFile file)
+        {
+            stream.Seek(0);
+            using var dataReader = new DataReader(stream);
+            await dataReader.LoadAsync((uint) stream.Size);
+            await FileIO.WriteBufferAsync(file, dataReader.ReadBuffer((uint) stream.Size));
         }
     }
 }

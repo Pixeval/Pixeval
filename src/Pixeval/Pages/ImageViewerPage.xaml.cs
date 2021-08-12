@@ -10,7 +10,7 @@ using Pixeval.ViewModel;
 
 namespace Pixeval.Pages
 {
-    // TODO add context menu and bookmark button
+    // TODO add context menu and file info and comments section
     public sealed partial class ImageViewerPage
     {
         private ImageViewerPageViewModel _viewModel = null!;
@@ -24,9 +24,8 @@ namespace Pixeval.Pages
             InitializeComponent();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        public override void Prepare(NavigationEventArgs e)
         {
-            base.OnNavigatedTo(e);
             _viewModel = (ImageViewerPageViewModel) e.Parameter;
         }
 

@@ -84,6 +84,20 @@
                 <TextBlock x:Uid="/SettingsPage/ApplicationWideSectionSubtitleTextBlock"
                            Margin="0,15,0,0"
                            FontSize="{StaticResource PixevalSubtitleFontSize}" />
+                <!--  ReSharper disable once Xaml.StaticResourceNotResolved  -->
+                <Button Width="200"
+                        Margin="{StaticResource SettingsEntriesMargin}"
+                        Style="{StaticResource AccentButtonStyle}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon VerticalAlignment="Center"
+                                      FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                      Glyph="&#xF3B1;" />
+                            <TextBlock x:Uid="/SettingsPage/LogoutButtonContentTextBlock"
+                                       Margin="10,0,0,0" />
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
                 <!--  Application Theme  -->
                 <TextBlock x:Uid="/SettingsPage/ApplicationThemeTextBlock"
                            Style="{StaticResource SectionHeaderTextBlockStyle}" />
@@ -110,7 +124,7 @@
                               x:Uid="/SettingsPage/SwitchSensitiveContentFilteringToggleSwitch"
                               Margin="{StaticResource SettingsEntriesMargin}"
                               FontSize="{StaticResource PixevalContentFontSize}"
-                              Toggled="SwitchSensitiveContentFilteringToggleSwitch_OnToggled" />
+                              IsOn="{x:Bind _viewModel.FiltrateRestrictedContent, Mode=TwoWay}" />
                 <InfoBar x:Uid="/SettingsPage/SwitchSensitiveContentFilteringInfoBar"
                          IsOpen="{x:Bind SwitchSensitiveContentFilteringToggleSwitch.IsOn, Mode=OneWay}"
                          Style="{StaticResource SectionInfoBarStyle}">
@@ -267,6 +281,30 @@
                     </TeachingTip.IconSource>
                 </TeachingTip>
                 <InfoBar x:Uid="/SettingsPage/PageLimitForSpotlightInfoBar"
+                         Style="{StaticResource SectionInfoBarStyle}" />
+                <!--  Recommend Items Limit  -->
+                <TextBlock x:Uid="/SettingsPage/RecommendsItemsLimitTextBlock"
+                           Style="{StaticResource SectionHeaderTextBlockStyle}" />
+                <NumberBox x:Name="RecommendsItemsLimitNumberBox"
+                           x:Uid="/SettingsPage/RecommendsItemsLimitNumberBox"
+                           Margin="{StaticResource SettingsEntryPadding}"
+                           GotFocus="RecommendsItemsLimitNumberBox_OnGotFocus"
+                           LostFocus="RecommendsItemsLimitNumberBox_OnLostFocus"
+                           Maximum="1500"
+                           Minimum="500"
+                           Style="{StaticResource SettingsNumberBoxStyle}"
+                           Value="{x:Bind _viewModel.ItemsNumberLimitForDailyRecommendations, Mode=TwoWay}" />
+                <TeachingTip x:Name="RecommendsItemsLimitNumberBoxValueNotInRangeTeachingTip"
+                             x:Uid="/SettingsPage/RecommendsItemsLimitNumberBoxValueNotInRangeTeachingTip"
+                             IsLightDismissEnabled="True"
+                             PreferredPlacement="TopRight"
+                             Target="{x:Bind RecommendsItemsLimitNumberBox}">
+                    <TeachingTip.IconSource>
+                        <FontIconSource FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                        Glyph="&#xE783;" />
+                    </TeachingTip.IconSource>
+                </TeachingTip>
+                <InfoBar x:Uid="/SettingsPage/RecommendsItemsLimitInfoBar"
                          Style="{StaticResource SectionInfoBarStyle}" />
                 <!--  Sensitive Tag  -->
                 <TextBlock x:Uid="/SettingsPage/SensitiveTagTextBlock"
