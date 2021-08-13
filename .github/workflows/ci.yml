@@ -1,14 +1,9 @@
 name: CI
 
 on:
-    pull_request:
-        branches:
-            - master
-            - remake
     push:
-        branches:
-            - master
-            - remake
+    pull_request:
+  
 
 jobs:
     build:
