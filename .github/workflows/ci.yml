@@ -32,9 +32,6 @@ jobs:
             - name: Restore the application
               run: dotnet restore
 
-            - name: Build the application
-              run: dotnet build -c $env:Configuration
-
             - name: Publish the application
               run: dotnet publish -p:OutDir="$PWD/publish" -c $env:Configuration
 
