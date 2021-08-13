@@ -2,10 +2,12 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Pipes;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Windows.Globalization;
@@ -39,22 +41,19 @@ namespace Pixeval.ViewModel
 
         public class LoginTokenResponse
         {
-            [JsonPropertyName("errno")]
-            public int Errno { get; set; }
+            [JsonPropertyName("errno")] public int Errno { get; set; }
 
-            [JsonPropertyName("cookie")]
-            public string? Cookie { get; set; }
+            [JsonPropertyName("cookie")] public string? Cookie { get; set; }
 
-            [JsonPropertyName("code")]
-            public string? Code { get; set; }
+            [JsonPropertyName("code")] public string? Code { get; set; }
 
-            [JsonPropertyName("verifier")]
-            public string? Verifier { get; set; }
+            [JsonPropertyName("verifier")] public string? Verifier { get; set; }
         }
 
         public enum LoginPhaseEnum
         {
-            [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseCheckingRefreshAvailable))]
+            [LocalizedResource(typeof(LoginPageResources),
+                nameof(LoginPageResources.LoginPhaseCheckingRefreshAvailable))]
             CheckingRefreshAvailable,
 
             [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseRefreshing))]
@@ -66,13 +65,15 @@ namespace Pixeval.ViewModel
             [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseExecutingLoginProxy))]
             ExecutingLoginProxy,
 
-            [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseCheckingCertificateInstallation))]
+            [LocalizedResource(typeof(LoginPageResources),
+                nameof(LoginPageResources.LoginPhaseCheckingCertificateInstallation))]
             CheckingCertificateInstallation,
 
             [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseInstallingCertificate))]
             InstallingCertificate,
 
-            [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseCheckingWebView2Installation))]
+            [LocalizedResource(typeof(LoginPageResources),
+                nameof(LoginPageResources.LoginPhaseCheckingWebView2Installation))]
             CheckingWebView2Installation
         }
 
@@ -137,11 +138,13 @@ namespace Pixeval.ViewModel
 
         private static bool CheckRefreshAvailableInternal(Session? session)
         {
-            return session is not null && session.RefreshToken.IsNotNullOrEmpty() && session.Cookie.IsNotNullOrEmpty() && CookieNotExpired(session);
+            return session is not null && session.RefreshToken.IsNotNullOrEmpty() &&
+                   session.Cookie.IsNotNullOrEmpty() && CookieNotExpired(session);
 
             static bool CookieNotExpired(Session session)
             {
-                return DateTimeOffset.Now - session.CookieCreation <= TimeSpan.FromDays(7); // check if the cookie is created within the last one week
+                return DateTimeOffset.Now - session.CookieCreation <=
+                       TimeSpan.FromDays(7); // check if the cookie is created within the last one week
             }
         }
 
@@ -150,7 +153,8 @@ namespace Pixeval.ViewModel
             AdvancePhase(LoginPhaseEnum.Refreshing);
             if (AppContext.LoadSession() is { } session && CheckRefreshAvailableInternal(session))
             {
-                App.MakoClient = new MakoClient(session, App.AppSetting.ToMakoClientConfiguration(), new RefreshTokenSessionUpdate());
+                App.MakoClient = new MakoClient(session, App.AppSetting.ToMakoClientConfiguration(),
+                    new RefreshTokenSessionUpdate());
                 await App.MakoClient.RefreshSessionAsync();
             }
             else
@@ -174,11 +178,17 @@ namespace Pixeval.ViewModel
             var port = IOHelper.NegotiatePort();
             AdvancePhase(LoginPhaseEnum.ExecutingLoginProxy);
             await ScanLoginProxyTask.Task; // awaits the copy and extract operations to complete
-            _loginProxyProcess = await CallLoginProxyAsync(ApplicationLanguages.ManifestLanguages[0], port); // calls the login proxy process and passes the language and IPC server port
-            var (cookie, code, verifier) = await WhenLoginTokenRequestedAsync(port); // awaits the login proxy to sends the post request which contains the login result
+            _loginProxyProcess =
+                await CallLoginProxyAsync(ApplicationLanguages.ManifestLanguages[0],
+                    port); // calls the login proxy process and passes the language and IPC server port
+            var (cookie, code, verifier) =
+                await WhenLoginTokenRequestedAsync(
+                    port); // awaits the login proxy to sends the post request which contains the login result
             var session = await AuthCodeToSessionAsync(code, verifier, cookie);
-            _loginProxyProcess = null; // if we reach here then the login procedure completes successfully, the login proxy process has been closed by itself, we do not need the control over it
-            App.MakoClient = new MakoClient(session, App.AppSetting.ToMakoClientConfiguration(), new RefreshTokenSessionUpdate());
+            _loginProxyProcess =
+                null; // if we reach here then the login procedure completes successfully, the login proxy process has been closed by itself, we do not need the control over it
+            App.MakoClient = new MakoClient(session, App.AppSetting.ToMakoClientConfiguration(),
+                new RefreshTokenSessionUpdate());
         }
 
         /// <summary>
@@ -186,56 +196,39 @@ namespace Pixeval.ViewModel
         /// </summary>
         public static async Task<Process> CallLoginProxyAsync(string culture, int port)
         {
-            if (await AppContext.TryGetFileRelativeToLocalFolderAsync(Path.Combine(AppContext.AppLoginProxyFolder, "Pixeval.LoginProxy.exe")) is { } file)
+            if (await AppContext.TryGetFileRelativeToLocalFolderAsync(Path.Combine(AppContext.AppLoginProxyFolder,
+                "Pixeval.LoginProxy.exe")) is { } file)
             {
                 return Process.Start(file.Path, $"{port} {culture}");
             }
 
-            throw new FileNotFoundException(MiscResources.CannotFindLoginProxyServerExecutable, "Pixeval.LoginProxy.exe");
+            throw new FileNotFoundException(MiscResources.CannotFindLoginProxyServerExecutable,
+                "Pixeval.LoginProxy.exe");
         }
 
         [ContractAnnotation("=> halt")]
         public static async Task<(string cookie, string code, string verifier)> WhenLoginTokenRequestedAsync(int port)
         {
-            // shit code
-            var httpListener = new HttpListener();
-            httpListener.Prefixes.Add($"http://localhost:{port}/");
-            httpListener.Start();
-            while (true)
+            var pipeServer = new NamedPipeServerStream("pixiv_login");
+            await pipeServer.WaitForConnectionAsync();
+            var json = await JsonSerializer.DeserializeAsync<LoginTokenResponse>(pipeServer);
+            if (json?.Errno is { } and not 0)
             {
-                var context = await httpListener.GetContextAsync();
-                if (context.Request.Url?.PathAndQuery is "/login/token"
-                    && context.Request.HasEntityBody
-                    && context.Request.HttpMethod == "POST")
+                throw new LoginProxyException(json.Errno switch
                 {
-                    using var streamReader = new StreamReader(context.Request.InputStream, context.Request.ContentEncoding, leaveOpen: false);
-                    var content = await streamReader.ReadToEndAsync();
-                    var json = content.FromJson<LoginTokenResponse>();
-                    if (json?.Errno is { } and not 0)
-                    {
-                        throw new LoginProxyException(json.Errno switch
-                        {
-                            1 => LoginPageResources.LoginProxyConnectToHostFailed,
-                            2 => LoginPageResources.LoginProxyCannotFindCertificate,
-                            _ => MiscResources.UnexpectedBehavior
-                        });
-                    }
-                    if (json?.Cookie is { } cookie && json.Code is { } token && json.Verifier is { } verifier)
-                    {
-                        SendResponse(context, 200);
-                        return (cookie, token, verifier);
-                    }
-                    SendResponse(context, 400);
-                }
+                    1 => LoginPageResources.LoginProxyConnectToHostFailed,
+                    2 => LoginPageResources.LoginProxyCannotFindCertificate,
+                    _ => MiscResources.UnexpectedBehavior
+                });
             }
 
-            static void SendResponse(HttpListenerContext context, int code)
+            if (json?.Cookie is { } cookie && json.Code is { } token && json.Verifier is { } verifier)
             {
-                context.Response.StatusCode = code;
-                context.Response.SendChunked = false;
-                context.Response.Headers.Clear();
-                context.Response.Close();
+                pipeServer.Disconnect();
+                return (cookie, token, verifier);
             }
+            pipeServer.Disconnect();
+            throw new LoginProxyException(LoginPageResources.LoginProxyConnectToHostFailed);
         }
 
         public static async Task<Session> AuthCodeToSessionAsync(string code, string verifier, string cookie)

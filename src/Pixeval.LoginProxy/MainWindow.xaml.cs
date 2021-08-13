@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
 using System.Windows;
@@ -92,12 +94,16 @@ namespace Pixeval.LoginProxy
 
             var (url, cookie) = await _webViewCompletion.Task;
             var code = HttpUtility.ParseQueryString(new Uri(url).Query)["code"];
-            await Interop.PostJsonToPixevalClient("/login/token", new LoginTokenRequest
+            var pipe = new NamedPipeClientStream("pixiv_login");
+            await pipe.ConnectAsync();
+            pipe.Write(JsonSerializer.SerializeToUtf8Bytes(new LoginTokenRequest
             {
                 Cookie = cookie,
                 Code = code,
                 Verifier = codeVerifier
-            });
+            }));
+            await pipe.FlushAsync();
+            pipe.Close();
             Close();
         }
     }
