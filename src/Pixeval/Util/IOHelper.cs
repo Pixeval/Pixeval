@@ -120,6 +120,7 @@ namespace Pixeval.Util
         public static async Task<(string filename, Stream content)[]> ReadZipArchiveEntries(Stream zipStream)
         {
             using var archive = new ZipArchive(zipStream, ZipArchiveMode.Read);
+            // Remarks:
             // return the result of Select directly will cause the enumeration to be delayed
             // which will lead the program into ObjectDisposedException since the archive object
             // will be disposed after the execution of ReadZipArchiveEntries

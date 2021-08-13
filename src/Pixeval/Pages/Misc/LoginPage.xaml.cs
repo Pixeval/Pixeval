@@ -8,7 +8,7 @@ using Pixeval.Events;
 using Pixeval.Util;
 using Pixeval.ViewModel;
 
-namespace Pixeval.Pages
+namespace Pixeval.Pages.Misc
 {
     public sealed partial class LoginPage
     {

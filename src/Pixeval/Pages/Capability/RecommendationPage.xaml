@@ -1,4 +1,4 @@
-﻿<util:EnhancedPage x:Class="Pixeval.Pages.BookmarksPage"
+﻿<util:EnhancedPage x:Class="Pixeval.Pages.Capability.RecommendationPage"
                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,7 +7,7 @@
                    xmlns:userControls="using:Pixeval.UserControls"
                    xmlns:util="using:Pixeval.Util"
                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                   Loaded="BookmarksPage_OnLoaded"
+                   Loaded="RecommendsPage_OnLoaded"
                    mc:Ignorable="d">
     <Grid>
         <userControls:IllustrationGridCommandBar HorizontalAlignment="Stretch"
@@ -17,15 +17,15 @@
                 <StackPanel Margin="10,5,0,0"
                             VerticalAlignment="Center"
                             Orientation="Horizontal">
-                    <ComboBox x:Name="PrivacyPolicyComboBox"
-                              x:Uid="/BookmarksPage/PrivacyPolicyComboBox"
-                              SelectionChanged="PrivacyPolicyComboBox_OnSelectionChanged">
+                    <ComboBox x:Name="ModeSelectionComboBox"
+                              x:Uid="/RecommendsPage/ModeSelectionComboBox"
+                              SelectionChanged="ModeSelectionComboBox_OnSelectionChanged">
                         <ComboBox.Items>
-                            <ComboBoxItem x:Name="PrivacyPolicyComboBoxPublicItem"
-                                          x:Uid="/BookmarksPage/PrivacyPolicyComboBoxPublicComboBoxItem"
-                                          Tag="{x:Bind mako:PrivacyPolicy.Public}" />
-                            <ComboBoxItem x:Uid="/BookmarksPage/PrivacyPolicyComboBoxPrivateComboBoxItem"
-                                          Tag="{x:Bind mako:PrivacyPolicy.Private}" />
+                            <ComboBoxItem x:Name="ModeSelectionComboBoxIllustComboBoxItem"
+                                          x:Uid="/RecommendsPage/ModeSelectionComboBoxIllustComboBoxItem"
+                                          Tag="{x:Bind mako:RecommendContentType.Illust}" />
+                            <ComboBoxItem x:Uid="/RecommendsPage/ModeSelectionComboBoxMangaComboBoxItem"
+                                          Tag="{x:Bind mako:RecommendContentType.Manga}" />
                         </ComboBox.Items>
                     </ComboBox>
 

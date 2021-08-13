@@ -3,7 +3,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Pages;
+using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
 using Pixeval.ViewModel;
 
@@ -48,6 +48,10 @@ namespace Pixeval.UserControls
             if (args.BringIntoViewDistanceY <= sender.ActualHeight) // one element ahead
             {
                 _ = context.LoadThumbnailIfRequired();
+            }
+            else if (args.BringIntoViewDistanceY != 0 && context.LoadingThumbnail) // if the image is not loaded yet and has slipped away from the view port
+            {
+                context.LoadingThumbnailCancellationHandle.Cancel();
             }
         }
     }

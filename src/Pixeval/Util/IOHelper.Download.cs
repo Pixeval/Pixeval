@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.IO;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
@@ -20,6 +21,7 @@ namespace Pixeval.Util
 
         private const int MaxBufferSizeInBytes = 16 * 1024 * BlockSizeInBytes; // 16MB
 
+        // Remarks:
         // We maintain an approximately 2:1 of large to small buffer pool size ratio, because
         // the full-sized images may get up to more than 20MB, and the thumbnails are comparatively
         // far more smaller. Let's assume that the thumbnails have an average size of 512K(this is
@@ -56,7 +58,7 @@ namespace Pixeval.Util
             return Functions.TryCatchAsync(async () => Result<Memory<byte>>.OfSuccess(await httpClient.GetByteArrayAsync(url)), e => Task.FromResult(Result<Memory<byte>>.OfFailure(e)));
         }
 
-        // avoid stack trace collections
+        // Remarks: avoid stack trace collections
         private static readonly OperationCanceledException CancellationMark = new();
 
         /// <summary>
@@ -88,8 +90,12 @@ namespace Pixeval.Util
             if (response.Content.Headers.ContentLength is { } responseLength)
             {
                 response.EnsureSuccessStatusCode();
-
+                if (cancellationHandle?.IsCancelled is true)
+                {
+                    return Result<Stream>.OfFailure(CancellationMark);
+                }
                 await using var contentStream = await response.Content.ReadAsStreamAsync();
+                // Remarks:
                 // Most cancellation happens when users are panning the ScrollViewer, where the
                 // cancellation occurs while the `await response.Content.ReadAsStreamAsync()` is 
                 // running, so we check the state right after the completion of that statement
@@ -100,7 +106,8 @@ namespace Pixeval.Util
 
                 var resultStream = (RecyclableMemoryStream) RecyclableMemoryStreamManager.GetStream();
                 int bytesRead, totalRead = 0;
-                while ((bytesRead = await contentStream.ReadAsync(resultStream.GetMemory(1024))) != 0)
+                var buffer = ArrayPool<byte>.Shared.Rent(1024);
+                while ((bytesRead = await contentStream.ReadAsync(buffer)) != 0)
                 {
                     if (cancellationHandle?.IsCancelled is true)
                     {
@@ -108,7 +115,7 @@ namespace Pixeval.Util
                         return Result<Stream>.OfFailure(CancellationMark);
                     }
 
-                    resultStream.Advance(bytesRead);
+                    await resultStream.WriteAsync(buffer, 0, bytesRead);
                     totalRead += bytesRead;
                     progress?.Report(totalRead / (double) responseLength * 100); // percentage, 100 as base
                 }

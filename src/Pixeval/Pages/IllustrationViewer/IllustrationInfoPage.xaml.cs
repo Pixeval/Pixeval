@@ -12,14 +12,22 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Pixeval.ViewModel;
 
-namespace Pixeval.Pages
+namespace Pixeval.Pages.IllustrationViewer
 {
-    public sealed partial class DownloadAndHistoryListPage
+    public sealed partial class IllustrationInfoPage
     {
-        public DownloadAndHistoryListPage()
+        private IllustrationViewerPageViewModel _viewModel = null!;
+
+        public IllustrationInfoPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+        }
+
+        public override void Prepare(NavigationEventArgs e)
+        {
+            _viewModel = (IllustrationViewerPageViewModel) e.Parameter;
         }
     }
 }

@@ -1,22 +1,22 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Mako.Net;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
 using Pixeval.Util;
 
 namespace Pixeval.ViewModel
 {
-    // TODO use each ImageViewerPageViewModel for each Illustration, for spotlight purpose
     public class IllustrationViewerPageViewModel : ObservableObject
     {
-        /// <summary>
-        /// <see cref="illustrations"/> should contains only one item iff the illustration is a single
-        /// otherwise it contains the entire manga data
-        /// </summary>
+        // Remarks:
+        // illustrations should contains only one item iff the illustration is a single
+        // otherwise it contains the entire manga data
         public IllustrationViewerPageViewModel(params IllustrationViewModel[] illustrations)
         {
             Illustrations = illustrations.Select(i => new ImageViewerPageViewModel(i)).ToArray();
             Current = Illustrations[CurrentIndex];
+            _ = LoadUserProfileImage();
         }
 
         public ImageViewerPageViewModel[] Illustrations { get; }
@@ -37,21 +37,31 @@ namespace Pixeval.ViewModel
             set => SetProperty(ref _current, value);
         }
 
+        private ImageSource? _userProfileImageSource;
+
+        // Remarks:
+        // The reason why we don't put UserProfileImageSource into IllustrationViewModel
+        // is because the whole array of Illustrations is just representing the same 
+        // illustration's different manga pages, so all of them have the same illustrator
+        // if the UserProfileImageSource is in IllustrationViewModel and the illustration
+        // itself is a manga then all of the IllustrationViewModel in Illustrations will
+        // request the same user profile image which is pointless and will (inevitably) causing
+        // the waste of system resource
+        public ImageSource? UserProfileImageSource
+        {
+            get => _userProfileImageSource;
+            set => SetProperty(ref _userProfileImageSource, value);
+        }
+
+        public string? IllustratorName => First.Illustration.User?.Name;
+
+        public string? IllustratorUid => First.Illustration.User?.Id.ToString();
+
         public bool IsManga => Illustrations.Length > 1;
 
         public bool IsUgoira => Current.IllustrationViewModel.Illustration.IsUgoira();
 
         public IllustrationViewModel First => Illustrations[0].IllustrationViewModel;
-
-        public Visibility CalculateNextImageButtonVisibility(int index)
-        {
-            return index < Illustrations.Length - 1 ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        public Visibility CalculatePrevImageButtonVisibility(int index)
-        {
-            return index > 0 ? Visibility.Visible : Visibility.Collapsed;
-        }
 
         public ImageViewerPageViewModel Next()
         {
@@ -73,6 +83,16 @@ namespace Pixeval.ViewModel
         public Task RemoveBookmarkAsync()
         {
             return Illustrations[0].IllustrationViewModel.RemoveBookmarkAsync();
+        }
+
+        private async Task LoadUserProfileImage()
+        {
+            if (First.Illustration.User?.ProfileImageUrls?.Medium is { } profileImage)
+            {
+                using var stream = (await App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi)
+                    .DownloadAsIRandomAccessStreamAsync(profileImage)).GetOrThrow();
+                UserProfileImageSource = await stream.GetImageSourceAsync();
+            }
         }
 
         public bool IsBookmarked => Illustrations[0].IllustrationViewModel.IsBookmarked;

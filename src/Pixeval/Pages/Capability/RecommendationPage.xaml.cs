@@ -7,7 +7,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Events;
 using Pixeval.Util;
 
-namespace Pixeval.Pages
+namespace Pixeval.Pages.Capability
 {
     public sealed partial class RecommendationPage
     {

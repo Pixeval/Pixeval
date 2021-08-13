@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:util="using:Pixeval.Util"
              mc:Ignorable="d">
 
     <CommandBar x:Name="CommandBar"
@@ -10,49 +11,24 @@
                 HorizontalContentAlignment="Center"
                 Background="Transparent"
                 DefaultLabelPosition="Right">
-        <AppBarToggleButton x:Uid="/IllustrationGridCommandBar/OpenConditionDialogButton">
-            <AppBarToggleButton.Icon>
-                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
-                          Glyph="&#xE71C;" />
-            </AppBarToggleButton.Icon>
-        </AppBarToggleButton>
+        <AppBarToggleButton x:Uid="/IllustrationGridCommandBar/OpenConditionDialogButton"
+                            Icon="{util:FontIcon Glyph=FilterE71C}" />
         <AppBarToggleButton x:Uid="/IllustrationGridCommandBar/SelectAllToggleButton"
                             Checked="SelectAllToggleButton_OnChecked"
-                            Unchecked="SelectAllToggleButton_OnUnchecked">
-            <AppBarToggleButton.Icon>
-                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
-                          Glyph="&#xE8B3;" />
-            </AppBarToggleButton.Icon>
-        </AppBarToggleButton>
+                            Icon="{util:FontIcon Glyph=SelectAllE8B3}"
+                            Unchecked="SelectAllToggleButton_OnUnchecked" />
         <AppBarSeparator />
         <AppBarButton x:Uid="/IllustrationGridCommandBar/AddAllToBookmarkButton"
-                      Tapped="AddAllToBookmarkButton_OnTapped">
-            <AppBarButton.Icon>
-                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
-                          Glyph="&#xEB51;" />
-            </AppBarButton.Icon>
-        </AppBarButton>
+                      Icon="{util:FontIcon Glyph=HeartEB51}"
+                      Tapped="AddAllToBookmarkButton_OnTapped" />
         <AppBarButton x:Uid="/IllustrationGridCommandBar/SaveAllButton"
-                      Tapped="SaveAllButton_OnTapped">
-            <AppBarButton.Icon>
-                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
-                          Glyph="&#xE74E;" />
-            </AppBarButton.Icon>
-        </AppBarButton>
+                      Icon="{util:FontIcon Glyph=SaveE74E}"
+                      Tapped="SaveAllButton_OnTapped" />
         <AppBarButton x:Uid="/IllustrationGridCommandBar/OpenAllInBrowserButton"
-                      Tapped="OpenAllInBrowserButton_OnTapped">
-            <AppBarButton.Icon>
-                <!--  WebSearch  -->
-                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
-                          Glyph="&#xF6FA;" />
-            </AppBarButton.Icon>
-        </AppBarButton>
+                      Icon="{util:FontIcon Glyph=WebSearchF6FA}"
+                      Tapped="OpenAllInBrowserButton_OnTapped" />
         <AppBarButton x:Uid="/IllustrationGridCommandBar/ShareButton"
-                      Tapped="ShareButton_OnTapped">
-            <AppBarButton.Icon>
-                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
-                          Glyph="&#xE72D;" />
-            </AppBarButton.Icon>
-        </AppBarButton>
+                      Icon="{util:FontIcon Glyph=ShareE72D}"
+                      Tapped="ShareButton_OnTapped" />
     </CommandBar>
 </UserControl>

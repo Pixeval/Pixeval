@@ -28,6 +28,7 @@ namespace Pixeval
             {
                 ApplicationData.Current.LocalSettings.CreateContainer(SessionContainerKey, ApplicationDataCreateDisposition.Always);
             }
+            // Remarks:
             // Keys in the RoamingSettings will be synced through the devices of the same user
             // For more detailed information see https://docs.microsoft.com/en-us/windows/apps/design/app-settings/store-and-retrieve-app-data
             if (!ApplicationData.Current.RoamingSettings.Containers.ContainsKey(ConfigurationContainerKey))

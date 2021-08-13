@@ -8,9 +8,8 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Util;
 using Pixeval.ViewModel;
 
-namespace Pixeval.Pages
+namespace Pixeval.Pages.IllustrationViewer
 {
-    // TODO add context menu and file info and comments section
     public sealed partial class ImageViewerPage
     {
         private ImageViewerPageViewModel _viewModel = null!;
@@ -30,7 +29,7 @@ namespace Pixeval.Pages
         }
 
         private void IllustrationOriginalImage_OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
-        { 
+        {
             var (deltaX, deltaY) = (e.Delta.Translation.X, e.Delta.Translation.Y);
             if (GetZoomFactor() > 1)
             {
@@ -207,4 +206,4 @@ namespace Pixeval.Pages
 
         #endregion
     }
-}                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+}                                                                                                                                                                                                                                                                                                                                                                                                                                               

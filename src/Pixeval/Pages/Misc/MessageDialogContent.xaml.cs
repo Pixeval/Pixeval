@@ -1,4 +1,4 @@
-﻿namespace Pixeval.Pages
+﻿namespace Pixeval.Pages.Misc
 {
 
     public sealed partial class MessageDialogContent

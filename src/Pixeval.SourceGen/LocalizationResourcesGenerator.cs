@@ -54,7 +54,7 @@ namespace Pixeval.SourceGen
                     }
                 }
                 
-                context.AddSource("LocalizationResources", stringBuilder.ToString());
+                context.AddSource("LocalizationResources.g", stringBuilder.ToString());
             }
         }
     }

@@ -1,16 +1,16 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
-using System;
+﻿using System;
 using System.Linq;
 using Windows.System;
 using CommunityToolkit.WinUI.UI.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Pixeval.Util;
 using Pixeval.ViewModel;
 
-namespace Pixeval.Pages
+namespace Pixeval.Pages.Misc
 {
-    // TODO: check for update, language, clear data and temp
+    // TODO: check for update, set language, clear data and temp, set main page default selected tab
     public sealed partial class SettingsPage
     {
         private readonly SettingsPageViewModel _viewModel = new(App.AppSetting);
@@ -28,6 +28,7 @@ namespace Pixeval.Pages
             PageLimitForSearchNumberBoxValueNotInRangeTeachingTip.IsOpen = false;
         }
 
+        // Remarks:
         // We use LostFocus event instead of ValueChanged because the ValueChanged event also
         // occurs when the value is a floating-point number and is about to be rounded down to 
         // fall into the valid range, e.g. 100.3
@@ -142,6 +143,7 @@ namespace Pixeval.Pages
             await Launcher.LaunchUriAsync(new Uri("mailto:decem0730@hotmail.com"));
         }
 
+        // Remarks:
         // We cannot use RadioButtons.SelectionChanged since it always returns null
         // see https://github.com/microsoft/microsoft-ui-xaml/issues/3268
         private void ApplicationThemeRadioButton_OnChecked(object sender, RoutedEventArgs e)
@@ -150,8 +152,7 @@ namespace Pixeval.Pages
         }
 
         #region Helper Functions
-
-        // TODO: use attached property
+        
         private static void NumberBoxCoerceValueInAndShowTeachingTip(object sender, TeachingTip teachingTip, double startInclusive, double endInclusive)
         {
             switch (sender)

@@ -1,13 +1,13 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using CommunityToolkit.WinUI.UI;
 using Mako.Global.Enum;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Events;
 using Pixeval.Util;
 
-namespace Pixeval.Pages
+namespace Pixeval.Pages.Capability
 {
     public sealed partial class BookmarksPage
     {

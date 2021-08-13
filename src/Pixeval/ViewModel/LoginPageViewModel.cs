@@ -24,6 +24,7 @@ namespace Pixeval.ViewModel
 {
     public class LoginPageViewModel : INotifyPropertyChanged
     {
+        // Remarks:
         // A Task that completes when the scan process of the Pixeval.LoginProxy completes
         // Note: the scan process consist of checksum matching and optionally file unzipping, see AppContext.CopyLoginProxyIfRequired()
         private static readonly TaskCompletionSource ScanLoginProxyTask = new();
@@ -240,6 +241,7 @@ namespace Pixeval.ViewModel
 
         public static async Task<Session> AuthCodeToSessionAsync(string code, string verifier, string cookie)
         {
+            // Remarks:
             // HttpClient is designed to be used through whole application lifetime, create and
             // dispose it in a function is a commonly misused anti-pattern, but this function
             // is intended to be called only once (at the start time) during the entire application's

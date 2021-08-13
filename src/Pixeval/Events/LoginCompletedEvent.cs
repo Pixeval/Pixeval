@@ -1,5 +1,6 @@
 ﻿using Mako.Preference;
 using Pixeval.Pages;
+using Pixeval.Pages.Misc;
 
 namespace Pixeval.Events
 {

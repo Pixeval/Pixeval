@@ -15,8 +15,9 @@ using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.ViewModel;
 
-namespace Pixeval.Pages
+namespace Pixeval.Pages.IllustrationViewer
 {
+    // TODO add context menu and file info and comments section
     public sealed partial class IllustrationViewerPage
     {
         private IllustrationViewerPageViewModel _viewModel = null!;
@@ -78,7 +79,7 @@ namespace Pixeval.Pages
                 else
                 {
                     _viewModel.Current.OriginalImageStream!.Seek(0);
-                    // OriginalImageStream won't work here, I don't know why for now
+                    // Remarks: OriginalImageStream won't work here, I don't know why for now
                     package.SetBitmap(RandomAccessStreamReference.CreateFromStream(await GetImage().GetUnderlyingStreamAsync()));
                 }
             });
@@ -91,7 +92,8 @@ namespace Pixeval.Pages
 
         private async void OnDataTransferManagerOnDataRequested(DataTransferManager _, DataRequestedEventArgs args)
         {
-            var vm = _viewModel.Current.IllustrationViewModel; // all the illustrations in _viewModels only differ in different image sources
+            // Remarks: all the illustrations in _viewModels only differ in different image sources
+            var vm = _viewModel.Current.IllustrationViewModel; 
             if (_viewModel.Current.LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true })
             {
                 return;
@@ -242,11 +244,26 @@ namespace Pixeval.Pages
             }
         }
 
+        private void IllustrationInfoAndCommentsNavigationView_OnBackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
+        {
+            IllustrationInfoAndCommentsSplitView.IsPaneOpen = false;
+        }
+
         #region Helper Functions
 
         private Image GetImage()
         {
             return (Image) IllustrationImageShowcaseFrame.FindChild(typeof(Image))!;
+        }
+
+        public Visibility CalculateNextImageButtonVisibility(int index)
+        {
+            return index < _viewModel.Illustrations.Length - 1 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public Visibility CalculatePrevImageButtonVisibility(int index)
+        {
+            return index > 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public static IconElement GetBookmarkButtonIcon(bool isBookmarked)
@@ -272,5 +289,10 @@ namespace Pixeval.Pages
         }
 
         #endregion
+
+        private void IllustrationInfoAndCommentsNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

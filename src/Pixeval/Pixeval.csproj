@@ -37,6 +37,7 @@
     <Content Remove="Assets\Strings\zh-CN\BookmarksPage.resw" />
     <Content Remove="Assets\Strings\zh-CN\DownloadAndHistoryListPage.resw" />
     <Content Remove="Assets\Strings\zh-CN\IllustrationGridCommandBar.resw" />
+    <Content Remove="Assets\Strings\zh-CN\IllustrationInfoPage.resw" />
     <Content Remove="Assets\Strings\zh-CN\IllustrationViewerPage.resw" />
     <Content Remove="Assets\Strings\zh-CN\ImageViewerPage.resw" />
     <Content Remove="Assets\Strings\zh-CN\RecommendsPage.resw" />
@@ -50,6 +51,7 @@
     <None Remove="Pages\DownloadAndHistoryListPage.xaml" />
     <None Remove="Pages\IllustrationGridPage.xaml" />
     <None Remove="Pages\IllustrationViewerPage.xaml" />
+    <None Remove="Pages\IllustrationViewer\IllustrationInfoPage.xaml" />
     <None Remove="Pages\ImageViewerPage.xaml" />
     <None Remove="Pages\RecommendationPage.xaml" />
     <None Remove="Pages\SettingsPage.xaml" />
@@ -106,19 +108,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Pages\SettingsPage.xaml">
+    <Page Update="Pages\Misc\SettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Pages\DownloadAndHistoryListPage.xaml">
+    <Page Update="Pages\Misc\DownloadAndHistoryListPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Pages\IllustrationViewerPage.xaml">
+    <Page Update="Pages\IllustrationViewer\IllustrationViewerPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
@@ -130,7 +132,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Pages\RecommendationPage.xaml">
+    <Page Update="Pages\Capabilities\RecommendationPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
@@ -142,7 +144,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Pages\MessageDialogContent.xaml">
+    <Page Update="Pages\Misc\MessageDialogContent.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
@@ -155,7 +157,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Pages\LoginPage.xaml">
+    <Page Update="Pages\Misc\LoginPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
@@ -175,13 +177,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Pages\ImageViewerPage.xaml">
+    <Page Update="Pages\IllustrationViewer\IllustrationInfoPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Pages\BookmarksPage.xaml">
+    <Page Update="Pages\IllustrationViewer\ImageViewerPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\Capabilities\BookmarksPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

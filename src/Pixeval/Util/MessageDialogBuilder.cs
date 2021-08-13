@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Pages;
+using Pixeval.Pages.Misc;
 
 namespace Pixeval.Util
 {
@@ -84,13 +85,13 @@ namespace Pixeval.Util
             return this;
         }
 
-        public ContentDialog Build(UserControl owner) // the owner argument is a workaround for issue #4870
+        public ContentDialog Build(UserControl owner) // Remarks: the owner argument is a workaround for issue #4870
         {
             _contentDialog.XamlRoot = owner.Content.XamlRoot;
             return _contentDialog;
         }
 
-        public ContentDialog Build(Window owner) // the owner argument is a workaround for issue #4870
+        public ContentDialog Build(Window owner) // Remarks: the owner argument is a workaround for issue #4870
         {
             _contentDialog.XamlRoot = owner.Content.XamlRoot;
             return _contentDialog;

@@ -5,6 +5,8 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Events;
+using Pixeval.Pages.Capability;
+using Pixeval.Pages.Misc;
 using Pixeval.ViewModel;
 
 namespace Pixeval.Pages

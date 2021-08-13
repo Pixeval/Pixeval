@@ -2,14 +2,14 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 using PInvoke;
-using Pixeval.Pages;
+using Pixeval.Pages.Misc;
 using Pixeval.Util;
 
 namespace Pixeval
 {
     public sealed partial class MainWindow : INavigationModeInfo
     {
-        // The parameter of OnNavigatedTo is always NavigationMode.New
+        // Remarks: The parameter of OnNavigatedTo is always NavigationMode.New
         public NavigationMode? NavigationMode { get; private set; }
 
         public NavigationMode? GetNavigationModeAndReset()
