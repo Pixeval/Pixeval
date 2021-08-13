@@ -30,13 +30,13 @@ jobs:
                       ${{ runner.os }}-nuget-
 
             - name: Restore the application
-              run: dotnet restore $env:Solution_Name
+              run: dotnet restore
 
             - name: Build the application
-              run: dotnet build $env:Project_Path -c $env:Configuration
+              run: dotnet build -c $env:Configuration
 
             - name: Publish the application
-              run: dotnet publish $env:Project_Path -p:OutDir="$PWD/publish" -c $env:Configuration
+              run: dotnet publish -p:OutDir="$PWD/publish" -c $env:Configuration
 
             - name: Upload a Build Artifact
               uses: actions/upload-artifact@v2
