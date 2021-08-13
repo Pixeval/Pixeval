@@ -33,7 +33,7 @@ jobs:
               run: dotnet restore
 
             - name: Publish the application
-              run: dotnet publish -p:OutDir="$PWD/publish" -c $env:Configuration
+              run: dotnet publish "src\Pixeval (Package)\Pixeval (Package).wapproj" -p:OutDir="$PWD/publish" -c $env:Configuration
 
             - name: Upload a Build Artifact
               uses: actions/upload-artifact@v2
