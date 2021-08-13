@@ -17,6 +17,10 @@ namespace Pixeval.ViewModel
     {
         public Illustration Illustration { get; }
 
+        public bool IsRestricted => Illustration.IsRestricted();
+
+        public string RestrictionCaption => Illustration.RestrictLevel().GetMetadataOnEnumMember()!;
+
         public string Id => Illustration.Id.ToString();
 
         public int Bookmark => Illustration.TotalBookmarks;
@@ -52,6 +56,14 @@ namespace Pixeval.ViewModel
             set => SetProperty(ref _thumbnailSource, value);
         }
 
+        private ImageSource? _originalImageSource;
+
+        public ImageSource? OriginalImageSource
+        {
+            get => _originalImageSource;
+            set => SetProperty(ref _originalImageSource, value);
+        }
+
         public CancellationHandle LoadingThumbnailCancellationHandle { get; }
 
         public bool LoadingThumbnail { get; private set; }
@@ -70,25 +82,28 @@ namespace Pixeval.ViewModel
             {
                 return;
             }
-            if (Illustration.GetThumbnailUrl(ThumbnailUrlOptions.Medium) is { } url)
+            LoadingThumbnail = true;
+            using var ras = await GetThumbnail(ThumbnailUrlOption.Medium);
+            ThumbnailSource = ras == null ? null : await ras.GetImageSourceAsync();
+            LoadingThumbnail = false;
+        }
+
+        public async Task<IRandomAccessStream?> GetThumbnail(ThumbnailUrlOption thumbnailUrlOptions)
+        {
+            if (Illustration.GetThumbnailUrl(thumbnailUrlOptions) is { } url)
             {
-                LoadingThumbnail = true;
-                var ras = await App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle) switch
+                return await App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle) switch
                 {
-                    Result<IRandomAccessStream>.Success (var stream) => stream,
-                    Result<IRandomAccessStream>.Failure (OperationCanceledException) => Functions.Block<IRandomAccessStream?>(() =>
+                    Result<IRandomAccessStream>.Success(var stream) => stream,
+                    Result<IRandomAccessStream>.Failure(OperationCanceledException) => Functions.Block<IRandomAccessStream?>(() =>
                     {
                         LoadingThumbnailCancellationHandle.Reset();
                         return null;
                     }),
                     var other => other.GetOrThrow()
                 };
-                ThumbnailSource = ras == null ? null : await ras.GetImageSourceAsync();
-                LoadingThumbnail = false;
-                return;
             }
-
-            ThumbnailSource = UIHelper.GetImageSourceFromUriRelativeToAssetsImageFolder("image-not-available.png");
+            return await AppContext.GetAssetStreamAsync("Images/image-not-available.png");
         }
 
         public Task RemoveBookmarkAsync()
@@ -109,13 +124,13 @@ namespace Pixeval.ViewModel
             if (Illustration.IsUgoira())
             {
                 sb.AppendLine();
-                sb.AppendLine("这是一张动图");
+                sb.Append("这是一张动图");
             }
 
             if (Illustration.IsManga())
             {
                 sb.AppendLine();
-                sb.AppendLine($"这是一副图集，内含{Illustration.PageCount}张图片");
+                sb.Append($"这是一副图集，内含{Illustration.PageCount}张图片");
             }
 
             return sb.ToString();

@@ -10,6 +10,7 @@ using Pixeval.ViewModel;
 
 namespace Pixeval.Pages
 {
+    // TODO add context menu and file info and comments section
     public sealed partial class ImageViewerPage
     {
         private ImageViewerPageViewModel _viewModel = null!;
@@ -23,9 +24,8 @@ namespace Pixeval.Pages
             InitializeComponent();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        public override void Prepare(NavigationEventArgs e)
         {
-            base.OnNavigatedTo(e);
             _viewModel = (ImageViewerPageViewModel) e.Parameter;
         }
 
@@ -39,13 +39,13 @@ namespace Pixeval.Pages
                 var renderedImageHeight = IllustrationOriginalImage.ActualHeight * GetZoomFactor();
                 var containerWidth = IllustrationOriginalImageContainer.ActualWidth;
                 var containerHeight = IllustrationOriginalImageContainer.ActualHeight;
-                var pos = IllustrationOriginalImage.TransformToVisual(IllustrationOriginalImageContainer).TransformPoint(new Point(0, 0));
+                var imagePos = IllustrationOriginalImage.TransformToVisual(IllustrationOriginalImageContainer).TransformPoint(new Point(0, 0));
                 if (renderedImageWidth > containerWidth)
                 {
                     switch (deltaX)
                     {
-                        case < 0 when pos.X > -(renderedImageWidth - containerWidth) - overflowPermittedInPixel:
-                        case > 0 when pos.X < overflowPermittedInPixel:
+                        case < 0 when imagePos.X > -(renderedImageWidth - containerWidth) - overflowPermittedInPixel:
+                        case > 0 when imagePos.X < overflowPermittedInPixel:
                             IllustrationOriginalImageRenderTransform.TranslateX += deltaX;
                             break;
                     }
@@ -55,8 +55,8 @@ namespace Pixeval.Pages
                 {
                     switch (deltaY)
                     {
-                        case < 0 when pos.Y > -(renderedImageHeight - containerHeight) - overflowPermittedInPixel:
-                        case > 0 when pos.Y < overflowPermittedInPixel:
+                        case < 0 when imagePos.Y > -(renderedImageHeight - containerHeight) - overflowPermittedInPixel:
+                        case > 0 when imagePos.Y < overflowPermittedInPixel:
                             IllustrationOriginalImageRenderTransform.TranslateY += deltaY;
                             break;
                     }
@@ -120,7 +120,7 @@ namespace Pixeval.Pages
             }
             else
             {
-                ImageScaledOut200PercentStoryboard.Begin();
+                ImageScaledIn200PercentStoryboard.Begin();
                 _tappedScaled.Inverse();
             }
         }
@@ -132,9 +132,9 @@ namespace Pixeval.Pages
             IllustrationOriginalImageRenderTransform.ScaleY = 1;
         }
 
-        private void ImageScaledOut200PercentStoryboard_OnCompleted(object? sender, object e)
+        private void ImageScaledIn200PercentStoryboard_OnCompleted(object? sender, object e)
         {
-            ImageScaledOut200PercentStoryboard.Stop();
+            ImageScaledIn200PercentStoryboard.Stop();
             IllustrationOriginalImageRenderTransform.ScaleX = 2;
             IllustrationOriginalImageRenderTransform.ScaleY = 2;
         }
@@ -166,7 +166,7 @@ namespace Pixeval.Pages
             return IllustrationOriginalImageRenderTransform.ScaleX;
         }
 
-        private void Zoom(double delta)
+        public void Zoom(double delta)
         {
             if (IllustrationOriginalImageRenderTransform.TranslateX != 0)
             {
@@ -193,6 +193,12 @@ namespace Pixeval.Pages
             {
                 case < 0 when factor > MinZoomFactor:
                 case > 0 when factor < MaxZoomFactor:
+                    delta = (factor + delta) switch
+                    {
+                        > MaxZoomFactor => MaxZoomFactor - factor,
+                        < MinZoomFactor => -(factor - MinZoomFactor),
+                        _ => delta
+                    };
                     IllustrationOriginalImageRenderTransform.ScaleX += delta;
                     IllustrationOriginalImageRenderTransform.ScaleY += delta;
                     break;

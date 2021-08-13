@@ -7,7 +7,7 @@ namespace Pixeval.Util
     /// A cancellation helper that prevents the default behaviors of <see cref="CancellationToken"/>, which is,
     /// throws an <see cref="OperationCanceledException"/>
     /// </summary>
-    public struct CancellationHandle
+    public class CancellationHandle
     {
         private int _isCancelled;
 

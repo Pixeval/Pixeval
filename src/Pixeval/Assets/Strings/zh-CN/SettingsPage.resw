@@ -154,6 +154,9 @@
   <data name="DisableSNIBypassToggleSwitch.Header" xml:space="preserve">
     <value>禁用域前置直连</value>
   </data>
+  <data name="DisplayTeachingTipWhenGeneratingAppLinkToggleSwitch.Header" xml:space="preserve">
+    <value>生成应用页面链接时显示使用方法提示</value>
+  </data>
   <data name="DonatingMeHyperlinkButton.Content" xml:space="preserve">
     <value>支持作者</value>
   </data>
@@ -202,6 +205,9 @@
   <data name="JoinFeedbackGroupHyperlinkButton.Content" xml:space="preserve">
     <value>加入反馈群聊</value>
   </data>
+  <data name="LogoutButtonContentTextBlock.Text" xml:space="preserve">
+    <value>登出</value>
+  </data>
   <data name="PageLimitForSearchInfoBar.Message" xml:space="preserve">
     <value>在使用侧边导航栏进行关键字搜索时，最多会搜索该设置项指定的页数，其中对于插画作品，每页包含30条结果，对于小说</value>
   </data>
@@ -237,6 +243,24 @@
   </data>
   <data name="PageLimitForSpotlightTextBlock.Text" xml:space="preserve">
     <value>特辑搜索页数限制</value>
+  </data>
+  <data name="RecommendsItemsLimitInfoBar.Message" xml:space="preserve">
+    <value>该选项指示在使用Pixeval的“每日推荐”一栏时搜索作品的数量限制</value>
+  </data>
+  <data name="RecommendsItemsLimitInfoBar.Title" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="RecommendsItemsLimitNumberBox.PlaceholderText" xml:space="preserve">
+    <value>作品数限制</value>
+  </data>
+  <data name="RecommendsItemsLimitNumberBoxValueNotInRangeTeachingTip.Subtitle" xml:space="preserve">
+    <value>值必须位于[500,1500]之间</value>
+  </data>
+  <data name="RecommendsItemsLimitNumberBoxValueNotInRangeTeachingTip.Title" xml:space="preserve">
+    <value>输入的值不合法</value>
+  </data>
+  <data name="RecommendsItemsLimitTextBlock.Text" xml:space="preserve">
+    <value>每日推荐作品数限制</value>
   </data>
   <data name="SearchKeywordMatchOptionComboBox.PlaceholderText" xml:space="preserve">
     <value>匹配模式</value>

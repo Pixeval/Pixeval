@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Channels;
 using System.Threading.Tasks;
 using Mako.Util;
 
@@ -16,26 +13,12 @@ namespace Pixeval.Events
     {
         static EventChannel()
         {
-            Default = CreateStarted();
+            Default = new EventChannel();
         }
 
         public static EventChannel Default;
 
-        public static EventChannel CreateStarted()
-        {
-            var eventChannel = new EventChannel();
-            eventChannel.Start();
-            return eventChannel;
-        }
-
-        public IAsyncEnumerable<T> OfType<T>() where T : IEvent
-        {
-            return this.Where(t => t is T).Select(t => (T) t);
-        }
-
         private readonly ConcurrentDictionary<Type, IList<Action<IEvent>>> _registeredSubscribers = new();
-
-        private readonly Channel<IEvent> _eventChannel = Channel.CreateUnbounded<IEvent>();
 
         public void Subscribe<T>(Action<T> eventHandler) where T : IEvent
         {
@@ -65,62 +48,12 @@ namespace Pixeval.Events
             _registeredSubscribers[typeof(T)] = new List<Action<IEvent>> {handler};
         }
 
-        public ValueTask PublishAsync<T>(T eventObj) where T : IEvent
+        public void Publish<T>(T eventObj) where T : IEvent
         {
-            return _eventChannel.Writer.WriteAsync(eventObj);
-        }
-
-        public void Start()
-        {
-            // Start a event loop that runs at background
-            Task.Factory.StartNew(async () =>
+            if (_registeredSubscribers.TryGetValue(eventObj.GetType(), out var list))
             {
-                var reader = _eventChannel.Reader;
-                while (!reader.Completion.IsCompleted)
-                {
-                    var evt = await reader.ReadAsync();
-                    if (_registeredSubscribers.TryGetValue(evt.GetType(), out var list))
-                    {
-                        list.ForEach(action => action(evt));
-                    }
-                }
-            }, TaskCreationOptions.LongRunning);
-        }
-
-        public void Close()
-        {
-            _eventChannel.Writer.Complete();
-        }
-
-        public IAsyncEnumerator<IEvent> GetAsyncEnumerator(CancellationToken cancellationToken)
-        {
-            return new EventChannelAsyncEnumerator(_eventChannel)!;
-        }
-
-        public class EventChannelAsyncEnumerator : IAsyncEnumerator<IEvent?>
-        {
-            private readonly Channel<IEvent> _eventChannel;
-
-            private bool _hasNext = true;
-
-            public EventChannelAsyncEnumerator(Channel<IEvent> eventChannel)
-            {
-                _eventChannel = eventChannel;
-                _eventChannel.Reader.Completion.ContinueWith(_ => _hasNext = false);
+                list.ForEach(action => action(eventObj));
             }
-
-            public ValueTask DisposeAsync()
-            {
-                return ValueTask.CompletedTask;
-            }
-
-            public async ValueTask<bool> MoveNextAsync()
-            {
-                Current = await _eventChannel.Reader.ReadAsync();
-                return _hasNext;
-            }
-
-            public IEvent? Current { get; private set; }
         }
     }
 }

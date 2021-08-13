@@ -10,7 +10,7 @@ using Pixeval.ViewModel;
 
 namespace Pixeval.Pages
 {
-    // TODO add settings entry for TargetFilter
+    // TODO: check for update, language, clear data and temp
     public sealed partial class SettingsPage
     {
         private readonly SettingsPageViewModel _viewModel = new(App.AppSetting);
@@ -66,6 +66,16 @@ namespace Pixeval.Pages
             NumberBoxCoerceValueInAndShowTeachingTip(sender, PageLimitForSpotlightNumberBoxValueNotInRangeTeachingTip, 1, 100);
         }
 
+        private void RecommendsItemsLimitNumberBox_OnGotFocus(object sender, RoutedEventArgs e)
+        {
+            RecommendsItemsLimitNumberBoxValueNotInRangeTeachingTip.IsOpen = false;
+        }
+
+        private void RecommendsItemsLimitNumberBox_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            NumberBoxCoerceValueInAndShowTeachingTip(sender, RecommendsItemsLimitNumberBoxValueNotInRangeTeachingTip, 500, 1500);
+        }
+
         #endregion
 
         #region Application Theme Switch
@@ -79,20 +89,6 @@ namespace Pixeval.Pages
         #endregion
 
         #region Sensitive Tags
-
-        private void SwitchSensitiveContentFilteringToggleSwitch_OnToggled(object sender, RoutedEventArgs e)
-        {
-            var toggleSwitch = (ToggleSwitch)sender;
-            if (toggleSwitch.IsOn)
-            {
-                _viewModel.AddR18Filtering();
-            }
-            else
-            {
-                _viewModel.RemoveR18Filtering();
-            }
-        }
-
         private void SwitchSensitiveContentFilteringInfoBarActionButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             SettingsPageRootScrollViewer.ScrollToElement(SensitiveTagTokenizingTextBox);

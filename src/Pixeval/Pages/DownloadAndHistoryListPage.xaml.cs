@@ -15,9 +15,9 @@ using Windows.Foundation.Collections;
 
 namespace Pixeval.Pages
 {
-    public sealed partial class DownloadListPage : Page
+    public sealed partial class DownloadAndHistoryListPage
     {
-        public DownloadListPage()
+        public DownloadAndHistoryListPage()
         {
             this.InitializeComponent();
         }

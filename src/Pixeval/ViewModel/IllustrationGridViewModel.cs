@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.WinUI.UI;
 using Mako.Engine;
 using Mako.Model;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
@@ -16,9 +17,11 @@ namespace Pixeval.ViewModel
 
         public IFetchEngine<Illustration?>? FetchEngine { get; set; }
 
-        public ConditionalObservableCollection<IllustrationViewModel> Illustrations { get; private set; }
+        public ObservableCollection<IllustrationViewModel> Illustrations { get; }
 
-        public ConditionalObservableCollection<IllustrationViewModel> SelectedIllustrations { get; private set; }
+        public AdvancedCollectionView IllustrationsView { get; }
+
+        public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; }
 
         private bool _isAnyIllustrationSelected;
 
@@ -30,19 +33,21 @@ namespace Pixeval.ViewModel
 
         public IllustrationGridViewModel()
         {
-            SelectedIllustrations = new ConditionalObservableCollection<IllustrationViewModel>();
-            Illustrations = new ConditionalObservableCollection<IllustrationViewModel>();
+            SelectedIllustrations = new ObservableCollection<IllustrationViewModel>();
+            Illustrations = new ObservableCollection<IllustrationViewModel>();
+            IllustrationsView = new AdvancedCollectionView(Illustrations);
         }
 
-        public async Task Fill(Action<ObservableCollection<IllustrationViewModel>, IllustrationViewModel> insertAction)
+        public async Task Fill(int? itemsLimit = null)
         {
             var added = new HashSet<long>(); 
             await foreach (var illustration in FetchEngine!)
             {
                 if (illustration is not null && !added.Contains(illustration.Id) /* Check for the repetition */)
                 {
-                    if (added.Count >= 500)
+                    if (added.Count >= itemsLimit)
                     {
+                        FetchEngine.Cancel();
                         break;
                     }
                     added.Add(illustration.Id); // add to the already-added-illustration list
@@ -60,33 +65,49 @@ namespace Pixeval.ViewModel
                         // Update the IsAnyIllustrationSelected Property if any of the viewModel's IsSelected property changes
                         IsAnyIllustrationSelected = SelectedIllustrations.Any();
                     };
-                    insertAction(Illustrations, viewModel);
+                    IllustrationsView.Add(viewModel);
                 }
             }
         }
 
-        public async Task Fill(IFetchEngine<Illustration?>? newEngine)
+        public async Task Fill(IFetchEngine<Illustration?>? newEngine, int? itemsLimit = null)
         {
             FetchEngine = newEngine;
-            await Fill((models, model) => models.Add(model));
+            await Fill(itemsLimit);
         }
 
-        public async Task ResetAndFill(IFetchEngine<Illustration?>? newEngine, Action<ObservableCollection<IllustrationViewModel>, IllustrationViewModel>? insertAction = null)
+        public async Task ResetAndFill(IFetchEngine<Illustration?>? newEngine, int? itemLimit = null)
         {
             FetchEngine?.EngineHandle.Cancel();
             FetchEngine = newEngine;
             lock (Lock)
             {
-                Illustrations.Clear();
+                IllustrationsView.Clear();
                 SelectedIllustrations.Clear();
             }
-            await Fill(insertAction ?? ((models, model) => models.Add(model)));
+            await Fill(itemLimit);
         }
 
         public void Dispose()
         {
-            SelectedIllustrations = new ConditionalObservableCollection<IllustrationViewModel>();
-            Illustrations = new ConditionalObservableCollection<IllustrationViewModel>();
+            SelectedIllustrations.Clear();
+            IllustrationsView.Clear();
+        }
+
+        public void SetSortDescription(SortDescription description)
+        {
+            if (!IllustrationsView.SortDescriptions.Any())
+            {
+                IllustrationsView.SortDescriptions.Add(description);
+                return;
+            }
+
+            IllustrationsView.SortDescriptions[0] = description;
+        }
+
+        public void ClearSortDescription(SortDescription description)
+        {
+            IllustrationsView.SortDescriptions.Clear();
         }
     }
 }

@@ -44,6 +44,10 @@ namespace Pixeval.SourceGen
                             foreach (var node in elements)
                             {
                                 var name = node.GetAttribute("name");
+                                if (name.Contains("[")) // useful though not elegant
+                                {
+                                    continue;
+                                }
                                 classBuilder.AppendLine(@$"public static readonly string {Regex.Replace(name, "\\.|\\:|\\[|\\]", string.Empty)} = ResourceLoader.GetString(""{name.Replace('.', '/')}"");");
                             }
                         }

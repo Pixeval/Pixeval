@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using CommunityToolkit.WinUI;
 using Mako;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -59,24 +60,31 @@ namespace Pixeval
 
         private void RegisterUnhandledExceptionHandler()
         {
-            UnhandledException += (_, args) =>
+            UnhandledException += async (_, args) =>
             {
                 args.Handled = true;
-                UncaughtExceptionHandler(args.Exception);
+                await UncaughtExceptionHandler(args.Exception);
             };
 
-            TaskScheduler.UnobservedTaskException += (_, args) =>
+            TaskScheduler.UnobservedTaskException += async (_, args) =>
             {
                 args.SetObserved();
-                UncaughtExceptionHandler(args.Exception);
+                await Window.DispatcherQueue.EnqueueAsync(async () => await UncaughtExceptionHandler(args.Exception));
             };
 
-            AppDomain.CurrentDomain.UnhandledException += (_, _) =>
+            AppDomain.CurrentDomain.UnhandledException += async (_, args) =>
             {
-                Debugger.Break();
+                if (args.ExceptionObject is Exception e)
+                {
+                    await UncaughtExceptionHandler(e);
+                }
+                else
+                {
+                    await ExitWithPushedNotification();
+                }
             };
 
-            static async void UncaughtExceptionHandler(Exception e)
+            static async Task UncaughtExceptionHandler(Exception e)
             {
                 await MessageDialogBuilder.CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
                 await ExitWithPushedNotification();
@@ -89,6 +97,7 @@ namespace Pixeval
             Window = new MainWindow();
             Window.SetWindowSize(800, 600);
             Window.Activate();
+            await AppContext.ClearTemporaryDirectory();
         }
 
         /// <summary>
@@ -98,7 +107,7 @@ namespace Pixeval
         /// <returns></returns>
         public static async Task ExitWithPushedNotification()
         {
-            await EventChannel.Default.PublishAsync(new ApplicationExitingEvent());
+            EventChannel.Default.Publish(new ApplicationExitingEvent());
             await Task.Delay(200); // well...just wait a second to let those subscribers handle the event
         }
     }

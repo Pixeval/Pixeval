@@ -1,13 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CommunityToolkit.WinUI.UI;
+using Mako.Engine;
 using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.ViewModel;
 
 namespace Pixeval.Util
 {
-    public enum ThumbnailUrlOptions
+    public enum XRestrictLevel
+    {
+        [Metadata("")]
+        Ordinary = 0,
+
+        [Metadata("R-18")]
+        R18 = 1, 
+
+        [Metadata("R-18G")]
+        R18G = 2
+    }
+
+    public enum ThumbnailUrlOption
     {
         Large, Medium, SquareMedium
     }
@@ -55,7 +69,7 @@ namespace Pixeval.Util
     {
         /// <summary>
         /// The <see cref="IllustrationSortOption"/> is welded into Mako, we cannot add <see cref="LocalizedResource"/> on its fields
-        /// so an alternative way is chosen
+        /// so an alternative is chosen
         /// And we cannot use generic since the xaml compiler will refuse to compile
         /// </summary>
         public static readonly IEnumerable<IllustrationSortOptionWrapper> AvailableIllustrationSortOptions = new IllustrationSortOptionWrapper[]
@@ -87,20 +101,20 @@ namespace Pixeval.Util
             return AvailableIllustrationSortOptions.First(it => it.Value == App.AppSetting.DefaultSortOption);
         }
 
-        public static string? GetThumbnailUrl(this Illustration illustration, ThumbnailUrlOptions option)
+        public static string? GetThumbnailUrl(this Illustration illustration, ThumbnailUrlOption option)
         {
             return option switch
             {
-                ThumbnailUrlOptions.Large        => illustration.ImageUrls?.Large,
-                ThumbnailUrlOptions.Medium       => illustration.ImageUrls?.Medium,
-                ThumbnailUrlOptions.SquareMedium => illustration.ImageUrls?.SquareMedium,
+                ThumbnailUrlOption.Large        => illustration.ImageUrls?.Large,
+                ThumbnailUrlOption.Medium       => illustration.ImageUrls?.Medium,
+                ThumbnailUrlOption.SquareMedium => illustration.ImageUrls?.SquareMedium,
                 _                                => throw new ArgumentOutOfRangeException(nameof(option), option, null)
             };
         }
 
-        public static string GetIllustrationWebUrl(string id)
+        public static Uri GetIllustrationWebUri(string id)
         {
-            return $"https://www.pixiv.net/artworks/{id}";
+            return new($"https://www.pixiv.net/artworks/{id}");
         }
 
         public static string? GetOriginalUrl(this Illustration illustration)
@@ -134,13 +148,13 @@ namespace Pixeval.Util
             return key1.CompareTo(key2);
         }
 
-        public static Action<IList<IllustrationViewModel>, IllustrationViewModel?>? Insert(IllustrationSortOption sortOption)
+        public static SortDescription? GetSortDescriptionForIllustration(IllustrationSortOption sortOption)
         {
             return sortOption switch
             {
-                IllustrationSortOption.PublishDateAscending => (models, model) => models!.AddSorted(model, (m1, m2) => m1.Compare(m2, m => m.PublishDate)),
-                IllustrationSortOption.PublishDateDescending => (models, model) => models!.AddSorted(model, (m1, m2) => -m1.Compare(m2, m => m.PublishDate)),
-                IllustrationSortOption.PopularityDescending => (models, model) => models!.AddSorted(model, (m1, m2) => -m1.Compare(m2, m => m.Bookmark)),
+                IllustrationSortOption.PopularityDescending => new SortDescription(SortDirection.Descending, IllustrationBookmarkComparer.Instance),
+                IllustrationSortOption.PublishDateAscending => new SortDescription(SortDirection.Ascending, IllustrationViewModelPublishDateComparer.Instance),
+                IllustrationSortOption.PublishDateDescending => new SortDescription(SortDirection.Descending, IllustrationViewModelPublishDateComparer.Instance),
                 IllustrationSortOption.DoNotSort => null,
                 _ => throw new ArgumentOutOfRangeException(nameof(sortOption), sortOption, null)
             };
@@ -154,6 +168,21 @@ namespace Pixeval.Util
         public static bool IsManga(this Illustration illustration)
         {
             return illustration.PageCount > 1;
+        }
+
+        public static void Cancel<T>(this IFetchEngine<T> engine)
+        {
+            engine.EngineHandle.Cancel();
+        }
+
+        public static bool IsRestricted(this Illustration illustration)
+        {
+            return illustration.XRestrict != 0;
+        }
+
+        public static XRestrictLevel RestrictLevel(this Illustration illustration)
+        {
+            return (XRestrictLevel) illustration.XRestrict;
         }
     }
 }

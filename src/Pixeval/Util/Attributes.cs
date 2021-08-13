@@ -43,7 +43,7 @@ namespace Pixeval.Util
         public static string? GetLocalizedResources(this Enum e)
         {
             var attribute = e.GetCustomAttribute<LocalizedResource>();
-            return attribute?.ResourceLoader?.GetField(attribute?.Key ?? string.Empty)?.GetValue(null) as string;
+            return attribute?.ResourceLoader.GetField(attribute.Key)?.GetValue(null) as string;
         }
     }
 }

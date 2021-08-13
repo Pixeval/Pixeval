@@ -2,7 +2,6 @@
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Mako.Net;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Events;
 using Pixeval.Util;
@@ -13,7 +12,7 @@ namespace Pixeval.ViewModel
     {
         public MainPageViewModel()
         {
-            EventChannel.Default.SubscribeOnUIThread<LoginCompletedEvent>(DownloadAndSetAvatar);
+            EventChannel.Default.Subscribe<LoginCompletedEvent>(DownloadAndSetAvatar);
         }
 
         public double MainPageRootNavigationViewOpenPanelLength => 250;
@@ -39,9 +38,9 @@ namespace Pixeval.ViewModel
             var makoClient = App.MakoClient!;
             // get byte array of avatar
             // and set to the bitmap image
-            var imageStream = await makoClient.GetMakoHttpClient(MakoApiKind.ImageApi)
-                .DownloadAsIRandomAccessStreamAsync(makoClient.Session.AvatarUrl!);
-            Avatar = await imageStream.GetOrThrow().GetImageSourceAsync();
+            using var imageStream = (await makoClient.GetMakoHttpClient(MakoApiKind.ImageApi)
+                .DownloadAsIRandomAccessStreamAsync(makoClient.Session.AvatarUrl!)).GetOrThrow();
+            Avatar = await imageStream.GetImageSourceAsync();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Runtime;
 using Mako.Global.Enum;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Events;
 using Pixeval.ViewModel;
 
 namespace Pixeval.Pages
@@ -22,7 +22,7 @@ namespace Pixeval.Pages
             Parameter = parameter;
         }
 
-        public static readonly MainPageRootNavigationViewTag Recommends = new(typeof(RecommendsPage), App.MakoClient.Recommends(targetFilter: App.AppSetting.TargetFilter));
+        public static readonly MainPageRootNavigationViewTag Recommends = new(typeof(RecommendationPage), App.MakoClient.Recommends(targetFilter: App.AppSetting.TargetFilter));
         
         public static readonly MainPageRootNavigationViewTag Bookmarks = new(typeof(BookmarksPage), App.MakoClient.Bookmarks(App.Uid!, PrivacyPolicy.Public, App.AppSetting.TargetFilter));
 
@@ -39,11 +39,6 @@ namespace Pixeval.Pages
             DataContext = _viewModel;
         }
 
-        private void MainPageRootNavigationView_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            SetMainPageRootNavigationViewItem(RecommendationTab);
-        }
-
         private void MainPageRootNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
             if (args.SelectedItem is NavigationViewItem {Tag: MainPageRootNavigationViewTag tag})
@@ -54,17 +49,9 @@ namespace Pixeval.Pages
 
         private void MainPageRootFrame_OnNavigated(object sender, NavigationEventArgs e)
         {
+            EventChannel.Default.Publish(new MainPageFrameNavigatingEvent(this));
             GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect();
-        }
-
-        #region Helper Functions
-
-        private void SetMainPageRootNavigationViewItem(NavigationViewItem navigationViewItem)
-        {
-            MainPageRootNavigationView.SelectedItem = navigationViewItem;
-        }
-
-        #endregion
+        } 
     }
 }
