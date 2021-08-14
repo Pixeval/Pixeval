@@ -9,6 +9,7 @@ using Mako.Net;
 using Mako.Util;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media;
+using Pixeval.Options;
 using Pixeval.Util;
 using Functions = Pixeval.Util.Functions;
 using SoftwareBitmapSource = Microsoft.UI.Xaml.Media.Imaging.SoftwareBitmapSource;

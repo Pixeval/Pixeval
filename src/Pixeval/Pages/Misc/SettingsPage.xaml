@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:numberFormatting="using:Windows.Globalization.NumberFormatting"
+      xmlns:options="using:Pixeval.Options"
       xmlns:pixeval="using:Pixeval"
       xmlns:system="using:System"
       xmlns:ui="using:CommunityToolkit.WinUI.UI"
@@ -162,10 +163,10 @@
                 <ComboBox x:Name="DefaultSortOptionComboBox"
                           x:Uid="/Misc/SortOptionComboBox"
                           Margin="{StaticResource StackLayoutEntryPadding}"
-                          ItemsSource="{x:Bind util:MakoHelper.AvailableIllustrationSortOptions}"
+                          ItemsSource="{x:Bind options:IllustrationSortOptionWrapper.Available}"
                           SelectedItem="{x:Bind _viewModel.BoxSortOption(), BindBack=_viewModel.UnboxSortOption, Mode=TwoWay}">
                     <ComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="util:IllustrationSortOptionWrapper">
+                        <DataTemplate x:DataType="options:IllustrationSortOptionWrapper">
                             <TextBlock Text="{x:Bind LocalizedString}" />
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
@@ -178,10 +179,10 @@
                 <ComboBox x:Name="SearchKeywordMatchOptionComboBox"
                           x:Uid="/SettingsPage/SearchKeywordMatchOptionComboBox"
                           Margin="{StaticResource StackLayoutEntryPadding}"
-                          ItemsSource="{x:Bind util:MakoHelper.AvailableSearchTagMatchOption}"
+                          ItemsSource="{x:Bind options:SearchTagMatchOptionWrapper.Available}"
                           SelectedItem="{x:Bind _viewModel.BoxSearchTagMatchOption(), BindBack=_viewModel.UnboxSearchTagMatchOption, Mode=TwoWay}">
                     <ComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="util:SearchTagMatchOptionWrapper">
+                        <DataTemplate x:DataType="options:SearchTagMatchOptionWrapper">
                             <TextBlock Text="{x:Bind LocalizedString}" />
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
@@ -194,10 +195,10 @@
                 <ComboBox x:Name="TargetFilterComboBox"
                           x:Uid="/SettingsPage/TargetFilterComboBox"
                           Margin="{StaticResource StackLayoutEntryPadding}"
-                          ItemsSource="{x:Bind util:MakoHelper.AvailableTargetFilters}"
+                          ItemsSource="{x:Bind options:TargetFilterWrapper.Available}"
                           SelectedItem="{x:Bind _viewModel.BoxTargetFilter(), BindBack=_viewModel.UnboxTargetFilter, Mode=TwoWay}">
                     <ComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="util:TargetFilterWrapper">
+                        <DataTemplate x:DataType="options:TargetFilterWrapper">
                             <TextBlock Text="{x:Bind LocalizedString}" />
                         </DataTemplate>
                     </ComboBox.ItemTemplate>

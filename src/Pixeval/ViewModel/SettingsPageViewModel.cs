@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Mako.Global.Enum;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Pixeval.Options;
 using Pixeval.Util;
 
 namespace Pixeval.ViewModel
@@ -20,7 +21,7 @@ namespace Pixeval.ViewModel
 
         public IllustrationSortOptionWrapper BoxSortOption()
         {
-            return MakoHelper.AvailableIllustrationSortOptions.First(s => s.Value == DefaultSortOption);
+            return IllustrationSortOptionWrapper.Available.First(s => s.Value == DefaultSortOption);
         }
 
         public void UnboxSortOption(object wrapper)
@@ -30,7 +31,7 @@ namespace Pixeval.ViewModel
 
         public SearchTagMatchOptionWrapper BoxSearchTagMatchOption()
         {
-            return MakoHelper.AvailableSearchTagMatchOption.First(s => s.Value == TagMatchOption);
+            return SearchTagMatchOptionWrapper.Available.First(s => s.Value == TagMatchOption);
         }
 
         public void UnboxSearchTagMatchOption(object wrapper)
@@ -40,7 +41,7 @@ namespace Pixeval.ViewModel
 
         public TargetFilterWrapper BoxTargetFilter()
         {
-            return MakoHelper.AvailableTargetFilters.First(s => s.Value == TargetFilter);
+            return TargetFilterWrapper.Available.First(s => s.Value == TargetFilter);
         }
 
         public void UnboxTargetFilter(object wrapper)

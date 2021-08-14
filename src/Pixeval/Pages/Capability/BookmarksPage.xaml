@@ -4,6 +4,7 @@
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                    xmlns:mako="using:Mako.Global.Enum"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:options="using:Pixeval.Options"
                    xmlns:userControls="using:Pixeval.UserControls"
                    xmlns:util="using:Pixeval.Util"
                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -32,10 +33,10 @@
                     <ComboBox x:Name="SortOptionComboBox"
                               x:Uid="/Misc/SortOptionComboBox"
                               Margin="10,0,0,0"
-                              ItemsSource="{x:Bind util:MakoHelper.AvailableIllustrationSortOptions}"
+                              ItemsSource="{x:Bind options:IllustrationSortOptionWrapper.Available}"
                               SelectionChanged="SortOptionComboBox_OnSelectionChanged">
                         <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="util:IllustrationSortOptionWrapper">
+                            <DataTemplate x:DataType="options:IllustrationSortOptionWrapper">
                                 <TextBlock Text="{x:Bind LocalizedString}" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>

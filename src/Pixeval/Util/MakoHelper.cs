@@ -5,100 +5,16 @@ using CommunityToolkit.WinUI.UI;
 using Mako.Engine;
 using Mako.Global.Enum;
 using Mako.Model;
+using Pixeval.Options;
 using Pixeval.ViewModel;
 
 namespace Pixeval.Util
 {
-    public enum XRestrictLevel
-    {
-        [Metadata("")]
-        Ordinary = 0,
-
-        [Metadata("R-18")]
-        R18 = 1, 
-
-        [Metadata("R-18G")]
-        R18G = 2
-    }
-
-    public enum ThumbnailUrlOption
-    {
-        Large, Medium, SquareMedium
-    }
-
-    public record IllustrationSortOptionWrapper : ILocalizedBox<IllustrationSortOption>
-    {
-        public IllustrationSortOption Value { get; }
-
-        public string LocalizedString { get; }
-
-        public IllustrationSortOptionWrapper(IllustrationSortOption value, string localizedString)
-        {
-            Value = value;
-            LocalizedString = localizedString;
-        }
-    }
-
-    public record SearchTagMatchOptionWrapper : ILocalizedBox<SearchTagMatchOption>
-    {
-        public SearchTagMatchOption Value { get; }
-
-        public string LocalizedString { get; }
-
-        public SearchTagMatchOptionWrapper(SearchTagMatchOption value, string localizedString)
-        {
-            Value = value;
-            LocalizedString = localizedString;
-        }
-    }
-
-    public record TargetFilterWrapper : ILocalizedBox<TargetFilter>
-    {
-        public TargetFilter Value { get; }
-
-        public string LocalizedString { get; }
-
-        public TargetFilterWrapper(TargetFilter value, string localizedString)
-        {
-            Value = value;
-            LocalizedString = localizedString;
-        }
-    }
-
     public static class MakoHelper
     {
-        /// <summary>
-        /// The <see cref="IllustrationSortOption"/> is welded into Mako, we cannot add <see cref="LocalizedResource"/> on its fields
-        /// so an alternative is chosen
-        /// And we cannot use generic since the xaml compiler will refuse to compile
-        /// </summary>
-        public static readonly IEnumerable<IllustrationSortOptionWrapper> AvailableIllustrationSortOptions = new IllustrationSortOptionWrapper[]
-        {
-            new(IllustrationSortOption.PublishDateDescending, MiscResources.IllustrationSortOptionPublishDateDescending),
-            new(IllustrationSortOption.PublishDateAscending, MiscResources.IllustrationSortOptionPublishDateAscending),
-            new(IllustrationSortOption.PopularityDescending, MiscResources.IllustrationSortOptionPopularityDescending),
-            new(IllustrationSortOption.DoNotSort, MiscResources.IllustrationSortOptionDoNotSort)
-        };
-
-        /// <summary>
-        /// The same reason as <see cref="AvailableIllustrationSortOptions"/>
-        /// </summary>
-        public static readonly IEnumerable<SearchTagMatchOptionWrapper> AvailableSearchTagMatchOption = new SearchTagMatchOptionWrapper[]
-        {
-            new(SearchTagMatchOption.PartialMatchForTags, MiscResources.SearchTagMatchOptionPartialMatchForTags),
-            new(SearchTagMatchOption.ExactMatchForTags, MiscResources.SearchTagMatchOptionExactMatchForTags),
-            new(SearchTagMatchOption.TitleAndCaption, MiscResources.SearchTagMatchOptionTitleAndCaption)
-        };
-
-        public static readonly IEnumerable<TargetFilterWrapper> AvailableTargetFilters = new TargetFilterWrapper[]
-        {
-            new(TargetFilter.ForAndroid, MiscResources.TargetFilterForAndroid),
-            new(TargetFilter.ForIos, MiscResources.TargetFilterForIOS)
-        };
-
         public static IllustrationSortOptionWrapper GetAppSettingDefaultSortOptionWrapper()
         {
-            return AvailableIllustrationSortOptions.First(it => it.Value == App.AppSetting.DefaultSortOption);
+            return IllustrationSortOptionWrapper.Available.First(it => it.Value == App.AppSetting.DefaultSortOption);
         }
 
         public static string? GetThumbnailUrl(this Illustration illustration, ThumbnailUrlOption option)

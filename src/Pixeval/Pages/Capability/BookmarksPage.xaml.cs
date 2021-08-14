@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Events;
+using Pixeval.Options;
 using Pixeval.Util;
 
 namespace Pixeval.Pages.Capability

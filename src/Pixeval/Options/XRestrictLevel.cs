@@ -1,6 +1,6 @@
 ﻿using Pixeval.Util;
 
-namespace Pixeval.Interop
+namespace Pixeval.Options
 {
     public enum XRestrictLevel
     {
