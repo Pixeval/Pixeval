@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
+using ABI.Microsoft.UI.Xaml.Media.Imaging;
 using Mako.Global.Enum;
 using Mako.Model;
 using Mako.Net;
@@ -10,6 +12,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Util;
 using Functions = Pixeval.Util.Functions;
+using SoftwareBitmapSource = Microsoft.UI.Xaml.Media.Imaging.SoftwareBitmapSource;
 
 namespace Pixeval.ViewModel
 {
@@ -48,9 +51,9 @@ namespace Pixeval.ViewModel
             });
         }
 
-        private ImageSource? _thumbnailSource;
+        private SoftwareBitmapSource? _thumbnailSource;
 
-        public ImageSource? ThumbnailSource
+        public SoftwareBitmapSource? ThumbnailSource
         {
             get => _thumbnailSource;
             set => SetProperty(ref _thumbnailSource, value);
@@ -78,13 +81,18 @@ namespace Pixeval.ViewModel
 
         public async Task LoadThumbnailIfRequired()
         {
-            if (ThumbnailSource is not null)
+            if (ThumbnailSource is null)
             {
-                return;
+                ThumbnailSource = new SoftwareBitmapSource();
             }
             LoadingThumbnail = true;
             using var ras = await GetThumbnail(ThumbnailUrlOption.Medium);
-            ThumbnailSource = ras == null ? null : await ras.GetImageSourceAsync();
+            if (ras is not null)
+            {
+                var decoder = await BitmapDecoder.CreateAsync(ras);
+                var bitmap = await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
+                await ThumbnailSource.SetBitmapAsync(bitmap);
+            }
             LoadingThumbnail = false;
         }
 
