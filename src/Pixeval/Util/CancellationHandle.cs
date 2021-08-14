@@ -17,11 +17,7 @@ namespace Pixeval.Util
         {
             if (!IsCancelled)
             {
-                int current;
-                do
-                {
-                    current = _isCancelled;
-                } while (current != Interlocked.CompareExchange(ref _isCancelled, 1, 0));
+                Interlocked.Increment(ref _isCancelled);
             }
         }
 
@@ -29,11 +25,7 @@ namespace Pixeval.Util
         {
             if (IsCancelled)
             {
-                int current;
-                do
-                {
-                    current = _isCancelled;
-                } while (current != Interlocked.CompareExchange(ref _isCancelled, 0, 1));
+                Interlocked.Decrement(ref _isCancelled);
             }
         }
     }

@@ -292,7 +292,7 @@ namespace Pixeval.Pages.IllustrationViewer
 
         private void IllustrationInfoAndCommentsNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
-            throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
     }
 }

@@ -3,7 +3,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
-using ABI.Microsoft.UI.Xaml.Media.Imaging;
 using Mako.Global.Enum;
 using Mako.Model;
 using Mako.Net;
@@ -16,7 +15,7 @@ using SoftwareBitmapSource = Microsoft.UI.Xaml.Media.Imaging.SoftwareBitmapSourc
 
 namespace Pixeval.ViewModel
 {
-    public class IllustrationViewModel : ObservableObject
+    public class IllustrationViewModel : ObservableObject, IDisposable
     {
         public Illustration Illustration { get; }
 
@@ -81,17 +80,19 @@ namespace Pixeval.ViewModel
 
         public async Task LoadThumbnailIfRequired()
         {
-            if (ThumbnailSource is null)
+            if (ThumbnailSource is not null || LoadingThumbnail)
             {
-                ThumbnailSource = new SoftwareBitmapSource();
+                return;
             }
+            var source = new SoftwareBitmapSource();
             LoadingThumbnail = true;
             using var ras = await GetThumbnail(ThumbnailUrlOption.Medium);
             if (ras is not null)
             {
                 var decoder = await BitmapDecoder.CreateAsync(ras);
                 var bitmap = await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
-                await ThumbnailSource.SetBitmapAsync(bitmap);
+                await source.SetBitmapAsync(bitmap);
+                ThumbnailSource = source;
             }
             LoadingThumbnail = false;
         }
@@ -142,6 +143,11 @@ namespace Pixeval.ViewModel
             }
 
             return sb.ToString();
+        }
+
+        public void Dispose()
+        {
+            _thumbnailSource?.Dispose();
         }
     }
 }

@@ -12,8 +12,6 @@ namespace Pixeval.ViewModel
 {
     public class IllustrationGridViewModel : ObservableObject
     {
-        private static readonly object Lock = new();
-
         public IFetchEngine<Illustration?>? FetchEngine { get; set; }
 
         public ObservableCollection<IllustrationViewModel> Illustrations { get; }
@@ -79,18 +77,13 @@ namespace Pixeval.ViewModel
         {
             FetchEngine?.EngineHandle.Cancel();
             FetchEngine = newEngine;
-            lock (Lock)
-            {
-                IllustrationsView.Clear();
-                SelectedIllustrations.Clear();
-            }
+            DisposeCurrent();
             await Fill(itemLimit);
         }
 
         public void Dispose()
         {
-            SelectedIllustrations.Clear();
-            IllustrationsView.Clear();
+            DisposeCurrent();
         }
 
         public void SetSortDescription(SortDescription description)
@@ -104,9 +97,19 @@ namespace Pixeval.ViewModel
             IllustrationsView.SortDescriptions[0] = description;
         }
 
-        public void ClearSortDescription(SortDescription description)
+        public void ClearSortDescription()
         {
             IllustrationsView.SortDescriptions.Clear();
+        }
+
+        private void DisposeCurrent()
+        {
+            foreach (IllustrationViewModel illustrationViewModel in IllustrationsView)
+            {
+                illustrationViewModel.Dispose();
+            }
+            SelectedIllustrations.Clear();
+            IllustrationsView.Clear();
         }
     }
 }

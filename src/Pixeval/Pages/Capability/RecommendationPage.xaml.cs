@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.WinUI.UI;
 using Mako.Global.Enum;
 using Microsoft.UI.Xaml;
@@ -47,7 +48,14 @@ namespace Pixeval.Pages.Capability
             if (MakoHelper.GetSortDescriptionForIllustration(GetIllustrationSortOption()) is { } desc)
             {
                 viewModel.SetSortDescription(desc);
-                IllustrationGrid.FindChild<ScrollViewer>()?.ScrollToVerticalOffset(0);
+                if (viewModel.IllustrationsView.FirstOrDefault() is { } first)
+                {
+                    IllustrationGrid.FindChild<GridView>()?.ScrollIntoView(first);
+                }
+            }
+            else
+            {
+                viewModel.ClearSortDescription();
             }
         }
 

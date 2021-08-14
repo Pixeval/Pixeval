@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
+using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -48,10 +50,19 @@ namespace Pixeval.UserControls
             if (args.BringIntoViewDistanceY <= sender.ActualHeight) // one element ahead
             {
                 _ = context.LoadThumbnailIfRequired();
+                return;
             }
-            else if (args.BringIntoViewDistanceY != 0 && context.LoadingThumbnail) // if the image is not loaded yet and has slipped away from the view port
+
+            switch (context)
             {
-                context.LoadingThumbnailCancellationHandle.Cancel();
+                case { LoadingThumbnail: true }:
+                    context.LoadingThumbnailCancellationHandle.Cancel();
+                    break;
+                case { ThumbnailSource: not null }:
+                    var source = context.ThumbnailSource;
+                    context.ThumbnailSource = null;
+                    source.Dispose();
+                    break;
             }
         }
     }

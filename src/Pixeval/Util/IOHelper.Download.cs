@@ -104,7 +104,7 @@ namespace Pixeval.Util
                     return Result<Stream>.OfFailure(CancellationMark);
                 }
 
-                var resultStream = (RecyclableMemoryStream) RecyclableMemoryStreamManager.GetStream();
+                var resultStream = new MemoryStream();
                 int bytesRead, totalRead = 0;
                 var buffer = ArrayPool<byte>.Shared.Rent(1024);
                 while ((bytesRead = await contentStream.ReadAsync(buffer)) != 0)
