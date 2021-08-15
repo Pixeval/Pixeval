@@ -3,7 +3,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 using PInvoke;
 using Pixeval.Pages.Misc;
-using Pixeval.Util;
+using Pixeval.Util.UI;
 
 namespace Pixeval
 {

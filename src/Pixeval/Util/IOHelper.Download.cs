@@ -9,6 +9,7 @@ using Windows.Storage.Streams;
 using Mako.Util;
 using Microsoft.IO;
 using Pixeval.Interop;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Util
 {

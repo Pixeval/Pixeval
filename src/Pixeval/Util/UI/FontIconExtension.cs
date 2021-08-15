@@ -3,7 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
 
-namespace Pixeval.Util
+namespace Pixeval.Util.UI
 {
     [MarkupExtensionReturnType(ReturnType = typeof(FontIcon))]
     public class FontIconExtension : TextIconExtension

@@ -5,7 +5,7 @@ using PInvoke;
 using Pixeval.Interop;
 using WinRT;
 
-namespace Pixeval.Util
+namespace Pixeval.Util.UI
 {
     public static partial class UIHelper
     {

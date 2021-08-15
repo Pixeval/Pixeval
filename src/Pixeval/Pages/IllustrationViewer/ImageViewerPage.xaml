@@ -1,12 +1,12 @@
-﻿<util:EnhancedPage x:Class="Pixeval.Pages.IllustrationViewer.ImageViewerPage"
-                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                   xmlns:util="using:Pixeval.Util"
-                   Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                   mc:Ignorable="d">
-    <util:EnhancedPage.Resources>
+﻿<ui:EnhancedPage x:Class="Pixeval.Pages.IllustrationViewer.ImageViewerPage"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:ui="using:Pixeval.Util.UI"
+                 Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                 mc:Ignorable="d">
+    <ui:EnhancedPage.Resources>
         <ResourceDictionary>
             <Storyboard x:Name="ResetImageScaleStoryboard"
                         Completed="ResetImageScaleStoryboard_OnCompleted">
@@ -75,13 +75,13 @@
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
-    </util:EnhancedPage.Resources>
+    </ui:EnhancedPage.Resources>
 
     <Grid>
         <Grid x:Name="IllustrationOriginalImageContainer"
               HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch"
-              util:ClipService.ClipToBounds="True"
+              ui:ClipService.ClipToBounds="True"
               PointerWheelChanged="IllustrationOriginalImageContainer_OnPointerWheelChanged">
             <Image x:Name="IllustrationOriginalImage"
                    HorizontalAlignment="Center"
@@ -92,7 +92,7 @@
                    ManipulationDelta="IllustrationOriginalImage_OnManipulationDelta"
                    ManipulationMode="TranslateX,TranslateY"
                    RenderTransformOrigin="0.5,0.5"
-                   Source="{x:Bind _viewModel.IllustrationViewModel.OriginalImageSource, Mode=OneWay}"
+                   Source="{x:Bind _viewModel.OriginalImageSource, Mode=OneWay}"
                    Stretch="Uniform">
                 <Image.RenderTransform>
                     <CompositeTransform x:Name="IllustrationOriginalImageRenderTransform" />
@@ -111,4 +111,4 @@
                           Value="{x:Bind _viewModel.LoadingProgress, Mode=OneWay}" />
         </Grid>
     </Grid>
-</util:EnhancedPage>
+</ui:EnhancedPage>

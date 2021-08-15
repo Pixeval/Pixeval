@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:util="using:Pixeval.Util"
+             xmlns:ui="using:Pixeval.Util.UI"
              mc:Ignorable="d">
 
     <CommandBar x:Name="CommandBar"
@@ -12,23 +12,23 @@
                 Background="Transparent"
                 DefaultLabelPosition="Right">
         <AppBarToggleButton x:Uid="/IllustrationGridCommandBar/OpenConditionDialogButton"
-                            Icon="{util:FontIcon Glyph=FilterE71C}" />
+                            Icon="{ui:FontIcon Glyph=FilterE71C}" />
         <AppBarToggleButton x:Uid="/IllustrationGridCommandBar/SelectAllToggleButton"
                             Checked="SelectAllToggleButton_OnChecked"
-                            Icon="{util:FontIcon Glyph=SelectAllE8B3}"
+                            Icon="{ui:FontIcon Glyph=SelectAllE8B3}"
                             Unchecked="SelectAllToggleButton_OnUnchecked" />
         <AppBarSeparator />
         <AppBarButton x:Uid="/IllustrationGridCommandBar/AddAllToBookmarkButton"
-                      Icon="{util:FontIcon Glyph=HeartEB51}"
+                      Icon="{ui:FontIcon Glyph=HeartEB51}"
                       Tapped="AddAllToBookmarkButton_OnTapped" />
         <AppBarButton x:Uid="/IllustrationGridCommandBar/SaveAllButton"
-                      Icon="{util:FontIcon Glyph=SaveE74E}"
+                      Icon="{ui:FontIcon Glyph=SaveE74E}"
                       Tapped="SaveAllButton_OnTapped" />
         <AppBarButton x:Uid="/IllustrationGridCommandBar/OpenAllInBrowserButton"
-                      Icon="{util:FontIcon Glyph=WebSearchF6FA}"
+                      Icon="{ui:FontIcon Glyph=WebSearchF6FA}"
                       Tapped="OpenAllInBrowserButton_OnTapped" />
         <AppBarButton x:Uid="/IllustrationGridCommandBar/ShareButton"
-                      Icon="{util:FontIcon Glyph=ShareE72D}"
+                      Icon="{ui:FontIcon Glyph=ShareE72D}"
                       Tapped="ShareButton_OnTapped" />
     </CommandBar>
 </UserControl>

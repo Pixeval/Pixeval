@@ -1,7 +1,7 @@
 ﻿// ReSharper disable UnusedMember.Global
 // ReSharper disable IdentifierTypo
 // ReSharper disable InconsistentNaming
-namespace Pixeval.Util
+namespace Pixeval.Util.UI
 {
     /// <summary>
     /// This file is auto-generated

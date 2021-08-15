@@ -14,6 +14,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Options;
 using Pixeval.UserControls;
 using Pixeval.Util;
+using Pixeval.Util.UI;
 using Pixeval.ViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer
@@ -49,21 +50,17 @@ namespace Pixeval.Pages.IllustrationViewer
             foreach (var imageViewerPageViewModel in _viewModel.Illustrations)
             {
                 imageViewerPageViewModel.ImageLoadingCancellationHandle.Cancel();
-                imageViewerPageViewModel.Dispose();
             }
+            _viewModel.Dispose();
         }
 
         public override void Prepare(NavigationEventArgs e)
         {
             _viewModel = (IllustrationViewerPageViewModel) e.Parameter;
-            IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), _viewModel.Current);
+            _illustrationInfo = new NavigationViewTag(typeof(IllustrationInfoPage), _viewModel);
+            _comments = null; // TODO
 
-            if (ConnectedAnimationService.GetForCurrentView().GetAnimation(IllustrationGrid.ConnectedAnimationKey) is { } animation)
-            {
-                var image = GetImage(); // See ImageViewerPage
-                animation.TryStart(image);
-                animation.TryStart(image);
-            }
+            IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), _viewModel.Current);
         }
 
         private async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -220,7 +217,7 @@ namespace Pixeval.Pages.IllustrationViewer
         private void PlayGifButton_OnClick(object sender, RoutedEventArgs e)
         {
             var appBarButton = (AppBarButton) sender;
-            var bitmap = (BitmapImage) _viewModel.Current.IllustrationViewModel.OriginalImageSource!;
+            var bitmap = (BitmapImage) _viewModel.Current.OriginalImageSource!;
             if (bitmap.IsPlaying)
             {
                 bitmap.Stop();
@@ -250,7 +247,29 @@ namespace Pixeval.Pages.IllustrationViewer
             IllustrationInfoAndCommentsSplitView.IsPaneOpen = false;
         }
 
+        private void IllustrationInfoAndCommentsNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        {
+            if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag })
+            {
+                IllustrationInfoAndCommentsFrame.Navigate(tag.NavigateTo, tag.Parameter, new SlideNavigationTransitionInfo
+                {
+                    Effect = tag switch
+                    {
+                        var x when x == _illustrationInfo => SlideNavigationTransitionEffect.FromLeft,
+                        var x when x == _comments => SlideNavigationTransitionEffect.FromRight,
+                        _ => throw new ArgumentOutOfRangeException()
+                    }
+                });
+            }
+        }
+
         #region Helper Functions
+
+        // Tags for IllustrationInfoAndCommentsNavigationView
+
+        private NavigationViewTag? _illustrationInfo;
+
+        private NavigationViewTag? _comments;
 
         private Image GetImage()
         {
@@ -290,10 +309,5 @@ namespace Pixeval.Pages.IllustrationViewer
         }
 
         #endregion
-
-        private void IllustrationInfoAndCommentsNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
-        {
-            // throw new NotImplementedException();
-        }
     }
 }

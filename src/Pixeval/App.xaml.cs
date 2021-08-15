@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
 using Mako;
@@ -8,7 +7,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Events;
 using Pixeval.Interop;
-using Pixeval.Util;
+using Pixeval.Util.UI;
 using WinRT;
 
 namespace Pixeval

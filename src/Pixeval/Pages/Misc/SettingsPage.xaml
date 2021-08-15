@@ -48,7 +48,7 @@
         <Style x:Key="NumberBoxWarningTeachingTipStyle"
                TargetType="TeachingTip">
             <Style.Setters>
-                <Setter Property="IconSource" Value="{util:FontIconSource Glyph=ErrorE783}" />
+                <Setter Property="IconSource" Value="{ui:FontIconSource Glyph=ErrorE783}" />
                 <Setter Property="IsLightDismissEnabled" Value="True" />
                 <Setter Property="PreferredPlacement" Value="TopRight" />
             </Style.Setters>

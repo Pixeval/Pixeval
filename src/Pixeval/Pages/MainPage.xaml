@@ -2,9 +2,8 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:mainPage="using:Pixeval.Pages"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:util="using:Pixeval.Util"
+      xmlns:ui="using:Pixeval.Util.UI"
       xmlns:viewModel="using:Pixeval.ViewModel"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
       NavigationCacheMode="Required"
@@ -24,29 +23,29 @@
         </NavigationView.AutoSuggestBox>
         <NavigationView.MenuItems>
             <NavigationViewItem x:Uid="/MainPage/RecommendationsTab"
-                                Icon="{util:FontIcon Glyph=CalendarE787}"
+                                Icon="{ui:FontIcon Glyph=CalendarE787}"
                                 IsSelected="True"
-                                Tag="{x:Bind mainPage:MainPageRootNavigationViewTag.Recommends}" />
+                                Tag="{x:Bind _recommends}" />
             <NavigationViewItem x:Uid="/MainPage/RankingsTab"
-                                Icon="{util:FontIcon Glyph=MarketEAFC}" />
+                                Icon="{ui:FontIcon Glyph=MarketEAFC}" />
             <NavigationViewItem x:Uid="/MainPage/BookmarksTab"
-                                Icon="{util:FontIcon Glyph=LibraryE8F1}"
-                                Tag="{x:Bind mainPage:MainPageRootNavigationViewTag.Bookmarks}" />
+                                Icon="{ui:FontIcon Glyph=LibraryE8F1}"
+                                Tag="{x:Bind _bookmarks}" />
             <NavigationViewItem x:Uid="/MainPage/FollowingsTab"
-                                Icon="{util:FontIcon Glyph=PeopleE716}" />
+                                Icon="{ui:FontIcon Glyph=PeopleE716}" />
             <NavigationViewItem x:Uid="/MainPage/SpotlightsTab"
-                                Icon="{util:FontIcon Glyph=MapLayersE81E}" />
+                                Icon="{ui:FontIcon Glyph=MapLayersE81E}" />
             <NavigationViewItem x:Uid="/MainPage/FeedsTab"
-                                Icon="{util:FontIcon Glyph=MobLocationEC43}" />
+                                Icon="{ui:FontIcon Glyph=MobLocationEC43}" />
             <NavigationViewItem x:Uid="/MainPage/NewPostsTab"
-                                Icon="{util:FontIcon Glyph=DevUpdateECC5}" />
+                                Icon="{ui:FontIcon Glyph=DevUpdateECC5}" />
             <NavigationViewItem x:Uid="/MainPage/ReverseSearchTab"
-                                Icon="{util:FontIcon Glyph=SearchAndAppsE773}" />
+                                Icon="{ui:FontIcon Glyph=SearchAndAppsE773}" />
             <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />
             <NavigationViewItem x:Uid="/MainPage/HistoriesTab"
-                                Icon="{util:FontIcon Glyph=HistoryE81C}" />
+                                Icon="{ui:FontIcon Glyph=HistoryE81C}" />
             <NavigationViewItem x:Uid="/MainPage/DownloadListTab"
-                                Icon="{util:FontIcon Glyph=CheckListE9D5}" />
+                                Icon="{ui:FontIcon Glyph=CheckListE9D5}" />
         </NavigationView.MenuItems>
         <NavigationView.FooterMenuItems>
             <NavigationViewItem>
@@ -60,10 +59,10 @@
                 </StackPanel>
             </NavigationViewItem>
             <NavigationViewItem x:Uid="/MainPage/HelpTab"
-                                Icon="{util:FontIcon Glyph=HelpE897}" />
+                                Icon="{ui:FontIcon Glyph=HelpE897}" />
             <NavigationViewItem x:Uid="/MainPage/SettingsTab"
-                                Icon="{util:FontIcon Glyph=SettingE713}"
-                                Tag="{x:Bind mainPage:MainPageRootNavigationViewTag.Settings}" />
+                                Icon="{ui:FontIcon Glyph=SettingE713}"
+                                Tag="{x:Bind _settings}" />
         </NavigationView.FooterMenuItems>
         <Frame x:Name="MainPageRootFrame"
                Navigated="MainPageRootFrame_OnNavigated" />

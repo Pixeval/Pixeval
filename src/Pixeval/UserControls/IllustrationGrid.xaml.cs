@@ -1,21 +1,20 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
-using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
+using Pixeval.Util.UI;
 using Pixeval.ViewModel;
 
 namespace Pixeval.UserControls
 {
+
+    // TODO determine why the ThumbnailSource is null after navigation
     public sealed partial class IllustrationGrid
     {
         public IllustrationGridViewModel ViewModel { get; set; }
-
-        public const string ConnectedAnimationKey = "IllustrationGridForwardAnimation";
 
         public IllustrationGrid()
         {
@@ -38,10 +37,8 @@ namespace Pixeval.UserControls
 
         private void Thumbnail_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            var animation = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(ConnectedAnimationKey, sender as Image);
-            animation.Configuration = new DirectConnectedAnimationConfiguration();
             var viewModel = sender.GetDataContext<IllustrationViewModel>().Illustration.GetMangaIllustrations().Select(p => new IllustrationViewModel(p)).ToArray();
-            App.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModel), new SuppressNavigationTransitionInfo());
+            App.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModel), new DrillInNavigationTransitionInfo());
         }
 
         private void IllustrationThumbnailContainerItem_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
@@ -53,6 +50,7 @@ namespace Pixeval.UserControls
                 return;
             }
 
+            // small tricks to reduce memory consumption
             switch (context)
             {
                 case { LoadingThumbnail: true }:

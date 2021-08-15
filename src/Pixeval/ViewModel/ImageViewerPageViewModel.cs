@@ -4,7 +4,9 @@ using Windows.Storage.Streams;
 using Mako.Net;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
 using Pixeval.Util;
+using Pixeval.Util.UI;
 
 namespace Pixeval.ViewModel
 {
@@ -40,12 +42,20 @@ namespace Pixeval.ViewModel
 
         public CancellationHandle ImageLoadingCancellationHandle { get; }
 
+        private ImageSource? _originalImageSource;
+
+        public ImageSource? OriginalImageSource
+        {
+            get => _originalImageSource;
+            set => SetProperty(ref _originalImageSource, value);
+        }
+
         private async Task LoadImage()
         {
             _ = IllustrationViewModel.LoadThumbnailIfRequired().ContinueWith(_ =>
             {
-                App.Window.DispatcherQueue.TryEnqueue(() => IllustrationViewModel.OriginalImageSource = IllustrationViewModel.ThumbnailSource);
-            });
+                OriginalImageSource = IllustrationViewModel.ThumbnailSource;
+            }, TaskScheduler.FromCurrentSynchronizationContext());
             await LoadOriginalImage();
         }
 
@@ -61,7 +71,7 @@ namespace Pixeval.ViewModel
                     LoadingOriginalSourceTask = task;
                     var zipStream = (await task).GetOrThrow();
                     OriginalImageStream = (await IOHelper.GetGifStreamResultAsync(zipStream, ugoiraMetadata)).GetOrThrow();
-                    IllustrationViewModel.OriginalImageSource = await OriginalImageStream.GetImageSourceAsync();
+                    OriginalImageSource = await OriginalImageStream.GetBitmapImageSourceAsync();
                     return;
                 }
             }
@@ -71,7 +81,7 @@ namespace Pixeval.ViewModel
                 var task = imageClient.DownloadAsIRandomAccessStreamAsync(src, new Progress<double>(d => LoadingProgress = d), ImageLoadingCancellationHandle);
                 LoadingOriginalSourceTask = task;
                 OriginalImageStream = (await task).GetOrThrow();
-                IllustrationViewModel.OriginalImageSource = await OriginalImageStream.GetImageSourceAsync();
+                OriginalImageSource = await OriginalImageStream.GetBitmapImageSourceAsync();
                 return;
             }
 

@@ -51,6 +51,7 @@
     <None Remove="Pages\DownloadAndHistoryListPage.xaml" />
     <None Remove="Pages\IllustrationGridPage.xaml" />
     <None Remove="Pages\IllustrationViewerPage.xaml" />
+    <None Remove="Pages\IllustrationViewer\CommentsPage.xaml" />
     <None Remove="Pages\IllustrationViewer\IllustrationInfoPage.xaml" />
     <None Remove="Pages\ImageViewerPage.xaml" />
     <None Remove="Pages\RecommendationPage.xaml" />
@@ -63,7 +64,7 @@
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.0.3" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.0.3" />
     <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="8.2.1" />
-    <PackageReference Include="Mako" Version="1.1.0" />
+    <PackageReference Include="Mako" Version="1.1.1" />
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.1.3" />
     <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.1" />
     <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.1" />
@@ -73,6 +74,7 @@
     <PackageReference Include="Microsoft.Win32.Registry" Version="6.0.0-preview.5.21301.5" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.4" />
     <PackageReference Include="PInvoke.User32" Version="0.7.104" />
+    <PackageReference Include="ReverseMarkdown" Version="3.19.0" />
     <PackageReference Include="System.Linq.Async" Version="5.0.0" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
@@ -174,6 +176,12 @@
     <Content Update="Assets\Images\logo44x44.ico">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\IllustrationViewer\CommentsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>
