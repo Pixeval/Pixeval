@@ -9,6 +9,7 @@ using Windows.System;
 using Mako.Util;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Util;
+using Pixeval.Util.UI;
 using Pixeval.ViewModel;
 
 namespace Pixeval.UserControls

@@ -1,9 +1,8 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Pages;
 using Pixeval.Pages.Misc;
 
-namespace Pixeval.Util
+namespace Pixeval.Util.UI
 {
     public class MessageDialogBuilder
     {

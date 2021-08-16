@@ -117,6 +117,42 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="IllustrationCaptionEmpty" xml:space="preserve">
+    <value>无</value>
+  </data>
+  <data name="IllustrationCaptionTextBlock.Text" xml:space="preserve">
+    <value>作品介绍</value>
+  </data>
+  <data name="IllustrationDimensionTextBlock.Text" xml:space="preserve">
+    <value>作品分辨率</value>
+  </data>
+  <data name="IllustrationDimensionUnknown" xml:space="preserve">
+    <value>未知</value>
+  </data>
+  <data name="IllustrationIdTextBlock.Text" xml:space="preserve">
+    <value>作品ID</value>
+  </data>
+  <data name="IllustrationTagListTextBlock.Text" xml:space="preserve">
+    <value>作品标签</value>
+  </data>
+  <data name="IllustrationTitleTextBlock.Text" xml:space="preserve">
+    <value>作品名</value>
+  </data>
+  <data name="IllustrationTotalBookmarksTextBlock.Text" xml:space="preserve">
+    <value>总收藏数</value>
+  </data>
+  <data name="IllustrationTotalViewsTextBlock.Text" xml:space="preserve">
+    <value>总浏览量</value>
+  </data>
+  <data name="IllustrationUploadDateTextBlock.Text" xml:space="preserve">
+    <value>上传日期</value>
+  </data>
+  <data name="IllustratorIdFormatted" xml:space="preserve">
+    <value>作者ID: {0}</value>
+  </data>
+  <data name="IllustratorNameFormatted" xml:space="preserve">
+    <value>作者名: {0}</value>
+  </data>
   <data name="IllustratorTextBlock.Text" xml:space="preserve">
     <value>作者信息</value>
   </data>

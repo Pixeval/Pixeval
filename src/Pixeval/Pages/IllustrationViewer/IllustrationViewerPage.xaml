@@ -1,26 +1,29 @@
-﻿<util:EnhancedPage x:Class="Pixeval.Pages.IllustrationViewer.IllustrationViewerPage"
-                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                   xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
-                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                   xmlns:illustrationViewer="using:Pixeval.Pages.IllustrationViewer"
-                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                   xmlns:util="using:Pixeval.Util"
-                   Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                   mc:Ignorable="d">
+﻿<ui:EnhancedPage x:Class="Pixeval.Pages.IllustrationViewer.IllustrationViewerPage"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:illustrationViewer="using:Pixeval.Pages.IllustrationViewer"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:ui="using:Pixeval.Util.UI"
+                 Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                 mc:Ignorable="d">
     <SplitView x:Name="IllustrationInfoAndCommentsSplitView"
                DisplayMode="Overlay">
         <SplitView.Pane>
             <NavigationView BackRequested="IllustrationInfoAndCommentsNavigationView_OnBackRequested"
                             IsBackEnabled="True"
                             IsSettingsVisible="False"
-                             SelectionChanged="IllustrationInfoAndCommentsNavigationView_OnSelectionChanged"
-                            PaneDisplayMode="Top">
+                            PaneDisplayMode="Top"
+                            SelectionChanged="IllustrationInfoAndCommentsNavigationView_OnSelectionChanged">
                 <NavigationView.MenuItems>
                     <NavigationViewItem x:Uid="/IllustrationViewerPage/IllustrationInfoTab"
-                                        IsSelected="True" />
-                    <NavigationViewItem x:Uid="/IllustrationViewerPage/CommentsTab" />
+                                        IsSelected="True"
+                                        Tag="{x:Bind _illustrationInfo}" />
+                    <NavigationViewItem x:Uid="/IllustrationViewerPage/CommentsTab"
+                                        Tag="{x:Bind _comments}" />
                 </NavigationView.MenuItems>
+                <Frame x:Name="IllustrationInfoAndCommentsFrame" />
             </NavigationView>
         </SplitView.Pane>
         <controls:DockPanel HorizontalAlignment="Stretch"
@@ -64,38 +67,38 @@
                 <AppBarSeparator />
                 <AppBarButton x:Uid="/IllustrationViewerPage/SaveCurrentImageButton"
                               Click="SaveCurrentImageButton_OnClick"
-                              Icon="{util:FontIcon Glyph=SaveE74E}" />
+                              Icon="{ui:FontIcon Glyph=SaveE74E}" />
                 <AppBarButton x:Uid="/IllustrationViewerPage/SaveAsCurrentImageButton"
                               Click="SaveAsCurrentImageButton_OnClick"
-                              Icon="{util:FontIcon Glyph=SaveAsE792}" />
+                              Icon="{ui:FontIcon Glyph=SaveAsE792}" />
                 <AppBarButton x:Uid="/IllustrationViewerPage/SaveMangaButton"
                               Click="SaveMangaButton_OnClick"
-                              Icon="{util:FontIcon Glyph=SaveCopyEA35}"
+                              Icon="{ui:FontIcon Glyph=SaveCopyEA35}"
                               Visibility="{x:Bind _viewModel.IsManga}" />
                 <AppBarButton x:Uid="/IllustrationViewerPage/SaveMangaAsButton"
                               Click="SaveMangaAsButton_OnClick"
-                              Icon="{util:FontIcon Glyph=SaveAsE792}"
+                              Icon="{ui:FontIcon Glyph=SaveAsE792}"
                               Visibility="{x:Bind _viewModel.IsManga}" />
                 <AppBarSeparator />
                 <AppBarButton x:Name="GenerateLinkToThisPageButton"
                               x:Uid="/IllustrationViewerPage/GenerateLinkToThisPageButton"
                               Click="GenerateLinkToThisPageButton_OnClick"
-                              Icon="{util:FontIcon Glyph=LinkE71B}" />
+                              Icon="{ui:FontIcon Glyph=LinkE71B}" />
                 <AppBarButton x:Uid="/IllustrationViewerPage/GenerateWebLinkButton"
                               Click="GenerateWebLinkButton_OnClick"
-                              Icon="{util:FontIcon Glyph=PreviewLinkE8A1}" />
+                              Icon="{ui:FontIcon Glyph=PreviewLinkE8A1}" />
                 <AppBarButton x:Uid="/IllustrationViewerPage/OpenInWebBrowserButton"
                               Click="OpenInWebBrowserButton_OnClick"
-                              Icon="{util:FontIcon Glyph=WebSearchF6FA}" />
+                              Icon="{ui:FontIcon Glyph=WebSearchF6FA}" />
                 <AppBarButton x:Uid="/IllustrationViewerPage/ShareButton"
                               Click="ShareButton_OnClick"
-                              Icon="{util:FontIcon Glyph=ShareE72D}" />
+                              Icon="{ui:FontIcon Glyph=ShareE72D}" />
                 <AppBarSeparator />
                 <AppBarButton x:Uid="/IllustrationViewerPage/CopyContentButton"
                               Command="{x:Bind _copyCommand}"
-                              Icon="{util:FontIcon Glyph=CopyE8C8}" />
+                              Icon="{ui:FontIcon Glyph=CopyE8C8}" />
                 <AppBarToggleButton x:Uid="/IllustrationViewerPage/IllustrationInfoAndCommentsButton"
-                                    Icon="{util:FontIcon Glyph=InfoE946}"
+                                    Icon="{ui:FontIcon Glyph=InfoE946}"
                                     IsChecked="{x:Bind IllustrationInfoAndCommentsSplitView.IsPaneOpen, Mode=TwoWay}" />
             </CommandBar>
             <TeachingTip x:Name="GenerateLinkToThisPageButtonTeachingTip"
@@ -112,7 +115,7 @@
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"
                               Click="PrevImageAppBarButton_OnClick"
-                              Icon="{util:FontIcon Glyph=CheveronLeft20F743}"
+                              Icon="{ui:FontIcon Glyph=CheveronLeft20F743}"
                               LabelPosition="Collapsed"
                               Visibility="{x:Bind CalculatePrevImageButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
 
@@ -123,7 +126,7 @@
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"
                               Click="NextImageAppBarButton_OnClick"
-                              Icon="{util:FontIcon Glyph=CheveronRight20F745}"
+                              Icon="{ui:FontIcon Glyph=CheveronRight20F745}"
                               LabelPosition="Collapsed"
                               Visibility="{x:Bind CalculateNextImageButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
             </Grid>
@@ -132,4 +135,4 @@
             <Frame x:Name="IllustrationImageShowcaseFrame" />
         </controls:DockPanel>
     </SplitView>
-</util:EnhancedPage>
+</ui:EnhancedPage>

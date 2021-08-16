@@ -9,7 +9,6 @@ using Mako.Model;
 using Mako.Net;
 using Mako.Util;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml.Media;
 using Pixeval.Options;
 using Pixeval.Util;
 using Functions = Pixeval.Util.Functions;
@@ -58,14 +57,6 @@ namespace Pixeval.ViewModel
         {
             get => _thumbnailSource;
             set => SetProperty(ref _thumbnailSource, value);
-        }
-
-        private ImageSource? _originalImageSource;
-
-        public ImageSource? OriginalImageSource
-        {
-            get => _originalImageSource;
-            set => SetProperty(ref _originalImageSource, value);
         }
 
         public CancellationHandle LoadingThumbnailCancellationHandle { get; }

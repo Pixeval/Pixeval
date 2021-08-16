@@ -40,7 +40,7 @@ namespace Pixeval.Util
             return (T) (obj ?? throw new InvalidCastException());
         }
 
-        public static string Format(this string str, params object[] args)
+        public static string Format(this string str, params object?[] args)
         {
             return string.Format(str, args);
         }

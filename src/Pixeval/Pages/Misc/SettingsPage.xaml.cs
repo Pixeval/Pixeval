@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Util;
+using Pixeval.Util.UI;
 using Pixeval.ViewModel;
 
 namespace Pixeval.Pages.Misc

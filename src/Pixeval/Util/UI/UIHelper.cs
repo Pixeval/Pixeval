@@ -15,11 +15,21 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using PInvoke;
 
-namespace Pixeval.Util
+namespace Pixeval.Util.UI
 {
     public static partial class UIHelper
     {
-        public static async Task<ImageSource> GetImageSourceAsync(this IRandomAccessStream randomAccessStream)
+        public static async Task<SoftwareBitmapSource> GetSoftwareBitmapSourceAsync(this IRandomAccessStream randomAccessStream)
+        {
+            var decoder = await BitmapDecoder.CreateAsync(randomAccessStream);
+            var bitmap = await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
+
+            var source = new SoftwareBitmapSource();
+            await source.SetBitmapAsync(bitmap);
+            return source;
+        }
+
+        public static async Task<BitmapImage> GetBitmapImageSourceAsync(this IRandomAccessStream randomAccessStream)
         {
             var bitmapImage = new BitmapImage();
             await bitmapImage.SetSourceAsync(randomAccessStream);
@@ -177,6 +187,14 @@ namespace Pixeval.Util
             var package = new DataPackage();
             await contentAction(package);
             Clipboard.SetContent(package);
+        }
+
+        public static void NavigateByNavigationViewTag(this Frame frame, NavigationView sender, NavigationTransitionInfo? transitionInfo = null)
+        {
+            if (sender.SelectedItem is NavigationViewItem {Tag: NavigationViewTag tag})
+            {
+                frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo ?? new EntranceNavigationTransitionInfo());
+            }
         }
     }
 }

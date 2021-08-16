@@ -1,7 +1,7 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
-namespace Pixeval.Util
+namespace Pixeval.Util.UI
 {
     public class EnhancedPage : Page
     {

@@ -1,13 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Mako.Net;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Util;
+using Pixeval.Util.UI;
 
 namespace Pixeval.ViewModel
 {
-    public class IllustrationViewerPageViewModel : ObservableObject
+    public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
     {
         // Remarks:
         // illustrations should contains only one item iff the illustration is a single
@@ -37,7 +39,7 @@ namespace Pixeval.ViewModel
             set => SetProperty(ref _current, value);
         }
 
-        private ImageSource? _userProfileImageSource;
+        private SoftwareBitmapSource? _userProfileImageSource;
 
         // Remarks:
         // The reason why we don't put UserProfileImageSource into IllustrationViewModel
@@ -47,7 +49,7 @@ namespace Pixeval.ViewModel
         // itself is a manga then all of the IllustrationViewModel in Illustrations will
         // request the same user profile image which is pointless and will (inevitably) causing
         // the waste of system resource
-        public ImageSource? UserProfileImageSource
+        public SoftwareBitmapSource? UserProfileImageSource
         {
             get => _userProfileImageSource;
             set => SetProperty(ref _userProfileImageSource, value);
@@ -91,10 +93,19 @@ namespace Pixeval.ViewModel
             {
                 using var stream = (await App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi)
                     .DownloadAsIRandomAccessStreamAsync(profileImage)).GetOrThrow();
-                UserProfileImageSource = await stream.GetImageSourceAsync();
+                UserProfileImageSource = await stream.GetSoftwareBitmapSourceAsync();
             }
         }
 
         public bool IsBookmarked => Illustrations[0].IllustrationViewModel.IsBookmarked;
+
+        public void Dispose()
+        {
+            foreach (var imageViewerPageViewModel in Illustrations)
+            {
+                imageViewerPageViewModel.Dispose();
+            }
+            _userProfileImageSource?.Dispose();
+        }
     }
 }

@@ -2,7 +2,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 
-namespace Pixeval.Util
+namespace Pixeval.Util.UI
 {
     public class ClipService
     {

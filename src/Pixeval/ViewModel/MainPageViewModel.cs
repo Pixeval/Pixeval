@@ -5,6 +5,7 @@ using Mako.Net;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Events;
 using Pixeval.Util;
+using Pixeval.Util.UI;
 
 namespace Pixeval.ViewModel
 {
@@ -40,7 +41,7 @@ namespace Pixeval.ViewModel
             // and set to the bitmap image
             using var imageStream = (await makoClient.GetMakoHttpClient(MakoApiKind.ImageApi)
                 .DownloadAsIRandomAccessStreamAsync(makoClient.Session.AvatarUrl!)).GetOrThrow();
-            Avatar = await imageStream.GetImageSourceAsync();
+            Avatar = await imageStream.GetBitmapImageSourceAsync();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

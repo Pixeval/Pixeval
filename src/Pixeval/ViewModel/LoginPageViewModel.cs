@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
-using System.Net;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
@@ -21,6 +20,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.Win32;
 using Pixeval.Events;
 using Pixeval.Util;
+using Pixeval.Util.UI;
 
 namespace Pixeval.ViewModel
 {
@@ -176,39 +176,30 @@ namespace Pixeval.ViewModel
             // so check its presence before starts the login procedure
             await AppContext.CopyLoginProxyIfRequiredAsync();
             AdvancePhase(LoginPhaseEnum.NegotiatingPort);
-            var port = IOHelper.NegotiatePort();
             AdvancePhase(LoginPhaseEnum.ExecutingLoginProxy);
             await ScanLoginProxyTask.Task; // awaits the copy and extract operations to complete
-            _loginProxyProcess =
-                await CallLoginProxyAsync(ApplicationLanguages.ManifestLanguages[0],
-                    port); // calls the login proxy process and passes the language and IPC server port
-            var (cookie, code, verifier) =
-                await WhenLoginTokenRequestedAsync(
-                    port); // awaits the login proxy to sends the post request which contains the login result
+            _loginProxyProcess = await CallLoginProxyAsync(ApplicationLanguages.ManifestLanguages[0]); // calls the login proxy process and passes the language and IPC server port
+            var (cookie, code, verifier) = await WhenLoginTokenRequestedAsync(); // awaits the login proxy to sends the post request which contains the login result
             var session = await AuthCodeToSessionAsync(code, verifier, cookie);
-            _loginProxyProcess =
-                null; // if we reach here then the login procedure completes successfully, the login proxy process has been closed by itself, we do not need the control over it
-            App.MakoClient = new MakoClient(session, App.AppSetting.ToMakoClientConfiguration(),
-                new RefreshTokenSessionUpdate());
+            _loginProxyProcess = null; // if we reach here then the login procedure completes successfully, the login proxy process has been closed by itself, we do not need the control over it
+            App.MakoClient = new MakoClient(session, App.AppSetting.ToMakoClientConfiguration(), new RefreshTokenSessionUpdate());
         }
 
         /// <summary>
         /// Starts the login proxy's executable. and passes the required parameters
         /// </summary>
-        public static async Task<Process> CallLoginProxyAsync(string culture, int port)
+        public static async Task<Process> CallLoginProxyAsync(string culture)
         {
-            if (await AppContext.TryGetFileRelativeToLocalFolderAsync(Path.Combine(AppContext.AppLoginProxyFolder,
-                "Pixeval.LoginProxy.exe")) is { } file)
+            if (await AppContext.TryGetFileRelativeToLocalFolderAsync(Path.Combine(AppContext.AppLoginProxyFolder, "Pixeval.LoginProxy.exe")) is { } file)
             {
-                return Process.Start(file.Path, $"{port} {culture}");
+                return Process.Start(file.Path, culture);
             }
 
-            throw new FileNotFoundException(MiscResources.CannotFindLoginProxyServerExecutable,
-                "Pixeval.LoginProxy.exe");
+            throw new FileNotFoundException(MiscResources.CannotFindLoginProxyServerExecutable, "Pixeval.LoginProxy.exe");
         }
 
         [ContractAnnotation("=> halt")]
-        public static async Task<(string cookie, string code, string verifier)> WhenLoginTokenRequestedAsync(int port)
+        public static async Task<(string cookie, string code, string verifier)> WhenLoginTokenRequestedAsync()
         {
             var pipeServer = new NamedPipeServerStream("pixiv_login");
             await pipeServer.WaitForConnectionAsync();
@@ -256,11 +247,6 @@ namespace Pixeval.ViewModel
                 CookieCreation = DateTimeOffset.Now
             };
             return session;
-        }
-
-        public static void Cleanup()
-        {
-            _loginProxyProcess?.Kill();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
