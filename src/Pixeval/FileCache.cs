@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -16,10 +17,8 @@ namespace Pixeval
 
     public class FileCache
     {
-
-
         private readonly Type[] _supportedKeyTypes;
-        private readonly Lazy<string> _baseDirectory;
+        private readonly string _baseDirectory;
         private const string IndexFileName = "idx.json";
         private Dictionary<Guid, string> _index;
         private string? _indexFile;
@@ -30,16 +29,20 @@ namespace Pixeval
         private readonly ReaderWriterLockSlim _expireIndexLocker;
         private readonly MD5 _md5;
 
+        
+        public static FileCache Default { get; private set; }
+        public int HitCount { get; private set; }
 
-
+        static FileCache()
+        {
+            Default = new FileCache();
+        }
 
         private FileCache(string? cacheDirectory = null)
         {
             _md5 = MD5.Create();
             _supportedKeyTypes = new[] { typeof(int), typeof(uint), typeof(ulong), typeof(long) };
-            _baseDirectory = new Lazy<string>(() => string.IsNullOrEmpty(cacheDirectory)
-                ? Path.Combine(Path.GetTempPath(), Assembly.GetAssembly(typeof(App))?.GetName().Name! + "Cache")
-                : cacheDirectory);
+            _baseDirectory = string.IsNullOrEmpty(cacheDirectory) ? Path.Combine(Path.GetTempPath(), Assembly.GetAssembly(typeof(App))!.GetName().Name + "Cache") : cacheDirectory;
 
             _index = new Dictionary<Guid, string>();
             _indexLocker = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
@@ -68,9 +71,9 @@ namespace Pixeval
             _expireIndexLocker.EnterWriteLock();
             try
             {
-                string? path = Path.Combine(_baseDirectory.Value, key.ToString("N"));
-                if (!Directory.Exists(_baseDirectory.Value))
-                    Directory.CreateDirectory(_baseDirectory.Value);
+                string? path = Path.Combine(_baseDirectory, key.ToString("N"));
+                if (!Directory.Exists(_baseDirectory))
+                    Directory.CreateDirectory(_baseDirectory);
 
                 switch (data)
                 {
@@ -146,7 +149,7 @@ namespace Pixeval
             _indexLocker.EnterWriteLock();
             if (data == null)
                 throw new ArgumentNullException(nameof(data), @"Data can not be null.");
-            Add(Guid.Parse(key), data, expireIn, eTag);
+            Add(HashToGuid(key), data, expireIn, eTag);
 
         }
 
@@ -180,7 +183,7 @@ namespace Pixeval
         /// <param name="keys">keys to empty</param>
         public void Empty(params string[] keys)
         {
-            Empty(keys.Select(Guid.Parse).ToArray());
+            Empty(keys.Select(HashToGuid).ToArray());
         }
         /// <summary>
         /// Empties all specified entries regardless if they are expired.
@@ -195,7 +198,7 @@ namespace Pixeval
             {
                 foreach (var k in keys)
                 {
-                    string? file = Path.Combine(_baseDirectory.Value, HashToGuid(k).ToString("N"));
+                    string? file = Path.Combine(_baseDirectory, HashToGuid(k).ToString("N"));
                     if (File.Exists(file))
                         File.Delete(file);
 
@@ -223,7 +226,7 @@ namespace Pixeval
                 foreach (var item in _index)
                 {
                     var guid = HashToGuid(item.Key);
-                    string? file = Path.Combine(_baseDirectory.Value, guid.ToString("N"));
+                    string? file = Path.Combine(_baseDirectory, guid.ToString("N"));
                     if (File.Exists(file))
                         File.Delete(file);
                 }
@@ -255,7 +258,7 @@ namespace Pixeval
 
                 foreach (var item in expired)
                 {
-                    string? file = Path.Combine(_baseDirectory.Value, item.Key.ToString("N"));
+                    string? file = Path.Combine(_baseDirectory, item.Key.ToString("N"));
                     if (File.Exists(file))
                         File.Delete(file);
                     toRemove.Add(item.Key);
@@ -305,7 +308,7 @@ namespace Pixeval
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentException(@"Key can not be null or empty.", nameof(key));
-            return Exists(Guid.Parse(key));
+            return Exists(HashToGuid(key));
         }
 
         /// <summary>
@@ -389,7 +392,7 @@ namespace Pixeval
 
         public T? Get<T>(string key)
         {
-            return Get<T>(Guid.Parse(key));
+            return Get<T>(HashToGuid(key));
         }
 
         /// <summary>
@@ -399,31 +402,28 @@ namespace Pixeval
         /// <returns>The data object that was stored if found, else default(T)</returns>
         public T? Get<T>(Guid key)
         {
-            //if (string.IsNullOrWhiteSpace(key))
-            //    throw new ArgumentException( @"Key can not be null or empty.",nameof(key));
-
             var result = default(T);
 
             _indexLocker.EnterReadLock();
 
             try
             {
-                string? path = Path.Combine(_baseDirectory.Value, key.ToString("N"));
+                string? path = Path.Combine(_baseDirectory, key.ToString("N"));
 
                 if (_index.ContainsKey(key) && File.Exists(path) && (!AutoExpire || (AutoExpire && !IsExpired(key))))
                 {
                     var bytes = File.ReadAllBytes(path);
-                    if (typeof(T).IsSubclassOf(typeof(Stream)))
+                    if (typeof(T)==typeof(Stream)||typeof(T).IsSubclassOf(typeof(Stream)))
                     {
-                        return (T)(object)new MemoryStream(bytes);
+                        result= (T)(object)new MemoryStream(bytes);
                     }
                     else if (typeof(T)==typeof(byte[]))
                     {
-                        return (T)(object)bytes;
+                        result = (T)(object)bytes;
                     }
                     else
                     {
-                        return JsonSerializer.Deserialize<T>(bytes);
+                        result = JsonSerializer.Deserialize<T>(bytes);
                     }
                 }
             }
@@ -431,7 +431,8 @@ namespace Pixeval
             {
                 _indexLocker.ExitReadLock();
             }
-
+            HitCount++;
+            Debug.WriteLine(HitCount);
             return result;
         }
         public DateTimeOffset? GetExpiration(object key)
@@ -523,7 +524,7 @@ namespace Pixeval
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentException(@"Key can not be null or empty.", nameof(key));
 
-            return GetETag(Guid.Parse(key));
+            return GetETag(HashToGuid(key));
         }
         /// <summary>
         /// Gets the ETag for the specified key.
@@ -580,7 +581,7 @@ namespace Pixeval
         /// <returns>If the expiration data has been met</returns>
         public bool IsExpired(string key)
         {
-            return IsExpired(Guid.Parse(key));
+            return IsExpired(HashToGuid(key));
         }
 
         /// <summary>
@@ -610,9 +611,9 @@ namespace Pixeval
         private void WriteIndex()
         {
             if (string.IsNullOrEmpty(_indexFile))
-                _indexFile = Path.Combine(_baseDirectory.Value, IndexFileName);
-            if (!Directory.Exists(_baseDirectory.Value))
-                Directory.CreateDirectory(_baseDirectory.Value);
+                _indexFile = Path.Combine(_baseDirectory, IndexFileName);
+            if (!Directory.Exists(_baseDirectory))
+                Directory.CreateDirectory(_baseDirectory);
 
             File.WriteAllBytes(_indexFile, JsonSerializer.SerializeToUtf8Bytes(_index));
         }
@@ -620,7 +621,7 @@ namespace Pixeval
         private void LoadIndex()
         {
             if (string.IsNullOrEmpty(_indexFile))
-                _indexFile = Path.Combine(_baseDirectory.Value, IndexFileName);
+                _indexFile = Path.Combine(_baseDirectory, IndexFileName);
 
             if (!File.Exists(_indexFile))
                 return;
@@ -634,17 +635,17 @@ namespace Pixeval
         private void WriteExpireIndex()
         {
             if (string.IsNullOrEmpty(_expireIndexFile))
-                _expireIndexFile = Path.Combine(_baseDirectory.Value, ExpireIndexFileName);
-            if (!Directory.Exists(_baseDirectory.Value))
-                Directory.CreateDirectory(_baseDirectory.Value);
+                _expireIndexFile = Path.Combine(_baseDirectory, ExpireIndexFileName);
+            if (!Directory.Exists(_baseDirectory))
+                Directory.CreateDirectory(_baseDirectory);
 
-            File.WriteAllBytes(_expireIndexFile, JsonSerializer.SerializeToUtf8Bytes(_index));
+            File.WriteAllBytes(_expireIndexFile, JsonSerializer.SerializeToUtf8Bytes(_expireIndex));
         }
 
         private void LoadExpireIndex()
         {
             if (string.IsNullOrEmpty(_expireIndexFile))
-                _expireIndexFile = Path.Combine(_baseDirectory.Value, ExpireIndexFileName);
+                _expireIndexFile = Path.Combine(_baseDirectory, ExpireIndexFileName);
 
             if (!File.Exists(_expireIndexFile))
                 return;

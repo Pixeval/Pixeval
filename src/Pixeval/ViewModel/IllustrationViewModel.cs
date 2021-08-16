@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
@@ -102,9 +103,26 @@ namespace Pixeval.ViewModel
         {
             if (Illustration.GetThumbnailUrl(thumbnailUrlOptions) is { } url)
             {
+                //TODO Confirm the key
+                var key = Illustration.Id + ":0";
+                if (FileCache.Default.Exists(key))
+                {
+                    var cacheStream = FileCache.Default.Get<Stream>(key);
+                    if (cacheStream is not null)
+                    {
+                        return cacheStream.AsRandomAccessStream();
+                    }
+                }
                 return await App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle) switch
                 {
-                    Result<IRandomAccessStream>.Success(var stream) => stream,
+                    Result<IRandomAccessStream>.Success(var stream) =>Functions.Block(() =>
+                    {
+                        if (!FileCache.Default.Exists(key))
+                        {
+                            FileCache.Default.Add(key,stream.AsStream(),TimeSpan.FromDays(1));
+                        }
+                        return stream;
+                    }),
                     Result<IRandomAccessStream>.Failure(OperationCanceledException) => Functions.Block<IRandomAccessStream?>(() =>
                     {
                         LoadingThumbnailCancellationHandle.Reset();
