@@ -5,26 +5,9 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+                <ResourceDictionary Source="Themes.xaml" />
                 <!--  Other merged dictionaries here  -->
             </ResourceDictionary.MergedDictionaries>
-            <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Default">
-                    <SolidColorBrush x:Key="SidePanelBackgroundThemeBrush"
-                                     Color="#F2F2F2" />
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Light">
-                    <SolidColorBrush x:Key="SidePanelBackgroundThemeBrush"
-                                     Color="#F2F2F2" />
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Dark">
-                    <SolidColorBrush x:Key="SidePanelBackgroundThemeBrush"
-                                     Color="#232323" />
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="HighContrast">
-                    <SolidColorBrush x:Key="SidePanelBackgroundThemeBrush"
-                                     Color="#323232" />
-                </ResourceDictionary>
-            </ResourceDictionary.ThemeDictionaries>
             <x:Double x:Key="PixevalTitleFontSize">25</x:Double>
             <x:Double x:Key="PixevalSubtitleFontSize">18</x:Double>
             <x:Double x:Key="PixevalContentFontSize">14</x:Double>

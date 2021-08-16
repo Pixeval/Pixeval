@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Globalization;
+using System.Linq;
 using System.Windows;
 
 namespace Pixeval.LoginProxy
@@ -7,15 +8,9 @@ namespace Pixeval.LoginProxy
     {
         public static string? Culture;
 
-        // reserved: public static bool? SignUp;
-
         protected override void OnStartup(StartupEventArgs e)
         {
-#if DEBUG
-            Culture = "zh-CN";
-#else
-            Environment.Exit(-1);
-#endif
+            Culture = e.Args.FirstOrDefault() ?? CultureInfo.CurrentUICulture.ToString();
         }
     }
 }

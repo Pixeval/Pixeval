@@ -47,36 +47,8 @@
                                  To="0"
                                  Duration="0:0:1" />
             </Storyboard>
-            <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Default">
-                    <AcrylicBrush x:Key="ImageMaskAcrylicBrush"
-                                  FallbackColor="#E6E6E6"
-                                  TintColor="#E6E6E6"
-                                  TintLuminosityOpacity="0.4"
-                                  TintOpacity="0.3" />
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Light">
-                    <AcrylicBrush x:Key="ImageMaskAcrylicBrush"
-                                  FallbackColor="#E6E6E6"
-                                  TintColor="#E6E6E6"
-                                  TintLuminosityOpacity="0.4"
-                                  TintOpacity="0.3" />
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Dark">
-                    <AcrylicBrush x:Key="ImageMaskAcrylicBrush"
-                                  FallbackColor="#515151"
-                                  TintColor="#515151"
-                                  TintLuminosityOpacity="0.4"
-                                  TintOpacity="0.3" />
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="HighContrast">
-                    <SolidColorBrush x:Key="ImageMaskAcrylicBrush"
-                                     Color="{ThemeResource SystemColorWindowColor}" />
-                </ResourceDictionary>
-            </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
     </ui:EnhancedPage.Resources>
-
     <Grid>
         <Grid x:Name="IllustrationOriginalImageContainer"
               HorizontalAlignment="Stretch"
@@ -102,7 +74,7 @@
         <Grid HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch"
               Visibility="{x:Bind _viewModel.GetLoadingMaskVisibility(_viewModel.LoadingOriginalSourceTask), Mode=OneWay}">
-            <Rectangle Fill="{ThemeResource ImageMaskAcrylicBrush}" />
+            <Rectangle Fill="{ThemeResource PixevalAppAcrylicBrush}" />
             <ProgressRing Width="50"
                           Height="50"
                           HorizontalAlignment="Center"

@@ -12,7 +12,6 @@ using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Options;
-using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.ViewModel;

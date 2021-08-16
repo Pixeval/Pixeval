@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
@@ -87,7 +88,7 @@ namespace Pixeval.LoginProxy
             LoginWebView.CoreWebView2.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All);
             LoginWebView.CoreWebView2.WebResourceRequested += (_, args) =>
             {
-                args.Request.Headers.SetHeader("Accept-Language", args.Request.Uri.Contains("recaptcha") ? "zh-cn" : App.Culture);
+                args.Request.Headers.SetHeader("Accept-Language", args.Request.Uri.Contains("recaptcha") ? "zh-cn" : CultureInfo.CurrentUICulture.Name);
             };
             var codeVerifier = PixivAuth.GetCodeVerify();
             LoginWebView.Source = new Uri(PixivAuth.GenerateWebPageUrl(codeVerifier));
