@@ -7,6 +7,10 @@ on:
 
 jobs:
     build:
+        strategy:
+            matrix:
+                platform: [¡®x64¡¯,'x86','arm64']
+
         runs-on: windows-latest
 
         steps:
@@ -18,23 +22,14 @@ jobs:
             - name: setup-msbuild
               uses: microsoft/setup-msbuild@v1
               
-            - name: Cache nuget packages
-              id: cache-nuget
-              uses: actions/cache@v2
-              with:
-                  path: ~/.nuget/packages
-                  key: ${{ runner.os }}-nuget-${{ hashFiles('**/Pixeval.csproj') }}
-                  restore-keys: |
-                      ${{ runner.os }}-nuget-
-
             - name: Restore the application
-              run: msbuild -t:restore
+              run: msbuild -t:restore -p:Platform=${{ matrix.platform }}
 
             - name: Publish the application
-              run:  msbuild -t:publish -p:PublishDir="$PWD/publish" -p:Configuration=Release -p:Platform=x64
+              run:  msbuild '.\src\Pixeval (Package)\Pixeval (Package).wapproj' -t:build -p:Configuration=Release -p:Platform=${{ matrix.platform }}
 
             - name: Upload a Build Artifact
               uses: actions/upload-artifact@v2
               with:
                   name: Pixeval
-                  path: "./publish/*"
+                  path: "./src/Pixeval (Package)/AppPackages/*"
