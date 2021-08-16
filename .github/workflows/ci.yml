@@ -9,7 +9,7 @@ jobs:
     build:
         strategy:
             matrix:
-                platform: [¡®x64¡¯,'x86','arm64']
+                platform: ['x64','x86','arm64']
 
         runs-on: windows-latest
 
