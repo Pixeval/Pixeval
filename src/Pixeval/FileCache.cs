@@ -12,28 +12,12 @@ using System.Threading;
 
 namespace Pixeval
 {
-    /// <summary>
-    /// Current state of the item in the cache.
-    /// </summary>
-    [Flags]
-    public enum CacheState
-    {
-        /// <summary>
-        /// An unknown state for the cache item
-        /// </summary>
-        None = 0,
-        /// <summary>
-        /// Expired cache item
-        /// </summary>
-        Expired = 1,
-        /// <summary>
-        /// Active non-expired cache item
-        /// </summary>
-        Active = 2
-    }
+    
 
-    public class FileCacheBarrel
+    public class FileCache
     {
+
+
         private readonly Type[] _supportedKeyTypes;
         private readonly Lazy<string> _baseDirectory;
         private const string IndexFileName = "idx.json";
@@ -49,7 +33,7 @@ namespace Pixeval
 
 
 
-        private FileCacheBarrel(string? cacheDirectory = null)
+        private FileCache(string? cacheDirectory = null)
         {
             _md5 = MD5.Create();
             _supportedKeyTypes = new[] { typeof(int), typeof(uint), typeof(ulong), typeof(long) };
@@ -68,11 +52,11 @@ namespace Pixeval
 
         public bool AutoExpire { get; set; }
 
-        public static FileCacheBarrel Create(string cacheDirectory) =>
+        public static FileCache Create(string cacheDirectory) =>
             new(cacheDirectory);
 
         /// <summary>
-        /// Adds an entry to the barrel
+        /// Adds an entry to the cache
         /// </summary>
         /// <param name="key">Unique identifier for the entry</param>
         /// <param name="data">Data object to store</param>
@@ -116,7 +100,7 @@ namespace Pixeval
             }
         }
         /// <summary>
-        /// Adds an entry to the barrel
+        /// Adds an entry to the cache
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="key">Unique identifier for the entry</param>
@@ -147,7 +131,7 @@ namespace Pixeval
 
         }
         /// <summary>
-        /// Adds an entry to the barrel
+        /// Adds an entry to the cache
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="key">Unique identifier for the entry</param>
@@ -227,7 +211,7 @@ namespace Pixeval
         }
 
         /// <summary>
-        /// Empties all expired entries that are in the Barrel.
+        /// Empties all expired entries that are in the cache.
         /// Throws an exception if any deletions fail and rolls back changes.
         /// </summary>
         public void EmptyAll()
@@ -255,7 +239,7 @@ namespace Pixeval
         }
 
         /// <summary>
-        /// Empties all expired entries that are in the Barrel.
+        /// Empties all expired entries that are in the cache.
         /// Throws an exception if any deletions fail and rolls back changes.
         /// </summary>
         public void EmptyExpired()
@@ -290,7 +274,7 @@ namespace Pixeval
             }
         }
         /// <summary>
-        /// Checks to see if the key exists in the Barrel.
+        /// Checks to see if the key exists in the cache.
         /// </summary>
         /// <param name="key">Unique identifier for the entry to check</param>
         /// <returns>If the key exists</returns>
@@ -313,7 +297,7 @@ namespace Pixeval
         }
 
         /// <summary>
-        /// Checks to see if the key exists in the Barrel.
+        /// Checks to see if the key exists in the cache.
         /// </summary>
         /// <param name="key">Unique identifier for the entry to check</param>
         /// <returns>If the key exists</returns>
@@ -325,7 +309,7 @@ namespace Pixeval
         }
 
         /// <summary>
-        /// Checks to see if the key exists in the Barrel.
+        /// Checks to see if the key exists in the cache.
         /// </summary>
         /// <param name="key">Unique identifier for the entry to check</param>
         /// <returns>If the key exists</returns>
@@ -726,5 +710,25 @@ namespace Pixeval
                 return DateTimeOffset.MaxValue;
             }
         }
+    }
+
+    /// <summary>
+    /// Current state of the item in the cache.
+    /// </summary>
+    [Flags]
+    public enum CacheState
+    {
+        /// <summary>
+        /// An unknown state for the cache item
+        /// </summary>
+        None = 0,
+        /// <summary>
+        /// Expired cache item
+        /// </summary>
+        Expired = 1,
+        /// <summary>
+        /// Active non-expired cache item
+        /// </summary>
+        Active = 2
     }
 }
