@@ -31,7 +31,7 @@ jobs:
               run: msbuild -t:restore
 
             - name: Publish the application
-              run:  msbuild -t:publish -p:PublishDir="$PWD/publish" -p:Configuration=Release
+              run:  msbuild -t:publish -p:PublishDir="$PWD/publish" -p:Configuration=Release -p:Platform=x64
 
             - name: Upload a Build Artifact
               uses: actions/upload-artifact@v2
