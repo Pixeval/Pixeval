@@ -9,11 +9,6 @@ jobs:
     build:
         runs-on: windows-latest
 
-        env:
-            Solution_Name: ./Pixeval.sln
-            Project_Path: ./src/Pixeval/Pixeval.csproj
-            Configuration: Release
-
         steps:
             - name: Checkout
               uses: actions/checkout@v2
@@ -36,7 +31,7 @@ jobs:
               run: msbuild -t:restore
 
             - name: Publish the application
-              run:  msbuild -t:publish -p:PublishDir="$PWD/publish" -c $env:Configuration
+              run:  msbuild -t:publish -p:PublishDir="$PWD/publish" -p:Configuration=Release
 
             - name: Upload a Build Artifact
               uses: actions/upload-artifact@v2
