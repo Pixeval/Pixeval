@@ -1,218 +1,218 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows10.0.19041</TargetFramework>
-    <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
-    <RootNamespace>Pixeval</RootNamespace>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Platforms>x86;x64;arm64</Platforms>
-    <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
-    <UseWinUI>true</UseWinUI>
-    <Nullable>enable</Nullable>
-    <DefaultLanguage>zh-CN</DefaultLanguage>
-    <EnableNETAnalyzers>false</EnableNETAnalyzers>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm64'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm64'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <ItemGroup>
-    <Content Remove="Assets\Images\77032538.png" />
-    <Content Remove="Assets\Images\logo-no-caption.png" />
-    <Content Remove="Assets\Strings\zh-CN\BookmarksPage.resw" />
-    <Content Remove="Assets\Strings\zh-CN\DownloadAndHistoryListPage.resw" />
-    <Content Remove="Assets\Strings\zh-CN\IllustrationGridCommandBar.resw" />
-    <Content Remove="Assets\Strings\zh-CN\IllustrationInfoPage.resw" />
-    <Content Remove="Assets\Strings\zh-CN\IllustrationViewerPage.resw" />
-    <Content Remove="Assets\Strings\zh-CN\ImageViewerPage.resw" />
-    <Content Remove="Assets\Strings\zh-CN\RecommendsPage.resw" />
-    <Content Remove="Assets\Strings\zh-CN\SettingsPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Assets\Certs\pixeval_server_cert.pfx" />
-    <None Remove="Assets\Images\logo44x44.ico" />
-    <None Remove="Assets\Strings\zh-CN\BookmarksPage.resw" />
-    <None Remove="Pages\BookMarksPage.xaml" />
-    <None Remove="Pages\DownloadAndHistoryListPage.xaml" />
-    <None Remove="Pages\IllustrationGridPage.xaml" />
-    <None Remove="Pages\IllustrationViewerPage.xaml" />
-    <None Remove="Pages\IllustrationViewer\CommentsPage.xaml" />
-    <None Remove="Pages\IllustrationViewer\IllustrationInfoPage.xaml" />
-    <None Remove="Pages\ImageViewerPage.xaml" />
-    <None Remove="Pages\RecommendationPage.xaml" />
-    <None Remove="Pages\SettingsPage.xaml" />
-    <None Remove="Themes.xaml" />
-    <None Remove="UserControls\IllustrationGridCommandBar.xaml" />
-  </ItemGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net5.0-windows10.0.19041</TargetFramework>
+		<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+		<RootNamespace>Pixeval</RootNamespace>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<Platforms>x86;x64;arm64</Platforms>
+		<RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+		<UseWinUI>true</UseWinUI>
+		<Nullable>enable</Nullable>
+		<DefaultLanguage>zh-CN</DefaultLanguage>
+		<EnableNETAnalyzers>false</EnableNETAnalyzers>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+		<DefineConstants>TRACE;DEBUG</DefineConstants>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm64'">
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm64'">
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	<ItemGroup>
+		<Content Remove="Assets\Images\77032538.png" />
+		<Content Remove="Assets\Images\logo-no-caption.png" />
+		<Content Remove="Assets\Strings\zh-CN\BookmarksPage.resw" />
+		<Content Remove="Assets\Strings\zh-CN\DownloadAndHistoryListPage.resw" />
+		<Content Remove="Assets\Strings\zh-CN\IllustrationGridCommandBar.resw" />
+		<Content Remove="Assets\Strings\zh-CN\IllustrationInfoPage.resw" />
+		<Content Remove="Assets\Strings\zh-CN\IllustrationViewerPage.resw" />
+		<Content Remove="Assets\Strings\zh-CN\ImageViewerPage.resw" />
+		<Content Remove="Assets\Strings\zh-CN\RecommendsPage.resw" />
+		<Content Remove="Assets\Strings\zh-CN\SettingsPage.resw" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="Assets\Certs\pixeval_server_cert.pfx" />
+		<None Remove="Assets\Images\logo44x44.ico" />
+		<None Remove="Assets\Strings\zh-CN\BookmarksPage.resw" />
+		<None Remove="Pages\BookMarksPage.xaml" />
+		<None Remove="Pages\DownloadAndHistoryListPage.xaml" />
+		<None Remove="Pages\IllustrationGridPage.xaml" />
+		<None Remove="Pages\IllustrationViewerPage.xaml" />
+		<None Remove="Pages\IllustrationViewer\CommentsPage.xaml" />
+		<None Remove="Pages\IllustrationViewer\IllustrationInfoPage.xaml" />
+		<None Remove="Pages\ImageViewerPage.xaml" />
+		<None Remove="Pages\RecommendationPage.xaml" />
+		<None Remove="Pages\SettingsPage.xaml" />
+		<None Remove="Themes.xaml" />
+		<None Remove="UserControls\IllustrationGridCommandBar.xaml" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.0.3" />
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.0.3" />
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.0.3" />
-    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="8.2.1" />
-    <PackageReference Include="Mako" Version="1.2.0" />
-    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.1.3" />
-    <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.1" />
-    <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.1" />
-    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.1" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.0-preview1" />
-    <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.0-preview1" />
-    <PackageReference Include="Microsoft.Win32.Registry" Version="6.0.0-preview.5.21301.5" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.4" />
-    <PackageReference Include="PInvoke.User32" Version="0.7.104" />
-    <PackageReference Include="ReverseMarkdown" Version="3.19.0" />
-    <PackageReference Include="System.Linq.Async" Version="5.0.0" />
-    <Manifest Include="$(ApplicationManifest)" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.0.3" />
+		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.0.3" />
+		<PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.0.3" />
+		<PackageReference Include="Magick.NET-Q16-AnyCPU" Version="8.2.1" />
+		<PackageReference Include="Mako" Version="1.2.0" />
+		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.1.3" />
+		<PackageReference Include="Microsoft.ProjectReunion" Version="0.8.1" />
+		<PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.1" />
+		<PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.1" />
+		<PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.0-preview1" />
+		<PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.0-preview1" />
+		<PackageReference Include="Microsoft.Win32.Registry" Version="6.0.0-preview.5.21301.5" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.4" />
+		<PackageReference Include="PInvoke.User32" Version="0.7.104" />
+		<PackageReference Include="ReverseMarkdown" Version="3.19.0" />
+		<PackageReference Include="System.Linq.Async" Version="5.0.0" />
+		<Manifest Include="$(ApplicationManifest)" />
+	</ItemGroup>
 
-  <!-- region Exposes PRI resources to the source generator -->
+	<!-- region Exposes PRI resources to the source generator -->
 
-  <Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
-    <ItemGroup>
-      <AdditionalFiles Include="@(PRIResource)" SourceItemGroup="PRIResource" />
-    </ItemGroup>
-  </Target>
+	<Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
+		<ItemGroup>
+			<AdditionalFiles Include="@(PRIResource)" SourceItemGroup="PRIResource" />
+		</ItemGroup>
+	</Target>
 
-  <ItemGroup>
-    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
-  </ItemGroup>
+	<ItemGroup>
+		<CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
+	</ItemGroup>
 
-  <!-- endregion Exposes PRI resources to the source generator -->
+	<!-- endregion Exposes PRI resources to the source generator -->
 
 	<Target Name="PackageLoginProxy" BeforeTargets="PrepareForBuild">
 		<PropertyGroup>
 			<LoginProxyAssetsPath>$(MSBuildProjectDirectory)\Assets\Binary\Pixeval.LoginProxy.zip</LoginProxyAssetsPath>
-      <LoginProxyPublishDir>$(TEMP)\LoginProxy</LoginProxyPublishDir>
-      <LoginProxyPublishConfiguration>Release</LoginProxyPublishConfiguration>
-      <LoginProxyPublishPlatform>Any CPU</LoginProxyPublishPlatform>
-      <LoginProxyPublishProtocol>FileSystem</LoginProxyPublishProtocol>
-      <LoginProxyPublishTargetFramework>net5.0-windows</LoginProxyPublishTargetFramework>
-      <LoginProxyPublishSelfContained>false</LoginProxyPublishSelfContained>
-    </PropertyGroup>
+			<LoginProxyPublishDir>$(TEMP)\LoginProxy</LoginProxyPublishDir>
+			<LoginProxyPublishConfiguration>Release</LoginProxyPublishConfiguration>
+			<LoginProxyPublishPlatform>Any CPU</LoginProxyPublishPlatform>
+			<LoginProxyPublishProtocol>FileSystem</LoginProxyPublishProtocol>
+			<LoginProxyPublishTargetFramework>net5.0-windows</LoginProxyPublishTargetFramework>
+			<LoginProxyPublishSelfContained>false</LoginProxyPublishSelfContained>
+		</PropertyGroup>
 		<RemoveDir Directories="$(LoginProxyPublishDir)"></RemoveDir>
-		<MSBuild Projects="$(MSBuildProjectDirectory)\..\Pixeval.LoginProxy\Pixeval.LoginProxy.csproj" Targets="publish" 
+		<MSBuild Projects="$(MSBuildProjectDirectory)\..\Pixeval.LoginProxy\Pixeval.LoginProxy.csproj" Targets="publish"
              Properties="Configuration=$(LoginProxyPublishConfiguration);Platform=$(LoginProxyPublishPlatform);PublishDir=$(LoginProxyPublishDir);PublishProtocol=$(LoginProxyPublishProtocol);TargetFramework=$(LoginProxyPublishTargetFramework);SelfContained=$(LoginProxyPublishSelfContained);" />
 		<Delete Files="$(LoginProxyAssetsPath)"></Delete>
 		<MakeDir Directories="$(MSBuildProjectDirectory)\Assets\Binary"></MakeDir>
 		<ZipDirectory DestinationFile="$(LoginProxyAssetsPath)" SourceDirectory="$(LoginProxyPublishDir)"></ZipDirectory>
-    <RemoveDir Directories="$(LoginProxyPublishDir)"></RemoveDir>
-  </Target>
+		<RemoveDir Directories="$(LoginProxyPublishDir)"></RemoveDir>
+	</Target>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Page Update="Pages\Misc\SettingsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Misc\SettingsPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Page Update="Pages\Misc\DownloadAndHistoryListPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Misc\DownloadAndHistoryListPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Page Update="Pages\IllustrationViewer\IllustrationViewerPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\IllustrationViewer\IllustrationViewerPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Page Update="UserControls\IllustrationGridCommandBar.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
+	<ItemGroup>
+		<Page Update="UserControls\IllustrationGridCommandBar.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Page Update="Pages\Capabilities\RecommendationPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Capabilities\RecommendationPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Page Update="UserControls\IllustrationGrid.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
+	<ItemGroup>
+		<Page Update="UserControls\IllustrationGrid.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Page Update="Pages\Misc\MessageDialogContent.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Misc\MessageDialogContent.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
 
 
-  <ItemGroup>
-    <Page Update="Pages\MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\MainPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Page Update="Pages\Misc\LoginPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Misc\LoginPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Assets\Binary\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Assets\Binary\" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PRIResource Include="Assets\Strings\zh-CN\BookmarksPage.resw" />
-  </ItemGroup>
+	<ItemGroup>
+		<PRIResource Include="Assets\Strings\zh-CN\BookmarksPage.resw" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Update="Assets\Images\logo44x44.ico">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+	<ItemGroup>
+		<Content Update="Assets\Images\logo44x44.ico">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Page Update="Themes.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
+	<ItemGroup>
+		<Page Update="Themes.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Page Update="Pages\IllustrationViewer\CommentsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\IllustrationViewer\CommentsPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Page Update="Pages\IllustrationViewer\IllustrationInfoPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\IllustrationViewer\IllustrationInfoPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Page Update="Pages\IllustrationViewer\ImageViewerPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\IllustrationViewer\ImageViewerPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Page Update="Pages\Capabilities\BookmarksPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
+	<ItemGroup>
+		<Page Update="Pages\Capabilities\BookmarksPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
 </Project>
