@@ -101,7 +101,7 @@ namespace Pixeval.ViewModel
                     var cacheStream = FileCache.Default.Get<Stream>(key);
                     if (cacheStream is not null)
                     {
-                        return cacheStream.AsRandomAccessStream();
+                        return (await cacheStream).AsRandomAccessStream();
                     }
                 }
                 return await App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle) switch
