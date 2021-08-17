@@ -110,7 +110,7 @@ namespace Pixeval.ViewModel
                     {
                         if (!FileCache.Default.Exists(key))
                         {
-                            FileCache.Default.Add(key,stream.AsStream(),TimeSpan.FromDays(1));
+                            FileCache.Default.Add(key, stream.AsStream(), TimeSpan.FromDays(1));
                         }
                         return stream;
                     }),

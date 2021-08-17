@@ -8,11 +8,11 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Net.NetworkInformation;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.Security.Cryptography;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -72,29 +72,24 @@ namespace Pixeval.Util
             await storageStreamTransaction.Stream.WriteAsync(CryptographicBuffer.CreateFromByteArray(bytes));
         }
 
-        public static Task WriteStringAsync(this StorageFile storageFile, string str)
+        public static IAsyncAction WriteStringAsync(this StorageFile storageFile, string str)
         {
             return storageFile.WriteBytesAsync(str.GetBytes());
         }
 
-        public static async Task WriteBytesAsync(this StorageFile storageFile, byte[] bytes)
+        public static IAsyncAction WriteBytesAsync(this StorageFile storageFile, byte[] bytes)
         {
-            using var storageStreamTransaction = await storageFile.OpenTransactedWriteAsync(StorageOpenOptions.AllowOnlyReaders);
-            await storageStreamTransaction.WriteBytesAsync(bytes);
-            await storageStreamTransaction.CommitAsync();
+            return FileIO.WriteBytesAsync(storageFile, bytes);
         }
 
-        public static int NegotiatePort()
+        public static async Task<StorageFile> GetOrCreateFileAsync(this StorageFolder folder, string itemName)
         {
-            var unavailable = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections().Select(t => t.LocalEndPoint.Port).ToArray();
-            var rd = new Random();
-            var proxyPort = rd.Next(3000, 65536);
-            while (Array.BinarySearch(unavailable, proxyPort) >= 0)
-            {
-                proxyPort = rd.Next(3000, 65536);
-            }
+            return await folder.TryGetItemAsync(itemName) is StorageFile file ? file : await folder.CreateFileAsync(itemName, CreationCollisionOption.ReplaceExisting);
+        }
 
-            return proxyPort;
+        public static async Task<StorageFolder> GetOrCreateFolderAsync(this StorageFolder folder, string folderName)
+        {
+            return await folder.TryGetItemAsync(folderName) is StorageFolder f ? f : await folder.CreateFolderAsync(folderName, CreationCollisionOption.ReplaceExisting);
         }
 
         public static async Task<string> ReadStringAsync(this StorageFile storageFile, Encoding? encoding = null)

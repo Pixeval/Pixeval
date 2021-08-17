@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Windows.Foundation;
 
 namespace Pixeval.Util
 {
@@ -66,5 +67,20 @@ namespace Pixeval.Util
         }
 
         public static bool Inverse(ref this bool b) => b = !b;
+
+        public static T ConfiguredWait<T>(this Task<T> task)
+        {
+            return task.ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+
+        public static void ConfiguredWait(this Task task)
+        {
+            task.ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+
+        public static T ConfiguredWait<T>(this IAsyncOperation<T> operation)
+        {
+            return operation.AsTask().ConfiguredWait();
+        }
     }
 }
