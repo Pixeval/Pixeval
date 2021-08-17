@@ -97,16 +97,17 @@
 	<Target Name="PackageLoginProxy" BeforeTargets="PrepareForBuild">
 		<PropertyGroup>
 			<LoginProxyAssetsPath>$(MSBuildProjectDirectory)\Assets\Binary\Pixeval.LoginProxy.zip</LoginProxyAssetsPath>
-			<LoginProxyPublishDir>$(TEMP)\LoginProxy</LoginProxyPublishDir>
-			<LoginProxyPublishConfiguration>Release</LoginProxyPublishConfiguration>
-			<LoginProxyPublishPlatform>Any CPU</LoginProxyPublishPlatform>
+			<LoginProxyPublishDir>$(TEMP)\LoginProxy-$(Configuration)-$(Platform)</LoginProxyPublishDir>
+			<LoginProxyPublishConfiguration>$(Configuration)</LoginProxyPublishConfiguration>
+			<LoginProxyPublishPlatform>$(Platform)</LoginProxyPublishPlatform>
 			<LoginProxyPublishProtocol>FileSystem</LoginProxyPublishProtocol>
 			<LoginProxyPublishTargetFramework>net5.0-windows</LoginProxyPublishTargetFramework>
 			<LoginProxyPublishSelfContained>false</LoginProxyPublishSelfContained>
+			<LoginProxyRuntimeIdentifier>$(RuntimeIdentifier)</LoginProxyRuntimeIdentifier>
 		</PropertyGroup>
 		<RemoveDir Directories="$(LoginProxyPublishDir)"></RemoveDir>
 		<MSBuild Projects="$(MSBuildProjectDirectory)\..\Pixeval.LoginProxy\Pixeval.LoginProxy.csproj" Targets="publish"
-             Properties="Configuration=$(LoginProxyPublishConfiguration);Platform=$(LoginProxyPublishPlatform);PublishDir=$(LoginProxyPublishDir);PublishProtocol=$(LoginProxyPublishProtocol);TargetFramework=$(LoginProxyPublishTargetFramework);SelfContained=$(LoginProxyPublishSelfContained);" />
+             Properties="Configuration=$(LoginProxyPublishConfiguration);RuntimeIdentifier=$(LoginProxyRuntimeIdentifier);Platform=$(LoginProxyPublishPlatform);PublishDir=$(LoginProxyPublishDir);PublishProtocol=$(LoginProxyPublishProtocol);TargetFramework=$(LoginProxyPublishTargetFramework);SelfContained=$(LoginProxyPublishSelfContained);" />
 		<Delete Files="$(LoginProxyAssetsPath)"></Delete>
 		<MakeDir Directories="$(MSBuildProjectDirectory)\Assets\Binary"></MakeDir>
 		<ZipDirectory DestinationFile="$(LoginProxyAssetsPath)" SourceDirectory="$(LoginProxyPublishDir)"></ZipDirectory>
