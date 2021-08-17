@@ -10,7 +10,6 @@ using Pixeval.Util.UI;
 
 namespace Pixeval.ViewModel
 {
-    // fixme: determines why the thumbnail source is null after the navigation
     public class ImageViewerPageViewModel : ObservableObject, IDisposable
     {
         public ImageViewerPageViewModel(IllustrationViewModel illustrationViewModel)

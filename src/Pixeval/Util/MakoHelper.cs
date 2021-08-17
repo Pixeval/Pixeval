@@ -6,7 +6,6 @@ using Mako.Engine;
 using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.Options;
-using Pixeval.ViewModel;
 
 namespace Pixeval.Util
 {
@@ -50,20 +49,6 @@ namespace Pixeval.Util
                 ImageUrls = m.ImageUrls
             });
         }
-
-        public static int Compare<K>(this IllustrationViewModel? m1, IllustrationViewModel? m2, Func<IllustrationViewModel, K> keySelector)
-            where K : IComparable<K>
-        {
-            if (m1 is null || m2 is null)
-            {
-                return 0;
-            }
-
-            var key1 = keySelector(m1);
-            var key2 = keySelector(m2);
-            return key1.CompareTo(key2);
-        }
-
         public static SortDescription? GetSortDescriptionForIllustration(IllustrationSortOption sortOption)
         {
             return sortOption switch

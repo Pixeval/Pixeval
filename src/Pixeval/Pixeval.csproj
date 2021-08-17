@@ -70,6 +70,7 @@
     <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.1" />
     <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.1" />
     <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.1" />
+    <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.0.2" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.0-preview1" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.0-preview1" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="6.0.0-preview.5.21301.5" />
@@ -105,8 +106,7 @@
       <LoginProxyPublishSelfContained>false</LoginProxyPublishSelfContained>
     </PropertyGroup>
 		<RemoveDir Directories="$(LoginProxyPublishDir)"></RemoveDir>
-		<MSBuild Projects="$(MSBuildProjectDirectory)\..\Pixeval.LoginProxy\Pixeval.LoginProxy.csproj" Targets="publish" 
-             Properties="Configuration=$(LoginProxyPublishConfiguration);Platform=$(LoginProxyPublishPlatform);PublishDir=$(LoginProxyPublishDir);PublishProtocol=$(LoginProxyPublishProtocol);TargetFramework=$(LoginProxyPublishTargetFramework);SelfContained=$(LoginProxyPublishSelfContained);" />
+		<MSBuild Projects="$(MSBuildProjectDirectory)\..\Pixeval.LoginProxy\Pixeval.LoginProxy.csproj" Targets="publish" Properties="Configuration=$(LoginProxyPublishConfiguration);Platform=$(LoginProxyPublishPlatform);PublishDir=$(LoginProxyPublishDir);PublishProtocol=$(LoginProxyPublishProtocol);TargetFramework=$(LoginProxyPublishTargetFramework);SelfContained=$(LoginProxyPublishSelfContained);" />
 		<Delete Files="$(LoginProxyAssetsPath)"></Delete>
 		<MakeDir Directories="$(MSBuildProjectDirectory)\Assets\Binary"></MakeDir>
 		<ZipDirectory DestinationFile="$(LoginProxyAssetsPath)" SourceDirectory="$(LoginProxyPublishDir)"></ZipDirectory>
