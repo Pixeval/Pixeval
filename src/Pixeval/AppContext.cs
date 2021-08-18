@@ -70,7 +70,7 @@ namespace Pixeval
         public static async Task CopyLoginProxyIfRequiredAsync()
         {
             var assetFile = await GetAssetBytesAsync("Binary/Pixeval.LoginProxy.zip");
-            var assetChecksum = await assetFile.HashAsync<SHA256CryptoServiceProvider>();
+            var assetChecksum = await assetFile.HashAsync<SHA256Managed>();
             if (await TryGetFolderRelativeToLocalFolderAsync(AppLoginProxyFolder) is { } folder
                 && await folder.TryGetItemAsync("checksum.sha256") is StorageFile checksum)
             {

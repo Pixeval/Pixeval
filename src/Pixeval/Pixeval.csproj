@@ -107,8 +107,7 @@
 			<LoginProxyRuntimeIdentifier>$(RuntimeIdentifier)</LoginProxyRuntimeIdentifier>
 		</PropertyGroup>
 		<RemoveDir Directories="$(LoginProxyPublishDir)"></RemoveDir>
-		<MSBuild Projects="$(MSBuildProjectDirectory)\..\Pixeval.LoginProxy\Pixeval.LoginProxy.csproj" Targets="publish"
-             Properties="Configuration=$(LoginProxyPublishConfiguration);RuntimeIdentifier=$(LoginProxyRuntimeIdentifier);Platform=$(LoginProxyPublishPlatform);PublishDir=$(LoginProxyPublishDir);PublishProtocol=$(LoginProxyPublishProtocol);TargetFramework=$(LoginProxyPublishTargetFramework);SelfContained=$(LoginProxyPublishSelfContained);" />
+		<MSBuild Projects="$(MSBuildProjectDirectory)\..\Pixeval.LoginProxy\Pixeval.LoginProxy.csproj" Targets="publish" Properties="Configuration=$(LoginProxyPublishConfiguration);RuntimeIdentifier=$(LoginProxyRuntimeIdentifier);Platform=$(LoginProxyPublishPlatform);PublishDir=$(LoginProxyPublishDir);PublishProtocol=$(LoginProxyPublishProtocol);TargetFramework=$(LoginProxyPublishTargetFramework);SelfContained=$(LoginProxyPublishSelfContained);" />
 		<Delete Files="$(LoginProxyAssetsPath)"></Delete>
 		<MakeDir Directories="$(MSBuildProjectDirectory)\Assets\Binary"></MakeDir>
 		<ZipDirectory DestinationFile="$(LoginProxyAssetsPath)" SourceDirectory="$(LoginProxyPublishDir)"></ZipDirectory>

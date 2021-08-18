@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,11 +14,8 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using CommunityToolkit.WinUI.Helpers;
 using Microsoft.Toolkit.Diagnostics;
-using Microsoft.Toolkit.HighPerformance.Buffers;
-using Pixeval.Util;
-using Functions = Pixeval.Util.Functions;
 
-namespace Pixeval
+namespace Pixeval.Util
 {
 
     public class FileCache
@@ -35,29 +33,32 @@ namespace Pixeval
         private Dictionary<Guid, DateTimeOffset> _expireIndex;
         private readonly ReaderWriterLockSlim _expireIndexLocker;
 
-        public static FileCache Default { get; }
-
         public int HitCount { get; private set; }
+
+        public bool AutoExpire { get; set; }
+
+        public static FileCache Default { get; }
 
         static FileCache()
         {
-            Default = new FileCache();
+            Default = new FileCache
+            {
+                AutoExpire = true
+            };
         }
 
         private FileCache()
         {
             _supportedKeyTypes = new[] {typeof(int), typeof(uint), typeof(ulong), typeof(long)};
             _baseDirectory = ApplicationData.Current.TemporaryFolder.GetOrCreateFolderAsync(CacheFolderName).ConfiguredWait();
-
             _index = new Dictionary<Guid, string>();
             _indexLocker = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
             _expireIndex = new Dictionary<Guid, DateTimeOffset>();
             _expireIndexLocker = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
-            LoadIndex();
-            WriteIndex();
-        }
 
-        public bool AutoExpire { get; set; }
+            LoadIndexAsync().ConfiguredWait();
+            LoadExpireIndexAsync().ConfiguredWait();
+        }
 
         /// <summary>
         /// Adds an entry to the cache
@@ -66,7 +67,7 @@ namespace Pixeval
         /// <param name="data">Data object to store</param>
         /// <param name="expireIn">Time from UtcNow to expire entry in</param>
         /// <param name="eTag">Optional eTag information</param>
-        public async Task Add(Guid key, object data, TimeSpan expireIn, string? eTag = null)
+        public async Task AddAsync(Guid key, object data, TimeSpan expireIn, string? eTag = null)
         {
             _indexLocker.EnterWriteLock();
             _expireIndexLocker.EnterWriteLock();
@@ -92,8 +93,8 @@ namespace Pixeval
                 _index[key] = eTag ?? string.Empty;
                 _expireIndex[key] = GetExpiration(expireIn);
 
-                WriteIndex();
-                WriteExpireIndex();
+                await WriteIndexAsync();
+                await WriteExpireIndexAsync();
             }
             finally
             {
@@ -109,19 +110,30 @@ namespace Pixeval
         /// <param name="data">Data object to store</param>
         /// <param name="expireIn">Time from UtcNow to expire entry in</param>
         /// <param name="eTag">Optional eTag information</param>
-        public async Task Add(object key, object data, TimeSpan expireIn, string? eTag = null)
+        public async Task AddAsync(object key, object data, TimeSpan expireIn, string? eTag = null)
         {
             Guard.IsNotNull(key, nameof(key));
             Guard.IsNotNullOrEmpty(key as string, nameof(key));
             Guard.IsNotNull(data, nameof(data));
             
-            await Add(key switch
+            await AddAsync(key switch
             {
                 Guid g => g,
                 string s => Guid.Parse(s),
                 _ when _supportedKeyTypes.Contains(key.GetType()) => HashToGuid(key),
                 _ => throw new ArgumentOutOfRangeException(nameof(key), key, null)
             }, data, expireIn, eTag);
+        }
+
+        public async Task<bool> TryAddAsync(string key, object data, TimeSpan expireIn, string? eTag = null)
+        {
+            if (!Exists(key))
+            {
+                await AddAsync(key, data, expireIn, eTag);
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -131,12 +143,12 @@ namespace Pixeval
         /// <param name="data">Data object to store</param>
         /// <param name="expireIn">Time from UtcNow to expire entry in</param>
         /// <param name="eTag">Optional eTag information</param>
-        public Task Add(string key, object data, TimeSpan expireIn, string? eTag = null)
+        public Task AddAsync(string key, object data, TimeSpan expireIn, string? eTag = null)
         {
             Guard.IsNotNull(key, nameof(key));
             Guard.IsNotNull(data, nameof(data));
 
-            return Add(HashToGuid(key), data, expireIn, eTag);
+            return AddAsync(HashToGuid(key), data, expireIn, eTag);
         }
 
         /// <summary>
@@ -144,16 +156,16 @@ namespace Pixeval
         /// Throws an exception if any deletion fails and rollback changes.
         /// </summary>
         /// <param name="keys">keys to empty</param>
-        public Task Empty(params object[] keys)
+        public Task EmptyAsync(params object[] keys)
         {
             Guard.IsNotNull(keys, nameof(keys));
 
             var arrElementType = keys.GetType().GetElementType();
             return keys switch
             {
-                var k when arrElementType == typeof(Guid) => Empty(k.Cast<Guid>()),
-                string[] arr => Empty(arr),
-                var k when _supportedKeyTypes.Contains(arrElementType) => Empty(k.Select(HashToGuid)),
+                var k when arrElementType == typeof(Guid) => EmptyAsync(k.Cast<Guid>()),
+                string[] arr => EmptyAsync(arr),
+                var k when _supportedKeyTypes.Contains(arrElementType) => EmptyAsync(k.Select(HashToGuid)),
                 _ => throw new ArgumentException(@$"The element type of keys '{keys.GetType().GetElementType()} is not supported.'")
             };
         }
@@ -163,9 +175,9 @@ namespace Pixeval
         /// Throws an exception if any deletions fail and rolls back changes.
         /// </summary>
         /// <param name="keys">keys to empty</param>
-        public async Task Empty(params string[] keys)
+        public async Task EmptyAsync(params string[] keys)
         {
-            await Empty(keys.Select(HashToGuid));
+            await EmptyAsync(keys.Select(HashToGuid));
         }
 
         /// <summary>
@@ -173,7 +185,7 @@ namespace Pixeval
         /// Throws an exception if any deletions fail and rolls back changes.
         /// </summary>
         /// <param name="keys">keys to empty</param>
-        public async Task Empty(IEnumerable<Guid> keys)
+        public async Task EmptyAsync(IEnumerable<Guid> keys)
         {
             _indexLocker.EnterWriteLock();
 
@@ -184,7 +196,7 @@ namespace Pixeval
                     (await _baseDirectory.TryGetItemAsync(HashToGuid(k).ToString("N")))?.DeleteAsync(StorageDeleteOption.PermanentDelete);
                     _index.Remove(k);
                 }
-                WriteIndex();
+                await WriteIndexAsync();
             }
             finally
             {
@@ -196,7 +208,7 @@ namespace Pixeval
         /// Empties all expired entries that are in the cache.
         /// Throws an exception if any deletions fail and rolls back changes.
         /// </summary>
-        public async Task EmptyAll()
+        public async Task EmptyAllAsync()
         {
             _indexLocker.EnterWriteLock();
 
@@ -206,7 +218,7 @@ namespace Pixeval
                     .Select(guid => _baseDirectory.TryGetItemAsync(guid.ToString("N")).AsTask())
                     .Select(item => item.ContinueWith(t => t.Result?.DeleteAsync())));
                 _index.Clear();
-                WriteIndex();
+                await WriteIndexAsync();
             }
             finally
             {
@@ -218,7 +230,7 @@ namespace Pixeval
         /// Empties all expired entries that are in the cache.
         /// Throws an exception if any deletions fail and rolls back changes.
         /// </summary>
-        public async Task EmptyExpired()
+        public async Task EmptyExpiredAsync()
         {
             _expireIndexLocker.EnterWriteLock();
             _indexLocker.EnterWriteLock();
@@ -233,8 +245,8 @@ namespace Pixeval
                     _index.Remove(key);
                 }
 
-                WriteIndex();
-                WriteExpireIndex();
+                await WriteIndexAsync();
+                await WriteExpireIndexAsync();
             }
             finally
             {
@@ -324,22 +336,27 @@ namespace Pixeval
             }
         }
 
-        public Task<T?> Get<T>(object key)
+        public Task<T?> GetAsync<T>(object key)
         {
             Guard.IsNotNull(key, nameof(key));
 
             return key switch
             {
-                Guid g => Get<T>(g),
-                string s => Get<T>(s),
-                var k when _supportedKeyTypes.Contains(k.GetType()) => Get<T>(HashToGuid(key)),
+                Guid g => GetAsync<T>(g),
+                string s => GetAsync<T>(s),
+                var k when _supportedKeyTypes.Contains(k.GetType()) => GetAsync<T>(HashToGuid(key)),
                 _ => throw new ArgumentException($"The type of key '{key.GetType()} is not supported.'")
             };
         }
 
-        public Task<T?> Get<T>(string key)
+        public Task<T?> TryGetAsync<T>(string key)
         {
-            return Get<T>(HashToGuid(key));
+            return Exists(key) ? GetAsync<T>(key) : Task.FromResult<T?>(default);
+        }
+
+        public Task<T?> GetAsync<T>(string key)
+        {
+            return GetAsync<T>(HashToGuid(key));
         }
 
         /// <summary>
@@ -347,7 +364,7 @@ namespace Pixeval
         /// </summary>
         /// <param name="key">Unique identifier for the entry to get</param>
         /// <returns>The data object that was stored if found, else default(T)</returns>
-        public async Task<T?> Get<T>(Guid key)
+        public async Task<T?> GetAsync<T>(Guid key)
         {
             _indexLocker.EnterReadLock();
 
@@ -374,7 +391,8 @@ namespace Pixeval
             {
                 _indexLocker.ExitReadLock();
             }
-            return default;
+
+            throw new KeyNotFoundException(key.ToString());
         }
 
         public DateTimeOffset? GetExpiration(object key)
@@ -515,13 +533,13 @@ namespace Pixeval
             }
         }
 
-        private async Task WriteIndex()
+        private async Task WriteIndexAsync()
         {
             _indexFile ??= await _baseDirectory.CreateFileAsync(IndexFileName, CreationCollisionOption.ReplaceExisting);
             await _indexFile.WriteBytesAsync(JsonSerializer.SerializeToUtf8Bytes(_index));
         }
 
-        private async Task LoadIndex()
+        private async Task LoadIndexAsync()
         {
             if (await _baseDirectory.TryGetItemAsync(IndexFileName) is StorageFile file)
             {
@@ -531,13 +549,13 @@ namespace Pixeval
             }
         }
 
-        private async Task WriteExpireIndex()
+        private async Task WriteExpireIndexAsync()
         {
             _expireIndexFile ??= await _baseDirectory.CreateFileAsync(ExpireIndexFileName, CreationCollisionOption.ReplaceExisting);
             await _expireIndexFile.WriteBytesAsync(JsonSerializer.SerializeToUtf8Bytes(_expireIndex));
         }
 
-        private async Task LoadExpireIndex()
+        private async Task LoadExpireIndexAsync()
         {
             if (await _baseDirectory.TryGetItemAsync(ExpireIndexFileName) is StorageFile file)
             {
@@ -567,8 +585,7 @@ namespace Pixeval
 
             static byte[] HashAndTruncateTo128Bit(ReadOnlySpan<byte> span)
             {
-                var result = SHA256.HashData(span);
-                return new ArraySegment<byte>(result, 0, result.Length)[..128].Array!;
+                return SHA256.HashData(span)[..16];
             }
         }
 

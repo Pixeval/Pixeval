@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,6 @@ using Mako.Util;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Pixeval.Options;
 using Pixeval.Util;
-using Functions = Pixeval.Util.Functions;
 using SoftwareBitmapSource = Microsoft.UI.Xaml.Media.Imaging.SoftwareBitmapSource;
 
 namespace Pixeval.ViewModel
@@ -94,33 +94,24 @@ namespace Pixeval.ViewModel
         {
             if (Illustration.GetThumbnailUrl(thumbnailUrlOptions) is { } url)
             {
-                //TODO Confirm the key
-                var key = Illustration.Id + ":0";
-                if (FileCache.Default.Exists(key))
+                var cacheKey = Illustration.GetIllustrationCacheKey();
+                if (await FileCache.Default.TryGetAsync<IRandomAccessStream>(cacheKey) is { } ras)
                 {
-                    var cacheStream = FileCache.Default.Get<Stream>(key);
-                    if (cacheStream is not null)
-                    {
-                        return (await cacheStream).AsRandomAccessStream();
-                    }
+                    Trace.WriteLine(FileCache.Default.HitCount);
+                    return ras;
                 }
-                return await App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle) switch
+
+                switch (await App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle))
                 {
-                    Result<IRandomAccessStream>.Success(var stream) =>Functions.Block(() =>
-                    {
-                        if (!FileCache.Default.Exists(key))
-                        {
-                            FileCache.Default.Add(key, stream.AsStream(), TimeSpan.FromDays(1));
-                        }
+                    case Result<IRandomAccessStream>.Success(var stream):
+                        _ = FileCache.Default.TryAddAsync(cacheKey, stream.AsStream(), TimeSpan.FromDays(1));
                         return stream;
-                    }),
-                    Result<IRandomAccessStream>.Failure(OperationCanceledException) => Functions.Block<IRandomAccessStream?>(() =>
-                    {
+                    case Result<IRandomAccessStream>.Failure(OperationCanceledException):
                         LoadingThumbnailCancellationHandle.Reset();
                         return null;
-                    }),
-                    var other => other.GetOrThrow()
-                };
+                    case var other:
+                        return other.GetOrThrow();
+                }
             }
             return await AppContext.GetAssetStreamAsync("Images/image-not-available.png");
         }
