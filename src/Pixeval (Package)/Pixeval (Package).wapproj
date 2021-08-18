@@ -40,7 +40,7 @@
     <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <AssetTargetFallback>net5.0-windows$(TargetPlatformVersion);$(AssetTargetFallback)</AssetTargetFallback>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <AppxPackageSigningEnabled>true</AppxPackageSigningEnabled>
+    <AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Release'">true</AppxPackageSigningEnabled>
     <EntryPointProjectUniqueName>..\Pixeval\Pixeval.csproj</EntryPointProjectUniqueName>
     <NoWarn>$(NoWarn);NU1701</NoWarn>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
