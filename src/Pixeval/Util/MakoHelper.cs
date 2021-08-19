@@ -37,6 +37,11 @@ namespace Pixeval.Util
             return illustration.ImageUrls?.Original ?? illustration.MetaSinglePage?.OriginalImageUrl;
         }
 
+        public static string GetIllustrationCacheKey(this Illustration illustration)
+        {
+            return illustration.GetOriginalUrl() ?? illustration.Id.ToString();
+        }
+
         public static IEnumerable<Illustration> GetMangaIllustrations(this Illustration illust)
         {
             if (illust.PageCount <= 1)
