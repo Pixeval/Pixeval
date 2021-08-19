@@ -31,7 +31,7 @@
 
 **The Pixeval that based on WinUI 3 is now WIP, the older version, which is the WPF version has been deprecated and expecting no more supports from developers, the WinUI 3 version provides a better user interface, a more structural codebase and a modern development experience compared to the WPF version. You can download and compile it yourself if you want to take a glance at the new version, follow the following steps the compile and run:**
 
-For more informations, see [main page](https://sora.ink/pixeval/)
+For more information, see [main page](https://sora.ink/pixeval/)
 
 ## Prerequisites
 1. Visual Studio 2019 with WinUI 3 workload, for more informations, see the "prerequisites" section of [Create your first WinUI 3 app](https://docs.microsoft.com/en-us/windows/apps/winui/winui3/create-your-first-winui3-app?tabs=desktop-csharp)
