@@ -1,7 +1,7 @@
 <div align="center">
     <img align="center" src="https://s1.ax1x.com/2020/04/03/GUMZjS.png" alt="logo" width="200">
     <h1 align="center">Pixeval</h1>
-    <p align="center">A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF</p>
+    <p align="center">A strong, fast, and nice-looking Pixiv desktop app based on .NET 5 and Windows UI 3</p>
     <p align="center">
         <img src="https://img.shields.io/github/stars/Rinacm/Pixeval?color=red&style=flat-square">
         <a href="mailto:decem0730@hotmail.com">
@@ -25,18 +25,35 @@
     </p>
 </div>
 
-**Pixeval is subject to be refactored by using WinUI 3, however, this has to be delayed due to the unstability of the preview version of WinUI 3 preview 3(which is the newest available version of WinUI library). I've been trying to refactor this for around one week and yet meet several unresolvable problems such as Storyboard reported cannot find TargetName when I'm trying to animate a control, I'm STILL going to rewrite the UI layer, but with WPF as its foundation instead of WinUI until WinUI being general available**
+**基于WinUI3的Pixeval已经正在开发中，而作为旧的WPF版本将会停止维护并不再收到任何支持，WinUI3版本提供了更好的UI，更好的项目结构已经更好的开发体验，如果你想要了解目前的开发进度，可以通过以下方法来下载并编译该项目**
 
 更多详细信息请前往[项目主页](https://sora.ink/pixeval/)查看
 
-**下载：**
-</br>
-前往[Release页面](https://github.com/Rinacm/Pixeval/releases)下载最新版本的Release或者在项目[主页](https://sora.ink/pixeval/)下载
+## 准备
+1. 带有WinUI 3工作负载的Visual Studio 2019，你可以在[创建你的第一个WinUI 3 app](https://docs.microsoft.com/zh-cn/windows/apps/winui/winui3/)的"先决条件"部分查看更多信息
+2. 安装.NET 5，你可以在[这里](https://dotnet.microsoft.com/download/dotnet/5.0)下载并安装.NET 5
 
-**如有遇到任何问题/有任何建议请通过以下方式联系作者：**
-* 提交[issue](https://github.com/Rinacm/Pixeval/issues/new)
-* 向decem0730@hotmail.com发送邮件
-* 添加qq群815791942进行反馈
+### 如果你想要参与进开发进程中，则需要...
+3. 对Windows XAML Framework的基本了解，要了解更多相关信息请看[XAML概述](https://docs.microsoft.com/zh-cn/windows/uwp/xaml-platform/xaml-overview)
+4. 对C# .NET开发的一定了解以及开发经验
+5. 具有不依赖文档阅读代码的能力
+
+
+## 开发
+1. 克隆本项目
+2. 将*Pixeval (Project)*设置为启动项目
+3. 构建并运行
+
+### 项目结构
+1. *Pixeval*项目包含了项目本身的逻辑以及布局代码
+2. *Pixeval (Packaged)*将原有项目包装进一个安装包
+3. *Pixeval.LoginProxy*包含了Pixiv登录以及IPC相关的代码
+4. *Pixeval.SourceGen*包含了从本地化文件自动生成对应C#类的代码
+
+### 如果遇到任何问题(按照推荐程度优先级排序)
+1. 在[github](https://github.com/dylech30th/Pixeval/issues/new)提交新的Issue
+2. 给[decem0730@hotmail.com](mailto:decem0730@hotmail.com)发送邮件
+3. 加入QQ群815791942来面对面的和开发者反馈问题
 
 **鸣谢：(排名不分先后)**
 * [@tobiichiamane](https://github.com/tobiichiamane)

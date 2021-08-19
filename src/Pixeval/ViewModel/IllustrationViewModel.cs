@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
@@ -8,10 +7,10 @@ using Mako.Model;
 using Mako.Net;
 using Mako.Util;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.UI;
-using SoftwareBitmapSource = Microsoft.UI.Xaml.Media.Imaging.SoftwareBitmapSource;
 
 namespace Pixeval.ViewModel
 {
