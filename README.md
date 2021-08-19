@@ -25,6 +25,9 @@
     </p>
 </div>
 
+[**简体中文**](https://github.com/Pixeval/Pixeval/README.md)[English](https://github.com/Pixeval/Pixeval/README.en.md)
+
+
 **基于WinUI3的Pixeval已经正在开发中，而作为旧的WPF版本将会停止维护并不再收到任何支持，WinUI3版本提供了更好的UI，更好的项目结构已经更好的开发体验，如果你想要了解目前的开发进度，可以通过以下方法来下载并编译该项目**
 
 更多详细信息请前往[项目主页](https://sora.ink/pixeval/)查看
@@ -51,7 +54,7 @@
 4. *Pixeval.SourceGen*包含了从本地化文件自动生成对应C#类的代码
 
 ### 如果遇到任何问题(按照推荐程度优先级排序)
-1. 在[github](https://github.com/dylech30th/Pixeval/issues/new)提交新的Issue
+1. 在[github](https://github.com/Pixeval/Pixeval/issues/new)提交新的Issue
 2. 给[decem0730@hotmail.com](mailto:decem0730@hotmail.com)发送邮件
 3. 加入QQ群815791942来面对面的和开发者反馈问题
 
