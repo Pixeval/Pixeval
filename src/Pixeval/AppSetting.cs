@@ -81,6 +81,8 @@ namespace Pixeval
 
         public int ItemsNumberLimitForDailyRecommendations { get; set; }
 
+        public bool UseFileCache { get; set; }
+
         public AppSetting(ApplicationTheme theme,
             ObservableCollection<string> excludeTags,
             bool disableDomainFronting,
@@ -94,7 +96,8 @@ namespace Pixeval
             int maxDownloadTaskConcurrencyLevel,
             bool displayTeachingTipWhenGeneratingAppLink,
             int itemsNumberLimitForDailyRecommendations, 
-            bool filtrateRestrictedContent)
+            bool filtrateRestrictedContent,
+            bool useFileCache)
         {
             Theme = theme;
             ExcludeTags = excludeTags;
@@ -110,6 +113,7 @@ namespace Pixeval
             DisplayTeachingTipWhenGeneratingAppLink = displayTeachingTipWhenGeneratingAppLink;
             ItemsNumberLimitForDailyRecommendations = itemsNumberLimitForDailyRecommendations;
             FiltrateRestrictedContent = filtrateRestrictedContent;
+            UseFileCache = useFileCache;
         }
 
         public static AppSetting CreateDefault()
@@ -127,6 +131,7 @@ namespace Pixeval
                 Environment.ProcessorCount,
                 true, 
                 500, 
+                false, 
                 false);
         }
 

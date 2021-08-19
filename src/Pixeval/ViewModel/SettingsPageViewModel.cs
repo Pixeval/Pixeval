@@ -140,5 +140,11 @@ namespace Pixeval.ViewModel
             get => _appSetting.ItemsNumberLimitForDailyRecommendations;
             set => SetProperty(_appSetting.ItemsNumberLimitForDailyRecommendations, value, _appSetting, (settings, value) => settings.ItemsNumberLimitForDailyRecommendations = value);
         }
+
+        public bool UseFileCache
+        {
+            get => _appSetting.UseFileCache;
+            set => SetProperty(_appSetting.UseFileCache, value, _appSetting, (settings, value) => settings.UseFileCache = value);
+        }
     }
 }

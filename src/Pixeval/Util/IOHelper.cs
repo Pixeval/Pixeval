@@ -168,6 +168,7 @@ namespace Pixeval.Util
             using var dataReader = new DataReader(stream);
             await dataReader.LoadAsync((uint) stream.Size);
             await FileIO.WriteBufferAsync(file, dataReader.ReadBuffer((uint) stream.Size));
+            dataReader.DetachStream();
         }
     }
 }

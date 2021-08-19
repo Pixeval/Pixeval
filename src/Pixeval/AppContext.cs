@@ -234,6 +234,7 @@ namespace Pixeval
                 ConfigurationContainer.Values[nameof(AppSetting.DisplayTeachingTipWhenGeneratingAppLink)] = appSetting.DisplayTeachingTipWhenGeneratingAppLink;
                 ConfigurationContainer.Values[nameof(AppSetting.ItemsNumberLimitForDailyRecommendations)] = appSetting.ItemsNumberLimitForDailyRecommendations;
                 ConfigurationContainer.Values[nameof(AppSetting.FiltrateRestrictedContent)] = appSetting.FiltrateRestrictedContent;
+                ConfigurationContainer.Values[nameof(AppSetting.UseFileCache)] = appSetting.UseFileCache;
             }
         }
 
@@ -280,7 +281,8 @@ namespace Pixeval
                     ConfigurationContainer.Values[nameof(AppSetting.MaxDownloadTaskConcurrencyLevel)].CastOrThrow<int>(),
                     ConfigurationContainer.Values[nameof(AppSetting.DisplayTeachingTipWhenGeneratingAppLink)].CastOrThrow<bool>(),
                     ConfigurationContainer.Values[nameof(AppSetting.ItemsNumberLimitForDailyRecommendations)].CastOrThrow<int>(),
-                    ConfigurationContainer.Values[nameof(AppSetting.FiltrateRestrictedContent)].CastOrThrow<bool>());
+                    ConfigurationContainer.Values[nameof(AppSetting.FiltrateRestrictedContent)].CastOrThrow<bool>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.UseFileCache)].CastOrThrow<bool>());
             }
             catch
             {

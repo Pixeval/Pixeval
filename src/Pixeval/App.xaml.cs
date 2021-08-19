@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
 using Mako;
@@ -7,6 +8,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Events;
 using Pixeval.Interop;
+using Pixeval.Util;
 using Pixeval.Util.UI;
 using WinRT;
 
@@ -21,6 +23,8 @@ namespace Pixeval
         public static MakoClient MakoClient { get; set; } = null!; // The null-state of MakoClient is transient
 
         public static AppSetting AppSetting { get; set; } = null!;
+
+        public static FileCache Cache { get; private set; } = null!;
 
         public static string? Uid => MakoClient.Session.Id;
 
@@ -62,7 +66,7 @@ namespace Pixeval
             UnhandledException += async (_, args) =>
             {
                 args.Handled = true;
-                await UncaughtExceptionHandler(args.Exception);
+                await Window.DispatcherQueue.EnqueueAsync(async () => await UncaughtExceptionHandler(args.Exception));
             };
 
             TaskScheduler.UnobservedTaskException += async (_, args) =>
@@ -75,7 +79,7 @@ namespace Pixeval
             {
                 if (args.ExceptionObject is Exception e)
                 {
-                    await UncaughtExceptionHandler(e);
+                    await Window.DispatcherQueue.EnqueueAsync(async () => await UncaughtExceptionHandler(e));
                 }
                 else
                 {
@@ -85,6 +89,9 @@ namespace Pixeval
 
             static async Task UncaughtExceptionHandler(Exception e)
             {
+#if DEBUG
+                Debugger.Break();
+#endif
                 await MessageDialogBuilder.CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
                 await ExitWithPushedNotification();
             }
@@ -97,6 +104,7 @@ namespace Pixeval
             Window.SetWindowSize(800, 600);
             Window.Activate();
             await AppContext.ClearTemporaryDirectory();
+            Cache = await FileCache.CreateDefaultAsync();
         }
 
         /// <summary>

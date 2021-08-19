@@ -334,6 +334,15 @@
   <data name="TitleTextBlock.Text" xml:space="preserve">
     <value>Pixeval设置</value>
   </data>
+  <data name="UseCacheInfoBar.Message" xml:space="preserve">
+    <value>开启缓存后，网络流量消耗会减少，浏览体验会有相应提升，但是CPU占用以及文件IO将会增加</value>
+  </data>
+  <data name="UseCacheInfoBar.Title" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="UseCacheToggleSwitch.Header" xml:space="preserve">
+    <value>使用文件缓存</value>
+  </data>
   <data name="ViewPixevalProjectRepositoryHyperlinkButton.Content" xml:space="preserve">
     <value>查看Pixeval的开源仓库</value>
   </data>

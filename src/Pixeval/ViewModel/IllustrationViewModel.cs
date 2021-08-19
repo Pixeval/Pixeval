@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
 using Mako.Global.Enum;
 using Mako.Model;
@@ -12,6 +10,7 @@ using Mako.Util;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Pixeval.Options;
 using Pixeval.Util;
+using Pixeval.Util.UI;
 using SoftwareBitmapSource = Microsoft.UI.Xaml.Media.Imaging.SoftwareBitmapSource;
 
 namespace Pixeval.ViewModel
@@ -77,15 +76,22 @@ namespace Pixeval.ViewModel
             {
                 return;
             }
-            var source = new SoftwareBitmapSource();
+
             LoadingThumbnail = true;
-            using var ras = await GetThumbnail(ThumbnailUrlOption.Medium);
-            if (ras is not null)
+            if (App.AppSetting.UseFileCache && await App.Cache.TryGetAsync<IRandomAccessStream>(Illustration.GetIllustrationCacheKey()) is { } stream)
             {
-                var decoder = await BitmapDecoder.CreateAsync(ras);
-                var bitmap = await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
-                await source.SetBitmapAsync(bitmap);
-                ThumbnailSource = source;
+                using (stream)
+                {
+                    ThumbnailSource = await stream.GetSoftwareBitmapSourceAsync();
+                }
+            }
+            else if (await GetThumbnail(ThumbnailUrlOption.Medium) is { } ras)
+            {
+                using (ras)
+                {
+                    await App.Cache.TryAddAsync(Illustration.GetIllustrationCacheKey(), ras!, TimeSpan.FromDays(1));
+                    ThumbnailSource = await ras!.GetSoftwareBitmapSourceAsync();
+                }
             }
             LoadingThumbnail = false;
         }
@@ -94,17 +100,9 @@ namespace Pixeval.ViewModel
         {
             if (Illustration.GetThumbnailUrl(thumbnailUrlOptions) is { } url)
             {
-                var cacheKey = Illustration.GetIllustrationCacheKey();
-                if (await FileCache.Default.TryGetAsync<IRandomAccessStream>(cacheKey) is { } ras)
-                {
-                    Trace.WriteLine(FileCache.Default.HitCount);
-                    return ras;
-                }
-
                 switch (await App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle))
                 {
                     case Result<IRandomAccessStream>.Success(var stream):
-                        _ = FileCache.Default.TryAddAsync(cacheKey, stream.AsStream(), TimeSpan.FromDays(1));
                         return stream;
                     case Result<IRandomAccessStream>.Failure(OperationCanceledException):
                         LoadingThumbnailCancellationHandle.Reset();

@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Buffers;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -21,43 +21,47 @@ namespace Pixeval.Util
     public class FileCache
     {
         private readonly Type[] _supportedKeyTypes;
+
         private const string IndexFileName = "index.json";
         private const string CacheFolderName = "cache";
-        private Dictionary<Guid, string> _index;
-        private readonly StorageFolder _baseDirectory;
-        private StorageFile? _indexFile;
-        private StorageFile? _expireIndexFile;
-        private readonly ReaderWriterLockSlim _indexLocker;
         private const string ExpireIndexFileName = "eindex.json";
+
         // The expiration time
         private Dictionary<Guid, DateTimeOffset> _expireIndex;
-        private readonly ReaderWriterLockSlim _expireIndexLocker;
+        private Dictionary<Guid, string> _index;
+
+        private StorageFolder _baseDirectory = null!;
+        private StorageFile? _indexFile;
+        private StorageFile? _expireIndexFile;
+
+        private readonly SemaphoreSlim _indexLocker;
+        private readonly SemaphoreSlim _expireIndexLocker;
 
         public int HitCount { get; private set; }
 
         public bool AutoExpire { get; set; }
 
-        public static FileCache Default { get; }
-
-        static FileCache()
+        public static async Task<FileCache> CreateDefaultAsync()
         {
-            Default = new FileCache
+            var fileCache = new FileCache
             {
-                AutoExpire = true
+                AutoExpire = true, 
+                _baseDirectory = await ApplicationData.Current.TemporaryFolder.GetOrCreateFolderAsync(CacheFolderName)
             };
+            await fileCache.LoadIndexAsync();
+            await fileCache.LoadExpireIndexAsync();
+            return fileCache;
         }
 
         private FileCache()
         {
             _supportedKeyTypes = new[] {typeof(int), typeof(uint), typeof(ulong), typeof(long)};
-            _baseDirectory = ApplicationData.Current.TemporaryFolder.GetOrCreateFolderAsync(CacheFolderName).ConfiguredWait();
-            _index = new Dictionary<Guid, string>();
-            _indexLocker = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
-            _expireIndex = new Dictionary<Guid, DateTimeOffset>();
-            _expireIndexLocker = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
 
-            LoadIndexAsync().ConfiguredWait();
-            LoadExpireIndexAsync().ConfiguredWait();
+            _index = new Dictionary<Guid, string>();
+            _expireIndex = new Dictionary<Guid, DateTimeOffset>();
+
+            _indexLocker = new SemaphoreSlim(1, 1);
+            _expireIndexLocker = new SemaphoreSlim(1, 1);
         }
 
         /// <summary>
@@ -69,21 +73,18 @@ namespace Pixeval.Util
         /// <param name="eTag">Optional eTag information</param>
         public async Task AddAsync(Guid key, object data, TimeSpan expireIn, string? eTag = null)
         {
-            _indexLocker.EnterWriteLock();
-            _expireIndexLocker.EnterWriteLock();
             try
             {
+                await _indexLocker.WaitAsync();
+
                 var file = await _baseDirectory.GetOrCreateFileAsync(key.ToString("N"));
                 switch (data)
                 {
                     case byte[] bytes:
                         await file.WriteBytesAsync(bytes);
                         break;
-                    case Stream stream:
-                        await using (var fs = await file.OpenStreamForWriteAsync())
-                        {
-                            await stream.CopyToAsync(fs);
-                        }
+                    case IRandomAccessStream stream:
+                        await stream.SaveToFile(file);
                         break;
                     default:
                         await file.WriteBytesAsync(JsonSerializer.SerializeToUtf8Bytes(data));
@@ -92,14 +93,14 @@ namespace Pixeval.Util
 
                 _index[key] = eTag ?? string.Empty;
                 _expireIndex[key] = GetExpiration(expireIn);
+                Trace.WriteLine(_expireIndex[key]);
 
                 await WriteIndexAsync();
                 await WriteExpireIndexAsync();
             }
             finally
             {
-                _indexLocker.ExitWriteLock();
-                _expireIndexLocker.ExitWriteLock();
+                _indexLocker.Release();
             }
         }
 
@@ -127,7 +128,7 @@ namespace Pixeval.Util
 
         public async Task<bool> TryAddAsync(string key, object data, TimeSpan expireIn, string? eTag = null)
         {
-            if (!Exists(key))
+            if (!await ExistsAsync(key))
             {
                 await AddAsync(key, data, expireIn, eTag);
                 return true;
@@ -187,7 +188,7 @@ namespace Pixeval.Util
         /// <param name="keys">keys to empty</param>
         public async Task EmptyAsync(IEnumerable<Guid> keys)
         {
-            _indexLocker.EnterWriteLock();
+            await _indexLocker.WaitAsync();
 
             try
             {
@@ -200,7 +201,7 @@ namespace Pixeval.Util
             }
             finally
             {
-                _indexLocker.ExitWriteLock();
+                _indexLocker.Release();
             }
         }
 
@@ -210,7 +211,7 @@ namespace Pixeval.Util
         /// </summary>
         public async Task EmptyAllAsync()
         {
-            _indexLocker.EnterWriteLock();
+            await _indexLocker.WaitAsync();
 
             try
             {
@@ -222,7 +223,7 @@ namespace Pixeval.Util
             }
             finally
             {
-                _indexLocker.ExitWriteLock();
+                _indexLocker.Release();
             }
         }
 
@@ -232,8 +233,7 @@ namespace Pixeval.Util
         /// </summary>
         public async Task EmptyExpiredAsync()
         {
-            _expireIndexLocker.EnterWriteLock();
-            _indexLocker.EnterWriteLock();
+            await _indexLocker.WaitAsync();
 
             try
             {
@@ -250,8 +250,7 @@ namespace Pixeval.Util
             }
             finally
             {
-                _indexLocker.ExitWriteLock();
-                _expireIndexLocker.ExitWriteLock();
+                _indexLocker.Release();
             }
         }
 
@@ -260,15 +259,15 @@ namespace Pixeval.Util
         /// </summary>
         /// <param name="key">Unique identifier for the entry to check</param>
         /// <returns>If the key exists</returns>
-        public bool Exists(object key)
+        public Task<bool> ExistsAsync(object key)
         {
             Guard.IsNotNull(key, nameof(key));
 
             return key switch
             {
-                Guid g => Exists(g),
-                string s => Exists(s),
-                var k when _supportedKeyTypes.Contains(k.GetType()) => Exists(HashToGuid(k)),
+                Guid g => ExistsAsync(g),
+                string s => ExistsAsync(s),
+                var k when _supportedKeyTypes.Contains(k.GetType()) => ExistsAsync(HashToGuid(k)),
                 _ => throw new ArgumentException($"The type of key '{key.GetType()} is not supported.'")
             };
         }
@@ -278,10 +277,10 @@ namespace Pixeval.Util
         /// </summary>
         /// <param name="key">Unique identifier for the entry to check</param>
         /// <returns>If the key exists</returns>
-        public bool Exists(string key)
+        public Task<bool> ExistsAsync(string key)
         {
             Guard.IsNotNull(key, nameof(key));
-            return Exists(HashToGuid(key));
+            return ExistsAsync(HashToGuid(key));
         }
 
         /// <summary>
@@ -289,9 +288,9 @@ namespace Pixeval.Util
         /// </summary>
         /// <param name="key">Unique identifier for the entry to check</param>
         /// <returns>If the key exists</returns>
-        public bool Exists(Guid key)
+        public async Task<bool> ExistsAsync(Guid key)
         {
-            _indexLocker.EnterReadLock();
+            await _indexLocker.WaitAsync();
 
             try
             {
@@ -299,7 +298,7 @@ namespace Pixeval.Util
             }
             finally
             {
-                _indexLocker.ExitReadLock();
+                _indexLocker.Release();
             }
         }
 
@@ -307,9 +306,9 @@ namespace Pixeval.Util
         /// Gets all the keys that are saved in the cache
         /// </summary>
         /// <returns>The IEnumerable of keys</returns>
-        public IEnumerable<Guid> GetKeys(CacheState state = CacheState.Active)
+        public async Task<IEnumerable<Guid>> GetKeysAsync(CacheState state = CacheState.Active)
         {
-            _indexLocker.EnterReadLock();
+            await _indexLocker.WaitAsync();
 
             try
             {
@@ -332,7 +331,7 @@ namespace Pixeval.Util
             }
             finally
             {
-                _indexLocker.ExitReadLock();
+                _indexLocker.Release();
             }
         }
 
@@ -349,9 +348,9 @@ namespace Pixeval.Util
             };
         }
 
-        public Task<T?> TryGetAsync<T>(string key)
+        public async Task<T?> TryGetAsync<T>(string key)
         {
-            return Exists(key) ? GetAsync<T>(key) : Task.FromResult<T?>(default);
+            return await ExistsAsync(key) ? await GetAsync<T>(key) : default;
         }
 
         public Task<T?> GetAsync<T>(string key)
@@ -366,13 +365,13 @@ namespace Pixeval.Util
         /// <returns>The data object that was stored if found, else default(T)</returns>
         public async Task<T?> GetAsync<T>(Guid key)
         {
-            _indexLocker.EnterReadLock();
+            await _indexLocker.WaitAsync();
 
             try
             {
                 var item = await _baseDirectory.TryGetItemAsync(key.ToString("N"));
 
-                if (_index.ContainsKey(key) && item is StorageFile file && (!AutoExpire || AutoExpire && !IsExpired(key)))
+                if (_index.ContainsKey(key) && item is StorageFile file && (!AutoExpire || AutoExpire && !await IsExpiredAsync(key)))
                 {
                     HitCount++;
                     return typeof(T) switch
@@ -389,21 +388,21 @@ namespace Pixeval.Util
             }
             finally
             {
-                _indexLocker.ExitReadLock();
+                _indexLocker.Release();
             }
 
             throw new KeyNotFoundException(key.ToString());
         }
 
-        public DateTimeOffset? GetExpiration(object key)
+        public Task<DateTimeOffset?> GetExpirationAsync(object key)
         {
             Guard.IsNotNull(key, nameof(key));
 
             return key switch
             {
-                Guid g => GetExpiration(g),
-                string s => GetExpiration(s),
-                var k when _supportedKeyTypes.Contains(k.GetType()) => GetExpiration(HashToGuid(key)),
+                Guid g => GetExpirationAsync(g),
+                string s => GetExpirationAsync(s),
+                var k when _supportedKeyTypes.Contains(k.GetType()) => GetExpirationAsync(HashToGuid(key)),
                 _ => throw new ArgumentException($"The type of key '{key.GetType()} is not supported.'")
             };
         }
@@ -413,10 +412,10 @@ namespace Pixeval.Util
         /// </summary>
         /// <param name="key">Unique identifier for entry to get</param>
         /// <returns>The expiration date if the key is found, else null</returns>
-        public DateTimeOffset? GetExpiration(string key)
+        public Task<DateTimeOffset?> GetExpirationAsync(string key)
         {
             Guard.IsNotNullOrWhiteSpace(key, nameof(key));
-            return GetExpiration(Guid.Parse(key));
+            return GetExpirationAsync(Guid.Parse(key));
         }
 
         /// <summary>
@@ -424,9 +423,9 @@ namespace Pixeval.Util
         /// </summary>
         /// <param name="key">Unique identifier for entry to get</param>
         /// <returns>The expiration date if the key is found, else null</returns>
-        public DateTimeOffset? GetExpiration(Guid key)
+        public async Task<DateTimeOffset?> GetExpirationAsync(Guid key)
         {
-            _expireIndexLocker.EnterReadLock();
+            await _expireIndexLocker.WaitAsync();
 
             try
             {
@@ -434,7 +433,7 @@ namespace Pixeval.Util
             }
             finally
             {
-                _indexLocker.ExitReadLock();
+                _indexLocker.Release();
             }
         }
 
@@ -443,15 +442,15 @@ namespace Pixeval.Util
         /// </summary>
         /// <param name="key">Unique identifier for entry to get</param>
         /// <returns>The ETag if the key is found, else null</returns>
-        public string? GetETag(object key)
+        public Task<string?> GetETag(object key)
         {
             Guard.IsNotNull(key, nameof(key));
 
             return key switch
             {
-                Guid g => GetETag(g),
-                string s => GetETag(s),
-                var k when _supportedKeyTypes.Contains(k.GetType()) => GetETag(HashToGuid(k)),
+                Guid g => GetETagAsync(g),
+                string s => GetETagAsync(s),
+                var k when _supportedKeyTypes.Contains(k.GetType()) => GetETagAsync(HashToGuid(k)),
                 _ => throw new ArgumentException($"The type of key '{key.GetType()} is not supported.'")
             };
         }
@@ -461,10 +460,10 @@ namespace Pixeval.Util
         /// </summary>
         /// <param name="key">Unique identifier for entry to get</param>
         /// <returns>The ETag if the key is found, else null</returns>
-        public string? GetETag(string key)
+        public Task<string?> GetETagAsync(string key)
         {
             Guard.IsNotNullOrWhiteSpace(key, nameof(key));
-            return GetETag(HashToGuid(key));
+            return GetETagAsync(HashToGuid(key));
         }
 
         /// <summary>
@@ -472,9 +471,9 @@ namespace Pixeval.Util
         /// </summary>
         /// <param name="key">Unique identifier for entry to get</param>
         /// <returns>The ETag if the key is found, else null</returns>
-        public string? GetETag(Guid key)
+        public async Task<string?> GetETagAsync(Guid key)
         {
-            _indexLocker.EnterReadLock();
+            await _indexLocker.WaitAsync();
 
             try
             {
@@ -482,7 +481,7 @@ namespace Pixeval.Util
             }
             finally
             {
-                _indexLocker.ExitReadLock();
+                _indexLocker.Release();
             }
         }
 
@@ -491,15 +490,15 @@ namespace Pixeval.Util
         /// </summary>
         /// <param name="key">Key to check</param>
         /// <returns>If the expiration data has been met</returns>
-        public bool IsExpired(object key)
+        public Task<bool> IsExpiredAsync(object key)
         {
             Guard.IsNotNull(key, nameof(key));
 
             return key switch
             {
-                Guid g => IsExpired(g),
-                string s => IsExpired(s),
-                var k when _supportedKeyTypes.Contains(k.GetType()) => IsExpired(HashToGuid(key)),
+                Guid g => IsExpiredAsync(g),
+                string s => IsExpiredAsync(s),
+                var k when _supportedKeyTypes.Contains(k.GetType()) => IsExpiredAsync(HashToGuid(key)),
                 _ => throw new ArgumentException($"The type of key '{key.GetType()} is not supported.'")
             };
         }
@@ -509,9 +508,9 @@ namespace Pixeval.Util
         /// </summary>
         /// <param name="key">Key to check</param>
         /// <returns>If the expiration data has been met</returns>
-        public bool IsExpired(string key)
+        public Task<bool> IsExpiredAsync(string key)
         {
-            return IsExpired(HashToGuid(key));
+            return IsExpiredAsync(HashToGuid(key));
         }
 
         /// <summary>
@@ -519,9 +518,9 @@ namespace Pixeval.Util
         /// </summary>
         /// <param name="key">Key to check</param>
         /// <returns>If the expiration data has been met</returns>
-        public bool IsExpired(Guid key)
+        public async Task<bool> IsExpiredAsync(Guid key)
         {
-            _expireIndexLocker.EnterReadLock();
+            await _expireIndexLocker.WaitAsync();
 
             try
             {
@@ -529,12 +528,13 @@ namespace Pixeval.Util
             }
             finally
             {
-                _expireIndexLocker.ExitReadLock();
+                _expireIndexLocker.Release();
             }
         }
 
         private async Task WriteIndexAsync()
         {
+            
             _indexFile ??= await _baseDirectory.CreateFileAsync(IndexFileName, CreationCollisionOption.ReplaceExisting);
             await _indexFile.WriteBytesAsync(JsonSerializer.SerializeToUtf8Bytes(_index));
         }

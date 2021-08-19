@@ -41,6 +41,7 @@
     <AssetTargetFallback>net5.0-windows$(TargetPlatformVersion);$(AssetTargetFallback)</AssetTargetFallback>
     <DefaultLanguage>en-US</DefaultLanguage>
     <AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Release'">true</AppxPackageSigningEnabled>
+    <AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Debug'">false</AppxPackageSigningEnabled>
     <EntryPointProjectUniqueName>..\Pixeval\Pixeval.csproj</EntryPointProjectUniqueName>
     <NoWarn>$(NoWarn);NU1701</NoWarn>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>

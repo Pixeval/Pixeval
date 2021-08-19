@@ -138,6 +138,15 @@
                                 Tapped="SwitchSensitiveContentFilteringInfoBarActionButton_OnTapped" />
                     </InfoBar.ActionButton>
                 </InfoBar>
+                <!--  Use Cache  -->
+                <ToggleSwitch x:Name="UseCacheToggleSwitch"
+                              x:Uid="/SettingsPage/UseCacheToggleSwitch"
+                              Margin="{StaticResource StackLayoutEntriesMargin}"
+                              FontSize="{StaticResource PixevalContentFontSize}"
+                              IsOn="{x:Bind _viewModel.UseFileCache, Mode=TwoWay}" />
+                <InfoBar x:Uid="/SettingsPage/UseCacheInfoBar"
+                         IsOpen="{x:Bind UseCacheToggleSwitch.IsOn, Mode=OneWay}"
+                         Style="{StaticResource SectionInfoBarStyle}" />
                 <!--  Disable Sni Bypass Switch  -->
                 <ToggleSwitch x:Name="DisableSniBypassToggleSwitch"
                               x:Uid="/SettingsPage/DisableSNIBypassToggleSwitch"
