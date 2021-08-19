@@ -44,7 +44,7 @@
 5. 具有不依赖文档阅读代码的能力
 
 
-## 开发
+### 开发
 1. 克隆本项目
 2. 将*Pixeval (Project)*设置为启动项目
 3. 构建并运行
@@ -60,7 +60,8 @@
 2. 给[decem0730@hotmail.com](mailto:decem0730@hotmail.com)发送邮件
 3. 加入QQ群815791942来面对面的和开发者反馈问题
 
-**鸣谢：(排名不分先后)**
+## 鸣谢：(排名不分先后)
+
 * [@tobiichiamane](https://github.com/tobiichiamane)
 * [@Notsfsssf](https://github.com/Notsfsssf)
 * [@ControlNet](https://github.com/ControlNet)
@@ -71,5 +72,5 @@
 * [@Summpot](https://github.com/Summpot)
 * 使用并给予积极意见的各位
 
-**支持作者：**
+## 支持作者: 
 如果你感觉该项目帮助到了你，欢迎前往[爱发电](https://afdian.net/@dylech30th)赞助我，你的支持是我维护项目的动力，谢谢！
