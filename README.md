@@ -23,10 +23,12 @@
             <img src="https://img.shields.io/static/v1?label=runtime&message=.NET%20Core%203.1&color=yellow&style=flat-square">
         </a>
     </p>
+    </br>
 </div>
 
-[**简体中文**](https://github.com/Pixeval/Pixeval/README.md)[English](https://github.com/Pixeval/Pixeval/README.en.md)
+🌏: [**简体中文**](https://github.com/Pixeval/Pixeval/blob/master/README.en.md), [English](https://github.com/Pixeval/Pixeval/blob/master/README.en.md)
 
+---
 
 **基于WinUI3的Pixeval已经正在开发中，而作为旧的WPF版本将会停止维护并不再收到任何支持，WinUI3版本提供了更好的UI，更好的项目结构已经更好的开发体验，如果你想要了解目前的开发进度，可以通过以下方法来下载并编译该项目**
 

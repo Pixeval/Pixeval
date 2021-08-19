@@ -27,7 +27,7 @@
 
 🌏: [**简体中文**](https://github.com/Pixeval/Pixeval/blob/master/README.en.md), [English](https://github.com/Pixeval/Pixeval/blob/master/README.en.md)
 
---
+---
 
 **The Pixeval that based on WinUI 3 is now WIP, the older version, which is the WPF version has been deprecated and expecting no more supports from developers, the WinUI 3 version provides a better user interface, a more structural codebase and a modern development experience compared to the WPF version. You can download and compile it yourself if you want to take a glance at the new version, follow the following steps the compile and run:**
 
