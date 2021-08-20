@@ -27,7 +27,8 @@
                                 IsSelected="True"
                                 Tag="{x:Bind _recommends}" />
             <NavigationViewItem x:Uid="/MainPage/RankingsTab"
-                                Icon="{ui:FontIcon Glyph=MarketEAFC}" />
+                                Icon="{ui:FontIcon Glyph=MarketEAFC}" 
+                                Tag="{x:Bind _rankings}"/>
             <NavigationViewItem x:Uid="/MainPage/BookmarksTab"
                                 Icon="{ui:FontIcon Glyph=LibraryE8F1}"
                                 Tag="{x:Bind _bookmarks}" />
