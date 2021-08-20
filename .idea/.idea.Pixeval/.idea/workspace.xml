@@ -9,7 +9,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9a10592-8e36-479e-afd0-baaf93d530c6" name="Changes" comment="" />
+    <list default="true" id="d9a10592-8e36-479e-afd0-baaf93d530c6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -25,13 +27,6 @@
       <filtered-out-file-type name="TAG" />
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
-  </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/b3f1892aa26649589593fde0da9509a52ca00/1b/e8dc0174/MakoClient.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/929c1e312ab941bfb6f8c1accdd423ee2b800/6f/151661c7/Result`1.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/IL/929c1e312ab941bfb6f8c1accdd423ee2b800/3f/bdfe2605/02000014.il" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/b3f1892aa26649589593fde0da9509a52ca00/c7/a5f7102b/RankOption.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8ddaa76fde204232a8a0a12fc05eba1a993990/82/941752c6/Selector.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="1vmzxANaQQRAGgNijUiTZ5lILTG" />
   <component name="ProjectLevelVcsManager">
@@ -124,6 +119,7 @@
       <workItem from="1628692651500" duration="206000" />
       <workItem from="1628811466245" duration="1087000" />
       <workItem from="1629427787772" duration="14044000" />
+      <workItem from="1629447021399" duration="13000" />
     </task>
     <servers />
   </component>
