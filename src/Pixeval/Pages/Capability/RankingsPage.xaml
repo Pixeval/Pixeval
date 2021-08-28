@@ -1,0 +1,43 @@
+﻿<ui:EnhancedPage
+    x:Class="Pixeval.Pages.Capability.RankingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mako="using:Mako.Global.Enum"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:options="using:Pixeval.Options"
+    xmlns:ui="using:Pixeval.Util.UI"
+    xmlns:userControls="using:Pixeval.UserControls"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Loaded="RankingsPage_OnLoaded"
+    mc:Ignorable="d">
+    <Grid>
+        <userControls:IllustrationGridCommandBar HorizontalAlignment="Stretch"
+                                                 IsDefaultCommandsEnabled="{x:Bind IllustrationGrid.ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
+                                                 ViewModel="{x:Bind IllustrationGrid.ViewModel}">
+            <userControls:IllustrationGridCommandBar.CommandBarContent>
+                <StackPanel Margin="10,5,0,0"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                    <ComboBox x:Name="RankOptionComboBox"
+                              x:Uid="/RankingsPage/RankOptionComboBox"
+                              Margin="10,0,0,0"
+                              ItemsSource="{x:Bind options:RankOptionWrapper.Available}"
+                              SelectionChanged="RankOptionComboBox_OnSelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="options:RankOptionWrapper">
+                                <TextBlock Text="{x:Bind LocalizedString}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <CalendarDatePicker x:Name="RankDateTimeCalendarDatePicker"
+                                        Margin="5,0,0,0"
+                                        MaxDate="{x:Bind MaxDate}"
+                                        DateChanged="RankDateTimeCalendarDatePicker_OnDateChanged"/>
+                </StackPanel>
+            </userControls:IllustrationGridCommandBar.CommandBarContent>
+        </userControls:IllustrationGridCommandBar>
+        <userControls:IllustrationGrid x:Name="IllustrationGrid"
+                                       Margin="0,40,0,0" />
+    </Grid>
+</ui:EnhancedPage>

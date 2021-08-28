@@ -40,7 +40,12 @@
 		<Content Remove="Assets\Strings\zh-CN\IllustrationInfoPage.resw" />
 		<Content Remove="Assets\Strings\zh-CN\IllustrationViewerPage.resw" />
 		<Content Remove="Assets\Strings\zh-CN\ImageViewerPage.resw" />
+<<<<<<< HEAD
 		<Content Remove="Assets\Strings\zh-CN\RecommendationsPage.resw" />
+=======
+		<Content Remove="Assets\Strings\zh-CN\RankingsPage.resw" />
+		<Content Remove="Assets\Strings\zh-CN\RecommendsPage.resw" />
+>>>>>>> 7e1760ce0dd4a2cf8b7f413d769e21f165165259
 		<Content Remove="Assets\Strings\zh-CN\SettingsPage.resw" />
 	</ItemGroup>
 	<ItemGroup>
@@ -48,6 +53,7 @@
 		<None Remove="Assets\Images\logo44x44.ico" />
 		<None Remove="Assets\Strings\zh-CN\BookmarksPage.resw" />
 		<None Remove="Pages\BookMarksPage.xaml" />
+		<None Remove="Pages\Capability\NavigationPage.xaml" />
 		<None Remove="Pages\DownloadAndHistoryListPage.xaml" />
 		<None Remove="Pages\IllustrationGridPage.xaml" />
 		<None Remove="Pages\IllustrationViewerPage.xaml" />
@@ -185,6 +191,12 @@
 		<Content Update="Assets\Images\logo44x44.ico">
 			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Update="Pages\Capability\RankingsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 
 	<ItemGroup>

@@ -7,7 +7,6 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Events;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Misc;
-using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.ViewModel;
 
@@ -21,6 +20,8 @@ namespace Pixeval.Pages
 
         private readonly NavigationViewTag _bookmarks = new(typeof(BookmarksPage), App.MakoClient.Bookmarks(App.Uid!, PrivacyPolicy.Public, App.AppSetting.TargetFilter));
 
+        private readonly NavigationViewTag _rankings = new(typeof(RankingsPage), App.MakoClient.Ranking(RankOption.Day, DateTime.Now));
+        
         private readonly NavigationViewTag _settings = new(typeof(SettingsPage), App.MakoClient.Configuration);
 
         public MainPage()
