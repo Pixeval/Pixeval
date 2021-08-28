@@ -42,19 +42,22 @@ namespace Pixeval.ViewModel
 
         public class LoginTokenResponse
         {
-            [JsonPropertyName("errno")] public int Errno { get; set; }
+            [JsonPropertyName("errno")] 
+            public int Errno { get; set; }
 
-            [JsonPropertyName("cookie")] public string? Cookie { get; set; }
+            [JsonPropertyName("cookie")] 
+            public string? Cookie { get; set; }
 
-            [JsonPropertyName("code")] public string? Code { get; set; }
+            [JsonPropertyName("code")]
+            public string? Code { get; set; }
 
-            [JsonPropertyName("verifier")] public string? Verifier { get; set; }
+            [JsonPropertyName("verifier")] 
+            public string? Verifier { get; set; }
         }
 
         public enum LoginPhaseEnum
         {
-            [LocalizedResource(typeof(LoginPageResources),
-                nameof(LoginPageResources.LoginPhaseCheckingRefreshAvailable))]
+            [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseCheckingRefreshAvailable))]
             CheckingRefreshAvailable,
 
             [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseRefreshing))]
@@ -66,15 +69,13 @@ namespace Pixeval.ViewModel
             [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseExecutingLoginProxy))]
             ExecutingLoginProxy,
 
-            [LocalizedResource(typeof(LoginPageResources),
-                nameof(LoginPageResources.LoginPhaseCheckingCertificateInstallation))]
+            [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseCheckingCertificateInstallation))]
             CheckingCertificateInstallation,
 
             [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseInstallingCertificate))]
             InstallingCertificate,
 
-            [LocalizedResource(typeof(LoginPageResources),
-                nameof(LoginPageResources.LoginPhaseCheckingWebView2Installation))]
+            [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseCheckingWebView2Installation))]
             CheckingWebView2Installation
         }
 

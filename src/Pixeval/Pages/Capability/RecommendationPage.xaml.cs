@@ -30,7 +30,7 @@ namespace Pixeval.Pages.Capability
             EventChannel.Default.Subscribe<MainPageFrameNavigatingEvent>(() => IllustrationGrid.ViewModel.FetchEngine?.Cancel());
         }
 
-        private async void RecommendsPage_OnLoaded(object sender, RoutedEventArgs e)
+        private async void RecommendationsPage_OnLoaded(object sender, RoutedEventArgs e)
         {
             if (App.Window.GetNavigationModeAndReset() is not NavigationMode.Back)
             {

@@ -8,7 +8,7 @@
                  xmlns:ui="using:Pixeval.Util.UI"
                  xmlns:userControls="using:Pixeval.UserControls"
                  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                 Loaded="RecommendsPage_OnLoaded"
+                 Loaded="RecommendationsPage_OnLoaded"
                  mc:Ignorable="d">
     <Grid>
         <userControls:IllustrationGridCommandBar HorizontalAlignment="Stretch"
@@ -19,13 +19,13 @@
                             VerticalAlignment="Center"
                             Orientation="Horizontal">
                     <ComboBox x:Name="ModeSelectionComboBox"
-                              x:Uid="/RecommendsPage/ModeSelectionComboBox"
+                              x:Uid="/RecommendationsPage/ModeSelectionComboBox"
                               SelectionChanged="ModeSelectionComboBox_OnSelectionChanged">
                         <ComboBox.Items>
                             <ComboBoxItem x:Name="ModeSelectionComboBoxIllustComboBoxItem"
-                                          x:Uid="/RecommendsPage/ModeSelectionComboBoxIllustComboBoxItem"
+                                          x:Uid="/RecommendationsPage/ModeSelectionComboBoxIllustComboBoxItem"
                                           Tag="{x:Bind mako:RecommendContentType.Illust}" />
-                            <ComboBoxItem x:Uid="/RecommendsPage/ModeSelectionComboBoxMangaComboBoxItem"
+                            <ComboBoxItem x:Uid="/RecommendationsPage/ModeSelectionComboBoxMangaComboBoxItem"
                                           Tag="{x:Bind mako:RecommendContentType.Manga}" />
                         </ComboBox.Items>
                     </ComboBox>

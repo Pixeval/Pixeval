@@ -23,6 +23,11 @@ namespace Pixeval.Options
 
         public string LocalizedString { get; }
 
+        public IEnumerable<ILocalizedBox<IllustrationSortOption>> GetAllOptions()
+        {
+            return Available;
+        }
+
         public IllustrationSortOptionWrapper(IllustrationSortOption value, string localizedString)
         {
             Value = value;

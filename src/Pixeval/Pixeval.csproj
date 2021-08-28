@@ -40,7 +40,7 @@
 		<Content Remove="Assets\Strings\zh-CN\IllustrationInfoPage.resw" />
 		<Content Remove="Assets\Strings\zh-CN\IllustrationViewerPage.resw" />
 		<Content Remove="Assets\Strings\zh-CN\ImageViewerPage.resw" />
-		<Content Remove="Assets\Strings\zh-CN\RecommendsPage.resw" />
+		<Content Remove="Assets\Strings\zh-CN\RecommendationsPage.resw" />
 		<Content Remove="Assets\Strings\zh-CN\SettingsPage.resw" />
 	</ItemGroup>
 	<ItemGroup>
