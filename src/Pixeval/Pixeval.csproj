@@ -18,6 +18,8 @@
     <PublishProfile>Properties\PublishProfiles\win-$(Platform).pubxml</PublishProfile>
     <EnableDefaultPriItems>false</EnableDefaultPriItems>
     <NeutralLanguage>zh-CN</NeutralLanguage>
+    <AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Release'">true</AppxPackageSigningEnabled>
+    <AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Debug'">false</AppxPackageSigningEnabled>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
 		<DefineConstants>TRACE;DEBUG</DefineConstants>
@@ -39,7 +41,6 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 	<ItemGroup>
-		<Content Remove="Assets\Images\77032538.png" />
 		<Content Remove="Assets\Images\logo-no-caption.png" />
 		<Content Remove="Strings\zh-CN\BookmarksPage.resw" />
 		<Content Remove="Strings\zh-CN\DownloadAndHistoryListPage.resw" />
