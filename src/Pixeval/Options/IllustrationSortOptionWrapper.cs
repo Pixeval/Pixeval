@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Mako.Global.Enum;
-using Pixeval.Util;
 using Pixeval.Util.Generic;
 
 namespace Pixeval.Options
