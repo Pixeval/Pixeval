@@ -5,7 +5,7 @@ using Pixeval.Util.Generic;
 
 namespace Pixeval.Options
 {
-    public record TargetFilterWrapper : ILocalizedBox<TargetFilter, TargetFilterWrapper>
+    public record TargetFilterWrapper : ILocalizedBox<TargetFilter>
     {
         public TargetFilter Value { get; }
 

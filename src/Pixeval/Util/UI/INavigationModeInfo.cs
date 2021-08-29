@@ -4,8 +4,8 @@ namespace Pixeval.Util.UI
 {
     public interface INavigationModeInfo
     {
-        static abstract NavigationMode? NavigationMode { get; }
+        NavigationMode? NavigationMode { get; }
 
-        static abstract NavigationMode? GetNavigationModeAndReset();
+        NavigationMode? GetNavigationModeAndReset();
     }
 }

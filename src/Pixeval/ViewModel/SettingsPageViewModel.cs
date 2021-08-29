@@ -21,7 +21,7 @@ namespace Pixeval.ViewModel
 
         public IllustrationSortOptionWrapper BoxSortOption()
         {
-            return LocalizedBoxHelper.Of<IllustrationSortOption, IllustrationSortOptionWrapper>(DefaultSortOption);
+            return IllustrationSortOptionWrapper.AvailableOptions().Of(DefaultSortOption);
         }
 
         public void UnboxSortOption(object wrapper)
@@ -31,7 +31,7 @@ namespace Pixeval.ViewModel
 
         public SearchTagMatchOptionWrapper BoxSearchTagMatchOption()
         {
-            return LocalizedBoxHelper.Of<SearchTagMatchOption, SearchTagMatchOptionWrapper>(TagMatchOption);
+            return SearchTagMatchOptionWrapper.AvailableOptions().Of(TagMatchOption);
         }
 
         public void UnboxSearchTagMatchOption(object wrapper)
@@ -41,7 +41,7 @@ namespace Pixeval.ViewModel
 
         public TargetFilterWrapper BoxTargetFilter()
         {
-            return LocalizedBoxHelper.Of<TargetFilter, TargetFilterWrapper>(TargetFilter);
+            return TargetFilterWrapper.AvailableOptions().Of(TargetFilter);
         }
 
         public void UnboxTargetFilter(object wrapper)

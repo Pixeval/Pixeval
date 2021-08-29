@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+		<TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
     <EnablePreviewFeatures>True</EnablePreviewFeatures>
 		<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
 		<RootNamespace>Pixeval</RootNamespace>
@@ -13,7 +13,6 @@
 		<EnableNETAnalyzers>false</EnableNETAnalyzers>
 		<ApplicationIcon />
 		<StartupObject />
-    <LangVersion>preview</LangVersion>
     <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
     <PublishProfile>Properties\PublishProfiles\win-$(Platform).pubxml</PublishProfile>
     <EnableDefaultPriItems>false</EnableDefaultPriItems>

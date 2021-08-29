@@ -6,7 +6,7 @@ using Pixeval.Util.Generic;
 
 namespace Pixeval.Options
 {
-    public record IllustrationSortOptionWrapper : ILocalizedBox<IllustrationSortOption, IllustrationSortOptionWrapper>
+    public record IllustrationSortOptionWrapper : ILocalizedBox<IllustrationSortOption>
     {
         public IllustrationSortOption Value { get; }
 

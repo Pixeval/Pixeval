@@ -3,21 +3,19 @@ using System.Linq;
 
 namespace Pixeval.Util.Generic
 {
-    public interface ILocalizedBox<T, L> where L : ILocalizedBox<T, L>
+    public interface ILocalizedBox<out T>
     {
         public T Value { get; }
 
         public string LocalizedString { get; }
-
-        static abstract IEnumerable<L> AvailableOptions();
     }
 
     public static class LocalizedBoxHelper
     {
-        public static TLocalizedBox Of<TOption, TLocalizedBox>(TOption option)
-            where TLocalizedBox : ILocalizedBox<TOption, TLocalizedBox>
+        public static TLocalizedBox Of<TOption, TLocalizedBox>(this IEnumerable<TLocalizedBox> source, TOption option)
+            where TLocalizedBox : ILocalizedBox<TOption>
         {
-            return TLocalizedBox.AvailableOptions().First(t => t.Value!.Equals(option));
+            return source.First(t => t.Value!.Equals(option));
         }
     }
 }

@@ -5,7 +5,7 @@ using Pixeval.Util.Generic;
 
 namespace Pixeval.Options
 {
-    public record RankOptionWrapper : ILocalizedBox<RankOption, RankOptionWrapper>
+    public record RankOptionWrapper : ILocalizedBox<RankOption>
     {
         public RankOption Value { get; }
 

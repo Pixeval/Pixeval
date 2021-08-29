@@ -5,7 +5,7 @@ using Pixeval.Util.Generic;
 
 namespace Pixeval.Options
 {
-    public record SearchTagMatchOptionWrapper : ILocalizedBox<SearchTagMatchOption, SearchTagMatchOptionWrapper>
+    public record SearchTagMatchOptionWrapper : ILocalizedBox<SearchTagMatchOption>
     {
         public SearchTagMatchOption Value { get; }
 

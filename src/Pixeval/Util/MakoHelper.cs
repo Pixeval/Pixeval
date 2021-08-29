@@ -14,7 +14,7 @@ namespace Pixeval.Util
     {
         public static IllustrationSortOptionWrapper GetAppSettingDefaultSortOptionWrapper()
         {
-            return LocalizedBoxHelper.Of<IllustrationSortOption, IllustrationSortOptionWrapper>(App.AppSetting.DefaultSortOption);
+            return IllustrationSortOptionWrapper.AvailableOptions().Of(App.AppSetting.DefaultSortOption);
         }
 
         public static string? GetThumbnailUrl(this Illustration illustration, ThumbnailUrlOption option)

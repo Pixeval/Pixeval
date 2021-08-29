@@ -10,9 +10,9 @@ namespace Pixeval
     public sealed partial class MainWindow : INavigationModeInfo
     {
         // Remarks: The parameter of OnNavigatedTo is always NavigationMode.New
-        public static NavigationMode? NavigationMode { get; private set; }
+        public NavigationMode? NavigationMode { get; private set; }
 
-        public static NavigationMode? GetNavigationModeAndReset()
+        public NavigationMode? GetNavigationModeAndReset()
         {
             var mode = NavigationMode;
             NavigationMode = null;

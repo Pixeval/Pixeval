@@ -32,7 +32,7 @@ namespace Pixeval.Pages.Capability
 
         private async void BookmarksPage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (MainWindow.GetNavigationModeAndReset() is not NavigationMode.Back)
+            if (App.Window.GetNavigationModeAndReset() is not NavigationMode.Back)
             {
                 await ChangeSource();
             }

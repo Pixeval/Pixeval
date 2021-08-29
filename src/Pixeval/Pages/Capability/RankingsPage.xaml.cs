@@ -34,14 +34,14 @@ namespace Pixeval.Pages.Capability
 
         public override void Prepare(NavigationEventArgs navigationEventArgs)
         {
-            RankOptionComboBox.SelectedItem = LocalizedBoxHelper.Of<RankOption, RankOptionWrapper>(RankOption.Day);
+            RankOptionComboBox.SelectedItem = RankOptionWrapper.AvailableOptions().Of(RankOption.Day);
             RankDateTimeCalendarDatePicker.Date = DateTime.Now.AddDays(-2);
             EventChannel.Default.Subscribe<MainPageFrameNavigatingEvent>(() => IllustrationGrid.ViewModel.FetchEngine?.Cancel());
         }
 
         private async void RankingsPage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (MainWindow.GetNavigationModeAndReset() is not NavigationMode.Back)
+            if (App.Window.GetNavigationModeAndReset() is not NavigationMode.Back)
             {
                 await ChangeSource();
             }
