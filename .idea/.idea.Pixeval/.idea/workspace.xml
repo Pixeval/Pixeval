@@ -10,7 +10,172 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d9a10592-8e36-479e-afd0-baaf93d530c6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/BadgeLogo.scale-100.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/BadgeLogo.scale-125.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/BadgeLogo.scale-150.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/BadgeLogo.scale-200.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/BadgeLogo.scale-400.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/LargeTile.scale-100.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/LargeTile.scale-125.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/LargeTile.scale-150.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/LargeTile.scale-200.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/LargeTile.scale-400.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/SmallTile.scale-100.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/SmallTile.scale-125.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/SmallTile.scale-150.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/SmallTile.scale-200.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/SmallTile.scale-400.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/SplashScreen.scale-100.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/SplashScreen.scale-125.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/SplashScreen.scale-150.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/SplashScreen.scale-200.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/SplashScreen.scale-400.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square150x150Logo.scale-100.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square150x150Logo.scale-125.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square150x150Logo.scale-150.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square150x150Logo.scale-200.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square150x150Logo.scale-400.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square44x44Logo.altform-lightunplated_targetsize-16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square44x44Logo.altform-lightunplated_targetsize-24.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square44x44Logo.altform-lightunplated_targetsize-256.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square44x44Logo.altform-lightunplated_targetsize-32.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square44x44Logo.altform-lightunplated_targetsize-48.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square44x44Logo.altform-unplated_targetsize-16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square44x44Logo.altform-unplated_targetsize-256.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square44x44Logo.altform-unplated_targetsize-32.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square44x44Logo.altform-unplated_targetsize-48.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square44x44Logo.scale-100.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square44x44Logo.scale-125.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square44x44Logo.scale-150.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square44x44Logo.scale-200.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square44x44Logo.scale-400.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square44x44Logo.targetsize-16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square44x44Logo.targetsize-24.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square44x44Logo.targetsize-24_altform-unplated.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square44x44Logo.targetsize-256.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square44x44Logo.targetsize-32.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Square44x44Logo.targetsize-48.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/StoreLogo.backup.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/StoreLogo.scale-100.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/StoreLogo.scale-125.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/StoreLogo.scale-150.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/StoreLogo.scale-200.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/StoreLogo.scale-400.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Wide310x150Logo.scale-100.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Wide310x150Logo.scale-125.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Wide310x150Logo.scale-150.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Wide310x150Logo.scale-200.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Images/Wide310x150Logo.scale-400.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Package.appxmanifest" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pixeval/Properties/launchSettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Pixeval/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Pixeval/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pixeval.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Pixeval.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/BadgeLogo.scale-100.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/BadgeLogo.scale-125.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/BadgeLogo.scale-150.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/BadgeLogo.scale-200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/BadgeLogo.scale-400.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/LargeTile.scale-100.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/LargeTile.scale-125.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/LargeTile.scale-150.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/LargeTile.scale-200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/LargeTile.scale-400.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/SmallTile.scale-100.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/SmallTile.scale-125.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/SmallTile.scale-150.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/SmallTile.scale-200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/SmallTile.scale-400.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/SplashScreen.scale-100.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/SplashScreen.scale-125.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/SplashScreen.scale-150.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/SplashScreen.scale-200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/SplashScreen.scale-400.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square150x150Logo.scale-100.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square150x150Logo.scale-125.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square150x150Logo.scale-150.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square150x150Logo.scale-200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square150x150Logo.scale-400.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square44x44Logo.altform-lightunplated_targetsize-16.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square44x44Logo.altform-lightunplated_targetsize-24.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square44x44Logo.altform-lightunplated_targetsize-256.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square44x44Logo.altform-lightunplated_targetsize-32.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square44x44Logo.altform-lightunplated_targetsize-48.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square44x44Logo.altform-unplated_targetsize-16.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square44x44Logo.altform-unplated_targetsize-256.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square44x44Logo.altform-unplated_targetsize-32.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square44x44Logo.altform-unplated_targetsize-48.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square44x44Logo.scale-100.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square44x44Logo.scale-125.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square44x44Logo.scale-150.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square44x44Logo.scale-200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square44x44Logo.scale-400.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square44x44Logo.targetsize-16.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square44x44Logo.targetsize-24.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square44x44Logo.targetsize-24_altform-unplated.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square44x44Logo.targetsize-256.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square44x44Logo.targetsize-32.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Square44x44Logo.targetsize-48.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/StoreLogo.backup.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/StoreLogo.scale-100.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/StoreLogo.scale-125.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/StoreLogo.scale-150.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/StoreLogo.scale-200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/StoreLogo.scale-400.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Wide310x150Logo.scale-100.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Wide310x150Logo.scale-125.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Wide310x150Logo.scale-150.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Wide310x150Logo.scale-200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Images/Wide310x150Logo.scale-400.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Package.appxmanifest" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval (Package)/Pixeval (Package).wapproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval.SourceGen/LocalizationResourcesGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval.SourceGen/LocalizationResourcesGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval.SourceGen/Pixeval.SourceGen.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval.SourceGen/Pixeval.SourceGen.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/App.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/App.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/AppContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/AppContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Assets/Strings/zh-CN/BookmarksPage.resw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Assets/Strings/zh-CN/DownloadAndHistoryListPage.resw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Assets/Strings/zh-CN/IllustrationGridCommandBar.resw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Assets/Strings/zh-CN/IllustrationInfoPage.resw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Assets/Strings/zh-CN/IllustrationViewerPage.resw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Assets/Strings/zh-CN/ImageViewerPage.resw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Assets/Strings/zh-CN/LoginPage.resw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Assets/Strings/zh-CN/MainPage.resw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Assets/Strings/zh-CN/MessageContentDialog.resw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Assets/Strings/zh-CN/Misc.resw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Assets/Strings/zh-CN/RankingsPage.resw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Assets/Strings/zh-CN/RecommendationsPage.resw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Assets/Strings/zh-CN/SettingsPage.resw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Options/IllustrationSortOptionWrapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/Options/IllustrationSortOptionWrapper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Options/RankOptionWrapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/Options/RankOptionWrapper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Options/SearchTagMatchOptionWrapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/Options/SearchTagMatchOptionWrapper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Options/TargetFilterWrapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/Options/TargetFilterWrapper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Pages/Capability/BookmarksPage.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/Pages/Capability/BookmarksPage.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Pages/Capability/BookmarksPage.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/Pages/Capability/BookmarksPage.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Pages/Capability/RankingsPage.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/Pages/Capability/RankingsPage.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Pages/Capability/RankingsPage.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/Pages/Capability/RankingsPage.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Pages/Capability/RecommendationPage.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/Pages/Capability/RecommendationPage.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Pages/Capability/RecommendationPage.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/Pages/Capability/RecommendationPage.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Pages/IllustrationViewer/IllustrationInfoPage.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/Pages/IllustrationViewer/IllustrationInfoPage.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Pages/IllustrationViewer/IllustrationViewerPage.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/Pages/IllustrationViewer/IllustrationViewerPage.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Pages/IllustrationViewer/ImageViewerPage.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/Pages/IllustrationViewer/ImageViewerPage.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Pages/Misc/SettingsPage.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/Pages/Misc/SettingsPage.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Pixeval.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/Pixeval.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Util/CertificateManager.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Util/Enumerates.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Util/FileCache.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Util/Functions.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Util/IOHelper.Download.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Util/IOHelper.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Util/IllustrationViewModelComparers.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Util/LocalizedBox.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Util/MakoHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/Util/MakoHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/Util/Objects.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/Util/Objects.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/ViewModel/IllustrationViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/ViewModel/IllustrationViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/ViewModel/IllustrationViewerPageViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/ViewModel/IllustrationViewerPageViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/ViewModel/ImageViewerPageViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/ViewModel/ImageViewerPageViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/ViewModel/LoginPageViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/ViewModel/LoginPageViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/ViewModel/MainPageViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/ViewModel/MainPageViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pixeval/ViewModel/SettingsPageViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pixeval/ViewModel/SettingsPageViewModel.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,6 +192,18 @@
       <filtered-out-file-type name="TAG" />
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/Pixeval/Options/SearchTagMatchOptionWrapper.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Pixeval/Pages/IllustrationViewer/IllustrationInfoPage.xaml.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Pixeval/Options/XRestrictLevel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Pixeval/Options/TargetFilterWrapper.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/AppData/Local/Temp/RiderSourceGeneratedDocuments/2183D11707543E5EF1F21C99/Pixeval.SourceGen/Pixeval.SourceGen.LocalizationResourcesGenerator/LocalizationResources.g.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Pixeval/Options/IllustrationSortOptionWrapper.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Pixeval/Options/RankOptionWrapper.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Pixeval/Util/MakoHelper.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Pixeval/Pages/IllustrationViewer/IllustrationInfoPage.xaml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/b3f1892aa26649589593fde0da9509a52ca00/3e/66f3a96f/Illustration.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="1vmzxANaQQRAGgNijUiTZ5lILTG" />
   <component name="ProjectLevelVcsManager">
@@ -120,6 +297,9 @@
       <workItem from="1628811466245" duration="1087000" />
       <workItem from="1629427787772" duration="14044000" />
       <workItem from="1629447021399" duration="13000" />
+      <workItem from="1630243656317" duration="823000" />
+      <workItem from="1630248200690" duration="82000" />
+      <workItem from="1630273314739" duration="105000" />
     </task>
     <servers />
   </component>

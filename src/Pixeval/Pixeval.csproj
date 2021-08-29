@@ -1,16 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net5.0-windows10.0.19041</TargetFramework>
+		<TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+    <EnablePreviewFeatures>True</EnablePreviewFeatures>
 		<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
 		<RootNamespace>Pixeval</RootNamespace>
-		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<Platforms>x86;x64;arm64</Platforms>
 		<RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
 		<UseWinUI>true</UseWinUI>
 		<Nullable>enable</Nullable>
 		<DefaultLanguage>zh-CN</DefaultLanguage>
 		<EnableNETAnalyzers>false</EnableNETAnalyzers>
+		<ApplicationIcon />
+		<StartupObject />
+    <LangVersion>preview</LangVersion>
+    <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+    <PublishProfile>Properties\PublishProfiles\win-$(Platform).pubxml</PublishProfile>
+    <EnableDefaultPriItems>false</EnableDefaultPriItems>
+    <NeutralLanguage>zh-CN</NeutralLanguage>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
 		<DefineConstants>TRACE;DEBUG</DefineConstants>
@@ -34,24 +41,88 @@
 	<ItemGroup>
 		<Content Remove="Assets\Images\77032538.png" />
 		<Content Remove="Assets\Images\logo-no-caption.png" />
-		<Content Remove="Assets\Strings\zh-CN\BookmarksPage.resw" />
-		<Content Remove="Assets\Strings\zh-CN\DownloadAndHistoryListPage.resw" />
-		<Content Remove="Assets\Strings\zh-CN\IllustrationGridCommandBar.resw" />
-		<Content Remove="Assets\Strings\zh-CN\IllustrationInfoPage.resw" />
-		<Content Remove="Assets\Strings\zh-CN\IllustrationViewerPage.resw" />
-		<Content Remove="Assets\Strings\zh-CN\ImageViewerPage.resw" />
-<<<<<<< HEAD
-		<Content Remove="Assets\Strings\zh-CN\RecommendationsPage.resw" />
-=======
-		<Content Remove="Assets\Strings\zh-CN\RankingsPage.resw" />
-		<Content Remove="Assets\Strings\zh-CN\RecommendsPage.resw" />
->>>>>>> 7e1760ce0dd4a2cf8b7f413d769e21f165165259
-		<Content Remove="Assets\Strings\zh-CN\SettingsPage.resw" />
+		<Content Remove="Strings\zh-CN\BookmarksPage.resw" />
+		<Content Remove="Strings\zh-CN\DownloadAndHistoryListPage.resw" />
+		<Content Remove="Strings\zh-CN\IllustrationGridCommandBar.resw" />
+		<Content Remove="Strings\zh-CN\IllustrationInfoPage.resw" />
+		<Content Remove="Strings\zh-CN\IllustrationViewerPage.resw" />
+		<Content Remove="Strings\zh-CN\ImageViewerPage.resw" />
+		<Content Remove="Strings\zh-CN\LoginPage.resw" />
+		<Content Remove="Strings\zh-CN\MainPage.resw" />
+		<Content Remove="Strings\zh-CN\MessageContentDialog.resw" />
+		<Content Remove="Strings\zh-CN\Misc.resw" />
+		<Content Remove="Strings\zh-CN\RecommendationsPage.resw" />
+		<Content Remove="Strings\zh-CN\RankingsPage.resw" />
+		<Content Remove="Strings\zh-CN\SettingsPage.resw" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="Assets\Certs\pixeval_server_cert.pfx" />
 		<None Remove="Assets\Images\logo44x44.ico" />
-		<None Remove="Assets\Strings\zh-CN\BookmarksPage.resw" />
+		<None Remove="Strings\zh-CN\BookmarksPage.resw" />
+		<None Remove="Strings\zh-CN\DownloadAndHistoryListPage.resw" />
+		<None Remove="Strings\zh-CN\IllustrationGridCommandBar.resw" />
+		<None Remove="Strings\zh-CN\IllustrationInfoPage.resw" />
+		<None Remove="Strings\zh-CN\IllustrationViewerPage.resw" />
+		<None Remove="Strings\zh-CN\ImageViewerPage.resw" />
+		<None Remove="Strings\zh-CN\RankingsPage.resw" />
+		<None Remove="Strings\zh-CN\RecommendationsPage.resw" />
+		<None Remove="Strings\zh-CN\SettingsPage.resw" />
+		<None Remove="Images\BadgeLogo.scale-100.png" />
+		<None Remove="Images\BadgeLogo.scale-125.png" />
+		<None Remove="Images\BadgeLogo.scale-150.png" />
+		<None Remove="Images\BadgeLogo.scale-200.png" />
+		<None Remove="Images\BadgeLogo.scale-400.png" />
+		<None Remove="Images\LargeTile.scale-100.png" />
+		<None Remove="Images\LargeTile.scale-125.png" />
+		<None Remove="Images\LargeTile.scale-150.png" />
+		<None Remove="Images\LargeTile.scale-200.png" />
+		<None Remove="Images\LargeTile.scale-400.png" />
+		<None Remove="Images\SmallTile.scale-100.png" />
+		<None Remove="Images\SmallTile.scale-125.png" />
+		<None Remove="Images\SmallTile.scale-150.png" />
+		<None Remove="Images\SmallTile.scale-200.png" />
+		<None Remove="Images\SmallTile.scale-400.png" />
+		<None Remove="Images\SplashScreen.scale-100.png" />
+		<None Remove="Images\SplashScreen.scale-125.png" />
+		<None Remove="Images\SplashScreen.scale-150.png" />
+		<None Remove="Images\SplashScreen.scale-200.png" />
+		<None Remove="Images\SplashScreen.scale-400.png" />
+		<None Remove="Images\Square150x150Logo.scale-100.png" />
+		<None Remove="Images\Square150x150Logo.scale-125.png" />
+		<None Remove="Images\Square150x150Logo.scale-150.png" />
+		<None Remove="Images\Square150x150Logo.scale-200.png" />
+		<None Remove="Images\Square150x150Logo.scale-400.png" />
+		<None Remove="Images\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
+		<None Remove="Images\Square44x44Logo.altform-lightunplated_targetsize-24.png" />
+		<None Remove="Images\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
+		<None Remove="Images\Square44x44Logo.altform-lightunplated_targetsize-32.png" />
+		<None Remove="Images\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
+		<None Remove="Images\Square44x44Logo.altform-unplated_targetsize-16.png" />
+		<None Remove="Images\Square44x44Logo.altform-unplated_targetsize-256.png" />
+		<None Remove="Images\Square44x44Logo.altform-unplated_targetsize-32.png" />
+		<None Remove="Images\Square44x44Logo.altform-unplated_targetsize-48.png" />
+		<None Remove="Images\Square44x44Logo.scale-100.png" />
+		<None Remove="Images\Square44x44Logo.scale-125.png" />
+		<None Remove="Images\Square44x44Logo.scale-150.png" />
+		<None Remove="Images\Square44x44Logo.scale-200.png" />
+		<None Remove="Images\Square44x44Logo.scale-400.png" />
+		<None Remove="Images\Square44x44Logo.targetsize-16.png" />
+		<None Remove="Images\Square44x44Logo.targetsize-24.png" />
+		<None Remove="Images\Square44x44Logo.targetsize-24_altform-unplated.png" />
+		<None Remove="Images\Square44x44Logo.targetsize-256.png" />
+		<None Remove="Images\Square44x44Logo.targetsize-32.png" />
+		<None Remove="Images\Square44x44Logo.targetsize-48.png" />
+		<None Remove="Images\StoreLogo.scale-100.png" />
+		<None Remove="Images\StoreLogo.scale-125.png" />
+		<None Remove="Images\StoreLogo.scale-150.png" />
+		<None Remove="Images\StoreLogo.scale-200.png" />
+		<None Remove="Images\StoreLogo.scale-400.png" />
+		<None Remove="Images\Wide310x150Logo.scale-100.png" />
+		<None Remove="Images\Wide310x150Logo.scale-125.png" />
+		<None Remove="Images\Wide310x150Logo.scale-150.png" />
+		<None Remove="Images\Wide310x150Logo.scale-200.png" />
+		<None Remove="Images\Wide310x150Logo.scale-400.png" />
+		<None Remove="Package.appxmanifest" />
 		<None Remove="Pages\BookMarksPage.xaml" />
 		<None Remove="Pages\Capability\NavigationPage.xaml" />
 		<None Remove="Pages\DownloadAndHistoryListPage.xaml" />
@@ -64,6 +135,11 @@
 		<None Remove="Pages\SettingsPage.xaml" />
 		<None Remove="Themes.xaml" />
 		<None Remove="UserControls\IllustrationGridCommandBar.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+	  <AppxManifest Include="Package.appxmanifest">
+	    <SubType>Designer</SubType>
+	  </AppxManifest>
 	</ItemGroup>
 
   <ItemGroup>
@@ -87,7 +163,7 @@
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
-	<!-- region Exposes PRI resources to the source generator -->
+	<!-- #region Exposes PRI resources to the source generator -->
 
 	<Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
 		<ItemGroup>
@@ -99,7 +175,7 @@
 		<CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
 	</ItemGroup>
 
-	<!-- endregion Exposes PRI resources to the source generator -->
+	<!-- #endregion Exposes PRI resources to the source generator -->
 
 	<Target Name="PackageLoginProxy" BeforeTargets="PrepareForBuild">
 		<PropertyGroup>
@@ -119,6 +195,64 @@
 		<ZipDirectory DestinationFile="$(LoginProxyAssetsPath)" SourceDirectory="$(LoginProxyPublishDir)"></ZipDirectory>
 		<RemoveDir Directories="$(LoginProxyPublishDir)"></RemoveDir>
 	</Target>
+
+	<ItemGroup>
+	  <Content Include="Images\BadgeLogo.scale-100.png" />
+	  <Content Include="Images\BadgeLogo.scale-125.png" />
+	  <Content Include="Images\BadgeLogo.scale-150.png" />
+	  <Content Include="Images\BadgeLogo.scale-200.png" />
+	  <Content Include="Images\BadgeLogo.scale-400.png" />
+	  <Content Include="Images\LargeTile.scale-100.png" />
+	  <Content Include="Images\LargeTile.scale-125.png" />
+	  <Content Include="Images\LargeTile.scale-150.png" />
+	  <Content Include="Images\LargeTile.scale-200.png" />
+	  <Content Include="Images\LargeTile.scale-400.png" />
+	  <Content Include="Images\SmallTile.scale-100.png" />
+	  <Content Include="Images\SmallTile.scale-125.png" />
+	  <Content Include="Images\SmallTile.scale-150.png" />
+	  <Content Include="Images\SmallTile.scale-200.png" />
+	  <Content Include="Images\SmallTile.scale-400.png" />
+	  <Content Include="Images\SplashScreen.scale-100.png" />
+	  <Content Include="Images\SplashScreen.scale-125.png" />
+	  <Content Include="Images\SplashScreen.scale-150.png" />
+	  <Content Include="Images\SplashScreen.scale-200.png" />
+	  <Content Include="Images\SplashScreen.scale-400.png" />
+	  <Content Include="Images\Square150x150Logo.scale-100.png" />
+	  <Content Include="Images\Square150x150Logo.scale-125.png" />
+	  <Content Include="Images\Square150x150Logo.scale-150.png" />
+	  <Content Include="Images\Square150x150Logo.scale-200.png" />
+	  <Content Include="Images\Square150x150Logo.scale-400.png" />
+	  <Content Include="Images\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
+	  <Content Include="Images\Square44x44Logo.altform-lightunplated_targetsize-24.png" />
+	  <Content Include="Images\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
+	  <Content Include="Images\Square44x44Logo.altform-lightunplated_targetsize-32.png" />
+	  <Content Include="Images\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
+	  <Content Include="Images\Square44x44Logo.altform-unplated_targetsize-16.png" />
+	  <Content Include="Images\Square44x44Logo.altform-unplated_targetsize-256.png" />
+	  <Content Include="Images\Square44x44Logo.altform-unplated_targetsize-32.png" />
+	  <Content Include="Images\Square44x44Logo.altform-unplated_targetsize-48.png" />
+	  <Content Include="Images\Square44x44Logo.scale-100.png" />
+	  <Content Include="Images\Square44x44Logo.scale-125.png" />
+	  <Content Include="Images\Square44x44Logo.scale-150.png" />
+	  <Content Include="Images\Square44x44Logo.scale-200.png" />
+	  <Content Include="Images\Square44x44Logo.scale-400.png" />
+	  <Content Include="Images\Square44x44Logo.targetsize-16.png" />
+	  <Content Include="Images\Square44x44Logo.targetsize-24.png" />
+	  <Content Include="Images\Square44x44Logo.targetsize-24_altform-unplated.png" />
+	  <Content Include="Images\Square44x44Logo.targetsize-256.png" />
+	  <Content Include="Images\Square44x44Logo.targetsize-32.png" />
+	  <Content Include="Images\Square44x44Logo.targetsize-48.png" />
+	  <Content Include="Images\StoreLogo.scale-100.png" />
+	  <Content Include="Images\StoreLogo.scale-125.png" />
+	  <Content Include="Images\StoreLogo.scale-150.png" />
+	  <Content Include="Images\StoreLogo.scale-200.png" />
+	  <Content Include="Images\StoreLogo.scale-400.png" />
+	  <Content Include="Images\Wide310x150Logo.scale-100.png" />
+	  <Content Include="Images\Wide310x150Logo.scale-125.png" />
+	  <Content Include="Images\Wide310x150Logo.scale-150.png" />
+	  <Content Include="Images\Wide310x150Logo.scale-200.png" />
+	  <Content Include="Images\Wide310x150Logo.scale-400.png" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
@@ -184,8 +318,20 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PRIResource Include="Assets\Strings\zh-CN\BookmarksPage.resw" />
-	</ItemGroup>
+		<PRIResource Include="Strings\zh-CN\BookmarksPage.resw" />
+		<PRIResource Include="Strings\zh-CN\DownloadAndHistoryListPage.resw" />
+		<PRIResource Include="Strings\zh-CN\IllustrationGridCommandBar.resw" />
+		<PRIResource Include="Strings\zh-CN\IllustrationInfoPage.resw" />
+		<PRIResource Include="Strings\zh-CN\IllustrationViewerPage.resw" />
+		<PRIResource Include="Strings\zh-CN\ImageViewerPage.resw" />
+		<PRIResource Include="Strings\zh-CN\LoginPage.resw" />
+		<PRIResource Include="Strings\zh-CN\MainPage.resw" />
+		<PRIResource Include="Strings\zh-CN\MessageContentDialog.resw" />
+		<PRIResource Include="Strings\zh-CN\Misc.resw" />
+		<PRIResource Include="Strings\zh-CN\RankingsPage.resw" />
+		<PRIResource Include="Strings\zh-CN\RecommendationsPage.resw" />
+		<PRIResource Include="Strings\zh-CN\SettingsPage.resw" />
+  </ItemGroup>
 
 	<ItemGroup>
 		<Content Update="Assets\Images\logo44x44.ico">

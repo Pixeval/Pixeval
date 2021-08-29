@@ -6,6 +6,7 @@ using Mako.Engine;
 using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.Options;
+using Pixeval.Util.Generic;
 
 namespace Pixeval.Util
 {
@@ -13,7 +14,7 @@ namespace Pixeval.Util
     {
         public static IllustrationSortOptionWrapper GetAppSettingDefaultSortOptionWrapper()
         {
-            return IllustrationSortOptionWrapper.Available.First(it => it.Value == App.AppSetting.DefaultSortOption);
+            return LocalizedBoxHelper.Of<IllustrationSortOption, IllustrationSortOptionWrapper>(App.AppSetting.DefaultSortOption);
         }
 
         public static string? GetThumbnailUrl(this Illustration illustration, ThumbnailUrlOption option)
@@ -29,7 +30,7 @@ namespace Pixeval.Util
 
         public static Uri GetIllustrationWebUri(string id)
         {
-            return new($"https://www.pixiv.net/artworks/{id}");
+            return new Uri($"https://www.pixiv.net/artworks/{id}");
         }
 
         public static string? GetOriginalUrl(this Illustration illustration)

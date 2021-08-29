@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using Mako.Global.Enum;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Pixeval.Options;
 using Pixeval.Util;
+using Pixeval.Util.Generic;
 
 namespace Pixeval.ViewModel
 {
@@ -21,7 +21,7 @@ namespace Pixeval.ViewModel
 
         public IllustrationSortOptionWrapper BoxSortOption()
         {
-            return IllustrationSortOptionWrapper.Available.First(s => s.Value == DefaultSortOption);
+            return LocalizedBoxHelper.Of<IllustrationSortOption, IllustrationSortOptionWrapper>(DefaultSortOption);
         }
 
         public void UnboxSortOption(object wrapper)
@@ -31,7 +31,7 @@ namespace Pixeval.ViewModel
 
         public SearchTagMatchOptionWrapper BoxSearchTagMatchOption()
         {
-            return SearchTagMatchOptionWrapper.Available.First(s => s.Value == TagMatchOption);
+            return LocalizedBoxHelper.Of<SearchTagMatchOption, SearchTagMatchOptionWrapper>(TagMatchOption);
         }
 
         public void UnboxSearchTagMatchOption(object wrapper)
@@ -41,7 +41,7 @@ namespace Pixeval.ViewModel
 
         public TargetFilterWrapper BoxTargetFilter()
         {
-            return TargetFilterWrapper.Available.First(s => s.Value == TargetFilter);
+            return LocalizedBoxHelper.Of<TargetFilter, TargetFilterWrapper>(TargetFilter);
         }
 
         public void UnboxTargetFilter(object wrapper)

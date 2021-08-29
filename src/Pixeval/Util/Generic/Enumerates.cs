@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
-namespace Pixeval.Util
+namespace Pixeval.Util.Generic
 {
     public static class Enumerates
     {
         public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> source)
         {
-            return new(source);
+            return new ObservableCollection<T>(source);
         }
 
         public static T[] ArrayOf<T>(params T[] t) => t;

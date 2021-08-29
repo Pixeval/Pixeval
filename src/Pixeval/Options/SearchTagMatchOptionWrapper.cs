@@ -1,18 +1,12 @@
 ﻿using System.Collections.Generic;
 using Mako.Global.Enum;
 using Pixeval.Util;
+using Pixeval.Util.Generic;
 
 namespace Pixeval.Options
 {
-    public record SearchTagMatchOptionWrapper : ILocalizedBox<SearchTagMatchOption>
+    public record SearchTagMatchOptionWrapper : ILocalizedBox<SearchTagMatchOption, SearchTagMatchOptionWrapper>
     {
-        public static readonly IEnumerable<SearchTagMatchOptionWrapper> Available = new SearchTagMatchOptionWrapper[]
-        {
-            new(SearchTagMatchOption.PartialMatchForTags, MiscResources.SearchTagMatchOptionPartialMatchForTags),
-            new(SearchTagMatchOption.ExactMatchForTags, MiscResources.SearchTagMatchOptionExactMatchForTags),
-            new(SearchTagMatchOption.TitleAndCaption, MiscResources.SearchTagMatchOptionTitleAndCaption)
-        };
-
         public SearchTagMatchOption Value { get; }
 
         public string LocalizedString { get; }
@@ -21,6 +15,16 @@ namespace Pixeval.Options
         {
             Value = value;
             LocalizedString = localizedString;
+        }
+
+        public static IEnumerable<SearchTagMatchOptionWrapper> AvailableOptions()
+        {
+            return new SearchTagMatchOptionWrapper[]
+            {
+                new(SearchTagMatchOption.PartialMatchForTags, MiscResources.SearchTagMatchOptionPartialMatchForTags),
+                new(SearchTagMatchOption.ExactMatchForTags, MiscResources.SearchTagMatchOptionExactMatchForTags),
+                new(SearchTagMatchOption.TitleAndCaption, MiscResources.SearchTagMatchOptionTitleAndCaption)
+            };
         }
     }
 }

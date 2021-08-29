@@ -20,6 +20,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.Win32;
 using Pixeval.Events;
 using Pixeval.Util;
+using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 
 namespace Pixeval.ViewModel

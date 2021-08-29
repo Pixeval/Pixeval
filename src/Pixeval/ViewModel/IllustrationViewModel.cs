@@ -10,6 +10,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Options;
 using Pixeval.Util;
+using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 
 namespace Pixeval.ViewModel

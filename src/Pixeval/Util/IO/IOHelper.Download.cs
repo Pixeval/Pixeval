@@ -10,8 +10,9 @@ using Mako.Util;
 using Microsoft.IO;
 using Pixeval.Interop;
 using Pixeval.Util.UI;
+using Functions = Pixeval.Util.Generic.Functions;
 
-namespace Pixeval.Util
+namespace Pixeval.Util.IO
 {
     // ReSharper disable once InconsistentNaming
     public static partial class IOHelper

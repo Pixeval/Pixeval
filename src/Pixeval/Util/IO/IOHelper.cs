@@ -9,7 +9,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -21,15 +20,10 @@ using ImageMagick;
 using Mako.Net.Response;
 using Mako.Util;
 
-namespace Pixeval.Util
+namespace Pixeval.Util.IO
 {
     public static partial class IOHelper
     {
-        public static async Task<string> CalculateChecksumAsync<T>(string fullnameOfFile) where T : HashAlgorithm, new()
-        {
-            return await (await File.ReadAllBytesAsync(fullnameOfFile)).HashAsync<T>();
-        }
-
         public static async Task ClearDirectoryAsync(this StorageFolder dir)
         {
             await Task.WhenAll((await dir.GetItemsAsync()).Select(f => f.DeleteAsync().AsTask()));

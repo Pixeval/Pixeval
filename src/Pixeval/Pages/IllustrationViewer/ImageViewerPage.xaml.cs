@@ -104,7 +104,7 @@ namespace Pixeval.Pages.IllustrationViewer
                 sb.Begin();
             }
 
-            Func<DoubleAnimation> DoubleAnimationTemplate(double by) => () => new DoubleAnimation {Duration = animationDuration, EasingFunction = _easingFunction, By = by};
+            Func<DoubleAnimation> DoubleAnimationTemplate(double by) => () => new DoubleAnimation { Duration = animationDuration, EasingFunction = _easingFunction, By = @by };
         }
 
         private void IllustrationOriginalImage_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)

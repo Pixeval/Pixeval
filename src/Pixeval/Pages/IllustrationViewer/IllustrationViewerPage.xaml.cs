@@ -13,6 +13,8 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Options;
 using Pixeval.Util;
+using Pixeval.Util.Generic;
+using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.ViewModel;
 

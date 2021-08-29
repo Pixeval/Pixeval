@@ -172,7 +172,7 @@
                 <ComboBox x:Name="DefaultSortOptionComboBox"
                           x:Uid="/Misc/SortOptionComboBox"
                           Margin="{StaticResource StackLayoutEntryPadding}"
-                          ItemsSource="{x:Bind options:IllustrationSortOptionWrapper.Available}"
+                          ItemsSource="{x:Bind options:IllustrationSortOptionWrapper.AvailableOptions()}"
                           SelectedItem="{x:Bind _viewModel.BoxSortOption(), BindBack=_viewModel.UnboxSortOption, Mode=TwoWay}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate x:DataType="options:IllustrationSortOptionWrapper">
@@ -188,7 +188,7 @@
                 <ComboBox x:Name="SearchKeywordMatchOptionComboBox"
                           x:Uid="/SettingsPage/SearchKeywordMatchOptionComboBox"
                           Margin="{StaticResource StackLayoutEntryPadding}"
-                          ItemsSource="{x:Bind options:SearchTagMatchOptionWrapper.Available}"
+                          ItemsSource="{x:Bind options:SearchTagMatchOptionWrapper.AvailableOptions()}"
                           SelectedItem="{x:Bind _viewModel.BoxSearchTagMatchOption(), BindBack=_viewModel.UnboxSearchTagMatchOption, Mode=TwoWay}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate x:DataType="options:SearchTagMatchOptionWrapper">
@@ -204,7 +204,7 @@
                 <ComboBox x:Name="TargetFilterComboBox"
                           x:Uid="/SettingsPage/TargetFilterComboBox"
                           Margin="{StaticResource StackLayoutEntryPadding}"
-                          ItemsSource="{x:Bind options:TargetFilterWrapper.Available}"
+                          ItemsSource="{x:Bind options:TargetFilterWrapper.AvailableOptions()}"
                           SelectedItem="{x:Bind _viewModel.BoxTargetFilter(), BindBack=_viewModel.UnboxTargetFilter, Mode=TwoWay}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate x:DataType="options:TargetFilterWrapper">

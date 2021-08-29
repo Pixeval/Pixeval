@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mako="using:Mako.Global.Enum"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:options="using:Pixeval.Options"
     xmlns:ui="using:Pixeval.Util.UI"
@@ -22,7 +21,7 @@
                     <ComboBox x:Name="RankOptionComboBox"
                               x:Uid="/RankingsPage/RankOptionComboBox"
                               Margin="10,0,0,0"
-                              ItemsSource="{x:Bind options:RankOptionWrapper.Available}"
+                              ItemsSource="{x:Bind options:RankOptionWrapper.AvailableOptions()}"
                               SelectionChanged="RankOptionComboBox_OnSelectionChanged">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="options:RankOptionWrapper">

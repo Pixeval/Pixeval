@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Pixeval.Util
+namespace Pixeval.Util.Generic
 {
     public static class Functions
     {

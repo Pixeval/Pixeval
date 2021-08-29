@@ -32,10 +32,12 @@ namespace Pixeval.Pages.Capability
 
         private async void BookmarksPage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (App.Window.GetNavigationModeAndReset() is not NavigationMode.Back)
+            if (MainWindow.GetNavigationModeAndReset() is not NavigationMode.Back)
             {
                 await ChangeSource();
             }
+
+            IllustrationGrid.Focus(FocusState.Programmatic);
         }
 
         private async void PrivacyPolicyComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

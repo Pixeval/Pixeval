@@ -13,6 +13,8 @@ using Mako.Preference;
 using Mako.Util;
 using Pixeval.Events;
 using Pixeval.Util;
+using Pixeval.Util.Generic;
+using Pixeval.Util.IO;
 
 namespace Pixeval
 {
@@ -70,7 +72,7 @@ namespace Pixeval
         public static async Task CopyLoginProxyIfRequiredAsync()
         {
             var assetFile = await GetAssetBytesAsync("Binary/Pixeval.LoginProxy.zip");
-            var assetChecksum = await assetFile.HashAsync<SHA256Managed>();
+            var assetChecksum = await SHA256.Create().HashAsync(assetFile);
             if (await TryGetFolderRelativeToLocalFolderAsync(AppLoginProxyFolder) is { } folder
                 && await folder.TryGetItemAsync("checksum.sha256") is StorageFile checksum)
             {

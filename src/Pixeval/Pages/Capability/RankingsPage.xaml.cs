@@ -2,12 +2,12 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Mako.Global.Enum;
 using Pixeval.Events;
 using Pixeval.Options;
 using Pixeval.Util;
+using Pixeval.Util.Generic;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -34,17 +34,19 @@ namespace Pixeval.Pages.Capability
 
         public override void Prepare(NavigationEventArgs navigationEventArgs)
         {
-            RankOptionComboBox.SelectedItem = RankOptionWrapper.Available.First(it => it.Value.Equals(RankOption.Day));
+            RankOptionComboBox.SelectedItem = LocalizedBoxHelper.Of<RankOption, RankOptionWrapper>(RankOption.Day);
             RankDateTimeCalendarDatePicker.Date = DateTime.Now.AddDays(-2);
             EventChannel.Default.Subscribe<MainPageFrameNavigatingEvent>(() => IllustrationGrid.ViewModel.FetchEngine?.Cancel());
         }
 
         private async void RankingsPage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (App.Window.GetNavigationModeAndReset() is not NavigationMode.Back)
+            if (MainWindow.GetNavigationModeAndReset() is not NavigationMode.Back)
             {
                 await ChangeSource();
             }
+
+            IllustrationGrid.Focus(FocusState.Programmatic);
         }
 
         private async void RankOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

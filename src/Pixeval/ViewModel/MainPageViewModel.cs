@@ -5,6 +5,7 @@ using Mako.Net;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Events;
 using Pixeval.Util;
+using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 
 namespace Pixeval.ViewModel

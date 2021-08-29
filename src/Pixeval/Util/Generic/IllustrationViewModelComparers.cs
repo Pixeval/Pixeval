@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Pixeval.ViewModel;
 
-namespace Pixeval.Util
+namespace Pixeval.Util.Generic
 {
     public class IllustrationViewModelPublishDateComparer : IComparer<IllustrationViewModel>, IComparer
     {

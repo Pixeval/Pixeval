@@ -33,7 +33,7 @@
                     <ComboBox x:Name="SortOptionComboBox"
                               x:Uid="/Misc/SortOptionComboBox"
                               Margin="10,0,0,0"
-                              ItemsSource="{x:Bind options:IllustrationSortOptionWrapper.Available}"
+                              ItemsSource="{x:Bind options:IllustrationSortOptionWrapper.AvailableOptions()}"
                               SelectionChanged="SortOptionComboBox_OnSelectionChanged">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="options:IllustrationSortOptionWrapper">

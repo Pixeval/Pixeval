@@ -1,17 +1,12 @@
 ﻿using System.Collections.Generic;
 using Mako.Global.Enum;
 using Pixeval.Util;
+using Pixeval.Util.Generic;
 
 namespace Pixeval.Options
 {
-    public record TargetFilterWrapper : ILocalizedBox<TargetFilter>
+    public record TargetFilterWrapper : ILocalizedBox<TargetFilter, TargetFilterWrapper>
     {
-        public static readonly IEnumerable<TargetFilterWrapper> Available = new TargetFilterWrapper[]
-        {
-            new(TargetFilter.ForAndroid, MiscResources.TargetFilterForAndroid),
-            new(TargetFilter.ForIos, MiscResources.TargetFilterForIOS)
-        };
-
         public TargetFilter Value { get; }
 
         public string LocalizedString { get; }
@@ -20,6 +15,15 @@ namespace Pixeval.Options
         {
             Value = value;
             LocalizedString = localizedString;
+        }
+
+        public static IEnumerable<TargetFilterWrapper> AvailableOptions()
+        {
+            return new TargetFilterWrapper[]
+            {
+                new(TargetFilter.ForAndroid, MiscResources.TargetFilterForAndroid),
+                new(TargetFilter.ForIos, MiscResources.TargetFilterForIOS)
+            };
         }
     }
 }

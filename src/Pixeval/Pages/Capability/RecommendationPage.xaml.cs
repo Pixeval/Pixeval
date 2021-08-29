@@ -32,10 +32,12 @@ namespace Pixeval.Pages.Capability
 
         private async void RecommendationsPage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (App.Window.GetNavigationModeAndReset() is not NavigationMode.Back)
+            if (MainWindow.GetNavigationModeAndReset() is not NavigationMode.Back)
             {
                 await ChangeSource();
             }
+
+            IllustrationGrid.Focus(FocusState.Programmatic);
         }
 
         private async void ModeSelectionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

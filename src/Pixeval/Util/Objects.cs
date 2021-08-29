@@ -23,11 +23,10 @@ namespace Pixeval.Util
             return !b;
         }
 
-        public static async Task<string> HashAsync<T>(this byte[] bytes) where T : HashAlgorithm, new()
+        public static async Task<string> HashAsync<T>(this T algorithm, byte[] bytes) where T : HashAlgorithm
         {
-            using var hasher = new T();
             await using var memoryStream = new MemoryStream(bytes);
-            return (await hasher.ComputeHashAsync(memoryStream)).ToHexString();
+            return (await algorithm.ComputeHashAsync(memoryStream)).ToHexString();
         }
 
         public static string ToHexString(this byte[] bytes)

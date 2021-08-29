@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Events;
 using Pixeval.Interop;
 using Pixeval.Util;
+using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using WinRT;
 
