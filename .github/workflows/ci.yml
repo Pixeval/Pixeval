@@ -26,7 +26,7 @@ jobs:
               run: msbuild -t:restore -p:Platform=${{ matrix.platform }}
 
             - name: Publish the application
-              run:  msbuild '.\src\Pixeval (Package)\Pixeval (Package).wapproj' -t:build -p:Configuration=Release -p:Platform=${{ matrix.platform }}
+              run:  msbuild -t:publish -p:Configuration=Release -p:Platform=${{ matrix.platform }}
 
             - name: Upload a Build Artifact
               uses: actions/upload-artifact@v2
