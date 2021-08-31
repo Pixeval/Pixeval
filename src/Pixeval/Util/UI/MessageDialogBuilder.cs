@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Windows.UI.Popups;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Interop;
 using Pixeval.Pages.Misc;
 using WinRT;
 
@@ -42,11 +43,9 @@ namespace Pixeval.Util.UI
 		private static T InitializeWithWindow<T>(this T obj)
 		{
 			if (Window.Current is null)
-				obj.As<IInitializeWithWindow>()?.Initialize(HWnd); //HWnd 或者 User32.GetActiveWindow()
+				obj.As<IInitializeWithWindow>()?.Initialize(GetWindow.HWnd); //HWnd 或者 User32.GetActiveWindow()
 			return obj;
 		}
-
-		private static IntPtr HWnd => WinRT.Interop.WindowNative.GetWindowHandle(App.Window);
 
 		[ComImport, Guid("3E68D4BD-7135-4D10-8018-9FB6D9F33FA1"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 		private interface IInitializeWithWindow

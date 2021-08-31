@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Pixeval.Interop
+namespace Pixeval.Interop //任意保留一种方法
 {
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
@@ -9,5 +9,10 @@ namespace Pixeval.Interop
     internal interface IWindowNative
     {
         IntPtr WindowHandle { get; }
+    }
+
+    public static class GetWindow
+    {
+	    public static IntPtr HWnd => WinRT.Interop.WindowNative.GetWindowHandle(App.Window);
     }
 }
