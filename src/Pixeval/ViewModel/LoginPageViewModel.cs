@@ -162,11 +162,9 @@ namespace Pixeval.ViewModel
             }
             else
             {
-                await MessageDialogBuilder.CreateAcknowledgement(
-                        App.Window,
-                        LoginPageResources.RefreshingSessionIsNotPresentTitle,
-                        LoginPageResources.RefreshingSessionIsNotPresentContent)
-                    .ShowAsync();
+	            await MessageDialogBuilder.CreateAcknowledgement(
+		            LoginPageResources.RefreshingSessionIsNotPresentTitle,
+		            LoginPageResources.RefreshingSessionIsNotPresentContent);
                 await AppContext.ClearAppLocalFolderAsync();
                 Application.Current.Exit();
             }

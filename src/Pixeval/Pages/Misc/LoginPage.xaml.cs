@@ -43,11 +43,9 @@ namespace Pixeval.Pages.Misc
             }
             catch (Exception exception)
             {
-                _ = await MessageDialogBuilder.CreateAcknowledgement(
-                        this,
-                        LoginPageResources.ErrorWhileLoggingInTitle,
-                        LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.Message))
-                    .ShowAsync();
+	            await MessageDialogBuilder.CreateAcknowledgement(
+		            LoginPageResources.ErrorWhileLoggingInTitle,
+		            LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.Message));
                 Application.Current.Exit();
             }
         }
@@ -56,10 +54,10 @@ namespace Pixeval.Pages.Misc
         {
             if (!await _viewModel.CheckFakeRootCertificateInstallationAsync())
             {
-                var dialogResult = await MessageDialogBuilder.CreateOkCancel(this,
+                var dialogResult = await MessageDialogBuilder.CreateOkCancel(
                     LoginPageResources.RootCertificateInstallationRequiredTitle,
-                    LoginPageResources.RootCertificateInstallationRequiredContent).ShowAsync();
-                if (dialogResult == ContentDialogResult.Primary)
+                    LoginPageResources.RootCertificateInstallationRequiredContent);
+                if (dialogResult)
                 {
                     await _viewModel.InstallFakeRootCertificateAsync();
                 }
@@ -74,10 +72,10 @@ namespace Pixeval.Pages.Misc
         {
             if (!_viewModel.CheckWebView2Installation())
             {
-                var dialogResult = await MessageDialogBuilder.CreateOkCancel(this,
+                var dialogResult = await MessageDialogBuilder.CreateOkCancel(
                     LoginPageResources.WebView2InstallationRequiredTitle,
-                    LoginPageResources.WebView2InstallationRequiredContent).ShowAsync();
-                if (dialogResult == ContentDialogResult.Primary)
+                    LoginPageResources.WebView2InstallationRequiredContent);
+                if (dialogResult)
                 {
                     await Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/p/?LinkId=2124703"));
                 }

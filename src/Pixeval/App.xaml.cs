@@ -93,7 +93,7 @@ namespace Pixeval
 #if DEBUG
                 Debugger.Break();
 #endif
-                await MessageDialogBuilder.CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
+                await MessageDialogBuilder.CreateAcknowledgement(MiscResources.ExceptionEncountered, e.ToString());
                 await ExitWithPushedNotification();
             }
         }

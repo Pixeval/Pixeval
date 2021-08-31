@@ -1,99 +1,57 @@
-﻿using Microsoft.UI.Xaml;
+﻿using System;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using Windows.UI.Popups;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Pages.Misc;
+using WinRT;
 
 namespace Pixeval.Util.UI
 {
-    public class MessageDialogBuilder
-    {
-        private readonly ContentDialog _contentDialog = new();
+	public static class MessageDialogBuilder
+	{
+		public static async Task<bool> CreateOkCancel(string title, string content)
+		{
+			var result = false;
+			var messageDialog = new MessageDialog(content, title)
+			{
+				DefaultCommandIndex = 1,
+				CancelCommandIndex = 1,
+				Options = MessageDialogOptions.AcceptUserInputAfterDelay
+			}.InitializeWithWindow();
+			messageDialog.Commands.Add(new UICommand(MessageContentDialogResources.OkButtonContent, _ => result = true));
+			messageDialog.Commands.Add(new UICommand(MessageContentDialogResources.CancelButtonContent, _ => result = false));
+			_ = await messageDialog.ShowAsync();
+			return result;
+		}
 
-        public static MessageDialogBuilder Create() => new();
+		public static async Task CreateAcknowledgement(string title, string content)
+		{
+			var messageDialog = new MessageDialog(content, title)
+			{
+				DefaultCommandIndex = 0,
+				CancelCommandIndex = 0,
+				Options = MessageDialogOptions.AcceptUserInputAfterDelay
+			}.InitializeWithWindow();
+			messageDialog.Commands.Add(new UICommand(MessageContentDialogResources.OkButtonContent, _ => { }));
+			_ = await messageDialog.ShowAsync();
+		}
 
-        public static ContentDialog CreateOkCancel(UserControl owner, string title, string content)
-        {
-            return Create().WithTitle(title)
-                .WithContent(content)
-                .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
-                .WithCloseButtonText(MessageContentDialogResources.CancelButtonContent)
-                .WithDefaultButton(ContentDialogButton.Primary)
-                .Build(owner);
-        }
 
-        public static ContentDialog CreateOkCancel(Window owner, string title, string content)
-        {
-            return Create().WithTitle(title)
-                .WithContent(content)
-                .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
-                .WithCloseButtonText(MessageContentDialogResources.CancelButtonContent)
-                .WithDefaultButton(ContentDialogButton.Primary)
-                .Build(owner);
-        }
+		private static T InitializeWithWindow<T>(this T obj)
+		{
+			if (Window.Current is null)
+				obj.As<IInitializeWithWindow>()?.Initialize(HWnd); //HWnd 或者 User32.GetActiveWindow()
+			return obj;
+		}
 
-        public static ContentDialog CreateAcknowledgement(UserControl owner, string title, string content)
-        {
-            return Create().WithTitle(title)
-                .WithContent(content)
-                .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
-                .WithDefaultButton(ContentDialogButton.Primary)
-                .Build(owner);
-        }
+		private static IntPtr HWnd => WinRT.Interop.WindowNative.GetWindowHandle(App.Window);
 
-        public static ContentDialog CreateAcknowledgement(Window owner, string title, string content)
-        {
-            return Create().WithTitle(title)
-                .WithContent(content)
-                .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
-                .WithDefaultButton(ContentDialogButton.Primary)
-                .Build(owner);
-        }
-
-        public MessageDialogBuilder WithTitle(string title)
-        {
-            _contentDialog.Title = title;
-            return this;
-        }
-
-        public MessageDialogBuilder WithPrimaryButtonText(string text)
-        {
-            _contentDialog.PrimaryButtonText = text;
-            return this;
-        }
-
-        public MessageDialogBuilder WithSecondaryButtonText(string text)
-        {
-            _contentDialog.SecondaryButtonText = text;
-            return this;
-        }
-
-        public MessageDialogBuilder WithCloseButtonText(string text)
-        {
-            _contentDialog.CloseButtonText = text;
-            return this;
-        }
-
-        public MessageDialogBuilder WithDefaultButton(ContentDialogButton button)
-        {
-            _contentDialog.DefaultButton = button;
-            return this;
-        }
-
-        public MessageDialogBuilder WithContent(string message)
-        {
-            _contentDialog.Content = new MessageDialogContent(message);
-            return this;
-        }
-
-        public ContentDialog Build(UserControl owner) // Remarks: the owner argument is a workaround for issue #4870
-        {
-            _contentDialog.XamlRoot = owner.Content.XamlRoot;
-            return _contentDialog;
-        }
-
-        public ContentDialog Build(Window owner) // Remarks: the owner argument is a workaround for issue #4870
-        {
-            _contentDialog.XamlRoot = owner.Content.XamlRoot;
-            return _contentDialog;
-        }
-    }
+		[ComImport, Guid("3E68D4BD-7135-4D10-8018-9FB6D9F33FA1"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+		private interface IInitializeWithWindow
+		{
+			void Initialize([In] IntPtr hWnd);
+		}
+	}
 }

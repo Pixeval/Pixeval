@@ -148,11 +148,10 @@ namespace Pixeval.UserControls
         {
             var notBookmarked = ViewModel.SelectedIllustrations.Where(i => !i.IsBookmarked);
             var viewModelSelectedIllustrations = notBookmarked as IllustrationViewModel[] ?? notBookmarked.ToArray();
-            if (viewModelSelectedIllustrations.Length > 5 && await MessageDialogBuilder.CreateOkCancel(
-                    this,
-                    IllustrationGridCommandBarResources.SelectedTooManyItemsForBookmarkTitle,
-                    IllustrationGridCommandBarResources.SelectedTooManyItemsForBookmarkContent)
-                .ShowAsync() != ContentDialogResult.Primary)
+            var dialogResult = await MessageDialogBuilder.CreateOkCancel(
+	            IllustrationGridCommandBarResources.SelectedTooManyItemsForBookmarkTitle,
+	            IllustrationGridCommandBarResources.SelectedTooManyItemsForBookmarkContent);
+            if (viewModelSelectedIllustrations.Length > 5 && dialogResult)
             {
                 return;
             }
@@ -180,11 +179,10 @@ namespace Pixeval.UserControls
         {
             if (ViewModel.SelectedIllustrations is {Count: > 15} selected)
             {
-                if (await MessageDialogBuilder.CreateOkCancel(
-                        this,
-                        IllustrationGridCommandBarResources.SelectedTooManyItemsTitle,
-                        IllustrationGridCommandBarResources.SelectedTooManyItemsForOpenInBrowserContent)
-                    .ShowAsync() == ContentDialogResult.Primary)
+	            var dialogResult = await MessageDialogBuilder.CreateOkCancel(
+		            IllustrationGridCommandBarResources.SelectedTooManyItemsTitle,
+		            IllustrationGridCommandBarResources.SelectedTooManyItemsForOpenInBrowserContent);
+                if (dialogResult)
                 {
                     foreach (var illustrationViewModel in selected)
                     {

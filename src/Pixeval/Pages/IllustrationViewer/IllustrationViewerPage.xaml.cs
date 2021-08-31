@@ -149,8 +149,7 @@ namespace Pixeval.Pages.IllustrationViewer
         {
             if (_viewModel.Current.LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true })
             {
-                await MessageDialogBuilder.CreateAcknowledgement(this, IllustrationViewerPageResources.CannotShareImageForNowTitle, IllustrationViewerPageResources.CannotShareImageForNowContent)
-                    .ShowAsync();
+                await MessageDialogBuilder.CreateAcknowledgement(IllustrationViewerPageResources.CannotShareImageForNowTitle, IllustrationViewerPageResources.CannotShareImageForNowContent);
                 return;
             }
             UIHelper.ShowShareUI();
