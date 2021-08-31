@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime;
 using Mako.Global.Enum;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
@@ -40,6 +41,11 @@ namespace Pixeval.Pages
             EventChannel.Default.Publish(new MainPageFrameNavigatingEvent(this));
             GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect();
-        } 
+        }
+
+        private void FrameworkElement_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+	        ((NavigationView)sender).PaneDisplayMode = ((FrameworkElement)sender).ActualWidth < _viewModel.MainPageRootNavigationViewOpenPanelLength * 3 ? NavigationViewPaneDisplayMode.LeftCompact : NavigationViewPaneDisplayMode.Left;
+        }
     }
 }
