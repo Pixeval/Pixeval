@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime;
+using System.Threading.Tasks;
 using Mako.Global.Enum;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -41,31 +42,6 @@ namespace Pixeval.Pages
             EventChannel.Default.Publish(new MainPageFrameNavigatingEvent(this));
             GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect();
-        }
-
-        private bool _manualSet;
-        private bool _ignoredOnce;
-        private void FrameworkElement_OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if(!_manualSet)
-            {
-	            ((NavigationView)sender).PaneDisplayMode = ((FrameworkElement)sender).ActualWidth < _viewModel.MainPageRootNavigationViewOpenPanelLength * 3 ? NavigationViewPaneDisplayMode.LeftCompact : NavigationViewPaneDisplayMode.Left;
-            }
-        }
-
-        private void NavigationView_OnDisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs e)
-        {
-	        if(_ignoredOnce)
-	        {
-		        if (Math.Abs(sender.ActualWidth - _viewModel.MainPageRootNavigationViewOpenPanelLength * 3) > 10)
-		        {
-			        _manualSet = true;
-		        }
-	        }
-	        else
-	        {
-		        _ignoredOnce = true;
-	        }
         }
     }
 }

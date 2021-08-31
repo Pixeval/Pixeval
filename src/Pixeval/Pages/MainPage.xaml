@@ -11,9 +11,6 @@
 
     <NavigationView d:DataContext="{d:DesignInstance viewModel:MainPageViewModel}"
                     IsSettingsVisible="False"
-                    PaneDisplayMode="Left"
-                    SizeChanged="FrameworkElement_OnSizeChanged"
-                    DisplayModeChanged="NavigationView_OnDisplayModeChanged"
                     OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}"
                     SelectionChanged="MainPageRootNavigationView_OnSelectionChanged">
         <NavigationView.PaneHeader>
