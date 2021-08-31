@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
       <OutputType>WinExe</OutputType>
@@ -276,11 +276,6 @@
    </ItemGroup>
    <ItemGroup>
       <Page Update="UserControls\IllustrationGrid.xaml">
-         <Generator>MSBuild:Compile</Generator>
-      </Page>
-   </ItemGroup>
-   <ItemGroup>
-      <Page Update="Pages\Misc\MessageDialogContent.xaml">
          <Generator>MSBuild:Compile</Generator>
       </Page>
    </ItemGroup>
