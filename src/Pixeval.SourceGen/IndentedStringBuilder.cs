@@ -60,7 +60,7 @@ namespace Pixeval.SourceGen
 
         public BlockIndentedStringBuilder Block(string prefix, char open, char close)
         {
-            Append(prefix + " " + open + "\n");
+            Append(prefix + "\n" + open + "\n");
             return new BlockIndentedStringBuilder(this, close);
         }
 

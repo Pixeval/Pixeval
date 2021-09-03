@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -9,6 +10,7 @@ using Windows.System;
 using Mako.Util;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Util;
+using Pixeval.Util.Generic;
 using Pixeval.Util.UI;
 using Pixeval.ViewModel;
 
@@ -24,6 +26,25 @@ namespace Pixeval.UserControls
             var defaultCommands = new List<ICommandBarElement>(CommandBar.PrimaryCommands);
             defaultCommands.AddRange(CommandBar.SecondaryCommands);
             _defaultCommands = defaultCommands.Where(e => e is AppBarButton).Cast<Control>();
+            CommandBarElements = new ObservableCollection<UIElement>();
+            CommandBarElements.CollectionChanged += (_, args) =>
+            {
+                switch (args)
+                {
+                    case {Action: NotifyCollectionChangedAction.Add}:
+                        if (args is {NewItems: not null})
+                        {
+                            foreach (UIElement argsNewItem in args.NewItems)
+                            {
+                                ExtraCommandsBar.Children.Add(argsNewItem);
+                            }
+                        }
+
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            };
         }
 
         public static DependencyProperty PrimaryCommandSupplementsProperty = DependencyProperty.Register(
@@ -49,12 +70,6 @@ namespace Pixeval.UserControls
             PropertyMetadata.Create(true,
                 (o, args) => ((IllustrationGridCommandBar) o)._defaultCommands.ForEach(c => c.IsEnabled = (bool) args.NewValue)));
 
-        public static DependencyProperty CommandBarContentProperty = DependencyProperty.Register(
-            nameof(CommandBarContent),
-            typeof(object),
-            typeof(IllustrationGridCommandBar),
-            PropertyMetadata.Create(new object(), (o, args) => ((IllustrationGridCommandBar) o).CommandBar.Content = args.NewValue));
-
         public static DependencyProperty ViewModelProperty = DependencyProperty.Register(
             nameof(ViewModel),
             typeof(IllustrationGridViewModel),
@@ -79,11 +94,7 @@ namespace Pixeval.UserControls
             set => SetValue(IsDefaultCommandsEnabledProperty, value);
         }
 
-        public object CommandBarContent
-        {
-            get => GetValue(CommandBarContentProperty);
-            set => SetValue(CommandBarContentProperty, value);
-        }
+        public ObservableCollection<UIElement> CommandBarElements { get; }
 
         public IllustrationGridViewModel ViewModel
         {
