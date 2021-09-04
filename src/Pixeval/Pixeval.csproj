@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
       <OutputType>WinExe</OutputType>
@@ -148,16 +148,16 @@
       <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="8.2.1" />
       <PackageReference Include="Mako" Version="1.2.0" />
       <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.1.3" />
-      <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.1" />
-      <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.1" />
-      <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.1" />
+      <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.3" />
+      <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.3" />
+      <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.3" />
       <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.0.2" />
       <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.0-preview1" />
       <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.0-preview1" />
       <PackageReference Include="Microsoft.Win32.Registry" Version="6.0.0-preview.5.21301.5" />
       <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.4" />
       <PackageReference Include="PInvoke.User32" Version="0.7.104" />
-      <PackageReference Include="ReverseMarkdown" Version="3.19.0" />
+      <PackageReference Include="ReverseMarkdown" Version="3.20.0" />
       <PackageReference Include="System.Linq.Async" Version="5.0.0" />
       <Manifest Include="$(ApplicationManifest)" />
    </ItemGroup>
@@ -182,7 +182,7 @@
          <LoginProxyPublishSelfContained>false</LoginProxyPublishSelfContained>
          <LoginProxyRuntimeIdentifier>$(RuntimeIdentifier)</LoginProxyRuntimeIdentifier>
       </PropertyGroup>
-      <RemoveDir Directories="$(LoginProxyPublishDir)" />
+      <RemoveDir Directories="$(LoginProxyPublishDir)" ContinueOnError="true" />
       <MSBuild Projects="$(MSBuildProjectDirectory)\..\Pixeval.LoginProxy\Pixeval.LoginProxy.csproj" Targets="publish" Properties="Configuration=$(LoginProxyPublishConfiguration);RuntimeIdentifier=$(LoginProxyRuntimeIdentifier);Platform=$(LoginProxyPublishPlatform);PublishDir=$(LoginProxyPublishDir);PublishProtocol=$(LoginProxyPublishProtocol);TargetFramework=$(LoginProxyPublishTargetFramework);SelfContained=$(LoginProxyPublishSelfContained);" />
       <Delete Files="$(LoginProxyAssetsPath)" />
       <MakeDir Directories="$(MSBuildProjectDirectory)\Assets\Binary" />
