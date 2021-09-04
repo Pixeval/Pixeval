@@ -20,7 +20,7 @@ using Pixeval.ViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer
 {
-    // TODO add context menu and file info and comments section
+    // TODO add context menu and comments section
     public sealed partial class IllustrationViewerPage
     {
         private IllustrationViewerPageViewModel _viewModel = null!;

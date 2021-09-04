@@ -20,14 +20,14 @@ namespace Pixeval.Pages.Capability
 
         public override void Dispose(NavigatingCancelEventArgs navigatingCancelEventArgs)
         {
-            IllustrationGrid.ViewModel.Dispose();
+            IllustrationContainer.ViewModel.Dispose();
         }
 
         public override void Prepare(NavigationEventArgs navigationEventArgs)
         {
             PrivacyPolicyComboBox.SelectedItem = PrivacyPolicyComboBoxPublicItem;
             SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
-            EventChannel.Default.Subscribe<MainPageFrameNavigatingEvent>(() => IllustrationGrid.ViewModel.FetchEngine?.Cancel());
+            EventChannel.Default.Subscribe<MainPageFrameNavigatingEvent>(() => IllustrationContainer.ViewModel.FetchEngine?.Cancel());
         }
 
         private async void BookmarksPage_OnLoaded(object sender, RoutedEventArgs e)
@@ -36,8 +36,6 @@ namespace Pixeval.Pages.Capability
             {
                 await ChangeSource();
             }
-
-            IllustrationGrid.Focus(FocusState.Programmatic);
         }
 
         private async void PrivacyPolicyComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -47,13 +45,13 @@ namespace Pixeval.Pages.Capability
 
         private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var viewModel = IllustrationGrid.ViewModel;
+            var viewModel = IllustrationContainer.ViewModel;
             if (MakoHelper.GetSortDescriptionForIllustration(GetIllustrationSortOption()) is { } desc)
             {
                 viewModel.SetSortDescription(desc);
                 if (viewModel.IllustrationsView.FirstOrDefault() is { } first)
                 {
-                    IllustrationGrid.FindChild<GridView>()?.ScrollIntoView(first);
+                    IllustrationContainer.FindChild<GridView>()?.ScrollIntoView(first);
                 }
             }
             else
@@ -66,7 +64,7 @@ namespace Pixeval.Pages.Capability
         {
             if (TryGetPrivacyPolicy(PrivacyPolicyComboBox, out var policy))
             {
-                await IllustrationGrid.ViewModel.ResetAndFill(App.MakoClient.Bookmarks(App.Uid!, policy));
+                await IllustrationContainer.ViewModel.ResetAndFill(App.MakoClient.Bookmarks(App.Uid!, policy));
             }
         }
 

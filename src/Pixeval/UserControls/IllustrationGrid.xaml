@@ -3,16 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
              xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+             xmlns:converters="using:Pixeval.Converters"
              xmlns:core="using:Microsoft.Xaml.Interactions.Core"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+             xmlns:local="using:Pixeval.UserControls"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:media="using:Microsoft.Xaml.Interactions.Media"
              xmlns:ui="using:CommunityToolkit.WinUI.UI"
              xmlns:viewModel="using:Pixeval.ViewModel"
              Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
              mc:Ignorable="d">
-
+    <UserControl.Resources>
+        <converters:IllustrationGridItemContainerClipConverter x:Key="IllustrationGridItemContainerClipConverter" />
+        <converters:IllustrationGridItemContainerWidthCenterConverter x:Key="IllustrationGridItemContainerWidthCenterConverter" />
+    </UserControl.Resources>
     <Grid>
         <controls:AdaptiveGridView animations:ItemsReorderAnimation.Duration="0:0:0.2"
                                    DesiredWidth="180"
@@ -27,8 +32,7 @@
                     <GridViewItem x:Name="IllustrationThumbnailContainerItem"
                                   EffectiveViewportChanged="IllustrationThumbnailContainerItem_OnEffectiveViewportChanged"
                                   IsSelected="{x:Bind IsSelected, Mode=TwoWay}">
-                        <Grid Width="180"
-                              Height="250">
+                        <Grid Height="250">
                             <Grid.Resources>
                                 <ExponentialEase x:Key="EasingFunction"
                                                  EasingMode="EaseOut"
@@ -128,7 +132,7 @@
                                 </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
                             <Grid.Clip>
-                                <RectangleGeometry Rect="0,0,180,250" />
+                                <RectangleGeometry Rect="{Binding ElementName=IllustrationThumbnailContainerItem, Path=ActualWidth, Mode=OneWay, Converter={StaticResource IllustrationGridItemContainerClipConverter}}" />
                             </Grid.Clip>
                             <Image x:Name="Thumbnail"
                                    HorizontalAlignment="Stretch"
@@ -137,7 +141,7 @@
                                    Stretch="UniformToFill"
                                    Tapped="Thumbnail_OnTapped">
                                 <Image.RenderTransform>
-                                    <ScaleTransform CenterX="90" CenterY="125" />
+                                    <ScaleTransform CenterX="{Binding ElementName=IllustrationThumbnailContainerItem, Path=ActualWidth, Mode=OneWay, Converter={StaticResource IllustrationGridItemContainerWidthCenterConverter}}" CenterY="125" />
                                 </Image.RenderTransform>
                                 <ToolTipService.ToolTip>
                                     <ToolTip Content="{x:Bind GetTooltip()}"

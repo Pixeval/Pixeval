@@ -9,8 +9,6 @@ using Pixeval.ViewModel;
 
 namespace Pixeval.UserControls
 {
-
-    // TODO determine why the ThumbnailSource is null after navigation
     public sealed partial class IllustrationGrid
     {
         public IllustrationGridViewModel ViewModel { get; set; }

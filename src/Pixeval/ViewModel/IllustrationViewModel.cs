@@ -37,7 +37,6 @@ namespace Pixeval.ViewModel
             set => SetProperty(Illustration.IsBookmarked, value, m => Illustration.IsBookmarked = m);
         }
 
-
         private bool _isSelected;
 
         public bool IsSelected

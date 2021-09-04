@@ -10,41 +10,30 @@
                  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                  Loaded="RecommendationsPage_OnLoaded"
                  mc:Ignorable="d">
-    <Grid>
-        <userControls:IllustrationGridCommandBar HorizontalAlignment="Stretch"
-                                                 IsDefaultCommandsEnabled="{x:Bind IllustrationGrid.ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
-                                                 ViewModel="{x:Bind IllustrationGrid.ViewModel}">
-            <userControls:IllustrationGridCommandBar.CommandBarContent>
-                <StackPanel Margin="10,5,0,0"
-                            VerticalAlignment="Center"
-                            Orientation="Horizontal">
-                    <ComboBox x:Name="ModeSelectionComboBox"
-                              x:Uid="/RecommendationsPage/ModeSelectionComboBox"
-                              SelectionChanged="ModeSelectionComboBox_OnSelectionChanged">
-                        <ComboBox.Items>
-                            <ComboBoxItem x:Name="ModeSelectionComboBoxIllustComboBoxItem"
-                                          x:Uid="/RecommendationsPage/ModeSelectionComboBoxIllustComboBoxItem"
-                                          Tag="{x:Bind mako:RecommendContentType.Illust}" />
-                            <ComboBoxItem x:Uid="/RecommendationsPage/ModeSelectionComboBoxMangaComboBoxItem"
-                                          Tag="{x:Bind mako:RecommendContentType.Manga}" />
-                        </ComboBox.Items>
-                    </ComboBox>
-
-                    <ComboBox x:Name="SortOptionComboBox"
-                              x:Uid="/Misc/SortOptionComboBox"
-                              Margin="10,0,0,0"
-                              ItemsSource="{x:Bind options:IllustrationSortOptionWrapper.AvailableOptions()}"
-                              SelectionChanged="SortOptionComboBox_OnSelectionChanged">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="options:IllustrationSortOptionWrapper">
-                                <TextBlock Text="{x:Bind LocalizedString}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                </StackPanel>
-            </userControls:IllustrationGridCommandBar.CommandBarContent>
-        </userControls:IllustrationGridCommandBar>
-        <userControls:IllustrationGrid x:Name="IllustrationGrid"
-                                       Margin="0,40,0,0" />
-    </Grid>
+    <userControls:IllustrationContainer x:Name="IllustrationContainer">
+        <userControls:IllustrationContainer.CommandBarElements>
+            <ComboBox x:Name="ModeSelectionComboBox"
+                      x:Uid="/RecommendationsPage/ModeSelectionComboBox"
+                      SelectionChanged="ModeSelectionComboBox_OnSelectionChanged">
+                <ComboBox.Items>
+                    <ComboBoxItem x:Name="ModeSelectionComboBoxIllustComboBoxItem"
+                                  x:Uid="/RecommendationsPage/ModeSelectionComboBoxIllustComboBoxItem"
+                                  Tag="{x:Bind mako:RecommendContentType.Illust}" />
+                    <ComboBoxItem x:Uid="/RecommendationsPage/ModeSelectionComboBoxMangaComboBoxItem"
+                                  Tag="{x:Bind mako:RecommendContentType.Manga}" />
+                </ComboBox.Items>
+            </ComboBox>
+            <ComboBox x:Name="SortOptionComboBox"
+                      x:Uid="/Misc/SortOptionComboBox"
+                      Margin="10,0,0,0"
+                      ItemsSource="{x:Bind options:IllustrationSortOptionWrapper.AvailableOptions()}"
+                      SelectionChanged="SortOptionComboBox_OnSelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="options:IllustrationSortOptionWrapper">
+                        <TextBlock Text="{x:Bind LocalizedString}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </userControls:IllustrationContainer.CommandBarElements>
+    </userControls:IllustrationContainer>
 </ui:EnhancedPage>
