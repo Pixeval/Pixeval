@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Net;
+using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
@@ -12,14 +13,19 @@ namespace Pixeval.ViewModel
 {
     public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
     {
+        public IllustrationGridViewModel GridViewModel;
+        public IllustrationGrid GridView;
+
         // Remarks:
         // illustrations should contains only one item if the illustration is a single
         // otherwise it contains the entire manga data
-        public IllustrationViewerPageViewModel(params IllustrationViewModel[] illustrations)
+        public IllustrationViewerPageViewModel(IllustrationGrid gridView, params IllustrationViewModel[] illustrations)
         {
             Illustrations = illustrations.Select(i => new ImageViewerPageViewModel(i)).ToArray();
             Current = Illustrations[CurrentIndex];
             _ = LoadUserProfileImage();
+            GridView = gridView;
+            GridViewModel = gridView.ViewModel;
         }
 
         public ImageViewerPageViewModel[] Illustrations { get; }
@@ -41,6 +47,13 @@ namespace Pixeval.ViewModel
         }
 
         private SoftwareBitmapSource? _userProfileImageSource;
+
+        public IllustrationViewModel IllustrationViewModel =>
+            GridViewModel.IllustrationsView.Select(a => (IllustrationViewModel)a).First(model =>
+                model.Illustration.GetMangaIllustrations().All(illustration =>
+                    Illustrations.Any(x => x.IllustrationViewModel.Illustration == illustration)));
+
+        public int IllustrationIndex => GridViewModel.IllustrationsView.IndexOf(IllustrationViewModel);
 
         // Remarks:
         // The reason why we don't put UserProfileImageSource into IllustrationViewModel

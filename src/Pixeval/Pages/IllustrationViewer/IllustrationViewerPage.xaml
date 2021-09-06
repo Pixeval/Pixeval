@@ -92,7 +92,13 @@
                               Icon="{ui:FontIcon Glyph=CheveronLeft20F743}"
                               LabelPosition="Collapsed"
                               Visibility="{x:Bind CalculatePrevImageButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
-
+                <AppBarButton Width="40"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              Click="PrevIllustrationAppBarButton_OnClick"
+                              Icon="{ui:FontIcon Glyph=CheveronLeft20F743}"
+                              LabelPosition="Collapsed"
+                              Visibility="{x:Bind CalculatePrevIllustrationButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
             </Grid>
             <Grid Width="48"
                   controls:DockPanel.Dock="Right">
@@ -103,6 +109,13 @@
                               Icon="{ui:FontIcon Glyph=CheveronRight20F745}"
                               LabelPosition="Collapsed"
                               Visibility="{x:Bind CalculateNextImageButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
+                <AppBarButton Width="40"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              Click="NextIllustrationAppBarButton_OnClick"
+                              Icon="{ui:FontIcon Glyph=CheveronRight20F745}"
+                              LabelPosition="Collapsed"
+                              Visibility="{x:Bind CalculateNextIllustrationButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
             </Grid>
             <Grid Height="30"
                   controls:DockPanel.Dock="Bottom" />

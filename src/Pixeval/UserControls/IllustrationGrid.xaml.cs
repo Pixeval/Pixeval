@@ -37,9 +37,7 @@ namespace Pixeval.UserControls
 
         private void Thumbnail_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            var page = this.FindParent<MainPage>();
-            if (page != null)
-                page.SelectedElement = (UIElement) sender;
+            MainPage.SelectedElement = (UIElement) sender;
 
             var viewModel = sender.GetDataContext<IllustrationViewModel>()
                 .Illustration
@@ -47,7 +45,7 @@ namespace Pixeval.UserControls
                 .Select(p => new IllustrationViewModel(p)).ToArray();
 
             ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement) sender);
-            App.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModel), new SuppressNavigationTransitionInfo());
+            App.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModel), new SuppressNavigationTransitionInfo());
         }
 
         private void IllustrationThumbnailContainerItem_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)

@@ -37,7 +37,7 @@ namespace Pixeval.ViewModel
 
         public async Task Fill(int? itemsLimit = null)
         {
-            var added = new HashSet<long>(); 
+            var added = new HashSet<long>();
             await foreach (var illustration in FetchEngine!)
             {
                 if (illustration is not null && !added.Contains(illustration.Id) /* Check for the repetition */)

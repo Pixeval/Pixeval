@@ -25,7 +25,7 @@
                                    ItemHeight="250"
                                    ItemsSource="{x:Bind ViewModel.IllustrationsView}"
                                    SelectionMode="Extended"
-                                   StretchContentForSingleRow="True">
+                                   StretchContentForSingleRow="True" x:Name="AdaptiveGridView" x:FieldModifier="public">
             <controls:AdaptiveGridView.ItemTemplate>
                 <DataTemplate x:DataType="viewModel:IllustrationViewModel">
                     <GridViewItem x:Name="IllustrationThumbnailContainerItem"
