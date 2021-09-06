@@ -21,7 +21,9 @@ namespace Pixeval.Pages
         private readonly NavigationViewTag _bookmarks = new(typeof(BookmarksPage), App.MakoClient.Bookmarks(App.Uid!, PrivacyPolicy.Public, App.AppSetting.TargetFilter));
 
         private readonly NavigationViewTag _rankings = new(typeof(RankingsPage), App.MakoClient.Ranking(RankOption.Day, DateTime.Today - TimeSpan.FromDays(2)));
-        
+
+        private readonly NavigationViewTag _recentPosts = new(typeof(RecentPostsPage), App.MakoClient.RecentPosts(PrivacyPolicy.Public));
+
         private readonly NavigationViewTag _settings = new(typeof(SettingsPage), App.MakoClient.Configuration);
 
         public MainPage()

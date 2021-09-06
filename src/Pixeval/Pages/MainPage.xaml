@@ -25,21 +25,22 @@
             <NavigationViewItem x:Uid="/MainPage/RecommendationsTab"
                                 Icon="{ui:FontIcon Glyph=CalendarE787}"
                                 IsSelected="True"
-                                Tag="{x:Bind _recommends}" />
+                                Tag="{x:Bind _recommends}"/>
             <NavigationViewItem x:Uid="/MainPage/RankingsTab"
                                 Icon="{ui:FontIcon Glyph=MarketEAFC}" 
                                 Tag="{x:Bind _rankings}"/>
             <NavigationViewItem x:Uid="/MainPage/BookmarksTab"
                                 Icon="{ui:FontIcon Glyph=LibraryE8F1}"
-                                Tag="{x:Bind _bookmarks}" />
+                                Tag="{x:Bind _bookmarks}"/>
             <NavigationViewItem x:Uid="/MainPage/FollowingsTab"
                                 Icon="{ui:FontIcon Glyph=PeopleE716}" />
             <NavigationViewItem x:Uid="/MainPage/SpotlightsTab"
                                 Icon="{ui:FontIcon Glyph=MapLayersE81E}" />
             <NavigationViewItem x:Uid="/MainPage/FeedsTab"
                                 Icon="{ui:FontIcon Glyph=MobLocationEC43}" />
-            <NavigationViewItem x:Uid="/MainPage/NewPostsTab"
-                                Icon="{ui:FontIcon Glyph=DevUpdateECC5}" />
+            <NavigationViewItem x:Uid="/MainPage/RecentPostsTab"
+                                Icon="{ui:FontIcon Glyph=DevUpdateECC5}" 
+                                Tag="{x:Bind _recentPosts}"/>
             <NavigationViewItem x:Uid="/MainPage/ReverseSearchTab"
                                 Icon="{ui:FontIcon Glyph=SearchAndAppsE773}" />
             <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />

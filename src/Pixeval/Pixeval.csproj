@@ -58,6 +58,7 @@
    <ItemGroup>
       <None Remove="Assets\Certs\pixeval_server_cert.pfx" />
       <None Remove="Assets\Images\logo44x44.ico" />
+      <None Remove="Pages\Capability\RecentPostsPage.xaml" />
       <None Remove="Strings\zh-CN\BookmarksPage.resw" />
       <None Remove="Strings\zh-CN\DownloadAndHistoryListPage.resw" />
       <None Remove="Strings\zh-CN\IllustrationGridCommandBar.resw" />
@@ -65,6 +66,7 @@
       <None Remove="Strings\zh-CN\IllustrationViewerPage.resw" />
       <None Remove="Strings\zh-CN\ImageViewerPage.resw" />
       <None Remove="Strings\zh-CN\RankingsPage.resw" />
+      <None Remove="Strings\zh-CN\RecentPostsPage.resw" />
       <None Remove="Strings\zh-CN\RecommendationsPage.resw" />
       <None Remove="Strings\zh-CN\SettingsPage.resw" />
       <None Remove="Images\BadgeLogo.scale-100.png" />
@@ -311,6 +313,7 @@
       <PRIResource Include="Strings\zh-CN\MessageContentDialog.resw" />
       <PRIResource Include="Strings\zh-CN\Misc.resw" />
       <PRIResource Include="Strings\zh-CN\RankingsPage.resw" />
+      <PRIResource Include="Strings\zh-CN\RecentPostsPage.resw" />
       <PRIResource Include="Strings\zh-CN\RecommendationsPage.resw" />
       <PRIResource Include="Strings\zh-CN\SettingsPage.resw" />
    </ItemGroup>
@@ -318,6 +321,11 @@
       <Content Update="Assets\Images\logo44x44.ico">
          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </Content>
+   </ItemGroup>
+   <ItemGroup>
+     <Page Update="Pages\Capability\RecentPostsPage.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
    </ItemGroup>
    <ItemGroup>
      <Page Update="UserControls\IllustrationContainer.xaml">
