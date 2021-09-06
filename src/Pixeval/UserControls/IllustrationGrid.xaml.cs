@@ -39,9 +39,12 @@ namespace Pixeval.UserControls
         {
             var page = this.FindParent<MainPage>();
             if (page != null)
-                page.selectedElement = (UIElement)sender;
+                page.SelectedElement = (UIElement) sender;
 
-            var viewModel = sender.GetDataContext<IllustrationViewModel>().Illustration.GetMangaIllustrations().Select(p => new IllustrationViewModel(p)).ToArray();
+            var viewModel = sender.GetDataContext<IllustrationViewModel>()
+                .Illustration
+                .GetMangaIllustrations()
+                .Select(p => new IllustrationViewModel(p)).ToArray();
 
             ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement) sender);
             App.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModel), new SuppressNavigationTransitionInfo());

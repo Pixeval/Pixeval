@@ -9,6 +9,7 @@
     <controls:DockPanel>
         <StackPanel x:Name="ExtraCommandsBar"
                     Margin="5,0,0,0"
+                    VerticalAlignment="Center"
                     controls:DockPanel.Dock="Left"
                     Background="Transparent"
                     FlowDirection="LeftToRight"

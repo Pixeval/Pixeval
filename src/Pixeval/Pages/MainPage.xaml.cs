@@ -46,16 +46,17 @@ namespace Pixeval.Pages
         }
 
         // 这玩意放在这有点蠢
-        public UIElement? selectedElement = null;
+        public UIElement? SelectedElement = null;
 
         // 转移到MainPage中某element的动画效果
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            var anim = ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation");
-            if (anim == null) return;
-            anim.Configuration = new DirectConnectedAnimationConfiguration();
-            anim.TryStart(selectedElement != null ? selectedElement! : this);
+            if (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation") is { } animation)
+            {
+                animation.Configuration = new DirectConnectedAnimationConfiguration();
+                animation.TryStart(SelectedElement ?? this);
+            }
         }
     }
 }

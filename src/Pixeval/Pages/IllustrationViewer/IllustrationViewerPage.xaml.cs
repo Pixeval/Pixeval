@@ -143,10 +143,12 @@ namespace Pixeval.Pages.IllustrationViewer
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            var anim = ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation");
-            if (anim == null) return;
-            anim.Configuration = new DirectConnectedAnimationConfiguration();
-            anim.TryStart(IllustrationImageShowcaseFrame);
+            if (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation") is { } animation)
+            {
+                animation.Configuration = new DirectConnectedAnimationConfiguration();
+                animation.TryStart(IllustrationImageShowcaseFrame);
+            }
+            
         }
 
         private void BackButton_OnClick(object sender, RoutedEventArgs e)
