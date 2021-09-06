@@ -165,21 +165,6 @@ namespace Pixeval.Pages.IllustrationViewer
                 link);
         }
 
-        private void ZoomInButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            (IllustrationImageShowcaseFrame.Content as ImageViewerPage)?.Zoom(0.5);
-        }
-
-        private void ZoomOutButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            (IllustrationImageShowcaseFrame.Content as ImageViewerPage)?.Zoom(-0.5);
-        }
-
-        private void SaveCurrentImageButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
         private void SaveAsCurrentImageButton_OnClick(object sender, RoutedEventArgs e)
         {
             throw new NotImplementedException();
@@ -230,18 +215,7 @@ namespace Pixeval.Pages.IllustrationViewer
                 appBarButton.Icon = new SymbolIcon(Symbol.Stop);
             }
         }
-
-        private void BookmarkButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (_viewModel.IsBookmarked)
-            {
-                _viewModel.RemoveBookmarkAsync();
-            }
-            else
-            {
-                _viewModel.PostPublicBookmarkAsync();
-            }
-        }
+        
 
         private void IllustrationInfoAndCommentsNavigationView_OnBackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
         {

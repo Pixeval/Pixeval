@@ -3,7 +3,8 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                 xmlns:ui="using:Pixeval.Util.UI"
+                 xmlns:ui="using:Pixeval.Util.UI" 
+                 xmlns:illustrationViewer="using:Pixeval.Pages.IllustrationViewer"
                  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                  mc:Ignorable="d">
     <ui:EnhancedPage.Resources>
@@ -70,6 +71,40 @@
                     <CompositeTransform x:Name="IllustrationOriginalImageRenderTransform" />
                 </Image.RenderTransform>
             </Image>
+
+            <!-- 工具栏的识别区 -->
+            <Rectangle Opacity="0" Fill="Black" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="400" Height="100" PointerEntered="DetectionArea_OnPointerEntered" PointerExited="DetectionArea_OnPointerExited" />
+
+            <Border HorizontalAlignment="Center" 
+                    VerticalAlignment="Bottom" Margin="0,0,0,10" BorderThickness="0.7"
+                    CornerRadius="10,10,10,10" BorderBrush="Black" Opacity="0"
+                    PointerEntered="CommandBar_OnPointerEntered" PointerExited="CommandBar_OnPointerExited"
+                    x:Name="CommandBorder">
+                <Border.OpacityTransition>
+                    <ScalarTransition></ScalarTransition>
+                </Border.OpacityTransition>
+                <CommandBar Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" OverflowButtonVisibility="Collapsed" x:Name="CommandBar">
+                    <AppBarButton Width="50" Click="BookmarkButton_OnClick"
+                                  Icon="{x:Bind illustrationViewer:IllustrationViewerPage.GetBookmarkButtonIcon(_viewModel.IllustrationViewModel.IsBookmarked), Mode=OneWay}"
+                                  Label="{x:Bind illustrationViewer:IllustrationViewerPage.GetBookmarkButtonLabel(_viewModel.IllustrationViewModel.IsBookmarked), Mode=OneWay}" />
+                    <AppBarButton Width="50"
+                                  Click="ZoomInButton_OnClick"
+                                  LabelPosition="Collapsed">
+                        <AppBarButton.Icon>
+                            <SymbolIcon Symbol="ZoomIn" />
+                        </AppBarButton.Icon>
+                    </AppBarButton>
+                    <AppBarButton Width="50"
+                                  Click="ZoomOutButton_OnClick"
+                                  LabelPosition="Collapsed">
+                        <AppBarButton.Icon>
+                            <SymbolIcon Symbol="ZoomOut" />
+                        </AppBarButton.Icon>
+                    </AppBarButton>
+                    <AppBarButton Width="50" x:Uid="/ImageViewerPage/SaveCurrentImageButton"
+                                  Icon="{ui:FontIcon Glyph=SaveE74E}" />
+                </CommandBar>
+            </Border>
         </Grid>
         <Grid HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch"
