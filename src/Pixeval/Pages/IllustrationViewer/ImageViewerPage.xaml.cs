@@ -230,5 +230,10 @@ namespace Pixeval.Pages.IllustrationViewer
                 _viewModel.IllustrationViewModel.PostPublicBookmarkAsync();
             }
         }
+
+        private void ImageViewerPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            CommandBorderDropShadow.Receivers.Add(IllustrationOriginalImage);
+        }
     }
 }                                                                                                                                                                                                                                                                                                                                                                                                                                               

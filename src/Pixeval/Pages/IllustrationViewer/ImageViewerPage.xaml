@@ -6,9 +6,9 @@
                  xmlns:illustrationViewer="using:Pixeval.Pages.IllustrationViewer"
                  xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                 xmlns:media="using:Microsoft.Xaml.Interactions.Media"
                  xmlns:ui="using:Pixeval.Util.UI"
                  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                 Loaded="ImageViewerPage_OnLoaded"
                  mc:Ignorable="d">
     <ui:EnhancedPage.Resources>
         <ResourceDictionary>
@@ -100,10 +100,13 @@
                     Margin="0,0,0,10"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"
-                    BorderBrush="Black"
-                    BorderThickness="0.7"
-                    CornerRadius="10,10,10,10"
-                    Opacity="0">
+                    BorderThickness="0"
+                    CornerRadius="10"
+                    Opacity="0"
+                    Translation="0,0,30">
+                <Border.Shadow>
+                    <ThemeShadow x:Name="CommandBorderDropShadow" />
+                </Border.Shadow>
                 <interactivity:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="PointerEntered">
                         <core:ChangePropertyAction PropertyName="Opacity"
@@ -118,8 +121,8 @@
                 <Border.OpacityTransition>
                     <ScalarTransition />
                 </Border.OpacityTransition>
-                <CommandBar x:Name="CommandBar"
-                            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                <CommandBar Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                            CornerRadius="10"
                             OverflowButtonVisibility="Collapsed">
                     <AppBarButton Width="50"
                                   Click="BookmarkButton_OnClick"
