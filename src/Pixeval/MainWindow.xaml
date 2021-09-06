@@ -9,5 +9,10 @@
            x:FieldModifier="public"
            Loaded="PixevalAppRootFrame_OnLoaded"
            Navigating="PixevalAppRootFrame_OnNavigating"
-           NavigationFailed="PixevalAppRootFrame_OnNavigationFailed" />
+           NavigationFailed="PixevalAppRootFrame_OnNavigationFailed" >
+        <Frame.ContentTransitions>
+            <TransitionCollection>
+                <NavigationThemeTransition></NavigationThemeTransition>
+            </TransitionCollection></Frame.ContentTransitions>
+    </Frame>
 </Window>

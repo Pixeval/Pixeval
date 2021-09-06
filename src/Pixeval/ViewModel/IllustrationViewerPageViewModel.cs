@@ -13,7 +13,7 @@ namespace Pixeval.ViewModel
     public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
     {
         // Remarks:
-        // illustrations should contains only one item iff the illustration is a single
+        // illustrations should contains only one item if the illustration is a single
         // otherwise it contains the entire manga data
         public IllustrationViewerPageViewModel(params IllustrationViewModel[] illustrations)
         {
