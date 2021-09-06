@@ -140,9 +140,19 @@ namespace Pixeval.Pages.IllustrationViewer
             PrevImage();
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            var anim = ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation");
+            if (anim == null) return;
+            anim.Configuration = new DirectConnectedAnimationConfiguration();
+            anim.TryStart(IllustrationImageShowcaseFrame);
+        }
+
         private void BackButton_OnClick(object sender, RoutedEventArgs e)
         {
-            App.AppWindowRootFrame.GoBack(new DrillInNavigationTransitionInfo());
+            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", IllustrationImageShowcaseFrame);
+            App.AppWindowRootFrame.GoBack(new SuppressNavigationTransitionInfo());
         }
 
         private async void ShareButton_OnClick(object sender, RoutedEventArgs e)
