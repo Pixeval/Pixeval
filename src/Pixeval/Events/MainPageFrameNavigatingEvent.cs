@@ -1,4 +1,5 @@
-﻿using Pixeval.Pages;
+﻿using Microsoft.UI.Xaml;
+using Pixeval.Pages;
 
 namespace Pixeval.Events
 {
@@ -6,7 +7,7 @@ namespace Pixeval.Events
     {
         public object? Sender { get; }
 
-        public MainPageFrameNavigatingEvent(MainPage? sender)
+        public MainPageFrameNavigatingEvent(UIElement? sender)
         {
             Sender = sender;
         }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
@@ -68,6 +70,11 @@ namespace Pixeval.ViewModel
         }
 
         public event EventHandler<IllustrationViewModel>? OnIsSelectedChanged;
+
+        public IEnumerable<IllustrationViewModel> GetMangaIllustrationViewModels()
+        {
+            return Illustration.GetMangaIllustrations().Select(p => new IllustrationViewModel(p));
+        }
 
         public async Task LoadThumbnailIfRequired()
         {
@@ -140,9 +147,20 @@ namespace Pixeval.ViewModel
             return sb.ToString();
         }
 
-        public void Dispose()
+        public void DisposeInternal()
         {
             _thumbnailSource?.Dispose();
+        }
+
+        public void Dispose()
+        {
+            DisposeInternal();
+            GC.SuppressFinalize(this);
+        }
+
+        ~IllustrationViewModel()
+        {
+            Dispose();
         }
     }
 }

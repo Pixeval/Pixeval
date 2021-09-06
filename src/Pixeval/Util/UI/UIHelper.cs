@@ -200,5 +200,10 @@ namespace Pixeval.Util.UI
                 frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo ?? new EntranceNavigationTransitionInfo());
             }
         }
+
+        public static Visibility Inverse(this Visibility visibility)
+        {
+            return visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+        }
     }
 }

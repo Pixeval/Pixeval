@@ -27,10 +27,13 @@ namespace Pixeval.Pages
 
         private readonly NavigationViewTag _settings = new(typeof(SettingsPage), App.MakoClient.Configuration);
 
+        private static UIElement? _selectedElement;
+
         public MainPage()
         {
             InitializeComponent();
             DataContext = _viewModel;
+            EventChannel.Default.Subscribe<MainPageFrameConnectedAnimationRequestedEvent>(evt => _selectedElement = evt.Sender as UIElement);
         }
          
         private void MainPageRootNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -45,9 +48,6 @@ namespace Pixeval.Pages
             GC.Collect();
         }
 
-        // 这玩意放在这有点蠢
-        public static UIElement? SelectedElement = null;
-
         // 转移到MainPage中某element的动画效果
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -55,7 +55,7 @@ namespace Pixeval.Pages
             if (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation") is { } animation)
             {
                 animation.Configuration = new DirectConnectedAnimationConfiguration();
-                animation.TryStart(SelectedElement ?? this);
+                animation.TryStart(_selectedElement ?? this);
             }
         }
     }

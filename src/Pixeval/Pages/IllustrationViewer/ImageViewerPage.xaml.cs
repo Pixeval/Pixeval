@@ -232,7 +232,7 @@ namespace Pixeval.Pages.IllustrationViewer
 
         private void ImageViewerPage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            CommandBorderDropShadow.Receivers.Add(IllustrationOriginalImage);
+            CommandBorderDropShadow.Receivers.Add(IllustrationOriginalImageContainer);
         }
     }
 }                                                                                                                                                                                                                                                                                                                                                                                                                                               

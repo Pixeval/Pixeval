@@ -74,80 +74,77 @@
                     <CompositeTransform x:Name="IllustrationOriginalImageRenderTransform" />
                 </Image.RenderTransform>
             </Image>
-
-            <!--  工具栏的识别区  -->
-            <Rectangle Width="400"
-                       Height="100"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Bottom"
-                       Fill="Black"
-                       Opacity="0">
-                <interactivity:Interaction.Behaviors>
-                    <core:EventTriggerBehavior EventName="PointerEntered">
-                        <core:ChangePropertyAction PropertyName="Opacity"
-                                                   TargetObject="{x:Bind CommandBorder}"
-                                                   Value="0.7" />
-                    </core:EventTriggerBehavior>
-                    <core:EventTriggerBehavior EventName="PointerExited">
-                        <core:ChangePropertyAction PropertyName="Opacity"
-                                                   TargetObject="{x:Bind CommandBorder}"
-                                                   Value="0" />
-                    </core:EventTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
-            </Rectangle>
-
-            <Border x:Name="CommandBorder"
-                    Margin="0,0,0,10"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Bottom"
-                    BorderThickness="0"
-                    CornerRadius="10"
-                    Opacity="0"
-                    Translation="0,0,30">
-                <Border.Shadow>
-                    <ThemeShadow x:Name="CommandBorderDropShadow" />
-                </Border.Shadow>
-                <interactivity:Interaction.Behaviors>
-                    <core:EventTriggerBehavior EventName="PointerEntered">
-                        <core:ChangePropertyAction PropertyName="Opacity"
-                                                   Value="1" />
-                    </core:EventTriggerBehavior>
-                    <core:EventTriggerBehavior EventName="PointerExited">
-                        <core:ChangePropertyAction PropertyName="Opacity"
-                                                   TargetObject="{x:Bind CommandBorder}"
-                                                   Value="0.7" />
-                    </core:EventTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
-                <Border.OpacityTransition>
-                    <ScalarTransition />
-                </Border.OpacityTransition>
-                <CommandBar Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                            CornerRadius="10"
-                            OverflowButtonVisibility="Collapsed">
-                    <AppBarButton Width="50"
-                                  Click="BookmarkButton_OnClick"
-                                  Icon="{x:Bind illustrationViewer:IllustrationViewerPage.GetBookmarkButtonIcon(_viewModel.IllustrationViewModel.IsBookmarked), Mode=OneWay}"
-                                  Label="{x:Bind illustrationViewer:IllustrationViewerPage.GetBookmarkButtonLabel(_viewModel.IllustrationViewModel.IsBookmarked), Mode=OneWay}" />
-                    <AppBarButton Width="50"
-                                  Click="ZoomInButton_OnClick"
-                                  LabelPosition="Collapsed">
-                        <AppBarButton.Icon>
-                            <SymbolIcon Symbol="ZoomIn" />
-                        </AppBarButton.Icon>
-                    </AppBarButton>
-                    <AppBarButton Width="50"
-                                  Click="ZoomOutButton_OnClick"
-                                  LabelPosition="Collapsed">
-                        <AppBarButton.Icon>
-                            <SymbolIcon Symbol="ZoomOut" />
-                        </AppBarButton.Icon>
-                    </AppBarButton>
-                    <AppBarButton x:Uid="/ImageViewerPage/SaveCurrentImageButton"
-                                  Width="50"
-                                  Icon="{ui:FontIcon Glyph=SaveE74E}" />
-                </CommandBar>
-            </Border>
         </Grid>
+        <!--  工具栏的识别区  -->
+        <Rectangle Width="400"
+                   Height="100"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Bottom"
+                   Fill="Black"
+                   Opacity="0">
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="PointerEntered">
+                    <core:ChangePropertyAction PropertyName="Opacity"
+                                               TargetObject="{x:Bind CommandBorder}"
+                                               Value="0.7" />
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="PointerExited">
+                    <core:ChangePropertyAction PropertyName="Opacity"
+                                               TargetObject="{x:Bind CommandBorder}"
+                                               Value="0" />
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+        </Rectangle>
+
+        <Border x:Name="CommandBorder"
+                Margin="0,0,0,10"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                BorderThickness="0"
+                CornerRadius="10"
+                Opacity="0"
+                Translation="0,0,30">
+            <Border.Shadow>
+                <ThemeShadow x:Name="CommandBorderDropShadow" />
+            </Border.Shadow>
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="PointerEntered">
+                    <core:ChangePropertyAction PropertyName="Opacity"
+                                               Value="1" />
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="PointerExited">
+                    <core:ChangePropertyAction PropertyName="Opacity"
+                                               TargetObject="{x:Bind CommandBorder}"
+                                               Value="0.7" />
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+            <Border.OpacityTransition>
+                <ScalarTransition />
+            </Border.OpacityTransition>
+            <CommandBar Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                        CornerRadius="10"
+                        DefaultLabelPosition="Collapsed"
+                        OverflowButtonVisibility="Collapsed">
+                <AppBarButton Width="50"
+                              Click="BookmarkButton_OnClick"
+                              Icon="{x:Bind illustrationViewer:IllustrationViewerPage.GetBookmarkButtonIcon(_viewModel.IllustrationViewModel.IsBookmarked), Mode=OneWay}" />
+                <AppBarButton Width="50"
+                              Click="ZoomInButton_OnClick">
+                    <AppBarButton.Icon>
+                        <SymbolIcon Symbol="ZoomIn" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton Width="50"
+                              Click="ZoomOutButton_OnClick">
+                    <AppBarButton.Icon>
+                        <SymbolIcon Symbol="ZoomOut" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton x:Uid="/ImageViewerPage/SaveCurrentImageButton"
+                              Width="50"
+                              Icon="{ui:FontIcon Glyph=SaveE74E}" />
+            </CommandBar>
+        </Border>
         <Grid HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch"
               Visibility="{x:Bind _viewModel.GetLoadingMaskVisibility(_viewModel.LoadingOriginalSourceTask), Mode=OneWay}">

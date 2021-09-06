@@ -3,6 +3,7 @@ using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.Events;
 using Pixeval.Pages;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
@@ -37,7 +38,7 @@ namespace Pixeval.UserControls
 
         private void Thumbnail_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            MainPage.SelectedElement = (UIElement) sender;
+            EventChannel.Default.Publish(new MainPageFrameConnectedAnimationRequestedEvent(sender as UIElement));
 
             var viewModel = sender.GetDataContext<IllustrationViewModel>()
                 .Illustration
@@ -69,6 +70,11 @@ namespace Pixeval.UserControls
                     source.Dispose();
                     break;
             }
+        }
+
+        public UIElement? GetItemContainer(IllustrationViewModel viewModel)
+        {
+            return IllustrationGridView.ContainerFromItem(viewModel) as UIElement;
         }
     }
 }

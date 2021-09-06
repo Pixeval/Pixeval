@@ -64,20 +64,6 @@ namespace Pixeval.Util
             return type.GetEnumValues().Cast<TEnum>();
         }
 
-        public static int RemoveAll<T>(this IList<T> list, Predicate<T> match)
-        {
-            var count = 0;
-
-            for (var i = list.Count - 1; i >= 0; i--)
-            {
-                if (!match(list[i])) continue;
-                ++count;
-                list.RemoveAt(i);
-            }
-
-            return count;
-        }
-
         public static bool Inverse(ref this bool b) => b = !b;
     }
 }

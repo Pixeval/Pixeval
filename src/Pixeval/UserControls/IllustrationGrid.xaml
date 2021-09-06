@@ -18,14 +18,16 @@
         <converters:IllustrationGridItemContainerWidthCenterConverter x:Key="IllustrationGridItemContainerWidthCenterConverter" />
     </UserControl.Resources>
     <Grid>
-        <controls:AdaptiveGridView animations:ItemsReorderAnimation.Duration="0:0:0.2"
+        <controls:AdaptiveGridView x:Name="IllustrationGridView"
+                                   animations:ItemsReorderAnimation.Duration="0:0:0.2"
+                                   x:FieldModifier="public"
                                    DesiredWidth="180"
                                    IsItemClickEnabled="True"
                                    IsMultiSelectCheckBoxEnabled="False"
                                    ItemHeight="250"
                                    ItemsSource="{x:Bind ViewModel.IllustrationsView}"
                                    SelectionMode="Extended"
-                                   StretchContentForSingleRow="True" x:Name="AdaptiveGridView" x:FieldModifier="public">
+                                   StretchContentForSingleRow="True">
             <controls:AdaptiveGridView.ItemTemplate>
                 <DataTemplate x:DataType="viewModel:IllustrationViewModel">
                     <GridViewItem x:Name="IllustrationThumbnailContainerItem"
