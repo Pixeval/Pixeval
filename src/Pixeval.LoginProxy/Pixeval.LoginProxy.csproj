@@ -14,7 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.902.49" />
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.705.50" />
 	</ItemGroup>
 
 	<ItemGroup>
