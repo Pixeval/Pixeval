@@ -59,7 +59,7 @@ namespace Pixeval.Pages.Capability
         {
             if (TryGetPrivacyPolicy(PrivacyPolicyComboBox, out var policy))
             {
-                await IllustrationContainer.ViewModel.ResetAndFill(App.MakoClient.Bookmarks(App.Uid!, policy));
+                await IllustrationContainer.ViewModel.ResetAndFill(App.MakoClient.RecentPosts(policy));
             }
         }
 
