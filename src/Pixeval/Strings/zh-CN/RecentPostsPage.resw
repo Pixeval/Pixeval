@@ -117,49 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AccountTab.Text" xml:space="preserve">
-    <value>Pixiv账号</value>
+  <data name="PrivacyPolicyComboBox.PlaceholderText" xml:space="preserve">
+    <value>关注选项</value>
   </data>
-  <data name="BookmarksTab.Content" xml:space="preserve">
-    <value>我的收藏</value>
+  <data name="PrivacyPolicyComboBoxPrivateComboBoxItem.Content" xml:space="preserve">
+    <value>私人关注</value>
   </data>
-  <data name="DownloadAndHistoriesTab.Content" xml:space="preserve">
-    <value>下载与历史</value>
-  </data>
-  <data name="DownloadListTab.Content" xml:space="preserve">
-    <value>下载列表</value>
-  </data>
-  <data name="FeedsTab.Content" xml:space="preserve">
-    <value>关注动态</value>
-  </data>
-  <data name="FollowingsTab.Content" xml:space="preserve">
-    <value>我的关注</value>
-  </data>
-  <data name="HelpTab.Content" xml:space="preserve">
-    <value>帮助</value>
-  </data>
-  <data name="HistoriesTab.Content" xml:space="preserve">
-    <value>浏览历史</value>
-  </data>
-  <data name="MainPageAutoSuggestionBox.PlaceholderText" xml:space="preserve">
-    <value>关键字/设置项/作品ID/用户ID</value>
-  </data>
-  <data name="RecentPostsTab.Content" xml:space="preserve">
-    <value>关注新作</value>
-  </data>
-  <data name="ReverseSearchTab.Content" xml:space="preserve">
-    <value>以图搜图</value>
-  </data>
-  <data name="SettingsTab.Content" xml:space="preserve">
-    <value>设置</value>
-  </data>
-  <data name="SpotlightsTab.Content" xml:space="preserve">
-    <value>特辑推荐</value>
-  </data>
-  <data name="RankingsTab.Content" xml:space="preserve">
-    <value>作品榜单</value>
-  </data>
-  <data name="RecommendationsTab.Content" xml:space="preserve">
-    <value>每日推荐</value>
+  <data name="PrivacyPolicyComboBoxPublicComboBoxItem.Content" xml:space="preserve">
+    <value>公开关注</value>
   </data>
 </root>
