@@ -133,7 +133,7 @@
     <value>复制</value>
   </data>
   <data name="GenerateLinkToThisPageButton.Label" xml:space="preserve">
-    <value>生成本页链接</value>
+    <value>生成链接</value>
   </data>
   <data name="GenerateLinkToThisPageButtonTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>不再显示</value>
@@ -148,19 +148,19 @@
     <value>链接已经复制到剪切板</value>
   </data>
   <data name="GenerateWebLinkButton.Label" xml:space="preserve">
-    <value>生成网页链接</value>
+    <value>生成网址</value>
   </data>
   <data name="IllustrationInfoAndCommentsButton.Label" xml:space="preserve">
-    <value>作品详情与评论</value>
+    <value>详情</value>
   </data>
   <data name="IllustrationInfoTab.Content" xml:space="preserve">
-    <value>作品信息</value>
+    <value>详情</value>
   </data>
   <data name="OpenInWebBrowserButton.Label" xml:space="preserve">
-    <value>在浏览器中查看</value>
+    <value>打开网页</value>
   </data>
   <data name="PlayGifButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>播放/暂停GIF图片</value>
+    <value>播放/暂停GIF</value>
   </data>
   <data name="RemoveBookmark" xml:space="preserve">
     <value>取消收藏</value>
@@ -172,7 +172,7 @@
     <value>图集另存为</value>
   </data>
   <data name="SaveMangaButton.Label" xml:space="preserve">
-    <value>保存图集</value>
+    <value>图集保存</value>
   </data>
   <data name="ShareButton.Label" xml:space="preserve">
     <value>分享</value>

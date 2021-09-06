@@ -38,7 +38,7 @@
                                   LabelPosition="Collapsed" />
                 </CommandBar.Content>
                 <AppBarButton x:Uid="/IllustrationViewerPage/PlayGifButton"
-                              Width="40"
+                              Width="32"
                               Click="PlayGifButton_OnClick"
                               LabelPosition="Collapsed"
                               Visibility="{x:Bind _viewModel.IsUgoira}">
@@ -46,8 +46,10 @@
                         <SymbolIcon Symbol="Stop" />
                     </AppBarButton.Icon>
                 </AppBarButton>
-                <!--TODO 由于保存功能转移到底部命令栏，这里的保存按钮应改为“保存整个图集” -->
-                <!--
+                <AppBarSeparator />
+                <AppBarButton x:Uid="/IllustrationViewerPage/CopyContentButton"
+                              Command="{x:Bind _copyCommand}"
+                              Icon="{ui:FontIcon Glyph=CopyE8C8}" />
                 <AppBarButton x:Uid="/IllustrationViewerPage/SaveCurrentImageButton"
                               Click="SaveCurrentImageButton_OnClick"
                               Icon="{ui:FontIcon Glyph=SaveE74E}" />-->
@@ -76,13 +78,6 @@
                 <AppBarButton x:Uid="/IllustrationViewerPage/ShareButton"
                               Click="ShareButton_OnClick"
                               Icon="{ui:FontIcon Glyph=ShareE72D}" />
-                <AppBarSeparator />
-                <AppBarButton x:Uid="/IllustrationViewerPage/CopyContentButton"
-                              Command="{x:Bind _copyCommand}"
-                              Icon="{ui:FontIcon Glyph=CopyE8C8}" />
-                <AppBarToggleButton x:Uid="/IllustrationViewerPage/IllustrationInfoAndCommentsButton"
-                                    Icon="{ui:FontIcon Glyph=InfoE946}"
-                                    IsChecked="{x:Bind IllustrationInfoAndCommentsSplitView.IsPaneOpen, Mode=TwoWay}" />
             </CommandBar>
             <TeachingTip x:Name="GenerateLinkToThisPageButtonTeachingTip"
                          x:Uid="/IllustrationViewerPage/GenerateLinkToThisPageButtonTeachingTip"
