@@ -50,9 +50,6 @@
                 <AppBarButton x:Uid="/IllustrationViewerPage/CopyContentButton"
                               Command="{x:Bind _copyCommand}"
                               Icon="{ui:FontIcon Glyph=CopyE8C8}" />
-                <AppBarButton x:Uid="/IllustrationViewerPage/SaveCurrentImageButton"
-                              Click="SaveCurrentImageButton_OnClick"
-                              Icon="{ui:FontIcon Glyph=SaveE74E}" />-->
                 <AppBarButton x:Uid="/IllustrationViewerPage/SaveAsCurrentImageButton"
                               Click="SaveAsCurrentImageButton_OnClick"
                               Icon="{ui:FontIcon Glyph=SaveAsE792}" />
