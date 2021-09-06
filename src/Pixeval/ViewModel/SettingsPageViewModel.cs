@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Mako.Global.Enum;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.Generic;

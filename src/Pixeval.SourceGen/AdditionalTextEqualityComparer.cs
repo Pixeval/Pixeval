@@ -5,7 +5,7 @@ namespace Pixeval.SourceGen
 {
     public class AdditionalTextEqualityComparer : IEqualityComparer<AdditionalText>
     {
-        public bool Equals(AdditionalText x, AdditionalText y)
+        public bool Equals(AdditionalText? x, AdditionalText? y)
         {
             if (ReferenceEquals(x, y)) return true;
             if (ReferenceEquals(x, null)) return false;

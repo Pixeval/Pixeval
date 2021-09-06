@@ -9,6 +9,7 @@ using Pixeval.ViewModel;
 
 namespace Pixeval.UserControls
 {
+    // use "load failed" image for those thumbnails who failed to load its source due to various reasons
     public sealed partial class IllustrationGrid
     {
         public IllustrationGridViewModel ViewModel { get; set; }

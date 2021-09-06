@@ -1,6 +1,6 @@
-﻿using Mako.Net.Response;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.CoreApi.Net.Response;
 
 namespace Pixeval.Pages.IllustrationViewer
 {

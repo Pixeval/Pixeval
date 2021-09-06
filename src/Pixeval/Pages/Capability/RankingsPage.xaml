@@ -13,6 +13,7 @@
         <userControls:IllustrationContainer.CommandBarElements>
             <ComboBox x:Name="RankOptionComboBox"
                       x:Uid="/RankingsPage/RankOptionComboBox"
+                      VerticalAlignment="Center"
                       ItemsSource="{x:Bind options:RankOptionWrapper.AvailableOptions()}"
                       SelectionChanged="RankOptionComboBox_OnSelectionChanged">
                 <ComboBox.ItemTemplate>

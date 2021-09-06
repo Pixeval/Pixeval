@@ -4,7 +4,7 @@
                  xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                 xmlns:model="using:Mako.Model"
+                 xmlns:model="using:Pixeval.CoreApi.Model"
                  xmlns:ui="using:Pixeval.Util.UI"
                  xmlns:viewer="using:Pixeval.Pages.IllustrationViewer"
                  Background="{ThemeResource SidePanelBackgroundThemeBrush}"

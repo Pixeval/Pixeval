@@ -3,7 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Threading.Tasks;
-using Mako.Global.Enum;
+using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Events;
 using Pixeval.Options;
 using Pixeval.Util;

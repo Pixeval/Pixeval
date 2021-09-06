@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime;
-using Mako.Global.Enum;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Events;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Misc;
@@ -20,7 +20,7 @@ namespace Pixeval.Pages
 
         private readonly NavigationViewTag _bookmarks = new(typeof(BookmarksPage), App.MakoClient.Bookmarks(App.Uid!, PrivacyPolicy.Public, App.AppSetting.TargetFilter));
 
-        private readonly NavigationViewTag _rankings = new(typeof(RankingsPage), App.MakoClient.Ranking(RankOption.Day, DateTime.Now));
+        private readonly NavigationViewTag _rankings = new(typeof(RankingsPage), App.MakoClient.Ranking(RankOption.Day, DateTime.Today - TimeSpan.FromDays(2)));
         
         private readonly NavigationViewTag _settings = new(typeof(SettingsPage), App.MakoClient.Configuration);
 

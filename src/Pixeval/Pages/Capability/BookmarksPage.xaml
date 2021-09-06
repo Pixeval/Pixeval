@@ -2,7 +2,7 @@
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                 xmlns:mako="using:Mako.Global.Enum"
+                 xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:options="using:Pixeval.Options"
                  xmlns:ui="using:Pixeval.Util.UI"
@@ -18,9 +18,9 @@
                 <ComboBox.Items>
                     <ComboBoxItem x:Name="PrivacyPolicyComboBoxPublicItem"
                                   x:Uid="/BookmarksPage/PrivacyPolicyComboBoxPublicComboBoxItem"
-                                  Tag="{x:Bind mako:PrivacyPolicy.Public}" />
+                                  Tag="{x:Bind enum:PrivacyPolicy.Public}" />
                     <ComboBoxItem x:Uid="/BookmarksPage/PrivacyPolicyComboBoxPrivateComboBoxItem"
-                                  Tag="{x:Bind mako:PrivacyPolicy.Private}" />
+                                  Tag="{x:Bind enum:PrivacyPolicy.Private}" />
                 </ComboBox.Items>
             </ComboBox>
             <ComboBox x:Name="SortOptionComboBox"

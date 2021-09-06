@@ -171,6 +171,12 @@
   <data name="TargetFilterForIOS" xml:space="preserve">
     <value>IOS</value>
   </data>
+  <data name="TheIllustrationIsAMangaFormatted" xml:space="preserve">
+    <value>这是一副图集，内含{0}张图片</value>
+  </data>
+  <data name="TheIllustrationIsAnUgoira" xml:space="preserve">
+    <value>这是一张动图</value>
+  </data>
   <data name="UnexpectedBehavior" xml:space="preserve">
     <value>发生了未定义的行为，如果你看到了该信息，请联系开发者寻求帮助</value>
   </data>

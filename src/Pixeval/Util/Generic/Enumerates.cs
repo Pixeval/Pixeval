@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Mako.Util;
+using Pixeval.CoreApi.Util;
 
 namespace Pixeval.Util.Generic
 {
@@ -22,6 +22,14 @@ namespace Pixeval.Util.Generic
             var enumerable = src as T[] ?? src.ToArray();
             enumerable.ForEach(action);
             return enumerable;
+        }
+
+        public static void AddRange<T>(this ICollection<T> dest, IEnumerable<T> source)
+        {
+            foreach (var t in source)
+            {
+                dest.Add(t);
+            }
         }
     }
 }

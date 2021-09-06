@@ -17,8 +17,8 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using CommunityToolkit.WinUI.Helpers;
 using ImageMagick;
-using Mako.Net.Response;
-using Mako.Util;
+using Pixeval.CoreApi.Net.Response;
+using Pixeval.CoreApi.Util;
 
 namespace Pixeval.Util.IO
 {

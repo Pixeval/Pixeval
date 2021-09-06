@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.WinUI.UI;
-using Mako.Engine;
-using Mako.Global.Enum;
-using Mako.Model;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.CoreApi;
+using Pixeval.CoreApi.Engine;
+using Pixeval.CoreApi.Global.Enum;
+using Pixeval.CoreApi.Model;
+using Pixeval.CoreApi.Net;
 using Pixeval.Options;
 using Pixeval.Util.Generic;
+using Pixeval.Util.IO;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Util
 {
@@ -21,16 +27,16 @@ namespace Pixeval.Util
         {
             return option switch
             {
-                ThumbnailUrlOption.Large        => illustration.ImageUrls?.Large,
-                ThumbnailUrlOption.Medium       => illustration.ImageUrls?.Medium,
+                ThumbnailUrlOption.Large => illustration.ImageUrls?.Large,
+                ThumbnailUrlOption.Medium => illustration.ImageUrls?.Medium,
                 ThumbnailUrlOption.SquareMedium => illustration.ImageUrls?.SquareMedium,
-                _                                => throw new ArgumentOutOfRangeException(nameof(option), option, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(option), option, null)
             };
         }
 
         public static Uri GetIllustrationWebUri(string id)
         {
-            return new Uri($"https://www.pixiv.net/artworks/{id}");
+            return new($"https://www.pixiv.net/artworks/{id}");
         }
 
         public static string? GetOriginalUrl(this Illustration illustration)
@@ -55,6 +61,7 @@ namespace Pixeval.Util
                 ImageUrls = m.ImageUrls
             });
         }
+
         public static SortDescription? GetSortDescriptionForIllustration(IllustrationSortOption sortOption)
         {
             return sortOption switch
@@ -90,6 +97,14 @@ namespace Pixeval.Util
         public static XRestrictLevel RestrictLevel(this Illustration illustration)
         {
             return (XRestrictLevel) illustration.XRestrict;
+        }
+
+        public static async Task<SoftwareBitmapSource> DownloadSoftwareBitmapSourceAsync(this MakoClient client, string url)
+        {
+            return await (await client.GetMakoHttpClient(MakoApiKind.ImageApi)
+                    .DownloadAsIRandomAccessStreamAsync(url))
+                .GetOrThrow()
+                .GetSoftwareBitmapSourceAsync(true);
         }
     }
 }

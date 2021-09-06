@@ -2,12 +2,12 @@
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
-using Mako.Global.Enum;
-using Mako.Model;
-using Mako.Net;
-using Mako.Util;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.CoreApi.Global.Enum;
+using Pixeval.CoreApi.Model;
+using Pixeval.CoreApi.Net;
+using Pixeval.CoreApi.Util;
 using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
@@ -79,17 +79,14 @@ namespace Pixeval.ViewModel
             LoadingThumbnail = true;
             if (App.AppSetting.UseFileCache && await App.Cache.TryGetAsync<IRandomAccessStream>(Illustration.GetIllustrationCacheKey()) is { } stream)
             {
-                using (stream)
-                {
-                    ThumbnailSource = await stream.GetSoftwareBitmapSourceAsync();
-                }
+                ThumbnailSource = await stream.GetSoftwareBitmapSourceAsync(true);
             }
             else if (await GetThumbnail(ThumbnailUrlOption.Medium) is { } ras)
             {
                 using (ras)
                 {
                     await App.Cache.TryAddAsync(Illustration.GetIllustrationCacheKey(), ras!, TimeSpan.FromDays(1));
-                    ThumbnailSource = await ras!.GetSoftwareBitmapSourceAsync();
+                    ThumbnailSource = await ras!.GetSoftwareBitmapSourceAsync(false);
                 }
             }
             LoadingThumbnail = false;
@@ -131,13 +128,13 @@ namespace Pixeval.ViewModel
             if (Illustration.IsUgoira())
             {
                 sb.AppendLine();
-                sb.Append("这是一张动图");
+                sb.Append(MiscResources.TheIllustrationIsAnUgoira);
             }
 
             if (Illustration.IsManga())
             {
                 sb.AppendLine();
-                sb.Append($"这是一副图集，内含{Illustration.PageCount}张图片");
+                sb.Append(MiscResources.TheIllustrationIsAMangaFormatted.Format(Illustration.PageCount));
             }
 
             return sb.ToString();

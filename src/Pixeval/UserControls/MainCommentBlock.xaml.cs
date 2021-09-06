@@ -18,11 +18,11 @@ using Windows.Foundation.Collections;
 
 namespace Pixeval.UserControls
 {
-    public sealed partial class CommentBlock : UserControl
+    public sealed partial class MainCommentBlock
     {
-        public CommentBlock()
+        public MainCommentBlock()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

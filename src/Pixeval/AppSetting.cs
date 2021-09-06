@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using Mako.Global.Enum;
-using Mako.Preference;
+using Pixeval.CoreApi.Global.Enum;
+using Pixeval.CoreApi.Preference;
 
 namespace Pixeval
 {

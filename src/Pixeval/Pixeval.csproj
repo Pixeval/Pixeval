@@ -134,9 +134,9 @@
       <None Remove="Pages\RecommendationPage.xaml" />
       <None Remove="Pages\SettingsPage.xaml" />
       <None Remove="Themes.xaml" />
-      <None Remove="UserControls\CommentBlock.xaml" />
       <None Remove="UserControls\IllustrationContainer.xaml" />
       <None Remove="UserControls\IllustrationGridCommandBar.xaml" />
+      <None Remove="UserControls\MainCommentBlock.xaml" />
    </ItemGroup>
    <ItemGroup>
       <AppxManifest Include="Package.appxmanifest">
@@ -148,7 +148,6 @@
       <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.0.3" />
       <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.0.3" />
       <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="8.2.1" />
-      <PackageReference Include="Mako" Version="1.2.0" />
       <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.1.3" />
       <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.1" />
       <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.1" />
@@ -249,6 +248,7 @@
       <Content Include="Images\Wide310x150Logo.scale-400.png" />
    </ItemGroup>
    <ItemGroup>
+      <ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
       <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
    </ItemGroup>
    <ItemGroup>
@@ -325,7 +325,7 @@
      </Page>
    </ItemGroup>
    <ItemGroup>
-     <Page Update="UserControls\CommentBlock.xaml">
+     <Page Update="UserControls\MainCommentBlock.xaml">
        <Generator>MSBuild:Compile</Generator>
      </Page>
    </ItemGroup>

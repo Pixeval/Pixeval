@@ -44,7 +44,7 @@ namespace Pixeval.SourceGen
                             foreach (var node in elements)
                             {
                                 var name = node.GetAttribute("name");
-                                if (name.Contains("[")) // useful though not elegant
+                                if (name.Contains("["))
                                 {
                                     continue;
                                 }

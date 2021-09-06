@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.UI;
-using Mako.Global.Enum;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Events;
 using Pixeval.Options;
 using Pixeval.Util;

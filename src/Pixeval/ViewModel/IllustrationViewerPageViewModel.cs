@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Mako.Net;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.CoreApi.Net;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
@@ -92,9 +92,7 @@ namespace Pixeval.ViewModel
         {
             if (First.Illustration.User?.ProfileImageUrls?.Medium is { } profileImage)
             {
-                using var stream = (await App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi)
-                    .DownloadAsIRandomAccessStreamAsync(profileImage)).GetOrThrow();
-                UserProfileImageSource = await stream.GetSoftwareBitmapSourceAsync();
+                UserProfileImageSource = await App.MakoClient.DownloadSoftwareBitmapSourceAsync(profileImage);
             }
         }
 

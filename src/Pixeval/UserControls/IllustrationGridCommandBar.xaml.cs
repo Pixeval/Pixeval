@@ -1,16 +1,14 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using Windows.System;
-using Mako.Util;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.CoreApi.Util;
 using Pixeval.Util;
-using Pixeval.Util.Generic;
 using Pixeval.Util.UI;
 using Pixeval.ViewModel;
 

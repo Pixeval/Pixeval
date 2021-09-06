@@ -6,7 +6,6 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
-using Mako.Util;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -14,18 +13,23 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using PInvoke;
+using Pixeval.CoreApi.Util;
 
 namespace Pixeval.Util.UI
 {
     public static partial class UIHelper
     {
-        public static async Task<SoftwareBitmapSource> GetSoftwareBitmapSourceAsync(this IRandomAccessStream randomAccessStream)
+        public static async Task<SoftwareBitmapSource> GetSoftwareBitmapSourceAsync(this IRandomAccessStream randomAccessStream, bool disposeImageStream)
         {
             var decoder = await BitmapDecoder.CreateAsync(randomAccessStream);
             var bitmap = await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
 
             var source = new SoftwareBitmapSource();
             await source.SetBitmapAsync(bitmap);
+            if (disposeImageStream)
+            {
+                randomAccessStream.Dispose();
+            }
             return source;
         }
 
