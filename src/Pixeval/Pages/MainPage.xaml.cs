@@ -46,7 +46,7 @@ namespace Pixeval.Pages
         }
 
         // 这玩意放在这有点蠢
-        public UIElement? selectedElement = null;
+        public static UIElement? selectedElement = null;
 
         // 转移到MainPage中某element的动画效果
         protected override void OnNavigatedTo(NavigationEventArgs e)

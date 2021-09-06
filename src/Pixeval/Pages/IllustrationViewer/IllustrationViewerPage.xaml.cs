@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Streams;
 using Windows.System;
@@ -62,6 +63,8 @@ namespace Pixeval.Pages.IllustrationViewer
             _comments = null; // TODO
 
             IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), _viewModel.Current);
+
+            MainPage.selectedElement = (UIElement) _viewModel.GridView.AdaptiveGridView.ContainerFromItem(_viewModel.IllustrationViewModel);
         }
 
         private async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -129,6 +132,28 @@ namespace Pixeval.Pages.IllustrationViewer
                 Effect = SlideNavigationTransitionEffect.FromLeft
             });
         }
+        
+        private void NextIllustration()
+        {
+            var illustrationViewModel = (IllustrationViewModel)_viewModel.GridViewModel.IllustrationsView[_viewModel.IllustrationIndex + 1];
+            var viewModel = illustrationViewModel.Illustration.GetMangaIllustrations().Select(p => new IllustrationViewModel(p)).ToArray();
+
+            App.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.GridView, viewModel), new SlideNavigationTransitionInfo
+            {
+                Effect = SlideNavigationTransitionEffect.FromRight
+            });
+        }
+
+        private void PrevIllustration()
+        {
+            var illustrationViewModel = (IllustrationViewModel)_viewModel.GridViewModel.IllustrationsView[_viewModel.IllustrationIndex - 1];
+            var viewModel = illustrationViewModel.Illustration.GetMangaIllustrations().Select(p => new IllustrationViewModel(p)).ToArray();
+
+            App.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.GridView, viewModel), new SlideNavigationTransitionInfo
+            {
+                Effect = SlideNavigationTransitionEffect.FromLeft
+            });
+        }
 
         private void NextImageAppBarButton_OnClick(object sender, RoutedEventArgs e)
         {
@@ -138,6 +163,16 @@ namespace Pixeval.Pages.IllustrationViewer
         private void PrevImageAppBarButton_OnClick(object sender, RoutedEventArgs e)
         {
             PrevImage();
+        }
+
+        private void NextIllustrationAppBarButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            NextIllustration();
+        }
+
+        private void PrevIllustrationAppBarButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            PrevIllustration();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -152,7 +187,8 @@ namespace Pixeval.Pages.IllustrationViewer
         private void BackButton_OnClick(object sender, RoutedEventArgs e)
         {
             ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", IllustrationImageShowcaseFrame);
-            App.AppWindowRootFrame.GoBack(new SuppressNavigationTransitionInfo());
+            App.AppWindowRootFrame.BackStack.RemoveAll(entry => entry.SourcePageType == typeof(IllustrationViewerPage));
+            App.AppWindowRootFrame.GoBack();
         }
 
         private async void ShareButton_OnClick(object sender, RoutedEventArgs e)
@@ -269,6 +305,22 @@ namespace Pixeval.Pages.IllustrationViewer
         public Visibility CalculatePrevImageButtonVisibility(int index)
         {
             return index > 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public Visibility CalculateNextIllustrationButtonVisibility(int index)
+        {
+            var modelIndex = _viewModel.IllustrationIndex;
+            if (_viewModel.GridViewModel.IllustrationsView.Count > modelIndex + 1)
+                return CalculateNextImageButtonVisibility(index) == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+            return Visibility.Collapsed;
+        }
+
+        public Visibility CalculatePrevIllustrationButtonVisibility(int index)
+        {
+            var modelIndex = _viewModel.IllustrationIndex;
+            if (modelIndex > 0)
+                return CalculateNextImageButtonVisibility(index) == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+            return Visibility.Collapsed;
         }
 
         public static IconElement GetBookmarkButtonIcon(bool isBookmarked)
