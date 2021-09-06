@@ -37,24 +37,6 @@
                                   Icon="Back"
                                   LabelPosition="Collapsed" />
                 </CommandBar.Content>
-                <AppBarButton Click="BookmarkButton_OnClick"
-                              Icon="{x:Bind illustrationViewer:IllustrationViewerPage.GetBookmarkButtonIcon(_viewModel.First.IsBookmarked), Mode=OneWay}"
-                              Label="{x:Bind illustrationViewer:IllustrationViewerPage.GetBookmarkButtonLabel(_viewModel.First.IsBookmarked), Mode=OneWay}" />
-                <AppBarSeparator />
-                <AppBarButton Width="40"
-                              Click="ZoomInButton_OnClick"
-                              LabelPosition="Collapsed">
-                    <AppBarButton.Icon>
-                        <SymbolIcon Symbol="ZoomIn" />
-                    </AppBarButton.Icon>
-                </AppBarButton>
-                <AppBarButton Width="40"
-                              Click="ZoomOutButton_OnClick"
-                              LabelPosition="Collapsed">
-                    <AppBarButton.Icon>
-                        <SymbolIcon Symbol="ZoomOut" />
-                    </AppBarButton.Icon>
-                </AppBarButton>
                 <AppBarButton x:Uid="/IllustrationViewerPage/PlayGifButton"
                               Width="40"
                               Click="PlayGifButton_OnClick"
@@ -64,10 +46,11 @@
                         <SymbolIcon Symbol="Stop" />
                     </AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarSeparator />
+                <!--TODO 由于保存功能转移到底部命令栏，这里的保存按钮应改为“保存整个图集” -->
+                <!--
                 <AppBarButton x:Uid="/IllustrationViewerPage/SaveCurrentImageButton"
                               Click="SaveCurrentImageButton_OnClick"
-                              Icon="{ui:FontIcon Glyph=SaveE74E}" />
+                              Icon="{ui:FontIcon Glyph=SaveE74E}" />-->
                 <AppBarButton x:Uid="/IllustrationViewerPage/SaveAsCurrentImageButton"
                               Click="SaveAsCurrentImageButton_OnClick"
                               Icon="{ui:FontIcon Glyph=SaveAsE792}" />

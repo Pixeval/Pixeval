@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Windows.Foundation;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -19,9 +20,12 @@ namespace Pixeval.Pages.IllustrationViewer
 
         private const int MinZoomFactor = 1;
 
+        private DispatcherTimer _timer = new();
+
         public ImageViewerPage()
         {
             InitializeComponent();
+            _timer.Tick += timer_Tick;
         }
 
         public override void Prepare(NavigationEventArgs e)
@@ -206,5 +210,56 @@ namespace Pixeval.Pages.IllustrationViewer
         }
 
         #endregion
+
+        private void ZoomInButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Zoom(0.5);
+        }
+
+        private void ZoomOutButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Zoom(-0.5);
+        }
+
+        private void BookmarkButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (_viewModel.IllustrationViewModel.IsBookmarked)
+            {
+                _viewModel.IllustrationViewModel.RemoveBookmarkAsync();
+            }
+            else
+            {
+                _viewModel.IllustrationViewModel.PostPublicBookmarkAsync();
+            }
+        }
+
+        private void DetectionArea_OnPointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            CommandBorder.Opacity = 0.7;
+            _timer.Stop();
+        }
+
+        private void DetectionArea_OnPointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            _timer.Interval = TimeSpan.FromSeconds(3);
+            _timer.Start();
+        }
+
+        private void CommandBar_OnPointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            _timer.Interval = TimeSpan.FromSeconds(5);
+            _timer.Start();
+        }
+
+        private void CommandBar_OnPointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            CommandBorder.Opacity = 1.0;
+        }
+
+        private void timer_Tick(object? sender, object e)
+        {
+            _timer.Stop();
+            CommandBorder.Opacity = 0.0;
+        }
     }
 }                                                                                                                                                                                                                                                                                                                                                                                                                                               
