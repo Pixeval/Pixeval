@@ -168,9 +168,6 @@
   <data name="SaveAsCurrentImageButton.Label" xml:space="preserve">
     <value>另存为</value>
   </data>
-  <data name="SaveCurrentImageButton.Label" xml:space="preserve">
-    <value>保存</value>
-  </data>
   <data name="SaveMangaAsButton.Label" xml:space="preserve">
     <value>图集另存为</value>
   </data>

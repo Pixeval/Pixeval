@@ -123,4 +123,7 @@
   <data name="CannotFindImageSourceTitle" xml:space="preserve">
     <value>警告</value>
   </data>
+  <data name="SaveCurrentImageButton.Label" xml:space="preserve">
+    <value>保存</value>
+  </data>
 </root>

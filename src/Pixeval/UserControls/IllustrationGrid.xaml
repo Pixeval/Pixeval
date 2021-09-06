@@ -7,7 +7,6 @@
              xmlns:core="using:Microsoft.Xaml.Interactions.Core"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-             xmlns:local="using:Pixeval.UserControls"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:media="using:Microsoft.Xaml.Interactions.Media"
              xmlns:ui="using:CommunityToolkit.WinUI.UI"
