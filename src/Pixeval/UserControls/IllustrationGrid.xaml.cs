@@ -38,12 +38,11 @@ namespace Pixeval.UserControls
 
         private void Thumbnail_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            EventChannel.Default.Publish(new MainPageFrameConnectedAnimationRequestedEvent(sender as UIElement));
+            EventChannel.Default.Publish(new MainPageFrameSetConnectedAnimationTargetEvent(sender as UIElement));
 
             var viewModel = sender.GetDataContext<IllustrationViewModel>()
-                .Illustration
                 .GetMangaIllustrations()
-                .Select(p => new IllustrationViewModel(p)).ToArray();
+                .ToArray();
 
             ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement) sender);
             App.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModel), new SuppressNavigationTransitionInfo());

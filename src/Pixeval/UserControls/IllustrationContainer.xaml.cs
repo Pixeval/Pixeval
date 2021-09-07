@@ -2,6 +2,8 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using CommunityToolkit.WinUI.UI;
+using Microsoft.UI.Xaml.Controls;
 using Pixeval.ViewModel;
 
 namespace Pixeval.UserControls
@@ -34,11 +36,19 @@ namespace Pixeval.UserControls
             };
         }
 
+        /// <summary>
+        /// The command elements that will appear at the left of the <see cref="TopCommandBar"/>
+        /// </summary>
         public ObservableCollection<UIElement> CommandBarElements { get; }
 
         private void IllustrationContainer_OnLoaded(object sender, RoutedEventArgs e)
         {
             IllustrationGrid.Focus(FocusState.Programmatic);
+        }
+
+        public void ScrollToTop()
+        {
+            IllustrationGrid.IllustrationGridView.FindDescendant<ScrollViewer>()?.ScrollToVerticalOffset(0);
         }
     }
 }

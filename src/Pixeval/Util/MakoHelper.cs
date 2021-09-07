@@ -49,19 +49,6 @@ namespace Pixeval.Util
             return illustration.GetOriginalUrl() ?? illustration.Id.ToString();
         }
 
-        public static IEnumerable<Illustration> GetMangaIllustrations(this Illustration illust)
-        {
-            if (illust.PageCount <= 1)
-            {
-                return new[] {illust};
-            }
-
-            return illust.MetaPages!.Select(m => illust with
-            {
-                ImageUrls = m.ImageUrls
-            });
-        }
-
         public static SortDescription? GetSortDescriptionForIllustration(IllustrationSortOption sortOption)
         {
             return sortOption switch

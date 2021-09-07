@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Runtime;
+using CommunityToolkit.WinUI.UI;
+using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -8,6 +10,7 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Events;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Misc;
+using Pixeval.UserControls;
 using Pixeval.Util.UI;
 using Pixeval.ViewModel;
 
@@ -27,13 +30,18 @@ namespace Pixeval.Pages
 
         private readonly NavigationViewTag _settings = new(typeof(SettingsPage), App.MakoClient.Configuration);
 
-        private static UIElement? _selectedElement;
+        private static UIElement? _connectedAnimationTarget;
+
+        // This field contains the view model that the illustration viewer is
+        // currently holding if we're navigating back to the MainPage
+        private static IllustrationViewModel? _illustrationViewerContent;
 
         public MainPage()
         {
             InitializeComponent();
             DataContext = _viewModel;
-            EventChannel.Default.Subscribe<MainPageFrameConnectedAnimationRequestedEvent>(evt => _selectedElement = evt.Sender as UIElement);
+            EventChannel.Default.Subscribe<MainPageFrameSetConnectedAnimationTargetEvent>(evt => _connectedAnimationTarget = evt.Parameter as UIElement);
+            EventChannel.Default.Subscribe<NavigatingBackToMainPageEvent>(evt => _illustrationViewerContent = evt.Parameter as IllustrationViewModel);
         }
          
         private void MainPageRootNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -55,7 +63,15 @@ namespace Pixeval.Pages
             if (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation") is { } animation)
             {
                 animation.Configuration = new DirectConnectedAnimationConfiguration();
-                animation.TryStart(_selectedElement ?? this);
+                animation.TryStart(_connectedAnimationTarget ?? this);
+                _connectedAnimationTarget = null;
+            }
+
+            // Scroll the content to the item that were being browsed just now
+            if (_illustrationViewerContent is not null && MainPageRootFrame.FindDescendant<AdaptiveGridView>() is { } gridView)
+            {
+                gridView.ScrollIntoView(_illustrationViewerContent);
+                _illustrationViewerContent = null;
             }
         }
     }

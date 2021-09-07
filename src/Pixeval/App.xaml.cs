@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
@@ -11,6 +10,10 @@ using Pixeval.Interop;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using WinRT;
+
+#if DEBUG
+using System.Diagnostics;
+#endif
 
 namespace Pixeval
 {

@@ -8,9 +8,9 @@
     {
         public ScanningLoginProxyEvent()
         {
-            Sender = null;
+            Parameter = null;
         }
 
-        public object? Sender { get; }
+        public object? Parameter { get; }
     }
 }

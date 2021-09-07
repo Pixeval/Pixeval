@@ -220,14 +220,7 @@ namespace Pixeval.Pages.IllustrationViewer
 
         private void BookmarkButton_OnClick(object sender, RoutedEventArgs e)
         {
-            if (_viewModel.IllustrationViewModel.IsBookmarked)
-            {
-                _viewModel.IllustrationViewModel.RemoveBookmarkAsync();
-            }
-            else
-            {
-                _viewModel.IllustrationViewModel.PostPublicBookmarkAsync();
-            }
+            _viewModel.SwitchBookmarkState();
         }
 
         private void ImageViewerPage_OnLoaded(object sender, RoutedEventArgs e)

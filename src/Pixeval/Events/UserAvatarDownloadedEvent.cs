@@ -7,9 +7,9 @@
     {
         public UserAvatarDownloadedEvent(object sender)
         {
-            Sender = sender;
+            Parameter = sender;
         }
         
-        public object? Sender { get; }
+        public object? Parameter { get; }
     }
 }

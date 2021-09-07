@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.CoreApi.Net;
+using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
@@ -13,8 +14,9 @@ namespace Pixeval.ViewModel
 {
     public class ImageViewerPageViewModel : ObservableObject, IDisposable
     {
-        public ImageViewerPageViewModel(IllustrationViewModel illustrationViewModel)
+        public ImageViewerPageViewModel(IllustrationViewerPageViewModel illustrationViewerPageViewModel, IllustrationViewModel illustrationViewModel)
         {
+            IllustrationViewerPageViewModel = illustrationViewerPageViewModel;
             IllustrationViewModel = illustrationViewModel;
             ImageLoadingCancellationHandle = new CancellationHandle();
             _ = LoadImage();
@@ -41,6 +43,12 @@ namespace Pixeval.ViewModel
         public IllustrationViewModel IllustrationViewModel { get; }
 
         public CancellationHandle ImageLoadingCancellationHandle { get; }
+
+        /// <summary>
+        /// The view model of the <see cref="IllustrationViewerPage"/> that hosts the owner <see cref="ImageViewerPage"/>
+        /// of this <see cref="ImageViewerPageViewModel"/>
+        /// </summary>
+        public IllustrationViewerPageViewModel IllustrationViewerPageViewModel { get; }
 
         private ImageSource? _originalImageSource;
 
@@ -88,9 +96,32 @@ namespace Pixeval.ViewModel
             throw new IllustrationSourceNotFoundException(ImageViewerPageResources.CannotFindImageSourceContent);
         }
 
+        /// <summary>
+        /// We use the <see cref="IllustrationViewerPageViewModel"/> to remove and add bookmark
+        /// because the manga have multiple works and those works aside of this one cannot receive
+        /// the bookmark notification if we use <see cref="IllustrationViewModel"/> 
+        /// </summary>
+        public void SwitchBookmarkState()
+        {
+            if (IllustrationViewerPageViewModel.FirstImageViewerPageViewModel.IsBookmarked)
+            {
+                IllustrationViewerPageViewModel.RemoveBookmarkAsync();
+            }
+            else
+            {
+                IllustrationViewerPageViewModel.PostPublicBookmarkAsync();
+            }
+        }
+
         public Visibility GetLoadingMaskVisibility(Task? loadingTask) => !(loadingTask?.IsCompletedSuccessfully ?? false) ? Visibility.Visible : Visibility.Collapsed;
 
         public void Dispose()
+        {
+            OriginalImageStream?.Dispose();
+            GC.SuppressFinalize(this);
+        }
+
+        ~ImageViewerPageViewModel()
         {
             OriginalImageStream?.Dispose();
         }

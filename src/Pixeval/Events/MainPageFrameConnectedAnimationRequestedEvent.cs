@@ -1,12 +1,16 @@
 ﻿namespace Pixeval.Events
 {
-    public class MainPageFrameConnectedAnimationRequestedEvent : IEvent
+    /// <summary>
+    /// This event occurs when the target of the connected animation between MainPage
+    /// and the other one page is selected
+    /// </summary>
+    public class MainPageFrameSetConnectedAnimationTargetEvent : IEvent
     {
-        public MainPageFrameConnectedAnimationRequestedEvent(object? sender)
+        public MainPageFrameSetConnectedAnimationTargetEvent(object? sender)
         {
-            Sender = sender;
+            Parameter = sender;
         }
 
-        public object? Sender { get; }
+        public object? Parameter { get; }
     }
 }

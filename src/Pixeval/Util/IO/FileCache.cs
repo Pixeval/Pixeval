@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -94,7 +93,6 @@ namespace Pixeval.Util.IO
 
                 _index[key] = eTag ?? string.Empty;
                 _expireIndex[key] = GetExpiration(expireIn);
-                Trace.WriteLine(_expireIndex[key]);
 
                 await WriteIndexAsync();
                 await WriteExpireIndexAsync();

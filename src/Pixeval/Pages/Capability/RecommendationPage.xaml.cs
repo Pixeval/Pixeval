@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using CommunityToolkit.WinUI.UI;
+﻿using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -49,10 +47,7 @@ namespace Pixeval.Pages.Capability
             if (MakoHelper.GetSortDescriptionForIllustration(GetIllustrationSortOption()) is { } desc)
             {
                 viewModel.SetSortDescription(desc);
-                if (viewModel.IllustrationsView.FirstOrDefault() is { } first)
-                {
-                    IllustrationContainer.FindChild<GridView>()?.ScrollIntoView(first);
-                }
+                IllustrationContainer.ScrollToTop();
             }
             else
             {

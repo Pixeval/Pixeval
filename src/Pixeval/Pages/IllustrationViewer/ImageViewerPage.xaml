@@ -95,7 +95,17 @@
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
         </Rectangle>
-
+        <Grid HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              Visibility="{x:Bind _viewModel.GetLoadingMaskVisibility(_viewModel.LoadingOriginalSourceTask), Mode=OneWay}">
+            <Rectangle Fill="{ThemeResource PixevalAppAcrylicBrush}" />
+            <ProgressRing Width="50"
+                          Height="50"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          IsIndeterminate="False"
+                          Value="{x:Bind _viewModel.LoadingProgress, Mode=OneWay}" />
+        </Grid>
         <Border x:Name="CommandBorder"
                 Margin="0,0,0,10"
                 HorizontalAlignment="Center"
@@ -125,16 +135,19 @@
                         CornerRadius="10"
                         DefaultLabelPosition="Collapsed"
                         OverflowButtonVisibility="Collapsed">
-                <AppBarButton Width="50"
+                <AppBarButton x:Uid="/ImageViewerPage/BookmarkButton"
+                              Width="50"
                               Click="BookmarkButton_OnClick"
-                              Icon="{x:Bind illustrationViewer:IllustrationViewerPage.GetBookmarkButtonIcon(_viewModel.IllustrationViewModel.IsBookmarked), Mode=OneWay}" />
-                <AppBarButton Width="50"
+                              Icon="{x:Bind illustrationViewer:IllustrationViewerPage.GetBookmarkButtonIcon(_viewModel.IllustrationViewerPageViewModel.FirstImageViewerPageViewModel.IsBookmarked), Mode=OneWay}" />
+                <AppBarButton x:Uid="/ImageViewerPage/ZoomInButton"
+                              Width="50"
                               Click="ZoomInButton_OnClick">
                     <AppBarButton.Icon>
                         <SymbolIcon Symbol="ZoomIn" />
                     </AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton Width="50"
+                <AppBarButton x:Uid="/ImageViewerPage/ZoomOutButton"
+                              Width="50"
                               Click="ZoomOutButton_OnClick">
                     <AppBarButton.Icon>
                         <SymbolIcon Symbol="ZoomOut" />
@@ -145,16 +158,5 @@
                               Icon="{ui:FontIcon Glyph=SaveE74E}" />
             </CommandBar>
         </Border>
-        <Grid HorizontalAlignment="Stretch"
-              VerticalAlignment="Stretch"
-              Visibility="{x:Bind _viewModel.GetLoadingMaskVisibility(_viewModel.LoadingOriginalSourceTask), Mode=OneWay}">
-            <Rectangle Fill="{ThemeResource PixevalAppAcrylicBrush}" />
-            <ProgressRing Width="50"
-                          Height="50"
-                          HorizontalAlignment="Center"
-                          VerticalAlignment="Center"
-                          IsIndeterminate="False"
-                          Value="{x:Bind _viewModel.LoadingProgress, Mode=OneWay}" />
-        </Grid>
     </Grid>
 </ui:EnhancedPage>

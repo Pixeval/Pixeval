@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
+using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Global.Enum;
@@ -11,12 +12,17 @@ using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Util;
 using Pixeval.Options;
+using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 
 namespace Pixeval.ViewModel
 {
+    /// <summary>
+    /// A view model that communicates between the model <see cref="Illustration"/> and the view <see cref="IllustrationGrid"/>.
+    /// It is responsible for being the elements of the <see cref="AdaptiveGridView"/> to present the thumbnail of an illustration
+    /// </summary>
     public class IllustrationViewModel : ObservableObject, IDisposable
     {
         public Illustration Illustration { get; }
@@ -71,9 +77,31 @@ namespace Pixeval.ViewModel
 
         public event EventHandler<IllustrationViewModel>? OnIsSelectedChanged;
 
-        public IEnumerable<IllustrationViewModel> GetMangaIllustrationViewModels()
+        /// <summary>
+        /// An illustration may contains multiple works and such illustrations are named "manga".
+        /// This method attempts to get the works and wrap into <see cref="IllustrationViewModel"/>
+        /// </summary>
+        /// <returns>
+        /// A collection of a single <see cref="IllustrationViewModel"/>, if the illustration is not
+        /// a manga, that is to say, contains only a single work.
+        /// A collection of multiple <see cref="IllustrationViewModel"/>, if the illustration is a manga
+        /// that consist of multiple works
+        /// </returns>
+        public IEnumerable<IllustrationViewModel> GetMangaIllustrations()
         {
-            return Illustration.GetMangaIllustrations().Select(p => new IllustrationViewModel(p));
+            if (Illustration.PageCount <= 1)
+            {
+                return new[] {this};
+            }
+
+            // The API result of manga (a work with multiple illustrations) is a single Illustration object
+            // that only differs from the illustrations of a single work on the MetaPages property, this property
+            // contains the download urls of the manga
+
+            return Illustration.MetaPages!.Select(m => Illustration with
+            {
+                ImageUrls = m.ImageUrls
+            }).Select(p => new IllustrationViewModel(p));
         }
 
         public async Task LoadThumbnailIfRequired()

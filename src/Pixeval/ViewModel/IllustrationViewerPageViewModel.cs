@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
@@ -12,7 +11,7 @@ namespace Pixeval.ViewModel
     public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
     {
         /// <summary>
-        /// The view model of the GridView that the <see cref="Illustrations"/> comes from
+        /// The view model of the GridView that the <see cref="ImageViewerPageViewModels"/> comes from
         /// </summary>
         public IllustrationGridViewModel ContainerGridViewModel { get; }
 
@@ -26,14 +25,15 @@ namespace Pixeval.ViewModel
         // otherwise it contains the entire manga data
         public IllustrationViewerPageViewModel(IllustrationGrid gridView, params IllustrationViewModel[] illustrations)
         {
-            Illustrations = illustrations.Select(i => new ImageViewerPageViewModel(i)).ToArray();
-            Current = Illustrations[CurrentIndex];
-            _ = LoadUserProfileImage();
+            ImageViewerPageViewModels = illustrations.Select(i => new ImageViewerPageViewModel(this, i)).ToArray();
+            Current = ImageViewerPageViewModels[CurrentIndex];
             IllustrationGrid = gridView;
             ContainerGridViewModel = gridView.ViewModel;
+            IllustrationViewModelInTheGridView = ContainerGridViewModel.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
+            _ = LoadUserProfileImage();
         }
 
-        public ImageViewerPageViewModel[] Illustrations { get; }
+        public ImageViewerPageViewModel[] ImageViewerPageViewModels { get; }
 
         private int _currentIndex;
 
@@ -53,12 +53,16 @@ namespace Pixeval.ViewModel
 
         private SoftwareBitmapSource? _userProfileImageSource;
 
-        public IllustrationViewModel IllustrationViewModel =>
-            ContainerGridViewModel.IllustrationsView.Cast<IllustrationViewModel>().First(model =>
-                model.Illustration.GetMangaIllustrations().All(illustration =>
-                    Illustrations.Any(x => x.IllustrationViewModel.Illustration == illustration)));
+        /// <summary>
+        /// The <see cref="IllustrationViewModelInTheGridView"/> in <see cref="IllustrationGrid"/> that corresponds to current
+        /// <see cref="IllustrationViewerPageViewModel"/>
+        /// </summary>
+        public IllustrationViewModel IllustrationViewModelInTheGridView { get; }
 
-        public int IllustrationIndex => ContainerGridViewModel.IllustrationsView.IndexOf(IllustrationViewModel);
+        /// <summary>
+        /// The index of current illustration in <see cref="IllustrationGrid"/>
+        /// </summary>
+        public int IllustrationIndex => ContainerGridViewModel.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
 
         // Remarks:
         // The reason why we don't put UserProfileImageSource into IllustrationViewModel
@@ -74,51 +78,56 @@ namespace Pixeval.ViewModel
             set => SetProperty(ref _userProfileImageSource, value);
         }
 
-        public string? IllustratorName => First.Illustration.User?.Name;
+        public string? IllustratorName => FirstImageViewerPageViewModel.Illustration.User?.Name;
 
-        public string? IllustratorUid => First.Illustration.User?.Id.ToString();
+        public string? IllustratorUid => FirstImageViewerPageViewModel.Illustration.User?.Id.ToString();
 
-        public bool IsManga => Illustrations.Length > 1;
+        public bool IsManga => ImageViewerPageViewModels.Length > 1;
 
         public bool IsUgoira => Current.IllustrationViewModel.Illustration.IsUgoira();
 
-        public IllustrationViewModel First => Illustrations[0].IllustrationViewModel;
+        /// <summary>
+        /// The first <see cref="ImageViewerPageViewModel"/> among <see cref="ImageViewerPageViewModels"/>
+        /// </summary>
+        public IllustrationViewModel FirstImageViewerPageViewModel => ImageViewerPageViewModels[0].IllustrationViewModel;
 
         public ImageViewerPageViewModel Next()
         {
-            Current = Illustrations[++CurrentIndex];
+            Current = ImageViewerPageViewModels[++CurrentIndex];
             return Current;
         }
 
         public ImageViewerPageViewModel Prev()
         {
-            Current = Illustrations[--CurrentIndex];
+            Current = ImageViewerPageViewModels[--CurrentIndex];
             return Current;
         }
 
         public Task PostPublicBookmarkAsync()
         {
-            return Illustrations[0].IllustrationViewModel.PostPublicBookmarkAsync();
+            // changes the IsBookmarked property of the item that of in the thumbnail list
+            // so the thumbnail item will also receives state update 
+            IllustrationViewModelInTheGridView.IsBookmarked = true;
+            return FirstImageViewerPageViewModel.PostPublicBookmarkAsync();
         }
 
         public Task RemoveBookmarkAsync()
         {
-            return Illustrations[0].IllustrationViewModel.RemoveBookmarkAsync();
+            IllustrationViewModelInTheGridView.IsBookmarked = false;
+            return FirstImageViewerPageViewModel.RemoveBookmarkAsync();
         }
 
         private async Task LoadUserProfileImage()
         {
-            if (First.Illustration.User?.ProfileImageUrls?.Medium is { } profileImage)
+            if (FirstImageViewerPageViewModel.Illustration.User?.ProfileImageUrls?.Medium is { } profileImage)
             {
                 UserProfileImageSource = await App.MakoClient.DownloadSoftwareBitmapSourceAsync(profileImage);
             }
         }
 
-        public bool IsBookmarked => Illustrations[0].IllustrationViewModel.IsBookmarked;
-
         public void Dispose()
         {
-            foreach (var imageViewerPageViewModel in Illustrations)
+            foreach (var imageViewerPageViewModel in ImageViewerPageViewModels)
             {
                 imageViewerPageViewModel.Dispose();
             }

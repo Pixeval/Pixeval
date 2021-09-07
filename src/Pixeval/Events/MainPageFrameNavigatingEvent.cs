@@ -1,15 +1,17 @@
 ﻿using Microsoft.UI.Xaml;
-using Pixeval.Pages;
 
 namespace Pixeval.Events
 {
+    /// <summary>
+    /// This event occurs when the MainPage's frame is navigating from one page to another
+    /// </summary>
     public class MainPageFrameNavigatingEvent : IEvent
     {
-        public object? Sender { get; }
+        public object? Parameter { get; }
 
         public MainPageFrameNavigatingEvent(UIElement? sender)
         {
-            Sender = sender;
+            Parameter = sender;
         }
     }
 }

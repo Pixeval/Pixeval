@@ -8,6 +8,6 @@ namespace Pixeval.Events
     /// </summary>
     public class ApplicationExitingEvent : IEvent
     {
-        public object? Sender => Application.Current;
+        public object? Parameter => Application.Current;
     }
 }

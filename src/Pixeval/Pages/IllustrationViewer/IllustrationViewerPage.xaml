@@ -32,14 +32,14 @@
                         DefaultLabelPosition="Right">
                 <CommandBar.Content>
                     <AppBarButton Width="48"
-                                  Click="BackButton_OnClick"
                                   Icon="Back"
-                                  LabelPosition="Collapsed" />
+                                  LabelPosition="Collapsed"
+                                  Tapped="BackButton_OnTapped" />
                 </CommandBar.Content>
                 <AppBarButton x:Uid="/IllustrationViewerPage/PlayGifButton"
                               Width="32"
-                              Click="PlayGifButton_OnClick"
                               LabelPosition="Collapsed"
+                              Tapped="PlayGifButton_OnTapped"
                               Visibility="{x:Bind _viewModel.IsUgoira}">
                     <AppBarButton.Icon>
                         <SymbolIcon Symbol="Stop" />
@@ -50,30 +50,30 @@
                               Command="{x:Bind _copyCommand}"
                               Icon="{ui:FontIcon Glyph=CopyE8C8}" />
                 <AppBarButton x:Uid="/IllustrationViewerPage/SaveAsCurrentImageButton"
-                              Click="SaveAsCurrentImageButton_OnClick"
-                              Icon="{ui:FontIcon Glyph=SaveAsE792}" />
+                              Icon="{ui:FontIcon Glyph=SaveAsE792}"
+                              Tapped="SaveAsCurrentImageButton_OnTapped" />
                 <AppBarButton x:Uid="/IllustrationViewerPage/SaveMangaButton"
-                              Click="SaveMangaButton_OnClick"
                               Icon="{ui:FontIcon Glyph=SaveCopyEA35}"
+                              Tapped="SaveMangaButton_OnTapped"
                               Visibility="{x:Bind _viewModel.IsManga}" />
                 <AppBarButton x:Uid="/IllustrationViewerPage/SaveMangaAsButton"
-                              Click="SaveMangaAsButton_OnClick"
                               Icon="{ui:FontIcon Glyph=SaveAsE792}"
+                              Tapped="SaveMangaAsButton_OnTapped"
                               Visibility="{x:Bind _viewModel.IsManga}" />
                 <AppBarSeparator />
                 <AppBarButton x:Name="GenerateLinkToThisPageButton"
                               x:Uid="/IllustrationViewerPage/GenerateLinkToThisPageButton"
-                              Click="GenerateLinkToThisPageButton_OnClick"
-                              Icon="{ui:FontIcon Glyph=LinkE71B}" />
+                              Icon="{ui:FontIcon Glyph=LinkE71B}"
+                              Tapped="GenerateLinkToThisPageButton_OnTapped" />
                 <AppBarButton x:Uid="/IllustrationViewerPage/GenerateWebLinkButton"
-                              Click="GenerateWebLinkButton_OnClick"
-                              Icon="{ui:FontIcon Glyph=PreviewLinkE8A1}" />
+                              Icon="{ui:FontIcon Glyph=PreviewLinkE8A1}"
+                              Tapped="GenerateWebLinkButton_OnTapped" />
                 <AppBarButton x:Uid="/IllustrationViewerPage/OpenInWebBrowserButton"
-                              Click="OpenInWebBrowserButton_OnClick"
-                              Icon="{ui:FontIcon Glyph=WebSearchF6FA}" />
+                              Icon="{ui:FontIcon Glyph=WebSearchF6FA}"
+                              Tapped="OpenInWebBrowserButton_OnTapped" />
                 <AppBarButton x:Uid="/IllustrationViewerPage/ShareButton"
-                              Click="ShareButton_OnClick"
-                              Icon="{ui:FontIcon Glyph=ShareE72D}" />
+                              Icon="{ui:FontIcon Glyph=ShareE72D}"
+                              Tapped="ShareButton_OnTapped" />
             </CommandBar>
             <TeachingTip x:Name="GenerateLinkToThisPageButtonTeachingTip"
                          x:Uid="/IllustrationViewerPage/GenerateLinkToThisPageButtonTeachingTip"
@@ -88,16 +88,16 @@
                 <AppBarButton Width="40"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"
-                              Click="PrevImageAppBarButton_OnClick"
                               Icon="{ui:FontIcon Glyph=CheveronLeft20F743}"
                               LabelPosition="Collapsed"
+                              Tapped="PrevImageAppBarButton_OnTapped"
                               Visibility="{x:Bind CalculatePrevImageButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
                 <AppBarButton Width="40"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"
-                              Click="PrevIllustrationAppBarButton_OnClick"
                               Icon="{ui:FontIcon Glyph=CheveronLeft20F743}"
                               LabelPosition="Collapsed"
+                              Tapped="PrevIllustrationAppBarButton_OnTapped"
                               Visibility="{x:Bind CalculatePrevIllustrationButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
             </Grid>
             <Grid Width="48"
@@ -105,16 +105,16 @@
                 <AppBarButton Width="40"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"
-                              Click="NextImageAppBarButton_OnClick"
                               Icon="{ui:FontIcon Glyph=CheveronRight20F745}"
                               LabelPosition="Collapsed"
+                              Tapped="NextImageAppBarButton_OnTapped"
                               Visibility="{x:Bind CalculateNextImageButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
                 <AppBarButton Width="40"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"
-                              Click="NextIllustrationAppBarButton_OnClick"
                               Icon="{ui:FontIcon Glyph=CheveronRight20F745}"
                               LabelPosition="Collapsed"
+                              Tapped="NextIllustrationAppBarButton_OnTapped"
                               Visibility="{x:Bind CalculateNextIllustrationButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
             </Grid>
             <Grid Height="30"

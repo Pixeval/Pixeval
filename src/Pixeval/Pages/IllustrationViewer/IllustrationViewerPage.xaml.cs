@@ -50,7 +50,7 @@ namespace Pixeval.Pages.IllustrationViewer
 
         public override void Dispose(NavigatingCancelEventArgs e)
         {
-            foreach (var imageViewerPageViewModel in _viewModel.Illustrations)
+            foreach (var imageViewerPageViewModel in _viewModel.ImageViewerPageViewModels)
             {
                 imageViewerPageViewModel.ImageLoadingCancellationHandle.Cancel();
             }
@@ -65,7 +65,7 @@ namespace Pixeval.Pages.IllustrationViewer
 
             IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), _viewModel.Current);
 
-            EventChannel.Default.Publish(new MainPageFrameConnectedAnimationRequestedEvent(_viewModel.IllustrationGrid.GetItemContainer(_viewModel.IllustrationViewModel)));
+            EventChannel.Default.Publish(new MainPageFrameSetConnectedAnimationTargetEvent(_viewModel.IllustrationGrid.GetItemContainer(_viewModel.IllustrationViewModelInTheGridView)));
         }
 
         private async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -82,7 +82,6 @@ namespace Pixeval.Pages.IllustrationViewer
                 else
                 {
                     _viewModel.Current.OriginalImageStream!.Seek(0);
-                    // Remarks: OriginalImageStream won't work here, I don't know why for now
                     package.SetBitmap(RandomAccessStreamReference.CreateFromStream(await GetImage().GetUnderlyingStreamAsync()));
                 }
             });
@@ -137,7 +136,7 @@ namespace Pixeval.Pages.IllustrationViewer
         private void NextIllustration()
         {
             var illustrationViewModel = (IllustrationViewModel) _viewModel.ContainerGridViewModel.IllustrationsView[_viewModel.IllustrationIndex + 1];
-            var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
+            var viewModel = illustrationViewModel.GetMangaIllustrations().ToArray();
 
             App.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationGrid, viewModel), new SlideNavigationTransitionInfo
             {
@@ -148,7 +147,7 @@ namespace Pixeval.Pages.IllustrationViewer
         private void PrevIllustration()
         {
             var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel.IllustrationsView[_viewModel.IllustrationIndex - 1];
-            var viewModel = illustrationViewModel.Illustration.GetMangaIllustrations().Select(p => new IllustrationViewModel(p)).ToArray();
+            var viewModel = illustrationViewModel.GetMangaIllustrations().ToArray();
 
             App.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationGrid, viewModel), new SlideNavigationTransitionInfo
             {
@@ -156,22 +155,22 @@ namespace Pixeval.Pages.IllustrationViewer
             });
         }
 
-        private void NextImageAppBarButton_OnClick(object sender, RoutedEventArgs e)
+        private void NextImageAppBarButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             NextImage();
         }
 
-        private void PrevImageAppBarButton_OnClick(object sender, RoutedEventArgs e)
+        private void PrevImageAppBarButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             PrevImage();
         }
 
-        private void NextIllustrationAppBarButton_OnClick(object sender, RoutedEventArgs e)
+        private void NextIllustrationAppBarButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             NextIllustration();
         }
 
-        private void PrevIllustrationAppBarButton_OnClick(object sender, RoutedEventArgs e)
+        private void PrevIllustrationAppBarButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             PrevIllustration();
         }
@@ -186,14 +185,19 @@ namespace Pixeval.Pages.IllustrationViewer
             }
         }
 
-        private void BackButton_OnClick(object sender, RoutedEventArgs e)
+        private void BackButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", IllustrationImageShowcaseFrame);
+            EventChannel.Default.Publish(new NavigatingBackToMainPageEvent(_viewModel.IllustrationViewModelInTheGridView));
+            
             App.AppWindowRootFrame.BackStack.RemoveAll(entry => entry.SourcePageType == typeof(IllustrationViewerPage));
-            App.AppWindowRootFrame.GoBack();
+            if (App.AppWindowRootFrame.CanGoBack)
+            {
+                App.AppWindowRootFrame.GoBack();
+            }
         }
 
-        private async void ShareButton_OnClick(object sender, RoutedEventArgs e)
+        private async void ShareButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             if (_viewModel.Current.LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true })
             {
@@ -204,7 +208,7 @@ namespace Pixeval.Pages.IllustrationViewer
             UIHelper.ShowShareUI();
         }
 
-        private void GenerateWebLinkButton_OnClick(object sender, RoutedEventArgs e)
+        private void GenerateWebLinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             var link = MakoHelper.GetIllustrationWebUri(_viewModel.Current.IllustrationViewModel.Id).ToString();
             UIHelper.SetClipboardContent(package => package.SetText(link));
@@ -213,27 +217,27 @@ namespace Pixeval.Pages.IllustrationViewer
                 link);
         }
 
-        private void SaveAsCurrentImageButton_OnClick(object sender, RoutedEventArgs e)
+        private void SaveAsCurrentImageButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             throw new NotImplementedException();
         }
 
-        private void SaveMangaButton_OnClick(object sender, RoutedEventArgs e)
+        private void SaveMangaButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             throw new NotImplementedException();
         }
 
-        private void SaveMangaAsButton_OnClick(object sender, RoutedEventArgs e)
+        private void SaveMangaAsButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             throw new NotImplementedException();
         }
 
-        private async void OpenInWebBrowserButton_OnClick(object sender, RoutedEventArgs e)
+        private async void OpenInWebBrowserButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             await Launcher.LaunchUriAsync(MakoHelper.GetIllustrationWebUri(_viewModel.Current.IllustrationViewModel.Id));
         }
 
-        private void GenerateLinkToThisPageButton_OnClick(object sender, RoutedEventArgs e)
+        private void GenerateLinkToThisPageButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             if (App.AppSetting.DisplayTeachingTipWhenGeneratingAppLink)
             {
@@ -248,7 +252,7 @@ namespace Pixeval.Pages.IllustrationViewer
             App.AppSetting.DisplayTeachingTipWhenGeneratingAppLink = false;
         }
 
-        private void PlayGifButton_OnClick(object sender, RoutedEventArgs e)
+        private void PlayGifButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             var appBarButton = (AppBarButton) sender;
             var bitmap = (BitmapImage) _viewModel.Current.OriginalImageSource!;
@@ -301,7 +305,7 @@ namespace Pixeval.Pages.IllustrationViewer
 
         public Visibility CalculateNextImageButtonVisibility(int index)
         {
-            return index < _viewModel.Illustrations.Length - 1 ? Visibility.Visible : Visibility.Collapsed;
+            return index < _viewModel.ImageViewerPageViewModels.Length - 1 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public Visibility CalculatePrevImageButtonVisibility(int index)

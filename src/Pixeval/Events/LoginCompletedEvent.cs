@@ -11,11 +11,11 @@ namespace Pixeval.Events
     {
         public LoginCompletedEvent(LoginPage sender, Session session)
         {
-            Sender = sender;
+            Parameter = sender;
             Session = session;
         }
 
-        public object? Sender { get; }
+        public object? Parameter { get; }
 
         public Session Session { get; }
     }

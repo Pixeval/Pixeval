@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ using Pixeval.Util;
 
 namespace Pixeval.ViewModel
 {
-    public class IllustrationGridViewModel : ObservableObject
+    public class IllustrationGridViewModel : ObservableObject, IDisposable
     {
         public IFetchEngine<Illustration?>? FetchEngine { get; set; }
 
@@ -81,11 +82,6 @@ namespace Pixeval.ViewModel
             await Fill(itemLimit);
         }
 
-        public void Dispose()
-        {
-            DisposeCurrent();
-        }
-
         public void SetSortDescription(SortDescription description)
         {
             if (!IllustrationsView.SortDescriptions.Any())
@@ -110,6 +106,17 @@ namespace Pixeval.ViewModel
             }
             SelectedIllustrations.Clear();
             IllustrationsView.Clear();
+        }
+
+        public void Dispose()
+        {
+            DisposeCurrent();
+            GC.SuppressFinalize(this);
+        }
+
+        ~IllustrationGridViewModel()
+        {
+            Dispose();
         }
     }
 }

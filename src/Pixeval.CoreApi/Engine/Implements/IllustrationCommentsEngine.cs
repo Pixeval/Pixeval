@@ -15,7 +15,7 @@ namespace Pixeval.CoreApi.Engine.Implements
             _illustId = illustId;
         }
 
-        public override IAsyncEnumerator<IllustrationCommentsResponse.Comment> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
+        public override IAsyncEnumerator<IllustrationCommentsResponse.Comment> GetAsyncEnumerator(CancellationToken cancellationToken = new())
         {
             return RecursivePixivAsyncEnumerators.Comment<IllustrationCommentsEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
                 engine => $"/v3/illust/comments?illust_id={engine._illustId}")!;

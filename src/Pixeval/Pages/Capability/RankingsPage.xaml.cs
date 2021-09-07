@@ -53,7 +53,6 @@ namespace Pixeval.Pages.Capability
 
         private async Task ChangeSource()
         {
-            // TODO: Something wrong. Need fix.
             if (TryGetRankOption(RankOptionComboBox, out var rankOption) && TryGetDatetime(RankDateTimeCalendarDatePicker, out var dateTime))
             {
                 await IllustrationContainer.ViewModel.ResetAndFill(App.MakoClient.Ranking(rankOption, dateTime));
