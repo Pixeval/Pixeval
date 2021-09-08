@@ -111,12 +111,6 @@ namespace Pixeval.ViewModel
         public void Dispose()
         {
             DisposeCurrent();
-            GC.SuppressFinalize(this);
-        }
-
-        ~IllustrationGridViewModel()
-        {
-            Dispose();
         }
     }
 }
