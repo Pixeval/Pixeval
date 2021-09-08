@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 using PInvoke;
+using Pixeval.Events;
 using Pixeval.Pages.Misc;
 using Pixeval.Util.UI;
 
@@ -41,7 +42,7 @@ namespace Pixeval
 
         private void MainWindow_OnClosed(object sender, WindowEventArgs args)
         {
-            App.ExitWithPushedNotification();
+            EventChannel.Default.Publish(new ApplicationExitingEvent());
         }
 
         private void PixevalAppRootFrame_OnNavigationFailed(object sender, NavigationFailedEventArgs e)

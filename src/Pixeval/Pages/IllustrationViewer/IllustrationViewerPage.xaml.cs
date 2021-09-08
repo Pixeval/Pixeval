@@ -193,7 +193,7 @@ namespace Pixeval.Pages.IllustrationViewer
             App.AppWindowRootFrame.BackStack.RemoveAll(entry => entry.SourcePageType == typeof(IllustrationViewerPage));
             if (App.AppWindowRootFrame.CanGoBack)
             {
-                App.AppWindowRootFrame.GoBack();
+                App.AppWindowRootFrame.GoBack(new DrillInNavigationTransitionInfo());
             }
         }
 

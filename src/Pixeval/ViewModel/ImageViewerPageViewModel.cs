@@ -151,8 +151,11 @@ namespace Pixeval.ViewModel
 
         private void DisposeInternal()
         {
-            (OriginalImageSource as SoftwareBitmapSource)?.Dispose();
             OriginalImageStream?.Dispose();
+            if (LoadingOriginalSourceTask?.IsCompletedSuccessfully is true)
+            {
+                (OriginalImageSource as SoftwareBitmapSource)?.Dispose();
+            }
         }
 
         public void Dispose()
