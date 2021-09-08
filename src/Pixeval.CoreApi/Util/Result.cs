@@ -38,8 +38,8 @@ namespace Pixeval.CoreApi.Util
             return this switch
             {
                 Success (var content) => content,
-                Failure (var cause)   => throw cause ?? new Exception("This is an exception thrown by Result.Failure"),
-                _                     => throw new Exception("Invalid derived type of Result<T>")
+                Failure (var cause) => throw cause ?? new Exception("This is an exception thrown by Result.Failure"),
+                _ => throw new Exception("Invalid derived type of Result<T>")
             };
         }
 
@@ -59,9 +59,9 @@ namespace Pixeval.CoreApi.Util
         {
             return this switch
             {
-                Success(var content) => Result<R>.OfSuccess(selector(content)),
-                Failure(var cause)   => Result<R>.OfFailure(cause),
-                _                    => throw new Exception("Invalid derived type of Result<T>")
+                Success (var content) => Result<R>.OfSuccess(selector(content)),
+                Failure (var cause) => Result<R>.OfFailure(cause),
+                _ => throw new Exception("Invalid derived type of Result<T>")
             };
         }
 

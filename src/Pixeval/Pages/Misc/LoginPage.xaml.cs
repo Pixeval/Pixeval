@@ -65,7 +65,7 @@ namespace Pixeval.Pages.Misc
                 }
                 else
                 {
-                    await App.ExitWithPushedNotification();
+                    App.ExitWithPushedNotification();
                 }
             }
         }
@@ -81,7 +81,8 @@ namespace Pixeval.Pages.Misc
                 {
                     await Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/p/?LinkId=2124703"));
                 }
-                await App.ExitWithPushedNotification();
+
+                App.ExitWithPushedNotification();
             }
         }
     }

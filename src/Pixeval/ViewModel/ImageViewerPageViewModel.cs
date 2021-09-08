@@ -1,10 +1,13 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Net;
+using Pixeval.CoreApi.Util;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
 using Pixeval.Util.IO;
@@ -21,6 +24,8 @@ namespace Pixeval.ViewModel
             ImageLoadingCancellationHandle = new CancellationHandle();
             _ = LoadImage();
         }
+
+        private bool _disposed;
 
         private double _loadingProgress;
 
@@ -62,7 +67,7 @@ namespace Pixeval.ViewModel
         {
             _ = IllustrationViewModel.LoadThumbnailIfRequired().ContinueWith(_ =>
             {
-                OriginalImageSource = IllustrationViewModel.ThumbnailSource;
+                OriginalImageSource ??= IllustrationViewModel.ThumbnailSource;
             }, TaskScheduler.FromCurrentSynchronizationContext());
             await LoadOriginalImage();
         }
@@ -70,6 +75,16 @@ namespace Pixeval.ViewModel
         public async Task LoadOriginalImage()
         {
             var imageClient = App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi);
+            var cacheKey = IllustrationViewModel.Illustration.GetIllustrationOriginalImageCacheKey();
+            if (await App.Cache.TryGetAsync<IRandomAccessStream>(cacheKey) is { } stream)
+            {
+                OriginalImageStream = stream;
+                OriginalImageSource = IllustrationViewModel.Illustration.IsUgoira()
+                    ? await OriginalImageStream.GetBitmapImageSourceAsync()
+                    : await stream.GetSoftwareBitmapSourceAsync(true);
+                LoadingOriginalSourceTask = Task.CompletedTask;
+                return;
+            }
             if (IllustrationViewModel.Illustration.IsUgoira())
             {
                 var ugoiraMetadata = await App.MakoClient.GetUgoiraMetadata(IllustrationViewModel.Id);
@@ -77,10 +92,16 @@ namespace Pixeval.ViewModel
                 {
                     var task = imageClient.DownloadAsStreamAsync(url, new Progress<double>(d => LoadingProgress = d), ImageLoadingCancellationHandle);
                     LoadingOriginalSourceTask = task;
-                    var zipStream = (await task).GetOrThrow();
-                    OriginalImageStream = (await IOHelper.GetGifStreamResultAsync(zipStream, ugoiraMetadata)).GetOrThrow();
-                    OriginalImageSource = await OriginalImageStream.GetBitmapImageSourceAsync();
-                    return;
+                    switch (await task)
+                    {
+                        case Result<Stream>.Success(var zipStream):
+                            OriginalImageStream = (await IOHelper.GetGifStreamResultAsync(zipStream, ugoiraMetadata)).GetOrThrow();
+                            break;
+                        case Result<Stream>.Failure(OperationCanceledException):
+                            return;
+                    }
+                    
+                    OriginalImageSource = await OriginalImageStream!.GetBitmapImageSourceAsync();
                 }
             }
 
@@ -88,8 +109,21 @@ namespace Pixeval.ViewModel
             {
                 var task = imageClient.DownloadAsIRandomAccessStreamAsync(src, new Progress<double>(d => LoadingProgress = d), ImageLoadingCancellationHandle);
                 LoadingOriginalSourceTask = task;
-                OriginalImageStream = (await task).GetOrThrow();
-                OriginalImageSource = await OriginalImageStream.GetBitmapImageSourceAsync();
+
+                switch (await task)
+                {
+                    case Result<IRandomAccessStream>.Success (var s):
+                        OriginalImageStream = s;
+                        break;
+                    case Result<IRandomAccessStream>.Failure (OperationCanceledException):
+                        return;
+                }
+                OriginalImageSource = await OriginalImageStream!.GetSoftwareBitmapSourceAsync(false);
+            }
+
+            if (OriginalImageStream is not null && !_disposed)
+            {
+                await App.Cache.TryAddAsync(cacheKey, OriginalImageStream!, TimeSpan.FromDays(1));
                 return;
             }
 
@@ -115,15 +149,22 @@ namespace Pixeval.ViewModel
 
         public Visibility GetLoadingMaskVisibility(Task? loadingTask) => !(loadingTask?.IsCompletedSuccessfully ?? false) ? Visibility.Visible : Visibility.Collapsed;
 
+        private void DisposeInternal()
+        {
+            (OriginalImageSource as SoftwareBitmapSource)?.Dispose();
+            OriginalImageStream?.Dispose();
+        }
+
         public void Dispose()
         {
-            OriginalImageStream?.Dispose();
+            _disposed = true;
+            DisposeInternal();
             GC.SuppressFinalize(this);
         }
 
         ~ImageViewerPageViewModel()
         {
-            OriginalImageStream?.Dispose();
+            Dispose();
         }
     }
 }

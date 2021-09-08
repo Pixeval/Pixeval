@@ -87,7 +87,7 @@ namespace Pixeval.ViewModel
         /// A collection of multiple <see cref="IllustrationViewModel"/>, if the illustration is a manga
         /// that consist of multiple works
         /// </returns>
-        public IEnumerable<IllustrationViewModel> GetMangaIllustrations()
+        public IEnumerable<IllustrationViewModel> GetMangaIllustrationViewModels()
         {
             if (Illustration.PageCount <= 1)
             {
@@ -112,7 +112,7 @@ namespace Pixeval.ViewModel
             }
 
             LoadingThumbnail = true;
-            if (App.AppSetting.UseFileCache && await App.Cache.TryGetAsync<IRandomAccessStream>(Illustration.GetIllustrationCacheKey()) is { } stream)
+            if (App.AppSetting.UseFileCache && await App.Cache.TryGetAsync<IRandomAccessStream>(Illustration.GetIllustrationThumbnailCacheKey()) is { } stream)
             {
                 ThumbnailSource = await stream.GetSoftwareBitmapSourceAsync(true);
             }
@@ -120,7 +120,7 @@ namespace Pixeval.ViewModel
             {
                 using (ras)
                 {
-                    await App.Cache.TryAddAsync(Illustration.GetIllustrationCacheKey(), ras!, TimeSpan.FromDays(1));
+                    await App.Cache.TryAddAsync(Illustration.GetIllustrationThumbnailCacheKey(), ras!, TimeSpan.FromDays(1));
                     ThumbnailSource = await ras!.GetSoftwareBitmapSourceAsync(false);
                 }
             }

@@ -86,7 +86,7 @@ namespace Pixeval
                 }
                 else
                 {
-                    await ExitWithPushedNotification();
+                    ExitWithPushedNotification();
                 }
             };
 
@@ -96,7 +96,7 @@ namespace Pixeval
                 Debugger.Break();
 #endif
                 await MessageDialogBuilder.CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
-                await ExitWithPushedNotification();
+                ExitWithPushedNotification();
             }
         }
 
@@ -115,10 +115,10 @@ namespace Pixeval
         /// to the <see cref="EventChannel"/>
         /// </summary>
         /// <returns></returns>
-        public static async Task ExitWithPushedNotification()
+        public static void ExitWithPushedNotification()
         {
             EventChannel.Default.Publish(new ApplicationExitingEvent());
-            await Task.Delay(200); // well...just wait a second to let those subscribers handle the event
+            Current.Exit();
         }
     }
 }

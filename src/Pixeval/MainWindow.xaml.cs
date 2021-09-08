@@ -39,9 +39,9 @@ namespace Pixeval
             PixevalAppRootFrame.Navigate(typeof(LoginPage));
         }
 
-        private async void MainWindow_OnClosed(object sender, WindowEventArgs args)
+        private void MainWindow_OnClosed(object sender, WindowEventArgs args)
         {
-            await App.ExitWithPushedNotification();
+            App.ExitWithPushedNotification();
         }
 
         private void PixevalAppRootFrame_OnNavigationFailed(object sender, NavigationFailedEventArgs e)

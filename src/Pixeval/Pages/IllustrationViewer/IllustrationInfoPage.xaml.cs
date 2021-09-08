@@ -54,7 +54,7 @@ namespace Pixeval.Pages.IllustrationViewer
             return _viewModel.Current.IllustrationViewModel.Illustration.Tags ?? Enumerable.Empty<Tag>();
         }
 
-        private static string GetMakoTagTranslatedNameText(string? name, string? fallback)
+        public static string GetMakoTagTranslatedNameText(string? name, string? fallback)
         {
             return (name.IsNullOrEmpty() ? fallback : name) ?? string.Empty;
         }

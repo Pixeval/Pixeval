@@ -36,6 +36,9 @@
                                   LabelPosition="Collapsed"
                                   Tapped="BackButton_OnTapped" />
                 </CommandBar.Content>
+                <AppBarToggleButton x:Uid="/IllustrationViewerPage/IllustrationInfoAndCommentsButton"
+                                    Icon="{ui:FontIcon Glyph=InfoE946}"
+                                    IsChecked="{x:Bind IllustrationInfoAndCommentsSplitView.IsPaneOpen, Mode=TwoWay}" />
                 <AppBarButton x:Uid="/IllustrationViewerPage/PlayGifButton"
                               Width="32"
                               LabelPosition="Collapsed"

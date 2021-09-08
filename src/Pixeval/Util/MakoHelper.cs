@@ -44,9 +44,13 @@ namespace Pixeval.Util
             return illustration.ImageUrls?.Original ?? illustration.MetaSinglePage?.OriginalImageUrl;
         }
 
-        public static string GetIllustrationCacheKey(this Illustration illustration)
+        public static string GetIllustrationThumbnailCacheKey(this Illustration illustration)
         {
-            return illustration.GetOriginalUrl() ?? illustration.Id.ToString();
+            return $"thumbnail-{illustration.GetOriginalUrl() ?? illustration.Id.ToString()}";
+        }
+        public static string GetIllustrationOriginalImageCacheKey(this Illustration illustration)
+        {
+            return $"original-{illustration.GetOriginalUrl() ?? illustration.Id.ToString()}";
         }
 
         public static SortDescription? GetSortDescriptionForIllustration(IllustrationSortOption sortOption)

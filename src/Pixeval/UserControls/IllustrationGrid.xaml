@@ -32,7 +32,8 @@
                 <DataTemplate x:DataType="viewModel:IllustrationViewModel">
                     <GridViewItem x:Name="IllustrationThumbnailContainerItem"
                                   EffectiveViewportChanged="IllustrationThumbnailContainerItem_OnEffectiveViewportChanged"
-                                  IsSelected="{x:Bind IsSelected, Mode=TwoWay}">
+                                  IsSelected="{x:Bind IsSelected, Mode=TwoWay}"
+                                  Tapped="IllustrationThumbnailContainerItem_OnTapped">
                         <Grid Height="250">
                             <Grid.Resources>
                                 <ExponentialEase x:Key="EasingFunction"
@@ -139,8 +140,7 @@
                                    HorizontalAlignment="Stretch"
                                    VerticalAlignment="Stretch"
                                    Source="{x:Bind ThumbnailSource, Mode=OneWay}"
-                                   Stretch="UniformToFill"
-                                   Tapped="Thumbnail_OnTapped">
+                                   Stretch="UniformToFill">
                                 <Image.RenderTransform>
                                     <ScaleTransform CenterX="{Binding ElementName=IllustrationThumbnailContainerItem, Path=ActualWidth, Mode=OneWay, Converter={StaticResource IllustrationGridItemContainerWidthCenterConverter}}" CenterY="125" />
                                 </Image.RenderTransform>

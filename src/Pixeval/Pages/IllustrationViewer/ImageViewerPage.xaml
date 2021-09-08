@@ -76,6 +76,17 @@
             </Image>
         </Grid>
         <!--  工具栏的识别区  -->
+        <Grid HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              Visibility="{x:Bind _viewModel.GetLoadingMaskVisibility(_viewModel.LoadingOriginalSourceTask), Mode=OneWay}">
+            <Rectangle Fill="{ThemeResource PixevalAppAcrylicBrush}" />
+            <ProgressRing Width="50"
+                          Height="50"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          IsIndeterminate="False"
+                          Value="{x:Bind _viewModel.LoadingProgress, Mode=OneWay}" />
+        </Grid>
         <Rectangle Width="400"
                    Height="100"
                    HorizontalAlignment="Center"
@@ -95,17 +106,6 @@
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
         </Rectangle>
-        <Grid HorizontalAlignment="Stretch"
-              VerticalAlignment="Stretch"
-              Visibility="{x:Bind _viewModel.GetLoadingMaskVisibility(_viewModel.LoadingOriginalSourceTask), Mode=OneWay}">
-            <Rectangle Fill="{ThemeResource PixevalAppAcrylicBrush}" />
-            <ProgressRing Width="50"
-                          Height="50"
-                          HorizontalAlignment="Center"
-                          VerticalAlignment="Center"
-                          IsIndeterminate="False"
-                          Value="{x:Bind _viewModel.LoadingProgress, Mode=OneWay}" />
-        </Grid>
         <Border x:Name="CommandBorder"
                 Margin="0,0,0,10"
                 HorizontalAlignment="Center"

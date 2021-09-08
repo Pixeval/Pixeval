@@ -46,6 +46,7 @@ namespace Pixeval.Util.IO
             var fileCache = new FileCache
             {
                 AutoExpire = true, 
+                // use TempState instead of LocalCache, we don't need to rely on the cached data
                 _baseDirectory = await ApplicationData.Current.TemporaryFolder.GetOrCreateFolderAsync(CacheFolderName)
             };
             await fileCache.LoadIndexAsync();

@@ -1,12 +1,9 @@
 ﻿using System.Linq;
-using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Events;
-using Pixeval.Pages;
 using Pixeval.Pages.IllustrationViewer;
-using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.ViewModel;
 
@@ -36,12 +33,12 @@ namespace Pixeval.UserControls
             await viewModel!.PostPublicBookmarkAsync();
         }
 
-        private void Thumbnail_OnTapped(object sender, TappedRoutedEventArgs e)
+        private void IllustrationThumbnailContainerItem_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             EventChannel.Default.Publish(new MainPageFrameSetConnectedAnimationTargetEvent(sender as UIElement));
 
             var viewModel = sender.GetDataContext<IllustrationViewModel>()
-                .GetMangaIllustrations()
+                .GetMangaIllustrationViewModels()
                 .ToArray();
 
             ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement) sender);

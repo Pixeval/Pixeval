@@ -174,9 +174,9 @@ namespace Pixeval
             return await AppLocalFolder.TryGetItemAsync(pathWithoutSlash) as StorageFolder;
         }
 
-        public static Task ClearTemporaryDirectory()
+        public static IAsyncAction ClearTemporaryDirectory()
         {
-            return ApplicationData.Current.TemporaryFolder.ClearDirectoryAsync();
+            return ApplicationData.Current.ClearAsync(ApplicationDataLocality.Temporary);
         }
 
         public static IAsyncOperation<StorageFile> CreateTemporaryFileWithRandomNameAsync(string? extension = null)

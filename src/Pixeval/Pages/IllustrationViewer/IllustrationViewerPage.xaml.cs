@@ -136,7 +136,7 @@ namespace Pixeval.Pages.IllustrationViewer
         private void NextIllustration()
         {
             var illustrationViewModel = (IllustrationViewModel) _viewModel.ContainerGridViewModel.IllustrationsView[_viewModel.IllustrationIndex + 1];
-            var viewModel = illustrationViewModel.GetMangaIllustrations().ToArray();
+            var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
             App.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationGrid, viewModel), new SlideNavigationTransitionInfo
             {
@@ -147,7 +147,7 @@ namespace Pixeval.Pages.IllustrationViewer
         private void PrevIllustration()
         {
             var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel.IllustrationsView[_viewModel.IllustrationIndex - 1];
-            var viewModel = illustrationViewModel.GetMangaIllustrations().ToArray();
+            var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
             App.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationGrid, viewModel), new SlideNavigationTransitionInfo
             {

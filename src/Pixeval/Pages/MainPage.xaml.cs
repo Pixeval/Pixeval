@@ -10,7 +10,6 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Events;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Misc;
-using Pixeval.UserControls;
 using Pixeval.Util.UI;
 using Pixeval.ViewModel;
 
