@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage.Streams;
-using Windows.System;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -12,7 +10,6 @@ using Pixeval.Util;
 using Pixeval.Util.Generic;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
-using StandardUICommand = Microsoft.UI.Xaml.Input.StandardUICommand;
 
 namespace Pixeval.ViewModel
 {
@@ -51,18 +48,15 @@ namespace Pixeval.ViewModel
             await UIHelper.SetClipboardContentAsync(async package =>
             {
                 package.RequestedOperation = DataPackageOperation.Copy;
-                if (IsUgoira)
-                {
-                    var file = await AppContext.CreateTemporaryFileWithRandomNameAsync("gif");
-                    await Current.OriginalImageStream!.SaveToFile(file);
-                    package.SetStorageItems(Enumerates.ArrayOf(file), true);
-                }
-                else
-                {
-                    Current.OriginalImageStream!.Seek(0);
-                    package.SetBitmap(RandomAccessStreamReference.CreateFromStream(Current.OriginalImageStream));
-                }
+                var file = await AppContext.CreateTemporaryFileWithNameAsync(GetCopyContentFileName(), IsUgoira ? "gif" : "png");
+                await Current.OriginalImageStream!.SaveToFile(file);
+                package.SetStorageItems(Enumerates.ArrayOf(file), true);
             });
+
+            string GetCopyContentFileName()
+            {
+                return $"{IllustrationId}{(IsUgoira ? string.Empty : IsManga ? $"_p{CurrentIndex}" : string.Empty)}";
+            }
         }
 
         private void CopyCommandOnCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
@@ -105,7 +99,7 @@ namespace Pixeval.ViewModel
         // The reason why we don't put UserProfileImageSource into IllustrationViewModel
         // is because the whole array of Illustrations is just representing the same 
         // illustration's different manga pages, so all of them have the same illustrator
-        // if the UserProfileImageSource is in IllustrationViewModel and the illustration
+        // If the UserProfileImageSource is in IllustrationViewModel and the illustration
         // itself is a manga then all of the IllustrationViewModel in Illustrations will
         // request the same user profile image which is pointless and will (inevitably) causing
         // the waste of system resource
@@ -114,6 +108,8 @@ namespace Pixeval.ViewModel
             get => _userProfileImageSource;
             set => SetProperty(ref _userProfileImageSource, value);
         }
+
+        public string IllustrationId => FirstImageViewerPageViewModel.Illustration.Id.ToString();
 
         public string? IllustratorName => FirstImageViewerPageViewModel.Illustration.User?.Name;
 

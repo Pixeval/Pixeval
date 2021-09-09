@@ -129,37 +129,6 @@ namespace Pixeval.Util.IO
             }));
         }
 
-        public static async Task<Result<IRandomAccessStream>> GetGifStreamResultAsync(Stream zipStream, UgoiraMetadataResponse ugoiraMetadataResponse)
-        {
-            var entryStreams = await ReadZipArchiveEntries(zipStream);
-            var ms = new MemoryStream();
-            using var collection = new MagickImageCollection();
-            if (ugoiraMetadataResponse.UgoiraMetadataInfo?.Frames is { } fs)
-            {
-                foreach (var frame in fs)
-                {
-                    var (_, stream) = entryStreams.FirstOrDefault(e => e.filename == frame.File);
-                    await using (stream)
-                    {
-                        var image = new MagickImage(stream)
-                        {
-                            AnimationDelay = (int) frame.Delay / 10 // the frame.Delay is based on milliseconds where the AnimationDelay is based on one-hundredth seconds
-                        };
-                        collection.Add(image);
-                    }
-                }
-
-                var settings = new QuantizeSettings {Colors = 256};
-                collection.Quantize(settings);
-                collection.Optimize();
-                await collection.WriteAsync(ms, MagickFormat.Gif);
-                ms.Seek(0, SeekOrigin.Begin);
-                return Result<IRandomAccessStream>.OfSuccess(ms.AsRandomAccessStream());
-            }
-
-            return Result<IRandomAccessStream>.OfFailure(new ArgumentNullException(nameof(ugoiraMetadataResponse), @"ugoiraMetadataResponse.UgoiraMetadataInfo.Frames is null"));
-        }
-
         public static async Task SaveToFile(this IRandomAccessStream stream, StorageFile file)
         {
             stream.Seek(0);
@@ -167,65 +136,6 @@ namespace Pixeval.Util.IO
             await dataReader.LoadAsync((uint) stream.Size);
             await FileIO.WriteBufferAsync(file, dataReader.ReadBuffer((uint) stream.Size));
             dataReader.DetachStream();
-        }
-        public static async Task<SoftwareBitmapSource> GetSoftwareBitmapSourceAsync(this IRandomAccessStream randomAccessStream, bool disposeImageStream)
-        {
-            var decoder = await BitmapDecoder.CreateAsync(randomAccessStream);
-            var bitmap = await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
-
-            var source = new SoftwareBitmapSource();
-            await source.SetBitmapAsync(bitmap);
-            if (disposeImageStream)
-            {
-                randomAccessStream.Dispose();
-            }
-            return source;
-        }
-
-        public static async Task SaveBitmapAsync(this StorageFile storageFile, IRandomAccessStream imageStream, BitmapSavingOption bitmapSavingOption)
-        {
-            var decoder = await BitmapDecoder.CreateAsync(imageStream);
-            var bitmap = await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
-            using var stream = await storageFile.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.None);
-            var encoder = await BitmapEncoder.CreateAsync(bitmapSavingOption switch
-            {
-                BitmapSavingOption.Png => BitmapEncoder.PngEncoderId,
-                BitmapSavingOption.Heif => BitmapEncoder.HeifEncoderId,
-                BitmapSavingOption.Gif => BitmapEncoder.GifEncoderId,
-                BitmapSavingOption.Jpeg => BitmapEncoder.JpegEncoderId,
-                _ => throw new ArgumentOutOfRangeException(nameof(bitmapSavingOption), bitmapSavingOption, null)
-            }, imageStream);
-            encoder.SetSoftwareBitmap(bitmap);
-            encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Fant;
-            // todo
-            await encoder.FlushAsync();
-        }
-
-        public static async Task<BitmapImage> GetBitmapImageSourceAsync(this IRandomAccessStream randomAccessStream)
-        {
-            var bitmapImage = new BitmapImage();
-            await bitmapImage.SetSourceAsync(randomAccessStream);
-            return bitmapImage;
-        }
-
-        public static async Task<IRandomAccessStream> GetUnderlyingStreamAsync(this Microsoft.UI.Xaml.Controls.Image image, bool isGif = false)
-        {
-            var renderTargetBitmap = new RenderTargetBitmap();
-            await renderTargetBitmap.RenderAsync(image);
-            var buffer = await renderTargetBitmap.GetPixelsAsync();
-            var stream = new InMemoryRandomAccessStream();
-            var encoder = await BitmapEncoder.CreateAsync(isGif ? BitmapEncoder.GifEncoderId : BitmapEncoder.PngEncoderId, stream);
-            var dpi = User32.GetDpiForWindow(App.GetMainWindowHandle());
-            encoder.SetPixelData(
-                BitmapPixelFormat.Bgra8,
-                BitmapAlphaMode.Straight,
-                (uint)renderTargetBitmap.PixelWidth,
-                (uint)renderTargetBitmap.PixelHeight,
-                dpi,
-                dpi,
-                buffer.ToArray());
-            await encoder.FlushAsync();
-            return stream;
         }
     }
 }

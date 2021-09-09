@@ -113,7 +113,7 @@
                     <RadioButtons.ItemTemplate>
                         <DataTemplate x:DataType="pixeval:ApplicationTheme">
                             <RadioButton Checked="ApplicationThemeRadioButton_OnChecked"
-                                         Content="{x:Bind util:AttributeHelper.GetLocalizedResources((pixeval:ApplicationTheme))}"
+                                         Content="{x:Bind util:AttributeHelper.GetLocalizedResourceContent((pixeval:ApplicationTheme))}"
                                          DataContext="{x:Bind}" />
                         </DataTemplate>
                     </RadioButtons.ItemTemplate>

@@ -20,7 +20,7 @@
             <TextBlock Margin="0,15,0,0"
                        HorizontalAlignment="Center"
                        FontSize="10"
-                       Text="{x:Bind util:AttributeHelper.GetLocalizedResources(_viewModel.LoginPhase), Mode=OneWay}" />
+                       Text="{x:Bind util:AttributeHelper.GetLocalizedResourceContent(_viewModel.LoginPhase), Mode=OneWay}" />
         </StackPanel>
     </Grid>
 </Page>

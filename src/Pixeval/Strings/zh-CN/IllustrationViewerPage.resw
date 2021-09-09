@@ -159,6 +159,9 @@
   <data name="OpenInWebBrowserButton.Label" xml:space="preserve">
     <value>打开网页</value>
   </data>
+  <data name="PlayGifButton.Label" xml:space="preserve">
+    <value>播放/暂停GIF</value>
+  </data>
   <data name="PlayGifButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>播放/暂停GIF</value>
   </data>

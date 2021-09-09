@@ -39,9 +39,9 @@ namespace Pixeval.ViewModel
             var makoClient = App.MakoClient!;
             // get byte array of avatar
             // and set to the bitmap image
-            using var imageStream = (await makoClient.GetMakoHttpClient(MakoApiKind.ImageApi)
-                .DownloadAsIRandomAccessStreamAsync(makoClient.Session.AvatarUrl!)).GetOrThrow();
-            Avatar = await imageStream.GetBitmapImageSourceAsync();
+            Avatar = await (await makoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(makoClient.Session.AvatarUrl!))
+                .GetOrThrow()
+                .GetBitmapImageAsync(true);
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

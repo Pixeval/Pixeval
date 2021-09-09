@@ -17,14 +17,16 @@ namespace Pixeval.Util
     [AttributeUsage(AttributeTargets.Field)]
     public class LocalizedResource : Attribute
     {
-        public Type ResourceLoader { get; set; }
+        public Type ResourceLoader { get; }
 
-        public string Key { get; set; }
+        public string Key { get; }
+        public object? FormatKey { get; }
 
-        public LocalizedResource(Type resourceLoader, string key)
+        public LocalizedResource(Type resourceLoader, string key, object? formatKey = null)
         {
             ResourceLoader = resourceLoader;
             Key = key;
+            FormatKey = formatKey;
         }
     }
 
@@ -40,10 +42,20 @@ namespace Pixeval.Util
             return e.GetCustomAttribute<Metadata>()?.Key;
         }
 
-        public static string? GetLocalizedResources(this Enum e)
+        public static string? GetLocalizedResourceContent(this Enum e)
         {
             var attribute = e.GetCustomAttribute<LocalizedResource>();
-            return attribute?.ResourceLoader.GetField(attribute.Key)?.GetValue(null) as string;
+            return attribute?.GetLocalizedResourceContent();
+        }
+
+        public static LocalizedResource? GetLocalizedResource(this Enum e)
+        {
+            return e.GetCustomAttribute<LocalizedResource>();
+        }
+
+        public static string? GetLocalizedResourceContent(this LocalizedResource attribute)
+        {
+            return attribute.ResourceLoader.GetField(attribute.Key)?.GetValue(null) as string;
         }
     }
 }

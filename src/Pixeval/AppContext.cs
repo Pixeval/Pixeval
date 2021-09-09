@@ -181,7 +181,12 @@ namespace Pixeval
 
         public static IAsyncOperation<StorageFile> CreateTemporaryFileWithRandomNameAsync(string? extension = null)
         {
-            return ApplicationData.Current.TemporaryFolder.CreateFileAsync($"{Guid.NewGuid().ToString()}.{extension ?? string.Empty}", CreationCollisionOption.ReplaceExisting);
+            return ApplicationData.Current.TemporaryFolder.CreateFileAsync($"{Guid.NewGuid().ToString()}.{extension ?? "temp"}", CreationCollisionOption.ReplaceExisting);
+        }
+
+        public static IAsyncOperation<StorageFile> CreateTemporaryFileWithNameAsync(string name, string? extension = null)
+        {
+            return ApplicationData.Current.TemporaryFolder.CreateFileAsync($"{name}.{extension ?? "temp"}", CreationCollisionOption.ReplaceExisting);
         }
 
         public static Task ClearAppLocalFolderAsync()

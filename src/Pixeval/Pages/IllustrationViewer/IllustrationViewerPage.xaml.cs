@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System;
 using CommunityToolkit.WinUI.UI;
@@ -58,8 +59,8 @@ namespace Pixeval.Pages.IllustrationViewer
         private async void OnDataTransferManagerOnDataRequested(DataTransferManager _, DataRequestedEventArgs args)
         {
             // Remarks: all the illustrations in _viewModels only differ in different image sources
-            var vm = _viewModel.Current.IllustrationViewModel; 
-            if (_viewModel.Current.LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true })
+            var vm = _viewModel.Current.IllustrationViewModel;
+            if (_viewModel.Current.LoadingOriginalSourceTask is not {IsCompletedSuccessfully: true})
             {
                 return;
             }
@@ -68,15 +69,25 @@ namespace Pixeval.Pages.IllustrationViewer
             var deferral = request.GetDeferral();
             var props = request.Data.Properties;
             var webLink = MakoHelper.GetIllustrationWebUri(vm.Id);
+
             props.Title = IllustrationViewerPageResources.ShareTitleFormatted.Format(vm.Id);
             props.Description = vm.Illustration.Title;
             props.Square30x30Logo = RandomAccessStreamReference.CreateFromStream(await AppContext.GetAssetStreamAsync("Images/logo44x44.ico"));
+
             var thumbnailStream = await _viewModel.Current.IllustrationViewModel.GetThumbnail(ThumbnailUrlOption.SquareMedium);
-            var originalStream = await GetImage().GetUnderlyingStreamAsync(vm.Illustration.IsUgoira());
-            props.Thumbnail = RandomAccessStreamReference.CreateFromStream(thumbnailStream);
-            request.Data.SetBitmap(RandomAccessStreamReference.CreateFromStream(originalStream));
-            request.Data.SetWebLink(webLink);
-            request.Data.SetApplicationLink(AppContext.GenerateAppLinkToIllustration(vm.Id));
+            var file = await AppContext.CreateTemporaryFileWithRandomNameAsync(_viewModel.IsUgoira ? "gif" : "png");
+
+            if (_viewModel.Current.OriginalImageStream is { } stream)
+            {
+                await stream.SaveToFile(file);
+
+                props.Thumbnail = RandomAccessStreamReference.CreateFromStream(thumbnailStream);
+
+                request.Data.SetStorageItems(Enumerates.ArrayOf(file), true);
+                request.Data.SetWebLink(webLink);
+                request.Data.SetApplicationLink(AppContext.GenerateAppLinkToIllustration(vm.Id));
+            }
+
             deferral.Complete();
         }
 
@@ -265,11 +276,6 @@ namespace Pixeval.Pages.IllustrationViewer
         private NavigationViewTag? _illustrationInfo;
 
         private NavigationViewTag? _comments;
-
-        private Image GetImage()
-        {
-            return (Image) IllustrationImageShowcaseFrame.FindChild(typeof(Image))!;
-        }
 
         public Visibility CalculateNextImageButtonVisibility(int index)
         {

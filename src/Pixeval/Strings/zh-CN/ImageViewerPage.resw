@@ -126,6 +126,24 @@
   <data name="CannotFindImageSourceTitle" xml:space="preserve">
     <value>警告</value>
   </data>
+  <data name="CheckingCache" xml:space="preserve">
+    <value>正在检查缓存...</value>
+  </data>
+  <data name="DownloadingGifZipFormatted" xml:space="preserve">
+    <value>正在下载包含GIF的压缩包: {0}%</value>
+  </data>
+  <data name="DownloadingImageFormatted" xml:space="preserve">
+    <value>正在下载图片: {0}%</value>
+  </data>
+  <data name="LoadingFromCache" xml:space="preserve">
+    <value>正在从缓存中加载...</value>
+  </data>
+  <data name="LoadingImage" xml:space="preserve">
+    <value>正在解码图片...</value>
+  </data>
+  <data name="MergingGifFrames" xml:space="preserve">
+    <value>正在合成GIF...</value>
+  </data>
   <data name="SaveCurrentImageButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>保存</value>
   </data>

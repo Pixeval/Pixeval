@@ -12,14 +12,32 @@ using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 
-#if DEBUG
-using System.Diagnostics;
-#endif
-
 namespace Pixeval.ViewModel
 {
     public class ImageViewerPageViewModel : ObservableObject, IDisposable
     {
+        public enum LoadingPhase
+        {
+            [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.CheckingCache))]
+            CheckingCache,
+
+            [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.LoadingFromCache))]
+            LoadingFromCache,
+
+            [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.DownloadingGifZipFormatted), DownloadingGifZip)]
+            DownloadingGifZip,
+
+            [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.MergingGifFrames))]
+            MergingGifFrames,
+
+            [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.DownloadingImageFormatted), DownloadingImage)]
+            DownloadingImage,
+
+            [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.LoadingImage))]
+            LoadingImage
+        }
+
+
         public ImageViewerPageViewModel(IllustrationViewerPageViewModel illustrationViewerPageViewModel, IllustrationViewModel illustrationViewModel)
         {
             IllustrationViewerPageViewModel = illustrationViewerPageViewModel;
@@ -36,6 +54,14 @@ namespace Pixeval.ViewModel
         {
             get => _loadingProgress;
             set => SetProperty(ref _loadingProgress, value);
+        }
+
+        private string? _loadingText;
+
+        public string? LoadingText
+        {
+            get => _loadingText;
+            set => SetProperty(ref _loadingText, value);
         }
 
         public IRandomAccessStream? OriginalImageStream { get; private set; }
@@ -66,6 +92,15 @@ namespace Pixeval.ViewModel
             set => SetProperty(ref _originalImageSource, value);
         }
 
+        private void AdvancePhase(LoadingPhase phase)
+        {
+            LoadingText = phase.GetLocalizedResource() switch
+            {
+                {FormatKey: LoadingPhase} attr => attr.GetLocalizedResourceContent()?.Format((int) LoadingProgress),
+                var attr => attr?.GetLocalizedResourceContent()
+            };
+        }
+
         private async Task LoadImage()
         {
             _ = IllustrationViewModel.LoadThumbnailIfRequired().ContinueWith(_ =>
@@ -79,49 +114,61 @@ namespace Pixeval.ViewModel
         {
             var imageClient = App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi);
             var cacheKey = IllustrationViewModel.Illustration.GetIllustrationOriginalImageCacheKey();
+            AdvancePhase(LoadingPhase.CheckingCache);
             if (await App.Cache.TryGetAsync<IRandomAccessStream>(cacheKey) is { } stream)
             {
+                AdvancePhase(LoadingPhase.LoadingFromCache);
                 OriginalImageStream = stream;
                 OriginalImageSource = IllustrationViewModel.Illustration.IsUgoira()
-                    ? await OriginalImageStream.GetBitmapImageSourceAsync()
-                    : await stream.GetSoftwareBitmapSourceAsync(true);
+                    ? await OriginalImageStream.GetBitmapImageAsync(false)
+                    : await stream.EncodeSoftwareBitmapSourceAsync(false);
                 LoadingOriginalSourceTask = Task.CompletedTask;
-                return;
             }
-            if (IllustrationViewModel.Illustration.IsUgoira())
+            else if (IllustrationViewModel.IsUgoira)
             {
                 var ugoiraMetadata = await App.MakoClient.GetUgoiraMetadata(IllustrationViewModel.Id);
                 if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Medium is { } url)
                 {
-                    var task = imageClient.DownloadAsStreamAsync(url, new Progress<double>(d => LoadingProgress = d), ImageLoadingCancellationHandle);
-                    LoadingOriginalSourceTask = task;
-                    switch (await task)
+                    AdvancePhase(LoadingPhase.DownloadingGifZip);
+                    switch (await imageClient.DownloadAsStreamAsync(url, new Progress<double>(d =>
+                    {
+                        LoadingProgress = d;
+                        AdvancePhase(LoadingPhase.DownloadingGifZip);
+                    }), ImageLoadingCancellationHandle))
                     {
                         case Result<Stream>.Success(var zipStream):
-                            OriginalImageStream = (await IOHelper.GetGifStreamResultAsync(zipStream, ugoiraMetadata)).GetOrThrow();
+                            AdvancePhase(LoadingPhase.MergingGifFrames);
+                            OriginalImageStream = await IOHelper.GetGifStreamFromZipStreamAsync(zipStream, ugoiraMetadata);
                             break;
                         case Result<Stream>.Failure(OperationCanceledException):
                             return;
                     }
-                    
-                    OriginalImageSource = await OriginalImageStream!.GetBitmapImageSourceAsync();
+
+                    AdvancePhase(LoadingPhase.LoadingImage);
+                    OriginalImageSource = await OriginalImageStream!.GetBitmapImageAsync(false);
+                    LoadingOriginalSourceTask = Task.CompletedTask;
                 }
             }
-
-            if (IllustrationViewModel.OriginalSourceUrl is { } src)
+            else if (IllustrationViewModel.OriginalSourceUrl is { } src)
             {
-                var task = imageClient.DownloadAsIRandomAccessStreamAsync(src, new Progress<double>(d => LoadingProgress = d), ImageLoadingCancellationHandle);
-                LoadingOriginalSourceTask = task;
-
-                switch (await task)
+                AdvancePhase(LoadingPhase.DownloadingImage);
+                switch (await imageClient.DownloadAsIRandomAccessStreamAsync(src, new Progress<double>(d =>
+                {
+                    LoadingProgress = d;
+                    AdvancePhase(LoadingPhase.DownloadingImage);
+                }), ImageLoadingCancellationHandle))
                 {
                     case Result<IRandomAccessStream>.Success (var s):
                         OriginalImageStream = s;
                         break;
                     case Result<IRandomAccessStream>.Failure (OperationCanceledException):
+                        // TODO add load failed image
                         return;
                 }
-                OriginalImageSource = await OriginalImageStream!.GetSoftwareBitmapSourceAsync(false);
+
+                AdvancePhase(LoadingPhase.LoadingImage);
+                OriginalImageSource = await OriginalImageStream!.EncodeSoftwareBitmapSourceAsync(false);
+                LoadingOriginalSourceTask = Task.CompletedTask;
             }
 
             if (OriginalImageStream is not null && !_disposed)

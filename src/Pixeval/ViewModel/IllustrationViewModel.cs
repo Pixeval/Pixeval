@@ -75,6 +75,8 @@ namespace Pixeval.ViewModel
             LoadingThumbnailCancellationHandle = new CancellationHandle();
         }
 
+        public bool IsUgoira => Illustration.IsUgoira();
+
         public event EventHandler<IllustrationViewModel>? OnIsSelectedChanged;
 
         /// <summary>

@@ -40,14 +40,9 @@
                                     Icon="{ui:FontIcon Glyph=InfoE946}"
                                     IsChecked="{x:Bind IllustrationInfoAndCommentsSplitView.IsPaneOpen, Mode=TwoWay}" />
                 <AppBarButton x:Uid="/IllustrationViewerPage/PlayGifButton"
-                              Width="32"
-                              LabelPosition="Collapsed"
+                              Icon="{ui:FontIcon Glyph=StopE71A}"
                               Tapped="PlayGifButton_OnTapped"
-                              Visibility="{x:Bind _viewModel.IsUgoira}">
-                    <AppBarButton.Icon>
-                        <SymbolIcon Symbol="Stop" />
-                    </AppBarButton.Icon>
-                </AppBarButton>
+                              Visibility="{x:Bind _viewModel.IsUgoira}" />
                 <AppBarSeparator />
                 <AppBarButton x:Uid="/IllustrationViewerPage/CopyContentButton"
                               Command="{x:Bind _viewModel.CopyCommand}"

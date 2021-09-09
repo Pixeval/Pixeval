@@ -99,9 +99,6 @@ namespace Pixeval
 #elif RELEASE
             static async Task UncaughtExceptionHandler(Exception e)
             {
-
-                Debugger.Break();
-
                 await MessageDialogBuilder.CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
                 ExitWithPushedNotification();
 
