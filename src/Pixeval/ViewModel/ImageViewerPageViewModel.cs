@@ -13,6 +13,10 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 
+#if DEBUG
+using System.Diagnostics;
+#endif
+
 namespace Pixeval.ViewModel
 {
     public class ImageViewerPageViewModel : ObservableObject, IDisposable
@@ -151,7 +155,14 @@ namespace Pixeval.ViewModel
 
         private void DisposeInternal()
         {
+#if DEBUG
+            Trace.WriteLine($"Disposing ImageViewerPageViewModel for {IllustrationViewModel.Id}");
+#endif
             OriginalImageStream?.Dispose();
+            // Remarks:
+            // if the loading task is null or hasn't been completed yet, the 
+            // OriginalImageSource would be the thumbnail source, its disposal may 
+            // causing the IllustrationGrid shows weird result such as an empty content
             if (LoadingOriginalSourceTask?.IsCompletedSuccessfully is true)
             {
                 (OriginalImageSource as SoftwareBitmapSource)?.Dispose();

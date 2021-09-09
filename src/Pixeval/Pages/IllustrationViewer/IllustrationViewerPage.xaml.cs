@@ -290,6 +290,11 @@ namespace Pixeval.Pages.IllustrationViewer
             }
         }
 
+        private void OpenIllustrationInfoPanelCommand_OnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            IllustrationInfoAndCommentsSplitView.IsPaneOpen = true;
+        }
+
         #region Helper Functions
 
         // Tags for IllustrationInfoAndCommentsNavigationView

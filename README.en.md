@@ -48,8 +48,8 @@ For more information, see [main page](https://sora.ink/pixeval/)
 3. Build and run
 
 ### Project Structure
-1. The *Pixeval* project contains the most relevant codes.
-2. The *Pixeval (Packaged)* wraps the original project into an installation package
+1. The *Pixeval* project contains the most relevant codes and the packaging files.
+2. The *Pixeval.CoreApi* contains the API endpoints that are required by the project.
 3. The *Pixeval.LoginProxy* contains the codes for login and the IPC
 4. The *Pixeval.SourceGen* contains the codes that automatically generates classes from the localization resource files
 

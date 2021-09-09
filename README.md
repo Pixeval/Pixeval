@@ -50,13 +50,13 @@
 #### 开发
 
 1. 克隆本项目
-2. 将 Pixeval (Project) 设置为启动项目
+2. 将 Pixeval 设置为启动项目
 3. 构建并运行
 
 #### 项目结构
 
-1. Pixeval 项目包含了项目本身的逻辑以及布局代码
-2. Pixeval (Packaged) 将原有项目包装进一个安装包
+1. Pixeval 项目包含了项目本身的逻辑，布局代码，以及打包相关的文件
+2. Pixeval.CoreApi 包含了项目需要的Pixiv API
 3. Pixeval.LoginProxy 包含了Pixiv登录以及IPC相关的代码
 4. Pixeval.SourceGen 包含了从本地化文件自动生成对应C#类的代码
 
