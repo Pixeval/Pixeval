@@ -90,14 +90,23 @@ namespace Pixeval
                 }
             };
 
+#if DEBUG
+            static Task UncaughtExceptionHandler(Exception e)
+            {
+                Debugger.Break();
+                return Task.CompletedTask;
+            }
+#elif RELEASE
             static async Task UncaughtExceptionHandler(Exception e)
             {
-#if DEBUG
+
                 Debugger.Break();
-#endif
+
                 await MessageDialogBuilder.CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
                 ExitWithPushedNotification();
+
             }
+#endif
         }
 
         protected override async void OnLaunched(LaunchActivatedEventArgs args)

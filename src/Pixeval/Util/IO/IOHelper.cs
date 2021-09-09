@@ -12,13 +12,17 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.Graphics.Imaging;
 using Windows.Security.Cryptography;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using CommunityToolkit.WinUI.Helpers;
 using ImageMagick;
+using Microsoft.UI.Xaml.Media.Imaging;
+using PInvoke;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.CoreApi.Util;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Util.IO
 {
@@ -163,6 +167,65 @@ namespace Pixeval.Util.IO
             await dataReader.LoadAsync((uint) stream.Size);
             await FileIO.WriteBufferAsync(file, dataReader.ReadBuffer((uint) stream.Size));
             dataReader.DetachStream();
+        }
+        public static async Task<SoftwareBitmapSource> GetSoftwareBitmapSourceAsync(this IRandomAccessStream randomAccessStream, bool disposeImageStream)
+        {
+            var decoder = await BitmapDecoder.CreateAsync(randomAccessStream);
+            var bitmap = await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
+
+            var source = new SoftwareBitmapSource();
+            await source.SetBitmapAsync(bitmap);
+            if (disposeImageStream)
+            {
+                randomAccessStream.Dispose();
+            }
+            return source;
+        }
+
+        public static async Task SaveBitmapAsync(this StorageFile storageFile, IRandomAccessStream imageStream, BitmapSavingOption bitmapSavingOption)
+        {
+            var decoder = await BitmapDecoder.CreateAsync(imageStream);
+            var bitmap = await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
+            using var stream = await storageFile.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.None);
+            var encoder = await BitmapEncoder.CreateAsync(bitmapSavingOption switch
+            {
+                BitmapSavingOption.Png => BitmapEncoder.PngEncoderId,
+                BitmapSavingOption.Heif => BitmapEncoder.HeifEncoderId,
+                BitmapSavingOption.Gif => BitmapEncoder.GifEncoderId,
+                BitmapSavingOption.Jpeg => BitmapEncoder.JpegEncoderId,
+                _ => throw new ArgumentOutOfRangeException(nameof(bitmapSavingOption), bitmapSavingOption, null)
+            }, imageStream);
+            encoder.SetSoftwareBitmap(bitmap);
+            encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Fant;
+            // todo
+            await encoder.FlushAsync();
+        }
+
+        public static async Task<BitmapImage> GetBitmapImageSourceAsync(this IRandomAccessStream randomAccessStream)
+        {
+            var bitmapImage = new BitmapImage();
+            await bitmapImage.SetSourceAsync(randomAccessStream);
+            return bitmapImage;
+        }
+
+        public static async Task<IRandomAccessStream> GetUnderlyingStreamAsync(this Microsoft.UI.Xaml.Controls.Image image, bool isGif = false)
+        {
+            var renderTargetBitmap = new RenderTargetBitmap();
+            await renderTargetBitmap.RenderAsync(image);
+            var buffer = await renderTargetBitmap.GetPixelsAsync();
+            var stream = new InMemoryRandomAccessStream();
+            var encoder = await BitmapEncoder.CreateAsync(isGif ? BitmapEncoder.GifEncoderId : BitmapEncoder.PngEncoderId, stream);
+            var dpi = User32.GetDpiForWindow(App.GetMainWindowHandle());
+            encoder.SetPixelData(
+                BitmapPixelFormat.Bgra8,
+                BitmapAlphaMode.Straight,
+                (uint)renderTargetBitmap.PixelWidth,
+                (uint)renderTargetBitmap.PixelHeight,
+                dpi,
+                dpi,
+                buffer.ToArray());
+            await encoder.FlushAsync();
+            return stream;
         }
     }
 }

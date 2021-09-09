@@ -1,10 +1,18 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage.Streams;
+using Windows.System;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.UserControls;
 using Pixeval.Util;
+using Pixeval.Util.Generic;
+using Pixeval.Util.IO;
+using Pixeval.Util.UI;
+using StandardUICommand = Microsoft.UI.Xaml.Input.StandardUICommand;
 
 namespace Pixeval.ViewModel
 {
@@ -14,6 +22,8 @@ namespace Pixeval.ViewModel
         /// The view model of the GridView that the <see cref="ImageViewerPageViewModels"/> comes from
         /// </summary>
         public IllustrationGridViewModel ContainerGridViewModel { get; }
+
+        public StandardUICommand CopyCommand { get; }
 
         /// <summary>
         /// The <see cref="IllustrationGrid"/> that owns <see cref="ContainerGridViewModel"/>
@@ -30,7 +40,34 @@ namespace Pixeval.ViewModel
             IllustrationGrid = gridView;
             ContainerGridViewModel = gridView.ViewModel;
             IllustrationViewModelInTheGridView = ContainerGridViewModel.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
+            CopyCommand = new StandardUICommand(StandardUICommandKind.Copy);
+            CopyCommand.CanExecuteRequested += CopyCommandOnCanExecuteRequested;
+            CopyCommand.ExecuteRequested += CopyCommandOnExecuteRequested;
             _ = LoadUserProfileImage();
+        }
+
+        private async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            await UIHelper.SetClipboardContentAsync(async package =>
+            {
+                package.RequestedOperation = DataPackageOperation.Copy;
+                if (IsUgoira)
+                {
+                    var file = await AppContext.CreateTemporaryFileWithRandomNameAsync("gif");
+                    await Current.OriginalImageStream!.SaveToFile(file);
+                    package.SetStorageItems(Enumerates.ArrayOf(file), true);
+                }
+                else
+                {
+                    Current.OriginalImageStream!.Seek(0);
+                    package.SetBitmap(RandomAccessStreamReference.CreateFromStream(Current.OriginalImageStream));
+                }
+            });
+        }
+
+        private void CopyCommandOnCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
+        {
+            args.CanExecute = Current.LoadingOriginalSourceTask?.IsCompletedSuccessfully ?? false;
         }
 
         public ImageViewerPageViewModel[] ImageViewerPageViewModels { get; }
@@ -90,6 +127,11 @@ namespace Pixeval.ViewModel
         /// The first <see cref="ImageViewerPageViewModel"/> among <see cref="ImageViewerPageViewModels"/>
         /// </summary>
         public IllustrationViewModel FirstImageViewerPageViewModel => ImageViewerPageViewModels[0].IllustrationViewModel;
+
+        public void UpdateCommandCanExecute()
+        {
+            CopyCommand.NotifyCanExecuteChanged();
+        }
 
         public ImageViewerPageViewModel Next()
         {

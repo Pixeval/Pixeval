@@ -50,7 +50,7 @@
                 </AppBarButton>
                 <AppBarSeparator />
                 <AppBarButton x:Uid="/IllustrationViewerPage/CopyContentButton"
-                              Command="{x:Bind _copyCommand}"
+                              Command="{x:Bind _viewModel.CopyCommand}"
                               Icon="{ui:FontIcon Glyph=CopyE8C8}" />
                 <AppBarButton x:Uid="/IllustrationViewerPage/SaveAsCurrentImageButton"
                               Icon="{ui:FontIcon Glyph=SaveAsE792}"

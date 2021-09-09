@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Streams;
@@ -27,25 +28,11 @@ namespace Pixeval.Pages.IllustrationViewer
     {
         private IllustrationViewerPageViewModel _viewModel = null!;
 
-        private readonly StandardUICommand _copyCommand = new(StandardUICommandKind.Copy)
-        {
-            KeyboardAccelerators =
-            {
-                new KeyboardAccelerator
-                {
-                    Key = VirtualKey.C,
-                    Modifiers = VirtualKeyModifiers.Control
-                }
-            }
-        };
-
         public IllustrationViewerPage()
         {
             InitializeComponent();
             var dataTransferManager = UIHelper.GetDataTransferManager();
             dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
-            _copyCommand.CanExecuteRequested += CopyCommandOnCanExecuteRequested;
-            _copyCommand.ExecuteRequested += CopyCommandOnExecuteRequested;
         }
 
         public override void Dispose(NavigatingCancelEventArgs e)
@@ -66,30 +53,6 @@ namespace Pixeval.Pages.IllustrationViewer
             IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), _viewModel.Current);
 
             EventChannel.Default.Publish(new MainPageFrameSetConnectedAnimationTargetEvent(_viewModel.IllustrationGrid.GetItemContainer(_viewModel.IllustrationViewModelInTheGridView)));
-        }
-
-        private async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-        {
-            await UIHelper.SetClipboardContentAsync(async package =>
-            {
-                package.RequestedOperation = DataPackageOperation.Copy;
-                if (_viewModel.IsUgoira)
-                {
-                    var file = await AppContext.CreateTemporaryFileWithRandomNameAsync("gif");
-                    await _viewModel.Current.OriginalImageStream!.SaveToFile(file);
-                    package.SetStorageItems(Enumerates.ArrayOf(file), true);
-                }
-                else
-                {
-                    _viewModel.Current.OriginalImageStream!.Seek(0);
-                    package.SetBitmap(RandomAccessStreamReference.CreateFromStream(await GetImage().GetUnderlyingStreamAsync()));
-                }
-            });
-        }
-
-        private void CopyCommandOnCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
-        {
-            args.CanExecute = _viewModel.Current.LoadingOriginalSourceTask?.IsCompletedSuccessfully ?? false;
         }
 
         private async void OnDataTransferManagerOnDataRequested(DataTransferManager _, DataRequestedEventArgs args)

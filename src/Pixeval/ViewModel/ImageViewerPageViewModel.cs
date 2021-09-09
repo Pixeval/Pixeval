@@ -11,7 +11,6 @@ using Pixeval.CoreApi.Util;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
 using Pixeval.Util.IO;
-using Pixeval.Util.UI;
 
 #if DEBUG
 using System.Diagnostics;
@@ -127,6 +126,7 @@ namespace Pixeval.ViewModel
 
             if (OriginalImageStream is not null && !_disposed)
             {
+                IllustrationViewerPageViewModel.UpdateCommandCanExecute();
                 await App.Cache.TryAddAsync(cacheKey, OriginalImageStream!, TimeSpan.FromDays(1));
                 return;
             }
@@ -155,9 +155,6 @@ namespace Pixeval.ViewModel
 
         private void DisposeInternal()
         {
-#if DEBUG
-            Trace.WriteLine($"Disposing ImageViewerPageViewModel for {IllustrationViewModel.Id}");
-#endif
             OriginalImageStream?.Dispose();
             // Remarks:
             // if the loading task is null or hasn't been completed yet, the 

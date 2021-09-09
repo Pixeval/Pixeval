@@ -12,54 +12,12 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
-using PInvoke;
 using Pixeval.CoreApi.Util;
 
 namespace Pixeval.Util.UI
 {
     public static partial class UIHelper
     {
-        public static async Task<SoftwareBitmapSource> GetSoftwareBitmapSourceAsync(this IRandomAccessStream randomAccessStream, bool disposeImageStream)
-        {
-            var decoder = await BitmapDecoder.CreateAsync(randomAccessStream);
-            var bitmap = await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
-
-            var source = new SoftwareBitmapSource();
-            await source.SetBitmapAsync(bitmap);
-            if (disposeImageStream)
-            {
-                randomAccessStream.Dispose();
-            }
-            return source;
-        }
-
-        public static async Task<BitmapImage> GetBitmapImageSourceAsync(this IRandomAccessStream randomAccessStream)
-        {
-            var bitmapImage = new BitmapImage();
-            await bitmapImage.SetSourceAsync(randomAccessStream);
-            return bitmapImage;
-        }
-
-        public static async Task<IRandomAccessStream> GetUnderlyingStreamAsync(this Image image, bool isGif = false)
-        {
-            var renderTargetBitmap = new RenderTargetBitmap();
-            await renderTargetBitmap.RenderAsync(image);
-            var buffer = await renderTargetBitmap.GetPixelsAsync();
-            var stream = new InMemoryRandomAccessStream();
-            var encoder = await BitmapEncoder.CreateAsync(isGif ? BitmapEncoder.GifEncoderId : BitmapEncoder.PngEncoderId, stream);
-            var dpi = User32.GetDpiForWindow(App.GetMainWindowHandle());
-            encoder.SetPixelData(
-                BitmapPixelFormat.Bgra8,
-                BitmapAlphaMode.Straight, 
-                (uint) renderTargetBitmap.PixelWidth,
-                (uint) renderTargetBitmap.PixelHeight,
-                dpi,
-                dpi,
-                buffer.ToArray());
-            await encoder.FlushAsync();
-            return stream;
-        }
-
         public static T GetDataContext<T>(this FrameworkElement element)
         {
             return (T) element.DataContext;
