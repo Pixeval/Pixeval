@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -12,6 +13,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
+using PInvoke;
 using Pixeval.CoreApi.Util;
 
 namespace Pixeval.Util.UI
@@ -162,6 +164,15 @@ namespace Pixeval.Util.UI
         public static Visibility Inverse(this Visibility visibility)
         {
             return visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        /// <summary>
+        /// Get the current screen size using User32 api
+        /// </summary>
+        /// <returns>Screen size</returns>
+        public static (int, int) GetScreenSize()
+        {
+            return (User32.GetSystemMetrics(User32.SystemMetric.SM_CXSCREEN), User32.GetSystemMetrics(User32.SystemMetric.SM_CYSCREEN));
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Drawing;
 using System.Threading.Tasks;
+using Windows.UI.ViewManagement;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -110,10 +112,25 @@ namespace Pixeval
         {
             await AppContext.WriteLogoIcoIfNotExist();
             Window = new MainWindow();
-            Window.SetWindowSize(800, 600);
+            var (width, height) = GetCalculatedWindowSize();
+            Window.SetWindowSize(width, height);
             Window.Activate();
             await AppContext.ClearTemporaryDirectory();
             Cache = await FileCache.CreateDefaultAsync();
+        }
+
+        /// <summary>
+        /// Calculate the window size by current resolution
+        /// </summary>
+        private (int, int) GetCalculatedWindowSize()
+        {
+            var (width, height) = UIHelper.GetScreenSize();
+            return width switch
+            {
+                >= 2560 when height >= 1440 => (1600, 900),
+                > 1600 when height > 900 => (1280, 720),
+                _ => (800, 600)
+            };
         }
 
         /// <summary>
