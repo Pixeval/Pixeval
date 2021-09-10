@@ -131,12 +131,7 @@ namespace Pixeval.Util.IO
         {
             var entryStreams = await ReadZipArchiveEntries(zipStream);
             var inMemoryRandomAccessStream = new InMemoryRandomAccessStream();
-            await WriteGifBitmapAsync(inMemoryRandomAccessStream, entryStreams.Select(s =>
-            {
-                var (_, content) = s;
-                content.Seek(0, SeekOrigin.Begin);
-                return content.AsRandomAccessStream();
-            }), (int) (ugoiraMetadataResponse.UgoiraMetadataInfo?.Frames?.FirstOrDefault()?.Delay ?? 0));
+            await WriteGifBitmapAsync(inMemoryRandomAccessStream, entryStreams.Select(s => s.content.AsRandomAccessStream()), (int) (ugoiraMetadataResponse.UgoiraMetadataInfo?.Frames?.FirstOrDefault()?.Delay ?? 0));
             return inMemoryRandomAccessStream;
         }
     }
