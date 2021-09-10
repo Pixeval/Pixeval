@@ -80,7 +80,7 @@ namespace Pixeval.Util.IO
                     return e.HResult switch
                     {
                         // Remarks: the GIF images are consist of multiple frames, some of them may be corrupted or having
-                        // a legal format and thus are incapable of being encoded in to the GIF file, such frames will raise
+                        // a illegal format and thus are incapable of being encoded in to the GIF file, such frames will raise
                         // a COMException indicating an unsuccessful HResult WIN_CODEC_ERR_COMPONENT_NOT_FOUND(0x88982F50),
                         // there is no way to fix this, so instead of try to repair the image, we just simply drop that frame
                         unchecked((int) 0x88982F50) or unchecked((int) 0x88982F81) => null!, // WIN_CODEC_ERR_COMPONENT_NOT_FOUND and WIN_CODEC_ERR_UNSUPPORTED_OPERATION 
