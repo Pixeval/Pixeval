@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Windows.Foundation;
+using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
@@ -152,6 +153,31 @@ namespace Pixeval.Pages.IllustrationViewer
             Zoom(e.GetCurrentPoint(null).Properties.MouseWheelDelta / 500d);
         }
 
+        private void ZoomInButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Zoom(0.5);
+        }
+
+        private void ZoomOutButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Zoom(-0.5);
+        }
+
+        private void BookmarkButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            _viewModel.SwitchBookmarkState();
+        }
+
+        private void ImageViewerPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            CommandBorderDropShadow.Receivers.Add(IllustrationOriginalImageContainer);
+        }
+
+        private void IllustrationInfoAndCommentsMenuFlyoutItem_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            _viewModel.IllustrationViewerPageViewModel.IsInfoPaneOpen = true;
+        }
+
         #region Helper Functions
 
         private readonly EasingFunctionBase _easingFunction = new ExponentialEase
@@ -207,25 +233,5 @@ namespace Pixeval.Pages.IllustrationViewer
         }
 
         #endregion
-
-        private void ZoomInButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            Zoom(0.5);
-        }
-
-        private void ZoomOutButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            Zoom(-0.5);
-        }
-
-        private void BookmarkButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            _viewModel.SwitchBookmarkState();
-        }
-
-        private void ImageViewerPage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            CommandBorderDropShadow.Receivers.Add(IllustrationOriginalImageContainer);
-        }
     }
 }                                                                                                                                                                                                                                                                                                                                                                                                                                               

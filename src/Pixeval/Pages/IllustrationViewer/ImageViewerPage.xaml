@@ -3,7 +3,6 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:core="using:Microsoft.Xaml.Interactions.Core"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                 xmlns:illustrationViewer="using:Pixeval.Pages.IllustrationViewer"
                  xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:ui="using:Pixeval.Util.UI"
@@ -70,6 +69,24 @@
                    RenderTransformOrigin="0.5,0.5"
                    Source="{x:Bind _viewModel.OriginalImageSource, Mode=OneWay}"
                    Stretch="Uniform">
+                <Image.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem x:Uid="/IllustrationViewerPage/IllustrationInfoAndCommentsMenuFlyoutItem"
+                                        Icon="{ui:FontIcon Glyph=InfoE946}"
+                                        Tapped="IllustrationInfoAndCommentsMenuFlyoutItem_OnTapped">
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Key="F12" />
+                            </MenuFlyoutItem.KeyboardAccelerators>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.PlayGifCommand}"
+                                        Visibility="{x:Bind _viewModel.IllustrationViewerPageViewModel.IsUgoira}" />
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.BookmarkCommand}" />
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem x:Uid="/IllustrationViewerPage/CopyContentMenuFlyoutItem"
+                                        Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.CopyCommand}" />
+                    </MenuFlyout>
+                </Image.ContextFlyout>
                 <Image.RenderTransform>
                     <CompositeTransform x:Name="IllustrationOriginalImageRenderTransform" />
                 </Image.RenderTransform>
@@ -141,8 +158,7 @@
                         OverflowButtonVisibility="Collapsed">
                 <AppBarButton x:Uid="/ImageViewerPage/BookmarkButton"
                               Width="50"
-                              Click="BookmarkButton_OnClick"
-                              Icon="{x:Bind illustrationViewer:IllustrationViewerPage.GetBookmarkButtonIcon(_viewModel.IllustrationViewerPageViewModel.FirstImageViewerPageViewModel.IsBookmarked), Mode=OneWay}" />
+                              Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.BookmarkCommand}" />
                 <AppBarButton x:Uid="/ImageViewerPage/ZoomInButton"
                               Width="50"
                               Click="ZoomInButton_OnClick">

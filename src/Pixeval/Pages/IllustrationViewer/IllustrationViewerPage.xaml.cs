@@ -226,23 +226,6 @@ namespace Pixeval.Pages.IllustrationViewer
             App.AppSetting.DisplayTeachingTipWhenGeneratingAppLink = false;
         }
 
-        private void PlayGifButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            var appBarButton = (AppBarButton) sender;
-            var bitmap = (BitmapImage) _viewModel.Current.OriginalImageSource!;
-            if (bitmap.IsPlaying)
-            {
-                bitmap.Stop();
-                appBarButton.Icon = new SymbolIcon(Symbol.Play);
-            }
-            else
-            {
-                bitmap.Play();
-                appBarButton.Icon = new SymbolIcon(Symbol.Stop);
-            }
-        }
-        
-
         private void IllustrationInfoAndCommentsNavigationView_OnBackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
         {
             IllustrationInfoAndCommentsSplitView.IsPaneOpen = false;
@@ -299,23 +282,6 @@ namespace Pixeval.Pages.IllustrationViewer
             return _viewModel.IllustrationIndex > 0 
                 ? CalculatePrevImageButtonVisibility(index).Inverse()
                 : Visibility.Collapsed;
-        }
-
-        public static IconElement GetBookmarkButtonIcon(bool isBookmarked)
-        {
-            var systemThemeFontFamily = new FontFamily("Segoe MDL2 Assets");
-            return isBookmarked
-                ? new FontIcon
-                {
-                    Glyph = "\xEB52", // HeartFill
-                    Foreground = new SolidColorBrush(Colors.Crimson),
-                    FontFamily = systemThemeFontFamily
-                }
-                : new FontIcon
-                {
-                    Glyph = "\xEB51", // Heart
-                    FontFamily = systemThemeFontFamily
-                };
         }
 
         public static string GetBookmarkButtonLabel(bool isBookmarked)
