@@ -188,7 +188,7 @@ namespace Pixeval.ViewModel
         /// </summary>
         public void SwitchBookmarkState()
         {
-            if (IllustrationViewerPageViewModel.FirstImageViewerPageViewModel.IsBookmarked)
+            if (IllustrationViewerPageViewModel.FirstIllustrationViewModel.IsBookmarked)
             {
                 IllustrationViewerPageViewModel.RemoveBookmarkAsync();
             }

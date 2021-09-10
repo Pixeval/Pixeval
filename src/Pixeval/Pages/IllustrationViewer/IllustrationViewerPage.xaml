@@ -8,7 +8,8 @@
                  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                  mc:Ignorable="d">
     <SplitView x:Name="IllustrationInfoAndCommentsSplitView"
-               DisplayMode="Overlay">
+               DisplayMode="Overlay"
+               IsPaneOpen="{x:Bind _viewModel.IsInfoPaneOpen, Mode=TwoWay}">
         <SplitView.Pane>
             <NavigationView BackRequested="IllustrationInfoAndCommentsNavigationView_OnBackRequested"
                             IsBackEnabled="True"
@@ -38,15 +39,17 @@
                 </CommandBar.Content>
                 <AppBarToggleButton x:Uid="/IllustrationViewerPage/IllustrationInfoAndCommentsButton"
                                     Icon="{ui:FontIcon Glyph=InfoE946}"
-                                    IsChecked="{x:Bind IllustrationInfoAndCommentsSplitView.IsPaneOpen, Mode=TwoWay}" />
+                                    IsChecked="{x:Bind _viewModel.IsInfoPaneOpen, Mode=TwoWay}">
+                    <AppBarToggleButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="F12" />
+                    </AppBarToggleButton.KeyboardAccelerators>
+                </AppBarToggleButton>
                 <AppBarButton x:Uid="/IllustrationViewerPage/PlayGifButton"
-                              Icon="{ui:FontIcon Glyph=StopE71A}"
-                              Tapped="PlayGifButton_OnTapped"
+                              Command="{x:Bind _viewModel.PlayGifCommand}"
                               Visibility="{x:Bind _viewModel.IsUgoira}" />
                 <AppBarSeparator />
                 <AppBarButton x:Uid="/IllustrationViewerPage/CopyContentButton"
-                              Command="{x:Bind _viewModel.CopyCommand}"
-                              Icon="{ui:FontIcon Glyph=CopyE8C8}" />
+                              Command="{x:Bind _viewModel.CopyCommand}" />
                 <AppBarButton x:Uid="/IllustrationViewerPage/SaveAsCurrentImageButton"
                               Icon="{ui:FontIcon Glyph=SaveAsE792}"
                               Tapped="SaveAsCurrentImageButton_OnTapped" />
