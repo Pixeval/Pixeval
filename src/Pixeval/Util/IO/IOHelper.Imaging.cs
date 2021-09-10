@@ -67,7 +67,27 @@ namespace Pixeval.Util.IO
                 ["/grctlext/Delay"] = new(delayInMilliseconds / 10, PropertyType.UInt16)
             });
             var randomAccessStreams = frames as IRandomAccessStream[] ?? frames.ToArray();
-            var frameSoftwareBitmaps = await Task.WhenAll(randomAccessStreams.Traverse(f => f.Seek(0)).Select(GetSoftwareBitmapFromStreamAsync));
+            var frameSoftwareBitmaps = (await Task.WhenAll(randomAccessStreams.Traverse(f => f.Seek(0)).Select(async stream =>
+            {
+                try
+                {
+                    // Remarks: the await keyword here is vital, the exception inside a task can be caught only if you await it
+                    // otherwise it will be caught by the TaskScheduler.UnobservedTaskException
+                    return await GetSoftwareBitmapFromStreamAsync(stream);
+                }
+                catch (Exception e)
+                {
+                    return e.HResult switch
+                    {
+                        // Remarks: the GIF images are consist of multiple frames, some of them may be corrupted or having
+                        // a legal format and thus are incapable of being encoded in to the GIF file, such frames will raise
+                        // a COMException indicating an unsuccessful HResult WIN_CODEC_ERR_COMPONENT_NOT_FOUND(0x88982F50),
+                        // there is no way to fix this, so instead of try to repair the image, we just simply drop that frame
+                        unchecked((int) 0x88982F50) or unchecked((int) 0x88982F81) => null!, // WIN_CODEC_ERR_COMPONENT_NOT_FOUND and WIN_CODEC_ERR_UNSUPPORTED_OPERATION 
+                        _ => throw e
+                    };
+                }
+            }))).WhereNotNull().ToArray();
             for (var i = 0; i < frameSoftwareBitmaps.Length; i++)
             {
                 var frame = frameSoftwareBitmaps[i];
@@ -101,7 +121,7 @@ namespace Pixeval.Util.IO
         /// Decodes the <paramref name="imageStream"/> to a <see cref="SoftwareBitmap"/>
         /// </summary>
         /// <returns></returns>
-        public static async Task<SoftwareBitmap> GetSoftwareBitmapFromStreamAsync(IRandomAccessStream imageStream)
+        public static async Task<SoftwareBitmap?> GetSoftwareBitmapFromStreamAsync(IRandomAccessStream imageStream)
         {
             var decoder = await BitmapDecoder.CreateAsync(imageStream);
             return await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
@@ -111,7 +131,12 @@ namespace Pixeval.Util.IO
         {
             var entryStreams = await ReadZipArchiveEntries(zipStream);
             var inMemoryRandomAccessStream = new InMemoryRandomAccessStream();
-            await WriteGifBitmapAsync(inMemoryRandomAccessStream, entryStreams.Select(s => s.content.AsRandomAccessStream()), (int) (ugoiraMetadataResponse.UgoiraMetadataInfo?.Frames?.FirstOrDefault()?.Delay ?? 0));
+            await WriteGifBitmapAsync(inMemoryRandomAccessStream, entryStreams.Select(s =>
+            {
+                var (_, content) = s;
+                content.Seek(0, SeekOrigin.Begin);
+                return content.AsRandomAccessStream();
+            }), (int) (ugoiraMetadataResponse.UgoiraMetadataInfo?.Frames?.FirstOrDefault()?.Delay ?? 0));
             return inMemoryRandomAccessStream;
         }
     }
