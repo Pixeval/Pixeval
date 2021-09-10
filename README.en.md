@@ -64,7 +64,7 @@ For more information, see [main page](https://sora.ink/pixeval/)
 * [@ControlNet](https://github.com/ControlNet)
 * [@wulunshijian](https://github.com/wulunshijian)
 * [@duiweiya](https://github.com/duiweiya)
-* [@Lasm_Gratel](https://github.com/NanamiArihara)
+* [@Lasm_Gratel](https://github.com/LasmGratel)
 * [@TheRealKamisama](https://github.com/TheRealKamisama)
 * [@Summpot](https://github.com/Summpot)
 
