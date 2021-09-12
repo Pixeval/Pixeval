@@ -24,6 +24,8 @@ namespace Pixeval.ViewModel
         /// </summary>
         public IllustrationGridViewModel ContainerGridViewModel { get; }
 
+        #region Commands
+
         public StandardUICommand CopyCommand { get; } = new(StandardUICommandKind.Copy);
 
         public StandardUICommand PlayGifCommand { get; } = new(StandardUICommandKind.Play)
@@ -42,6 +44,13 @@ namespace Pixeval.ViewModel
             IconSource = new SymbolIconSource
             {
                 Symbol = Symbol.ZoomOut
+            },
+            KeyboardAccelerators =
+            {
+                new KeyboardAccelerator
+                {
+                    Key = VirtualKey.Subtract,
+                }
             }
         };
 
@@ -51,10 +60,67 @@ namespace Pixeval.ViewModel
             IconSource = new SymbolIconSource
             {
                 Symbol = Symbol.ZoomIn
+            },
+            KeyboardAccelerators =
+            {
+                new KeyboardAccelerator
+                {
+                    Key = VirtualKey.Add,
+                }
             }
         };
 
         public XamlUICommand BookmarkCommand { get; private set; } = null!; // the null-state is transient
+
+        public StandardUICommand SaveCommand { get; } = new(StandardUICommandKind.Save);
+
+        public XamlUICommand SaveAsCommand { get; } = new()
+        {
+            Label = IllustrationViewerPageResources.SaveAs,
+            KeyboardAccelerators =
+            {
+                new KeyboardAccelerator
+                {
+                    Modifiers = VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, // todo
+                    Key = VirtualKey.S
+                }
+            },
+            IconSource = FontIconSymbols.SaveAsE792.GetFontIconSource()
+        };
+
+        public XamlUICommand SaveMangaCommand { get; } = new()
+        {
+            Label = IllustrationViewerPageResources.SaveManga,
+            IconSource = FontIconSymbols.SaveCopyEA35.GetFontIconSource()
+        };
+
+        public XamlUICommand SaveMangaAsCommand { get; } = new()
+        {
+            Label = IllustrationViewerPageResources.SaveMangaAs,
+            IconSource = FontIconSymbols.LinkE71B.GetFontIconSource()
+        };
+
+        public XamlUICommand GenerateLinkCommand { get; } = new()
+        {
+            Label = IllustrationViewerPageResources.GenerateLink,
+            IconSource = FontIconSymbols.LinkE71B.GetFontIconSource()
+        };
+
+        public XamlUICommand GenerateWebLinkCommand { get; } = new()
+        {
+            Label = IllustrationViewerPageResources.GenerateLink,
+            IconSource = FontIconSymbols.PreviewLinkE8A1.GetFontIconSource()
+        };
+
+        public XamlUICommand OpenInWebBrowserCommand { get; } = new()
+        {
+            Label = IllustrationViewerPageResources.OpenInWebBrowser,
+            IconSource = FontIconSymbols.WebSearchF6FA.GetFontIconSource()
+        };
+
+        public StandardUICommand ShareCommand { get; } = new(StandardUICommandKind.Share);
+
+        #endregion
 
         /// <summary>
         /// The <see cref="IllustrationGrid"/> that owns <see cref="ContainerGridViewModel"/>
@@ -73,6 +139,14 @@ namespace Pixeval.ViewModel
             IllustrationViewModelInTheGridView = ContainerGridViewModel.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
             InitializeCommands();
             _ = LoadUserProfileImage();
+        }
+
+        public void UpdateCommandCanExecute()
+        {
+            PlayGifCommand.NotifyCanExecuteChanged();
+            CopyCommand.NotifyCanExecuteChanged();
+            SaveMangaCommand.NotifyCanExecuteChanged();
+            SaveMangaAsCommand.NotifyCanExecuteChanged();
         }
 
         private void InitializeCommands()
@@ -99,10 +173,84 @@ namespace Pixeval.ViewModel
             PlayGifCommand.CanExecuteRequested += PlayGifCommandOnCanExecuteRequested;
             PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
 
-            ZoomInCommand.ExecuteRequested += (sender, args) =>
+            ZoomOutCommand.ExecuteRequested += (_, _) => Current.Zoom(-0.5);
+            ZoomInCommand.ExecuteRequested += (_, _) => Current.Zoom(0.5);
+
+            SaveCommand.ExecuteRequested += SaveCommandOnExecuteRequested;
+            SaveAsCommand.ExecuteRequested += SaveAsCommandOnExecuteRequested;
+
+            SaveMangaCommand.CanExecuteRequested += SaveMangaCommandOnCanExecuteRequested;
+            SaveMangaCommand.ExecuteRequested += SaveMangaCommandOnExecuteRequested;
+
+            SaveMangaAsCommand.CanExecuteRequested += SaveMangaAsCommandOnCanExecuteRequested;
+            SaveMangaAsCommand.ExecuteRequested += SaveMangaAsCommandOnExecuteRequested;
+
+            GenerateLinkCommand.ExecuteRequested += GenerateLinkCommandOnExecuteRequested;
+            GenerateWebLinkCommand.ExecuteRequested += GenerateWebLinkCommandOnExecuteRequested;
+            OpenInWebBrowserCommand.ExecuteRequested += OpenInWebBrowserCommandOnExecuteRequested;
+            ShareCommand.ExecuteRequested += ShareCommandOnExecuteRequested;
+        }
+
+        private async void ShareCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            if (Current.LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true })
             {
-                
+                await MessageDialogBuilder.CreateAcknowledgement(App.Window, IllustrationViewerPageResources.CannotShareImageForNowTitle, IllustrationViewerPageResources.CannotShareImageForNowContent)
+                    .ShowAsync();
+                return;
             }
+            UIHelper.ShowShareUI();
+        }
+
+        private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            await Launcher.LaunchUriAsync(MakoHelper.GetIllustrationWebUri(Current.IllustrationViewModel.Id));
+        }
+
+        private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            var link = MakoHelper.GetIllustrationWebUri(Current.IllustrationViewModel.Id).ToString();
+            UIHelper.SetClipboardContent(package => package.SetText(link));
+            UIHelper.ShowTextToastNotification(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle, link);
+        }
+
+        private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            if (App.AppSetting.DisplayTeachingTipWhenGeneratingAppLink)
+            {
+                IsGenerateLinkTeachingTipOpen = true;
+            }
+            UIHelper.SetClipboardContent(package => package.SetText(AppContext.GenerateAppLinkToIllustration(Current.IllustrationViewModel.Id).ToString()));
+        }
+
+        private void SaveMangaAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SaveMangaAsCommandOnCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
+        {
+            args.CanExecute = IsManga;
+        }
+
+        private void SaveMangaCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SaveMangaCommandOnCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
+        {
+            args.CanExecute = IsManga;
+        }
+
+        private void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            throw new NotImplementedException();
         }
 
         private void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -246,10 +394,12 @@ namespace Pixeval.ViewModel
             set => SetProperty(ref _isInfoPaneOpen, value);
         }
 
-        public void UpdateCommandCanExecute()
+        private bool _isGenerateLinkTeachingTipOpen;
+
+        public bool IsGenerateLinkTeachingTipOpen
         {
-            PlayGifCommand.NotifyCanExecuteChanged();
-            CopyCommand.NotifyCanExecuteChanged();
+            get => _isGenerateLinkTeachingTipOpen;
+            set => SetProperty(ref _isGenerateLinkTeachingTipOpen, value);
         }
 
         public ImageViewerPageViewModel Next()

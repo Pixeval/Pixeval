@@ -44,41 +44,25 @@
                         <KeyboardAccelerator Key="F12" />
                     </AppBarToggleButton.KeyboardAccelerators>
                 </AppBarToggleButton>
-                <AppBarButton x:Uid="/IllustrationViewerPage/PlayGifButton"
-                              Command="{x:Bind _viewModel.PlayGifCommand}"
+                <AppBarButton Command="{x:Bind _viewModel.PlayGifCommand}"
                               Visibility="{x:Bind _viewModel.IsUgoira}" />
                 <AppBarSeparator />
-                <AppBarButton x:Uid="/IllustrationViewerPage/CopyContentButton"
-                              Command="{x:Bind _viewModel.CopyCommand}" />
-                <AppBarButton x:Uid="/IllustrationViewerPage/SaveAsCurrentImageButton"
-                              Icon="{ui:FontIcon Glyph=SaveAsE792}"
-                              Tapped="SaveAsCurrentImageButton_OnTapped" />
-                <AppBarButton x:Uid="/IllustrationViewerPage/SaveMangaButton"
-                              Icon="{ui:FontIcon Glyph=SaveCopyEA35}"
-                              Tapped="SaveMangaButton_OnTapped"
+                <AppBarButton Command="{x:Bind _viewModel.CopyCommand}" />
+                <AppBarButton Command="{x:Bind _viewModel.SaveAsCommand}" />
+                <AppBarButton Command="{x:Bind _viewModel.SaveMangaCommand}"
                               Visibility="{x:Bind _viewModel.IsManga}" />
-                <AppBarButton x:Uid="/IllustrationViewerPage/SaveMangaAsButton"
-                              Icon="{ui:FontIcon Glyph=SaveAsE792}"
-                              Tapped="SaveMangaAsButton_OnTapped"
+                <AppBarButton Command="{x:Bind _viewModel.SaveMangaAsCommand}"
                               Visibility="{x:Bind _viewModel.IsManga}" />
                 <AppBarSeparator />
                 <AppBarButton x:Name="GenerateLinkToThisPageButton"
-                              x:Uid="/IllustrationViewerPage/GenerateLinkToThisPageButton"
-                              Icon="{ui:FontIcon Glyph=LinkE71B}"
-                              Tapped="GenerateLinkToThisPageButton_OnTapped" />
-                <AppBarButton x:Uid="/IllustrationViewerPage/GenerateWebLinkButton"
-                              Icon="{ui:FontIcon Glyph=PreviewLinkE8A1}"
-                              Tapped="GenerateWebLinkButton_OnTapped" />
-                <AppBarButton x:Uid="/IllustrationViewerPage/OpenInWebBrowserButton"
-                              Icon="{ui:FontIcon Glyph=WebSearchF6FA}"
-                              Tapped="OpenInWebBrowserButton_OnTapped" />
-                <AppBarButton x:Uid="/IllustrationViewerPage/ShareButton"
-                              Icon="{ui:FontIcon Glyph=ShareE72D}"
-                              Tapped="ShareButton_OnTapped" />
+                              Command="{x:Bind _viewModel.GenerateLinkCommand}" />
+                <AppBarButton Command="{x:Bind _viewModel.GenerateWebLinkCommand}" />
+                <AppBarButton Command="{x:Bind _viewModel.OpenInWebBrowserCommand}" />
+                <AppBarButton Command="{x:Bind _viewModel.ShareCommand}" />
             </CommandBar>
-            <TeachingTip x:Name="GenerateLinkToThisPageButtonTeachingTip"
-                         x:Uid="/IllustrationViewerPage/GenerateLinkToThisPageButtonTeachingTip"
+            <TeachingTip x:Uid="/IllustrationViewerPage/GenerateLinkToThisPageButtonTeachingTip"
                          ActionButtonClick="GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick"
+                         IsOpen="{x:Bind _viewModel.IsGenerateLinkTeachingTipOpen, Mode=OneWay}"
                          Target="{x:Bind GenerateLinkToThisPageButton}">
                 <TeachingTip.HeroContent>
                     <Image Source="../../Assets/Images/illust-app-link-sample.png" />

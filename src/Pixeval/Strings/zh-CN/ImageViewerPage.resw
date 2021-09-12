@@ -135,6 +135,9 @@
   <data name="DownloadingImageFormatted" xml:space="preserve">
     <value>正在下载图片: {0}%</value>
   </data>
+  <data name="IllustrationInfoAndCommentsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>作品信息</value>
+  </data>
   <data name="LoadingFromCache" xml:space="preserve">
     <value>正在从缓存中加载...</value>
   </data>

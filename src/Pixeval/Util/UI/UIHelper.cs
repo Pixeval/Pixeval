@@ -175,5 +175,21 @@ namespace Pixeval.Util.UI
         {
             return (User32.GetSystemMetrics(User32.SystemMetric.SM_CXSCREEN), User32.GetSystemMetrics(User32.SystemMetric.SM_CYSCREEN));
         }
+
+        public static FontIcon GetFontIcon(this FontIconSymbols symbol)
+        {
+            return new()
+            {
+                Glyph = symbol.GetMetadataOnEnumMember()
+            };
+        }
+
+        public static FontIconSource GetFontIconSource(this FontIconSymbols symbol)
+        {
+            return new()
+            {
+                Glyph = symbol.GetMetadataOnEnumMember()
+            };
+        }
     }
 }

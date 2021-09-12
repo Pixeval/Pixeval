@@ -171,58 +171,9 @@ namespace Pixeval.Pages.IllustrationViewer
             }
         }
 
-        private async void ShareButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            if (_viewModel.Current.LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true })
-            {
-                await MessageDialogBuilder.CreateAcknowledgement(this, IllustrationViewerPageResources.CannotShareImageForNowTitle, IllustrationViewerPageResources.CannotShareImageForNowContent)
-                    .ShowAsync();
-                return;
-            }
-            UIHelper.ShowShareUI();
-        }
-
-        private void GenerateWebLinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            var link = MakoHelper.GetIllustrationWebUri(_viewModel.Current.IllustrationViewModel.Id).ToString();
-            UIHelper.SetClipboardContent(package => package.SetText(link));
-            UIHelper.ShowTextToastNotification(
-                IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle,
-                link);
-        }
-
-        private void SaveAsCurrentImageButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void SaveMangaButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void SaveMangaAsButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private async void OpenInWebBrowserButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            await Launcher.LaunchUriAsync(MakoHelper.GetIllustrationWebUri(_viewModel.Current.IllustrationViewModel.Id));
-        }
-
-        private void GenerateLinkToThisPageButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            if (App.AppSetting.DisplayTeachingTipWhenGeneratingAppLink)
-            {
-                GenerateLinkToThisPageButtonTeachingTip.IsOpen = true;
-            }
-            UIHelper.SetClipboardContent(package => package.SetText(AppContext.GenerateAppLinkToIllustration(_viewModel.Current.IllustrationViewModel.Id).ToString()));
-        }
-
         private void GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick(TeachingTip sender, object args)
         {
-            GenerateLinkToThisPageButtonTeachingTip.IsOpen = false;
+            _viewModel.IsGenerateLinkTeachingTipOpen = false;
             App.AppSetting.DisplayTeachingTipWhenGeneratingAppLink = false;
         }
 
@@ -245,11 +196,6 @@ namespace Pixeval.Pages.IllustrationViewer
                     }
                 });
             }
-        }
-
-        private void OpenIllustrationInfoPanelCommand_OnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-        {
-            IllustrationInfoAndCommentsSplitView.IsPaneOpen = true;
         }
 
         #region Helper Functions
@@ -282,11 +228,6 @@ namespace Pixeval.Pages.IllustrationViewer
             return _viewModel.IllustrationIndex > 0 
                 ? CalculatePrevImageButtonVisibility(index).Inverse()
                 : Visibility.Collapsed;
-        }
-
-        public static string GetBookmarkButtonLabel(bool isBookmarked)
-        {
-            return isBookmarked ? IllustrationViewerPageResources.RemoveBookmark : IllustrationViewerPageResources.Bookmark;
         }
 
         #endregion

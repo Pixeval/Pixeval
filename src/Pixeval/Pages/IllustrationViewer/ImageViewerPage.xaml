@@ -71,7 +71,7 @@
                    Stretch="Uniform">
                 <Image.ContextFlyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem x:Uid="/IllustrationViewerPage/IllustrationInfoAndCommentsMenuFlyoutItem"
+                        <MenuFlyoutItem x:Uid="/ImageViewerPage/IllustrationInfoAndCommentsMenuFlyoutItem"
                                         Icon="{ui:FontIcon Glyph=InfoE946}"
                                         Tapped="IllustrationInfoAndCommentsMenuFlyoutItem_OnTapped">
                             <MenuFlyoutItem.KeyboardAccelerators>
@@ -80,15 +80,27 @@
                         </MenuFlyoutItem>
                         <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.PlayGifCommand}"
                                         Visibility="{x:Bind _viewModel.IllustrationViewerPageViewModel.IsUgoira}" />
-                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ZoomInCommand}" />
+                        <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ZoomOutCommand}" />
                         <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.BookmarkCommand}" />
                         <MenuFlyoutSeparator />
-                        <MenuFlyoutItem x:Uid="/IllustrationViewerPage/CopyContentMenuFlyoutItem"
-                                        Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.CopyCommand}" />
+                        <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.CopyCommand}" />
+                        <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SaveCommand}" />
+                        <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SaveMangaCommand}"
+                                        Visibility="{x:Bind _viewModel.IllustrationViewerPageViewModel.IsManga}" />
+                        <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SaveMangaAsCommand}"
+                                        Visibility="{x:Bind _viewModel.IllustrationViewerPageViewModel.IsManga}" />
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.GenerateLinkCommand}" />
+                        <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.GenerateWebLinkCommand}" />
+                        <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.OpenInWebBrowserCommand}" />
+                        <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ShareCommand}" />
                     </MenuFlyout>
                 </Image.ContextFlyout>
                 <Image.RenderTransform>
-                    <CompositeTransform x:Name="IllustrationOriginalImageRenderTransform" />
+                    <CompositeTransform x:Name="IllustrationOriginalImageRenderTransform"
+                                        ScaleX="{x:Bind _viewModel.Scale, Mode=OneWay}"
+                                        ScaleY="{x:Bind _viewModel.Scale, Mode=OneWay}" />
                 </Image.RenderTransform>
             </Image>
         </Grid>
@@ -161,21 +173,13 @@
                               Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.BookmarkCommand}" />
                 <AppBarButton x:Uid="/ImageViewerPage/ZoomInButton"
                               Width="50"
-                              Click="ZoomInButton_OnClick">
-                    <AppBarButton.Icon>
-                        <SymbolIcon Symbol="ZoomIn" />
-                    </AppBarButton.Icon>
-                </AppBarButton>
+                              Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ZoomInCommand}" />
                 <AppBarButton x:Uid="/ImageViewerPage/ZoomOutButton"
                               Width="50"
-                              Click="ZoomOutButton_OnClick">
-                    <AppBarButton.Icon>
-                        <SymbolIcon Symbol="ZoomOut" />
-                    </AppBarButton.Icon>
-                </AppBarButton>
+                              Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ZoomOutCommand}" />
                 <AppBarButton x:Uid="/ImageViewerPage/SaveCurrentImageButton"
                               Width="50"
-                              Icon="{ui:FontIcon Glyph=SaveE74E}" />
+                              Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SaveCommand}" />
             </CommandBar>
         </Border>
     </Grid>

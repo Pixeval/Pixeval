@@ -16,10 +16,6 @@ namespace Pixeval.Pages.IllustrationViewer
     {
         private ImageViewerPageViewModel _viewModel = null!;
 
-        private const int MaxZoomFactor = 8;
-
-        private const int MinZoomFactor = 1;
-
         public ImageViewerPage()
         {
             InitializeComponent();
@@ -187,7 +183,7 @@ namespace Pixeval.Pages.IllustrationViewer
             return IllustrationOriginalImageRenderTransform.ScaleX;
         }
 
-        public void Zoom(double delta)
+        private void ResetImagePosition()
         {
             if (IllustrationOriginalImageRenderTransform.TranslateX != 0)
             {
@@ -208,22 +204,12 @@ namespace Pixeval.Pages.IllustrationViewer
                     EasingFunction = _easingFunction
                 })).Begin();
             }
+        }
 
-            var factor = GetZoomFactor();
-            switch (delta)
-            {
-                case < 0 when factor > MinZoomFactor:
-                case > 0 when factor < MaxZoomFactor:
-                    delta = (factor + delta) switch
-                    {
-                        > MaxZoomFactor => MaxZoomFactor - factor,
-                        < MinZoomFactor => -(factor - MinZoomFactor),
-                        _ => delta
-                    };
-                    IllustrationOriginalImageRenderTransform.ScaleX += delta;
-                    IllustrationOriginalImageRenderTransform.ScaleY += delta;
-                    break;
-            }
+        private void Zoom(double delta)
+        {
+            ResetImagePosition();
+            _viewModel.Zoom(delta);
         }
 
         #endregion

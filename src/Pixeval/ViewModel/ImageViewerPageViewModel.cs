@@ -37,7 +37,6 @@ namespace Pixeval.ViewModel
             LoadingImage
         }
 
-
         public ImageViewerPageViewModel(IllustrationViewerPageViewModel illustrationViewerPageViewModel, IllustrationViewModel illustrationViewModel)
         {
             IllustrationViewerPageViewModel = illustrationViewerPageViewModel;
@@ -54,6 +53,14 @@ namespace Pixeval.ViewModel
         {
             get => _loadingProgress;
             set => SetProperty(ref _loadingProgress, value);
+        }
+
+        private double _scale = 1;
+
+        public double Scale
+        {
+            get => _scale;
+            set => SetProperty(ref _scale, value);
         }
 
         private string? _loadingText;
@@ -90,6 +97,28 @@ namespace Pixeval.ViewModel
         {
             get => _originalImageSource;
             set => SetProperty(ref _originalImageSource, value);
+        }
+
+        private const int MaxZoomFactor = 8;
+
+        private const int MinZoomFactor = 1;
+
+        public void Zoom(double delta)
+        {
+            var factor = Scale;
+            switch (delta)
+            {
+                case < 0 when factor > MinZoomFactor:
+                case > 0 when factor < MaxZoomFactor:
+                    delta = (factor + delta) switch
+                    {
+                        > MaxZoomFactor => MaxZoomFactor - factor,
+                        < MinZoomFactor => -(factor - MinZoomFactor),
+                        _ => delta
+                    };
+                    Scale += delta;
+                    break;
+            }
         }
 
         private void AdvancePhase(LoadingPhase phase)
