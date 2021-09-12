@@ -99,7 +99,10 @@ namespace Pixeval.ViewModel
             PlayGifCommand.CanExecuteRequested += PlayGifCommandOnCanExecuteRequested;
             PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
 
-            // TODO zoom in zoom out
+            ZoomInCommand.ExecuteRequested += (sender, args) =>
+            {
+                
+            }
         }
 
         private void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

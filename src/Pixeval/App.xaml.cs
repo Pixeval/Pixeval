@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Drawing;
 using System.Threading.Tasks;
-using Windows.UI.ViewManagement;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -122,13 +120,12 @@ namespace Pixeval
         /// <summary>
         /// Calculate the window size by current resolution
         /// </summary>
-        private (int, int) GetCalculatedWindowSize()
+        private static (int, int) GetCalculatedWindowSize()
         {
-            var (width, height) = UIHelper.GetScreenSize();
-            return width switch
+            return UIHelper.GetScreenSize() switch
             {
-                >= 2560 when height >= 1440 => (1600, 900),
-                > 1600 when height > 900 => (1280, 720),
+                (>= 2560, >= 1440) => (1600, 900),
+                (> 1600, > 900) => (1280, 720),
                 _ => (800, 600)
             };
         }

@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Windows.Foundation;
-using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
@@ -161,11 +160,6 @@ namespace Pixeval.Pages.IllustrationViewer
         private void ZoomOutButton_OnClick(object sender, RoutedEventArgs e)
         {
             Zoom(-0.5);
-        }
-
-        private void BookmarkButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            _viewModel.SwitchBookmarkState();
         }
 
         private void ImageViewerPage_OnLoaded(object sender, RoutedEventArgs e)
