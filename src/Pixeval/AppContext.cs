@@ -15,6 +15,7 @@ using Pixeval.Events;
 using Pixeval.Util;
 using Pixeval.Util.Generic;
 using Pixeval.Util.IO;
+using Pixeval.Util.UI;
 
 namespace Pixeval
 {
@@ -62,6 +63,25 @@ namespace Pixeval
         public static ApplicationDataContainer ConfigurationContainer;
 
         public static string AppLoginProxyFolder = "LoginProxy";
+
+        /// <summary>
+        /// Calculate the window size by current resolution
+        /// </summary>
+        public static (int, int) PredetermineEstimatedWindowSize()
+        {
+            return UIHelper.GetScreenSize() switch
+            {
+                // 这 就 是 C #
+                ( >= 2560, >= 1440) => (1600, 900),
+                ( > 1600, > 900) => (1280, 720),
+                _ => (800, 600)
+            };
+        }
+
+        public static (int, int) GetAppWindowSize()
+        {
+            return UIHelper.GetWindowSize(App.GetMainWindowHandle());
+        }
 
         /// <summary>
         /// Copy and extract the login proxy zip to a local folder if:
@@ -153,7 +173,6 @@ namespace Pixeval
             return await (await StorageFile.GetFileFromApplicationUriAsync(new Uri(path))).OpenReadAsync();
         }
 
-
         /// <summary>
         /// Get an item relative to <see cref="AppLocalFolder"/>
         /// </summary>
@@ -242,6 +261,8 @@ namespace Pixeval
                 ConfigurationContainer.Values[nameof(AppSetting.ItemsNumberLimitForDailyRecommendations)] = appSetting.ItemsNumberLimitForDailyRecommendations;
                 ConfigurationContainer.Values[nameof(AppSetting.FiltrateRestrictedContent)] = appSetting.FiltrateRestrictedContent;
                 ConfigurationContainer.Values[nameof(AppSetting.UseFileCache)] = appSetting.UseFileCache;
+                ConfigurationContainer.Values[nameof(AppSetting.WindowWidth)] = appSetting.WindowWidth;
+                ConfigurationContainer.Values[nameof(AppSetting.WindowHeight)] = appSetting.WindowHeight;
             }
         }
 
@@ -289,7 +310,9 @@ namespace Pixeval
                     ConfigurationContainer.Values[nameof(AppSetting.DisplayTeachingTipWhenGeneratingAppLink)].CastOrThrow<bool>(),
                     ConfigurationContainer.Values[nameof(AppSetting.ItemsNumberLimitForDailyRecommendations)].CastOrThrow<int>(),
                     ConfigurationContainer.Values[nameof(AppSetting.FiltrateRestrictedContent)].CastOrThrow<bool>(),
-                    ConfigurationContainer.Values[nameof(AppSetting.UseFileCache)].CastOrThrow<bool>());
+                    ConfigurationContainer.Values[nameof(AppSetting.UseFileCache)].CastOrThrow<bool>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.WindowWidth)].CastOrThrow<int>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.WindowHeight)].CastOrThrow<int>());
             }
             catch
             {

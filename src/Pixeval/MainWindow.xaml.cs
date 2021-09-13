@@ -55,5 +55,12 @@ namespace Pixeval
         {
             NavigationMode = e.NavigationMode;
         }
+
+        private void MainWindow_OnSizeChanged(object sender, WindowSizeChangedEventArgs args)
+        {
+            // Save the window size
+            App.AppSetting.WindowWidth = (int) args.Size.Width;
+            App.AppSetting.WindowHeight = (int) args.Size.Height;
+        }
     }
 }

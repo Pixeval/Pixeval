@@ -110,24 +110,10 @@ namespace Pixeval
         {
             await AppContext.WriteLogoIcoIfNotExist();
             Window = new MainWindow();
-            var (width, height) = GetCalculatedWindowSize();
-            Window.SetWindowSize(width, height);
+            Window.SetWindowSize(AppSetting.WindowWidth, AppSetting.WindowHeight);
             Window.Activate();
             await AppContext.ClearTemporaryDirectory();
             Cache = await FileCache.CreateDefaultAsync();
-        }
-
-        /// <summary>
-        /// Calculate the window size by current resolution
-        /// </summary>
-        private static (int, int) GetCalculatedWindowSize()
-        {
-            return UIHelper.GetScreenSize() switch
-            {
-                (>= 2560, >= 1440) => (1600, 900),
-                (> 1600, > 900) => (1280, 720),
-                _ => (800, 600)
-            };
         }
 
         /// <summary>

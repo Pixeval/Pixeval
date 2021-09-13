@@ -64,5 +64,20 @@ namespace Pixeval.Util.UI
         {
             DataTransferManagerInterop.ShowShareUIForWindow(App.GetMainWindowHandle());
         }
+
+        /// <summary>
+        /// Get the current screen size using User32 api
+        /// </summary>
+        /// <returns>Screen size</returns>
+        public static (int, int) GetScreenSize()
+        {
+            return (User32.GetSystemMetrics(User32.SystemMetric.SM_CXSCREEN), User32.GetSystemMetrics(User32.SystemMetric.SM_CYSCREEN));
+        }
+
+        public static (int, int) GetWindowSize(IntPtr hWnd)
+        {
+            User32.GetWindowRect(hWnd, out var rect);
+            return (rect.right - rect.left, rect.bottom - rect.top);
+        }
     }
 }

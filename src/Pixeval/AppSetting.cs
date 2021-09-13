@@ -83,7 +83,12 @@ namespace Pixeval
 
         public bool UseFileCache { get; set; }
 
-        public AppSetting(ApplicationTheme theme,
+        public int WindowWidth { get; set; }
+
+        public int WindowHeight { get; set; }
+
+        public AppSetting(
+            ApplicationTheme theme,
             ObservableCollection<string> excludeTags,
             bool disableDomainFronting,
             IllustrationSortOption defaultSortOption,
@@ -97,7 +102,9 @@ namespace Pixeval
             bool displayTeachingTipWhenGeneratingAppLink,
             int itemsNumberLimitForDailyRecommendations, 
             bool filtrateRestrictedContent,
-            bool useFileCache)
+            bool useFileCache,
+            int windowWidth, 
+            int windowHeight)
         {
             Theme = theme;
             ExcludeTags = excludeTags;
@@ -114,11 +121,15 @@ namespace Pixeval
             ItemsNumberLimitForDailyRecommendations = itemsNumberLimitForDailyRecommendations;
             FiltrateRestrictedContent = filtrateRestrictedContent;
             UseFileCache = useFileCache;
+            WindowWidth = windowWidth;
+            WindowHeight = windowHeight;
         }
 
         public static AppSetting CreateDefault()
         {
-            return new(ApplicationTheme.SystemDefault,
+            var (width, height) = AppContext.PredetermineEstimatedWindowSize();
+            return new AppSetting(
+                ApplicationTheme.SystemDefault,
                 new ObservableCollection<string>(),
                 false,
                 IllustrationSortOption.DoNotSort,
@@ -129,10 +140,12 @@ namespace Pixeval
                 50,
                 null,
                 Environment.ProcessorCount,
-                true, 
-                500, 
-                false, 
-                false);
+                true,
+                500,
+                false,
+                false,
+                width,
+                height);
         }
 
         public MakoClientConfiguration ToMakoClientConfiguration()
