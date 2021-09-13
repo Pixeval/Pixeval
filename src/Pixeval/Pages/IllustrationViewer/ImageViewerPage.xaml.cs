@@ -79,20 +79,20 @@ namespace Pixeval.Pages.IllustrationViewer
             switch (pos.X)
             {
                 case var x when x < xLowerBound && renderedImageWidth > containerWidth:
-                    sb.Children.Add(IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(translateXProperty, DoubleAnimationTemplate(xLowerBound - x)));
+                    sb.Children.Add(IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(translateXProperty, animationDuration, by: xLowerBound - x));
                     break;
                 case > 0 when renderedImageWidth > containerWidth:
-                    sb.Children.Add(IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(translateXProperty, DoubleAnimationTemplate(-pos.X)));
+                    sb.Children.Add(IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(translateXProperty, animationDuration, by: -pos.X));
                     break;
             }
 
             switch (pos.Y)
             {
                 case var y when y < yLowerBound && renderedImageHeight > containerHeight:
-                    sb.Children.Add(IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(translateYProperty, DoubleAnimationTemplate(yLowerBound - y)));
+                    sb.Children.Add(IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(translateYProperty, animationDuration, by: yLowerBound - y));
                     break;
                 case > 0 when renderedImageHeight > containerHeight:
-                    sb.Children.Add(IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(translateYProperty, DoubleAnimationTemplate(-pos.Y)));
+                    sb.Children.Add(IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(translateYProperty, animationDuration, by: -pos.Y));
                     break;
             }
 
@@ -100,8 +100,6 @@ namespace Pixeval.Pages.IllustrationViewer
             {
                 sb.Begin();
             }
-
-            Func<DoubleAnimation> DoubleAnimationTemplate(double by) => () => new DoubleAnimation { Duration = animationDuration, EasingFunction = _easingFunction, By = @by };
         }
 
         private void IllustrationOriginalImage_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
@@ -148,16 +146,6 @@ namespace Pixeval.Pages.IllustrationViewer
             Zoom(e.GetCurrentPoint(null).Properties.MouseWheelDelta / 500d);
         }
 
-        private void ZoomInButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            Zoom(0.5);
-        }
-
-        private void ZoomOutButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            Zoom(-0.5);
-        }
-
         private void ImageViewerPage_OnLoaded(object sender, RoutedEventArgs e)
         {
             CommandBorderDropShadow.Receivers.Add(IllustrationOriginalImageContainer);
@@ -187,22 +175,20 @@ namespace Pixeval.Pages.IllustrationViewer
         {
             if (IllustrationOriginalImageRenderTransform.TranslateX != 0)
             {
-                UIHelper.CreateStoryboard(IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(nameof(CompositeTransform.TranslateX), () => new DoubleAnimation
-                {
-                    To = 0,
-                    Duration = TimeSpan.FromMilliseconds(100),
-                    EasingFunction = _easingFunction
-                })).Begin();
+                IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(
+                    nameof(CompositeTransform.TranslateX),
+                    to: 0,
+                    duration: TimeSpan.FromMilliseconds(100),
+                    easingFunction: _easingFunction).BeginStoryboard();
             }
 
             if (IllustrationOriginalImageRenderTransform.TranslateY != 0)
             {
-                UIHelper.CreateStoryboard(IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(nameof(CompositeTransform.TranslateY), () => new DoubleAnimation
-                {
-                    To = 0,
-                    Duration = TimeSpan.FromMilliseconds(100),
-                    EasingFunction = _easingFunction
-                })).Begin();
+                IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(
+                    nameof(CompositeTransform.TranslateY),
+                    to: 0,
+                    duration: TimeSpan.FromMilliseconds(100),
+                    easingFunction: _easingFunction).BeginStoryboard();
             }
         }
 

@@ -28,12 +28,19 @@
                                    ItemsSource="{x:Bind ViewModel.IllustrationsView}"
                                    SelectionMode="Extended"
                                    StretchContentForSingleRow="True">
+            <controls:AdaptiveGridView.ItemContainerTransitions>
+                <AddDeleteThemeTransition />
+            </controls:AdaptiveGridView.ItemContainerTransitions>
             <controls:AdaptiveGridView.ItemTemplate>
                 <DataTemplate x:DataType="viewModel:IllustrationViewModel">
                     <GridViewItem x:Name="IllustrationThumbnailContainerItem"
                                   EffectiveViewportChanged="IllustrationThumbnailContainerItem_OnEffectiveViewportChanged"
                                   IsSelected="{x:Bind IsSelected, Mode=TwoWay}"
+                                  Opacity="0"
                                   Tapped="IllustrationThumbnailContainerItem_OnTapped">
+                        <GridViewItem.RenderTransform>
+                            <ScaleTransform CenterX="{Binding ElementName=IllustrationThumbnailContainerItem, Path=ActualWidth, Mode=OneWay, Converter={StaticResource IllustrationGridItemContainerWidthCenterConverter}}" CenterY="125" />
+                        </GridViewItem.RenderTransform>
                         <Grid Height="250">
                             <Grid.Resources>
                                 <ExponentialEase x:Key="EasingFunction"

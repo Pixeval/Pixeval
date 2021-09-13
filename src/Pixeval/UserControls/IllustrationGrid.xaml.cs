@@ -1,6 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Events;
 using Pixeval.Pages.IllustrationViewer;
@@ -45,12 +49,26 @@ namespace Pixeval.UserControls
             App.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModel), new SuppressNavigationTransitionInfo());
         }
 
+        private static readonly ExponentialEase ImageSourceSetEasingFunction = new()
+        {
+            EasingMode = EasingMode.EaseOut,
+            Exponent = 12
+        };
+
         private void IllustrationThumbnailContainerItem_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
         {
             var context = sender.GetDataContext<IllustrationViewModel>();
             if (args.BringIntoViewDistanceY <= sender.ActualHeight) // one element ahead
             {
-                _ = context.LoadThumbnailIfRequired();
+                _ = context.LoadThumbnailIfRequired().ContinueWith(task =>
+                {
+                    if (!task.Result) return;
+                    var transform = (ScaleTransform) sender.RenderTransform;
+                    var scaleXAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleX), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
+                    var scaleYAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleY), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
+                    var opacityAnimation = sender.CreateDoubleAnimation(nameof(sender.Opacity), from: 0, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
+                    UIHelper.CreateStoryboard(scaleXAnimation, scaleYAnimation, opacityAnimation).Begin();
+                }, TaskScheduler.FromCurrentSynchronizationContext());
                 return;
             }
 

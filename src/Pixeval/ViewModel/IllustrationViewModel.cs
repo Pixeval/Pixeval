@@ -106,27 +106,35 @@ namespace Pixeval.ViewModel
             }).Select(p => new IllustrationViewModel(p));
         }
 
-        public async Task LoadThumbnailIfRequired()
+        public async Task<bool> LoadThumbnailIfRequired()
         {
             if (ThumbnailSource is not null || LoadingThumbnail)
             {
-                return;
+                return false;
             }
 
             LoadingThumbnail = true;
             if (App.AppSetting.UseFileCache && await App.Cache.TryGetAsync<IRandomAccessStream>(Illustration.GetIllustrationThumbnailCacheKey()) is { } stream)
             {
                 ThumbnailSource = await stream.GetSoftwareBitmapSourceAsync(true);
+                LoadingThumbnail = false;
+                return true;
             }
-            else if (await GetThumbnail(ThumbnailUrlOption.Medium) is { } ras)
+
+            if (await GetThumbnail(ThumbnailUrlOption.Medium) is { } ras)
             {
                 using (ras)
                 {
                     await App.Cache.TryAddAsync(Illustration.GetIllustrationThumbnailCacheKey(), ras!, TimeSpan.FromDays(1));
                     ThumbnailSource = await ras!.GetSoftwareBitmapSourceAsync(false);
                 }
+
+                LoadingThumbnail = false;
+                return true;
             }
+
             LoadingThumbnail = false;
+            return false;
         }
 
         public async Task<IRandomAccessStream?> GetThumbnail(ThumbnailUrlOption thumbnailUrlOptions)

@@ -134,12 +134,35 @@ namespace Pixeval.Util.UI
             return sb;
         }
 
-        public static DoubleAnimation CreateDoubleAnimation(this DependencyObject depObj, string property, Func<DoubleAnimation> supplier)
+        public static DoubleAnimation CreateDoubleAnimation(this DependencyObject depObj, 
+            string property,
+            Duration duration = default,
+            EasingFunctionBase? easingFunction= null, 
+            double by = default, 
+            double from = default,
+            double to = default)
         {
-            var animation = supplier();
+            var animation = new DoubleAnimation
+            {
+                Duration = duration,
+                EasingFunction = easingFunction,
+                By = by,
+                From = from,
+                To = to
+            };
             Storyboard.SetTarget(animation, depObj);
             Storyboard.SetTargetProperty(animation, property);
             return animation;
+        }
+
+        public static Storyboard GetStoryboard(this Timeline timeline)
+        {
+            return CreateStoryboard(timeline);
+        }
+        
+        public static void BeginStoryboard(this Timeline timeline)
+        {
+            CreateStoryboard(timeline).Begin();
         }
 
         public static void SetClipboardContent(Action<DataPackage> contentAction)
