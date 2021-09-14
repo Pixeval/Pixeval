@@ -215,28 +215,37 @@
                                 <Grid Background="White"
                                       CornerRadius="5"
                                       Opacity="0.8" />
-                                <CheckBox Tapped="SelectionButton_OnTapped" IsChecked="{x:Bind IsSelected, Mode=TwoWay}" />
+                                <CheckBox IsChecked="{x:Bind IsSelected, Mode=TwoWay}" />
                             </Grid>
                             <Grid Margin="10,0,0,10"
                                   HorizontalAlignment="Left"
-                                  VerticalAlignment="Bottom" ColumnDefinitions="Auto, Auto" RowDefinitions="Auto" ColumnSpacing="3">
-                                <Grid Background="Crimson"
+                                  VerticalAlignment="Bottom"
+                                  ColumnDefinitions="Auto, Auto"
+                                  ColumnSpacing="3"
+                                  RowDefinitions="Auto">
+                                <Grid Grid.Row="0"
+                                      Grid.Column="0"
+                                      Background="Crimson"
                                       CornerRadius="5"
-                                      Visibility="{x:Bind IsRestricted}" Grid.Column="0" Grid.Row="0">
+                                      Visibility="{x:Bind IsRestricted}">
                                     <TextBlock Margin="3"
-                                               FontSize="9" TextAlignment="Center"
+                                               FontSize="9"
                                                FontWeight="Bold"
                                                Foreground="White"
-                                               Text="{x:Bind RestrictionCaption}" />
+                                               Text="{x:Bind RestrictionCaption}"
+                                               TextAlignment="Center" />
                                 </Grid>
-                                <Grid Background="Green"
+                                <Grid Grid.Row="0"
+                                      Grid.Column="1"
+                                      Background="Green"
                                       CornerRadius="5"
-                                      Visibility="{x:Bind IsUgoira}" Grid.Column="1" Grid.Row="0">
+                                      Visibility="{x:Bind IsUgoira}">
                                     <TextBlock Margin="3"
-                                               FontSize="9" TextAlignment="Center"
+                                               FontSize="9"
                                                FontWeight="Bold"
                                                Foreground="White"
-                                               Text="GIF"/>
+                                               Text="GIF"
+                                               TextAlignment="Center" />
                                 </Grid>
                             </Grid>
                         </Grid>

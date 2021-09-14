@@ -41,16 +41,17 @@
 ### 准备...
 1. 带有WinUI 3工作负载的Visual Studio
    2019，你可以在 [创建你的第一个WinUI 3 app](https://docs.microsoft.com/zh-cn/windows/apps/winui/winui3/create-your-first-winui3-app?tabs=desktop-csharp) 的"先决条件"部分查看更多信息
-2. 安装.NET 5，你可以在 [这里](https://dotnet.microsoft.com/download/dotnet/5.0) 下载并安装.NET 5
-3. 对Windows XAML
+2. 安装VS插件[Single-project MSIX Packaging Tools for VS 2019](https://marketplace.visualstudio.com/items?itemName=ProjectReunion.MicrosoftSingleProjectMSIXPackagingTools)(如果你使用的是VS 2022则需要下载对应插件的VS 2022版本)
+3. 安装.NET 5，你可以在 [这里](https://dotnet.microsoft.com/download/dotnet/5.0) 下载并安装.NET 5
+4. 对Windows XAML
    Framework的基本了解，要了解更多相关信息请看 [XAML概述](https://docs.microsoft.com/zh-cn/windows/uwp/xaml-platform/xaml-overview)
-4. 对C# .NET开发的一定了解以及开发经验
-5. 具有不依赖文档阅读代码的能力
+5. 对C# .NET开发的一定了解以及开发经验
+6. 具有不依赖文档阅读代码的能力
 
-#### 开发
-
+#### 开发 
 1. 克隆本项目
 2. 将 Pixeval 设置为启动项目
+3. 打开`Build` | `ConfigurationManager`，勾选Pixeval一项后面的`Deploy`单选框
 3. 构建并运行
 
 #### 项目结构

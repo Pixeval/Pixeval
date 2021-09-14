@@ -4,12 +4,19 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Events;
+using Pixeval.Misc;
+using Pixeval.UserControls;
 using Pixeval.Util;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Capability
 {
-    public sealed partial class RecommendationPage
+    public sealed partial class RecommendationPage : ISortedIllustrationContainerPageHelper
     {
+        public IllustrationContainer ViewModelProvider => IllustrationContainer;
+
+        public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
+
         public RecommendationPage()
         {
             InitializeComponent();
@@ -42,40 +49,14 @@ namespace Pixeval.Pages.Capability
 
         private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var viewModel = IllustrationContainer.ViewModel;
-            if (MakoHelper.GetSortDescriptionForIllustration(SortOptionComboBox.SelectedOption) is { } desc)
-            {
-                viewModel.SetSortDescription(desc);
-                IllustrationContainer.ScrollToTop();
-            }
-            else
-            {
-                viewModel.ClearSortDescription();
-            }
+            // FUCK C#, the default implementations are not inherited. We have to use this stupid cast here.
+            // even a donkey knows "this" is an "ISortedIllustrationContainerPageHelper"
+            ((ISortedIllustrationContainerPageHelper) this).OnSortOptionChanged();
         }
 
         private async Task ChangeSource()
         {
-            if (TryGetRecommendContentType(ModeSelectionComboBox, out var type))
-            {
-                await IllustrationContainer.ViewModel.ResetAndFill(App.MakoClient.Recommends(type), App.AppSetting.ItemsNumberLimitForDailyRecommendations);
-            }
+            await IllustrationContainer.ViewModel.ResetAndFill(App.MakoClient.Recommends(ModeSelectionComboBox.GetComboBoxSelectedItemTag(RecommendContentType.Illust)), App.AppSetting.ItemsNumberLimitForDailyRecommendations);
         }
-
-        #region Helper Functions
-
-        private static bool TryGetRecommendContentType(ComboBox sender, out RecommendContentType type)
-        {
-            if (sender is {SelectedItem: ComboBoxItem {Tag: RecommendContentType t}})
-            {
-                type = t;
-                return true;
-            }
-
-            type = RecommendContentType.Illust;
-            return false;
-        }
-
-        #endregion
     }
 }

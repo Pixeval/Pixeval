@@ -1,4 +1,4 @@
-﻿<ui:EnhancedPage x:Class="Pixeval.Pages.IllustrationViewer.IllustrationInfoPage"
+﻿<controls1:EnhancedPage x:Class="Pixeval.Pages.IllustrationViewer.IllustrationInfoPage"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
@@ -7,9 +7,10 @@
                  xmlns:model="using:Pixeval.CoreApi.Model"
                  xmlns:ui="using:Pixeval.Util.UI"
                  xmlns:viewer="using:Pixeval.Pages.IllustrationViewer"
+                 xmlns:controls1="using:Pixeval.Controls"
                  Background="{ThemeResource SidePanelBackgroundThemeBrush}"
                  mc:Ignorable="d">
-    <ui:EnhancedPage.Resources>
+    <controls1:EnhancedPage.Resources>
         <Style x:Key="InfoPageSectionHeaderTextBlockStyle"
                TargetType="TextBlock">
             <Setter Property="Margin" Value="{StaticResource StackLayoutEntriesMargin}" />
@@ -24,7 +25,7 @@
             <Setter Property="TextWrapping" Value="Wrap" />
             <Setter Property="MaxHeight" Value="200" />
         </Style>
-    </ui:EnhancedPage.Resources>
+    </controls1:EnhancedPage.Resources>
     <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                   HorizontalScrollMode="Disabled"
                   VerticalScrollBarVisibility="Auto">
@@ -119,4 +120,4 @@
             </ListView>
         </StackPanel>
     </ScrollViewer>
-</ui:EnhancedPage>
+</controls1:EnhancedPage>

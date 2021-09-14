@@ -42,8 +42,7 @@ namespace Pixeval.ViewModel
             SelectedIllustrations = new ObservableCollection<IllustrationViewModel>();
             Illustrations = new ObservableCollection<IllustrationViewModel>();
             IllustrationsView = new AdvancedCollectionView(Illustrations);
-            SelectionLabel =
-                IllustrationGridCommandBarResources.CancelSelectionButtonLabel;
+            _selectionLabel = IllustrationGridCommandBarResources.CancelSelectionButtonDefaultLabel;
         }
 
         public async Task Fill(int? itemsLimit = null)
@@ -75,8 +74,9 @@ namespace Pixeval.ViewModel
 
                         var count = SelectedIllustrations.Count;
                         SelectionLabel = count == 0
-                            ? IllustrationGridCommandBarResources.CancelSelectionButtonLabel
+                            ? IllustrationGridCommandBarResources.CancelSelectionButtonDefaultLabel
                             : IllustrationGridCommandBarResources.CancelSelectionButtonFormatted.Format(count);
+
                     };
                     IllustrationsView.Add(viewModel);
                 }

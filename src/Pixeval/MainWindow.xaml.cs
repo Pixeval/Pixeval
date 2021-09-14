@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 using PInvoke;
 using Pixeval.Events;
+using Pixeval.Misc;
 using Pixeval.Pages.Misc;
 using Pixeval.Util.UI;
 

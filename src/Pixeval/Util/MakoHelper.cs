@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -9,10 +7,10 @@ using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
+using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util.Generic;
 using Pixeval.Util.IO;
-using Pixeval.Util.UI;
 
 namespace Pixeval.Util
 {

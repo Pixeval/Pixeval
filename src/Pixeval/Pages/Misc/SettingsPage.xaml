@@ -12,6 +12,7 @@
       xmlns:userControls="using:Pixeval.UserControls"
       xmlns:util="using:Pixeval.Util"
       xmlns:viewModel="using:Pixeval.ViewModel"
+      xmlns:misc="using:Pixeval.Misc"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
       mc:Ignorable="d">
     <!--  ReSharper disable UnusedMember.Local  -->
@@ -114,7 +115,7 @@
                     <RadioButtons.ItemTemplate>
                         <DataTemplate x:DataType="pixeval:ApplicationTheme">
                             <RadioButton Checked="ApplicationThemeRadioButton_OnChecked"
-                                         Content="{x:Bind util:AttributeHelper.GetLocalizedResourceContent((pixeval:ApplicationTheme))}"
+                                         Content="{x:Bind misc:AttributeHelper.GetLocalizedResourceContent((pixeval:ApplicationTheme))}"
                                          DataContext="{x:Bind}" />
                         </DataTemplate>
                     </RadioButtons.ItemTemplate>

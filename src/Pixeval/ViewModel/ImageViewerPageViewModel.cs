@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Util;
+using Pixeval.Misc;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
 using Pixeval.Util.IO;

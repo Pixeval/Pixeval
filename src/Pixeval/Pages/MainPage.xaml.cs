@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Events;
+using Pixeval.Misc;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Misc;
 using Pixeval.Util.UI;

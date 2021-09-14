@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pixeval.Util.UI
+namespace Pixeval.Misc
 {
     public sealed class NavigationViewTag
     {

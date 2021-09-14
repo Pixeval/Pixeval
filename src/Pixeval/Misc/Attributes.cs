@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Pixeval.Util
+namespace Pixeval.Misc
 {
     [AttributeUsage(AttributeTargets.Field)]
     public class Metadata : Attribute

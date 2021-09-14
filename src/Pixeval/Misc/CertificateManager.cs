@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 
-namespace Pixeval.Util.IO
+namespace Pixeval.Misc
 {
     public class CertificateManager
     {

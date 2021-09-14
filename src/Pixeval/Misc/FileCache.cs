@@ -14,8 +14,9 @@ using Windows.Storage.Streams;
 using CommunityToolkit.WinUI.Helpers;
 using Microsoft.Toolkit.Diagnostics;
 using Pixeval.Util.Generic;
+using Pixeval.Util.IO;
 
-namespace Pixeval.Util.IO
+namespace Pixeval.Misc
 {
 
     public class FileCache

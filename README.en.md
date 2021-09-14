@@ -35,7 +35,8 @@ For more information, see [main page](https://sora.ink/pixeval/)
 
 ## Prerequisites
 1. Visual Studio 2019 with WinUI 3 workload, for more informations, see the "prerequisites" section of [Create your first WinUI 3 app](https://docs.microsoft.com/en-us/windows/apps/winui/winui3/create-your-first-winui3-app?tabs=desktop-csharp)
-2. .NET 5 installed, you can download and install .NET 5 at [here](https://dotnet.microsoft.com/download/dotnet/5.0)
+2. Install Visual Studio extension [Single-project MSIX Packaging Tools for VS 2019](https://marketplace.visualstudio.com/items?itemName=ProjectReunion.MicrosoftSingleProjectMSIXPackagingTools)(note if you're using VS 2022, use the corresponding version instead)
+3. .NET 5 installed, you can download and install .NET 5 at [here](https://dotnet.microsoft.com/download/dotnet/5.0)
 
 ### If you want to take part into the development, there are some extra requirements:
 3. The basic knowledge about Windows XAML Framework, for more information, see [XAML Overview](https://docs.microsoft.com/en-us/windows/uwp/xaml-platform/xaml-overview)
@@ -45,6 +46,7 @@ For more information, see [main page](https://sora.ink/pixeval/)
 ## Development
 1. Clone the project
 2. Set the *Pixeval (Packaged)* as startup project
+3. Open `Build` | `ConfigurationManager` and select the check box labelled with `Deploy` at Pixeval's row
 3. Build and run
 
 ### Project Structure

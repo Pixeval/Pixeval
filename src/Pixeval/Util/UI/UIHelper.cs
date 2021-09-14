@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Util;
+using Pixeval.Misc;
 
 namespace Pixeval.Util.UI
 {
@@ -54,7 +55,7 @@ namespace Pixeval.Util.UI
             bool? addImageQuery = default)
         {
 
-            var appLogoOverrideUri = new ToastGenericAppLogo()
+            var appLogoOverrideUri = new ToastGenericAppLogo
             {
                 Source = uri
             };
@@ -198,6 +199,11 @@ namespace Pixeval.Util.UI
             {
                 Glyph = symbol.GetMetadataOnEnumMember()
             };
+        }
+
+        public static T? GetComboBoxSelectedItemTag<T>(this ComboBox box, T? defaultValue = default)
+        {
+            return box is { SelectedItem: ComboBoxItem { Tag: T t } } ? t : defaultValue;
         }
     }
 }

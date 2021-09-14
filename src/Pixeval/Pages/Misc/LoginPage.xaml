@@ -5,6 +5,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:util="using:Pixeval.Util"
       xmlns:viewModel="using:Pixeval.ViewModel"
+      xmlns:misc="using:Pixeval.Misc"
       d:DataContext="{d:DesignInstance viewModel:LoginPageViewModel}"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
       Loaded="LoginPage_OnLoaded"
@@ -20,7 +21,7 @@
             <TextBlock Margin="0,15,0,0"
                        HorizontalAlignment="Center"
                        FontSize="10"
-                       Text="{x:Bind util:AttributeHelper.GetLocalizedResourceContent(_viewModel.LoginPhase), Mode=OneWay}" />
+                       Text="{x:Bind misc:AttributeHelper.GetLocalizedResourceContent(_viewModel.LoginPhase), Mode=OneWay}" />
         </StackPanel>
     </Grid>
 </Page>

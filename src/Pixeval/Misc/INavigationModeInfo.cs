@@ -1,6 +1,6 @@
 ﻿using Microsoft.UI.Xaml.Navigation;
 
-namespace Pixeval.Util.UI
+namespace Pixeval.Misc
 {
     public interface INavigationModeInfo
     {

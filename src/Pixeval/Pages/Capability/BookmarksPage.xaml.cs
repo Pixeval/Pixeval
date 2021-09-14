@@ -4,12 +4,19 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Events;
+using Pixeval.Misc;
+using Pixeval.UserControls;
 using Pixeval.Util;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Capability
 {
-    public sealed partial class BookmarksPage
+    public sealed partial class BookmarksPage : ISortedIllustrationContainerPageHelper
     {
+        public IllustrationContainer ViewModelProvider => IllustrationContainer;
+
+        public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
+
         public BookmarksPage()
         {
             InitializeComponent();
@@ -42,40 +49,12 @@ namespace Pixeval.Pages.Capability
 
         private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var viewModel = IllustrationContainer.ViewModel;
-            if (MakoHelper.GetSortDescriptionForIllustration(SortOptionComboBox.SelectedOption) is { } desc)
-            {
-                viewModel.SetSortDescription(desc);
-                IllustrationContainer.ScrollToTop();
-            }
-            else
-            {
-                viewModel.ClearSortDescription();
-            }
+            ((ISortedIllustrationContainerPageHelper) this).OnSortOptionChanged();
         }
 
         private async Task ChangeSource()
         {
-            if (TryGetPrivacyPolicy(PrivacyPolicyComboBox, out var policy))
-            {
-                await IllustrationContainer.ViewModel.ResetAndFill(App.MakoClient.Bookmarks(App.Uid!, policy));
-            }
+            await IllustrationContainer.ViewModel.ResetAndFill(App.MakoClient.Bookmarks(App.Uid!, PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public)));
         }
-
-        #region Helper Functions
-
-        private static bool TryGetPrivacyPolicy(ComboBox sender, out PrivacyPolicy type)
-        {
-            if (sender is { SelectedItem: ComboBoxItem { Tag: PrivacyPolicy t } })
-            {
-                type = t;
-                return true;
-            }
-
-            type = PrivacyPolicy.Public;
-            return false;
-        }
-
-        #endregion
     }
 }

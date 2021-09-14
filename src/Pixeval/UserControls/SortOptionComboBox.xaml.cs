@@ -1,7 +1,9 @@
-﻿using Microsoft.UI.Xaml;
+﻿using CommunityToolkit.WinUI.UI;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Options;
+using Pixeval.Util;
 
 namespace Pixeval.UserControls
 {
@@ -38,8 +40,14 @@ namespace Pixeval.UserControls
 
         public IllustrationSortOption SelectedOption => ((IllustrationSortOptionWrapper) SelectedItem).Value;
 
+        public SortDescription? GetSortDescription()
+        {
+            return MakoHelper.GetSortDescriptionForIllustration(SelectedOption);
+        }
+
         private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            SelectedItem = ComboBox.SelectedItem;
             SelectionChangedInternal?.Invoke(sender, e);
         }
     }

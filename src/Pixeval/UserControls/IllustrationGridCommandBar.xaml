@@ -20,16 +20,15 @@
                     controls:DockPanel.Dock="Right"
                     Background="Transparent"
                     DefaultLabelPosition="Right">
-            <AppBarButton x:Uid="/IllustrationGridCommandBar/CancelSelectionButton"
-                          Icon="{ui:FontIcon Glyph=CancelE711}"
-                          Tapped="CancelSelectionButton_OnTapped"
-                          Label="{x:Bind ViewModel.SelectionLabel, Mode=OneWay}"/>
+            <AppBarButton Icon="{ui:FontIcon Glyph=CancelE711}"
+                          Label="{x:Bind ViewModel.SelectionLabel, Mode=OneWay}"
+                          Tapped="CancelSelectionButton_OnTapped" />
             <AppBarToggleButton x:Uid="/IllustrationGridCommandBar/OpenConditionDialogButton"
                                 Icon="{ui:FontIcon Glyph=FilterE71C}" />
-            <AppBarToggleButton x:Uid="/IllustrationGridCommandBar/SelectAllToggleButton"
-                                Checked="SelectAllToggleButton_OnChecked"
-                                Icon="{ui:FontIcon Glyph=SelectAllE8B3}"
-                                Unchecked="SelectAllToggleButton_OnUnchecked" />
+            <AppBarButton x:Name="SelectAllButton"
+                          x:Uid="/IllustrationGridCommandBar/SelectAllButton"
+                          Icon="{ui:FontIcon Glyph=SelectAllE8B3}"
+                          Tapped="SelectAllToggleButton_OnTapped" />
             <AppBarSeparator />
             <AppBarButton x:Uid="/IllustrationGridCommandBar/AddAllToBookmarkButton"
                           Icon="{ui:FontIcon Glyph=HeartEB51}"

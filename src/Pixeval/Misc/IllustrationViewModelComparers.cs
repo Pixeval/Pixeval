@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Pixeval.ViewModel;
 
-namespace Pixeval.Util.Generic
+namespace Pixeval.Misc
 {
     public class IllustrationViewModelPublishDateComparer : IComparer<IllustrationViewModel>, IComparer
     {
@@ -34,7 +34,6 @@ namespace Pixeval.Util.Generic
             {
                 return xi.TotalBookmarks.CompareTo(yi.TotalBookmarks);
             }
-
             return 0;
         }
 

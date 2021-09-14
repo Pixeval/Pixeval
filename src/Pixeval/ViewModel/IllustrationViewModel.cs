@@ -11,6 +11,7 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Util;
+using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.UserControls;
 using Pixeval.Util;

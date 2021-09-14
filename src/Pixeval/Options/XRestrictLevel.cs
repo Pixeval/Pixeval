@@ -1,4 +1,4 @@
-﻿using Pixeval.Util;
+﻿using Pixeval.Misc;
 
 namespace Pixeval.Options
 {

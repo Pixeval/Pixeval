@@ -31,12 +31,6 @@ namespace Pixeval.UserControls
             await viewModel!.RemoveBookmarkAsync();
         }
 
-        // Make sure that a tap on the selection button will not be handled by IllustrationThumbnailContainerItem_OnTapped
-        private void SelectionButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            e.Handled = true;
-        }
-
         private async void PostBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             e.Handled = true;

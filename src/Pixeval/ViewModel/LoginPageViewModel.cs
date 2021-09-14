@@ -19,6 +19,7 @@ using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Preference;
 using Pixeval.CoreApi.Util;
 using Pixeval.Events;
+using Pixeval.Misc;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;

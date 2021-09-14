@@ -138,7 +138,7 @@
   <data name="SaveAllButton.Label" xml:space="preserve">
     <value>保存</value>
   </data>
-  <data name="SelectAllToggleButton.Label" xml:space="preserve">
+  <data name="SelectAllButton.Label" xml:space="preserve">
     <value>全选</value>
   </data>
   <data name="SelectedTooManyItemsForBookmarkContent" xml:space="preserve">
@@ -159,7 +159,7 @@
   <data name="ShareButton.Label" xml:space="preserve">
     <value>分享</value>
   </data>
-  <data name="CancelSelectionButton.Label" xml:space="preserve">
+  <data name="CancelSelectionButtonDefaultLabel" xml:space="preserve">
     <value>取消选择</value>
   </data>
 </root>

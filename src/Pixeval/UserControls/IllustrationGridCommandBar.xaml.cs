@@ -66,7 +66,7 @@ namespace Pixeval.UserControls
             typeof(bool),
             typeof(IllustrationGridCommandBar),
             PropertyMetadata.Create(true,
-                (o, args) => ((IllustrationGridCommandBar) o)._defaultCommands.ForEach(c => c.IsEnabled = (bool) args.NewValue)));
+                (o, args) => ((IllustrationGridCommandBar) o)._defaultCommands.Where(c => c != ((IllustrationGridCommandBar) o).SelectAllButton).ForEach(c => c.IsEnabled = (bool) args.NewValue)));
 
         public static DependencyProperty ViewModelProperty = DependencyProperty.Register(
             nameof(ViewModel),
@@ -121,36 +121,9 @@ namespace Pixeval.UserControls
             }
         }
 
-        private void SelectAllToggleButton_OnChecked(object sender, RoutedEventArgs e)
+        private void SelectAllToggleButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             ViewModel.Illustrations.ForEach(v => v.IsSelected = true);
-            ViewModel.Illustrations.CollectionChanged += OnIllustrationsCollectionChanged;
-        }
-
-        private void SelectAllToggleButton_OnUnchecked(object sender, RoutedEventArgs e)
-        {
-            ViewModel.Illustrations.ForEach(v => v.IsSelected = false);
-            ViewModel.Illustrations.CollectionChanged -= OnIllustrationsCollectionChanged;
-        }
-
-        private static void OnIllustrationsCollectionChanged(object? _, NotifyCollectionChangedEventArgs args)
-        {
-            switch (args)
-            {
-                case {Action: NotifyCollectionChangedAction.Add}:
-                    if (args.NewItems is { } newItems)
-                    {
-                        foreach (IllustrationViewModel? item in newItems)
-                        {
-                            if (item is not null)
-                            {
-                                item.IsSelected = true;
-                            }
-                        }
-                    }
-
-                    break;
-            }
         }
 
         private async void AddAllToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -212,7 +185,6 @@ namespace Pixeval.UserControls
         private void CancelSelectionButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             ViewModel.Illustrations.ForEach(v => v.IsSelected = false);
-            ViewModel.Illustrations.CollectionChanged -= OnIllustrationsCollectionChanged;
         }
     }
 }
