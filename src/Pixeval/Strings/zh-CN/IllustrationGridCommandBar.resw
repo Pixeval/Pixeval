@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CancelSelectionButtonFormatted" xml:space="preserve">
+    <value>取消选择 ({0})</value>
+  </data>
   <data name="AddAllToBookmarkButton.Label" xml:space="preserve">
     <value>收藏</value>
   </data>
@@ -155,5 +158,8 @@
   </data>
   <data name="ShareButton.Label" xml:space="preserve">
     <value>分享</value>
+  </data>
+  <data name="CancelSelectionButton.Label" xml:space="preserve">
+    <value>取消选择</value>
   </data>
 </root>

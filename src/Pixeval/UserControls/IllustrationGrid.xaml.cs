@@ -13,6 +13,7 @@ using Pixeval.ViewModel;
 namespace Pixeval.UserControls
 {
     // use "load failed" image for those thumbnails who failed to load its source due to various reasons
+    // note: please ALWAYS add e.Handled = true before every "tapped" event for the buttons
     public sealed partial class IllustrationGrid
     {
         public IllustrationGridViewModel ViewModel { get; set; }
@@ -25,8 +26,15 @@ namespace Pixeval.UserControls
 
         private async void RemoveBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
+            e.Handled = true;
             var viewModel = sender.GetDataContext<IllustrationViewModel>();
             await viewModel!.RemoveBookmarkAsync();
+        }
+
+        // Make sure that a tap on the selection button will not be handled by IllustrationThumbnailContainerItem_OnTapped
+        private void SelectionButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            e.Handled = true;
         }
 
         private async void PostBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)

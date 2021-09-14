@@ -29,6 +29,8 @@ namespace Pixeval.ViewModel
 
         public bool IsRestricted => Illustration.IsRestricted();
 
+        public bool IsManga => Illustration.IsManga();
+
         public string RestrictionCaption => Illustration.RestrictLevel().GetMetadataOnEnumMember()!;
 
         public string Id => Illustration.Id.ToString();
