@@ -4,7 +4,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Events;
-using Pixeval.Options;
 using Pixeval.Util;
 
 namespace Pixeval.Pages.Capability
@@ -44,7 +43,7 @@ namespace Pixeval.Pages.Capability
         private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var viewModel = IllustrationContainer.ViewModel;
-            if (MakoHelper.GetSortDescriptionForIllustration(GetIllustrationSortOption()) is { } desc)
+            if (MakoHelper.GetSortDescriptionForIllustration(SortOptionComboBox.SelectedOption) is { } desc)
             {
                 viewModel.SetSortDescription(desc);
                 IllustrationContainer.ScrollToTop();
@@ -75,11 +74,6 @@ namespace Pixeval.Pages.Capability
 
             type = RecommendContentType.Illust;
             return false;
-        }
-
-        private IllustrationSortOption GetIllustrationSortOption()
-        {
-            return ((IllustrationSortOptionWrapper) SortOptionComboBox.SelectedItem).Value;
         }
 
         #endregion

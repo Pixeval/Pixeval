@@ -22,6 +22,9 @@
                                   Tag="{x:Bind enum:PrivacyPolicy.Private}" />
                 </ComboBox.Items>
             </ComboBox>
+            <userControls:SortOptionComboBox x:Name="SortOptionComboBox"
+                                             Margin="10,0,0,0"
+                                             SelectionChanged="SortOptionComboBox_OnSelectionChanged" />
         </userControls:IllustrationContainer.CommandBarElements>
     </userControls:IllustrationContainer>
 </ui:EnhancedPage>

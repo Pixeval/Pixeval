@@ -36,7 +36,7 @@ namespace Pixeval.UserControls
             await viewModel!.PostPublicBookmarkAsync();
         }
 
-        private void IllustrationThumbnailContainerItem_OnTapped(object sender, TappedRoutedEventArgs e)
+        private void Thumbnail_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             EventChannel.Default.Publish(new MainPageFrameSetConnectedAnimationTargetEvent(sender as UIElement));
 

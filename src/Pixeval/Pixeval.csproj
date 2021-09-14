@@ -135,10 +135,12 @@
       <None Remove="Pages\ImageViewerPage.xaml" />
       <None Remove="Pages\RecommendationPage.xaml" />
       <None Remove="Pages\SettingsPage.xaml" />
+      <None Remove="Strings\zh-CN\SortOptionComboBox.resw" />
       <None Remove="Themes.xaml" />
       <None Remove="UserControls\IllustrationContainer.xaml" />
       <None Remove="UserControls\IllustrationGridCommandBar.xaml" />
       <None Remove="UserControls\MainCommentBlock.xaml" />
+      <None Remove="UserControls\SortOptionComboBox.xaml" />
    </ItemGroup>
    <ItemGroup>
       <AppxManifest Include="Package.appxmanifest">
@@ -315,11 +317,17 @@
       <PRIResource Include="Strings\zh-CN\RecentPostsPage.resw" />
       <PRIResource Include="Strings\zh-CN\RecommendationsPage.resw" />
       <PRIResource Include="Strings\zh-CN\SettingsPage.resw" />
+      <PRIResource Include="Strings\zh-CN\SortOptionComboBox.resw" />
    </ItemGroup>
    <ItemGroup>
       <Content Update="Assets\Images\logo44x44.ico">
          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </Content>
+   </ItemGroup>
+   <ItemGroup>
+     <Page Update="UserControls\SortOptionComboBox.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
    </ItemGroup>
    <ItemGroup>
      <Page Update="Pages\Capability\RecentPostsPage.xaml">

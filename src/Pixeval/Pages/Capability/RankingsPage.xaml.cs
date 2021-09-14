@@ -18,9 +18,6 @@ namespace Pixeval.Pages.Capability
             InitializeComponent();
         }
 
-
-        private DateTime MaxDate => DateTime.Now.AddDays(-2);
-
         public override void Dispose(NavigatingCancelEventArgs navigatingCancelEventArgs)
         {
             IllustrationContainer.ViewModel.Dispose();
@@ -28,6 +25,7 @@ namespace Pixeval.Pages.Capability
 
         public override void Prepare(NavigationEventArgs navigationEventArgs)
         {
+            SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
             RankOptionComboBox.SelectedItem = RankOptionWrapper.AvailableOptions().Of(RankOption.Day);
             RankDateTimeCalendarDatePicker.Date = DateTime.Now.AddDays(-2);
             EventChannel.Default.Subscribe<MainPageFrameNavigatingEvent>(() => IllustrationContainer.ViewModel.FetchEngine?.Cancel());
@@ -58,11 +56,26 @@ namespace Pixeval.Pages.Capability
                 await IllustrationContainer.ViewModel.ResetAndFill(App.MakoClient.Ranking(rankOption, dateTime));
             }
         }
+
+        private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var viewModel = IllustrationContainer.ViewModel;
+            if (MakoHelper.GetSortDescriptionForIllustration(SortOptionComboBox.SelectedOption) is { } desc)
+            {
+                viewModel.SetSortDescription(desc);
+                IllustrationContainer.ScrollToTop();
+            }
+            else
+            {
+                viewModel.ClearSortDescription();
+            }
+        }
+
         #region Helper Functions
 
-        private bool TryGetDatetime(CalendarDatePicker sender, out DateTime dateTime)
+        private static bool TryGetDatetime(CalendarDatePicker sender, out DateTime dateTime)
         {
-            if (sender is {Date: { } })
+            if (sender is {Date: { }})
             {
                 dateTime = sender.Date.Value.DateTime;
                 return true;
@@ -72,7 +85,7 @@ namespace Pixeval.Pages.Capability
             return false;
         }
 
-        private bool TryGetRankOption(ComboBox sender, out RankOption option)
+        private static bool TryGetRankOption(ComboBox sender, out RankOption option)
         {
             if (sender is {SelectedItem: RankOptionWrapper {Value: var t}})
             {
@@ -83,7 +96,7 @@ namespace Pixeval.Pages.Capability
             option = RankOption.Day;
             return false;
         }
-        
+
         #endregion
     }
 }

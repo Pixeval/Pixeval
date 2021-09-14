@@ -23,17 +23,9 @@
                                   Tag="{x:Bind enum:RecommendContentType.Manga}" />
                 </ComboBox.Items>
             </ComboBox>
-            <ComboBox x:Name="SortOptionComboBox"
-                      x:Uid="/Misc/SortOptionComboBox"
-                      Margin="10,0,0,0"
-                      ItemsSource="{x:Bind options:IllustrationSortOptionWrapper.AvailableOptions()}"
-                      SelectionChanged="SortOptionComboBox_OnSelectionChanged">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate x:DataType="options:IllustrationSortOptionWrapper">
-                        <TextBlock Text="{x:Bind LocalizedString}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
+            <userControls:SortOptionComboBox x:Name="SortOptionComboBox"
+                                             Margin="10,0,0,0"
+                                             SelectionChanged="SortOptionComboBox_OnSelectionChanged" />
         </userControls:IllustrationContainer.CommandBarElements>
     </userControls:IllustrationContainer>
 </ui:EnhancedPage>

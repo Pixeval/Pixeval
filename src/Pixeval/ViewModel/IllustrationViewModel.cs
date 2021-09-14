@@ -148,8 +148,6 @@ namespace Pixeval.ViewModel
                     case Result<IRandomAccessStream>.Failure(OperationCanceledException):
                         LoadingThumbnailCancellationHandle.Reset();
                         return null;
-                    case var other:
-                        return other.GetOrThrow();
                 }
             }
             return await AppContext.GetAssetStreamAsync("Images/image-not-available.png");

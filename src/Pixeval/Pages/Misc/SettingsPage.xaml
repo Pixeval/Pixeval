@@ -9,6 +9,7 @@
       xmlns:pixeval="using:Pixeval"
       xmlns:system="using:System"
       xmlns:ui="using:CommunityToolkit.WinUI.UI"
+      xmlns:userControls="using:Pixeval.UserControls"
       xmlns:util="using:Pixeval.Util"
       xmlns:viewModel="using:Pixeval.ViewModel"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -169,17 +170,8 @@
                 <TextBlock x:Uid="/SettingsPage/DefaultSortOptionTextBlock"
                            Margin="0,10,0,0"
                            Style="{StaticResource SectionHeaderTextBlockStyle}" />
-                <ComboBox x:Name="DefaultSortOptionComboBox"
-                          x:Uid="/Misc/SortOptionComboBox"
-                          Margin="{StaticResource StackLayoutEntryPadding}"
-                          ItemsSource="{x:Bind options:IllustrationSortOptionWrapper.AvailableOptions()}"
-                          SelectedItem="{x:Bind _viewModel.BoxSortOption(), BindBack=_viewModel.UnboxSortOption, Mode=TwoWay}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="options:IllustrationSortOptionWrapper">
-                            <TextBlock Text="{x:Bind LocalizedString}" />
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                <userControls:SortOptionComboBox Margin="{StaticResource StackLayoutEntryPadding}"
+                                                 SelectedItem="{x:Bind _viewModel.BoxSortOption(), BindBack=_viewModel.UnboxSortOption, Mode=TwoWay}" />
                 <InfoBar x:Uid="/SettingsPage/DefaultSortOptionInfoBar"
                          Style="{StaticResource SectionInfoBarStyle}" />
                 <!--  Search Keyword Match Section  -->

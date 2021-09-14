@@ -35,9 +35,7 @@
                 <DataTemplate x:DataType="viewModel:IllustrationViewModel">
                     <GridViewItem x:Name="IllustrationThumbnailContainerItem"
                                   EffectiveViewportChanged="IllustrationThumbnailContainerItem_OnEffectiveViewportChanged"
-                                  IsSelected="{x:Bind IsSelected, Mode=TwoWay}"
-                                  Opacity="0"
-                                  Tapped="IllustrationThumbnailContainerItem_OnTapped">
+                                  IsSelected="{x:Bind IsSelected, Mode=TwoWay}">
                         <GridViewItem.RenderTransform>
                             <ScaleTransform CenterX="{Binding ElementName=IllustrationThumbnailContainerItem, Path=ActualWidth, Mode=OneWay, Converter={StaticResource IllustrationGridItemContainerWidthCenterConverter}}" CenterY="125" />
                         </GridViewItem.RenderTransform>
@@ -147,7 +145,8 @@
                                    HorizontalAlignment="Stretch"
                                    VerticalAlignment="Stretch"
                                    Source="{x:Bind ThumbnailSource, Mode=OneWay}"
-                                   Stretch="UniformToFill">
+                                   Stretch="UniformToFill"
+                                   Tapped="Thumbnail_OnTapped">
                                 <Image.RenderTransform>
                                     <ScaleTransform CenterX="{Binding ElementName=IllustrationThumbnailContainerItem, Path=ActualWidth, Mode=OneWay, Converter={StaticResource IllustrationGridItemContainerWidthCenterConverter}}" CenterY="125" />
                                 </Image.RenderTransform>

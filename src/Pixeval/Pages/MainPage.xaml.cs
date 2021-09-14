@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime;
 using CommunityToolkit.WinUI.UI;
 using CommunityToolkit.WinUI.UI.Controls;
@@ -72,6 +73,12 @@ namespace Pixeval.Pages
                 gridView.ScrollIntoView(_illustrationViewerContent);
                 _illustrationViewerContent = null;
             }
+        }
+
+        private void MainPageRootFrame_OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        {
+            // TODO
+            Debugger.Break();
         }
     }
 }

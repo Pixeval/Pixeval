@@ -1,36 +1,20 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Events;
 using Pixeval.Util;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace Pixeval.Pages.Capability
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class RecentPostsPage
     {
         public RecentPostsPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
+
         public override void Dispose(NavigatingCancelEventArgs navigatingCancelEventArgs)
         {
             IllustrationContainer.ViewModel.Dispose();
@@ -39,6 +23,7 @@ namespace Pixeval.Pages.Capability
         public override void Prepare(NavigationEventArgs navigationEventArgs)
         {
             PrivacyPolicyComboBox.SelectedItem = PrivacyPolicyComboBoxPublicItem;
+            SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
             EventChannel.Default.Subscribe<MainPageFrameNavigatingEvent>(() => IllustrationContainer.ViewModel.FetchEngine?.Cancel());
         }
 
@@ -60,6 +45,20 @@ namespace Pixeval.Pages.Capability
             if (TryGetPrivacyPolicy(PrivacyPolicyComboBox, out var policy))
             {
                 await IllustrationContainer.ViewModel.ResetAndFill(App.MakoClient.RecentPosts(policy));
+            }
+        }
+
+        private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var viewModel = IllustrationContainer.ViewModel;
+            if (MakoHelper.GetSortDescriptionForIllustration(SortOptionComboBox.SelectedOption) is { } desc)
+            {
+                viewModel.SetSortDescription(desc);
+                IllustrationContainer.ScrollToTop();
+            }
+            else
+            {
+                viewModel.ClearSortDescription();
             }
         }
 

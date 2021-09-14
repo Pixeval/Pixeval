@@ -4,6 +4,7 @@
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:options="using:Pixeval.Options"
+                 xmlns:system="using:System"
                  xmlns:ui="using:Pixeval.Util.UI"
                  xmlns:userControls="using:Pixeval.UserControls"
                  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -24,7 +25,10 @@
             <CalendarDatePicker x:Name="RankDateTimeCalendarDatePicker"
                                 Margin="10,0,0,0"
                                 DateChanged="RankDateTimeCalendarDatePicker_OnDateChanged"
-                                MaxDate="{x:Bind MaxDate}" />
+                                MaxDate="{x:Bind system:DateTime.Now.AddDays(-2)}" />
+            <userControls:SortOptionComboBox x:Name="SortOptionComboBox"
+                                             Margin="10,0,0,0"
+                                             SelectionChanged="SortOptionComboBox_OnSelectionChanged" />
         </userControls:IllustrationContainer.CommandBarElements>
     </userControls:IllustrationContainer>
 </ui:EnhancedPage>
