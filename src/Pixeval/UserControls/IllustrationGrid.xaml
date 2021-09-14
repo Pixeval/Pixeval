@@ -46,6 +46,11 @@
                                                  Exponent="12" />
                                 <Storyboard x:Key="ThumbnailScaleOutStoryboard">
                                     <DoubleAnimation EasingFunction="{StaticResource EasingFunction}"
+                                                     Storyboard.TargetName="ImageCollectionHint"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     To="0"
+                                                     Duration="0:0:2" />
+                                    <DoubleAnimation EasingFunction="{StaticResource EasingFunction}"
                                                      Storyboard.TargetName="Thumbnail"
                                                      Storyboard.TargetProperty="(Image.RenderTransform).(ScaleTransform.ScaleX)"
                                                      To="1.1"
@@ -87,6 +92,11 @@
                                                      Duration="0:0:2" />
                                 </Storyboard>
                                 <Storyboard x:Key="ThumbnailScaleInStoryboard">
+                                    <DoubleAnimation EasingFunction="{StaticResource EasingFunction}"
+                                                     Storyboard.TargetName="ImageCollectionHint"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     To="1"
+                                                     Duration="0:0:2" />
                                     <DoubleAnimation EasingFunction="{StaticResource EasingFunction}"
                                                      Storyboard.TargetName="Thumbnail"
                                                      Storyboard.TargetProperty="(Image.RenderTransform).(ScaleTransform.ScaleX)"
@@ -180,6 +190,18 @@
                                           Tapped="RemoveBookmarkButton_OnTapped"
                                           Visibility="{x:Bind IsBookmarked, Mode=OneWay}" />
                             </Grid>
+                            <Grid x:Name="ImageCollectionHint"
+                                  Width="20"
+                                  Height="20"
+                                  Margin="0,10,10,0"
+                                  HorizontalAlignment="Right"
+                                  VerticalAlignment="Top">
+                                <FontIcon Width="20"
+                                          Height="20"
+                                          FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                          Glyph="&#xF5ED;"
+                                          Visibility="{x:Bind IsManga, Mode=OneWay}" />
+                            </Grid>
                             <Grid x:Name="ImageSelectionButtonGrid"
                                   Width="20"
                                   Height="20"
@@ -193,19 +215,29 @@
                                 <Grid Background="White"
                                       CornerRadius="5"
                                       Opacity="0.8" />
-                                <CheckBox IsChecked="{x:Bind IsSelected, Mode=TwoWay}" />
+                                <CheckBox Tapped="SelectionButton_OnTapped" IsChecked="{x:Bind IsSelected, Mode=TwoWay}" />
                             </Grid>
                             <Grid Margin="10,0,0,10"
                                   HorizontalAlignment="Left"
-                                  VerticalAlignment="Bottom"
-                                  Background="Crimson"
-                                  CornerRadius="5"
-                                  Visibility="{x:Bind IsRestricted}">
-                                <TextBlock Margin="3"
-                                           FontSize="9"
-                                           FontWeight="Bold"
-                                           Foreground="White"
-                                           Text="{x:Bind RestrictionCaption}" />
+                                  VerticalAlignment="Bottom" ColumnDefinitions="Auto, Auto" RowDefinitions="Auto" ColumnSpacing="3">
+                                <Grid Background="Crimson"
+                                      CornerRadius="5"
+                                      Visibility="{x:Bind IsRestricted}" Grid.Column="0" Grid.Row="0">
+                                    <TextBlock Margin="3"
+                                               FontSize="9" TextAlignment="Center"
+                                               FontWeight="Bold"
+                                               Foreground="White"
+                                               Text="{x:Bind RestrictionCaption}" />
+                                </Grid>
+                                <Grid Background="Green"
+                                      CornerRadius="5"
+                                      Visibility="{x:Bind IsUgoira}" Grid.Column="1" Grid.Row="0">
+                                    <TextBlock Margin="3"
+                                               FontSize="9" TextAlignment="Center"
+                                               FontWeight="Bold"
+                                               Foreground="White"
+                                               Text="GIF"/>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </GridViewItem>

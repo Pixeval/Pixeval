@@ -208,5 +208,11 @@ namespace Pixeval.UserControls
             // TODO
             throw new NotImplementedException();
         }
+
+        private void CancelSelectionButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            ViewModel.Illustrations.ForEach(v => v.IsSelected = false);
+            ViewModel.Illustrations.CollectionChanged -= OnIllustrationsCollectionChanged;
+        }
     }
 }

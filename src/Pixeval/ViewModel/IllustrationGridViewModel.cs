@@ -29,11 +29,21 @@ namespace Pixeval.ViewModel
             set => SetProperty(ref _isAnyIllustrationSelected, value);
         }
 
+        private string _selectionLabel;
+
+        public string SelectionLabel
+        {
+            get => _selectionLabel;
+            set => SetProperty(ref _selectionLabel, value);
+        }
+
         public IllustrationGridViewModel()
         {
             SelectedIllustrations = new ObservableCollection<IllustrationViewModel>();
             Illustrations = new ObservableCollection<IllustrationViewModel>();
             IllustrationsView = new AdvancedCollectionView(Illustrations);
+            SelectionLabel =
+                IllustrationGridCommandBarResources.CancelSelectionButtonLabel;
         }
 
         public async Task Fill(int? itemsLimit = null)
@@ -62,6 +72,11 @@ namespace Pixeval.ViewModel
                         }
                         // Update the IsAnyIllustrationSelected Property if any of the viewModel's IsSelected property changes
                         IsAnyIllustrationSelected = SelectedIllustrations.Any();
+
+                        var count = SelectedIllustrations.Count;
+                        SelectionLabel = count == 0
+                            ? IllustrationGridCommandBarResources.CancelSelectionButtonLabel
+                            : IllustrationGridCommandBarResources.CancelSelectionButtonFormatted.Format(count);
                     };
                     IllustrationsView.Add(viewModel);
                 }

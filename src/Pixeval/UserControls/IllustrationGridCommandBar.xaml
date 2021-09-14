@@ -20,6 +20,10 @@
                     controls:DockPanel.Dock="Right"
                     Background="Transparent"
                     DefaultLabelPosition="Right">
+            <AppBarButton x:Uid="/IllustrationGridCommandBar/CancelSelectionButton"
+                          Icon="{ui:FontIcon Glyph=CancelE711}"
+                          Tapped="CancelSelectionButton_OnTapped"
+                          Label="{x:Bind ViewModel.SelectionLabel, Mode=OneWay}"/>
             <AppBarToggleButton x:Uid="/IllustrationGridCommandBar/OpenConditionDialogButton"
                                 Icon="{ui:FontIcon Glyph=FilterE71C}" />
             <AppBarToggleButton x:Uid="/IllustrationGridCommandBar/SelectAllToggleButton"
