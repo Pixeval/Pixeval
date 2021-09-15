@@ -50,6 +50,11 @@ namespace Pixeval
         public TargetFilter TargetFilter { get; set; }
 
         /// <summary>
+        /// How many rows to be preloaded in illustration grid
+        /// </summary>
+        public int PreLoadRows { get; set; }
+
+        /// <summary>
         /// Indicates the maximum page count that are allowed to be retrieved during
         /// keyword search(30 entries per page)
         /// </summary>
@@ -94,6 +99,7 @@ namespace Pixeval
             IllustrationSortOption defaultSortOption,
             SearchTagMatchOption searchTagMatchOption,
             TargetFilter targetFilter,
+            int preLoadRows,
             int pageLimitForKeywordSearch,
             int searchStartingFromPageNumber,
             int pageLimitForSpotlight,
@@ -112,6 +118,7 @@ namespace Pixeval
             DefaultSortOption = defaultSortOption;
             TagMatchOption = searchTagMatchOption;
             TargetFilter = targetFilter;
+            PreLoadRows = preLoadRows;
             PageLimitForKeywordSearch = pageLimitForKeywordSearch;
             SearchStartingFromPageNumber = searchStartingFromPageNumber;
             PageLimitForSpotlight = pageLimitForSpotlight;
@@ -135,6 +142,7 @@ namespace Pixeval
                 IllustrationSortOption.DoNotSort,
                 SearchTagMatchOption.PartialMatchForTags,
                 TargetFilter.ForAndroid,
+                2,
                 100,
                 1,
                 50,

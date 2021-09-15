@@ -226,6 +226,24 @@
   <data name="PageLimitForSearchTextBlock.Text" xml:space="preserve">
     <value>最大搜索页数限制</value>
   </data>
+  <data name="PreLoadRowsInfoBar.Message" xml:space="preserve">
+    <value>浏览插画时会根据此值提前加载几行插画，提升浏览插画时的流畅度，但会增加网络和资源占用。</value>
+  </data>
+  <data name="PreLoadRowsInfoBar.Title" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="PreLoadRowsNumberBox.PlaceholderText" xml:space="preserve">
+    <value>预加载行数限制</value>
+  </data>
+  <data name="PreLoadRowsNumberBoxValueNotInRangeTeachingTip.Subtitle" xml:space="preserve">
+    <value>值必须位于[1,15]内</value>
+  </data>
+  <data name="PreLoadRowsNumberBoxValueNotInRangeTeachingTip.Title" xml:space="preserve">
+    <value>输入的值不合法</value>
+  </data>
+  <data name="PreLoadRowsTextBlock.Text" xml:space="preserve">
+    <value>预加载行数限制</value>
+  </data>
   <data name="PageLimitForSpotlightInfoBar.Message" xml:space="preserve">
     <value>在搜索特辑时，最多会搜索该设置项指定的页数，其中每一页包含10条结果</value>
   </data>

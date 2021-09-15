@@ -252,6 +252,7 @@ namespace Pixeval
                 ConfigurationContainer.Values[nameof(AppSetting.DefaultSortOption)] = appSetting.DefaultSortOption.CastOrThrow<int>();
                 ConfigurationContainer.Values[nameof(AppSetting.TagMatchOption)] = appSetting.TagMatchOption.CastOrThrow<int>();
                 ConfigurationContainer.Values[nameof(AppSetting.TargetFilter)] = appSetting.TargetFilter.CastOrThrow<int>();
+                ConfigurationContainer.Values[nameof(AppSetting.PreLoadRows)] = appSetting.PreLoadRows;
                 ConfigurationContainer.Values[nameof(AppSetting.PageLimitForKeywordSearch)] = appSetting.PageLimitForKeywordSearch;
                 ConfigurationContainer.Values[nameof(AppSetting.SearchStartingFromPageNumber)] = appSetting.SearchStartingFromPageNumber;
                 ConfigurationContainer.Values[nameof(AppSetting.PageLimitForSpotlight)] = appSetting.PageLimitForSpotlight;
@@ -302,6 +303,7 @@ namespace Pixeval
                     ConfigurationContainer.Values[nameof(AppSetting.DefaultSortOption)].CastOrThrow<IllustrationSortOption>(),
                     ConfigurationContainer.Values[nameof(AppSetting.TagMatchOption)].CastOrThrow<SearchTagMatchOption>(),
                     ConfigurationContainer.Values[nameof(AppSetting.TargetFilter)].CastOrThrow<TargetFilter>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.PreLoadRows)].CastOrThrow<int>(),
                     ConfigurationContainer.Values[nameof(AppSetting.PageLimitForKeywordSearch)].CastOrThrow<int>(),
                     ConfigurationContainer.Values[nameof(AppSetting.SearchStartingFromPageNumber)].CastOrThrow<int>(),
                     ConfigurationContainer.Values[nameof(AppSetting.PageLimitForSpotlight)].CastOrThrow<int>(),
