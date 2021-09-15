@@ -35,7 +35,7 @@ namespace Pixeval
         {
             InitializeComponent();
             RegisterUnhandledExceptionHandler();
-            AppSetting = AppContext.LoadConfiguration() ?? AppSetting.CreateDefault();
+            AppSetting = AppContext.LoadSetting() ?? AppSetting.CreateDefault();
             RequestedTheme = AppSetting.Theme switch
             {
                 ApplicationTheme.Dark  => Microsoft.UI.Xaml.ApplicationTheme.Dark,

@@ -8,6 +8,7 @@ using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using CommunityToolkit.WinUI.Helpers;
+using PInvoke;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Preference;
 using Pixeval.CoreApi.Util;
@@ -220,6 +221,8 @@ namespace Pixeval
 
         public static void SaveContext()
         {
+            // Save the current resolution
+            (App.AppSetting.WindowWidth, App.AppSetting.WindowHeight) = UIHelper.GetWindowSize(App.GetMainWindowHandle());
             SaveSession();
             SaveConfiguration();
         }
@@ -291,7 +294,7 @@ namespace Pixeval
             }
         }
 
-        public static AppSetting? LoadConfiguration()
+        public static AppSetting? LoadSetting()
         {
             try
             {

@@ -5,7 +5,6 @@ using PInvoke;
 using Pixeval.Events;
 using Pixeval.Misc;
 using Pixeval.Pages.Misc;
-using Pixeval.Util.UI;
 
 namespace Pixeval
 {
@@ -55,13 +54,6 @@ namespace Pixeval
         private void PixevalAppRootFrame_OnNavigating(object sender, NavigatingCancelEventArgs e)
         {
             NavigationMode = e.NavigationMode;
-        }
-
-        private void MainWindow_OnSizeChanged(object sender, WindowSizeChangedEventArgs args)
-        {
-            // Save the window size
-            App.AppSetting.WindowWidth = (int) args.Size.Width;
-            App.AppSetting.WindowHeight = (int) args.Size.Height;
         }
     }
 }

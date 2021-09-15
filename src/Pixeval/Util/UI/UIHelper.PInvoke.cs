@@ -66,7 +66,8 @@ namespace Pixeval.Util.UI
         }
 
         /// <summary>
-        /// Get the current screen size using User32 api
+        /// Get the dpi-aware screen size using win32 API, where by "dpi-aware" means that
+        /// the result will be divided by the scale factor of the monitor that hosts the app
         /// </summary>
         /// <returns>Screen size</returns>
         public static (int, int) GetScreenSize()
@@ -77,7 +78,8 @@ namespace Pixeval.Util.UI
         public static (int, int) GetWindowSize(IntPtr hWnd)
         {
             User32.GetWindowRect(hWnd, out var rect);
-            return (rect.right - rect.left, rect.bottom - rect.top);
+            var dpi = User32.GetDpiForWindow(hWnd) / 96d;
+            return ((int, int)) (rect.right / dpi - rect.left / dpi, rect.bottom / dpi - rect.top / dpi);
         }
     }
 }
