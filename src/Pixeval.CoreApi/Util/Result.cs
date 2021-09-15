@@ -43,6 +43,16 @@ namespace Pixeval.CoreApi.Util
             };
         }
 
+        public T? GetOrElse(T? @else)
+        {
+            return this switch
+            {
+                Success(var content) => content,
+                Failure(var cause) => @else,
+                _ => throw new Exception("Invalid derived type of Result<T>")
+            };
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Result<T> OfSuccess(T value)
         {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Util;
@@ -9,7 +9,7 @@ using Pixeval.Util.Generic;
 
 namespace Pixeval.ViewModel
 {
-    public class CommentBlockViewModel : ObservableObject, IDisposable, ICommentViewModel
+    public class CommentBlockViewModel : CommentViewModel, IDisposable
     {
         public CommentBlockViewModel(IllustrationCommentsResponse.Comment comment)
         {
@@ -37,13 +37,15 @@ namespace Pixeval.ViewModel
 
         public bool IsStamp => Comment.Stamp is not null;
 
-        public DateTimeOffset PostDate => Comment.Date;
+        public override DateTimeOffset PostDate => Comment.Date;
 
-        public string? CommentContent => Comment.CommentContent;
+        public override string Poster => Comment.User?.Name ?? string.Empty;
+
+        public override string CommentContent => Comment.CommentContent ?? string.Empty;
 
         private SoftwareBitmapSource? _avatarSource;
 
-        public SoftwareBitmapSource? AvatarSource
+        public override SoftwareBitmapSource? AvatarSource
         {
             get => _avatarSource;
             set => SetProperty(ref _avatarSource, value);
@@ -64,7 +66,6 @@ namespace Pixeval.ViewModel
             Replies.AddRange(await App.MakoClient.IllustrationCommentReplies(Comment.Id.ToString())
                 .Select(c => new CommentRepliesViewModel(c))
                 .ToListAsync());
-
         }
 
         private async void LoadAvatarSource()

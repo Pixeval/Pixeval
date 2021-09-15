@@ -136,6 +136,7 @@ namespace Pixeval.ViewModel
                 return true;
             }
 
+            // TODO: Use loaded-failed image
             LoadingThumbnail = false;
             return false;
         }

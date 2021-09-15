@@ -137,6 +137,7 @@
       <None Remove="Pages\SettingsPage.xaml" />
       <None Remove="Strings\zh-CN\SortOptionComboBox.resw" />
       <None Remove="Themes.xaml" />
+      <None Remove="UserControls\CommentBlock.xaml" />
       <None Remove="UserControls\IllustrationContainer.xaml" />
       <None Remove="UserControls\IllustrationGridCommandBar.xaml" />
       <None Remove="UserControls\MainCommentBlock.xaml" />
@@ -323,6 +324,11 @@
       <Content Update="Assets\Images\logo44x44.ico">
          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </Content>
+   </ItemGroup>
+   <ItemGroup>
+     <Page Update="UserControls\CommentBlock.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
    </ItemGroup>
    <ItemGroup>
      <Page Update="UserControls\SortOptionComboBox.xaml">

@@ -9,6 +9,13 @@ namespace Pixeval.Util.UI
 {
     public static partial class UIHelper
     {
+        /// <summary>
+        /// Set the dpi-aware window size, where by "dpi-aware" means that the desired size
+        /// will be multiplied by the scale factor of the monitor which hosts the app
+        /// </summary>
+        /// <param name="window"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
         public static void SetWindowSize(this Window window, int width, int height)
         {
             var windowNative = window.As<IWindowNative>(); // see https://github.com/microsoft/WinUI-3-Demos/blob/master/src/Build2020Demo/DemoBuildCs/DemoBuildCs/DemoBuildCs/App.xaml.cs

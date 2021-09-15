@@ -22,6 +22,11 @@ namespace Pixeval.Util
             return !b;
         }
 
+        public static string RemoveSurrounding(this string str, string prefix, string suffix)
+        {
+            return str[(str.StartsWith(prefix) ? prefix.Length : 0)..(str.EndsWith(suffix) ? ^suffix.Length : str.Length)];
+        }
+
         public static async Task<string> HashAsync<T>(this T algorithm, byte[] bytes) where T : HashAlgorithm
         {
             await using var memoryStream = new MemoryStream(bytes);

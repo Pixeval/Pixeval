@@ -4,15 +4,15 @@
       xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:misc="using:Pixeval.Misc"
       xmlns:numberFormatting="using:Windows.Globalization.NumberFormatting"
       xmlns:options="using:Pixeval.Options"
       xmlns:pixeval="using:Pixeval"
       xmlns:system="using:System"
-      xmlns:ui="using:CommunityToolkit.WinUI.UI"
+      xmlns:toolkit="using:CommunityToolkit.WinUI.UI"
+      xmlns:ui="using:Pixeval.Util.UI"
       xmlns:userControls="using:Pixeval.UserControls"
-      xmlns:util="using:Pixeval.Util"
       xmlns:viewModel="using:Pixeval.ViewModel"
-      xmlns:misc="using:Pixeval.Misc"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
       mc:Ignorable="d">
     <!--  ReSharper disable UnusedMember.Local  -->
@@ -327,7 +327,7 @@
                                             Margin="{StaticResource StackLayoutEntryPadding}"
                                             HorizontalAlignment="Left"
                                             ItemsSource="{x:Bind _viewModel.ExcludeTags}"
-                                            QueryIcon="{ui:SymbolIconSource Symbol=Tag}"
+                                            QueryIcon="{toolkit:SymbolIconSource Symbol=Tag}"
                                             TokenItemAdded="SensitiveTagTokenizingTextBox_OnTokenItemAdded"
                                             TokenItemAdding="SensitiveTagTokenizingTextBox_OnTokenItemAdding"
                                             TokenItemRemoved="SensitiveTagTokenizingTextBox_OnTokenItemRemoved" />
