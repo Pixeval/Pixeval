@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
+using CommunityToolkit.WinUI;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -204,6 +205,14 @@ namespace Pixeval.Util.UI
         public static T? GetComboBoxSelectedItemTag<T>(this ComboBox box, T? defaultValue = default)
         {
             return box is { SelectedItem: ComboBoxItem { Tag: T t } } ? t : defaultValue;
+        }
+
+        public static bool IsFullyOrPartiallyVisible(this FrameworkElement child, FrameworkElement scrollViewer)
+        {
+            var childTransform = child.TransformToVisual(scrollViewer);
+            var childRectangle = childTransform.TransformBounds(new Rect(new Point(0, 0), child.RenderSize));
+            var ownerRectangle = new Rect(new Point(0, 0), scrollViewer.RenderSize);
+            return ownerRectangle.IntersectsWith(childRectangle);
         }
     }
 }

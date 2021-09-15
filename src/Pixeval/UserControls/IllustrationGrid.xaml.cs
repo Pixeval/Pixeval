@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
@@ -59,16 +59,25 @@ namespace Pixeval.UserControls
         private void IllustrationThumbnailContainerItem_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
         {
             var context = sender.GetDataContext<IllustrationViewModel>();
-            if (args.BringIntoViewDistanceY <= sender.ActualHeight) // one element ahead
+            var preloadRows = Math.Clamp(App.AppSetting.PreLoadRows, 1, 15);
+            if (args.BringIntoViewDistanceY <= sender.ActualHeight * preloadRows) // one element ahead
             {
                 _ = context.LoadThumbnailIfRequired().ContinueWith(task =>
                 {
                     if (!task.Result) return;
                     var transform = (ScaleTransform) sender.RenderTransform;
-                    var scaleXAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleX), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
-                    var scaleYAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleY), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
-                    var opacityAnimation = sender.CreateDoubleAnimation(nameof(sender.Opacity), from: 0, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
-                    UIHelper.CreateStoryboard(scaleXAnimation, scaleYAnimation, opacityAnimation).Begin();
+                    if (sender.IsFullyOrPartiallyVisible(this)) {
+                        var scaleXAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleX), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
+                        var scaleYAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleY), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
+                        var opacityAnimation = sender.CreateDoubleAnimation(nameof(sender.Opacity), from: 0, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
+                        UIHelper.CreateStoryboard(scaleXAnimation, scaleYAnimation, opacityAnimation).Begin();
+                    }
+                    else
+                    {
+                        transform.ScaleX = 1;
+                        transform.ScaleY = 1;
+                        sender.Opacity = 1;
+                    }
                 }, TaskScheduler.FromCurrentSynchronizationContext());
                 return;
             }

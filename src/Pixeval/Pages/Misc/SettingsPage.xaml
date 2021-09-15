@@ -235,6 +235,34 @@
                              x:Uid="/SettingsPage/PageLimitForSearchNumberBoxValueNotInRangeTeachingTip"
                              Style="{StaticResource NumberBoxWarningTeachingTipStyle}"
                              Target="{x:Bind PageLimitForSearchNumberBox}" />
+                <!--  Pre Load Rows  -->
+                <TextBlock x:Uid="/SettingsPage/PreLoadRowsTextBlock"
+                           Style="{StaticResource SectionHeaderTextBlockStyle}" />
+                <StackPanel Margin="{StaticResource StackLayoutEntryPadding}"
+                            Orientation="Horizontal">
+                    <Slider Width="300"
+                            HorizontalAlignment="Left"
+                            Maximum="15"
+                            Minimum="1"
+                            TickFrequency="10"
+                            TickPlacement="Outside"
+                            Value="{x:Bind _viewModel.PreLoadRows, Mode=TwoWay}" />
+                    <NumberBox x:Name="PreLoadRowsNumberBox"
+                               x:Uid="/SettingsPage/PreLoadRowsNumberBox"
+                               Margin="15,0,0,0"
+                               GotFocus="PreLoadRowsNumberBox_OnGotFocus"
+                               LostFocus="PreLoadRowsNumberBox_OnLostFocus"
+                               Maximum="15"
+                               Minimum="1"
+                               Style="{StaticResource SettingsNumberBoxStyle}"
+                               Value="{x:Bind _viewModel.PreLoadRows, Mode=TwoWay}" />
+                </StackPanel>
+                <InfoBar x:Uid="/SettingsPage/PreLoadRowsInfoBar"
+                         Style="{StaticResource SectionInfoBarStyle}" />
+                <TeachingTip x:Name="PreLoadRowsNumberBoxValueNotInRangeTeachingTip"
+                             x:Uid="/SettingsPage/PreLoadRowsNumberBoxValueNotInRangeTeachingTip"
+                             Style="{StaticResource NumberBoxWarningTeachingTipStyle}"
+                             Target="{x:Bind PreLoadRowsNumberBox}" />
                 <!--  Search Starts From  -->
                 <TextBlock x:Uid="/SettingsPage/SearchStartsFromPageNumberTextBlock"
                            Style="{StaticResource SectionHeaderTextBlockStyle}" />

@@ -95,6 +95,12 @@ namespace Pixeval.ViewModel
             set => SetProperty(_appSetting.TargetFilter, value, _appSetting, (setting, value) => setting.TargetFilter = value);
         }
 
+        public int PreLoadRows
+        {
+            get => _appSetting.PreLoadRows;
+            set => SetProperty(_appSetting.PreLoadRows, value, _appSetting, (setting, value) => setting.PreLoadRows = value);
+        }
+
         public int PageLimitForKeywordSearch
         {
             get => _appSetting.PageLimitForKeywordSearch;

@@ -48,6 +48,17 @@ namespace Pixeval.Pages.Misc
             NumberBoxCoerceValueInAndShowTeachingTip(sender, DownloadConcurrencyLevelValueNotInRangeTeachingTip, 1, Environment.ProcessorCount);
         }
 
+        private void PreLoadRowsNumberBox_OnGotFocus(object sender, RoutedEventArgs e)
+        {
+            DownloadConcurrencyLevelValueNotInRangeTeachingTip.IsOpen = false;
+        }
+
+        private void PreLoadRowsNumberBox_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            NumberBoxCoerceValueInAndShowTeachingTip(sender, SearchStartsFromPageNumberNumberBoxValueNotInRangeTeachingTip, 1, 150);
+        }
+
+
         private void SearchStartsFromPageNumberNumberBox_OnGotFocus(object sender, RoutedEventArgs e)
         {
             DownloadConcurrencyLevelValueNotInRangeTeachingTip.IsOpen = false;
