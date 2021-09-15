@@ -34,17 +34,17 @@ namespace Pixeval.Pages.Capability
             EventChannel.Default.Subscribe<MainPageFrameNavigatingEvent>(() => IllustrationContainer.ViewModel.FetchEngine?.Cancel());
         }
 
-        private async void RecommendationsPage_OnLoaded(object sender, RoutedEventArgs e)
+        private void RecommendationsPage_OnLoaded(object sender, RoutedEventArgs e)
         {
             if (App.Window.GetNavigationModeAndReset() is not NavigationMode.Back)
-            {
-                await ChangeSource();
+            { 
+                ChangeSource();
             }
         }
 
-        private async void ModeSelectionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            await ChangeSource();
+        private void ModeSelectionComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
+        { 
+            ChangeSource();
         }
 
         private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -54,9 +54,9 @@ namespace Pixeval.Pages.Capability
             ((ISortedIllustrationContainerPageHelper) this).OnSortOptionChanged();
         }
 
-        private async Task ChangeSource()
+        private void ChangeSource()
         {
-            await IllustrationContainer.ViewModel.ResetAndFill(App.MakoClient.Recommends(ModeSelectionComboBox.GetComboBoxSelectedItemTag(RecommendContentType.Illust)), App.AppSetting.ItemsNumberLimitForDailyRecommendations);
+            _ = IllustrationContainer.ViewModel.ResetAndFillAsync(App.MakoClient.Recommends(ModeSelectionComboBox.GetComboBoxSelectedItemTag(RecommendContentType.Illust)), App.AppSetting.ItemsNumberLimitForDailyRecommendations);
         }
     }
 }

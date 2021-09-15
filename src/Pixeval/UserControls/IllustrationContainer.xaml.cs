@@ -48,7 +48,7 @@ namespace Pixeval.UserControls
 
         public void ScrollToTop()
         {
-            IllustrationGrid.IllustrationGridView.FindDescendant<ScrollViewer>()?.ScrollToVerticalOffset(0);
+            IllustrationGrid.IllustrationGridView.FindDescendant<ScrollViewer>()?.ChangeView(null, 0, null, false);
         }
     }
 }

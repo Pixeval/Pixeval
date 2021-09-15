@@ -1,6 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Events;
@@ -34,22 +33,22 @@ namespace Pixeval.Pages.Capability
             EventChannel.Default.Subscribe<MainPageFrameNavigatingEvent>(() => IllustrationContainer.ViewModel.FetchEngine?.Cancel());
         }
 
-        private async void RecentPostsPage_OnLoaded(object sender, RoutedEventArgs e)
+        private void RecentPostsPage_OnLoaded(object sender, RoutedEventArgs e)
         {
             if (App.Window.GetNavigationModeAndReset() is not NavigationMode.Back)
             {
-                await ChangeSource();
+                ChangeSource();
             }
         }
 
-        private async void PrivacyPolicyComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
         {
-            await ChangeSource();
+            ChangeSource();
         }
 
-        private async Task ChangeSource()
+        private void ChangeSource()
         {
-            await IllustrationContainer.ViewModel.ResetAndFill(App.MakoClient.RecentPosts(PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public)));
+            _ = IllustrationContainer.ViewModel.ResetAndFillAsync(App.MakoClient.RecentPosts(PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public)));
         }
 
         private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

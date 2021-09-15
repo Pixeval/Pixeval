@@ -18,8 +18,10 @@ namespace Pixeval.Misc
                     ViewModelProvider.ScrollToTop();
                     break;
                 default:
+                    // reset the view so that it can resort its item to the initial order
                     ViewModelProvider.ViewModel.ClearSortDescription();
                     ViewModelProvider.ViewModel.IllustrationsView.ResetView();
+                    ViewModelProvider.ScrollToTop();
                     break;
             }
         }

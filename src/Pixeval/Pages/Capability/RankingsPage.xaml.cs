@@ -1,8 +1,7 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Threading.Tasks;
+using Microsoft.UI.Xaml;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Events;
 using Pixeval.Misc;
@@ -37,34 +36,34 @@ namespace Pixeval.Pages.Capability
             EventChannel.Default.Subscribe<MainPageFrameNavigatingEvent>(() => IllustrationContainer.ViewModel.FetchEngine?.Cancel());
         }
 
-        private async void RankingsPage_OnLoaded(object sender, RoutedEventArgs e)
+        private void RankingsPage_OnLoaded(object? sender, RoutedEventArgs e)
         {
             if (App.Window.GetNavigationModeAndReset() is not NavigationMode.Back)
             {
-                await ChangeSource();
+                ChangeSource();
             }
         }
 
-        private async void RankOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void RankOptionComboBox_OnSelectionChangedWhenPrepared(object sender, SelectionChangedEventArgs e)
         {
-            await ChangeSource();
-        }
-        
-        private async void RankDateTimeCalendarDatePicker_OnDateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
-        {
-            await ChangeSource();
+            ChangeSource();
         }
 
-        private async Task ChangeSource()
+        private void RankDateTimeCalendarDatePicker_OnDateChangedWhenLoaded(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
         {
-            var rankOption = (RankOptionComboBox.SelectedItem as RankOptionWrapper)?.Value ?? RankOption.Day;
-            var dateTime = RankDateTimeCalendarDatePicker.Date?.DateTime ?? DateTime.Now.AddDays(-2);
-            await IllustrationContainer.ViewModel.ResetAndFill(App.MakoClient.Ranking(rankOption, dateTime));
+            ChangeSource();
         }
 
         private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ((ISortedIllustrationContainerPageHelper) this).OnSortOptionChanged();
+        }
+
+        private void ChangeSource()
+        {
+            var rankOption = (RankOptionComboBox.SelectedItem as RankOptionWrapper)?.Value ?? RankOption.Day;
+            var dateTime = RankDateTimeCalendarDatePicker.Date?.DateTime ?? DateTime.Now.AddDays(-2);
+            _ = IllustrationContainer.ViewModel.ResetAndFillAsync(App.MakoClient.Ranking(rankOption, dateTime));
         }
     }
 }

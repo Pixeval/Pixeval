@@ -20,12 +20,12 @@ namespace Pixeval.UserControls
             InitializeComponent();
         }
 
-        private event SelectionChangedEventHandler? SelectionChangedInternal;
+        private SelectionChangedEventHandler? _selectionChangedWhenLoadedInternal;
 
-        public event SelectionChangedEventHandler SelectionChanged
+        public event SelectionChangedEventHandler SelectionChangedWhenLoaded
         {
-            add => SelectionChangedInternal += value;
-            remove => SelectionChangedInternal -= value;
+            add => _selectionChangedWhenLoadedInternal += value;
+            remove => _selectionChangedWhenLoadedInternal -= value;
         }
 
         public object SelectedItem
@@ -45,10 +45,10 @@ namespace Pixeval.UserControls
             return MakoHelper.GetSortDescriptionForIllustration(SelectedOption);
         }
 
-        private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void SortOptionComboBox_OnSelectionChangedWhenPrepared(object sender, SelectionChangedEventArgs e)
         {
             SelectedItem = ComboBox.SelectedItem;
-            SelectionChangedInternal?.Invoke(sender, e);
+            _selectionChangedWhenLoadedInternal?.Invoke(sender, e);
         }
     }
 }

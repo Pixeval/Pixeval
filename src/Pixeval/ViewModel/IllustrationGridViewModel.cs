@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.UI;
@@ -45,7 +46,7 @@ namespace Pixeval.ViewModel
             _selectionLabel = IllustrationGridCommandBarResources.CancelSelectionButtonDefaultLabel;
         }
 
-        public async Task Fill(int? itemsLimit = null)
+        public async Task FillAsync(int? itemsLimit = null)
         {
             var added = new HashSet<long>();
             await foreach (var illustration in FetchEngine!)
@@ -83,18 +84,18 @@ namespace Pixeval.ViewModel
             }
         }
 
-        public async Task Fill(IFetchEngine<Illustration?>? newEngine, int? itemsLimit = null)
+        public async Task FillAsync(IFetchEngine<Illustration?>? newEngine, int? itemsLimit = null)
         {
             FetchEngine = newEngine;
-            await Fill(itemsLimit);
+            await FillAsync(itemsLimit);
         }
 
-        public async Task ResetAndFill(IFetchEngine<Illustration?>? newEngine, int? itemLimit = null)
+        public async Task ResetAndFillAsync(IFetchEngine<Illustration?>? newEngine, int? itemLimit = null)
         {
             FetchEngine?.EngineHandle.Cancel();
             FetchEngine = newEngine;
             DisposeCurrent();
-            await Fill(itemLimit);
+            await FillAsync(itemLimit);
         }
 
         public void SetSortDescription(SortDescription description)

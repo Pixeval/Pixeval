@@ -8,7 +8,6 @@ using Pixeval.CoreApi;
 using Pixeval.Events;
 using Pixeval.Interop;
 using Pixeval.Misc;
-using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using WinRT;
 

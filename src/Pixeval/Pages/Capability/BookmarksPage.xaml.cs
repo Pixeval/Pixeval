@@ -34,17 +34,17 @@ namespace Pixeval.Pages.Capability
             EventChannel.Default.Subscribe<MainPageFrameNavigatingEvent>(() => IllustrationContainer.ViewModel.FetchEngine?.Cancel());
         }
 
-        private async void BookmarksPage_OnLoaded(object sender, RoutedEventArgs e)
+        private void BookmarksPage_OnLoaded(object sender, RoutedEventArgs e)
         {
             if (App.Window.GetNavigationModeAndReset() is not NavigationMode.Back)
             {
-                await ChangeSource();
+                ChangeSource();
             }
         }
 
-        private async void PrivacyPolicyComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
         {
-            await ChangeSource();
+            ChangeSource();
         }
 
         private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -52,9 +52,9 @@ namespace Pixeval.Pages.Capability
             ((ISortedIllustrationContainerPageHelper) this).OnSortOptionChanged();
         }
 
-        private async Task ChangeSource()
+        private void ChangeSource()
         {
-            await IllustrationContainer.ViewModel.ResetAndFill(App.MakoClient.Bookmarks(App.Uid!, PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public)));
+            _ = IllustrationContainer.ViewModel.ResetAndFillAsync(App.MakoClient.Bookmarks(App.Uid!, PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public)));
         }
     }
 }

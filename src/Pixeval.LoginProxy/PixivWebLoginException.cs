@@ -5,7 +5,7 @@ namespace Pixeval.LoginProxy
     public enum Reason
     {
         ConnectToHostFailed = 1,
-        CertificateNotFound = 2
+        CertificateNotFound = 2,
     }
 
     public class PixivWebLoginException : Exception
