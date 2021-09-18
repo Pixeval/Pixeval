@@ -345,7 +345,7 @@ namespace Pixeval.ViewModel
             set => SetProperty(ref _current, value);
         }
 
-        private SoftwareBitmapSource? _userProfileImageSource;
+        private ImageSource? _userProfileImageSource;
 
         /// <summary>
         /// The <see cref="IllustrationViewModelInTheGridView"/> in <see cref="IllustrationGrid"/> that corresponds to current
@@ -366,7 +366,7 @@ namespace Pixeval.ViewModel
         // itself is a manga then all of the IllustrationViewModel in Illustrations will
         // request the same user profile image which is pointless and will (inevitably) causing
         // the waste of system resource
-        public SoftwareBitmapSource? UserProfileImageSource
+        public ImageSource? UserProfileImageSource
         {
             get => _userProfileImageSource;
             set => SetProperty(ref _userProfileImageSource, value);
@@ -432,7 +432,8 @@ namespace Pixeval.ViewModel
         {
             if (FirstIllustrationViewModel.Illustration.User?.ProfileImageUrls?.Medium is { } profileImage)
             {
-                UserProfileImageSource = await App.MakoClient.DownloadSoftwareBitmapSourceAsync(profileImage);
+                UserProfileImageSource = await App.MakoClient.DownloadSoftwareBitmapSourceResultAsync(profileImage)
+                    .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync());
             }
         }
 
@@ -442,7 +443,8 @@ namespace Pixeval.ViewModel
             {
                 imageViewerPageViewModel.Dispose();
             }
-            _userProfileImageSource?.Dispose();
+
+            (_userProfileImageSource as SoftwareBitmapSource)?.Dispose();
         }
     }
 }

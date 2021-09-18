@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Net;
 using Pixeval.Misc;
 using Pixeval.Util.IO;
@@ -16,8 +16,6 @@ namespace Pixeval.ViewModel
         public abstract string Poster { get; }
 
         public abstract string CommentContent { get; }
-
-        public abstract SoftwareBitmapSource? AvatarSource { get; set; }
 
         public abstract DateTimeOffset PostDate { get; }
 
@@ -44,9 +42,10 @@ namespace Pixeval.ViewModel
                             {
                                 Child = new Image
                                 {
+                                    VerticalAlignment = VerticalAlignment.Bottom,
                                     Source = await emojiSource.GetBitmapImageAsync(true),
-                                    Width = 16,
-                                    Height = 16
+                                    Width = 14,
+                                    Height = 14
                                 }
                             });
                         }

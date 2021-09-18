@@ -5,6 +5,19 @@ namespace Pixeval.Controls
 {
     public class EnhancedPage : Page
     {
+        public EnhancedPage()
+        {
+            Loaded += (_, _) =>
+            {
+                if (!Initialized)
+                {
+                    Initialized = true;
+                }
+            };
+        }
+
+        public bool Initialized { get; private set; }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);

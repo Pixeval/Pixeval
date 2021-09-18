@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using CommunityToolkit.WinUI.Helpers;
-using PInvoke;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Preference;
 using Pixeval.CoreApi.Util;
@@ -64,6 +65,34 @@ namespace Pixeval
         public static ApplicationDataContainer ConfigurationContainer;
 
         public static string AppLoginProxyFolder = "LoginProxy";
+
+        private static SoftwareBitmapSource? _imageNotAvailable;
+
+        private static IRandomAccessStream? _imageNotAvailableStream;
+
+        private static SoftwareBitmapSource? _pixivNoProfile;
+
+        private static IRandomAccessStream? _pixivNoProfileStream;
+
+        public static async Task<SoftwareBitmapSource> GetNotAvailableImageAsync()
+        {
+            return _imageNotAvailable ??= await (await GetNotAvailableImageStreamAsync()).GetSoftwareBitmapSourceAsync(true);
+        }
+
+        public static async Task<IRandomAccessStream> GetNotAvailableImageStreamAsync()
+        {
+            return _imageNotAvailableStream ??= await GetAssetStreamAsync("Images/image-not-available.png");
+        }
+
+        public static async Task<SoftwareBitmapSource> GetPixivNoProfileImageAsync()
+        {
+            return _pixivNoProfile ??= await (await GetPixivNoProfileImageStreamAsync()).GetSoftwareBitmapSourceAsync(true);
+        }
+
+        public static async Task<IRandomAccessStream> GetPixivNoProfileImageStreamAsync()
+        {
+            return _pixivNoProfileStream ??= await GetAssetStreamAsync("Images/pixiv_no_profile.png");
+        }
 
         /// <summary>
         /// Calculate the window size by current resolution

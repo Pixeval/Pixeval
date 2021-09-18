@@ -1,36 +1,22 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
+﻿using System.Collections.Generic;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Navigation;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using Pixeval.CoreApi.Net.Response;
+using Pixeval.ViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class CommentsPage : Page
+    public sealed partial class CommentsPage
     {
         public CommentsPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
-        private void CommentContent_OnLoaded(object sender, RoutedEventArgs e)
+        public override void Prepare(NavigationEventArgs e)
         {
-            throw new NotImplementedException();
+            var engine = (IAsyncEnumerable<IllustrationCommentsResponse.Comment>) e.Parameter;
+            CommentsList.ItemsSource = new IncrementalLoadingCollection<CommentsIncrementalSource, CommentBlockViewModel>(new CommentsIncrementalSource(engine), 30);
         }
     }
 }

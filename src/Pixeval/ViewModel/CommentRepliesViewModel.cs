@@ -18,13 +18,5 @@ namespace Pixeval.ViewModel
         public override string CommentContent => Comment.CommentContent ?? string.Empty;
 
         public override DateTimeOffset PostDate => Comment.Date;
-
-        private SoftwareBitmapSource? _avatarSource;
-
-        public override SoftwareBitmapSource? AvatarSource
-        {
-            get => _avatarSource;
-            set => SetProperty(ref _avatarSource, value);
-        }
     }
 }

@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Threading.Tasks;
 using CommunityToolkit.WinUI.UI;
-using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.CoreApi;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
 using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util.Generic;
-using Pixeval.Util.IO;
 
 namespace Pixeval.Util
 {
@@ -86,14 +81,6 @@ namespace Pixeval.Util
         public static XRestrictLevel RestrictLevel(this Illustration illustration)
         {
             return (XRestrictLevel) illustration.XRestrict;
-        }
-
-        public static async Task<SoftwareBitmapSource> DownloadSoftwareBitmapSourceAsync(this MakoClient client, string url)
-        {
-            return await (await client.GetMakoHttpClient(MakoApiKind.ImageApi)
-                    .DownloadAsIRandomAccessStreamAsync(url))
-                .GetOrThrow()
-                .GetSoftwareBitmapSourceAsync(true);
         }
     }
 }

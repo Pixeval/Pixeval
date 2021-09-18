@@ -60,7 +60,7 @@ namespace Pixeval.UserControls
         {
             var context = sender.GetDataContext<IllustrationViewModel>();
             var preloadRows = Math.Clamp(App.AppSetting.PreLoadRows, 1, 15);
-            if (args.BringIntoViewDistanceY <= sender.ActualHeight * preloadRows) // one element ahead
+            if (args.BringIntoViewDistanceY <= sender.ActualHeight * preloadRows) // [preloadRows] element ahead
             {
                 _ = context.LoadThumbnailIfRequired().ContinueWith(task =>
                 {

@@ -30,7 +30,7 @@ namespace Pixeval.Util.UI
         /// </summary>
         public static string GetReplyEmojiDownloadUrl(this PixivReplyEmoji emoji)
         {
-            return $"https://s.pximg.net/common/images/emoji/{(int)emoji}.png";
+            return $"https://s.pximg.net/common/images/emoji/{(int) emoji}.png";
         }
 
         public static PixivReplyEmoji GetReplyEmojiFromPlaceholderKey(string content)

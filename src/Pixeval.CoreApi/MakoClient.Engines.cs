@@ -326,7 +326,7 @@ namespace Pixeval.CoreApi
         /// <returns>
         ///     The <see cref="IllustrationCommentsEngine"/> containing comments of the illustration.
         /// </returns>
-        public IFetchEngine<IllustrationCommentsResponse.Comment> IllustrationComments(string illustId)
+        public IFetchEngine<IllustrationCommentsResponse.Comment?> IllustrationComments(string illustId)
         {
             EnsureNotCancelled();
             return new IllustrationCommentsEngine(illustId, this, new EngineHandle(CancelInstance));

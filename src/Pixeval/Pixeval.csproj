@@ -60,6 +60,7 @@
       <None Remove="Assets\Images\logo44x44.ico" />
       <None Remove="Pages\Capability\RecentPostsPage.xaml" />
       <None Remove="Strings\zh-CN\BookmarksPage.resw" />
+      <None Remove="Strings\zh-CN\CommentBlock.resw" />
       <None Remove="Strings\zh-CN\DownloadAndHistoryListPage.resw" />
       <None Remove="Strings\zh-CN\IllustrationGridCommandBar.resw" />
       <None Remove="Strings\zh-CN\IllustrationInfoPage.resw" />
@@ -140,7 +141,6 @@
       <None Remove="UserControls\CommentBlock.xaml" />
       <None Remove="UserControls\IllustrationContainer.xaml" />
       <None Remove="UserControls\IllustrationGridCommandBar.xaml" />
-      <None Remove="UserControls\MainCommentBlock.xaml" />
       <None Remove="UserControls\SortOptionComboBox.xaml" />
    </ItemGroup>
    <ItemGroup>
@@ -305,6 +305,7 @@
    </ItemGroup>
    <ItemGroup>
       <PRIResource Include="Strings\zh-CN\BookmarksPage.resw" />
+      <PRIResource Include="Strings\zh-CN\CommentBlock.resw" />
       <PRIResource Include="Strings\zh-CN\DownloadAndHistoryListPage.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationGridCommandBar.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationInfoPage.resw" />
@@ -342,11 +343,6 @@
    </ItemGroup>
    <ItemGroup>
      <Page Update="UserControls\IllustrationContainer.xaml">
-       <Generator>MSBuild:Compile</Generator>
-     </Page>
-   </ItemGroup>
-   <ItemGroup>
-     <Page Update="UserControls\MainCommentBlock.xaml">
        <Generator>MSBuild:Compile</Generator>
      </Page>
    </ItemGroup>

@@ -185,6 +185,10 @@ namespace Pixeval.Util.UI
         {
             return visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
         }
+        public static Visibility ToVisibility(this bool value)
+        {
+            return value ? Visibility.Visible : Visibility.Collapsed;
+        }
 
         public static FontIcon GetFontIcon(this FontIconSymbols symbol)
         {

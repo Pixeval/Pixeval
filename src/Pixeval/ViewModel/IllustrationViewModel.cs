@@ -154,7 +154,8 @@ namespace Pixeval.ViewModel
                         return null;
                 }
             }
-            return await AppContext.GetAssetStreamAsync("Images/image-not-available.png");
+
+            return await AppContext.GetNotAvailableImageStreamAsync();
         }
 
         public Task RemoveBookmarkAsync()

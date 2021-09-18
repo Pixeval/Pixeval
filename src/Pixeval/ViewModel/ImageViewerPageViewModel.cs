@@ -145,7 +145,7 @@ namespace Pixeval.ViewModel
             var imageClient = App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi);
             var cacheKey = IllustrationViewModel.Illustration.GetIllustrationOriginalImageCacheKey();
             AdvancePhase(LoadingPhase.CheckingCache);
-            if (await App.Cache.TryGetAsync<IRandomAccessStream>(cacheKey) is { } stream)
+            if (App.AppSetting.UseFileCache && await App.Cache.TryGetAsync<IRandomAccessStream>(cacheKey) is { } stream)
             {
                 AdvancePhase(LoadingPhase.LoadingFromCache);
                 OriginalImageStream = stream;
@@ -205,7 +205,10 @@ namespace Pixeval.ViewModel
             if (OriginalImageStream is not null && !_disposed)
             {
                 IllustrationViewerPageViewModel.UpdateCommandCanExecute();
-                await App.Cache.TryAddAsync(cacheKey, OriginalImageStream!, TimeSpan.FromDays(1));
+                if (App.AppSetting.UseFileCache)
+                {
+                    await App.Cache.TryAddAsync(cacheKey, OriginalImageStream!, TimeSpan.FromDays(1));
+                }
                 return;
             }
 

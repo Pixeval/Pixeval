@@ -88,45 +88,52 @@ namespace Pixeval.Util.IO
             IProgress<double>? progress = null,
             CancellationHandle? cancellationHandle = default)
         {
-            using var response = await httpClient.GetResponseHeader(url);
-            if (response.Content.Headers.ContentLength is { } responseLength)
+            try
             {
-                response.EnsureSuccessStatusCode();
-                if (cancellationHandle?.IsCancelled is true)
+                using var response = await httpClient.GetResponseHeader(url);
+                if (response.Content.Headers.ContentLength is { } responseLength)
                 {
-                    return Result<Stream>.OfFailure(CancellationMark);
-                }
-                await using var contentStream = await response.Content.ReadAsStreamAsync();
-                // Remarks:
-                // Most cancellation happens when users are panning the ScrollViewer, where the
-                // cancellation occurs while the `await response.Content.ReadAsStreamAsync()` is 
-                // running, so we check the state right after the completion of that statement
-                if (cancellationHandle?.IsCancelled is true)
-                {
-                    return Result<Stream>.OfFailure(CancellationMark);
-                }
-
-                var resultStream = new MemoryStream();
-                int bytesRead, totalRead = 0;
-                var buffer = ArrayPool<byte>.Shared.Rent(1024);
-                while ((bytesRead = await contentStream.ReadAsync(buffer)) != 0)
-                {
+                    response.EnsureSuccessStatusCode();
                     if (cancellationHandle?.IsCancelled is true)
                     {
-                        await resultStream.DisposeAsync();
+                        return Result<Stream>.OfFailure(CancellationMark);
+                    }
+                    await using var contentStream = await response.Content.ReadAsStreamAsync();
+                    // Remarks:
+                    // Most cancellation happens when users are panning the ScrollViewer, where the
+                    // cancellation occurs while the `await response.Content.ReadAsStreamAsync()` is 
+                    // running, so we check the state right after the completion of that statement
+                    if (cancellationHandle?.IsCancelled is true)
+                    {
                         return Result<Stream>.OfFailure(CancellationMark);
                     }
 
-                    await resultStream.WriteAsync(buffer, 0, bytesRead);
-                    totalRead += bytesRead;
-                    progress?.Report(totalRead / (double) responseLength * 100); // percentage, 100 as base
+                    var resultStream = new MemoryStream();
+                    int bytesRead, totalRead = 0;
+                    var buffer = ArrayPool<byte>.Shared.Rent(1024);
+                    while ((bytesRead = await contentStream.ReadAsync(buffer)) != 0)
+                    {
+                        if (cancellationHandle?.IsCancelled is true)
+                        {
+                            await resultStream.DisposeAsync();
+                            return Result<Stream>.OfFailure(CancellationMark);
+                        }
+
+                        await resultStream.WriteAsync(buffer, 0, bytesRead);
+                        totalRead += bytesRead;
+                        progress?.Report(totalRead / (double) responseLength * 100); // percentage, 100 as base
+                    }
+
+                    resultStream.Seek(0, SeekOrigin.Begin);
+                    return Result<Stream>.OfSuccess(resultStream);
                 }
 
-                resultStream.Seek(0, SeekOrigin.Begin);
-                return Result<Stream>.OfSuccess(resultStream);
+                return (await httpClient.DownloadByteArrayAsync(url)).Bind(m => (Stream) RecyclableMemoryStreamManager.GetStream(m));
             }
-
-            return (await httpClient.DownloadByteArrayAsync(url)).Bind(m => (Stream) RecyclableMemoryStreamManager.GetStream(m));
+            catch (Exception e)
+            {
+                return Result<Stream>.OfFailure(e);
+            }
         }
 
         public static async Task<Result<IRandomAccessStream>> DownloadAsIRandomAccessStreamAndRevealProgressInTaskBarIconAsync(

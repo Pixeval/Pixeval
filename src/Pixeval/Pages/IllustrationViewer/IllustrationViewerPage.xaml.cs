@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Streams;
@@ -43,7 +44,7 @@ namespace Pixeval.Pages.IllustrationViewer
         {
             _viewModel = (IllustrationViewerPageViewModel) e.Parameter;
             _illustrationInfo = new NavigationViewTag(typeof(IllustrationInfoPage), _viewModel);
-            _comments = null; // TODO
+            _comments = new NavigationViewTag(typeof(CommentsPage), App.MakoClient.IllustrationComments(_viewModel.IllustrationId).Where(c => c is not null)); // TODO
 
             IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), _viewModel.Current);
 
@@ -161,7 +162,7 @@ namespace Pixeval.Pages.IllustrationViewer
             App.AppWindowRootFrame.BackStack.RemoveAll(entry => entry.SourcePageType == typeof(IllustrationViewerPage));
             if (App.AppWindowRootFrame.CanGoBack)
             {
-                App.AppWindowRootFrame.GoBack(new DrillInNavigationTransitionInfo());
+                App.AppWindowRootFrame.GoBack(new SuppressNavigationTransitionInfo());
             }
         }
 
@@ -225,5 +226,10 @@ namespace Pixeval.Pages.IllustrationViewer
         }
 
         #endregion
+
+        private void IllustrationInfoAndCommentsFrame_OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        {
+            Debugger.Break();
+        }
     }
 }

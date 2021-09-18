@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
+using Pixeval.CoreApi.Util;
 
 namespace Pixeval.Util
 {
@@ -70,5 +72,11 @@ namespace Pixeval.Util
         }
 
         public static bool Inverse(ref this bool b) => b = !b;
+
+        [ContractAnnotation("orElse:null => null;orElse:notnull => notnull")]
+        public static async Task<R?> GetOrElseAsync<R>(this Task<Result<R>> task, R? orElse)
+        {
+            return (await task).GetOrElse(orElse);
+        }
     }
 }
