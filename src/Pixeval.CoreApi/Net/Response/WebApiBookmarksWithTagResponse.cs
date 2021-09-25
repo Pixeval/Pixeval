@@ -26,7 +26,7 @@
 
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using Pixeval.CoreApi.Util;
+using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Net.Response
 {

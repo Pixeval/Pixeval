@@ -5,7 +5,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
-                <ResourceDictionary Source="Themes.xaml" />
+                <ResourceDictionary Source="Styles/Themes.xaml" />
+                <ResourceDictionary Source="Styles/Controls.xaml" />
                 <!--  Other merged dictionaries here  -->
             </ResourceDictionary.MergedDictionaries>
             <x:Double x:Key="PixevalTitleFontSize">25</x:Double>
@@ -16,6 +17,8 @@
             <Thickness x:Key="StackLayoutEntriesMargin">0,20,0,0</Thickness>
             <!--  Gap between the same entry's different component  -->
             <Thickness x:Key="StackLayoutEntryPadding">0,5,0,0</Thickness>
+            <x:Double x:Key="ContentDialogMaxWidth">800</x:Double>
+            <x:Double x:Key="ContentDialogMaxHeight">1200</x:Double>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

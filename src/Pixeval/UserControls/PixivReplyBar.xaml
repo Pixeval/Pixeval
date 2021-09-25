@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="Pixeval.UserControls.PixivReplyBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="using:Pixeval.Util.UI"
+             mc:Ignorable="d">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="35" />
+            <ColumnDefinition />
+            <ColumnDefinition Width="70" />
+        </Grid.ColumnDefinitions>
+        <Button Grid.Column="0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Content="{ui:FontIcon Glyph=Emoji2E76E,
+                                      FontSize={StaticResource PixevalButtonIconSize}}"
+                Style="{StaticResource PixevalRoundedButtonStyle}">
+            <Button.Flyout>
+                <Flyout>
+                    <NavigationView IsBackButtonVisible="Collapsed"
+                                    IsSettingsVisible="False"
+                                    PaneDisplayMode="Top"
+                                    SelectionChanged="EmojiButtonFlyoutNavigationView_OnSelectionChanged">
+                        <NavigationView.MenuItems>
+                            <NavigationViewItem x:Uid="/CommentRepliesBlock/EmojiButtonFlyoutEmojiSectionNavigationViewItem"
+                                                Icon="{ui:FontIcon Glyph=Emoji2E76E}"
+                                                IsSelected="True"
+                                                Tag="{x:Bind _replyEmojiPage}" />
+                            <NavigationViewItem x:Uid="/CommentRepliesBlock/EmojiButtonFlyoutStickersSectionNavigationViewItem"
+                                                Icon="{ui:FontIcon Glyph=Sticker2F4AA}"
+                                                Tag="{x:Bind _replyStickerPage}" />
+                        </NavigationView.MenuItems>
+                        <Frame x:Name="EmojiButtonFlyoutFrame"
+                               Width="350"
+                               Height="150" />
+                    </NavigationView>
+                </Flyout>
+            </Button.Flyout>
+        </Button>
+        <RichEditBox x:Uid="/PixivReplyBar/ReplyContentRichEditBox"
+                     Grid.Column="1"
+                     Height="35"
+                     Margin="10,0"
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Center" />
+        <Button Grid.Column="2"
+                Width="65"
+                Height="30"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal">
+                <ContentPresenter VerticalAlignment="Center"
+                                  Content="{ui:FontIcon Glyph=SendE724,
+                                                        FontSize={StaticResource PixevalButtonIconSize}}" />
+                <TextBlock x:Uid="/CommentRepliesBlock/SendButtonTextBlock"
+                           Margin="5,0,0,0"
+                           VerticalAlignment="Center" />
+            </StackPanel>
+        </Button>
+    </Grid>
+</UserControl>

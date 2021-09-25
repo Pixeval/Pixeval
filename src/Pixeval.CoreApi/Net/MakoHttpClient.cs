@@ -27,7 +27,7 @@
 using System;
 using System.Net.Http;
 using JetBrains.Annotations;
-using Pixeval.CoreApi.Util;
+using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Net
 {

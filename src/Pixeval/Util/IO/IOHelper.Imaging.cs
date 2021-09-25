@@ -8,7 +8,7 @@ using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Net.Response;
-using Pixeval.CoreApi.Util;
+using Pixeval.Utilities;
 using Pixeval.Util.Generic;
 
 namespace Pixeval.Util.IO

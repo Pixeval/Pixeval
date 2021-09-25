@@ -1,9 +1,10 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Events;
+using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.UserControls;
@@ -26,6 +27,7 @@ namespace Pixeval.Pages.Capability
         public override void Dispose(NavigatingCancelEventArgs navigatingCancelEventArgs)
         {
             IllustrationContainer.ViewModel.Dispose();
+            WeakReferenceMessenger.Default.UnregisterAll(this);
         }
 
         public override void Prepare(NavigationEventArgs navigationEventArgs)
@@ -33,12 +35,12 @@ namespace Pixeval.Pages.Capability
             SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
             RankOptionComboBox.SelectedItem = RankOptionWrapper.AvailableOptions().Of(RankOption.Day);
             RankDateTimeCalendarDatePicker.Date = DateTime.Now.AddDays(-2);
-            EventChannel.Default.Subscribe<MainPageFrameNavigatingEvent>(() => IllustrationContainer.ViewModel.FetchEngine?.Cancel());
+            WeakReferenceMessenger.Default.Register<RankingsPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustrationContainer.ViewModel.FetchEngine?.Cancel());
         }
 
         private void RankingsPage_OnLoaded(object? sender, RoutedEventArgs e)
         {
-            if (App.Window.GetNavigationModeAndReset() is not NavigationMode.Back)
+            if (App.AppViewModel.Window.GetNavigationModeAndReset() is not NavigationMode.Back)
             {
                 ChangeSource();
             }
@@ -63,7 +65,7 @@ namespace Pixeval.Pages.Capability
         {
             var rankOption = (RankOptionComboBox.SelectedItem as RankOptionWrapper)?.Value ?? RankOption.Day;
             var dateTime = RankDateTimeCalendarDatePicker.Date?.DateTime ?? DateTime.Now.AddDays(-2);
-            _ = IllustrationContainer.ViewModel.ResetAndFillAsync(App.MakoClient.Ranking(rankOption, dateTime));
+            _ = IllustrationContainer.ViewModel.ResetAndFillAsync(App.AppViewModel.MakoClient.Ranking(rankOption, dateTime));
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.UI;
@@ -9,6 +8,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Util;
+using Pixeval.Utilities;
 
 namespace Pixeval.ViewModel
 {

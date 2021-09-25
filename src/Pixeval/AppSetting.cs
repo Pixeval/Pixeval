@@ -134,7 +134,7 @@ namespace Pixeval
 
         public static AppSetting CreateDefault()
         {
-            var (width, height) = AppContext.PredetermineEstimatedWindowSize();
+            var (width, height) = App.AppViewModel.PredetermineEstimatedWindowSize();
             return new AppSetting(
                 ApplicationTheme.SystemDefault,
                 new ObservableCollection<string>(),

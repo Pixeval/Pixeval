@@ -7,7 +7,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using Windows.System;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.CoreApi.Util;
+using Pixeval.Utilities;
 using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.ViewModel;

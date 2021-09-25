@@ -5,28 +5,19 @@
                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:userControls="using:Pixeval.UserControls"
-                       xmlns:viewModel="using:Pixeval.ViewModel"
-                       Background="{ThemeResource PixevalAppAcrylicBrush}"
+                       Background="{ThemeResource PixevalPanelBackgroundThemeBrush}"
                        NavigationCacheMode="Enabled"
                        mc:Ignorable="d">
-    <controls:EnhancedPage.Resources>
-        <DataTemplate x:Key="CommentDataTemplate"
-                      x:DataType="viewModel:CommentBlockViewModel">
-            <userControls:CommentBlock HorizontalAlignment="Stretch"
-                                       ViewModel="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-        </DataTemplate>
-    </controls:EnhancedPage.Resources>
-    <ListView x:Name="CommentsList"
-              IsItemClickEnabled="False"
-              ItemTemplate="{StaticResource CommentDataTemplate}"
-              SelectionMode="None">
-        <ListView.ItemContainerStyle>
-            <Style TargetType="ListViewItem">
-                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-            </Style>
-        </ListView.ItemContainerStyle>
-        <ListView.Transitions>
-            <AddDeleteThemeTransition />
-        </ListView.Transitions>
-    </ListView>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <userControls:PixivReplyBar Grid.Row="0"
+                                    Margin="10,0"
+                                    VerticalAlignment="Center" />
+        <userControls:CommentList x:Name="CommentList"
+                                  Grid.Row="1"
+                                  RepliesHyperlinkButtonTapped="CommentList_OnRepliesHyperlinkButtonTapped" />
+    </Grid>
 </controls:EnhancedPage>

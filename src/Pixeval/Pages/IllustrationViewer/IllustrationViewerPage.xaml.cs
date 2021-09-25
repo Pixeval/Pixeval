@@ -1,25 +1,25 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Streams;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Events;
+using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Options;
+using Pixeval.UserControls;
 using Pixeval.Util;
-using Pixeval.Util.Generic;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
+using Pixeval.Utilities;
 using Pixeval.ViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer
 {
-    // TODO add context menu and comments section
     public sealed partial class IllustrationViewerPage
     {
         private IllustrationViewerPageViewModel _viewModel = null!;
@@ -31,6 +31,12 @@ namespace Pixeval.Pages.IllustrationViewer
             dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
         }
 
+        private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            SidePanelShadow.Receivers.Add(IllustrationPresenterDockPanel);
+            PopupShadow.Receivers.Add(IllustrationInfoAndCommentsSplitView);
+        }
+
         public override void Dispose(NavigatingCancelEventArgs e)
         {
             foreach (var imageViewerPageViewModel in _viewModel.ImageViewerPageViewModels)
@@ -38,17 +44,52 @@ namespace Pixeval.Pages.IllustrationViewer
                 imageViewerPageViewModel.ImageLoadingCancellationHandle.Cancel();
             }
             _viewModel.Dispose();
+            WeakReferenceMessenger.Default.UnregisterAll(this);
         }
 
         public override void Prepare(NavigationEventArgs e)
         {
             _viewModel = (IllustrationViewerPageViewModel) e.Parameter;
             _illustrationInfo = new NavigationViewTag(typeof(IllustrationInfoPage), _viewModel);
-            _comments = new NavigationViewTag(typeof(CommentsPage), App.MakoClient.IllustrationComments(_viewModel.IllustrationId).Where(c => c is not null)); // TODO
+            _comments = new NavigationViewTag(typeof(CommentsPage), App.AppViewModel.MakoClient.IllustrationComments(_viewModel.IllustrationId).Where(c => c is not null)); // TODO
 
             IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), _viewModel.Current);
 
-            EventChannel.Default.Publish(new MainPageFrameSetConnectedAnimationTargetEvent(_viewModel.IllustrationGrid.GetItemContainer(_viewModel.IllustrationViewModelInTheGridView)));
+            WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(_viewModel.IllustrationGrid.GetItemContainer(_viewModel.IllustrationViewModelInTheGridView)));
+            WeakReferenceMessenger.Default.Register<IllustrationViewerPage, CommentRepliesHyperlinkButtonTappedMessage>(this, CommentRepliesHyperlinkButtonTapped);
+        }
+
+        private static void CommentRepliesHyperlinkButtonTapped(IllustrationViewerPage recipient, CommentRepliesHyperlinkButtonTappedMessage message)
+        {
+            var commentRepliesBlock = new CommentRepliesBlock
+            {
+                ViewModel = new CommentRepliesBlockViewModel(message.Sender!.GetDataContext<CommentBlockViewModel>())
+            };
+            commentRepliesBlock.CloseButtonTapped += recipient.CommentRepliesBlock_OnCloseButtonTapped;
+            recipient._commentRepliesPopup = PopupManager.CreatePopup(commentRepliesBlock, 200, maxWidth: 1500, minWidth: 400, maxHeight: 1200);
+            var inAnimation = new PopInThemeAnimation();
+            var storyboard = UIHelper.CreateStoryboard(inAnimation);
+            Storyboard.SetTarget(inAnimation, recipient._commentRepliesPopup.Popup);
+            storyboard.Begin();
+            PopupManager.ShowPopup(recipient._commentRepliesPopup);
+        }
+
+        private AppPopup? _commentRepliesPopup;
+
+        private void CommentRepliesBlock_OnCloseButtonTapped(object? sender, TappedRoutedEventArgs e)
+        {
+            if (_commentRepliesPopup is not null)
+            {
+                var inAnimation = new PopOutThemeAnimation();
+                var storyboard = UIHelper.CreateStoryboard(inAnimation);
+                Storyboard.SetTarget(inAnimation, _commentRepliesPopup.Popup);
+                storyboard.Completed += (_, _) =>
+                {
+                    PopupManager.ClosePopup(_commentRepliesPopup);
+                    _commentRepliesPopup = null;
+                };
+                storyboard.Begin();
+            }
         }
 
         private async void OnDataTransferManagerOnDataRequested(DataTransferManager _, DataRequestedEventArgs args)
@@ -107,7 +148,7 @@ namespace Pixeval.Pages.IllustrationViewer
             var illustrationViewModel = (IllustrationViewModel) _viewModel.ContainerGridViewModel.IllustrationsView[_viewModel.IllustrationIndex + 1];
             var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
-            App.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationGrid, viewModel), new SlideNavigationTransitionInfo
+            App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationGrid, viewModel), new SlideNavigationTransitionInfo
             {
                 Effect = SlideNavigationTransitionEffect.FromRight
             });
@@ -118,7 +159,7 @@ namespace Pixeval.Pages.IllustrationViewer
             var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel.IllustrationsView[_viewModel.IllustrationIndex - 1];
             var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
-            App.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationGrid, viewModel), new SlideNavigationTransitionInfo
+            App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationGrid, viewModel), new SlideNavigationTransitionInfo
             {
                 Effect = SlideNavigationTransitionEffect.FromLeft
             });
@@ -157,19 +198,19 @@ namespace Pixeval.Pages.IllustrationViewer
         private void BackButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", IllustrationImageShowcaseFrame);
-            EventChannel.Default.Publish(new NavigatingBackToMainPageEvent(_viewModel.IllustrationViewModelInTheGridView));
-            
-            App.AppWindowRootFrame.BackStack.RemoveAll(entry => entry.SourcePageType == typeof(IllustrationViewerPage));
-            if (App.AppWindowRootFrame.CanGoBack)
+            WeakReferenceMessenger.Default.Send(new NavigatingBackToMainPageMessage(_viewModel.IllustrationViewModelInTheGridView));
+
+            App.AppViewModel.AppWindowRootFrame.BackStack.RemoveAll(entry => entry.SourcePageType == typeof(IllustrationViewerPage));
+            if (App.AppViewModel.AppWindowRootFrame.CanGoBack)
             {
-                App.AppWindowRootFrame.GoBack(new SuppressNavigationTransitionInfo());
+                App.AppViewModel.AppWindowRootFrame.GoBack(new SuppressNavigationTransitionInfo());
             }
         }
 
         private void GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick(TeachingTip sender, object args)
         {
             _viewModel.IsGenerateLinkTeachingTipOpen = false;
-            App.AppSetting.DisplayTeachingTipWhenGeneratingAppLink = false;
+            App.AppViewModel.AppSetting.DisplayTeachingTipWhenGeneratingAppLink = false;
         }
 
         private void IllustrationInfoAndCommentsNavigationView_OnBackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
@@ -226,10 +267,5 @@ namespace Pixeval.Pages.IllustrationViewer
         }
 
         #endregion
-
-        private void IllustrationInfoAndCommentsFrame_OnNavigationFailed(object sender, NavigationFailedEventArgs e)
-        {
-            Debugger.Break();
-        }
     }
 }

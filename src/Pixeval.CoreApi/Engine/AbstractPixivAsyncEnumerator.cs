@@ -30,7 +30,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Pixeval.CoreApi.Global.Exception;
 using Pixeval.CoreApi.Net;
-using Pixeval.CoreApi.Util;
+using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine
 {

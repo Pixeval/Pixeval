@@ -1,11 +1,12 @@
 ﻿ using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.UI.Xaml;
+ using Microsoft.Toolkit.Mvvm.Messaging;
+ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Events;
+using Pixeval.Messages;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.UI;
 using Pixeval.ViewModel;
@@ -40,14 +41,14 @@ namespace Pixeval.UserControls
 
         private void Thumbnail_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            EventChannel.Default.Publish(new MainPageFrameSetConnectedAnimationTargetEvent(sender as UIElement));
+            WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(sender as UIElement));
 
             var viewModel = sender.GetDataContext<IllustrationViewModel>()
                 .GetMangaIllustrationViewModels()
                 .ToArray();
 
             ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement) sender);
-            App.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModel), new SuppressNavigationTransitionInfo());
+            App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModel), new SuppressNavigationTransitionInfo());
         }
 
         private static readonly ExponentialEase ImageSourceSetEasingFunction = new()
@@ -59,7 +60,7 @@ namespace Pixeval.UserControls
         private void IllustrationThumbnailContainerItem_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
         {
             var context = sender.GetDataContext<IllustrationViewModel>();
-            var preloadRows = Math.Clamp(App.AppSetting.PreLoadRows, 1, 15);
+            var preloadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
             if (args.BringIntoViewDistanceY <= sender.ActualHeight * preloadRows) // [preloadRows] element ahead
             {
                 _ = context.LoadThumbnailIfRequired().ContinueWith(task =>

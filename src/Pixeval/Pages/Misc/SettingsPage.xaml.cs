@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Util;
 using Pixeval.Util.UI;
+using Pixeval.Utilities;
 using Pixeval.ViewModel;
 
 namespace Pixeval.Pages.Misc
@@ -14,7 +15,7 @@ namespace Pixeval.Pages.Misc
     // TODO: check for update, set language, clear data and temp, set main page default selected tab
     public sealed partial class SettingsPage
     {
-        private readonly SettingsPageViewModel _viewModel = new(App.AppSetting);
+        private readonly SettingsPageViewModel _viewModel = new(App.AppViewModel.AppSetting);
 
         public SettingsPage()
         {
@@ -161,6 +162,7 @@ namespace Pixeval.Pages.Misc
         private void ApplicationThemeRadioButton_OnChecked(object sender, RoutedEventArgs e)
         {
             _viewModel.Theme = sender.GetDataContext<ApplicationTheme>();
+            App.AppViewModel.SwitchTheme(_viewModel.Theme);
         }
 
         #region Helper Functions

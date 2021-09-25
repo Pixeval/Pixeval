@@ -8,7 +8,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Util;
+using Pixeval.Utilities;
 using Pixeval.Util;
 using Pixeval.ViewModel;
 using ReverseMarkdown;

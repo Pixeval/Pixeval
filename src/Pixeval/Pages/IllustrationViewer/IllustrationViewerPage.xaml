@@ -6,28 +6,39 @@
                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                         xmlns:ui="using:Pixeval.Util.UI"
+                        xmlns:userControls="using:Pixeval.UserControls"
                         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                        Loaded="IllustrationViewerPage_OnLoaded"
                         mc:Ignorable="d">
+    <controls1:EnhancedPage.Resources>
+        <ThemeShadow x:Name="PopupShadow" />
+        <ThemeShadow x:Name="SidePanelShadow" />
+    </controls1:EnhancedPage.Resources>
     <SplitView x:Name="IllustrationInfoAndCommentsSplitView"
                DisplayMode="Overlay"
                IsPaneOpen="{x:Bind _viewModel.IsInfoPaneOpen, Mode=TwoWay}">
         <SplitView.Pane>
-            <NavigationView BackRequested="IllustrationInfoAndCommentsNavigationView_OnBackRequested"
-                            IsBackEnabled="True"
-                            IsSettingsVisible="False"
-                            PaneDisplayMode="Top"
-                            SelectionChanged="IllustrationInfoAndCommentsNavigationView_OnSelectionChanged">
-                <NavigationView.MenuItems>
-                    <NavigationViewItem x:Uid="/IllustrationViewerPage/IllustrationInfoTab"
-                                        IsSelected="True"
-                                        Tag="{x:Bind _illustrationInfo}" />
-                    <NavigationViewItem x:Uid="/IllustrationViewerPage/CommentsTab"
-                                        Tag="{x:Bind _comments}" />
-                </NavigationView.MenuItems>
-                <Frame x:Name="IllustrationInfoAndCommentsFrame" NavigationFailed="IllustrationInfoAndCommentsFrame_OnNavigationFailed"/>
-            </NavigationView>
+            <Grid Shadow="{x:Bind SidePanelShadow}"
+                  Translation="0,0,20">
+                <NavigationView BackRequested="IllustrationInfoAndCommentsNavigationView_OnBackRequested"
+                                IsBackEnabled="True"
+                                IsSettingsVisible="False"
+                                PaneDisplayMode="Top"
+                                SelectionChanged="IllustrationInfoAndCommentsNavigationView_OnSelectionChanged"
+                                Shadow="{x:Bind SidePanelShadow}">
+                    <NavigationView.MenuItems>
+                        <NavigationViewItem x:Uid="/IllustrationViewerPage/IllustrationInfoTab"
+                                            IsSelected="True"
+                                            Tag="{x:Bind _illustrationInfo}" />
+                        <NavigationViewItem x:Uid="/IllustrationViewerPage/CommentsTab"
+                                            Tag="{x:Bind _comments}" />
+                    </NavigationView.MenuItems>
+                    <Frame x:Name="IllustrationInfoAndCommentsFrame" />
+                </NavigationView>
+            </Grid>
         </SplitView.Pane>
-        <controls:DockPanel HorizontalAlignment="Stretch"
+        <controls:DockPanel x:Name="IllustrationPresenterDockPanel"
+                            HorizontalAlignment="Stretch"
                             LastChildFill="True">
             <CommandBar controls:DockPanel.Dock="Top"
                         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"

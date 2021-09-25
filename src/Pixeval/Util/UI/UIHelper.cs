@@ -1,16 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.UI;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.CoreApi.Util;
+using Pixeval.Utilities;
 using Pixeval.Misc;
 
 namespace Pixeval.Util.UI
@@ -142,8 +145,8 @@ namespace Pixeval.Util.UI
             {
                 Duration = duration,
                 EasingFunction = easingFunction,
-                By = by,
-                From = from,
+                By = @by,
+                From = @from,
                 To = to
             };
             Storyboard.SetTarget(animation, depObj);
@@ -217,6 +220,12 @@ namespace Pixeval.Util.UI
             var childRectangle = childTransform.TransformBounds(new Rect(new Point(0, 0), child.RenderSize));
             var ownerRectangle = new Rect(new Point(0, 0), scrollViewer.RenderSize);
             return ownerRectangle.IntersectsWith(childRectangle);
+        }
+
+        public static IEnumerable<T> FindChildren<T>(this FrameworkElement startNode)
+            where T : DependencyObject
+        {
+            return startNode.FindChildren().OfType<T>();
         }
     }
 }

@@ -3,12 +3,13 @@ using System.Diagnostics;
 using System.Runtime;
 using CommunityToolkit.WinUI.UI;
 using CommunityToolkit.WinUI.UI.Controls;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Events;
+using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Misc;
@@ -21,15 +22,15 @@ namespace Pixeval.Pages
     {
         private readonly MainPageViewModel _viewModel = new();
 
-        private readonly NavigationViewTag _recommends = new(typeof(RecommendationPage), App.MakoClient.Recommends(targetFilter: App.AppSetting.TargetFilter));
+        private readonly NavigationViewTag _recommends = new(typeof(RecommendationPage), App.AppViewModel.MakoClient.Recommends(targetFilter: App.AppViewModel.AppSetting.TargetFilter));
 
-        private readonly NavigationViewTag _bookmarks = new(typeof(BookmarksPage), App.MakoClient.Bookmarks(App.Uid!, PrivacyPolicy.Public, App.AppSetting.TargetFilter));
+        private readonly NavigationViewTag _bookmarks = new(typeof(BookmarksPage), App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid!, PrivacyPolicy.Public, App.AppViewModel.AppSetting.TargetFilter));
 
-        private readonly NavigationViewTag _rankings = new(typeof(RankingsPage), App.MakoClient.Ranking(RankOption.Day, DateTime.Today - TimeSpan.FromDays(2)));
+        private readonly NavigationViewTag _rankings = new(typeof(RankingsPage), App.AppViewModel.MakoClient.Ranking(RankOption.Day, DateTime.Today - TimeSpan.FromDays(2)));
 
-        private readonly NavigationViewTag _recentPosts = new(typeof(RecentPostsPage), App.MakoClient.RecentPosts(PrivacyPolicy.Public));
+        private readonly NavigationViewTag _recentPosts = new(typeof(RecentPostsPage), App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicy.Public));
 
-        private readonly NavigationViewTag _settings = new(typeof(SettingsPage), App.MakoClient.Configuration);
+        private readonly NavigationViewTag _settings = new(typeof(SettingsPage), App.AppViewModel.MakoClient.Configuration);
 
         private static UIElement? _connectedAnimationTarget;
 
@@ -41,8 +42,8 @@ namespace Pixeval.Pages
         {
             InitializeComponent();
             DataContext = _viewModel;
-            EventChannel.Default.Subscribe<MainPageFrameSetConnectedAnimationTargetEvent>(evt => _connectedAnimationTarget = evt.Parameter as UIElement);
-            EventChannel.Default.Subscribe<NavigatingBackToMainPageEvent>(evt => _illustrationViewerContent = evt.Parameter as IllustrationViewModel);
+            WeakReferenceMessenger.Default.Register<MainPage, MainPageFrameSetConnectedAnimationTargetMessage>(this, (_, message) => _connectedAnimationTarget = message.Parameter);
+            WeakReferenceMessenger.Default.Register<MainPage, NavigatingBackToMainPageMessage>(this, (_, message) => _illustrationViewerContent = message.Parameter);
         }
          
         private void MainPageRootNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -52,7 +53,7 @@ namespace Pixeval.Pages
 
         private void MainPageRootFrame_OnNavigated(object sender, NavigationEventArgs e)
         {
-            EventChannel.Default.Publish(new MainPageFrameNavigatingEvent(this));
+            WeakReferenceMessenger.Default.Send(new MainPageFrameNavigatingEvent(this));
             GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect();
         }

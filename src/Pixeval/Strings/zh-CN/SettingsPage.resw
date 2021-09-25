@@ -127,7 +127,7 @@
     <value>打开Windows系统主题设置</value>
   </data>
   <data name="ApplicationThemeTextBlock.Text" xml:space="preserve">
-    <value>应用程序主题(重启应用后生效)</value>
+    <value>应用程序主题(重启应用后完全生效)</value>
   </data>
   <data name="ApplicationWideSectionSubtitleTextBlock.Text" xml:space="preserve">
     <value>应用程序相关设置</value>

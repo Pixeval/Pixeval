@@ -7,7 +7,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Net;
-using Pixeval.CoreApi.Util;
+using Pixeval.Utilities;
 using Pixeval.Misc;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
@@ -142,10 +142,10 @@ namespace Pixeval.ViewModel
 
         public async Task LoadOriginalImage()
         {
-            var imageClient = App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi);
+            var imageClient = App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi);
             var cacheKey = IllustrationViewModel.Illustration.GetIllustrationOriginalImageCacheKey();
             AdvancePhase(LoadingPhase.CheckingCache);
-            if (App.AppSetting.UseFileCache && await App.Cache.TryGetAsync<IRandomAccessStream>(cacheKey) is { } stream)
+            if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(cacheKey) is { } stream)
             {
                 AdvancePhase(LoadingPhase.LoadingFromCache);
                 OriginalImageStream = stream;
@@ -156,7 +156,7 @@ namespace Pixeval.ViewModel
             }
             else if (IllustrationViewModel.IsUgoira)
             {
-                var ugoiraMetadata = await App.MakoClient.GetUgoiraMetadata(IllustrationViewModel.Id);
+                var ugoiraMetadata = await App.AppViewModel.MakoClient.GetUgoiraMetadata(IllustrationViewModel.Id);
                 if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Medium is { } url)
                 {
                     AdvancePhase(LoadingPhase.DownloadingGifZip);
@@ -205,9 +205,9 @@ namespace Pixeval.ViewModel
             if (OriginalImageStream is not null && !_disposed)
             {
                 IllustrationViewerPageViewModel.UpdateCommandCanExecute();
-                if (App.AppSetting.UseFileCache)
+                if (App.AppViewModel.AppSetting.UseFileCache)
                 {
-                    await App.Cache.TryAddAsync(cacheKey, OriginalImageStream!, TimeSpan.FromDays(1));
+                    await App.AppViewModel.Cache.TryAddAsync(cacheKey, OriginalImageStream!, TimeSpan.FromDays(1));
                 }
                 return;
             }

@@ -1,0 +1,94 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <AcrylicBrush x:Key="PixevalAppAcrylicBrush"
+                                  FallbackColor="#E6E6E6"
+                                  TintColor="#E6E6E6"
+                                  TintLuminosityOpacity="0.4"
+                                  TintOpacity="0.3" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <AcrylicBrush x:Key="PixevalAppAcrylicBrush"
+                                  FallbackColor="#E6E6E6"
+                                  TintColor="#E6E6E6"
+                                  TintLuminosityOpacity="0.4"
+                                  TintOpacity="0.3" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <AcrylicBrush x:Key="PixevalAppAcrylicBrush"
+                                  FallbackColor="#515151"
+                                  TintColor="#515151"
+                                  TintLuminosityOpacity="0.4"
+                                  TintOpacity="0.3" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <SolidColorBrush x:Key="PixevalAppAcrylicBrush"
+                                     Color="{ThemeResource SystemColorWindowColor}" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <SolidColorBrush x:Key="PixevalPanelBackgroundThemeBrush"
+                                     Color="#F2F2F2" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="PixevalPanelBackgroundThemeBrush"
+                                     Color="#F2F2F2" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="PixevalPanelBackgroundThemeBrush"
+                                     Color="#232323" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <SolidColorBrush x:Key="PixevalPanelBackgroundThemeBrush"
+                                     Color="#323232" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <SolidColorBrush x:Key="PixevalBorderBrush"
+                                     Color="#7C7B7B" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="PixevalBorderBrush"
+                                     Color="#7C7B7B" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="PixevalBorderBrush"
+                                     Color="#ACADAD" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <SolidColorBrush x:Key="PixevalBorderBrush"
+                                     Color="#ACADAD" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <SolidColorBrush x:Key="PixevalTipTextForeground"
+                                     Color="#999AA1" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="PixevalTipTextForeground"
+                                     Color="#999AA1" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="PixevalTipTextForeground"
+                                     Color="#828492" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <SolidColorBrush x:Key="PixevalTipTextForeground"
+                                     Color="#828492" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

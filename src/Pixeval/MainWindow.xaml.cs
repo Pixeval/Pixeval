@@ -1,8 +1,9 @@
 ﻿using System;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 using PInvoke;
-using Pixeval.Events;
+using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Pages.Misc;
 
@@ -31,7 +32,7 @@ namespace Pixeval
         private static async void LoadIcon()
         {
             var icon = User32.LoadImage(IntPtr.Zero, await AppContext.GetIconAbsolutePath(), User32.ImageType.IMAGE_ICON, 44, 44, User32.LoadImageFlags.LR_LOADFROMFILE);
-            User32.SendMessage(App.GetMainWindowHandle(), User32.WindowMessage.WM_SETICON, IntPtr.Zero, icon);
+            User32.SendMessage(App.AppViewModel.GetMainWindowHandle(), User32.WindowMessage.WM_SETICON, IntPtr.Zero, icon);
         }
 
         private void PixevalAppRootFrame_OnLoaded(object sender, RoutedEventArgs e)
@@ -42,7 +43,7 @@ namespace Pixeval
 
         private void MainWindow_OnClosed(object sender, WindowEventArgs args)
         {
-            EventChannel.Default.Publish(new ApplicationExitingEvent());
+            WeakReferenceMessenger.Default.Send(new ApplicationExitingMessage());
         }
 
         private void PixevalAppRootFrame_OnNavigationFailed(object sender, NavigationFailedEventArgs e)

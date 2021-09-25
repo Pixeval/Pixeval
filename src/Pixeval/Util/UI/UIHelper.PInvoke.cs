@@ -1,5 +1,6 @@
 ﻿using System;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using PInvoke;
 using Pixeval.Interop;
@@ -38,7 +39,7 @@ namespace Pixeval.Util.UI
         {
             if (TaskBarCustomizationSupported)
             {
-                TaskBarList3Instance.SetProgressState(App.GetMainWindowHandle(), state);
+                TaskBarList3Instance.SetProgressState(App.AppViewModel.GetMainWindowHandle(), state);
             }
         }
 
@@ -46,7 +47,7 @@ namespace Pixeval.Util.UI
         {
             if (TaskBarCustomizationSupported)
             {
-                TaskBarList3Instance.SetProgressValue(App.GetMainWindowHandle(), progressValue, max);
+                TaskBarList3Instance.SetProgressValue(App.AppViewModel.GetMainWindowHandle(), progressValue, max);
             }
         }
 
@@ -62,14 +63,14 @@ namespace Pixeval.Util.UI
             var manager = IntPtr.Zero;
             fixed (Guid* id = &RiId)
             {
-                interop.GetForWindow(App.GetMainWindowHandle(), id, (void**) &manager);
+                interop.GetForWindow(App.AppViewModel.GetMainWindowHandle(), id, (void**) &manager);
                 return DataTransferManager.FromAbi(manager);
             }
         }
 
         public static void ShowShareUI()
         {
-            DataTransferManagerInterop.ShowShareUIForWindow(App.GetMainWindowHandle());
+            DataTransferManagerInterop.ShowShareUIForWindow(App.AppViewModel.GetMainWindowHandle());
         }
 
         /// <summary>
@@ -82,11 +83,34 @@ namespace Pixeval.Util.UI
             return (User32.GetSystemMetrics(User32.SystemMetric.SM_CXSCREEN), User32.GetSystemMetrics(User32.SystemMetric.SM_CYSCREEN));
         }
 
-        public static (int, int) GetWindowSize(IntPtr hWnd)
+        public static IntPtr GetWindowHandle(this Window window)
+        {
+            return window.As<IWindowNative>().WindowHandle;
+        }
+
+        public static (int, int) GetWindowSizeTuple(IntPtr hWnd)
         {
             User32.GetWindowRect(hWnd, out var rect);
             var dpi = User32.GetDpiForWindow(hWnd) / 96d;
             return ((int, int)) (rect.right / dpi - rect.left / dpi, rect.bottom / dpi - rect.top / dpi);
+        }
+
+        public static Size GetWindowSize(IntPtr hWnd)
+        {
+            var (width, height) = GetWindowSizeTuple(hWnd);
+            return new Size(width, height);
+        }
+
+        public static (int, int) SizeTuple(this Window window)
+        {
+            var hWnd = window.GetWindowHandle();
+            return GetWindowSizeTuple(hWnd);
+        }
+
+        public static Size Size(this Window window)
+        {
+            var hWnd = window.GetWindowHandle();
+            return GetWindowSize(hWnd);
         }
     }
 }

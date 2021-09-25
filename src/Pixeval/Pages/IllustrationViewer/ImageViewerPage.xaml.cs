@@ -6,8 +6,8 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Util;
 using Pixeval.Util.UI;
+using Pixeval.Utilities;
 using Pixeval.ViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer

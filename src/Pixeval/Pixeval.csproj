@@ -57,74 +57,26 @@
    </ItemGroup>
    <ItemGroup>
       <None Remove="Assets\Certs\pixeval_server_cert.pfx" />
+      <None Remove="Assets\Images\empty-box.theme-dark.png" />
+      <None Remove="Assets\Images\empty-box.theme-light.png" />
       <None Remove="Assets\Images\logo44x44.ico" />
       <None Remove="Pages\Capability\RecentPostsPage.xaml" />
+      <None Remove="Pages\IllustrationViewer\CommentRepliesPage.xaml" />
+      <None Remove="Pages\IllustrationViewer\PixivReplyEmojiListPage.xaml" />
+      <None Remove="Pages\IllustrationViewer\PixivReplyStickerListPage.xaml" />
       <None Remove="Strings\zh-CN\BookmarksPage.resw" />
       <None Remove="Strings\zh-CN\CommentBlock.resw" />
+      <None Remove="Strings\zh-CN\CommentRepliesBlock.resw" />
       <None Remove="Strings\zh-CN\DownloadAndHistoryListPage.resw" />
       <None Remove="Strings\zh-CN\IllustrationGridCommandBar.resw" />
       <None Remove="Strings\zh-CN\IllustrationInfoPage.resw" />
       <None Remove="Strings\zh-CN\IllustrationViewerPage.resw" />
       <None Remove="Strings\zh-CN\ImageViewerPage.resw" />
+      <None Remove="Strings\zh-CN\PixivReplyBar.resw" />
       <None Remove="Strings\zh-CN\RankingsPage.resw" />
       <None Remove="Strings\zh-CN\RecentPostsPage.resw" />
       <None Remove="Strings\zh-CN\RecommendationsPage.resw" />
       <None Remove="Strings\zh-CN\SettingsPage.resw" />
-      <None Remove="Images\BadgeLogo.scale-100.png" />
-      <None Remove="Images\BadgeLogo.scale-125.png" />
-      <None Remove="Images\BadgeLogo.scale-150.png" />
-      <None Remove="Images\BadgeLogo.scale-200.png" />
-      <None Remove="Images\BadgeLogo.scale-400.png" />
-      <None Remove="Images\LargeTile.scale-100.png" />
-      <None Remove="Images\LargeTile.scale-125.png" />
-      <None Remove="Images\LargeTile.scale-150.png" />
-      <None Remove="Images\LargeTile.scale-200.png" />
-      <None Remove="Images\LargeTile.scale-400.png" />
-      <None Remove="Images\SmallTile.scale-100.png" />
-      <None Remove="Images\SmallTile.scale-125.png" />
-      <None Remove="Images\SmallTile.scale-150.png" />
-      <None Remove="Images\SmallTile.scale-200.png" />
-      <None Remove="Images\SmallTile.scale-400.png" />
-      <None Remove="Images\SplashScreen.scale-100.png" />
-      <None Remove="Images\SplashScreen.scale-125.png" />
-      <None Remove="Images\SplashScreen.scale-150.png" />
-      <None Remove="Images\SplashScreen.scale-200.png" />
-      <None Remove="Images\SplashScreen.scale-400.png" />
-      <None Remove="Images\Square150x150Logo.scale-100.png" />
-      <None Remove="Images\Square150x150Logo.scale-125.png" />
-      <None Remove="Images\Square150x150Logo.scale-150.png" />
-      <None Remove="Images\Square150x150Logo.scale-200.png" />
-      <None Remove="Images\Square150x150Logo.scale-400.png" />
-      <None Remove="Images\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
-      <None Remove="Images\Square44x44Logo.altform-lightunplated_targetsize-24.png" />
-      <None Remove="Images\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
-      <None Remove="Images\Square44x44Logo.altform-lightunplated_targetsize-32.png" />
-      <None Remove="Images\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
-      <None Remove="Images\Square44x44Logo.altform-unplated_targetsize-16.png" />
-      <None Remove="Images\Square44x44Logo.altform-unplated_targetsize-256.png" />
-      <None Remove="Images\Square44x44Logo.altform-unplated_targetsize-32.png" />
-      <None Remove="Images\Square44x44Logo.altform-unplated_targetsize-48.png" />
-      <None Remove="Images\Square44x44Logo.scale-100.png" />
-      <None Remove="Images\Square44x44Logo.scale-125.png" />
-      <None Remove="Images\Square44x44Logo.scale-150.png" />
-      <None Remove="Images\Square44x44Logo.scale-200.png" />
-      <None Remove="Images\Square44x44Logo.scale-400.png" />
-      <None Remove="Images\Square44x44Logo.targetsize-16.png" />
-      <None Remove="Images\Square44x44Logo.targetsize-24.png" />
-      <None Remove="Images\Square44x44Logo.targetsize-24_altform-unplated.png" />
-      <None Remove="Images\Square44x44Logo.targetsize-256.png" />
-      <None Remove="Images\Square44x44Logo.targetsize-32.png" />
-      <None Remove="Images\Square44x44Logo.targetsize-48.png" />
-      <None Remove="Images\StoreLogo.scale-100.png" />
-      <None Remove="Images\StoreLogo.scale-125.png" />
-      <None Remove="Images\StoreLogo.scale-150.png" />
-      <None Remove="Images\StoreLogo.scale-200.png" />
-      <None Remove="Images\StoreLogo.scale-400.png" />
-      <None Remove="Images\Wide310x150Logo.scale-100.png" />
-      <None Remove="Images\Wide310x150Logo.scale-125.png" />
-      <None Remove="Images\Wide310x150Logo.scale-150.png" />
-      <None Remove="Images\Wide310x150Logo.scale-200.png" />
-      <None Remove="Images\Wide310x150Logo.scale-400.png" />
       <None Remove="Package.appxmanifest" />
       <None Remove="Pages\BookMarksPage.xaml" />
       <None Remove="Pages\Capability\NavigationPage.xaml" />
@@ -137,10 +89,15 @@
       <None Remove="Pages\RecommendationPage.xaml" />
       <None Remove="Pages\SettingsPage.xaml" />
       <None Remove="Strings\zh-CN\SortOptionComboBox.resw" />
+      <None Remove="Styles\Controls.xaml" />
+      <None Remove="Templates.xaml" />
       <None Remove="Themes.xaml" />
       <None Remove="UserControls\CommentBlock.xaml" />
+      <None Remove="UserControls\CommentList.xaml" />
       <None Remove="UserControls\IllustrationContainer.xaml" />
       <None Remove="UserControls\IllustrationGridCommandBar.xaml" />
+      <None Remove="UserControls\OverlayPopupContent.xaml" />
+      <None Remove="UserControls\PixivReplyBar.xaml" />
       <None Remove="UserControls\SortOptionComboBox.xaml" />
    </ItemGroup>
    <ItemGroup>
@@ -195,63 +152,7 @@
       <RemoveDir Directories="$(LoginProxyPublishDir)" />
    </Target>
    <ItemGroup>
-      <Content Include="Images\BadgeLogo.scale-100.png" />
-      <Content Include="Images\BadgeLogo.scale-125.png" />
-      <Content Include="Images\BadgeLogo.scale-150.png" />
-      <Content Include="Images\BadgeLogo.scale-200.png" />
-      <Content Include="Images\BadgeLogo.scale-400.png" />
-      <Content Include="Images\LargeTile.scale-100.png" />
-      <Content Include="Images\LargeTile.scale-125.png" />
-      <Content Include="Images\LargeTile.scale-150.png" />
-      <Content Include="Images\LargeTile.scale-200.png" />
-      <Content Include="Images\LargeTile.scale-400.png" />
-      <Content Include="Images\SmallTile.scale-100.png" />
-      <Content Include="Images\SmallTile.scale-125.png" />
-      <Content Include="Images\SmallTile.scale-150.png" />
-      <Content Include="Images\SmallTile.scale-200.png" />
-      <Content Include="Images\SmallTile.scale-400.png" />
-      <Content Include="Images\SplashScreen.scale-100.png" />
-      <Content Include="Images\SplashScreen.scale-125.png" />
-      <Content Include="Images\SplashScreen.scale-150.png" />
-      <Content Include="Images\SplashScreen.scale-200.png" />
-      <Content Include="Images\SplashScreen.scale-400.png" />
-      <Content Include="Images\Square150x150Logo.scale-100.png" />
-      <Content Include="Images\Square150x150Logo.scale-125.png" />
-      <Content Include="Images\Square150x150Logo.scale-150.png" />
-      <Content Include="Images\Square150x150Logo.scale-200.png" />
-      <Content Include="Images\Square150x150Logo.scale-400.png" />
-      <Content Include="Images\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
-      <Content Include="Images\Square44x44Logo.altform-lightunplated_targetsize-24.png" />
-      <Content Include="Images\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
-      <Content Include="Images\Square44x44Logo.altform-lightunplated_targetsize-32.png" />
-      <Content Include="Images\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
-      <Content Include="Images\Square44x44Logo.altform-unplated_targetsize-16.png" />
-      <Content Include="Images\Square44x44Logo.altform-unplated_targetsize-256.png" />
-      <Content Include="Images\Square44x44Logo.altform-unplated_targetsize-32.png" />
-      <Content Include="Images\Square44x44Logo.altform-unplated_targetsize-48.png" />
-      <Content Include="Images\Square44x44Logo.scale-100.png" />
-      <Content Include="Images\Square44x44Logo.scale-125.png" />
-      <Content Include="Images\Square44x44Logo.scale-150.png" />
-      <Content Include="Images\Square44x44Logo.scale-200.png" />
-      <Content Include="Images\Square44x44Logo.scale-400.png" />
-      <Content Include="Images\Square44x44Logo.targetsize-16.png" />
-      <Content Include="Images\Square44x44Logo.targetsize-24.png" />
-      <Content Include="Images\Square44x44Logo.targetsize-24_altform-unplated.png" />
-      <Content Include="Images\Square44x44Logo.targetsize-256.png" />
-      <Content Include="Images\Square44x44Logo.targetsize-32.png" />
-      <Content Include="Images\Square44x44Logo.targetsize-48.png" />
-      <Content Include="Images\StoreLogo.scale-100.png" />
-      <Content Include="Images\StoreLogo.scale-125.png" />
-      <Content Include="Images\StoreLogo.scale-150.png" />
-      <Content Include="Images\StoreLogo.scale-200.png" />
-      <Content Include="Images\StoreLogo.scale-400.png" />
-      <Content Include="Images\Wide310x150Logo.scale-100.png" />
-      <Content Include="Images\Wide310x150Logo.scale-125.png" />
-      <Content Include="Images\Wide310x150Logo.scale-150.png" />
-      <Content Include="Images\Wide310x150Logo.scale-200.png" />
-      <Content Include="Images\Wide310x150Logo.scale-400.png" />
-   </ItemGroup>
-   <ItemGroup>
+      <ProjectReference Include="..\..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
       <ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
       <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
    </ItemGroup>
@@ -306,6 +207,7 @@
    <ItemGroup>
       <PRIResource Include="Strings\zh-CN\BookmarksPage.resw" />
       <PRIResource Include="Strings\zh-CN\CommentBlock.resw" />
+      <PRIResource Include="Strings\zh-CN\CommentRepliesBlock.resw" />
       <PRIResource Include="Strings\zh-CN\DownloadAndHistoryListPage.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationGridCommandBar.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationInfoPage.resw" />
@@ -318,6 +220,7 @@
       <PRIResource Include="Strings\zh-CN\RankingsPage.resw" />
       <PRIResource Include="Strings\zh-CN\RecentPostsPage.resw" />
       <PRIResource Include="Strings\zh-CN\RecommendationsPage.resw" />
+      <PRIResource Include="Strings\zh-CN\PixivReplyBar.resw" />
       <PRIResource Include="Strings\zh-CN\SettingsPage.resw" />
       <PRIResource Include="Strings\zh-CN\SortOptionComboBox.resw" />
    </ItemGroup>
@@ -325,6 +228,41 @@
       <Content Update="Assets\Images\logo44x44.ico">
          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </Content>
+   </ItemGroup>
+   <ItemGroup>
+     <Page Update="UserControls\PixivReplyBar.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+   </ItemGroup>
+   <ItemGroup>
+     <Page Update="Pages\IllustrationViewer\PixivReplyStickerListPage.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+   </ItemGroup>
+   <ItemGroup>
+     <Page Update="Pages\IllustrationViewer\PixivReplyEmojiListPage.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+   </ItemGroup>
+   <ItemGroup>
+     <Page Update="UserControls\OverlayPopupContent.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+   </ItemGroup>
+   <ItemGroup>
+     <Page Update="Styles\Controls.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+   </ItemGroup>
+   <ItemGroup>
+     <Page Update="UserControls\CommentList.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+   </ItemGroup>
+   <ItemGroup>
+     <Page Update="UserControls\CommentRepliesBlock.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
    </ItemGroup>
    <ItemGroup>
      <Page Update="UserControls\CommentBlock.xaml">
@@ -352,7 +290,7 @@
       </Page>
    </ItemGroup>
    <ItemGroup>
-      <Page Update="Themes.xaml">
+      <Page Update="Styles\Themes.xaml">
          <Generator>MSBuild:Compile</Generator>
       </Page>
    </ItemGroup>

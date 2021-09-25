@@ -28,7 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using JetBrains.Annotations;
-using Pixeval.CoreApi.Util;
+using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements
 {

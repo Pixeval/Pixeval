@@ -27,7 +27,7 @@
 using System;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
-using Pixeval.CoreApi.Util;
+using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Preference
 {

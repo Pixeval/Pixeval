@@ -31,7 +31,7 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Global.Exception;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net.Response;
-using Pixeval.CoreApi.Util;
+using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi
 {

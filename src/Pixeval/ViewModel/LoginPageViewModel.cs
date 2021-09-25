@@ -11,14 +11,15 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Windows.Globalization;
 using JetBrains.Annotations;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.Win32;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Preference;
-using Pixeval.CoreApi.Util;
-using Pixeval.Events;
+using Pixeval.Utilities;
+using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Util;
 using Pixeval.Util.IO;
@@ -37,9 +38,9 @@ namespace Pixeval.ViewModel
 
         static LoginPageViewModel()
         {
-            EventChannel.Default.Subscribe<ScanningLoginProxyEvent>(ScanLoginProxyTask.SetResult);
+            WeakReferenceMessenger.Default.Register(RecipientAdapter<ScanningLoginProxyMessage>.Create(_ => ScanLoginProxyTask.SetResult()));
             // Kill the login proxy process if the application encounters exception
-            EventChannel.Default.Subscribe<ApplicationExitingEvent>(() => _loginProxyProcess?.Kill());
+            WeakReferenceMessenger.Default.Register(RecipientAdapter<ApplicationExitingMessage>.Create(_ => _loginProxyProcess?.Kill()));
         }
 
         public class LoginTokenResponse
@@ -157,14 +158,14 @@ namespace Pixeval.ViewModel
             AdvancePhase(LoginPhaseEnum.Refreshing);
             if (AppContext.LoadSession() is { } session && CheckRefreshAvailableInternal(session))
             {
-                App.MakoClient = new MakoClient(session, App.AppSetting.ToMakoClientConfiguration(),
+                App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSetting.ToMakoClientConfiguration(),
                     new RefreshTokenSessionUpdate());
-                await App.MakoClient.RefreshSessionAsync();
+                await App.AppViewModel.MakoClient.RefreshSessionAsync();
             }
             else
             {
                 await MessageDialogBuilder.CreateAcknowledgement(
-                        App.Window,
+                        App.AppViewModel.Window,
                         LoginPageResources.RefreshingSessionIsNotPresentTitle,
                         LoginPageResources.RefreshingSessionIsNotPresentContent)
                     .ShowAsync();
@@ -185,7 +186,7 @@ namespace Pixeval.ViewModel
             var (cookie, code, verifier) = await WhenLoginTokenRequestedAsync(); // awaits the login proxy to sends the post request which contains the login result
             var session = await AuthCodeToSessionAsync(code, verifier, cookie);
             _loginProxyProcess = null; // if we reach here then the login procedure completes successfully, the login proxy process has been closed by itself, we do not need the control over it
-            App.MakoClient = new MakoClient(session, App.AppSetting.ToMakoClientConfiguration(), new RefreshTokenSessionUpdate());
+            App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSetting.ToMakoClientConfiguration(), new RefreshTokenSessionUpdate());
         }
 
         /// <summary>

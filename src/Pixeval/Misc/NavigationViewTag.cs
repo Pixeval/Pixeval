@@ -6,9 +6,9 @@ namespace Pixeval.Misc
     {
         public Type NavigateTo { get; }
 
-        public object Parameter { get; }
+        public object? Parameter { get; }
 
-        public NavigationViewTag(Type navigateTo, object parameter)
+        public NavigationViewTag(Type navigateTo, object? parameter)
         {
             NavigateTo = navigateTo;
             Parameter = parameter;

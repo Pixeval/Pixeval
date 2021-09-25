@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -9,13 +8,12 @@ using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using CommunityToolkit.WinUI.Helpers;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Preference;
-using Pixeval.CoreApi.Util;
-using Pixeval.Events;
-using Pixeval.Util;
-using Pixeval.Util.Generic;
+using Pixeval.Utilities;
+using Pixeval.Messages;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 
@@ -45,7 +43,7 @@ namespace Pixeval
             ConfigurationContainer = ApplicationData.Current.RoamingSettings.Containers[ConfigurationContainerKey];
 
             // Save the context information when application closing
-            EventChannel.Default.Subscribe<ApplicationExitingEvent>(SaveContext);
+            WeakReferenceMessenger.Default.Register(RecipientAdapter<ApplicationExitingMessage>.Create(_ => SaveContext()));
         }
 
         public const string AppIdentifier = "Pixeval";
@@ -95,25 +93,6 @@ namespace Pixeval
         }
 
         /// <summary>
-        /// Calculate the window size by current resolution
-        /// </summary>
-        public static (int, int) PredetermineEstimatedWindowSize()
-        {
-            return UIHelper.GetScreenSize() switch
-            {
-                // 这 就 是 C #
-                ( >= 2560, >= 1440) => (1600, 900),
-                ( > 1600, > 900) => (1280, 720),
-                _ => (800, 600)
-            };
-        }
-
-        public static (int, int) GetAppWindowSize()
-        {
-            return UIHelper.GetWindowSize(App.GetMainWindowHandle());
-        }
-
-        /// <summary>
         /// Copy and extract the login proxy zip to a local folder if:
         /// 1. The local file's checksum doesn't match with the one in the Assets folder(Assets/Binary/Pixeval.LoginProxy.zip)
         /// 2. The local file doesn't exist
@@ -131,12 +110,12 @@ namespace Pixeval
                     await CopyLoginProxyZipFileAndExtractInternalAsync(assetFile, assetChecksum);
                 }
 
-                EventChannel.Default.Publish(new ScanningLoginProxyEvent());
+                WeakReferenceMessenger.Default.Send(new ScanningLoginProxyMessage());
                 return;
             }
 
             await CopyLoginProxyZipFileAndExtractInternalAsync(assetFile, assetChecksum);
-            EventChannel.Default.Publish(new ScanningLoginProxyEvent());
+            WeakReferenceMessenger.Default.Send(new ScanningLoginProxyMessage());
         }
 
         public static Uri GenerateAppLinkToIllustration(string id)
@@ -251,14 +230,14 @@ namespace Pixeval
         public static void SaveContext()
         {
             // Save the current resolution
-            (App.AppSetting.WindowWidth, App.AppSetting.WindowHeight) = UIHelper.GetWindowSize(App.GetMainWindowHandle());
+            (App.AppViewModel.AppSetting.WindowWidth, App.AppViewModel.AppSetting.WindowHeight) = App.AppViewModel.Window.SizeTuple();
             SaveSession();
             SaveConfiguration();
         }
 
         public static void SaveSession()
         {
-            if (App.MakoClient.Session is { } session)
+            if (App.AppViewModel.MakoClient.Session is { } session)
             {
                 var values = SessionContainer.Values;
                 values[nameof(Session.AccessToken)] = session.AccessToken;
@@ -276,7 +255,7 @@ namespace Pixeval
 
         public static void SaveConfiguration()
         {
-            if (App.AppSetting is { } appSetting)
+            if (App.AppViewModel.AppSetting is { } appSetting)
             {
                 ConfigurationContainer.Values[nameof(AppSetting.Theme)] = appSetting.Theme.CastOrThrow<int>();
                 ConfigurationContainer.Values[nameof(AppSetting.ExcludeTags)] = appSetting.ExcludeTags.ToJson();

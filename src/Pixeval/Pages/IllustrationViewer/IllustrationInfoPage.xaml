@@ -6,8 +6,9 @@
                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                         xmlns:model="using:Pixeval.CoreApi.Model"
+                        xmlns:ui="using:CommunityToolkit.WinUI.UI"
                         xmlns:viewer="using:Pixeval.Pages.IllustrationViewer"
-                        Background="{ThemeResource SidePanelBackgroundThemeBrush}"
+                        Background="{ThemeResource PixevalPanelBackgroundThemeBrush}"
                         mc:Ignorable="d">
     <controls1:EnhancedPage.Resources>
         <Style x:Key="InfoPageSectionHeaderTextBlockStyle"
@@ -39,6 +40,7 @@
                         Orientation="Horizontal">
                 <PersonPicture Width="50"
                                Height="50"
+                               ui:FrameworkElementExtensions.Cursor="Hand"
                                ProfilePicture="{x:Bind _viewModel.UserProfileImageSource, Mode=OneWay}"
                                Tapped="IllustratorPersonPicture_OnTapped" />
                 <StackPanel Margin="10,0,0,0"
@@ -69,7 +71,7 @@
             <controls:MarkdownTextBlock x:Name="IllustrationCaptionMarkdownTextBlock"
                                         MaxHeight="200"
                                         Margin="{StaticResource StackLayoutEntryPadding}"
-                                        Background="{ThemeResource SidePanelBackgroundThemeBrush}"
+                                        Background="{ThemeResource PixevalPanelBackgroundThemeBrush}"
                                         FontSize="{StaticResource PixevalContentFontSize}"
                                         LinkClicked="IllustrationCaptionMarkdownTextBlock_OnLinkClicked"
                                         TextWrapping="Wrap" />

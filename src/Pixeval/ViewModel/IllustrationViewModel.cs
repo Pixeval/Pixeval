@@ -10,7 +10,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
-using Pixeval.CoreApi.Util;
+using Pixeval.Utilities;
 using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.UserControls;
@@ -117,7 +117,7 @@ namespace Pixeval.ViewModel
             }
 
             LoadingThumbnail = true;
-            if (App.AppSetting.UseFileCache && await App.Cache.TryGetAsync<IRandomAccessStream>(Illustration.GetIllustrationThumbnailCacheKey()) is { } stream)
+            if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(Illustration.GetIllustrationThumbnailCacheKey()) is { } stream)
             {
                 ThumbnailSource = await stream.GetSoftwareBitmapSourceAsync(true);
                 LoadingThumbnail = false;
@@ -128,7 +128,7 @@ namespace Pixeval.ViewModel
             {
                 using (ras)
                 {
-                    await App.Cache.TryAddAsync(Illustration.GetIllustrationThumbnailCacheKey(), ras!, TimeSpan.FromDays(1));
+                    await App.AppViewModel.Cache.TryAddAsync(Illustration.GetIllustrationThumbnailCacheKey(), ras!, TimeSpan.FromDays(1));
                     ThumbnailSource = await ras!.GetSoftwareBitmapSourceAsync(false);
                 }
 
@@ -145,7 +145,7 @@ namespace Pixeval.ViewModel
         {
             if (Illustration.GetThumbnailUrl(thumbnailUrlOptions) is { } url)
             {
-                switch (await App.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle))
+                switch (await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle))
                 {
                     case Result<IRandomAccessStream>.Success(var stream):
                         return stream;
@@ -161,13 +161,13 @@ namespace Pixeval.ViewModel
         public Task RemoveBookmarkAsync()
         {
             IsBookmarked = false;
-            return App.MakoClient.RemoveBookmarkAsync(Id);
+            return App.AppViewModel.MakoClient.RemoveBookmarkAsync(Id);
         }
 
         public Task PostPublicBookmarkAsync()
         {
             IsBookmarked = true;
-            return App.MakoClient.PostBookmarkAsync(Id, PrivacyPolicy.Public);
+            return App.AppViewModel.MakoClient.PostBookmarkAsync(Id, PrivacyPolicy.Public);
         }
 
         public string GetTooltip()

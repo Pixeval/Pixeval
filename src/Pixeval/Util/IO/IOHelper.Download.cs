@@ -7,10 +7,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Microsoft.IO;
-using Pixeval.CoreApi.Util;
+using Pixeval.Utilities;
 using Pixeval.Interop;
 using Pixeval.Util.UI;
-using Functions = Pixeval.Util.Generic.Functions;
 
 namespace Pixeval.Util.IO
 {

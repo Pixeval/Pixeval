@@ -3,8 +3,8 @@ using System.Collections.ObjectModel;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Options;
-using Pixeval.Util;
 using Pixeval.Util.Generic;
+using Pixeval.Utilities;
 
 namespace Pixeval.ViewModel
 {
@@ -73,7 +73,7 @@ namespace Pixeval.ViewModel
             set => SetProperty(_appSetting.DisableDomainFronting, value, _appSetting, (setting, value) =>
             {
                 setting.DisableDomainFronting = value;
-                App.MakoClient.Configuration.Bypass = !value;
+                App.AppViewModel.MakoClient.Configuration.Bypass = !value;
             });
         }
 
@@ -125,7 +125,7 @@ namespace Pixeval.ViewModel
             set => SetProperty(_appSetting.MirrorHost, value, _appSetting, (setting, value) =>
             {
                 setting.MirrorHost = value;
-                App.MakoClient.Configuration.MirrorHost = value;
+                App.AppViewModel.MakoClient.Configuration.MirrorHost = value;
             });
         }
 

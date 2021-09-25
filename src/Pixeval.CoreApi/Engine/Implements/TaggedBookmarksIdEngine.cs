@@ -30,7 +30,7 @@ using System.Web;
 using JetBrains.Annotations;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
-using Pixeval.CoreApi.Util;
+using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements
 {

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text;
 using Pixeval.Misc;
-using Pixeval.Util.Generic;
 
 namespace Pixeval.Util.UI
 {

@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.CoreApi.Net;
-using Pixeval.Events;
+using Pixeval.Messages;
 using Pixeval.Util.IO;
-using Pixeval.Util.UI;
 
 namespace Pixeval.ViewModel
 {
@@ -13,7 +13,7 @@ namespace Pixeval.ViewModel
     {
         public MainPageViewModel()
         {
-            EventChannel.Default.Subscribe<LoginCompletedEvent>(DownloadAndSetAvatar);
+            WeakReferenceMessenger.Default.Register<MainPageViewModel, LoginCompletedMessage>(this, (recipient, _) => recipient.DownloadAndSetAvatar());
         }
 
         public double MainPageRootNavigationViewOpenPanelLength => 250;
@@ -36,7 +36,7 @@ namespace Pixeval.ViewModel
         /// </summary>
         public async void DownloadAndSetAvatar()
         {
-            var makoClient = App.MakoClient!;
+            var makoClient = App.AppViewModel.MakoClient!;
             // get byte array of avatar
             // and set to the bitmap image
             Avatar = await (await makoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(makoClient.Session.AvatarUrl!))

@@ -2,7 +2,7 @@
 using Microsoft.UI.Xaml.Media;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Net;
-using Pixeval.CoreApi.Util;
+using Pixeval.Utilities;
 
 namespace Pixeval.Util.IO
 {

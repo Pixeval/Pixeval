@@ -15,6 +15,7 @@ using CommunityToolkit.WinUI.Helpers;
 using Microsoft.Toolkit.Diagnostics;
 using Pixeval.Util.Generic;
 using Pixeval.Util.IO;
+using Functions = Pixeval.Utilities.Functions;
 
 namespace Pixeval.Misc
 {
@@ -379,7 +380,7 @@ namespace Pixeval.Misc
                     {
                         var type when type == typeof(IRandomAccessStream) || type.IsSubclassOf(typeof(IRandomAccessStream)) => (T) await file.OpenAsync(FileAccessMode.Read),
                         var type when type == typeof(byte[]) || type.IsSubclassOf(typeof(IEnumerable<byte>)) => (T) (object) await file.ReadBytesAsync(),
-                        _ => await Functions.Block(async () =>
+                        _ => await Utilities.Functions.Block(async () =>
                         {
                             await using var stream = await file.OpenStreamForReadAsync();
                             return await JsonSerializer.DeserializeAsync<T>(stream);

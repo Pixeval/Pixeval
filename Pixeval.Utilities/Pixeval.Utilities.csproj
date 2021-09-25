@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" PrivateAssets="True" />
+    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.0" PrivateAssets="True" />
+  </ItemGroup>
+
+</Project>

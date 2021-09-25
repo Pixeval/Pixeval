@@ -16,7 +16,7 @@ using Windows.Security.Cryptography;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using CommunityToolkit.WinUI.Helpers;
-using Pixeval.CoreApi.Util;
+using Pixeval.Utilities;
 
 namespace Pixeval.Util.IO
 {

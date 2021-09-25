@@ -35,7 +35,7 @@ using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.EndPoints;
 using Pixeval.CoreApi.Net.Request;
 using Pixeval.CoreApi.Net.Response;
-using Pixeval.CoreApi.Util;
+using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi
 {

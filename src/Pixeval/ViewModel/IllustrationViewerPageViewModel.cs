@@ -11,9 +11,9 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.UserControls;
 using Pixeval.Util;
-using Pixeval.Util.Generic;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
+using Pixeval.Utilities;
 
 namespace Pixeval.ViewModel
 {
@@ -108,7 +108,7 @@ namespace Pixeval.ViewModel
 
         public XamlUICommand GenerateWebLinkCommand { get; } = new()
         {
-            Label = IllustrationViewerPageResources.GenerateLink,
+            Label = IllustrationViewerPageResources.GenerateWebLink,
             IconSource = FontIconSymbols.PreviewLinkE8A1.GetFontIconSource()
         };
 
@@ -195,7 +195,7 @@ namespace Pixeval.ViewModel
         {
             if (Current.LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true })
             {
-                await MessageDialogBuilder.CreateAcknowledgement(App.Window, IllustrationViewerPageResources.CannotShareImageForNowTitle, IllustrationViewerPageResources.CannotShareImageForNowContent)
+                await MessageDialogBuilder.CreateAcknowledgement(App.AppViewModel.Window, IllustrationViewerPageResources.CannotShareImageForNowTitle, IllustrationViewerPageResources.CannotShareImageForNowContent)
                     .ShowAsync();
                 return;
             }
@@ -216,7 +216,7 @@ namespace Pixeval.ViewModel
 
         private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
         {
-            if (App.AppSetting.DisplayTeachingTipWhenGeneratingAppLink)
+            if (App.AppViewModel.AppSetting.DisplayTeachingTipWhenGeneratingAppLink)
             {
                 IsGenerateLinkTeachingTipOpen = true;
             }
@@ -432,7 +432,7 @@ namespace Pixeval.ViewModel
         {
             if (FirstIllustrationViewModel.Illustration.User?.ProfileImageUrls?.Medium is { } profileImage)
             {
-                UserProfileImageSource = await App.MakoClient.DownloadSoftwareBitmapSourceResultAsync(profileImage)
+                UserProfileImageSource = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceResultAsync(profileImage)
                     .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync());
             }
         }

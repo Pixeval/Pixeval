@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Events;
+using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.UserControls;
 using Pixeval.Util;
@@ -25,18 +25,19 @@ namespace Pixeval.Pages.Capability
         public override void Dispose(NavigatingCancelEventArgs navigatingCancelEventArgs)
         {
             IllustrationContainer.ViewModel.Dispose();
+            WeakReferenceMessenger.Default.UnregisterAll(this);
         }
 
         public override void Prepare(NavigationEventArgs navigationEventArgs)
         {
             ModeSelectionComboBox.SelectedItem = ModeSelectionComboBoxIllustComboBoxItem;
             SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
-            EventChannel.Default.Subscribe<MainPageFrameNavigatingEvent>(() => IllustrationContainer.ViewModel.FetchEngine?.Cancel());
+            WeakReferenceMessenger.Default.Register<RecommendationPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustrationContainer.ViewModel.FetchEngine?.Cancel());
         }
 
         private void RecommendationsPage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (App.Window.GetNavigationModeAndReset() is not NavigationMode.Back)
+            if (App.AppViewModel.Window.GetNavigationModeAndReset() is not NavigationMode.Back)
             { 
                 ChangeSource();
             }
@@ -56,7 +57,7 @@ namespace Pixeval.Pages.Capability
 
         private void ChangeSource()
         {
-            _ = IllustrationContainer.ViewModel.ResetAndFillAsync(App.MakoClient.Recommends(ModeSelectionComboBox.GetComboBoxSelectedItemTag(RecommendContentType.Illust)), App.AppSetting.ItemsNumberLimitForDailyRecommendations);
+            _ = IllustrationContainer.ViewModel.ResetAndFillAsync(App.AppViewModel.MakoClient.Recommends(ModeSelectionComboBox.GetComboBoxSelectedItemTag(RecommendContentType.Illust)), App.AppViewModel.AppSetting.ItemsNumberLimitForDailyRecommendations);
         }
     }
 }

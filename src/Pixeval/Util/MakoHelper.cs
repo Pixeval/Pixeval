@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using CommunityToolkit.WinUI.UI;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
@@ -6,6 +8,8 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util.Generic;
+using Pixeval.Utilities;
+using Enumerates = Pixeval.Utilities.Enumerates;
 
 namespace Pixeval.Util
 {
@@ -13,7 +17,7 @@ namespace Pixeval.Util
     {
         public static IllustrationSortOptionWrapper GetAppSettingDefaultSortOptionWrapper()
         {
-            return IllustrationSortOptionWrapper.AvailableOptions().Of(App.AppSetting.DefaultSortOption);
+            return IllustrationSortOptionWrapper.AvailableOptions().Of(App.AppViewModel.AppSetting.DefaultSortOption);
         }
 
         public static string? GetThumbnailUrl(this Illustration illustration, ThumbnailUrlOption option)
@@ -81,6 +85,18 @@ namespace Pixeval.Util
         public static XRestrictLevel RestrictLevel(this Illustration illustration)
         {
             return (XRestrictLevel) illustration.XRestrict;
+        }
+
+        public static IReadOnlyList<int> StickerIds = Enumerates.EnumerableOf(
+                Enumerable.Range(301, 10),
+                Enumerable.Range(401, 10),
+                Enumerable.Range(201, 10),
+                Enumerable.Range(101, 10))
+            .SelectMany(Functions.Identity<IEnumerable<int>>()).ToList();
+
+        public static string GenerateStickerDownloadUrl(int id)
+        {
+            return $"https://s.pximg.net/common/images/stamp/generated-stamps/{id}_s.jpg";
         }
     }
 }

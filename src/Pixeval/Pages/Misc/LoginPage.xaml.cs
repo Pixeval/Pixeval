@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Windows.System;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Events;
-using Pixeval.Util;
+using Pixeval.Messages;
 using Pixeval.Util.UI;
+using Pixeval.Utilities;
 using Pixeval.ViewModel;
 
 namespace Pixeval.Pages.Misc
@@ -39,7 +40,7 @@ namespace Pixeval.Pages.Misc
                 }
 
                 AppContext.SaveContext();
-                EventChannel.Default.Publish(new LoginCompletedEvent(this, App.MakoClient!.Session));
+                WeakReferenceMessenger.Default.Send(new LoginCompletedMessage(this, App.AppViewModel.MakoClient!.Session));
             }
             catch (Exception exception)
             {
@@ -65,7 +66,7 @@ namespace Pixeval.Pages.Misc
                 }
                 else
                 {
-                    App.ExitWithPushedNotification();
+                    App.AppViewModel.ExitWithPushedNotification();
                 }
             }
         }
@@ -82,7 +83,7 @@ namespace Pixeval.Pages.Misc
                     await Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/p/?LinkId=2124703"));
                 }
 
-                App.ExitWithPushedNotification();
+                App.AppViewModel.ExitWithPushedNotification();
             }
         }
     }

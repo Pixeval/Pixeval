@@ -24,7 +24,7 @@
 
 #endregion
 
-using Pixeval.CoreApi.Util;
+using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Global.Enum
 {
