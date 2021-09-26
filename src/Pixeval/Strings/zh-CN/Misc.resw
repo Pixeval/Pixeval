@@ -144,6 +144,9 @@
   <data name="IllustrationSortOptionPublishDateDescending" xml:space="preserve">
     <value>发布日期降序</value>
   </data>
+  <data name="ReplyContentTooLong" xml:space="preserve">
+    <value>回复内容超过140字，请重新编辑</value>
+  </data>
   <data name="SearchTagMatchOptionExactMatchForTags" xml:space="preserve">
     <value>与关键字完全一致</value>
   </data>

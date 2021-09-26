@@ -1,17 +1,27 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.CoreApi.Model;
+using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Messages;
+using Pixeval.UserControls;
+using Pixeval.Util.IO;
 using Pixeval.ViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer
 {
     public sealed partial class CommentsPage
     {
+        private string? _illustId;
+
         public CommentsPage()
         {
             InitializeComponent();
@@ -19,15 +29,54 @@ namespace Pixeval.Pages.IllustrationViewer
 
         public override void Prepare(NavigationEventArgs e)
         {
-            var engine = (IAsyncEnumerable<IllustrationCommentsResponse.Comment>) e.Parameter;
+            var (engine, illustId) = ((IAsyncEnumerable<Comment>, string)) e.Parameter;
+            _illustId = illustId;
             CommentList.ItemsSource = new IncrementalLoadingCollection<CommentsIncrementalSource, CommentBlockViewModel>(
-                new CommentsIncrementalSource(engine.Select(c => new CommentBlockViewModel(c))), 
+                new CommentsIncrementalSource(engine.Select(c => new CommentBlockViewModel(c, illustId))), 
                 30);
         }
 
         private void CommentList_OnRepliesHyperlinkButtonTapped(object? sender, TappedRoutedEventArgs e)
         {
             WeakReferenceMessenger.Default.Send(new CommentRepliesHyperlinkButtonTappedMessage(sender));
+        }
+
+        private async void ReplyBar_OnSendButtonTapped(object? sender, SendButtonTappedEventArgs e)
+        {
+            var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment, 
+                ("illust_id", _illustId!),
+                ("comment", e.ReplyContentRichEditBoxStringContent));
+
+            if (result.IsSuccessStatusCode)
+            {
+                var response = await result.Content.ReadFromJsonAsync<PostCommentResponse>();
+                ((ObservableCollection<CommentBlockViewModel>) CommentList.ItemsSource).Insert(0, new CommentBlockViewModel(response?.Comment!, _illustId!));
+            }
+
+            await AddComment(result);
+        }
+
+        private async void ReplyBar_OnStickerTapped(object? sender, StickerTappedEventArgs e)
+        {
+            var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment, 
+                ("illust_id", _illustId!),
+                ("stamp_id", e.StickerViewModel.StickerId.ToString()));
+
+            await AddComment(result);
+        }
+
+        private async Task AddComment(HttpResponseMessage postCommentResponse)
+        {
+            if (CommentList.ItemsSource is IEnumerable<object> enumerable && !enumerable.Any())
+            {
+                CommentList.ItemsSource = new ObservableCollection<CommentBlockViewModel>();
+            }
+
+            if (postCommentResponse.IsSuccessStatusCode)
+            {
+                var response = await postCommentResponse.Content.ReadFromJsonAsync<PostCommentResponse>();
+                ((ObservableCollection<CommentBlockViewModel>) CommentList.ItemsSource).Insert(0, new CommentBlockViewModel(response?.Comment!, _illustId!));
+            }
         }
     }
 }

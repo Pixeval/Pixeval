@@ -49,6 +49,8 @@
         </Grid>
         <userControls:PixivReplyBar x:Name="ReplyBar"
                                     Grid.Row="3"
-                                    Grid.Column="1" />
+                                    Grid.Column="1"
+                                    SendButtonTapped="ReplyBar_OnSendButtonTapped"
+                                    StickerTapped="ReplyBar_OnStickerTapped" />
     </Grid>
 </UserControl>

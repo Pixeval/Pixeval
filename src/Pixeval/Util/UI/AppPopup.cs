@@ -23,7 +23,9 @@ namespace Pixeval.Util.UI
             double minWidth = 0,
             double maxWidth = double.MaxValue,
             double minHeight = 0,
-            double maxHeight = double.MaxValue)
+            double maxHeight = double.MaxValue, 
+            Action<FrameworkElement>? opening = null,
+            Action<FrameworkElement>? closing = null)
         {
             return new(content, widthMargin, heightMargin, minWidth, maxWidth, minHeight, maxHeight);
         }
@@ -49,16 +51,24 @@ namespace Pixeval.Util.UI
         private readonly double _maxWidth;
         private readonly double _minHeight;
         private readonly double _maxHeight;
+        private readonly FrameworkElement _content;
+        private readonly Action<FrameworkElement>? _opening;
+        private readonly Action<FrameworkElement>? _closing;
 
         public AppPopup(
-            FrameworkElement content,
+            FrameworkElement content, 
             double widthMargin = double.NaN,
             double heightMargin = double.NaN,
             double minWidth = 0,
             double maxWidth = double.MaxValue,
             double minHeight = 0,
-            double maxHeight = double.MaxValue)
+            double maxHeight = double.MaxValue,
+            Action<FrameworkElement>? opening = null,
+            Action<FrameworkElement>? closing = null)
         {
+            _content = content;
+            _opening = opening;
+            _closing = closing;
             _maxWidth = maxWidth;
             _widthMargin = widthMargin;
             _heightMargin = heightMargin;
@@ -129,12 +139,14 @@ namespace Pixeval.Util.UI
         public void Show()
         {
             Popup.IsOpen = true;
+            _opening?.Invoke(_content);
             RearrangePopup(App.AppViewModel.GetAppWindowSize());
         }
 
         public void Close()
         {
             Popup.IsOpen = false;
+            _closing?.Invoke(_content);
         }
 
         public Popup Popup { get; }

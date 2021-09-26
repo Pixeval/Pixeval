@@ -15,7 +15,9 @@
         </Grid.RowDefinitions>
         <userControls:PixivReplyBar Grid.Row="0"
                                     Margin="10,0"
-                                    VerticalAlignment="Center" />
+                                    VerticalAlignment="Center"
+                                    SendButtonTapped="ReplyBar_OnSendButtonTapped"
+                                    StickerTapped="ReplyBar_OnStickerTapped" />
         <userControls:CommentList x:Name="CommentList"
                                   Grid.Row="1"
                                   RepliesHyperlinkButtonTapped="CommentList_OnRepliesHyperlinkButtonTapped" />

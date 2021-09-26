@@ -7,12 +7,10 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
+using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
-using Pixeval.CoreApi.Net.Response;
 using Pixeval.Utilities;
 using Pixeval.Misc;
-using Pixeval.Util;
-using Pixeval.Util.Generic;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 
@@ -20,38 +18,45 @@ namespace Pixeval.ViewModel
 {
     public class CommentBlockViewModel
     {
-        public CommentBlockViewModel(IllustrationCommentsResponse.Comment comment)
+        public const string AddCommentUrlSegment = "/v1/illust/comment/add";
+
+        public CommentBlockViewModel(Comment comment, string illustrationId)
         {
             Comment = comment;
+            IllustrationId = illustrationId;
         }
 
-        public IllustrationCommentsResponse.Comment Comment { get; }
+        public string IllustrationId { get; }
+
+        public Comment Comment { get; }
 
         public bool HasReplies => Comment.HasReplies;
 
-        public bool IsStamp => Comment.Stamp is not null;
+        public bool IsStamp => Comment.CommentStamp is not null;
 
-        public string? StampSource => Comment.Stamp?.StampUrl;
+        public string? StampSource => Comment.CommentStamp?.StampUrl;
 
         public DateTimeOffset PostDate => Comment.Date;
 
-        public string Poster => Comment.User?.Name ?? string.Empty;
+        public string Poster => Comment.CommentPoster?.Name ?? string.Empty;
 
         public string CommentContent => Comment.CommentContent ?? string.Empty;
+
+        public string CommentId => Comment.Id.ToString();
 
         public ObservableCollection<CommentBlockViewModel>? Replies { get; private set; }
 
         public async Task LoadRepliesAsync()
         {
-            Replies = (await App.AppViewModel.MakoClient.IllustrationCommentReplies(Comment.Id.ToString())
-                    .Select(c => new CommentBlockViewModel(c))
+            Replies = (await App.AppViewModel.MakoClient.IllustrationCommentReplies(CommentId)
+                    .Select(c => new CommentBlockViewModel(c, IllustrationId))
                     .ToListAsync())
                 .ToObservableCollection();
         }
 
         public async Task<ImageSource> GetAvatarSource()
         {
-            return (await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(Comment.User!.ProfileImageUrls!.Medium!)
+            return (await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(Comment.CommentPoster!.ProfileImageUrls!.Medium!)
                 .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync())!)!;
         }
 

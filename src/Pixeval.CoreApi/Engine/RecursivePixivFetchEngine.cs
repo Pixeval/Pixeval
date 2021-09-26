@@ -259,8 +259,8 @@ namespace Pixeval.CoreApi.Engine
             }
         }
 
-        public abstract class Comment<TFetchEngine> : RecursivePixivAsyncEnumerator<IllustrationCommentsResponse.Comment, IllustrationCommentsResponse, TFetchEngine>
-            where TFetchEngine : class, IFetchEngine<IllustrationCommentsResponse.Comment>
+        public abstract class Comment<TFetchEngine> : RecursivePixivAsyncEnumerator<Comment, IllustrationCommentsResponse, TFetchEngine>
+            where TFetchEngine : class, IFetchEngine<Comment>
         {
             protected Comment([NotNull] TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
             {
@@ -278,7 +278,7 @@ namespace Pixeval.CoreApi.Engine
 
             protected abstract override string InitialUrl();
 
-            protected override IEnumerator<IllustrationCommentsResponse.Comment>? GetNewEnumerator(IllustrationCommentsResponse? rawEntity)
+            protected override IEnumerator<Comment>? GetNewEnumerator(IllustrationCommentsResponse? rawEntity)
             {
                 return rawEntity?.Comments?.GetEnumerator();
             }
@@ -290,7 +290,7 @@ namespace Pixeval.CoreApi.Engine
         }
 
         private class CommentImpl<TFetchEngine> : Comment<TFetchEngine>
-            where TFetchEngine : class, IFetchEngine<IllustrationCommentsResponse.Comment>
+            where TFetchEngine : class, IFetchEngine<Comment>
         {
             private readonly Func<TFetchEngine, string> _initialUrlFactory;
 

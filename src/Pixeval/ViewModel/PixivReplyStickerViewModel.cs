@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml.Media;
+﻿using Windows.Storage.Streams;
+using Microsoft.UI.Xaml.Media;
 
 namespace Pixeval.ViewModel
 {
@@ -6,12 +7,14 @@ namespace Pixeval.ViewModel
     {
         public int StickerId { get; }
 
-        public ImageSource ImageSource { get; }
+        public IRandomAccessStream ImageStream { get; }
 
-        public PixivReplyStickerViewModel(int stickerId, ImageSource imageSource)
+        public ImageSource? ImageSource { get; set; }
+
+        public PixivReplyStickerViewModel(int stickerId, IRandomAccessStream imageStream)
         {
             StickerId = stickerId;
-            ImageSource = imageSource;
+            ImageStream = imageStream;
         }
     }
 }

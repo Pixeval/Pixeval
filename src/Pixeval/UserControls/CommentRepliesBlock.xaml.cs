@@ -1,8 +1,20 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
+using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.CoreApi.Net;
+using Pixeval.CoreApi.Net.Response;
+using Pixeval.Pages.IllustrationViewer;
+using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.ViewModel;
 
@@ -55,6 +67,43 @@ namespace Pixeval.UserControls
         private void CommentList_OnRepliesHyperlinkButtonTapped(object? sender, TappedRoutedEventArgs e)
         {
             ReplyBar.FindDescendant<RichEditBox>()?.Focus(FocusState.Programmatic);
+        }
+
+        private async void ReplyBar_OnSendButtonTapped(object? sender, SendButtonTappedEventArgs e)
+        {
+            var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
+                ("illust_id", ViewModel.Comment.IllustrationId),
+                ("parent_comment_id", ViewModel.Comment.CommentId), 
+                ("comment", e.ReplyContentRichEditBoxStringContent));
+
+            await AddComment(result);
+        }
+
+        private async void ReplyBar_OnStickerTapped(object? sender, StickerTappedEventArgs e)
+        {
+            var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment, 
+                ("illust_id", ViewModel.Comment.IllustrationId), 
+                ("parent_comment_id", ViewModel.Comment.CommentId),
+                ("stamp_id", e.StickerViewModel.StickerId.ToString()));
+
+            await AddComment(result);
+        }
+
+        private async Task AddComment(HttpResponseMessage postCommentResponse)
+        {
+            RepliesAreEmptyPanel.Visibility = Visibility.Collapsed;
+            CommentList.Visibility = Visibility.Visible;
+
+            if (CommentList.ItemsSource is IEnumerable<object> enumerable && !enumerable.Any())
+            {
+                CommentList.ItemsSource = new ObservableCollection<CommentBlockViewModel>();
+            }
+
+            if (postCommentResponse.IsSuccessStatusCode)
+            {
+                var response = await postCommentResponse.Content.ReadFromJsonAsync<PostCommentResponse>();
+                ((ObservableCollection<CommentBlockViewModel>) CommentList.ItemsSource).Insert(0, new CommentBlockViewModel(response?.Comment!, ViewModel.Comment.IllustrationId));
+            }
         }
     }
 }

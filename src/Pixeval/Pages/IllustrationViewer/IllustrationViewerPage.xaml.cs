@@ -2,6 +2,7 @@
 using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Streams;
+using CommunityToolkit.WinUI.UI;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -51,7 +52,7 @@ namespace Pixeval.Pages.IllustrationViewer
         {
             _viewModel = (IllustrationViewerPageViewModel) e.Parameter;
             _illustrationInfo = new NavigationViewTag(typeof(IllustrationInfoPage), _viewModel);
-            _comments = new NavigationViewTag(typeof(CommentsPage), App.AppViewModel.MakoClient.IllustrationComments(_viewModel.IllustrationId).Where(c => c is not null)); // TODO
+            _comments = new NavigationViewTag(typeof(CommentsPage), (App.AppViewModel.MakoClient.IllustrationComments(_viewModel.IllustrationId).Where(c => c is not null), _viewModel.IllustrationId)); // TODO
 
             IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), _viewModel.Current);
 

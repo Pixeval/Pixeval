@@ -30,7 +30,6 @@ using Pixeval.CoreApi.Engine.Implements;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Global.Exception;
 using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net.Response;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi
@@ -326,7 +325,7 @@ namespace Pixeval.CoreApi
         /// <returns>
         ///     The <see cref="IllustrationCommentsEngine"/> containing comments of the illustration.
         /// </returns>
-        public IFetchEngine<IllustrationCommentsResponse.Comment?> IllustrationComments(string illustId)
+        public IFetchEngine<Comment?> IllustrationComments(string illustId)
         {
             EnsureNotCancelled();
             return new IllustrationCommentsEngine(illustId, this, new EngineHandle(CancelInstance));
@@ -339,7 +338,7 @@ namespace Pixeval.CoreApi
         /// <returns>
         ///     The <see cref="IllustrationCommentRepliesEngine"/> containing replies of the comment.
         /// </returns>
-        public IFetchEngine<IllustrationCommentsResponse.Comment> IllustrationCommentReplies(string commentId)
+        public IFetchEngine<Comment> IllustrationCommentReplies(string commentId)
         {
             EnsureNotCancelled();
             return new IllustrationCommentRepliesEngine(commentId, this, new EngineHandle(CancelInstance));

@@ -1,5 +1,9 @@
-﻿using Microsoft.UI.Xaml.Media;
+﻿using Windows.Storage.Streams;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Misc;
+using Pixeval.Util.IO;
 
 namespace Pixeval.ViewModel
 {
@@ -7,12 +11,14 @@ namespace Pixeval.ViewModel
     {
         public PixivReplyEmoji EmojiEnumValue { get; }
 
-        public ImageSource ImageSource { get; }
+        public IRandomAccessStream ImageStream { get; }
 
-        public PixivReplyEmojiViewModel(PixivReplyEmoji emojiEnumValue, ImageSource imageSource)
+        public ImageSource? ImageSource { get; set; }
+
+        public PixivReplyEmojiViewModel(PixivReplyEmoji emojiEnumValue, IRandomAccessStream imageStream)
         {
             EmojiEnumValue = emojiEnumValue;
-            ImageSource = imageSource;
+            ImageStream = imageStream;
         }
     }
 }

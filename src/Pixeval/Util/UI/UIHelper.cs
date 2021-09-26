@@ -8,6 +8,7 @@ using Windows.Foundation;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.Toolkit.Uwp.Notifications;
+using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -222,10 +223,14 @@ namespace Pixeval.Util.UI
             return ownerRectangle.IntersectsWith(childRectangle);
         }
 
-        public static IEnumerable<T> FindChildren<T>(this FrameworkElement startNode)
-            where T : DependencyObject
+        public static IEnumerable<T> FindChildren<T>(this FrameworkElement startNode) where T : DependencyObject
         {
             return startNode.FindChildren().OfType<T>();
         }
+
+        public static void ClearContent(this RichEditBox box)
+        {
+            box.Document.SetText(TextSetOptions.None, string.Empty);
+        } 
     }
 }
