@@ -43,22 +43,16 @@ namespace Pixeval.Pages.IllustrationViewer
 
         private async void ReplyBar_OnSendButtonTapped(object? sender, SendButtonTappedEventArgs e)
         {
-            var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment, 
+            using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment, 
                 ("illust_id", _illustId!),
                 ("comment", e.ReplyContentRichEditBoxStringContent));
-
-            if (result.IsSuccessStatusCode)
-            {
-                var response = await result.Content.ReadFromJsonAsync<PostCommentResponse>();
-                ((ObservableCollection<CommentBlockViewModel>) CommentList.ItemsSource).Insert(0, new CommentBlockViewModel(response?.Comment!, _illustId!));
-            }
 
             await AddComment(result);
         }
 
         private async void ReplyBar_OnStickerTapped(object? sender, StickerTappedEventArgs e)
         {
-            var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment, 
+            using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment, 
                 ("illust_id", _illustId!),
                 ("stamp_id", e.StickerViewModel.StickerId.ToString()));
 

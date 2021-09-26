@@ -71,7 +71,7 @@ namespace Pixeval.UserControls
 
         private async void ReplyBar_OnSendButtonTapped(object? sender, SendButtonTappedEventArgs e)
         {
-            var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
+            using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
                 ("illust_id", ViewModel.Comment.IllustrationId),
                 ("parent_comment_id", ViewModel.Comment.CommentId), 
                 ("comment", e.ReplyContentRichEditBoxStringContent));
@@ -81,7 +81,7 @@ namespace Pixeval.UserControls
 
         private async void ReplyBar_OnStickerTapped(object? sender, StickerTappedEventArgs e)
         {
-            var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment, 
+            using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment, 
                 ("illust_id", ViewModel.Comment.IllustrationId), 
                 ("parent_comment_id", ViewModel.Comment.CommentId),
                 ("stamp_id", e.StickerViewModel.StickerId.ToString()));
