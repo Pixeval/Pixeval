@@ -128,6 +128,7 @@ namespace Pixeval.UserControls
 
         private async void AddAllToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
+            // TODO
             var notBookmarked = ViewModel.SelectedIllustrations.Where(i => !i.IsBookmarked);
             var viewModelSelectedIllustrations = notBookmarked as IllustrationViewModel[] ?? notBookmarked.ToArray();
             if (viewModelSelectedIllustrations.Length > 5 && await MessageDialogBuilder.CreateOkCancel(
