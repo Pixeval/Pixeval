@@ -10,7 +10,8 @@ namespace Pixeval.Converters
         {
             if (value is double width)
             {
-                return new Rect(0, 0, width, 250);
+                var size = App.AppViewModel.DesiredThumbnailSize();
+                return new Rect(0, 0, width, size.Height);
             }
 
             return default(Rect);

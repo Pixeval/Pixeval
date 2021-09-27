@@ -69,6 +69,7 @@
                               Command="{x:Bind _viewModel.GenerateLinkCommand}" />
                 <AppBarButton Command="{x:Bind _viewModel.GenerateWebLinkCommand}" />
                 <AppBarButton Command="{x:Bind _viewModel.OpenInWebBrowserCommand}" />
+                <AppBarButton Command="{x:Bind _viewModel.ShowQrCodeCommand}" />
                 <AppBarButton Command="{x:Bind _viewModel.ShareCommand}" />
             </CommandBar>
             <TeachingTip x:Uid="/IllustrationViewerPage/GenerateLinkToThisPageButtonTeachingTip"

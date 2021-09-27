@@ -98,6 +98,7 @@
       <None Remove="UserControls\IllustrationGridCommandBar.xaml" />
       <None Remove="UserControls\OverlayPopupContent.xaml" />
       <None Remove="UserControls\PixivReplyBar.xaml" />
+      <None Remove="UserControls\QrCodePresenter%27.xaml" />
       <None Remove="UserControls\SortOptionComboBox.xaml" />
    </ItemGroup>
    <ItemGroup>
@@ -119,6 +120,7 @@
       <PackageReference Include="Microsoft.Win32.Registry" Version="6.0.0-preview.5.21301.5" />
       <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.4" />
       <PackageReference Include="PInvoke.User32" Version="0.7.104" />
+      <PackageReference Include="QRCoder" Version="1.4.1" />
       <PackageReference Include="ReverseMarkdown" Version="3.20.0" />
       <PackageReference Include="System.Linq.Async" Version="5.0.0" />
       <Manifest Include="$(ApplicationManifest)" />
@@ -230,6 +232,11 @@
       </Content>
    </ItemGroup>
    <ItemGroup>
+     <Page Update="Popups\QrCodePresenter.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+   </ItemGroup>
+   <ItemGroup>
      <Page Update="UserControls\PixivReplyBar.xaml">
        <Generator>MSBuild:Compile</Generator>
      </Page>
@@ -260,7 +267,7 @@
      </Page>
    </ItemGroup>
    <ItemGroup>
-     <Page Update="UserControls\CommentRepliesBlock.xaml">
+     <Page Update="Popups\CommentRepliesBlock.xaml">
        <Generator>MSBuild:Compile</Generator>
      </Page>
    </ItemGroup>

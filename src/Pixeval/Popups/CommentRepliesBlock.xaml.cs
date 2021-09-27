@@ -1,24 +1,22 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
-using Pixeval.Pages.IllustrationViewer;
+using Pixeval.UserControls;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.ViewModel;
 
-namespace Pixeval.UserControls
+namespace Pixeval.Popups
 {
     public sealed partial class CommentRepliesBlock
     {

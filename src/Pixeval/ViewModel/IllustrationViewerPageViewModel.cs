@@ -9,11 +9,13 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.Popups;
 using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using QRCoder;
 
 namespace Pixeval.ViewModel
 {
@@ -23,6 +25,13 @@ namespace Pixeval.ViewModel
         /// The view model of the GridView that the <see cref="ImageViewerPageViewModels"/> comes from
         /// </summary>
         public IllustrationGridViewModel ContainerGridViewModel { get; }
+
+        /// <summary>
+        /// The <see cref="IllustrationGrid"/> that owns <see cref="ContainerGridViewModel"/>
+        /// </summary>
+        public IllustrationGrid IllustrationGrid { get; }
+
+        private ImageSource? _qrCodeSource;
 
         #region Commands
 
@@ -120,12 +129,13 @@ namespace Pixeval.ViewModel
 
         public StandardUICommand ShareCommand { get; } = new(StandardUICommandKind.Share);
 
-        #endregion
+        public XamlUICommand ShowQrCodeCommand { get; } = new()
+        {
+            Label = IllustrationViewerPageResources.ShowQRCode,
+            IconSource = FontIconSymbols.QRCodeED14.GetFontIconSource()
+        };
 
-        /// <summary>
-        /// The <see cref="IllustrationGrid"/> that owns <see cref="ContainerGridViewModel"/>
-        /// </summary>
-        public IllustrationGrid IllustrationGrid { get; }
+        #endregion
 
         // Remarks:
         // illustrations should contains only one item if the illustration is a single
@@ -189,6 +199,21 @@ namespace Pixeval.ViewModel
             GenerateWebLinkCommand.ExecuteRequested += GenerateWebLinkCommandOnExecuteRequested;
             OpenInWebBrowserCommand.ExecuteRequested += OpenInWebBrowserCommandOnExecuteRequested;
             ShareCommand.ExecuteRequested += ShareCommandOnExecuteRequested;
+            ShowQrCodeCommand.ExecuteRequested += ShowQRCodeCommandOnExecuteRequested;
+        }
+
+        private async void ShowQRCodeCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            if (_qrCodeSource is null)
+            {
+                var qrCodeGen = new QRCodeGenerator();
+                var urlPayload = new PayloadGenerator.Url(MakoHelper.GetIllustrationWebUri(Current.IllustrationViewModel.Id).ToString());
+                var qrCodeData = qrCodeGen.CreateQrCode(urlPayload, QRCodeGenerator.ECCLevel.Q);
+                var qrCode = new BitmapByteQRCode(qrCodeData);
+                var bytes = qrCode.GetGraphic(20);
+                _qrCodeSource = await (await IOHelper.GetRandomAccessStreamFromByteArrayAsync(bytes)).GetBitmapImageAsync(true);
+            }
+            PopupManager.ShowPopup(PopupManager.CreatePopup(new QrCodePresenter(_qrCodeSource), lightDismiss: true));
         }
 
         private async void ShareCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

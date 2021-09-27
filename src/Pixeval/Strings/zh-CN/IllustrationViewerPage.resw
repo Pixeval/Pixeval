@@ -180,6 +180,9 @@
   <data name="ShareTitleFormatted" xml:space="preserve">
     <value>分享{0}</value>
   </data>
+  <data name="ShowQRCode" xml:space="preserve">
+    <value>生成二维码</value>
+  </data>
   <data name="WebLinkCopiedToClipboardToastTitle" xml:space="preserve">
     <value>链接已经复制到剪切板</value>
   </data>

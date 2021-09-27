@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.CoreApi;
 using Pixeval.Messages;
 using Pixeval.Misc;
+using Pixeval.Options;
 using Pixeval.Util.UI;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
 #if DEBUG
@@ -54,6 +55,16 @@ namespace Pixeval.ViewModel
                 ApplicationTheme.Light => ElementTheme.Light,
                 ApplicationTheme.SystemDefault => ElementTheme.Default,
                 _ => throw new ArgumentOutOfRangeException(nameof(theme), theme, null)
+            };
+        }
+
+        public Size DesiredThumbnailSize()
+        {
+            return App.AppViewModel.AppSetting.ThumbnailDirection switch
+            {
+                ThumbnailDirection.Landscape => new Size(250, 180),
+                ThumbnailDirection.Portrait => new Size(180, 250),
+                _ => throw new ArgumentOutOfRangeException()
             };
         }
 

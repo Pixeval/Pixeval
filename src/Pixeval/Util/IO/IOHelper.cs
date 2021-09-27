@@ -32,6 +32,16 @@ namespace Pixeval.Util.IO
             return buffer.AsStream().AsRandomAccessStream();
         }
 
+        public static async Task<IRandomAccessStream> GetRandomAccessStreamFromByteArrayAsync(byte[] byteArray)
+        {
+            var stream = new InMemoryRandomAccessStream();
+            using var dataWriter = new DataWriter(stream.GetOutputStreamAt(0));
+            dataWriter.WriteBytes(byteArray);
+            await dataWriter.StoreAsync();
+            dataWriter.DetachStream();
+            return stream;
+        }
+ 
         public static async Task<ImageFormat> DetectImageFormat(this IRandomAccessStream randomAccessStream)
         {
             await using var stream = randomAccessStream.AsStream();

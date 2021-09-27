@@ -57,23 +57,24 @@ namespace Pixeval.UserControls
             await viewModel!.PostPublicBookmarkAsync();
         }
 
+        private static readonly ExponentialEase ImageSourceSetEasingFunction = new()
+        {
+            EasingMode = EasingMode.EaseOut,
+            Exponent = 12
+        };
+
         private void Thumbnail_OnTapped(object sender, TappedRoutedEventArgs e)
         {
+            e.Handled = true;
             WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(sender as UIElement));
 
             var viewModel = sender.GetDataContext<IllustrationViewModel>()
                 .GetMangaIllustrationViewModels()
                 .ToArray();
 
-            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement) sender);
+            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement)sender);
             App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModel), new SuppressNavigationTransitionInfo());
         }
-
-        private static readonly ExponentialEase ImageSourceSetEasingFunction = new()
-        {
-            EasingMode = EasingMode.EaseOut,
-            Exponent = 12
-        };
 
         private void IllustrationThumbnailContainerItem_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
         {

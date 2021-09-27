@@ -11,12 +11,10 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
-using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.IO;
-using Pixeval.Util.UI;
 
 namespace Pixeval.ViewModel
 {

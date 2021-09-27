@@ -1,9 +1,14 @@
-﻿using Microsoft.UI.Xaml;
+﻿using System;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Input;
+using Pixeval.Util.UI;
 
 namespace Pixeval.UserControls
 {
     public sealed partial class OverlayPopupContent
     {
+        private readonly Guid _popupGuid;
+
         public static DependencyProperty PopupContentProperty = DependencyProperty.Register(
             nameof(PopupContent),
             typeof(object),
@@ -22,8 +27,38 @@ namespace Pixeval.UserControls
             set => SetValue(PopupContentProperty, value);
         }
 
-        public OverlayPopupContent()
+        public static DependencyProperty IsLightDismissProperty = DependencyProperty.Register(
+            nameof(PopupContent),
+            typeof(bool),
+            typeof(OverlayPopupContent),
+            PropertyMetadata.Create(false, (o, args) =>
+            {
+                var popupContent = (OverlayPopupContent) o;
+                var value = (bool) args.NewValue;
+                if (value)
+                {
+                    popupContent.ShadowReceiver.Tapped += OnShadowReceiverOnTapped;
+                }
+                else
+                {
+                    popupContent.ShadowReceiver.Tapped -= OnShadowReceiverOnTapped;
+                }
+
+                void OnShadowReceiverOnTapped(object sender, TappedRoutedEventArgs args)
+                {
+                    PopupManager.ClosePopup(PopupManager.OpenPopups[popupContent._popupGuid]);
+                }
+            }));
+
+        public bool IsLightDismiss
         {
+            get => (bool) GetValue(IsLightDismissProperty);
+            set => SetValue(IsLightDismissProperty, value);
+        }
+
+        public OverlayPopupContent(Guid popupGuid)
+        {
+            _popupGuid = popupGuid;
             InitializeComponent();
         }
 

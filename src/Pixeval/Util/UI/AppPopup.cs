@@ -24,10 +24,12 @@ namespace Pixeval.Util.UI
             double maxWidth = double.MaxValue,
             double minHeight = 0,
             double maxHeight = double.MaxValue, 
+            bool lightDismiss = false,
+            bool useAnimation = true,
             Action<FrameworkElement>? opening = null,
             Action<FrameworkElement>? closing = null)
         {
-            return new(content, widthMargin, heightMargin, minWidth, maxWidth, minHeight, maxHeight);
+            return new(content, widthMargin, heightMargin, minWidth, maxWidth, minHeight, maxHeight, lightDismiss, useAnimation, opening, closing);
         }
 
         public static void ShowPopup(AppPopup popup)
@@ -51,6 +53,7 @@ namespace Pixeval.Util.UI
         private readonly double _maxWidth;
         private readonly double _minHeight;
         private readonly double _maxHeight;
+        private readonly bool _useAnimation;
         private readonly FrameworkElement _content;
         private readonly Action<FrameworkElement>? _opening;
         private readonly Action<FrameworkElement>? _closing;
@@ -63,6 +66,8 @@ namespace Pixeval.Util.UI
             double maxWidth = double.MaxValue,
             double minHeight = 0,
             double maxHeight = double.MaxValue,
+            bool lightDismiss = false,
+            bool useAnimation = true,
             Action<FrameworkElement>? opening = null,
             Action<FrameworkElement>? closing = null)
         {
@@ -76,6 +81,7 @@ namespace Pixeval.Util.UI
             _maxWidth = maxWidth;
             _minHeight = minHeight;
             _maxHeight = maxHeight;
+            _useAnimation = useAnimation;
             var (windowWidth, windowHeight) = App.AppViewModel.GetAppWindowSizeTuple();
             UniqueId = Guid.NewGuid();
             content.HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -90,8 +96,9 @@ namespace Pixeval.Util.UI
                 XamlRoot = App.AppViewModel.AppWindowRootFrame.XamlRoot,
                 Width = windowWidth,
                 Height = windowHeight,
-                Child = new OverlayPopupContent
+                Child = new OverlayPopupContent(UniqueId)
                 {
+                    IsLightDismiss = lightDismiss,
                     Width = windowWidth,
                     Height = windowHeight,
                     PopupContent = new Grid
@@ -138,6 +145,13 @@ namespace Pixeval.Util.UI
 
         public void Show()
         {
+            if (_useAnimation)
+            {
+                var inAnimation = new PopInThemeAnimation();
+                var storyboard = UIHelper.CreateStoryboard(inAnimation);
+                Storyboard.SetTarget(inAnimation, Popup);
+                storyboard.Begin();
+            }
             Popup.IsOpen = true;
             _opening?.Invoke(_content);
             RearrangePopup(App.AppViewModel.GetAppWindowSize());
@@ -145,8 +159,23 @@ namespace Pixeval.Util.UI
 
         public void Close()
         {
-            Popup.IsOpen = false;
-            _closing?.Invoke(_content);
+            if (_useAnimation)
+            {
+                var inAnimation = new PopOutThemeAnimation();
+                var storyboard = UIHelper.CreateStoryboard(inAnimation);
+                Storyboard.SetTarget(inAnimation, Popup);
+                storyboard.Completed += (_, _) =>
+                {
+                    Popup.IsOpen = false;
+                    _closing?.Invoke(_content);
+                };
+                storyboard.Begin();
+            }
+            else
+            {
+                Popup.IsOpen = false;
+                _closing?.Invoke(_content);
+            }
         }
 
         public Popup Popup { get; }

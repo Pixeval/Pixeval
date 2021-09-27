@@ -2,7 +2,6 @@
 using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Streams;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -12,7 +11,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Options;
-using Pixeval.UserControls;
+using Pixeval.Popups;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
@@ -67,11 +66,7 @@ namespace Pixeval.Pages.IllustrationViewer
                 ViewModel = new CommentRepliesBlockViewModel(message.Sender!.GetDataContext<CommentBlockViewModel>())
             };
             commentRepliesBlock.CloseButtonTapped += recipient.CommentRepliesBlock_OnCloseButtonTapped;
-            recipient._commentRepliesPopup = PopupManager.CreatePopup(commentRepliesBlock, 200, maxWidth: 1500, minWidth: 400, maxHeight: 1200);
-            var inAnimation = new PopInThemeAnimation();
-            var storyboard = UIHelper.CreateStoryboard(inAnimation);
-            Storyboard.SetTarget(inAnimation, recipient._commentRepliesPopup.Popup);
-            storyboard.Begin();
+            recipient._commentRepliesPopup = PopupManager.CreatePopup(commentRepliesBlock, 200, maxWidth: 1500, minWidth: 400, maxHeight: 1200, closing: _ => recipient._commentRepliesPopup = null);
             PopupManager.ShowPopup(recipient._commentRepliesPopup);
         }
 
@@ -81,15 +76,7 @@ namespace Pixeval.Pages.IllustrationViewer
         {
             if (_commentRepliesPopup is not null)
             {
-                var inAnimation = new PopOutThemeAnimation();
-                var storyboard = UIHelper.CreateStoryboard(inAnimation);
-                Storyboard.SetTarget(inAnimation, _commentRepliesPopup.Popup);
-                storyboard.Completed += (_, _) =>
-                {
-                    PopupManager.ClosePopup(_commentRepliesPopup);
-                    _commentRepliesPopup = null;
-                };
-                storyboard.Begin();
+                PopupManager.ClosePopup(_commentRepliesPopup);
             }
         }
 
