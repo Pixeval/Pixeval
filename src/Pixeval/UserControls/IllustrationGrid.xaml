@@ -12,6 +12,7 @@
              xmlns:ui="using:CommunityToolkit.WinUI.UI"
              xmlns:viewModel="using:Pixeval.ViewModel"
              Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+             Loaded="IllustrationGrid_OnLoaded"
              mc:Ignorable="d">
     <UserControl.Resources>
         <converters:IllustrationGridItemContainerClipConverter x:Key="IllustrationGridItemContainerClipConverter" />
@@ -21,10 +22,8 @@
         <controls:AdaptiveGridView x:Name="IllustrationGridView"
                                    animations:ItemsReorderAnimation.Duration="0:0:0.2"
                                    x:FieldModifier="public"
-                                   DesiredWidth="180"
                                    IsItemClickEnabled="True"
                                    IsMultiSelectCheckBoxEnabled="False"
-                                   ItemHeight="250"
                                    ItemsSource="{x:Bind ViewModel.IllustrationsView}"
                                    SelectionMode="Extended"
                                    StretchContentForSingleRow="True">
@@ -39,7 +38,7 @@
                         <GridViewItem.RenderTransform>
                             <ScaleTransform CenterX="{Binding ElementName=IllustrationThumbnailContainerItem, Path=ActualWidth, Mode=OneWay, Converter={StaticResource IllustrationGridItemContainerWidthCenterConverter}}" CenterY="125" />
                         </GridViewItem.RenderTransform>
-                        <Grid Height="250">
+                        <Grid>
                             <Grid.Resources>
                                 <ExponentialEase x:Key="EasingFunction"
                                                  EasingMode="EaseOut"

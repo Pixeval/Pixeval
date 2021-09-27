@@ -1,16 +1,15 @@
 ﻿<controls:EnhancedPage x:Class="Pixeval.Pages.Misc.LoginPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:util="using:Pixeval.Util"
-      xmlns:viewModel="using:Pixeval.ViewModel"
-      xmlns:misc="using:Pixeval.Misc"
-      xmlns:controls="using:Pixeval.Controls"
-      d:DataContext="{d:DesignInstance viewModel:LoginPageViewModel}"
-      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-      Loaded="LoginPage_OnLoaded"
-      mc:Ignorable="d">
+                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                       xmlns:controls="using:Pixeval.Controls"
+                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                       xmlns:util="using:Pixeval.Util"
+                       xmlns:viewModel="using:Pixeval.ViewModel"
+                       d:DataContext="{d:DesignInstance viewModel:LoginPageViewModel}"
+                       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                       Loaded="LoginPage_OnLoaded"
+                       mc:Ignorable="d">
     <Grid>
         <StackPanel HorizontalAlignment="Center"
                     VerticalAlignment="Center">
@@ -22,7 +21,7 @@
             <TextBlock Margin="0,15,0,0"
                        HorizontalAlignment="Center"
                        FontSize="10"
-                       Text="{x:Bind misc:AttributeHelper.GetLocalizedResourceContent(_viewModel.LoginPhase), Mode=OneWay}" />
+                       Text="{x:Bind util:AttributeHelper.GetLocalizedResourceContent(_viewModel.LoginPhase), Mode=OneWay}" />
         </StackPanel>
     </Grid>
 </controls:EnhancedPage>

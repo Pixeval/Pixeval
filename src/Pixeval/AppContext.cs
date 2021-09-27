@@ -14,6 +14,7 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Utilities;
 using Pixeval.Messages;
+using Pixeval.Options;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 
@@ -272,6 +273,7 @@ namespace Pixeval
                 ConfigurationContainer.Values[nameof(AppSetting.UseFileCache)] = appSetting.UseFileCache;
                 ConfigurationContainer.Values[nameof(AppSetting.WindowWidth)] = appSetting.WindowWidth;
                 ConfigurationContainer.Values[nameof(AppSetting.WindowHeight)] = appSetting.WindowHeight;
+                ConfigurationContainer.Values[nameof(AppSetting.ThumbnailDirection)] = appSetting.ThumbnailDirection.CastOrThrow<int>();
             }
         }
 
@@ -322,7 +324,8 @@ namespace Pixeval
                     ConfigurationContainer.Values[nameof(AppSetting.FiltrateRestrictedContent)].CastOrThrow<bool>(),
                     ConfigurationContainer.Values[nameof(AppSetting.UseFileCache)].CastOrThrow<bool>(),
                     ConfigurationContainer.Values[nameof(AppSetting.WindowWidth)].CastOrThrow<int>(),
-                    ConfigurationContainer.Values[nameof(AppSetting.WindowHeight)].CastOrThrow<int>());
+                    ConfigurationContainer.Values[nameof(AppSetting.WindowHeight)].CastOrThrow<int>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.ThumbnailDirection)].CastOrThrow<ThumbnailDirection>());
             }
             catch
             {

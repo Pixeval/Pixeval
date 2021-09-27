@@ -4,14 +4,13 @@
       xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:misc="using:Pixeval.Misc"
       xmlns:numberFormatting="using:Windows.Globalization.NumberFormatting"
       xmlns:options="using:Pixeval.Options"
-      xmlns:pixeval="using:Pixeval"
       xmlns:system="using:System"
       xmlns:toolkit="using:CommunityToolkit.WinUI.UI"
       xmlns:ui="using:Pixeval.Util.UI"
       xmlns:userControls="using:Pixeval.UserControls"
+      xmlns:util="using:Pixeval.Util"
       xmlns:viewModel="using:Pixeval.ViewModel"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
       mc:Ignorable="d">
@@ -113,9 +112,9 @@
                               MaxColumns="1"
                               SelectedItem="{x:Bind _viewModel.Theme}">
                     <RadioButtons.ItemTemplate>
-                        <DataTemplate x:DataType="pixeval:ApplicationTheme">
+                        <DataTemplate x:DataType="options:ApplicationTheme">
                             <RadioButton Checked="ApplicationThemeRadioButton_OnChecked"
-                                         Content="{x:Bind misc:AttributeHelper.GetLocalizedResourceContent((pixeval:ApplicationTheme))}"
+                                         Content="{x:Bind util:AttributeHelper.GetLocalizedResourceContent((options:ApplicationTheme))}"
                                          DataContext="{x:Bind}" />
                         </DataTemplate>
                     </RadioButtons.ItemTemplate>
@@ -126,6 +125,18 @@
                 <TextBlock x:Uid="/SettingsPage/BrowsingExperienceSectionSubtitleTextBlock"
                            Margin="0,15,0,0"
                            FontSize="{StaticResource PixevalSubtitleFontSize}" />
+                <!--  Thumbnail Direction  -->
+                <TextBlock x:Uid="/SettingsPage/ThumbnailDirectionTextBlock"
+                           Style="{StaticResource SectionHeaderTextBlockStyle}" />
+                <ComboBox Margin="{StaticResource StackLayoutEntryPadding}"
+                          ItemsSource="{x:Bind viewModel:SettingsPageViewModel.AvailableThumbnailDirections}"
+                          SelectedItem="{x:Bind _viewModel.ThumbnailDirection, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="options:ThumbnailDirection">
+                            <TextBlock Text="{x:Bind util:AttributeHelper.GetLocalizedResourceContent((options:ThumbnailDirection))}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
                 <!--  Sensitive Content Switch  -->
                 <ToggleSwitch x:Name="SwitchSensitiveContentFilteringToggleSwitch"
                               x:Uid="/SettingsPage/SwitchSensitiveContentFilteringToggleSwitch"

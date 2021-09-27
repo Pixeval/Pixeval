@@ -367,4 +367,7 @@
   <data name="ViewPixevalWebSiteHyperlinkButton.Content" xml:space="preserve">
     <value>查看Pixeval网页</value>
   </data>
+  <data name="ThumbnailDirectionTextBlock.Text" xml:space="preserve">
+    <value>缩略图方向</value>
+  </data>
 </root>

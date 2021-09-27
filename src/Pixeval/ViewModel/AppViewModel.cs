@@ -11,7 +11,7 @@ using Pixeval.CoreApi;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Util.UI;
-
+using ApplicationTheme = Pixeval.Options.ApplicationTheme;
 #if DEBUG
 using System.Diagnostics;
 #endif
@@ -135,20 +135,6 @@ namespace Pixeval.ViewModel
             Window.Activate();
             await AppContext.ClearTemporaryDirectory();
             Cache = await FileCache.CreateDefaultAsync();
-        }
-
-        /// <summary>
-        /// Calculate the window size by current resolution
-        /// </summary>
-        public (int, int) PredetermineEstimatedWindowSize()
-        {
-            return UIHelper.GetScreenSize() switch
-            {
-                // 这 就 是 C #
-                ( >= 2560, >= 1440) => (1600, 900),
-                ( > 1600, > 900) => (1280, 720),
-                _ => (800, 600)
-            };
         }
 
         public (int, int) GetAppWindowSizeTuple()

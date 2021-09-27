@@ -1,7 +1,6 @@
 ﻿using Pixeval.Misc;
-using Pixeval.Util;
 
-namespace Pixeval
+namespace Pixeval.Options
 {
     public enum ApplicationTheme
     {

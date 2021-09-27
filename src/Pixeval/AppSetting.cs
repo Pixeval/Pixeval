@@ -3,10 +3,11 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Preference;
+using Pixeval.Options;
 
 namespace Pixeval
 {
-    public class AppSetting
+    public record AppSetting
     {
         /// <summary>
         /// The Application Theme
@@ -92,6 +93,8 @@ namespace Pixeval
 
         public int WindowHeight { get; set; }
 
+        public ThumbnailDirection ThumbnailDirection { get; set; }
+
         public AppSetting(
             ApplicationTheme theme,
             ObservableCollection<string> excludeTags,
@@ -110,7 +113,8 @@ namespace Pixeval
             bool filtrateRestrictedContent,
             bool useFileCache,
             int windowWidth, 
-            int windowHeight)
+            int windowHeight,
+            ThumbnailDirection thumbnailDirection)
         {
             Theme = theme;
             ExcludeTags = excludeTags;
@@ -130,11 +134,12 @@ namespace Pixeval
             UseFileCache = useFileCache;
             WindowWidth = windowWidth;
             WindowHeight = windowHeight;
+            ThumbnailDirection = thumbnailDirection;
         }
 
         public static AppSetting CreateDefault()
         {
-            var (width, height) = App.AppViewModel.PredetermineEstimatedWindowSize();
+            var (width, height) = App.PredetermineEstimatedWindowSize();
             return new AppSetting(
                 ApplicationTheme.SystemDefault,
                 new ObservableCollection<string>(),
@@ -153,7 +158,8 @@ namespace Pixeval
                 false,
                 false,
                 width,
-                height);
+                height,
+                ThumbnailDirection.Portrait);
         }
 
         public MakoClientConfiguration ToMakoClientConfiguration()

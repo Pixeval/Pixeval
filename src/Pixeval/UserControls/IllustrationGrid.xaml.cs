@@ -7,7 +7,8 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Messages;
-using Pixeval.Pages.IllustrationViewer;
+ using Pixeval.Options;
+ using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.UI;
 using Pixeval.ViewModel;
 
@@ -23,6 +24,23 @@ namespace Pixeval.UserControls
         {
             InitializeComponent();
             ViewModel = new IllustrationGridViewModel();
+        }
+
+        private void IllustrationGrid_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            switch (App.AppViewModel.AppSetting.ThumbnailDirection)
+            {
+                case ThumbnailDirection.Landscape:
+                    IllustrationGridView.ItemHeight = 180;
+                    IllustrationGridView.DesiredWidth = 250;
+                    break;
+                case ThumbnailDirection.Portrait:
+                    IllustrationGridView.ItemHeight = 250;
+                    IllustrationGridView.DesiredWidth = 180;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private async void RemoveBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)

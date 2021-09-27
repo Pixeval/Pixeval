@@ -1,5 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
+using Pixeval.Util.UI;
 using Pixeval.ViewModel;
+using ApplicationTheme = Pixeval.Options.ApplicationTheme;
 
 namespace Pixeval
 {
@@ -23,6 +25,20 @@ namespace Pixeval
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
             await AppViewModel.InitializeAsync();
+        }
+
+        /// <summary>
+        /// Calculate the window size by current resolution
+        /// </summary>
+        public static (int, int) PredetermineEstimatedWindowSize()
+        {
+            return UIHelper.GetScreenSize() switch
+            {
+                // 这 就 是 C #
+                ( >= 2560, >= 1440) => (1600, 900),
+                ( > 1600, > 900) => (1280, 720),
+                _ => (800, 600)
+            };
         }
     }
 }

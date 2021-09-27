@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Input;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.ViewModel;
+using ApplicationTheme = Pixeval.Options.ApplicationTheme;
 
 namespace Pixeval.Pages.Misc
 {

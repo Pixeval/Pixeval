@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Options;
 using Pixeval.Util.Generic;
-using Pixeval.Utilities;
 
 namespace Pixeval.ViewModel
 {
@@ -17,7 +17,9 @@ namespace Pixeval.ViewModel
             _appSetting = appSetting;
         }
 
-        public static readonly IEnumerable<ApplicationTheme> AvailableApplicationThemes = typeof(ApplicationTheme).GetEnumValues<ApplicationTheme>();
+        public static readonly IEnumerable<ApplicationTheme> AvailableApplicationThemes = Enum.GetValues<ApplicationTheme>();
+
+        public static readonly IEnumerable<ThumbnailDirection> AvailableThumbnailDirections = Enum.GetValues<ThumbnailDirection>();
 
         public IllustrationSortOptionWrapper BoxSortOption()
         {
@@ -151,6 +153,12 @@ namespace Pixeval.ViewModel
         {
             get => _appSetting.UseFileCache;
             set => SetProperty(_appSetting.UseFileCache, value, _appSetting, (settings, value) => settings.UseFileCache = value);
+        }
+
+        public ThumbnailDirection ThumbnailDirection
+        {
+            get => _appSetting.ThumbnailDirection;
+            set => SetProperty(_appSetting.ThumbnailDirection, value, _appSetting, (settings, value) => settings.ThumbnailDirection = value);
         }
     }
 }
