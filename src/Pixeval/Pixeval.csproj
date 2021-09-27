@@ -61,6 +61,7 @@
       <None Remove="Assets\Images\empty-box.theme-light.png" />
       <None Remove="Assets\Images\logo44x44.ico" />
       <None Remove="Pages\Capability\RecentPostsPage.xaml" />
+      <None Remove="Pages\Capability\SearchResultsPage.xaml" />
       <None Remove="Pages\IllustrationViewer\CommentRepliesPage.xaml" />
       <None Remove="Pages\IllustrationViewer\PixivReplyEmojiListPage.xaml" />
       <None Remove="Pages\IllustrationViewer\PixivReplyStickerListPage.xaml" />
@@ -157,6 +158,9 @@
       <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
    </ItemGroup>
    <ItemGroup>
+      <Page Update="Pages\Capability\SearchResultsPage.xaml">
+        <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      </Page>
       <Page Update="Pages\Misc\SettingsPage.xaml">
          <Generator>MSBuild:Compile</Generator>
       </Page>
