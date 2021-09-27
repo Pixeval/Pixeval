@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Pixeval.Utilities\Pixeval.Utilities.csproj" PrivateAssets="True" />
+    <ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
   </ItemGroup>
 
   <ItemGroup>

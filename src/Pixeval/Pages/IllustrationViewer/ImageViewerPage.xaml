@@ -170,7 +170,8 @@
                         CornerRadius="10"
                         DefaultLabelPosition="Collapsed"
                         OverflowButtonVisibility="Collapsed">
-                <AppBarButton x:Uid="/ImageViewerPage/BookmarkButton"
+                <AppBarButton x:Name="BookmarkButton"
+                              x:Uid="/ImageViewerPage/BookmarkButton"
                               Width="50"
                               Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.BookmarkCommand}" />
                 <AppBarButton x:Uid="/ImageViewerPage/ZoomInButton"

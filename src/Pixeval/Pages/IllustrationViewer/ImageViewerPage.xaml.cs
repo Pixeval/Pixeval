@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Windows.Foundation;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -154,6 +155,19 @@ namespace Pixeval.Pages.IllustrationViewer
         private void IllustrationInfoAndCommentsMenuFlyoutItem_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             _viewModel.IllustrationViewerPageViewModel.IsInfoPaneOpen = true;
+        }
+
+        private void BookmarkButton_OnPointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            if (!FlyoutBase.GetAttachedFlyout(BookmarkButton).IsOpen)
+            {
+                FlyoutBase.ShowAttachedFlyout(BookmarkButton);
+            }
+        }
+
+        private void BookmarkButton_OnPointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            FlyoutBase.GetAttachedFlyout(BookmarkButton).Hide();
         }
 
         #region Helper Functions

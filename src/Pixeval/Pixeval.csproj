@@ -154,9 +154,9 @@
       <RemoveDir Directories="$(LoginProxyPublishDir)" />
    </Target>
    <ItemGroup>
-      <ProjectReference Include="..\..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
       <ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
       <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+      <ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
    </ItemGroup>
    <ItemGroup>
       <Page Update="Pages\Misc\SettingsPage.xaml">

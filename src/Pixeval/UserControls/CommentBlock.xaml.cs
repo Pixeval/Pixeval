@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
@@ -53,7 +52,7 @@ namespace Pixeval.UserControls
 
             block.PosterPersonPicture.ProfilePicture = await viewModel.GetAvatarSource();
             block.PosterTextBlock.Text = viewModel.Poster;
-            block.PostDateTextBlock.Text = viewModel.PostDate.ToString(CultureInfo.CurrentUICulture);
+            block.PostDateTextBlock.Text = viewModel.PostDate.ToString("yyyy-MM-dd dddd");
             block.CommentContent.Visibility = (!viewModel.IsStamp).ToVisibility();
             block.StickerImageContent.Visibility = viewModel.IsStamp.ToVisibility();
             block.DeleteReplyHyperlinkButton.Visibility = (viewModel.PosterId == App.AppViewModel.PixivUid).ToVisibility();
