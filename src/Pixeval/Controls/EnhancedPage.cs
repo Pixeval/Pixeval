@@ -21,20 +21,20 @@ namespace Pixeval.Controls
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            Prepare(e);
+            OnPageActivated(e);
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             base.OnNavigatingFrom(e);
-            Dispose(e);
+            OnPageDeactivated(e);
         }
 
-        public virtual void Dispose(NavigatingCancelEventArgs e)
+        public virtual void OnPageDeactivated(NavigatingCancelEventArgs e)
         {
         }
 
-        public virtual void Prepare(NavigationEventArgs e)
+        public virtual void OnPageActivated(NavigationEventArgs e)
         {
         }
     }

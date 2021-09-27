@@ -55,11 +55,18 @@
                    Height="100"
                    HorizontalAlignment="Left"
                    Stretch="UniformToFill" />
-            <HyperlinkButton x:Name="OpenRepliesHyperlinkButton"
-                             Grid.Row="3"
-                             Grid.Column="2"
-                             FontSize="10"
-                             Tapped="OpenRepliesHyperlinkButton_OnTapped" />
+            <StackPanel Grid.Row="3"
+                        Grid.Column="2"
+                        Orientation="Horizontal">
+                <HyperlinkButton x:Name="OpenRepliesHyperlinkButton"
+                                 FontSize="10"
+                                 Tapped="OpenRepliesHyperlinkButton_OnTapped" />
+                <HyperlinkButton x:Name="DeleteReplyHyperlinkButton"
+                                 x:Uid="/CommentBlock/DeleteReplyHyperlinkButton"
+                                 Margin="10,0,0,0"
+                                 FontSize="10"
+                                 Tapped="DeleteReplyHyperlinkButton_OnTapped" />
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

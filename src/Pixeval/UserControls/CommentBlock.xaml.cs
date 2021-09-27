@@ -26,6 +26,14 @@ namespace Pixeval.UserControls
             remove => _repliesHyperlinkButtonTapped -= value;
         }
 
+        private EventHandler<TappedRoutedEventArgs>? _deleteHyperlinkButtonTapped;
+
+        public event EventHandler<TappedRoutedEventArgs> DeleteHyperlinkButtonTapped
+        {
+            add => _deleteHyperlinkButtonTapped += value;
+            remove => _deleteHyperlinkButtonTapped -= value;
+        }
+
         private static async void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var block = (CommentBlock) d;
@@ -48,6 +56,7 @@ namespace Pixeval.UserControls
             block.PostDateTextBlock.Text = viewModel.PostDate.ToString(CultureInfo.CurrentUICulture);
             block.CommentContent.Visibility = (!viewModel.IsStamp).ToVisibility();
             block.StickerImageContent.Visibility = viewModel.IsStamp.ToVisibility();
+            block.DeleteReplyHyperlinkButton.Visibility = (viewModel.PosterId == App.AppViewModel.PixivUid).ToVisibility();
             if (viewModel.IsStamp)
             {
                 block.StickerImageContent.Source = viewModel.StampSource is { } url
@@ -80,6 +89,11 @@ namespace Pixeval.UserControls
         private void OpenRepliesHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             _repliesHyperlinkButtonTapped?.Invoke(sender, e);
+        }
+
+        private void DeleteReplyHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            _deleteHyperlinkButtonTapped?.Invoke(sender, e);
         }
     }
 }

@@ -14,7 +14,8 @@
                 <ColumnDefinition />
                 <ColumnDefinition Width="70" />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0"
+            <Button x:Name="EmojiButton"
+                    Grid.Column="0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Content="{ui:FontIcon Glyph=Emoji2E76E,
@@ -49,7 +50,8 @@
                          Margin="10,0"
                          HorizontalAlignment="Stretch"
                          VerticalAlignment="Center"
-                         x:FieldModifier="public" />
+                         x:FieldModifier="public"
+                         ContextMenuOpening="ReplyContentRichEditBox_OnContextMenuOpening" />
             <Button Grid.Column="2"
                     Width="65"
                     Height="30"

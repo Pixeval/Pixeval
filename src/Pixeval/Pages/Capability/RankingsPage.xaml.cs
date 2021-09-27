@@ -24,13 +24,13 @@ namespace Pixeval.Pages.Capability
             InitializeComponent();
         }
 
-        public override void Dispose(NavigatingCancelEventArgs navigatingCancelEventArgs)
+        public override void OnPageDeactivated(NavigatingCancelEventArgs navigatingCancelEventArgs)
         {
             IllustrationContainer.ViewModel.Dispose();
             WeakReferenceMessenger.Default.UnregisterAll(this);
         }
 
-        public override void Prepare(NavigationEventArgs navigationEventArgs)
+        public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
         {
             SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
             RankOptionComboBox.SelectedItem = RankOptionWrapper.AvailableOptions().Of(RankOption.Day);

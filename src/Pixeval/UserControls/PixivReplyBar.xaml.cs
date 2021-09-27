@@ -32,6 +32,7 @@ namespace Pixeval.UserControls
         public PixivReplyBar()
         {
             InitializeComponent();
+            _stickerTapped += (_, _) => EmojiButton.Flyout.Hide();
         }
 
         private void PixivReplyBar_OnLoaded(object sender, RoutedEventArgs e)
@@ -60,6 +61,12 @@ namespace Pixeval.UserControls
             }
             _sendButtonTapped?.Invoke(this, new SendButtonTappedEventArgs(e, content));
             ReplyContentRichEditBox.ClearContent();
+        }
+
+        private void ReplyContentRichEditBox_OnContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            // disable context menu
+            e.Handled = true;
         }
     }
 

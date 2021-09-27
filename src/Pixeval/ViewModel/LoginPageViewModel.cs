@@ -1,10 +1,8 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -27,21 +25,16 @@ using Pixeval.Util.UI;
 
 namespace Pixeval.ViewModel
 {
-    public class LoginPageViewModel : INotifyPropertyChanged
+    public class LoginPageViewModel : AutoActivateObservableRecipient, 
+        IRecipient<ScanningLoginProxyMessage>, 
+        IRecipient<ApplicationExitingMessage>
     {
         // Remarks:
         // A Task that completes when the scan process of the Pixeval.LoginProxy completes
         // Note: the scan process consist of checksum matching and optionally file unzipping, see AppContext.CopyLoginProxyIfRequired()
-        private static readonly TaskCompletionSource ScanLoginProxyTask = new();
+        private readonly TaskCompletionSource _scanLoginProxyTask = new();
 
-        private static Process? _loginProxyProcess;
-
-        static LoginPageViewModel()
-        {
-            WeakReferenceMessenger.Default.Register(RecipientAdapter<ScanningLoginProxyMessage>.Create(_ => ScanLoginProxyTask.SetResult()));
-            // Kill the login proxy process if the application encounters exception
-            WeakReferenceMessenger.Default.Register(RecipientAdapter<ApplicationExitingMessage>.Create(_ => _loginProxyProcess?.Kill()));
-        }
+        private Process? _loginProxyProcess;
 
         public class LoginTokenResponse
         {
@@ -87,12 +80,7 @@ namespace Pixeval.ViewModel
         public LoginPhaseEnum LoginPhase
         {
             get => _loginPhase;
-            set
-            {
-                if (value == _loginPhase) return;
-                _loginPhase = value;
-                OnPropertyChanged();
-            }
+            set => SetProperty(ref _loginPhase, value);
         }
 
         public void AdvancePhase(LoginPhaseEnum newPhase)
@@ -181,7 +169,7 @@ namespace Pixeval.ViewModel
             await AppContext.CopyLoginProxyIfRequiredAsync();
             AdvancePhase(LoginPhaseEnum.NegotiatingPort);
             AdvancePhase(LoginPhaseEnum.ExecutingLoginProxy);
-            await ScanLoginProxyTask.Task; // awaits the copy and extract operations to complete
+            await _scanLoginProxyTask.Task; // awaits the copy and extract operations to complete
             _loginProxyProcess = await CallLoginProxyAsync(ApplicationLanguages.ManifestLanguages[0]); // calls the login proxy process and passes the language and IPC server port
             var (cookie, code, verifier) = await WhenLoginTokenRequestedAsync(); // awaits the login proxy to sends the post request which contains the login result
             var session = await AuthCodeToSessionAsync(code, verifier, cookie);
@@ -253,12 +241,14 @@ namespace Pixeval.ViewModel
             return session;
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        public void Receive(ScanningLoginProxyMessage message)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            _scanLoginProxyTask.SetResult();
+        }
+
+        public void Receive(ApplicationExitingMessage message)
+        {
+            _loginProxyProcess?.Kill();
         }
     }
 }

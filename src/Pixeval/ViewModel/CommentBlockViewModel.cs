@@ -40,6 +40,8 @@ namespace Pixeval.ViewModel
 
         public string Poster => Comment.CommentPoster?.Name ?? string.Empty;
 
+        public string PosterId => Comment.CommentPoster?.Id.ToString()!;
+
         public string CommentContent => Comment.CommentContent ?? string.Empty;
 
         public string CommentId => Comment.Id.ToString();

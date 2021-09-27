@@ -5,14 +5,13 @@ using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.ViewModel;
 
 namespace Pixeval.Pages.Misc
 {
-    // TODO: check for update, set language, clear data and temp, set main page default selected tab
+    // TODO: check for update, set language, set main page default selected tab
     public sealed partial class SettingsPage
     {
         private readonly SettingsPageViewModel _viewModel = new(App.AppViewModel.AppSetting);

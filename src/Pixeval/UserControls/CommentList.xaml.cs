@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.Util.UI;
 using Pixeval.ViewModel;
 
 namespace Pixeval.UserControls
@@ -36,6 +38,16 @@ namespace Pixeval.UserControls
         private void CommentBlock_OnRepliesHyperlinkButtonTapped(object? sender, TappedRoutedEventArgs e)
         {
             _repliesHyperlinkButtonTapped?.Invoke(sender, e);
+        }
+
+        private void CommentBlock_OnDeleteHyperlinkButtonTapped(object? sender, TappedRoutedEventArgs e)
+        {
+            var viewModel = sender!.GetDataContext<CommentBlockViewModel>();
+            App.AppViewModel.MakoClient.DeleteCommentAsync(viewModel.CommentId);
+            if (ItemsSource is IList<CommentBlockViewModel> list)
+            {
+                list.Remove(viewModel);
+            }
         }
     }
 }

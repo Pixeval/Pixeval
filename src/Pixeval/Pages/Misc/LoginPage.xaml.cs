@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Messages;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
@@ -85,6 +86,11 @@ namespace Pixeval.Pages.Misc
 
                 App.AppViewModel.ExitWithPushedNotification();
             }
+        }
+
+        public override void OnPageDeactivated(NavigatingCancelEventArgs e)
+        {
+            _viewModel.Deactivate();
         }
     }
 }

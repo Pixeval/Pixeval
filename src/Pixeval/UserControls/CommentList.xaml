@@ -12,6 +12,7 @@
                       x:DataType="viewModel:CommentBlockViewModel">
             <local:CommentBlock HorizontalAlignment="Stretch"
                                 RepliesHyperlinkButtonTapped="CommentBlock_OnRepliesHyperlinkButtonTapped"
+                                DeleteHyperlinkButtonTapped="CommentBlock_OnDeleteHyperlinkButtonTapped"
                                 ViewModel="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
         </DataTemplate>
     </UserControl.Resources>

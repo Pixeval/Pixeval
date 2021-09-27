@@ -21,7 +21,7 @@ namespace Pixeval.Pages.IllustrationViewer
             InitializeComponent();
         }
 
-        public override void Prepare(NavigationEventArgs e)
+        public override void OnPageActivated(NavigationEventArgs e)
         {
             _viewModel = (ImageViewerPageViewModel) e.Parameter;
         }

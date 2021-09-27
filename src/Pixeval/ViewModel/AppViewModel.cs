@@ -18,7 +18,7 @@ using System.Diagnostics;
 
 namespace Pixeval.ViewModel
 {
-    public class AppViewModel
+    public class AppViewModel : AutoActivateObservableRecipient, IRecipient<ApplicationExitingMessage>
     {
         public AppViewModel(App app)
         {
@@ -159,6 +159,11 @@ namespace Pixeval.ViewModel
         public Size GetAppWindowSize()
         {
             return App.AppViewModel.Window.Size();
+        }
+
+        public void Receive(ApplicationExitingMessage message)
+        {
+            AppContext.SaveContext();
         }
     }
 }

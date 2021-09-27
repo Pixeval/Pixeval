@@ -1,9 +1,7 @@
 ﻿using System;
-using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 using PInvoke;
-using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Pages.Misc;
 
@@ -43,7 +41,7 @@ namespace Pixeval
 
         private void MainWindow_OnClosed(object sender, WindowEventArgs args)
         {
-            WeakReferenceMessenger.Default.Send(new ApplicationExitingMessage());
+            AppContext.SaveContext();
         }
 
         private void PixevalAppRootFrame_OnNavigationFailed(object sender, NavigationFailedEventArgs e)

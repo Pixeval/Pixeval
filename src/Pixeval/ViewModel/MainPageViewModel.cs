@@ -1,21 +1,14 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using JetBrains.Annotations;
-using Microsoft.Toolkit.Mvvm.Messaging;
+﻿using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.CoreApi.Net;
 using Pixeval.Messages;
 using Pixeval.Util.IO;
+using Pixeval.Util.UI;
 
 namespace Pixeval.ViewModel
 {
-    public class MainPageViewModel : INotifyPropertyChanged
+    public class MainPageViewModel : AutoActivateObservableRecipient, IRecipient<LoginCompletedMessage>
     {
-        public MainPageViewModel()
-        {
-            WeakReferenceMessenger.Default.Register<MainPageViewModel, LoginCompletedMessage>(this, (recipient, _) => recipient.DownloadAndSetAvatar());
-        }
-
         public double MainPageRootNavigationViewOpenPanelLength => 250;
 
         private ImageSource? _avatar;
@@ -23,12 +16,7 @@ namespace Pixeval.ViewModel
         public ImageSource? Avatar
         {
             get => _avatar;
-            set
-            {
-                if (Equals(value, _avatar)) return;
-                _avatar = value;
-                OnPropertyChanged();
-            }
+            set => SetProperty(ref _avatar, value);
         }
 
         /// <summary>
@@ -44,12 +32,9 @@ namespace Pixeval.ViewModel
                 .GetBitmapImageAsync(true);
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        public void Receive(LoginCompletedMessage message)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            DownloadAndSetAvatar();
         }
     }
 }

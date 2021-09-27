@@ -67,7 +67,6 @@
                                 Tag="{x:Bind _settings}" />
         </NavigationView.FooterMenuItems>
         <Frame x:Name="MainPageRootFrame"
-               Navigated="MainPageRootFrame_OnNavigated"
-               NavigationFailed="MainPageRootFrame_OnNavigationFailed" />
+               Navigated="MainPageRootFrame_OnNavigated" />
     </NavigationView>
 </Page>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Runtime;
 using CommunityToolkit.WinUI.UI;
 using CommunityToolkit.WinUI.UI.Controls;
@@ -42,8 +41,8 @@ namespace Pixeval.Pages
         {
             InitializeComponent();
             DataContext = _viewModel;
-            WeakReferenceMessenger.Default.Register<MainPage, MainPageFrameSetConnectedAnimationTargetMessage>(this, (_, message) => _connectedAnimationTarget = message.Parameter);
-            WeakReferenceMessenger.Default.Register<MainPage, NavigatingBackToMainPageMessage>(this, (_, message) => _illustrationViewerContent = message.Parameter);
+            WeakReferenceMessenger.Default.Register<MainPage, MainPageFrameSetConnectedAnimationTargetMessage>(this, (_, message) => _connectedAnimationTarget = message.Sender);
+            WeakReferenceMessenger.Default.Register<MainPage, NavigatingBackToMainPageMessage>(this, (_, message) => _illustrationViewerContent = message.IllustrationViewModel);
         }
          
         private void MainPageRootNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -75,12 +74,6 @@ namespace Pixeval.Pages
                 gridView.ScrollIntoView(_illustrationViewerContent);
                 _illustrationViewerContent = null;
             }
-        }
-
-        private void MainPageRootFrame_OnNavigationFailed(object sender, NavigationFailedEventArgs e)
-        {
-            // TODO
-            Debugger.Break();
         }
     }
 }

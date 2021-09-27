@@ -2,7 +2,7 @@
 using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Streams;
-using CommunityToolkit.WinUI.UI;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -38,7 +38,7 @@ namespace Pixeval.Pages.IllustrationViewer
             PopupShadow.Receivers.Add(IllustrationInfoAndCommentsSplitView);
         }
 
-        public override void Dispose(NavigatingCancelEventArgs e)
+        public override void OnPageDeactivated(NavigatingCancelEventArgs e)
         {
             foreach (var imageViewerPageViewModel in _viewModel.ImageViewerPageViewModels)
             {
@@ -48,7 +48,7 @@ namespace Pixeval.Pages.IllustrationViewer
             WeakReferenceMessenger.Default.UnregisterAll(this);
         }
 
-        public override void Prepare(NavigationEventArgs e)
+        public override void OnPageActivated(NavigationEventArgs e)
         {
             _viewModel = (IllustrationViewerPageViewModel) e.Parameter;
             _illustrationInfo = new NavigationViewTag(typeof(IllustrationInfoPage), _viewModel);

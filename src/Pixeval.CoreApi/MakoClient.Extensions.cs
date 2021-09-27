@@ -168,9 +168,14 @@ namespace Pixeval.CoreApi
             return dic;
         }
 
-        public Task<UgoiraMetadataResponse> GetUgoiraMetadata(string id)
+        public Task<UgoiraMetadataResponse> GetUgoiraMetadataAsync(string id)
         {
             return Resolve<IAppApiEndPoint>().GetUgoiraMetadataAsync(id);
+        }
+
+        public Task DeleteCommentAsync(string commentId)
+        {
+            return Resolve<IAppApiEndPoint>().DeleteCommentAsync(new DeleteCommentRequest(commentId));
         }
     }
 }

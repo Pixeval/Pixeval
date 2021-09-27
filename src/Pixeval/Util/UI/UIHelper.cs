@@ -7,6 +7,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.UI;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
@@ -231,6 +232,11 @@ namespace Pixeval.Util.UI
         public static void ClearContent(this RichEditBox box)
         {
             box.Document.SetText(TextSetOptions.None, string.Empty);
-        } 
+        }
+
+        public static void Deactivate(this ObservableRecipient recipient)
+        {
+            recipient.IsActive = false;
+        }
     }
 }

@@ -33,7 +33,7 @@ namespace Pixeval.Pages.IllustrationViewer
             InitializeComponent();
         }
 
-        public override void Prepare(NavigationEventArgs e)
+        public override void OnPageActivated(NavigationEventArgs e)
         {
              _replyBar = (PixivReplyBar) e.Parameter;
         }

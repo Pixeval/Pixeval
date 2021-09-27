@@ -156,7 +156,7 @@ namespace Pixeval.ViewModel
             }
             else if (IllustrationViewModel.IsUgoira)
             {
-                var ugoiraMetadata = await App.AppViewModel.MakoClient.GetUgoiraMetadata(IllustrationViewModel.Id);
+                var ugoiraMetadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(IllustrationViewModel.Id);
                 if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Medium is { } url)
                 {
                     AdvancePhase(LoadingPhase.DownloadingGifZip);
