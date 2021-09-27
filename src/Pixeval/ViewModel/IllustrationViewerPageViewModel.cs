@@ -100,6 +100,12 @@ namespace Pixeval.ViewModel
             IconSource = FontIconSymbols.LinkE71B.GetFontIconSource()
         };
 
+        public XamlUICommand AddToBookmarkCommand { get; } = new()
+        {
+            Label = IllustrationViewerPageResources.AddToBookmark,
+            IconSource = FontIconSymbols.BookmarksE8A4.GetFontIconSource()
+        };
+
         public XamlUICommand GenerateLinkCommand { get; } = new()
         {
             Label = IllustrationViewerPageResources.GenerateLink,
