@@ -121,7 +121,7 @@
     <value>取消选择 ({0})</value>
   </data>
   <data name="AddAllToBookmarkButton.Label" xml:space="preserve">
-    <value>收藏</value>
+    <value>添加到收藏夹</value>
   </data>
   <data name="AddAllToBookmarkToastContentFormatted" xml:space="preserve">
     <value>收藏了{0}张图片</value>

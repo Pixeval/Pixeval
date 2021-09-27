@@ -31,8 +31,13 @@
                           Tapped="SelectAllToggleButton_OnTapped" />
             <AppBarSeparator />
             <AppBarButton x:Uid="/IllustrationGridCommandBar/AddAllToBookmarkButton"
-                          Icon="{ui:FontIcon Glyph=HeartEB51}"
-                          Tapped="AddAllToBookmarkButton_OnTapped" />
+                          Icon="{ui:FontIcon Glyph=BookmarksE8A4}" >
+                <AppBarButton.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Tapped="AddAllToBookmarkButton_OnTapped" Text="本地收藏夹"></MenuFlyoutItem>
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
             <AppBarButton x:Uid="/IllustrationGridCommandBar/SaveAllButton"
                           Icon="{ui:FontIcon Glyph=SaveE74E}"
                           Tapped="SaveAllButton_OnTapped" />

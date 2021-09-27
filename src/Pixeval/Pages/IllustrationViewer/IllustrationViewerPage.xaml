@@ -5,7 +5,8 @@
                         xmlns:controls1="using:Pixeval.Controls"
                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                        xmlns:ui="using:Pixeval.Util.UI"
+                        xmlns:ui="using:Pixeval.Util.UI" 
+                        xmlns:userControls="using:Pixeval.UserControls"
                         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                         Loaded="IllustrationViewerPage_OnLoaded"
                         mc:Ignorable="d">
@@ -65,6 +66,13 @@
                 <AppBarButton Command="{x:Bind _viewModel.SaveMangaAsCommand}"
                               Visibility="{x:Bind _viewModel.IsManga}" />
                 <AppBarSeparator />
+                <AppBarButton Command="{x:Bind _viewModel.AddToBookmarkCommand}">
+                    <AppBarButton.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="本地收藏夹"></MenuFlyoutItem>
+                        </MenuFlyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
                 <AppBarButton x:Name="GenerateLinkToThisPageButton"
                               Command="{x:Bind _viewModel.GenerateLinkCommand}" />
                 <AppBarButton Command="{x:Bind _viewModel.GenerateWebLinkCommand}" />

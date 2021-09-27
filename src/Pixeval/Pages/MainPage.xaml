@@ -9,7 +9,8 @@
       NavigationCacheMode="Required"
       mc:Ignorable="d">
 
-    <NavigationView d:DataContext="{d:DesignInstance viewModel:MainPageViewModel}"
+    <NavigationView x:Name="MainPageRootNavigationView"
+                    d:DataContext="{d:DesignInstance viewModel:MainPageViewModel}"
                     IsSettingsVisible="False"
                     OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}"
                     SelectionChanged="MainPageRootNavigationView_OnSelectionChanged">
@@ -19,7 +20,8 @@
         </NavigationView.PaneHeader>
         <NavigationView.AutoSuggestBox>
             <AutoSuggestBox x:Uid="/MainPage/MainPageAutoSuggestionBox"
-                            QueryIcon="Find" />
+                            QueryIcon="Find"
+                            QuerySubmitted="AutoSuggestBox_QuerySubmitted" />
         </NavigationView.AutoSuggestBox>
         <NavigationView.MenuItems>
             <NavigationViewItem x:Uid="/MainPage/RecommendationsTab"
