@@ -34,13 +34,19 @@ namespace Pixeval.Controls
 
         public string Text
         {
-            get => (string)GetValue(TextProperty);
+            get => (string) GetValue(TextProperty);
             set => SetValue(TextProperty, value);
         }
 
         private static void TextPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((StackPanel) ((Button) d).Content).FindDescendant<TextBlock>()!.Text = (string) e.NewValue;
+            var textBlock = ((StackPanel) ((Button) d).Content).FindDescendant<TextBlock>();
+            if (e.NewValue is null)
+            {
+                textBlock!.Visibility = Visibility.Collapsed;
+                return;
+            }
+            textBlock!.Text = (string) e.NewValue;
         }
 
         public static readonly DependencyProperty IconProperty = DependencyProperty.Register(

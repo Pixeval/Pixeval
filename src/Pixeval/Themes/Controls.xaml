@@ -9,4 +9,5 @@
         </Style.Setters>
     </Style>
     <x:Double x:Key="PixevalButtonIconSize">13</x:Double>
+    <x:Double x:Key="PixevalButtonIconSmallSize">10</x:Double>
 </ResourceDictionary>

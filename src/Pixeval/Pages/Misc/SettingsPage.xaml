@@ -1,8 +1,10 @@
 ﻿<Page x:Class="Pixeval.Pages.Misc.SettingsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:card="using:Pixeval.Controls.Card"
       xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:expander="using:Pixeval.Controls.Expander"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:numberFormatting="using:Windows.Globalization.NumberFormatting"
       xmlns:options="using:Pixeval.Options"
@@ -10,6 +12,7 @@
       xmlns:toolkit="using:CommunityToolkit.WinUI.UI"
       xmlns:ui="using:Pixeval.Util.UI"
       xmlns:userControls="using:Pixeval.UserControls"
+      xmlns:userControls1="using:Pixeval.Controls.Setting.UI.UserControls"
       xmlns:util="using:Pixeval.Util"
       xmlns:viewModel="using:Pixeval.ViewModel"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -104,6 +107,27 @@
                         </StackPanel>
                     </Button.Content>
                 </Button>
+                <expander:Expander HorizontalAlignment="Stretch"
+                                   HeaderHeight="50">
+                    <expander:Expander.Header>
+                        <TextBlock Text="ABCDEFG" />
+                    </expander:Expander.Header>
+                    <ListView>
+                        <TextBlock Text="测试测试测试测试测试" />
+                        <TextBlock Text="测试测试测试测试测试" />
+                        <TextBlock Text="测试测试测试测试测试" />
+                    </ListView>
+                </expander:Expander>
+                <userControls1:ActionableSettingEntry Height="70"
+                                                      HorizontalAlignment="Stretch"
+                                                      Header="Download updates automatically">
+                    <userControls1:ActionableSettingEntry.Description>
+                        <TextBlock Text="Except on metered connections" />
+                    </userControls1:ActionableSettingEntry.Description>
+                    <userControls1:ActionableSettingEntry.ActionContent>
+                        <ComboBox />
+                    </userControls1:ActionableSettingEntry.ActionContent>
+                </userControls1:ActionableSettingEntry>
                 <!--  Application Theme  -->
                 <TextBlock x:Uid="/SettingsPage/ApplicationThemeTextBlock"
                            Style="{StaticResource SectionHeaderTextBlockStyle}" />

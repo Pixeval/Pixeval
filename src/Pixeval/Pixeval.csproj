@@ -60,6 +60,11 @@
       <None Remove="Assets\Images\empty-box.theme-dark.png" />
       <None Remove="Assets\Images\empty-box.theme-light.png" />
       <None Remove="Assets\Images\logo44x44.ico" />
+      <None Remove="Controls\Card\CardControl.xaml" />
+      <None Remove="Controls\Expander\Expander.xaml" />
+      <None Remove="Controls\Setting.UI\SingleSelectionSettingEntry\SingleSelectionSettingEntry.xaml" />
+      <None Remove="Controls\Setting.UI\UserControls\ActionableSettingEntry.xaml" />
+      <None Remove="Controls\Setting.UI\UserControls\SettingEntryHeader.xaml" />
       <None Remove="Pages\Capability\RecentPostsPage.xaml" />
       <None Remove="Pages\Capability\SearchResultsPage.xaml" />
       <None Remove="Pages\IllustrationViewer\CommentRepliesPage.xaml" />
@@ -90,9 +95,11 @@
       <None Remove="Pages\RecommendationPage.xaml" />
       <None Remove="Pages\SettingsPage.xaml" />
       <None Remove="Strings\zh-CN\SortOptionComboBox.resw" />
-      <None Remove="Styles\Controls.xaml" />
+      <None Remove="Themes\Card.xaml" />
+      <None Remove="Themes\Controls.xaml" />
       <None Remove="Templates.xaml" />
       <None Remove="Themes.xaml" />
+      <None Remove="Themes\Generic.xaml" />
       <None Remove="UserControls\CommentBlock.xaml" />
       <None Remove="UserControls\CommentList.xaml" />
       <None Remove="UserControls\IllustrationContainer.xaml" />
@@ -236,6 +243,39 @@
       </Content>
    </ItemGroup>
    <ItemGroup>
+     <Page Update="Controls\Expander\Expander.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+   </ItemGroup>
+   <ItemGroup>
+     <Page Update="Controls\Setting.UI\SingleSelectionSettingEntry\SingleSelectionSettingEntry.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+   </ItemGroup>
+   <ItemGroup>
+     <Page Update="Controls\Setting.UI\UserControls\ActionableSettingEntry.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+   </ItemGroup>
+   <ItemGroup>
+     <Page Update="Controls\Setting.UI\UserControls\SettingEntryHeader.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+   </ItemGroup>
+   <ItemGroup>
+     <Page Update="Controls\Card\CardControl.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+     <Page Update="Themes\Generic.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+   </ItemGroup>
+   <ItemGroup>
+     <Page Update="Themes\Card.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+   </ItemGroup>
+   <ItemGroup>
      <Page Update="Popups\QrCodePresenter.xaml">
        <Generator>MSBuild:Compile</Generator>
      </Page>
@@ -301,7 +341,7 @@
       </Page>
    </ItemGroup>
    <ItemGroup>
-      <Page Update="Styles\Themes.xaml">
+      <Page Update="Styles\Colors.xaml">
          <Generator>MSBuild:Compile</Generator>
       </Page>
    </ItemGroup>

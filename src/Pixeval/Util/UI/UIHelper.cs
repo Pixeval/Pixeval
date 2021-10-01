@@ -147,8 +147,8 @@ namespace Pixeval.Util.UI
             {
                 Duration = duration,
                 EasingFunction = easingFunction,
-                By = @by,
-                From = @from,
+                By = by,
+                From = from,
                 To = to
             };
             Storyboard.SetTarget(animation, depObj);
@@ -195,20 +195,32 @@ namespace Pixeval.Util.UI
             return value ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        public static FontIcon GetFontIcon(this FontIconSymbols symbol)
+        public static FontIcon GetFontIcon(this FontIconSymbols symbol, double? fontSize = null)
         {
-            return new()
+            var icon =  new FontIcon
             {
                 Glyph = symbol.GetMetadataOnEnumMember()
             };
+            if (fontSize is not null)
+            {
+                icon.FontSize = fontSize.Value;
+            }
+
+            return icon;
         }
 
-        public static FontIconSource GetFontIconSource(this FontIconSymbols symbol)
+        public static FontIconSource GetFontIconSource(this FontIconSymbols symbol, double? fontSize = null)
         {
-            return new()
+            var icon = new FontIconSource
             {
                 Glyph = symbol.GetMetadataOnEnumMember()
             };
+            if (fontSize is not null)
+            {
+                icon.FontSize = fontSize.Value;
+            }
+
+            return icon;
         }
 
         public static T? GetComboBoxSelectedItemTag<T>(this ComboBox box, T? defaultValue = default)
