@@ -96,14 +96,14 @@
                               Icon="{ui:FontIcon Glyph=CheveronLeft20F743}"
                               LabelPosition="Collapsed"
                               Tapped="PrevImageAppBarButton_OnTapped"
-                              Visibility="{x:Bind CalculatePrevImageButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
+                              Visibility="{x:Bind _viewModel.CalculatePrevImageButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
                 <AppBarButton Width="40"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"
                               Icon="{ui:FontIcon Glyph=CheveronLeft20F743}"
                               LabelPosition="Collapsed"
                               Tapped="PrevIllustrationAppBarButton_OnTapped"
-                              Visibility="{x:Bind CalculatePrevIllustrationButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
+                              Visibility="{x:Bind _viewModel.CalculatePrevIllustrationButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
             </Grid>
             <Grid Width="48"
                   controls:DockPanel.Dock="Right">
@@ -113,18 +113,19 @@
                               Icon="{ui:FontIcon Glyph=CheveronRight20F745}"
                               LabelPosition="Collapsed"
                               Tapped="NextImageAppBarButton_OnTapped"
-                              Visibility="{x:Bind CalculateNextImageButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
+                              Visibility="{x:Bind _viewModel.CalculateNextImageButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
                 <AppBarButton Width="40"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"
                               Icon="{ui:FontIcon Glyph=CheveronRight20F745}"
                               LabelPosition="Collapsed"
                               Tapped="NextIllustrationAppBarButton_OnTapped"
-                              Visibility="{x:Bind CalculateNextIllustrationButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
+                              Visibility="{x:Bind _viewModel.CalculateNextIllustrationButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
             </Grid>
             <Grid Height="30"
                   controls:DockPanel.Dock="Bottom" />
-            <Frame x:Name="IllustrationImageShowcaseFrame" />
+            <Frame Grid.Column="1" x:Name="IllustrationImageShowcaseFrame" />
+
         </controls:DockPanel>
     </SplitView>
 </controls1:EnhancedPage>

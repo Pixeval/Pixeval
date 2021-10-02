@@ -222,38 +222,10 @@ namespace Pixeval.Pages.IllustrationViewer
             }
         }
 
-        #region Helper Functions
-
         // Tags for IllustrationInfoAndCommentsNavigationView
 
         private NavigationViewTag? _illustrationInfo;
 
         private NavigationViewTag? _comments;
-
-        public Visibility CalculateNextImageButtonVisibility(int index)
-        {
-            return index < _viewModel.ImageViewerPageViewModels.Length - 1 ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        public Visibility CalculatePrevImageButtonVisibility(int index)
-        {
-            return index > 0 ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        public Visibility CalculateNextIllustrationButtonVisibility(int index)
-        {
-            return _viewModel.ContainerGridViewModel.IllustrationsView.Count > _viewModel.IllustrationIndex + 1 
-                ? CalculateNextImageButtonVisibility(index).Inverse() 
-                : Visibility.Collapsed;
-        }
-
-        public Visibility CalculatePrevIllustrationButtonVisibility(int index)
-        {
-            return _viewModel.IllustrationIndex > 0 
-                ? CalculatePrevImageButtonVisibility(index).Inverse()
-                : Visibility.Collapsed;
-        }
-
-        #endregion
     }
 }

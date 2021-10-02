@@ -5,10 +5,12 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.Misc;
 using Pixeval.Popups;
 using Pixeval.UserControls;
 using Pixeval.Util;
@@ -155,6 +157,7 @@ namespace Pixeval.ViewModel
             IllustrationViewModelInTheGridView = ContainerGridViewModel.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
             InitializeCommands();
             _ = LoadUserProfileImage();
+            _ = LoadThumbnails();
         }
 
         public void UpdateCommandCanExecute()
@@ -459,6 +462,11 @@ namespace Pixeval.ViewModel
             return FirstIllustrationViewModel.RemoveBookmarkAsync();
         }
 
+        private Task<bool[]> LoadThumbnails()
+        {
+            return Task.WhenAll(ImageViewerPageViewModels.Select(i => i.IllustrationViewModel.LoadThumbnailIfRequired()));
+        }
+
         private async Task LoadUserProfileImage()
         {
             if (FirstIllustrationViewModel.Illustration.User?.ProfileImageUrls?.Medium is { } profileImage)
@@ -477,5 +485,55 @@ namespace Pixeval.ViewModel
 
             (_userProfileImageSource as SoftwareBitmapSource)?.Dispose();
         }
+
+        #region Helper Functions
+
+        public Visibility CalculateNextImageVisibility()
+        {
+            return CurrentIndex < ImageViewerPageViewModels.Length - 1 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public Visibility CalculatePrevImageVisibility()
+        {
+            return CurrentIndex > 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public ImageSource? NextThumbnail()
+        {
+            var illustrationModel = ImageViewerPageViewModels[CurrentIndex + 1]?.IllustrationViewModel;
+            return illustrationModel?.ThumbnailSource;
+        }
+
+        public ImageSource? PrevThumbnail()
+        {
+            var illustrationModel = ImageViewerPageViewModels[CurrentIndex - 1]?.IllustrationViewModel;
+            return illustrationModel?.ThumbnailSource;
+        }
+
+        public Visibility CalculateNextImageButtonVisibility(int index)
+        {
+            return index < ImageViewerPageViewModels.Length - 1 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public Visibility CalculatePrevImageButtonVisibility(int index)
+        {
+            return index > 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public Visibility CalculateNextIllustrationButtonVisibility(int index)
+        {
+            return ContainerGridViewModel.IllustrationsView.Count > IllustrationIndex + 1
+                ? CalculateNextImageButtonVisibility(index).Inverse()
+                : Visibility.Collapsed;
+        }
+
+        public Visibility CalculatePrevIllustrationButtonVisibility(int index)
+        {
+            return IllustrationIndex > 0
+                ? CalculatePrevImageButtonVisibility(index).Inverse()
+                : Visibility.Collapsed;
+        }
+
+        #endregion
     }
 }

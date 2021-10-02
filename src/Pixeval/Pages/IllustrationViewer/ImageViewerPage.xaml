@@ -59,7 +59,30 @@
               VerticalAlignment="Stretch"
               ui:ClipService.ClipToBounds="True"
               PointerWheelChanged="IllustrationOriginalImageContainer_OnPointerWheelChanged">
-            <Image x:Name="IllustrationOriginalImage"
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Image x:Name="ThumbnailLeft"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Center"
+                   Source="{x:Bind _viewModel.IllustrationViewerPageViewModel.PrevThumbnail(), Mode=OneWay}"
+                   Stretch="UniformToFill"
+                   Visibility="{x:Bind _viewModel.IllustrationViewerPageViewModel.CalculatePrevImageVisibility(), Mode=OneWay}"
+                   Grid.Column="0"
+                   Width="200" Height="360">
+            </Image>
+            <Image x:Name="ThumbnailRight"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Center"
+                   Source="{x:Bind _viewModel.IllustrationViewerPageViewModel.NextThumbnail(), Mode=OneWay}"
+                   Stretch="UniformToFill"
+                   Visibility="{x:Bind _viewModel.IllustrationViewerPageViewModel.CalculateNextImageVisibility(), Mode=OneWay}"
+                   Grid.Column="2"
+                   Width="200" Height="360">
+            </Image>
+            <Image Grid.Column="1" x:Name="IllustrationOriginalImage"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    DoubleTapped="IllustrationOriginalImage_OnDoubleTapped"
