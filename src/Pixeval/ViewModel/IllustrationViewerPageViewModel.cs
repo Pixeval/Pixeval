@@ -462,9 +462,9 @@ namespace Pixeval.ViewModel
             return FirstIllustrationViewModel.RemoveBookmarkAsync();
         }
 
-        private Task<bool[]> LoadThumbnails()
+        private async Task LoadThumbnails()
         {
-            return Task.WhenAll(ImageViewerPageViewModels.Select(i => i.IllustrationViewModel.LoadThumbnailIfRequired()));
+            _ = await Task.WhenAll(ImageViewerPageViewModels.Select(i => i.IllustrationViewModel.LoadThumbnailIfRequired()));
         }
 
         private async Task LoadUserProfileImage()
@@ -500,14 +500,16 @@ namespace Pixeval.ViewModel
 
         public ImageSource? NextThumbnail()
         {
-            var illustrationModel = ImageViewerPageViewModels[CurrentIndex + 1]?.IllustrationViewModel;
-            return illustrationModel?.ThumbnailSource;
+            if (CurrentIndex > ImageViewerPageViewModels.Length - 1) return null;
+            var illustrationModel = ImageViewerPageViewModels[CurrentIndex + 1].IllustrationViewModel;
+            return illustrationModel.ThumbnailSource;
         }
 
         public ImageSource? PrevThumbnail()
         {
-            var illustrationModel = ImageViewerPageViewModels[CurrentIndex - 1]?.IllustrationViewModel;
-            return illustrationModel?.ThumbnailSource;
+            if (CurrentIndex <= 0) return null;
+            var illustrationModel = ImageViewerPageViewModels[CurrentIndex - 1].IllustrationViewModel;
+            return illustrationModel.ThumbnailSource;
         }
 
         public Visibility CalculateNextImageButtonVisibility(int index)

@@ -51,6 +51,52 @@
                                  To="0"
                                  Duration="0:0:1" />
             </Storyboard>
+            <Storyboard x:Name="LeftImageFadeInStoryboard">
+
+            </Storyboard>
+            <Storyboard x:Name="LeftImageMoveInStoryboard">
+                <DoubleAnimation
+                                 Storyboard.TargetName="IllustrationLeftImageRenderTransform"
+                                 Storyboard.TargetProperty="ScaleX"
+                                 To="1"
+                                 Duration="0:0:1" >
+                    <DoubleAnimation.EasingFunction>
+                        <CircleEase EasingMode="EaseOut" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation
+                                 Storyboard.TargetName="IllustrationLeftImageRenderTransform"
+                                 Storyboard.TargetProperty="ScaleY"
+                                 To="1"
+                                 Duration="0:0:1">
+                    <DoubleAnimation.EasingFunction>
+                        <CircleEase EasingMode="EaseOut" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+            <Storyboard x:Name="RightImageFadeInStoryboard">
+                
+            </Storyboard>
+            <Storyboard x:Name="RightImageMoveInStoryboard">
+                <DoubleAnimation
+                                 Storyboard.TargetName="IllustrationRightImageRenderTransform"
+                                 Storyboard.TargetProperty="ScaleX"
+                                 To="1"
+                                 Duration="0:0:1" >
+                    <DoubleAnimation.EasingFunction>
+                        <CircleEase EasingMode="EaseOut" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation
+                                 Storyboard.TargetName="IllustrationRightImageRenderTransform"
+                                 Storyboard.TargetProperty="ScaleY"
+                                 To="1"
+                                 Duration="0:0:1" >
+                    <DoubleAnimation.EasingFunction>
+                        <CircleEase EasingMode="EaseOut" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
         </ResourceDictionary>
     </controls:EnhancedPage.Resources>
     <Grid>
@@ -65,22 +111,34 @@
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Image x:Name="ThumbnailLeft"
-                   HorizontalAlignment="Stretch"
+                   HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    Source="{x:Bind _viewModel.IllustrationViewerPageViewModel.PrevThumbnail(), Mode=OneWay}"
-                   Stretch="UniformToFill"
+                   Stretch="Uniform"
                    Visibility="{x:Bind _viewModel.IllustrationViewerPageViewModel.CalculatePrevImageVisibility(), Mode=OneWay}"
                    Grid.Column="0"
-                   Width="200" Height="360">
+                   RenderTransformOrigin="0.5,0.5"
+                   Tapped="ThumbnailLeft_OnTapped">
+                <Image.RenderTransform>
+                    <CompositeTransform x:Name="IllustrationLeftImageRenderTransform"
+                                        ScaleX="0.4"
+                                        ScaleY="0.4" />
+                </Image.RenderTransform>
             </Image>
             <Image x:Name="ThumbnailRight"
-                   HorizontalAlignment="Stretch"
+                   HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    Source="{x:Bind _viewModel.IllustrationViewerPageViewModel.NextThumbnail(), Mode=OneWay}"
-                   Stretch="UniformToFill"
+                   Stretch="Uniform"
                    Visibility="{x:Bind _viewModel.IllustrationViewerPageViewModel.CalculateNextImageVisibility(), Mode=OneWay}"
                    Grid.Column="2"
-                   Width="200" Height="360">
+                   RenderTransformOrigin="0.5,0.5"
+                   Tapped="ThumbnailRight_OnTapped">
+                <Image.RenderTransform>
+                    <CompositeTransform x:Name="IllustrationRightImageRenderTransform"
+                                        ScaleX="0.4"
+                                        ScaleY="0.4" />
+                </Image.RenderTransform>
             </Image>
             <Image Grid.Column="1" x:Name="IllustrationOriginalImage"
                    HorizontalAlignment="Center"

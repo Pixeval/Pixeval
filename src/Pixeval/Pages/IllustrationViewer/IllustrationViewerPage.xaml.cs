@@ -181,6 +181,12 @@ namespace Pixeval.Pages.IllustrationViewer
                 animation.Configuration = new DirectConnectedAnimationConfiguration();
                 animation.TryStart(IllustrationImageShowcaseFrame);
             }
+
+            if (e.SourcePageType == typeof(ImageViewerPage))
+            {
+                // Illustration transition
+
+            }
         }
 
         private void BackButton_OnTapped(object sender, TappedRoutedEventArgs e)
