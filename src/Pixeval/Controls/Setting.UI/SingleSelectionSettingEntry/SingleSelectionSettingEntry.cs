@@ -1,64 +1,121 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Documents;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using System.Runtime.CompilerServices;
+using Windows.Foundation;
+using CommunityToolkit.WinUI.UI;
+using Pixeval.Controls.Setting.UI.Model;
+using Pixeval.Controls.Setting.UI.UserControls;
 
 namespace Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry
 {
-    public sealed class SingleSelectionSettingEntry : Control
+    [TemplatePart(Name = PartSelectorRadioButtons, Type = typeof(RadioButtons))]
+    [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
+    public sealed class SingleSelectionSettingEntry : SettingEntryBase
     {
-        public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(
-            nameof(Header),
-            typeof(string),
-            typeof(SingleSelectionSettingEntry),
-            PropertyMetadata.Create(DependencyProperty.UnsetValue, HeaderChanged));
+        private const string PartSelectorRadioButtons = "SelectorRadioButtons";
 
-        public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register(
-            nameof(Description),
+        private RadioButtons? _selectorRadioButtons;
+
+        private TypedEventHandler<SingleSelectionSettingEntry, SelectionChangedEventArgs>? _selectionChanged;
+
+        public event TypedEventHandler<SingleSelectionSettingEntry, SelectionChangedEventArgs> SelectionChanged
+        {
+            add => _selectionChanged += value;
+            remove => _selectionChanged -= value;
+        }
+
+        public static readonly DependencyProperty HeaderHeightProperty = DependencyProperty.Register(
+            nameof(HeaderHeight),
+            typeof(double),
+            typeof(SingleSelectionSettingEntry),
+            PropertyMetadata.Create(DependencyProperty.UnsetValue));
+
+        public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(
+            nameof(ItemsSource),
+            typeof(IEnumerable<IStringRepresentableItem>),
+            typeof(SingleSelectionSettingEntry),
+            PropertyMetadata.Create(DependencyProperty.UnsetValue));
+
+        public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(
+            nameof(SelectedItem),
             typeof(object),
             typeof(SingleSelectionSettingEntry),
-            PropertyMetadata.Create(DependencyProperty.UnsetValue, DescriptionChanged));
+            PropertyMetadata.Create(DependencyProperty.UnsetValue, (o, args) => SelectedItemChanged(o, args.NewValue)));
 
-        public string Header
+        public double HeaderHeight
         {
-            get => (string) GetValue(HeaderProperty);
-            set => SetValue(HeaderProperty, value);
+            get => (double) GetValue(HeaderHeightProperty);
+            set => SetValue(HeaderHeightProperty, value);
         }
 
-        public object Description
+        public IEnumerable<IStringRepresentableItem> ItemsSource
         {
-            get => GetValue(DescriptionProperty);
-            set => SetValue(DescriptionProperty, value);
+            get => (IEnumerable<IStringRepresentableItem>) GetValue(ItemsSourceProperty);
+            set => SetValue(ItemsSourceProperty, value);
         }
 
-        private static void HeaderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        public object SelectedItem
         {
-            if (e.NewValue is string str)
+            get => GetValue(SelectedItemProperty);
+            set => SetValue(SelectedItemProperty, value);
+        }
+        private static void IconChanged(DependencyObject d, object newValue)
+        {
+            if (d is SingleSelectionSettingEntry {_selectorRadioButtons: { } button})
             {
-                
+                button.Margin = newValue is IconElement
+                    ? new Thickness(50, 0, 0, 0)
+                    : new Thickness(10, 0, 0, 0);
             }
         }
 
-        private static void DescriptionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        private static void SelectedItemChanged(DependencyObject d, object newValue)
         {
-            if (e.NewValue is { } content)
+            if (d is SingleSelectionSettingEntry {_selectorRadioButtons: { } buttons, ItemsSource: { } itemsSource})
             {
-                
+                var correspondingItem = itemsSource.First(r => r.Item.Equals(newValue));
+                // set RadioButtons.SelectedItem won't work
+                buttons.FindDescendants().OfType<RadioButton>().First(b => b.DataContext.Equals(correspondingItem)).IsChecked = true;
             }
+        }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        private void SelectorRadioButtonsOnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_selectorRadioButtons is {SelectedItem: IStringRepresentableItem item})
+            {
+                SelectedItem = item.Item;
+            }
+
+            _selectionChanged?.Invoke(this, e);
         }
 
         public SingleSelectionSettingEntry()
         {
             DefaultStyleKey = typeof(SingleSelectionSettingEntry);
+        }
+
+        protected override void Update()
+        {
+            SelectedItemChanged(this, SelectedItem);
+            IconChanged(this, Icon);
+        }
+
+        protected override void OnApplyTemplate()
+        {
+            if (_selectorRadioButtons is not null)
+            {
+                _selectorRadioButtons.SelectionChanged -= SelectorRadioButtonsOnSelectionChanged;
+            }
+            if ((_selectorRadioButtons = GetTemplateChild(PartSelectorRadioButtons) as RadioButtons) is not null)
+            {
+                _selectorRadioButtons.SelectionChanged += SelectorRadioButtonsOnSelectionChanged;
+            }
+
+            base.OnApplyTemplate();
         }
     }
 }

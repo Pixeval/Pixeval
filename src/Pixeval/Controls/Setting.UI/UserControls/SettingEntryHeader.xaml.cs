@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 namespace Pixeval.Controls.Setting.UI.UserControls
 {
@@ -16,15 +17,28 @@ namespace Pixeval.Controls.Setting.UI.UserControls
             typeof(SettingEntryHeader),
             PropertyMetadata.Create(DependencyProperty.UnsetValue, DescriptionChanged));
 
+        public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
+            nameof(Icon),
+            typeof(IconElement),
+            typeof(SettingEntryHeader),
+            PropertyMetadata.Create(DependencyProperty.UnsetValue, IconChanged));
+
         public string Header
         {
             get => (string) GetValue(HeaderProperty);
             set => SetValue(HeaderProperty, value);
         }
+
         public object Description
         {
             get => GetValue(DescriptionProperty);
             set => SetValue(DescriptionProperty, value);
+        }
+
+        public IconElement Icon
+        {
+            get => (IconElement) GetValue(IconProperty);
+            set => SetValue(IconProperty, value);
         }
 
         private static void HeaderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -40,6 +54,20 @@ namespace Pixeval.Controls.Setting.UI.UserControls
             if (e.NewValue is { } content)
             {
                 ((SettingEntryHeader) d).DescriptionPresenter.Content = content;
+            }
+        }
+
+        private static void IconChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var presenter = ((SettingEntryHeader)d).IconContentPresenter;
+            if (e.NewValue is IconElement icon)
+            {
+                presenter.Visibility = Visibility.Visible;
+                presenter.Content = icon;
+            }
+            else
+            {
+                presenter.Visibility = Visibility.Collapsed;
             }
         }
 

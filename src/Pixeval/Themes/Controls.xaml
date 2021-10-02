@@ -10,4 +10,9 @@
     </Style>
     <x:Double x:Key="PixevalButtonIconSize">13</x:Double>
     <x:Double x:Key="PixevalButtonIconSmallSize">10</x:Double>
+    <Style x:Key="BodyStrongTextBlockStyle"
+           TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="600" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
 </ResourceDictionary>

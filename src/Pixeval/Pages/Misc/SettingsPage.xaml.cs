@@ -5,6 +5,7 @@ using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.ViewModel;
@@ -22,7 +23,8 @@ namespace Pixeval.Pages.Misc
             InitializeComponent();
         }
 
-        #region TeachingTips Got and Lost Focus
+        /*
+         *#region TeachingTips Got and Lost Focus
 
         private void PageLimitForSearchNumberBox_OnGotFocus(object sender, RoutedEventArgs e)
         {
@@ -91,6 +93,8 @@ namespace Pixeval.Pages.Misc
         }
 
         #endregion
+         *
+         */
 
         #region Application Theme Switch
 
@@ -102,7 +106,7 @@ namespace Pixeval.Pages.Misc
 
         #endregion
 
-        #region Sensitive Tags
+        /*#region Sensitive Tags
         private void SwitchSensitiveContentFilteringInfoBarActionButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             SettingsPageRootScrollViewer.ScrollToElement(SensitiveTagTokenizingTextBox);
@@ -132,9 +136,9 @@ namespace Pixeval.Pages.Misc
             }
         }
 
-        #endregion
+        #endregion*/
 
-        #region Image Mirror Server
+        /*#region Image Mirror Server
 
         private void ImageMirrorServerTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
@@ -149,12 +153,7 @@ namespace Pixeval.Pages.Misc
             ImageMirrorServerTeachingTip.IsOpen = false;
         }
 
-        #endregion
-
-        private async void SendFeedbackHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            await Launcher.LaunchUriAsync(new Uri("mailto:decem0730@hotmail.com"));
-        }
+        #endregion*/
 
         // Remarks:
         // We cannot use RadioButtons.SelectionChanged since it always returns null
@@ -182,5 +181,10 @@ namespace Pixeval.Pages.Misc
         }
 
         #endregion
+
+        private void SingleSelectionSettingEntry_OnSelectionChanged(SingleSelectionSettingEntry sender, SelectionChangedEventArgs args)
+        {
+            App.AppViewModel.SwitchTheme(_viewModel.Theme);
+        }
     }
 }

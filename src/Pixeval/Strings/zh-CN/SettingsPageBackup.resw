@@ -1,0 +1,373 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutPixevalTextBlock.Text" xml:space="preserve">
+    <value>Pixeval是一个基于WinUI3开发的Pixiv客户端，提供了绝大部分功能支持以及更加友好的用户体验，你可以在如下的链接中查找Pixeval的相关信息</value>
+  </data>
+  <data name="AboutSNIBypassHyperlinkButton.Content" xml:space="preserve">
+    <value>了解更多关于域前置直连的信息</value>
+  </data>
+  <data name="ApplicationThemeOpenSystemThemeSettingHyperlinkButton.Content" xml:space="preserve">
+    <value>打开Windows系统主题设置</value>
+  </data>
+  <data name="ApplicationThemeTextBlock.Text" xml:space="preserve">
+    <value>应用程序主题(重启应用后完全生效)</value>
+  </data>
+  <data name="ApplicationWideSectionSubtitleTextBlock.Text" xml:space="preserve">
+    <value>应用程序相关设置</value>
+  </data>
+  <data name="BrowsingExperienceSectionSubtitleTextBlock.Text" xml:space="preserve">
+    <value>浏览体验设置</value>
+  </data>
+  <data name="DefaultSortOptionInfoBar.Message" xml:space="preserve">
+    <value>该设置提供全局默认的排序方式，当导航至作品的浏览页面时，将会默认采用该选项指定的方式排序
+注：当使用侧边导航栏进行关键字搜索时，会根据账号情况以及该选项采取两种不同的策略。(1)：如果账号是高级会员，则直接使用高级会员的API进行访问，此时获得的是真正的结果。(2)：如果账号不是高级会员，则会使用“发布日期倒序”的选项抓取结果后在本地排序，此时获取到的结果仅仅是发布日期倒序的前若干张排序后的结果</value>
+  </data>
+  <data name="DefaultSortOptionInfoBar.Title" xml:space="preserve">
+    <value>注意</value>
+  </data>
+  <data name="DefaultSortOptionTextBlock.Text" xml:space="preserve">
+    <value>默认排序方式</value>
+  </data>
+  <data name="DisableSNIBypassInfoBar.Message" xml:space="preserve">
+    <value>开启此选项会禁用域前置技术，开启此选项后，位于中国大陆的用户需要开启代理或另寻其他方法绕过GFW以继续使用Pixeval</value>
+  </data>
+  <data name="DisableSNIBypassInfoBar.Title" xml:space="preserve">
+    <value>注意</value>
+  </data>
+  <data name="DisableSNIBypassToggleSwitch.Header" xml:space="preserve">
+    <value>禁用域前置直连</value>
+  </data>
+  <data name="DisplayTeachingTipWhenGeneratingAppLinkToggleSwitch.Header" xml:space="preserve">
+    <value>生成应用页面链接时显示使用方法提示</value>
+  </data>
+  <data name="DonatingMeHyperlinkButton.Content" xml:space="preserve">
+    <value>支持作者</value>
+  </data>
+  <data name="DownloadConcurrencyLevelInfoBar.Message" xml:space="preserve">
+    <value>该设置项指定了同时进行的下载任务的最大数量，可以设置的最大值是你的CPU核心数，请酌情调节该值</value>
+  </data>
+  <data name="DownloadConcurrencyLevelInfoBar.Title" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="DownloadConcurrencyLevelNumberBox.PlaceholderText" xml:space="preserve">
+    <value>最大并发数</value>
+  </data>
+  <data name="DownloadConcurrencyLevelTextBlock.Text" xml:space="preserve">
+    <value>允许的最大同时下载任务数</value>
+  </data>
+  <data name="DownloadConcurrencyLevelValueNotInRangeTeachingTip.Subtitle" xml:space="preserve">
+    <value>值不得小于1或者大于你的CPU核心数</value>
+  </data>
+  <data name="DownloadConcurrencyLevelValueNotInRangeTeachingTip.Title" xml:space="preserve">
+    <value>输入的值不合法</value>
+  </data>
+  <data name="DownloadSectionSubtitleTextBlock.Text" xml:space="preserve">
+    <value>下载相关的设置</value>
+  </data>
+  <data name="ImageMirrorServerInfoBar.Message" xml:space="preserve">
+    <value>下载图片时所用的镜像站，如果你不知道这一栏怎么填写，请留空不要改动</value>
+  </data>
+  <data name="ImageMirrorServerInfoBar.Title" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="ImageMirrorServerTeachingTip.Subtitle" xml:space="preserve">
+    <value>镜像服务器要求填写合法的主机名或带有协议的URL，如果你不清楚该填写什么，请在这一栏留空</value>
+  </data>
+  <data name="ImageMirrorServerTeachingTip.Title" xml:space="preserve">
+    <value>主机名不正确</value>
+  </data>
+  <data name="ImageMirrorServerTextBlock.Text" xml:space="preserve">
+    <value>图片镜像站的主机名</value>
+  </data>
+  <data name="ImageMirrorServerTextBox.PlaceholderText" xml:space="preserve">
+    <value>主机名</value>
+  </data>
+  <data name="InformationPanelHeaderTextBlock.Text" xml:space="preserve">
+    <value>Pixeval</value>
+  </data>
+  <data name="JoinFeedbackGroupHyperlinkButton.Content" xml:space="preserve">
+    <value>加入反馈群聊</value>
+  </data>
+  <data name="LogoutButtonContentTextBlock.Text" xml:space="preserve">
+    <value>登出</value>
+  </data>
+  <data name="PageLimitForSearchInfoBar.Message" xml:space="preserve">
+    <value>在使用侧边导航栏进行关键字搜索时，最多会搜索该设置项指定的页数，其中对于插画作品，每页包含30条结果，对于小说</value>
+  </data>
+  <data name="PageLimitForSearchInfoBar.Title" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="PageLimitForSearchNumberBox.PlaceholderText" xml:space="preserve">
+    <value>关键字搜索页数限制</value>
+  </data>
+  <data name="PageLimitForSearchNumberBoxValueNotInRangeTeachingTip.Subtitle" xml:space="preserve">
+    <value>值必须位于[1,100]内</value>
+  </data>
+  <data name="PageLimitForSearchNumberBoxValueNotInRangeTeachingTip.Title" xml:space="preserve">
+    <value>输入的值不合法</value>
+  </data>
+  <data name="PageLimitForSearchTextBlock.Text" xml:space="preserve">
+    <value>最大搜索页数限制</value>
+  </data>
+  <data name="PreLoadRowsInfoBar.Message" xml:space="preserve">
+    <value>浏览插画时会根据此值提前加载几行插画，提升浏览插画时的流畅度，但会增加网络和资源占用。</value>
+  </data>
+  <data name="PreLoadRowsInfoBar.Title" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="PreLoadRowsNumberBox.PlaceholderText" xml:space="preserve">
+    <value>预加载行数限制</value>
+  </data>
+  <data name="PreLoadRowsNumberBoxValueNotInRangeTeachingTip.Subtitle" xml:space="preserve">
+    <value>值必须位于[1,15]内</value>
+  </data>
+  <data name="PreLoadRowsNumberBoxValueNotInRangeTeachingTip.Title" xml:space="preserve">
+    <value>输入的值不合法</value>
+  </data>
+  <data name="PreLoadRowsTextBlock.Text" xml:space="preserve">
+    <value>预加载行数限制</value>
+  </data>
+  <data name="PageLimitForSpotlightInfoBar.Message" xml:space="preserve">
+    <value>在搜索特辑时，最多会搜索该设置项指定的页数，其中每一页包含10条结果</value>
+  </data>
+  <data name="PageLimitForSpotlightInfoBar.Title" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="PageLimitForSpotlightNumberBox.PlaceholderText" xml:space="preserve">
+    <value>页码</value>
+  </data>
+  <data name="PageLimitForSpotlightNumberBoxValueNotInRangeTeachingTip.Subtitle" xml:space="preserve">
+    <value>该值不能大于100</value>
+  </data>
+  <data name="PageLimitForSpotlightNumberBoxValueNotInRangeTeachingTip.Title" xml:space="preserve">
+    <value>输入的值不合法</value>
+  </data>
+  <data name="PageLimitForSpotlightTextBlock.Text" xml:space="preserve">
+    <value>特辑搜索页数限制</value>
+  </data>
+  <data name="RecommendsItemsLimitInfoBar.Message" xml:space="preserve">
+    <value>该选项指示在使用Pixeval的“每日推荐”一栏时搜索作品的数量限制</value>
+  </data>
+  <data name="RecommendsItemsLimitInfoBar.Title" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="RecommendsItemsLimitNumberBox.PlaceholderText" xml:space="preserve">
+    <value>作品数限制</value>
+  </data>
+  <data name="RecommendsItemsLimitNumberBoxValueNotInRangeTeachingTip.Subtitle" xml:space="preserve">
+    <value>值必须位于[500,1500]之间</value>
+  </data>
+  <data name="RecommendsItemsLimitNumberBoxValueNotInRangeTeachingTip.Title" xml:space="preserve">
+    <value>输入的值不合法</value>
+  </data>
+  <data name="RecommendsItemsLimitTextBlock.Text" xml:space="preserve">
+    <value>每日推荐作品数限制</value>
+  </data>
+  <data name="SearchKeywordMatchOptionComboBox.PlaceholderText" xml:space="preserve">
+    <value>匹配模式</value>
+  </data>
+  <data name="SearchKeywordMatchOptionInfoBar.Message" xml:space="preserve">
+    <value>在使用侧边导航栏进行关键字搜索时，会使用该选项中对应的匹配方式来与Pixiv数据库中的作品匹配</value>
+  </data>
+  <data name="SearchKeywordMatchOptionInfoBar.Title" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="SearchKeywordMatchOptionTextBlock.Text" xml:space="preserve">
+    <value>搜索时的关键字匹配选项</value>
+  </data>
+  <data name="SearchStartsFromPageNumberInfoBar.Message" xml:space="preserve">
+    <value>在使用侧边导航栏进行关键字搜索时，会从该设置项指定的页数开始搜索，其中对于插画作品，每页包含30条结果，对于小说</value>
+  </data>
+  <data name="SearchStartsFromPageNumberInfoBar.Title" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="SearchStartsFromPageNumberNumberBox.PlaceholderText" xml:space="preserve">
+    <value>页码</value>
+  </data>
+  <data name="SearchStartsFromPageNumberNumberBoxValueNotInRangeTeachingTip.Subtitle" xml:space="preserve">
+    <value>该值不能大于150</value>
+  </data>
+  <data name="SearchStartsFromPageNumberNumberBoxValueNotInRangeTeachingTip.Title" xml:space="preserve">
+    <value>输入的值不合法</value>
+  </data>
+  <data name="SearchStartsFromPageNumberTextBlock.Text" xml:space="preserve">
+    <value>从第几页开始搜索作品</value>
+  </data>
+  <data name="SendFeedbackHyperlinkButton.Content" xml:space="preserve">
+    <value>通过邮件向作者反馈</value>
+  </data>
+  <data name="SensitiveTagInfoBar.Message" xml:space="preserve">
+    <value>在使用Pixeval时，任何包含如下文本框中的Tag的作品都会被排除在外，不计入搜索结果中</value>
+  </data>
+  <data name="SensitiveTagInfoBar.Title" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="SensitiveTagTextBlock.Text" xml:space="preserve">
+    <value>要被排除的敏感词Tag</value>
+  </data>
+  <data name="SensitiveTagTokenizingTextBox.PlaceholderText" xml:space="preserve">
+    <value>添加Tag，按回车确认</value>
+  </data>
+  <data name="SwitchSensitiveContentFilteringInfoBar.Message" xml:space="preserve">
+    <value>开启该选项后，任何搜索结果(不仅仅是关键字搜索)都不会包含敏感内容(R-18以及R-18G，您可以在设置中自行添加敏感词tag)</value>
+  </data>
+  <data name="SwitchSensitiveContentFilteringInfoBar.Title" xml:space="preserve">
+    <value>注意</value>
+  </data>
+  <data name="SwitchSensitiveContentFilteringInfoBarActionButton.Content" xml:space="preserve">
+    <value>设置自定义敏感词</value>
+  </data>
+  <data name="SwitchSensitiveContentFilteringToggleSwitch.Header" xml:space="preserve">
+    <value>过滤敏感内容(R-18以及R-18G)</value>
+  </data>
+  <data name="TargetFilterComboBox.PlaceholderText" xml:space="preserve">
+    <value>API平台</value>
+  </data>
+  <data name="TargetFilterInfoBar.Message" xml:space="preserve">
+    <value>该选项指示Pixeval将会使用哪个平台的API接口，如果不知道如何选择请保持默认设置不变</value>
+  </data>
+  <data name="TargetFilterInfoBar.Title" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="TargetFilterTextBlock.Text" xml:space="preserve">
+    <value>使用的API平台</value>
+  </data>
+  <data name="TitleTextBlock.Text" xml:space="preserve">
+    <value>Pixeval设置</value>
+  </data>
+  <data name="UseCacheInfoBar.Message" xml:space="preserve">
+    <value>开启缓存后，网络流量消耗会减少，浏览体验会有相应提升，但是CPU占用以及文件IO将会增加</value>
+  </data>
+  <data name="UseCacheInfoBar.Title" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="UseCacheToggleSwitch.Header" xml:space="preserve">
+    <value>使用文件缓存</value>
+  </data>
+  <data name="ViewPixevalProjectRepositoryHyperlinkButton.Content" xml:space="preserve">
+    <value>查看Pixeval的开源仓库</value>
+  </data>
+  <data name="ViewPixevalWebSiteHyperlinkButton.Content" xml:space="preserve">
+    <value>查看Pixeval网页</value>
+  </data>
+  <data name="ThumbnailDirectionTextBlock.Text" xml:space="preserve">
+    <value>缩略图方向</value>
+  </data>
+</root>

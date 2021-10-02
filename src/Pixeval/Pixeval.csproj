@@ -19,6 +19,7 @@
       <NeutralLanguage>zh-CN</NeutralLanguage>
       <AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Release'">true</AppxPackageSigningEnabled>
       <AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Debug'">false</AppxPackageSigningEnabled>
+      <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
    </PropertyGroup>
    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       <DefineConstants>TRACE;DEBUG</DefineConstants>
@@ -53,7 +54,6 @@
       <Content Remove="Strings\zh-CN\Misc.resw" />
       <Content Remove="Strings\zh-CN\RecommendationsPage.resw" />
       <Content Remove="Strings\zh-CN\RankingsPage.resw" />
-      <Content Remove="Strings\zh-CN\SettingsPage.resw" />
    </ItemGroup>
    <ItemGroup>
       <None Remove="Assets\Certs\pixeval_server_cert.pfx" />
@@ -62,8 +62,12 @@
       <None Remove="Assets\Images\logo44x44.ico" />
       <None Remove="Controls\Card\CardControl.xaml" />
       <None Remove="Controls\Expander\Expander.xaml" />
+      <None Remove="Controls\Setting.UI\ActionableSettingEntry\ActionableSettingEntry.xaml" />
+      <None Remove="Controls\Setting.UI\ExpanderSettingEntry\ExpanderSettingEntry.xaml" />
+      <None Remove="Controls\Setting.UI\SettingsGroup\SettingsGroup.xaml" />
       <None Remove="Controls\Setting.UI\SingleSelectionSettingEntry\SingleSelectionSettingEntry.xaml" />
-      <None Remove="Controls\Setting.UI\UserControls\ActionableSettingEntry.xaml" />
+      <None Remove="Controls\Setting.UI\SliderSettingEntry\SliderSettingEntry.xaml" />
+      <None Remove="Controls\Setting.UI\SwitchSettingEntry\SwitchSettingEntry.xaml" />
       <None Remove="Controls\Setting.UI\UserControls\SettingEntryHeader.xaml" />
       <None Remove="Pages\Capability\RecentPostsPage.xaml" />
       <None Remove="Pages\Capability\SearchResultsPage.xaml" />
@@ -82,7 +86,6 @@
       <None Remove="Strings\zh-CN\RankingsPage.resw" />
       <None Remove="Strings\zh-CN\RecentPostsPage.resw" />
       <None Remove="Strings\zh-CN\RecommendationsPage.resw" />
-      <None Remove="Strings\zh-CN\SettingsPage.resw" />
       <None Remove="Package.appxmanifest" />
       <None Remove="Pages\BookMarksPage.xaml" />
       <None Remove="Pages\Capability\NavigationPage.xaml" />
@@ -94,6 +97,8 @@
       <None Remove="Pages\ImageViewerPage.xaml" />
       <None Remove="Pages\RecommendationPage.xaml" />
       <None Remove="Pages\SettingsPage.xaml" />
+      <None Remove="Strings\zh-CN\SettingsPage.resw" />
+      <None Remove="Strings\zh-CN\SettingsPageBackup.resw" />
       <None Remove="Strings\zh-CN\SortOptionComboBox.resw" />
       <None Remove="Themes\Card.xaml" />
       <None Remove="Themes\Controls.xaml" />
@@ -235,6 +240,7 @@
       <PRIResource Include="Strings\zh-CN\RecommendationsPage.resw" />
       <PRIResource Include="Strings\zh-CN\PixivReplyBar.resw" />
       <PRIResource Include="Strings\zh-CN\SettingsPage.resw" />
+      <PRIResource Include="Strings\zh-CN\SettingsPageBackup.resw" />
       <PRIResource Include="Strings\zh-CN\SortOptionComboBox.resw" />
    </ItemGroup>
    <ItemGroup>
@@ -243,17 +249,37 @@
       </Content>
    </ItemGroup>
    <ItemGroup>
+     <Page Update="Controls\Setting.UI\ExpanderSettingEntry\ExpanderSettingEntry.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+   </ItemGroup>
+   <ItemGroup>
+     <Page Update="Controls\Setting.UI\ActionableSettingEntry\ActionableSettingEntry.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+   </ItemGroup>
+   <ItemGroup>
+     <Page Update="Controls\Setting.UI\SettingsGroup\SettingsGroup.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+   </ItemGroup>
+   <ItemGroup>
+     <Page Update="Controls\Setting.UI\SliderSettingEntry\SliderSettingEntry.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+   </ItemGroup>
+   <ItemGroup>
+     <Page Update="Controls\Setting.UI\SwitchSettingEntry\SwitchSettingEntry.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+   </ItemGroup>
+   <ItemGroup>
      <Page Update="Controls\Expander\Expander.xaml">
        <Generator>MSBuild:Compile</Generator>
      </Page>
    </ItemGroup>
    <ItemGroup>
      <Page Update="Controls\Setting.UI\SingleSelectionSettingEntry\SingleSelectionSettingEntry.xaml">
-       <Generator>MSBuild:Compile</Generator>
-     </Page>
-   </ItemGroup>
-   <ItemGroup>
-     <Page Update="Controls\Setting.UI\UserControls\ActionableSettingEntry.xaml">
        <Generator>MSBuild:Compile</Generator>
      </Page>
    </ItemGroup>

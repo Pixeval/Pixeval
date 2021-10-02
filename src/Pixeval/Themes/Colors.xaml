@@ -14,13 +14,15 @@
             <SolidColorBrush x:Key="PixevalTipTextForeground"
                              Color="#999AA1" />
             <SolidColorBrush x:Key="CardBackground"
-                             Color="#FBFBFB" />
+                             Color="#FAFCFD" />
             <SolidColorBrush x:Key="CardStrokeBrush"
                              Color="#0F000000" />
             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush"
                              Color="#F3F3F3" />
             <SolidColorBrush x:Key="ExpanderContentBackground"
-                             Color="#F4F4F4" />
+                             Color="#FAFCFD" />
+            <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground"
+                             Color="#F6F6F6" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
             <AcrylicBrush x:Key="PixevalAppAcrylicBrush"
@@ -35,13 +37,15 @@
             <SolidColorBrush x:Key="PixevalTipTextForeground"
                              Color="#999AA1" />
             <SolidColorBrush x:Key="CardBackground"
-                             Color="#FBFBFB" />
+                             Color="#FAFCFD" />
             <SolidColorBrush x:Key="CardStrokeBrush"
                              Color="#0F000000" />
             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush"
                              Color="#F3F3F3" />
             <SolidColorBrush x:Key="ExpanderContentBackground"
-                             Color="#F4F4F4" />
+                             Color="#FAFCFD" />
+            <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground"
+                             Color="#F6F6F6" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
             <AcrylicBrush x:Key="PixevalAppAcrylicBrush"
@@ -56,13 +60,15 @@
             <SolidColorBrush x:Key="PixevalTipTextForeground"
                              Color="#828492" />
             <SolidColorBrush x:Key="CardBackground"
-                             Color="#2B2B2B" />
+                             Color="#2B2A2F" />
             <SolidColorBrush x:Key="CardStrokeBrush"
                              Color="#19000000" />
             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush"
                              Color="#202020" />
             <SolidColorBrush x:Key="ExpanderContentBackground"
-                             Color="#272727" />
+                             Color="#2B2A2F" />
+            <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground"
+                             Color="#323232" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast">
             <SolidColorBrush x:Key="PixevalAppAcrylicBrush"
@@ -80,7 +86,9 @@
             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush"
                              Color="#202020" />
             <SolidColorBrush x:Key="ExpanderContentBackground"
-                             Color="#272727" />
+                             Color="#2B2A2F" />
+            <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground"
+                             Color="#323232" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

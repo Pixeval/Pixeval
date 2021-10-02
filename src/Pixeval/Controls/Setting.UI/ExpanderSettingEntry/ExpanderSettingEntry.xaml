@@ -1,14 +1,9 @@
-﻿<!--  ReSharper disable  Xaml.ConstructorWarning  -->
-<!--  ReSharper disable MarkupAttributeTypo  -->
-
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:expander="using:Pixeval.Controls.Expander"
-                    xmlns:local="using:Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry"
+                    xmlns:local="using:Pixeval.Controls.Setting.UI.ExpanderSettingEntry"
                     xmlns:userControls="using:Pixeval.Controls.Setting.UI.UserControls">
-    <Thickness x:Key="RadioButtonMargin">10,5</Thickness>
-    <x:Double x:Key="RadioButtonHeight">35</x:Double>
-    <Style TargetType="local:SingleSelectionSettingEntry">
+    <Style TargetType="local:ExpanderSettingEntry">
         <Setter Property="CornerRadius" Value="{ThemeResource CardCornerRadius}" />
         <Setter Property="Background" Value="{ThemeResource CardBackground}" />
         <Setter Property="IsTabStop" Value="False" />
@@ -17,7 +12,7 @@
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="local:SingleSelectionSettingEntry">
+                <ControlTemplate TargetType="local:ExpanderSettingEntry">
                     <expander:Expander x:Name="EntryExpander"
                                        HorizontalContentAlignment="Left"
                                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
@@ -30,16 +25,11 @@
                                                              Header="{TemplateBinding Header}"
                                                              Icon="{TemplateBinding Icon}" />
                         </expander:Expander.Header>
-                        <RadioButtons x:Name="SelectorRadioButtons"
-                                      Margin="{StaticResource RadioButtonMargin}"
-                                      ItemsSource="{TemplateBinding ItemsSource}">
-                            <RadioButtons.ItemTemplate>
-                                <DataTemplate>
-                                    <RadioButton Height="{StaticResource RadioButtonHeight}"
-                                                 Content="{Binding StringRepresentation}" />
-                                </DataTemplate>
-                            </RadioButtons.ItemTemplate>
-                        </RadioButtons>
+                        <ContentPresenter HorizontalAlignment="Stretch"
+                                          VerticalAlignment="Stretch"
+                                          HorizontalContentAlignment="Stretch"
+                                          VerticalContentAlignment="Stretch"
+                                          Content="{TemplateBinding Content}" />
                     </expander:Expander>
                 </ControlTemplate>
             </Setter.Value>

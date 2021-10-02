@@ -5,26 +5,35 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d">
 
-    <StackPanel>
-        <TextBlock x:Name="HeaderTextBlock"
-                   FontSize="{StaticResource PixevalContentFontSize}" />
-        <ContentPresenter x:Name="DescriptionPresenter"
-                          Margin="0,3,0,0"
-                          FontSize="{StaticResource PixevalSubscriptFontSize}"
-                          TextWrapping="WrapWholeWords">
-            <ContentPresenter.Resources>
-                <Style BasedOn="{StaticResource CaptionTextBlockStyle}"
-                       TargetType="TextBlock">
-                    <Setter Property="TextWrapping" Value="WrapWholeWords" />
-                    <Setter Property="FontSize" Value="{StaticResource PixevalSubscriptFontSize}" />
-                    <Setter Property="Foreground" Value="{ThemeResource PixevalTipTextForeground}" />
-                </Style>
-                <Style BasedOn="{StaticResource TextBlockButtonStyle}"
-                       TargetType="HyperlinkButton">
-                    <Setter Property="FontSize" Value="{StaticResource PixevalSubscriptFontSize}" />
-                    <Setter Property="Padding" Value="0,0,0,0" />
-                </Style>
-            </ContentPresenter.Resources>
-        </ContentPresenter>
+    <StackPanel Orientation="Horizontal">
+        <ContentPresenter x:Name="IconContentPresenter"
+                          Width="50"
+                          VerticalAlignment="Center"
+                          Visibility="Collapsed" />
+        <StackPanel VerticalAlignment="Center">
+            <TextBlock x:Name="HeaderTextBlock"
+                       HorizontalAlignment="Left"
+                       FontSize="{StaticResource PixevalContentFontSize}"
+                       TextWrapping="WrapWholeWords" />
+            <ContentPresenter x:Name="DescriptionPresenter"
+                              Margin="0,3,0,0"
+                              HorizontalAlignment="Left"
+                              FontSize="{StaticResource PixevalSubscriptFontSize}"
+                              TextWrapping="WrapWholeWords">
+                <ContentPresenter.Resources>
+                    <Style BasedOn="{StaticResource CaptionTextBlockStyle}"
+                           TargetType="TextBlock">
+                        <Setter Property="TextWrapping" Value="WrapWholeWords" />
+                        <Setter Property="FontSize" Value="{StaticResource PixevalSubscriptFontSize}" />
+                        <Setter Property="Foreground" Value="{ThemeResource PixevalTipTextForeground}" />
+                    </Style>
+                    <Style BasedOn="{StaticResource TextBlockButtonStyle}"
+                           TargetType="HyperlinkButton">
+                        <Setter Property="FontSize" Value="{StaticResource PixevalSubscriptFontSize}" />
+                        <Setter Property="Padding" Value="0,0,0,0" />
+                    </Style>
+                </ContentPresenter.Resources>
+            </ContentPresenter>
+        </StackPanel>
     </StackPanel>
 </UserControl>

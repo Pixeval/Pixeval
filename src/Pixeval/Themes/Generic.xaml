@@ -2,5 +2,11 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///Controls/Card/CardControl.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/Expander/Expander.xaml" />
+        <ResourceDictionary Source="ms-appx:///Controls/Setting.UI/SingleSelectionSettingEntry/SingleSelectionSettingEntry.xaml" />
+        <ResourceDictionary Source="ms-appx:///Controls/Setting.UI/SwitchSettingEntry/SwitchSettingEntry.xaml" />
+        <ResourceDictionary Source="ms-appx:///Controls/Setting.UI/SliderSettingEntry/SliderSettingEntry.xaml" />
+        <ResourceDictionary Source="ms-appx:///Controls/Setting.UI/SettingsGroup/SettingsGroup.xaml" />
+        <ResourceDictionary Source="ms-appx:///Controls/Setting.UI/ExpanderSettingEntry/ExpanderSettingEntry.xaml" />
+        <ResourceDictionary Source="ms-appx:///Controls/Setting.UI/ActionableSettingEntry/ActionableSettingEntry.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
