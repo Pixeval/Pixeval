@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ui="using:Windows.UI">
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Default">
             <AcrylicBrush x:Key="PixevalAppAcrylicBrush"
@@ -19,10 +20,12 @@
                              Color="#0F000000" />
             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush"
                              Color="#F3F3F3" />
-            <SolidColorBrush x:Key="ExpanderContentBackground"
-                             Color="#FAFCFD" />
+            <ui:Color x:Key="ExpanderHeaderCardPointerOverBackgroundColor">#F6F6F6</ui:Color>
+            <ui:Color x:Key="ExpanderContentBackgroundColor">#FAFCFD</ui:Color>
             <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground"
-                             Color="#F6F6F6" />
+                             Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
+            <SolidColorBrush x:Key="ExpanderContentBackground"
+                             Color="{ThemeResource ExpanderContentBackgroundColor}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
             <AcrylicBrush x:Key="PixevalAppAcrylicBrush"
@@ -42,10 +45,12 @@
                              Color="#0F000000" />
             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush"
                              Color="#F3F3F3" />
-            <SolidColorBrush x:Key="ExpanderContentBackground"
-                             Color="#FAFCFD" />
+            <ui:Color x:Key="ExpanderHeaderCardPointerOverBackgroundColor">#F6F6F6</ui:Color>
+            <ui:Color x:Key="ExpanderContentBackgroundColor">#FAFCFD</ui:Color>
             <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground"
-                             Color="#F6F6F6" />
+                             Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
+            <SolidColorBrush x:Key="ExpanderContentBackground"
+                             Color="{ThemeResource ExpanderContentBackgroundColor}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
             <AcrylicBrush x:Key="PixevalAppAcrylicBrush"
@@ -65,10 +70,12 @@
                              Color="#19000000" />
             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush"
                              Color="#202020" />
-            <SolidColorBrush x:Key="ExpanderContentBackground"
-                             Color="#2B2A2F" />
+            <ui:Color x:Key="ExpanderHeaderCardPointerOverBackgroundColor">#323232</ui:Color>
+            <ui:Color x:Key="ExpanderContentBackgroundColor">#2B2A2F</ui:Color>
             <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground"
-                             Color="#323232" />
+                             Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
+            <SolidColorBrush x:Key="ExpanderContentBackground"
+                             Color="{ThemeResource ExpanderContentBackgroundColor}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast">
             <SolidColorBrush x:Key="PixevalAppAcrylicBrush"
@@ -85,10 +92,12 @@
                              Color="#FF0000" />
             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush"
                              Color="#202020" />
-            <SolidColorBrush x:Key="ExpanderContentBackground"
-                             Color="#2B2A2F" />
+            <ui:Color x:Key="ExpanderHeaderCardPointerOverBackgroundColor">#323232</ui:Color>
+            <ui:Color x:Key="ExpanderContentBackgroundColor">#2B2A2F</ui:Color>
             <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground"
-                             Color="#323232" />
+                             Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
+            <SolidColorBrush x:Key="ExpanderContentBackground"
+                             Color="{ThemeResource ExpanderContentBackgroundColor}" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

@@ -35,7 +35,7 @@ namespace Pixeval.Controls.Setting.UI.SwitchSettingEntry
 
         private static void IsOnChanged(DependencyObject d, object newValue)
         {
-            if (d is SwitchSettingEntry {_switch: { } sh} entry)
+            if (d is SwitchSettingEntry {_switch: { } sh})
             {
                 sh.IsOn = (bool) newValue;
             }
@@ -67,8 +67,6 @@ namespace Pixeval.Controls.Setting.UI.SwitchSettingEntry
             if ((_switch = GetTemplateChild(PartSwitch) as ToggleSwitch) is not null)
             {
                 _switch.Toggled += SwitchOnToggled;
-                _switch.OnContent = MiscResources.ToggledOn;
-                _switch.OffContent = MiscResources.ToggledOff;
             }
 
             base.OnApplyTemplate();

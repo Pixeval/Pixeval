@@ -60,8 +60,10 @@
       <None Remove="Assets\Images\empty-box.theme-dark.png" />
       <None Remove="Assets\Images\empty-box.theme-light.png" />
       <None Remove="Assets\Images\logo44x44.ico" />
+      <None Remove="Assets\Images\pixeval-mock.png" />
       <None Remove="Controls\Card\CardControl.xaml" />
       <None Remove="Controls\Expander\Expander.xaml" />
+      <None Remove="Controls\Setting.UI\ActionableExpanderSettingEntry\ActionableExpanderSettingEntry.xaml" />
       <None Remove="Controls\Setting.UI\ActionableSettingEntry\ActionableSettingEntry.xaml" />
       <None Remove="Controls\Setting.UI\ExpanderSettingEntry\ExpanderSettingEntry.xaml" />
       <None Remove="Controls\Setting.UI\SettingsGroup\SettingsGroup.xaml" />
@@ -247,6 +249,11 @@
       <Content Update="Assets\Images\logo44x44.ico">
          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </Content>
+   </ItemGroup>
+   <ItemGroup>
+     <Page Update="Controls\Setting.UI\ActionableExpanderSettingEntry\ActionableExpanderSettingEntry.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
    </ItemGroup>
    <ItemGroup>
      <Page Update="Controls\Setting.UI\ExpanderSettingEntry\ExpanderSettingEntry.xaml">

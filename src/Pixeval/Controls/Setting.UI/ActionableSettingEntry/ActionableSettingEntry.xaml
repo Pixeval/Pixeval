@@ -6,6 +6,7 @@
     <Style TargetType="local:ActionableSettingEntry">
         <Setter Property="CornerRadius" Value="{ThemeResource CardCornerRadius}" />
         <Setter Property="Background" Value="{ThemeResource CardBackground}" />
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="Height" Value="70" />
@@ -27,8 +28,7 @@
                                                              VerticalAlignment="Center"
                                                              Header="{TemplateBinding Header}"
                                                              Icon="{TemplateBinding Icon}" />
-                            <ContentPresenter x:Name="ActionContainer"
-                                              Grid.Column="1"
+                            <ContentPresenter Grid.Column="1"
                                               Margin="0,0,10,0"
                                               HorizontalAlignment="Right"
                                               VerticalAlignment="Center"

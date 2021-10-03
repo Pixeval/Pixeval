@@ -48,27 +48,43 @@ namespace Pixeval.Controls.Setting.UI
 
         private static void IconChanged(DependencyObject dependencyObject, object argsNewValue)
         {
-            if (dependencyObject is SettingEntryBase {SettingEntryHeader: { } header})
+            if (dependencyObject is SettingEntryBase entry)
             {
-                header.Margin = argsNewValue is IconElement
-                    ? new Thickness(0)
-                    : new Thickness(10, 0, 0, 0);
+                entry.IconChanged(argsNewValue);
             }
         }
 
-        private static void DescriptionChanged(DependencyObject dependencyObject, object? argsNewValue)
+        protected static void DescriptionChanged(DependencyObject dependencyObject, object? argsNewValue)
         {
-            if (dependencyObject is SettingEntryBase {SettingEntryHeader: { } header})
+            if (dependencyObject is SettingEntryBase entry)
             {
-                if (argsNewValue is UIElement element)
+                entry.DescriptionChanged(argsNewValue);
+            }
+        }
+
+        protected virtual void IconChanged(object? newValue)
+        {
+            if (SettingEntryHeader is not null)
+            {
+                SettingEntryHeader.Margin = newValue is IconElement
+                    ? new Thickness(0)
+                    : new Thickness(10, 0, 10, 0);
+            }
+        }
+
+        public virtual void DescriptionChanged(object? newValue)
+        {
+            if (SettingEntryHeader is not null)
+            {
+                if (newValue is UIElement element)
                 {
-                    header.Description = element;
+                    SettingEntryHeader.Description = element;
                     return;
                 }
 
-                header.Description = new TextBlock
+                SettingEntryHeader.Description = new TextBlock
                 {
-                    Text = argsNewValue?.ToString() ?? string.Empty
+                    Text = newValue?.ToString() ?? string.Empty
                 };
             }
         }

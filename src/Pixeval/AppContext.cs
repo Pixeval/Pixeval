@@ -48,6 +48,8 @@ namespace Pixeval
 
         public const string AppProtocol = "pixeval";
 
+        public static readonly AppVersion AppVersion = new(IterationStage.Alpha, 0, 1, 0, 1);
+
         private const string SessionContainerKey = "Session";
 
         private const string ConfigurationContainerKey = "Config";
@@ -274,6 +276,8 @@ namespace Pixeval
                 ConfigurationContainer.Values[nameof(AppSetting.WindowWidth)] = appSetting.WindowWidth;
                 ConfigurationContainer.Values[nameof(AppSetting.WindowHeight)] = appSetting.WindowHeight;
                 ConfigurationContainer.Values[nameof(AppSetting.ThumbnailDirection)] = appSetting.ThumbnailDirection.CastOrThrow<int>();
+                ConfigurationContainer.Values[nameof(AppSetting.LastCheckedUpdate)] = appSetting.LastCheckedUpdate;
+                ConfigurationContainer.Values[nameof(AppSetting.DownloadUpdateAutomatically)] = appSetting.DownloadUpdateAutomatically;
             }
         }
 
@@ -325,7 +329,9 @@ namespace Pixeval
                     ConfigurationContainer.Values[nameof(AppSetting.UseFileCache)].CastOrThrow<bool>(),
                     ConfigurationContainer.Values[nameof(AppSetting.WindowWidth)].CastOrThrow<int>(),
                     ConfigurationContainer.Values[nameof(AppSetting.WindowHeight)].CastOrThrow<int>(),
-                    ConfigurationContainer.Values[nameof(AppSetting.ThumbnailDirection)].CastOrThrow<ThumbnailDirection>());
+                    ConfigurationContainer.Values[nameof(AppSetting.ThumbnailDirection)].CastOrThrow<ThumbnailDirection>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.LastCheckedUpdate)].CastOrThrow<DateTimeOffset>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.DownloadUpdateAutomatically)].CastOrThrow<bool>());
             }
             catch
             {

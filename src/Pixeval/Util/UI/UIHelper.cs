@@ -250,5 +250,15 @@ namespace Pixeval.Util.UI
         {
             recipient.IsActive = false;
         }
+
+        public static void Invisible(this UIElement element)
+        {
+            element.Visibility = Visibility.Collapsed;
+        }
+
+        public static void Visible(this UIElement element)
+        {
+            element.Visibility = Visibility.Visible;
+        }
     }
 }

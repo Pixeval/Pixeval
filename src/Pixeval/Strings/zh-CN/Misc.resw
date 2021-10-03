@@ -174,12 +174,6 @@
   <data name="ThumbnailDirectionPortrait" xml:space="preserve">
     <value>纵向</value>
   </data>
-  <data name="ToggledOff" xml:space="preserve">
-    <value>已关闭</value>
-  </data>
-  <data name="ToggledOn" xml:space="preserve">
-    <value>已开启</value>
-  </data>
   <data name="UnexpectedBehavior" xml:space="preserve">
     <value>发生了未定义的行为，如果你看到了该信息，请联系开发者寻求帮助</value>
   </data>

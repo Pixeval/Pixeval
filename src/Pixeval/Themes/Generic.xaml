@@ -8,5 +8,6 @@
         <ResourceDictionary Source="ms-appx:///Controls/Setting.UI/SettingsGroup/SettingsGroup.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/Setting.UI/ExpanderSettingEntry/ExpanderSettingEntry.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/Setting.UI/ActionableSettingEntry/ActionableSettingEntry.xaml" />
+        <ResourceDictionary Source="ms-appx:///Controls/Setting.UI/ActionableExpanderSettingEntry/ActionableExpanderSettingEntry.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

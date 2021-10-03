@@ -13,8 +13,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ExpanderSettingEntry">
-                    <expander:Expander x:Name="EntryExpander"
-                                       HorizontalContentAlignment="Left"
+                    <expander:Expander HorizontalContentAlignment="Left"
                                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                        CornerRadius="{TemplateBinding CornerRadius}"
                                        HeaderHeight="{TemplateBinding HeaderHeight}">
@@ -25,7 +24,8 @@
                                                              Header="{TemplateBinding Header}"
                                                              Icon="{TemplateBinding Icon}" />
                         </expander:Expander.Header>
-                        <ContentPresenter HorizontalAlignment="Stretch"
+                        <ContentPresenter x:Name="EntryContentPresenter"
+                                          HorizontalAlignment="Stretch"
                                           VerticalAlignment="Stretch"
                                           HorizontalContentAlignment="Stretch"
                                           VerticalContentAlignment="Stretch"

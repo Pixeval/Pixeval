@@ -61,14 +61,17 @@ namespace Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry
             get => GetValue(SelectedItemProperty);
             set => SetValue(SelectedItemProperty, value);
         }
-        private static void IconChanged(DependencyObject d, object newValue)
+
+        protected override void IconChanged(object? newValue)
         {
-            if (d is SingleSelectionSettingEntry {_selectorRadioButtons: { } button})
+            if (_selectorRadioButtons is not null)
             {
-                button.Margin = newValue is IconElement
-                    ? new Thickness(50, 0, 0, 0)
-                    : new Thickness(10, 0, 0, 0);
+                _selectorRadioButtons.Margin = newValue is IconElement
+                    ? new Thickness(50, 0, 50, 0)
+                    : new Thickness(10, 0, 10, 0);
             }
+
+            base.IconChanged(newValue);
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
@@ -101,7 +104,6 @@ namespace Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry
         protected override void Update()
         {
             SelectedItemChanged(this, SelectedItem);
-            IconChanged(this, Icon);
         }
 
         protected override void OnApplyTemplate()

@@ -1,5 +1,7 @@
-﻿using Microsoft.UI.Xaml;
+﻿using CommunityToolkit.WinUI.UI;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Pixeval.Controls.Setting.UI.UserControls
 {
@@ -74,6 +76,14 @@ namespace Pixeval.Controls.Setting.UI.UserControls
         public SettingEntryHeader()
         {
             InitializeComponent();
+            Loaded += (_, _) =>
+            {
+                // Prevent the button from expanding the expander
+                if (DescriptionPresenter.Content is DependencyObject obj && obj.FindDescendantOrSelf<ButtonBase>() is { } buttonBase)
+                {
+                    buttonBase.Tapped += (_, eventArgs) => eventArgs.Handled = true;
+                }
+            };
         }
     }
 }

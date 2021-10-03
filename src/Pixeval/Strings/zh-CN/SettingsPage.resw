@@ -117,11 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AppDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Pixeval 是一个基于 Windows UI 3 开发的第三方Pixiv客户端，在保证对Pixiv绝大部分功能的支持的同时提供了大量有助于提高用户体验的额外特性，包括并不限于本地收藏夹以及中国大陆地区无需代理的浏览体验，你可以在如下的链接中找到更多有关 Pixeval 的信息</value>
+  </data>
   <data name="ApplicationSettingsGroup.Header" xml:space="preserve">
     <value>应用程序相关设置</value>
   </data>
   <data name="BrowsingExperiencesGroup.Header" xml:space="preserve">
     <value>浏览体验设置</value>
+  </data>
+  <data name="CheckForUpdateButton.Content" xml:space="preserve">
+    <value>检查更新</value>
+  </data>
+  <data name="CheckingForUpdateTextBlock.Text" xml:space="preserve">
+    <value>正在检查更新</value>
   </data>
   <data name="DefaultSearchSortOptionEntry.Description" xml:space="preserve">
     <value>在使用侧边栏关键字搜索插画时，如未指定其他则会使用改设置项所指定的选项作为排序策略</value>
@@ -141,8 +150,17 @@
   <data name="DisableDomainFrontingEntry.Header" xml:space="preserve">
     <value>禁用域前置直连</value>
   </data>
+  <data name="DonateDeveloperHyperlinkButton.Content" xml:space="preserve">
+    <value>支持作者</value>
+  </data>
   <data name="DownloadSettings.Header" xml:space="preserve">
     <value>下载设置</value>
+  </data>
+  <data name="DownloadUpdateAutomaticallyEntry.Description" xml:space="preserve">
+    <value>计费网络除外</value>
+  </data>
+  <data name="DownloadUpdateAutomaticallyEntry.Header" xml:space="preserve">
+    <value>自动下载更新</value>
   </data>
   <data name="ExcludeTagsEntry.Description" xml:space="preserve">
     <value>包含该文本框中的标签的作品将会被排除在搜索结果之外</value>
@@ -153,23 +171,23 @@
   <data name="ExcludeTagsTokenTextBox.PlaceholderText" xml:space="preserve">
     <value>请输入要排除的标签</value>
   </data>
+  <data name="FeedbackByEmailHyperlinkButton.Content" xml:space="preserve">
+    <value>邮件联系作者</value>
+  </data>
   <data name="FiltrateRestrictedContentEntry.Description" xml:space="preserve">
-    <value>R-18以及R-18G浏览设置</value>
+    <value>在Pixiv官方账号设置开启R-18内容的同时关闭该选项以浏览R-18以及R-18G内容</value>
   </data>
   <data name="FiltrateRestrictedContentEntry.Header" xml:space="preserve">
     <value>过滤敏感内容</value>
-  </data>
-  <data name="FiltrateRestrictedContentEntrySwitch.Description" xml:space="preserve">
-    <value>在Pixiv官方账号设置开启R-18内容的同时关闭该选项以浏览R-18以及R-18G内容</value>
-  </data>
-  <data name="FiltrateRestrictedContentEntrySwitch.Header" xml:space="preserve">
-    <value>敏感内容开关</value>
   </data>
   <data name="GenerateHelpLinkEntry.Description" xml:space="preserve">
     <value>该帮助提示会指示用户如何使用链接</value>
   </data>
   <data name="GenerateHelpLinkEntry.Header" xml:space="preserve">
     <value>生成页面链接时显示帮助提示</value>
+  </data>
+  <data name="GitHubRepositoryHyperlinkButton.Content" xml:space="preserve">
+    <value>GitHub 仓库</value>
   </data>
   <data name="ImageMirrorServerEntry.Description" xml:space="preserve">
     <value>下载图片时所使用的的镜像站的主机名，如果不明白是什么意思请留空</value>
@@ -179,6 +197,18 @@
   </data>
   <data name="ImageMirrorServerTextBox.PlaceholderText" xml:space="preserve">
     <value>主机名</value>
+  </data>
+  <data name="ImageMirrorServerTextBoxTeachingTip.Subtitle" xml:space="preserve">
+    <value>请检查URL格式后重新提交</value>
+  </data>
+  <data name="ImageMirrorServerTextBoxTeachingTip.Title" xml:space="preserve">
+    <value>URL格式错误</value>
+  </data>
+  <data name="JoinFeedbackGroupHyperlinkButton.Content" xml:space="preserve">
+    <value>加入反馈群</value>
+  </data>
+  <data name="LastCheckedPrefix" xml:space="preserve">
+    <value>上次检查时间：</value>
   </data>
   <data name="MaxDownloadConcurrencyLevelEntry.Description" xml:space="preserve">
     <value>该设置项指定了同时进行的下载任务的最大数量，可以设置的最大值是你的CPU核心数，请酌情调节</value>
@@ -192,6 +222,9 @@
   <data name="MaximumSearchPageLimit.Header" xml:space="preserve">
     <value>最大搜索页数限制</value>
   </data>
+  <data name="MaximumSearchPageLimitNumberBox.PlaceholderText" xml:space="preserve">
+    <value>搜索页数限制[1,100]</value>
+  </data>
   <data name="MiscGroup.Header" xml:space="preserve">
     <value>杂项</value>
   </data>
@@ -201,11 +234,20 @@
   <data name="PreloadRowsEntry.Header" xml:space="preserve">
     <value>预加载行数</value>
   </data>
-  <data name="RecommendationItemLimit.Description" xml:space="preserve">
+  <data name="RecommendationItemLimitEntry.Description" xml:space="preserve">
     <value>使用每日推荐功能时最多会返回该设置项所指定的插画数</value>
   </data>
-  <data name="RecommendationItemLimit.Header" xml:space="preserve">
+  <data name="RecommendationItemLimitEntry.Header" xml:space="preserve">
     <value>每日推荐结果数量限制</value>
+  </data>
+  <data name="RecommendationItemLimitNumberBox.PlaceholderText" xml:space="preserve">
+    <value>每日推荐数量限制[500,2500]</value>
+  </data>
+  <data name="ReleaseNotesHyperlinkButton.Content" xml:space="preserve">
+    <value>更新日志</value>
+  </data>
+  <data name="ReportBugHyperlinkButton.Content" xml:space="preserve">
+    <value>在 GitHub 上汇报问题</value>
   </data>
   <data name="SearchSettings.Header" xml:space="preserve">
     <value>搜索设置</value>
@@ -216,11 +258,17 @@
   <data name="SearchStartsFromEntry.Header" xml:space="preserve">
     <value>从第几页开始搜索</value>
   </data>
+  <data name="SearchStartsFromNumberBox.PlaceholderText" xml:space="preserve">
+    <value>从第几页开始搜索[1,150]</value>
+  </data>
   <data name="SpotlightSearchPageLimitEntry.Description" xml:space="preserve">
     <value>在搜索特辑时，最多会搜索该设置项所指定的页数，其中每一页包含10条结果</value>
   </data>
   <data name="SpotlightSearchPageLimitEntry.Header" xml:space="preserve">
     <value>特辑搜索页数限制</value>
+  </data>
+  <data name="SpotlightSearchPageLimitNumberBox.PlaceholderText" xml:space="preserve">
+    <value>特辑搜索页数限制[1,100]</value>
   </data>
   <data name="TargetAPIPlatformEntry.Description" xml:space="preserve">
     <value>指定发送请求时使用哪个平台对应的API，如果不知道这是什么意思请保持默认</value>
@@ -232,7 +280,7 @@
     <value>应用程序主题(重启应用后完全生效)</value>
   </data>
   <data name="ThemeEntryDescriptionHyperlinkButton.Content" xml:space="preserve">
-    <value>打开Windows系统主题设置</value>
+    <value>打开 Windows 系统主题设置</value>
   </data>
   <data name="ThumbnailDirectionEntry.Description" xml:space="preserve">
     <value>指示浏览图片列表时图片的长宽比</value>
@@ -240,10 +288,19 @@
   <data name="ThumbnailDirectionEntry.Header" xml:space="preserve">
     <value>缩略图方向</value>
   </data>
+  <data name="TitleTextBlock.Text" xml:space="preserve">
+    <value>Pixeval设置</value>
+  </data>
   <data name="UseFileCacheEntry.Description" xml:space="preserve">
     <value>开启此选项后网络流量消耗会减少，浏览体验会有相应提升，但CPU占用以及文件IO将会增加</value>
   </data>
   <data name="UseFileCacheEntry.Header" xml:space="preserve">
     <value>使用文件缓存</value>
+  </data>
+  <data name="VersionSettingsGroup.Header" xml:space="preserve">
+    <value>版本</value>
+  </data>
+  <data name="ViewPixevalWebsiteHyperlinkButton.Content" xml:space="preserve">
+    <value>介绍网页</value>
   </data>
 </root>

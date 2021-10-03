@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Options;
-using Pixeval.Util.Generic;
 
-namespace Pixeval.ViewModel
+namespace Pixeval.Controls.Setting.UI
 {
     public class SettingsPageViewModel : ObservableObject
     {
@@ -17,38 +16,9 @@ namespace Pixeval.ViewModel
             _appSetting = appSetting;
         }
 
-        public static readonly IEnumerable<ApplicationTheme> AvailableApplicationThemes = Enum.GetValues<ApplicationTheme>();
-
-        public static readonly IEnumerable<ThumbnailDirection> AvailableThumbnailDirections = Enum.GetValues<ThumbnailDirection>();
-
-        public IllustrationSortOptionWrapper BoxSortOption()
+        public string GetLastUpdateCheckDisplayString(DateTimeOffset lastChecked)
         {
-            return IllustrationSortOptionWrapper.AvailableOptions().Of(DefaultSortOption);
-        }
-
-        public void UnboxSortOption(object wrapper)
-        {
-            DefaultSortOption = ((IllustrationSortOptionWrapper) wrapper).Value;
-        }
-
-        public SearchTagMatchOptionWrapper BoxSearchTagMatchOption()
-        {
-            return SearchTagMatchOptionWrapper.AvailableOptions().Of(TagMatchOption);
-        }
-
-        public void UnboxSearchTagMatchOption(object wrapper)
-        {
-            TagMatchOption = ((SearchTagMatchOptionWrapper) wrapper).Value;
-        }
-
-        public TargetFilterWrapper BoxTargetFilter()
-        {
-            return TargetFilterWrapper.AvailableOptions().Of(TargetFilter);
-        }
-
-        public void UnboxTargetFilter(object wrapper)
-        {
-            TargetFilter = ((TargetFilterWrapper) wrapper).Value;
+            return $"{SettingsPageResources.LastCheckedPrefix}{lastChecked.ToString(CultureInfo.CurrentUICulture)}";
         }
 
         public ApplicationTheme Theme
@@ -159,6 +129,18 @@ namespace Pixeval.ViewModel
         {
             get => _appSetting.ThumbnailDirection;
             set => SetProperty(_appSetting.ThumbnailDirection, value, _appSetting, (settings, value) => settings.ThumbnailDirection = value);
+        }
+
+        public DateTimeOffset LastCheckedUpdate
+        {
+            get => _appSetting.LastCheckedUpdate;
+            set => SetProperty(_appSetting.LastCheckedUpdate, value, _appSetting, (settings, value) => settings.LastCheckedUpdate = value);
+        }
+
+        public bool DownloadUpdateAutomatically
+        {
+            get => _appSetting.DownloadUpdateAutomatically;
+            set => SetProperty(_appSetting.DownloadUpdateAutomatically, value, _appSetting, (settings, value) => settings.DownloadUpdateAutomatically = value);
         }
     }
 }

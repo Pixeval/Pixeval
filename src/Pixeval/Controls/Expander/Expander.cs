@@ -147,6 +147,7 @@ namespace Pixeval.Controls.Expander
         private void HeaderCardContainerOnTapped(object sender, TappedRoutedEventArgs e)
         {
             IsExpanded = !IsExpanded;
+            e.Handled = true;
         }
 
         private void RootPanelOnPointerExited(object sender, PointerRoutedEventArgs e)
@@ -164,6 +165,7 @@ namespace Pixeval.Controls.Expander
         private void ExpandSwitchButtonOnTapped(object sender, TappedRoutedEventArgs e)
         {
             IsExpanded = !IsExpanded;
+            e.Handled = true;
         }
     }
 }

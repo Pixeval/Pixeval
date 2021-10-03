@@ -15,4 +15,9 @@
         <Setter Property="FontWeight" Value="600" />
         <Setter Property="FontSize" Value="14" />
     </Style>
+    <Style x:Key="TitleTextBlockStyle"
+           TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="600" />
+        <Setter Property="FontSize" Value="28" />
+    </Style>
 </ResourceDictionary>

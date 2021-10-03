@@ -95,6 +95,10 @@ namespace Pixeval
 
         public ThumbnailDirection ThumbnailDirection { get; set; }
 
+        public DateTimeOffset LastCheckedUpdate { get; set; }
+
+        public bool DownloadUpdateAutomatically { get; set; }
+
         public AppSetting(
             ApplicationTheme theme,
             ObservableCollection<string> excludeTags,
@@ -114,7 +118,9 @@ namespace Pixeval
             bool useFileCache,
             int windowWidth, 
             int windowHeight,
-            ThumbnailDirection thumbnailDirection)
+            ThumbnailDirection thumbnailDirection, 
+            DateTimeOffset lastCheckedUpdate, 
+            bool downloadUpdateAutomatically)
         {
             Theme = theme;
             ExcludeTags = excludeTags;
@@ -135,6 +141,8 @@ namespace Pixeval
             WindowWidth = windowWidth;
             WindowHeight = windowHeight;
             ThumbnailDirection = thumbnailDirection;
+            LastCheckedUpdate = lastCheckedUpdate;
+            DownloadUpdateAutomatically = downloadUpdateAutomatically;
         }
 
         public static AppSetting CreateDefault()
@@ -159,7 +167,9 @@ namespace Pixeval
                 false,
                 width,
                 height,
-                ThumbnailDirection.Portrait);
+                ThumbnailDirection.Portrait, 
+                DateTimeOffset.MinValue, 
+                false);
         }
 
         public MakoClientConfiguration ToMakoClientConfiguration()
