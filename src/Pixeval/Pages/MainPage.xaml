@@ -4,6 +4,7 @@
       xmlns:controls="using:Pixeval.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:model="using:Pixeval.CoreApi.Model"
       xmlns:ui="using:Pixeval.Util.UI"
       xmlns:viewModel="using:Pixeval.ViewModel"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -22,7 +23,26 @@
         <NavigationView.AutoSuggestBox>
             <AutoSuggestBox x:Uid="/MainPage/MainPageAutoSuggestionBox"
                             QueryIcon="Find"
-                            QuerySubmitted="AutoSuggestBox_QuerySubmitted" />
+                            QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
+                            TextChanged="KeywordAutoSuggestBox_OnTextChanged">
+                <AutoSuggestBox.ItemTemplate>
+                    <DataTemplate x:DataType="model:Tag">
+                        <Grid Height="50"
+                              VerticalAlignment="Center">
+                            <StackPanel Spacing="3">
+                                <TextBlock FontSize="{StaticResource PixevalContentFontSize}"
+                                           Text="{x:Bind Name}"
+                                           TextWrapping="WrapWholeWords" />
+                                <TextBlock FontSize="{StaticResource PixevalSubscriptFontSize}"
+                                           Foreground="{ThemeResource PixevalTipTextForeground}"
+                                           Text="{x:Bind TranslatedName}"
+                                           TextWrapping="WrapWholeWords" />
+                            </StackPanel>
+                        </Grid>
+
+                    </DataTemplate>
+                </AutoSuggestBox.ItemTemplate>
+            </AutoSuggestBox>
         </NavigationView.AutoSuggestBox>
         <NavigationView.PaneCustomContent>
             <controls:IconButton x:Uid="/MainPage/OpenSearchSettingPopupButton"

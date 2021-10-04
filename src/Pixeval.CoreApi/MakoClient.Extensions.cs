@@ -52,6 +52,11 @@ namespace Pixeval.CoreApi
             return (await Resolve<IAppApiEndPoint>().GetSingleAsync(id).ConfigureAwait(false)).Illust!;
         }
 
+        public async Task<IEnumerable<Tag>> GetAutoCompletionForKeyword(string word)
+        {
+            return (await Resolve<IAppApiEndPoint>().GetAutoCompletionAsync(new AutoCompletionRequest(word))).Tags!;
+        }
+
         public async Task<User.Info> GetUserFromIdAsync(string id, TargetFilter targetFilter)
         {
             EnsureNotCancelled();

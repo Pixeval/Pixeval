@@ -77,10 +77,19 @@ namespace Pixeval.Pages
         }
 
         // 搜索并跳转至搜索结果
-        private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        private void KeywordAutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             MainPageRootNavigationView.SelectedItem = null;
             MainPageRootFrame.Navigate(typeof(SearchResultsPage), App.AppViewModel.MakoClient.Search(args.QueryText));
+        }
+
+        private async void KeywordAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (sender.Text is {Length: > 0} keyword)
+            {
+                var suggestions = await App.AppViewModel.MakoClient.GetAutoCompletionForKeyword(keyword);
+                
+            }
         }
     }
 }

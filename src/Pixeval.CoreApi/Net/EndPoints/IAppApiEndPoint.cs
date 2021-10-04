@@ -60,5 +60,8 @@ namespace Pixeval.CoreApi.Net.EndPoints
 
         [Post("/v1/illust/comment/delete")]
         Task DeleteCommentAsync([Body(BodySerializationMethod.UrlEncoded)] DeleteCommentRequest request);
+
+        [Get("/v2/search/autocomplete")]
+        Task<AutoCompletionResponse> GetAutoCompletionAsync(AutoCompletionRequest autoCompletionRequest);
     }
 }
