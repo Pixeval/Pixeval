@@ -152,7 +152,7 @@
                         </singleSelectionSettingEntry:SingleSelectionSettingEntry>
 
                         <expanderSettingEntry:ExpanderSettingEntry x:Uid="/SettingsPage/AppFontFamilyEntry"
-                                                                   ContentMargin="10,0,0,0"
+                                                                   ContentMargin="35,0"
                                                                    Icon="{ui:FontIcon Glyph=FontE8D2}">
                             <expanderSettingEntry:ExpanderSettingEntry.Description>
                                 <HyperlinkButton x:Uid="/SettingsPage/OpenFontSettingsHyperlinkButton"
