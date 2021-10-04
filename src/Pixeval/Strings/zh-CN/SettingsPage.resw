@@ -122,6 +122,18 @@
 
 你可以在下方链接中找到更多有关 Pixeval 的信息。</value>
   </data>
+  <data name="AppFontFamilyComboBoxEntry.Description" xml:space="preserve">
+    <value>重启应用后生效</value>
+  </data>
+  <data name="AppFontFamilyComboBoxEntry.Header" xml:space="preserve">
+    <value>选择字体</value>
+  </data>
+  <data name="AppFontFamilyComboBoxEntryComboBox.PlaceholderText" xml:space="preserve">
+    <value>选择字体</value>
+  </data>
+  <data name="AppFontFamilyEntry.Header" xml:space="preserve">
+    <value>字体设置</value>
+  </data>
   <data name="ApplicationSettingsGroup.Header" xml:space="preserve">
     <value>应用程序相关设置</value>
   </data>
@@ -229,6 +241,9 @@
   </data>
   <data name="MiscGroup.Header" xml:space="preserve">
     <value>杂项</value>
+  </data>
+  <data name="OpenFontSettingsHyperlinkButton.Content" xml:space="preserve">
+    <value>打开 Windows 系统字体设置</value>
   </data>
   <data name="PreloadRowsEntry.Description" xml:space="preserve">
     <value>浏览插画时会提前加载多少行插画，提升浏览流畅度，但会增加网络与资源占用</value>

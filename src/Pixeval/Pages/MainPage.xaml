@@ -24,12 +24,13 @@
             <AutoSuggestBox x:Uid="/MainPage/MainPageAutoSuggestionBox"
                             QueryIcon="Find"
                             QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
-                            TextChanged="KeywordAutoSuggestBox_OnTextChanged">
+                            TextChanged="KeywordAutoSuggestBox_OnTextChanged"
+                            TextMemberPath="Name">
                 <AutoSuggestBox.ItemTemplate>
                     <DataTemplate x:DataType="model:Tag">
-                        <Grid Height="50"
-                              VerticalAlignment="Center">
-                            <StackPanel Spacing="3">
+                        <Grid Height="50">
+                            <StackPanel VerticalAlignment="Center"
+                                        Spacing="3">
                                 <TextBlock FontSize="{StaticResource PixevalContentFontSize}"
                                            Text="{x:Bind Name}"
                                            TextWrapping="WrapWholeWords" />

@@ -224,7 +224,7 @@ namespace Pixeval
 
         public static async Task<X509Certificate2> GetFakeCaRootCertificateAsync()
         {
-            return new(await GetAssetBytesAsync("Certs/pixeval_ca.cer"));
+            return new X509Certificate2(await GetAssetBytesAsync("Certs/pixeval_ca.cer"));
         }
 
         public static void SaveContext()
@@ -278,6 +278,7 @@ namespace Pixeval
                 ConfigurationContainer.Values[nameof(AppSetting.ThumbnailDirection)] = appSetting.ThumbnailDirection.CastOrThrow<int>();
                 ConfigurationContainer.Values[nameof(AppSetting.LastCheckedUpdate)] = appSetting.LastCheckedUpdate;
                 ConfigurationContainer.Values[nameof(AppSetting.DownloadUpdateAutomatically)] = appSetting.DownloadUpdateAutomatically;
+                ConfigurationContainer.Values[nameof(AppSetting.AppFontFamilyName)] = appSetting.AppFontFamilyName;
             }
         }
 
@@ -331,7 +332,8 @@ namespace Pixeval
                     ConfigurationContainer.Values[nameof(AppSetting.WindowHeight)].CastOrThrow<int>(),
                     ConfigurationContainer.Values[nameof(AppSetting.ThumbnailDirection)].CastOrThrow<ThumbnailDirection>(),
                     ConfigurationContainer.Values[nameof(AppSetting.LastCheckedUpdate)].CastOrThrow<DateTimeOffset>(),
-                    ConfigurationContainer.Values[nameof(AppSetting.DownloadUpdateAutomatically)].CastOrThrow<bool>());
+                    ConfigurationContainer.Values[nameof(AppSetting.DownloadUpdateAutomatically)].CastOrThrow<bool>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.AppFontFamilyName)].CastOrThrow<string>());
             }
             catch
             {

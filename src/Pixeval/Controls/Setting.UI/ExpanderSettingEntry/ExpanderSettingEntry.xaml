@@ -24,7 +24,7 @@
                                                              Header="{TemplateBinding Header}"
                                                              Icon="{TemplateBinding Icon}" />
                         </expander:Expander.Header>
-                        <ContentPresenter x:Name="EntryContentPresenter"
+                        <ContentPresenter Margin="{TemplateBinding ContentMargin}"
                                           HorizontalAlignment="Stretch"
                                           VerticalAlignment="Stretch"
                                           HorizontalContentAlignment="Stretch"

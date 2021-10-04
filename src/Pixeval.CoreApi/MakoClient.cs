@@ -38,6 +38,7 @@ using Pixeval.CoreApi.Global.Exception;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.EndPoints;
 using Pixeval.CoreApi.Preference;
+using Pixeval.Utilities;
 using Refit;
 
 namespace Pixeval.CoreApi

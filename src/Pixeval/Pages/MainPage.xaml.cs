@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime;
 using CommunityToolkit.WinUI.UI;
 using CommunityToolkit.WinUI.UI.Controls;
@@ -7,6 +8,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls.Setting.UI;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Misc;
@@ -90,7 +92,10 @@ namespace Pixeval.Pages
             if (sender.Text is {Length: > 0} keyword)
             {
                 var suggestions = await App.AppViewModel.MakoClient.GetAutoCompletionForKeyword(keyword);
-                
+                if (suggestions.Any())
+                {
+                    sender.ItemsSource = suggestions;
+                }
             }
         }
     }

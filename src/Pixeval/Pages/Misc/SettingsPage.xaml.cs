@@ -7,13 +7,13 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls.Setting.UI;
-using Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry;
+using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Misc
 {
-    // TODO: check for update, set language, set main page default selected tab
+    // set language, set main page default selected tab, set font, clear database
     public sealed partial class SettingsPage
     {
         private readonly SettingsPageViewModel _viewModel = new(App.AppViewModel.AppSetting);
@@ -52,7 +52,7 @@ namespace Pixeval.Pages.Misc
             }
         }
 
-        private void SingleSelectionSettingEntry_OnSelectionChanged(SingleSelectionSettingEntry sender, SelectionChangedEventArgs args)
+        private void SingleSelectionSettingEntry_OnSelectionChanged(Controls.Setting.UI.SingleSelectionSettingEntry.SingleSelectionSettingEntry sender, SelectionChangedEventArgs args)
         {
             App.AppViewModel.SwitchTheme(_viewModel.Theme);
         }
@@ -88,7 +88,12 @@ namespace Pixeval.Pages.Misc
 
         private void FeedbackByEmailHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            _ = Launcher.LaunchUriAsync(new Uri("mailto:decem0730@hotmail.com"));
+            Launcher.LaunchUriAsync(new Uri("mailto:decem0730@hotmail.com")).Discard();
+        }
+
+        private void OpenFontSettingsHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            Launcher.LaunchUriAsync(new Uri("ms-settings:fonts")).Discard();
         }
     }
 }

@@ -46,6 +46,7 @@ namespace Pixeval.Controls
                 textBlock!.Visibility = Visibility.Collapsed;
                 return;
             }
+
             textBlock!.Text = (string) e.NewValue;
         }
 

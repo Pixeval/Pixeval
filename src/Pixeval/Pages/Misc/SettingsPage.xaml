@@ -5,9 +5,11 @@
       xmlns:actionableSettingEntry="using:Pixeval.Controls.Setting.UI.ActionableSettingEntry"
       xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:expanderSettingEntry="using:Pixeval.Controls.Setting.UI.ExpanderSettingEntry"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:model="using:Pixeval.Controls.Setting.UI.Model"
       xmlns:numberFormatting="using:Windows.Globalization.NumberFormatting"
+      xmlns:setting="using:Pixeval.Controls.Setting.UI"
       xmlns:settingsGroup="using:Pixeval.Controls.Setting.UI.SettingsGroup"
       xmlns:singleSelectionSettingEntry="using:Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry"
       xmlns:sliderSettingEntry="using:Pixeval.Controls.Setting.UI.SliderSettingEntry"
@@ -19,10 +21,15 @@
       Loaded="SettingsPage_OnLoaded"
       mc:Ignorable="d">
     <Page.Resources>
+        <Style x:Key="ExpanderContentSettingEntryStyle"
+               TargetType="setting:SettingEntryBase">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
         <Style x:Key="SettingsNumberBoxStyle"
                TargetType="NumberBox">
             <Setter Property="Width" Value="200" />
-            <Setter Property="Height" Value="40" />
             <Setter Property="IsWrapEnabled" Value="True" />
             <Setter Property="LargeChange" Value="10" />
             <Setter Property="NumberFormatter" Value="{StaticResource IntegerRoundedDecimalFormatter}" />
@@ -144,6 +151,27 @@
                             </singleSelectionSettingEntry:SingleSelectionSettingEntry.Description>
                         </singleSelectionSettingEntry:SingleSelectionSettingEntry>
 
+                        <expanderSettingEntry:ExpanderSettingEntry x:Uid="/SettingsPage/AppFontFamilyEntry"
+                                                                   ContentMargin="10,0,0,0"
+                                                                   Icon="{ui:FontIcon Glyph=FontE8D2}">
+                            <expanderSettingEntry:ExpanderSettingEntry.Description>
+                                <HyperlinkButton x:Uid="/SettingsPage/OpenFontSettingsHyperlinkButton"
+                                                 Tapped="OpenFontSettingsHyperlinkButton_OnTapped" />
+                            </expanderSettingEntry:ExpanderSettingEntry.Description>
+                            <expanderSettingEntry:ExpanderSettingEntry.Content>
+                                <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/AppFontFamilyComboBoxEntry"
+                                                                               Icon="{ui:FontIcon Glyph=SpellingF87B}"
+                                                                               Style="{StaticResource ExpanderContentSettingEntryStyle}">
+                                    <actionableSettingEntry:ActionableSettingEntry.ActionContent>
+                                        <ComboBox x:Uid="/SettingsPage/AppFontFamilyComboBoxEntryComboBox"
+                                                  Width="200"
+                                                  ItemsSource="{x:Bind setting:SettingsPageViewModel.AvailableFonts}"
+                                                  SelectedItem="{x:Bind _viewModel.AppFontFamilyName, Mode=TwoWay}" />
+                                    </actionableSettingEntry:ActionableSettingEntry.ActionContent>
+                                </actionableSettingEntry:ActionableSettingEntry>
+                            </expanderSettingEntry:ExpanderSettingEntry.Content>
+                        </expanderSettingEntry:ExpanderSettingEntry>
+
                         <switchSettingEntry:SwitchSettingEntry x:Uid="/SettingsPage/DisableDomainFrontingEntry"
                                                                Icon="{ui:FontIcon Glyph=DisableUpdatesE8D8}"
                                                                IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=TwoWay}" />
@@ -169,14 +197,12 @@
                                               IsOn="{x:Bind _viewModel.FiltrateRestrictedContent, Mode=TwoWay}" />
                             </actionableExpanderSettingEntry:ActionableExpanderSettingEntry.ActionContent>
                             <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/ExcludeTagsEntry"
-                                                                           Background="Transparent"
-                                                                           BorderThickness="0"
-                                                                           CornerRadius="0"
-                                                                           Icon="{ui:FontIcon Glyph=TagE8EC}">
+                                                                           Icon="{ui:FontIcon Glyph=TagE8EC}"
+                                                                           Style="{StaticResource ExpanderContentSettingEntryStyle}">
                                 <controls:TokenizingTextBox x:Uid="/SettingsPage/ExcludeTagsTokenTextBox"
+                                                            Height="35"
                                                             MaxWidth="400"
                                                             MaxHeight="40"
-                                                            CornerRadius="5"
                                                             ItemsSource="{x:Bind _viewModel.ExcludeTags}"
                                                             QueryIcon="{toolkit:SymbolIconSource Symbol=Tag}"
                                                             TokenItemAdded="ExcludeTagsTokenTextBox_OnTokenItemAdded"

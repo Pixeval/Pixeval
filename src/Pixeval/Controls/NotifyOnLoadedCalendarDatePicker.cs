@@ -1,4 +1,5 @@
 ﻿using Windows.Foundation;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace Pixeval.Controls
@@ -14,6 +15,7 @@ namespace Pixeval.Controls
                     _dateChangedWhenLoaded?.Invoke(sender, args);
                 }
             };
+            CornerRadius = new CornerRadius(2);
         }
 
         private TypedEventHandler<CalendarDatePicker, CalendarDatePickerDateChangedEventArgs>? _dateChangedWhenLoaded;

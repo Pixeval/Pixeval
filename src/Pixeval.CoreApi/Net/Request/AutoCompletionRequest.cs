@@ -4,7 +4,7 @@ namespace Pixeval.CoreApi.Net.Request
 {
     public class AutoCompletionRequest
     {
-        [AliasAs("merge_plain_keyword_results")]
+        [AliasAs("merge_plain_keyword_results=true")]
         public bool MergePlainKeywordResult { get; }
 
         [AliasAs("word")]

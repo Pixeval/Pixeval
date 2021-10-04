@@ -1,19 +1,14 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+﻿using System;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Markup;
 using Pixeval.Controls.Setting.UI.UserControls;
 
 namespace Pixeval.Controls.Setting.UI.ExpanderSettingEntry
 {
     [ContentProperty(Name = nameof(Content))]
-    [TemplatePart(Name = PartEntryContentPresenter, Type = typeof(ContentPresenter))]
     [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
     public class ExpanderSettingEntry : SettingEntryBase
     {
-        private const string PartEntryContentPresenter = "EntryContentPresenter";
-
-        private ContentPresenter? _entryContentPresenter;
-
         public static readonly DependencyProperty HeaderHeightProperty = DependencyProperty.Register(
             nameof(HeaderHeight),
             typeof(double),
@@ -38,22 +33,16 @@ namespace Pixeval.Controls.Setting.UI.ExpanderSettingEntry
             set => SetValue(ContentProperty, value);
         }
 
-        protected override void IconChanged(object? newValue)
-        {
-            if (_entryContentPresenter is { } presenter)
-            {
-                presenter.Margin = newValue is IconElement
-                    ? new Thickness(50, 0, 50, 0)
-                    : new Thickness(10, 0, 10, 0);
-            }
+        public static readonly DependencyProperty ContentMarginProperty = DependencyProperty.Register(
+            nameof(ContentMargin),
+            typeof(Thickness),
+            typeof(ExpanderSettingEntry),
+            PropertyMetadata.Create(DependencyProperty.UnsetValue));
 
-            base.IconChanged(newValue);
-        }
-
-        protected override void OnApplyTemplate()
+        public Thickness ContentMargin
         {
-            _entryContentPresenter = GetTemplateChild(PartEntryContentPresenter) as ContentPresenter;
-            base.OnApplyTemplate();
+            get => (Thickness) GetValue(ContentMarginProperty);
+            set => SetValue(ContentMarginProperty, value);
         }
 
         public ExpanderSettingEntry()

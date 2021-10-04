@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
+using Microsoft.Graphics.Canvas.Text;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Pixeval.Controls.Setting.UI.Model;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Options;
 
@@ -10,6 +14,8 @@ namespace Pixeval.Controls.Setting.UI
     public class SettingsPageViewModel : ObservableObject
     {
         private readonly AppSetting _appSetting;
+
+        public static readonly IEnumerable<string> AvailableFonts = CanvasTextFormat.GetSystemFontFamilies();
 
         public SettingsPageViewModel(AppSetting appSetting)
         {
@@ -141,6 +147,12 @@ namespace Pixeval.Controls.Setting.UI
         {
             get => _appSetting.DownloadUpdateAutomatically;
             set => SetProperty(_appSetting.DownloadUpdateAutomatically, value, _appSetting, (settings, value) => settings.DownloadUpdateAutomatically = value);
+        }
+
+        public string AppFontFamilyName
+        {
+            get => _appSetting.AppFontFamilyName;
+            set => SetProperty(_appSetting.AppFontFamilyName, value, _appSetting, (settings, value) => settings.AppFontFamilyName = value);
         }
     }
 }

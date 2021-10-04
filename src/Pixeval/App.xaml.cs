@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
 using Pixeval.Util.UI;
 using Pixeval.ViewModel;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
@@ -7,6 +8,8 @@ namespace Pixeval
 {
     public partial class App
     {
+        private const string ApplicationWideFontKey = "ContentControlThemeFontFamily";
+
         public static AppViewModel AppViewModel { get; private set; } = null!;
 
         public App()
@@ -24,6 +27,7 @@ namespace Pixeval
 
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
+            Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSetting.AppFontFamilyName);
             await AppViewModel.InitializeAsync();
         }
 
@@ -35,8 +39,8 @@ namespace Pixeval
             return UIHelper.GetScreenSize() switch
             {
                 // 这 就 是 C #
-                ( >= 2560, >= 1440) => (1600, 900),
-                ( > 1600, > 900) => (1280, 720),
+                (>= 2560, >= 1440) => (1600, 900),
+                (> 1600, > 900) => (1280, 720),
                 _ => (800, 600)
             };
         }
