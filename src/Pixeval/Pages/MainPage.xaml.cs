@@ -47,7 +47,7 @@ namespace Pixeval.Pages
          
         private void MainPageRootNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
-            MainPageRootFrame.NavigateByNavigationViewTag(sender, new EntranceNavigationTransitionInfo());
+            MainPageRootFrame.NavigateByNavigationViewTag(sender, new SuppressNavigationTransitionInfo());
         }
 
         private void MainPageRootFrame_OnNavigated(object sender, NavigationEventArgs e)
@@ -61,6 +61,8 @@ namespace Pixeval.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+
+            // Connected animation to the element located in MainPage
             if (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation") is { } animation)
             {
                 animation.Configuration = new DirectConnectedAnimationConfiguration();

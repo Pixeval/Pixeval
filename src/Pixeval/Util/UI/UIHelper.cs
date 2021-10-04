@@ -182,7 +182,7 @@ namespace Pixeval.Util.UI
         {
             if (sender.SelectedItem is NavigationViewItem {Tag: NavigationViewTag tag})
             {
-                frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo ?? new EntranceNavigationTransitionInfo());
+                frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo ?? new SuppressNavigationTransitionInfo());
             }
         }
 

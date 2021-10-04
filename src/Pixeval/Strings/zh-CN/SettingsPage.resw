@@ -118,7 +118,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppDescriptionTextBlock.Text" xml:space="preserve">
-    <value>Pixeval 是一个基于 Windows UI 3 开发的第三方Pixiv客户端，在保证对Pixiv绝大部分功能的支持的同时提供了大量有助于提高用户体验的额外特性，包括并不限于本地收藏夹以及中国大陆地区无需代理的浏览体验，你可以在如下的链接中找到更多有关 Pixeval 的信息</value>
+    <value>Pixeval 是一个基于 Windows UI 3 开发的第三方 Pixiv 客户端。在保证对 Pixiv 绝大部分功能的支持的同时，提供了大量有助于提高用户体验的额外特性，包括本地收藏夹以及中国大陆地区无需代理的浏览体验等。
+
+你可以在下方链接中找到更多有关 Pixeval 的信息。</value>
   </data>
   <data name="ApplicationSettingsGroup.Header" xml:space="preserve">
     <value>应用程序相关设置</value>
@@ -133,19 +135,19 @@
     <value>正在检查更新</value>
   </data>
   <data name="DefaultSearchSortOptionEntry.Description" xml:space="preserve">
-    <value>在使用侧边栏关键字搜索插画时，如未指定其他则会使用改设置项所指定的选项作为排序策略</value>
+    <value>在使用侧边栏关键字搜索插画时的默认排序策略</value>
   </data>
   <data name="DefaultSearchSortOptionEntry.Header" xml:space="preserve">
     <value>默认排序方式</value>
   </data>
   <data name="DefaultSearchTagMatchOptionEntry.Description" xml:space="preserve">
-    <value>在使用侧边栏关键字搜索插画时，将会使用设置项所指定的选项来匹配查找到的作品</value>
+    <value>在使用侧边栏关键字搜索插画时如何匹配查找作品</value>
   </data>
   <data name="DefaultSearchTagMatchOptionEntry.Header" xml:space="preserve">
     <value>默认的关键字匹配策略</value>
   </data>
   <data name="DisableDomainFrontingEntry.Description" xml:space="preserve">
-    <value>开启此选项会导致位于中国大陆区域的用户无法在不依赖其他绕过GFW的手段的前提下正常使用</value>
+    <value>开启此选项将导致在 Pixiv 被屏蔽的国家或地区的用户无法正常使用</value>
   </data>
   <data name="DisableDomainFrontingEntry.Header" xml:space="preserve">
     <value>禁用域前置直连</value>
@@ -163,7 +165,7 @@
     <value>自动下载更新</value>
   </data>
   <data name="ExcludeTagsEntry.Description" xml:space="preserve">
-    <value>包含该文本框中的标签的作品将会被排除在搜索结果之外</value>
+    <value>包含这些标签的作品将会被排除在搜索结果之外</value>
   </data>
   <data name="ExcludeTagsEntry.Header" xml:space="preserve">
     <value>要被排除的标签</value>
@@ -175,7 +177,7 @@
     <value>邮件联系作者</value>
   </data>
   <data name="FiltrateRestrictedContentEntry.Description" xml:space="preserve">
-    <value>在Pixiv官方账号设置开启R-18内容的同时关闭该选项以浏览R-18以及R-18G内容</value>
+    <value>在 Pixiv 官方账号设置开启 R-18 内容的同时关闭该选项以浏览 R-18 以及 R-18G 内容</value>
   </data>
   <data name="FiltrateRestrictedContentEntry.Header" xml:space="preserve">
     <value>过滤敏感内容</value>
@@ -199,10 +201,10 @@
     <value>主机名</value>
   </data>
   <data name="ImageMirrorServerTextBoxTeachingTip.Subtitle" xml:space="preserve">
-    <value>请检查URL格式后重新提交</value>
+    <value>请检查 URL 格式后重新提交</value>
   </data>
   <data name="ImageMirrorServerTextBoxTeachingTip.Title" xml:space="preserve">
-    <value>URL格式错误</value>
+    <value>URL 格式错误</value>
   </data>
   <data name="JoinFeedbackGroupHyperlinkButton.Content" xml:space="preserve">
     <value>加入反馈群</value>
@@ -211,13 +213,13 @@
     <value>上次检查时间：</value>
   </data>
   <data name="MaxDownloadConcurrencyLevelEntry.Description" xml:space="preserve">
-    <value>该设置项指定了同时进行的下载任务的最大数量，可以设置的最大值是你的CPU核心数，请酌情调节</value>
+    <value>该设置项限制了并行下载任务的数量，可以设置的最大值是你的 CPU 核心数，请酌情调节，过多可能造成系统卡顿</value>
   </data>
   <data name="MaxDownloadConcurrencyLevelEntry.Header" xml:space="preserve">
-    <value>允许的最大同时下载数</value>
+    <value>最大并行下载任务数</value>
   </data>
   <data name="MaximumSearchPageLimit.Description" xml:space="preserve">
-    <value>在使用侧边栏关键字搜索插画时，最多会搜索该设置项所指定的页数，对于插画作品每页包含30张</value>
+    <value>在使用侧边栏关键字搜索插画时，最多会搜索多少页（每页包含30张）</value>
   </data>
   <data name="MaximumSearchPageLimit.Header" xml:space="preserve">
     <value>最大搜索页数限制</value>
@@ -229,13 +231,13 @@
     <value>杂项</value>
   </data>
   <data name="PreloadRowsEntry.Description" xml:space="preserve">
-    <value>浏览插画时会根据此值提前加载几行插画，提醒浏览流畅度，但会增加网络与资源占用</value>
+    <value>浏览插画时会提前加载多少行插画，提升浏览流畅度，但会增加网络与资源占用</value>
   </data>
   <data name="PreloadRowsEntry.Header" xml:space="preserve">
     <value>预加载行数</value>
   </data>
   <data name="RecommendationItemLimitEntry.Description" xml:space="preserve">
-    <value>使用每日推荐功能时最多会返回该设置项所指定的插画数</value>
+    <value>使用每日推荐功能时最多会获取多少条插画</value>
   </data>
   <data name="RecommendationItemLimitEntry.Header" xml:space="preserve">
     <value>每日推荐结果数量限制</value>
@@ -262,7 +264,7 @@
     <value>从第几页开始搜索[1,150]</value>
   </data>
   <data name="SpotlightSearchPageLimitEntry.Description" xml:space="preserve">
-    <value>在搜索特辑时，最多会搜索该设置项所指定的页数，其中每一页包含10条结果</value>
+    <value>在搜索特辑时，最多会获取多少页的结果（每一页包含10条结果）</value>
   </data>
   <data name="SpotlightSearchPageLimitEntry.Header" xml:space="preserve">
     <value>特辑搜索页数限制</value>
@@ -271,28 +273,28 @@
     <value>特辑搜索页数限制[1,100]</value>
   </data>
   <data name="TargetAPIPlatformEntry.Description" xml:space="preserve">
-    <value>指定发送请求时使用哪个平台对应的API，如果不知道这是什么意思请保持默认</value>
+    <value>指定发送请求时使用哪个平台对应的 API，如果不知道这是什么意思请保持默认</value>
   </data>
   <data name="TargetAPIPlatformEntry.Header" xml:space="preserve">
-    <value>使用的API平台</value>
+    <value>使用的 API 平台</value>
   </data>
   <data name="ThemeEntry.Header" xml:space="preserve">
-    <value>应用程序主题(重启应用后完全生效)</value>
+    <value>应用程序主题（重启应用后完全生效）</value>
   </data>
   <data name="ThemeEntryDescriptionHyperlinkButton.Content" xml:space="preserve">
     <value>打开 Windows 系统主题设置</value>
   </data>
   <data name="ThumbnailDirectionEntry.Description" xml:space="preserve">
-    <value>指示浏览图片列表时图片的长宽比</value>
+    <value>浏览图片时使用的页面方向</value>
   </data>
   <data name="ThumbnailDirectionEntry.Header" xml:space="preserve">
     <value>缩略图方向</value>
   </data>
   <data name="TitleTextBlock.Text" xml:space="preserve">
-    <value>Pixeval设置</value>
+    <value>Pixeval 设置</value>
   </data>
   <data name="UseFileCacheEntry.Description" xml:space="preserve">
-    <value>开启此选项后网络流量消耗会减少，浏览体验会有相应提升，但CPU占用以及文件IO将会增加</value>
+    <value>开启此选项后会减少网络流量消耗并提升浏览体验，但是会增加 CPU 占用以及硬盘读写</value>
   </data>
   <data name="UseFileCacheEntry.Header" xml:space="preserve">
     <value>使用文件缓存</value>

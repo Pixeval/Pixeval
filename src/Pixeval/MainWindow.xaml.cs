@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using PInvoke;
 using Pixeval.Misc;
@@ -18,6 +19,9 @@ namespace Pixeval
             NavigationMode = null;
             return mode;
         }
+
+        public NavigationTransitionInfo? DefaultNavigationTransitionInfo { get; internal set; } =
+            new SuppressNavigationTransitionInfo();
 
         public MainWindow()
         {

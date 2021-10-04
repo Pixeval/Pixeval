@@ -12,7 +12,7 @@
            NavigationFailed="PixevalAppRootFrame_OnNavigationFailed">
         <Frame.ContentTransitions>
             <TransitionCollection>
-                <NavigationThemeTransition />
+                <NavigationThemeTransition DefaultNavigationTransitionInfo="{x:Bind DefaultNavigationTransitionInfo}" />
             </TransitionCollection>
         </Frame.ContentTransitions>
     </Frame>
