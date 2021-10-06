@@ -10,7 +10,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.Misc;
 using Pixeval.Popups;
 using Pixeval.UserControls;
 using Pixeval.Util;
@@ -157,7 +156,6 @@ namespace Pixeval.ViewModel
             IllustrationViewModelInTheGridView = ContainerGridViewModel.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
             InitializeCommands();
             _ = LoadUserProfileImage();
-            _ = LoadThumbnails();
         }
 
         public void UpdateCommandCanExecute()
@@ -462,11 +460,6 @@ namespace Pixeval.ViewModel
             return FirstIllustrationViewModel.RemoveBookmarkAsync();
         }
 
-        private async Task LoadThumbnails()
-        {
-            _ = await Task.WhenAll(ImageViewerPageViewModels.Select(i => i.IllustrationViewModel.LoadThumbnailIfRequired()));
-        }
-
         private async Task LoadUserProfileImage()
         {
             if (FirstIllustrationViewModel.Illustration.User?.ProfileImageUrls?.Medium is { } profileImage)
@@ -487,31 +480,6 @@ namespace Pixeval.ViewModel
         }
 
         #region Helper Functions
-
-        public Visibility CalculateNextImageVisibility()
-        {
-            return CurrentIndex < ImageViewerPageViewModels.Length - 1 ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        public Visibility CalculatePrevImageVisibility()
-        {
-            return CurrentIndex > 0 ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        public ImageSource? NextThumbnail()
-        {
-            if (CurrentIndex > ImageViewerPageViewModels.Length - 1) return null;
-            var illustrationModel = ImageViewerPageViewModels[CurrentIndex + 1].IllustrationViewModel;
-            return illustrationModel.ThumbnailSource;
-        }
-
-        public ImageSource? PrevThumbnail()
-        {
-            if (CurrentIndex <= 0) return null;
-            var illustrationModel = ImageViewerPageViewModels[CurrentIndex - 1].IllustrationViewModel;
-            return illustrationModel.ThumbnailSource;
-        }
-
         public Visibility CalculateNextImageButtonVisibility(int index)
         {
             return index < ImageViewerPageViewModels.Length - 1 ? Visibility.Visible : Visibility.Collapsed;
@@ -535,7 +503,7 @@ namespace Pixeval.ViewModel
                 ? CalculatePrevImageButtonVisibility(index).Inverse()
                 : Visibility.Collapsed;
         }
-
+         
         #endregion
     }
 }

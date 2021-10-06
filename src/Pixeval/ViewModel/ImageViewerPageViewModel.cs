@@ -72,22 +72,6 @@ namespace Pixeval.ViewModel
             set => SetProperty(ref _loadingText, value);
         }
 
-        private ImageSource? _prevImageThumbnail;
-
-        public ImageSource? PrevImageThumbnail
-        {
-            get => _prevImageThumbnail;
-            set => SetProperty(ref _prevImageThumbnail, value);
-        }
-
-        private ImageSource? _nextImageThumbnail;
-
-        public ImageSource? NextImageThumbnail
-        {
-            get => _nextImageThumbnail;
-            set => SetProperty(ref _nextImageThumbnail, value);
-        }
-
         public IRandomAccessStream? OriginalImageStream { get; private set; }
 
         private TaskNotifier? _loadingOriginalSourceTask;
@@ -229,19 +213,6 @@ namespace Pixeval.ViewModel
             }
 
             throw new IllustrationSourceNotFoundException(ImageViewerPageResources.CannotFindImageSourceContent);
-        }
-
-        // TODO Solve first picture in thumbnail problem
-        public void RefreshThumbnails()
-        {
-            if (NextImageThumbnail == null)
-            {
-                NextImageThumbnail = IllustrationViewerPageViewModel.NextThumbnail();
-            }
-            if (PrevImageThumbnail == null)
-            {
-                PrevImageThumbnail = IllustrationViewerPageViewModel.PrevThumbnail();
-            }
         }
 
         /// <summary>

@@ -49,6 +49,12 @@ namespace Pixeval.Pages.IllustrationViewer
 
         public override void OnPageActivated(NavigationEventArgs e)
         {
+            if (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation") is { } animation)
+            {
+                animation.Configuration = new DirectConnectedAnimationConfiguration();
+                animation.TryStart(IllustrationImageShowcaseFrame);
+            }
+
             _viewModel = (IllustrationViewerPageViewModel) e.Parameter;
             _illustrationInfo = new NavigationViewTag(typeof(IllustrationInfoPage), _viewModel);
             _comments = new NavigationViewTag(typeof(CommentsPage), (App.AppViewModel.MakoClient.IllustrationComments(_viewModel.IllustrationId).Where(c => c is not null), _viewModel.IllustrationId)); // TODO
@@ -171,22 +177,6 @@ namespace Pixeval.Pages.IllustrationViewer
         private void PrevIllustrationAppBarButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             PrevIllustration();
-        }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            if (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation") is { } animation)
-            {
-                animation.Configuration = new DirectConnectedAnimationConfiguration();
-                animation.TryStart(IllustrationImageShowcaseFrame);
-            }
-
-            if (e.SourcePageType == typeof(ImageViewerPage))
-            {
-                // Illustration transition
-
-            }
         }
 
         private void BackButton_OnTapped(object sender, TappedRoutedEventArgs e)

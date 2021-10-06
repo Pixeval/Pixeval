@@ -1,10 +1,7 @@
 using System;
 using System.Linq;
 using Windows.Foundation;
-using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -159,19 +156,6 @@ namespace Pixeval.Pages.IllustrationViewer
             _viewModel.IllustrationViewerPageViewModel.IsInfoPaneOpen = true;
         }
 
-        private void BookmarkButton_OnPointerMoved(object sender, PointerRoutedEventArgs e)
-        {
-            if (!FlyoutBase.GetAttachedFlyout(BookmarkButton).IsOpen)
-            {
-                FlyoutBase.ShowAttachedFlyout(BookmarkButton);
-            }
-        }
-
-        private void BookmarkButton_OnPointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            FlyoutBase.GetAttachedFlyout(BookmarkButton).Hide();
-        }
-
         #region Helper Functions
 
         private readonly EasingFunctionBase _easingFunction = new ExponentialEase
@@ -215,25 +199,5 @@ namespace Pixeval.Pages.IllustrationViewer
         }
 
         #endregion
-
-        private void ThumbnailLeft_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            LeftImageMoveInStoryboard.Begin();
-            var frame = this.FindParent("IllustrationImageShowcaseFrame") as Frame;
-            frame?.Navigate(typeof(ImageViewerPage), _viewModel.IllustrationViewerPageViewModel.Prev(), new SlideNavigationTransitionInfo
-            {
-                Effect = SlideNavigationTransitionEffect.FromLeft
-            });
-        }
-
-        private void ThumbnailRight_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            RightImageMoveInStoryboard.Begin();
-            var frame = this.FindParent("IllustrationImageShowcaseFrame") as Frame;
-            frame?.Navigate(typeof(ImageViewerPage), _viewModel.IllustrationViewerPageViewModel.Next(), new SlideNavigationTransitionInfo
-            {
-                Effect = SlideNavigationTransitionEffect.FromRight
-            });
-        }
     }
 }                                                                                                                                                                                                                                                                                                                                                                                                   
