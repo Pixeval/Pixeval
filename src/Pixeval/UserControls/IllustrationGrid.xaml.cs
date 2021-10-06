@@ -54,7 +54,7 @@ namespace Pixeval.UserControls
         {
             e.Handled = true;
             var viewModel = sender.GetDataContext<IllustrationViewModel>();
-            await viewModel!.PostPublicBookmarkAsync();
+            await viewModel.PostPublicBookmarkAsync();
         }
 
         private static readonly ExponentialEase ImageSourceSetEasingFunction = new()

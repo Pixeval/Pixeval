@@ -5,8 +5,7 @@
                         xmlns:controls1="using:Pixeval.Controls"
                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                        xmlns:ui="using:Pixeval.Util.UI" 
-                        xmlns:userControls="using:Pixeval.UserControls"
+                        xmlns:ui="using:Pixeval.Util.UI"
                         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                         Loaded="IllustrationViewerPage_OnLoaded"
                         mc:Ignorable="d">
@@ -69,7 +68,7 @@
                 <AppBarButton Command="{x:Bind _viewModel.AddToBookmarkCommand}">
                     <AppBarButton.Flyout>
                         <MenuFlyout>
-                            <MenuFlyoutItem Text="本地收藏夹"></MenuFlyoutItem>
+                            <MenuFlyoutItem Text="本地收藏夹" />
                         </MenuFlyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>
@@ -124,8 +123,7 @@
             </Grid>
             <Grid Height="30"
                   controls:DockPanel.Dock="Bottom" />
-            <Frame Grid.Column="1" x:Name="IllustrationImageShowcaseFrame" />
-
+            <Frame x:Name="IllustrationImageShowcaseFrame" />
         </controls:DockPanel>
     </SplitView>
 </controls1:EnhancedPage>
