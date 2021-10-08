@@ -65,6 +65,8 @@
       <None Remove="CommunityToolkit\Markdown\MarkdownTextBlock\MarkdownTextBlock.xaml" />
       <None Remove="Controls\Card\CardControl.xaml" />
       <None Remove="Controls\Expander\Expander.xaml" />
+      <None Remove="Controls\NotifyOnLoadedCalendarDatePicker\NotifyOnLoadedCalendarDatePicker.xaml" />
+      <None Remove="Controls\NotifyOnLoadedComboBox\NotifyOnLoadedComboBox.xaml" />
       <None Remove="Controls\Setting.UI\ActionableExpanderSettingEntry\ActionableExpanderSettingEntry.xaml" />
       <None Remove="Controls\Setting.UI\ActionableSettingEntry\ActionableSettingEntry.xaml" />
       <None Remove="Controls\Setting.UI\ExpanderSettingEntry\ExpanderSettingEntry.xaml" />
@@ -249,6 +251,12 @@
    </ItemGroup>
    <ItemGroup>
      <Page Update="CommunityToolkit\Markdown\MarkdownTextBlock\MarkdownTextBlock.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+     <Page Update="Controls\NotifyOnLoadedCalendarDatePicker\NotifyOnLoadedCalendarDatePicker.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+     <Page Update="Controls\NotifyOnLoadedComboBox\NotifyOnLoadedComboBox.xaml">
        <Generator>MSBuild:Compile</Generator>
      </Page>
      <None Update="Pages\Capability\RecentPostsPage.xaml">

@@ -5,16 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:options="using:Pixeval.Options"
+             xmlns:notifyOnLoadedComboBox="using:Pixeval.Controls.NotifyOnLoadedComboBox"
              mc:Ignorable="d">
 
-    <controls:NotifyOnLoadedComboBox x:Name="ComboBox"
+    <notifyOnLoadedComboBox:NotifyOnLoadedComboBox x:Name="ComboBox"
                                      x:Uid="/SortOptionComboBox/SortOptionComboBox"
                                      ItemsSource="{x:Bind options:IllustrationSortOptionWrapper.AvailableOptions()}"
                                      SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChangedWhenPrepared">
-        <controls:NotifyOnLoadedComboBox.ItemTemplate>
+        <notifyOnLoadedComboBox:NotifyOnLoadedComboBox.ItemTemplate>
             <DataTemplate x:DataType="options:IllustrationSortOptionWrapper">
                 <TextBlock Text="{x:Bind LocalizedString}" />
             </DataTemplate>
-        </controls:NotifyOnLoadedComboBox.ItemTemplate>
-    </controls:NotifyOnLoadedComboBox>
+        </notifyOnLoadedComboBox:NotifyOnLoadedComboBox.ItemTemplate>
+    </notifyOnLoadedComboBox:NotifyOnLoadedComboBox>
 </UserControl>

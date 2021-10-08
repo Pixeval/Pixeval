@@ -7,22 +7,24 @@
                        xmlns:options="using:Pixeval.Options"
                        xmlns:system="using:System"
                        xmlns:userControls="using:Pixeval.UserControls"
+                       xmlns:notifyOnLoadedCalendarDatePicker="using:Pixeval.Controls.NotifyOnLoadedCalendarDatePicker"
+                       xmlns:notifyOnLoadedComboBox="using:Pixeval.Controls.NotifyOnLoadedComboBox"
                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                        Loaded="RankingsPage_OnLoaded"
                        mc:Ignorable="d">
     <userControls:IllustrationContainer x:Name="IllustrationContainer">
         <userControls:IllustrationContainer.CommandBarElements>
-            <controls:NotifyOnLoadedComboBox x:Name="RankOptionComboBox"
+            <notifyOnLoadedComboBox:NotifyOnLoadedComboBox x:Name="RankOptionComboBox"
                                              x:Uid="/RankingsPage/RankOptionComboBox"
                                              ItemsSource="{x:Bind options:RankOptionWrapper.AvailableOptions()}"
                                              SelectionChangedWhenLoaded="RankOptionComboBox_OnSelectionChangedWhenPrepared">
-                <controls:NotifyOnLoadedComboBox.ItemTemplate>
+                <notifyOnLoadedComboBox:NotifyOnLoadedComboBox.ItemTemplate>
                     <DataTemplate x:DataType="options:RankOptionWrapper">
                         <TextBlock Text="{x:Bind LocalizedString}" />
                     </DataTemplate>
-                </controls:NotifyOnLoadedComboBox.ItemTemplate>
-            </controls:NotifyOnLoadedComboBox>
-            <controls:NotifyOnLoadedCalendarDatePicker x:Name="RankDateTimeCalendarDatePicker"
+                </notifyOnLoadedComboBox:NotifyOnLoadedComboBox.ItemTemplate>
+            </notifyOnLoadedComboBox:NotifyOnLoadedComboBox>
+            <notifyOnLoadedCalendarDatePicker:NotifyOnLoadedCalendarDatePicker x:Name="RankDateTimeCalendarDatePicker"
                                                        Margin="10,0,0,0"
                                                        DateChangedWhenLoaded="RankDateTimeCalendarDatePicker_OnDateChangedWhenLoaded"
                                                        MaxDate="{x:Bind system:DateTime.Now.AddDays(-2)}" />

@@ -1,13 +1,13 @@
 ﻿using System;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-namespace Pixeval.Controls
+namespace Pixeval.Controls.NotifyOnLoadedComboBox
 {
     public class NotifyOnLoadedComboBox : ComboBox
     {
         public NotifyOnLoadedComboBox()
         {
+            DefaultStyleKey = typeof(NotifyOnLoadedComboBox);
             SelectionChanged += (sender, args) =>
             {
                 if (IsDropDownOpen)
@@ -15,7 +15,6 @@ namespace Pixeval.Controls
                     _selectionChangedWhenLoaded?.Invoke(sender, args);
                 }
             };
-            CornerRadius = new CornerRadius(2);
         }
 
         private EventHandler<SelectionChangedEventArgs>? _selectionChangedWhenLoaded;
