@@ -162,4 +162,10 @@
   <data name="OpenSearchSettingPopupButton.Text" xml:space="preserve">
     <value>搜索设置</value>
   </data>
+  <data name="SearchKeywordCannotBeBlankToastContent" xml:space="preserve">
+    <value>关键字的长度不能为空</value>
+  </data>
+  <data name="SearchKeywordCannotBeBlankToastTitle" xml:space="preserve">
+    <value>输入非法</value>
+  </data>
 </root>

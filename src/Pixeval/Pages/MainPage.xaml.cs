@@ -14,6 +14,7 @@ using Pixeval.Misc;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Misc;
 using Pixeval.Util.UI;
+using Pixeval.Utilities;
 using Pixeval.ViewModel;
 
 namespace Pixeval.Pages
@@ -82,6 +83,14 @@ namespace Pixeval.Pages
         // 搜索并跳转至搜索结果
         private void KeywordAutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
+            if (args.QueryText.IsNullOrBlank())
+            {
+                UIHelper.ShowTextToastNotification(
+                    MainPageResources.SearchKeywordCannotBeBlankToastTitle,
+                    MainPageResources.SearchKeywordCannotBeBlankToastContent,
+                    AppContext.AppLogoNoCaptionUri);
+                return;
+            }
             MainPageRootNavigationView.SelectedItem = null;
             MainPageRootFrame.Navigate(typeof(SearchResultsPage), App.AppViewModel.MakoClient.Search(args.QueryText));
         }

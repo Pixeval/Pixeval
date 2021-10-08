@@ -45,6 +45,12 @@ namespace Pixeval.Utilities
             return string.IsNullOrEmpty(str);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsNullOrBlank(this string? str)
+        {
+            return string.IsNullOrWhiteSpace(str);
+        }
+
         public static byte[] GetBytes(this string str, Encoding? encoding = null)
         {
             return encoding?.Let(e => e!.GetBytes(str)) ?? Encoding.UTF8.GetBytes(str);
