@@ -1,6 +1,5 @@
 ﻿using System;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using PInvoke;
 using Pixeval.Interop;
@@ -86,31 +85,6 @@ namespace Pixeval.Util.UI
         public static IntPtr GetWindowHandle(this Window window)
         {
             return window.As<IWindowNative>().WindowHandle;
-        }
-
-        public static (int, int) GetWindowSizeTuple(IntPtr hWnd)
-        {
-            User32.GetWindowRect(hWnd, out var rect);
-            var dpi = User32.GetDpiForWindow(hWnd) / 96d;
-            return ((int, int)) (rect.right / dpi - rect.left / dpi, rect.bottom / dpi - rect.top / dpi);
-        }
-
-        public static Size GetWindowSize(IntPtr hWnd)
-        {
-            var (width, height) = GetWindowSizeTuple(hWnd);
-            return new Size(width, height);
-        }
-
-        public static (int, int) SizeTuple(this Window window)
-        {
-            var hWnd = window.GetWindowHandle();
-            return GetWindowSizeTuple(hWnd);
-        }
-
-        public static Size Size(this Window window)
-        {
-            var hWnd = window.GetWindowHandle();
-            return GetWindowSize(hWnd);
         }
     }
 }

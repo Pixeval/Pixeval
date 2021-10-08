@@ -2,7 +2,10 @@
 using System.Diagnostics.Tracing;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.Graphics;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -29,6 +32,8 @@ namespace Pixeval.ViewModel
         public App App { get; }
 
         public MainWindow Window = null!;
+
+        public AppWindow AppWindow = null!;
 
         public Frame AppWindowRootFrame => Window.PixevalAppRootFrame;
 
@@ -142,20 +147,26 @@ namespace Pixeval.ViewModel
             RegisterUnhandledExceptionHandler();
             await AppContext.WriteLogoIcoIfNotExist();
             Window = new MainWindow();
-            Window.SetWindowSize(AppSetting.WindowWidth, AppSetting.WindowHeight);
-            Window.Activate();
+
+            AppWindow = AppWindow.GetFromWindowId(Win32Interop.GetWindowIdFromWindow(GetMainWindowHandle()));
+            AppWindow.Title = AppContext.AppIdentifier;
+            AppWindow.Resize(new SizeInt32(AppSetting.WindowWidth, AppSetting.WindowHeight));
+            AppWindow.Show();
+            AppWindow.SetIcon(await AppContext.GetIconAbsolutePath());
+
             await AppContext.ClearTemporaryDirectory();
             Cache = await FileCache.CreateDefaultAsync();
         }
 
         public (int, int) GetAppWindowSizeTuple()
         {
-            return App.AppViewModel.Window.SizeTuple();
+            var windowSize = AppWindow.Size;
+            return (windowSize.Width, windowSize.Height);
         }
 
         public Size GetAppWindowSize()
         {
-            return App.AppViewModel.Window.Size();
+            return App.AppViewModel.AppWindow.Size.ToWinRTSize();
         }
 
         public void Receive(ApplicationExitingMessage message)

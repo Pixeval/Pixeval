@@ -4,8 +4,8 @@
            TargetType="Button">
         <Style.Setters>
             <Setter Property="CornerRadius" Value="90" />
-            <Setter Property="Width" Value="35" />
-            <Setter Property="Height" Value="35" />
+            <Setter Property="Width" Value="38" />
+            <Setter Property="Height" Value="38" />
         </Style.Setters>
     </Style>
     <x:Double x:Key="PixevalButtonIconSize">13</x:Double>

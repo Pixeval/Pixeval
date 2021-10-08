@@ -63,17 +63,17 @@ namespace Pixeval.Util.UI
 
         private static void HeightMarginChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (GetRootWindow(d) is { } window)
+            if (GetRootWindow(d) is not null)
             {
-                RearrangePopup(d, window.Size());
+                RearrangePopup(d, App.AppViewModel.GetAppWindowSize());
             }
         }
 
         private static void WidthMarginChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (GetRootWindow(d) is { } window)
+            if (GetRootWindow(d) is not null)
             {
-                RearrangePopup(d, window.Size());
+                RearrangePopup(d, App.AppViewModel.GetAppWindowSize());
             }
         }
 
@@ -82,7 +82,7 @@ namespace Pixeval.Util.UI
             if (e.NewValue is Window window)
             {
                 window.SizeChanged += (_, args) => RearrangePopup(d, args.Size);
-                RearrangePopup(d, window.Size());
+                RearrangePopup(d, App.AppViewModel.GetAppWindowSize());
             }
         }
 
@@ -104,9 +104,9 @@ namespace Pixeval.Util.UI
             }
         }
 
-        public static Window GetRootWindow(DependencyObject obj)
+        public static Window? GetRootWindow(DependencyObject obj)
         {
-            return (Window) obj.GetValue(RootWindowProperty);
+            return obj.GetValue(RootWindowProperty) as Window;
         }
 
         public static void SetRootWindow(DependencyObject obj, Window value)

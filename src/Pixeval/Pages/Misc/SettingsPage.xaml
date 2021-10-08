@@ -14,7 +14,6 @@
       xmlns:sliderSettingEntry="using:Pixeval.Controls.Setting.UI.SliderSettingEntry"
       xmlns:switchSettingEntry="using:Pixeval.Controls.Setting.UI.SwitchSettingEntry"
       xmlns:system="using:System"
-      xmlns:toolkit="using:CommunityToolkit.WinUI.UI"
       xmlns:ui="using:Pixeval.Util.UI"
       xmlns:wrapPanel="using:Pixeval.CommunityToolkit.WrapPanel"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -78,9 +77,9 @@
                         <TextBlock x:Uid="/SettingsPage/AppDescriptionTextBlock"
                                    TextWrapping="Wrap" />
                         <wrapPanel:WrapPanel Margin="0,8,0,0"
-                                            HorizontalSpacing="24"
-                                            IsTabStop="False"
-                                            Orientation="Horizontal">
+                                             HorizontalSpacing="24"
+                                             IsTabStop="False"
+                                             Orientation="Horizontal">
                             <HyperlinkButton x:Uid="/SettingsPage/ViewPixevalWebsiteHyperlinkButton"
                                              NavigateUri="https://piexval.github.io/" />
                             <HyperlinkButton x:Uid="/SettingsPage/GitHubRepositoryHyperlinkButton"

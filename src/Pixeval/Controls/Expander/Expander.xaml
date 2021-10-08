@@ -50,8 +50,8 @@
                                                   FontSize="{StaticResource PixevalContentFontSize}" />
                                 <controls:IconButton x:Name="ExpandOrFoldExpanderButton"
                                                      Grid.Column="1"
-                                                     Width="30"
-                                                     Height="30"
+                                                     Width="35"
+                                                     Height="35"
                                                      HorizontalAlignment="Center"
                                                      VerticalAlignment="Center"
                                                      Background="Transparent"

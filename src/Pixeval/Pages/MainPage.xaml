@@ -15,11 +15,8 @@
                     d:DataContext="{d:DesignInstance viewModel:MainPageViewModel}"
                     IsSettingsVisible="False"
                     OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}"
+                    PaneTitle="Pixeval"
                     SelectionChanged="MainPageRootNavigationView_OnSelectionChanged">
-        <NavigationView.PaneHeader>
-            <TextBlock VerticalAlignment="Center"
-                       Text="Pixeval" />
-        </NavigationView.PaneHeader>
         <NavigationView.AutoSuggestBox>
             <AutoSuggestBox x:Uid="/MainPage/MainPageAutoSuggestionBox"
                             QueryIcon="Find"
@@ -86,16 +83,6 @@
                                 Icon="{ui:FontIcon Glyph=CheckListE9D5}" />
         </NavigationView.MenuItems>
         <NavigationView.FooterMenuItems>
-            <NavigationViewItem>
-                <StackPanel Margin="-6,0,0,0"
-                            Orientation="Horizontal">
-                    <PersonPicture Width="20"
-                                   Height="20"
-                                   ProfilePicture="{x:Bind _viewModel.Avatar, Mode=OneWay}" />
-                    <TextBlock x:Uid="/MainPage/AccountTab"
-                               Margin="10,0,0,0" />
-                </StackPanel>
-            </NavigationViewItem>
             <NavigationViewItem x:Uid="/MainPage/HelpTab"
                                 Icon="{ui:FontIcon Glyph=HelpE897}" />
             <NavigationViewItem x:Uid="/MainPage/SettingsTab"

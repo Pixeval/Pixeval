@@ -1,8 +1,6 @@
-﻿using System;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
-using PInvoke;
 using Pixeval.Misc;
 using Pixeval.Pages.Misc;
 
@@ -26,20 +24,10 @@ namespace Pixeval
         public MainWindow()
         {
             InitializeComponent();
-            // TODO awaiting WinUI3 fix: see https://github.com/microsoft/microsoft-ui-xaml/issues/3689
-            Title = "Pixeval";
-        }
-
-        // TODO awaiting WinUI3 fix: see https://github.com/microsoft/microsoft-ui-xaml/issues/4056
-        private static async void LoadIcon()
-        {
-            var icon = User32.LoadImage(IntPtr.Zero, await AppContext.GetIconAbsolutePath(), User32.ImageType.IMAGE_ICON, 44, 44, User32.LoadImageFlags.LR_LOADFROMFILE);
-            User32.SendMessage(App.AppViewModel.GetMainWindowHandle(), User32.WindowMessage.WM_SETICON, IntPtr.Zero, icon);
         }
 
         private void PixevalAppRootFrame_OnLoaded(object sender, RoutedEventArgs e)
         {
-            LoadIcon();
             PixevalAppRootFrame.Navigate(typeof(LoginPage));
         }
 

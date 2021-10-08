@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
+using Windows.Graphics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.UI.Text;
@@ -258,6 +259,11 @@ namespace Pixeval.Util.UI
         public static void Visible(this UIElement element)
         {
             element.Visibility = Visibility.Visible;
+        }
+
+        public static Size ToWinRTSize(this SizeInt32 size)
+        {
+            return new Size(size.Width, size.Height);
         }
     }
 }

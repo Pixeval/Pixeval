@@ -229,7 +229,7 @@ namespace Pixeval
         public static void SaveContext()
         {
             // Save the current resolution
-            (App.AppViewModel.AppSetting.WindowWidth, App.AppViewModel.AppSetting.WindowHeight) = App.AppViewModel.Window.SizeTuple();
+            (App.AppViewModel.AppSetting.WindowWidth, App.AppViewModel.AppSetting.WindowHeight) = App.AppViewModel.GetAppWindowSizeTuple();
             SaveSession();
             SaveConfiguration();
         }
