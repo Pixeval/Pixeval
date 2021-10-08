@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Misc;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.UI;
+using Pixeval.Utilities;
 using Pixeval.ViewModel;
 
 namespace Pixeval.UserControls
@@ -54,10 +55,12 @@ namespace Pixeval.UserControls
         private void SendButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             ReplyContentRichEditBox.Document.GetText(TextGetOptions.UseObjectText, out var content);
-            if (content.Length > 140)
+            if (content.Length is 0 or > 140)
             {
-                // TODO
-                // PixivReplyBarInAppNotification.Show(MiscResources.ReplyContentTooLong, 2000);
+                UIHelper.ShowTextToastNotification(
+                    PixivReplyBarResources.CommentIsTooShortOrTooLongToastTitle,
+                    PixivReplyBarResources.CommentIsTooShortOrTooLongToastContentFormatted.Format(content.Length),
+                    AppContext.AppLogoNoCaptionUri);
                 return;
             }
             _sendButtonTapped?.Invoke(this, new SendButtonTappedEventArgs(e, content));

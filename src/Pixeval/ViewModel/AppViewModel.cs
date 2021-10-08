@@ -9,6 +9,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
+using PInvoke;
 using Pixeval.CommunityToolkit;
 using Pixeval.CoreApi;
 using Pixeval.Messages;
@@ -166,7 +167,21 @@ namespace Pixeval.ViewModel
 
         public Size GetAppWindowSize()
         {
-            return App.AppViewModel.AppWindow.Size.ToWinRTSize();
+            return AppWindow.Size.ToWinRTSize();
+        }
+
+        public Size GetDpiAwareAppWindowSize()
+        {
+            var dpi = User32.GetDpiForWindow(GetMainWindowHandle());
+            var size = GetAppWindowSize();
+            var scalingFactor = (float) dpi / 96;
+            return new Size(size.Width / scalingFactor, size.Height / scalingFactor);
+        }
+
+        public (int, int) GetDpiAwareAppWindowSizeTuple()
+        {
+            var size = GetDpiAwareAppWindowSize();
+            return ((int, int)) (size.Width, size.Height);
         }
 
         public void Receive(ApplicationExitingMessage message)

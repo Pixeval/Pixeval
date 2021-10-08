@@ -13,6 +13,7 @@
 
     <NavigationView x:Name="MainPageRootNavigationView"
                     d:DataContext="{d:DesignInstance viewModel:MainPageViewModel}"
+                    IsBackButtonVisible="Collapsed"
                     IsSettingsVisible="False"
                     OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}"
                     PaneTitle="Pixeval"

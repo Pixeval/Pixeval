@@ -29,7 +29,7 @@ namespace Pixeval.Util.UI
             Action<FrameworkElement>? opening = null,
             Action<FrameworkElement>? closing = null)
         {
-            return new(content, widthMargin, heightMargin, minWidth, maxWidth, minHeight, maxHeight, lightDismiss, useAnimation, opening, closing);
+            return new AppPopup(content, widthMargin, heightMargin, minWidth, maxWidth, minHeight, maxHeight, lightDismiss, useAnimation, opening, closing);
         }
 
         public static void ShowPopup(AppPopup popup)
@@ -126,8 +126,8 @@ namespace Pixeval.Util.UI
         private void RearrangePopup(Size desiredSize)
         {
             var (windowWidth, windowHeight) = (desiredSize.Width, desiredSize.Height);
-            var child = (OverlayPopupContent)Popup.Child;
-            var container = (Grid)child.PopupContent;
+            var child = (OverlayPopupContent) Popup.Child;
+            var container = (Grid) child.PopupContent;
             Popup.Width = windowWidth;
             Popup.Height = windowHeight;
             child.Width = windowWidth;
@@ -154,7 +154,7 @@ namespace Pixeval.Util.UI
             }
             Popup.IsOpen = true;
             _opening?.Invoke(_content);
-            RearrangePopup(App.AppViewModel.GetAppWindowSize());
+            RearrangePopup(App.AppViewModel.GetDpiAwareAppWindowSize());
         }
 
         public void Close()
