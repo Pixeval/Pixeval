@@ -1,6 +1,7 @@
-﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:local="using:Pixeval.Controls.NotifyOnLoadedComboBox">
-    <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
-    <Style TargetType="local:NotifyOnLoadedComboBox" BasedOn="{StaticResource DefaultComboBoxStyle}" />
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:local="using:Pixeval.Controls.NotifyOnLoadedComboBox">
+    <!--  Remarks: see https://github.com/microsoft/microsoft-ui-xaml/issues/4362  -->
+    <!--  ReSharper disable once Xaml.StaticResourceNotResolved  -->
+    <Style BasedOn="{StaticResource DefaultComboBoxStyle}"
+           TargetType="local:NotifyOnLoadedComboBox" />
 </ResourceDictionary>

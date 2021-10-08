@@ -1,14 +1,14 @@
-﻿ using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
- using Microsoft.Toolkit.Mvvm.Messaging;
- using Microsoft.UI.Xaml;
+using Microsoft.Toolkit.Mvvm.Messaging;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Messages;
- using Pixeval.Options;
- using Pixeval.Pages.IllustrationViewer;
+using Pixeval.Options;
+using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.UI;
 using Pixeval.ViewModel;
 
@@ -18,13 +18,19 @@ namespace Pixeval.UserControls
     // note: please ALWAYS add e.Handled = true before every "tapped" event for the buttons
     public sealed partial class IllustrationGrid
     {
-        public IllustrationGridViewModel ViewModel { get; set; }
+        private static readonly ExponentialEase ImageSourceSetEasingFunction = new()
+        {
+            EasingMode = EasingMode.EaseOut,
+            Exponent = 12
+        };
 
         public IllustrationGrid()
         {
             InitializeComponent();
             ViewModel = new IllustrationGridViewModel();
         }
+
+        public IllustrationGridViewModel ViewModel { get; set; }
 
         private void IllustrationGrid_OnLoaded(object sender, RoutedEventArgs e)
         {
@@ -47,7 +53,7 @@ namespace Pixeval.UserControls
         {
             e.Handled = true;
             var viewModel = sender.GetDataContext<IllustrationViewModel>();
-            await viewModel!.RemoveBookmarkAsync();
+            await viewModel.RemoveBookmarkAsync();
         }
 
         private async void PostBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -56,12 +62,6 @@ namespace Pixeval.UserControls
             var viewModel = sender.GetDataContext<IllustrationViewModel>();
             await viewModel.PostPublicBookmarkAsync();
         }
-
-        private static readonly ExponentialEase ImageSourceSetEasingFunction = new()
-        {
-            EasingMode = EasingMode.EaseOut,
-            Exponent = 12
-        };
 
         private void Thumbnail_OnTapped(object sender, TappedRoutedEventArgs e)
         {
@@ -76,6 +76,11 @@ namespace Pixeval.UserControls
             App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModel), new SuppressNavigationTransitionInfo());
         }
 
+        private void IllustrationThumbnailContainerItem_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+        }
+
         private void IllustrationThumbnailContainerItem_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
         {
             var context = sender.GetDataContext<IllustrationViewModel>();
@@ -84,9 +89,14 @@ namespace Pixeval.UserControls
             {
                 _ = context.LoadThumbnailIfRequired().ContinueWith(task =>
                 {
-                    if (!task.Result) return;
+                    if (!task.Result)
+                    {
+                        return;
+                    }
+
                     var transform = (ScaleTransform) sender.RenderTransform;
-                    if (sender.IsFullyOrPartiallyVisible(this)) {
+                    if (sender.IsFullyOrPartiallyVisible(this))
+                    {
                         var scaleXAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleX), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
                         var scaleYAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleY), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
                         var opacityAnimation = sender.CreateDoubleAnimation(nameof(sender.Opacity), from: 0, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
