@@ -74,7 +74,7 @@ namespace Pixeval.Pages
 
         private void MainPageRootNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
-            MainPageRootFrame.NavigateByNavigationViewTag(sender, new SuppressNavigationTransitionInfo());
+            MainPageRootFrame.NavigateByNavigationViewTag(sender, new EntranceNavigationTransitionInfo());
         }
 
         private void MainPageRootFrame_OnNavigated(object sender, NavigationEventArgs e)

@@ -197,7 +197,7 @@ namespace Pixeval.Util.UI
 
         public static FontIcon GetFontIcon(this FontIconSymbols symbol, double? fontSize = null)
         {
-            var icon =  new FontIcon
+            var icon = new FontIcon
             {
                 Glyph = symbol.GetMetadataOnEnumMember()
             };

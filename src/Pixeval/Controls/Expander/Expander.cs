@@ -8,7 +8,7 @@ using Pixeval.Util.UI;
 namespace Pixeval.Controls.Expander
 {
     [TemplatePart(Name = PartContentCardContainer, Type = typeof(CardControl))]
-    [TemplatePart(Name = PartExpanderSwitchButton, Type = typeof(IconButton))]
+    [TemplatePart(Name = PartExpandOrFoldExpanderPresenter, Type = typeof(IconButton))]
     [TemplatePart(Name = PartRootPanel, Type = typeof(Grid))]
     [TemplateVisualState(GroupName = "CommonStates", Name = "Normal")]
     [TemplateVisualState(GroupName = "CommonStates", Name = "Expanded")]
@@ -16,12 +16,12 @@ namespace Pixeval.Controls.Expander
     {
         private const string PartContentCardContainer = "ContentCardContainer";
         private const string PartHeaderCardContainer = "HeaderCardContainer";
-        private const string PartExpanderSwitchButton = "ExpandOrFoldExpanderButton";
+        private const string PartExpandOrFoldExpanderPresenter = "ExpandOrFoldExpanderPresenter";
         private const string PartRootPanel = "RootPanel";
 
         private CardControl? _contentCardContainer;
         private CardControl? _headerCardContainer;
-        private IconButton? _expanderSwitchButton;
+        private ContentPresenter? _expandOrFoldExpanderPresenter;
         private Grid? _rootPanel;
 
         public static readonly DependencyProperty HeaderHeightProperty = DependencyProperty.Register(
@@ -82,12 +82,11 @@ namespace Pixeval.Controls.Expander
 
         private static void IsExpandedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (e.NewValue is bool value && d is Expander {_expanderSwitchButton: { } button} expander)
+            if (e.NewValue is bool value && d is Expander {_expandOrFoldExpanderPresenter: { } presenter} expander)
             {
-                var size = (double) Application.Current.Resources["PixevalButtonIconSmallSize"];
-                button.Icon = value
-                    ? FontIconSymbols.ChevronUpSmallE96D.GetFontIcon(size)
-                    : FontIconSymbols.ChevronDownSmallE96E.GetFontIcon(size);
+                presenter.Content = value
+                    ? FontIconSymbols.ChevronUpSmallE96D.GetFontIcon(13)
+                    : FontIconSymbols.ChevronDownSmallE96E.GetFontIcon(13);
                 VisualStateManager.GoToState(expander, value ? "Expanded" : "Normal", true);
             }
         }
@@ -109,14 +108,15 @@ namespace Pixeval.Controls.Expander
             _contentCardContainer = GetTemplateChild(PartContentCardContainer) as CardControl;
             NegativeHeaderHeight = -HeaderHeight;
 
-            if (_expanderSwitchButton is not null)
+            if (_expandOrFoldExpanderPresenter is not null)
             {
-                _expanderSwitchButton.Tapped -= ExpandSwitchButtonOnTapped;
+                _expandOrFoldExpanderPresenter.Tapped -= ExpandSwitchButtonOnTapped;
             }
 
-            if ((_expanderSwitchButton = GetTemplateChild(PartExpanderSwitchButton) as IconButton) is not null)
+            if ((_expandOrFoldExpanderPresenter = GetTemplateChild(PartExpandOrFoldExpanderPresenter) as ContentPresenter) is not null)
             {
-                _expanderSwitchButton.Tapped += ExpandSwitchButtonOnTapped;
+                _expandOrFoldExpanderPresenter.Content = FontIconSymbols.ChevronDownSmallE96E.GetFontIcon(13);
+                _expandOrFoldExpanderPresenter.Tapped += ExpandSwitchButtonOnTapped;
             }
 
             if (_rootPanel is not null)
