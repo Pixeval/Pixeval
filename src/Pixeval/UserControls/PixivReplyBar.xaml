@@ -68,8 +68,5 @@
                 </StackPanel>
             </Button>
         </Grid>
-        <controls:InAppNotification x:Name="PixivReplyBarInAppNotification"
-                                    AnimationDuration="0:0:0.2"
-                                    ShowDismissButton="True" />
     </Grid>
 </UserControl>

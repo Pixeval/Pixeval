@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.System;
-using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -28,7 +26,7 @@ namespace Pixeval.Pages.Misc
             CheckForUpdatesEntry.Header = AppContext.AppVersion.ToString();
         }
 
-        private void ExcludeTagsTokenTextBox_OnTokenItemAdded(TokenizingTextBox sender, object args)
+        /*private void ExcludeTagsTokenTextBox_OnTokenItemAdded(TokenizingTextBox sender, object args)
         {
             if (_viewModel.ExcludeTags.Contains("R-18", StringComparer.OrdinalIgnoreCase) || _viewModel.ExcludeTags.Contains("R-18G", StringComparer.OrdinalIgnoreCase))
             {
@@ -50,7 +48,7 @@ namespace Pixeval.Pages.Misc
             {
                 args.Cancel = true;
             }
-        }
+        }*/
 
         private void SingleSelectionSettingEntry_OnSelectionChanged(Controls.Setting.UI.SingleSelectionSettingEntry.SingleSelectionSettingEntry sender, SelectionChangedEventArgs args)
         {

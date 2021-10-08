@@ -56,7 +56,8 @@ namespace Pixeval.UserControls
             ReplyContentRichEditBox.Document.GetText(TextGetOptions.UseObjectText, out var content);
             if (content.Length > 140)
             {
-                PixivReplyBarInAppNotification.Show(MiscResources.ReplyContentTooLong, 2000);
+                // TODO
+                // PixivReplyBarInAppNotification.Show(MiscResources.ReplyContentTooLong, 2000);
                 return;
             }
             _sendButtonTapped?.Invoke(this, new SendButtonTappedEventArgs(e, content));

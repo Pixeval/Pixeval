@@ -1,8 +1,7 @@
-﻿using CommunityToolkit.WinUI.UI;
-using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.Misc;
+using Pixeval.CommunityToolkit;
 
 namespace Pixeval.Util.UI
 {

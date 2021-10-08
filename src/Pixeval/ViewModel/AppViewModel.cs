@@ -2,11 +2,11 @@
 using System.Diagnostics.Tracing;
 using System.Threading.Tasks;
 using Windows.Foundation;
-using CommunityToolkit.WinUI;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.CommunityToolkit;
 using Pixeval.CoreApi;
 using Pixeval.Messages;
 using Pixeval.Misc;

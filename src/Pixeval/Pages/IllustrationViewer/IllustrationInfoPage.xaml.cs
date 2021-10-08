@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.System;
-using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock;
 using Pixeval.CoreApi.Model;
 using Pixeval.Utilities;
-using Pixeval.Util;
 using Pixeval.ViewModel;
 using ReverseMarkdown;
 

@@ -6,8 +6,9 @@
                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                         xmlns:model="using:Pixeval.CoreApi.Model"
-                        xmlns:ui="using:CommunityToolkit.WinUI.UI"
                         xmlns:viewer="using:Pixeval.Pages.IllustrationViewer"
+                        xmlns:wrapPanel="using:Pixeval.CommunityToolkit.WrapPanel"
+                        xmlns:markdownTextBlock="using:Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock"
                         Background="{ThemeResource PixevalPanelBackgroundThemeBrush}"
                         mc:Ignorable="d">
     <controls1:EnhancedPage.Resources>
@@ -40,7 +41,6 @@
                         Orientation="Horizontal">
                 <PersonPicture Width="50"
                                Height="50"
-                               ui:FrameworkElementExtensions.Cursor="Hand"
                                ProfilePicture="{x:Bind _viewModel.UserProfileImageSource, Mode=OneWay}"
                                Tapped="IllustratorPersonPicture_OnTapped" />
                 <StackPanel Margin="10,0,0,0"
@@ -68,7 +68,7 @@
             <!--#region Illustration Caption-->
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationCaptionTextBlock"
                        Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <controls:MarkdownTextBlock x:Name="IllustrationCaptionMarkdownTextBlock"
+            <markdownTextBlock:MarkdownTextBlock x:Name="IllustrationCaptionMarkdownTextBlock"
                                         MaxHeight="200"
                                         Margin="{StaticResource StackLayoutEntryPadding}"
                                         Background="{ThemeResource PixevalPanelBackgroundThemeBrush}"
@@ -114,7 +114,7 @@
                 </ListView.ItemTemplate>
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <controls:WrapPanel HorizontalSpacing="5"
+                        <wrapPanel:WrapPanel HorizontalSpacing="5"
                                             VerticalSpacing="5" />
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>

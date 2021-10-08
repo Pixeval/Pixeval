@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime;
-using CommunityToolkit.WinUI.UI;
-using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Controls.Setting.UI;
+using Pixeval.CommunityToolkit;
+using Pixeval.CommunityToolkit.AdaptiveGridView;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Misc;

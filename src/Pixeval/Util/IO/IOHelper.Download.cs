@@ -2,7 +2,6 @@
 using System.Buffers;
 using System.IO;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
@@ -39,16 +38,6 @@ namespace Pixeval.Util.IO
             MaxBufferSizeInBytes,
             MaximumSmallBufferPoolSizeInBytes,
             MaximumLargeBufferPoolSizeInBytes);
-
-        public static MemoryStream GetStream(this RecyclableMemoryStreamManager manager, Memory<byte> buffer, [CallerMemberName] string? tag = null)
-        {
-            return manager.GetStream(tag, buffer);
-        }
-
-        public static MemoryStream GetStream(this RecyclableMemoryStreamManager manager, byte[] buffer, [CallerMemberName] string? tag = null)
-        {
-            return manager.GetStream(tag, buffer);
-        }
 
         /// <summary>
         /// Attempts to download the content that are located by the <paramref name="url"/> argument
@@ -127,7 +116,7 @@ namespace Pixeval.Util.IO
                     return Result<Stream>.OfSuccess(resultStream);
                 }
 
-                return (await httpClient.DownloadByteArrayAsync(url)).Bind(m => (Stream) RecyclableMemoryStreamManager.GetStream(m));
+                return (await httpClient.DownloadByteArrayAsync(url)).Bind(m => (Stream) RecyclableMemoryStreamManager.GetStream(m.Span));
             }
             catch (Exception e)
             {

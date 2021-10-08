@@ -5,8 +5,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
-using CommunityToolkit.WinUI;
-using CommunityToolkit.WinUI.UI;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.UI.Text;
@@ -15,6 +13,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.CommunityToolkit;
 using Pixeval.Utilities;
 using Pixeval.Misc;
 

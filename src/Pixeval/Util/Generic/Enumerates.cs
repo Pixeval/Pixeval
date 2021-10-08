@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using CommunityToolkit.WinUI.UI;
+﻿using System.Linq;
+using Pixeval.CommunityToolkit.AdvancedCollectionView;
 using Pixeval.Utilities;
 
 namespace Pixeval.Util.Generic

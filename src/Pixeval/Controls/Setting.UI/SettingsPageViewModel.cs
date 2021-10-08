@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
-using Microsoft.Graphics.Canvas.Text;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Pixeval.Controls.Setting.UI.Model;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Options;
 
@@ -15,7 +14,7 @@ namespace Pixeval.Controls.Setting.UI
     {
         private readonly AppSetting _appSetting;
 
-        public static readonly IEnumerable<string> AvailableFonts = CanvasTextFormat.GetSystemFontFamilies();
+        public static readonly IEnumerable<string> AvailableFonts = new InstalledFontCollection().Families.Select(f => f.Name);
 
         public SettingsPageViewModel(AppSetting appSetting)
         {
