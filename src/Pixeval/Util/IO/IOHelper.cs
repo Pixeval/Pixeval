@@ -15,7 +15,6 @@ using Windows.Foundation;
 using Windows.Security.Cryptography;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using CommunityToolkit.WinUI.Helpers;
 using Pixeval.Utilities;
 
 namespace Pixeval.Util.IO
@@ -94,9 +93,24 @@ namespace Pixeval.Util.IO
             return await folder.TryGetItemAsync(folderName) is StorageFolder f ? f : await folder.CreateFolderAsync(folderName, CreationCollisionOption.ReplaceExisting);
         }
 
-        public static async Task<string> ReadStringAsync(this StorageFile storageFile, Encoding? encoding = null)
+        public static async Task<string?> ReadStringAsync(this StorageFile storageFile, Encoding? encoding = null)
         {
-            return (await storageFile.ReadBytesAsync()).GetString(encoding);
+            return (await storageFile.ReadBytesAsync())?.GetString(encoding);
+        }
+
+        public static async Task<byte[]?> ReadBytesAsync(this StorageFile? file)
+        {
+            if (file == null)
+            {
+                return null;
+            }
+
+            using IRandomAccessStream stream = await file.OpenReadAsync();
+            using var reader = new DataReader(stream.GetInputStreamAt(0));
+            await reader.LoadAsync((uint)stream.Size);
+            var bytes = new byte[stream.Size];
+            reader.ReadBytes(bytes);
+            return bytes;
         }
 
         public static Task<HttpResponseMessage> PostFormAsync(this HttpClient httpClient, string url, params (string key, string value)[] parameters)

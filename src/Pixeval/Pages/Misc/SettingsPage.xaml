@@ -3,7 +3,6 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:actionableExpanderSettingEntry="using:Pixeval.Controls.Setting.UI.ActionableExpanderSettingEntry"
       xmlns:actionableSettingEntry="using:Pixeval.Controls.Setting.UI.ActionableSettingEntry"
-      xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:expanderSettingEntry="using:Pixeval.Controls.Setting.UI.ExpanderSettingEntry"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -17,6 +16,7 @@
       xmlns:system="using:System"
       xmlns:toolkit="using:CommunityToolkit.WinUI.UI"
       xmlns:ui="using:Pixeval.Util.UI"
+      xmlns:wrapPanel="using:Pixeval.CommunityToolkit.WrapPanel"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
       Loaded="SettingsPage_OnLoaded"
       mc:Ignorable="d">
@@ -77,7 +77,7 @@
                     <StackPanel Grid.Column="1">
                         <TextBlock x:Uid="/SettingsPage/AppDescriptionTextBlock"
                                    TextWrapping="Wrap" />
-                        <controls:WrapPanel Margin="0,8,0,0"
+                        <wrapPanel:WrapPanel Margin="0,8,0,0"
                                             HorizontalSpacing="24"
                                             IsTabStop="False"
                                             Orientation="Horizontal">
@@ -93,7 +93,7 @@
                                              NavigateUri="https://afdian.net/@dylech30th" />
                             <HyperlinkButton x:Uid="/SettingsPage/JoinFeedbackGroupHyperlinkButton"
                                              NavigateUri="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog" />
-                        </controls:WrapPanel>
+                        </wrapPanel:WrapPanel>
                     </StackPanel>
                 </Grid>
                 <StackPanel Grid.Row="1"
@@ -199,7 +199,7 @@
                             <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/ExcludeTagsEntry"
                                                                            Icon="{ui:FontIcon Glyph=TagE8EC}"
                                                                            Style="{StaticResource ExpanderContentSettingEntryStyle}">
-                                <controls:TokenizingTextBox x:Uid="/SettingsPage/ExcludeTagsTokenTextBox"
+                                <!--<controls:TokenizingTextBox x:Uid="/SettingsPage/ExcludeTagsTokenTextBox"
                                                             Height="35"
                                                             MaxWidth="400"
                                                             MaxHeight="40"
@@ -207,7 +207,7 @@
                                                             QueryIcon="{toolkit:SymbolIconSource Symbol=Tag}"
                                                             TokenItemAdded="ExcludeTagsTokenTextBox_OnTokenItemAdded"
                                                             TokenItemAdding="ExcludeTagsTokenTextBox_OnTokenItemAdding"
-                                                            TokenItemRemoved="ExcludeTagsTokenTextBox_OnTokenItemRemoved" />
+                                                            TokenItemRemoved="ExcludeTagsTokenTextBox_OnTokenItemRemoved" />-->
                             </actionableSettingEntry:ActionableSettingEntry>
                         </actionableExpanderSettingEntry:ActionableExpanderSettingEntry>
                         <singleSelectionSettingEntry:SingleSelectionSettingEntry x:Uid="/SettingsPage/TargetAPIPlatformEntry"

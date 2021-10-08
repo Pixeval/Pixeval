@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using CommunityToolkit.WinUI.Helpers;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Global.Enum;
@@ -174,7 +173,7 @@ namespace Pixeval
 
         public static async Task<byte[]> GetResourceBytesAsync(string path)
         {
-            return await (await StorageFile.GetFileFromApplicationUriAsync(new Uri(path))).ReadBytesAsync();
+            return (await (await StorageFile.GetFileFromApplicationUriAsync(new Uri(path))).ReadBytesAsync())!;
         }
 
         public static async Task<IRandomAccessStreamWithContentType> GetResourceStreamAsync(string path)

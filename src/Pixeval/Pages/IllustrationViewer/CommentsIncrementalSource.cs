@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CommunityToolkit.Common.Collections;
+using Pixeval.CommunityToolkit.IncrementalLoadingCollection;
 using Pixeval.ViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer

@@ -35,7 +35,7 @@ namespace Pixeval.SourceGen
                     {
                         var className = $"{Path.GetFileNameWithoutExtension(additionalText.Path)}Resources";
                         using var classBuilder = namespaceBuilder.Block($"public class {className}", open, close);
-                        classBuilder.AppendLine(@$"public static readonly Microsoft.ApplicationModel.Resources.ResourceLoader ResourceLoader = new(Microsoft.ApplicationModel.Resources.ResourceLoader.GetDefaultResourceFilePath(), ""{Path.GetFileNameWithoutExtension(additionalText.Path)}"");");
+                        classBuilder.AppendLine(@$"public static readonly Microsoft.Windows.ApplicationModel.Resources.ResourceLoader ResourceLoader = new(Microsoft.Windows.ApplicationModel.Resources.ResourceLoader.GetDefaultResourceFilePath(), ""{Path.GetFileNameWithoutExtension(additionalText.Path)}"");");
                         var doc = new XmlDocument();
                         doc.Load(additionalText.Path);
                         if (doc.SelectNodes("//data") is { } nodes)

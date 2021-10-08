@@ -28,7 +28,6 @@
                            Grid.Column="0"
                            Width="35"
                            Height="35"
-                           ui:FrameworkElementExtensions.Cursor="Hand"
                            Tapped="PosterPersonPicture_OnTapped" />
             <StackPanel Grid.Row="0"
                         Grid.Column="2"

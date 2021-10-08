@@ -1,6 +1,6 @@
-﻿using CommunityToolkit.WinUI.UI;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.CommunityToolkit.AdvancedCollectionView;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Options;
 using Pixeval.Util;

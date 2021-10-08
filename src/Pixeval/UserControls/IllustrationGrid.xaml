@@ -1,16 +1,15 @@
 ﻿<UserControl x:Class="Pixeval.UserControls.IllustrationGrid"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
-             xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
              xmlns:converters="using:Pixeval.Converters"
              xmlns:core="using:Microsoft.Xaml.Interactions.Core"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:media="using:Microsoft.Xaml.Interactions.Media"
-             xmlns:ui="using:CommunityToolkit.WinUI.UI"
              xmlns:viewModel="using:Pixeval.ViewModel"
+             xmlns:adaptiveGridView="using:Pixeval.CommunityToolkit.AdaptiveGridView"
+             xmlns:communityToolkit="using:Pixeval.CommunityToolkit"
              Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
              Loaded="IllustrationGrid_OnLoaded"
              mc:Ignorable="d">
@@ -19,18 +18,18 @@
         <converters:IllustrationGridItemContainerWidthCenterConverter x:Key="IllustrationGridItemContainerWidthCenterConverter" />
     </UserControl.Resources>
     <Grid>
-        <controls:AdaptiveGridView x:Name="IllustrationGridView"
-                                   animations:ItemsReorderAnimation.Duration="0:0:0.2"
+        <adaptiveGridView:AdaptiveGridView x:Name="IllustrationGridView"
+                                   communityToolkit:ItemsReorderAnimation.Duration="0:0:0.2"
                                    x:FieldModifier="public"
                                    IsItemClickEnabled="True"
                                    IsMultiSelectCheckBoxEnabled="False"
                                    ItemsSource="{x:Bind ViewModel.IllustrationsView}"
                                    SelectionMode="Extended"
                                    StretchContentForSingleRow="True">
-            <controls:AdaptiveGridView.ItemContainerTransitions>
+            <adaptiveGridView:AdaptiveGridView.ItemContainerTransitions>
                 <AddDeleteThemeTransition />
-            </controls:AdaptiveGridView.ItemContainerTransitions>
-            <controls:AdaptiveGridView.ItemTemplate>
+            </adaptiveGridView:AdaptiveGridView.ItemContainerTransitions>
+            <adaptiveGridView:AdaptiveGridView.ItemTemplate>
                 <DataTemplate x:DataType="viewModel:IllustrationViewModel">
                     <GridViewItem x:Name="IllustrationThumbnailContainerItem"
                                   EffectiveViewportChanged="IllustrationThumbnailContainerItem_OnEffectiveViewportChanged"
@@ -176,13 +175,11 @@
                                 </Grid.RenderTransform>
                                 <FontIcon Width="20"
                                           Height="20"
-                                          ui:FrameworkElementExtensions.Cursor="Hand"
                                           FontFamily="{StaticResource SymbolThemeFontFamily}"
                                           Glyph="&#xEB51;"
                                           Tapped="PostBookmarkButton_OnTapped" />
                                 <FontIcon Width="20"
                                           Height="20"
-                                          ui:FrameworkElementExtensions.Cursor="Hand"
                                           FontFamily="{StaticResource SymbolThemeFontFamily}"
                                           Foreground="Crimson"
                                           Glyph="&#xEB52;"
@@ -250,7 +247,7 @@
                         </Grid>
                     </GridViewItem>
                 </DataTemplate>
-            </controls:AdaptiveGridView.ItemTemplate>
-        </controls:AdaptiveGridView>
+            </adaptiveGridView:AdaptiveGridView.ItemTemplate>
+        </adaptiveGridView:AdaptiveGridView>
     </Grid>
 </UserControl>

@@ -1,23 +1,23 @@
 ﻿<UserControl x:Class="Pixeval.UserControls.IllustrationGridCommandBar"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="using:Pixeval.Util.UI"
+             xmlns:dockPanel="using:Pixeval.CommunityToolkit.DockPanel"
              mc:Ignorable="d">
-    <controls:DockPanel>
+    <dockPanel:DockPanel>
         <StackPanel x:Name="ExtraCommandsBar"
                     Margin="5,0,0,0"
                     VerticalAlignment="Center"
-                    controls:DockPanel.Dock="Left"
+                    dockPanel:DockPanel.Dock="Left"
                     Background="Transparent"
                     FlowDirection="LeftToRight"
                     Orientation="Horizontal" />
         <CommandBar x:Name="CommandBar"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
-                    controls:DockPanel.Dock="Right"
+                    dockPanel:DockPanel.Dock="Right"
                     Background="Transparent"
                     DefaultLabelPosition="Right">
             <AppBarButton Icon="{ui:FontIcon Glyph=CancelE711}"
@@ -48,5 +48,5 @@
                           Icon="{ui:FontIcon Glyph=ShareE72D}"
                           Tapped="ShareButton_OnTapped" />
         </CommandBar>
-    </controls:DockPanel>
+    </dockPanel:DockPanel>
 </UserControl>
