@@ -41,7 +41,7 @@ namespace Pixeval.Pages.Misc
                 }
 
                 AppContext.SaveContext();
-                WeakReferenceMessenger.Default.Send(new LoginCompletedMessage(this, App.AppViewModel.MakoClient!.Session));
+                WeakReferenceMessenger.Default.Send(new LoginCompletedMessage(this, App.AppViewModel.MakoClient.Session));
             }
             catch (Exception exception)
             {

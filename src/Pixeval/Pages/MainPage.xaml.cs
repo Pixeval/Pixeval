@@ -43,26 +43,18 @@ namespace Pixeval.Pages
         {
             InitializeComponent();
             DataContext = _viewModel;
+        }
+
+        public override void OnPageDeactivated(NavigatingCancelEventArgs e)
+        {
+            WeakReferenceMessenger.Default.UnregisterAll(this);
+        }
+
+        public override void OnPageActivated(NavigationEventArgs e)
+        {
             WeakReferenceMessenger.Default.Register<MainPage, MainPageFrameSetConnectedAnimationTargetMessage>(this, (_, message) => _connectedAnimationTarget = message.Sender);
             WeakReferenceMessenger.Default.Register<MainPage, NavigatingBackToMainPageMessage>(this, (_, message) => _illustrationViewerContent = message.IllustrationViewModel);
-        }
-         
-        private void MainPageRootNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
-        {
-            MainPageRootFrame.NavigateByNavigationViewTag(sender, new SuppressNavigationTransitionInfo());
-        }
-
-        private void MainPageRootFrame_OnNavigated(object sender, NavigationEventArgs e)
-        {
-            WeakReferenceMessenger.Default.Send(new MainPageFrameNavigatingEvent(this));
-            GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
-            GC.Collect();
-        }
-
-        // 转移到MainPage中某element的动画效果
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
+            WeakReferenceMessenger.Default.Register<MainPage, IllustrationTagClickedMessage>(this, (_, message) => PerformSearch(message.Tag));
 
             // Connected animation to the element located in MainPage
             if (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation") is { } animation)
@@ -80,6 +72,18 @@ namespace Pixeval.Pages
             }
         }
 
+        private void MainPageRootNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        {
+            MainPageRootFrame.NavigateByNavigationViewTag(sender, new SuppressNavigationTransitionInfo());
+        }
+
+        private void MainPageRootFrame_OnNavigated(object sender, NavigationEventArgs e)
+        {
+            WeakReferenceMessenger.Default.Send(new MainPageFrameNavigatingEvent(this));
+            GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+            GC.Collect();
+        }
+
         // 搜索并跳转至搜索结果
         private void KeywordAutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
@@ -91,8 +95,8 @@ namespace Pixeval.Pages
                     AppContext.AppLogoNoCaptionUri);
                 return;
             }
-            MainPageRootNavigationView.SelectedItem = null;
-            MainPageRootFrame.Navigate(typeof(SearchResultsPage), App.AppViewModel.MakoClient.Search(args.QueryText));
+
+            PerformSearch(args.QueryText);
         }
 
         private async void KeywordAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -105,6 +109,12 @@ namespace Pixeval.Pages
                     sender.ItemsSource = suggestions;
                 }
             }
+        }
+
+        private void PerformSearch(string text)
+        {
+            MainPageRootNavigationView.SelectedItem = null;
+            MainPageRootFrame.Navigate(typeof(SearchResultsPage), App.AppViewModel.MakoClient.Search(text));
         }
     }
 }

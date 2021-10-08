@@ -24,7 +24,7 @@ namespace Pixeval.ViewModel
         /// </summary>
         public async void DownloadAndSetAvatar()
         {
-            var makoClient = App.AppViewModel.MakoClient!;
+            var makoClient = App.AppViewModel.MakoClient;
             // get byte array of avatar
             // and set to the bitmap image
             Avatar = await (await makoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(makoClient.Session.AvatarUrl!))

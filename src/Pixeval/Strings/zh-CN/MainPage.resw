@@ -159,9 +159,6 @@
   <data name="RecommendationsTab.Content" xml:space="preserve">
     <value>每日推荐</value>
   </data>
-  <data name="OpenSearchSettingPopupButton.Text" xml:space="preserve">
-    <value>搜索设置</value>
-  </data>
   <data name="SearchKeywordCannotBeBlankToastContent" xml:space="preserve">
     <value>关键字的长度不能为空</value>
   </data>

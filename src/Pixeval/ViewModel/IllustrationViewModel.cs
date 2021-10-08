@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.CommunityToolkit.AdaptiveGridView;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
@@ -125,8 +126,8 @@ namespace Pixeval.ViewModel
             {
                 using (ras)
                 {
-                    await App.AppViewModel.Cache.TryAddAsync(Illustration.GetIllustrationThumbnailCacheKey(), ras!, TimeSpan.FromDays(1));
-                    ThumbnailSource = await ras!.GetSoftwareBitmapSourceAsync(false);
+                    await App.AppViewModel.Cache.TryAddAsync(Illustration.GetIllustrationThumbnailCacheKey(), ras, TimeSpan.FromDays(1));
+                    ThumbnailSource = await ras.GetSoftwareBitmapSourceAsync(false);
                 }
 
                 LoadingThumbnail = false;

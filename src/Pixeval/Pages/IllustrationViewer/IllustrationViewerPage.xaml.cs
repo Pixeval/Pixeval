@@ -181,14 +181,7 @@ namespace Pixeval.Pages.IllustrationViewer
 
         private void BackButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", IllustrationImageShowcaseFrame);
-            WeakReferenceMessenger.Default.Send(new NavigatingBackToMainPageMessage(_viewModel.IllustrationViewModelInTheGridView));
-
-            App.AppViewModel.AppWindowRootFrame.BackStack.RemoveAll(entry => entry.SourcePageType == typeof(IllustrationViewerPage));
-            if (App.AppViewModel.AppWindowRootFrame.CanGoBack)
-            {
-                App.AppViewModel.AppWindowRootFrame.GoBack(new SuppressNavigationTransitionInfo());
-            }
+            BackToMainPage();
         }
 
         private void GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick(TeachingTip sender, object args)
@@ -215,6 +208,18 @@ namespace Pixeval.Pages.IllustrationViewer
                         _ => throw new ArgumentOutOfRangeException()
                     }
                 });
+            }
+        }
+
+        public void BackToMainPage()
+        {
+            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", IllustrationImageShowcaseFrame);
+            WeakReferenceMessenger.Default.Send(new NavigatingBackToMainPageMessage(_viewModel.IllustrationViewModelInTheGridView));
+            
+            App.AppViewModel.AppWindowRootFrame.BackStack.RemoveAll(entry => entry.SourcePageType == typeof(IllustrationViewerPage));
+            if (App.AppViewModel.AppWindowRootFrame.CanGoBack)
+            {
+                App.AppViewModel.AppWindowRootFrame.GoBack(new SuppressNavigationTransitionInfo());
             }
         }
 

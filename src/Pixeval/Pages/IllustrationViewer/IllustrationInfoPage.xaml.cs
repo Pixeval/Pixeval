@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.System;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.CommunityToolkit;
 using Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock;
 using Pixeval.CoreApi.Model;
+using Pixeval.Messages;
 using Pixeval.Utilities;
 using Pixeval.ViewModel;
 using ReverseMarkdown;
@@ -31,8 +35,8 @@ namespace Pixeval.Pages.IllustrationViewer
 
         private void IllustrationTagButton_OnClick(object sender, RoutedEventArgs e)
         {
-            // TODO
-            // throw new System.NotImplementedException();
+            this.FindAscendant<IllustrationViewerPage>()?.BackToMainPage();
+            WeakReferenceMessenger.Default.Send(new IllustrationTagClickedMessage((string) ((Button) sender).Content));
         }
 
         private async void IllustrationCaptionMarkdownTextBlock_OnLinkClicked(object? sender, LinkClickedEventArgs e)
