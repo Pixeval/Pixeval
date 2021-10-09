@@ -44,7 +44,7 @@ namespace Pixeval.UserControls
                     popupContent.ShadowReceiver.Tapped -= OnShadowReceiverOnTapped;
                 }
 
-                void OnShadowReceiverOnTapped(object sender, TappedRoutedEventArgs args)
+                void OnShadowReceiverOnTapped(object sender, TappedRoutedEventArgs a)
                 {
                     PopupManager.ClosePopup(PopupManager.OpenPopups[popupContent._popupGuid]);
                 }

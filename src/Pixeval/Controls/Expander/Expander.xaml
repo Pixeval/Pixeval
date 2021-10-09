@@ -4,8 +4,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:card="using:Pixeval.Controls.Card"
-                    xmlns:local="using:Pixeval.Controls.Expander"
-                    xmlns:ui="using:Pixeval.Util.UI">
+                    xmlns:local="using:Pixeval.Controls.Expander">
     <GridLength x:Key="ExpanderChevronButtonContainerWidth">50</GridLength>
     <Style TargetType="local:Expander">
         <Setter Property="CornerRadius" Value="5" />
