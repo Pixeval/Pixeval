@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.CommunityToolkit;
+using Pixeval.Misc;
 
 namespace Pixeval.Util.UI
 {

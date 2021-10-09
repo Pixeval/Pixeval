@@ -1,154 +1,200 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Reflection;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Preference;
+using Pixeval.Misc;
 using Pixeval.Options;
 
 namespace Pixeval
 {
-    public record AppSetting(
-        ApplicationTheme Theme,
-        ObservableCollection<string> ExcludeTags,
-        bool DisableDomainFronting,
-        IllustrationSortOption DefaultSortOption,
-        SearchTagMatchOption TagMatchOption,
-        TargetFilter TargetFilter,
-        int PreLoadRows,
-        int PageLimitForKeywordSearch,
-        int SearchStartingFromPageNumber,
-        int PageLimitForSpotlight,
-        string? MirrorHost,
-        int MaxDownloadTaskConcurrencyLevel,
-        bool DisplayTeachingTipWhenGeneratingAppLink,
-        int ItemsNumberLimitForDailyRecommendations,
-        bool FiltrateRestrictedContent,
-        bool UseFileCache,
-        int WindowWidth,
-        int WindowHeight,
-        ThumbnailDirection ThumbnailDirection,
-        DateTimeOffset LastCheckedUpdate,
-        bool DownloadUpdateAutomatically,
-        string AppFontFamilyName)
+    public record AppSetting
     {
+#pragma warning disable CS8618
+        public AppSetting()
+#pragma warning restore CS8618
+        {
+            ResetDefault();
+        }
+
+        public AppSetting(ApplicationTheme theme,
+            ObservableCollection<string> excludeTags,
+            bool disableDomainFronting,
+            IllustrationSortOption defaultSortOption,
+            SearchTagMatchOption tagMatchOption,
+            TargetFilter targetFilter,
+            int preLoadRows,
+            int pageLimitForKeywordSearch,
+            int searchStartingFromPageNumber,
+            int pageLimitForSpotlight,
+            string? mirrorHost,
+            int maxDownloadTaskConcurrencyLevel,
+            bool displayTeachingTipWhenGeneratingAppLink,
+            int itemsNumberLimitForDailyRecommendations,
+            bool filtrateRestrictedContent,
+            bool useFileCache,
+            int windowWidth,
+            int windowHeight,
+            ThumbnailDirection thumbnailDirection,
+            DateTimeOffset lastCheckedUpdate,
+            bool downloadUpdateAutomatically,
+            string appFontFamilyName,
+            MainPageTabItem defaultSelectedTabItem)
+        {
+            Theme = theme;
+            ExcludeTags = excludeTags;
+            FiltrateRestrictedContent = filtrateRestrictedContent;
+            DisableDomainFronting = disableDomainFronting;
+            DefaultSortOption = defaultSortOption;
+            TagMatchOption = tagMatchOption;
+            TargetFilter = targetFilter;
+            PreLoadRows = preLoadRows;
+            PageLimitForKeywordSearch = pageLimitForKeywordSearch;
+            SearchStartingFromPageNumber = searchStartingFromPageNumber;
+            PageLimitForSpotlight = pageLimitForSpotlight;
+            MirrorHost = mirrorHost;
+            MaxDownloadTaskConcurrencyLevel = maxDownloadTaskConcurrencyLevel;
+            DisplayTeachingTipWhenGeneratingAppLink = displayTeachingTipWhenGeneratingAppLink;
+            ItemsNumberLimitForDailyRecommendations = itemsNumberLimitForDailyRecommendations;
+            UseFileCache = useFileCache;
+            WindowWidth = windowWidth;
+            WindowHeight = windowHeight;
+            ThumbnailDirection = thumbnailDirection;
+            LastCheckedUpdate = lastCheckedUpdate;
+            DownloadUpdateAutomatically = downloadUpdateAutomatically;
+            AppFontFamilyName = appFontFamilyName;
+            DefaultSelectedTabItem = defaultSelectedTabItem;
+        }
+
         /// <summary>
         /// The Application Theme
         /// </summary>
-        public ApplicationTheme Theme { get; set; } = Theme;
+        [DefaultValue(ApplicationTheme.SystemDefault)]
+        public ApplicationTheme Theme { get; set; }
 
         /// <summary>
         /// The tags that are not allowed to be included in the search result.
         /// The particular search result will be ignored if any of its tag is
         /// included in <see cref="ExcludeTags"/>
         /// </summary>
-        public ObservableCollection<string> ExcludeTags { get; set; } = ExcludeTags;
+        [DefaultValue(typeof(ObservableCollection<string>))]
+        public ObservableCollection<string> ExcludeTags { get; set; }
 
         /// <summary>
         /// Indicates whether the restricted content are permitted to be included
         /// in the searching results, including R-18 and R-18G
         /// </summary>
-        public bool FiltrateRestrictedContent { get; set; } = FiltrateRestrictedContent;
+        [DefaultValue(false)]
+        public bool FiltrateRestrictedContent { get; set; }
 
         /// <summary>
         /// Disable the domain fronting technology, once disabled, the users
         /// from China mainland are required to have other countermeasures to bypass
         /// GFW
         /// </summary>
-        public bool DisableDomainFronting { get; set; } = DisableDomainFronting;
+        [DefaultValue(false)]
+        public bool DisableDomainFronting { get; set; }
 
         /// <summary>
         /// The application-wide default sort option, any illustration page that supports
         /// different orders will use this as its default value
         /// </summary>
-        public IllustrationSortOption DefaultSortOption { get; set; } = DefaultSortOption;
+        [DefaultValue(IllustrationSortOption.DoNotSort)]
+        public IllustrationSortOption DefaultSortOption { get; set; }
 
         /// <summary>
         /// The tag match option for keyword search
         /// </summary>
-        public SearchTagMatchOption TagMatchOption { get; set; } = TagMatchOption;
+        [DefaultValue(SearchTagMatchOption.PartialMatchForTags)]
+        public SearchTagMatchOption TagMatchOption { get; set; }
 
         /// <summary>
         /// The target filter that indicates the type of the client
         /// </summary>
-        public TargetFilter TargetFilter { get; set; } = TargetFilter;
+        [DefaultValue(TargetFilter.ForAndroid)]
+        public TargetFilter TargetFilter { get; set; }
 
         /// <summary>
         /// How many rows to be preloaded in illustration grid
         /// </summary>
-        public int PreLoadRows { get; set; } = PreLoadRows;
+        [DefaultValue(2)]
+        public int PreLoadRows { get; set; }
 
         /// <summary>
         /// Indicates the maximum page count that are allowed to be retrieved during
         /// keyword search(30 entries per page)
         /// </summary>
-        public int PageLimitForKeywordSearch { get; set; } = PageLimitForKeywordSearch;
+        [DefaultValue(100)]
+        public int PageLimitForKeywordSearch { get; set; }
 
         /// <summary>
         /// Indicates the starting page's number of keyword search
         /// </summary>
-        public int SearchStartingFromPageNumber { get; set; } = SearchStartingFromPageNumber;
+        [DefaultValue(1)]
+        public int SearchStartingFromPageNumber { get; set; }
 
         /// <summary>
         /// Indicates the maximum page count that are allowed to be retrieved during
         /// spotlight retrieval(10 entries per page)
         /// </summary>
-        public int PageLimitForSpotlight { get; set; } = PageLimitForSpotlight;
+        [DefaultValue(50)]
+        public int PageLimitForSpotlight { get; set; }
 
         /// <summary>
         /// The mirror host for image server, Pixeval will do a simple substitution that
         /// changes the host of the original url(i.pximg.net) to this one.
         /// </summary>
-        public string? MirrorHost { get; set; } = MirrorHost;
+        [DefaultValue(null)]
+        public string? MirrorHost { get; set; }
 
         /// <summary>
         /// The max download tasks that are allowed to run concurrently
         /// </summary>
-        public int MaxDownloadTaskConcurrencyLevel { get; set; } = MaxDownloadTaskConcurrencyLevel;
+        [DefaultValue(typeof(ProcessorCountDefaultValueProvider))]
+        public int MaxDownloadTaskConcurrencyLevel { get; set; }
 
-        public bool DisplayTeachingTipWhenGeneratingAppLink { get; set; } = DisplayTeachingTipWhenGeneratingAppLink;
+        [DefaultValue(true)]
+        public bool DisplayTeachingTipWhenGeneratingAppLink { get; set; }
 
-        public int ItemsNumberLimitForDailyRecommendations { get; set; } = ItemsNumberLimitForDailyRecommendations;
+        [DefaultValue(500)]
+        public int ItemsNumberLimitForDailyRecommendations { get; set; }
 
-        public bool UseFileCache { get; set; } = UseFileCache;
+        [DefaultValue(false)]
+        public bool UseFileCache { get; set; }
 
-        public int WindowWidth { get; set; } = WindowWidth;
+        [DefaultValue(typeof(AppWidthDefaultValueProvider))]
+        public int WindowWidth { get; set; }
 
-        public int WindowHeight { get; set; } = WindowHeight;
+        [DefaultValue(typeof(AppHeightDefaultValueProvider))]
+        public int WindowHeight { get; set; }
 
-        public ThumbnailDirection ThumbnailDirection { get; set; } = ThumbnailDirection;
+        [DefaultValue(ThumbnailDirection.Portrait)]
+        public ThumbnailDirection ThumbnailDirection { get; set; }
 
-        public DateTimeOffset LastCheckedUpdate { get; set; } = LastCheckedUpdate;
+        [DefaultValue(typeof(DateTimeOffSetDefaultValueProvider))]
+        public DateTimeOffset LastCheckedUpdate { get; set; }
 
-        public bool DownloadUpdateAutomatically { get; set; } = DownloadUpdateAutomatically;
+        [DefaultValue(false)]
+        public bool DownloadUpdateAutomatically { get; set; }
 
-        public string AppFontFamilyName { get; set; } = AppFontFamilyName;
+        [DefaultValue("Segoe UI")]
+        public string AppFontFamilyName { get; set; }
+
+        [DefaultValue(MainPageTabItem.DailyRecommendation)]
+        public MainPageTabItem DefaultSelectedTabItem { get; set; }
 
         public static AppSetting CreateDefault()
         {
-            var (width, height) = App.PredetermineEstimatedWindowSize();
-            return new AppSetting(
-                ApplicationTheme.SystemDefault,
-                new ObservableCollection<string>(),
-                false,
-                IllustrationSortOption.DoNotSort,
-                SearchTagMatchOption.PartialMatchForTags,
-                TargetFilter.ForAndroid,
-                2,
-                100,
-                1,
-                50,
-                null,
-                Environment.ProcessorCount,
-                true,
-                500,
-                false,
-                false,
-                width,
-                height,
-                ThumbnailDirection.Portrait,
-                DateTimeOffset.MinValue,
-                false,
-                "Segoe UI");
+            return new AppSetting();
+        }
+
+        private void ResetDefault()
+        {
+            foreach (var propertyInfo in typeof(AppSetting).GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            {
+                propertyInfo.SetValue(this, propertyInfo.GetDefaultValue());
+            }
         }
 
         public MakoClientConfiguration ToMakoClientConfiguration()

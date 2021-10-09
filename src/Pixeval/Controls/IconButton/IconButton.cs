@@ -2,12 +2,13 @@
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.CommunityToolkit;
 
-namespace Pixeval.Controls
+namespace Pixeval.Controls.IconButton
 {
     public class IconButton : Button
     {
         public IconButton()
         {
+            DefaultStyleKey = typeof(IconButton);
             Content = new StackPanel
             {
                 Orientation = Orientation.Horizontal,

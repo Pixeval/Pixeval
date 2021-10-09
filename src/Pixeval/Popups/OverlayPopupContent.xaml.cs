@@ -3,7 +3,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Util.UI;
 
-namespace Pixeval.UserControls
+namespace Pixeval.Popups
 {
     public sealed partial class OverlayPopupContent
     {
@@ -17,7 +17,7 @@ namespace Pixeval.UserControls
             {
                 var popupContent = (OverlayPopupContent) o;
                 var element = (FrameworkElement) args.NewValue;
-                popupContent.PopupContentPresenter.Content = element;
+                popupContent.PopupContentPresenter.Children.Add(element);
                 element.Shadow = popupContent.PopupContentShadow;
             }));
 

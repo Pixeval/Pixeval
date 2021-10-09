@@ -11,5 +11,6 @@
         <ResourceDictionary Source="ms-appx:///Controls/Setting.UI/ActionableExpanderSettingEntry/ActionableExpanderSettingEntry.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/NotifyOnLoadedCalendarDatePicker/NotifyOnLoadedCalendarDatePicker.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/NotifyOnLoadedComboBox/NotifyOnLoadedComboBox.xaml" />
+        <ResourceDictionary Source="ms-appx:///Controls/IconButton/IconButton.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

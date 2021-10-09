@@ -3,9 +3,9 @@
                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                         xmlns:controls1="using:Pixeval.Controls"
                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                        xmlns:dockPanel="using:Pixeval.CommunityToolkit.DockPanel"
                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                         xmlns:ui="using:Pixeval.Util.UI"
-                        xmlns:dockPanel="using:Pixeval.CommunityToolkit.DockPanel"
                         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                         Loaded="IllustrationViewerPage_OnLoaded"
                         mc:Ignorable="d">
@@ -18,13 +18,12 @@
                IsPaneOpen="{x:Bind _viewModel.IsInfoPaneOpen, Mode=TwoWay}">
         <SplitView.Pane>
             <Grid Shadow="{x:Bind SidePanelShadow}"
-                  Translation="0,0,20">
+                  Translation="0,0,40">
                 <NavigationView BackRequested="IllustrationInfoAndCommentsNavigationView_OnBackRequested"
                                 IsBackEnabled="True"
                                 IsSettingsVisible="False"
                                 PaneDisplayMode="Top"
-                                SelectionChanged="IllustrationInfoAndCommentsNavigationView_OnSelectionChanged"
-                                Shadow="{x:Bind SidePanelShadow}">
+                                SelectionChanged="IllustrationInfoAndCommentsNavigationView_OnSelectionChanged">
                     <NavigationView.MenuItems>
                         <NavigationViewItem x:Uid="/IllustrationViewerPage/IllustrationInfoTab"
                                             IsSelected="True"
@@ -37,8 +36,8 @@
             </Grid>
         </SplitView.Pane>
         <dockPanel:DockPanel x:Name="IllustrationPresenterDockPanel"
-                            HorizontalAlignment="Stretch"
-                            LastChildFill="True">
+                             HorizontalAlignment="Stretch"
+                             LastChildFill="True">
             <CommandBar dockPanel:DockPanel.Dock="Top"
                         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                         DefaultLabelPosition="Right">
@@ -123,7 +122,9 @@
             </Grid>
             <Grid Height="30"
                   dockPanel:DockPanel.Dock="Bottom" />
-            <Frame x:Name="IllustrationImageShowcaseFrame" />
+            <Frame x:Name="IllustrationImageShowcaseFrame"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Stretch" />
         </dockPanel:DockPanel>
     </SplitView>
 </controls1:EnhancedPage>

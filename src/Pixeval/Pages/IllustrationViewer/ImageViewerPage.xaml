@@ -59,13 +59,7 @@
               VerticalAlignment="Stretch"
               ui:ClipService.ClipToBounds="True"
               PointerWheelChanged="IllustrationOriginalImageContainer_OnPointerWheelChanged">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
             <Image x:Name="IllustrationOriginalImage"
-                   Grid.Column="1"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    DoubleTapped="IllustrationOriginalImage_OnDoubleTapped"

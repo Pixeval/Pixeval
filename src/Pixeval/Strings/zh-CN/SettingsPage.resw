@@ -158,6 +158,12 @@
   <data name="DefaultSearchTagMatchOptionEntry.Header" xml:space="preserve">
     <value>默认的关键字匹配策略</value>
   </data>
+  <data name="DefaultSelectedTabEntry.Description" xml:space="preserve">
+    <value>应用启动时将会选中主页侧边导航栏中由该项所指定的默认标签栏</value>
+  </data>
+  <data name="DefaultSelectedTabEntry.Header" xml:space="preserve">
+    <value>默认标签栏</value>
+  </data>
   <data name="DisableDomainFrontingEntry.Description" xml:space="preserve">
     <value>开启此选项将导致在 Pixiv 被屏蔽的国家或地区的用户无法正常使用</value>
   </data>
@@ -176,14 +182,8 @@
   <data name="DownloadUpdateAutomaticallyEntry.Header" xml:space="preserve">
     <value>自动下载更新</value>
   </data>
-  <data name="ExcludeTagsEntry.Description" xml:space="preserve">
-    <value>包含这些标签的作品将会被排除在搜索结果之外</value>
-  </data>
-  <data name="ExcludeTagsEntry.Header" xml:space="preserve">
-    <value>要被排除的标签</value>
-  </data>
-  <data name="ExcludeTagsTokenTextBox.PlaceholderText" xml:space="preserve">
-    <value>请输入要排除的标签</value>
+  <data name="ExcludeTagsTextBox.PlaceholderText" xml:space="preserve">
+    <value>在此输入要排除的标签，点击右侧按钮或Enter键添加到列表</value>
   </data>
   <data name="FeedbackByEmailHyperlinkButton.Content" xml:space="preserve">
     <value>邮件联系作者</value>
@@ -245,6 +245,9 @@
   <data name="OpenFontSettingsHyperlinkButton.Content" xml:space="preserve">
     <value>打开 Windows 系统字体设置</value>
   </data>
+  <data name="PerformSignOutButton.Content" xml:space="preserve">
+    <value>执行登出</value>
+  </data>
   <data name="PreloadRowsEntry.Description" xml:space="preserve">
     <value>浏览插画时会提前加载多少行插画，提升浏览流畅度，但会增加网络与资源占用</value>
   </data>
@@ -266,6 +269,21 @@
   <data name="ReportBugHyperlinkButton.Content" xml:space="preserve">
     <value>在 GitHub 上汇报问题</value>
   </data>
+  <data name="ResetDefaultSettingsButton.Content" xml:space="preserve">
+    <value>重置设置</value>
+  </data>
+  <data name="ResetDefaultSettingsEntry.Description" xml:space="preserve">
+    <value>点击该按钮将会将所有设置重置会默认状态，该操作不可撤销</value>
+  </data>
+  <data name="ResetDefaultSettingsEntry.Header" xml:space="preserve">
+    <value>重置默认设置</value>
+  </data>
+  <data name="ResetSettingConfirmationDialogContent" xml:space="preserve">
+    <value>该操作将会无法撤销</value>
+  </data>
+  <data name="ResetSettingConfirmationDialogTitle" xml:space="preserve">
+    <value>你确定要重置所有设置项吗？</value>
+  </data>
   <data name="SearchSettings.Header" xml:space="preserve">
     <value>搜索设置</value>
   </data>
@@ -278,6 +296,21 @@
   <data name="SearchStartsFromNumberBox.PlaceholderText" xml:space="preserve">
     <value>从第几页开始搜索[1,150]</value>
   </data>
+  <data name="SessionSettingsGroup.Header" xml:space="preserve">
+    <value>会话设置</value>
+  </data>
+  <data name="SignOutConfirmationDialogContent" xml:space="preserve">
+    <value>该操作将会无法撤销</value>
+  </data>
+  <data name="SignOutConfirmationDialogTitle" xml:space="preserve">
+    <value>你确定要登出吗？</value>
+  </data>
+  <data name="SignOutEntry.Description" xml:space="preserve">
+    <value>退出登录将会清除你的缓存与包括跨设备同步在内的所有个人信息并关闭应用程序</value>
+  </data>
+  <data name="SignOutEntry.Header" xml:space="preserve">
+    <value>退出登录</value>
+  </data>
   <data name="SpotlightSearchPageLimitEntry.Description" xml:space="preserve">
     <value>在搜索特辑时，最多会获取多少页的结果（每一页包含10条结果）</value>
   </data>
@@ -286,6 +319,9 @@
   </data>
   <data name="SpotlightSearchPageLimitNumberBox.PlaceholderText" xml:space="preserve">
     <value>特辑搜索页数限制[1,100]</value>
+  </data>
+  <data name="SubmitExcludeTagButton.Content" xml:space="preserve">
+    <value>提交</value>
   </data>
   <data name="TargetAPIPlatformEntry.Description" xml:space="preserve">
     <value>指定发送请求时使用哪个平台对应的 API，如果不知道这是什么意思请保持默认</value>

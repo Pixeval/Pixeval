@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.Controls.IconButton;
 using Pixeval.Controls.Setting.UI;
 using Pixeval.Util;
 using Pixeval.Util.UI;
@@ -26,29 +28,45 @@ namespace Pixeval.Pages.Misc
             CheckForUpdatesEntry.Header = AppContext.AppVersion.ToString();
         }
 
-        /*private void ExcludeTagsTokenTextBox_OnTokenItemAdded(TokenizingTextBox sender, object args)
+        private void SubmitExcludeTagButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            if (_viewModel.ExcludeTags.Contains("R-18", StringComparer.OrdinalIgnoreCase) || _viewModel.ExcludeTags.Contains("R-18G", StringComparer.OrdinalIgnoreCase))
+            AddExcludeTag(ExcludeTagsTextBox.Text);
+        }
+
+        private void ExcludeTagsTextBox_OnKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Enter)
             {
-                FiltrateRestrictedContentSwitch.IsOn = true;
+                AddExcludeTag(ExcludeTagsTextBox.Text);
             }
         }
 
-        private void ExcludeTagsTokenTextBox_OnTokenItemRemoved(TokenizingTextBox sender, object args)
+        private void AddExcludeTag(string text)
         {
-            if (!_viewModel.ExcludeTags.Contains("R-18", StringComparer.OrdinalIgnoreCase) || !_viewModel.ExcludeTags.Contains("R-18G", StringComparer.OrdinalIgnoreCase))
+            ExcludeTagsTextBox.Text = string.Empty;
+            if (_viewModel.ExcludeTags.Contains(text, StringComparer.OrdinalIgnoreCase))
             {
-                FiltrateRestrictedContentSwitch.IsOn = false;
+                return;
+            }
+
+            _viewModel.ExcludeTags.Add(text);
+
+            if (_viewModel.ExcludeTags.Contains("R-18", StringComparer.OrdinalIgnoreCase) && _viewModel.ExcludeTags.Contains("R-18G", StringComparer.OrdinalIgnoreCase))
+            {
+                _viewModel.FiltrateRestrictedContent = true;
             }
         }
 
-        private void ExcludeTagsTokenTextBox_OnTokenItemAdding(TokenizingTextBox sender, TokenItemAddingEventArgs args)
+        private void ExcludeTagButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            if (_viewModel.ExcludeTags.Contains(args.TokenText, StringComparer.OrdinalIgnoreCase))
+            var token = ((IconButton) sender).Text;
+            if (token.Equals("R-18", StringComparison.OrdinalIgnoreCase) || token.Contains("R-18G", StringComparison.OrdinalIgnoreCase))
             {
-                args.Cancel = true;
+                _viewModel.FiltrateRestrictedContent = false;
             }
-        }*/
+
+            _viewModel.ExcludeTags.Remove(token);
+        }
 
         private void SingleSelectionSettingEntry_OnSelectionChanged(Controls.Setting.UI.SingleSelectionSettingEntry.SingleSelectionSettingEntry sender, SelectionChangedEventArgs args)
         {
@@ -92,6 +110,31 @@ namespace Pixeval.Pages.Misc
         private void OpenFontSettingsHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             Launcher.LaunchUriAsync(new Uri("ms-settings:fonts")).Discard();
+        }
+
+        private async void PerformSignOutButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            var dialog = MessageDialogBuilder.CreateOkCancel(
+                App.AppViewModel.Window,
+                SettingsPageResources.SignOutConfirmationDialogTitle,
+                SettingsPageResources.SignOutConfirmationDialogContent);
+            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+            {
+                await AppContext.ClearDataAsync();
+                App.AppViewModel.Window.Close();
+            }
+        }
+
+        private async void ResetDefaultSettingsButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            var dialog = MessageDialogBuilder.CreateOkCancel(
+                App.AppViewModel.Window,
+                SettingsPageResources.ResetSettingConfirmationDialogTitle,
+                SettingsPageResources.ResetSettingConfirmationDialogContent);
+            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+            {
+                _viewModel.ResetDefault();
+            }
         }
     }
 }

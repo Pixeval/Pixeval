@@ -119,7 +119,7 @@ namespace Pixeval
 
         public static Uri GenerateAppLinkToIllustration(string id)
         {
-            return new($"{AppProtocol}://illust/{id}");
+            return new Uri($"{AppProtocol}://illust/{id}");
         }
 
         public static async Task WriteLogoIcoIfNotExist()
@@ -226,6 +226,17 @@ namespace Pixeval
             return new X509Certificate2(await GetAssetBytesAsync("Certs/pixeval_ca.cer"));
         }
 
+        /// <summary>
+        /// Erase all personal data, including session, configuration and image cache
+        /// </summary>
+        public static async Task ClearDataAsync()
+        {
+            // TODO remove database file
+            ApplicationData.Current.RoamingSettings.DeleteContainer(ConfigurationContainerKey);
+            ApplicationData.Current.LocalSettings.DeleteContainer(SessionContainerKey);
+            await ClearAppLocalFolderAsync();
+        }
+
         public static void SaveContext()
         {
             // Save the current resolution
@@ -278,6 +289,7 @@ namespace Pixeval
                 ConfigurationContainer.Values[nameof(AppSetting.LastCheckedUpdate)] = appSetting.LastCheckedUpdate;
                 ConfigurationContainer.Values[nameof(AppSetting.DownloadUpdateAutomatically)] = appSetting.DownloadUpdateAutomatically;
                 ConfigurationContainer.Values[nameof(AppSetting.AppFontFamilyName)] = appSetting.AppFontFamilyName;
+                ConfigurationContainer.Values[nameof(AppSetting.DefaultSelectedTabItem)] = appSetting.DefaultSelectedTabItem.CastOrThrow<int>();
             }
         }
 
@@ -332,7 +344,8 @@ namespace Pixeval
                     ConfigurationContainer.Values[nameof(AppSetting.ThumbnailDirection)].CastOrThrow<ThumbnailDirection>(),
                     ConfigurationContainer.Values[nameof(AppSetting.LastCheckedUpdate)].CastOrThrow<DateTimeOffset>(),
                     ConfigurationContainer.Values[nameof(AppSetting.DownloadUpdateAutomatically)].CastOrThrow<bool>(),
-                    ConfigurationContainer.Values[nameof(AppSetting.AppFontFamilyName)].CastOrThrow<string>());
+                    ConfigurationContainer.Values[nameof(AppSetting.AppFontFamilyName)].CastOrThrow<string>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.DefaultSelectedTabItem)].CastOrThrow<MainPageTabItem>());
             }
             catch
             {

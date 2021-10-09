@@ -48,10 +48,14 @@ namespace Pixeval.Pages
         public override void OnPageDeactivated(NavigatingCancelEventArgs e)
         {
             WeakReferenceMessenger.Default.UnregisterAll(this);
+            
         }
 
         public override void OnPageActivated(NavigationEventArgs e)
         {
+            // little dirty tricks
+            ((NavigationViewItem) MainPageRootNavigationView.MenuItems[(int) App.AppViewModel.AppSetting.DefaultSelectedTabItem]).IsSelected = true;
+
             WeakReferenceMessenger.Default.Register<MainPage, MainPageFrameSetConnectedAnimationTargetMessage>(this, (_, message) => _connectedAnimationTarget = message.Sender);
             WeakReferenceMessenger.Default.Register<MainPage, NavigatingBackToMainPageMessage>(this, (_, message) => _illustrationViewerContent = message.IllustrationViewModel);
             WeakReferenceMessenger.Default.Register<MainPage, IllustrationTagClickedMessage>(this, (_, message) => PerformSearch(message.Tag));

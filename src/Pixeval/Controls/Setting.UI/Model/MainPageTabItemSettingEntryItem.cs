@@ -6,11 +6,11 @@ using Pixeval.Options;
 
 namespace Pixeval.Controls.Setting.UI.Model
 {
-    public record ApplicationThemeSettingEntryItem : IStringRepresentableItem
+    public record MainPageTabItemSettingEntryItem : IStringRepresentableItem
     {
-        public static readonly IEnumerable<IStringRepresentableItem> AvailableItems = Enum.GetValues<ApplicationTheme>().Select(a => new ApplicationThemeSettingEntryItem(a));
+        public static readonly IEnumerable<IStringRepresentableItem> AvailableItems = Enum.GetValues<MainPageTabItem>().Select(m => new MainPageTabItemSettingEntryItem(m));
 
-        public ApplicationThemeSettingEntryItem(ApplicationTheme item)
+        public MainPageTabItemSettingEntryItem(MainPageTabItem item)
         {
             Item = item;
             StringRepresentation = item.GetLocalizedResourceContent()!;

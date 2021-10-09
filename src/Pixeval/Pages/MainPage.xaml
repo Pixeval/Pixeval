@@ -58,7 +58,6 @@
         <NavigationView.MenuItems>
             <NavigationViewItem x:Uid="/MainPage/RecommendationsTab"
                                 Icon="{ui:FontIcon Glyph=CalendarE787}"
-                                IsSelected="True"
                                 Tag="{x:Bind _recommends}" />
             <NavigationViewItem x:Uid="/MainPage/RankingsTab"
                                 Icon="{ui:FontIcon Glyph=MarketEAFC}"

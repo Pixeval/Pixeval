@@ -7,7 +7,7 @@
                     xmlns:local="using:Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry"
                     xmlns:userControls="using:Pixeval.Controls.Setting.UI.UserControls">
     <Thickness x:Key="RadioButtonMargin">10,5</Thickness>
-    <x:Double x:Key="RadioButtonHeight">35</x:Double>
+    <x:Double x:Key="RadioButtonHeight">30</x:Double>
     <Style TargetType="local:SingleSelectionSettingEntry">
         <Setter Property="CornerRadius" Value="{ThemeResource CardCornerRadius}" />
         <Setter Property="Background" Value="{ThemeResource CardBackground}" />
@@ -30,16 +30,18 @@
                                                              Header="{TemplateBinding Header}"
                                                              Icon="{TemplateBinding Icon}" />
                         </expander:Expander.Header>
-                        <RadioButtons x:Name="SelectorRadioButtons"
-                                      Margin="{StaticResource RadioButtonMargin}"
-                                      ItemsSource="{TemplateBinding ItemsSource}">
-                            <RadioButtons.ItemTemplate>
-                                <DataTemplate>
-                                    <RadioButton Height="{StaticResource RadioButtonHeight}"
-                                                 Content="{Binding StringRepresentation}" />
-                                </DataTemplate>
-                            </RadioButtons.ItemTemplate>
-                        </RadioButtons>
+                        <Grid Margin="0,0,0,5">
+                            <RadioButtons x:Name="SelectorRadioButtons"
+                                          Margin="{StaticResource RadioButtonMargin}"
+                                          ItemsSource="{TemplateBinding ItemsSource}">
+                                <RadioButtons.ItemTemplate>
+                                    <DataTemplate>
+                                        <RadioButton Height="{StaticResource RadioButtonHeight}"
+                                                     Content="{Binding StringRepresentation}" />
+                                    </DataTemplate>
+                                </RadioButtons.ItemTemplate>
+                            </RadioButtons>
+                        </Grid>
                     </expander:Expander>
                 </ControlTemplate>
             </Setter.Value>

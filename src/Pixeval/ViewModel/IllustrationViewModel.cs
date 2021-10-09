@@ -10,6 +10,7 @@ using Pixeval.CommunityToolkit.AdaptiveGridView;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
+using Pixeval.Misc;
 using Pixeval.Utilities;
 using Pixeval.Options;
 using Pixeval.UserControls;

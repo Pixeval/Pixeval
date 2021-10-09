@@ -129,7 +129,4 @@
   <data name="RepliesAreEmptyTextBlock.Text" xml:space="preserve">
     <value>本评论暂时没有任何回复</value>
   </data>
-  <data name="SendButtonTextBlock.Text" xml:space="preserve">
-    <value>发送</value>
-  </data>
 </root>

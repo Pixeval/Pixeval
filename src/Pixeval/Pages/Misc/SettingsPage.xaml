@@ -5,6 +5,7 @@
       xmlns:actionableSettingEntry="using:Pixeval.Controls.Setting.UI.ActionableSettingEntry"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:expanderSettingEntry="using:Pixeval.Controls.Setting.UI.ExpanderSettingEntry"
+      xmlns:iconButton="using:Pixeval.Controls.IconButton"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:model="using:Pixeval.Controls.Setting.UI.Model"
       xmlns:numberFormatting="using:Windows.Globalization.NumberFormatting"
@@ -98,7 +99,6 @@
                 <StackPanel Grid.Row="1"
                             VerticalAlignment="Top">
                     <settingsGroup:SettingsGroup x:Uid="/SettingsPage/VersionSettingsGroup">
-
                         <actionableSettingEntry:ActionableSettingEntry x:Name="CheckForUpdatesEntry"
                                                                        Icon="{ui:FontIcon Glyph=SyncE895}">
                             <actionableSettingEntry:ActionableSettingEntry.Description>
@@ -135,6 +135,25 @@
                         <switchSettingEntry:SwitchSettingEntry x:Uid="/SettingsPage/DownloadUpdateAutomaticallyEntry"
                                                                Icon="{ui:FontIcon Glyph=CommunicationsE95A}"
                                                                IsOn="{x:Bind _viewModel.DownloadUpdateAutomatically, Mode=TwoWay}" />
+                    </settingsGroup:SettingsGroup>
+
+                    <settingsGroup:SettingsGroup x:Uid="/SettingsPage/SessionSettingsGroup">
+
+                        <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/SignOutEntry"
+                                                                       Icon="{ui:FontIcon Glyph=SignOutF3B1}">
+                            <actionableSettingEntry:ActionableSettingEntry.ActionContent>
+                                <Button x:Uid="/SettingsPage/PerformSignOutButton"
+                                        Tapped="PerformSignOutButton_OnTapped" />
+                            </actionableSettingEntry:ActionableSettingEntry.ActionContent>
+                        </actionableSettingEntry:ActionableSettingEntry>
+                        <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/ResetDefaultSettingsEntry"
+                                                                       Icon="{ui:FontIcon Glyph=AppIconDefaultECAA}">
+                            <actionableSettingEntry:ActionableSettingEntry.ActionContent>
+                                <Button x:Uid="/SettingsPage/ResetDefaultSettingsButton"
+                                        Tapped="ResetDefaultSettingsButton_OnTapped" />
+                            </actionableSettingEntry:ActionableSettingEntry.ActionContent>
+                        </actionableSettingEntry:ActionableSettingEntry>
+
                     </settingsGroup:SettingsGroup>
 
                     <settingsGroup:SettingsGroup x:Uid="/SettingsPage/ApplicationSettingsGroup">
@@ -182,6 +201,11 @@
                         <switchSettingEntry:SwitchSettingEntry x:Uid="/SettingsPage/GenerateHelpLinkEntry"
                                                                Icon="{ui:FontIcon Glyph=LinkE71B}"
                                                                IsOn="{x:Bind _viewModel.DisplayTeachingTipWhenGeneratingAppLink, Mode=TwoWay}" />
+
+                        <singleSelectionSettingEntry:SingleSelectionSettingEntry x:Uid="/SettingsPage/DefaultSelectedTabEntry"
+                                                                                 Icon="{ui:FontIcon Glyph=CheckMarkE73E}"
+                                                                                 ItemsSource="{x:Bind model:MainPageTabItemSettingEntryItem.AvailableItems}"
+                                                                                 SelectedItem="{x:Bind _viewModel.DefaultSelectedTabItem, Mode=TwoWay}" />
                     </settingsGroup:SettingsGroup>
 
                     <settingsGroup:SettingsGroup x:Uid="/SettingsPage/BrowsingExperiencesGroup">
@@ -192,22 +216,48 @@
                         <actionableExpanderSettingEntry:ActionableExpanderSettingEntry x:Uid="/SettingsPage/FiltrateRestrictedContentEntry"
                                                                                        Icon="{ui:FontIcon Glyph=BlockContactE8F8}">
                             <actionableExpanderSettingEntry:ActionableExpanderSettingEntry.ActionContent>
-                                <ToggleSwitch x:Name="FiltrateRestrictedContentSwitch"
-                                              IsOn="{x:Bind _viewModel.FiltrateRestrictedContent, Mode=TwoWay}" />
+                                <ToggleSwitch IsOn="{x:Bind _viewModel.FiltrateRestrictedContent, Mode=TwoWay}" />
                             </actionableExpanderSettingEntry:ActionableExpanderSettingEntry.ActionContent>
-                            <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/ExcludeTagsEntry"
-                                                                           Icon="{ui:FontIcon Glyph=TagE8EC}"
-                                                                           Style="{StaticResource ExpanderContentSettingEntryStyle}">
-                                <!--<controls:TokenizingTextBox x:Uid="/SettingsPage/ExcludeTagsTokenTextBox"
-                                                            Height="35"
-                                                            MaxWidth="400"
-                                                            MaxHeight="40"
-                                                            ItemsSource="{x:Bind _viewModel.ExcludeTags}"
-                                                            QueryIcon="{toolkit:SymbolIconSource Symbol=Tag}"
-                                                            TokenItemAdded="ExcludeTagsTokenTextBox_OnTokenItemAdded"
-                                                            TokenItemAdding="ExcludeTagsTokenTextBox_OnTokenItemAdding"
-                                                            TokenItemRemoved="ExcludeTagsTokenTextBox_OnTokenItemRemoved" />-->
-                            </actionableSettingEntry:ActionableSettingEntry>
+                            <StackPanel Margin="0,5"
+                                        Spacing="5">
+                                <ItemsControl ItemsSource="{x:Bind _viewModel.ExcludeTags}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="system:String">
+                                            <iconButton:IconButton FlowDirection="RightToLeft"
+                                                                   FontSize="{StaticResource PixevalContentFontSize}"
+                                                                   Icon="{ui:FontIcon Glyph=ChromeCloseE8BB,
+                                                                                      FontSize=12}"
+                                                                   Tapped="ExcludeTagButton_OnTapped"
+                                                                   Text="{x:Bind}" />
+
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <wrapPanel:WrapPanel HorizontalSpacing="5"
+                                                                 VerticalSpacing="5" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="75" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="ExcludeTagsTextBox"
+                                             x:Uid="/SettingsPage/ExcludeTagsTextBox"
+                                             Grid.Column="0"
+                                             HorizontalAlignment="Stretch"
+                                             VerticalAlignment="Center"
+                                             KeyDown="ExcludeTagsTextBox_OnKeyDown" />
+                                    <iconButton:IconButton x:Uid="/SettingsPage/SubmitExcludeTagButton"
+                                                           Grid.Column="1"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"
+                                                           Icon="{ui:FontIcon Glyph=SendE724}"
+                                                           Tapped="SubmitExcludeTagButton_OnTapped" />
+                                </Grid>
+                            </StackPanel>
                         </actionableExpanderSettingEntry:ActionableExpanderSettingEntry>
                         <singleSelectionSettingEntry:SingleSelectionSettingEntry x:Uid="/SettingsPage/TargetAPIPlatformEntry"
                                                                                  Icon="{ui:FontIcon Glyph=CommandPromptE756}"

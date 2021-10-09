@@ -144,6 +144,30 @@
   <data name="IllustrationSortOptionPublishDateDescending" xml:space="preserve">
     <value>发布日期降序</value>
   </data>
+  <data name="MainPageTabBookmark" xml:space="preserve">
+    <value>我的收藏</value>
+  </data>
+  <data name="MainPageTabDailyRecommendations" xml:space="preserve">
+    <value>每日推荐</value>
+  </data>
+  <data name="MainPageTabFeed" xml:space="preserve">
+    <value>关注动态</value>
+  </data>
+  <data name="MainPageTabFollow" xml:space="preserve">
+    <value>我的关注</value>
+  </data>
+  <data name="MainPageTabRanking" xml:space="preserve">
+    <value>作品榜单</value>
+  </data>
+  <data name="MainPageTabReverseSearch" xml:space="preserve">
+    <value>以图搜图</value>
+  </data>
+  <data name="MainPageTabSpotlight" xml:space="preserve">
+    <value>特辑推荐</value>
+  </data>
+  <data name="MainPageTabUpdate" xml:space="preserve">
+    <value>关注新作</value>
+  </data>
   <data name="ReplyContentTooLong" xml:space="preserve">
     <value>回复内容超过140字，请重新编辑</value>
   </data>

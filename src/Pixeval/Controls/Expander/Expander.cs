@@ -8,7 +8,7 @@ using Pixeval.Util.UI;
 namespace Pixeval.Controls.Expander
 {
     [TemplatePart(Name = PartContentCardContainer, Type = typeof(CardControl))]
-    [TemplatePart(Name = PartExpandOrFoldExpanderPresenter, Type = typeof(IconButton))]
+    [TemplatePart(Name = PartExpandOrFoldExpanderPresenter, Type = typeof(IconButton.IconButton))]
     [TemplatePart(Name = PartRootPanel, Type = typeof(Grid))]
     [TemplateVisualState(GroupName = "CommonStates", Name = "Normal")]
     [TemplateVisualState(GroupName = "CommonStates", Name = "Expanded")]

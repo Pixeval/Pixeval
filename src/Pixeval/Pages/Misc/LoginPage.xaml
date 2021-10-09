@@ -4,7 +4,7 @@
                        xmlns:controls="using:Pixeval.Controls"
                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                       xmlns:util="using:Pixeval.Util"
+                       xmlns:misc="using:Pixeval.Misc"
                        xmlns:viewModel="using:Pixeval.ViewModel"
                        d:DataContext="{d:DesignInstance viewModel:LoginPageViewModel}"
                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -21,7 +21,7 @@
             <TextBlock Margin="0,15,0,0"
                        HorizontalAlignment="Center"
                        FontSize="10"
-                       Text="{x:Bind util:AttributeHelper.GetLocalizedResourceContent(_viewModel.LoginPhase), Mode=OneWay}" />
+                       Text="{x:Bind misc:LocalizedResourceAttributeHelper.GetLocalizedResourceContent(_viewModel.LoginPhase), Mode=OneWay}" />
         </StackPanel>
     </Grid>
 </controls:EnhancedPage>

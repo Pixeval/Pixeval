@@ -33,7 +33,7 @@ namespace Pixeval.Util
 
         public static Uri GetIllustrationWebUri(string id)
         {
-            return new($"https://www.pixiv.net/artworks/{id}");
+            return new Uri($"https://www.pixiv.net/artworks/{id}");
         }
 
         public static string? GetOriginalUrl(this Illustration illustration)

@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.Popups;
 using Pixeval.UserControls;
 
 namespace Pixeval.Util.UI
@@ -59,7 +60,7 @@ namespace Pixeval.Util.UI
         private readonly Action<FrameworkElement>? _closing;
 
         public AppPopup(
-            FrameworkElement content, 
+            FrameworkElement content,
             double widthMargin = double.NaN,
             double heightMargin = double.NaN,
             double minWidth = 0,
@@ -109,7 +110,7 @@ namespace Pixeval.Util.UI
                         CornerRadius = new CornerRadius(10),
                         HorizontalAlignment = HorizontalAlignment.Center,
                         VerticalAlignment = VerticalAlignment.Center,
-                        Children = {content}
+                        Children = { content }
                     },
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                     VerticalAlignment = VerticalAlignment.Stretch,
