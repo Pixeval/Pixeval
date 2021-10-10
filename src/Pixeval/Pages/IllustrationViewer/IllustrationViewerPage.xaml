@@ -15,11 +15,17 @@
     </controls1:EnhancedPage.Resources>
     <SplitView x:Name="IllustrationInfoAndCommentsSplitView"
                DisplayMode="Overlay"
-               IsPaneOpen="{x:Bind _viewModel.IsInfoPaneOpen, Mode=TwoWay}">
+               IsPaneOpen="{x:Bind _viewModel.IsInfoPaneOpen, Mode=TwoWay}"
+               OpenPaneLength="370"
+               PaneBackground="Transparent">
         <SplitView.Pane>
-            <Grid Shadow="{x:Bind SidePanelShadow}"
+            <Grid Width="360"
+                  HorizontalAlignment="Left"
+                  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                  Shadow="{x:Bind SidePanelShadow}"
                   Translation="0,0,40">
-                <NavigationView BackRequested="IllustrationInfoAndCommentsNavigationView_OnBackRequested"
+                <NavigationView Width="360"
+                                BackRequested="IllustrationInfoAndCommentsNavigationView_OnBackRequested"
                                 IsBackEnabled="True"
                                 IsSettingsVisible="False"
                                 PaneDisplayMode="Top"
@@ -31,7 +37,8 @@
                         <NavigationViewItem x:Uid="/IllustrationViewerPage/CommentsTab"
                                             Tag="{x:Bind _comments}" />
                     </NavigationView.MenuItems>
-                    <Frame x:Name="IllustrationInfoAndCommentsFrame" />
+                    <Frame x:Name="IllustrationInfoAndCommentsFrame"
+                           Width="360" />
                 </NavigationView>
             </Grid>
         </SplitView.Pane>
@@ -86,7 +93,7 @@
                     <Image Source="../../Assets/Images/illust-app-link-sample.png" />
                 </TeachingTip.HeroContent>
             </TeachingTip>
-            <Grid Width="48"
+            <Grid Width="50"
                   dockPanel:DockPanel.Dock="Left">
                 <AppBarButton Width="40"
                               HorizontalAlignment="Center"
@@ -103,7 +110,7 @@
                               Tapped="PrevIllustrationAppBarButton_OnTapped"
                               Visibility="{x:Bind _viewModel.CalculatePrevIllustrationButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
             </Grid>
-            <Grid Width="48"
+            <Grid Width="50"
                   dockPanel:DockPanel.Dock="Right">
                 <AppBarButton Width="40"
                               HorizontalAlignment="Center"

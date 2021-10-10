@@ -3,7 +3,6 @@
                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                        xmlns:controls="using:Pixeval.Controls"
                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                       xmlns:iconButton="using:Pixeval.Controls.IconButton"
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:model="using:Pixeval.CoreApi.Model"
                        xmlns:ui="using:Pixeval.Util.UI"
@@ -24,7 +23,7 @@
                   Visibility="{x:Bind MainPageRootNavigationView.IsPaneOpen, Mode=OneWay}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
-                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="38" />
                 </Grid.ColumnDefinitions>
                 <AutoSuggestBox x:Uid="/MainPage/MainPageAutoSuggestionBox"
                                 Grid.Column="0"
@@ -52,8 +51,8 @@
                 </AutoSuggestBox>
                 <ToggleButton x:Uid="/MainPage/OpenSearchSettingPopupButton"
                               Grid.Column="1"
-                              Width="34"
-                              Height="34"
+                              Width="33"
+                              Height="33"
                               Padding="0"
                               HorizontalAlignment="Right"
                               VerticalAlignment="Center"
