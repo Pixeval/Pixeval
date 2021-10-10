@@ -126,7 +126,7 @@
   <data name="ReplyContentRichEditBox.PlaceholderText" xml:space="preserve">
     <value>输入你要发送的评论</value>
   </data>
-  <data name="SendButton.Content" xml:space="preserve">
+  <data name="SendButton.Text" xml:space="preserve">
     <value>发送</value>
   </data>
 </root>

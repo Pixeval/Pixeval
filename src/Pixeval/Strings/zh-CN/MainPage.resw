@@ -139,7 +139,7 @@
     <value>浏览历史</value>
   </data>
   <data name="MainPageAutoSuggestionBox.PlaceholderText" xml:space="preserve">
-    <value>关键字/设置项/作品ID/用户ID</value>
+    <value>输入关键字</value>
   </data>
   <data name="RecentPostsTab.Content" xml:space="preserve">
     <value>关注新作</value>
@@ -164,5 +164,8 @@
   </data>
   <data name="SearchKeywordCannotBeBlankToastTitle" xml:space="preserve">
     <value>输入非法</value>
+  </data>
+  <data name="OpenSearchSettingPopupButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>搜索设置</value>
   </data>
 </root>

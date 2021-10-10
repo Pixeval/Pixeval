@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Popups;
-using Pixeval.UserControls;
 
 namespace Pixeval.Util.UI
 {
@@ -87,6 +87,46 @@ namespace Pixeval.Util.UI
             UniqueId = Guid.NewGuid();
             content.HorizontalAlignment = HorizontalAlignment.Stretch;
             content.VerticalAlignment = VerticalAlignment.Stretch;
+
+            // TODO: use a user control instead of writing it with bare hand. this is a bug of WAS 1.0.0 preview2
+            // that the ThemeShadow will display incorrectly
+            var themeShadow = new ThemeShadow();
+            var shadowReceiver = new Grid
+            {
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
+                Background = (Brush) Application.Current.Resources["ApplicationPageBackgroundThemeBrush"],
+                Opacity = 0.4
+            };
+            var popupContentPresenter = new ContentPresenter
+            {
+                Shadow = themeShadow,
+                Translation = new Vector3(0, 0, 40),
+                BorderBrush = (Brush) Application.Current.Resources["PixevalBorderBrush"],
+                Background = (Brush) Application.Current.Resources["PixevalPanelBackgroundThemeBrush"],
+                BorderThickness = new Thickness(0.5),
+                CornerRadius = new CornerRadius(10),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Content = content
+            };
+
+            themeShadow.Receivers.Add(shadowReceiver);
+
+            if (lightDismiss)
+            {
+                shadowReceiver.Tapped += OnShadowReceiverOnTapped;
+            }
+            else
+            {
+                shadowReceiver.Tapped -= OnShadowReceiverOnTapped;
+            }
+
+            void OnShadowReceiverOnTapped(object sender, TappedRoutedEventArgs a)
+            {
+                PopupManager.ClosePopup(PopupManager.OpenPopups[UniqueId]);
+            }
+
             Popup = new Popup
             {
                 RequestedTheme = App.AppViewModel.AppRootFrameTheme,
@@ -97,23 +137,12 @@ namespace Pixeval.Util.UI
                 XamlRoot = App.AppViewModel.AppWindowRootFrame.XamlRoot,
                 Width = windowWidth,
                 Height = windowHeight,
-                Child = new OverlayPopupContent(UniqueId)
+                Child = new Grid
                 {
-                    IsLightDismiss = lightDismiss,
-                    Width = windowWidth,
-                    Height = windowHeight,
-                    PopupContent = new Grid
+                    Children =
                     {
-                        BorderBrush = (Brush) Application.Current.Resources["PixevalBorderBrush"],
-                        Background = (Brush) Application.Current.Resources["PixevalPanelBackgroundThemeBrush"],
-                        BorderThickness = new Thickness(0.5),
-                        CornerRadius = new CornerRadius(10),
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        VerticalAlignment = VerticalAlignment.Center,
-                        Children = { content }
-                    },
-                    HorizontalAlignment = HorizontalAlignment.Stretch,
-                    VerticalAlignment = VerticalAlignment.Stretch,
+                        shadowReceiver, popupContentPresenter
+                    }
                 }
             };
             App.AppViewModel.Window.SizeChanged += WindowOnSizeChanged;
@@ -127,8 +156,8 @@ namespace Pixeval.Util.UI
         private void RearrangePopup(Size desiredSize)
         {
             var (windowWidth, windowHeight) = (desiredSize.Width, desiredSize.Height);
-            var child = (OverlayPopupContent) Popup.Child;
-            var container = (Grid) child.PopupContent;
+            var child = (Grid) Popup.Child;
+            var container = (ContentPresenter) ((Grid) Popup.Child).Children[1];
             Popup.Width = windowWidth;
             Popup.Height = windowHeight;
             child.Width = windowWidth;

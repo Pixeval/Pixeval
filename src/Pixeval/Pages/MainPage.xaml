@@ -3,6 +3,7 @@
                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                        xmlns:controls="using:Pixeval.Controls"
                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                       xmlns:iconButton="using:Pixeval.Controls.IconButton"
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:model="using:Pixeval.CoreApi.Model"
                        xmlns:ui="using:Pixeval.Util.UI"
@@ -18,43 +19,48 @@
                     OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}"
                     PaneTitle="Pixeval"
                     SelectionChanged="MainPageRootNavigationView_OnSelectionChanged">
-        <NavigationView.AutoSuggestBox>
-            <AutoSuggestBox x:Uid="/MainPage/MainPageAutoSuggestionBox"
-                            QueryIcon="Find"
-                            QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
-                            TextChanged="KeywordAutoSuggestBox_OnTextChanged"
-                            TextMemberPath="Name">
-                <AutoSuggestBox.ItemTemplate>
-                    <DataTemplate x:DataType="model:Tag">
-                        <Grid Height="50">
-                            <StackPanel VerticalAlignment="Center"
-                                        Spacing="3">
-                                <TextBlock FontSize="{StaticResource PixevalContentFontSize}"
-                                           Text="{x:Bind Name}"
-                                           TextWrapping="WrapWholeWords" />
-                                <TextBlock FontSize="{StaticResource PixevalSubscriptFontSize}"
-                                           Foreground="{ThemeResource PixevalTipTextForeground}"
-                                           Text="{x:Bind TranslatedName}"
-                                           TextWrapping="WrapWholeWords" />
-                            </StackPanel>
-                        </Grid>
-
-                    </DataTemplate>
-                </AutoSuggestBox.ItemTemplate>
-            </AutoSuggestBox>
-        </NavigationView.AutoSuggestBox>
-        <!--<NavigationView.PaneCustomContent>
-            <controls:IconButton x:Uid="/MainPage/OpenSearchSettingPopupButton"
-                                 Grid.Column="2"
-                                 Height="30"
-                                 Margin="10,0,0,0"
-                                 Padding="5"
-                                 VerticalAlignment="Center"
-                                 Background="Transparent"
-                                 CornerRadius="3"
-                                 Icon="{ui:FontIcon Glyph=MapPinE707,
-                                                    FontSize={StaticResource PixevalButtonIconSize}}" />
-        </NavigationView.PaneCustomContent>-->
+        <NavigationView.PaneCustomContent>
+            <Grid Margin="15,5,15,10"
+                  Visibility="{x:Bind MainPageRootNavigationView.IsPaneOpen, Mode=OneWay}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="40" />
+                </Grid.ColumnDefinitions>
+                <AutoSuggestBox x:Uid="/MainPage/MainPageAutoSuggestionBox"
+                                Grid.Column="0"
+                                VerticalAlignment="Center"
+                                QueryIcon="Find"
+                                QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
+                                TextChanged="KeywordAutoSuggestBox_OnTextChanged"
+                                TextMemberPath="Name">
+                    <AutoSuggestBox.ItemTemplate>
+                        <DataTemplate x:DataType="model:Tag">
+                            <Grid Height="50">
+                                <StackPanel VerticalAlignment="Center"
+                                            Spacing="3">
+                                    <TextBlock FontSize="{StaticResource PixevalContentFontSize}"
+                                               Text="{x:Bind Name}"
+                                               TextWrapping="WrapWholeWords" />
+                                    <TextBlock FontSize="{StaticResource PixevalSubscriptFontSize}"
+                                               Foreground="{ThemeResource PixevalTipTextForeground}"
+                                               Text="{x:Bind TranslatedName}"
+                                               TextWrapping="WrapWholeWords" />
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </AutoSuggestBox.ItemTemplate>
+                </AutoSuggestBox>
+                <ToggleButton x:Uid="/MainPage/OpenSearchSettingPopupButton"
+                              Grid.Column="1"
+                              Width="34"
+                              Height="34"
+                              Padding="0"
+                              HorizontalAlignment="Right"
+                              VerticalAlignment="Center"
+                              Content="{ui:FontIcon Glyph=SettingE713,
+                                                    FontSize=13}" />
+            </Grid>
+        </NavigationView.PaneCustomContent>
         <NavigationView.MenuItems>
             <NavigationViewItem x:Uid="/MainPage/RecommendationsTab"
                                 Icon="{ui:FontIcon Glyph=CalendarE787}"

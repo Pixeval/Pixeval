@@ -2,9 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dockPanel="using:Pixeval.CommunityToolkit.DockPanel"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="using:Pixeval.Util.UI"
-             xmlns:dockPanel="using:Pixeval.CommunityToolkit.DockPanel"
              mc:Ignorable="d">
     <dockPanel:DockPanel>
         <StackPanel x:Name="ExtraCommandsBar"
@@ -31,13 +31,7 @@
                           Tapped="SelectAllToggleButton_OnTapped" />
             <AppBarSeparator />
             <AppBarButton x:Uid="/IllustrationGridCommandBar/AddAllToBookmarkButton"
-                          Icon="{ui:FontIcon Glyph=BookmarksE8A4}" >
-                <AppBarButton.Flyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem Tapped="AddAllToBookmarkButton_OnTapped" Text="本地收藏夹"></MenuFlyoutItem>
-                    </MenuFlyout>
-                </AppBarButton.Flyout>
-            </AppBarButton>
+                          Icon="{ui:FontIcon Glyph=BookmarksE8A4}" />
             <AppBarButton x:Uid="/IllustrationGridCommandBar/SaveAllButton"
                           Icon="{ui:FontIcon Glyph=SaveE74E}"
                           Tapped="SaveAllButton_OnTapped" />
