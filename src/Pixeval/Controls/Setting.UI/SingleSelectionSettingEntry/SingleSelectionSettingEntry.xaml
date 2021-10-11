@@ -19,13 +19,12 @@
             <Setter.Value>
                 <ControlTemplate TargetType="local:SingleSelectionSettingEntry">
                     <expander:Expander x:Name="EntryExpander"
-                                       HorizontalContentAlignment="Left"
-                                       VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                        CornerRadius="{TemplateBinding CornerRadius}"
                                        HeaderHeight="{TemplateBinding HeaderHeight}">
                         <expander:Expander.Header>
                             <userControls:SettingEntryHeader x:Name="EntryHeader"
                                                              Height="{TemplateBinding HeaderHeight}"
+                                                             HorizontalAlignment="Stretch"
                                                              VerticalAlignment="Center"
                                                              Header="{TemplateBinding Header}"
                                                              Icon="{TemplateBinding Icon}" />

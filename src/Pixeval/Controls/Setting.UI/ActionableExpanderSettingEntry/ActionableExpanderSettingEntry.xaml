@@ -13,16 +13,14 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ActionableExpanderSettingEntry">
-                    <expander:Expander HorizontalContentAlignment="Stretch"
-                                       VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                       CornerRadius="{TemplateBinding CornerRadius}"
+                    <expander:Expander CornerRadius="{TemplateBinding CornerRadius}"
                                        HeaderHeight="{TemplateBinding HeaderHeight}">
                         <expander:Expander.Header>
                             <Grid HorizontalAlignment="Stretch"
                                   VerticalAlignment="Center">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*" />
-                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <Grid.Resources>
                                     <Style TargetType="ToggleSwitch">
@@ -32,11 +30,12 @@
                                 <userControls:SettingEntryHeader x:Name="EntryHeader"
                                                                  Grid.Column="0"
                                                                  Height="{TemplateBinding HeaderHeight}"
-                                                                 HorizontalAlignment="Left"
+                                                                 HorizontalAlignment="Stretch"
                                                                  VerticalAlignment="Stretch"
                                                                  Header="{TemplateBinding Header}"
                                                                  Icon="{TemplateBinding Icon}" />
-                                <ContentPresenter Grid.Column="1"
+                                <ContentPresenter x:Name="ActionContentPresenter"
+                                                  Grid.Column="1"
                                                   HorizontalAlignment="Right"
                                                   VerticalAlignment="Center"
                                                   Content="{TemplateBinding ActionContent}" />

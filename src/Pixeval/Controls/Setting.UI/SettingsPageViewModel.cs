@@ -23,6 +23,11 @@ namespace Pixeval.Controls.Setting.UI
             _appSetting = appSetting;
         }
 
+        public DateTimeOffset GetMinSearchEndDate(DateTimeOffset startDate)
+        {
+            return startDate.AddDays(1);
+        }
+
         public string GetLastUpdateCheckDisplayString(DateTimeOffset lastChecked)
         {
             return $"{SettingsPageResources.LastCheckedPrefix}{lastChecked.ToString(CultureInfo.CurrentUICulture)}";
@@ -155,7 +160,7 @@ namespace Pixeval.Controls.Setting.UI
             set => SetProperty(_appSetting.ThumbnailDirection, value, _appSetting, (settings, value) => settings.ThumbnailDirection = value);
         }
 
-        [DefaultValue(typeof(DateTimeOffSetDefaultValueProvider))]
+        [DefaultValue(typeof(MinDateTimeOffSetDefaultValueProvider))]
         public DateTimeOffset LastCheckedUpdate
         {
             get => _appSetting.LastCheckedUpdate;
@@ -181,6 +186,34 @@ namespace Pixeval.Controls.Setting.UI
         {
             get => _appSetting.DefaultSelectedTabItem;
             set => SetProperty(_appSetting.DefaultSelectedTabItem, value, _appSetting, (settings, value) => settings.DefaultSelectedTabItem = value);
+        }
+
+        [DefaultValue(SearchDuration.Undecided)]
+        public SearchDuration SearchDuration
+        {
+            get => _appSetting.SearchDuration;
+            set => SetProperty(_appSetting.SearchDuration, value, _appSetting, (settings, value) => settings.SearchDuration = value);
+        }
+
+        [DefaultValue(false)]
+        public bool UsePreciseRangeForSearch
+        {
+            get => _appSetting.UsePreciseRangeForSearch;
+            set => SetProperty(_appSetting.UsePreciseRangeForSearch, value, _appSetting, (settings, value) => settings.UsePreciseRangeForSearch = value);
+        }
+
+        [DefaultValue(typeof(DecrementedDateTimeOffSetDefaultValueProvider))]
+        public DateTimeOffset SearchStartDate
+        {
+            get => _appSetting.SearchStartDate;
+            set => SetProperty(_appSetting.SearchStartDate, value, _appSetting, (settings, value) => settings.SearchStartDate = value);
+        }
+
+        [DefaultValue(typeof(CurrentDateTimeOffSetDefaultValueProvider))]
+        public DateTimeOffset SearchEndDate
+        {
+            get => _appSetting.SearchEndDate;
+            set => SetProperty(_appSetting.SearchEndDate, value, _appSetting, (settings, value) => settings.SearchEndDate = value);
         }
 
         public void ResetDefault()

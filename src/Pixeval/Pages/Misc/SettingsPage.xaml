@@ -1,25 +1,25 @@
-﻿<Page x:Class="Pixeval.Pages.Misc.SettingsPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:actionableExpanderSettingEntry="using:Pixeval.Controls.Setting.UI.ActionableExpanderSettingEntry"
-      xmlns:actionableSettingEntry="using:Pixeval.Controls.Setting.UI.ActionableSettingEntry"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:expanderSettingEntry="using:Pixeval.Controls.Setting.UI.ExpanderSettingEntry"
-      xmlns:iconButton="using:Pixeval.Controls.IconButton"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:model="using:Pixeval.Controls.Setting.UI.Model"
-      xmlns:numberFormatting="using:Windows.Globalization.NumberFormatting"
-      xmlns:setting="using:Pixeval.Controls.Setting.UI"
-      xmlns:settingsGroup="using:Pixeval.Controls.Setting.UI.SettingsGroup"
-      xmlns:singleSelectionSettingEntry="using:Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry"
-      xmlns:sliderSettingEntry="using:Pixeval.Controls.Setting.UI.SliderSettingEntry"
-      xmlns:switchSettingEntry="using:Pixeval.Controls.Setting.UI.SwitchSettingEntry"
-      xmlns:system="using:System"
-      xmlns:ui="using:Pixeval.Util.UI"
-      xmlns:wrapPanel="using:Pixeval.CommunityToolkit.WrapPanel"
-      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-      Loaded="SettingsPage_OnLoaded"
-      mc:Ignorable="d">
+﻿<controls:EnhancedPage x:Class="Pixeval.Pages.Misc.SettingsPage"
+                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                       xmlns:actionableExpanderSettingEntry="using:Pixeval.Controls.Setting.UI.ActionableExpanderSettingEntry"
+                       xmlns:actionableSettingEntry="using:Pixeval.Controls.Setting.UI.ActionableSettingEntry"
+                       xmlns:controls="using:Pixeval.Controls"
+                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                       xmlns:expanderSettingEntry="using:Pixeval.Controls.Setting.UI.ExpanderSettingEntry"
+                       xmlns:iconButton="using:Pixeval.Controls.IconButton"
+                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                       xmlns:model="using:Pixeval.Controls.Setting.UI.Model"
+                       xmlns:setting="using:Pixeval.Controls.Setting.UI"
+                       xmlns:settingsGroup="using:Pixeval.Controls.Setting.UI.SettingsGroup"
+                       xmlns:singleSelectionSettingEntry="using:Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry"
+                       xmlns:sliderSettingEntry="using:Pixeval.Controls.Setting.UI.SliderSettingEntry"
+                       xmlns:switchSettingEntry="using:Pixeval.Controls.Setting.UI.SwitchSettingEntry"
+                       xmlns:system="using:System"
+                       xmlns:ui="using:Pixeval.Util.UI"
+                       xmlns:wrapPanel="using:Pixeval.CommunityToolkit.WrapPanel"
+                       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                       Loaded="SettingsPage_OnLoaded"
+                       mc:Ignorable="d">
     <Page.Resources>
         <Style x:Key="ExpanderContentSettingEntryStyle"
                TargetType="setting:SettingEntryBase">
@@ -27,23 +27,6 @@
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="CornerRadius" Value="0" />
         </Style>
-        <Style x:Key="SettingsNumberBoxStyle"
-               TargetType="NumberBox">
-            <Setter Property="Width" Value="200" />
-            <Setter Property="IsWrapEnabled" Value="True" />
-            <Setter Property="LargeChange" Value="10" />
-            <Setter Property="NumberFormatter" Value="{StaticResource IntegerRoundedDecimalFormatter}" />
-            <Setter Property="SmallChange" Value="1" />
-            <Setter Property="SpinButtonPlacementMode" Value="Compact" />
-            <Setter Property="ValidationMode" Value="InvalidInputOverwritten" />
-        </Style>
-        <numberFormatting:DecimalFormatter x:Key="IntegerRoundedDecimalFormatter"
-                                           FractionDigits="0">
-            <numberFormatting:DecimalFormatter.NumberRounder>
-                <numberFormatting:IncrementNumberRounder Increment="1"
-                                                         RoundingAlgorithm="RoundHalfUp" />
-            </numberFormatting:DecimalFormatter.NumberRounder>
-        </numberFormatting:DecimalFormatter>
     </Page.Resources>
     <Grid RowSpacing="20">
         <Grid.RowDefinitions>
@@ -54,7 +37,9 @@
                    Grid.Row="0"
                    Margin="20,20,0,0"
                    Style="{StaticResource TitleTextBlockStyle}" />
-        <ScrollViewer Grid.Row="1"
+        <ScrollViewer x:Name="SettingsPageScrollViewer"
+                      Grid.Row="1"
+                      x:FieldModifier="public"
                       HorizontalScrollBarVisibility="Disabled"
                       HorizontalScrollMode="Disabled">
             <Grid Margin="20,0">
@@ -208,7 +193,7 @@
                                                                                  SelectedItem="{x:Bind _viewModel.DefaultSelectedTabItem, Mode=TwoWay}" />
                     </settingsGroup:SettingsGroup>
 
-                    <settingsGroup:SettingsGroup x:Uid="/SettingsPage/BrowsingExperiencesGroup">
+                    <settingsGroup:SettingsGroup x:Uid="/SettingsPage/BrowsingExperienceSettingsGroup">
                         <singleSelectionSettingEntry:SingleSelectionSettingEntry x:Uid="/SettingsPage/ThumbnailDirectionEntry"
                                                                                  Icon="{ui:FontIcon Glyph=LandscapeOrientationEF6B}"
                                                                                  ItemsSource="{x:Bind model:ThumbnailDirectionSettingEntryItem.AvailableItems}"
@@ -265,7 +250,9 @@
                                                                                  SelectedItem="{x:Bind _viewModel.TargetFilter, Mode=TwoWay}" />
                     </settingsGroup:SettingsGroup>
 
-                    <settingsGroup:SettingsGroup x:Uid="/SettingsPage/SearchSettings">
+                    <settingsGroup:SettingsGroup x:Name="SearchSettingsGroup"
+                                                 x:Uid="/SettingsPage/SearchSettingsGroup"
+                                                 x:FieldModifier="public">
                         <singleSelectionSettingEntry:SingleSelectionSettingEntry x:Uid="/SettingsPage/DefaultSearchSortOptionEntry"
                                                                                  Icon="{ui:FontIcon Glyph=SortE8CB}"
                                                                                  ItemsSource="{x:Bind model:IllustrationSortOptionSettingEntryItem.AvailableItems}"
@@ -297,9 +284,38 @@
                                            Value="{x:Bind _viewModel.SearchStartingFromPageNumber, Mode=TwoWay}" />
                             </actionableSettingEntry:ActionableSettingEntry.ActionContent>
                         </actionableSettingEntry:ActionableSettingEntry>
+
+                        <singleSelectionSettingEntry:SingleSelectionSettingEntry x:Uid="/SettingsPage/SearchDurationEntry"
+                                                                                 Icon="{ui:FontIcon Glyph=EaseOfAccessE776}"
+                                                                                 ItemsSource="{x:Bind model:SearchDurationSettingEntryItem.AvailableItems}"
+                                                                                 SelectedItem="{x:Bind _viewModel.SearchDuration, Mode=TwoWay}" />
+
+                        <actionableExpanderSettingEntry:ActionableExpanderSettingEntry x:Uid="/SettingsPage/UsePreciseRangeForSearchEntry"
+                                                                                       Icon="{ui:FontIcon Glyph=StopwatchE916}">
+                            <actionableExpanderSettingEntry:ActionableExpanderSettingEntry.ActionContent>
+                                <ToggleSwitch IsOn="{x:Bind _viewModel.UsePreciseRangeForSearch, Mode=TwoWay}" />
+                            </actionableExpanderSettingEntry:ActionableExpanderSettingEntry.ActionContent>
+                            <StackPanel>
+                                <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/SearchStartDateEntry"
+                                                                               Icon="{ui:FontIcon Glyph=PageLeftE760}"
+                                                                               IsEnabled="{x:Bind _viewModel.UsePreciseRangeForSearch, Mode=OneWay}"
+                                                                               Style="{StaticResource ExpanderContentSettingEntryStyle}">
+                                    <CalendarDatePicker x:Uid="/SettingsPage/SearchStartCalendarDatePicker"
+                                                        Date="{x:Bind _viewModel.SearchStartDate, Mode=TwoWay}" />
+                                </actionableSettingEntry:ActionableSettingEntry>
+                                <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/SearchEndDateEntry"
+                                                                               Icon="{ui:FontIcon Glyph=PageRightE761}"
+                                                                               IsEnabled="{x:Bind _viewModel.UsePreciseRangeForSearch, Mode=OneWay}"
+                                                                               Style="{StaticResource ExpanderContentSettingEntryStyle}">
+                                    <CalendarDatePicker x:Uid="/SettingsPage/SearchEndCalendarDatePicker"
+                                                        Date="{x:Bind _viewModel.SearchEndDate, Mode=TwoWay}"
+                                                        MinDate="{x:Bind _viewModel.GetMinSearchEndDate(_viewModel.SearchStartDate), Mode=OneWay}" />
+                                </actionableSettingEntry:ActionableSettingEntry>
+                            </StackPanel>
+                        </actionableExpanderSettingEntry:ActionableExpanderSettingEntry>
                     </settingsGroup:SettingsGroup>
 
-                    <settingsGroup:SettingsGroup x:Uid="/SettingsPage/DownloadSettings">
+                    <settingsGroup:SettingsGroup x:Uid="/SettingsPage/DownloadSettingsGroup">
                         <sliderSettingEntry:SliderSettingEntry x:Uid="/SettingsPage/MaxDownloadConcurrencyLevelEntry"
                                                                Icon="{ui:FontIcon Glyph=LightningBoltE945}"
                                                                Maximum="{x:Bind system:Environment.ProcessorCount}"
@@ -307,7 +323,7 @@
                                                                Value="{x:Bind _viewModel.MaxDownloadTaskConcurrencyLevel, Mode=TwoWay}" />
                     </settingsGroup:SettingsGroup>
 
-                    <settingsGroup:SettingsGroup x:Uid="/SettingsPage/MiscGroup">
+                    <settingsGroup:SettingsGroup x:Uid="/SettingsPage/MiscSettingsGroup">
 
                         <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/SpotlightSearchPageLimitEntry"
                                                                        Icon="{ui:FontIcon Glyph=PictureE8B9}">
@@ -355,4 +371,4 @@
             </Grid>
         </ScrollViewer>
     </Grid>
-</Page>
+</controls:EnhancedPage>

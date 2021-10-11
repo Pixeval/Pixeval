@@ -171,6 +171,18 @@
   <data name="ReplyContentTooLong" xml:space="preserve">
     <value>回复内容超过140字，请重新编辑</value>
   </data>
+  <data name="SearchDurationUndecided" xml:space="preserve">
+    <value>默认</value>
+  </data>
+  <data name="SearchDurationWithinLastDay" xml:space="preserve">
+    <value>一天内</value>
+  </data>
+  <data name="SearchDurationWithinLastMonth" xml:space="preserve">
+    <value>一月内</value>
+  </data>
+  <data name="SearchDurationWithinLastWeek" xml:space="preserve">
+    <value>一周内</value>
+  </data>
   <data name="SearchTagMatchOptionExactMatchForTags" xml:space="preserve">
     <value>与关键字完全一致</value>
   </data>

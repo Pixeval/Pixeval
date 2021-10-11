@@ -40,7 +40,11 @@ namespace Pixeval
             DateTimeOffset lastCheckedUpdate,
             bool downloadUpdateAutomatically,
             string appFontFamilyName,
-            MainPageTabItem defaultSelectedTabItem)
+            MainPageTabItem defaultSelectedTabItem, 
+            SearchDuration searchDuration,
+            bool usePreciseRangeForSearch,
+            DateTimeOffset searchStartDate,
+            DateTimeOffset searchEndDate)
         {
             Theme = theme;
             ExcludeTags = excludeTags;
@@ -65,6 +69,10 @@ namespace Pixeval
             DownloadUpdateAutomatically = downloadUpdateAutomatically;
             AppFontFamilyName = appFontFamilyName;
             DefaultSelectedTabItem = defaultSelectedTabItem;
+            SearchDuration = searchDuration;
+            UsePreciseRangeForSearch = usePreciseRangeForSearch;
+            SearchStartDate = searchStartDate;
+            SearchEndDate = searchEndDate;
         }
 
         /// <summary>
@@ -172,7 +180,7 @@ namespace Pixeval
         [DefaultValue(ThumbnailDirection.Portrait)]
         public ThumbnailDirection ThumbnailDirection { get; set; }
 
-        [DefaultValue(typeof(DateTimeOffSetDefaultValueProvider))]
+        [DefaultValue(typeof(MinDateTimeOffSetDefaultValueProvider))]
         public DateTimeOffset LastCheckedUpdate { get; set; }
 
         [DefaultValue(false)]
@@ -183,6 +191,18 @@ namespace Pixeval
 
         [DefaultValue(MainPageTabItem.DailyRecommendation)]
         public MainPageTabItem DefaultSelectedTabItem { get; set; }
+
+        [DefaultValue(SearchDuration.Undecided)]
+        public SearchDuration SearchDuration { get; set; }
+
+        [DefaultValue(false)]
+        public bool UsePreciseRangeForSearch { get; set; }
+
+        [DefaultValue(typeof(DecrementedDateTimeOffSetDefaultValueProvider))]
+        public DateTimeOffset SearchStartDate { get; set; }
+
+        [DefaultValue(typeof(CurrentDateTimeOffSetDefaultValueProvider))]
+        public DateTimeOffset SearchEndDate { get; set; }
 
         public static AppSetting CreateDefault()
         {

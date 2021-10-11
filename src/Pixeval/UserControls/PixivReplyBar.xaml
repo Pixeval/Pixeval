@@ -58,7 +58,8 @@
                                    Height="30"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
-                                   Icon="{ui:FontIcon Glyph=SendE724}"
+                                   Icon="{ui:FontIcon Glyph=SendE724,
+                                                      FontSize={StaticResource PixevalSubscriptFontSize}}"
                                    Tapped="SendButton_OnTapped" />
         </Grid>
     </Grid>

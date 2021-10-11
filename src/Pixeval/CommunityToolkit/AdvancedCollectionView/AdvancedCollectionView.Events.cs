@@ -51,8 +51,7 @@ namespace Pixeval.CommunityToolkit.AdvancedCollectionView
             }
 
             VectorChanged?.Invoke(this, e);
-
-            // ReSharper disable once ExplicitCallerInfoArgument
+            
             OnPropertyChanged(nameof(Count));
         }
     }

@@ -97,6 +97,7 @@ namespace Pixeval.Pages.Misc
             _viewModel.LastCheckedUpdate = DateTimeOffset.Now;
             CheckForUpdateButton.Invisible();
             CheckingForUpdatePanel.Visible();
+            // TODO add update check
             await Task.Delay(2000);
             CheckForUpdateButton.Visible();
             CheckingForUpdatePanel.Invisible();

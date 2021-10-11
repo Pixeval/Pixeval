@@ -32,6 +32,8 @@ namespace Pixeval.CoreApi.Global.Enum
     [PublicAPI]
     public enum SearchDuration
     {
+        Undecided,
+
         [Description("within_last_day")]
         WithinLastDay,
 

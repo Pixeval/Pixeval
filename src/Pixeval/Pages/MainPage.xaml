@@ -10,7 +10,6 @@
                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                        NavigationCacheMode="Required"
                        mc:Ignorable="d">
-
     <NavigationView x:Name="MainPageRootNavigationView"
                     d:DataContext="{d:DesignInstance viewModel:MainPageViewModel}"
                     IsBackButtonVisible="Collapsed"
@@ -49,15 +48,16 @@
                         </DataTemplate>
                     </AutoSuggestBox.ItemTemplate>
                 </AutoSuggestBox>
-                <ToggleButton x:Uid="/MainPage/OpenSearchSettingPopupButton"
-                              Grid.Column="1"
-                              Width="33"
-                              Height="33"
-                              Padding="0"
-                              HorizontalAlignment="Right"
-                              VerticalAlignment="Center"
-                              Content="{ui:FontIcon Glyph=SettingE713,
-                                                    FontSize=13}" />
+                <Button x:Uid="/MainPage/OpenSearchSettingPopupButton"
+                        Grid.Column="1"
+                        Width="33"
+                        Height="33"
+                        Padding="0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Content="{ui:FontIcon Glyph=SettingE713,
+                                              FontSize=13}"
+                        Tapped="OpenSearchSettingPopupButton_OnTapped" />
             </Grid>
         </NavigationView.PaneCustomContent>
         <NavigationView.MenuItems>
@@ -90,7 +90,8 @@
         <NavigationView.FooterMenuItems>
             <NavigationViewItem x:Uid="/MainPage/HelpTab"
                                 Icon="{ui:FontIcon Glyph=HelpE897}" />
-            <NavigationViewItem x:Uid="/MainPage/SettingsTab"
+            <NavigationViewItem x:Name="SettingsTab"
+                                x:Uid="/MainPage/SettingsTab"
                                 Icon="{ui:FontIcon Glyph=SettingE713}"
                                 Tag="{x:Bind _settings}" />
         </NavigationView.FooterMenuItems>

@@ -16,15 +16,15 @@
     <SplitView x:Name="IllustrationInfoAndCommentsSplitView"
                DisplayMode="Overlay"
                IsPaneOpen="{x:Bind _viewModel.IsInfoPaneOpen, Mode=TwoWay}"
-               OpenPaneLength="370"
+               OpenPaneLength="330"
                PaneBackground="Transparent">
         <SplitView.Pane>
-            <Grid Width="360"
+            <Grid Width="320"
                   HorizontalAlignment="Left"
                   Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                   Shadow="{x:Bind SidePanelShadow}"
                   Translation="0,0,40">
-                <NavigationView Width="360"
+                <NavigationView Width="320"
                                 BackRequested="IllustrationInfoAndCommentsNavigationView_OnBackRequested"
                                 IsBackEnabled="True"
                                 IsSettingsVisible="False"
@@ -38,7 +38,7 @@
                                             Tag="{x:Bind _comments}" />
                     </NavigationView.MenuItems>
                     <Frame x:Name="IllustrationInfoAndCommentsFrame"
-                           Width="360" />
+                           Width="320" />
                 </NavigationView>
             </Grid>
         </SplitView.Pane>

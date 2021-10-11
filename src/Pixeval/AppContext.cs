@@ -15,7 +15,6 @@ using Pixeval.Utilities;
 using Pixeval.Messages;
 using Pixeval.Options;
 using Pixeval.Util.IO;
-using Pixeval.Util.UI;
 
 namespace Pixeval
 {
@@ -290,6 +289,10 @@ namespace Pixeval
                 ConfigurationContainer.Values[nameof(AppSetting.DownloadUpdateAutomatically)] = appSetting.DownloadUpdateAutomatically;
                 ConfigurationContainer.Values[nameof(AppSetting.AppFontFamilyName)] = appSetting.AppFontFamilyName;
                 ConfigurationContainer.Values[nameof(AppSetting.DefaultSelectedTabItem)] = appSetting.DefaultSelectedTabItem.CastOrThrow<int>();
+                ConfigurationContainer.Values[nameof(AppSetting.SearchDuration)] = appSetting.SearchDuration.CastOrThrow<int>();
+                ConfigurationContainer.Values[nameof(AppSetting.UsePreciseRangeForSearch)] = appSetting.UsePreciseRangeForSearch;
+                ConfigurationContainer.Values[nameof(AppSetting.SearchStartDate)] = appSetting.SearchStartDate;
+                ConfigurationContainer.Values[nameof(AppSetting.SearchEndDate)] = appSetting.SearchEndDate;
             }
         }
 
@@ -345,7 +348,11 @@ namespace Pixeval
                     ConfigurationContainer.Values[nameof(AppSetting.LastCheckedUpdate)].CastOrThrow<DateTimeOffset>(),
                     ConfigurationContainer.Values[nameof(AppSetting.DownloadUpdateAutomatically)].CastOrThrow<bool>(),
                     ConfigurationContainer.Values[nameof(AppSetting.AppFontFamilyName)].CastOrThrow<string>(),
-                    ConfigurationContainer.Values[nameof(AppSetting.DefaultSelectedTabItem)].CastOrThrow<MainPageTabItem>());
+                    ConfigurationContainer.Values[nameof(AppSetting.DefaultSelectedTabItem)].CastOrThrow<MainPageTabItem>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.SearchDuration)].CastOrThrow<SearchDuration>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.UsePreciseRangeForSearch)].CastOrThrow<bool>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.SearchStartDate)].CastOrThrow<DateTimeOffset>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.SearchEndDate)].CastOrThrow<DateTimeOffset>());
             }
             catch
             {

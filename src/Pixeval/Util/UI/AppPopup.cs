@@ -104,7 +104,7 @@ namespace Pixeval.Util.UI
                 Translation = new Vector3(0, 0, 40),
                 BorderBrush = (Brush) Application.Current.Resources["PixevalBorderBrush"],
                 Background = (Brush) Application.Current.Resources["PixevalPanelBackgroundThemeBrush"],
-                BorderThickness = new Thickness(0.5),
+                BorderThickness = new Thickness(0.3),
                 CornerRadius = new CornerRadius(10),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,

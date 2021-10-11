@@ -27,7 +27,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using JetBrains.Annotations;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
@@ -38,12 +37,12 @@ namespace Pixeval.CoreApi.Engine.Implements
     internal class SearchEngine : AbstractPixivFetchEngine<Illustration>
     {
         private readonly int _current;
-        private readonly DateTime? _endDate;
+        private readonly DateTimeOffset? _endDate;
         private readonly SearchTagMatchOption _matchOption;
         private readonly int _pages;
-        private readonly SearchDuration? _searchDuration;
+        private readonly SearchDuration _searchDuration;
         private readonly IllustrationSortOption _sortOption;
-        private readonly DateTime? _startDate;
+        private readonly DateTimeOffset? _startDate;
         private readonly string _tag;
         private readonly TargetFilter _targetFilter;
 
@@ -55,9 +54,9 @@ namespace Pixeval.CoreApi.Engine.Implements
             int start,
             int pages,
             IllustrationSortOption? sortOption,
-            SearchDuration? searchDuration,
-            DateTime? startDate,
-            DateTime? endDate,
+            SearchDuration searchDuration,
+            DateTimeOffset? startDate,
+            DateTimeOffset? endDate,
             TargetFilter? targetFilter) : base(makoClient, engineHandle)
         {
             _matchOption = matchOption;
@@ -78,7 +77,7 @@ namespace Pixeval.CoreApi.Engine.Implements
 
         private class SearchAsyncEnumerator : RecursivePixivAsyncEnumerators.Illustration<SearchEngine>
         {
-            public SearchAsyncEnumerator([NotNull] SearchEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
+            public SearchAsyncEnumerator(SearchEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
             {
             }
 
@@ -97,7 +96,7 @@ namespace Pixeval.CoreApi.Engine.Implements
                 var match = PixivFetchEngine._matchOption.GetDescription();
                 var startDateSegment = PixivFetchEngine._startDate?.Let(dn => $"&start_date={dn:yyyy-MM-dd}");
                 var endDateSegment = PixivFetchEngine._endDate?.Let(dn => $"&start_date={dn:yyyy-MM-dd}");
-                var durationSegment = PixivFetchEngine._searchDuration?.Let(du => $"&duration={du.GetDescription()}");
+                var durationSegment = PixivFetchEngine._searchDuration == SearchDuration.Undecided ? null : $"&duration={PixivFetchEngine._searchDuration.GetDescription()}";
                 var sortSegment = PixivFetchEngine._sortOption != IllustrationSortOption.DoNotSort ? $"&sort={PixivFetchEngine._sortOption.GetDescription()}" : string.Empty;
                 return "/v1/search/illust"
                        + $"?search_target={match}"

@@ -25,6 +25,7 @@
                                                              Grid.Column="0"
                                                              Height="{TemplateBinding Height}"
                                                              Margin="10,0,0,0"
+                                                             HorizontalAlignment="Stretch"
                                                              VerticalAlignment="Center"
                                                              Header="{TemplateBinding Header}"
                                                              Icon="{TemplateBinding Icon}" />

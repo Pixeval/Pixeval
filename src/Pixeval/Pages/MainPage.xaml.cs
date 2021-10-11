@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime;
+using System.Threading.Tasks;
+using Windows.Foundation;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CommunityToolkit;
@@ -48,7 +51,7 @@ namespace Pixeval.Pages
         public override void OnPageDeactivated(NavigatingCancelEventArgs e)
         {
             WeakReferenceMessenger.Default.UnregisterAll(this);
-            
+
         }
 
         public override void OnPageActivated(NavigationEventArgs e)
@@ -105,7 +108,7 @@ namespace Pixeval.Pages
 
         private async void KeywordAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-            if (sender.Text is {Length: > 0} keyword)
+            if (sender.Text is { Length: > 0 } keyword)
             {
                 var suggestions = await App.AppViewModel.MakoClient.GetAutoCompletionForKeyword(keyword);
                 if (suggestions.Any())
@@ -117,8 +120,32 @@ namespace Pixeval.Pages
 
         private void PerformSearch(string text)
         {
+            var setting = App.AppViewModel.AppSetting;
             MainPageRootNavigationView.SelectedItem = null;
-            MainPageRootFrame.Navigate(typeof(SearchResultsPage), App.AppViewModel.MakoClient.Search(text));
+            MainPageRootFrame.Navigate(typeof(SearchResultsPage), App.AppViewModel.MakoClient.Search(
+                text, 
+                setting.SearchStartingFromPageNumber,
+                setting.PageLimitForKeywordSearch,
+                setting.TagMatchOption,
+                setting.DefaultSortOption,
+                setting.SearchDuration,
+                setting.TargetFilter,
+                setting.UsePreciseRangeForSearch ? setting.SearchStartDate : null,
+                setting.UsePreciseRangeForSearch ? setting.SearchEndDate : null));
+        }
+
+        private async void OpenSearchSettingPopupButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            MainPageRootNavigationView.SelectedItem = SettingsTab;
+            WeakReferenceMessenger.Default.Send(new OpenSearchSettingMessage());
+            // The stupid delay here does merely nothing but wait the navigation to complete, apparently
+            // the navigation is asynchronous and there's no way to wait for it
+            await Task.Delay(500);
+            var settingsPage = MainPageRootFrame.FindDescendant<SettingsPage>()!;
+            var position = settingsPage.SearchSettingsGroup
+                .TransformToVisual((UIElement) settingsPage.SettingsPageScrollViewer.Content)
+                .TransformPoint(new Point(0, 0));
+            settingsPage.SettingsPageScrollViewer.ChangeView(null, position.Y, null, false);
         }
     }
 }

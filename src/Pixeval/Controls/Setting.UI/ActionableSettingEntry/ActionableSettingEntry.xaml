@@ -19,12 +19,13 @@
                                       CornerRadius="{TemplateBinding CornerRadius}">
                         <Grid CornerRadius="{TemplateBinding CornerRadius}">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*" />
-                                <ColumnDefinition />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <userControls:SettingEntryHeader x:Name="EntryHeader"
                                                              Grid.Column="0"
                                                              Margin="10,0,0,0"
+                                                             HorizontalAlignment="Stretch"
                                                              VerticalAlignment="Center"
                                                              Header="{TemplateBinding Header}"
                                                              Icon="{TemplateBinding Icon}" />

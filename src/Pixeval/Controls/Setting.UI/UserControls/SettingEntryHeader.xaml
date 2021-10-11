@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             SizeChanged="SettingEntryHeader_OnSizeChanged"
              mc:Ignorable="d">
 
     <StackPanel Orientation="Horizontal">
@@ -10,20 +11,29 @@
                           Width="50"
                           VerticalAlignment="Center"
                           Visibility="Collapsed" />
-        <StackPanel VerticalAlignment="Center">
+        <Grid HorizontalAlignment="Stretch"
+              VerticalAlignment="Center"
+              RowSpacing="3">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
             <TextBlock x:Name="HeaderTextBlock"
+                       Grid.Row="0"
                        HorizontalAlignment="Left"
                        FontSize="{StaticResource PixevalContentFontSize}"
                        TextWrapping="WrapWholeWords" />
             <ContentPresenter x:Name="DescriptionPresenter"
-                              Margin="0,3,0,0"
+                              Grid.Row="1"
                               HorizontalAlignment="Left"
+                              HorizontalContentAlignment="Stretch"
                               FontSize="{StaticResource PixevalSubscriptFontSize}"
                               TextWrapping="WrapWholeWords">
                 <ContentPresenter.Resources>
                     <Style BasedOn="{StaticResource CaptionTextBlockStyle}"
                            TargetType="TextBlock">
-                        <Setter Property="TextWrapping" Value="WrapWholeWords" />
+                        <Setter Property="TextWrapping" Value="Wrap" />
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
                         <Setter Property="FontSize" Value="{StaticResource PixevalSubscriptFontSize}" />
                         <Setter Property="Foreground" Value="{ThemeResource PixevalTipTextForeground}" />
                     </Style>
@@ -34,6 +44,6 @@
                     </Style>
                 </ContentPresenter.Resources>
             </ContentPresenter>
-        </StackPanel>
+        </Grid>
     </StackPanel>
 </UserControl>

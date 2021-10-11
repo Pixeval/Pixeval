@@ -85,10 +85,10 @@ namespace Pixeval.CoreApi
             int pages = 100,
             SearchTagMatchOption matchOption = SearchTagMatchOption.TitleAndCaption,
             IllustrationSortOption? sortOption = null,
-            SearchDuration? searchDuration = null,
+            SearchDuration searchDuration = SearchDuration.Undecided,
             TargetFilter? targetFilter = null,
-            DateTime? startDate = null,
-            DateTime? endDate = null)
+            DateTimeOffset? startDate = null,
+            DateTimeOffset? endDate = null)
         {
             EnsureNotCancelled();
             if (sortOption == IllustrationSortOption.PopularityDescending && !Session.IsPremium)

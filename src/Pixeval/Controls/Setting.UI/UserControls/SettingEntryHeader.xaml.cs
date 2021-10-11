@@ -61,7 +61,7 @@ namespace Pixeval.Controls.Setting.UI.UserControls
 
         private static void IconChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var presenter = ((SettingEntryHeader)d).IconContentPresenter;
+            var presenter = ((SettingEntryHeader) d).IconContentPresenter;
             if (e.NewValue is IconElement icon)
             {
                 presenter.Visibility = Visibility.Visible;
@@ -84,6 +84,12 @@ namespace Pixeval.Controls.Setting.UI.UserControls
                     buttonBase.Tapped += (_, eventArgs) => eventArgs.Handled = true;
                 }
             };
+        }
+
+        private void SettingEntryHeader_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            // The MaxWidth binding won't work, no idea why
+            DescriptionPresenter.Width = e.NewSize.Width - IconContentPresenter.ActualWidth;
         }
     }
 }

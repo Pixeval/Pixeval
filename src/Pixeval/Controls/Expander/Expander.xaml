@@ -27,23 +27,23 @@
                             </card:CardControl.RenderTransform>
                         </card:CardControl>
                         <card:CardControl x:Name="HeaderCardContainer"
-                                          Height="{TemplateBinding HeaderHeight}"
+                                          MinHeight="{TemplateBinding HeaderHeight}"
                                           VerticalAlignment="Top"
                                           CornerRadius="{TemplateBinding CornerRadius}"
                                           Opacity="1">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="{StaticResource ExpanderChevronButtonContainerWidth}" />
                                 </Grid.ColumnDefinitions>
                                 <ContentPresenter x:Name="HeaderPresenter"
                                                   Grid.Column="0"
-                                                  Height="{TemplateBinding HeaderHeight}"
+                                                  MinHeight="{TemplateBinding HeaderHeight}"
                                                   Padding="{TemplateBinding Padding}"
                                                   HorizontalAlignment="Stretch"
                                                   VerticalAlignment="Stretch"
-                                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  HorizontalContentAlignment="Stretch"
+                                                  VerticalContentAlignment="Center"
                                                   Content="{TemplateBinding Header}"
                                                   FontSize="{StaticResource PixevalContentFontSize}" />
                                 <ContentPresenter x:Name="ExpandOrFoldExpanderPresenter"
@@ -52,7 +52,6 @@
                                                   Height="35"
                                                   HorizontalAlignment="Center"
                                                   VerticalAlignment="Center"
-                                                  Background="Transparent"
                                                   CornerRadius="3" />
                             </Grid>
                         </card:CardControl>
