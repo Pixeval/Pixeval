@@ -12,5 +12,7 @@
         <ResourceDictionary Source="ms-appx:///Controls/NotifyOnLoadedCalendarDatePicker/NotifyOnLoadedCalendarDatePicker.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/NotifyOnLoadedComboBox/NotifyOnLoadedComboBox.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/IconButton/IconButton.xaml" />
+        <ResourceDictionary Source="ms-appx:///Controls/TokenInputTextBox/TokenInputTextBox.xaml" />
+        <ResourceDictionary Source="ms-appx:///Popups/IllustrationResultFilter/IllustrationResultFilterFunctionEntry.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

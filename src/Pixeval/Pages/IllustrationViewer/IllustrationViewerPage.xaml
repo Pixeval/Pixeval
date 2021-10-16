@@ -6,6 +6,7 @@
                         xmlns:dockPanel="using:Pixeval.CommunityToolkit.DockPanel"
                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                         xmlns:ui="using:Pixeval.Util.UI"
+                        ui:NavigationHelper.BackHotKey="Escape"
                         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                         Loaded="IllustrationViewerPage_OnLoaded"
                         mc:Ignorable="d">

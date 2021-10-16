@@ -1,0 +1,119 @@
+﻿<UserControl x:Class="Pixeval.Popups.IllustrationResultFilter.IllustrationResultFilterPopupContent"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:illustrationResultFilter="using:Pixeval.Popups.IllustrationResultFilter"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:tokenInput="using:Pixeval.UserControls.TokenInput"
+             xmlns:tokenInputTextBox="using:Pixeval.Controls.TokenInputTextBox"
+             xmlns:ui="using:Pixeval.Util.UI"
+             ui:NavigationHelper.ClosePopupHotKey="Escape"
+             Loaded="IllustrationResultFilterPopupContent_OnLoaded"
+             mc:Ignorable="d">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <TextBlock x:Uid="/IllustrationResultFilterPopupContent/TitleTextBlock"
+                       Margin="0,0,0,10"
+                       FontSize="{StaticResource PixevalTitleFontSize}" />
+            <Button x:Name="CloseButton"
+                    Width="38"
+                    Height="38"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Content="{ui:FontIcon Glyph=ChromeCloseE8BB,
+                                          FontSize={StaticResource PixevalButtonIconSize}}"
+                    CornerRadius="90"
+                    Tapped="CloseButton_OnTapped" />
+        </Grid>
+        <ScrollViewer Grid.Row="1">
+            <StackPanel HorizontalAlignment="Stretch"
+                        VerticalAlignment="Top"
+                        Spacing="5">
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/LeastBookmarkCountEntry">
+                    <NumberBox x:Uid="/IllustrationResultFilterPopupContent/LeastBookmarkCountNumberBox"
+                               Width="400"
+                               HorizontalAlignment="Left"
+                               Minimum="0"
+                               Style="{StaticResource SettingsNumberBoxStyle}"
+                               Value="{x:Bind _viewModel.LeastBookmark, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </illustrationResultFilter:IllustrationResultFilterFunctionEntry>
+
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/MaximumBookmarkCountEntry">
+                    <NumberBox x:Uid="/IllustrationResultFilterPopupContent/MaximumBookmarkCountNumberBox"
+                               Width="400"
+                               HorizontalAlignment="Left"
+                               Minimum="0"
+                               Style="{StaticResource SettingsNumberBoxStyle}"
+                               Value="{x:Bind _viewModel.MaximumBookmark, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </illustrationResultFilter:IllustrationResultFilterFunctionEntry>
+
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/IncludeTagsEntry">
+                    <tokenInput:TokenInput x:Uid="/IllustrationResultFilterPopupContent/IncludeTagTokenInput"
+                                           TokenSource="{x:Bind _viewModel.IncludeTags, Mode=OneWay}" />
+                </illustrationResultFilter:IllustrationResultFilterFunctionEntry>
+
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/ExcludeTagsEntry">
+                    <tokenInput:TokenInput x:Uid="/IllustrationResultFilterPopupContent/ExcludeTagTokenInput"
+                                           TokenSource="{x:Bind _viewModel.ExcludeTags, Mode=OneWay}" />
+                </illustrationResultFilter:IllustrationResultFilterFunctionEntry>
+
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/UserGroupNameEntry">
+                    <tokenInput:TokenInput x:Uid="/IllustrationResultFilterPopupContent/UserGroupNameInput"
+                                           TokenSource="{x:Bind _viewModel.UserGroupName, Mode=OneWay}" />
+                </illustrationResultFilter:IllustrationResultFilterFunctionEntry>
+
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/IllustratorNameEntry">
+                    <tokenInputTextBox:TokenInputTextBox x:Uid="/IllustrationResultFilterPopupContent/IllustratorNameInput"
+                                                         Token="{x:Bind _viewModel.IllustratorName, Mode=OneWay}" />
+                </illustrationResultFilter:IllustrationResultFilterFunctionEntry>
+
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/IllustrationNameEntry">
+                    <tokenInputTextBox:TokenInputTextBox x:Uid="/IllustrationResultFilterPopupContent/IllustrationNameInput"
+                                                         Token="{x:Bind _viewModel.IllustrationName, Mode=OneWay}" />
+                </illustrationResultFilter:IllustrationResultFilterFunctionEntry>
+
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/IllustratorIdEntry">
+                    <NumberBox x:Uid="/IllustrationResultFilterPopupContent/IllustratorIdInput"
+                               Width="400"
+                               HorizontalAlignment="Left"
+                               SpinButtonPlacementMode="Hidden"
+                               Style="{StaticResource SettingsNumberBoxStyle}"
+                               Text="{x:Bind _viewModel.IllustratorId, Mode=TwoWay}" />
+                </illustrationResultFilter:IllustrationResultFilterFunctionEntry>
+
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/IllustrationIdEntry">
+                    <NumberBox x:Uid="/IllustrationResultFilterPopupContent/IllustrationIdInput"
+                               Width="400"
+                               HorizontalAlignment="Left"
+                               SpinButtonPlacementMode="Hidden"
+                               Style="{StaticResource SettingsNumberBoxStyle}"
+                               Text="{x:Bind _viewModel.IllustrationId, Mode=TwoWay}" />
+                </illustrationResultFilter:IllustrationResultFilterFunctionEntry>
+
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/PublishDateStartEntry">
+                    <CalendarDatePicker x:Uid="/IllustrationResultFilterPopupContent/PublishDateStartPicker"
+                                        Width="400"
+                                        Date="{x:Bind _viewModel.PublishDateStart, Mode=TwoWay}" />
+                </illustrationResultFilter:IllustrationResultFilterFunctionEntry>
+
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/PublishDateEndEntry">
+                    <CalendarDatePicker x:Uid="/IllustrationResultFilterPopupContent/PublishDateEndPicker"
+                                        Width="400"
+                                        Date="{x:Bind _viewModel.PublishDateEnd, Mode=TwoWay}" />
+                </illustrationResultFilter:IllustrationResultFilterFunctionEntry>
+
+            </StackPanel>
+        </ScrollViewer>
+        <Button x:Uid="/IllustrationResultFilterPopupContent/ResetButton"
+                Grid.Row="2"
+                Margin="0,15,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Tapped="ResetButton_OnTapped" />
+    </Grid>
+</UserControl>

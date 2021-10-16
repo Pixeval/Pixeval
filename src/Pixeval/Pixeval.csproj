@@ -76,15 +76,19 @@
       <None Remove="Controls\Setting.UI\SliderSettingEntry\SliderSettingEntry.xaml" />
       <None Remove="Controls\Setting.UI\SwitchSettingEntry\SwitchSettingEntry.xaml" />
       <None Remove="Controls\Setting.UI\UserControls\SettingEntryHeader.xaml" />
+      <None Remove="Controls\TokenInputTextBox\TokenInputTextBox.xaml" />
       <None Remove="Pages\IllustrationViewer\CommentRepliesPage.xaml" />
       <None Remove="Pages\IllustrationViewer\PixivReplyEmojiListPage.xaml" />
       <None Remove="Pages\IllustrationViewer\PixivReplyStickerListPage.xaml" />
+      <None Remove="Popups\IllustrationResultFilterPopup.xaml" />
+      <None Remove="Popups\IllustrationResultFilter\IllustrationResultFilterFunctionEntry.xaml" />
       <None Remove="Strings\zh-CN\BookmarksPage.resw" />
       <None Remove="Strings\zh-CN\CommentBlock.resw" />
       <None Remove="Strings\zh-CN\CommentRepliesBlock.resw" />
       <None Remove="Strings\zh-CN\DownloadAndHistoryListPage.resw" />
       <None Remove="Strings\zh-CN\IllustrationGridCommandBar.resw" />
       <None Remove="Strings\zh-CN\IllustrationInfoPage.resw" />
+      <None Remove="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
       <None Remove="Strings\zh-CN\IllustrationViewerPage.resw" />
       <None Remove="Strings\zh-CN\ImageViewerPage.resw" />
       <None Remove="Strings\zh-CN\PixivReplyBar.resw" />
@@ -104,6 +108,7 @@
       <None Remove="Pages\SettingsPage.xaml" />
       <None Remove="Strings\zh-CN\SettingsPage.resw" />
       <None Remove="Strings\zh-CN\SortOptionComboBox.resw" />
+      <None Remove="Strings\zh-CN\TokenInputTextBox.resw" />
       <None Remove="Themes\Card.xaml" />
       <None Remove="Themes\Controls.xaml" />
       <None Remove="Templates.xaml" />
@@ -117,6 +122,7 @@
       <None Remove="UserControls\PixivReplyBar.xaml" />
       <None Remove="UserControls\QrCodePresenter%27.xaml" />
       <None Remove="UserControls\SortOptionComboBox.xaml" />
+      <None Remove="UserControls\TokenInput.xaml" />
    </ItemGroup>
    <ItemGroup>
       <AppxManifest Include="Package.appxmanifest">
@@ -232,6 +238,7 @@
       <PRIResource Include="Strings\zh-CN\DownloadAndHistoryListPage.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationGridCommandBar.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationInfoPage.resw" />
+      <PRIResource Include="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationViewerPage.resw" />
       <PRIResource Include="Strings\zh-CN\ImageViewerPage.resw" />
       <PRIResource Include="Strings\zh-CN\LoginPage.resw" />
@@ -244,6 +251,7 @@
       <PRIResource Include="Strings\zh-CN\PixivReplyBar.resw" />
       <PRIResource Include="Strings\zh-CN\SettingsPage.resw" />
       <PRIResource Include="Strings\zh-CN\SortOptionComboBox.resw" />
+      <PRIResource Include="Strings\zh-CN\TokenInputTextBox.resw" />
    </ItemGroup>
    <ItemGroup>
       <Content Update="Assets\Images\logo44x44.ico">
@@ -263,12 +271,24 @@
      <Page Update="Controls\IconButton\IconButton.xaml">
        <Generator>MSBuild:Compile</Generator>
      </Page>
+     <Page Update="Controls\TokenInputTextBox\TokenInputTextBox.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
      <None Update="Pages\Capability\RecentPostsPage.xaml">
        <Generator>MSBuild:Compile</Generator>
      </None>
      <None Update="Pages\Capability\SearchResultsPage.xaml">
        <Generator>MSBuild:Compile</Generator>
      </None>
+     <Page Update="UserControls\TokenInput\TokenInput.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+     <Page Update="Popups\IllustrationResultFilter\IllustrationResultFilterFunctionEntry.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+     <Page Update="Popups\IllustrationResultFilter\IllustrationResultFilterPopupContent.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
    </ItemGroup>
    <ItemGroup>
      <Page Update="Controls\Setting.UI\ActionableExpanderSettingEntry\ActionableExpanderSettingEntry.xaml">
@@ -345,11 +365,6 @@
    </ItemGroup>
    <ItemGroup>
      <Page Update="Pages\IllustrationViewer\PixivReplyEmojiListPage.xaml">
-       <Generator>MSBuild:Compile</Generator>
-     </Page>
-   </ItemGroup>
-   <ItemGroup>
-     <Page Update="Popups\OverlayPopupContent.xaml">
        <Generator>MSBuild:Compile</Generator>
      </Page>
    </ItemGroup>

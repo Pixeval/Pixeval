@@ -23,7 +23,9 @@
             <AppBarButton Icon="{ui:FontIcon Glyph=CancelE711}"
                           Label="{x:Bind ViewModel.SelectionLabel, Mode=OneWay}"
                           Tapped="CancelSelectionButton_OnTapped" />
-            <AppBarToggleButton x:Uid="/IllustrationGridCommandBar/OpenConditionDialogButton"
+            <AppBarToggleButton x:Name="OpenConditionDialogButton"
+                                x:Uid="/IllustrationGridCommandBar/OpenConditionDialogButton"
+                                Checked="OpenConditionDialogButton_OnChecked"
                                 Icon="{ui:FontIcon Glyph=FilterE71C}" />
             <AppBarButton x:Name="SelectAllButton"
                           x:Uid="/IllustrationGridCommandBar/SelectAllButton"
@@ -31,7 +33,8 @@
                           Tapped="SelectAllToggleButton_OnTapped" />
             <AppBarSeparator />
             <AppBarButton x:Uid="/IllustrationGridCommandBar/AddAllToBookmarkButton"
-                          Icon="{ui:FontIcon Glyph=BookmarksE8A4}" />
+                          Icon="{ui:FontIcon Glyph=BookmarksE8A4}"
+                          Tapped="AddAllToBookmarkButton_OnTapped" />
             <AppBarButton x:Uid="/IllustrationGridCommandBar/SaveAllButton"
                           Icon="{ui:FontIcon Glyph=SaveE74E}"
                           Tapped="SaveAllButton_OnTapped" />

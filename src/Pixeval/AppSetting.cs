@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Reflection;
 using Pixeval.CoreApi.Global.Enum;
@@ -15,11 +14,11 @@ namespace Pixeval
         public AppSetting()
 #pragma warning restore CS8618
         {
-            ResetDefault();
+            DefaultValueAttributeHelper.Initialize(this);
         }
 
+        // ReSharper disable once UnusedMember.Global
         public AppSetting(ApplicationTheme theme,
-            ObservableCollection<string> excludeTags,
             bool disableDomainFronting,
             IllustrationSortOption defaultSortOption,
             SearchTagMatchOption tagMatchOption,
@@ -40,14 +39,13 @@ namespace Pixeval
             DateTimeOffset lastCheckedUpdate,
             bool downloadUpdateAutomatically,
             string appFontFamilyName,
-            MainPageTabItem defaultSelectedTabItem, 
+            MainPageTabItem defaultSelectedTabItem,
             SearchDuration searchDuration,
             bool usePreciseRangeForSearch,
             DateTimeOffset searchStartDate,
             DateTimeOffset searchEndDate)
         {
             Theme = theme;
-            ExcludeTags = excludeTags;
             FiltrateRestrictedContent = filtrateRestrictedContent;
             DisableDomainFronting = disableDomainFronting;
             DefaultSortOption = defaultSortOption;
@@ -80,14 +78,6 @@ namespace Pixeval
         /// </summary>
         [DefaultValue(ApplicationTheme.SystemDefault)]
         public ApplicationTheme Theme { get; set; }
-
-        /// <summary>
-        /// The tags that are not allowed to be included in the search result.
-        /// The particular search result will be ignored if any of its tag is
-        /// included in <see cref="ExcludeTags"/>
-        /// </summary>
-        [DefaultValue(typeof(ObservableCollection<string>))]
-        public ObservableCollection<string> ExcludeTags { get; set; }
 
         /// <summary>
         /// Indicates whether the restricted content are permitted to be included
@@ -207,14 +197,6 @@ namespace Pixeval
         public static AppSetting CreateDefault()
         {
             return new AppSetting();
-        }
-
-        private void ResetDefault()
-        {
-            foreach (var propertyInfo in typeof(AppSetting).GetProperties(BindingFlags.Public | BindingFlags.Instance))
-            {
-                propertyInfo.SetValue(this, propertyInfo.GetDefaultValue());
-            }
         }
 
         public MakoClientConfiguration ToMakoClientConfiguration()

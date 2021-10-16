@@ -44,5 +44,13 @@ namespace Pixeval.Misc
 
             return null;
         }
+
+        public static void Initialize(object obj)
+        {
+            foreach (var propertyInfo in obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            {
+                propertyInfo.SetValue(obj, propertyInfo.GetDefaultValue());
+            }
+        }
     }
 }

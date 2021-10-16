@@ -10,10 +10,8 @@ namespace Pixeval.Controls.Setting.UI.SwitchSettingEntry
     public class SwitchSettingEntry : SettingEntryBase
     {
         private const string PartSwitch = "Switch";
-        private const string PartContentContainerGrid = "ContentContainerGrid";
 
         private ToggleSwitch? _switch;
-        private Grid? _contentContainerGrid;
 
         private TypedEventHandler<SwitchSettingEntry, RoutedEventArgs>? _toggled;
 
@@ -71,8 +69,6 @@ namespace Pixeval.Controls.Setting.UI.SwitchSettingEntry
                 _switch.Toggled += SwitchOnToggled;
             }
 
-            _contentContainerGrid = GetTemplateChild(PartContentContainerGrid) as Grid;
-            
             base.OnApplyTemplate();
         }
     }

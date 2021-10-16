@@ -10,6 +10,14 @@ namespace Pixeval.Misc
         }
     }
 
+    public class MaxDateTimeOffSetDefaultValueProvider : IDefaultValueProvider
+    {
+        public object ProvideValue()
+        {
+            return DateTimeOffset.MaxValue;
+        }
+    }
+
     public class CurrentDateTimeOffSetDefaultValueProvider : IDefaultValueProvider
     {
         public object ProvideValue()

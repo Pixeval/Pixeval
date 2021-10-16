@@ -18,13 +18,38 @@ using Pixeval.ViewModel;
 
 namespace Pixeval.Popups
 {
-    public sealed partial class CommentRepliesBlock
+    public sealed partial class CommentRepliesBlock : IAppPopupContent
     {
+        public Guid UniqueId { get; }
+
+        public FrameworkElement UIContent => this;
+
         public static DependencyProperty ViewModelProperty = DependencyProperty.Register(
             nameof(ViewModel),
             typeof(CommentRepliesBlockViewModel),
             typeof(CommentRepliesBlock),
             PropertyMetadata.Create(DependencyProperty.UnsetValue, ViewModelChangedCallback));
+
+        public CommentRepliesBlockViewModel ViewModel
+        {
+            get => (CommentRepliesBlockViewModel)GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
+        }
+
+        public CommentRepliesBlock(CommentRepliesBlockViewModel viewModel)
+        {
+            ViewModel = viewModel;
+            UniqueId = Guid.NewGuid();
+            InitializeComponent();
+        }
+
+        private EventHandler<TappedRoutedEventArgs>? _closeButtonTapped;
+
+        public event EventHandler<TappedRoutedEventArgs> CloseButtonTapped
+        {
+            add => _closeButtonTapped += value;
+            remove => _closeButtonTapped -= value;
+        }
 
         private static void ViewModelChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -38,23 +63,10 @@ namespace Pixeval.Popups
             }
         }
 
-        public CommentRepliesBlockViewModel ViewModel
+        private void CommentRepliesBlock_OnLoaded(object sender, RoutedEventArgs e)
         {
-            get => (CommentRepliesBlockViewModel) GetValue(ViewModelProperty);
-            set => SetValue(ViewModelProperty, value);
-        }
-
-        public CommentRepliesBlock()
-        {
-            InitializeComponent();
-        }
-
-        private EventHandler<TappedRoutedEventArgs>? _closeButtonTapped;
-
-        public event EventHandler<TappedRoutedEventArgs> CloseButtonTapped
-        {
-            add => _closeButtonTapped += value;
-            remove => _closeButtonTapped -= value;
+            // Focus the popup content so that the hot key for closing can work properly
+            CloseButton.Focus(FocusState.Programmatic);
         }
 
         private void CloseButton_OnTapped(object sender, TappedRoutedEventArgs e)

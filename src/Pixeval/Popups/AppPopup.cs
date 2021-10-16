@@ -8,8 +8,9 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.Util.UI;
 
-namespace Pixeval.Util.UI
+namespace Pixeval.Popups
 {
     public static class PopupManager
     {
@@ -18,7 +19,9 @@ namespace Pixeval.Util.UI
         public static IReadOnlyDictionary<Guid, AppPopup> OpenPopups => OpenPopupsInternal;
 
         public static AppPopup CreatePopup(
-            FrameworkElement content,
+            IAppPopupContent content,
+            double width = double.NaN,
+            double height = double.NaN,
             double widthMargin = double.NaN,
             double heightMargin = double.NaN,
             double minWidth = 0,
@@ -27,10 +30,10 @@ namespace Pixeval.Util.UI
             double maxHeight = double.MaxValue, 
             bool lightDismiss = false,
             bool useAnimation = true,
-            Action<FrameworkElement>? opening = null,
-            Action<FrameworkElement>? closing = null)
+            Action<IAppPopupContent>? opening = null,
+            Action<IAppPopupContent, object?>? closing = null)
         {
-            return new AppPopup(content, widthMargin, heightMargin, minWidth, maxWidth, minHeight, maxHeight, lightDismiss, useAnimation, opening, closing);
+            return new AppPopup(content, width, height, widthMargin, heightMargin, minWidth, maxWidth, minHeight, maxHeight, lightDismiss, useAnimation, opening, closing);
         }
 
         public static void ShowPopup(AppPopup popup)
@@ -44,6 +47,15 @@ namespace Pixeval.Util.UI
             popup.Close();
             OpenPopupsInternal.Remove(popup.UniqueId);
         }
+
+        public static void ClosePopup(Guid guid)
+        {
+            if (OpenPopupsInternal.TryGetValue(guid, out var popup))
+            {
+                popup.Close();
+                OpenPopupsInternal.Remove(guid);
+            }
+        }
     }
 
     public class AppPopup
@@ -55,12 +67,16 @@ namespace Pixeval.Util.UI
         private readonly double _minHeight;
         private readonly double _maxHeight;
         private readonly bool _useAnimation;
-        private readonly FrameworkElement _content;
-        private readonly Action<FrameworkElement>? _opening;
-        private readonly Action<FrameworkElement>? _closing;
+        private readonly IAppPopupContent _content;
+        private readonly double _width;
+        private readonly double _height;
+        private readonly Action<IAppPopupContent>? _opening;
+        private readonly Action<IAppPopupContent, object?>? _closing;
 
         public AppPopup(
-            FrameworkElement content,
+            IAppPopupContent content,
+            double width = double.NaN,
+            double height = double.NaN,
             double widthMargin = double.NaN,
             double heightMargin = double.NaN,
             double minWidth = 0,
@@ -69,10 +85,12 @@ namespace Pixeval.Util.UI
             double maxHeight = double.MaxValue,
             bool lightDismiss = false,
             bool useAnimation = true,
-            Action<FrameworkElement>? opening = null,
-            Action<FrameworkElement>? closing = null)
+            Action<IAppPopupContent>? opening = null,
+            Action<IAppPopupContent, object?>? closing = null)
         {
             _content = content;
+            _width = width;
+            _height = height;
             _opening = opening;
             _closing = closing;
             _maxWidth = maxWidth;
@@ -84,12 +102,10 @@ namespace Pixeval.Util.UI
             _maxHeight = maxHeight;
             _useAnimation = useAnimation;
             var (windowWidth, windowHeight) = App.AppViewModel.GetAppWindowSizeTuple();
-            UniqueId = Guid.NewGuid();
-            content.HorizontalAlignment = HorizontalAlignment.Stretch;
-            content.VerticalAlignment = VerticalAlignment.Stretch;
+            UniqueId = content.UniqueId;
+            content.UIContent.HorizontalAlignment = HorizontalAlignment.Stretch;
+            content.UIContent.VerticalAlignment = VerticalAlignment.Stretch;
 
-            // TODO: use a user control instead of writing it with bare hand. this is a bug of WAS 1.0.0 preview2
-            // that the ThemeShadow will display incorrectly
             var themeShadow = new ThemeShadow();
             var shadowReceiver = new Grid
             {
@@ -162,12 +178,20 @@ namespace Pixeval.Util.UI
             Popup.Height = windowHeight;
             child.Width = windowWidth;
             child.Height = windowHeight;
-            if (!double.IsNaN(_widthMargin))
+            if (!double.IsNaN(_width))
+            {
+                container.Width = _width;
+            }
+            else if (!double.IsNaN(_widthMargin))
             {
                 container.Width = Math.Clamp(windowWidth - _widthMargin * 2, _minWidth, _maxWidth);
             }
 
-            if (!double.IsNaN(_heightMargin))
+            if (!double.IsNaN(_height))
+            {
+                container.Height = _height;
+            }
+            else if (!double.IsNaN(_heightMargin))
             {
                 container.Height = Math.Clamp(windowHeight - _heightMargin * 2, _minHeight, _maxHeight);
             }
@@ -197,14 +221,14 @@ namespace Pixeval.Util.UI
                 storyboard.Completed += (_, _) =>
                 {
                     Popup.IsOpen = false;
-                    _closing?.Invoke(_content);
+                    _closing?.Invoke(_content, _content is ICompletableAppPopupContent completable ? completable.GetCompletionResult() : null);
                 };
                 storyboard.Begin();
             }
             else
             {
                 Popup.IsOpen = false;
-                _closing?.Invoke(_content);
+                _closing?.Invoke(_content, _content is ICompletableAppPopupContent completable ? completable.GetCompletionResult() : null);
             }
         }
 

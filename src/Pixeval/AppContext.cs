@@ -267,7 +267,6 @@ namespace Pixeval
             if (App.AppViewModel.AppSetting is { } appSetting)
             {
                 ConfigurationContainer.Values[nameof(AppSetting.Theme)] = appSetting.Theme.CastOrThrow<int>();
-                ConfigurationContainer.Values[nameof(AppSetting.ExcludeTags)] = appSetting.ExcludeTags.ToJson();
                 ConfigurationContainer.Values[nameof(AppSetting.DisableDomainFronting)] = appSetting.DisableDomainFronting;
                 ConfigurationContainer.Values[nameof(AppSetting.DefaultSortOption)] = appSetting.DefaultSortOption.CastOrThrow<int>();
                 ConfigurationContainer.Values[nameof(AppSetting.TagMatchOption)] = appSetting.TagMatchOption.CastOrThrow<int>();
@@ -327,7 +326,6 @@ namespace Pixeval
             {
                 return new AppSetting(
                     ConfigurationContainer.Values[nameof(AppSetting.Theme)].CastOrThrow<ApplicationTheme>(),
-                    (ConfigurationContainer.Values[nameof(AppSetting.ExcludeTags)].CastOrThrow<string>().FromJson<string[]>() ?? Array.Empty<string>()).ToObservableCollection(),
                     ConfigurationContainer.Values[nameof(AppSetting.DisableDomainFronting)].CastOrThrow<bool>(),
                     ConfigurationContainer.Values[nameof(AppSetting.DefaultSortOption)].CastOrThrow<IllustrationSortOption>(),
                     ConfigurationContainer.Values[nameof(AppSetting.TagMatchOption)].CastOrThrow<SearchTagMatchOption>(),

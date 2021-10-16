@@ -6,7 +6,6 @@
                        xmlns:controls="using:Pixeval.Controls"
                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                        xmlns:expanderSettingEntry="using:Pixeval.Controls.Setting.UI.ExpanderSettingEntry"
-                       xmlns:iconButton="using:Pixeval.Controls.IconButton"
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:model="using:Pixeval.Controls.Setting.UI.Model"
                        xmlns:setting="using:Pixeval.Controls.Setting.UI"
@@ -42,7 +41,7 @@
                       x:FieldModifier="public"
                       HorizontalScrollBarVisibility="Disabled"
                       HorizontalScrollMode="Disabled">
-            <Grid Margin="20,0">
+            <Grid Margin="20,0,20,20">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -198,52 +197,10 @@
                                                                                  Icon="{ui:FontIcon Glyph=LandscapeOrientationEF6B}"
                                                                                  ItemsSource="{x:Bind model:ThumbnailDirectionSettingEntryItem.AvailableItems}"
                                                                                  SelectedItem="{x:Bind _viewModel.ThumbnailDirection, Mode=TwoWay}" />
-                        <actionableExpanderSettingEntry:ActionableExpanderSettingEntry x:Uid="/SettingsPage/FiltrateRestrictedContentEntry"
-                                                                                       Icon="{ui:FontIcon Glyph=BlockContactE8F8}">
-                            <actionableExpanderSettingEntry:ActionableExpanderSettingEntry.ActionContent>
-                                <ToggleSwitch IsOn="{x:Bind _viewModel.FiltrateRestrictedContent, Mode=TwoWay}" />
-                            </actionableExpanderSettingEntry:ActionableExpanderSettingEntry.ActionContent>
-                            <StackPanel Margin="0,5"
-                                        Spacing="5">
-                                <ItemsControl ItemsSource="{x:Bind _viewModel.ExcludeTags}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="system:String">
-                                            <iconButton:IconButton FlowDirection="RightToLeft"
-                                                                   FontSize="{StaticResource PixevalContentFontSize}"
-                                                                   Icon="{ui:FontIcon Glyph=ChromeCloseE8BB,
-                                                                                      FontSize=12}"
-                                                                   Tapped="ExcludeTagButton_OnTapped"
-                                                                   Text="{x:Bind}" />
+                        <switchSettingEntry:SwitchSettingEntry x:Uid="/SettingsPage/FiltrateRestrictedContentEntry"
+                                                               Icon="{ui:FontIcon Glyph=BlockContactE8F8}"
+                                                               IsOn="{x:Bind _viewModel.FiltrateRestrictedContent, Mode=TwoWay}" />
 
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <wrapPanel:WrapPanel HorizontalSpacing="5"
-                                                                 VerticalSpacing="5" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                </ItemsControl>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition />
-                                        <ColumnDefinition Width="75" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBox x:Name="ExcludeTagsTextBox"
-                                             x:Uid="/SettingsPage/ExcludeTagsTextBox"
-                                             Grid.Column="0"
-                                             HorizontalAlignment="Stretch"
-                                             VerticalAlignment="Center"
-                                             KeyDown="ExcludeTagsTextBox_OnKeyDown" />
-                                    <iconButton:IconButton x:Uid="/SettingsPage/SubmitExcludeTagButton"
-                                                           Grid.Column="1"
-                                                           HorizontalAlignment="Center"
-                                                           VerticalAlignment="Center"
-                                                           Icon="{ui:FontIcon Glyph=SendE724}"
-                                                           Tapped="SubmitExcludeTagButton_OnTapped" />
-                                </Grid>
-                            </StackPanel>
-                        </actionableExpanderSettingEntry:ActionableExpanderSettingEntry>
                         <singleSelectionSettingEntry:SingleSelectionSettingEntry x:Uid="/SettingsPage/TargetAPIPlatformEntry"
                                                                                  Icon="{ui:FontIcon Glyph=CommandPromptE756}"
                                                                                  ItemsSource="{x:Bind model:TargetPlatformSettingEntryItem.AvailableItems}"

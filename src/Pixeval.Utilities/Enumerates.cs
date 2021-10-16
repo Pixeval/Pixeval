@@ -61,6 +61,12 @@ namespace Pixeval.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool None<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate)
+        {
+            return !enumerable.Any(predicate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
         {
             foreach (var t in enumerable)
@@ -97,7 +103,7 @@ namespace Pixeval.Utilities
 
         public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> source)
         {
-            return new(source);
+            return new ObservableCollection<T>(source);
         }
 
         public static T[] ArrayOf<T>(params T[] t) => t;
@@ -134,6 +140,14 @@ namespace Pixeval.Utilities
             }
 
             return count;
+        }
+
+        public static void AddIfAbsent<T>(this ICollection<T> collection, T item, IEqualityComparer<T>? comparer = null)
+        {
+            if (!collection.Contains(item, comparer))
+            {
+                collection.Add(item);
+            } 
         }
     }
 

@@ -40,6 +40,7 @@ namespace Pixeval.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("str:notnull => true")]
         public static bool IsNullOrEmpty(this string? str)
         {
             return string.IsNullOrEmpty(str);
@@ -205,6 +206,23 @@ namespace Pixeval.Utilities
         public static async Task<R?> GetOrElseAsync<R>(this Task<Result<R>> task, R? orElse)
         {
             return (await task).GetOrElse(orElse);
+        }
+
+        public static bool IsValidRegexPattern(this string pattern)
+        {
+            if (pattern.IsNullOrEmpty())
+            {
+                return false;
+            }
+            try
+            {
+                _ = new Regex(pattern, RegexOptions.None, new TimeSpan(0, 0, 2)).IsMatch(string.Empty);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
 
         private class CaseIgnoredStringComparer : IEqualityComparer<string>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
@@ -45,13 +44,6 @@ namespace Pixeval.Controls.Setting.UI
         {
             get => _appSetting.FiltrateRestrictedContent;
             set => SetProperty(_appSetting.FiltrateRestrictedContent, value, _appSetting, (setting, value) => setting.FiltrateRestrictedContent = value);
-        }
-
-        [DefaultValue(typeof(ObservableCollection<string>))]
-        public ObservableCollection<string> ExcludeTags
-        {
-            get => _appSetting.ExcludeTags;
-            set => SetProperty(_appSetting.ExcludeTags, value, _appSetting, (setting, value) => setting.ExcludeTags = value);
         }
 
         [DefaultValue(false)]

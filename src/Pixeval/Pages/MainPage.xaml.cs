@@ -51,7 +51,6 @@ namespace Pixeval.Pages
         public override void OnPageDeactivated(NavigatingCancelEventArgs e)
         {
             WeakReferenceMessenger.Default.UnregisterAll(this);
-
         }
 
         public override void OnPageActivated(NavigationEventArgs e)

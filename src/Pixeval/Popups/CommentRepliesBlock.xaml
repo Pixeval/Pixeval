@@ -5,7 +5,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="using:Pixeval.Util.UI"
              xmlns:userControls="using:Pixeval.UserControls"
+             ui:NavigationHelper.ClosePopupHotKey="Escape"
              Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+             Loaded="CommentRepliesBlock_OnLoaded"
              mc:Ignorable="d">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -26,7 +28,8 @@
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center"
                        FontSize="{StaticResource PixevalTitleFontSize}" />
-            <Button HorizontalAlignment="Right"
+            <Button x:Name="CloseButton"
+                    HorizontalAlignment="Right"
                     VerticalAlignment="Center"
                     Content="{ui:FontIcon Glyph=ChromeCloseE8BB,
                                           FontSize={StaticResource PixevalButtonIconSize}}"

@@ -20,7 +20,7 @@ using Pixeval.ViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer
 {
-    public sealed partial class IllustrationViewerPage
+    public sealed partial class IllustrationViewerPage : IGoBack
     {
         private IllustrationViewerPageViewModel _viewModel = null!;
 
@@ -67,12 +67,9 @@ namespace Pixeval.Pages.IllustrationViewer
 
         private static void CommentRepliesHyperlinkButtonTapped(IllustrationViewerPage recipient, CommentRepliesHyperlinkButtonTappedMessage message)
         {
-            var commentRepliesBlock = new CommentRepliesBlock
-            {
-                ViewModel = new CommentRepliesBlockViewModel(message.Sender!.GetDataContext<CommentBlockViewModel>())
-            };
+            var commentRepliesBlock = new CommentRepliesBlock(new CommentRepliesBlockViewModel(message.Sender!.GetDataContext<CommentBlockViewModel>()));
             commentRepliesBlock.CloseButtonTapped += recipient.CommentRepliesBlock_OnCloseButtonTapped;
-            recipient._commentRepliesPopup = PopupManager.CreatePopup(commentRepliesBlock, 200, maxWidth: 1500, minWidth: 400, maxHeight: 1200, closing: _ => recipient._commentRepliesPopup = null);
+            recipient._commentRepliesPopup = PopupManager.CreatePopup(commentRepliesBlock, widthMargin: 200, maxWidth: 1500, minWidth: 400, maxHeight: 1200, closing: (_, _) => recipient._commentRepliesPopup = null);
             PopupManager.ShowPopup(recipient._commentRepliesPopup);
         }
 
@@ -181,7 +178,7 @@ namespace Pixeval.Pages.IllustrationViewer
 
         private void BackButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            BackToMainPage();
+            GoBack();
         }
 
         private void GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick(TeachingTip sender, object args)
@@ -202,7 +199,7 @@ namespace Pixeval.Pages.IllustrationViewer
                 IllustrationInfoAndCommentsFrame.Navigate(tag.NavigateTo, tag.Parameter, new SlideNavigationTransitionInfo
                 {
                     Effect = tag switch
-                    {
+                    { 
                         var x when x == _illustrationInfo => SlideNavigationTransitionEffect.FromLeft,
                         var x when x == _comments => SlideNavigationTransitionEffect.FromRight,
                         _ => throw new ArgumentOutOfRangeException()
@@ -211,11 +208,11 @@ namespace Pixeval.Pages.IllustrationViewer
             }
         }
 
-        public void BackToMainPage()
+        public void GoBack()
         {
             ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", IllustrationImageShowcaseFrame);
             WeakReferenceMessenger.Default.Send(new NavigatingBackToMainPageMessage(_viewModel.IllustrationViewModelInTheGridView));
-            
+
             App.AppViewModel.AppWindowRootFrame.BackStack.RemoveAll(entry => entry.SourcePageType == typeof(IllustrationViewerPage));
             if (App.AppViewModel.AppWindowRootFrame.CanGoBack)
             {
