@@ -46,5 +46,15 @@ namespace Pixeval
         {
             NavigationMode = e.NavigationMode;
         }
+
+        public void ShowActivationProgressRing()
+        {
+            ProcessingActivation.Visibility = Visibility.Visible;
+        }
+
+        public void HideActivationProgressRing()
+        {
+            ProcessingActivation.Visibility = Visibility.Collapsed;
+        }
     }
 }

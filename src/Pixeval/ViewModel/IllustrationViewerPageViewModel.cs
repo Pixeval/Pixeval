@@ -25,12 +25,23 @@ namespace Pixeval.ViewModel
         /// <summary>
         /// The view model of the GridView that the <see cref="ImageViewerPageViewModels"/> comes from
         /// </summary>
-        public IllustrationGridViewModel ContainerGridViewModel { get; }
+        public IllustrationGridViewModel? ContainerGridViewModel { get; }
 
         /// <summary>
         /// The <see cref="IllustrationGrid"/> that owns <see cref="ContainerGridViewModel"/>
         /// </summary>
-        public IllustrationGrid IllustrationGrid { get; }
+        public IllustrationGrid? IllustrationGrid { get; }
+
+        /// <summary>
+        /// The <see cref="IllustrationViewModelInTheGridView"/> in <see cref="IllustrationGrid"/> that corresponds to current
+        /// <see cref="IllustrationViewerPageViewModel"/>
+        /// </summary>
+        public IllustrationViewModel? IllustrationViewModelInTheGridView { get; }
+
+        /// <summary>
+        /// The index of current illustration in <see cref="IllustrationGrid"/>
+        /// </summary>
+        public int? IllustrationIndex => ContainerGridViewModel?.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
 
         private ImageSource? _qrCodeSource;
 
@@ -154,6 +165,14 @@ namespace Pixeval.ViewModel
             IllustrationGrid = gridView;
             ContainerGridViewModel = gridView.ViewModel;
             IllustrationViewModelInTheGridView = ContainerGridViewModel.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
+            InitializeCommands();
+            _ = LoadUserProfileImage();
+        }
+
+        public IllustrationViewerPageViewModel(params IllustrationViewModel[] illustrations)
+        {
+            ImageViewerPageViewModels = illustrations.Select(i => new ImageViewerPageViewModel(this, i)).ToArray();
+            Current = ImageViewerPageViewModels[CurrentIndex];
             InitializeCommands();
             _ = LoadUserProfileImage();
         }
@@ -379,17 +398,6 @@ namespace Pixeval.ViewModel
 
         private ImageSource? _userProfileImageSource;
 
-        /// <summary>
-        /// The <see cref="IllustrationViewModelInTheGridView"/> in <see cref="IllustrationGrid"/> that corresponds to current
-        /// <see cref="IllustrationViewerPageViewModel"/>
-        /// </summary>
-        public IllustrationViewModel IllustrationViewModelInTheGridView { get; }
-
-        /// <summary>
-        /// The index of current illustration in <see cref="IllustrationGrid"/>
-        /// </summary>
-        public int IllustrationIndex => ContainerGridViewModel.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
-
         // Remarks:
         // The reason why we don't put UserProfileImageSource into IllustrationViewModel
         // is because the whole array of Illustrations is just representing the same 
@@ -450,13 +458,21 @@ namespace Pixeval.ViewModel
         {
             // changes the IsBookmarked property of the item that of in the thumbnail list
             // so the thumbnail item will also receives state update 
-            IllustrationViewModelInTheGridView.IsBookmarked = true;
+            if (IllustrationViewModelInTheGridView is not null)
+            {
+                IllustrationViewModelInTheGridView.IsBookmarked = true;
+            }
+
             return FirstIllustrationViewModel.PostPublicBookmarkAsync();
         }
 
         public Task RemoveBookmarkAsync()
         {
-            IllustrationViewModelInTheGridView.IsBookmarked = false;
+            if (IllustrationViewModelInTheGridView is not null)
+            {
+                IllustrationViewModelInTheGridView.IsBookmarked = false;
+            }
+
             return FirstIllustrationViewModel.RemoveBookmarkAsync();
         }
 
@@ -482,16 +498,28 @@ namespace Pixeval.ViewModel
         #region Helper Functions
         public Visibility CalculateNextImageButtonVisibility(int index)
         {
+            if (IllustrationGrid is null)
+            {
+                return Visibility.Collapsed;
+            }
             return index < ImageViewerPageViewModels.Length - 1 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public Visibility CalculatePrevImageButtonVisibility(int index)
         {
+            if (IllustrationGrid is null)
+            {
+                return Visibility.Collapsed;
+            }
             return index > 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public Visibility CalculateNextIllustrationButtonVisibility(int index)
         {
+            if (ContainerGridViewModel is null)
+            {
+                return Visibility.Collapsed;
+            }
             return ContainerGridViewModel.IllustrationsView.Count > IllustrationIndex + 1
                 ? CalculateNextImageButtonVisibility(index).Inverse()
                 : Visibility.Collapsed;
@@ -499,6 +527,10 @@ namespace Pixeval.ViewModel
 
         public Visibility CalculatePrevIllustrationButtonVisibility(int index)
         {
+            if (ContainerGridViewModel is null)
+            {
+                return Visibility.Collapsed;
+            }
             return IllustrationIndex > 0
                 ? CalculatePrevImageButtonVisibility(index).Inverse()
                 : Visibility.Collapsed;

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Runtime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
@@ -9,6 +10,8 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.Windows.AppLifecycle;
+using Pixeval.Activation;
 using Pixeval.CommunityToolkit;
 using Pixeval.CommunityToolkit.AdaptiveGridView;
 using Pixeval.CoreApi.Global.Enum;
@@ -36,6 +39,10 @@ namespace Pixeval.Pages
 
         private readonly NavigationViewTag _settings = new(typeof(SettingsPage), App.AppViewModel.MakoClient.Configuration);
 
+        private readonly NavigationViewTag _downloads = new(typeof(DownloadListPage), null);
+        
+        private readonly NavigationViewTag _histories = new(typeof(BrowsingHistoryPage), null);
+
         private static UIElement? _connectedAnimationTarget;
 
         // This field contains the view model that the illustration viewer is
@@ -57,6 +64,12 @@ namespace Pixeval.Pages
         {
             // little dirty tricks
             ((NavigationViewItem) MainPageRootNavigationView.MenuItems[(int) App.AppViewModel.AppSetting.DefaultSelectedTabItem]).IsSelected = true;
+
+
+            if (App.AppViewModel.ConsumeProtocolActivation())
+            {
+                ActivationRegistrar.Dispatch(AppInstance.GetCurrent().GetActivatedEventArgs());
+            }
 
             WeakReferenceMessenger.Default.Register<MainPage, MainPageFrameSetConnectedAnimationTargetMessage>(this, (_, message) => _connectedAnimationTarget = message.Sender);
             WeakReferenceMessenger.Default.Register<MainPage, NavigatingBackToMainPageMessage>(this, (_, message) => _illustrationViewerContent = message.IllustrationViewModel);

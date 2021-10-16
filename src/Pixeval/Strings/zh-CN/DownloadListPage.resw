@@ -117,13 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BrowsingHistoryTab.Content" xml:space="preserve">
-    <value>历史记录</value>
-  </data>
-  <data name="DownloadedItemsTab.Content" xml:space="preserve">
-    <value>已下载</value>
-  </data>
-  <data name="DownloadingItemsTab.Content" xml:space="preserve">
-    <value>下载中</value>
-  </data>
 </root>

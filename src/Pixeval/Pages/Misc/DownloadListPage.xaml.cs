@@ -1,8 +1,8 @@
 ﻿namespace Pixeval.Pages.Misc
 {
-    public sealed partial class DownloadAndHistoryListPage
+    public sealed partial class DownloadListPage
     {
-        public DownloadAndHistoryListPage()
+        public DownloadListPage()
         {
             this.InitializeComponent();
         }

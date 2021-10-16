@@ -5,6 +5,7 @@ using Windows.Foundation;
 using Windows.Graphics;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -29,6 +30,8 @@ namespace Pixeval.ViewModel
         {
             App = app;
         }
+
+        private bool _activatedByProtocol;
 
         public App App { get; }
 
@@ -116,19 +119,29 @@ namespace Pixeval.ViewModel
             };
 
 #if DEBUG
+            // ReSharper disable once UnusedParameter.Local
             static Task UncaughtExceptionHandler(Exception e)
             {
                 Debugger.Break();
                 return Task.CompletedTask;
             }
 #elif RELEASE
-            static async Task UncaughtExceptionHandler(Exception e)
+            async Task UncaughtExceptionHandler(Exception e)
             {
                 await MessageDialogBuilder.CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
                 ExitWithPushedNotification();
-
             }
 #endif
+        }
+
+        public void DispatchTask(DispatcherQueueHandler action)
+        {
+            Window.DispatcherQueue.TryEnqueue(action);
+        }
+
+        public Task DispatchTaskAsync(Func<Task> action)
+        {
+            return Window.DispatcherQueue.EnqueueAsync(action);
         }
 
 
@@ -143,12 +156,13 @@ namespace Pixeval.ViewModel
             Application.Current.Exit();
         }
 
-        public async Task InitializeAsync()
+        public async Task InitializeAsync(bool activatedByProtocol)
         {
+            _activatedByProtocol = activatedByProtocol;
             RegisterUnhandledExceptionHandler();
             await AppContext.WriteLogoIcoIfNotExist();
-            Window = new MainWindow();
 
+            Window = new MainWindow();
             AppWindow = AppWindow.GetFromWindowId(Win32Interop.GetWindowIdFromWindow(GetMainWindowHandle()));
             AppWindow.Title = AppContext.AppIdentifier;
             AppWindow.Resize(new SizeInt32(AppSetting.WindowWidth, AppSetting.WindowHeight));
@@ -187,6 +201,27 @@ namespace Pixeval.ViewModel
         public void Receive(ApplicationExitingMessage message)
         {
             AppContext.SaveContext();
+        }
+
+        public void PrepareForActivation()
+        {
+            Window.ShowActivationProgressRing();
+        }
+
+        public void ActivationProcessed()
+        {
+            Window.HideActivationProgressRing();
+        }
+
+        /// <summary>
+        /// Gets and resets the <see cref="_activatedByProtocol"/> field, used for one-time activation process
+        /// during the app start
+        /// </summary>
+        public bool ConsumeProtocolActivation()
+        {
+            var original = _activatedByProtocol;
+            _activatedByProtocol = false;
+            return original;
         }
     }
 }

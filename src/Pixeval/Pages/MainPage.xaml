@@ -83,9 +83,11 @@
                                 Icon="{ui:FontIcon Glyph=SearchAndAppsE773}" />
             <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />
             <NavigationViewItem x:Uid="/MainPage/HistoriesTab"
-                                Icon="{ui:FontIcon Glyph=HistoryE81C}" />
+                                Icon="{ui:FontIcon Glyph=HistoryE81C}"
+                                Tag="{x:Bind _histories}" />
             <NavigationViewItem x:Uid="/MainPage/DownloadListTab"
-                                Icon="{ui:FontIcon Glyph=CheckListE9D5}" />
+                                Icon="{ui:FontIcon Glyph=CheckListE9D5}"
+                                Tag="{x:Bind _downloads}" />
         </NavigationView.MenuItems>
         <NavigationView.FooterMenuItems>
             <NavigationViewItem x:Uid="/MainPage/HelpTab"

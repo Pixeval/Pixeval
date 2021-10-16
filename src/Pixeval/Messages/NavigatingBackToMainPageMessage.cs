@@ -9,5 +9,5 @@ namespace Pixeval.Messages
     /// <see cref="MainPage"/>, the parameter contains the item that the <see cref="IllustrationViewerPage"/>
     /// is currently browsing
     /// </summary>
-    public record NavigatingBackToMainPageMessage(IllustrationViewModel IllustrationViewModel);
+    public record NavigatingBackToMainPageMessage(IllustrationViewModel? IllustrationViewModel);
 }

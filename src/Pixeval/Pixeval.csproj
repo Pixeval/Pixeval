@@ -44,7 +44,6 @@
    <ItemGroup>
       <Content Remove="Assets\Images\logo-no-caption.png" />
       <Content Remove="Strings\zh-CN\BookmarksPage.resw" />
-      <Content Remove="Strings\zh-CN\DownloadAndHistoryListPage.resw" />
       <Content Remove="Strings\zh-CN\IllustrationGridCommandBar.resw" />
       <Content Remove="Strings\zh-CN\IllustrationInfoPage.resw" />
       <Content Remove="Strings\zh-CN\IllustrationViewerPage.resw" />
@@ -80,12 +79,14 @@
       <None Remove="Pages\IllustrationViewer\CommentRepliesPage.xaml" />
       <None Remove="Pages\IllustrationViewer\PixivReplyEmojiListPage.xaml" />
       <None Remove="Pages\IllustrationViewer\PixivReplyStickerListPage.xaml" />
+      <None Remove="Pages\Misc\BrowsingHistoryPage.xaml" />
       <None Remove="Popups\IllustrationResultFilterPopup.xaml" />
       <None Remove="Popups\IllustrationResultFilter\IllustrationResultFilterFunctionEntry.xaml" />
+      <None Remove="Strings\zh-CN\Activations.resw" />
       <None Remove="Strings\zh-CN\BookmarksPage.resw" />
       <None Remove="Strings\zh-CN\CommentBlock.resw" />
       <None Remove="Strings\zh-CN\CommentRepliesBlock.resw" />
-      <None Remove="Strings\zh-CN\DownloadAndHistoryListPage.resw" />
+      <None Remove="Strings\zh-CN\DownloadListPage.resw" />
       <None Remove="Strings\zh-CN\IllustrationGridCommandBar.resw" />
       <None Remove="Strings\zh-CN\IllustrationInfoPage.resw" />
       <None Remove="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
@@ -98,7 +99,6 @@
       <None Remove="Package.appxmanifest" />
       <None Remove="Pages\BookMarksPage.xaml" />
       <None Remove="Pages\Capability\NavigationPage.xaml" />
-      <None Remove="Pages\DownloadAndHistoryListPage.xaml" />
       <None Remove="Pages\IllustrationGridPage.xaml" />
       <None Remove="Pages\IllustrationViewerPage.xaml" />
       <None Remove="Pages\IllustrationViewer\CommentsPage.xaml" />
@@ -186,7 +186,7 @@
       </Page>
    </ItemGroup>
    <ItemGroup>
-      <Page Update="Pages\Misc\DownloadAndHistoryListPage.xaml">
+      <Page Update="Pages\Misc\DownloadListPage.xaml">
          <Generator>MSBuild:Compile</Generator>
       </Page>
    </ItemGroup>
@@ -232,10 +232,11 @@
       <Folder Include="CommunityToolkit\Markdown\Parsers\Markdown\Helpers\" />
    </ItemGroup>
    <ItemGroup>
+      <PRIResource Include="Strings\zh-CN\Activations.resw" />
       <PRIResource Include="Strings\zh-CN\BookmarksPage.resw" />
       <PRIResource Include="Strings\zh-CN\CommentBlock.resw" />
       <PRIResource Include="Strings\zh-CN\CommentRepliesBlock.resw" />
-      <PRIResource Include="Strings\zh-CN\DownloadAndHistoryListPage.resw" />
+      <PRIResource Include="Strings\zh-CN\DownloadListPage.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationGridCommandBar.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationInfoPage.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
@@ -280,6 +281,9 @@
      <None Update="Pages\Capability\SearchResultsPage.xaml">
        <Generator>MSBuild:Compile</Generator>
      </None>
+     <Page Update="Pages\Misc\BrowsingHistoryPage.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
      <Page Update="UserControls\TokenInput\TokenInput.xaml">
        <Generator>MSBuild:Compile</Generator>
      </Page>

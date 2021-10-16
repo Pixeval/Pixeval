@@ -68,12 +68,12 @@ namespace Pixeval.UserControls
             e.Handled = true;
             WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(sender as UIElement));
 
-            var viewModel = sender.GetDataContext<IllustrationViewModel>()
+            var viewModels = sender.GetDataContext<IllustrationViewModel>()
                 .GetMangaIllustrationViewModels()
                 .ToArray();
 
             ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement) sender);
-            App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModel), new SuppressNavigationTransitionInfo());
+            App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo());
         }
 
         private void IllustrationThumbnailContainerItem_OnTapped(object sender, TappedRoutedEventArgs e)

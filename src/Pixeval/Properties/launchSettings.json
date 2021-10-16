@@ -2,7 +2,6 @@
   "profiles": {
     "Pixeval": {
       "commandName": "MsixPackage",
-      "commandLineArgs": "",
       "alwaysReinstallApp": "false",
       "remoteDebugEnabled": false,
       "allowLocalNetworkLoopbackProperty": true,
