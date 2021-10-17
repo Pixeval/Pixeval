@@ -100,6 +100,10 @@ namespace Pixeval.Controls.TokenInputTextBox
             {
                 SubmitToken();
             }
+            if (e.Key == VirtualKey.Space)
+            {
+                SubmitToken();
+            }
         }
 
         private void SubmitToken()

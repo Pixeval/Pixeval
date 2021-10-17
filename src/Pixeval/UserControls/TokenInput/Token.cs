@@ -67,8 +67,8 @@ namespace Pixeval.UserControls.TokenInput
             }
 
             return CaseSensitive
-                ? TokenContent.Equals(other.TokenContent, StringComparison.OrdinalIgnoreCase)
-                : TokenContent == other.TokenContent;
+                ? TokenContent == other.TokenContent
+                : TokenContent.Equals(other.TokenContent, StringComparison.OrdinalIgnoreCase);
         }
 
         public bool Match(string? input)
