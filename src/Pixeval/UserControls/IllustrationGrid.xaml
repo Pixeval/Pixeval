@@ -46,16 +46,6 @@
                                                  To="0"
                                                  Duration="0:0:2" />
                                 <DoubleAnimation EasingFunction="{StaticResource EasingFunction}"
-                                                 Storyboard.TargetName="Thumbnail"
-                                                 Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleX)"
-                                                 To="1.1"
-                                                 Duration="0:0:2" />
-                                <DoubleAnimation EasingFunction="{StaticResource EasingFunction}"
-                                                 Storyboard.TargetName="Thumbnail"
-                                                 Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleY)"
-                                                 To="1.1"
-                                                 Duration="0:0:2" />
-                                <DoubleAnimation EasingFunction="{StaticResource EasingFunction}"
                                                  Storyboard.TargetName="ImageSelectionButtonGrid"
                                                  Storyboard.TargetProperty="Opacity"
                                                  To="1"
