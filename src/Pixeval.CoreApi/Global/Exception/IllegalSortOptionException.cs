@@ -39,15 +39,15 @@ namespace Pixeval.CoreApi.Global.Exception
         {
         }
 
-        protected IllegalSortOptionException([NotNull] SerializationInfo info, StreamingContext context) : base(info, context)
+        protected IllegalSortOptionException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
 
-        public IllegalSortOptionException([CanBeNull] string? message) : base(message)
+        public IllegalSortOptionException(string? message) : base(message)
         {
         }
 
-        public IllegalSortOptionException([CanBeNull] string? message, [CanBeNull] System.Exception? innerException) : base(message, innerException)
+        public IllegalSortOptionException(string? message, System.Exception? innerException) : base(message, innerException)
         {
         }
     }

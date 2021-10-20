@@ -27,7 +27,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Web;
-using JetBrains.Annotations;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Utilities;
@@ -43,7 +42,7 @@ namespace Pixeval.CoreApi.Engine.Implements
         private readonly string _tag;
         private readonly string _uid;
 
-        public TaggedBookmarksIdEngine([NotNull] MakoClient makoClient, EngineHandle? engineHandle, string uid, string tag) : base(makoClient, engineHandle)
+        public TaggedBookmarksIdEngine(MakoClient makoClient, EngineHandle? engineHandle, string uid, string tag) : base(makoClient, engineHandle)
         {
             _uid = uid;
             _tag = tag;
@@ -58,7 +57,7 @@ namespace Pixeval.CoreApi.Engine.Implements
         {
             private int _currentIndex;
 
-            public TaggedBookmarksIdAsyncEnumerator([NotNull] TaggedBookmarksIdEngine pixivFetchEngine, MakoApiKind apiKind) : base(pixivFetchEngine, apiKind)
+            public TaggedBookmarksIdAsyncEnumerator(TaggedBookmarksIdEngine pixivFetchEngine, MakoApiKind apiKind) : base(pixivFetchEngine, apiKind)
             {
             }
 

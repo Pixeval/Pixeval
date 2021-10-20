@@ -33,6 +33,15 @@ namespace Pixeval.CoreApi.Model
     // ReSharper disable UnusedAutoPropertyAccessor.Global
     public record Illustration
     {
+        [JsonIgnore]
+        public bool FromSpotlight { get; set; }
+
+        [JsonIgnore]
+        public string? SpotlightTitle { get; set; }
+
+        [JsonIgnore]
+        public string? SpotlightId { get; set; }
+
         [JsonPropertyName("id")]
         public long Id { get; set; }
 

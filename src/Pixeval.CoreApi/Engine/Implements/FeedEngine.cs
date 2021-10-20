@@ -32,7 +32,6 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using Pixeval.CoreApi.Global.Exception;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
@@ -42,7 +41,7 @@ namespace Pixeval.CoreApi.Engine.Implements
 {
     internal class FeedEngine : AbstractPixivFetchEngine<Feed>
     {
-        public FeedEngine([NotNull] MakoClient makoClient, EngineHandle? engineHandle) : base(makoClient, engineHandle)
+        public FeedEngine(MakoClient makoClient, EngineHandle? engineHandle) : base(makoClient, engineHandle)
         {
         }
 
@@ -57,7 +56,7 @@ namespace Pixeval.CoreApi.Engine.Implements
             private string? _tt;
 
 
-            public UserFeedsAsyncEnumerator([NotNull] FeedEngine pixivFetchEngine, MakoApiKind apiKind) : base(pixivFetchEngine, apiKind)
+            public UserFeedsAsyncEnumerator(FeedEngine pixivFetchEngine, MakoApiKind apiKind) : base(pixivFetchEngine, apiKind)
             {
             }
 

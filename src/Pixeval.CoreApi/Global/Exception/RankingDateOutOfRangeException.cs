@@ -39,15 +39,15 @@ namespace Pixeval.CoreApi.Global.Exception
         {
         }
 
-        protected RankingDateOutOfRangeException([NotNull] SerializationInfo info, StreamingContext context) : base(info, context)
+        protected RankingDateOutOfRangeException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
 
-        public RankingDateOutOfRangeException([CanBeNull] string? message) : base(message)
+        public RankingDateOutOfRangeException(string? message) : base(message)
         {
         }
 
-        public RankingDateOutOfRangeException([CanBeNull] string? message, [CanBeNull] System.Exception? innerException) : base(message, innerException)
+        public RankingDateOutOfRangeException(string? message, System.Exception? innerException) : base(message, innerException)
         {
         }
     }

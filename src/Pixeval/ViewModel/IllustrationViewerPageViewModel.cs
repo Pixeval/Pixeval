@@ -368,7 +368,7 @@ namespace Pixeval.ViewModel
             {
                 package.RequestedOperation = DataPackageOperation.Copy;
                 var file = await AppContext.CreateTemporaryFileWithNameAsync(GetCopyContentFileName(), IsUgoira ? "gif" : "png");
-                await Current.OriginalImageStream!.SaveToFile(file);
+                await Current.OriginalImageStream!.SaveToFileAsync(file);
                 package.SetStorageItems(Enumerates.ArrayOf(file), true);
             });
 

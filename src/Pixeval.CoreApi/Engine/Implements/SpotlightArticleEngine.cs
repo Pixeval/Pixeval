@@ -26,7 +26,6 @@
 
 using System.Collections.Generic;
 using System.Threading;
-using JetBrains.Annotations;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
@@ -36,7 +35,7 @@ namespace Pixeval.CoreApi.Engine.Implements
 {
     internal class SpotlightArticleEngine : AbstractPixivFetchEngine<SpotlightArticle>
     {
-        public SpotlightArticleEngine([NotNull] MakoClient makoClient, EngineHandle? engineHandle) : base(makoClient, engineHandle)
+        public SpotlightArticleEngine(MakoClient makoClient, EngineHandle? engineHandle) : base(makoClient, engineHandle)
         {
         }
 
@@ -47,7 +46,7 @@ namespace Pixeval.CoreApi.Engine.Implements
 
         private class SpotlightArticleAsyncEnumerator : RecursivePixivAsyncEnumerator<SpotlightArticle, PixivSpotlightResponse, SpotlightArticleEngine>
         {
-            public SpotlightArticleAsyncEnumerator([NotNull] SpotlightArticleEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
+            public SpotlightArticleAsyncEnumerator(SpotlightArticleEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
             {
             }
 

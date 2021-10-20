@@ -8,5 +8,10 @@ namespace Pixeval.Util
         {
             // nop
         }
+
+        public static void Discard(this IAsyncAction _)
+        {
+            // nop
+        }
     }
 }

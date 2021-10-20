@@ -27,7 +27,6 @@
 using System;
 using System.Linq;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
@@ -38,7 +37,6 @@ using Pixeval.CoreApi.Global.Exception;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.EndPoints;
 using Pixeval.CoreApi.Preference;
-using Pixeval.Utilities;
 using Refit;
 
 namespace Pixeval.CoreApi

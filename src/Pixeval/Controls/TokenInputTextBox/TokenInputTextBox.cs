@@ -96,13 +96,10 @@ namespace Pixeval.Controls.TokenInputTextBox
 
         private void TokenTextBoxOnKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key == VirtualKey.Enter)
+            if (e.Key is VirtualKey.Enter or VirtualKey.Space)
             {
                 SubmitToken();
-            }
-            if (e.Key == VirtualKey.Space)
-            {
-                SubmitToken();
+                e.Handled = true;
             }
         }
 

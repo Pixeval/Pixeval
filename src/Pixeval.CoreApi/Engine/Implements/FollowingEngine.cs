@@ -26,7 +26,6 @@
 
 using System.Collections.Generic;
 using System.Threading;
-using JetBrains.Annotations;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
@@ -39,7 +38,7 @@ namespace Pixeval.CoreApi.Engine.Implements
         private readonly PrivacyPolicy _privacyPolicy;
         private readonly string _uid;
 
-        public FollowingEngine([NotNull] MakoClient makoClient, PrivacyPolicy privacyPolicy, string uid, EngineHandle? engineHandle) : base(makoClient, engineHandle)
+        public FollowingEngine(MakoClient makoClient, PrivacyPolicy privacyPolicy, string uid, EngineHandle? engineHandle) : base(makoClient, engineHandle)
         {
             _privacyPolicy = privacyPolicy;
             _uid = uid;

@@ -26,14 +26,13 @@
 
 using System;
 using System.Net.Http;
-using JetBrains.Annotations;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Net
 {
     internal class MakoHttpClient : HttpClient
     {
-        private MakoHttpClient([NotNull] HttpMessageHandler handler) : base(handler)
+        private MakoHttpClient(HttpMessageHandler handler) : base(handler)
         {
         }
 

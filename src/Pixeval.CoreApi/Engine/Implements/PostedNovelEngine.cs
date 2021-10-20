@@ -26,7 +26,6 @@
 
 using System.Collections.Generic;
 using System.Threading;
-using JetBrains.Annotations;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
@@ -40,7 +39,7 @@ namespace Pixeval.CoreApi.Engine.Implements
         private readonly string _uid;
 
         public PostedNovelEngine(
-            [NotNull] MakoClient makoClient,
+            MakoClient makoClient,
             string uid,
             TargetFilter targetFilter,
             EngineHandle? engineHandle) : base(makoClient, engineHandle)

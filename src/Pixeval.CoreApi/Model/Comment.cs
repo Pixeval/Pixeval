@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text.Json.Serialization;
-using Pixeval.CoreApi.Engine;
 
 namespace Pixeval.CoreApi.Model
 {

@@ -26,7 +26,6 @@
 
 using System.Collections.Generic;
 using System.Threading;
-using JetBrains.Annotations;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
@@ -39,7 +38,7 @@ namespace Pixeval.CoreApi.Engine.Implements
         private readonly TargetFilter _targetFilter;
         private readonly string _uid;
 
-        public PostedMangaEngine([NotNull] MakoClient makoClient, string uid, TargetFilter targetFilter, EngineHandle? engineHandle) : base(makoClient, engineHandle)
+        public PostedMangaEngine(MakoClient makoClient, string uid, TargetFilter targetFilter, EngineHandle? engineHandle) : base(makoClient, engineHandle)
         {
             _uid = uid;
             _targetFilter = targetFilter;

@@ -26,7 +26,6 @@
 
 using System.Collections.Generic;
 using System.Threading;
-using JetBrains.Annotations;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
@@ -40,7 +39,7 @@ namespace Pixeval.CoreApi.Engine.Implements
         private readonly TargetFilter _targetFilter;
         private readonly UserSortOption _userSortOption;
 
-        public UserSearchEngine([NotNull] MakoClient makoClient, TargetFilter targetFilter, UserSortOption? userSortOption, string keyword, EngineHandle? engineHandle) : base(makoClient, engineHandle)
+        public UserSearchEngine(MakoClient makoClient, TargetFilter targetFilter, UserSortOption? userSortOption, string keyword, EngineHandle? engineHandle) : base(makoClient, engineHandle)
         {
             _keyword = keyword;
             _targetFilter = targetFilter;

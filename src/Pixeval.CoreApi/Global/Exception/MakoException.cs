@@ -36,15 +36,15 @@ namespace Pixeval.CoreApi.Global.Exception
         {
         }
 
-        protected MakoException([NotNull] SerializationInfo info, StreamingContext context) : base(info, context)
+        protected MakoException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
 
-        public MakoException([CanBeNull] string? message) : base(message)
+        public MakoException(string? message) : base(message)
         {
         }
 
-        public MakoException([CanBeNull] string? message, [CanBeNull] System.Exception? innerException) : base(message, innerException)
+        public MakoException(string? message, System.Exception? innerException) : base(message, innerException)
         {
         }
     }

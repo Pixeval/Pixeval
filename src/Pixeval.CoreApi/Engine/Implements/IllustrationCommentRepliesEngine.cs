@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-using JetBrains.Annotations;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 
@@ -10,7 +9,7 @@ namespace Pixeval.CoreApi.Engine.Implements
     {
         private readonly string _commentId;
 
-        public IllustrationCommentRepliesEngine(string commentId, [NotNull] MakoClient makoClient, EngineHandle? engineHandle) : base(makoClient, engineHandle)
+        public IllustrationCommentRepliesEngine(string commentId, MakoClient makoClient, EngineHandle? engineHandle) : base(makoClient, engineHandle)
         {
             _commentId = commentId;
         }

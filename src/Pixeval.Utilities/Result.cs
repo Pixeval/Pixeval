@@ -67,15 +67,8 @@ namespace Pixeval.Utilities
         }
 
         [PublicAPI]
-        public record Success : Result<T>
+        public record Success(T Value) : Result<T>
         {
-            public Success(T value)
-            {
-                Value = value;
-            }
-
-            public T Value { get; }
-
             public void Deconstruct(out T value)
             {
                 value = Value;
@@ -83,16 +76,9 @@ namespace Pixeval.Utilities
         }
 
         [PublicAPI]
-        public record Failure : Result<T>
+        public record Failure(Exception? Cause) : Result<T>
         {
-            public Failure(Exception? cause)
-            {
-                Cause = cause;
-            }
-
-            public Exception? Cause { get; }
-
-            public void Deconstruct([CanBeNull] out Exception? cause)
+            public void Deconstruct(out Exception? cause)
             {
                 cause = Cause;
             }

@@ -27,7 +27,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
@@ -123,7 +122,7 @@ namespace Pixeval.CoreApi.Engine
         public abstract class User<TFetchEngine> : RecursivePixivAsyncEnumerator<User, PixivUserResponse, TFetchEngine>
             where TFetchEngine : class, IFetchEngine<User>
         {
-            protected User([NotNull] TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
+            protected User(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
             {
             }
 
@@ -156,7 +155,7 @@ namespace Pixeval.CoreApi.Engine
         {
             private readonly Func<TFetchEngine, string> _initialUrlFactory;
 
-            public UserImpl([NotNull] TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, Func<TFetchEngine, string> initialUrlFactory) : base(pixivFetchEngine, makoApiKind)
+            public UserImpl(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, Func<TFetchEngine, string> initialUrlFactory) : base(pixivFetchEngine, makoApiKind)
             {
                 _initialUrlFactory = initialUrlFactory;
             }
@@ -170,7 +169,7 @@ namespace Pixeval.CoreApi.Engine
         public abstract class Illustration<TFetchEngine> : RecursivePixivAsyncEnumerator<Illustration, PixivResponse, TFetchEngine>
             where TFetchEngine : class, IFetchEngine<Illustration>
         {
-            protected Illustration([NotNull] TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
+            protected Illustration(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
             {
             }
 
@@ -202,7 +201,7 @@ namespace Pixeval.CoreApi.Engine
         {
             private readonly Func<TFetchEngine, string> _initialUrlFactory;
 
-            public IllustrationImpl([NotNull] TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, Func<TFetchEngine, string> initialUrlFactory) : base(pixivFetchEngine, makoApiKind)
+            public IllustrationImpl(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, Func<TFetchEngine, string> initialUrlFactory) : base(pixivFetchEngine, makoApiKind)
             {
                 _initialUrlFactory = initialUrlFactory;
             }
@@ -216,7 +215,7 @@ namespace Pixeval.CoreApi.Engine
         public abstract class Novel<TFetchEngine> : RecursivePixivAsyncEnumerator<Novel, PixivNovelResponse, TFetchEngine>
             where TFetchEngine : class, IFetchEngine<Novel>
         {
-            protected Novel([NotNull] TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
+            protected Novel(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
             {
             }
 
@@ -248,7 +247,7 @@ namespace Pixeval.CoreApi.Engine
         {
             private readonly Func<TFetchEngine, string> _initialUrlFactory;
 
-            public NovelImpl([NotNull] TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, Func<TFetchEngine, string> initialUrlFactory) : base(pixivFetchEngine, makoApiKind)
+            public NovelImpl(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, Func<TFetchEngine, string> initialUrlFactory) : base(pixivFetchEngine, makoApiKind)
             {
                 _initialUrlFactory = initialUrlFactory;
             }
@@ -262,7 +261,7 @@ namespace Pixeval.CoreApi.Engine
         public abstract class Comment<TFetchEngine> : RecursivePixivAsyncEnumerator<Comment, IllustrationCommentsResponse, TFetchEngine>
             where TFetchEngine : class, IFetchEngine<Comment>
         {
-            protected Comment([NotNull] TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
+            protected Comment(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
             {
             }
 
@@ -294,7 +293,7 @@ namespace Pixeval.CoreApi.Engine
         {
             private readonly Func<TFetchEngine, string> _initialUrlFactory;
 
-            public CommentImpl([NotNull] TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, Func<TFetchEngine, string> initialUrlFactory) : base(pixivFetchEngine, makoApiKind)
+            public CommentImpl(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, Func<TFetchEngine, string> initialUrlFactory) : base(pixivFetchEngine, makoApiKind)
             {
                 _initialUrlFactory = initialUrlFactory;
             }

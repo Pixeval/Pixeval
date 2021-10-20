@@ -1,13 +1,13 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
-using Windows.ApplicationModel.Activation;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
 using Pixeval.Util.UI;
 using Pixeval.ViewModel;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
-using LaunchActivatedEventArgs = Microsoft.UI.Xaml.LaunchActivatedEventArgs;
 
 namespace Pixeval
 {
@@ -19,6 +19,7 @@ namespace Pixeval
         
         public App()
         {
+            File.WriteAllText("D:\\test.txt", "asdasdasdasdasdasdasdasdsad");
             // The theme can only be changed in ctor
             AppViewModel = new AppViewModel(this) {AppSetting = AppContext.LoadSetting() ?? AppSetting.CreateDefault()};
             RequestedTheme = AppViewModel.AppSetting.Theme switch
@@ -31,8 +32,6 @@ namespace Pixeval
             InitializeComponent();
         }
 
-
-
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
             var isProtocolActivated = AppInstance.GetCurrent().GetActivatedEventArgs() is { Kind: ExtendedActivationKind.Protocol };
@@ -42,7 +41,7 @@ namespace Pixeval
                 await notCurrent.RedirectActivationToAsync(AppInstance.GetCurrent().GetActivatedEventArgs());
                 return;
             }
-
+            
             Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSetting.AppFontFamilyName);
             await AppViewModel.InitializeAsync(isProtocolActivated);
         }

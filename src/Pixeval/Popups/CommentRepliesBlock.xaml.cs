@@ -36,9 +36,8 @@ namespace Pixeval.Popups
             set => SetValue(ViewModelProperty, value);
         }
 
-        public CommentRepliesBlock(CommentRepliesBlockViewModel viewModel)
+        public CommentRepliesBlock()
         {
-            ViewModel = viewModel;
             UniqueId = Guid.NewGuid();
             InitializeComponent();
         }

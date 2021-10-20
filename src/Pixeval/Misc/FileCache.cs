@@ -85,7 +85,7 @@ namespace Pixeval.Misc
                         await file.WriteBytesAsync(bytes);
                         break;
                     case IRandomAccessStream stream:
-                        await stream.SaveToFile(file);
+                        await stream.SaveToFileAsync(file);
                         break;
                     default:
                         await file.WriteBytesAsync(JsonSerializer.SerializeToUtf8Bytes(data));

@@ -84,6 +84,18 @@ namespace Pixeval.Utilities
             }
         }
 
+        public static void IgnoreException(Action action)
+        {
+            try
+            {
+                action();
+            }
+            catch
+            {
+                // ignored
+            }
+        }
+
         public static TResult Block<TResult>(Func<TResult> block)
         {
             return block();

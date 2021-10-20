@@ -92,6 +92,7 @@
       <None Remove="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
       <None Remove="Strings\zh-CN\IllustrationViewerPage.resw" />
       <None Remove="Strings\zh-CN\ImageViewerPage.resw" />
+      <None Remove="Strings\zh-CN\MacroParser.resw" />
       <None Remove="Strings\zh-CN\PixivReplyBar.resw" />
       <None Remove="Strings\zh-CN\RankingsPage.resw" />
       <None Remove="Strings\zh-CN\RecentPostsPage.resw" />
@@ -141,6 +142,7 @@
       <PackageReference Include="PInvoke.User32" Version="0.7.104" />
       <PackageReference Include="QRCoder" Version="1.4.1" />
       <PackageReference Include="ReverseMarkdown" Version="3.20.0" />
+      <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
       <PackageReference Include="System.Linq.Async" Version="5.0.0" />
       <Manifest Include="$(ApplicationManifest)" />
    </ItemGroup>
@@ -230,6 +232,7 @@
       <Folder Include="CommunityToolkit\IncrementalLoadingCollection\" />
       <Folder Include="CommunityToolkit\Markdown\Parsers\Markdown\Enums\" />
       <Folder Include="CommunityToolkit\Markdown\Parsers\Markdown\Helpers\" />
+      <Folder Include="Download\MacroParser\Ast\" />
    </ItemGroup>
    <ItemGroup>
       <PRIResource Include="Strings\zh-CN\Activations.resw" />
@@ -243,6 +246,7 @@
       <PRIResource Include="Strings\zh-CN\IllustrationViewerPage.resw" />
       <PRIResource Include="Strings\zh-CN\ImageViewerPage.resw" />
       <PRIResource Include="Strings\zh-CN\LoginPage.resw" />
+      <PRIResource Include="Strings\zh-CN\MacroParser.resw" />
       <PRIResource Include="Strings\zh-CN\MainPage.resw" />
       <PRIResource Include="Strings\zh-CN\MessageContentDialog.resw" />
       <PRIResource Include="Strings\zh-CN\Misc.resw" />

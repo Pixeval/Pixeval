@@ -107,6 +107,12 @@ namespace Pixeval.CoreApi
 
             var illustrations = await (result.ResponseBody.First().Illusts?.SelectNotNull(illust => Task.Run(() => GetIllustrationFromIdAsync(illust.IllustId.ToString()))).WhenAll()
                                        ?? Task.FromResult(Array.Empty<Illustration>())).ConfigureAwait(false);
+            foreach (var illustration in illustrations)
+            {
+                illustration.FromSpotlight = true;
+                illustration.SpotlightId = result.ResponseBody.First().Id;
+                illustration.SpotlightTitle = result.ResponseBody.First().Title;
+            }
             var entry = result.ResponseBody.First().Entry;
             return new SpotlightDetail(new SpotlightArticle
             {

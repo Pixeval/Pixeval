@@ -26,7 +26,6 @@
 
 using System.Collections.Generic;
 using System.Threading;
-using JetBrains.Annotations;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 
@@ -36,7 +35,7 @@ namespace Pixeval.CoreApi.Engine.Implements
     {
         private readonly string _uid;
 
-        public PostedIllustrationEngine([NotNull] MakoClient makoClient, string uid, EngineHandle? engineHandle) : base(makoClient, engineHandle)
+        public PostedIllustrationEngine(MakoClient makoClient, string uid, EngineHandle? engineHandle) : base(makoClient, engineHandle)
         {
             _uid = uid;
         }

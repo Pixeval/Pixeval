@@ -21,6 +21,12 @@ namespace Pixeval.Util.IO
 {
     public static partial class IOHelper
     {
+        public static void CreateParentDirectories(string fullPath)
+        {
+            var directory = Path.GetDirectoryName(fullPath);
+            Directory.CreateDirectory(directory!);
+        }
+
         public static async Task ClearDirectoryAsync(this StorageFolder dir)
         {
             await Task.WhenAll((await dir.GetItemsAsync()).Select(f => f.DeleteAsync().AsTask()));
@@ -147,7 +153,7 @@ namespace Pixeval.Util.IO
             }));
         }
 
-        public static async Task SaveToFile(this IRandomAccessStream stream, StorageFile file)
+        public static async Task SaveToFileAsync(this IRandomAccessStream stream, StorageFile file)
         {
             stream.Seek(0);
             using var dataReader = new DataReader(stream);

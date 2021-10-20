@@ -38,17 +38,17 @@ namespace Pixeval.CoreApi.Global.Exception
             Illustration = illustration;
         }
 
-        protected MangaPagesNotFoundException([NotNull] SerializationInfo info, StreamingContext context, Illustration illustration) : base(info, context)
+        protected MangaPagesNotFoundException(SerializationInfo info, StreamingContext context, Illustration illustration) : base(info, context)
         {
             Illustration = illustration;
         }
 
-        public MangaPagesNotFoundException([CanBeNull] string? message, Illustration illustration) : base(message)
+        public MangaPagesNotFoundException(string? message, Illustration illustration) : base(message)
         {
             Illustration = illustration;
         }
 
-        public MangaPagesNotFoundException([CanBeNull] string? message, [CanBeNull] System.Exception? innerException, Illustration illustration) : base(message, innerException)
+        public MangaPagesNotFoundException(string? message, System.Exception? innerException, Illustration illustration) : base(message, innerException)
         {
             Illustration = illustration;
         }

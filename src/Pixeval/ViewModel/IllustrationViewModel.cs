@@ -27,6 +27,8 @@ namespace Pixeval.ViewModel
     {
         public Illustration Illustration { get; }
 
+        public int MangaIndex { get; set; }
+
         public bool IsRestricted => Illustration.IsRestricted();
 
         public bool IsManga => Illustration.IsManga();
@@ -105,7 +107,10 @@ namespace Pixeval.ViewModel
             return Illustration.MetaPages!.Select(m => Illustration with
             {
                 ImageUrls = m.ImageUrls
-            }).Select(p => new IllustrationViewModel(p));
+            }).Select((p, i) => new IllustrationViewModel(p)
+            {
+                MangaIndex = i
+            });
         }
 
         public async Task<bool> LoadThumbnailIfRequired()

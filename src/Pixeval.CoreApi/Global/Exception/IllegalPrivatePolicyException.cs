@@ -42,17 +42,17 @@ namespace Pixeval.CoreApi.Global.Exception
             Uid = uid;
         }
 
-        protected IllegalPrivatePolicyException([NotNull] SerializationInfo info, StreamingContext context, string uid) : base(info, context)
+        protected IllegalPrivatePolicyException(SerializationInfo info, StreamingContext context, string uid) : base(info, context)
         {
             Uid = uid;
         }
 
-        public IllegalPrivatePolicyException([CanBeNull] string? message, string uid) : base(message)
+        public IllegalPrivatePolicyException(string? message, string uid) : base(message)
         {
             Uid = uid;
         }
 
-        public IllegalPrivatePolicyException([CanBeNull] string? message, [CanBeNull] System.Exception? innerException, string uid) : base(message, innerException)
+        public IllegalPrivatePolicyException(string? message, System.Exception? innerException, string uid) : base(message, innerException)
         {
             Uid = uid;
         }
