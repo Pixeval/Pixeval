@@ -35,7 +35,6 @@ using Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock;
 using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
 using Pixeval.Utilities;
-using Pixeval.ViewModel;
 using ReverseMarkdown;
 
 namespace Pixeval.Pages.IllustrationViewer

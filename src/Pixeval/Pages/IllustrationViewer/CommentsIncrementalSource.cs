@@ -25,7 +25,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Pixeval.CommunityToolkit.IncrementalLoadingCollection;
-using Pixeval.ViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer
 {

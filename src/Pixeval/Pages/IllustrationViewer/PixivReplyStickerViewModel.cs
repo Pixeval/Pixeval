@@ -23,7 +23,7 @@
 using Windows.Storage.Streams;
 using Microsoft.UI.Xaml.Media;
 
-namespace Pixeval.ViewModel
+namespace Pixeval.Pages.IllustrationViewer
 {
     public class PixivReplyStickerViewModel
     {

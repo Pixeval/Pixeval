@@ -22,7 +22,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using Pixeval.ViewModel;
+using Pixeval.UserControls;
 
 namespace Pixeval.Misc
 {

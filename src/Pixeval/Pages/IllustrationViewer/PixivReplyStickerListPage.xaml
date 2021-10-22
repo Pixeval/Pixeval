@@ -4,7 +4,6 @@
                        xmlns:controls="using:Pixeval.Controls"
                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                       xmlns:viewModel="using:Pixeval.ViewModel"
                        xmlns:viewer="using:Pixeval.Pages.IllustrationViewer"
                        Background="{ThemeResource PixevalPanelBackgroundThemeBrush}"
                        mc:Ignorable="d">
@@ -13,7 +12,7 @@
               ItemsSource="{x:Bind viewer:PixivReplyStickerListPage.Stickers}"
               SelectionMode="None">
         <GridView.ItemTemplate>
-            <DataTemplate x:DataType="viewModel:PixivReplyStickerViewModel">
+            <DataTemplate x:DataType="viewer:PixivReplyStickerViewModel">
                 <Image Width="83"
                        Height="83"
                        Source="{x:Bind ImageSource}"

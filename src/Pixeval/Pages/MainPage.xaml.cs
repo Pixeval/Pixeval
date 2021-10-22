@@ -39,10 +39,11 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Pages.Capability;
+using Pixeval.Pages.Download;
 using Pixeval.Pages.Misc;
+using Pixeval.UserControls;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Pixeval.ViewModel;
 
 namespace Pixeval.Pages
 {

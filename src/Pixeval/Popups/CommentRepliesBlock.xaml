@@ -27,7 +27,7 @@
             <TextBlock x:Uid="/CommentRepliesBlock/CommentRepliesPageTitle"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center"
-                       FontSize="{StaticResource PixevalTitleFontSize}" />
+                       Style="{StaticResource TitleTextBlockStyle}" />
             <Button x:Name="CloseButton"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"

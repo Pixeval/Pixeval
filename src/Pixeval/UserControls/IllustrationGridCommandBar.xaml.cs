@@ -36,7 +36,6 @@ using Pixeval.Util;
 using Pixeval.Util.Generic;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Pixeval.ViewModel;
 
 namespace Pixeval.UserControls
 {

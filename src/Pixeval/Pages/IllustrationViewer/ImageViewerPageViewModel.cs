@@ -30,12 +30,12 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Net;
 using Pixeval.Misc;
-using Pixeval.Pages.IllustrationViewer;
+using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 
-namespace Pixeval.ViewModel
+namespace Pixeval.Pages.IllustrationViewer
 {
     public class ImageViewerPageViewModel : ObservableObject, IDisposable
     {

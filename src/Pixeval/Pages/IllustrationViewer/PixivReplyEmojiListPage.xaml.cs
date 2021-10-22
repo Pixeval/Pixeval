@@ -35,7 +35,6 @@ using Pixeval.UserControls;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Pixeval.ViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer
 {

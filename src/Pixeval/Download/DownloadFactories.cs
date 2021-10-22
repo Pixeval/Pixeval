@@ -18,7 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.ViewModel;
+using Pixeval.UserControls;
 
 namespace Pixeval.Download
 {

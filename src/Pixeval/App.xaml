@@ -10,7 +10,7 @@
                 <ResourceDictionary Source="Themes/Card.xaml" />
                 <!--  Other merged dictionaries here  -->
             </ResourceDictionary.MergedDictionaries>
-            <x:Double x:Key="PixevalTitleFontSize">25</x:Double>
+            <x:Double x:Key="PixevalTitleFontSize">28</x:Double>
             <x:Double x:Key="PixevalSubtitleFontSize">18</x:Double>
             <x:Double x:Key="PixevalContentFontSize">14</x:Double>
             <x:Double x:Key="PixevalSubscriptFontSize">11</x:Double>

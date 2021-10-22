@@ -31,7 +31,6 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Messages;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Pixeval.ViewModel;
 
 namespace Pixeval.Pages.Misc
 {

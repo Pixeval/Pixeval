@@ -34,12 +34,11 @@ using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.Misc;
 using Pixeval.Options;
-using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 
-namespace Pixeval.ViewModel
+namespace Pixeval.UserControls
 {
     /// <summary>
     ///     A view model that communicates between the model <see cref="Illustration" /> and the view

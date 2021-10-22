@@ -27,9 +27,9 @@ using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Messages;
 using Pixeval.Pages.IllustrationViewer;
+using Pixeval.UserControls;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Pixeval.ViewModel;
 
 namespace Pixeval.Activation
 {

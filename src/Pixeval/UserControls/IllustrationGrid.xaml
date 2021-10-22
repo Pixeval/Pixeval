@@ -9,7 +9,7 @@
              xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:media="using:Microsoft.Xaml.Interactions.Media"
-             xmlns:viewModel="using:Pixeval.ViewModel"
+             xmlns:userControls="using:Pixeval.UserControls"
              Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
              Loaded="IllustrationGrid_OnLoaded"
              mc:Ignorable="d">
@@ -25,7 +25,7 @@
             <AddDeleteThemeTransition />
         </adaptiveGridView:AdaptiveGridView.ItemContainerTransitions>
         <adaptiveGridView:AdaptiveGridView.ItemTemplate>
-            <DataTemplate x:DataType="viewModel:IllustrationViewModel">
+            <DataTemplate x:DataType="userControls:IllustrationViewModel">
                 <GridViewItem x:Name="IllustrationThumbnailContainerItem"
                               Tapped="IllustrationThumbnailContainerItem_OnTapped"
                               EffectiveViewportChanged="IllustrationThumbnailContainerItem_OnEffectiveViewportChanged"

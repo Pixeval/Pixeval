@@ -21,8 +21,8 @@
 #endregion
 
 using Pixeval.Download.MacroParser;
+using Pixeval.UserControls;
 using Pixeval.Utilities;
-using Pixeval.ViewModel;
 
 namespace Pixeval.Download
 {

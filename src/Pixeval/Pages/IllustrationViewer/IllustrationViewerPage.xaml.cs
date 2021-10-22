@@ -34,11 +34,11 @@ using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Popups;
+using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Pixeval.ViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer
 {

@@ -22,7 +22,7 @@
 
 using Pixeval.Pages;
 using Pixeval.Pages.IllustrationViewer;
-using Pixeval.ViewModel;
+using Pixeval.UserControls;
 
 namespace Pixeval.Messages
 {

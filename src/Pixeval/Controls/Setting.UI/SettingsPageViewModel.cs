@@ -32,8 +32,8 @@ using Pixeval.Download;
 using Pixeval.Download.MacroParser;
 using Pixeval.Misc;
 using Pixeval.Options;
+using Pixeval.UserControls;
 using Pixeval.UserControls.TokenInput;
-using Pixeval.ViewModel;
 
 namespace Pixeval.Controls.Setting.UI
 {
@@ -41,7 +41,7 @@ namespace Pixeval.Controls.Setting.UI
     {
         public static readonly IEnumerable<string> AvailableFonts = new InstalledFontCollection().Families.Select(f => f.Name);
 
-        public static readonly ICollection<Token> AvailableIllustMacros = IllustrationDownloadTask.Factory.PathParser.MacroProvider.AvailableMacros
+        public static readonly ICollection<Token> AvailableIllustMacros = DownloadFactories.Illustration.PathParser.MacroProvider.AvailableMacros
             .Select(m => $"@{{{(m is IMacro<IllustrationViewModel>.IPredicate ? $"{m.Name}:" : m.Name)}}}")
             .Select(s => new Token(s, false, false))
             .ToList();

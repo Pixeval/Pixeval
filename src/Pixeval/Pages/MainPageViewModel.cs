@@ -27,7 +27,7 @@ using Pixeval.Messages;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 
-namespace Pixeval.ViewModel
+namespace Pixeval.Pages
 {
     public class MainPageViewModel : AutoActivateObservableRecipient, IRecipient<LoginCompletedMessage>
     {

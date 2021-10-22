@@ -32,7 +32,7 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Util;
 using Pixeval.Utilities;
 
-namespace Pixeval.ViewModel
+namespace Pixeval.UserControls
 {
     public class IllustrationGridViewModel : ObservableObject, IDisposable
     {

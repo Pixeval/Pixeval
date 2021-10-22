@@ -26,7 +26,6 @@ using System.Collections.Specialized;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.CommunityToolkit;
-using Pixeval.ViewModel;
 
 namespace Pixeval.UserControls
 {

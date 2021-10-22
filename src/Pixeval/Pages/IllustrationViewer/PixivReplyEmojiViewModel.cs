@@ -3,7 +3,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2021 Pixeval/IllustrationMetaPathMacroProvider.cs
+// Copyright (c) 2021 Pixeval/PixivReplyEmojiViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,20 +20,24 @@
 
 #endregion
 
-using System.Collections.Generic;
-using Pixeval.Download.MacroParser;
-using Pixeval.Download.Macros;
-using Pixeval.UserControls;
+using Windows.Storage.Streams;
+using Microsoft.UI.Xaml.Media;
+using Pixeval.Misc;
 
-namespace Pixeval.Download
+namespace Pixeval.Pages.IllustrationViewer
 {
-    public class IllustrationMetaPathMacroProvider : IMetaPathMacroProvider<IllustrationViewModel>
+    public class PixivReplyEmojiViewModel
     {
-        public IllustrationMetaPathMacroProvider()
+        public PixivReplyEmojiViewModel(PixivReplyEmoji emojiEnumValue, IRandomAccessStream imageStream)
         {
-            AvailableMacros = MetaPathMacroAttributeHelper.GetAttachedTypeInstances<IMacro<IllustrationViewModel>>(typeof(IllustrationViewModel));
+            EmojiEnumValue = emojiEnumValue;
+            ImageStream = imageStream;
         }
 
-        public IEnumerable<IMacro<IllustrationViewModel>> AvailableMacros { get; }
+        public PixivReplyEmoji EmojiEnumValue { get; }
+
+        public IRandomAccessStream ImageStream { get; }
+
+        public ImageSource? ImageSource { get; set; }
     }
 }

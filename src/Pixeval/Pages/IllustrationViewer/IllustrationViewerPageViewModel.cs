@@ -41,7 +41,7 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using QRCoder;
 
-namespace Pixeval.ViewModel
+namespace Pixeval.Pages.IllustrationViewer
 {
     public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
     {

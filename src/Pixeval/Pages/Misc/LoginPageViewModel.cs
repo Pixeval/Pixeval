@@ -45,7 +45,7 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 
-namespace Pixeval.ViewModel
+namespace Pixeval.Pages.Misc
 {
     public class LoginPageViewModel : AutoActivateObservableRecipient,
         IRecipient<ScanningLoginProxyMessage>,

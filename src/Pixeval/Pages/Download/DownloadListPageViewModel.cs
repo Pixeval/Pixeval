@@ -1,9 +1,8 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
-
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2021 Pixeval/DownloadListPage.xaml.cs
+// Copyright (c) 2021 Pixeval/DownloadListPageViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,16 +16,30 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #endregion
 
-namespace Pixeval.Pages.Misc
+using System;
+using System.Collections.Generic;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Pixeval.Misc;
+
+namespace Pixeval.Pages.Download
 {
-    public sealed partial class DownloadListPage
+    public class DownloadListPageViewModel : ObservableObject
     {
-        public DownloadListPage()
+        private DownloadListOption _currentOption;
+
+        public DownloadListOption CurrentOption
         {
-            InitializeComponent();
+            get => _currentOption;
+            set => SetProperty(ref _currentOption, value);
+        }
+
+        public static readonly IEnumerable<DownloadListOption> AvailableDownloadListOptions = Enum.GetValues<DownloadListOption>();
+
+        public string? SubtitleText(DownloadListOption option)
+        {
+            return option.GetLocalizedResourceContent();
         }
     }
 }

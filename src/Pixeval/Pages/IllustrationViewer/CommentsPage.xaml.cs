@@ -36,7 +36,6 @@ using Pixeval.CoreApi.Net.Response;
 using Pixeval.Messages;
 using Pixeval.UserControls;
 using Pixeval.Util.IO;
-using Pixeval.ViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer
 {

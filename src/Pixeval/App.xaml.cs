@@ -27,7 +27,6 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
 using Pixeval.Util.UI;
-using Pixeval.ViewModel;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
 
 namespace Pixeval

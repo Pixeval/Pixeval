@@ -3,7 +3,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2021 Pixeval/PixivReplyEmojiViewModel.cs
+// Copyright (c) 2021 Pixeval/DownloadListPage.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,24 +20,15 @@
 
 #endregion
 
-using Windows.Storage.Streams;
-using Microsoft.UI.Xaml.Media;
-using Pixeval.Misc;
-
-namespace Pixeval.ViewModel
+namespace Pixeval.Pages.Download
 {
-    public class PixivReplyEmojiViewModel
+    public sealed partial class DownloadListPage
     {
-        public PixivReplyEmojiViewModel(PixivReplyEmoji emojiEnumValue, IRandomAccessStream imageStream)
+        private readonly DownloadListPageViewModel _viewModel = new();
+
+        public DownloadListPage()
         {
-            EmojiEnumValue = emojiEnumValue;
-            ImageStream = imageStream;
+            InitializeComponent();
         }
-
-        public PixivReplyEmoji EmojiEnumValue { get; }
-
-        public IRandomAccessStream ImageStream { get; }
-
-        public ImageSource? ImageSource { get; set; }
     }
 }

@@ -79,6 +79,7 @@
       <None Remove="Controls\Setting.UI\SwitchSettingEntry\SwitchSettingEntry.xaml" />
       <None Remove="Controls\Setting.UI\UserControls\SettingEntryHeader.xaml" />
       <None Remove="Controls\TokenInputTextBox\TokenInputTextBox.xaml" />
+      <None Remove="Pages\Download\DownloadListEntry.xaml" />
       <None Remove="Pages\IllustrationViewer\CommentRepliesPage.xaml" />
       <None Remove="Pages\IllustrationViewer\PixivReplyEmojiListPage.xaml" />
       <None Remove="Pages\IllustrationViewer\PixivReplyStickerListPage.xaml" />
@@ -192,7 +193,7 @@
       </Page>
    </ItemGroup>
    <ItemGroup>
-      <Page Update="Pages\Misc\DownloadListPage.xaml">
+      <Page Update="Pages\Download\DownloadListPage.xaml">
          <Generator>MSBuild:Compile</Generator>
       </Page>
    </ItemGroup>
@@ -290,6 +291,9 @@
      <None Update="Pages\Capability\SearchResultsPage.xaml">
        <Generator>MSBuild:Compile</Generator>
      </None>
+     <Page Update="Pages\Download\DownloadListEntry.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
      <Page Update="Pages\Misc\BrowsingHistoryPage.xaml">
        <Generator>MSBuild:Compile</Generator>
      </Page>

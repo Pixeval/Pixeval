@@ -36,7 +36,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Misc
 {
-    // set language, set main page default selected tab, set font, clear database
+    // set language, clear database
     public sealed partial class SettingsPage
     {
         private static readonly MacroParser<string> TestParser = new();

@@ -22,7 +22,7 @@
 
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 
-namespace Pixeval.ViewModel
+namespace Pixeval.Pages.IllustrationViewer
 {
     public class CommentRepliesBlockViewModel : ObservableObject
     {

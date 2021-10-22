@@ -21,6 +21,7 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.Diagnostics.Tracing;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -43,10 +44,9 @@ using Pixeval.Options;
 using Pixeval.Util.UI;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
 #if DEBUG
-using System.Diagnostics;
 #endif
 
-namespace Pixeval.ViewModel
+namespace Pixeval
 {
     public class AppViewModel : AutoActivateObservableRecipient,
         IRecipient<ApplicationExitingMessage>,
