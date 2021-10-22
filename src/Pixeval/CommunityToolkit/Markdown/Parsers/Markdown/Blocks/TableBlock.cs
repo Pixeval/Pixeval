@@ -1,17 +1,40 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/TableBlock.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using Pixeval.CommunityToolkit.Markdown.Parsers.Core;
 using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Enums;
+using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Helpers;
 
 namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
 {
     /// <summary>
-    /// Represents a block which contains tabular data.
+    ///     Represents a block which contains tabular data.
     /// </summary>
     public class TableBlock : MarkdownBlock
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TableBlock"/> class.
+        ///     Initializes a new instance of the <see cref="TableBlock" /> class.
         /// </summary>
         public TableBlock()
             : base(MarkdownBlockType.Table)
@@ -19,19 +42,19 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
         }
 
         /// <summary>
-        /// Gets or sets the table rows.
+        ///     Gets or sets the table rows.
         /// </summary>
         public IList<TableRow>? Rows { get; set; }
 
         /// <summary>
-        /// Gets or sets describes the columns in the table.  Rows can have more or less cells than the number
-        /// of columns.  Rows with fewer cells should be padded with empty cells.  For rows with
-        /// more cells, the extra cells should be hidden.
+        ///     Gets or sets describes the columns in the table.  Rows can have more or less cells than the number
+        ///     of columns.  Rows with fewer cells should be padded with empty cells.  For rows with
+        ///     more cells, the extra cells should be hidden.
         /// </summary>
         public IList<TableColumnDefinition>? ColumnDefinitions { get; set; }
 
         /// <summary>
-        /// Parses a table block.
+        ///     Parses a table block.
         /// </summary>
         /// <param name="markdown"> The markdown text. </param>
         /// <param name="start"> The location of the first character in the block. </param>
@@ -159,28 +182,28 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
         }
 
         /// <summary>
-        /// Describes a column in the markdown table.
+        ///     Describes a column in the markdown table.
         /// </summary>
         public class TableColumnDefinition
         {
             /// <summary>
-            /// Gets or sets the alignment of content in a table column.
+            ///     Gets or sets the alignment of content in a table column.
             /// </summary>
             public ColumnAlignment Alignment { get; set; }
         }
 
         /// <summary>
-        /// Represents a single row in the table.
+        ///     Represents a single row in the table.
         /// </summary>
         public class TableRow
         {
             /// <summary>
-            /// Gets or sets the table cells.
+            ///     Gets or sets the table cells.
             /// </summary>
             public IList<TableCell>? Cells { get; set; }
 
             /// <summary>
-            /// Parses the contents of the row, ignoring whitespace at the beginning and end of each cell.
+            ///     Parses the contents of the row, ignoring whitespace at the beginning and end of each cell.
             /// </summary>
             /// <param name="markdown"> The markdown text. </param>
             /// <param name="startingPos"> The position of the start of the row. </param>
@@ -192,7 +215,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
             internal static int ParseContents(string markdown, int startingPos, int maxEndingPos, int quoteDepth, bool requireVerticalBar, Action<int, int> contentParser)
             {
                 // Skip quote characters.
-                var pos = Helpers.Common.SkipQuoteCharacters(markdown, startingPos, maxEndingPos, quoteDepth);
+                var pos = Common.SkipQuoteCharacters(markdown, startingPos, maxEndingPos, quoteDepth);
 
                 // If the line starts with a '|' character, skip it.
                 var lineHasVerticalBar = false;
@@ -287,9 +310,12 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
             }
 
             /// <summary>
-            /// Called when this block type should parse out the goods. Given the markdown, a starting point, and a max ending point
-            /// the block should find the start of the block, find the end and parse out the middle. The end most of the time will not be
-            /// the max ending pos, but it sometimes can be. The function will return where it ended parsing the block in the markdown.
+            ///     Called when this block type should parse out the goods. Given the markdown, a starting point, and a max ending
+            ///     point
+            ///     the block should find the start of the block, find the end and parse out the middle. The end most of the time will
+            ///     not be
+            ///     the max ending pos, but it sometimes can be. The function will return where it ended parsing the block in the
+            ///     markdown.
             /// </summary>
             /// <returns>the position parsed to</returns>
             internal int Parse(string markdown, int startingPos, int maxEndingPos, int quoteDepth)
@@ -305,7 +331,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
                     {
                         var cell = new TableCell
                         {
-                            Inlines = Helpers.Common.ParseInlineChildren(markdown, startingPos2, maxEndingPos2)
+                            Inlines = Common.ParseInlineChildren(markdown, startingPos2, maxEndingPos2)
                         };
                         Cells.Add(cell);
                     });
@@ -313,12 +339,12 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
         }
 
         /// <summary>
-        /// Represents a cell in the table.
+        ///     Represents a cell in the table.
         /// </summary>
         public class TableCell
         {
             /// <summary>
-            /// Gets or sets the cell contents.
+            ///     Gets or sets the cell contents.
             /// </summary>
             public IList<MarkdownInline>? Inlines { get; set; }
         }

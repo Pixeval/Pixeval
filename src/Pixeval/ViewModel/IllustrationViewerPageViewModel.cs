@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/IllustrationViewerPageViewModel.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -10,6 +32,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.Download;
 using Pixeval.Popups;
 using Pixeval.UserControls;
 using Pixeval.Util;
@@ -22,138 +45,17 @@ namespace Pixeval.ViewModel
 {
     public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
     {
-        /// <summary>
-        /// The view model of the GridView that the <see cref="ImageViewerPageViewModels"/> comes from
-        /// </summary>
-        public IllustrationGridViewModel? ContainerGridViewModel { get; }
+        private ImageViewerPageViewModel _current = null!;
 
-        /// <summary>
-        /// The <see cref="IllustrationGrid"/> that owns <see cref="ContainerGridViewModel"/>
-        /// </summary>
-        public IllustrationGrid? IllustrationGrid { get; }
+        private int _currentIndex;
 
-        /// <summary>
-        /// The <see cref="IllustrationViewModelInTheGridView"/> in <see cref="IllustrationGrid"/> that corresponds to current
-        /// <see cref="IllustrationViewerPageViewModel"/>
-        /// </summary>
-        public IllustrationViewModel? IllustrationViewModelInTheGridView { get; }
+        private bool _isGenerateLinkTeachingTipOpen;
 
-        /// <summary>
-        /// The index of current illustration in <see cref="IllustrationGrid"/>
-        /// </summary>
-        public int? IllustrationIndex => ContainerGridViewModel?.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
+        private bool _isInfoPaneOpen;
 
         private ImageSource? _qrCodeSource;
 
-        #region Commands
-
-        public StandardUICommand CopyCommand { get; } = new(StandardUICommandKind.Copy);
-
-        public StandardUICommand PlayGifCommand { get; } = new(StandardUICommandKind.Play)
-        {
-            // The gif will be played as soon as its loaded, so the default state is playing and thus we need the button to be pause
-            Label = IllustrationViewerPageResources.PauseGif,
-            IconSource = new SymbolIconSource
-            {
-                Symbol = Symbol.Stop
-            }
-        };
-
-        public XamlUICommand ZoomOutCommand { get; } = new()
-        {
-            Label = IllustrationViewerPageResources.ZoomOut,
-            IconSource = new SymbolIconSource
-            {
-                Symbol = Symbol.ZoomOut
-            },
-            KeyboardAccelerators =
-            {
-                new KeyboardAccelerator
-                {
-                    Key = VirtualKey.Subtract,
-                }
-            }
-        };
-
-        public XamlUICommand ZoomInCommand { get; } = new()
-        {
-            Label = IllustrationViewerPageResources.ZoomIn,
-            IconSource = new SymbolIconSource
-            {
-                Symbol = Symbol.ZoomIn
-            },
-            KeyboardAccelerators =
-            {
-                new KeyboardAccelerator
-                {
-                    Key = VirtualKey.Add,
-                }
-            }
-        };
-
-        public XamlUICommand BookmarkCommand { get; private set; } = null!; // the null-state is transient
-
-        public StandardUICommand SaveCommand { get; } = new(StandardUICommandKind.Save);
-
-        public XamlUICommand SaveAsCommand { get; } = new()
-        {
-            Label = IllustrationViewerPageResources.SaveAs,
-            KeyboardAccelerators =
-            {
-                new KeyboardAccelerator
-                {
-                    Modifiers = VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, // todo
-                    Key = VirtualKey.S
-                }
-            },
-            IconSource = FontIconSymbols.SaveAsE792.GetFontIconSource()
-        };
-
-        public XamlUICommand SaveMangaCommand { get; } = new()
-        {
-            Label = IllustrationViewerPageResources.SaveManga,
-            IconSource = FontIconSymbols.SaveCopyEA35.GetFontIconSource()
-        };
-
-        public XamlUICommand SaveMangaAsCommand { get; } = new()
-        {
-            Label = IllustrationViewerPageResources.SaveMangaAs,
-            IconSource = FontIconSymbols.LinkE71B.GetFontIconSource()
-        };
-
-        public XamlUICommand AddToBookmarkCommand { get; } = new()
-        {
-            Label = IllustrationViewerPageResources.AddToBookmark,
-            IconSource = FontIconSymbols.BookmarksE8A4.GetFontIconSource()
-        };
-
-        public XamlUICommand GenerateLinkCommand { get; } = new()
-        {
-            Label = IllustrationViewerPageResources.GenerateLink,
-            IconSource = FontIconSymbols.LinkE71B.GetFontIconSource()
-        };
-
-        public XamlUICommand GenerateWebLinkCommand { get; } = new()
-        {
-            Label = IllustrationViewerPageResources.GenerateWebLink,
-            IconSource = FontIconSymbols.PreviewLinkE8A1.GetFontIconSource()
-        };
-
-        public XamlUICommand OpenInWebBrowserCommand { get; } = new()
-        {
-            Label = IllustrationViewerPageResources.OpenInWebBrowser,
-            IconSource = FontIconSymbols.WebSearchF6FA.GetFontIconSource()
-        };
-
-        public StandardUICommand ShareCommand { get; } = new(StandardUICommandKind.Share);
-
-        public XamlUICommand ShowQrCodeCommand { get; } = new()
-        {
-            Label = IllustrationViewerPageResources.ShowQRCode,
-            IconSource = FontIconSymbols.QRCodeED14.GetFontIconSource()
-        };
-
-        #endregion
+        private ImageSource? _userProfileImageSource;
 
         // Remarks:
         // illustrations should contains only one item if the illustration is a single
@@ -175,6 +77,92 @@ namespace Pixeval.ViewModel
             Current = ImageViewerPageViewModels[CurrentIndex];
             InitializeCommands();
             _ = LoadUserProfileImage();
+        }
+
+        /// <summary>
+        ///     The view model of the GridView that the <see cref="ImageViewerPageViewModels" /> comes from
+        /// </summary>
+        public IllustrationGridViewModel? ContainerGridViewModel { get; }
+
+        /// <summary>
+        ///     The <see cref="IllustrationGrid" /> that owns <see cref="ContainerGridViewModel" />
+        /// </summary>
+        public IllustrationGrid? IllustrationGrid { get; }
+
+        /// <summary>
+        ///     The <see cref="IllustrationViewModelInTheGridView" /> in <see cref="IllustrationGrid" /> that corresponds to
+        ///     current
+        ///     <see cref="IllustrationViewerPageViewModel" />
+        /// </summary>
+        public IllustrationViewModel? IllustrationViewModelInTheGridView { get; }
+
+        /// <summary>
+        ///     The index of current illustration in <see cref="IllustrationGrid" />
+        /// </summary>
+        public int? IllustrationIndex => ContainerGridViewModel?.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
+
+        public ImageViewerPageViewModel[] ImageViewerPageViewModels { get; }
+
+        public int CurrentIndex
+        {
+            get => _currentIndex;
+            private set => SetProperty(ref _currentIndex, value);
+        }
+
+        public ImageViewerPageViewModel Current
+        {
+            get => _current;
+            set => SetProperty(ref _current, value);
+        }
+
+        // Remarks:
+        // The reason why we don't put UserProfileImageSource into IllustrationViewModel
+        // is because the whole array of Illustrations is just representing the same 
+        // illustration's different manga pages, so all of them have the same illustrator
+        // If the UserProfileImageSource is in IllustrationViewModel and the illustration
+        // itself is a manga then all of the IllustrationViewModel in Illustrations will
+        // request the same user profile image which is pointless and will (inevitably) causing
+        // the waste of system resource
+        public ImageSource? UserProfileImageSource
+        {
+            get => _userProfileImageSource;
+            set => SetProperty(ref _userProfileImageSource, value);
+        }
+
+        public string IllustrationId => FirstIllustrationViewModel.Illustration.Id.ToString();
+
+        public string? IllustratorName => FirstIllustrationViewModel.Illustration.User?.Name;
+
+        public string? IllustratorUid => FirstIllustrationViewModel.Illustration.User?.Id.ToString();
+
+        public bool IsManga => ImageViewerPageViewModels.Length > 1;
+
+        public bool IsUgoira => Current.IllustrationViewModel.Illustration.IsUgoira();
+
+        public IllustrationViewModel FirstIllustrationViewModel => FirstImageViewerPageViewModel.IllustrationViewModel;
+
+        public ImageViewerPageViewModel FirstImageViewerPageViewModel => ImageViewerPageViewModels[0];
+
+        public bool IsInfoPaneOpen
+        {
+            get => _isInfoPaneOpen;
+            set => SetProperty(ref _isInfoPaneOpen, value);
+        }
+
+        public bool IsGenerateLinkTeachingTipOpen
+        {
+            get => _isGenerateLinkTeachingTipOpen;
+            set => SetProperty(ref _isGenerateLinkTeachingTipOpen, value);
+        }
+
+        public void Dispose()
+        {
+            foreach (var imageViewerPageViewModel in ImageViewerPageViewModels)
+            {
+                imageViewerPageViewModel.Dispose();
+            }
+
+            (_userProfileImageSource as SoftwareBitmapSource)?.Dispose();
         }
 
         public void UpdateCommandCanExecute()
@@ -239,6 +227,7 @@ namespace Pixeval.ViewModel
                 var bytes = qrCode.GetGraphic(20);
                 _qrCodeSource = await (await IOHelper.GetRandomAccessStreamFromByteArrayAsync(bytes)).GetBitmapImageAsync(true);
             }
+
             PopupManager.ShowPopup(PopupManager.CreatePopup(new QrCodePresenter(_qrCodeSource), lightDismiss: true));
         }
 
@@ -250,6 +239,7 @@ namespace Pixeval.ViewModel
                     .ShowAsync();
                 return;
             }
+
             UIHelper.ShowShareUI();
         }
 
@@ -271,6 +261,7 @@ namespace Pixeval.ViewModel
             {
                 IsGenerateLinkTeachingTipOpen = true;
             }
+
             UIHelper.SetClipboardContent(package => package.SetText(AppContext.GenerateAppLinkToIllustration(Current.IllustrationViewModel.Id).ToString()));
         }
 
@@ -299,13 +290,15 @@ namespace Pixeval.ViewModel
             throw new NotImplementedException();
         }
 
-        private void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        private async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
         {
-            throw new NotImplementedException();
+            // TODO 
+            var downloadTask = await DownloadFactories.Illustration.CreateAsync(Current.IllustrationViewModel, App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
+            App.AppViewModel.IllustrationDownloadManager.QueueTask(downloadTask);
         }
 
         private void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-        { 
+        {
             FirstImageViewerPageViewModel.SwitchBookmarkState();
             // update manually
             BookmarkCommand.Label = FirstIllustrationViewModel.IsBookmarked ? IllustrationViewerPageResources.RemoveBookmark : IllustrationViewerPageResources.Bookmark;
@@ -378,70 +371,6 @@ namespace Pixeval.ViewModel
             }
         }
 
-        public ImageViewerPageViewModel[] ImageViewerPageViewModels { get; }
-
-        private int _currentIndex;
-
-        public int CurrentIndex
-        {
-            get => _currentIndex;
-            private set => SetProperty(ref _currentIndex, value);
-        }
-
-        private ImageViewerPageViewModel _current = null!;
-
-        public ImageViewerPageViewModel Current
-        {
-            get => _current;
-            set => SetProperty(ref _current, value);
-        }
-
-        private ImageSource? _userProfileImageSource;
-
-        // Remarks:
-        // The reason why we don't put UserProfileImageSource into IllustrationViewModel
-        // is because the whole array of Illustrations is just representing the same 
-        // illustration's different manga pages, so all of them have the same illustrator
-        // If the UserProfileImageSource is in IllustrationViewModel and the illustration
-        // itself is a manga then all of the IllustrationViewModel in Illustrations will
-        // request the same user profile image which is pointless and will (inevitably) causing
-        // the waste of system resource
-        public ImageSource? UserProfileImageSource
-        {
-            get => _userProfileImageSource;
-            set => SetProperty(ref _userProfileImageSource, value);
-        }
-
-        public string IllustrationId => FirstIllustrationViewModel.Illustration.Id.ToString();
-
-        public string? IllustratorName => FirstIllustrationViewModel.Illustration.User?.Name;
-
-        public string? IllustratorUid => FirstIllustrationViewModel.Illustration.User?.Id.ToString();
-
-        public bool IsManga => ImageViewerPageViewModels.Length > 1;
-
-        public bool IsUgoira => Current.IllustrationViewModel.Illustration.IsUgoira();
-
-        public IllustrationViewModel FirstIllustrationViewModel => FirstImageViewerPageViewModel.IllustrationViewModel;
-
-        public ImageViewerPageViewModel FirstImageViewerPageViewModel => ImageViewerPageViewModels[0];
-
-        private bool _isInfoPaneOpen;
-
-        public bool IsInfoPaneOpen
-        {
-            get => _isInfoPaneOpen;
-            set => SetProperty(ref _isInfoPaneOpen, value);
-        }
-
-        private bool _isGenerateLinkTeachingTipOpen;
-
-        public bool IsGenerateLinkTeachingTipOpen
-        {
-            get => _isGenerateLinkTeachingTipOpen;
-            set => SetProperty(ref _isGenerateLinkTeachingTipOpen, value);
-        }
-
         public ImageViewerPageViewModel Next()
         {
             Current = ImageViewerPageViewModels[++CurrentIndex];
@@ -485,23 +414,125 @@ namespace Pixeval.ViewModel
             }
         }
 
-        public void Dispose()
-        {
-            foreach (var imageViewerPageViewModel in ImageViewerPageViewModels)
-            {
-                imageViewerPageViewModel.Dispose();
-            }
+        #region Commands
 
-            (_userProfileImageSource as SoftwareBitmapSource)?.Dispose();
-        }
+        public StandardUICommand CopyCommand { get; } = new(StandardUICommandKind.Copy);
+
+        public StandardUICommand PlayGifCommand { get; } = new(StandardUICommandKind.Play)
+        {
+            // The gif will be played as soon as its loaded, so the default state is playing and thus we need the button to be pause
+            Label = IllustrationViewerPageResources.PauseGif,
+            IconSource = new SymbolIconSource
+            {
+                Symbol = Symbol.Stop
+            }
+        };
+
+        public XamlUICommand ZoomOutCommand { get; } = new()
+        {
+            Label = IllustrationViewerPageResources.ZoomOut,
+            IconSource = new SymbolIconSource
+            {
+                Symbol = Symbol.ZoomOut
+            },
+            KeyboardAccelerators =
+            {
+                new KeyboardAccelerator
+                {
+                    Key = VirtualKey.Subtract
+                }
+            }
+        };
+
+        public XamlUICommand ZoomInCommand { get; } = new()
+        {
+            Label = IllustrationViewerPageResources.ZoomIn,
+            IconSource = new SymbolIconSource
+            {
+                Symbol = Symbol.ZoomIn
+            },
+            KeyboardAccelerators =
+            {
+                new KeyboardAccelerator
+                {
+                    Key = VirtualKey.Add
+                }
+            }
+        };
+
+        public XamlUICommand BookmarkCommand { get; private set; } = null!; // the null-state is transient
+
+        public StandardUICommand SaveCommand { get; } = new(StandardUICommandKind.Save);
+
+        public XamlUICommand SaveAsCommand { get; } = new()
+        {
+            Label = IllustrationViewerPageResources.SaveAs,
+            KeyboardAccelerators =
+            {
+                new KeyboardAccelerator
+                {
+                    Modifiers = VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, // todo
+                    Key = VirtualKey.S
+                }
+            },
+            IconSource = FontIconSymbols.SaveAsE792.GetFontIconSource()
+        };
+
+        public XamlUICommand SaveMangaCommand { get; } = new()
+        {
+            Label = IllustrationViewerPageResources.SaveManga,
+            IconSource = FontIconSymbols.SaveCopyEA35.GetFontIconSource()
+        };
+
+        public XamlUICommand SaveMangaAsCommand { get; } = new()
+        {
+            Label = IllustrationViewerPageResources.SaveMangaAs,
+            IconSource = FontIconSymbols.LinkE71B.GetFontIconSource()
+        };
+
+        public XamlUICommand AddToBookmarkCommand { get; } = new()
+        {
+            Label = IllustrationViewerPageResources.AddToBookmark,
+            IconSource = FontIconSymbols.BookmarksE8A4.GetFontIconSource()
+        };
+
+        public XamlUICommand GenerateLinkCommand { get; } = new()
+        {
+            Label = IllustrationViewerPageResources.GenerateLink,
+            IconSource = FontIconSymbols.LinkE71B.GetFontIconSource()
+        };
+
+        public XamlUICommand GenerateWebLinkCommand { get; } = new()
+        {
+            Label = IllustrationViewerPageResources.GenerateWebLink,
+            IconSource = FontIconSymbols.PreviewLinkE8A1.GetFontIconSource()
+        };
+
+        public XamlUICommand OpenInWebBrowserCommand { get; } = new()
+        {
+            Label = IllustrationViewerPageResources.OpenInWebBrowser,
+            IconSource = FontIconSymbols.WebSearchF6FA.GetFontIconSource()
+        };
+
+        public StandardUICommand ShareCommand { get; } = new(StandardUICommandKind.Share);
+
+        public XamlUICommand ShowQrCodeCommand { get; } = new()
+        {
+            Label = IllustrationViewerPageResources.ShowQRCode,
+            IconSource = FontIconSymbols.QRCodeED14.GetFontIconSource()
+        };
+
+        #endregion
 
         #region Helper Functions
+
         public Visibility CalculateNextImageButtonVisibility(int index)
         {
             if (IllustrationGrid is null)
             {
                 return Visibility.Collapsed;
             }
+
             return index < ImageViewerPageViewModels.Length - 1 ? Visibility.Visible : Visibility.Collapsed;
         }
 
@@ -511,6 +542,7 @@ namespace Pixeval.ViewModel
             {
                 return Visibility.Collapsed;
             }
+
             return index > 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
@@ -520,6 +552,7 @@ namespace Pixeval.ViewModel
             {
                 return Visibility.Collapsed;
             }
+
             return ContainerGridViewModel.IllustrationsView.Count > IllustrationIndex + 1
                 ? CalculateNextImageButtonVisibility(index).Inverse()
                 : Visibility.Collapsed;
@@ -531,11 +564,12 @@ namespace Pixeval.ViewModel
             {
                 return Visibility.Collapsed;
             }
+
             return IllustrationIndex > 0
                 ? CalculatePrevImageButtonVisibility(index).Inverse()
                 : Visibility.Collapsed;
         }
-         
+
         #endregion
     }
 }

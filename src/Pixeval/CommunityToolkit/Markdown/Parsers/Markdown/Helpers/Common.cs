@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/Common.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Enums;
@@ -7,7 +29,7 @@ using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines;
 namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Helpers
 {
     /// <summary>
-    /// Helpers for Markdown.
+    ///     Helpers for Markdown.
     /// </summary>
     internal class Common
     {
@@ -35,14 +57,14 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Helpers
         }
 
         /// <summary>
-        /// This function can be called by any element parsing. Given a start and stopping point this will
-        /// parse all found elements out of the range.
+        ///     This function can be called by any element parsing. Given a start and stopping point this will
+        ///     parse all found elements out of the range.
         /// </summary>
         /// <returns> A list of parsed inlines. </returns>
         public static List<MarkdownInline> ParseInlineChildren(string markdown, int startingPos, int maxEndingPos, bool ignoreLinks = false)
         {
             var currentParsePosition = startingPos;
-            
+
             var inlines = new List<MarkdownInline>();
             while (currentParsePosition < maxEndingPos)
             {
@@ -69,7 +91,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Helpers
         }
 
         /// <summary>
-        /// Finds the next inline element by matching trip chars and verifying the match.
+        ///     Finds the next inline element by matching trip chars and verifying the match.
         /// </summary>
         /// <param name="markdown"> The markdown text to parse. </param>
         /// <param name="start"> The position to start parsing. </param>
@@ -212,7 +234,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Helpers
         }
 
         /// <summary>
-        /// Returns the next \n or \r\n in the markdown.
+        ///     Returns the next \n or \r\n in the markdown.
         /// </summary>
         /// <returns>the next single line</returns>
         public static int FindNextSingleNewLine(string markdown, int startingPos, int endingPos, out int startOfNextLine)
@@ -242,7 +264,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Helpers
         }
 
         /// <summary>
-        /// Helper function for index of with a start and an ending.
+        ///     Helper function for index of with a start and an ending.
         /// </summary>
         /// <returns>Pos of the searched for item</returns>
         public static int IndexOf(string markdown, string search, int startingPos, int endingPos, bool reverseSearch = false)
@@ -280,7 +302,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Helpers
         }
 
         /// <summary>
-        /// Helper function for index of with a start and an ending.
+        ///     Helper function for index of with a start and an ending.
         /// </summary>
         /// <returns>Pos of the searched for item</returns>
         public static int IndexOf(string markdown, char search, int startingPos, int endingPos, bool reverseSearch = false)
@@ -318,7 +340,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Helpers
         }
 
         /// <summary>
-        /// Finds the next whitespace in a range.
+        ///     Finds the next whitespace in a range.
         /// </summary>
         /// <returns>pos of the white space</returns>
         public static int FindNextWhiteSpace(string markdown, int startingPos, int endingPos, bool ifNotFoundReturnLength)
@@ -338,7 +360,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Helpers
         }
 
         /// <summary>
-        /// Parses lines.
+        ///     Parses lines.
         /// </summary>
         /// <returns>LineInfo</returns>
         public static IEnumerable<LineInfo> ParseLines(string markdown, int start, int end, int quoteDepth)
@@ -420,7 +442,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Helpers
                     StartOfLine = startOfLine,
                     FirstNonWhitespaceChar = nonSpacePos,
                     EndOfLine = endOfLine,
-                    StartOfNextLine = startOfNextLine,
+                    StartOfNextLine = startOfNextLine
                 };
 
                 if (nonSpaceChar == '\0')
@@ -435,7 +457,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Helpers
         }
 
         /// <summary>
-        /// Skips a certain number of quote characters (>).
+        ///     Skips a certain number of quote characters (>).
         /// </summary>
         /// <returns>Skip Quote Chars</returns>
         public static int SkipQuoteCharacters(string markdown, int start, int end, int quoteDepth)
@@ -505,7 +527,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Helpers
         }
 
         /// <summary>
-        /// Checks if the given URL is allowed in a markdown link.
+        ///     Checks if the given URL is allowed in a markdown link.
         /// </summary>
         /// <param name="url"> The URL to check. </param>
         /// <returns> <c>true</c> if the URL is valid; <c>false</c> otherwise. </returns>

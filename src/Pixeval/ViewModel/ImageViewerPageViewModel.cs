@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/ImageViewerPageViewModel.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
@@ -7,11 +29,11 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Net;
-using Pixeval.Utilities;
 using Pixeval.Misc;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
 using Pixeval.Util.IO;
+using Pixeval.Utilities;
 
 namespace Pixeval.ViewModel
 {
@@ -38,6 +60,22 @@ namespace Pixeval.ViewModel
             LoadingImage
         }
 
+        private const int MaxZoomFactor = 8;
+
+        private const int MinZoomFactor = 1;
+
+        private bool _disposed;
+
+        private TaskNotifier? _loadingOriginalSourceTask;
+
+        private double _loadingProgress;
+
+        private string? _loadingText;
+
+        private ImageSource? _originalImageSource;
+
+        private double _scale = 1;
+
         public ImageViewerPageViewModel(IllustrationViewerPageViewModel illustrationViewerPageViewModel, IllustrationViewModel illustrationViewModel)
         {
             IllustrationViewerPageViewModel = illustrationViewerPageViewModel;
@@ -46,25 +84,17 @@ namespace Pixeval.ViewModel
             _ = LoadImage();
         }
 
-        private bool _disposed;
-
-        private double _loadingProgress;
-
         public double LoadingProgress
         {
             get => _loadingProgress;
             set => SetProperty(ref _loadingProgress, value);
         }
 
-        private double _scale = 1;
-
         public double Scale
         {
             get => _scale;
             set => SetProperty(ref _scale, value);
         }
-
-        private string? _loadingText;
 
         public string? LoadingText
         {
@@ -73,8 +103,6 @@ namespace Pixeval.ViewModel
         }
 
         public IRandomAccessStream? OriginalImageStream { get; private set; }
-
-        private TaskNotifier? _loadingOriginalSourceTask;
 
         public Task? LoadingOriginalSourceTask
         {
@@ -87,12 +115,10 @@ namespace Pixeval.ViewModel
         public CancellationHandle ImageLoadingCancellationHandle { get; }
 
         /// <summary>
-        /// The view model of the <see cref="IllustrationViewerPage"/> that hosts the owner <see cref="ImageViewerPage"/>
-        /// of this <see cref="ImageViewerPageViewModel"/>
+        ///     The view model of the <see cref="IllustrationViewerPage" /> that hosts the owner <see cref="ImageViewerPage" />
+        ///     of this <see cref="ImageViewerPageViewModel" />
         /// </summary>
         public IllustrationViewerPageViewModel IllustrationViewerPageViewModel { get; }
-
-        private ImageSource? _originalImageSource;
 
         public ImageSource? OriginalImageSource
         {
@@ -100,9 +126,12 @@ namespace Pixeval.ViewModel
             set => SetProperty(ref _originalImageSource, value);
         }
 
-        private const int MaxZoomFactor = 8;
-
-        private const int MinZoomFactor = 1;
+        public void Dispose()
+        {
+            _disposed = true;
+            DisposeInternal();
+            GC.SuppressFinalize(this);
+        }
 
         public void Zoom(double delta)
         {
@@ -126,7 +155,7 @@ namespace Pixeval.ViewModel
         {
             LoadingText = phase.GetLocalizedResource() switch
             {
-                {FormatKey: LoadingPhase} attr => attr.GetLocalizedResourceContent()?.Format((int) LoadingProgress),
+                { FormatKey: LoadingPhase } attr => attr.GetLocalizedResourceContent()?.Format((int) LoadingProgress),
                 var attr => attr?.GetLocalizedResourceContent()
             };
         }
@@ -209,6 +238,7 @@ namespace Pixeval.ViewModel
                 {
                     await App.AppViewModel.Cache.TryAddAsync(cacheKey, OriginalImageStream!, TimeSpan.FromDays(1));
                 }
+
                 return;
             }
 
@@ -216,9 +246,9 @@ namespace Pixeval.ViewModel
         }
 
         /// <summary>
-        /// We use the <see cref="IllustrationViewerPageViewModel"/> to remove and add bookmark
-        /// because the manga have multiple works and those works aside of this one cannot receive
-        /// the bookmark notification if we use <see cref="IllustrationViewModel"/> 
+        ///     We use the <see cref="IllustrationViewerPageViewModel" /> to remove and add bookmark
+        ///     because the manga have multiple works and those works aside of this one cannot receive
+        ///     the bookmark notification if we use <see cref="IllustrationViewModel" />
         /// </summary>
         public void SwitchBookmarkState()
         {
@@ -232,7 +262,10 @@ namespace Pixeval.ViewModel
             }
         }
 
-        public Visibility GetLoadingMaskVisibility(Task? loadingTask) => !(loadingTask?.IsCompletedSuccessfully ?? false) ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility GetLoadingMaskVisibility(Task? loadingTask)
+        {
+            return !(loadingTask?.IsCompletedSuccessfully ?? false) ? Visibility.Visible : Visibility.Collapsed;
+        }
 
         private void DisposeInternal()
         {
@@ -245,13 +278,6 @@ namespace Pixeval.ViewModel
             {
                 (OriginalImageSource as SoftwareBitmapSource)?.Dispose();
             }
-        }
-
-        public void Dispose()
-        {
-            _disposed = true;
-            DisposeInternal();
-            GC.SuppressFinalize(this);
         }
 
         ~ImageViewerPageViewModel()

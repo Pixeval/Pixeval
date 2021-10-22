@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/PixivReplyBar.xaml.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -16,19 +38,7 @@ namespace Pixeval.UserControls
     {
         private EventHandler<SendButtonTappedEventArgs>? _sendButtonTapped;
 
-        public event EventHandler<SendButtonTappedEventArgs> SendButtonTapped
-        {
-            add => _sendButtonTapped += value;
-            remove => _sendButtonTapped -= value;
-        }
-
         private EventHandler<StickerTappedEventArgs>? _stickerTapped;
-
-        public event EventHandler<StickerTappedEventArgs> StickerTapped
-        {
-            add => _stickerTapped += value;
-            remove => _stickerTapped -= value;
-        }
 
         public PixivReplyBar()
         {
@@ -36,9 +46,21 @@ namespace Pixeval.UserControls
             _stickerTapped += (_, _) => EmojiButton.Flyout.Hide();
         }
 
+        public event EventHandler<SendButtonTappedEventArgs> SendButtonTapped
+        {
+            add => _sendButtonTapped += value;
+            remove => _sendButtonTapped -= value;
+        }
+
+        public event EventHandler<StickerTappedEventArgs> StickerTapped
+        {
+            add => _stickerTapped += value;
+            remove => _stickerTapped -= value;
+        }
+
         private void PixivReplyBar_OnLoaded(object sender, RoutedEventArgs e)
         {
-            EmojiButtonFlyoutEmojiSectionNavigationViewItem.Tag = new NavigationViewTag(typeof(PixivReplyEmojiListPage), this); 
+            EmojiButtonFlyoutEmojiSectionNavigationViewItem.Tag = new NavigationViewTag(typeof(PixivReplyEmojiListPage), this);
             EmojiButtonFlyoutStickersSectionNavigationViewItem.Tag = new NavigationViewTag(typeof(PixivReplyStickerListPage), (Guid.NewGuid(), _stickerTapped) /* just to support the serialization, see https://docs.microsoft.com/en-us/windows/winui/api/microsoft.ui.xaml.controls.frame.navigate?view=winui-3.0#Microsoft_UI_Xaml_Controls_Frame_Navigate_Windows_UI_Xaml_Interop_TypeName_System_Object_Microsoft_UI_Xaml_Media_Animation_NavigationTransitionInfo_ */);
         }
 
@@ -63,6 +85,7 @@ namespace Pixeval.UserControls
                     AppContext.AppLogoNoCaptionUri);
                 return;
             }
+
             _sendButtonTapped?.Invoke(this, new SendButtonTappedEventArgs(e, content));
             ReplyContentRichEditBox.ClearContent();
         }
@@ -76,27 +99,27 @@ namespace Pixeval.UserControls
 
     public class SendButtonTappedEventArgs : EventArgs
     {
-        public TappedRoutedEventArgs TappedEventArgs { get; }
-
-        public string ReplyContentRichEditBoxStringContent { get; }
-
         public SendButtonTappedEventArgs(TappedRoutedEventArgs tappedEventArgs, string replyContentRichEditBoxStringContent)
         {
             TappedEventArgs = tappedEventArgs;
             ReplyContentRichEditBoxStringContent = replyContentRichEditBoxStringContent;
         }
+
+        public TappedRoutedEventArgs TappedEventArgs { get; }
+
+        public string ReplyContentRichEditBoxStringContent { get; }
     }
 
     public class StickerTappedEventArgs : EventArgs
     {
-        public TappedRoutedEventArgs TappedEventArgs { get; }
-
-        public PixivReplyStickerViewModel StickerViewModel { get; }
-
         public StickerTappedEventArgs(TappedRoutedEventArgs tappedEventArgs, PixivReplyStickerViewModel stickerViewModel)
         {
             TappedEventArgs = tappedEventArgs;
             StickerViewModel = stickerViewModel;
         }
+
+        public TappedRoutedEventArgs TappedEventArgs { get; }
+
+        public PixivReplyStickerViewModel StickerViewModel { get; }
     }
 }

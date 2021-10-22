@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/IllustrationViewModel.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,20 +33,32 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.Misc;
-using Pixeval.Utilities;
 using Pixeval.Options;
 using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.IO;
+using Pixeval.Utilities;
 
 namespace Pixeval.ViewModel
 {
     /// <summary>
-    /// A view model that communicates between the model <see cref="Illustration"/> and the view <see cref="IllustrationGrid"/>.
-    /// It is responsible for being the elements of the <see cref="AdaptiveGridView"/> to present the thumbnail of an illustration
+    ///     A view model that communicates between the model <see cref="Illustration" /> and the view
+    ///     <see cref="IllustrationGrid" />.
+    ///     It is responsible for being the elements of the <see cref="AdaptiveGridView" /> to present the thumbnail of an
+    ///     illustration
     /// </summary>
     public class IllustrationViewModel : ObservableObject, IDisposable
     {
+        private bool _isSelected;
+
+        private SoftwareBitmapSource? _thumbnailSource;
+
+        public IllustrationViewModel(Illustration illustration)
+        {
+            Illustration = illustration;
+            LoadingThumbnailCancellationHandle = new CancellationHandle();
+        }
+
         public Illustration Illustration { get; }
 
         public int MangaIndex { get; set; }
@@ -49,8 +83,6 @@ namespace Pixeval.ViewModel
             set => SetProperty(Illustration.IsBookmarked, value, m => Illustration.IsBookmarked = m);
         }
 
-        private bool _isSelected;
-
         public bool IsSelected
         {
             get => _isSelected;
@@ -60,8 +92,6 @@ namespace Pixeval.ViewModel
                 OnIsSelectedChanged?.Invoke(this, this);
             });
         }
-
-        private SoftwareBitmapSource? _thumbnailSource;
 
         public SoftwareBitmapSource? ThumbnailSource
         {
@@ -73,31 +103,31 @@ namespace Pixeval.ViewModel
 
         public bool LoadingThumbnail { get; private set; }
 
-        public IllustrationViewModel(Illustration illustration)
-        {
-            Illustration = illustration;
-            LoadingThumbnailCancellationHandle = new CancellationHandle();
-        }
-
         public bool IsUgoira => Illustration.IsUgoira();
+
+        public void Dispose()
+        {
+            DisposeInternal();
+            GC.SuppressFinalize(this);
+        }
 
         public event EventHandler<IllustrationViewModel>? OnIsSelectedChanged;
 
         /// <summary>
-        /// An illustration may contains multiple works and such illustrations are named "manga".
-        /// This method attempts to get the works and wrap into <see cref="IllustrationViewModel"/>
+        ///     An illustration may contains multiple works and such illustrations are named "manga".
+        ///     This method attempts to get the works and wrap into <see cref="IllustrationViewModel" />
         /// </summary>
         /// <returns>
-        /// A collection of a single <see cref="IllustrationViewModel"/>, if the illustration is not
-        /// a manga, that is to say, contains only a single work.
-        /// A collection of multiple <see cref="IllustrationViewModel"/>, if the illustration is a manga
-        /// that consist of multiple works
+        ///     A collection of a single <see cref="IllustrationViewModel" />, if the illustration is not
+        ///     a manga, that is to say, contains only a single work.
+        ///     A collection of multiple <see cref="IllustrationViewModel" />, if the illustration is a manga
+        ///     that consist of multiple works
         /// </returns>
         public IEnumerable<IllustrationViewModel> GetMangaIllustrationViewModels()
         {
             if (Illustration.PageCount <= 1)
             {
-                return new[] {this};
+                return new[] { this };
             }
 
             // The API result of manga (a work with multiple illustrations) is a single Illustration object
@@ -195,12 +225,6 @@ namespace Pixeval.ViewModel
         public void DisposeInternal()
         {
             _thumbnailSource?.Dispose();
-        }
-
-        public void Dispose()
-        {
-            DisposeInternal();
-            GC.SuppressFinalize(this);
         }
 
         ~IllustrationViewModel()

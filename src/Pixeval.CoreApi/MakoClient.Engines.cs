@@ -1,26 +1,22 @@
-﻿#region Copyright (c) Pixeval/Mako
+﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
 
-// MIT License
+// GPL v3 License
 // 
-// Copyright (c) Pixeval 2021 Mako/MakoClient.Engines.cs
+// Pixeval/Pixeval.CoreApi
+// Copyright (c) 2021 Pixeval.CoreApi/MakoClient.Engines.cs
 // 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 // 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 // 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
@@ -42,7 +38,7 @@ namespace Pixeval.CoreApi
         // elements is not guaranteed, call Distinct() if you
         // are care about the uniqueness of the results
         // --------------------------------------------------
-        
+
         /// <summary>
         ///     Request bookmarked illustrations for a user.
         /// </summary>
@@ -50,7 +46,7 @@ namespace Pixeval.CoreApi
         /// <param name="privacyPolicy">The <see cref="PrivacyPolicy" /> options targeting private or public</param>
         /// <param name="targetFilter">The <see cref="TargetFilter" /> options targeting android or ios</param>
         /// <returns>
-        ///     The <see cref="BookmarkEngine"/>> iterator containing bookmarked illustrations for the user.
+        ///     The <see cref="BookmarkEngine" />> iterator containing bookmarked illustrations for the user.
         /// </returns>
         /// <exception cref="IllegalPrivatePolicyException">Requesting other user's private bookmarks will throw this exception.</exception>
         public IFetchEngine<Illustration> Bookmarks(string uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter = TargetFilter.ForAndroid)
@@ -65,19 +61,22 @@ namespace Pixeval.CoreApi
         }
 
         /// <summary>
-        ///     Search in Pixiv. 
+        ///     Search in Pixiv.
         /// </summary>
         /// <param name="tag">Texts for searching</param>
         /// <param name="start">Start page</param>
         /// <param name="pages">Number of pages</param>
-        /// <param name="matchOption">The <see cref="SearchTagMatchOption.TitleAndCaption"/> option for the method of search matching</param>
-        /// <param name="sortOption">The <see cref="IllustrationSortOption"/> option for sorting method</param>
-        /// <param name="searchDuration">The <see cref="SearchDuration"/> option for the duration of this search</param>
-        /// <param name="targetFilter">The <see cref="TargetFilter"/> option targeting android or ios</param>
+        /// <param name="matchOption">
+        ///     The <see cref="SearchTagMatchOption.TitleAndCaption" /> option for the method of search
+        ///     matching
+        /// </param>
+        /// <param name="sortOption">The <see cref="IllustrationSortOption" /> option for sorting method</param>
+        /// <param name="searchDuration">The <see cref="SearchDuration" /> option for the duration of this search</param>
+        /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
         /// <param name="startDate">The starting date filtering the search results</param>
         /// <param name="endDate">The ending date filtering the searching results</param>
         /// <returns>
-        ///     The <see cref="SearchEngine"/> iterator containing the searching results.
+        ///     The <see cref="SearchEngine" /> iterator containing the searching results.
         /// </returns>
         public IFetchEngine<Illustration> Search(
             string tag,
@@ -102,11 +101,11 @@ namespace Pixeval.CoreApi
         /// <summary>
         ///     Request ranking illustrations in Pixiv.
         /// </summary>
-        /// <param name="rankOption">The option of which the <see cref="RankOption"/> of rankings</param>
+        /// <param name="rankOption">The option of which the <see cref="RankOption" /> of rankings</param>
         /// <param name="dateTime">The date of rankings</param>
-        /// <param name="targetFilter">The <see cref="TargetFilter"/> option targeting android or ios</param>
+        /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
         /// <returns>
-        ///     The <see cref="RankingEngine"/> containing rankings.
+        ///     The <see cref="RankingEngine" /> containing rankings.
         /// </returns>
         /// <exception cref="RankingDateOutOfRangeException">
         ///     Throw this exception if the date is not valid.
@@ -125,29 +124,29 @@ namespace Pixeval.CoreApi
         /// <summary>
         ///     Request recommended illustrations in Pixiv.
         /// </summary>
-        /// <param name="recommendContentType">The <see cref="RecommendContentType"/> option for illust or manga</param>
-        /// <param name="targetFilter">The <see cref="TargetFilter"/> option targeting android or ios</param>
+        /// <param name="recommendContentType">The <see cref="RecommendationContentType" /> option for illust or manga</param>
+        /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
         /// <param name="maxBookmarkIdForRecommend">Max bookmark id for recommendation</param>
         /// <param name="minBookmarkIdForRecentIllust">Min bookmark id for recent illust</param>
         /// <returns>
-        ///     The <see cref="RecommendEngine"/> containing recommended illustrations. 
+        ///     The <see cref="RecommendationEngine" /> containing recommended illustrations.
         /// </returns>
-        public IFetchEngine<Illustration> Recommends(
-            RecommendContentType recommendContentType = RecommendContentType.Illust,
+        public IFetchEngine<Illustration> Recommendations(
+            RecommendationContentType recommendContentType = RecommendationContentType.Illust,
             TargetFilter targetFilter = TargetFilter.ForAndroid,
             uint? maxBookmarkIdForRecommend = null,
             uint? minBookmarkIdForRecentIllust = null)
         {
             EnsureNotCancelled();
-            return new RecommendEngine(this, recommendContentType, targetFilter, maxBookmarkIdForRecommend, minBookmarkIdForRecentIllust, new EngineHandle(CancelInstance));
+            return new RecommendationEngine(this, recommendContentType, targetFilter, maxBookmarkIdForRecommend, minBookmarkIdForRecentIllust, new EngineHandle(CancelInstance));
         }
 
         /// <summary>
-        ///     Request recommended illustrators. 
+        ///     Request recommended illustrators.
         /// </summary>
-        /// <param name="targetFilter">The <see cref="TargetFilter"/> option targeting android or ios</param>
+        /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
         /// <returns>
-        ///     The <see cref="RecommendIllustratorEngine"/> containing recommended illustrators.
+        ///     The <see cref="RecommendIllustratorEngine" /> containing recommended illustrators.
         /// </returns>
         public IFetchEngine<User> RecommendIllustrators(TargetFilter targetFilter = TargetFilter.ForAndroid)
         {
@@ -159,7 +158,7 @@ namespace Pixeval.CoreApi
         ///     Request the spotlights in Pixiv.
         /// </summary>
         /// <returns>
-        ///     The <see cref="SpotlightArticleEngine"/> containing the spotlight articles.
+        ///     The <see cref="SpotlightArticleEngine" /> containing the spotlight articles.
         /// </returns>
         public IFetchEngine<SpotlightArticle> Spotlights()
         {
@@ -171,7 +170,7 @@ namespace Pixeval.CoreApi
         ///     Request feeds (the recent activity of following users)
         /// </summary>
         /// <returns>
-        ///     The <see cref="FeedEngine"/> containing the feeds.
+        ///     The <see cref="FeedEngine" /> containing the feeds.
         /// </returns>
         public IFetchEngine<Feed> Feeds()
         {
@@ -184,7 +183,7 @@ namespace Pixeval.CoreApi
         /// </summary>
         /// <param name="uid">User id.</param>
         /// <returns>
-        ///     The <see cref="PostedIllustrationEngine"/> containing posts of that user.
+        ///     The <see cref="PostedIllustrationEngine" /> containing posts of that user.
         /// </returns>
         public IFetchEngine<Illustration> Posts(string uid)
         {
@@ -198,7 +197,7 @@ namespace Pixeval.CoreApi
         /// <param name="uid">User id</param>
         /// <param name="privacyPolicy">The <see cref="PrivacyPolicy" /> options targeting private or public</param>
         /// <returns>
-        ///     The <see cref="FollowingEngine"/> containing following users.
+        ///     The <see cref="FollowingEngine" /> containing following users.
         /// </returns>
         /// <exception cref="IllegalPrivatePolicyException"></exception>
         public IFetchEngine<User> Following(string uid, PrivacyPolicy privacyPolicy)
@@ -211,15 +210,15 @@ namespace Pixeval.CoreApi
 
             return new FollowingEngine(this, privacyPolicy, uid, new EngineHandle(CancelInstance));
         }
-        
+
         /// <summary>
         ///     Search user in Pixiv.
         /// </summary>
         /// <param name="keyword">The text in searching</param>
-        /// <param name="userSortOption">The <see cref="UserSortOption"/> enum as date ascending or descending.</param>
-        /// <param name="targetFilter">The <see cref="TargetFilter"/> option targeting android or ios</param>
+        /// <param name="userSortOption">The <see cref="UserSortOption" /> enum as date ascending or descending.</param>
+        /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
         /// <returns>
-        ///     The <see cref="UserSearchEngine"/> containing the search results for users.
+        ///     The <see cref="UserSearchEngine" /> containing the search results for users.
         /// </returns>
         public IFetchEngine<User> SearchUser(
             string keyword,
@@ -229,13 +228,13 @@ namespace Pixeval.CoreApi
             EnsureNotCancelled();
             return new UserSearchEngine(this, targetFilter, userSortOption, keyword, new EngineHandle(CancelInstance));
         }
-        
+
         /// <summary>
         ///     Request recent posts of following users.
         /// </summary>
         /// <param name="privacyPolicy">The <see cref="PrivacyPolicy" /> options targeting private or public</param>
         /// <returns>
-        ///     The <see cref="RecentPostedIllustrationEngine"/> containing the recent posts.
+        ///     The <see cref="RecentPostedIllustrationEngine" /> containing the recent posts.
         /// </returns>
         public IFetchEngine<Illustration> RecentPosts(PrivacyPolicy privacyPolicy)
         {
@@ -252,7 +251,7 @@ namespace Pixeval.CoreApi
         /// <param name="uid">User id</param>
         /// <param name="tagWithOriginalName">The untranslated name of the tag</param>
         /// <returns>
-        ///     The <see cref="TaggedBookmarksIdEngine"/> containing the illustrations ID for the bookmark tag.
+        ///     The <see cref="TaggedBookmarksIdEngine" /> containing the illustrations ID for the bookmark tag.
         /// </returns>
         public IFetchEngine<string> UserTaggedBookmarksId(string uid, string tagWithOriginalName)
         {
@@ -261,12 +260,12 @@ namespace Pixeval.CoreApi
         }
 
         /// <summary>
-        ///     Similar to <see cref="UserTaggedBookmarksId"/> but get the illustrations.
+        ///     Similar to <see cref="UserTaggedBookmarksId" /> but get the illustrations.
         /// </summary>
         /// <param name="uid">User id</param>
         /// <param name="tagWithOriginalName">The untranslated name of the tag</param>
         /// <returns>
-        ///     The <see cref="TaggedBookmarksIdEngine"/> containing the illustrations for the bookmark tag.
+        ///     The <see cref="TaggedBookmarksIdEngine" /> containing the illustrations for the bookmark tag.
         /// </returns>
         public IFetchEngine<Illustration> UserTaggedBookmarks(string uid, string tagWithOriginalName)
         {
@@ -278,9 +277,9 @@ namespace Pixeval.CoreApi
         ///     Request manga posts of that user.
         /// </summary>
         /// <param name="uid">User id</param>
-        /// <param name="targetFilter">The <see cref="TargetFilter"/> option targeting android or ios</param>
+        /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
         /// <returns>
-        ///     The <see cref="PostedMangaEngine"/> containing the manga posts of the user.
+        ///     The <see cref="PostedMangaEngine" /> containing the manga posts of the user.
         /// </returns>
         public IFetchEngine<Illustration> MangaPosts(string uid, TargetFilter targetFilter)
         {
@@ -292,9 +291,9 @@ namespace Pixeval.CoreApi
         ///     Request novel posts of that user.
         /// </summary>
         /// <param name="uid">User id</param>
-        /// <param name="targetFilter">The <see cref="TargetFilter"/> option targeting android or ios</param>
+        /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
         /// <returns>
-        ///     The <see cref="PostedNovelEngine"/> containing the novel posts of that user.
+        ///     The <see cref="PostedNovelEngine" /> containing the novel posts of that user.
         /// </returns>
         public IFetchEngine<Novel> NovelPosts(string uid, TargetFilter targetFilter)
         {
@@ -307,9 +306,9 @@ namespace Pixeval.CoreApi
         /// </summary>
         /// <param name="uid">User id</param>
         /// <param name="privacyPolicy">The <see cref="PrivacyPolicy" /> options targeting private or public</param>
-        /// <param name="targetFilter">The <see cref="TargetFilter"/> option targeting android or ios</param>
+        /// <param name="targetFilter">The <see cref="TargetFilter" /> option targeting android or ios</param>
         /// <returns>
-        ///     The <see cref="NovelBookmarkEngine"/> containing the bookmarked novels.
+        ///     The <see cref="NovelBookmarkEngine" /> containing the bookmarked novels.
         /// </returns>
         public IFetchEngine<Novel> NovelBookmarks(string uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter)
         {
@@ -323,7 +322,7 @@ namespace Pixeval.CoreApi
         /// </summary>
         /// <param name="illustId">Illustration id</param>
         /// <returns>
-        ///     The <see cref="IllustrationCommentsEngine"/> containing comments of the illustration.
+        ///     The <see cref="IllustrationCommentsEngine" /> containing comments of the illustration.
         /// </returns>
         public IFetchEngine<Comment?> IllustrationComments(string illustId)
         {
@@ -336,7 +335,7 @@ namespace Pixeval.CoreApi
         /// </summary>
         /// <param name="commentId">Comment id</param>
         /// <returns>
-        ///     The <see cref="IllustrationCommentRepliesEngine"/> containing replies of the comment.
+        ///     The <see cref="IllustrationCommentRepliesEngine" /> containing replies of the comment.
         /// </returns>
         public IFetchEngine<Comment> IllustrationCommentReplies(string commentId)
         {

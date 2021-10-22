@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval.Utilities
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval.Utilities
+// Copyright (c) 2021 Pixeval.Utilities/Objects.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
@@ -24,7 +46,7 @@ namespace Pixeval.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Regex ToRegex(this string str)
         {
-            return new(str);
+            return new Regex(str);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -181,7 +203,7 @@ namespace Pixeval.Utilities
         }
 
         /// <summary>
-        /// Start inclusive, end inclusive
+        ///     Start inclusive, end inclusive
         /// </summary>
         public static bool InRange(this double i, (double, double) range)
         {
@@ -200,7 +222,10 @@ namespace Pixeval.Utilities
             return type.GetEnumValues().Cast<TEnum>();
         }
 
-        public static bool Inverse(ref this bool b) => b = !b;
+        public static bool Inverse(ref this bool b)
+        {
+            return b = !b;
+        }
 
         [ContractAnnotation("orElse:null => null;orElse:notnull => notnull")]
         public static async Task<R?> GetOrElseAsync<R>(this Task<Result<R>> task, R? orElse)
@@ -214,6 +239,7 @@ namespace Pixeval.Utilities
             {
                 return false;
             }
+
             try
             {
                 _ = new Regex(pattern, RegexOptions.None, new TimeSpan(0, 0, 2)).IsMatch(string.Empty);
@@ -222,6 +248,7 @@ namespace Pixeval.Utilities
             {
                 return false;
             }
+
             return true;
         }
 

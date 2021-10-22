@@ -1,8 +1,31 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/MarkdownTextBlock.Methods.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
@@ -13,12 +36,97 @@ using Pixeval.CommunityToolkit.Markdown.Render;
 namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
 {
     /// <summary>
-    /// An efficient and extensible control that can parse and render markdown.
+    ///     An efficient and extensible control that can parse and render markdown.
     /// </summary>
     public partial class MarkdownTextBlock
     {
         /// <summary>
-        /// Sets the Markdown Renderer for Rendering the UI.
+        ///     Called when a Code Block is being rendered.
+        /// </summary>
+        /// <returns>Parsing was handled Successfully</returns>
+        bool ICodeBlockResolver.ParseSyntax(InlineCollection inlineCollection, string text, string? codeLanguage)
+        {
+            // we don't need that
+            return true;
+        }
+
+        /// <summary>
+        ///     Called when the renderer needs to display a image.
+        /// </summary>
+        /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
+        async Task<ImageSource?> IImageResolver.ResolveImageAsync(string url, string tooltip)
+        {
+            if (!Uri.TryCreate(url, UriKind.Absolute, out _))
+            {
+                if (!string.IsNullOrEmpty(UriPrefix))
+                {
+                    url = $"{UriPrefix}{url}";
+                }
+            }
+
+            var eventArgs = new ImageResolvingEventArgs(url, tooltip);
+            ImageResolving?.Invoke(this, eventArgs);
+
+            await eventArgs.WaitForDeferrals();
+
+            try
+            {
+                return eventArgs.Handled
+                    ? eventArgs.Image
+                    : GetImageSource(new Uri(url));
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+            ImageSource GetImageSource(Uri imageUrl)
+            {
+                if (Path.GetExtension(imageUrl.AbsolutePath).ToLowerInvariant() == ".svg")
+                {
+                    return new SvgImageSource(imageUrl);
+                }
+
+                return new BitmapImage(imageUrl);
+            }
+        }
+
+        /// <summary>
+        ///     Called when the render has a link we need to listen to.
+        /// </summary>
+        public void RegisterNewHyperLink(Hyperlink newHyperlink, string linkUrl)
+        {
+            // Setup a listener for clicks.
+            newHyperlink.Click += Hyperlink_Click;
+
+            // Associate the URL with the hyperlink.
+            newHyperlink.SetValue(HyperlinkUrlProperty, linkUrl);
+
+            // Add it to our list
+            _listeningHyperlinks.Add(newHyperlink);
+        }
+
+        /// <summary>
+        ///     Called when the render has a link we need to listen to.
+        /// </summary>
+        // ReSharper disable once IdentifierTypo
+        public void RegisterNewHyperLink(Image newImagelink, string linkUrl, bool isHyperLink)
+        {
+            // Setup a listener for clicks.
+            newImagelink.Tapped += NewImagelink_Tapped;
+
+            // Associate the URL with the hyperlink.
+            newImagelink.SetValue(HyperlinkUrlProperty, linkUrl);
+
+            // Set if the Image is HyperLink or not
+            newImagelink.SetValue(IsHyperlinkProperty, isHyperLink);
+
+            // Add it to our list
+            _listeningHyperlinks.Add(newImagelink);
+        }
+
+        /// <summary>
+        ///     Sets the Markdown Renderer for Rendering the UI.
         /// </summary>
         /// <typeparam name="T">The Inherited Markdown Render</typeparam>
         public void SetRenderer<T>()
@@ -28,7 +136,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Called to preform a render of the current Markdown.
+        ///     Called to preform a render of the current Markdown.
         /// </summary>
         private void RenderMarkdown()
         {
@@ -205,92 +313,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Called when the render has a link we need to listen to.
-        /// </summary>
-        public void RegisterNewHyperLink(Hyperlink newHyperlink, string linkUrl)
-        {
-            // Setup a listener for clicks.
-            newHyperlink.Click += Hyperlink_Click;
-
-            // Associate the URL with the hyperlink.
-            newHyperlink.SetValue(HyperlinkUrlProperty, linkUrl);
-
-            // Add it to our list
-            _listeningHyperlinks.Add(newHyperlink);
-        }
-
-        /// <summary>
-        /// Called when the render has a link we need to listen to.
-        /// </summary>
-        // ReSharper disable once IdentifierTypo
-        public void RegisterNewHyperLink(Image newImagelink, string linkUrl, bool isHyperLink)
-        {
-            // Setup a listener for clicks.
-            newImagelink.Tapped += NewImagelink_Tapped;
-
-            // Associate the URL with the hyperlink.
-            newImagelink.SetValue(HyperlinkUrlProperty, linkUrl);
-
-            // Set if the Image is HyperLink or not
-            newImagelink.SetValue(IsHyperlinkProperty, isHyperLink);
-
-            // Add it to our list
-            _listeningHyperlinks.Add(newImagelink);
-        }
-
-        /// <summary>
-        /// Called when the renderer needs to display a image.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        async Task<ImageSource?> IImageResolver.ResolveImageAsync(string url, string tooltip)
-        {
-            if (!Uri.TryCreate(url, UriKind.Absolute, out _))
-            {
-                if (!string.IsNullOrEmpty(UriPrefix))
-                {
-                    url = $"{UriPrefix}{url}";
-                }
-            }
-
-            var eventArgs = new ImageResolvingEventArgs(url, tooltip);
-            ImageResolving?.Invoke(this, eventArgs);
-
-            await eventArgs.WaitForDeferrals();
-
-            try
-            {
-                return eventArgs.Handled
-                    ? eventArgs.Image
-                    : GetImageSource(new Uri(url));
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
-            ImageSource GetImageSource(Uri imageUrl)
-            {
-                if (Path.GetExtension(imageUrl.AbsolutePath).ToLowerInvariant() == ".svg")
-                {
-                    return new SvgImageSource(imageUrl);
-                }
-
-                return new BitmapImage(imageUrl);
-            }
-        }
-
-        /// <summary>
-        /// Called when a Code Block is being rendered.
-        /// </summary>
-        /// <returns>Parsing was handled Successfully</returns>
-        bool ICodeBlockResolver.ParseSyntax(InlineCollection inlineCollection, string text, string? codeLanguage)
-        {
-            // we don't need that
-            return true;
-        }
-
-        /// <summary>
-        /// Called when a link needs to be handled
+        ///     Called when a link needs to be handled
         /// </summary>
         internal async void LinkHandled(string? url, bool isHyperlink)
         {
@@ -303,7 +326,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             }
 
             multiClickDetectionTriggered = true;
-            await DispatcherQueue.EnqueueAsync(() => multiClickDetectionTriggered = false, Microsoft.UI.Dispatching.DispatcherQueuePriority.High);
+            await DispatcherQueue.EnqueueAsync(() => multiClickDetectionTriggered = false, DispatcherQueuePriority.High);
 
             // Get the hyperlink URL.
             if (url == null)

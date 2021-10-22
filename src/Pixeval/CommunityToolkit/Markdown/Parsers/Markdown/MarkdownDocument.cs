@@ -1,20 +1,54 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/MarkdownDocument.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks;
 using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Enums;
+using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Helpers;
 
 namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown
 {
     /// <summary>
-    /// Represents a Markdown Document. <para/>
-    /// Initialize an instance and call <see cref="Parse(string)"/> to parse the Raw Markdown Text.
+    ///     Represents a Markdown Document.
+    ///     <para />
+    ///     Initialize an instance and call <see cref="Parse(string)" /> to parse the Raw Markdown Text.
     /// </summary>
     public class MarkdownDocument : MarkdownBlock
     {
+        private Dictionary<string, LinkReferenceBlock>? _references;
+
         /// <summary>
-        /// Gets a list of URL schemes.
+        ///     Initializes a new instance of the <see cref="MarkdownDocument" /> class.
+        /// </summary>
+        public MarkdownDocument()
+            : base(MarkdownBlockType.Root)
+        {
+        }
+
+        /// <summary>
+        ///     Gets a list of URL schemes.
         /// </summary>
         public static List<string> KnownSchemes { get; } = new()
         {
@@ -30,28 +64,18 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown
             "sip"
         };
 
-        private Dictionary<string, LinkReferenceBlock>? _references;
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="MarkdownDocument"/> class.
-        /// </summary>
-        public MarkdownDocument()
-            : base(MarkdownBlockType.Root)
-        {
-        }
-
-        /// <summary>
-        /// Gets or sets the list of block elements.
+        ///     Gets or sets the list of block elements.
         /// </summary>
         public IList<MarkdownBlock>? Blocks { get; set; }
 
         /// <summary>
-        /// Parses markdown document text.
+        ///     Parses markdown document text.
         /// </summary>
         /// <param name="markdownText"> The markdown text. </param>
         public void Parse(string markdownText)
         {
-            Blocks = Parse(markdownText, 0, markdownText.Length, quoteDepth: 0, actualEnd: out _);
+            Blocks = Parse(markdownText, 0, markdownText.Length, 0, out _);
 
             // Remove any references from the list of blocks, and add them to a dictionary.
             for (var i = Blocks.Count - 1; i >= 0; i--)
@@ -72,14 +96,15 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown
         }
 
         /// <summary>
-        /// Parses a markdown document.
+        ///     Parses a markdown document.
         /// </summary>
         /// <param name="markdown"> The markdown text. </param>
         /// <param name="start"> The position to start parsing. </param>
         /// <param name="end"> The position to stop parsing. </param>
         /// <param name="quoteDepth"> The current nesting level for block quoting. </param>
-        /// <param name="actualEnd"> Set to the position at which parsing ended.  This can be
-        /// different from <paramref name="end"/> when the parser is being called recursively.
+        /// <param name="actualEnd">
+        ///     Set to the position at which parsing ended.  This can be
+        ///     different from <paramref name="end" /> when the parser is being called recursively.
         /// </param>
         /// <returns> A list of parsed blocks. </returns>
         internal static List<MarkdownBlock> Parse(string markdown, int start, int end, int quoteDepth, out int actualEnd)
@@ -161,7 +186,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown
                             lastIndentation = lastLine.Count(c => c == '>');
                         }
 
-                        var currentEndOfLine = Helpers.Common.FindNextSingleNewLine(markdown, nonSpacePos, end, out _);
+                        var currentEndOfLine = Common.FindNextSingleNewLine(markdown, nonSpacePos, end, out _);
                         var currentLine = markdown.Substring(realStartOfLine, currentEndOfLine - realStartOfLine);
                         var currentIndentation = currentLine.Count(c => c == '>');
                         var firstChar = markdown[realStartOfLine];
@@ -195,7 +220,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown
                 }
 
                 // Find the end of the current line.
-                int endOfLine = Helpers.Common.FindNextSingleNewLine(markdown, nonSpacePos, end, out int startOfNextLine);
+                var endOfLine = Common.FindNextSingleNewLine(markdown, nonSpacePos, end, out var startOfNextLine);
 
                 if (nonSpaceChar == '\0')
                 {
@@ -224,7 +249,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown
                         {
                             realStartOfLine = startOfLine;
                             endOfLine = startOfLine + 3;
-                            startOfNextLine = Helpers.Common.FindNextSingleNewLine(markdown, startOfLine, end, out startOfNextLine);
+                            startOfNextLine = Common.FindNextSingleNewLine(markdown, startOfLine, end, out startOfNextLine);
 
                             paragraphText.Clear();
                         }
@@ -364,9 +389,9 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown
         }
 
         /// <summary>
-        /// Looks up a reference using the ID.
-        /// A reference is a line that looks like this:
-        /// [foo]: http://example.com/
+        ///     Looks up a reference using the ID.
+        ///     A reference is a line that looks like this:
+        ///     [foo]: http://example.com/
         /// </summary>
         /// <param name="id"> The ID of the reference (case insensitive). </param>
         /// <returns> The reference details, or <c>null</c> if the reference wasn't found. </returns>
@@ -386,7 +411,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown
         }
 
         /// <summary>
-        /// Converts the object into it's textual representation.
+        ///     Converts the object into it's textual representation.
         /// </summary>
         /// <returns> The textual representation of this object. </returns>
         public override string? ToString()

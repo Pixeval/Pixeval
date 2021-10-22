@@ -146,6 +146,15 @@
   <data name="CheckingForUpdateTextBlock.Text" xml:space="preserve">
     <value>正在检查更新</value>
   </data>
+  <data name="DefaultDownloadPathMacroEntry.Description" xml:space="preserve">
+    <value>当使用“保存”而非“另存为”选项时会使用该项的值作为下载路径</value>
+  </data>
+  <data name="DefaultDownloadPathMacroEntry.Header" xml:space="preserve">
+    <value>默认的下载路径</value>
+  </data>
+  <data name="DefaultDownloadPathMacroTextBox.PlaceholderText" xml:space="preserve">
+    <value>下载路径宏</value>
+  </data>
   <data name="DefaultSearchSortOptionEntry.Description" xml:space="preserve">
     <value>在使用侧边栏关键字搜索插画时的默认排序策略</value>
   </data>
@@ -172,6 +181,15 @@
   </data>
   <data name="DonateDeveloperHyperlinkButton.Content" xml:space="preserve">
     <value>支持作者</value>
+  </data>
+  <data name="DownloadPathMacroInvalidTeachingTip.Title" xml:space="preserve">
+    <value>宏解析失败</value>
+  </data>
+  <data name="DownloadPathMacroInvalidTeachingTipInputCannotBeBlank" xml:space="preserve">
+    <value>输入不能为空</value>
+  </data>
+  <data name="DownloadPathMacroInvalidTeachingTipMacroInvalidFormatted" xml:space="preserve">
+    <value>{0}, 请更正后重新填写</value>
   </data>
   <data name="DownloadSettingsGroup.Header" xml:space="preserve">
     <value>下载设置</value>

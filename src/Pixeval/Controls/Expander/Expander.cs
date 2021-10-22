@@ -1,4 +1,26 @@
-﻿using Microsoft.UI.Xaml;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/Expander.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
@@ -19,22 +41,11 @@ namespace Pixeval.Controls.Expander
         private const string PartExpandOrFoldExpanderPresenter = "ExpandOrFoldExpanderPresenter";
         private const string PartRootPanel = "RootPanel";
 
-        private CardControl? _contentCardContainer;
-        private CardControl? _headerCardContainer;
-        private ContentPresenter? _expandOrFoldExpanderPresenter;
-        private Grid? _rootPanel;
-
         public static readonly DependencyProperty HeaderHeightProperty = DependencyProperty.Register(
             nameof(HeaderHeight),
             typeof(double),
             typeof(Expander),
             PropertyMetadata.Create(DependencyProperty.UnsetValue, HeaderHeightChanged));
-
-        public double HeaderHeight
-        {
-            get => (double) GetValue(HeaderHeightProperty);
-            set => SetValue(HeaderHeightProperty, value);
-        }
 
         public static readonly DependencyProperty NegativeHeaderHeightProperty = DependencyProperty.Register(
             nameof(NegativeHeaderHeight),
@@ -42,29 +53,46 @@ namespace Pixeval.Controls.Expander
             typeof(Expander),
             PropertyMetadata.Create(DependencyProperty.UnsetValue));
 
+        public static readonly DependencyProperty IsExpandedProperty = DependencyProperty.Register(
+            nameof(IsExpanded),
+            typeof(bool),
+            typeof(Expander),
+            PropertyMetadata.Create(false, IsExpandedChanged));
+
+        public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(
+            nameof(Header),
+            typeof(object),
+            typeof(Expander),
+            PropertyMetadata.Create(DependencyProperty.UnsetValue));
+
+        private CardControl? _contentCardContainer;
+        private ContentPresenter? _expandOrFoldExpanderPresenter;
+        private CardControl? _headerCardContainer;
+        private Grid? _rootPanel;
+
+        public Expander()
+        {
+            DefaultStyleKey = typeof(Expander);
+            Loaded += OnLoaded;
+        }
+
+        public double HeaderHeight
+        {
+            get => (double) GetValue(HeaderHeightProperty);
+            set => SetValue(HeaderHeightProperty, value);
+        }
+
         public double NegativeHeaderHeight
         {
             get => (double) GetValue(NegativeHeaderHeightProperty);
             set => SetValue(NegativeHeaderHeightProperty, value);
         }
 
-        public static readonly DependencyProperty IsExpandedProperty = DependencyProperty.Register(
-            nameof(IsExpanded), 
-            typeof(bool), 
-            typeof(Expander), 
-            PropertyMetadata.Create(false, IsExpandedChanged));
-
         public bool IsExpanded
         {
             get => (bool) GetValue(IsExpandedProperty);
             set => SetValue(IsExpandedProperty, value);
         }
-
-        public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(
-            nameof(Header), 
-            typeof(object), 
-            typeof(Expander), 
-            PropertyMetadata.Create(DependencyProperty.UnsetValue));
 
         public object Header
         {
@@ -82,19 +110,13 @@ namespace Pixeval.Controls.Expander
 
         private static void IsExpandedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (e.NewValue is bool value && d is Expander {_expandOrFoldExpanderPresenter: { } presenter} expander)
+            if (e.NewValue is bool value && d is Expander { _expandOrFoldExpanderPresenter: { } presenter } expander)
             {
                 presenter.Content = value
                     ? FontIconSymbols.ChevronUpSmallE96D.GetFontIcon(13)
                     : FontIconSymbols.ChevronDownSmallE96E.GetFontIcon(13);
                 VisualStateManager.GoToState(expander, value ? "Expanded" : "Normal", true);
             }
-        }
-
-        public Expander()
-        {
-            DefaultStyleKey = typeof(Expander);
-            Loaded += OnLoaded;
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)

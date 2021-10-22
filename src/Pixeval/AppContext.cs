@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/AppContext.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.IO;
 using System.IO.Compression;
 using System.Security.Cryptography;
@@ -11,48 +33,29 @@ using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Preference;
-using Pixeval.Utilities;
 using Pixeval.Messages;
 using Pixeval.Options;
 using Pixeval.Util.IO;
+using Pixeval.Utilities;
 
 namespace Pixeval
 {
     /// <summary>
-    /// Provide miscellaneous information about the app
+    ///     Provide miscellaneous information about the app
     /// </summary>
     public static class AppContext
     {
-        static AppContext()
-        {
-            AppLocalFolder = ApplicationData.Current.LocalFolder;
-            if (!ApplicationData.Current.LocalSettings.Containers.ContainsKey(SessionContainerKey))
-            {
-                ApplicationData.Current.LocalSettings.CreateContainer(SessionContainerKey, ApplicationDataCreateDisposition.Always);
-            }
-            // Remarks:
-            // Keys in the RoamingSettings will be synced through the devices of the same user
-            // For more detailed information see https://docs.microsoft.com/en-us/windows/apps/design/app-settings/store-and-retrieve-app-data
-            if (!ApplicationData.Current.RoamingSettings.Containers.ContainsKey(ConfigurationContainerKey))
-            {
-                ApplicationData.Current.RoamingSettings.CreateContainer(ConfigurationContainerKey, ApplicationDataCreateDisposition.Always);
-            }
-
-            SessionContainer = ApplicationData.Current.LocalSettings.Containers[SessionContainerKey];
-            ConfigurationContainer = ApplicationData.Current.RoamingSettings.Containers[ConfigurationContainerKey];
-        }
-
         public const string AppIdentifier = "Pixeval";
 
         public const string AppProtocol = "pixeval";
-
-        public static readonly AppVersion AppVersion = new(IterationStage.Alpha, 0, 1, 0, 1);
 
         private const string SessionContainerKey = "Session";
 
         private const string ConfigurationContainerKey = "Config";
 
         public const string AppLogoNoCaptionUri = "ms-appx:///Assets/Images/logo-no-caption.png";
+
+        public static readonly AppVersion AppVersion = new(IterationStage.Alpha, 0, 1, 0, 1);
 
         public static StorageFolder AppLocalFolder;
 
@@ -69,6 +72,26 @@ namespace Pixeval
         private static SoftwareBitmapSource? _pixivNoProfile;
 
         private static IRandomAccessStream? _pixivNoProfileStream;
+
+        static AppContext()
+        {
+            AppLocalFolder = ApplicationData.Current.LocalFolder;
+            if (!ApplicationData.Current.LocalSettings.Containers.ContainsKey(SessionContainerKey))
+            {
+                ApplicationData.Current.LocalSettings.CreateContainer(SessionContainerKey, ApplicationDataCreateDisposition.Always);
+            }
+
+            // Remarks:
+            // Keys in the RoamingSettings will be synced through the devices of the same user
+            // For more detailed information see https://docs.microsoft.com/en-us/windows/apps/design/app-settings/store-and-retrieve-app-data
+            if (!ApplicationData.Current.RoamingSettings.Containers.ContainsKey(ConfigurationContainerKey))
+            {
+                ApplicationData.Current.RoamingSettings.CreateContainer(ConfigurationContainerKey, ApplicationDataCreateDisposition.Always);
+            }
+
+            SessionContainer = ApplicationData.Current.LocalSettings.Containers[SessionContainerKey];
+            ConfigurationContainer = ApplicationData.Current.RoamingSettings.Containers[ConfigurationContainerKey];
+        }
 
         public static async Task<SoftwareBitmapSource> GetNotAvailableImageAsync()
         {
@@ -91,9 +114,9 @@ namespace Pixeval
         }
 
         /// <summary>
-        /// Copy and extract the login proxy zip to a local folder if:
-        /// 1. The local file's checksum doesn't match with the one in the Assets folder(Assets/Binary/Pixeval.LoginProxy.zip)
-        /// 2. The local file doesn't exist
+        ///     Copy and extract the login proxy zip to a local folder if:
+        ///     1. The local file's checksum doesn't match with the one in the Assets folder(Assets/Binary/Pixeval.LoginProxy.zip)
+        ///     2. The local file doesn't exist
         /// </summary>
         /// <returns>A task completes when the copy and extraction operation completes</returns>
         public static async Task CopyLoginProxyIfRequiredAsync()
@@ -156,7 +179,7 @@ namespace Pixeval
         }
 
         /// <summary>
-        /// Get the byte array of a file in the Assets folder
+        ///     Get the byte array of a file in the Assets folder
         /// </summary>
         /// <param name="relativeToAssetsFolder">A path with leading slash(or backslash) removed</param>
         /// <returns></returns>
@@ -181,7 +204,7 @@ namespace Pixeval
         }
 
         /// <summary>
-        /// Get an item relative to <see cref="AppLocalFolder"/>
+        ///     Get an item relative to <see cref="AppLocalFolder" />
         /// </summary>
         /// <param name="pathWithoutSlash">A path with leading slash(or backslash) removed</param>
         /// <returns></returns>
@@ -226,7 +249,7 @@ namespace Pixeval
         }
 
         /// <summary>
-        /// Erase all personal data, including session, configuration and image cache
+        ///     Erase all personal data, including session, configuration and image cache
         /// </summary>
         public static async Task ClearDataAsync()
         {
@@ -292,6 +315,7 @@ namespace Pixeval
                 ConfigurationContainer.Values[nameof(AppSetting.UsePreciseRangeForSearch)] = appSetting.UsePreciseRangeForSearch;
                 ConfigurationContainer.Values[nameof(AppSetting.SearchStartDate)] = appSetting.SearchStartDate;
                 ConfigurationContainer.Values[nameof(AppSetting.SearchEndDate)] = appSetting.SearchEndDate;
+                ConfigurationContainer.Values[nameof(AppSetting.DefaultDownloadPathMacro)] = appSetting.DefaultDownloadPathMacro;
             }
         }
 
@@ -350,7 +374,8 @@ namespace Pixeval
                     ConfigurationContainer.Values[nameof(AppSetting.SearchDuration)].CastOrThrow<SearchDuration>(),
                     ConfigurationContainer.Values[nameof(AppSetting.UsePreciseRangeForSearch)].CastOrThrow<bool>(),
                     ConfigurationContainer.Values[nameof(AppSetting.SearchStartDate)].CastOrThrow<DateTimeOffset>(),
-                    ConfigurationContainer.Values[nameof(AppSetting.SearchEndDate)].CastOrThrow<DateTimeOffset>());
+                    ConfigurationContainer.Values[nameof(AppSetting.SearchEndDate)].CastOrThrow<DateTimeOffset>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.DefaultDownloadPathMacro)].CastOrThrow<string>());
             }
             catch
             {

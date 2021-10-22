@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/SettingsPageViewModel.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Drawing.Text;
 using System.Globalization;
@@ -6,30 +28,29 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Pixeval.CoreApi.Global.Enum;
+using Pixeval.Download;
+using Pixeval.Download.MacroParser;
 using Pixeval.Misc;
 using Pixeval.Options;
+using Pixeval.UserControls.TokenInput;
+using Pixeval.ViewModel;
 
 namespace Pixeval.Controls.Setting.UI
 {
     public class SettingsPageViewModel : ObservableObject
     {
-        private readonly AppSetting _appSetting;
-
         public static readonly IEnumerable<string> AvailableFonts = new InstalledFontCollection().Families.Select(f => f.Name);
+
+        public static readonly ICollection<Token> AvailableIllustMacros = IllustrationDownloadTask.Factory.PathParser.MacroProvider.AvailableMacros
+            .Select(m => $"@{{{(m is IMacro<IllustrationViewModel>.IPredicate ? $"{m.Name}:" : m.Name)}}}")
+            .Select(s => new Token(s, false, false))
+            .ToList();
+
+        private readonly AppSetting _appSetting;
 
         public SettingsPageViewModel(AppSetting appSetting)
         {
             _appSetting = appSetting;
-        }
-
-        public DateTimeOffset GetMinSearchEndDate(DateTimeOffset startDate)
-        {
-            return startDate.AddDays(1);
-        }
-
-        public string GetLastUpdateCheckDisplayString(DateTimeOffset lastChecked)
-        {
-            return $"{SettingsPageResources.LastCheckedPrefix}{lastChecked.ToString(CultureInfo.CurrentUICulture)}";
         }
 
         [DefaultValue(ApplicationTheme.SystemDefault)]
@@ -206,6 +227,23 @@ namespace Pixeval.Controls.Setting.UI
         {
             get => _appSetting.SearchEndDate;
             set => SetProperty(_appSetting.SearchEndDate, value, _appSetting, (settings, value) => settings.SearchEndDate = value);
+        }
+
+        [DefaultValue(typeof(DownloadPathMacroDefaultValueProvider))]
+        public string DefaultDownloadPathMacro
+        {
+            get => _appSetting.DefaultDownloadPathMacro;
+            set => SetProperty(_appSetting.DefaultDownloadPathMacro, value, _appSetting, (settings, value) => settings.DefaultDownloadPathMacro = value);
+        }
+
+        public DateTimeOffset GetMinSearchEndDate(DateTimeOffset startDate)
+        {
+            return startDate.AddDays(1);
+        }
+
+        public string GetLastUpdateCheckDisplayString(DateTimeOffset lastChecked)
+        {
+            return $"{SettingsPageResources.LastCheckedPrefix}{lastChecked.ToString(CultureInfo.CurrentUICulture)}";
         }
 
         public void ResetDefault()

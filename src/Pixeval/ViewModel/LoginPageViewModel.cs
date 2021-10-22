@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/LoginPageViewModel.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
@@ -16,41 +38,19 @@ using Pixeval.CoreApi;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Preference;
-using Pixeval.Utilities;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
+using Pixeval.Utilities;
 
 namespace Pixeval.ViewModel
 {
-    public class LoginPageViewModel : AutoActivateObservableRecipient, 
-        IRecipient<ScanningLoginProxyMessage>, 
+    public class LoginPageViewModel : AutoActivateObservableRecipient,
+        IRecipient<ScanningLoginProxyMessage>,
         IRecipient<ApplicationExitingMessage>
     {
-        // Remarks:
-        // A Task that completes when the scan process of the Pixeval.LoginProxy completes
-        // Note: the scan process consist of checksum matching and optionally file unzipping, see AppContext.CopyLoginProxyIfRequired()
-        private readonly TaskCompletionSource _scanLoginProxyTask = new();
-
-        private Process? _loginProxyProcess;
-
-        public class LoginTokenResponse
-        {
-            [JsonPropertyName("errno")] 
-            public int Errno { get; set; }
-
-            [JsonPropertyName("cookie")] 
-            public string? Cookie { get; set; }
-
-            [JsonPropertyName("code")]
-            public string? Code { get; set; }
-
-            [JsonPropertyName("verifier")] 
-            public string? Verifier { get; set; }
-        }
-
         public enum LoginPhaseEnum
         {
             [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseCheckingRefreshAvailable))]
@@ -75,12 +75,29 @@ namespace Pixeval.ViewModel
             CheckingWebView2Installation
         }
 
+        // Remarks:
+        // A Task that completes when the scan process of the Pixeval.LoginProxy completes
+        // Note: the scan process consist of checksum matching and optionally file unzipping, see AppContext.CopyLoginProxyIfRequired()
+        private readonly TaskCompletionSource _scanLoginProxyTask = new();
+
         private LoginPhaseEnum _loginPhase;
+
+        private Process? _loginProxyProcess;
 
         public LoginPhaseEnum LoginPhase
         {
             get => _loginPhase;
             set => SetProperty(ref _loginPhase, value);
+        }
+
+        public void Receive(ApplicationExitingMessage message)
+        {
+            _loginProxyProcess?.Kill();
+        }
+
+        public void Receive(ScanningLoginProxyMessage message)
+        {
+            _scanLoginProxyTask.SetResult();
         }
 
         public void AdvancePhase(LoginPhaseEnum newPhase)
@@ -115,11 +132,11 @@ namespace Pixeval.ViewModel
         }
 
         /// <summary>
-        /// Check if the session file exists and satisfies the following four conditions: <br></br>
-        /// 1. The <see cref="Session"/> object deserialized from the file is not null <br></br>
-        /// 2. The <see cref="Session.RefreshToken"/> is not null <br></br>
-        /// 3. The <see cref="Session.Cookie"/> is not null <br></br>
-        /// 4. The <see cref="Session.CookieCreation"/> is within last seven days <br></br>
+        ///     Check if the session file exists and satisfies the following four conditions: <br></br>
+        ///     1. The <see cref="Session" /> object deserialized from the file is not null <br></br>
+        ///     2. The <see cref="Session.RefreshToken" /> is not null <br></br>
+        ///     3. The <see cref="Session.Cookie" /> is not null <br></br>
+        ///     4. The <see cref="Session.CookieCreation" /> is within last seven days <br></br>
         /// </summary>
         /// <returns></returns>
         public bool CheckRefreshAvailable()
@@ -178,7 +195,7 @@ namespace Pixeval.ViewModel
         }
 
         /// <summary>
-        /// Starts the login proxy's executable. and passes the required parameters
+        ///     Starts the login proxy's executable. and passes the required parameters
         /// </summary>
         public static async Task<Process> CallLoginProxyAsync(string culture)
         {
@@ -211,6 +228,7 @@ namespace Pixeval.ViewModel
                 pipeServer.Disconnect();
                 return (cookie, token, verifier);
             }
+
             pipeServer.Disconnect();
             throw new LoginProxyException(LoginPageResources.LoginProxyConnectToHostFailed);
         }
@@ -241,14 +259,19 @@ namespace Pixeval.ViewModel
             return session;
         }
 
-        public void Receive(ScanningLoginProxyMessage message)
+        public class LoginTokenResponse
         {
-            _scanLoginProxyTask.SetResult();
-        }
+            [JsonPropertyName("errno")]
+            public int Errno { get; set; }
 
-        public void Receive(ApplicationExitingMessage message)
-        {
-            _loginProxyProcess?.Kill();
+            [JsonPropertyName("cookie")]
+            public string? Cookie { get; set; }
+
+            [JsonPropertyName("code")]
+            public string? Code { get; set; }
+
+            [JsonPropertyName("verifier")]
+            public string? Verifier { get; set; }
         }
     }
 }

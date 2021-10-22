@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/IllustrationViewerPage.xaml.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Streams;
@@ -6,8 +28,8 @@ using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Options;
@@ -22,6 +44,13 @@ namespace Pixeval.Pages.IllustrationViewer
 {
     public sealed partial class IllustrationViewerPage : IGoBack
     {
+        private AppPopup? _commentRepliesPopup;
+
+        private NavigationViewTag? _comments;
+
+        // Tags for IllustrationInfoAndCommentsNavigationView
+
+        private NavigationViewTag? _illustrationInfo;
         private IllustrationViewerPageViewModel _viewModel = null!;
 
         public IllustrationViewerPage()
@@ -29,6 +58,18 @@ namespace Pixeval.Pages.IllustrationViewer
             InitializeComponent();
             var dataTransferManager = UIHelper.GetDataTransferManager();
             dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
+        }
+
+        public void GoBack()
+        {
+            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", IllustrationImageShowcaseFrame);
+            WeakReferenceMessenger.Default.Send(new NavigatingBackToMainPageMessage(_viewModel.IllustrationViewModelInTheGridView));
+
+            App.AppViewModel.AppWindowRootFrame.BackStack.RemoveAll(entry => entry.SourcePageType == typeof(IllustrationViewerPage));
+            if (App.AppViewModel.AppWindowRootFrame.CanGoBack)
+            {
+                App.AppViewModel.AppWindowRootFrame.GoBack(new SuppressNavigationTransitionInfo());
+            }
         }
 
         private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
@@ -43,6 +84,7 @@ namespace Pixeval.Pages.IllustrationViewer
             {
                 imageViewerPageViewModel.ImageLoadingCancellationHandle.Cancel();
             }
+
             _viewModel.Dispose();
             WeakReferenceMessenger.Default.UnregisterAll(this);
         }
@@ -76,8 +118,6 @@ namespace Pixeval.Pages.IllustrationViewer
             PopupManager.ShowPopup(recipient._commentRepliesPopup);
         }
 
-        private AppPopup? _commentRepliesPopup;
-
         private void CommentRepliesBlock_OnCloseButtonTapped(object? sender, TappedRoutedEventArgs e)
         {
             if (_commentRepliesPopup is not null)
@@ -90,7 +130,7 @@ namespace Pixeval.Pages.IllustrationViewer
         {
             // Remarks: all the illustrations in _viewModels only differ in different image sources
             var vm = _viewModel.Current.IllustrationViewModel;
-            if (_viewModel.Current.LoadingOriginalSourceTask is not {IsCompletedSuccessfully: true})
+            if (_viewModel.Current.LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true })
             {
                 return;
             }
@@ -202,7 +242,7 @@ namespace Pixeval.Pages.IllustrationViewer
                 IllustrationInfoAndCommentsFrame.Navigate(tag.NavigateTo, tag.Parameter, new SlideNavigationTransitionInfo
                 {
                     Effect = tag switch
-                    { 
+                    {
                         var x when x == _illustrationInfo => SlideNavigationTransitionEffect.FromLeft,
                         var x when x == _comments => SlideNavigationTransitionEffect.FromRight,
                         _ => throw new ArgumentOutOfRangeException()
@@ -210,23 +250,5 @@ namespace Pixeval.Pages.IllustrationViewer
                 });
             }
         }
-
-        public void GoBack()
-        {
-            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", IllustrationImageShowcaseFrame);
-            WeakReferenceMessenger.Default.Send(new NavigatingBackToMainPageMessage(_viewModel.IllustrationViewModelInTheGridView));
-
-            App.AppViewModel.AppWindowRootFrame.BackStack.RemoveAll(entry => entry.SourcePageType == typeof(IllustrationViewerPage));
-            if (App.AppViewModel.AppWindowRootFrame.CanGoBack)
-            {
-                App.AppViewModel.AppWindowRootFrame.GoBack(new SuppressNavigationTransitionInfo());
-            }
-        }
-
-        // Tags for IllustrationInfoAndCommentsNavigationView
-
-        private NavigationViewTag? _illustrationInfo;
-
-        private NavigationViewTag? _comments;
     }
 }

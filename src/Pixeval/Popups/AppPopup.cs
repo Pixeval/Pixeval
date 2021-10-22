@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/AppPopup.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using Windows.Foundation;
@@ -27,7 +49,7 @@ namespace Pixeval.Popups
             double minWidth = 0,
             double maxWidth = double.MaxValue,
             double minHeight = 0,
-            double maxHeight = double.MaxValue, 
+            double maxHeight = double.MaxValue,
             bool lightDismiss = false,
             bool useAnimation = true,
             Action<IAppPopupContent>? opening = null,
@@ -60,18 +82,18 @@ namespace Pixeval.Popups
 
     public class AppPopup
     {
-        private readonly double _widthMargin;
+        private readonly Action<IAppPopupContent, object?>? _closing;
+        private readonly IAppPopupContent _content;
+        private readonly double _height;
         private readonly double _heightMargin;
-        private readonly double _minWidth;
+        private readonly double _maxHeight;
         private readonly double _maxWidth;
         private readonly double _minHeight;
-        private readonly double _maxHeight;
-        private readonly bool _useAnimation;
-        private readonly IAppPopupContent _content;
-        private readonly double _width;
-        private readonly double _height;
+        private readonly double _minWidth;
         private readonly Action<IAppPopupContent>? _opening;
-        private readonly Action<IAppPopupContent, object?>? _closing;
+        private readonly bool _useAnimation;
+        private readonly double _width;
+        private readonly double _widthMargin;
 
         public AppPopup(
             IAppPopupContent content,
@@ -164,6 +186,10 @@ namespace Pixeval.Popups
             App.AppViewModel.Window.SizeChanged += WindowOnSizeChanged;
         }
 
+        public Popup Popup { get; }
+
+        public Guid UniqueId { get; }
+
         private void WindowOnSizeChanged(object sender, WindowSizeChangedEventArgs args)
         {
             RearrangePopup(args.Size);
@@ -206,6 +232,7 @@ namespace Pixeval.Popups
                 Storyboard.SetTarget(inAnimation, Popup);
                 storyboard.Begin();
             }
+
             Popup.IsOpen = true;
             _opening?.Invoke(_content);
             RearrangePopup(App.AppViewModel.GetDpiAwareAppWindowSize());
@@ -232,10 +259,6 @@ namespace Pixeval.Popups
             }
         }
 
-        public Popup Popup { get; }
-
-        public Guid UniqueId { get; }
-        
         ~AppPopup()
         {
             App.AppViewModel.Window.SizeChanged -= WindowOnSizeChanged;

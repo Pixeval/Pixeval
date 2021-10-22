@@ -18,8 +18,6 @@
                              Color="#FAFCFD" />
             <SolidColorBrush x:Key="CardStrokeBrush"
                              Color="#0F000000" />
-            <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush"
-                             Color="#F3F3F3" />
             <ui:Color x:Key="ExpanderHeaderCardPointerOverBackgroundColor">#F6F6F6</ui:Color>
             <ui:Color x:Key="ExpanderContentBackgroundColor">#FAFCFD</ui:Color>
             <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground"
@@ -43,8 +41,6 @@
                              Color="#FAFCFD" />
             <SolidColorBrush x:Key="CardStrokeBrush"
                              Color="#0F000000" />
-            <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush"
-                             Color="#F3F3F3" />
             <ui:Color x:Key="ExpanderHeaderCardPointerOverBackgroundColor">#F6F6F6</ui:Color>
             <ui:Color x:Key="ExpanderContentBackgroundColor">#FAFCFD</ui:Color>
             <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground"
@@ -68,8 +64,6 @@
                              Color="#2B2A2F" />
             <SolidColorBrush x:Key="CardStrokeBrush"
                              Color="#19000000" />
-            <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush"
-                             Color="#202020" />
             <ui:Color x:Key="ExpanderHeaderCardPointerOverBackgroundColor">#323232</ui:Color>
             <ui:Color x:Key="ExpanderContentBackgroundColor">#2B2A2F</ui:Color>
             <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground"
@@ -90,8 +84,6 @@
                              Color="{StaticResource SystemColorWindowColor}" />
             <SolidColorBrush x:Key="CardStrokeBrush"
                              Color="#FF0000" />
-            <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush"
-                             Color="#202020" />
             <ui:Color x:Key="ExpanderHeaderCardPointerOverBackgroundColor">#323232</ui:Color>
             <ui:Color x:Key="ExpanderContentBackgroundColor">#2B2A2F</ui:Color>
             <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground"

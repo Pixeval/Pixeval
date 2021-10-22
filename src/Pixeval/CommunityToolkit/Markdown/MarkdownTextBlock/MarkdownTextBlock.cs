@@ -1,21 +1,43 @@
-﻿using Microsoft.UI.Xaml;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/MarkdownTextBlock.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.CommunityToolkit.Markdown.Render;
 
 namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
 {
     /// <summary>
-    /// An efficient and extensible control that can parse and render markdown.
+    ///     An efficient and extensible control that can parse and render markdown.
     /// </summary>
     public partial class MarkdownTextBlock : Control, ILinkRegister, IImageResolver, ICodeBlockResolver
     {
-        private long _fontSizePropertyToken;
-        private long _flowDirectionPropertyToken;
         private long _backgroundPropertyToken;
         private long _borderBrushPropertyToken;
         private long _borderThicknessPropertyToken;
         private long _characterSpacingPropertyToken;
+        private long _flowDirectionPropertyToken;
         private long _fontFamilyPropertyToken;
+        private long _fontSizePropertyToken;
         private long _fontStretchPropertyToken;
         private long _fontStylePropertyToken;
         private long _fontWeightPropertyToken;
@@ -24,7 +46,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         private long _requestedThemePropertyToken;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MarkdownTextBlock"/> class.
+        ///     Initializes a new instance of the <see cref="MarkdownTextBlock" /> class.
         /// </summary>
         public MarkdownTextBlock()
         {

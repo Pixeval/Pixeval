@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/IllustrationResultFilterPopupViewModel.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Collections.ObjectModel;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Pixeval.Misc;
@@ -8,14 +30,33 @@ namespace Pixeval.Popups.IllustrationResultFilter
 {
     public class IllustrationResultFilterPopupViewModel : ObservableObject
     {
+        private ObservableCollection<Token> _excludeTags;
+
+        private string _illustrationId;
+
+        private Token _illustrationName;
+
+        private string _illustratorId;
+
+        private Token _illustratorName;
+
+        private ObservableCollection<Token> _includeTags;
+
+        private int _leastBookmark;
+
+        private int _maximumBookmark;
+
+        private DateTimeOffset _publishDateEnd;
+
+        private DateTimeOffset _publishDateStart;
+
+        private ObservableCollection<Token> _userGroupName;
 #pragma warning disable CS8618
         public IllustrationResultFilterPopupViewModel()
 #pragma warning restore CS8618
         {
             DefaultValueAttributeHelper.Initialize(this);
         }
-
-        private ObservableCollection<Token> _includeTags;
 
         [DefaultValue(typeof(ObservableCollection<Token>))]
         public ObservableCollection<Token> IncludeTags
@@ -24,16 +65,12 @@ namespace Pixeval.Popups.IllustrationResultFilter
             set => SetProperty(ref _includeTags, value);
         }
 
-        private ObservableCollection<Token> _excludeTags;
-
         [DefaultValue(typeof(ObservableCollection<Token>))]
         public ObservableCollection<Token> ExcludeTags
         {
             get => _excludeTags;
             set => SetProperty(ref _excludeTags, value);
         }
-
-        private int _leastBookmark;
 
         [DefaultValue(0)]
         public int LeastBookmark
@@ -42,16 +79,12 @@ namespace Pixeval.Popups.IllustrationResultFilter
             set => SetProperty(ref _leastBookmark, value);
         }
 
-        private int _maximumBookmark;
-
         [DefaultValue(int.MaxValue)]
         public int MaximumBookmark
         {
             get => _maximumBookmark;
             set => SetProperty(ref _maximumBookmark, value);
         }
-
-        private ObservableCollection<Token> _userGroupName;
 
         [DefaultValue(typeof(ObservableCollection<Token>))]
         public ObservableCollection<Token> UserGroupName
@@ -60,8 +93,6 @@ namespace Pixeval.Popups.IllustrationResultFilter
             set => SetProperty(ref _userGroupName, value);
         }
 
-        private Token _illustratorName;
-
         [DefaultValue(typeof(Token))]
         public Token IllustratorName
         {
@@ -69,16 +100,12 @@ namespace Pixeval.Popups.IllustrationResultFilter
             set => SetProperty(ref _illustratorName, value);
         }
 
-        private string _illustratorId;
-
         [DefaultValue("")]
         public string IllustratorId
         {
             get => _illustratorId;
             set => SetProperty(ref _illustratorId, value);
         }
-
-        private Token _illustrationName;
 
 
         [DefaultValue(typeof(Token))]
@@ -88,8 +115,6 @@ namespace Pixeval.Popups.IllustrationResultFilter
             set => SetProperty(ref _illustrationName, value);
         }
 
-        private string _illustrationId;
-
         [DefaultValue("")]
         public string IllustrationId
         {
@@ -97,16 +122,12 @@ namespace Pixeval.Popups.IllustrationResultFilter
             set => SetProperty(ref _illustrationId, value);
         }
 
-        private DateTimeOffset _publishDateStart;
-
         [DefaultValue(typeof(MinDateTimeOffSetDefaultValueProvider))]
         public DateTimeOffset PublishDateStart
         {
             get => _publishDateStart;
             set => SetProperty(ref _publishDateStart, value);
         }
-
-        private DateTimeOffset _publishDateEnd;
 
         [DefaultValue(typeof(MaxDateTimeOffSetDefaultValueProvider))]
         public DateTimeOffset PublishDateEnd

@@ -7,7 +7,7 @@
       <RootNamespace>Pixeval</RootNamespace>
       <Platforms>x86;x64;arm64</Platforms>
       <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
-     <ApplicationManifest>app.manifest</ApplicationManifest>
+      <ApplicationManifest>app.manifest</ApplicationManifest>
       <UseWinUI>true</UseWinUI>
       <Nullable>enable</Nullable>
       <DefaultLanguage>zh-CN</DefaultLanguage>
@@ -41,6 +41,9 @@
    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
       <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
    </PropertyGroup>
+   <ItemGroup>
+      <ProjectCapability Include="TestContainer" />
+   </ItemGroup>
    <ItemGroup>
       <Content Remove="Assets\Images\logo-no-caption.png" />
       <Content Remove="Strings\zh-CN\BookmarksPage.resw" />
@@ -87,6 +90,7 @@
       <None Remove="Strings\zh-CN\CommentBlock.resw" />
       <None Remove="Strings\zh-CN\CommentRepliesBlock.resw" />
       <None Remove="Strings\zh-CN\DownloadListPage.resw" />
+      <None Remove="Strings\zh-CN\DownloadTask.resw" />
       <None Remove="Strings\zh-CN\IllustrationGridCommandBar.resw" />
       <None Remove="Strings\zh-CN\IllustrationInfoPage.resw" />
       <None Remove="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
@@ -131,7 +135,7 @@
       </AppxManifest>
    </ItemGroup>
    <ItemGroup>
-     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.0" />
+      <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.0" />
       <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.0" />
       <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.0" />
       <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.0" />
@@ -240,6 +244,7 @@
       <PRIResource Include="Strings\zh-CN\CommentBlock.resw" />
       <PRIResource Include="Strings\zh-CN\CommentRepliesBlock.resw" />
       <PRIResource Include="Strings\zh-CN\DownloadListPage.resw" />
+      <PRIResource Include="Strings\zh-CN\DownloadTask.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationGridCommandBar.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationInfoPage.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />

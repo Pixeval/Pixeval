@@ -1,27 +1,50 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/HeaderBlock.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Enums;
+using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Helpers;
 
 namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
 {
     /// <summary>
-    /// Represents a heading.
-    /// <seealso href="https://spec.commonmark.org/0.29/#atx-headings">Single-Line Header CommonMark Spec</seealso>
-    /// <seealso href="https://spec.commonmark.org/0.29/#setext-headings">Two-Line Header CommonMark Spec</seealso>
+    ///     Represents a heading.
+    ///     <seealso href="https://spec.commonmark.org/0.29/#atx-headings">Single-Line Header CommonMark Spec</seealso>
+    ///     <seealso href="https://spec.commonmark.org/0.29/#setext-headings">Two-Line Header CommonMark Spec</seealso>
     /// </summary>
     public class HeaderBlock : MarkdownBlock
     {
+        private int _headerLevel;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="HeaderBlock"/> class.
+        ///     Initializes a new instance of the <see cref="HeaderBlock" /> class.
         /// </summary>
         public HeaderBlock() : base(MarkdownBlockType.Header)
         {
         }
 
-        private int _headerLevel;
-
         /// <summary>
-        /// Gets or sets the header level (1-6).  1 is the most important header, 6 is the least important.
+        ///     Gets or sets the header level (1-6).  1 is the most important header, 6 is the least important.
         /// </summary>
         public int HeaderLevel
         {
@@ -40,12 +63,12 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
         }
 
         /// <summary>
-        /// Gets or sets the contents of the block.
+        ///     Gets or sets the contents of the block.
         /// </summary>
         public IList<MarkdownInline>? Inlines { get; set; }
 
         /// <summary>
-        /// Parses a header that starts with a hash.
+        ///     Parses a header that starts with a hash.
         /// </summary>
         /// <param name="markdown"> The markdown text. </param>
         /// <param name="start"> The location of the first hash character. </param>
@@ -77,12 +100,12 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
             }
 
             // Parse the inline content.
-            result.Inlines = Helpers.Common.ParseInlineChildren(markdown, pos, end);
+            result.Inlines = Common.ParseInlineChildren(markdown, pos, end);
             return result;
         }
 
         /// <summary>
-        /// Parses a two-line header.
+        ///     Parses a two-line header.
         /// </summary>
         /// <param name="markdown"> The markdown text. </param>
         /// <param name="firstLineStart"> The location of the start of the first line. </param>
@@ -139,14 +162,14 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
             {
                 HeaderLevel = underlineChar == '=' ? 1 : 2,
                 // Parse the inline content.
-                Inlines = Helpers.Common.ParseInlineChildren(markdown, firstLineStart, firstLineEnd)
+                Inlines = Common.ParseInlineChildren(markdown, firstLineStart, firstLineEnd)
             };
 
             return result;
         }
 
         /// <summary>
-        /// Converts the object into it's textual representation.
+        ///     Converts the object into it's textual representation.
         /// </summary>
         /// <returns> The textual representation of this object. </returns>
         public override string? ToString()

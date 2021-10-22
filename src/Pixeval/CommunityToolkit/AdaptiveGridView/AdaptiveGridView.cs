@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/AdaptiveGridView.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using Windows.Foundation.Collections;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -7,29 +29,29 @@ using Microsoft.UI.Xaml.Data;
 namespace Pixeval.CommunityToolkit.AdaptiveGridView
 {
     /// <summary>
-    /// The AdaptiveGridView control allows to present information within a Grid View perfectly adjusting the
-    /// total display available space. It reacts to changes in the layout as well as the content so it can adapt
-    /// to different form factors automatically.
+    ///     The AdaptiveGridView control allows to present information within a Grid View perfectly adjusting the
+    ///     total display available space. It reacts to changes in the layout as well as the content so it can adapt
+    ///     to different form factors automatically.
     /// </summary>
     /// <remarks>
-    /// The number and the width of items are calculated based on the
-    /// screen resolution in order to fully leverage the available screen space. The property ItemsHeight define
-    /// the items fixed height and the property DesiredWidth sets the minimum width for the elements to add a
-    /// new column.
+    ///     The number and the width of items are calculated based on the
+    ///     screen resolution in order to fully leverage the available screen space. The property ItemsHeight define
+    ///     the items fixed height and the property DesiredWidth sets the minimum width for the elements to add a
+    ///     new column.
     /// </remarks>
     public partial class AdaptiveGridView : GridView
     {
         private bool _isLoaded;
-        private ScrollMode _savedVerticalScrollMode;
-        private ScrollMode _savedHorizontalScrollMode;
-        private ScrollBarVisibility _savedVerticalScrollBarVisibility;
-        private ScrollBarVisibility _savedHorizontalScrollBarVisibility;
-        private Orientation _savedOrientation;
-        private bool _needToRestoreScrollStates;
         private bool _needContainerMarginForLayout;
+        private bool _needToRestoreScrollStates;
+        private ScrollBarVisibility _savedHorizontalScrollBarVisibility;
+        private ScrollMode _savedHorizontalScrollMode;
+        private Orientation _savedOrientation;
+        private ScrollBarVisibility _savedVerticalScrollBarVisibility;
+        private ScrollMode _savedVerticalScrollMode;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AdaptiveGridView"/> class.
+        ///     Initializes a new instance of the <see cref="AdaptiveGridView" /> class.
         /// </summary>
         public AdaptiveGridView()
         {
@@ -45,7 +67,7 @@ namespace Pixeval.CommunityToolkit.AdaptiveGridView
         }
 
         /// <summary>
-        /// Prepares the specified element to display the specified item.
+        ///     Prepares the specified element to display the specified item.
         /// </summary>
         /// <param name="obj">The element that's used to display the specified item.</param>
         /// <param name="item">The item to display.</param>
@@ -54,14 +76,14 @@ namespace Pixeval.CommunityToolkit.AdaptiveGridView
             base.PrepareContainerForItemOverride(obj, item);
             if (obj is FrameworkElement element)
             {
-                var heightBinding = new Binding()
+                var heightBinding = new Binding
                 {
                     Source = this,
                     Path = new PropertyPath("ItemHeight"),
                     Mode = BindingMode.TwoWay
                 };
 
-                var widthBinding = new Binding()
+                var widthBinding = new Binding
                 {
                     Source = this,
                     Path = new PropertyPath("ItemWidth"),
@@ -86,7 +108,7 @@ namespace Pixeval.CommunityToolkit.AdaptiveGridView
         }
 
         /// <summary>
-        /// Calculates the width of the grid items.
+        ///     Calculates the width of the grid items.
         /// </summary>
         /// <param name="containerWidth">The width of the container control.</param>
         /// <returns>The calculated item width.</returns>
@@ -115,13 +137,13 @@ namespace Pixeval.CommunityToolkit.AdaptiveGridView
                 _needContainerMarginForLayout = true;
             }
 
-            return (containerWidth / columns) - itemMargin.Left - itemMargin.Right;
+            return containerWidth / columns - itemMargin.Left - itemMargin.Right;
         }
 
         /// <summary>
-        /// Invoked whenever application code or internal processes (such as a rebuilding layout pass) call
-        /// ApplyTemplate. In simplest terms, this means the method is called just before a UI element displays
-        /// in your app. Override this method to influence the default post-template logic of a class.
+        ///     Invoked whenever application code or internal processes (such as a rebuilding layout pass) call
+        ///     ApplyTemplate. In simplest terms, this means the method is called just before a UI element displays
+        ///     in your app. Override this method to influence the default post-template logic of a class.
         /// </summary>
         protected override void OnApplyTemplate()
         {

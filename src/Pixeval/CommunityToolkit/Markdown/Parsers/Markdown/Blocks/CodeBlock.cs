@@ -1,16 +1,39 @@
-﻿using System.Text;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/CodeBlock.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System.Text;
 using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Enums;
+using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Helpers;
 
 namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
 {
     /// <summary>
-    /// Represents a block of text that is displayed in a fixed-width font.  Inline elements and
-    /// escape sequences are ignored inside the code block.
+    ///     Represents a block of text that is displayed in a fixed-width font.  Inline elements and
+    ///     escape sequences are ignored inside the code block.
     /// </summary>
     public class CodeBlock : MarkdownBlock
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CodeBlock"/> class.
+        ///     Initializes a new instance of the <see cref="CodeBlock" /> class.
         /// </summary>
         public CodeBlock()
             : base(MarkdownBlockType.Code)
@@ -18,19 +41,23 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
         }
 
         /// <summary>
-        /// Gets or sets the source code to display.
+        ///     Gets or sets the source code to display.
         /// </summary>
         public string? Text { get; set; }
 
         /// <summary>
-        /// Gets or sets the Language specified in prefix, e.g. ```c# (GitHub Style Parsing).<para/>
-        /// This does not guarantee that the Code Block has a language, or no language, some valid code might not have been prefixed, and this will still return null. <para/>
-        /// To ensure all Code is Highlighted (If desired), you might have to determine the language from the provided string, such as looking for key words.
+        ///     Gets or sets the Language specified in prefix, e.g. ```c# (GitHub Style Parsing).
+        ///     <para />
+        ///     This does not guarantee that the Code Block has a language, or no language, some valid code might not have been
+        ///     prefixed, and this will still return null.
+        ///     <para />
+        ///     To ensure all Code is Highlighted (If desired), you might have to determine the language from the provided string,
+        ///     such as looking for key words.
         /// </summary>
         public string? CodeLanguage { get; set; }
 
         /// <summary>
-        /// Parses a code block.
+        ///     Parses a code block.
         /// </summary>
         /// <param name="markdown"> The markdown text. </param>
         /// <param name="start"> The location of the first character in the block. </param>
@@ -51,7 +78,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
                 Or the code block starts and ends with ```
             */
 
-            foreach (var lineInfo in Helpers.Common.ParseLines(markdown, start, maxEnd, quoteDepth))
+            foreach (var lineInfo in Common.ParseLines(markdown, start, maxEnd, quoteDepth))
             {
                 var pos = lineInfo.StartOfLine;
                 if (pos < maxEnd && markdown[pos] == '`')
@@ -80,14 +107,12 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
                             actualEnd = lineInfo.StartOfNextLine;
                             break;
                         }
-                        else
+
+                        // Collects the Programming Language from the end of the starting ticks.
+                        while (pos < lineInfo.EndOfLine)
                         {
-                            // Collects the Programming Language from the end of the starting ticks.
-                            while (pos < lineInfo.EndOfLine)
-                            {
-                                codeLanguage += markdown[pos];
-                                pos++;
-                            }
+                            codeLanguage += markdown[pos];
+                            pos++;
                         }
                     }
                 }
@@ -152,7 +177,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
                         var c = lineText[i];
                         if (c == '\t')
                         {
-                            code.Append(' ', 4 - ((code.Length - startOfLinePos) % 4));
+                            code.Append(' ', 4 - (code.Length - startOfLinePos) % 4);
                         }
                         else
                         {
@@ -173,7 +198,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
             }
 
             // Blank lines should be trimmed from the start and end.
-            return new CodeBlock()
+            return new CodeBlock
             {
                 Text = code.ToString().Trim('\r', '\n'),
                 CodeLanguage = !string.IsNullOrWhiteSpace(codeLanguage) ? codeLanguage.Trim() : null
@@ -181,7 +206,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
         }
 
         /// <summary>
-        /// Converts the object into it's textual representation.
+        ///     Converts the object into it's textual representation.
         /// </summary>
         /// <returns> The textual representation of this object. </returns>
         public override string? ToString()

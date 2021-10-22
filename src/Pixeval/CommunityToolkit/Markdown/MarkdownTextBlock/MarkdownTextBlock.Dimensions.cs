@@ -1,15 +1,37 @@
-﻿using Microsoft.UI.Xaml;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/MarkdownTextBlock.Dimensions.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 
 namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
 {
     /// <summary>
-    /// Measurement Properties for elements in the Markdown.
+    ///     Measurement Properties for elements in the Markdown.
     /// </summary>
     public partial class MarkdownTextBlock
     {
         /// <summary>
-        /// Gets the dependency property for <see cref="InlineCodePadding"/>.
+        ///     Gets the dependency property for <see cref="InlineCodePadding" />.
         /// </summary>
         public static readonly DependencyProperty InlineCodePaddingProperty =
             DependencyProperty.Register(
@@ -19,7 +41,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
                 new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="InlineCodeMargin"/>.
+        ///     Gets the dependency property for <see cref="InlineCodeMargin" />.
         /// </summary>
         public static readonly DependencyProperty InlineCodeMarginProperty =
             DependencyProperty.Register(
@@ -29,7 +51,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
                 new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="InlineCodeBorderThickness"/>.
+        ///     Gets the dependency property for <see cref="InlineCodeBorderThickness" />.
         /// </summary>
         public static readonly DependencyProperty InlineCodeBorderThicknessProperty =
             DependencyProperty.Register(
@@ -39,7 +61,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
                 new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="ImageStretch"/>.
+        ///     Gets the dependency property for <see cref="ImageStretch" />.
         /// </summary>
         public static readonly DependencyProperty ImageStretchProperty = DependencyProperty.Register(
             nameof(ImageStretch),
@@ -48,7 +70,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(Stretch.None, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="CodeBorderThickness"/>.
+        ///     Gets the dependency property for <see cref="CodeBorderThickness" />.
         /// </summary>
         public static readonly DependencyProperty CodeBorderThicknessProperty = DependencyProperty.Register(
             nameof(CodeBorderThickness),
@@ -57,7 +79,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="CodeMargin"/>.
+        ///     Gets the dependency property for <see cref="CodeMargin" />.
         /// </summary>
         public static readonly DependencyProperty CodeMarginProperty = DependencyProperty.Register(
             nameof(CodeMargin),
@@ -66,7 +88,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="CodePadding"/>.
+        ///     Gets the dependency property for <see cref="CodePadding" />.
         /// </summary>
         public static readonly DependencyProperty CodePaddingProperty = DependencyProperty.Register(
             nameof(CodePadding),
@@ -75,7 +97,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="Header1FontSize"/>.
+        ///     Gets the dependency property for <see cref="Header1FontSize" />.
         /// </summary>
         public static readonly DependencyProperty Header1FontSizeProperty = DependencyProperty.Register(
             nameof(Header1FontSize),
@@ -84,7 +106,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="Header1Margin"/>.
+        ///     Gets the dependency property for <see cref="Header1Margin" />.
         /// </summary>
         public static readonly DependencyProperty Header1MarginProperty = DependencyProperty.Register(
             nameof(Header1Margin),
@@ -93,7 +115,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="Header2FontSize"/>.
+        ///     Gets the dependency property for <see cref="Header2FontSize" />.
         /// </summary>
         public static readonly DependencyProperty Header2FontSizeProperty = DependencyProperty.Register(
             nameof(Header2FontSize),
@@ -102,7 +124,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="Header2Margin"/>.
+        ///     Gets the dependency property for <see cref="Header2Margin" />.
         /// </summary>
         public static readonly DependencyProperty Header2MarginProperty = DependencyProperty.Register(
             nameof(Header2Margin),
@@ -111,7 +133,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="Header3FontSize"/>.
+        ///     Gets the dependency property for <see cref="Header3FontSize" />.
         /// </summary>
         public static readonly DependencyProperty Header3FontSizeProperty = DependencyProperty.Register(
             nameof(Header3FontSize),
@@ -120,7 +142,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="Header3Margin"/>.
+        ///     Gets the dependency property for <see cref="Header3Margin" />.
         /// </summary>
         public static readonly DependencyProperty Header3MarginProperty = DependencyProperty.Register(
             nameof(Header3Margin),
@@ -129,7 +151,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="Header4FontSize"/>.
+        ///     Gets the dependency property for <see cref="Header4FontSize" />.
         /// </summary>
         public static readonly DependencyProperty Header4FontSizeProperty = DependencyProperty.Register(
             nameof(Header4FontSize),
@@ -138,7 +160,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="Header4Margin"/>.
+        ///     Gets the dependency property for <see cref="Header4Margin" />.
         /// </summary>
         public static readonly DependencyProperty Header4MarginProperty = DependencyProperty.Register(
             nameof(Header4Margin),
@@ -147,7 +169,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="Header5FontSize"/>.
+        ///     Gets the dependency property for <see cref="Header5FontSize" />.
         /// </summary>
         public static readonly DependencyProperty Header5FontSizeProperty = DependencyProperty.Register(
             nameof(Header5FontSize),
@@ -156,7 +178,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="Header5Margin"/>.
+        ///     Gets the dependency property for <see cref="Header5Margin" />.
         /// </summary>
         public static readonly DependencyProperty Header5MarginProperty = DependencyProperty.Register(
             nameof(Header5Margin),
@@ -165,7 +187,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="Header6Margin"/>.
+        ///     Gets the dependency property for <see cref="Header6Margin" />.
         /// </summary>
         public static readonly DependencyProperty Header6MarginProperty = DependencyProperty.Register(
             nameof(Header6Margin),
@@ -174,7 +196,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="Header6FontSize"/>.
+        ///     Gets the dependency property for <see cref="Header6FontSize" />.
         /// </summary>
         public static readonly DependencyProperty Header6FontSizeProperty = DependencyProperty.Register(
             nameof(Header6FontSize),
@@ -183,7 +205,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="HorizontalRuleMargin"/>.
+        ///     Gets the dependency property for <see cref="HorizontalRuleMargin" />.
         /// </summary>
         public static readonly DependencyProperty HorizontalRuleMarginProperty = DependencyProperty.Register(
             nameof(HorizontalRuleMargin),
@@ -192,7 +214,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="HorizontalRuleThickness"/>.
+        ///     Gets the dependency property for <see cref="HorizontalRuleThickness" />.
         /// </summary>
         public static readonly DependencyProperty HorizontalRuleThicknessProperty = DependencyProperty.Register(
             nameof(HorizontalRuleThickness),
@@ -201,7 +223,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="ListMargin"/>.
+        ///     Gets the dependency property for <see cref="ListMargin" />.
         /// </summary>
         public static readonly DependencyProperty ListMarginProperty = DependencyProperty.Register(
             nameof(ListMargin),
@@ -210,7 +232,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="ListGutterWidth"/>.
+        ///     Gets the dependency property for <see cref="ListGutterWidth" />.
         /// </summary>
         public static readonly DependencyProperty ListGutterWidthProperty = DependencyProperty.Register(
             nameof(ListGutterWidth),
@@ -219,7 +241,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="ListBulletSpacing"/>.
+        ///     Gets the dependency property for <see cref="ListBulletSpacing" />.
         /// </summary>
         public static readonly DependencyProperty ListBulletSpacingProperty = DependencyProperty.Register(
             nameof(ListBulletSpacing),
@@ -228,7 +250,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="ParagraphMargin"/>.
+        ///     Gets the dependency property for <see cref="ParagraphMargin" />.
         /// </summary>
         public static readonly DependencyProperty ParagraphMarginProperty = DependencyProperty.Register(
             nameof(ParagraphMargin),
@@ -237,7 +259,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="ParagraphLineHeight"/>.
+        ///     Gets the dependency property for <see cref="ParagraphLineHeight" />.
         /// </summary>
         public static readonly DependencyProperty ParagraphLineHeightProperty = DependencyProperty.Register(
             nameof(ParagraphLineHeight),
@@ -246,7 +268,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="QuoteBorderThickness"/>.
+        ///     Gets the dependency property for <see cref="QuoteBorderThickness" />.
         /// </summary>
         public static readonly DependencyProperty QuoteBorderThicknessProperty = DependencyProperty.Register(
             nameof(QuoteBorderThickness),
@@ -255,7 +277,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="QuoteMargin"/>.
+        ///     Gets the dependency property for <see cref="QuoteMargin" />.
         /// </summary>
         public static readonly DependencyProperty QuoteMarginProperty = DependencyProperty.Register(
             nameof(QuoteMargin),
@@ -264,7 +286,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="QuotePadding"/>.
+        ///     Gets the dependency property for <see cref="QuotePadding" />.
         /// </summary>
         public static readonly DependencyProperty QuotePaddingProperty = DependencyProperty.Register(
             nameof(QuotePadding),
@@ -273,7 +295,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="YamlBorderThickness"/>.
+        ///     Gets the dependency property for <see cref="YamlBorderThickness" />.
         /// </summary>
         public static readonly DependencyProperty YamlBorderThicknessProperty = DependencyProperty.Register(
             nameof(YamlBorderThickness),
@@ -282,7 +304,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="TableBorderThickness"/>.
+        ///     Gets the dependency property for <see cref="TableBorderThickness" />.
         /// </summary>
         public static readonly DependencyProperty TableBorderThicknessProperty = DependencyProperty.Register(
             nameof(TableBorderThickness),
@@ -291,7 +313,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="TableCellPadding"/>.
+        ///     Gets the dependency property for <see cref="TableCellPadding" />.
         /// </summary>
         public static readonly DependencyProperty TableCellPaddingProperty = DependencyProperty.Register(
             nameof(TableCellPadding),
@@ -300,7 +322,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="TableMargin"/>.
+        ///     Gets the dependency property for <see cref="TableMargin" />.
         /// </summary>
         public static readonly DependencyProperty TableMarginProperty = DependencyProperty.Register(
             nameof(TableMargin),
@@ -309,7 +331,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="TextWrapping"/>.
+        ///     Gets the dependency property for <see cref="TextWrapping" />.
         /// </summary>
         public static readonly DependencyProperty TextWrappingProperty = DependencyProperty.Register(
             nameof(TextWrapping),
@@ -318,7 +340,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(null, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="ImageMaxHeight"/>
+        ///     Gets the dependency property for <see cref="ImageMaxHeight" />
         /// </summary>
         public static readonly DependencyProperty ImageMaxHeightProperty = DependencyProperty.Register(
             nameof(ImageMaxHeight),
@@ -327,7 +349,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(0.0, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets the dependency property for <see cref="ImageMaxWidth"/>
+        ///     Gets the dependency property for <see cref="ImageMaxWidth" />
         /// </summary>
         public static readonly DependencyProperty ImageMaxWidthProperty = DependencyProperty.Register(
             nameof(ImageMaxWidth),
@@ -336,7 +358,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
             new PropertyMetadata(0.0, OnPropertyChangedStatic));
 
         /// <summary>
-        /// Gets or sets the MaxWidth for images.
+        ///     Gets or sets the MaxWidth for images.
         /// </summary>
         public double ImageMaxWidth
         {
@@ -345,7 +367,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the MaxHeight for images.
+        ///     Gets or sets the MaxHeight for images.
         /// </summary>
         public double ImageMaxHeight
         {
@@ -354,7 +376,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the stretch used for images.
+        ///     Gets or sets the stretch used for images.
         /// </summary>
         public Stretch ImageStretch
         {
@@ -363,7 +385,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the thickness of the border around code blocks.
+        ///     Gets or sets the thickness of the border around code blocks.
         /// </summary>
         public Thickness CodeBorderThickness
         {
@@ -372,7 +394,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the thickness of the border for inline code.
+        ///     Gets or sets the thickness of the border for inline code.
         /// </summary>
         public Thickness InlineCodeBorderThickness
         {
@@ -381,7 +403,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the space between the code border and the text.
+        ///     Gets or sets the space between the code border and the text.
         /// </summary>
         public Thickness InlineCodePadding
         {
@@ -390,7 +412,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the margin for inline code.
+        ///     Gets or sets the margin for inline code.
         /// </summary>
         public Thickness InlineCodeMargin
         {
@@ -399,7 +421,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the space between the code border and the text.
+        ///     Gets or sets the space between the code border and the text.
         /// </summary>
         public Thickness CodeMargin
         {
@@ -408,7 +430,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets space between the code border and the text.
+        ///     Gets or sets space between the code border and the text.
         /// </summary>
         public Thickness CodePadding
         {
@@ -417,7 +439,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the font size for level 1 headers.
+        ///     Gets or sets the font size for level 1 headers.
         /// </summary>
         public double Header1FontSize
         {
@@ -426,7 +448,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the margin for level 1 headers.
+        ///     Gets or sets the margin for level 1 headers.
         /// </summary>
         public Thickness Header1Margin
         {
@@ -435,7 +457,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the font size for level 2 headers.
+        ///     Gets or sets the font size for level 2 headers.
         /// </summary>
         public double Header2FontSize
         {
@@ -444,7 +466,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the margin for level 2 headers.
+        ///     Gets or sets the margin for level 2 headers.
         /// </summary>
         public Thickness Header2Margin
         {
@@ -453,7 +475,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the font size for level 3 headers.
+        ///     Gets or sets the font size for level 3 headers.
         /// </summary>
         public double Header3FontSize
         {
@@ -462,7 +484,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the margin for level 3 headers.
+        ///     Gets or sets the margin for level 3 headers.
         /// </summary>
         public Thickness Header3Margin
         {
@@ -471,7 +493,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the font size for level 4 headers.
+        ///     Gets or sets the font size for level 4 headers.
         /// </summary>
         public double Header4FontSize
         {
@@ -480,7 +502,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the margin for level 4 headers.
+        ///     Gets or sets the margin for level 4 headers.
         /// </summary>
         public Thickness Header4Margin
         {
@@ -489,7 +511,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the font size for level 5 headers.
+        ///     Gets or sets the font size for level 5 headers.
         /// </summary>
         public double Header5FontSize
         {
@@ -498,7 +520,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the margin for level 5 headers.
+        ///     Gets or sets the margin for level 5 headers.
         /// </summary>
         public Thickness Header5Margin
         {
@@ -507,7 +529,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the font size for level 6 headers.
+        ///     Gets or sets the font size for level 6 headers.
         /// </summary>
         public double Header6FontSize
         {
@@ -516,7 +538,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the margin for level 6 headers.
+        ///     Gets or sets the margin for level 6 headers.
         /// </summary>
         public Thickness Header6Margin
         {
@@ -525,7 +547,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the margin used for horizontal rules.
+        ///     Gets or sets the margin used for horizontal rules.
         /// </summary>
         public Thickness HorizontalRuleMargin
         {
@@ -534,7 +556,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the vertical thickness of the horizontal rule.
+        ///     Gets or sets the vertical thickness of the horizontal rule.
         /// </summary>
         public double HorizontalRuleThickness
         {
@@ -543,7 +565,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the margin used by lists.
+        ///     Gets or sets the margin used by lists.
         /// </summary>
         public Thickness ListMargin
         {
@@ -552,7 +574,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the width of the space used by list item bullets/numbers.
+        ///     Gets or sets the width of the space used by list item bullets/numbers.
         /// </summary>
         public double ListGutterWidth
         {
@@ -561,7 +583,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the space between the list item bullets/numbers and the list item content.
+        ///     Gets or sets the space between the list item bullets/numbers and the list item content.
         /// </summary>
         public double ListBulletSpacing
         {
@@ -570,7 +592,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the margin used for paragraphs.
+        ///     Gets or sets the margin used for paragraphs.
         /// </summary>
         public Thickness ParagraphMargin
         {
@@ -579,7 +601,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the line height used for paragraphs.
+        ///     Gets or sets the line height used for paragraphs.
         /// </summary>
         public int ParagraphLineHeight
         {
@@ -588,7 +610,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the thickness of quote borders.
+        ///     Gets or sets the thickness of quote borders.
         /// </summary>
         public Thickness QuoteBorderThickness
         {
@@ -597,7 +619,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the space outside of quote borders.
+        ///     Gets or sets the space outside of quote borders.
         /// </summary>
         public Thickness QuoteMargin
         {
@@ -606,7 +628,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the space between the quote border and the text.
+        ///     Gets or sets the space between the quote border and the text.
         /// </summary>
         public Thickness QuotePadding
         {
@@ -615,7 +637,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the thickness of any yaml header borders.
+        ///     Gets or sets the thickness of any yaml header borders.
         /// </summary>
         public double YamlBorderThickness
         {
@@ -624,7 +646,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the thickness of any table borders.
+        ///     Gets or sets the thickness of any table borders.
         /// </summary>
         public double TableBorderThickness
         {
@@ -633,7 +655,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the padding inside each cell.
+        ///     Gets or sets the padding inside each cell.
         /// </summary>
         public Thickness TableCellPadding
         {
@@ -642,7 +664,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the margin used by tables.
+        ///     Gets or sets the margin used by tables.
         /// </summary>
         public Thickness TableMargin
         {
@@ -651,7 +673,7 @@ namespace Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock
         }
 
         /// <summary>
-        /// Gets or sets the word wrapping behavior.
+        ///     Gets or sets the word wrapping behavior.
         /// </summary>
         public TextWrapping TextWrapping
         {

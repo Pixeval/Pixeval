@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/MarkdownRenderer.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
@@ -12,17 +34,17 @@ using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Render;
 namespace Pixeval.CommunityToolkit.Markdown.Render
 {
     /// <summary>
-    /// Generates Framework Elements for the UWP Markdown TextBlock.
+    ///     Generates Framework Elements for the UWP Markdown TextBlock.
     /// </summary>
     public partial class MarkdownRenderer : MarkdownRendererBase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MarkdownRenderer"/> class.
+        ///     Initializes a new instance of the <see cref="MarkdownRenderer" /> class.
         /// </summary>
         /// <param name="document">The Document to Render.</param>
-        /// <param name="linkRegister">The LinkRegister, <see cref="MarkdownTextBlock"/> will use itself.</param>
-        /// <param name="imageResolver">The Image Resolver, <see cref="MarkdownTextBlock"/> will use itself.</param>
-        /// <param name="codeBlockResolver">The Code Block Resolver, <see cref="MarkdownTextBlock"/> will use itself.</param>
+        /// <param name="linkRegister">The LinkRegister, <see cref="MarkdownTextBlock" /> will use itself.</param>
+        /// <param name="imageResolver">The Image Resolver, <see cref="MarkdownTextBlock" /> will use itself.</param>
+        /// <param name="codeBlockResolver">The Code Block Resolver, <see cref="MarkdownTextBlock" /> will use itself.</param>
         public MarkdownRenderer(MarkdownDocument document, ILinkRegister linkRegister, IImageResolver imageResolver, ICodeBlockResolver codeBlockResolver)
             : base(document)
         {
@@ -33,7 +55,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Called externally to render markdown to a text block.
+        ///     Called externally to render markdown to a text block.
         /// </summary>
         /// <returns> A XAML UI element. </returns>
         public UIElement Render()
@@ -52,7 +74,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Creates a new RichTextBlock, if the last element of the provided collection isn't already a RichTextBlock.
+        ///     Creates a new RichTextBlock, if the last element of the provided collection isn't already a RichTextBlock.
         /// </summary>
         /// <returns>The rich text block</returns>
         protected RichTextBlock CreateOrReuseRichTextBlock(IRenderContext context)
@@ -89,7 +111,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Creates a new TextBlock, with default settings.
+        ///     Creates a new TextBlock, with default settings.
         /// </summary>
         /// <returns>The created TextBlock</returns>
         protected TextBlock CreateTextBlock(RenderContext context)
@@ -111,7 +133,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Performs an action against any runs that occur within the given span.
+        ///     Performs an action against any runs that occur within the given span.
         /// </summary>
         protected void AlterChildRuns(Span parentSpan, Action<Span, Run> action)
         {
@@ -130,7 +152,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Checks if all text elements inside the given container are superscript.
+        ///     Checks if all text elements inside the given container are superscript.
         /// </summary>
         /// <returns> <c>true</c> if all text is superscript (level 1); <c>false</c> otherwise. </returns>
         private static bool AllTextIsSuperscript(IInlineContainer container, int superscriptLevel = 0)
@@ -152,7 +174,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Removes all superscript elements from the given container.
+        ///     Removes all superscript elements from the given container.
         /// </summary>
         private static void RemoveSuperscriptRuns(IInlineContainer container, bool insertCaret)
         {

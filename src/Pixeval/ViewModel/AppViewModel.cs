@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/AppViewModel.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Diagnostics.Tracing;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -13,6 +35,8 @@ using Microsoft.UI.Xaml.Media.Animation;
 using PInvoke;
 using Pixeval.CommunityToolkit;
 using Pixeval.CoreApi;
+using Pixeval.CoreApi.Net;
+using Pixeval.Download;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Options;
@@ -24,20 +48,24 @@ using System.Diagnostics;
 
 namespace Pixeval.ViewModel
 {
-    public class AppViewModel : AutoActivateObservableRecipient, IRecipient<ApplicationExitingMessage>
+    public class AppViewModel : AutoActivateObservableRecipient,
+        IRecipient<ApplicationExitingMessage>,
+        IRecipient<LoginCompletedMessage>
     {
+        private bool _activatedByProtocol;
+
         public AppViewModel(App app)
         {
             App = app;
         }
 
-        private bool _activatedByProtocol;
-
         public App App { get; }
 
-        public MainWindow Window = null!;
+        public MainWindow Window { get; private set; } = null!;
 
-        public AppWindow AppWindow = null!;
+        public AppWindow AppWindow { get; private set; } = null!;
+
+        public DownloadManager IllustrationDownloadManager { get; private set; } = null!;
 
         public Frame AppWindowRootFrame => Window.PixevalAppRootFrame;
 
@@ -50,6 +78,16 @@ namespace Pixeval.ViewModel
         public ElementTheme AppRootFrameTheme => AppWindowRootFrame.RequestedTheme;
 
         public string? PixivUid => MakoClient.Session.Id;
+
+        public void Receive(ApplicationExitingMessage message)
+        {
+            AppContext.SaveContext();
+        }
+
+        public void Receive(LoginCompletedMessage message)
+        {
+            IllustrationDownloadManager = new DownloadManager(AppSetting.MaxDownloadTaskConcurrencyLevel, MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi));
+        }
 
         public IntPtr GetMainWindowHandle()
         {
@@ -146,8 +184,8 @@ namespace Pixeval.ViewModel
 
 
         /// <summary>
-        /// Exit the notification after pushing an <see cref="ApplicationExitingMessage"/>
-        /// to the <see cref="EventChannel"/>
+        ///     Exit the notification after pushing an <see cref="ApplicationExitingMessage" />
+        ///     to the <see cref="EventChannel" />
         /// </summary>
         /// <returns></returns>
         public void ExitWithPushedNotification()
@@ -159,6 +197,7 @@ namespace Pixeval.ViewModel
         public async Task InitializeAsync(bool activatedByProtocol)
         {
             _activatedByProtocol = activatedByProtocol;
+
             RegisterUnhandledExceptionHandler();
             await AppContext.WriteLogoIcoIfNotExist();
 
@@ -198,11 +237,6 @@ namespace Pixeval.ViewModel
             return ((int, int)) (size.Width, size.Height);
         }
 
-        public void Receive(ApplicationExitingMessage message)
-        {
-            AppContext.SaveContext();
-        }
-
         public void PrepareForActivation()
         {
             Window.ShowActivationProgressRing();
@@ -214,8 +248,8 @@ namespace Pixeval.ViewModel
         }
 
         /// <summary>
-        /// Gets and resets the <see cref="_activatedByProtocol"/> field, used for one-time activation process
-        /// during the app start
+        ///     Gets and resets the <see cref="_activatedByProtocol" /> field, used for one-time activation process
+        ///     during the app start
         /// </summary>
         public bool ConsumeProtocolActivation()
         {

@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/IllustrationResultFilterPopupContent.xaml.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Reflection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
@@ -10,19 +32,9 @@ namespace Pixeval.Popups.IllustrationResultFilter
     {
         private readonly IllustrationResultFilterPopupViewModel _viewModel;
 
+        private EventHandler<TappedRoutedEventArgs>? _closeButtonTapped;
+
         private EventHandler<TappedRoutedEventArgs>? _resetButtonTapped;
-
-        public event EventHandler<TappedRoutedEventArgs> ResetButtonTapped
-        {
-            add => _resetButtonTapped += value;
-            remove => _resetButtonTapped -= value;
-        }
-
-        public Guid UniqueId { get; }
-
-        public FrameworkElement UIContent => this;
-
-        public bool IsReset { get; private set; }
 
         public IllustrationResultFilterPopupContent(IllustrationResultFilterPopupViewModel viewModel)
         {
@@ -31,18 +43,11 @@ namespace Pixeval.Popups.IllustrationResultFilter
             InitializeComponent();
         }
 
-        private EventHandler<TappedRoutedEventArgs>? _closeButtonTapped;
+        public bool IsReset { get; private set; }
 
-        public event EventHandler<TappedRoutedEventArgs> CloseButtonTapped
-        {
-            add => _closeButtonTapped += value;
-            remove => _closeButtonTapped -= value;
-        }
+        public Guid UniqueId { get; }
 
-        private void CloseButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            _closeButtonTapped?.Invoke(this, e);
-        }
+        public FrameworkElement UIContent => this;
 
         public object GetCompletionResult()
         {
@@ -60,8 +65,25 @@ namespace Pixeval.Popups.IllustrationResultFilter
                 _viewModel.PublishDateEnd);
         }
 
+        public event EventHandler<TappedRoutedEventArgs> ResetButtonTapped
+        {
+            add => _resetButtonTapped += value;
+            remove => _resetButtonTapped -= value;
+        }
+
+        public event EventHandler<TappedRoutedEventArgs> CloseButtonTapped
+        {
+            add => _closeButtonTapped += value;
+            remove => _closeButtonTapped -= value;
+        }
+
+        private void CloseButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            _closeButtonTapped?.Invoke(this, e);
+        }
+
         /// <summary>
-        /// Flush the bindings
+        ///     Flush the bindings
         /// </summary>
         public void Cleanup()
         {
@@ -75,6 +97,7 @@ namespace Pixeval.Popups.IllustrationResultFilter
             {
                 propertyInfo.SetValue(_viewModel, propertyInfo.GetDefaultValue());
             }
+
             _resetButtonTapped?.Invoke(this, e);
         }
 

@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/MarkdownRendererBase.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks;
@@ -8,12 +30,12 @@ using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines;
 namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Render
 {
     /// <summary>
-    /// A base renderer for Rendering Markdown into Controls.
+    ///     A base renderer for Rendering Markdown into Controls.
     /// </summary>
     public abstract partial class MarkdownRendererBase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MarkdownRendererBase"/> class.
+        ///     Initializes a new instance of the <see cref="MarkdownRendererBase" /> class.
         /// </summary>
         /// <param name="document">Markdown Document to Render</param>
         protected MarkdownRendererBase(MarkdownDocument document)
@@ -22,7 +44,12 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Render
         }
 
         /// <summary>
-        /// Renders all Content to the Provided Parent UI.
+        ///     Gets the markdown document that will be rendered.
+        /// </summary>
+        protected MarkdownDocument Document { get; }
+
+        /// <summary>
+        ///     Renders all Content to the Provided Parent UI.
         /// </summary>
         /// <param name="context">UI Context</param>
         public virtual void Render(IRenderContext context)
@@ -31,7 +58,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Render
         }
 
         /// <summary>
-        /// Renders a list of block elements.
+        ///     Renders a list of block elements.
         /// </summary>
         protected virtual void RenderBlocks(IEnumerable<MarkdownBlock> blockElements, IRenderContext context)
         {
@@ -42,30 +69,30 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Render
         }
 
         /// <summary>
-        /// Called to render a block element.
+        ///     Called to render a block element.
         /// </summary>
         protected void RenderBlock(MarkdownBlock element, IRenderContext context)
         {
             switch (element.Type)
             {
                 case MarkdownBlockType.Paragraph:
-                    RenderParagraph((ParagraphBlock)element, context);
+                    RenderParagraph((ParagraphBlock) element, context);
                     break;
 
                 case MarkdownBlockType.Quote:
-                    RenderQuote((QuoteBlock)element, context);
+                    RenderQuote((QuoteBlock) element, context);
                     break;
 
                 case MarkdownBlockType.Code:
-                    RenderCode((CodeBlock)element, context);
+                    RenderCode((CodeBlock) element, context);
                     break;
 
                 case MarkdownBlockType.Header:
-                    RenderHeader((HeaderBlock)element, context);
+                    RenderHeader((HeaderBlock) element, context);
                     break;
 
                 case MarkdownBlockType.List:
-                    RenderListElement((ListBlock)element, context);
+                    RenderListElement((ListBlock) element, context);
                     break;
 
                 case MarkdownBlockType.HorizontalRule:
@@ -73,11 +100,11 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Render
                     break;
 
                 case MarkdownBlockType.Table:
-                    RenderTable((TableBlock)element, context);
+                    RenderTable((TableBlock) element, context);
                     break;
 
                 case MarkdownBlockType.YamlHeader:
-                    RenderYamlHeader((YamlHeaderBlock)element, context);
+                    RenderYamlHeader((YamlHeaderBlock) element, context);
                     break;
                 case MarkdownBlockType.Root:
                 case MarkdownBlockType.ListItemBuilder:
@@ -88,7 +115,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Render
         }
 
         /// <summary>
-        /// Renders all of the children for the given element.
+        ///     Renders all of the children for the given element.
         /// </summary>
         /// <param name="inlineElements"> The parsed inline elements to render. </param>
         /// <param name="context"> Persistent state. </param>
@@ -110,7 +137,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Render
         }
 
         /// <summary>
-        /// Called to render an inline element.
+        ///     Called to render an inline element.
         /// </summary>
         /// <param name="element"> The parsed inline element to render. </param>
         /// <param name="context"> Persistent state. </param>
@@ -165,7 +192,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Render
         }
 
         /// <summary>
-        /// Removes leading whitespace, but only if this is the first run in the block.
+        ///     Removes leading whitespace, but only if this is the first run in the block.
         /// </summary>
         /// <returns>The corrected string</returns>
         protected string CollapseWhitespace(IRenderContext context, string text)
@@ -201,7 +228,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Render
         }
 
         /// <summary>
-        /// Verifies if the link is valid, before processing into a link, or plain text.
+        ///     Verifies if the link is valid, before processing into a link, or plain text.
         /// </summary>
         /// <param name="element"> The parsed inline element to render. </param>
         /// <param name="context"> Persistent state. </param>
@@ -240,10 +267,5 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Render
 
             RenderMarkdownLink(element, context);
         }
-
-        /// <summary>
-        /// Gets the markdown document that will be rendered.
-        /// </summary>
-        protected MarkdownDocument Document { get; }
     }
 }

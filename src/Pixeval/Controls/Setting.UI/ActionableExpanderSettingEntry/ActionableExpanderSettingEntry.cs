@@ -1,4 +1,26 @@
-﻿using Microsoft.UI.Xaml;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/ActionableExpanderSettingEntry.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Controls.Setting.UI.UserControls;
 
@@ -10,28 +32,6 @@ namespace Pixeval.Controls.Setting.UI.ActionableExpanderSettingEntry
     {
         private const string PartEntryHeader = "EntryHeader";
         private const string PartEntryContentPresenter = "EntryContentPresenter";
-
-        private SettingEntryHeader? _entryHeader;
-        private ContentPresenter? _entryContentPresenter;
-
-        public ActionableExpanderSettingEntry()
-        {
-            DefaultStyleKey = typeof(ActionableExpanderSettingEntry);
-            Loaded += (_, _) => Update();
-        }
-
-        private void Update()
-        {
-            DescriptionChanged(this, Description);
-            IconChanged(this, Icon);
-        }
-
-        protected override void OnApplyTemplate()
-        {
-            _entryHeader = GetTemplateChild(PartEntryHeader) as SettingEntryHeader;
-            _entryContentPresenter = GetTemplateChild(PartEntryContentPresenter) as ContentPresenter;
-            base.OnApplyTemplate();
-        }
 
         public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
             nameof(Icon),
@@ -64,6 +64,16 @@ namespace Pixeval.Controls.Setting.UI.ActionableExpanderSettingEntry
             typeof(ActionableExpanderSettingEntry),
             PropertyMetadata.Create(DependencyProperty.UnsetValue));
 
+        private ContentPresenter? _entryContentPresenter;
+
+        private SettingEntryHeader? _entryHeader;
+
+        public ActionableExpanderSettingEntry()
+        {
+            DefaultStyleKey = typeof(ActionableExpanderSettingEntry);
+            Loaded += (_, _) => Update();
+        }
+
         public IconElement Icon
         {
             get => (IconElement) GetValue(IconProperty);
@@ -94,9 +104,22 @@ namespace Pixeval.Controls.Setting.UI.ActionableExpanderSettingEntry
             set => SetValue(ActionContentProperty, value);
         }
 
+        private void Update()
+        {
+            DescriptionChanged(this, Description);
+            IconChanged(this, Icon);
+        }
+
+        protected override void OnApplyTemplate()
+        {
+            _entryHeader = GetTemplateChild(PartEntryHeader) as SettingEntryHeader;
+            _entryContentPresenter = GetTemplateChild(PartEntryContentPresenter) as ContentPresenter;
+            base.OnApplyTemplate();
+        }
+
         private static void IconChanged(DependencyObject dependencyObject, object? argsNewValue)
         {
-            if (dependencyObject is ActionableExpanderSettingEntry {_entryHeader: { } header, _entryContentPresenter: { } presenter})
+            if (dependencyObject is ActionableExpanderSettingEntry { _entryHeader: { } header, _entryContentPresenter: { } presenter })
             {
                 header.Margin = argsNewValue is IconElement
                     ? new Thickness(0)
@@ -109,7 +132,7 @@ namespace Pixeval.Controls.Setting.UI.ActionableExpanderSettingEntry
 
         private static void DescriptionChanged(DependencyObject dependencyObject, object? argsNewValue)
         {
-            if (dependencyObject is ActionableExpanderSettingEntry {_entryHeader: { } header})
+            if (dependencyObject is ActionableExpanderSettingEntry { _entryHeader: { } header })
             {
                 if (argsNewValue is UIElement element)
                 {

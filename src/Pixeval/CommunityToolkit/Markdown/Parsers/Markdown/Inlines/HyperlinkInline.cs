@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/HyperlinkInline.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Enums;
@@ -7,13 +29,13 @@ using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Helpers;
 namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
 {
     /// <summary>
-    /// Represents a type of hyperlink where the text and the target URL cannot be controlled
-    /// independently.
+    ///     Represents a type of hyperlink where the text and the target URL cannot be controlled
+    ///     independently.
     /// </summary>
     public class HyperlinkInline : MarkdownInline, IInlineLeaf, ILinkElement
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="HyperlinkInline"/> class.
+        ///     Initializes a new instance of the <see cref="HyperlinkInline" /> class.
         /// </summary>
         public HyperlinkInline()
             : base(MarkdownInlineType.RawHyperlink)
@@ -21,27 +43,27 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
         }
 
         /// <summary>
-        /// Gets or sets the text to display.
-        /// </summary>
-        public string? Text { get; set; }
-
-        /// <summary>
-        /// Gets or sets the URL to link to.
-        /// </summary>
-        public string? Url { get; set; }
-
-        /// <summary>
-        /// Gets this type of hyperlink does not have a tooltip.
-        /// </summary>
-        string? ILinkElement.Tooltip => null;
-
-        /// <summary>
-        /// Gets or sets the type of hyperlink.
+        ///     Gets or sets the type of hyperlink.
         /// </summary>
         public HyperlinkType LinkType { get; set; }
 
         /// <summary>
-        /// Returns the chars that if found means we might have a match.
+        ///     Gets or sets the text to display.
+        /// </summary>
+        public string? Text { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the URL to link to.
+        /// </summary>
+        public string? Url { get; set; }
+
+        /// <summary>
+        ///     Gets this type of hyperlink does not have a tooltip.
+        /// </summary>
+        string? ILinkElement.Tooltip => null;
+
+        /// <summary>
+        ///     Returns the chars that if found means we might have a match.
         /// </summary>
         internal static void AddTripChars(List<InlineTripCharHelper> tripCharHelpers)
         {
@@ -53,7 +75,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
         }
 
         /// <summary>
-        /// Attempts to parse a URL within angle brackets e.g. "http://www.reddit.com".
+        ///     Attempts to parse a URL within angle brackets e.g. "http://www.reddit.com".
         /// </summary>
         /// <param name="markdown"> The markdown text. </param>
         /// <param name="start"> The location to start parsing. </param>
@@ -95,7 +117,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
         }
 
         /// <summary>
-        /// Attempts to parse a URL e.g. "http://www.reddit.com".
+        ///     Attempts to parse a URL e.g. "http://www.reddit.com".
         /// </summary>
         /// <param name="markdown"> The markdown text. </param>
         /// <param name="tripPos"> The location of the colon character. </param>
@@ -145,7 +167,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
         }
 
         /// <summary>
-        /// Attempts to parse a subreddit link e.g. "/r/news" or "r/news".
+        ///     Attempts to parse a subreddit link e.g. "/r/news" or "r/news".
         /// </summary>
         /// <param name="markdown"> The markdown text. </param>
         /// <param name="start"> The location to start parsing. </param>
@@ -158,7 +180,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
         }
 
         /// <summary>
-        /// Parse a link of the form "/r/news" or "/u/quinbd".
+        ///     Parse a link of the form "/r/news" or "/u/quinbd".
         /// </summary>
         /// <param name="markdown"> The markdown text. </param>
         /// <param name="start"> The location to start parsing. </param>
@@ -207,7 +229,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
         }
 
         /// <summary>
-        /// Parse a link of the form "r/news" or "u/quinbd".
+        ///     Parse a link of the form "r/news" or "u/quinbd".
         /// </summary>
         /// <param name="markdown"> The markdown text. </param>
         /// <param name="start"> The location to start parsing. </param>
@@ -258,7 +280,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
         }
 
         /// <summary>
-        /// Attempts to parse a URL without a scheme e.g. "www.reddit.com".
+        ///     Attempts to parse a URL without a scheme e.g. "www.reddit.com".
         /// </summary>
         /// <param name="markdown"> The markdown text. </param>
         /// <param name="tripPos"> The location of the dot character. </param>
@@ -292,7 +314,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
         }
 
         /// <summary>
-        /// Attempts to parse an email address e.g. "test@reddit.com".
+        ///     Attempts to parse an email address e.g. "test@reddit.com".
         /// </summary>
         /// <param name="markdown"> The markdown text. </param>
         /// <param name="minStart"> The minimum start position to return. </param>
@@ -378,7 +400,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
         }
 
         /// <summary>
-        /// Converts the object into it's textual representation.
+        ///     Converts the object into it's textual representation.
         /// </summary>
         /// <returns> The textual representation of this object. </returns>
         public override string? ToString()
@@ -387,7 +409,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
         }
 
         /// <summary>
-        /// Finds the next character that is not a letter, digit or underscore in a range.
+        ///     Finds the next character that is not a letter, digit or underscore in a range.
         /// </summary>
         /// <param name="markdown"> The markdown text. </param>
         /// <param name="start"> The location to start searching. </param>
@@ -411,7 +433,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
         }
 
         /// <summary>
-        /// Finds the end of a URL.
+        ///     Finds the end of a URL.
         /// </summary>
         /// <param name="markdown"> The markdown text. </param>
         /// <param name="start"> The location to start searching. </param>

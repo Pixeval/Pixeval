@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/FileCache.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,29 +35,38 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Microsoft.Toolkit.Diagnostics;
 using Pixeval.Util.IO;
-using Functions = Pixeval.Utilities.Functions;
+using Pixeval.Utilities;
 
 namespace Pixeval.Misc
 {
-
     public class FileCache
     {
-        private readonly Type[] _supportedKeyTypes;
-
         private const string IndexFileName = "index.json";
         private const string CacheFolderName = "cache";
         private const string ExpireIndexFileName = "eindex.json";
+        private readonly SemaphoreSlim _expireIndexLocker;
+
+        private readonly SemaphoreSlim _indexLocker;
+        private readonly Type[] _supportedKeyTypes;
+
+        private StorageFolder _baseDirectory = null!;
 
         // The expiration time
         private Dictionary<Guid, DateTimeOffset> _expireIndex;
-        private Dictionary<Guid, string> _index;
-
-        private StorageFolder _baseDirectory = null!;
-        private StorageFile? _indexFile;
         private StorageFile? _expireIndexFile;
+        private Dictionary<Guid, string> _index;
+        private StorageFile? _indexFile;
 
-        private readonly SemaphoreSlim _indexLocker;
-        private readonly SemaphoreSlim _expireIndexLocker;
+        private FileCache()
+        {
+            _supportedKeyTypes = new[] { typeof(int), typeof(uint), typeof(ulong), typeof(long) };
+
+            _index = new Dictionary<Guid, string>();
+            _expireIndex = new Dictionary<Guid, DateTimeOffset>();
+
+            _indexLocker = new SemaphoreSlim(1, 1);
+            _expireIndexLocker = new SemaphoreSlim(1, 1);
+        }
 
         public int HitCount { get; private set; }
 
@@ -45,7 +76,7 @@ namespace Pixeval.Misc
         {
             var fileCache = new FileCache
             {
-                AutoExpire = true, 
+                AutoExpire = true,
                 // use TempState instead of LocalCache, we don't need to rely on the cached data
                 _baseDirectory = await ApplicationData.Current.TemporaryFolder.GetOrCreateFolderAsync(CacheFolderName)
             };
@@ -54,19 +85,8 @@ namespace Pixeval.Misc
             return fileCache;
         }
 
-        private FileCache()
-        {
-            _supportedKeyTypes = new[] {typeof(int), typeof(uint), typeof(ulong), typeof(long)};
-
-            _index = new Dictionary<Guid, string>();
-            _expireIndex = new Dictionary<Guid, DateTimeOffset>();
-
-            _indexLocker = new SemaphoreSlim(1, 1);
-            _expireIndexLocker = new SemaphoreSlim(1, 1);
-        }
-
         /// <summary>
-        /// Adds an entry to the cache
+        ///     Adds an entry to the cache
         /// </summary>
         /// <param name="key">Unique identifier for the entry</param>
         /// <param name="data">Data object to store</param>
@@ -105,7 +125,7 @@ namespace Pixeval.Misc
         }
 
         /// <summary>
-        /// Adds an entry to the cache
+        ///     Adds an entry to the cache
         /// </summary>
         /// <param name="key">Unique identifier for the entry</param>
         /// <param name="data">Data object to store</param>
@@ -116,7 +136,7 @@ namespace Pixeval.Misc
             Guard.IsNotNull(key, nameof(key));
             Guard.IsNotNullOrEmpty(key as string, nameof(key));
             Guard.IsNotNull(data, nameof(data));
-            
+
             await AddAsync(key switch
             {
                 Guid g => g,
@@ -138,7 +158,7 @@ namespace Pixeval.Misc
         }
 
         /// <summary>
-        /// Adds an entry to the cache
+        ///     Adds an entry to the cache
         /// </summary>
         /// <param name="key">Unique identifier for the entry</param>
         /// <param name="data">Data object to store</param>
@@ -153,8 +173,8 @@ namespace Pixeval.Misc
         }
 
         /// <summary>
-        /// Empties all specified entries regardless of whether they're expired or not.
-        /// Throws an exception if any deletion fails and rollback changes.
+        ///     Empties all specified entries regardless of whether they're expired or not.
+        ///     Throws an exception if any deletion fails and rollback changes.
         /// </summary>
         /// <param name="keys">keys to empty</param>
         public Task EmptyAsync(params object[] keys)
@@ -172,8 +192,8 @@ namespace Pixeval.Misc
         }
 
         /// <summary>
-        /// Empties all specified entries regardless if they are expired.
-        /// Throws an exception if any deletions fail and rolls back changes.
+        ///     Empties all specified entries regardless if they are expired.
+        ///     Throws an exception if any deletions fail and rolls back changes.
         /// </summary>
         /// <param name="keys">keys to empty</param>
         public async Task EmptyAsync(params string[] keys)
@@ -182,8 +202,8 @@ namespace Pixeval.Misc
         }
 
         /// <summary>
-        /// Empties all specified entries regardless if they are expired.
-        /// Throws an exception if any deletions fail and rolls back changes.
+        ///     Empties all specified entries regardless if they are expired.
+        ///     Throws an exception if any deletions fail and rolls back changes.
         /// </summary>
         /// <param name="keys">keys to empty</param>
         public async Task EmptyAsync(IEnumerable<Guid> keys)
@@ -197,6 +217,7 @@ namespace Pixeval.Misc
                     (await _baseDirectory.TryGetItemAsync(HashToGuid(k).ToString("N")))?.DeleteAsync(StorageDeleteOption.PermanentDelete);
                     _index.Remove(k);
                 }
+
                 await WriteIndexAsync();
             }
             finally
@@ -206,8 +227,8 @@ namespace Pixeval.Misc
         }
 
         /// <summary>
-        /// Empties all expired entries that are in the cache.
-        /// Throws an exception if any deletions fail and rolls back changes.
+        ///     Empties all expired entries that are in the cache.
+        ///     Throws an exception if any deletions fail and rolls back changes.
         /// </summary>
         public async Task EmptyAllAsync()
         {
@@ -228,8 +249,8 @@ namespace Pixeval.Misc
         }
 
         /// <summary>
-        /// Empties all expired entries that are in the cache.
-        /// Throws an exception if any deletions fail and rolls back changes.
+        ///     Empties all expired entries that are in the cache.
+        ///     Throws an exception if any deletions fail and rolls back changes.
         /// </summary>
         public async Task EmptyExpiredAsync()
         {
@@ -238,7 +259,7 @@ namespace Pixeval.Misc
             try
             {
                 var expired = _expireIndex.Where(k => k.Value < DateTimeOffset.Now);
-                
+
                 foreach (var (key, _) in expired)
                 {
                     await (await _baseDirectory.TryGetItemAsync(key.ToString("N")))?.DeleteAsync();
@@ -255,7 +276,7 @@ namespace Pixeval.Misc
         }
 
         /// <summary>
-        /// Checks to see if the key exists in the cache.
+        ///     Checks to see if the key exists in the cache.
         /// </summary>
         /// <param name="key">Unique identifier for the entry to check</param>
         /// <returns>If the key exists</returns>
@@ -273,7 +294,7 @@ namespace Pixeval.Misc
         }
 
         /// <summary>
-        /// Checks to see if the key exists in the cache.
+        ///     Checks to see if the key exists in the cache.
         /// </summary>
         /// <param name="key">Unique identifier for the entry to check</param>
         /// <returns>If the key exists</returns>
@@ -284,7 +305,7 @@ namespace Pixeval.Misc
         }
 
         /// <summary>
-        /// Checks to see if the key exists in the cache.
+        ///     Checks to see if the key exists in the cache.
         /// </summary>
         /// <param name="key">Unique identifier for the entry to check</param>
         /// <returns>If the key exists</returns>
@@ -303,7 +324,7 @@ namespace Pixeval.Misc
         }
 
         /// <summary>
-        /// Gets all the keys that are saved in the cache
+        ///     Gets all the keys that are saved in the cache
         /// </summary>
         /// <returns>The IEnumerable of keys</returns>
         public async Task<IEnumerable<Guid>> GetKeysAsync(CacheState state = CacheState.Active)
@@ -359,7 +380,7 @@ namespace Pixeval.Misc
         }
 
         /// <summary>
-        /// Gets the data entry for the specified key.
+        ///     Gets the data entry for the specified key.
         /// </summary>
         /// <param name="key">Unique identifier for the entry to get</param>
         /// <returns>The data object that was stored if found, else default(T)</returns>
@@ -408,7 +429,7 @@ namespace Pixeval.Misc
         }
 
         /// <summary>
-        /// Gets the DateTime that the item will expire for the specified key.
+        ///     Gets the DateTime that the item will expire for the specified key.
         /// </summary>
         /// <param name="key">Unique identifier for entry to get</param>
         /// <returns>The expiration date if the key is found, else null</returns>
@@ -419,7 +440,7 @@ namespace Pixeval.Misc
         }
 
         /// <summary>
-        /// Gets the DateTime that the item will expire for the specified key.
+        ///     Gets the DateTime that the item will expire for the specified key.
         /// </summary>
         /// <param name="key">Unique identifier for entry to get</param>
         /// <returns>The expiration date if the key is found, else null</returns>
@@ -438,7 +459,7 @@ namespace Pixeval.Misc
         }
 
         /// <summary>
-        /// Gets the ETag for the specified key.
+        ///     Gets the ETag for the specified key.
         /// </summary>
         /// <param name="key">Unique identifier for entry to get</param>
         /// <returns>The ETag if the key is found, else null</returns>
@@ -456,7 +477,7 @@ namespace Pixeval.Misc
         }
 
         /// <summary>
-        /// Gets the ETag for the specified key.
+        ///     Gets the ETag for the specified key.
         /// </summary>
         /// <param name="key">Unique identifier for entry to get</param>
         /// <returns>The ETag if the key is found, else null</returns>
@@ -467,7 +488,7 @@ namespace Pixeval.Misc
         }
 
         /// <summary>
-        /// Gets the ETag for the specified key.
+        ///     Gets the ETag for the specified key.
         /// </summary>
         /// <param name="key">Unique identifier for entry to get</param>
         /// <returns>The ETag if the key is found, else null</returns>
@@ -486,7 +507,7 @@ namespace Pixeval.Misc
         }
 
         /// <summary>
-        /// Checks to see if the entry for the key is expired.
+        ///     Checks to see if the entry for the key is expired.
         /// </summary>
         /// <param name="key">Key to check</param>
         /// <returns>If the expiration data has been met</returns>
@@ -504,7 +525,7 @@ namespace Pixeval.Misc
         }
 
         /// <summary>
-        /// Checks to see if the entry for the key is expired.
+        ///     Checks to see if the entry for the key is expired.
         /// </summary>
         /// <param name="key">Key to check</param>
         /// <returns>If the expiration data has been met</returns>
@@ -514,7 +535,7 @@ namespace Pixeval.Misc
         }
 
         /// <summary>
-        /// Checks to see if the entry for the key is expired.
+        ///     Checks to see if the entry for the key is expired.
         /// </summary>
         /// <param name="key">Key to check</param>
         /// <returns>If the expiration data has been met</returns>
@@ -534,7 +555,6 @@ namespace Pixeval.Misc
 
         private async Task WriteIndexAsync()
         {
-            
             _indexFile ??= await _baseDirectory.CreateFileAsync(IndexFileName, CreationCollisionOption.ReplaceExisting);
             await _indexFile.WriteBytesAsync(JsonSerializer.SerializeToUtf8Bytes(_index));
         }
@@ -590,7 +610,7 @@ namespace Pixeval.Misc
         }
 
         /// <summary>
-        /// Gets the expiration from a timespan
+        ///     Gets the expiration from a timespan
         /// </summary>
         /// <param name="timeSpan"></param>
         /// <returns></returns>
@@ -608,23 +628,23 @@ namespace Pixeval.Misc
     }
 
     /// <summary>
-    /// Current state of the item in the cache.
+    ///     Current state of the item in the cache.
     /// </summary>
     [Flags]
     public enum CacheState
     {
         /// <summary>
-        /// An unknown state for the cache item
+        ///     An unknown state for the cache item
         /// </summary>
         None = 0,
 
         /// <summary>
-        /// Expired cache item
+        ///     Expired cache item
         /// </summary>
         Expired = 1,
 
         /// <summary>
-        /// Active non-expired cache item
+        ///     Active non-expired cache item
         /// </summary>
         Active = 2
     }

@@ -1,4 +1,26 @@
-﻿// ReSharper disable StringLiteralTypo
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/TextRunInline.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+// ReSharper disable StringLiteralTypo
 
 using System;
 using System.Collections.Generic;
@@ -8,23 +30,10 @@ using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Enums;
 namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
 {
     /// <summary>
-    /// Represents a span containing plain text.
+    ///     Represents a span containing plain text.
     /// </summary>
     public class TextRunInline : MarkdownInline, IInlineLeaf
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TextRunInline"/> class.
-        /// </summary>
-        public TextRunInline()
-            : base(MarkdownInlineType.TextRun)
-        {
-        }
-
-        /// <summary>
-        /// Gets or sets the text for this run.
-        /// </summary>
-        public string? Text { get; set; }
-
         // A list of supported HTML entity names, along with their corresponding code points.
         private static readonly Dictionary<string, int> _entities = new()
         {
@@ -281,14 +290,27 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
             { "spades", 0x2660 }, // ♠
             { "clubs", 0x2663 }, // ♣
             { "hearts", 0x2665 }, // ♥
-            { "diams", 0x2666 }, // ♦
+            { "diams", 0x2666 } // ♦
         };
 
         // A list of characters that can be escaped.
-        private static readonly char[] _escapeCharacters = new char[] { '\\', '`', '*', '_', '{', '}', '[', ']', '(', ')', '#', '+', '-', '.', '!', '|', '~', '^', '&', ':', '<', '>', '/' };
+        private static readonly char[] _escapeCharacters = { '\\', '`', '*', '_', '{', '}', '[', ']', '(', ')', '#', '+', '-', '.', '!', '|', '~', '^', '&', ':', '<', '>', '/' };
 
         /// <summary>
-        /// Parses unformatted text.
+        ///     Initializes a new instance of the <see cref="TextRunInline" /> class.
+        /// </summary>
+        public TextRunInline()
+            : base(MarkdownInlineType.TextRun)
+        {
+        }
+
+        /// <summary>
+        ///     Gets or sets the text for this run.
+        /// </summary>
+        public string? Text { get; set; }
+
+        /// <summary>
+        ///     Parses unformatted text.
         /// </summary>
         /// <param name="markdown"> The markdown text. </param>
         /// <param name="start"> The location to start parsing. </param>
@@ -377,7 +399,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
         }
 
         /// <summary>
-        /// Parses unformatted text.
+        ///     Parses unformatted text.
         /// </summary>
         /// <param name="markdown"> The markdown text. </param>
         /// <param name="start"> The location to start parsing. </param>
@@ -434,7 +456,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
         }
 
         /// <summary>
-        /// Converts the object into it's textual representation.
+        ///     Converts the object into it's textual representation.
         /// </summary>
         /// <returns> The textual representation of this object. </returns>
         public override string? ToString()

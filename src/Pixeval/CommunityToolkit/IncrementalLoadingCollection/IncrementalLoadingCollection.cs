@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/IncrementalLoadingCollection.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -11,59 +33,121 @@ using Microsoft.UI.Xaml.Data;
 namespace Pixeval.CommunityToolkit.IncrementalLoadingCollection
 {
     /// <summary>
-    /// This class represents an <see cref="ObservableCollection{T}"/> whose items can be loaded incrementally.
+    ///     This class represents an <see cref="ObservableCollection{T}" /> whose items can be loaded incrementally.
     /// </summary>
     /// <typeparam name="TSource">
-    /// The data source that must be loaded incrementally.
+    ///     The data source that must be loaded incrementally.
     /// </typeparam>
     /// <typeparam name="IType">
-    /// The type of collection items.
+    ///     The type of collection items.
     /// </typeparam>
-    /// <seealso cref="IIncrementalSource{TSource}"/>
-    /// <seealso cref="ISupportIncrementalLoading"/>
+    /// <seealso cref="IIncrementalSource{TSource}" />
+    /// <seealso cref="ISupportIncrementalLoading" />
     public class IncrementalLoadingCollection<TSource, IType> : ObservableCollection<IType>,
         ISupportIncrementalLoading
         where TSource : IIncrementalSource<IType>
     {
         private readonly SemaphoreSlim _mutex = new(1);
+        private CancellationToken _cancellationToken;
+        private bool _hasMoreItems;
+
+        private bool _isLoading;
+        private bool _refreshOnLoad;
 
         /// <summary>
-        /// Gets or sets an <see cref="Action"/> that is called when a retrieval operation begins.
+        ///     Initializes a new instance of the <see cref="IncrementalLoadingCollection{TSource, IType}" /> class optionally
+        ///     specifying how many items to load for each data page.
+        /// </summary>
+        /// <param name="itemsPerPage">
+        ///     The number of items to retrieve for each call. Default is 20.
+        /// </param>
+        /// <param name="onStartLoading">
+        ///     An <see cref="Action" /> that is called when a retrieval operation begins.
+        /// </param>
+        /// <param name="onEndLoading">
+        ///     An <see cref="Action" /> that is called when a retrieval operation ends.
+        /// </param>
+        /// <param name="onError">
+        ///     An <see cref="Action" /> that is called if an error occurs during data retrieval.
+        /// </param>
+        /// <seealso cref="IIncrementalSource{TSource}" />
+        public IncrementalLoadingCollection(int itemsPerPage = 20, Action? onStartLoading = null, Action? onEndLoading = null, Action<Exception>? onError = null)
+            : this(Activator.CreateInstance<TSource>(), itemsPerPage, onStartLoading, onEndLoading, onError)
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="IncrementalLoadingCollection{TSource, IType}" /> class using the
+        ///     specified <see cref="IIncrementalSource{TSource}" /> implementation and, optionally, how many items to load for
+        ///     each data page.
+        /// </summary>
+        /// <param name="source">
+        ///     An implementation of the <see cref="IIncrementalSource{TSource}" /> interface that contains the logic to actually
+        ///     load data incrementally.
+        /// </param>
+        /// <param name="itemsPerPage">
+        ///     The number of items to retrieve for each call. Default is 20.
+        /// </param>
+        /// <param name="onStartLoading">
+        ///     An <see cref="Action" /> that is called when a retrieval operation begins.
+        /// </param>
+        /// <param name="onEndLoading">
+        ///     An <see cref="Action" /> that is called when a retrieval operation ends.
+        /// </param>
+        /// <param name="onError">
+        ///     An <see cref="Action" /> that is called if an error occurs during data retrieval.
+        /// </param>
+        /// <seealso cref="IIncrementalSource{TSource}" />
+        public IncrementalLoadingCollection(TSource source, int itemsPerPage = 20, Action? onStartLoading = null, Action? onEndLoading = null, Action<Exception>? onError = null)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            Source = source;
+
+            OnStartLoading = onStartLoading;
+            OnEndLoading = onEndLoading;
+            OnError = onError;
+
+            ItemsPerPage = itemsPerPage;
+            _hasMoreItems = true;
+        }
+
+        /// <summary>
+        ///     Gets or sets an <see cref="Action" /> that is called when a retrieval operation begins.
         /// </summary>
         public Action? OnStartLoading { get; set; }
 
         /// <summary>
-        /// Gets or sets an <see cref="Action"/> that is called when a retrieval operation ends.
+        ///     Gets or sets an <see cref="Action" /> that is called when a retrieval operation ends.
         /// </summary>
         public Action? OnEndLoading { get; set; }
 
         /// <summary>
-        /// Gets or sets an <see cref="Action"/> that is called if an error occurs during data retrieval. The actual <see cref="Exception"/> is passed as an argument.
+        ///     Gets or sets an <see cref="Action" /> that is called if an error occurs during data retrieval. The actual
+        ///     <see cref="Exception" /> is passed as an argument.
         /// </summary>
         public Action<Exception>? OnError { get; set; }
 
         /// <summary>
-        /// Gets a value indicating the source of incremental loading.
+        ///     Gets a value indicating the source of incremental loading.
         /// </summary>
         protected TSource Source { get; }
 
         /// <summary>
-        /// Gets a value indicating how many items that must be retrieved for each incremental call.
+        ///     Gets a value indicating how many items that must be retrieved for each incremental call.
         /// </summary>
         protected int ItemsPerPage { get; }
 
         /// <summary>
-        /// Gets or sets a value indicating The zero-based index of the current items page.
+        ///     Gets or sets a value indicating The zero-based index of the current items page.
         /// </summary>
         protected int CurrentPageIndex { get; set; }
 
-        private bool _isLoading;
-        private bool _hasMoreItems;
-        private CancellationToken _cancellationToken;
-        private bool _refreshOnLoad;
-
         /// <summary>
-        /// Gets a value indicating whether new items are being loaded.
+        ///     Gets a value indicating whether new items are being loaded.
         /// </summary>
         public bool IsLoading
         {
@@ -89,7 +173,7 @@ namespace Pixeval.CommunityToolkit.IncrementalLoadingCollection
         }
 
         /// <summary>
-        /// Gets a value indicating whether the collection contains more items to retrieve.
+        ///     Gets a value indicating whether the collection contains more items to retrieve.
         /// </summary>
         public bool HasMoreItems
         {
@@ -106,76 +190,22 @@ namespace Pixeval.CommunityToolkit.IncrementalLoadingCollection
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="IncrementalLoadingCollection{TSource, IType}"/> class optionally specifying how many items to load for each data page.
-        /// </summary>
-        /// <param name="itemsPerPage">
-        /// The number of items to retrieve for each call. Default is 20.
-        /// </param>
-        /// <param name="onStartLoading">
-        /// An <see cref="Action"/> that is called when a retrieval operation begins.
-        /// </param>
-        /// <param name="onEndLoading">
-        /// An <see cref="Action"/> that is called when a retrieval operation ends.
-        /// </param>
-        /// <param name="onError">
-        /// An <see cref="Action"/> that is called if an error occurs during data retrieval.
-        /// </param>
-        /// <seealso cref="IIncrementalSource{TSource}"/>
-        public IncrementalLoadingCollection(int itemsPerPage = 20, Action? onStartLoading = null, Action? onEndLoading = null, Action<Exception>? onError = null)
-            : this(Activator.CreateInstance<TSource>(), itemsPerPage, onStartLoading, onEndLoading, onError)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="IncrementalLoadingCollection{TSource, IType}"/> class using the specified <see cref="IIncrementalSource{TSource}"/> implementation and, optionally, how many items to load for each data page.
-        /// </summary>
-        /// <param name="source">
-        /// An implementation of the <see cref="IIncrementalSource{TSource}"/> interface that contains the logic to actually load data incrementally.
-        /// </param>
-        /// <param name="itemsPerPage">
-        /// The number of items to retrieve for each call. Default is 20.
-        /// </param>
-        /// <param name="onStartLoading">
-        /// An <see cref="Action"/> that is called when a retrieval operation begins.
-        /// </param>
-        /// <param name="onEndLoading">
-        /// An <see cref="Action"/> that is called when a retrieval operation ends.
-        /// </param>
-        /// <param name="onError">
-        /// An <see cref="Action"/> that is called if an error occurs during data retrieval.
-        /// </param>
-        /// <seealso cref="IIncrementalSource{TSource}"/>
-        public IncrementalLoadingCollection(TSource source, int itemsPerPage = 20, Action? onStartLoading = null, Action? onEndLoading = null, Action<Exception>? onError = null)
-        {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            Source = source;
-
-            OnStartLoading = onStartLoading;
-            OnEndLoading = onEndLoading;
-            OnError = onError;
-
-            ItemsPerPage = itemsPerPage;
-            _hasMoreItems = true;
-        }
-
-        /// <summary>
-        /// Initializes incremental loading from the view.
+        ///     Initializes incremental loading from the view.
         /// </summary>
         /// <param name="count">
-        /// The number of items to load.
+        ///     The number of items to load.
         /// </param>
         /// <returns>
-        /// An object of the <see cref="LoadMoreItemsAsync(uint)"/> that specifies how many items have been actually retrieved.
+        ///     An object of the <see cref="LoadMoreItemsAsync(uint)" /> that specifies how many items have been actually
+        ///     retrieved.
         /// </returns>
         public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)
-            => LoadMoreItemsAsync(new CancellationToken(false)).AsAsyncOperation();
+        {
+            return LoadMoreItemsAsync(new CancellationToken(false)).AsAsyncOperation();
+        }
 
         /// <summary>
-        /// Clears the collection and triggers/forces a reload of the first page
+        ///     Clears the collection and triggers/forces a reload of the first page
         /// </summary>
         /// <returns>This method does not return a result</returns>
         public Task RefreshAsync()
@@ -202,13 +232,13 @@ namespace Pixeval.CommunityToolkit.IncrementalLoadingCollection
         }
 
         /// <summary>
-        /// Actually performs the incremental loading.
+        ///     Actually performs the incremental loading.
         /// </summary>
         /// <param name="cancellationToken">
-        /// Used to propagate notification that operation should be canceled.
+        ///     Used to propagate notification that operation should be canceled.
         /// </param>
         /// <returns>
-        /// Returns a collection of <typeparamref name="IType"/>.
+        ///     Returns a collection of <typeparamref name="IType" />.
         /// </returns>
         protected virtual async Task<IEnumerable<IType>> LoadDataAsync(CancellationToken cancellationToken)
         {

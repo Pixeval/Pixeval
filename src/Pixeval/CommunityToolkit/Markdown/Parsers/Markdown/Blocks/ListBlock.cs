@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/ListBlock.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,16 +28,17 @@ using System.Text.RegularExpressions;
 using Pixeval.CommunityToolkit.Markdown.Parsers.Core;
 using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks.List;
 using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Enums;
+using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Helpers;
 
 namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
 {
     /// <summary>
-    /// Represents a list, with each list item proceeded by either a number or a bullet.
+    ///     Represents a list, with each list item proceeded by either a number or a bullet.
     /// </summary>
     public class ListBlock : MarkdownBlock
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ListBlock"/> class.
+        ///     Initializes a new instance of the <see cref="ListBlock" /> class.
         /// </summary>
         public ListBlock()
             : base(MarkdownBlockType.List)
@@ -23,17 +46,17 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
         }
 
         /// <summary>
-        /// Gets or sets the list items.
+        ///     Gets or sets the list items.
         /// </summary>
         public IList<ListItemBlock?>? Items { get; set; }
 
         /// <summary>
-        /// Gets or sets the style of the list, either numbered or bulleted.
+        ///     Gets or sets the style of the list, either numbered or bulleted.
         /// </summary>
         public ListStyle? Style { get; set; }
 
         /// <summary>
-        /// Parses a list block.
+        ///     Parses a list block.
         /// </summary>
         /// <param name="markdown"> The markdown text. </param>
         /// <param name="start"> The location of the first character in the block. </param>
@@ -50,7 +73,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
             ListItemBlock? currentListItem = null;
             actualEnd = start;
 
-            foreach (var lineInfo in Helpers.Common.ParseLines(markdown, start, maxEnd, quoteDepth))
+            foreach (var lineInfo in Common.ParseLines(markdown, start, maxEnd, quoteDepth))
             {
                 // Is this line blank?
                 if (lineInfo.IsLineBlank)
@@ -94,7 +117,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
                         }
                         else
                         {
-                            russianDollIndex = Math.Max(1, 1 + ((spaceCount - 1) / 4));
+                            russianDollIndex = Math.Max(1, 1 + (spaceCount - 1) / 4);
                             if (russianDollIndex < russianDolls.Count)
                             {
                                 // Add the new list item to an existing list.
@@ -143,7 +166,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
                         }
 
                         russianDollIndex = Math.Min(russianDollIndex, (spaceCount - 1) / 4);
-                        var lineStart = Math.Min(lineInfo.FirstNonWhitespaceChar, lineInfo.StartOfLine + ((russianDollIndex + 1) * 4));
+                        var lineStart = Math.Min(lineInfo.FirstNonWhitespaceChar, lineInfo.StartOfLine + (russianDollIndex + 1) * 4);
 
                         // 0 spaces = end of the list.
                         // 1-4 spaces = first level.
@@ -208,7 +231,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
         }
 
         /// <summary>
-        /// Parsing helper method.
+        ///     Parsing helper method.
         /// </summary>
         /// <returns>Returns a ListItemPreamble</returns>
         private static ListItemPreamble? ParseItemPreamble(string markdown, int start, int maxEnd)
@@ -256,7 +279,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
             }
 
             // Next should be a space.
-            if (start == maxEnd || (markdown[start] != ' ' && markdown[start] != '\t'))
+            if (start == maxEnd || markdown[start] != ' ' && markdown[start] != '\t')
             {
                 return null;
             }
@@ -268,7 +291,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
         }
 
         /// <summary>
-        /// Parsing helper method.
+        ///     Parsing helper method.
         /// </summary>
         private static void AppendTextToListItem(ListItemBlock? listItem, string markdown, int start, int end, bool newLine = false)
         {
@@ -306,7 +329,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
         }
 
         /// <summary>
-        /// Parsing helper.
+        ///     Parsing helper.
         /// </summary>
         /// <returns> <c>true</c> if any of the list items were parsed using the block parser. </returns>
         private static bool ReplaceStringBuilders(ListBlock? list)
@@ -344,7 +367,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
                             // Don't allow blocks.
                             var paragraph = new ParagraphBlock
                             {
-                                Inlines = Helpers.Common.ParseInlineChildren(blockText, 0, blockText.Length)
+                                Inlines = Common.ParseInlineChildren(blockText, 0, blockText.Length)
                             };
                             newBlockList.Add(paragraph);
                         }
@@ -362,7 +385,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Blocks
         }
 
         /// <summary>
-        /// Converts the object into it's textual representation.
+        ///     Converts the object into it's textual representation.
         /// </summary>
         /// <returns> The textual representation of this object. </returns>
         public override string? ToString()

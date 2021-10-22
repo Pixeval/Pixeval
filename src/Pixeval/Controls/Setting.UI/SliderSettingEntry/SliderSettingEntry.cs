@@ -1,4 +1,26 @@
-﻿using Microsoft.UI.Xaml;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/SliderSettingEntry.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Pixeval.Controls.Setting.UI.UserControls;
@@ -11,19 +33,11 @@ namespace Pixeval.Controls.Setting.UI.SliderSettingEntry
     {
         private const string PartValueSlider = "ValueSlider";
 
-        private Slider? _valueSlider;
-
         public static readonly DependencyProperty MaximumProperty = DependencyProperty.Register(
-            nameof(Maximum), 
+            nameof(Maximum),
             typeof(double),
-            typeof(SliderSettingEntry), 
+            typeof(SliderSettingEntry),
             PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-        public double Maximum
-        {
-            get => (double) GetValue(MaximumProperty);
-            set => SetValue(MaximumProperty, value);
-        }
 
         public static readonly DependencyProperty MinimumProperty = DependencyProperty.Register(
             nameof(Minimum),
@@ -31,17 +45,30 @@ namespace Pixeval.Controls.Setting.UI.SliderSettingEntry
             typeof(SliderSettingEntry),
             PropertyMetadata.Create(DependencyProperty.UnsetValue));
 
-        public double Minimum
-        {
-            get => (double) GetValue(MinimumProperty);
-            set => SetValue(MinimumProperty, value);
-        }
-
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
             nameof(Value),
             typeof(double),
             typeof(SliderSettingEntry),
             PropertyMetadata.Create(DependencyProperty.UnsetValue, (o, args) => ValueChanged(o, args.NewValue)));
+
+        private Slider? _valueSlider;
+
+        public SliderSettingEntry()
+        {
+            DefaultStyleKey = typeof(SliderSettingEntry);
+        }
+
+        public double Maximum
+        {
+            get => (double) GetValue(MaximumProperty);
+            set => SetValue(MaximumProperty, value);
+        }
+
+        public double Minimum
+        {
+            get => (double) GetValue(MinimumProperty);
+            set => SetValue(MinimumProperty, value);
+        }
 
         public double Value
         {
@@ -60,11 +87,6 @@ namespace Pixeval.Controls.Setting.UI.SliderSettingEntry
         private void ValueSliderOnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             Value = e.NewValue;
-        }
-
-        public SliderSettingEntry()
-        {
-            DefaultStyleKey = typeof(SliderSettingEntry);
         }
 
         protected override void OnApplyTemplate()

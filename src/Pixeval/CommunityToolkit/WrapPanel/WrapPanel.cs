@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/WrapPanel.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.Foundation;
@@ -10,17 +32,7 @@ namespace Pixeval.CommunityToolkit.WrapPanel
     public partial class WrapPanel : Panel
     {
         /// <summary>
-        /// Gets or sets a uniform Horizontal distance (in pixels) between items when <see cref="Orientation"/> is set to Horizontal,
-        /// or between columns of items when <see cref="Orientation"/> is set to Vertical.
-        /// </summary>
-        public double HorizontalSpacing
-        {
-            get => (double) GetValue(HorizontalSpacingProperty);
-            set => SetValue(HorizontalSpacingProperty, value);
-        }
-
-        /// <summary>
-        /// Identifies the <see cref="HorizontalSpacing"/> dependency property.
+        ///     Identifies the <see cref="HorizontalSpacing" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty HorizontalSpacingProperty =
             DependencyProperty.Register(
@@ -30,17 +42,7 @@ namespace Pixeval.CommunityToolkit.WrapPanel
                 new PropertyMetadata(0d, LayoutPropertyChanged));
 
         /// <summary>
-        /// Gets or sets a uniform Vertical distance (in pixels) between items when <see cref="Orientation"/> is set to Vertical,
-        /// or between rows of items when <see cref="Orientation"/> is set to Horizontal.
-        /// </summary>
-        public double VerticalSpacing
-        {
-            get => (double) GetValue(VerticalSpacingProperty);
-            set => SetValue(VerticalSpacingProperty, value);
-        }
-
-        /// <summary>
-        /// Identifies the <see cref="VerticalSpacing"/> dependency property.
+        ///     Identifies the <see cref="VerticalSpacing" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty VerticalSpacingProperty =
             DependencyProperty.Register(
@@ -50,18 +52,7 @@ namespace Pixeval.CommunityToolkit.WrapPanel
                 new PropertyMetadata(0d, LayoutPropertyChanged));
 
         /// <summary>
-        /// Gets or sets the orientation of the WrapPanel.
-        /// Horizontal means that child controls will be added horizontally until the width of the panel is reached, then a new row is added to add new child controls.
-        /// Vertical means that children will be added vertically until the height of the panel is reached, then a new column is added.
-        /// </summary>
-        public Orientation Orientation
-        {
-            get => (Orientation) GetValue(OrientationProperty);
-            set => SetValue(OrientationProperty, value);
-        }
-
-        /// <summary>
-        /// Identifies the <see cref="Orientation"/> dependency property.
+        ///     Identifies the <see cref="Orientation" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty OrientationProperty =
             DependencyProperty.Register(
@@ -71,22 +62,9 @@ namespace Pixeval.CommunityToolkit.WrapPanel
                 new PropertyMetadata(Orientation.Horizontal, LayoutPropertyChanged));
 
         /// <summary>
-        /// Gets or sets the distance between the border and its child object.
+        ///     Identifies the Padding dependency property.
         /// </summary>
-        /// <returns>
-        /// The dimensions of the space between the border and its child as a Thickness value.
-        /// Thickness is a structure that stores dimension values using pixel measures.
-        /// </returns>
-        public Thickness Padding
-        {
-            get => (Thickness) GetValue(PaddingProperty);
-            set => SetValue(PaddingProperty, value);
-        }
-
-        /// <summary>
-        /// Identifies the Padding dependency property.
-        /// </summary>
-        /// <returns>The identifier for the <see cref="Padding"/> dependency property.</returns>
+        /// <returns>The identifier for the <see cref="Padding" /> dependency property.</returns>
         public static readonly DependencyProperty PaddingProperty =
             DependencyProperty.Register(
                 nameof(Padding),
@@ -95,24 +73,74 @@ namespace Pixeval.CommunityToolkit.WrapPanel
                 new PropertyMetadata(default(Thickness), LayoutPropertyChanged));
 
         /// <summary>
-        /// Gets or sets a value indicating how to arrange child items
+        ///     Identifies the <see cref="StretchChild" /> dependency property.
         /// </summary>
-        public StretchChild StretchChild
-        {
-            get => (StretchChild) GetValue(StretchChildProperty);
-            set => SetValue(StretchChildProperty, value);
-        }
-
-        /// <summary>
-        /// Identifies the <see cref="StretchChild"/> dependency property.
-        /// </summary>
-        /// <returns>The identifier for the <see cref="StretchChild"/> dependency property.</returns>
+        /// <returns>The identifier for the <see cref="StretchChild" /> dependency property.</returns>
         public static readonly DependencyProperty StretchChildProperty =
             DependencyProperty.Register(
                 nameof(StretchChild),
                 typeof(StretchChild),
                 typeof(WrapPanel),
                 new PropertyMetadata(StretchChild.None, LayoutPropertyChanged));
+
+        private readonly List<Row> _rows = new();
+
+        /// <summary>
+        ///     Gets or sets a uniform Horizontal distance (in pixels) between items when <see cref="Orientation" /> is set to
+        ///     Horizontal,
+        ///     or between columns of items when <see cref="Orientation" /> is set to Vertical.
+        /// </summary>
+        public double HorizontalSpacing
+        {
+            get => (double) GetValue(HorizontalSpacingProperty);
+            set => SetValue(HorizontalSpacingProperty, value);
+        }
+
+        /// <summary>
+        ///     Gets or sets a uniform Vertical distance (in pixels) between items when <see cref="Orientation" /> is set to
+        ///     Vertical,
+        ///     or between rows of items when <see cref="Orientation" /> is set to Horizontal.
+        /// </summary>
+        public double VerticalSpacing
+        {
+            get => (double) GetValue(VerticalSpacingProperty);
+            set => SetValue(VerticalSpacingProperty, value);
+        }
+
+        /// <summary>
+        ///     Gets or sets the orientation of the WrapPanel.
+        ///     Horizontal means that child controls will be added horizontally until the width of the panel is reached, then a new
+        ///     row is added to add new child controls.
+        ///     Vertical means that children will be added vertically until the height of the panel is reached, then a new column
+        ///     is added.
+        /// </summary>
+        public Orientation Orientation
+        {
+            get => (Orientation) GetValue(OrientationProperty);
+            set => SetValue(OrientationProperty, value);
+        }
+
+        /// <summary>
+        ///     Gets or sets the distance between the border and its child object.
+        /// </summary>
+        /// <returns>
+        ///     The dimensions of the space between the border and its child as a Thickness value.
+        ///     Thickness is a structure that stores dimension values using pixel measures.
+        /// </returns>
+        public Thickness Padding
+        {
+            get => (Thickness) GetValue(PaddingProperty);
+            set => SetValue(PaddingProperty, value);
+        }
+
+        /// <summary>
+        ///     Gets or sets a value indicating how to arrange child items
+        /// </summary>
+        public StretchChild StretchChild
+        {
+            get => (StretchChild) GetValue(StretchChildProperty);
+            set => SetValue(StretchChildProperty, value);
+        }
 
         private static void LayoutPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -122,8 +150,6 @@ namespace Pixeval.CommunityToolkit.WrapPanel
                 wp.InvalidateArrange();
             }
         }
-
-        private readonly List<Row> _rows = new();
 
         /// <inheritdoc />
         protected override Size MeasureOverride(Size availableSize)
@@ -143,8 +169,8 @@ namespace Pixeval.CommunityToolkit.WrapPanel
         /// <inheritdoc />
         protected override Size ArrangeOverride(Size finalSize)
         {
-            if ((Orientation == Orientation.Horizontal && finalSize.Width < DesiredSize.Width) ||
-                (Orientation == Orientation.Vertical && finalSize.Height < DesiredSize.Height))
+            if (Orientation == Orientation.Horizontal && finalSize.Width < DesiredSize.Width ||
+                Orientation == Orientation.Vertical && finalSize.Height < DesiredSize.Height)
             {
                 // We haven't received our desired size. We need to refresh the rows.
                 UpdateRows(finalSize);
@@ -169,7 +195,7 @@ namespace Pixeval.CommunityToolkit.WrapPanel
                         var arrangeRect = new UvRect
                         {
                             Position = rect.Position,
-                            Size = new UvMeasure { U = rect.Size.U, V = row.Size.V },
+                            Size = new UvMeasure { U = rect.Size.U, V = row.Size.V }
                         };
 
                         var finalRect = arrangeRect.ToRect(Orientation);

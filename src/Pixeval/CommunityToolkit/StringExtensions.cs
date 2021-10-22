@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/StringExtensions.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Net;
@@ -7,55 +29,58 @@ using System.Text.RegularExpressions;
 namespace Pixeval.CommunityToolkit
 {
     /// <summary>
-    /// Helpers for working with strings and string representations.
+    ///     Helpers for working with strings and string representations.
     /// </summary>
     public static class StringExtensions
     {
         /// <summary>
-        /// Regular expression for matching a phone number.
+        ///     Regular expression for matching a phone number.
         /// </summary>
         internal const string PhoneNumberRegex = @"^[+]?(\d{1,3})?[\s.-]?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$";
 
         /// <summary>
-        /// Regular expression for matching a string that contains only letters.
+        ///     Regular expression for matching a string that contains only letters.
         /// </summary>
         internal const string CharactersRegex = "^[A-Za-z]+$";
 
         /// <summary>
-        /// Regular expression for matching an email address.
+        ///     Regular expression for matching an email address.
         /// </summary>
         /// <remarks>General Email Regex (RFC 5322 Official Standard) from https://emailregex.com.</remarks>
         internal const string EmailRegex = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
 
         /// <summary>
-        /// Regular expression of HTML tags to remove.
+        ///     Regular expression of HTML tags to remove.
         /// </summary>
         private const string RemoveHtmlTagsRegex = @"(?></?\w+)(?>(?:[^>'""]+|'[^']*'|""[^""]*"")*)>";
 
         /// <summary>
-        /// Regular expression for removing comments from HTML.
+        ///     Regular expression for removing comments from HTML.
         /// </summary>
         private static readonly Regex RemoveHtmlCommentsRegex = new("<!--.*?-->", RegexOptions.Singleline);
 
         /// <summary>
-        /// Regular expression for removing scripts from HTML.
+        ///     Regular expression for removing scripts from HTML.
         /// </summary>
         private static readonly Regex RemoveHtmlScriptsRegex = new(@"(?s)<script.*?(/>|</script>)", RegexOptions.Singleline | RegexOptions.IgnoreCase);
 
         /// <summary>
-        /// Regular expression for removing styles from HTML.
+        ///     Regular expression for removing styles from HTML.
         /// </summary>
         private static readonly Regex RemoveHtmlStylesRegex = new(@"(?s)<style.*?(/>|</style>)", RegexOptions.Singleline | RegexOptions.IgnoreCase);
 
         /// <summary>
-        /// Determines whether a string is a valid email address.
+        ///     Determines whether a string is a valid email address.
         /// </summary>
         /// <param name="str">The string to test.</param>
         /// <returns><c>true</c> for a valid email address; otherwise, <c>false</c>.</returns>
-        public static bool IsEmail(this string str) => Regex.IsMatch(str, EmailRegex);
+        public static bool IsEmail(this string str)
+        {
+            return Regex.IsMatch(str, EmailRegex);
+        }
 
         /// <summary>
-        /// Determines whether a string is a valid decimal number.
+        ///     Determines whether a string is a valid decimal number.
         /// </summary>
         /// <param name="str">The string to test.</param>
         /// <returns><c>true</c> for a valid decimal number; otherwise, <c>false</c>.</returns>
@@ -65,7 +90,7 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Determines whether a string is a valid integer.
+        ///     Determines whether a string is a valid integer.
         /// </summary>
         /// <param name="str">The string to test.</param>
         /// <returns><c>true</c> for a valid integer; otherwise, <c>false</c>.</returns>
@@ -75,21 +100,27 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Determines whether a string is a valid phone number.
+        ///     Determines whether a string is a valid phone number.
         /// </summary>
         /// <param name="str">The string to test.</param>
         /// <returns><c>true</c> for a valid phone number; otherwise, <c>false</c>.</returns>
-        public static bool IsPhoneNumber(this string str) => Regex.IsMatch(str, PhoneNumberRegex);
+        public static bool IsPhoneNumber(this string str)
+        {
+            return Regex.IsMatch(str, PhoneNumberRegex);
+        }
 
         /// <summary>
-        /// Determines whether a string contains only letters.
+        ///     Determines whether a string contains only letters.
         /// </summary>
         /// <param name="str">The string to test.</param>
         /// <returns><c>true</c> if the string contains only letters; otherwise, <c>false</c>.</returns>
-        public static bool IsCharacterString(this string str) => Regex.IsMatch(str, CharactersRegex);
+        public static bool IsCharacterString(this string str)
+        {
+            return Regex.IsMatch(str, CharactersRegex);
+        }
 
         /// <summary>
-        /// Returns a string with HTML comments, scripts, styles, and tags removed.
+        ///     Returns a string with HTML comments, scripts, styles, and tags removed.
         /// </summary>
         /// <param name="htmlText">HTML string.</param>
         /// <returns>Decoded HTML string.</returns>
@@ -110,7 +141,7 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Returns a string with HTML comments, scripts, and styles removed.
+        ///     Returns a string with HTML comments, scripts, and styles removed.
         /// </summary>
         /// <param name="html">HTML string to fix.</param>
         /// <returns>Fixed HTML string.</returns>
@@ -129,15 +160,18 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Truncates a string to the specified length.
+        ///     Truncates a string to the specified length.
         /// </summary>
         /// <param name="value">The string to be truncated.</param>
         /// <param name="length">The maximum length.</param>
         /// <returns>Truncated string.</returns>
-        public static string Truncate(this string? value, int length) => Truncate(value, length, false);
+        public static string Truncate(this string? value, int length)
+        {
+            return Truncate(value, length, false);
+        }
 
         /// <summary>
-        /// Provide better linking for resourced strings.
+        ///     Provide better linking for resourced strings.
         /// </summary>
         /// <param name="format">The format of the string being linked.</param>
         /// <param name="args">The object which will receive the linked String.</param>
@@ -155,7 +189,7 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Truncates a string to the specified length.
+        ///     Truncates a string to the specified length.
         /// </summary>
         /// <param name="value">The string to be truncated.</param>
         /// <param name="length">The maximum length.</param>

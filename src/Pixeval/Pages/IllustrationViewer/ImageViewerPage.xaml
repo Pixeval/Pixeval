@@ -89,12 +89,16 @@
                         <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SaveCommand}" />
                         <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SaveMangaCommand}"
                                         Visibility="{x:Bind _viewModel.IllustrationViewerPageViewModel.IsManga}" />
-                        <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SaveMangaAsCommand}"
-                                        Visibility="{x:Bind _viewModel.IllustrationViewerPageViewModel.IsManga}" />
+                        <MenuFlyoutItem
+                            Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SaveMangaAsCommand}"
+                            Visibility="{x:Bind _viewModel.IllustrationViewerPageViewModel.IsManga}" />
                         <MenuFlyoutSeparator />
-                        <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.GenerateLinkCommand}" />
-                        <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.GenerateWebLinkCommand}" />
-                        <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.OpenInWebBrowserCommand}" />
+                        <MenuFlyoutItem
+                            Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.GenerateLinkCommand}" />
+                        <MenuFlyoutItem
+                            Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.GenerateWebLinkCommand}" />
+                        <MenuFlyoutItem
+                            Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.OpenInWebBrowserCommand}" />
                         <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ShowQrCodeCommand}" />
                         <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ShareCommand}" />
                     </MenuFlyout>

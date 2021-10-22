@@ -34,7 +34,8 @@
             <StackPanel HorizontalAlignment="Stretch"
                         VerticalAlignment="Top"
                         Spacing="5">
-                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/LeastBookmarkCountEntry">
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry
+                    x:Uid="/IllustrationResultFilterPopupContent/LeastBookmarkCountEntry">
                     <NumberBox x:Uid="/IllustrationResultFilterPopupContent/LeastBookmarkCountNumberBox"
                                Width="400"
                                HorizontalAlignment="Left"
@@ -43,7 +44,8 @@
                                Value="{x:Bind _viewModel.LeastBookmark, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </illustrationResultFilter:IllustrationResultFilterFunctionEntry>
 
-                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/MaximumBookmarkCountEntry">
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry
+                    x:Uid="/IllustrationResultFilterPopupContent/MaximumBookmarkCountEntry">
                     <NumberBox x:Uid="/IllustrationResultFilterPopupContent/MaximumBookmarkCountNumberBox"
                                Width="400"
                                HorizontalAlignment="Left"
@@ -52,32 +54,40 @@
                                Value="{x:Bind _viewModel.MaximumBookmark, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </illustrationResultFilter:IllustrationResultFilterFunctionEntry>
 
-                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/IncludeTagsEntry">
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry
+                    x:Uid="/IllustrationResultFilterPopupContent/IncludeTagsEntry">
                     <tokenInput:TokenInput x:Uid="/IllustrationResultFilterPopupContent/IncludeTagTokenInput"
                                            TokenSource="{x:Bind _viewModel.IncludeTags, Mode=OneWay}" />
                 </illustrationResultFilter:IllustrationResultFilterFunctionEntry>
 
-                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/ExcludeTagsEntry">
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry
+                    x:Uid="/IllustrationResultFilterPopupContent/ExcludeTagsEntry">
                     <tokenInput:TokenInput x:Uid="/IllustrationResultFilterPopupContent/ExcludeTagTokenInput"
                                            TokenSource="{x:Bind _viewModel.ExcludeTags, Mode=OneWay}" />
                 </illustrationResultFilter:IllustrationResultFilterFunctionEntry>
 
-                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/UserGroupNameEntry">
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry
+                    x:Uid="/IllustrationResultFilterPopupContent/UserGroupNameEntry">
                     <tokenInput:TokenInput x:Uid="/IllustrationResultFilterPopupContent/UserGroupNameInput"
                                            TokenSource="{x:Bind _viewModel.UserGroupName, Mode=OneWay}" />
                 </illustrationResultFilter:IllustrationResultFilterFunctionEntry>
 
-                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/IllustratorNameEntry">
-                    <tokenInputTextBox:TokenInputTextBox x:Uid="/IllustrationResultFilterPopupContent/IllustratorNameInput"
-                                                         Token="{x:Bind _viewModel.IllustratorName, Mode=OneWay}" />
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry
+                    x:Uid="/IllustrationResultFilterPopupContent/IllustratorNameEntry">
+                    <tokenInputTextBox:TokenInputTextBox
+                        x:Uid="/IllustrationResultFilterPopupContent/IllustratorNameInput"
+                        Token="{x:Bind _viewModel.IllustratorName, Mode=OneWay}" />
                 </illustrationResultFilter:IllustrationResultFilterFunctionEntry>
 
-                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/IllustrationNameEntry">
-                    <tokenInputTextBox:TokenInputTextBox x:Uid="/IllustrationResultFilterPopupContent/IllustrationNameInput"
-                                                         Token="{x:Bind _viewModel.IllustrationName, Mode=OneWay}" />
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry
+                    x:Uid="/IllustrationResultFilterPopupContent/IllustrationNameEntry">
+                    <tokenInputTextBox:TokenInputTextBox
+                        x:Uid="/IllustrationResultFilterPopupContent/IllustrationNameInput"
+                        Token="{x:Bind _viewModel.IllustrationName, Mode=OneWay}" />
                 </illustrationResultFilter:IllustrationResultFilterFunctionEntry>
 
-                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/IllustratorIdEntry">
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry
+                    x:Uid="/IllustrationResultFilterPopupContent/IllustratorIdEntry">
                     <NumberBox x:Uid="/IllustrationResultFilterPopupContent/IllustratorIdInput"
                                Width="400"
                                HorizontalAlignment="Left"
@@ -86,7 +96,8 @@
                                Text="{x:Bind _viewModel.IllustratorId, Mode=TwoWay}" />
                 </illustrationResultFilter:IllustrationResultFilterFunctionEntry>
 
-                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/IllustrationIdEntry">
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry
+                    x:Uid="/IllustrationResultFilterPopupContent/IllustrationIdEntry">
                     <NumberBox x:Uid="/IllustrationResultFilterPopupContent/IllustrationIdInput"
                                Width="400"
                                HorizontalAlignment="Left"
@@ -95,13 +106,15 @@
                                Text="{x:Bind _viewModel.IllustrationId, Mode=TwoWay}" />
                 </illustrationResultFilter:IllustrationResultFilterFunctionEntry>
 
-                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/PublishDateStartEntry">
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry
+                    x:Uid="/IllustrationResultFilterPopupContent/PublishDateStartEntry">
                     <CalendarDatePicker x:Uid="/IllustrationResultFilterPopupContent/PublishDateStartPicker"
                                         Width="400"
                                         Date="{x:Bind _viewModel.PublishDateStart, Mode=TwoWay}" />
                 </illustrationResultFilter:IllustrationResultFilterFunctionEntry>
 
-                <illustrationResultFilter:IllustrationResultFilterFunctionEntry x:Uid="/IllustrationResultFilterPopupContent/PublishDateEndEntry">
+                <illustrationResultFilter:IllustrationResultFilterFunctionEntry
+                    x:Uid="/IllustrationResultFilterPopupContent/PublishDateEndEntry">
                     <CalendarDatePicker x:Uid="/IllustrationResultFilterPopupContent/PublishDateEndPicker"
                                         Width="400"
                                         Date="{x:Bind _viewModel.PublishDateEnd, Mode=TwoWay}" />

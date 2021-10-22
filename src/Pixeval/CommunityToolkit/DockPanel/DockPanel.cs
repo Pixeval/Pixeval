@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/DockPanel.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -6,7 +28,7 @@ using Microsoft.UI.Xaml.Controls;
 namespace Pixeval.CommunityToolkit.DockPanel
 {
     /// <summary>
-    /// Defines an area where you can arrange child elements either horizontally or vertically, relative to each other.
+    ///     Defines an area where you can arrange child elements either horizontally or vertically, relative to each other.
     /// </summary>
     public partial class DockPanel : Panel
     {
@@ -66,14 +88,14 @@ namespace Pixeval.CommunityToolkit.DockPanel
 
                         width = Math.Min(child.DesiredSize.Width, GetPositiveOrZero(currentBounds.Width - currentBounds.X));
                         child.Arrange(new Rect(GetPositiveOrZero(currentBounds.Width - width), currentBounds.Y, width, GetPositiveOrZero(currentBounds.Height - currentBounds.Y)));
-                        currentBounds.Width -= (currentBounds.Width - width) > 0 ? width : 0;
+                        currentBounds.Width -= currentBounds.Width - width > 0 ? width : 0;
 
                         break;
                     case Dock.Bottom:
 
                         height = Math.Min(child.DesiredSize.Height, GetPositiveOrZero(currentBounds.Height - currentBounds.Y));
                         child.Arrange(new Rect(currentBounds.X, GetPositiveOrZero(currentBounds.Height - height), GetPositiveOrZero(currentBounds.Width - currentBounds.X), height));
-                        currentBounds.Height -= (currentBounds.Height - height) > 0 ? height : 0;
+                        currentBounds.Height -= currentBounds.Height - height > 0 ? height : 0;
 
                         break;
                     default:

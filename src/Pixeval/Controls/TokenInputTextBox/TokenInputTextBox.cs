@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/TokenInputTextBox.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -12,33 +34,11 @@ namespace Pixeval.Controls.TokenInputTextBox
         private const string PartTokenTextBox = "TokenTextBox";
         private const string PartSubmitButton = "SubmitButton";
 
-        private TextBox? _tokenTextBox;
-        private IconButton.IconButton? _submitButton;
-
-        private EventHandler<Token>? _tokenSubmitted;
-
-        public event EventHandler<Token> TokenSubmitted
-        {
-            add => _tokenSubmitted += value;
-            remove => _tokenSubmitted -= value;
-        }
-
-        public TokenInputTextBox()
-        {
-            DefaultStyleKey = typeof(TokenInputTextBox);
-        }
-
         public static readonly DependencyProperty PlaceholderTextProperty = DependencyProperty.Register(
             nameof(PlaceholderText),
             typeof(string),
             typeof(TokenInputTextBox),
             PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-        public string PlaceholderText
-        {
-            get => (string) GetValue(PlaceholderTextProperty);
-            set => SetValue(PlaceholderTextProperty, value);
-        }
 
         public static readonly DependencyProperty SubmitEnableProperty = DependencyProperty.Register(
             nameof(SubmitEnable),
@@ -46,22 +46,45 @@ namespace Pixeval.Controls.TokenInputTextBox
             typeof(TokenInputTextBox),
             PropertyMetadata.Create(DependencyProperty.UnsetValue));
 
-        public bool SubmitEnable
-        {
-            get => (bool) GetValue(SubmitEnableProperty);
-            set => SetValue(SubmitEnableProperty, value);
-        }
-
         public static readonly DependencyProperty TokenProperty = DependencyProperty.Register(
             nameof(Token),
             typeof(Token),
             typeof(TokenInputTextBox),
             PropertyMetadata.Create(DependencyProperty.UnsetValue));
 
+        private IconButton.IconButton? _submitButton;
+
+        private EventHandler<Token>? _tokenSubmitted;
+
+        private TextBox? _tokenTextBox;
+
+        public TokenInputTextBox()
+        {
+            DefaultStyleKey = typeof(TokenInputTextBox);
+        }
+
+        public string PlaceholderText
+        {
+            get => (string) GetValue(PlaceholderTextProperty);
+            set => SetValue(PlaceholderTextProperty, value);
+        }
+
+        public bool SubmitEnable
+        {
+            get => (bool) GetValue(SubmitEnableProperty);
+            set => SetValue(SubmitEnableProperty, value);
+        }
+
         public Token Token
         {
             get => (Token) GetValue(TokenProperty);
             set => SetValue(TokenProperty, value);
+        }
+
+        public event EventHandler<Token> TokenSubmitted
+        {
+            add => _tokenSubmitted += value;
+            remove => _tokenSubmitted -= value;
         }
 
         protected override void OnApplyTemplate()

@@ -13,14 +13,14 @@
     <userControls:IllustrationContainer x:Name="IllustrationContainer">
         <userControls:IllustrationContainer.CommandBarElements>
             <notifyOnLoadedComboBox:NotifyOnLoadedComboBox x:Name="ModeSelectionComboBox"
-                                             x:Uid="/RecommendationsPage/ModeSelectionComboBox"
-                                             SelectionChangedWhenLoaded="ModeSelectionComboBox_OnSelectionChangedWhenLoaded">
+                                                           x:Uid="/RecommendationsPage/ModeSelectionComboBox"
+                                                           SelectionChangedWhenLoaded="ModeSelectionComboBox_OnSelectionChangedWhenLoaded">
                 <ComboBox.Items>
                     <ComboBoxItem x:Name="ModeSelectionComboBoxIllustComboBoxItem"
                                   x:Uid="/RecommendationsPage/ModeSelectionComboBoxIllustComboBoxItem"
-                                  Tag="{x:Bind enum:RecommendContentType.Illust}" />
+                                  Tag="{x:Bind enum:RecommendationContentType.Illust}" />
                     <ComboBoxItem x:Uid="/RecommendationsPage/ModeSelectionComboBoxMangaComboBoxItem"
-                                  Tag="{x:Bind enum:RecommendContentType.Manga}" />
+                                  Tag="{x:Bind enum:RecommendationContentType.Manga}" />
                 </ComboBox.Items>
             </notifyOnLoadedComboBox:NotifyOnLoadedComboBox>
             <userControls:SortOptionComboBox x:Name="SortOptionComboBox"

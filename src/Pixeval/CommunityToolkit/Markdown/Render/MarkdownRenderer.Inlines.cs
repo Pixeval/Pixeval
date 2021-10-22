@@ -1,4 +1,26 @@
-﻿using System.Collections.Generic;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/MarkdownRenderer.Inlines.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System.Collections.Generic;
 using Windows.UI.Text;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
@@ -13,12 +35,12 @@ using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Render;
 namespace Pixeval.CommunityToolkit.Markdown.Render
 {
     /// <summary>
-    /// Inline UI Methods for UWP UI Creation.
+    ///     Inline UI Methods for UWP UI Creation.
     /// </summary>
     public partial class MarkdownRenderer
     {
         /// <summary>
-        /// Renders emoji element.
+        ///     Renders emoji element.
         /// </summary>
         /// <param name="element"> The parsed inline element to render. </param>
         /// <param name="context"> Persistent state. </param>
@@ -41,7 +63,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Renders a text run element.
+        ///     Renders a text run element.
         /// </summary>
         /// <param name="element"> The parsed inline element to render. </param>
         /// <param name="context"> Persistent state. </param>
@@ -71,7 +93,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Renders a bold run element.
+        ///     Renders a bold run element.
         /// </summary>
         /// <param name="element"> The parsed inline element to render. </param>
         /// <param name="context"> Persistent state. </param>
@@ -102,7 +124,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Renders a link element
+        ///     Renders a link element
         /// </summary>
         /// <param name="element"> The parsed inline element to render. </param>
         /// <param name="context"> Persistent state. </param>
@@ -173,7 +195,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Renders a raw link element.
+        ///     Renders a raw link element.
         /// </summary>
         /// <param name="element"> The parsed inline element to render. </param>
         /// <param name="context"> Persistent state. </param>
@@ -209,7 +231,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Renders an image element.
+        ///     Renders an image element.
         /// </summary>
         /// <param name="element"> The parsed inline element to render. </param>
         /// <param name="context"> Persistent state. </param>
@@ -260,7 +282,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
             };
 
             var imageContainer = new InlineUIContainer { Child = scrollViewer };
-            
+
             LinkRegister.RegisterNewHyperLink(image, element.Url!, element.RenderUrl != element.Url);
 
             if (ImageMaxHeight > 0)
@@ -326,7 +348,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Renders a text run element.
+        ///     Renders a text run element.
         /// </summary>
         /// <param name="element"> The parsed inline element to render. </param>
         /// <param name="context"> Persistent state. </param>
@@ -358,7 +380,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Renders a strike through element.
+        ///     Renders a strike through element.
         /// </summary>
         /// <param name="element"> The parsed inline element to render. </param>
         /// <param name="context"> Persistent state. </param>
@@ -387,7 +409,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Renders a superscript element.
+        ///     Renders a superscript element.
         /// </summary>
         /// <param name="element"> The parsed inline element to render. </param>
         /// <param name="context"> Persistent state. </param>
@@ -441,7 +463,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Renders a subscript element.
+        ///     Renders a subscript element.
         /// </summary>
         /// <param name="element"> The parsed inline element to render. </param>
         /// <param name="context"> Persistent state. </param>
@@ -474,7 +496,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
 
             var border = new Border
             {
-                Margin = new Thickness(0, 0, 0, (-1) * (paragraph.FontSize * 0.6)),
+                Margin = new Thickness(0, 0, 0, -1 * (paragraph.FontSize * 0.6)),
                 Child = richTextBlock
             };
 
@@ -488,7 +510,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Renders a code element
+        ///     Renders a code element
         /// </summary>
         /// <param name="element"> The parsed inline element to render. </param>
         /// <param name="context"> Persistent state. </param>

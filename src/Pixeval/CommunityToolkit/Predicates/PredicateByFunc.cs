@@ -1,10 +1,32 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/PredicateByFunc.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Runtime.CompilerServices;
 
 namespace Pixeval.CommunityToolkit.Predicates
 {
     /// <summary>
-    /// An <see cref="IPredicate{T}"/> type matching items of a given type.
+    ///     An <see cref="IPredicate{T}" /> type matching items of a given type.
     /// </summary>
     /// <typeparam name="T">The type of items to match.</typeparam>
     /// <typeparam name="TState">The type of state to use when matching items.</typeparam>
@@ -12,19 +34,19 @@ namespace Pixeval.CommunityToolkit.Predicates
         where T : class
     {
         /// <summary>
-        /// The state to give as input to <see name="predicate"/>.
+        ///     The state to give as input to <see name="predicate" />.
         /// </summary>
         private readonly TState state;
 
         /// <summary>
-        /// The predicate to use to match items.
+        ///     The predicate to use to match items.
         /// </summary>
         private readonly Func<T, TState, bool> predicate;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PredicateByFunc{T, TState}"/> struct.
+        ///     Initializes a new instance of the <see cref="PredicateByFunc{T, TState}" /> struct.
         /// </summary>
-        /// <param name="state">The state to give as input to <paramref name="predicate"/>.</param>
+        /// <param name="state">The state to give as input to <paramref name="predicate" />.</param>
         /// <param name="predicate">The predicate to use to match items.</param>
         public PredicateByFunc(TState state, Func<T, TState, bool> predicate)
         {
@@ -32,7 +54,7 @@ namespace Pixeval.CommunityToolkit.Predicates
             this.predicate = predicate;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Match(T element)
         {
@@ -41,19 +63,19 @@ namespace Pixeval.CommunityToolkit.Predicates
     }
 
     /// <summary>
-    /// An <see cref="IPredicate{T}"/> type matching items of a given type.
+    ///     An <see cref="IPredicate{T}" /> type matching items of a given type.
     /// </summary>
     /// <typeparam name="T">The type of items to match.</typeparam>
     internal readonly struct PredicateByFunc<T> : IPredicate<T>
         where T : class
     {
         /// <summary>
-        /// The predicate to use to match items.
+        ///     The predicate to use to match items.
         /// </summary>
         private readonly Func<T, bool> predicate;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PredicateByFunc{T}"/> struct.
+        ///     Initializes a new instance of the <see cref="PredicateByFunc{T}" /> struct.
         /// </summary>
         /// <param name="predicate">The predicate to use to match items.</param>
         public PredicateByFunc(Func<T, bool> predicate)
@@ -61,7 +83,7 @@ namespace Pixeval.CommunityToolkit.Predicates
             this.predicate = predicate;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Match(T element)
         {

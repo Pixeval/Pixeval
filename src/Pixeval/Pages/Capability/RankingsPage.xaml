@@ -15,9 +15,9 @@
     <userControls:IllustrationContainer x:Name="IllustrationContainer">
         <userControls:IllustrationContainer.CommandBarElements>
             <notifyOnLoadedComboBox:NotifyOnLoadedComboBox x:Name="RankOptionComboBox"
-                                             x:Uid="/RankingsPage/RankOptionComboBox"
-                                             ItemsSource="{x:Bind options:RankOptionWrapper.AvailableOptions()}"
-                                             SelectionChangedWhenLoaded="RankOptionComboBox_OnSelectionChangedWhenPrepared">
+                                                           x:Uid="/RankingsPage/RankOptionComboBox"
+                                                           ItemsSource="{x:Bind options:RankOptionWrapper.AvailableOptions()}"
+                                                           SelectionChangedWhenLoaded="RankOptionComboBox_OnSelectionChangedWhenPrepared">
                 <notifyOnLoadedComboBox:NotifyOnLoadedComboBox.ItemTemplate>
                     <DataTemplate x:DataType="options:RankOptionWrapper">
                         <TextBlock Text="{x:Bind LocalizedString}" />
@@ -25,9 +25,9 @@
                 </notifyOnLoadedComboBox:NotifyOnLoadedComboBox.ItemTemplate>
             </notifyOnLoadedComboBox:NotifyOnLoadedComboBox>
             <notifyOnLoadedCalendarDatePicker:NotifyOnLoadedCalendarDatePicker x:Name="RankDateTimeCalendarDatePicker"
-                                                       Margin="10,0,0,0"
-                                                       DateChangedWhenLoaded="RankDateTimeCalendarDatePicker_OnDateChangedWhenLoaded"
-                                                       MaxDate="{x:Bind system:DateTime.Now.AddDays(-2)}" />
+                                                                               Margin="10,0,0,0"
+                                                                               DateChangedWhenLoaded="RankDateTimeCalendarDatePicker_OnDateChangedWhenLoaded"
+                                                                               MaxDate="{x:Bind system:DateTime.Now.AddDays(-2)}" />
             <userControls:SortOptionComboBox x:Name="SortOptionComboBox"
                                              Margin="10,0,0,0"
                                              SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />

@@ -127,7 +127,7 @@
     <value>解析失败：解析结果为空</value>
   </data>
   <data name="UnexpectedTokenFormatted" xml:space="preserve">
-    <value>输入非法：在{0}位置遇到了非法符号</value>
+    <value>输入非法：在第{0}个字符处遇到了非法符号</value>
   </data>
   <data name="UnknownArtist" xml:space="preserve">
     <value>未知作者</value>

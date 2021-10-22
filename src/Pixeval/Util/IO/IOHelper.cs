@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/IOHelper.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Drawing;
@@ -21,6 +43,11 @@ namespace Pixeval.Util.IO
 {
     public static partial class IOHelper
     {
+        public static string NormalizePath(string path)
+        {
+            return Path.GetFullPath(Path.GetInvalidPathChars().Aggregate(path, (s, c) => s.Replace(c.ToString(), string.Empty)));
+        }
+
         public static void CreateParentDirectories(string fullPath)
         {
             var directory = Path.GetDirectoryName(fullPath);
@@ -46,7 +73,7 @@ namespace Pixeval.Util.IO
             dataWriter.DetachStream();
             return stream;
         }
- 
+
         public static async Task<ImageFormat> DetectImageFormat(this IRandomAccessStream randomAccessStream)
         {
             await using var stream = randomAccessStream.AsStream();
@@ -113,7 +140,7 @@ namespace Pixeval.Util.IO
 
             using IRandomAccessStream stream = await file.OpenReadAsync();
             using var reader = new DataReader(stream.GetInputStreamAt(0));
-            await reader.LoadAsync((uint)stream.Size);
+            await reader.LoadAsync((uint) stream.Size);
             var bytes = new byte[stream.Size];
             reader.ReadBytes(bytes);
             return bytes;

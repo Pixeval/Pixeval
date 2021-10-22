@@ -1,10 +1,35 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/SettingsPage.xaml.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Threading.Tasks;
 using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls.Setting.UI;
+using Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry;
+using Pixeval.Download.MacroParser;
+using Pixeval.UserControls.TokenInput;
 using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
@@ -14,11 +39,16 @@ namespace Pixeval.Pages.Misc
     // set language, set main page default selected tab, set font, clear database
     public sealed partial class SettingsPage
     {
-        private readonly SettingsPageViewModel _viewModel = new(App.AppViewModel.AppSetting);
+        private static readonly MacroParser<string> TestParser = new();
+        private readonly SettingsPageViewModel _viewModel;
+
+        private string _previousPath;
 
         public SettingsPage()
         {
             InitializeComponent();
+            _viewModel = new SettingsPageViewModel(App.AppViewModel.AppSetting);
+            _previousPath = _viewModel.DefaultDownloadPathMacro;
         }
 
         private void SettingsPage_OnLoaded(object sender, RoutedEventArgs e)
@@ -26,7 +56,7 @@ namespace Pixeval.Pages.Misc
             CheckForUpdatesEntry.Header = AppContext.AppVersion.ToString();
         }
 
-        private void SingleSelectionSettingEntry_OnSelectionChanged(Controls.Setting.UI.SingleSelectionSettingEntry.SingleSelectionSettingEntry sender, SelectionChangedEventArgs args)
+        private void SingleSelectionSettingEntry_OnSelectionChanged(SingleSelectionSettingEntry sender, SelectionChangedEventArgs args)
         {
             App.AppViewModel.SwitchTheme(_viewModel.Theme);
         }
@@ -94,6 +124,40 @@ namespace Pixeval.Pages.Misc
             {
                 _viewModel.ResetDefault();
             }
+        }
+
+        private void DefaultDownloadPathMacroTextBox_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            if (_viewModel.DefaultDownloadPathMacro.IsNullOrBlank())
+            {
+                DownloadPathMacroInvalidTeachingTip.IsOpen = true;
+                DownloadPathMacroInvalidTeachingTip.Subtitle = SettingsPageResources.DownloadPathMacroInvalidTeachingTipInputCannotBeBlank;
+                _viewModel.DefaultDownloadPathMacro = _previousPath;
+                return;
+            }
+
+            try
+            {
+                TestParser.SetupParsingEnvironment(new Lexer(_viewModel.DefaultDownloadPathMacro));
+                TestParser.Parse();
+            }
+            catch (Exception exception)
+            {
+                DownloadPathMacroInvalidTeachingTip.IsOpen = true;
+                DownloadPathMacroInvalidTeachingTip.Subtitle = SettingsPageResources.DownloadPathMacroInvalidTeachingTipMacroInvalidFormatted.Format(exception.Message);
+                _viewModel.DefaultDownloadPathMacro = _previousPath;
+            }
+        }
+
+        private void DefaultDownloadPathMacroTextBox_OnGotFocus(object sender, RoutedEventArgs e)
+        {
+            DownloadPathMacroInvalidTeachingTip.IsOpen = false;
+            _previousPath = _viewModel.DefaultDownloadPathMacro;
+        }
+
+        private void MacroTokenInputBox_OnTokenTapped(object? sender, Token e)
+        {
+            _viewModel.DefaultDownloadPathMacro = _viewModel.DefaultDownloadPathMacro.Insert(DefaultDownloadPathMacroTextBox.SelectionStart, e.TokenContent);
         }
     }
 }

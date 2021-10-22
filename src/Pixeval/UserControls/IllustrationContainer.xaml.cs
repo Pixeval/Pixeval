@@ -1,7 +1,29 @@
-﻿using Microsoft.UI.Xaml;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/IllustrationContainer.xaml.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.CommunityToolkit;
 using Pixeval.ViewModel;
@@ -10,8 +32,6 @@ namespace Pixeval.UserControls
 {
     public sealed partial class IllustrationContainer
     {
-        public IllustrationGridViewModel ViewModel => IllustrationGrid.ViewModel;
-
         public IllustrationContainer()
         {
             InitializeComponent();
@@ -36,8 +56,10 @@ namespace Pixeval.UserControls
             };
         }
 
+        public IllustrationGridViewModel ViewModel => IllustrationGrid.ViewModel;
+
         /// <summary>
-        /// The command elements that will appear at the left of the <see cref="TopCommandBar"/>
+        ///     The command elements that will appear at the left of the <see cref="TopCommandBar" />
         /// </summary>
         public ObservableCollection<UIElement> CommandBarElements { get; }
 

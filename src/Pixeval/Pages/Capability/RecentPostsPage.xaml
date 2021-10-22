@@ -13,8 +13,8 @@
     <userControls:IllustrationContainer x:Name="IllustrationContainer">
         <userControls:IllustrationContainer.CommandBarElements>
             <notifyOnLoadedComboBox:NotifyOnLoadedComboBox x:Name="PrivacyPolicyComboBox"
-                                             x:Uid="/RecentPostsPage/PrivacyPolicyComboBox"
-                                             SelectionChangedWhenLoaded="PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded">
+                                                           x:Uid="/RecentPostsPage/PrivacyPolicyComboBox"
+                                                           SelectionChangedWhenLoaded="PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded">
                 <notifyOnLoadedComboBox:NotifyOnLoadedComboBox.Items>
                     <ComboBoxItem x:Name="PrivacyPolicyComboBoxPublicItem"
                                   x:Uid="/RecentPostsPage/PrivacyPolicyComboBoxPublicComboBoxItem"

@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/MarkdownRenderer.Blocks.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
@@ -13,12 +35,12 @@ using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Render;
 namespace Pixeval.CommunityToolkit.Markdown.Render
 {
     /// <summary>
-    /// Block UI Methods for UWP UI Creation.
+    ///     Block UI Methods for UWP UI Creation.
     /// </summary>
     public partial class MarkdownRenderer
     {
         /// <summary>
-        /// Renders a list of block elements.
+        ///     Renders a list of block elements.
         /// </summary>
         protected override void RenderBlocks(IEnumerable<MarkdownBlock> blockElements, IRenderContext context)
         {
@@ -69,7 +91,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Renders a paragraph element.
+        ///     Renders a paragraph element.
         /// </summary>
         protected override void RenderParagraph(ParagraphBlock element, IRenderContext context)
         {
@@ -91,7 +113,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Renders a yaml header element.
+        ///     Renders a yaml header element.
         /// </summary>
         protected override void RenderYamlHeader(YamlHeaderBlock element, IRenderContext context)
         {
@@ -147,7 +169,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Renders a header element.
+        ///     Renders a header element.
         /// </summary>
         protected override void RenderHeader(HeaderBlock element, IRenderContext context)
         {
@@ -218,7 +240,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Renders a list element.
+        ///     Renders a list element.
         /// </summary>
         protected override void RenderListElement(ListBlock element, IRenderContext context)
         {
@@ -279,7 +301,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Renders a horizontal rule element.
+        ///     Renders a horizontal rule element.
         /// </summary>
         protected override void RenderHorizontalRule(IRenderContext context)
         {
@@ -308,7 +330,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Renders a quote element.
+        ///     Renders a quote element.
         /// </summary>
         protected override void RenderQuote(QuoteBlock element, IRenderContext context)
         {
@@ -347,7 +369,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Renders a code element.
+        ///     Renders a code element.
         /// </summary>
         protected override void RenderCode(CodeBlock element, IRenderContext context)
         {
@@ -408,7 +430,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Render
         }
 
         /// <summary>
-        /// Renders a table element.
+        ///     Renders a table element.
         /// </summary>
         protected override void RenderTable(TableBlock element, IRenderContext context)
         {

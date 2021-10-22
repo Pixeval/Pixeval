@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/MarkdownLinkInline.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using Pixeval.CommunityToolkit.Markdown.Parsers.Core;
 using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Enums;
@@ -7,12 +29,12 @@ using Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Helpers;
 namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
 {
     /// <summary>
-    /// Represents a type of hyperlink where the text can be different from the target URL.
+    ///     Represents a type of hyperlink where the text can be different from the target URL.
     /// </summary>
     public class MarkdownLinkInline : MarkdownInline, IInlineContainer, ILinkElement
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MarkdownLinkInline"/> class.
+        ///     Initializes a new instance of the <see cref="MarkdownLinkInline" /> class.
         /// </summary>
         public MarkdownLinkInline()
             : base(MarkdownInlineType.MarkdownLink)
@@ -20,27 +42,27 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
         }
 
         /// <summary>
-        /// Gets or sets the contents of the inline.
-        /// </summary>
-        public IList<MarkdownInline>? Inlines { get; set; }
-
-        /// <summary>
-        /// Gets or sets the link URL.
-        /// </summary>
-        public string? Url { get; set; }
-
-        /// <summary>
-        /// Gets or sets a tooltip to display on hover.
-        /// </summary>
-        public string? Tooltip { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ID of a reference, if this is a reference-style link.
+        ///     Gets or sets the ID of a reference, if this is a reference-style link.
         /// </summary>
         public string? ReferenceId { get; set; }
 
         /// <summary>
-        /// Returns the chars that if found means we might have a match.
+        ///     Gets or sets the contents of the inline.
+        /// </summary>
+        public IList<MarkdownInline>? Inlines { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the link URL.
+        /// </summary>
+        public string? Url { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a tooltip to display on hover.
+        /// </summary>
+        public string? Tooltip { get; set; }
+
+        /// <summary>
+        ///     Returns the chars that if found means we might have a match.
         /// </summary>
         internal static void AddTripChars(List<InlineTripCharHelper> tripCharHelpers)
         {
@@ -48,7 +70,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
         }
 
         /// <summary>
-        /// Attempts to parse a markdown link e.g. "[](http://www.reddit.com)".
+        ///     Attempts to parse a markdown link e.g. "[](http://www.reddit.com)".
         /// </summary>
         /// <param name="markdown"> The markdown text. </param>
         /// <param name="start"> The location to start parsing. </param>
@@ -129,10 +151,8 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
                                 linkClose = pos;
                                 break;
                             }
-                            else
-                            {
-                                openParenthesis--;
-                            }
+
+                            openParenthesis--;
                         }
 
                         if (markdown[pos] == '(')
@@ -176,7 +196,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
                     {
                         // Extract the URL (resolving any escape sequences).
                         url = TextRunInline.ResolveEscapeSequences(markdown, linkOpen, tooltipStart).TrimEnd(' ', '\t', '\r', '\n');
-                        tooltip = markdown.Substring(tooltipStart + 2, (linkClose - 1) - (tooltipStart + 2));
+                        tooltip = markdown.Substring(tooltipStart + 2, linkClose - 1 - (tooltipStart + 2));
                     }
                     else
                     {
@@ -200,7 +220,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
                     // We found a regular stand-alone link.
                     var result = new MarkdownLinkInline
                     {
-                        Inlines = Common.ParseInlineChildren(markdown, linkTextOpen, linkTextClose, ignoreLinks: true),
+                        Inlines = Common.ParseInlineChildren(markdown, linkTextOpen, linkTextClose, true),
                         Url = url.Replace(" ", "%20"),
                         Tooltip = tooltip
                     };
@@ -234,7 +254,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
         }
 
         /// <summary>
-        /// If this is a reference-style link, attempts to converts it to a regular link.
+        ///     If this is a reference-style link, attempts to converts it to a regular link.
         /// </summary>
         /// <param name="document"> The document containing the list of references. </param>
         internal void ResolveReference(MarkdownDocument document)
@@ -269,7 +289,7 @@ namespace Pixeval.CommunityToolkit.Markdown.Parsers.Markdown.Inlines
         }
 
         /// <summary>
-        /// Converts the object into it's textual representation.
+        ///     Converts the object into it's textual representation.
         /// </summary>
         /// <returns> The textual representation of this object. </returns>
         public override string? ToString()

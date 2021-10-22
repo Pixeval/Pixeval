@@ -1,8 +1,29 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/MainPage.xaml.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Linq;
 using System.Runtime;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
@@ -27,27 +48,26 @@ namespace Pixeval.Pages
 {
     public sealed partial class MainPage
     {
-        private readonly MainPageViewModel _viewModel = new();
-
-        private readonly NavigationViewTag _recommends = new(typeof(RecommendationPage), App.AppViewModel.MakoClient.Recommends(targetFilter: App.AppViewModel.AppSetting.TargetFilter));
-
-        private readonly NavigationViewTag _bookmarks = new(typeof(BookmarksPage), App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid!, PrivacyPolicy.Public, App.AppViewModel.AppSetting.TargetFilter));
-
-        private readonly NavigationViewTag _rankings = new(typeof(RankingsPage), App.AppViewModel.MakoClient.Ranking(RankOption.Day, DateTime.Today - TimeSpan.FromDays(2)));
-
-        private readonly NavigationViewTag _recentPosts = new(typeof(RecentPostsPage), App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicy.Public));
-
-        private readonly NavigationViewTag _settings = new(typeof(SettingsPage), App.AppViewModel.MakoClient.Configuration);
-
-        private readonly NavigationViewTag _downloads = new(typeof(DownloadListPage), null);
-        
-        private readonly NavigationViewTag _histories = new(typeof(BrowsingHistoryPage), null);
-
         private static UIElement? _connectedAnimationTarget;
 
         // This field contains the view model that the illustration viewer is
         // currently holding if we're navigating back to the MainPage
         private static IllustrationViewModel? _illustrationViewerContent;
+
+        private readonly NavigationViewTag _bookmarks = new(typeof(BookmarksPage), App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid!, PrivacyPolicy.Public, App.AppViewModel.AppSetting.TargetFilter));
+
+        private readonly NavigationViewTag _downloads = new(typeof(DownloadListPage), null);
+
+        private readonly NavigationViewTag _histories = new(typeof(BrowsingHistoryPage), null);
+
+        private readonly NavigationViewTag _rankings = new(typeof(RankingsPage), App.AppViewModel.MakoClient.Ranking(RankOption.Day, DateTime.Today - TimeSpan.FromDays(2)));
+
+        private readonly NavigationViewTag _recentPosts = new(typeof(RecentPostsPage), App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicy.Public));
+
+        private readonly NavigationViewTag _recommends = new(typeof(RecommendationPage), App.AppViewModel.MakoClient.Recommendations(targetFilter: App.AppViewModel.AppSetting.TargetFilter));
+
+        private readonly NavigationViewTag _settings = new(typeof(SettingsPage), App.AppViewModel.MakoClient.Configuration);
+        private readonly MainPageViewModel _viewModel = new();
 
         public MainPage()
         {
@@ -135,7 +155,7 @@ namespace Pixeval.Pages
             var setting = App.AppViewModel.AppSetting;
             MainPageRootNavigationView.SelectedItem = null;
             MainPageRootFrame.Navigate(typeof(SearchResultsPage), App.AppViewModel.MakoClient.Search(
-                text, 
+                text,
                 setting.SearchStartingFromPageNumber,
                 setting.PageLimitForKeywordSearch,
                 setting.TagMatchOption,

@@ -1,54 +1,47 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/IllustrationGridCommandBar.xaml.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using Windows.System;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Popups;
 using Pixeval.Popups.IllustrationResultFilter;
 using Pixeval.UserControls.TokenInput;
-using Pixeval.Utilities;
 using Pixeval.Util;
 using Pixeval.Util.Generic;
 using Pixeval.Util.UI;
+using Pixeval.Utilities;
 using Pixeval.ViewModel;
 
 namespace Pixeval.UserControls
 {
     public sealed partial class IllustrationGridCommandBar
     {
-        private readonly IEnumerable<Control> _defaultCommands;
-
-        public IllustrationGridCommandBar()
-        {
-            InitializeComponent();
-            var defaultCommands = new List<ICommandBarElement>(CommandBar.PrimaryCommands);
-            defaultCommands.AddRange(CommandBar.SecondaryCommands);
-            _defaultCommands = defaultCommands.Where(e => e is AppBarButton).Cast<Control>();
-            CommandBarElements = new ObservableCollection<UIElement>();
-            CommandBarElements.CollectionChanged += (_, args) =>
-            {
-                switch (args)
-                {
-                    case { Action: NotifyCollectionChangedAction.Add }:
-                        if (args is { NewItems: not null })
-                        {
-                            foreach (UIElement argsNewItem in args.NewItems)
-                            {
-                                ExtraCommandsBar.Children.Add(argsNewItem);
-                            }
-                        }
-
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            };
-        }
-
         public static DependencyProperty PrimaryCommandSupplementsProperty = DependencyProperty.Register(
             nameof(PrimaryCommandsSupplements),
             typeof(ObservableCollection<ICommandBarElement>),
@@ -77,6 +70,37 @@ namespace Pixeval.UserControls
             typeof(IllustrationGridViewModel),
             typeof(IllustrationGridCommandBar),
             PropertyMetadata.Create(new IllustrationGridViewModel()));
+
+        private readonly IEnumerable<Control> _defaultCommands;
+
+        private readonly IllustrationResultFilterPopupViewModel _filterPopupViewModel = new();
+
+        public IllustrationGridCommandBar()
+        {
+            InitializeComponent();
+            var defaultCommands = new List<ICommandBarElement>(CommandBar.PrimaryCommands);
+            defaultCommands.AddRange(CommandBar.SecondaryCommands);
+            _defaultCommands = defaultCommands.Where(e => e is AppBarButton).Cast<Control>();
+            CommandBarElements = new ObservableCollection<UIElement>();
+            CommandBarElements.CollectionChanged += (_, args) =>
+            {
+                switch (args)
+                {
+                    case { Action: NotifyCollectionChangedAction.Add }:
+                        if (args is { NewItems: not null })
+                        {
+                            foreach (UIElement argsNewItem in args.NewItems)
+                            {
+                                ExtraCommandsBar.Children.Add(argsNewItem);
+                            }
+                        }
+
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            };
+        }
 
         public ObservableCollection<ICommandBarElement> PrimaryCommandsSupplements
         {
@@ -195,8 +219,6 @@ namespace Pixeval.UserControls
             ViewModel.Illustrations.ForEach(v => v.IsSelected = false);
         }
 
-        private readonly IllustrationResultFilterPopupViewModel _filterPopupViewModel = new();
-
         private void OpenConditionDialogButton_OnChecked(object sender, RoutedEventArgs e)
         {
             var content = new IllustrationResultFilterPopupContent(_filterPopupViewModel);
@@ -248,7 +270,7 @@ namespace Pixeval.UserControls
 
                     return false;
                 };
-            } 
+            }
             else if (popup is IllustrationResultFilterPopupContent { IsReset: true })
             {
                 ViewModel.IllustrationsView.ResetView();

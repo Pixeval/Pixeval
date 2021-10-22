@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/FrameworkElementExtensions.LogicalTree.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.UI.Xaml;
@@ -8,16 +30,16 @@ using Pixeval.CommunityToolkit.Predicates;
 
 namespace Pixeval.CommunityToolkit
 {
-    /// <inheritdoc cref="FrameworkElementExtensions"/>
+    /// <inheritdoc cref="FrameworkElementExtensions" />
     public static class FrameworkElementExtensions
     {
         /// <summary>
-        /// Find the first child of type <see cref="FrameworkElement"/> with a given name, using a depth-first search.
+        ///     Find the first child of type <see cref="FrameworkElement" /> with a given name, using a depth-first search.
         /// </summary>
         /// <param name="element">The root element.</param>
         /// <param name="name">The name of the element to look for.</param>
-        /// <param name="comparisonType">The comparison type to use to match <paramref name="name"/>.</param>
-        /// <returns>The child that was found, or <see langword="null"/>.</returns>
+        /// <param name="comparisonType">The comparison type to use to match <paramref name="name" />.</param>
+        /// <returns>The child that was found, or <see langword="null" />.</returns>
         public static FrameworkElement? FindChild(this FrameworkElement element, string name, StringComparison comparisonType = StringComparison.Ordinal)
         {
             PredicateByName predicateByName = new(name, comparisonType);
@@ -26,11 +48,11 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Find the first child element of a given type, using a depth-first search.
+        ///     Find the first child element of a given type, using a depth-first search.
         /// </summary>
         /// <typeparam name="T">The type of elements to match.</typeparam>
         /// <param name="element">The root element.</param>
-        /// <returns>The child that was found, or <see langword="null"/>.</returns>
+        /// <returns>The child that was found, or <see langword="null" />.</returns>
         public static T? FindChild<T>(this FrameworkElement element)
             where T : FrameworkElement
         {
@@ -40,11 +62,11 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Find the first child element of a given type, using a depth-first search.
+        ///     Find the first child element of a given type, using a depth-first search.
         /// </summary>
         /// <param name="element">The root element.</param>
         /// <param name="type">The type of element to match.</param>
-        /// <returns>The child that was found, or <see langword="null"/>.</returns>
+        /// <returns>The child that was found, or <see langword="null" />.</returns>
         public static FrameworkElement? FindChild(this FrameworkElement element, Type type)
         {
             PredicateByType predicateByType = new(type);
@@ -53,12 +75,12 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Find the first child element matching a given predicate, using a depth-first search.
+        ///     Find the first child element matching a given predicate, using a depth-first search.
         /// </summary>
         /// <typeparam name="T">The type of elements to match.</typeparam>
         /// <param name="element">The root element.</param>
         /// <param name="predicate">The predicate to use to match the child nodes.</param>
-        /// <returns>The child that was found, or <see langword="null"/>.</returns>
+        /// <returns>The child that was found, or <see langword="null" />.</returns>
         public static T? FindChild<T>(this FrameworkElement element, Func<T, bool> predicate)
             where T : FrameworkElement
         {
@@ -68,14 +90,14 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Find the first child element matching a given predicate, using a depth-first search.
+        ///     Find the first child element matching a given predicate, using a depth-first search.
         /// </summary>
         /// <typeparam name="T">The type of elements to match.</typeparam>
         /// <typeparam name="TState">The type of state to use when matching nodes.</typeparam>
         /// <param name="element">The root element.</param>
-        /// <param name="state">The state to give as input to <paramref name="predicate"/>.</param>
+        /// <param name="state">The state to give as input to <paramref name="predicate" />.</param>
         /// <param name="predicate">The predicate to use to match the child nodes.</param>
-        /// <returns>The child that was found, or <see langword="null"/>.</returns>
+        /// <returns>The child that was found, or <see langword="null" />.</returns>
         public static T? FindChild<T, TState>(this FrameworkElement element, TState state, Func<T, TState, bool> predicate)
             where T : FrameworkElement
         {
@@ -85,21 +107,21 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Find the first child element matching a given predicate, using a depth-first search.
+        ///     Find the first child element matching a given predicate, using a depth-first search.
         /// </summary>
         /// <typeparam name="T">The type of elements to match.</typeparam>
         /// <typeparam name="TPredicate">The type of predicate in use.</typeparam>
         /// <param name="element">The root element.</param>
         /// <param name="predicate">The predicate to use to match the child nodes.</param>
-        /// <returns>The child that was found, or <see langword="null"/>.</returns>
+        /// <returns>The child that was found, or <see langword="null" />.</returns>
         private static T? FindChild<T, TPredicate>(this FrameworkElement element, ref TPredicate predicate)
             where T : FrameworkElement
             where TPredicate : struct, IPredicate<T>
         {
-        // Jump label to manually optimize the tail recursive paths for elements with a single
-        // child by just overwriting the current element and jumping back to the start of the
-        // method. This avoids a recursive call and one stack frame every time.
-        Start:
+            // Jump label to manually optimize the tail recursive paths for elements with a single
+            // child by just overwriting the current element and jumping back to the start of the
+            // method. This avoids a recursive call and one stack frame every time.
+            Start:
 
             switch (element)
             {
@@ -258,23 +280,24 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Find the first child (or self) of type <see cref="FrameworkElement"/> with a given name, using a depth-first search.
+        ///     Find the first child (or self) of type <see cref="FrameworkElement" /> with a given name, using a depth-first
+        ///     search.
         /// </summary>
         /// <param name="element">The root element.</param>
         /// <param name="name">The name of the element to look for.</param>
-        /// <param name="comparisonType">The comparison type to use to match <paramref name="name"/>.</param>
-        /// <returns>The child (or self) that was found, or <see langword="null"/>.</returns>
+        /// <param name="comparisonType">The comparison type to use to match <paramref name="name" />.</param>
+        /// <returns>The child (or self) that was found, or <see langword="null" />.</returns>
         public static FrameworkElement? FindChildOrSelf(this FrameworkElement element, string name, StringComparison comparisonType = StringComparison.Ordinal)
         {
             return name.Equals(element.Name, comparisonType) ? element : FindChild(element, name, comparisonType);
         }
 
         /// <summary>
-        /// Find the first child (or self) element of a given type, using a depth-first search.
+        ///     Find the first child (or self) element of a given type, using a depth-first search.
         /// </summary>
         /// <typeparam name="T">The type of elements to match.</typeparam>
         /// <param name="element">The root element.</param>
-        /// <returns>The child (or self) that was found, or <see langword="null"/>.</returns>
+        /// <returns>The child (or self) that was found, or <see langword="null" />.</returns>
         public static T? FindChildOrSelf<T>(this FrameworkElement element)
             where T : FrameworkElement
         {
@@ -282,23 +305,23 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Find the first child (or self) element of a given type, using a depth-first search.
+        ///     Find the first child (or self) element of a given type, using a depth-first search.
         /// </summary>
         /// <param name="element">The root element.</param>
         /// <param name="type">The type of element to match.</param>
-        /// <returns>The child (or self) that was found, or <see langword="null"/>.</returns>
+        /// <returns>The child (or self) that was found, or <see langword="null" />.</returns>
         public static FrameworkElement? FindChildOrSelf(this FrameworkElement element, Type type)
         {
             return element.GetType() == type ? element : FindChild(element, type);
         }
 
         /// <summary>
-        /// Find the first child (or self) element matching a given predicate, using a depth-first search.
+        ///     Find the first child (or self) element matching a given predicate, using a depth-first search.
         /// </summary>
         /// <typeparam name="T">The type of elements to match.</typeparam>
         /// <param name="element">The root element.</param>
         /// <param name="predicate">The predicate to use to match the child nodes.</param>
-        /// <returns>The child (or self) that was found, or <see langword="null"/>.</returns>
+        /// <returns>The child (or self) that was found, or <see langword="null" />.</returns>
         public static T? FindChildOrSelf<T>(this FrameworkElement element, Func<T, bool> predicate)
             where T : FrameworkElement
         {
@@ -311,14 +334,14 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Find the first child (or self) element matching a given predicate, using a depth-first search.
+        ///     Find the first child (or self) element matching a given predicate, using a depth-first search.
         /// </summary>
         /// <typeparam name="T">The type of elements to match.</typeparam>
         /// <typeparam name="TState">The type of state to use when matching nodes.</typeparam>
         /// <param name="element">The root element.</param>
-        /// <param name="state">The state to give as input to <paramref name="predicate"/>.</param>
+        /// <param name="state">The state to give as input to <paramref name="predicate" />.</param>
         /// <param name="predicate">The predicate to use to match the child nodes.</param>
-        /// <returns>The child (or self) that was found, or <see langword="null"/>.</returns>
+        /// <returns>The child (or self) that was found, or <see langword="null" />.</returns>
         public static T? FindChildOrSelf<T, TState>(this FrameworkElement element, TState state, Func<T, TState, bool> predicate)
             where T : FrameworkElement
         {
@@ -331,20 +354,20 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Find all logical child elements of the specified element. This method can be chained with
-        /// LINQ calls to add additional filters or projections on top of the returned results.
-        /// <para>
-        /// This method is meant to provide extra flexibility in specific scenarios and it should not
-        /// be used when only the first item is being looked for. In those cases, use one of the
-        /// available <see cref="FindChild{T}(FrameworkElement)"/> overloads instead, which will
-        /// offer a more compact syntax as well as better performance in those cases.
-        /// </para>
+        ///     Find all logical child elements of the specified element. This method can be chained with
+        ///     LINQ calls to add additional filters or projections on top of the returned results.
+        ///     <para>
+        ///         This method is meant to provide extra flexibility in specific scenarios and it should not
+        ///         be used when only the first item is being looked for. In those cases, use one of the
+        ///         available <see cref="FindChild{T}(FrameworkElement)" /> overloads instead, which will
+        ///         offer a more compact syntax as well as better performance in those cases.
+        ///     </para>
         /// </summary>
         /// <param name="element">The root element.</param>
-        /// <returns>All the child <see cref="FrameworkElement"/> instance from <paramref name="element"/>.</returns>
+        /// <returns>All the child <see cref="FrameworkElement" /> instance from <paramref name="element" />.</returns>
         public static IEnumerable<FrameworkElement> FindChildren(this FrameworkElement element)
         {
-        Start:
+            Start:
 
             if (element is Panel panel)
             {
@@ -446,12 +469,12 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Find the first parent of type <see cref="FrameworkElement"/> with a given name.
+        ///     Find the first parent of type <see cref="FrameworkElement" /> with a given name.
         /// </summary>
         /// <param name="element">The starting element.</param>
         /// <param name="name">The name of the element to look for.</param>
-        /// <param name="comparisonType">The comparison type to use to match <paramref name="name"/>.</param>
-        /// <returns>The parent that was found, or <see langword="null"/>.</returns>
+        /// <param name="comparisonType">The comparison type to use to match <paramref name="name" />.</param>
+        /// <returns>The parent that was found, or <see langword="null" />.</returns>
         public static FrameworkElement? FindParent(this FrameworkElement element, string name, StringComparison comparisonType = StringComparison.Ordinal)
         {
             PredicateByName predicateByName = new(name, comparisonType);
@@ -460,11 +483,11 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Find the first parent element of a given type.
+        ///     Find the first parent element of a given type.
         /// </summary>
         /// <typeparam name="T">The type of elements to match.</typeparam>
         /// <param name="element">The starting element.</param>
-        /// <returns>The parent that was found, or <see langword="null"/>.</returns>
+        /// <returns>The parent that was found, or <see langword="null" />.</returns>
         public static T? FindParent<T>(this FrameworkElement element)
             where T : FrameworkElement
         {
@@ -474,11 +497,11 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Find the first parent element of a given type.
+        ///     Find the first parent element of a given type.
         /// </summary>
         /// <param name="element">The starting element.</param>
         /// <param name="type">The type of element to match.</param>
-        /// <returns>The parent that was found, or <see langword="null"/>.</returns>
+        /// <returns>The parent that was found, or <see langword="null" />.</returns>
         public static FrameworkElement? FindParent(this FrameworkElement element, Type type)
         {
             PredicateByType predicateByType = new(type);
@@ -487,12 +510,12 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Find the first parent element matching a given predicate.
+        ///     Find the first parent element matching a given predicate.
         /// </summary>
         /// <typeparam name="T">The type of elements to match.</typeparam>
         /// <param name="element">The starting element.</param>
         /// <param name="predicate">The predicate to use to match the parent nodes.</param>
-        /// <returns>The parent that was found, or <see langword="null"/>.</returns>
+        /// <returns>The parent that was found, or <see langword="null" />.</returns>
         public static T? FindParent<T>(this FrameworkElement element, Func<T, bool> predicate)
             where T : FrameworkElement
         {
@@ -502,14 +525,14 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Find the first parent element matching a given predicate.
+        ///     Find the first parent element matching a given predicate.
         /// </summary>
         /// <typeparam name="T">The type of elements to match.</typeparam>
         /// <typeparam name="TState">The type of state to use when matching nodes.</typeparam>
         /// <param name="element">The starting element.</param>
-        /// <param name="state">The state to give as input to <paramref name="predicate"/>.</param>
+        /// <param name="state">The state to give as input to <paramref name="predicate" />.</param>
         /// <param name="predicate">The predicate to use to match the parent nodes.</param>
-        /// <returns>The parent that was found, or <see langword="null"/>.</returns>
+        /// <returns>The parent that was found, or <see langword="null" />.</returns>
         public static T? FindParent<T, TState>(this FrameworkElement element, TState state, Func<T, TState, bool> predicate)
             where T : FrameworkElement
         {
@@ -519,13 +542,13 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Find the first parent element matching a given predicate.
+        ///     Find the first parent element matching a given predicate.
         /// </summary>
         /// <typeparam name="T">The type of elements to match.</typeparam>
         /// <typeparam name="TPredicate">The type of predicate in use.</typeparam>
         /// <param name="element">The starting element.</param>
         /// <param name="predicate">The predicate to use to match the parent nodes.</param>
-        /// <returns>The parent that was found, or <see langword="null"/>.</returns>
+        /// <returns>The parent that was found, or <see langword="null" />.</returns>
         private static T? FindParent<T, TPredicate>(this FrameworkElement element, ref TPredicate predicate)
             where T : FrameworkElement
             where TPredicate : struct, IPredicate<T>
@@ -547,12 +570,12 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Find the first parent (or self) of type <see cref="FrameworkElement"/> with a given name.
+        ///     Find the first parent (or self) of type <see cref="FrameworkElement" /> with a given name.
         /// </summary>
         /// <param name="element">The starting element.</param>
         /// <param name="name">The name of the element to look for.</param>
-        /// <param name="comparisonType">The comparison type to use to match <paramref name="name"/>.</param>
-        /// <returns>The parent (or self) that was found, or <see langword="null"/>.</returns>
+        /// <param name="comparisonType">The comparison type to use to match <paramref name="name" />.</param>
+        /// <returns>The parent (or self) that was found, or <see langword="null" />.</returns>
         public static FrameworkElement? FindParentOrSelf(this FrameworkElement element, string name, StringComparison comparisonType = StringComparison.Ordinal)
         {
             if (name.Equals(element.Name, comparisonType))
@@ -564,11 +587,11 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Find the first parent (or self) element of a given type.
+        ///     Find the first parent (or self) element of a given type.
         /// </summary>
         /// <typeparam name="T">The type of elements to match.</typeparam>
         /// <param name="element">The starting element.</param>
-        /// <returns>The parent (or self) that was found, or <see langword="null"/>.</returns>
+        /// <returns>The parent (or self) that was found, or <see langword="null" />.</returns>
         public static T? FindParentOrSelf<T>(this FrameworkElement element)
             where T : FrameworkElement
         {
@@ -581,11 +604,11 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Find the first parent (or self) element of a given type.
+        ///     Find the first parent (or self) element of a given type.
         /// </summary>
         /// <param name="element">The starting element.</param>
         /// <param name="type">The type of element to match.</param>
-        /// <returns>The parent (or self) that was found, or <see langword="null"/>.</returns>
+        /// <returns>The parent (or self) that was found, or <see langword="null" />.</returns>
         public static FrameworkElement? FindParentOrSelf(this FrameworkElement element, Type type)
         {
             if (element.GetType() == type)
@@ -597,12 +620,12 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Find the first parent (or self) element matching a given predicate.
+        ///     Find the first parent (or self) element matching a given predicate.
         /// </summary>
         /// <typeparam name="T">The type of elements to match.</typeparam>
         /// <param name="element">The starting element.</param>
         /// <param name="predicate">The predicate to use to match the parent nodes.</param>
-        /// <returns>The parent (or self) that was found, or <see langword="null"/>.</returns>
+        /// <returns>The parent (or self) that was found, or <see langword="null" />.</returns>
         public static T? FindParentOrSelf<T>(this FrameworkElement element, Func<T, bool> predicate)
             where T : FrameworkElement
         {
@@ -615,14 +638,14 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Find the first parent (or self) element matching a given predicate.
+        ///     Find the first parent (or self) element matching a given predicate.
         /// </summary>
         /// <typeparam name="T">The type of elements to match.</typeparam>
         /// <typeparam name="TState">The type of state to use when matching nodes.</typeparam>
         /// <param name="element">The starting element.</param>
-        /// <param name="state">The state to give as input to <paramref name="predicate"/>.</param>
+        /// <param name="state">The state to give as input to <paramref name="predicate" />.</param>
         /// <param name="predicate">The predicate to use to match the parent nodes.</param>
-        /// <returns>The parent (or self) that was found, or <see langword="null"/>.</returns>
+        /// <returns>The parent (or self) that was found, or <see langword="null" />.</returns>
         public static T? FindParentOrSelf<T, TState>(this FrameworkElement element, TState state, Func<T, TState, bool> predicate)
             where T : FrameworkElement
         {
@@ -635,17 +658,17 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Find all parent elements of the specified element. This method can be chained with
-        /// LINQ calls to add additional filters or projections on top of the returned results.
-        /// <para>
-        /// This method is meant to provide extra flexibility in specific scenarios and it should not
-        /// be used when only the first item is being looked for. In those cases, use one of the
-        /// available <see cref="FindParent{T}(FrameworkElement)"/> overloads instead, which will
-        /// offer a more compact syntax as well as better performance in those cases.
-        /// </para>
+        ///     Find all parent elements of the specified element. This method can be chained with
+        ///     LINQ calls to add additional filters or projections on top of the returned results.
+        ///     <para>
+        ///         This method is meant to provide extra flexibility in specific scenarios and it should not
+        ///         be used when only the first item is being looked for. In those cases, use one of the
+        ///         available <see cref="FindParent{T}(FrameworkElement)" /> overloads instead, which will
+        ///         offer a more compact syntax as well as better performance in those cases.
+        ///     </para>
         /// </summary>
         /// <param name="element">The root element.</param>
-        /// <returns>All the parent <see cref="FrameworkElement"/> instance from <paramref name="element"/>.</returns>
+        /// <returns>All the parent <see cref="FrameworkElement" /> instance from <paramref name="element" />.</returns>
         public static IEnumerable<FrameworkElement> FindParents(this FrameworkElement element)
         {
             while (true)
@@ -662,10 +685,10 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Gets the content property of this element as defined by <see cref="ContentPropertyAttribute"/>, if available.
+        ///     Gets the content property of this element as defined by <see cref="ContentPropertyAttribute" />, if available.
         /// </summary>
         /// <param name="element">The parent element.</param>
-        /// <returns>The retrieved content control, or <see langword="null"/> if not available.</returns>
+        /// <returns>The retrieved content control, or <see langword="null" /> if not available.</returns>
         public static UIElement? GetContentControl(this FrameworkElement element)
         {
             var type = element.GetType();
@@ -693,14 +716,19 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Provides a WPF compatible version of FindResource to provide a static resource lookup.
-        /// If the key is not found in the current element's resources, the logical tree is then
-        /// searched element-by-element to look for the resource in each element's resources.
-        /// If none of the elements contain the resource, the Application's resources are then searched.
-        /// <para>See: <seealso href="https://docs.microsoft.com/dotnet/api/system.windows.frameworkelement.findresource"/>.</para>
-        /// <para>And also: <seealso href="https://docs.microsoft.com/dotnet/desktop-wpf/fundamentals/xaml-resources-define#static-resource-lookup-behavior"/>.</para>
+        ///     Provides a WPF compatible version of FindResource to provide a static resource lookup.
+        ///     If the key is not found in the current element's resources, the logical tree is then
+        ///     searched element-by-element to look for the resource in each element's resources.
+        ///     If none of the elements contain the resource, the Application's resources are then searched.
+        ///     <para>See: <seealso href="https://docs.microsoft.com/dotnet/api/system.windows.frameworkelement.findresource" />.</para>
+        ///     <para>
+        ///         And also:
+        ///         <seealso
+        ///             href="https://docs.microsoft.com/dotnet/desktop-wpf/fundamentals/xaml-resources-define#static-resource-lookup-behavior" />
+        ///         .
+        ///     </para>
         /// </summary>
-        /// <param name="element">The <see cref="FrameworkElement"/> to start searching for the target resource.</param>
+        /// <param name="element">The <see cref="FrameworkElement" /> to start searching for the target resource.</param>
         /// <param name="resourceKey">The resource key to search for.</param>
         /// <returns>The requested resource.</returns>
         /// <exception cref="Exception">Thrown when no resource is found with the specified key.</exception>
@@ -711,22 +739,33 @@ namespace Pixeval.CommunityToolkit
                 return value!;
             }
 
-            static object Throw(object resourceKey) => throw new KeyNotFoundException($"No resource was found with the key \"{resourceKey}\"");
+            static object Throw(object resourceKey)
+            {
+                throw new KeyNotFoundException($"No resource was found with the key \"{resourceKey}\"");
+            }
 
             return Throw(resourceKey);
         }
 
         /// <summary>
-        /// Provides a WPF compatible version of TryFindResource to provide a static resource lookup.
-        /// If the key is not found in the current element's resources, the logical tree is then
-        /// searched element-by-element to look for the resource in each element's resources.
-        /// If none of the elements contain the resource, the Application's resources are then searched.
-        /// <para>See: <seealso href="https://docs.microsoft.com/dotnet/api/system.windows.frameworkelement.tryfindresource"/>.</para>
-        /// <para>And also: <seealso href="https://docs.microsoft.com/dotnet/desktop-wpf/fundamentals/xaml-resources-define#static-resource-lookup-behavior"/>.</para>
+        ///     Provides a WPF compatible version of TryFindResource to provide a static resource lookup.
+        ///     If the key is not found in the current element's resources, the logical tree is then
+        ///     searched element-by-element to look for the resource in each element's resources.
+        ///     If none of the elements contain the resource, the Application's resources are then searched.
+        ///     <para>
+        ///         See: <seealso href="https://docs.microsoft.com/dotnet/api/system.windows.frameworkelement.tryfindresource" />
+        ///         .
+        ///     </para>
+        ///     <para>
+        ///         And also:
+        ///         <seealso
+        ///             href="https://docs.microsoft.com/dotnet/desktop-wpf/fundamentals/xaml-resources-define#static-resource-lookup-behavior" />
+        ///         .
+        ///     </para>
         /// </summary>
-        /// <param name="element">The <see cref="FrameworkElement"/> to start searching for the target resource.</param>
+        /// <param name="element">The <see cref="FrameworkElement" /> to start searching for the target resource.</param>
         /// <param name="resourceKey">The resource key to search for.</param>
-        /// <returns>The requested resource, or <see langword="null"/> if it wasn't found.</returns>
+        /// <returns>The requested resource, or <see langword="null" /> if it wasn't found.</returns>
         public static object? TryFindResource(this FrameworkElement element, object resourceKey)
         {
             object? value = null;
@@ -753,14 +792,22 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Provides a WPF compatible version of TryFindResource to provide a static resource lookup.
-        /// If the key is not found in the current element's resources, the logical tree is then
-        /// searched element-by-element to look for the resource in each element's resources.
-        /// If none of the elements contain the resource, the Application's resources are then searched.
-        /// <para>See: <seealso href="https://docs.microsoft.com/dotnet/api/system.windows.frameworkelement.tryfindresource"/>.</para>
-        /// <para>And also: <seealso href="https://docs.microsoft.com/dotnet/desktop-wpf/fundamentals/xaml-resources-define#static-resource-lookup-behavior"/>.</para>
+        ///     Provides a WPF compatible version of TryFindResource to provide a static resource lookup.
+        ///     If the key is not found in the current element's resources, the logical tree is then
+        ///     searched element-by-element to look for the resource in each element's resources.
+        ///     If none of the elements contain the resource, the Application's resources are then searched.
+        ///     <para>
+        ///         See: <seealso href="https://docs.microsoft.com/dotnet/api/system.windows.frameworkelement.tryfindresource" />
+        ///         .
+        ///     </para>
+        ///     <para>
+        ///         And also:
+        ///         <seealso
+        ///             href="https://docs.microsoft.com/dotnet/desktop-wpf/fundamentals/xaml-resources-define#static-resource-lookup-behavior" />
+        ///         .
+        ///     </para>
         /// </summary>
-        /// <param name="element">The <see cref="FrameworkElement"/> to start searching for the target resource.</param>
+        /// <param name="element">The <see cref="FrameworkElement" /> to start searching for the target resource.</param>
         /// <param name="resourceKey">The resource key to search for.</param>
         /// <param name="value">The resulting value, if present.</param>
         /// <returns>Whether or not a value with the specified key has been found.</returns>

@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval.LoginProxy
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval.LoginProxy
+// Copyright (c) 2021 Pixeval.LoginProxy/PixivProxyServer.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -17,16 +39,6 @@ namespace Pixeval.LoginProxy
         private readonly X509Certificate2? _certificate;
         private readonly TcpListener? _tcpListener;
 
-        private static Task<IPAddress[]> GetTargetIp(string host)
-        {
-            return !host.Contains("pixiv") ? Dns.GetHostAddressesAsync(host) : Task.FromResult(new[]
-            {
-                IPAddress.Parse("210.140.131.219"),
-                IPAddress.Parse("210.140.131.223"),
-                IPAddress.Parse("210.140.131.226")
-            });
-        }
-
         private PixivProxyServer(X509Certificate2 certificate, TcpListener tcpListener)
         {
             _certificate = certificate;
@@ -35,9 +47,27 @@ namespace Pixeval.LoginProxy
             _tcpListener.BeginAcceptTcpClient(AcceptTcpClientCallback, _tcpListener);
         }
 
+        public void Dispose()
+        {
+            _certificate?.Dispose();
+            _tcpListener?.Stop();
+        }
+
+        private static Task<IPAddress[]> GetTargetIp(string host)
+        {
+            return !host.Contains("pixiv")
+                ? Dns.GetHostAddressesAsync(host)
+                : Task.FromResult(new[]
+                {
+                    IPAddress.Parse("210.140.131.219"),
+                    IPAddress.Parse("210.140.131.223"),
+                    IPAddress.Parse("210.140.131.226")
+                });
+        }
+
         public static PixivProxyServer Create(IPAddress ip, int port, X509Certificate2 certificate)
         {
-            return new(certificate, new TcpListener(ip, port));
+            return new PixivProxyServer(certificate, new TcpListener(ip, port));
         }
 
         private async void AcceptTcpClientCallback(IAsyncResult result)
@@ -53,7 +83,11 @@ namespace Pixeval.LoginProxy
                         var clientStream = client.GetStream();
                         var content = await new StreamReader(clientStream).ReadLineAsync();
                         // content starts with "CONNECT" means it's trying to establish an HTTPS connection
-                        if (content == null || !content.StartsWith("CONNECT")) return;
+                        if (content == null || !content.StartsWith("CONNECT"))
+                        {
+                            return;
+                        }
+
                         await using var writer = new StreamWriter(clientStream);
                         await writer.WriteLineAsync("HTTP/1.1 200 Connection established");
                         await writer.WriteLineAsync($"Timestamp: {DateTime.Now}");
@@ -81,7 +115,7 @@ namespace Pixeval.LoginProxy
                 }
             }
         }
-        
+
 
         private static async Task<SslStream> CreateConnection(IPAddress[] ipAddresses)
         {
@@ -112,12 +146,6 @@ namespace Pixeval.LoginProxy
             }
 
             return proxyPort;
-        }
-
-        public void Dispose()
-        {
-            _certificate?.Dispose();
-            _tcpListener?.Stop();
         }
     }
 }

@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/UIHelper.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -15,13 +37,15 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CommunityToolkit;
-using Pixeval.Utilities;
 using Pixeval.Misc;
+using Pixeval.Utilities;
 
 namespace Pixeval.Util.UI
 {
     public static partial class UIHelper
     {
+        private static readonly PropertyInfo AppLogoOverrideUriProperty = typeof(ToastContentBuilder).GetProperty("AppLogoOverrideUri", BindingFlags.NonPublic | BindingFlags.Instance)!;
+
         public static T GetDataContext<T>(this FrameworkElement element)
         {
             return (T) element.DataContext;
@@ -51,16 +75,13 @@ namespace Pixeval.Util.UI
             builder.Show();
         }
 
-        private static readonly PropertyInfo AppLogoOverrideUriProperty = typeof(ToastContentBuilder).GetProperty("AppLogoOverrideUri", BindingFlags.NonPublic | BindingFlags.Instance)!;
-
         public static ToastContentBuilder AddAppLogoOverride(
-            this ToastContentBuilder builder, 
-            string uri, 
+            this ToastContentBuilder builder,
+            string uri,
             ToastGenericAppLogoCrop? hintCrop = default,
             string? alternateText = default,
             bool? addImageQuery = default)
         {
-
             var appLogoOverrideUri = new ToastGenericAppLogo
             {
                 Source = uri
@@ -135,11 +156,11 @@ namespace Pixeval.Util.UI
             return sb;
         }
 
-        public static DoubleAnimation CreateDoubleAnimation(this DependencyObject depObj, 
+        public static DoubleAnimation CreateDoubleAnimation(this DependencyObject depObj,
             string property,
             Duration duration = default,
-            EasingFunctionBase? easingFunction= null, 
-            double by = default, 
+            EasingFunctionBase? easingFunction = null,
+            double by = default,
             double from = default,
             double to = default)
         {
@@ -160,7 +181,7 @@ namespace Pixeval.Util.UI
         {
             return CreateStoryboard(timeline);
         }
-        
+
         public static void BeginStoryboard(this Timeline timeline)
         {
             CreateStoryboard(timeline).Begin();
@@ -180,7 +201,7 @@ namespace Pixeval.Util.UI
 
         public static void NavigateByNavigationViewTag(this Frame frame, NavigationView sender, NavigationTransitionInfo? transitionInfo = null)
         {
-            if (sender.SelectedItem is NavigationViewItem {Tag: NavigationViewTag tag})
+            if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag })
             {
                 frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo ?? new SuppressNavigationTransitionInfo());
             }
@@ -190,6 +211,7 @@ namespace Pixeval.Util.UI
         {
             return visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
         }
+
         public static Visibility ToVisibility(this bool value)
         {
             return value ? Visibility.Visible : Visibility.Collapsed;

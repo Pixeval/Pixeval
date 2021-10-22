@@ -1,26 +1,22 @@
-﻿#region Copyright (c) Pixeval/Mako
+﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
 
-// MIT License
+// GPL v3 License
 // 
-// Copyright (c) Pixeval 2021 Mako/FeedEngine.cs
+// Pixeval/Pixeval.CoreApi
+// Copyright (c) 2021 Pixeval.CoreApi/FeedEngine.cs
 // 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 // 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 // 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
@@ -110,6 +106,7 @@ namespace Pixeval.CoreApi.Engine.Implements
                         PixivFetchEngine.EngineHandle.Complete();
                         return false;
                     }
+
                     await UpdateAsync(ParseFeedJson(JsonDocument.Parse(json).RootElement.GetProperty("stacc"))).ConfigureAwait(false);
                     _feedRequestContext = ExtractRequestContextFromJsonElement(JsonDocument.Parse(json).RootElement.GetProperty("stacc"));
                     return true;
@@ -191,18 +188,18 @@ namespace Pixeval.CoreApi.Engine.Implements
 
                     FeedType? feedType = status.Value.GetPropertyString("type") switch
                     {
-                        "add_bookmark"       => FeedType.AddBookmark,
-                        "add_illust"         => FeedType.AddIllust,
+                        "add_bookmark" => FeedType.AddBookmark,
+                        "add_illust" => FeedType.AddIllust,
                         "add_novel_bookmark" => FeedType.AddNovelBookmark,
-                        "add_favorite"       => FeedType.AddFavorite,
-                        _                    => null
+                        "add_favorite" => FeedType.AddFavorite,
+                        _ => null
                     };
                     var feedTargetId = feedType switch
                     {
                         FeedType.AddBookmark or FeedType.AddIllust => status.Value.GetProperty("ref_illust").GetPropertyString("id"),
-                        FeedType.AddFavorite                       => status.Value.GetProperty("ref_user").GetPropertyLong("id").ToString(), // long & string in two objects with almost the same properties? fuck pixiv
-                        FeedType.AddNovelBookmark                  => status.Value.GetProperty("ref_novel").GetPropertyString("id"),
-                        _                                          => null
+                        FeedType.AddFavorite => status.Value.GetProperty("ref_user").GetPropertyLong("id").ToString(), // long & string in two objects with almost the same properties? fuck pixiv
+                        FeedType.AddNovelBookmark => status.Value.GetProperty("ref_novel").GetPropertyString("id"),
+                        _ => null
                     };
                     if (feedTargetId is null)
                     {

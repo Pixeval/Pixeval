@@ -136,7 +136,8 @@
                         </card:CardControl.Resources>
                         <interactivity:Interaction.Behaviors>
                             <core:EventTriggerBehavior EventName="PointerEntered">
-                                <media:ControlStoryboardAction Storyboard="{StaticResource ThumbnailScaleOutStoryboard}" />
+                                <media:ControlStoryboardAction
+                                    Storyboard="{StaticResource ThumbnailScaleOutStoryboard}" />
                             </core:EventTriggerBehavior>
                             <core:EventTriggerBehavior EventName="PointerExited">
                                 <media:ControlStoryboardAction ControlStoryboardOption="Play"

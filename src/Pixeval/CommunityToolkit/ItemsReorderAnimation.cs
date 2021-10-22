@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/ItemsReorderAnimation.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using Windows.ApplicationModel;
 using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
@@ -8,12 +30,12 @@ using Microsoft.UI.Xaml.Hosting;
 namespace Pixeval.CommunityToolkit
 {
     /// <summary>
-    /// Provides the ability to assign a reorder animation to a <see cref="ListViewBase"/>.
+    ///     Provides the ability to assign a reorder animation to a <see cref="ListViewBase" />.
     /// </summary>
     public static class ItemsReorderAnimation
     {
         /// <summary>
-        /// Identifies the attached "Duration" <see cref="DependencyProperty"/>.
+        ///     Identifies the attached "Duration" <see cref="DependencyProperty" />.
         /// </summary>
         public static readonly DependencyProperty DurationProperty = DependencyProperty.RegisterAttached(
             "Duration",
@@ -22,7 +44,7 @@ namespace Pixeval.CommunityToolkit
             new PropertyMetadata(TimeSpan.Zero, OnDurationChanged));
 
         /// <summary>
-        /// Identifies the attached "ReorderAnimation" <see cref="DependencyProperty"/>.
+        ///     Identifies the attached "ReorderAnimation" <see cref="DependencyProperty" />.
         /// </summary>
         private static readonly DependencyProperty ReorderAnimationProperty = DependencyProperty.RegisterAttached(
             "ReorderAnimation",
@@ -31,17 +53,17 @@ namespace Pixeval.CommunityToolkit
             new PropertyMetadata(null));
 
         /// <summary>
-        /// Gets the value of the <see cref="DurationProperty"/> property.
+        ///     Gets the value of the <see cref="DurationProperty" /> property.
         /// </summary>
-        /// <param name="listView">The <see cref="ListViewBase"/> to get the value for.</param>
-        /// <returns>The retrieved <see cref="TimeSpan"/> value.</returns>
+        /// <param name="listView">The <see cref="ListViewBase" /> to get the value for.</param>
+        /// <returns>The retrieved <see cref="TimeSpan" /> value.</returns>
         public static TimeSpan GetDuration(ListViewBase listView)
         {
             return (TimeSpan) listView.GetValue(DurationProperty);
         }
 
         /// <summary>
-        /// Sets a value for the duration, in milliseconds, the animation should take.
+        ///     Sets a value for the duration, in milliseconds, the animation should take.
         /// </summary>
         /// <param name="listView">the object to set the value on.</param>
         /// <param name="value">The duration.</param>
@@ -51,10 +73,10 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Callback to apply the reorder animation when <see cref="DurationProperty"/> changes.
+        ///     Callback to apply the reorder animation when <see cref="DurationProperty" /> changes.
         /// </summary>
         /// <param name="d">The target object the property was changed for.</param>
-        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance for the current event.</param>
+        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs" /> instance for the current event.</param>
         private static void OnDurationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (DesignMode.DesignModeEnabled)
@@ -75,9 +97,9 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Updates the reorder animation for a target <see cref="ListViewBase"/> instance.
+        ///     Updates the reorder animation for a target <see cref="ListViewBase" /> instance.
         /// </summary>
-        /// <param name="listView">The target <see cref="ListViewBase"/> instance.</param>
+        /// <param name="listView">The target <see cref="ListViewBase" /> instance.</param>
         /// <param name="duration">The duration of the animation.</param>
         private static void AssignReorderAnimation(UIElement listView, TimeSpan duration)
         {
@@ -112,10 +134,10 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Updates the reorder animation to each container, whenever one changes.
+        ///     Updates the reorder animation to each container, whenever one changes.
         /// </summary>
-        /// <param name="sender">The sender <see cref="ListViewBase"/> instance.</param>
-        /// <param name="args">The <see cref="ContainerContentChangingEventArgs"/> instance for the current container change.</param>
+        /// <param name="sender">The sender <see cref="ListViewBase" /> instance.</param>
+        /// <param name="args">The <see cref="ContainerContentChangingEventArgs" /> instance for the current container change.</param>
         private static void OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
         {
             if (args.InRecycleQueue)
@@ -132,10 +154,10 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Pokes the Z index of each container when one is chosen, to ensure animations are displayed correctly.
+        ///     Pokes the Z index of each container when one is chosen, to ensure animations are displayed correctly.
         /// </summary>
-        /// <param name="sender">The sender <see cref="ListViewBase"/> instance.</param>
-        /// <param name="args">The <see cref="ContainerContentChangingEventArgs"/> instance for the current container event.</param>
+        /// <param name="sender">The sender <see cref="ListViewBase" /> instance.</param>
+        /// <param name="args">The <see cref="ContainerContentChangingEventArgs" /> instance for the current container event.</param>
         private static void OnChoosingItemContainer(ListViewBase sender, ChoosingItemContainerEventArgs args)
         {
             if (args.ItemContainer is not null)
@@ -145,9 +167,9 @@ namespace Pixeval.CommunityToolkit
         }
 
         /// <summary>
-        /// Pokes the Z index of a target <see cref="UIElement"/>.
+        ///     Pokes the Z index of a target <see cref="UIElement" />.
         /// </summary>
-        /// <param name="element">The target <see cref="UIElement"/> to poke the Z index for.</param>
+        /// <param name="element">The target <see cref="UIElement" /> to poke the Z index for.</param>
         private static void PokeUIElementZIndex(UIElement element)
         {
             var oldZIndex = Canvas.GetZIndex(element);

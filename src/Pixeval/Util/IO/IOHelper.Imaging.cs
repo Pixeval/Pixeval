@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/IOHelper.Imaging.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,15 +31,14 @@ using Windows.Storage.Streams;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Utilities;
-using Pixeval.Util.Generic;
 
 namespace Pixeval.Util.IO
 {
     public static partial class IOHelper
     {
         /// <summary>
-        /// Re-encode and decode the image that wrapped in <paramref name="imageStream"/>. Note that this function
-        /// is intended to be used when the image is about to be displayed on the screen instead of saving to file
+        ///     Re-encode and decode the image that wrapped in <paramref name="imageStream" />. Note that this function
+        ///     is intended to be used when the image is about to be displayed on the screen instead of saving to file
         /// </summary>
         /// <returns></returns>
         public static async Task<SoftwareBitmapSource> EncodeSoftwareBitmapSourceAsync(this IRandomAccessStream imageStream, bool disposeOfImageStream)
@@ -52,18 +73,17 @@ namespace Pixeval.Util.IO
         }
 
         /// <summary>
-        /// Writes the frames that are contained in <paramref name="frames"/> into <paramref name="target"/>
-        /// and encodes to a GIF format
+        ///     Writes the frames that are contained in <paramref name="frames" /> into <paramref name="target" />
+        ///     and encodes to a GIF format
         /// </summary>
         /// <returns></returns>
         public static async Task WriteGifBitmapAsync(IRandomAccessStream target, IEnumerable<IRandomAccessStream> frames, int delayInMilliseconds)
         {
-
             var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.GifEncoderId, target);
             await encoder.BitmapProperties.SetPropertiesAsync(new Dictionary<string, BitmapTypedValue> // wtf?
             {
                 ["/appext/Application"] = new("NETSCAPE2.0".GetBytes(), PropertyType.UInt8Array),
-                ["/appext/Data"] = new(new byte[] {3, 1, 0, 0}, PropertyType.UInt8Array),
+                ["/appext/Data"] = new(new byte[] { 3, 1, 0, 0 }, PropertyType.UInt8Array),
                 ["/grctlext/Delay"] = new(delayInMilliseconds / 10, PropertyType.UInt16)
             });
             var randomAccessStreams = frames as IRandomAccessStream[] ?? frames.ToArray();
@@ -103,6 +123,7 @@ namespace Pixeval.Util.IO
             {
                 randomAccessStream.Dispose();
             }
+
             await encoder.FlushAsync();
         }
 
@@ -114,11 +135,12 @@ namespace Pixeval.Util.IO
             {
                 imageStream.Dispose();
             }
+
             return bitmapImage;
         }
 
         /// <summary>
-        /// Decodes the <paramref name="imageStream"/> to a <see cref="SoftwareBitmap"/>
+        ///     Decodes the <paramref name="imageStream" /> to a <see cref="SoftwareBitmap" />
         /// </summary>
         /// <returns></returns>
         public static async Task<SoftwareBitmap?> GetSoftwareBitmapFromStreamAsync(IRandomAccessStream imageStream)

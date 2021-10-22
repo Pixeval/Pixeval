@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/AdvancedCollectionView.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,29 +36,28 @@ using Microsoft.UI.Xaml.Data;
 namespace Pixeval.CommunityToolkit.AdvancedCollectionView
 {
     /// <summary>
-    /// A collection view implementation that supports filtering, sorting and incremental loading
+    ///     A collection view implementation that supports filtering, sorting and incremental loading
     /// </summary>
     public partial class AdvancedCollectionView : IAdvancedCollectionView, INotifyPropertyChanged, ISupportIncrementalLoading, IComparer<object>
     {
-        private readonly List<object?> _view;
-
-        private readonly ObservableCollection<SortDescription> _sortDescriptions;
-
-        private readonly Dictionary<string, PropertyInfo?> _sortProperties;
-
         private readonly bool _liveShapingEnabled;
 
         private readonly HashSet<string> _observedFilterProperties = new();
 
-        private IList? _source;
+        private readonly ObservableCollection<SortDescription> _sortDescriptions;
+
+        private readonly Dictionary<string, PropertyInfo?> _sortProperties;
+        private readonly List<object?> _view;
+        private int _deferCounter;
 
         private Predicate<object?>? _filter;
-        private int _deferCounter;
+
+        private IList? _source;
 
         private WeakEventListener<AdvancedCollectionView, object, NotifyCollectionChangedEventArgs>? _sourceWeakEventListener;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AdvancedCollectionView"/> class.
+        ///     Initializes a new instance of the <see cref="AdvancedCollectionView" /> class.
         /// </summary>
         public AdvancedCollectionView()
             : this(new List<object>(0))
@@ -44,10 +65,13 @@ namespace Pixeval.CommunityToolkit.AdvancedCollectionView
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AdvancedCollectionView"/> class.
+        ///     Initializes a new instance of the <see cref="AdvancedCollectionView" /> class.
         /// </summary>
         /// <param name="source">source IEnumerable</param>
-        /// <param name="isLiveShaping">Denotes whether or not this ACV should re-filter/re-sort if a PropertyChanged is raised for an observed property.</param>
+        /// <param name="isLiveShaping">
+        ///     Denotes whether or not this ACV should re-filter/re-sort if a PropertyChanged is raised for
+        ///     an observed property.
+        /// </param>
         public AdvancedCollectionView(IList? source, bool isLiveShaping = false)
         {
             _liveShapingEnabled = isLiveShaping;
@@ -59,7 +83,7 @@ namespace Pixeval.CommunityToolkit.AdvancedCollectionView
         }
 
         /// <summary>
-        /// Gets or sets the source
+        ///     Gets or sets the source
         /// </summary>
         public IList Source
         {
@@ -102,30 +126,36 @@ namespace Pixeval.CommunityToolkit.AdvancedCollectionView
         }
 
         /// <summary>
-        /// Manually refresh the view
+        ///     Manually refresh the view
         /// </summary>
         public void Refresh()
         {
             HandleSourceChanged();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void RefreshFilter()
         {
             HandleFilterChanged();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void RefreshSorting()
         {
             HandleSortChanged();
         }
 
         /// <inheritdoc />
-        public IEnumerator<object> GetEnumerator() => _view.GetEnumerator();
+        public IEnumerator<object> GetEnumerator()
+        {
+            return _view.GetEnumerator();
+        }
 
         /// <inheritdoc />
-        IEnumerator IEnumerable.GetEnumerator() => _view.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _view.GetEnumerator();
+        }
 
         /// <inheritdoc />
         public void Add(object item)
@@ -150,10 +180,16 @@ namespace Pixeval.CommunityToolkit.AdvancedCollectionView
         }
 
         /// <inheritdoc />
-        public bool Contains(object? item) => _view.Contains(item);
+        public bool Contains(object? item)
+        {
+            return _view.Contains(item);
+        }
 
         /// <inheritdoc />
-        public void CopyTo(object?[] array, int arrayIndex) => _view.CopyTo(array, arrayIndex);
+        public void CopyTo(object?[] array, int arrayIndex)
+        {
+            _view.CopyTo(array, arrayIndex);
+        }
 
         /// <inheritdoc />
         public bool Remove(object? item)
@@ -174,7 +210,10 @@ namespace Pixeval.CommunityToolkit.AdvancedCollectionView
         public bool IsReadOnly => _source == null || _source.IsReadOnly;
 
         /// <inheritdoc />
-        public int IndexOf(object? item) => _view.IndexOf(item);
+        public int IndexOf(object? item)
+        {
+            return _view.IndexOf(item);
+        }
 
         /// <inheritdoc />
         public void Insert(int index, object item)
@@ -188,18 +227,34 @@ namespace Pixeval.CommunityToolkit.AdvancedCollectionView
         }
 
         /// <summary>
-        /// Removes the <see cref="T:System.Collections.Generic.IList`1"/> item at the specified index.
+        ///     Removes the <see cref="T:System.Collections.Generic.IList`1" /> item at the specified index.
         /// </summary>
-        /// <param name="index">The zero-based index of the item to remove.</param><exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in the <see cref="T:System.Collections.Generic.IList`1"/>.</exception><exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.IList`1"/> is read-only.</exception>
-        public void RemoveAt(int index) => Remove(_view[index]);
+        /// <param name="index">The zero-based index of the item to remove.</param>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">
+        ///     <paramref name="index" /> is not a valid index in the
+        ///     <see cref="T:System.Collections.Generic.IList`1" />.
+        /// </exception>
+        /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.IList`1" /> is read-only.</exception>
+        public void RemoveAt(int index)
+        {
+            Remove(_view[index]);
+        }
 
         /// <summary>
-        /// Gets or sets the element at the specified index.
+        ///     Gets or sets the element at the specified index.
         /// </summary>
         /// <returns>
-        /// The element at the specified index.
+        ///     The element at the specified index.
         /// </returns>
-        /// <param name="index">The zero-based index of the element to get or set.</param><exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in the <see cref="T:System.Collections.Generic.IList`1"/>.</exception><exception cref="T:System.NotSupportedException">The property is set and the <see cref="T:System.Collections.Generic.IList`1"/> is read-only.</exception>
+        /// <param name="index">The zero-based index of the element to get or set.</param>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">
+        ///     <paramref name="index" /> is not a valid index in the
+        ///     <see cref="T:System.Collections.Generic.IList`1" />.
+        /// </exception>
+        /// <exception cref="T:System.NotSupportedException">
+        ///     The property is set and the
+        ///     <see cref="T:System.Collections.Generic.IList`1" /> is read-only.
+        /// </exception>
         public object this[int index]
         {
             get => _view[index]!;
@@ -207,50 +262,68 @@ namespace Pixeval.CommunityToolkit.AdvancedCollectionView
         }
 
         /// <summary>
-        /// Occurs when the vector changes.
+        ///     Occurs when the vector changes.
         /// </summary>
         public event VectorChangedEventHandler<object>? VectorChanged;
 
         /// <summary>
-        /// Move current index to item
+        ///     Move current index to item
         /// </summary>
         /// <param name="item">item</param>
         /// <returns>success of operation</returns>
-        public bool MoveCurrentTo(object? item) => item == CurrentItem || MoveCurrentToIndex(IndexOf(item));
+        public bool MoveCurrentTo(object? item)
+        {
+            return item == CurrentItem || MoveCurrentToIndex(IndexOf(item));
+        }
 
         /// <summary>
-        /// Moves selected item to position
+        ///     Moves selected item to position
         /// </summary>
         /// <param name="index">index</param>
         /// <returns>success of operation</returns>
-        public bool MoveCurrentToPosition(int index) => MoveCurrentToIndex(index);
+        public bool MoveCurrentToPosition(int index)
+        {
+            return MoveCurrentToIndex(index);
+        }
 
         /// <summary>
-        /// Move current item to first item
+        ///     Move current item to first item
         /// </summary>
         /// <returns>success of operation</returns>
-        public bool MoveCurrentToFirst() => MoveCurrentToIndex(0);
+        public bool MoveCurrentToFirst()
+        {
+            return MoveCurrentToIndex(0);
+        }
 
         /// <summary>
-        /// Move current item to last item
+        ///     Move current item to last item
         /// </summary>
         /// <returns>success of operation</returns>
-        public bool MoveCurrentToLast() => MoveCurrentToIndex(_view.Count - 1);
+        public bool MoveCurrentToLast()
+        {
+            return MoveCurrentToIndex(_view.Count - 1);
+        }
 
         /// <summary>
-        /// Move current item to next item
+        ///     Move current item to next item
         /// </summary>
         /// <returns>success of operation</returns>
-        public bool MoveCurrentToNext() => MoveCurrentToIndex(CurrentPosition + 1);
+        public bool MoveCurrentToNext()
+        {
+            return MoveCurrentToIndex(CurrentPosition + 1);
+        }
 
         /// <summary>
-        /// Move current item to previous item
+        ///     Move current item to previous item
         /// </summary>
         /// <returns>success of operation</returns>
-        public bool MoveCurrentToPrevious() => MoveCurrentToIndex(CurrentPosition - 1);
+        public bool MoveCurrentToPrevious()
+        {
+            return MoveCurrentToIndex(CurrentPosition - 1);
+        }
 
         /// <summary>
-        /// Load more items from the source
+        ///     Load more items from the source
         /// </summary>
         /// <param name="count">number of items to load</param>
         /// <returns>Async operation of LoadMoreItemsResult</returns>
@@ -263,12 +336,12 @@ namespace Pixeval.CommunityToolkit.AdvancedCollectionView
         }
 
         /// <summary>
-        /// Gets the groups in collection
+        ///     Gets the groups in collection
         /// </summary>
         public IObservableVector<object> CollectionGroups => null!;
 
         /// <summary>
-        /// Gets or sets the current item
+        ///     Gets or sets the current item
         /// </summary>
         public object? CurrentItem
         {
@@ -277,43 +350,43 @@ namespace Pixeval.CommunityToolkit.AdvancedCollectionView
         }
 
         /// <summary>
-        /// Gets the position of current item
+        ///     Gets the position of current item
         /// </summary>
         public int CurrentPosition { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether the source has more items
+        ///     Gets a value indicating whether the source has more items
         /// </summary>
         // ReSharper disable once SuspiciousTypeConversion.Global
         public bool HasMoreItems => (_source as ISupportIncrementalLoading)?.HasMoreItems ?? false;
 
         /// <summary>
-        /// Gets a value indicating whether the current item is after the last visible item
+        ///     Gets a value indicating whether the current item is after the last visible item
         /// </summary>
         public bool IsCurrentAfterLast => CurrentPosition >= _view.Count;
 
         /// <summary>
-        /// Gets a value indicating whether the current item is before the first visible item
+        ///     Gets a value indicating whether the current item is before the first visible item
         /// </summary>
         public bool IsCurrentBeforeFirst => CurrentPosition < 0;
 
         /// <summary>
-        /// Current item changed event handler
+        ///     Current item changed event handler
         /// </summary>
         public event EventHandler<object?>? CurrentChanged;
 
         /// <summary>
-        /// Current item changing event handler
+        ///     Current item changing event handler
         /// </summary>
         public event CurrentChangingEventHandler? CurrentChanging;
 
         /// <summary>
-        /// Gets a value indicating whether this CollectionView can filter its items
+        ///     Gets a value indicating whether this CollectionView can filter its items
         /// </summary>
         public bool CanFilter => true;
 
         /// <summary>
-        /// Gets or sets the predicate used to filter the visible items
+        ///     Gets or sets the predicate used to filter the visible items
         /// </summary>
         public Predicate<object?>? Filter
         {
@@ -332,12 +405,12 @@ namespace Pixeval.CommunityToolkit.AdvancedCollectionView
         }
 
         /// <summary>
-        /// Gets a value indicating whether this CollectionView can sort its items
+        ///     Gets a value indicating whether this CollectionView can sort its items
         /// </summary>
         public bool CanSort => true;
 
         /// <summary>
-        /// Gets SortDescriptions to sort the visible items
+        ///     Gets SortDescriptions to sort the visible items
         /// </summary>
         public IList<SortDescription> SortDescriptions => _sortDescriptions;
 
@@ -353,12 +426,24 @@ namespace Pixeval.CommunityToolkit.AdvancedCollectionView
         */
 
         /// <summary>
-        /// Gets the source collection
+        ///     Gets the source collection
         /// </summary>
         public IEnumerable? SourceCollection => _source;
 
+        /// <inheritdoc />
+        public void ObserveFilterProperty(string propertyName)
+        {
+            _observedFilterProperties.Add(propertyName);
+        }
+
+        /// <inheritdoc />
+        public void ClearObservedFilterProperties()
+        {
+            _observedFilterProperties.Clear();
+        }
+
         /// <summary>
-        /// IComparer implementation
+        ///     IComparer implementation
         /// </summary>
         /// <param name="x">Object A</param>
         /// <param name="y">Object B</param>
@@ -407,29 +492,17 @@ namespace Pixeval.CommunityToolkit.AdvancedCollectionView
         }
 
         /// <summary>
-        /// Occurs when a property value changes.
+        ///     Occurs when a property value changes.
         /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
-        /// Property changed event invoker
+        ///     Property changed event invoker
         /// </summary>
         /// <param name="propertyName">name of the property that changed</param>
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        /// <inheritdoc/>
-        public void ObserveFilterProperty(string propertyName)
-        {
-            _observedFilterProperties.Add(propertyName);
-        }
-
-        /// <inheritdoc/>
-        public void ClearObservedFilterProperties()
-        {
-            _observedFilterProperties.Clear();
         }
 
         private void ItemOnPropertyChanged(object? item, PropertyChangedEventArgs e)
