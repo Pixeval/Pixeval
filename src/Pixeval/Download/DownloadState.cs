@@ -34,6 +34,8 @@ namespace Pixeval.Download
 
         Error,
 
-        Completed
+        Completed,
+
+        Paused
     }
 }

@@ -65,7 +65,7 @@ namespace Pixeval
 
         public AppWindow AppWindow { get; private set; } = null!;
 
-        public DownloadManager IllustrationDownloadManager { get; private set; } = null!;
+        public DownloadManager<ObservableDownloadTask> DownloadManager { get; private set; } = null!;
 
         public Frame AppWindowRootFrame => Window.PixevalAppRootFrame;
 
@@ -86,7 +86,7 @@ namespace Pixeval
 
         public void Receive(LoginCompletedMessage message)
         {
-            IllustrationDownloadManager = new DownloadManager(AppSetting.MaxDownloadTaskConcurrencyLevel, MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi));
+            DownloadManager = new DownloadManager<ObservableDownloadTask>(AppSetting.MaxDownloadTaskConcurrencyLevel, MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi));
         }
 
         public IntPtr GetMainWindowHandle()
@@ -181,7 +181,6 @@ namespace Pixeval
         {
             return Window.DispatcherQueue.EnqueueAsync(action);
         }
-
 
         /// <summary>
         ///     Exit the notification after pushing an <see cref="ApplicationExitingMessage" />

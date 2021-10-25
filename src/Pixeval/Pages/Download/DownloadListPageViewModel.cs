@@ -19,14 +19,19 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Pixeval.CommunityToolkit.AdvancedCollectionView;
+using Pixeval.Download;
 using Pixeval.Misc;
 
 namespace Pixeval.Pages.Download
 {
     public class DownloadListPageViewModel : ObservableObject
     {
+        public static readonly IEnumerable<DownloadListOption> AvailableDownloadListOptions = Enum.GetValues<DownloadListOption>();
+
         private DownloadListOption _currentOption;
 
         public DownloadListOption CurrentOption
@@ -35,7 +40,45 @@ namespace Pixeval.Pages.Download
             set => SetProperty(ref _currentOption, value);
         }
 
-        public static readonly IEnumerable<DownloadListOption> AvailableDownloadListOptions = Enum.GetValues<DownloadListOption>();
+        private IList<DownloadListEntryViewModel> _downloadTasks;
+
+        public IList<DownloadListEntryViewModel> DownloadTasks
+        {
+            get => _downloadTasks;
+            set => SetProperty(ref _downloadTasks, value);
+        }
+
+        private AdvancedCollectionView _downloadTasksView;
+
+        public AdvancedCollectionView DownloadTasksView
+        {
+            get => _downloadTasksView;
+            set => SetProperty(ref _downloadTasksView, value);
+        }
+
+        public DownloadListPageViewModel(IList<DownloadListEntryViewModel> downloadTasks)
+        {
+            _downloadTasks = downloadTasks;
+            _downloadTasksView = new AdvancedCollectionView(downloadTasks as IList);
+        }
+
+        public void ResetFilter()
+        {
+            DownloadTasksView.Filter = o => o switch
+            {
+                DownloadListEntryViewModel { DownloadTask: var task } => CurrentOption switch
+                {
+                    DownloadListOption.AllQueued => true,
+                    DownloadListOption.Running => task.CurrentState is DownloadState.Running,
+                    DownloadListOption.Completed => task.CurrentState is DownloadState.Completed,
+                    DownloadListOption.Cancelled => task.CurrentState is DownloadState.Cancelled,
+                    DownloadListOption.Error => task.CurrentState is DownloadState.Error,
+                    _ => throw new ArgumentOutOfRangeException()
+                },
+                _ => false
+            };
+            DownloadTasksView.Refresh();
+        }
 
         public string? SubtitleText(DownloadListOption option)
         {

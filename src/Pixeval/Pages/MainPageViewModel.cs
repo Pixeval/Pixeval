@@ -20,10 +20,15 @@
 
 #endregion
 
+using System;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media;
+using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net;
 using Pixeval.Messages;
+using Pixeval.Misc;
+using Pixeval.Pages.Capability;
+using Pixeval.Pages.Misc;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 
@@ -32,7 +37,21 @@ namespace Pixeval.Pages
     public class MainPageViewModel : AutoActivateObservableRecipient, IRecipient<LoginCompletedMessage>
     {
         private ImageSource? _avatar;
+
         public double MainPageRootNavigationViewOpenPanelLength => 250;
+
+        public readonly NavigationViewTag BookmarksTag = new(typeof(BookmarksPage), App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid!, PrivacyPolicy.Public, App.AppViewModel.AppSetting.TargetFilter));
+
+        public readonly NavigationViewTag HistoriesTag = new(typeof(BrowsingHistoryPage), null);
+
+        public readonly NavigationViewTag RankingsTag = new(typeof(RankingsPage), App.AppViewModel.MakoClient.Ranking(RankOption.Day, DateTime.Today - TimeSpan.FromDays(2)));
+
+        public readonly NavigationViewTag RecentPostsTag = new(typeof(RecentPostsPage), App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicy.Public));
+
+        public readonly NavigationViewTag RecommendsTag = new(typeof(RecommendationPage), App.AppViewModel.MakoClient.Recommendations(targetFilter: App.AppViewModel.AppSetting.TargetFilter));
+
+        public readonly NavigationViewTag SettingsTag = new(typeof(SettingsPage), App.AppViewModel.MakoClient.Configuration);
+
 
         public ImageSource? Avatar
         {

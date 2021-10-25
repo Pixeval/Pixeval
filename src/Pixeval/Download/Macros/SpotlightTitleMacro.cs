@@ -22,6 +22,8 @@
 
 using Pixeval.Download.MacroParser;
 using Pixeval.UserControls;
+using Pixeval.Util.IO;
+using Pixeval.Utilities;
 
 namespace Pixeval.Download.Macros
 {
@@ -32,7 +34,7 @@ namespace Pixeval.Download.Macros
 
         public string Substitute(IllustrationViewModel context)
         {
-            return context.Illustration.SpotlightTitle ?? MacroParserResources.UnknownSpotlightTitle;
+            return context.Illustration.SpotlightTitle?.Let(IOHelper.NormalizePathSegment) ?? MacroParserResources.UnknownSpotlightTitle;
         }
     }
 }

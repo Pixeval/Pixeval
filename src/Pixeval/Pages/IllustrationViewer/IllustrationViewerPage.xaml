@@ -66,6 +66,7 @@
                               Visibility="{x:Bind _viewModel.IsUgoira}" />
                 <AppBarSeparator />
                 <AppBarButton Command="{x:Bind _viewModel.CopyCommand}" />
+                <AppBarButton Command="{x:Bind _viewModel.SaveCommand}" />
                 <AppBarButton Command="{x:Bind _viewModel.SaveAsCommand}" />
                 <AppBarButton Command="{x:Bind _viewModel.SaveMangaCommand}"
                               Visibility="{x:Bind _viewModel.IsManga}" />

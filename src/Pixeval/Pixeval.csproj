@@ -90,6 +90,7 @@
       <None Remove="Strings\zh-CN\BookmarksPage.resw" />
       <None Remove="Strings\zh-CN\CommentBlock.resw" />
       <None Remove="Strings\zh-CN\CommentRepliesBlock.resw" />
+      <None Remove="Strings\zh-CN\DownloadListEntry.resw" />
       <None Remove="Strings\zh-CN\DownloadListPage.resw" />
       <None Remove="Strings\zh-CN\DownloadTask.resw" />
       <None Remove="Strings\zh-CN\IllustrationGridCommandBar.resw" />
@@ -244,6 +245,7 @@
       <PRIResource Include="Strings\zh-CN\BookmarksPage.resw" />
       <PRIResource Include="Strings\zh-CN\CommentBlock.resw" />
       <PRIResource Include="Strings\zh-CN\CommentRepliesBlock.resw" />
+      <PRIResource Include="Strings\zh-CN\DownloadListEntry.resw" />
       <PRIResource Include="Strings\zh-CN\DownloadListPage.resw" />
       <PRIResource Include="Strings\zh-CN\DownloadTask.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationGridCommandBar.resw" />

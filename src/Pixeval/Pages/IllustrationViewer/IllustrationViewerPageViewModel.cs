@@ -292,9 +292,11 @@ namespace Pixeval.Pages.IllustrationViewer
 
         private async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
         {
-            // TODO 
-            var downloadTask = await DownloadFactories.Illustration.CreateAsync(Current.IllustrationViewModel, App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
-            App.AppViewModel.IllustrationDownloadManager.QueueTask(downloadTask);
+            foreach (var mangaIllustrationViewModel in Current.IllustrationViewModel.GetMangaIllustrationViewModels())
+            {
+                var downloadTask = await DownloadFactories.Illustration.CreateAsync(mangaIllustrationViewModel, App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
+                App.AppViewModel.DownloadManager.QueueTask(downloadTask);
+            }
         }
 
         private void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -462,7 +464,7 @@ namespace Pixeval.Pages.IllustrationViewer
 
         public XamlUICommand BookmarkCommand { get; private set; } = null!; // the null-state is transient
 
-        public StandardUICommand SaveCommand { get; } = new(StandardUICommandKind.Save);
+        public StandardUICommand SaveCommand { get; } = new(StandardUICommandKind.Save) { Description = MiscResources.Save };
 
         public XamlUICommand SaveAsCommand { get; } = new()
         {

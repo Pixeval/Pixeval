@@ -138,11 +138,15 @@ namespace Pixeval.Controls.Setting.UI
             });
         }
 
-        [DefaultValue(typeof(ProcessorCountDefaultValueProvider))]
+        [DefaultValue(typeof(DownloadConcurrencyDefaultValueProvider))]
         public int MaxDownloadTaskConcurrencyLevel
         {
             get => _appSetting.MaxDownloadTaskConcurrencyLevel;
-            set => SetProperty(_appSetting.MaxDownloadTaskConcurrencyLevel, value, _appSetting, (setting, value) => setting.MaxDownloadTaskConcurrencyLevel = value);
+            set => SetProperty(_appSetting.MaxDownloadTaskConcurrencyLevel, value, _appSetting, (setting, value) =>
+            {
+                App.AppViewModel.DownloadManager.ConcurrencyDegree = value;
+                setting.MaxDownloadTaskConcurrencyLevel = value;
+            });
         }
 
         [DefaultValue(true)]

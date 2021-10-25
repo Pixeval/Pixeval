@@ -26,66 +26,116 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Pixeval.Util.IO;
+using Pixeval.Util.Threading;
 using Pixeval.Utilities;
 
 namespace Pixeval.Download
 {
-    public class DownloadManager
+    public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : IDownloadTask
     {
-        private readonly TaskScheduler _downloadTaskScheduler;
+        // the generic parameter is used to simplify the code, the expression can be embedded directly into the condition of the while loop
+        private readonly ReenterableAwaiter<bool> _throttle;
         private readonly HttpClient _httpClient;
-        private readonly ObservableCollection<IDownloadTask> _queuedTasks;
+        private readonly ObservableCollection<TDownloadTask> _queuedTasks;
+        private readonly ISet<TDownloadTask> _taskQuerySet;
+        private readonly Channel<TDownloadTask> _downloadTaskChannel;
+        private readonly SemaphoreSlim _semaphoreSlim;
+        private int _workingTasks;
 
         public DownloadManager(int concurrencyDegree, HttpClient? httpClient = null)
         {
             _httpClient = httpClient ?? new HttpClient();
+            _queuedTasks = new ObservableCollection<TDownloadTask>();
+            _taskQuerySet = new HashSet<TDownloadTask>();
+            _throttle = new ReenterableAwaiter<bool>(true, true);
+            _downloadTaskChannel = Channel.CreateUnbounded<TDownloadTask>();
+            _semaphoreSlim = new SemaphoreSlim(1, 1);
             ConcurrencyDegree = concurrencyDegree;
-            _queuedTasks = new ObservableCollection<IDownloadTask>();
-            _downloadTaskScheduler = new ConcurrentExclusiveSchedulerPair(TaskScheduler.Default, ConcurrencyDegree).ConcurrentScheduler;
+
+            PollTask();
         }
 
         public int ConcurrencyDegree { get; set; }
 
-        public IEnumerable<IDownloadTask> QueuedTasks => _queuedTasks;
+        public IList<TDownloadTask> QueuedTasks => _queuedTasks;
 
-        public void QueueTask(IDownloadTask task)
+        public void QueueTask(TDownloadTask task)
         {
+            if (_taskQuerySet.Contains(task))
+            {
+                return;
+            }
+
+            _taskQuerySet.Add(task);
             _queuedTasks.Add(task);
             // Start the task only if it is created and is ready-to-run
             if (task.CurrentState == DownloadState.Created)
             {
-                task.CurrentState = DownloadState.Queued;
-                CreateDownloadTask(task);
+                SetState(task, DownloadState.Queued);
+                QueueDownloadTask(task);
             }
         }
 
-        public bool TryExecuteInlineAsync(IDownloadTask task)
+        private async void PollTask()
+        {
+            while (await _downloadTaskChannel.Reader.WaitToReadAsync())
+            {
+                while (await _throttle && _downloadTaskChannel.Reader.TryRead(out var task))
+                {
+                    Download(task).Discard();
+                }
+            }
+        }
+
+        public void RemoveTask(TDownloadTask task)
+        {
+            _queuedTasks.Remove(task);
+        }
+
+        public bool TryExecuteInline(TDownloadTask task)
         {
             // Execute the task only if it's already queued and is not running
-            if (_queuedTasks.Contains(task) && !task.IsRunning())
+            if (_queuedTasks.Contains(task) && task.CurrentState is not DownloadState.Running or DownloadState.Created or DownloadState.Queued)
             {
-                CreateDownloadTask(task);
+                QueueDownloadTask(task);
                 return true;
             }
 
             return false;
         }
 
-        private void CreateDownloadTask(IDownloadTask task)
+        private void QueueDownloadTask(TDownloadTask task)
         {
-            Task.Factory.StartNew(() => Download(task), CancellationToken.None, TaskCreationOptions.DenyChildAttach, _downloadTaskScheduler);
+            _downloadTaskChannel.Writer.WriteAsync(task);
         }
 
-        private async Task Download(IDownloadTask task)
+        private async Task Download(TDownloadTask task)
         {
-            task.CurrentState = DownloadState.Running;
-            task.CancellationHandle.Register(() => task.CurrentState = DownloadState.Cancelled);
+            if (Interlocked.Increment(ref _workingTasks) == ConcurrencyDegree)
+            {
+                _throttle.Reset();
+            }
+
+            await DownloadInternal(task);
+            Interlocked.Decrement(ref _workingTasks);
+            await _semaphoreSlim.WaitAsync();
+            _throttle.SetResult(true);
+            _semaphoreSlim.Release();
+        }
+
+        private async Task DownloadInternal(TDownloadTask task)
+        {
+            SetState(task, DownloadState.Running);
+            task.CancellationHandle.Register(() => SetState(task, DownloadState.Cancelled));
+            task.CancellationHandle.RegisterPaused(() => SetState(task, DownloadState.Paused));
+            task.CancellationHandle.RegisterResumed(() => SetState(task, DownloadState.Running));
             var ras = await _httpClient.DownloadAsIRandomAccessStreamAsync(
                 task.Url,
-                new Progress<double>(d => task.ProgressPercentage = d),
+                new Progress<int>(percentage => task.ProgressPercentage = percentage),
                 task.CancellationHandle);
             switch (ras)
             {
@@ -110,18 +160,32 @@ namespace Pixeval.Download
                     catch (Exception e)
                     {
                         Functions.IgnoreException(() => File.Delete(task.Destination));
-                        task.CurrentState = DownloadState.Error;
-                        task.ErrorCause = e;
+                        App.AppViewModel.DispatchTask(() => task.ErrorCause = e);
+                        SetState(task, DownloadState.Error);
                     }
 
-                    task.CurrentState = DownloadState.Completed;
+                    SetState(task, DownloadState.Completed);
                     break;
                 case Result<IRandomAccessStream>.Failure (var exception):
                     Functions.IgnoreException(() => File.Delete(task.Destination));
-                    task.CurrentState = DownloadState.Error;
-                    task.ErrorCause = exception;
+                    if (exception is not OperationCanceledException)
+                    {
+                        App.AppViewModel.DispatchTask(() => task.ErrorCause = exception);
+                        SetState(task, DownloadState.Error);
+                    }
                     break;
             }
+        }
+
+        private static void SetState(TDownloadTask task, DownloadState state)
+        {
+            App.AppViewModel.DispatchTask(() => task.CurrentState = state);
+        }
+
+        public void Dispose()
+        {
+            _httpClient.Dispose();
+            _semaphoreSlim.Dispose();
         }
     }
 }

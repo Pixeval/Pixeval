@@ -136,7 +136,7 @@
     <value>过滤</value>
   </data>
   <data name="SaveAllButton.Label" xml:space="preserve">
-    <value>保存</value>
+    <value>全部保存</value>
   </data>
   <data name="SelectAllButton.Label" xml:space="preserve">
     <value>全选</value>

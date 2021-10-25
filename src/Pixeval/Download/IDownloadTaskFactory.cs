@@ -25,10 +25,10 @@ using Pixeval.Download.MacroParser;
 
 namespace Pixeval.Download
 {
-    public interface IDownloadTaskFactory<T>
+    public interface IDownloadTaskFactory<T, TDownloadTask> where TDownloadTask : IDownloadTask
     {
         IMetaPathParser<T> PathParser { get; }
 
-        Task<IDownloadTask> CreateAsync(T context, string rawPath);
+        Task<TDownloadTask> CreateAsync(T context, string rawPath);
     }
 }

@@ -21,15 +21,21 @@
 #endregion
 
 using System;
-using Pixeval.Util;
+using Pixeval.Util.Threading;
 
 namespace Pixeval.Download
 {
     public interface IDownloadTask
     {
+        string? Title { get; }
+
+        string? Description { get; }
+
         string Url { get; }
 
         string Destination { get; }
+
+        string? Thumbnail { get; }
 
         CancellationHandle CancellationHandle { get; set; }
 
@@ -39,10 +45,13 @@ namespace Pixeval.Download
 
         double ProgressPercentage { get; set; }
 
-        public bool IsRunning()
-        {
-            return CurrentState is DownloadState.Running;
-        }
+        event Action Paused;
+
+        event Action Resumed;
+
+        void OnPaused();
+
+        void OnResumed();
     }
 
     public static class DownloadTaskHelper
@@ -50,9 +59,9 @@ namespace Pixeval.Download
         public static void Reset(this IDownloadTask task)
         {
             task.CancellationHandle.Reset();
-            task.ErrorCause = null;
-            task.CurrentState = DownloadState.Created;
             task.ProgressPercentage = 0;
+            task.CurrentState = DownloadState.Created;
+            task.ErrorCause = null;
         }
     }
 }

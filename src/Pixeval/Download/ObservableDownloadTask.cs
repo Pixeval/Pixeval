@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2021 Pixeval/StateMachineDownloadTask.cs
+// Copyright (c) 2021 Pixeval/ObservableDownloadTask.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,24 +20,37 @@
 
 using System;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Pixeval.Util;
-using Pixeval.Util.IO;
+using Pixeval.Util.Threading;
 
 namespace Pixeval.Download
 {
     public class ObservableDownloadTask : ObservableObject, IDownloadTask
     {
-        public ObservableDownloadTask(string url, string destination)
+        public ObservableDownloadTask(
+            string? title,
+            string? description, 
+            string url, 
+            string destination,
+            string? thumbnail)
         {
+            Title = title;
+            Description = description;
             Url = url;
-            Destination = IOHelper.NormalizePath(destination);
+            Destination = destination;
+            Thumbnail = thumbnail;
             CancellationHandle = new CancellationHandle();
             CurrentState = DownloadState.Created;
         }
 
+        public string? Title { get; }
+
+        public string? Description { get; }
+
         public string Url { get; }
 
         public string Destination { get; }
+
+        public string? Thumbnail { get; }
 
         public CancellationHandle CancellationHandle { get; set; }
 
@@ -63,6 +76,35 @@ namespace Pixeval.Download
         {
             get => _progressPercentage;
             set => SetProperty(ref _progressPercentage, value);
+        }
+
+        public event Action? Paused;
+
+        public event Action? Resumed;
+
+        public void OnPaused()
+        {
+            Paused?.Invoke();
+        }
+
+        public void OnResumed()
+        {
+            Resumed?.Invoke();
+        }
+
+        protected bool Equals(ObservableDownloadTask other)
+        {
+            return Url == other.Url;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return !ReferenceEquals(null, obj) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((ObservableDownloadTask) obj));
+        }
+
+        public override int GetHashCode()
+        {
+            return Url.GetHashCode();
         }
     }
 }

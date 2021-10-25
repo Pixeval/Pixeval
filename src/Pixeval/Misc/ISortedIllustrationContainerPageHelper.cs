@@ -21,7 +21,6 @@
 #endregion
 
 using Pixeval.UserControls;
-using Pixeval.Util.Generic;
 
 namespace Pixeval.Misc
 {
@@ -42,7 +41,7 @@ namespace Pixeval.Misc
                 default:
                     // reset the view so that it can resort its item to the initial order
                     ViewModelProvider.ViewModel.ClearSortDescription();
-                    ViewModelProvider.ViewModel.IllustrationsView.ResetView();
+                    ViewModelProvider.ViewModel.IllustrationsView.Refresh();
                     ViewModelProvider.ScrollToTop();
                     break;
             }

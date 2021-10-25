@@ -5,8 +5,8 @@
                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:model="using:Pixeval.CoreApi.Model"
-                       xmlns:ui="using:Pixeval.Util.UI"
                        xmlns:pages="using:Pixeval.Pages"
+                       xmlns:ui="using:Pixeval.Util.UI"
                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                        NavigationCacheMode="Required"
                        mc:Ignorable="d">
@@ -63,13 +63,13 @@
         <NavigationView.MenuItems>
             <NavigationViewItem x:Uid="/MainPage/RecommendationsTab"
                                 Icon="{ui:FontIcon Glyph=CalendarE787}"
-                                Tag="{x:Bind _recommends}" />
+                                Tag="{x:Bind _viewModel.RecommendsTag}" />
             <NavigationViewItem x:Uid="/MainPage/RankingsTab"
                                 Icon="{ui:FontIcon Glyph=MarketEAFC}"
-                                Tag="{x:Bind _rankings}" />
+                                Tag="{x:Bind _viewModel.RankingsTag}" />
             <NavigationViewItem x:Uid="/MainPage/BookmarksTab"
                                 Icon="{ui:FontIcon Glyph=LibraryE8F1}"
-                                Tag="{x:Bind _bookmarks}" />
+                                Tag="{x:Bind _viewModel.BookmarksTag}" />
             <NavigationViewItem x:Uid="/MainPage/FollowingsTab"
                                 Icon="{ui:FontIcon Glyph=PeopleE716}" />
             <NavigationViewItem x:Uid="/MainPage/SpotlightsTab"
@@ -78,16 +78,16 @@
                                 Icon="{ui:FontIcon Glyph=MobLocationEC43}" />
             <NavigationViewItem x:Uid="/MainPage/RecentPostsTab"
                                 Icon="{ui:FontIcon Glyph=DevUpdateECC5}"
-                                Tag="{x:Bind _recentPosts}" />
+                                Tag="{x:Bind _viewModel.RecentPostsTag}" />
             <NavigationViewItem x:Uid="/MainPage/ReverseSearchTab"
                                 Icon="{ui:FontIcon Glyph=SearchAndAppsE773}" />
             <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />
             <NavigationViewItem x:Uid="/MainPage/HistoriesTab"
                                 Icon="{ui:FontIcon Glyph=HistoryE81C}"
-                                Tag="{x:Bind _histories}" />
-            <NavigationViewItem x:Uid="/MainPage/DownloadListTab"
-                                Icon="{ui:FontIcon Glyph=CheckListE9D5}"
-                                Tag="{x:Bind _downloads}" />
+                                Tag="{x:Bind _viewModel.HistoriesTag}" />
+            <NavigationViewItem x:Name="DownloadListTab"
+                                x:Uid="/MainPage/DownloadListTab"
+                                Icon="{ui:FontIcon Glyph=CheckListE9D5}" />
         </NavigationView.MenuItems>
         <NavigationView.FooterMenuItems>
             <NavigationViewItem x:Uid="/MainPage/HelpTab"
@@ -95,7 +95,7 @@
             <NavigationViewItem x:Name="SettingsTab"
                                 x:Uid="/MainPage/SettingsTab"
                                 Icon="{ui:FontIcon Glyph=SettingE713}"
-                                Tag="{x:Bind _settings}" />
+                                Tag="{x:Bind _viewModel.SettingsTag}" />
         </NavigationView.FooterMenuItems>
         <Frame x:Name="MainPageRootFrame"
                Navigated="MainPageRootFrame_OnNavigated" />

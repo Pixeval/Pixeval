@@ -3,7 +3,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2021 Pixeval/Enumerates.cs
+// Copyright (c) 2021 Pixeval/ProcessorCountDefaultValueProvider.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,23 +20,15 @@
 
 #endregion
 
-using System.Linq;
-using Pixeval.CommunityToolkit.AdvancedCollectionView;
-using Pixeval.Utilities;
+using System;
 
-namespace Pixeval.Util.Generic
+namespace Pixeval.Misc
 {
-    public static class Enumerates
+    public class DownloadConcurrencyDefaultValueProvider : IDefaultValueProvider
     {
-        public static void ResetView(this AdvancedCollectionView view)
+        public object ProvideValue()
         {
-            var sourceCopy = view.Source.Cast<object>().ToList();
-            foreach (var o in sourceCopy)
-            {
-                view.Remove(o);
-            }
-
-            view.AddRange(sourceCopy);
+            return Environment.ProcessorCount / 2;
         }
     }
 }

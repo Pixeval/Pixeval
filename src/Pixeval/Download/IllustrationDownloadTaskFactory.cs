@@ -20,6 +20,7 @@
 
 #endregion
 
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Pixeval.Download.MacroParser;
 using Pixeval.UserControls;
@@ -28,7 +29,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Download
 {
-    public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IllustrationViewModel>
+    public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>
     {
         public IllustrationDownloadTaskFactory()
         {
@@ -37,17 +38,17 @@ namespace Pixeval.Download
 
         public IMetaPathParser<IllustrationViewModel> PathParser { get; }
 
-        public async Task<IDownloadTask> CreateAsync(IllustrationViewModel context, string rawPath)
+        public async Task<ObservableDownloadTask> CreateAsync(IllustrationViewModel context, string rawPath)
         {
             if (context.Illustration.IsUgoira())
             {
                 var ugoiraMetadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(context.Id);
                 return ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Medium is { } url
-                    ? new AnimatedIllustrationDownloadTask(url, PathParser.Reduce(rawPath, context), ugoiraMetadata)
+                    ? new AnimatedIllustrationDownloadTask(context, url, PathParser.Reduce(rawPath, context), ugoiraMetadata)
                     : throw new DownloadTaskInitializationException(DownloadTaskResources.GifSourceUrlNotFoundFormatted.Format(context.Id));
             }
 
-            return new ObservableDownloadTask(context.Illustration.GetOriginalUrl()!, PathParser.Reduce(rawPath, context));
+            return new IllustrationDownloadTask(context, PathParser.Reduce(rawPath, context));
         }
     }
 }

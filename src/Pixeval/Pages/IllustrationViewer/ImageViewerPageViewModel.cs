@@ -33,6 +33,7 @@ using Pixeval.Misc;
 using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.IO;
+using Pixeval.Util.Threading;
 using Pixeval.Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer
@@ -189,7 +190,7 @@ namespace Pixeval.Pages.IllustrationViewer
                 if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Medium is { } url)
                 {
                     AdvancePhase(LoadingPhase.DownloadingGifZip);
-                    switch (await imageClient.DownloadAsStreamAsync(url, new Progress<double>(d =>
+                    switch (await imageClient.DownloadAsStreamAsync(url, new Progress<int>(d =>
                     {
                         LoadingProgress = d;
                         AdvancePhase(LoadingPhase.DownloadingGifZip);
@@ -212,7 +213,7 @@ namespace Pixeval.Pages.IllustrationViewer
             else if (IllustrationViewModel.OriginalSourceUrl is { } src)
             {
                 AdvancePhase(LoadingPhase.DownloadingImage);
-                switch (await imageClient.DownloadAsIRandomAccessStreamAsync(src, new Progress<double>(d =>
+                switch (await imageClient.DownloadAsIRandomAccessStreamAsync(src, new Progress<int>(d =>
                 {
                     LoadingProgress = d;
                     AdvancePhase(LoadingPhase.DownloadingImage);

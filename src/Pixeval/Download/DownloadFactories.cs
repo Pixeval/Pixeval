@@ -24,6 +24,6 @@ namespace Pixeval.Download
 {
     public static class DownloadFactories
     {
-        public static readonly IDownloadTaskFactory<IllustrationViewModel> Illustration = new IllustrationDownloadTaskFactory();
+        public static readonly IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask> Illustration = new IllustrationDownloadTaskFactory();
     }
 }

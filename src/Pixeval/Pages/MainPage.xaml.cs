@@ -35,9 +35,7 @@ using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
 using Pixeval.CommunityToolkit;
 using Pixeval.CommunityToolkit.AdaptiveGridView;
-using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
-using Pixeval.Misc;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Download;
 using Pixeval.Pages.Misc;
@@ -55,19 +53,6 @@ namespace Pixeval.Pages
         // currently holding if we're navigating back to the MainPage
         private static IllustrationViewModel? _illustrationViewerContent;
 
-        private readonly NavigationViewTag _bookmarks = new(typeof(BookmarksPage), App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid!, PrivacyPolicy.Public, App.AppViewModel.AppSetting.TargetFilter));
-
-        private readonly NavigationViewTag _downloads = new(typeof(DownloadListPage), null);
-
-        private readonly NavigationViewTag _histories = new(typeof(BrowsingHistoryPage), null);
-
-        private readonly NavigationViewTag _rankings = new(typeof(RankingsPage), App.AppViewModel.MakoClient.Ranking(RankOption.Day, DateTime.Today - TimeSpan.FromDays(2)));
-
-        private readonly NavigationViewTag _recentPosts = new(typeof(RecentPostsPage), App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicy.Public));
-
-        private readonly NavigationViewTag _recommends = new(typeof(RecommendationPage), App.AppViewModel.MakoClient.Recommendations(targetFilter: App.AppViewModel.AppSetting.TargetFilter));
-
-        private readonly NavigationViewTag _settings = new(typeof(SettingsPage), App.AppViewModel.MakoClient.Configuration);
         private readonly MainPageViewModel _viewModel = new();
 
         public MainPage()
@@ -83,7 +68,8 @@ namespace Pixeval.Pages
 
         public override void OnPageActivated(NavigationEventArgs e)
         {
-            // little dirty tricks
+            // little dirty tricks, the order of the menu items is the same as the order of the fields in MainPageTabItem
+            // since enums are basically integers, we just need a cast to transform it to the correct offset.
             ((NavigationViewItem) MainPageRootNavigationView.MenuItems[(int) App.AppViewModel.AppSetting.DefaultSelectedTabItem]).IsSelected = true;
 
 
@@ -114,6 +100,15 @@ namespace Pixeval.Pages
 
         private void MainPageRootNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
+            // The App.AppViewModel.IllustrationDownloadManager will be initialized after that of MainPage object
+            // so we cannot put a navigation tag inside MainPage and treat it as a field, since it will be initialized immediately after
+            // the creation of the object while the App.AppViewModel.IllustrationDownloadManager is still null which
+            // will lead the program into NullReferenceException on the access of QueuedTasks.
+            if (args.SelectedItem.Equals(DownloadListTab))
+            {
+                MainPageRootFrame.Navigate(typeof(DownloadListPage), App.AppViewModel.DownloadManager.QueuedTasks);
+                return;
+            }
             MainPageRootFrame.NavigateByNavigationViewTag(sender, new SuppressNavigationTransitionInfo());
         }
 

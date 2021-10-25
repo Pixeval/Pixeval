@@ -23,7 +23,7 @@
 using System;
 using System.Threading;
 
-namespace Pixeval.Util
+namespace Pixeval.Util.Threading
 {
     /// <summary>
     ///     A re-entrant cancellation helper that prevents the default behaviors of <see cref="CancellationToken" />, which is,
@@ -32,9 +32,18 @@ namespace Pixeval.Util
     public class CancellationHandle
     {
         private int _isCancelled;
+
+        private int _paused;
+
         private Action? _onCancellation;
 
+        private Action? _onPause;
+
+        private Action? _onResume;
+
         public bool IsCancelled => _isCancelled == 1;
+
+        public bool IsPaused => _paused == 1;
 
         public void Cancel()
         {
@@ -47,9 +56,31 @@ namespace Pixeval.Util
 
         public void Reset()
         {
+            if (IsPaused)
+            {
+                Interlocked.Decrement(ref _paused);
+            }
             if (IsCancelled)
             {
                 Interlocked.Decrement(ref _isCancelled);
+            }
+        }
+
+        public void Pause()
+        {
+            if (!IsPaused)
+            {
+                _onPause?.Invoke();
+                Interlocked.Increment(ref _paused);
+            }
+        }
+
+        public void Resume()
+        {
+            if (IsPaused)
+            {
+                _onResume?.Invoke();
+                Interlocked.Decrement(ref _paused);
             }
         }
 
@@ -58,11 +89,14 @@ namespace Pixeval.Util
             _onCancellation += action;
         }
 
-        public static CancellationHandle FromCancellationToken(CancellationToken token)
+        public void RegisterPaused(Action action)
         {
-            var cancellationHandle = new CancellationHandle();
-            token.Register(() => cancellationHandle.Cancel());
-            return cancellationHandle;
+            _onPause += action;
+        }
+
+        public void RegisterResumed(Action action)
+        {
+            _onResume += action;
         }
     }
 }

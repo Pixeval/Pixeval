@@ -28,8 +28,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Microsoft.IO;
-using Pixeval.Interop;
-using Pixeval.Util.UI;
+using Pixeval.Util.Threading;
 using Pixeval.Utilities;
 
 namespace Pixeval.Util.IO
@@ -83,7 +82,7 @@ namespace Pixeval.Util.IO
         public static async Task<Result<IRandomAccessStream>> DownloadAsIRandomAccessStreamAsync(
             this HttpClient httpClient,
             string url,
-            IProgress<double>? progress = null,
+            IProgress<int>? progress = null,
             CancellationHandle? cancellationHandle = default)
         {
             return (await httpClient.DownloadAsStreamAsync(url, progress, cancellationHandle)).Bind(stream => stream.AsRandomAccessStream());
@@ -92,9 +91,13 @@ namespace Pixeval.Util.IO
         public static async Task<Result<Stream>> DownloadAsStreamAsync(
             this HttpClient httpClient,
             string url,
-            IProgress<double>? progress = null,
+            IProgress<int>? progress = null,
             CancellationHandle? cancellationHandle = default)
         {
+            var awaiter = new ReenterableAwaiter<bool>(true, true);
+            cancellationHandle?.RegisterPaused(() => awaiter.Reset());
+            cancellationHandle?.RegisterResumed(() => awaiter.SetResult(true));
+            cancellationHandle?.Register(() => awaiter.SetResult(false));
             try
             {
                 using var response = await httpClient.GetResponseHeader(url);
@@ -118,7 +121,8 @@ namespace Pixeval.Util.IO
 
                     var resultStream = new MemoryStream();
                     int bytesRead, totalRead = 0;
-                    var buffer = ArrayPool<byte>.Shared.Rent(1024);
+                    var buffer = ArrayPool<byte>.Shared.Rent(4096);
+                    var lastReportedProgressPercentage = 0;
                     while ((bytesRead = await contentStream.ReadAsync(buffer)) != 0)
                     {
                         if (cancellationHandle?.IsCancelled is true)
@@ -127,11 +131,24 @@ namespace Pixeval.Util.IO
                             return Result<Stream>.OfFailure(CancellationMark);
                         }
 
+                        if (!await awaiter)
+                        {
+                            await resultStream.DisposeAsync();
+                            return Result<Stream>.OfFailure(CancellationMark);
+                        }
+
                         await resultStream.WriteAsync(buffer, 0, bytesRead);
                         totalRead += bytesRead;
-                        progress?.Report(totalRead / (double) responseLength * 100); // percentage, 100 as base
+                        // Remarks:
+                        // reduce the frequency of the invocation of the callback, otherwise it will draws a severe performance impact
+                        if ((int) (totalRead / (double) responseLength * 100) is var percentage && percentage - lastReportedProgressPercentage >= 1)
+                        {
+                            lastReportedProgressPercentage = percentage;
+                            progress?.Report(percentage); // percentage, 100 as base
+                        }
                     }
 
+                    ArrayPool<byte>.Shared.Return(buffer, true);
                     resultStream.Seek(0, SeekOrigin.Begin);
                     return Result<Stream>.OfSuccess(resultStream);
                 }
@@ -141,31 +158,6 @@ namespace Pixeval.Util.IO
             catch (Exception e)
             {
                 return Result<Stream>.OfFailure(e);
-            }
-        }
-
-        public static async Task<Result<IRandomAccessStream>> DownloadAsIRandomAccessStreamAndRevealProgressInTaskBarIconAsync(
-            this HttpClient httpClient,
-            string url,
-            IProgress<double>? progress = null,
-            CancellationHandle? cancellationHandle = default)
-        {
-            UIHelper.SetTaskBarIconProgressState(TaskBarState.Normal);
-            var newProgress = new Progress<double>(d =>
-            {
-                progress?.Report(d);
-                UIHelper.SetTaskBarIconProgressValue((ulong) d, 100);
-            });
-            try
-            {
-                var result = await httpClient.DownloadAsIRandomAccessStreamAsync(url, newProgress, cancellationHandle);
-                UIHelper.SetTaskBarIconProgressState(TaskBarState.NoProgress);
-                return result;
-            }
-            catch
-            {
-                UIHelper.SetTaskBarIconProgressState(TaskBarState.Error);
-                throw;
             }
         }
     }

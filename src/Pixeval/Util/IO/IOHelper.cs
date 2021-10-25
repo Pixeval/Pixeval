@@ -48,6 +48,11 @@ namespace Pixeval.Util.IO
             return Path.GetFullPath(Path.GetInvalidPathChars().Aggregate(path, (s, c) => s.Replace(c.ToString(), string.Empty)));
         }
 
+        public static string NormalizePathSegment(string path)
+        {
+            return Path.GetInvalidFileNameChars().Aggregate(path, (s, c) => s.Replace(c.ToString(), string.Empty));
+        }
+
         public static void CreateParentDirectories(string fullPath)
         {
             var directory = Path.GetDirectoryName(fullPath);

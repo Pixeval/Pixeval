@@ -25,15 +25,17 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.CommunityToolkit;
+using Pixeval.Download;
 using Pixeval.Popups;
 using Pixeval.Popups.IllustrationResultFilter;
 using Pixeval.UserControls.TokenInput;
 using Pixeval.Util;
-using Pixeval.Util.Generic;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 
@@ -156,7 +158,7 @@ namespace Pixeval.UserControls
 
         private async void AddAllToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            // TODO
+            // TODO custom bookmark tag
             var notBookmarked = ViewModel.SelectedIllustrations.Where(i => !i.IsBookmarked);
             var viewModelSelectedIllustrations = notBookmarked as IllustrationViewModel[] ?? notBookmarked.ToArray();
             if (viewModelSelectedIllustrations.Length > 5 && await MessageDialogBuilder.CreateOkCancel(
@@ -184,7 +186,19 @@ namespace Pixeval.UserControls
 
         private void SaveAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            // That will run for quite a while
+            Task.Run(async () =>
+            {
+                var tasks = await App.AppViewModel.Window.DispatcherQueue.EnqueueAsync(
+                    async () => await Task.WhenAll(
+                        ViewModel.SelectedIllustrations
+                            .SelectMany(i => i.GetMangaIllustrationViewModels())
+                            .Select(i => DownloadFactories.Illustration.CreateAsync(i, App.AppViewModel.AppSetting.DefaultDownloadPathMacro))));
+                foreach (var viewModelSelectedIllustration in tasks)
+                {
+                    App.AppViewModel.DownloadManager.QueueTask(viewModelSelectedIllustration);
+                }
+            });
         }
 
         private async void OpenAllInBrowserButton_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -272,7 +286,7 @@ namespace Pixeval.UserControls
             }
             else if (popup is IllustrationResultFilterPopupContent { IsReset: true })
             {
-                ViewModel.IllustrationsView.ResetView();
+                ViewModel.IllustrationsView.Refresh();
             }
 
             static bool ExamineExcludeTags(IEnumerable<string> tags, IEnumerable<Token> predicates)

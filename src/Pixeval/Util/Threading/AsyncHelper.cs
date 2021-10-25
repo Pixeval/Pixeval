@@ -20,9 +20,10 @@
 
 #endregion
 
+using System.Threading.Tasks;
 using Windows.Foundation;
 
-namespace Pixeval.Util
+namespace Pixeval.Util.Threading
 {
     public static class AsyncHelper
     {
@@ -32,6 +33,11 @@ namespace Pixeval.Util
         }
 
         public static void Discard(this IAsyncAction _)
+        {
+            // nop
+        }
+
+        public static void Discard(this Task _)
         {
             // nop
         }

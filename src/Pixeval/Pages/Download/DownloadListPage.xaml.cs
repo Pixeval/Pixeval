@@ -20,15 +20,41 @@
 
 #endregion
 
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Download;
+using Pixeval.Util.UI;
+
 namespace Pixeval.Pages.Download
 {
     public sealed partial class DownloadListPage
     {
-        private readonly DownloadListPageViewModel _viewModel = new();
+        private DownloadListPageViewModel _viewModel = null!;
 
         public DownloadListPage()
         {
             InitializeComponent();
+        }
+
+        public override void OnPageActivated(NavigationEventArgs e)
+        {
+            _viewModel = new DownloadListPageViewModel(((IEnumerable<ObservableDownloadTask>) e.Parameter).Select(o => new DownloadListEntryViewModel(o)).ToList());
+        }
+
+        public override void OnPageDeactivated(NavigatingCancelEventArgs e)
+        {
+            foreach (var downloadListEntryViewModel in _viewModel.DownloadTasks)
+            {
+                downloadListEntryViewModel.Dispose();
+            }
+        }
+
+        private void ModeFilterComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _viewModel.ResetFilter();
         }
     }
 }

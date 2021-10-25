@@ -175,7 +175,7 @@ namespace Pixeval
         /// <summary>
         ///     The max download tasks that are allowed to run concurrently
         /// </summary>
-        [DefaultValue(typeof(ProcessorCountDefaultValueProvider))]
+        [DefaultValue(typeof(DownloadConcurrencyDefaultValueProvider))]
         public int MaxDownloadTaskConcurrencyLevel { get; set; }
 
         /// <summary>

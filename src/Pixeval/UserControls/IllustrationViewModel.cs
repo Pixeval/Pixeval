@@ -36,6 +36,7 @@ using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
+using Pixeval.Util.Threading;
 using Pixeval.Utilities;
 
 namespace Pixeval.UserControls

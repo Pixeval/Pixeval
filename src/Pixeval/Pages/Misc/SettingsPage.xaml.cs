@@ -31,6 +31,7 @@ using Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry;
 using Pixeval.Download.MacroParser;
 using Pixeval.UserControls.TokenInput;
 using Pixeval.Util;
+using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 

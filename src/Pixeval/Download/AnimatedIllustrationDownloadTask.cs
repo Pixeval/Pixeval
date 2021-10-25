@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2021 Pixeval/ObservableCustomBehaviorDownloadTask.cs
+// Copyright (c) 2021 Pixeval/AnimatedIllustrationDownloadTask.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,6 +21,9 @@
 using System.IO;
 using Windows.Storage.Streams;
 using Pixeval.CoreApi.Net.Response;
+using Pixeval.Options;
+using Pixeval.UserControls;
+using Pixeval.Util;
 using Pixeval.Util.IO;
 
 namespace Pixeval.Download
@@ -30,10 +33,11 @@ namespace Pixeval.Download
         private readonly UgoiraMetadataResponse _metadata;
 
         public AnimatedIllustrationDownloadTask(
-            string url,
+            IllustrationViewModel illustration,
+            string zipUrl,
             string destination,
             UgoiraMetadataResponse metadata)
-            : base(url, destination)
+            : base(illustration.Illustration.Title, illustration.Illustration.User?.Name, zipUrl, IOHelper.NormalizePath(destination), illustration.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium))
         {
             _metadata = metadata;
         }
