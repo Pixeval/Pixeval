@@ -22,16 +22,21 @@
 
 using System;
 using System.Linq;
-using System.Threading.Tasks;
+using Windows.System;
+using Windows.UI.Core;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.Download;
 using Pixeval.Messages;
 using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
+using Pixeval.Util;
 using Pixeval.Util.UI;
+using Pixeval.Utilities;
 
 namespace Pixeval.UserControls
 {
@@ -86,6 +91,12 @@ namespace Pixeval.UserControls
 
         private void Thumbnail_OnTapped(object sender, TappedRoutedEventArgs e)
         {
+            if (InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Shift).HasFlag(CoreVirtualKeyStates.Down))
+            {
+                // User is doing the range selection
+                return;
+            }
+
             e.Handled = true;
             WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(sender as UIElement));
 
@@ -102,23 +113,17 @@ namespace Pixeval.UserControls
             e.Handled = true;
         }
 
-        private void IllustrationThumbnailContainerItem_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
+        private async void IllustrationThumbnailContainerItem_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
         {
             var context = sender.GetDataContext<IllustrationViewModel>();
             var preloadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
             if (args.BringIntoViewDistanceY <= sender.ActualHeight * preloadRows) // [preloadRows] element ahead
             {
-                _ = context.LoadThumbnailIfRequired().ContinueWith(task =>
+                if (await context.LoadThumbnailIfRequired())
                 {
-                    if (!task.Result)
-                    {
-                        return;
-                    }
-
-                    var transform = (ScaleTransform) sender.RenderTransform;
+                    var transform = (ScaleTransform)sender.RenderTransform;
                     if (sender.IsFullyOrPartiallyVisible(this))
                     {
-                        // TODO Change to shadow and z-level animation
                         var scaleXAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleX), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
                         var scaleYAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleY), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
                         var opacityAnimation = sender.CreateDoubleAnimation(nameof(sender.Opacity), from: 0, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
@@ -130,7 +135,8 @@ namespace Pixeval.UserControls
                         transform.ScaleY = 1;
                         sender.Opacity = 1;
                     }
-                }, TaskScheduler.FromCurrentSynchronizationContext());
+                }
+
                 return;
             }
 
@@ -151,6 +157,53 @@ namespace Pixeval.UserControls
         public UIElement? GetItemContainer(IllustrationViewModel viewModel)
         {
             return IllustrationGridView.ContainerFromItem(viewModel) as UIElement;
+        }
+
+        private void BookmarkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            sender.GetDataContext<IllustrationViewModel>().SwitchBookmarkStateAsync();
+        }
+
+        private async void SaveContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            var task = await DownloadFactories.Illustration.CreateAsync(sender.GetDataContext<IllustrationViewModel>(), App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
+            App.AppViewModel.DownloadManager.QueueTask(task);
+        }
+
+        private async void OpenInBrowserContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<IllustrationViewModel>().Id));
+        }
+
+        private void AddToBookmarkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private async void SaveAsContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            var viewModel = sender.GetDataContext<IllustrationViewModel>();
+            var file = await UIHelper.OpenFileSavePickerAsync(viewModel.Id, $"{viewModel.Illustration.GetImageFormat().RemoveSurrounding(".", string.Empty)} file", viewModel.Illustration.GetImageFormat());
+        }
+
+        private void CopyWebLinkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString()));
+        }
+
+        private void CopyAppLinkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationAppUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString()));
+        }
+
+        private async void ShowQrCodeContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            await ViewModel.ShowQrCodeForIllustrationAsync(sender.GetDataContext<IllustrationViewModel>());
+        }
+
+        private async void ShowPixEzQrCodeContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            await ViewModel.ShowPixEzQrCodeForIllustrationAsync(sender.GetDataContext<IllustrationViewModel>());
         }
     }
 }

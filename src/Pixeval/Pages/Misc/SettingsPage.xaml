@@ -273,6 +273,10 @@
 
                     <settingsGroup:SettingsGroup x:Uid="/SettingsPage/DownloadSettingsGroup">
 
+                        <switchSettingEntry:SwitchSettingEntry x:Uid="/SettingsPage/OverwriteDownloadedFileEntry"
+                                                               Icon="{ui:FontIcon Glyph=ScanE8FE}"
+                                                               IsOn="{x:Bind _viewModel.OverwriteDownloadedFile, Mode=TwoWay}" />
+
                         <sliderSettingEntry:SliderSettingEntry x:Uid="/SettingsPage/MaxDownloadConcurrencyLevelEntry"
                                                                Icon="{ui:FontIcon Glyph=LightningBoltE945}"
                                                                Maximum="{x:Bind system:Environment.ProcessorCount}"

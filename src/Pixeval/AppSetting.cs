@@ -68,7 +68,8 @@ namespace Pixeval
             bool usePreciseRangeForSearch,
             DateTimeOffset searchStartDate,
             DateTimeOffset searchEndDate,
-            string defaultDownloadPathMacro)
+            string defaultDownloadPathMacro, 
+            bool overwriteDownloadedFile)
         {
             Theme = theme;
             FiltrateRestrictedContent = filtrateRestrictedContent;
@@ -97,6 +98,7 @@ namespace Pixeval
             SearchStartDate = searchStartDate;
             SearchEndDate = searchEndDate;
             DefaultDownloadPathMacro = defaultDownloadPathMacro;
+            OverwriteDownloadedFile = overwriteDownloadedFile;
         }
 
         /// <summary>
@@ -230,6 +232,9 @@ namespace Pixeval
 
         [DefaultValue(typeof(DownloadPathMacroDefaultValueProvider))]
         public string DefaultDownloadPathMacro { get; set; }
+
+        [DefaultValue(false)]
+        public bool OverwriteDownloadedFile { get; set; }
 
         public static AppSetting CreateDefault()
         {

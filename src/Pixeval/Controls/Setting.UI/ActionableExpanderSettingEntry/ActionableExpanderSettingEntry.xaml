@@ -36,6 +36,7 @@
                                                                  Icon="{TemplateBinding Icon}" />
                                 <ContentPresenter x:Name="ActionContentPresenter"
                                                   Grid.Column="1"
+                                                  Margin="{TemplateBinding ContentMargin}"
                                                   HorizontalAlignment="Right"
                                                   VerticalAlignment="Center"
                                                   Content="{TemplateBinding ActionContent}" />

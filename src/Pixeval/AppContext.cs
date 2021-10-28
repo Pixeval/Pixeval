@@ -139,11 +139,6 @@ namespace Pixeval
             WeakReferenceMessenger.Default.Send(new ScanningLoginProxyMessage());
         }
 
-        public static Uri GenerateAppLinkToIllustration(string id)
-        {
-            return new Uri($"{AppProtocol}://illust/{id}");
-        }
-
         public static async Task WriteLogoIcoIfNotExist()
         {
             const string iconName = "logo44x44.ico";
@@ -316,6 +311,7 @@ namespace Pixeval
                 ConfigurationContainer.Values[nameof(AppSetting.SearchStartDate)] = appSetting.SearchStartDate;
                 ConfigurationContainer.Values[nameof(AppSetting.SearchEndDate)] = appSetting.SearchEndDate;
                 ConfigurationContainer.Values[nameof(AppSetting.DefaultDownloadPathMacro)] = appSetting.DefaultDownloadPathMacro;
+                ConfigurationContainer.Values[nameof(AppSetting.OverwriteDownloadedFile)] = appSetting.OverwriteDownloadedFile;
             }
         }
 
@@ -375,7 +371,8 @@ namespace Pixeval
                     ConfigurationContainer.Values[nameof(AppSetting.UsePreciseRangeForSearch)].CastOrThrow<bool>(),
                     ConfigurationContainer.Values[nameof(AppSetting.SearchStartDate)].CastOrThrow<DateTimeOffset>(),
                     ConfigurationContainer.Values[nameof(AppSetting.SearchEndDate)].CastOrThrow<DateTimeOffset>(),
-                    ConfigurationContainer.Values[nameof(AppSetting.DefaultDownloadPathMacro)].CastOrThrow<string>());
+                    ConfigurationContainer.Values[nameof(AppSetting.DefaultDownloadPathMacro)].CastOrThrow<string>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.OverwriteDownloadedFile)].CastOrThrow<bool>());
             }
             catch
             {

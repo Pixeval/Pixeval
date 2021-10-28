@@ -9,7 +9,9 @@
              xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:media="using:Microsoft.Xaml.Interactions.Media"
+             xmlns:ui="using:Pixeval.Util.UI"
              xmlns:userControls="using:Pixeval.UserControls"
+             xmlns:util="using:Pixeval.Util"
              Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
              Loaded="IllustrationGrid_OnLoaded"
              mc:Ignorable="d">
@@ -27,13 +29,54 @@
         <adaptiveGridView:AdaptiveGridView.ItemTemplate>
             <DataTemplate x:DataType="userControls:IllustrationViewModel">
                 <GridViewItem x:Name="IllustrationThumbnailContainerItem"
-                              Tapped="IllustrationThumbnailContainerItem_OnTapped"
                               EffectiveViewportChanged="IllustrationThumbnailContainerItem_OnEffectiveViewportChanged"
                               IsSelected="{x:Bind IsSelected, Mode=TwoWay}"
-                              RenderTransformOrigin="0.5,0.5">
+                              RenderTransformOrigin="0.5,0.5"
+                              Tapped="IllustrationThumbnailContainerItem_OnTapped">
                     <GridViewItem.RenderTransform>
                         <ScaleTransform />
                     </GridViewItem.RenderTransform>
+                    <GridViewItem.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem x:Uid="/IllustrationGrid/BookmarkContextItem"
+                                            Icon="{x:Bind util:MakoHelper.GetBookmarkButtonIcon(IsBookmarked), Mode=OneWay}"
+                                            Tapped="BookmarkContextItem_OnTapped"
+                                            Text="{x:Bind GetBookmarkContextItemText(IsBookmarked), Mode=OneWay}" />
+                            <MenuFlyoutItem x:Uid="/IllustrationGrid/AddToBookmarkContextItem"
+                                            Icon="{ui:FontIcon Glyph=BookmarksE8A4}"
+                                            Tapped="AddToBookmarkContextItem_OnTapped" />
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem x:Uid="/IllustrationGrid/SaveContextItem"
+                                            Icon="{ui:FontIcon Glyph=SaveE74E}"
+                                            Tapped="SaveContextItem_OnTapped" />
+                            <MenuFlyoutItem x:Uid="/IllustrationGrid/SaveAsContextItem"
+                                            Icon="{ui:FontIcon Glyph=SaveAsE792}"
+                                            Tapped="SaveAsContextItem_OnTapped" />
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem x:Uid="/IllustrationGrid/OpenInBrowserContextItem"
+                                            Icon="{ui:FontIcon Glyph=WebSearchF6FA}"
+                                            Tapped="OpenInBrowserContextItem_OnTapped" />
+                            <MenuFlyoutItem x:Uid="/IllustrationGrid/CopyWebLinkContextItem"
+                                            Icon="{ui:FontIcon Glyph=PreviewLinkE8A1}"
+                                            Tapped="CopyWebLinkContextItem_OnTapped" />
+                            <MenuFlyoutItem x:Uid="/IllustrationGrid/CopyAppLinkContextItem"
+                                            Icon="{ui:FontIcon Glyph=LinkE71B}"
+                                            Tapped="CopyAppLinkContextItem_OnTapped" />
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem x:Uid="/IllustrationGrid/ShowQrCodeContextItem"
+                                            Icon="{ui:FontIcon Glyph=QRCodeED14}"
+                                            Tapped="ShowQrCodeContextItem_OnTapped" />
+                            <MenuFlyoutItem x:Uid="/IllustrationGrid/ShowPixEzQrCodeContextItem"
+                                            Icon="{ui:FontIcon Glyph=Photo2EB9F}"
+                                            Tapped="ShowPixEzQrCodeContextItem_OnTapped" />
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutSubItem x:Uid="/IllustrationGrid/SetAsSubContextItem"
+                                               Icon="{ui:FontIcon Glyph=PersonalizeE771}">
+                                <MenuFlyoutItem x:Uid="/IllustrationGrid/SetAsBackgroundContextItem" />
+                                <MenuFlyoutItem x:Uid="/IllustrationGrid/SetAsLockScreenContextItem" />
+                            </MenuFlyoutSubItem>
+                        </MenuFlyout>
+                    </GridViewItem.ContextFlyout>
                     <card:CardControl CornerRadius="5">
                         <card:CardControl.Resources>
                             <ExponentialEase x:Key="EasingFunction"
@@ -136,8 +179,7 @@
                         </card:CardControl.Resources>
                         <interactivity:Interaction.Behaviors>
                             <core:EventTriggerBehavior EventName="PointerEntered">
-                                <media:ControlStoryboardAction
-                                    Storyboard="{StaticResource ThumbnailScaleOutStoryboard}" />
+                                <media:ControlStoryboardAction Storyboard="{StaticResource ThumbnailScaleOutStoryboard}" />
                             </core:EventTriggerBehavior>
                             <core:EventTriggerBehavior EventName="PointerExited">
                                 <media:ControlStoryboardAction ControlStoryboardOption="Play"
@@ -171,18 +213,16 @@
                                 <Grid.RenderTransform>
                                     <ScaleTransform CenterX="10" CenterY="10" ScaleX="0" ScaleY="0" />
                                 </Grid.RenderTransform>
-                                <FontIcon Width="20"
-                                          Height="20"
-                                          FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                          Glyph="&#xEB51;"
-                                          Tapped="PostBookmarkButton_OnTapped" />
-                                <FontIcon Width="20"
-                                          Height="20"
-                                          FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                          Foreground="Crimson"
-                                          Glyph="&#xEB52;"
-                                          Tapped="RemoveBookmarkButton_OnTapped"
-                                          Visibility="{x:Bind IsBookmarked, Mode=OneWay}" />
+                                <ContentPresenter Width="20"
+                                                  Height="20"
+                                                  Content="{ui:FontIcon Glyph=HeartEB51}"
+                                                  Tapped="PostBookmarkButton_OnTapped" />
+                                <ContentPresenter Width="20"
+                                                  Height="20"
+                                                  Content="{ui:FontIcon Glyph=HeartFillEB52,
+                                                                        Foreground=Crimson}"
+                                                  Tapped="RemoveBookmarkButton_OnTapped"
+                                                  Visibility="{x:Bind IsBookmarked, Mode=OneWay}" />
                             </Grid>
                             <Grid x:Name="ImageCollectionHint"
                                   Width="20"

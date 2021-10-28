@@ -95,9 +95,14 @@ namespace Pixeval.Pages.Download
             };
         }
 
-        public static bool GetEntryCancelDownloadItemIsEnabled(DownloadState currentState)
+        public static bool GetIsEntryCancelDownloadItemEnabled(DownloadState currentState)
         {
             return currentState is DownloadState.Running or DownloadState.Created or DownloadState.Queued;
+        }
+
+        public static bool GetIsShowErrorDetailDialogItemEnabled(DownloadState currentState)
+        {
+            return currentState == DownloadState.Error;
         }
 
         public static Brush GetActionButtonBackground(DownloadState currentState)

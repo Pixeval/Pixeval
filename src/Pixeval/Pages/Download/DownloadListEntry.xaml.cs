@@ -3,12 +3,14 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Download;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.UserControls;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Download
 {
@@ -18,7 +20,7 @@ namespace Pixeval.Pages.Download
             nameof(ViewModel),
             typeof(ObservableDownloadTask),
             typeof(DownloadListEntry),
-            PropertyMetadata.Create(DependencyProperty.UnsetValue));
+            PropertyMetadata.Create(DependencyProperty.UnsetValue, ViewModelChanged));
 
         public ObservableDownloadTask ViewModel
         {
@@ -26,24 +28,25 @@ namespace Pixeval.Pages.Download
             set => SetValue(ViewModelProperty, value);
         }
 
+        private static void ViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is DownloadListEntry entry && e.NewValue is ObservableDownloadTask value)
+            {
+                ToolTipService.SetToolTip(entry, value.Title);
+                ToolTipService.SetPlacement(entry, PlacementMode.Mouse);
+            }
+        }
+
         public static readonly DependencyProperty ThumbnailProperty = DependencyProperty.Register(
             nameof(Thumbnail),
             typeof(ImageSource),
             typeof(DownloadListEntry),
-            PropertyMetadata.Create(DependencyProperty.UnsetValue, ThumbnailChanged));
+            PropertyMetadata.Create(DependencyProperty.UnsetValue));
 
         public ImageSource Thumbnail
         {
             get => (ImageSource)GetValue(ThumbnailProperty);
             set => SetValue(ThumbnailProperty, value);
-        }
-
-        private static void ThumbnailChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is DownloadListEntry { ThumbnailImage: var image } && e.NewValue is ImageSource value)
-            {
-                image.Source = value;
-            }
         }
 
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
@@ -74,7 +77,7 @@ namespace Pixeval.Pages.Download
             nameof(Progress),
             typeof(double),
             typeof(DownloadListEntry),
-            PropertyMetadata.Create(DependencyProperty.UnsetValue, ProgressChanged));
+            PropertyMetadata.Create(DependencyProperty.UnsetValue));
 
         public double Progress
         {
@@ -82,19 +85,11 @@ namespace Pixeval.Pages.Download
             set => SetValue(ProgressProperty, value);
         }
 
-        private static void ProgressChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is DownloadListEntry { DownloadProgressBar: var progressBar } && e.NewValue is double value)
-            {
-                progressBar.Value = value;
-            }
-        }
-
         public static readonly DependencyProperty ProgressMessageProperty = DependencyProperty.Register(
             nameof(ProgressMessage),
             typeof(string),
             typeof(DownloadListEntry),
-            PropertyMetadata.Create(DependencyProperty.UnsetValue, ProgressMessageChanged));
+            PropertyMetadata.Create(DependencyProperty.UnsetValue));
 
         public string ProgressMessage
         {
@@ -102,19 +97,11 @@ namespace Pixeval.Pages.Download
             set => SetValue(ProgressMessageProperty, value);
         }
 
-        private static void ProgressMessageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is DownloadListEntry { ProgressMessageTextBlock: var block } && e.NewValue is string value)
-            {
-                block.Text = value;
-            }
-        }
-
         public static readonly DependencyProperty ActionButtonContentProperty = DependencyProperty.Register(
             nameof(ActionButtonContent),
             typeof(string),
             typeof(DownloadListEntry),
-            PropertyMetadata.Create(DependencyProperty.UnsetValue, ActionButtonContentChanged));
+            PropertyMetadata.Create(DependencyProperty.UnsetValue));
 
         public string ActionButtonContent
         {
@@ -122,19 +109,11 @@ namespace Pixeval.Pages.Download
             set => SetValue(ActionButtonContentProperty, value);
         }
 
-        private static void ActionButtonContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is DownloadListEntry { ActionButton: var button } && e.NewValue is string value)
-            {
-                button.Content = value;
-            }
-        }
-
         public static readonly DependencyProperty IsCancelItemEnabledProperty = DependencyProperty.Register(
             nameof(IsCancelItemEnabled),
             typeof(bool),
             typeof(DownloadListEntry),
-            PropertyMetadata.Create(DependencyProperty.UnsetValue, IsCancelButtonEnabledChanged));
+            PropertyMetadata.Create(DependencyProperty.UnsetValue));
 
         public bool IsCancelItemEnabled
         {
@@ -142,19 +121,11 @@ namespace Pixeval.Pages.Download
             set => SetValue(IsCancelItemEnabledProperty, value);
         }
 
-        private static void IsCancelButtonEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is DownloadListEntry { CancelDownloadItem: var item } && e.NewValue is bool value)
-            {
-                item.IsEnabled = value;
-            }
-        }
-
         public static readonly DependencyProperty ActionButtonBackgroundProperty = DependencyProperty.Register(
             nameof(ActionButtonBackground),
             typeof(Brush),
             typeof(DownloadListEntry),
-            PropertyMetadata.Create(DependencyProperty.UnsetValue, ActionButtonBackgroundChanged));
+            PropertyMetadata.Create(DependencyProperty.UnsetValue));
 
         public Brush ActionButtonBackground
         {
@@ -162,12 +133,16 @@ namespace Pixeval.Pages.Download
             set => SetValue(ActionButtonBackgroundProperty, value);
         }
 
-        private static void ActionButtonBackgroundChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        public static readonly DependencyProperty IsShowErrorDetailDialogItemEnabledProperty = DependencyProperty.Register(
+            nameof(IsShowErrorDetailDialogItemEnabled),
+            typeof(bool),
+            typeof(DownloadListEntry),
+            PropertyMetadata.Create(DependencyProperty.UnsetValue));
+
+        public bool IsShowErrorDetailDialogItemEnabled
         {
-            if (d is DownloadListEntry { ActionButton: var button } && e.NewValue is Brush value)
-            {
-                button.Background = value;
-            }
+            get => (bool) GetValue(IsShowErrorDetailDialogItemEnabledProperty);
+            set => SetValue(IsShowErrorDetailDialogItemEnabledProperty, value);
         }
 
         public DownloadListEntry()
@@ -191,6 +166,7 @@ namespace Pixeval.Pages.Download
 
         private void ApplyVisualStateChange(bool compact)
         {
+            // VisualStateManager won't work for unknown reason, sucks
             if (compact)
             {
                 ImageColumn.Width = new GridLength(1, GridUnitType.Star);
@@ -299,6 +275,12 @@ namespace Pixeval.Pages.Download
                     App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
                     break;
             }
+        }
+
+        private async void CheckErrorMessageInDetail_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            await MessageDialogBuilder.CreateAcknowledgement(App.AppViewModel.Window, DownloadListEntryResources.ErrorMessageDialogTitle, ViewModel.ErrorCause!.ToString())
+                .ShowAsync();
         }
     }
 }

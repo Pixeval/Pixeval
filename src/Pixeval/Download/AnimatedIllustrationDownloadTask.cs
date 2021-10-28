@@ -36,10 +36,18 @@ namespace Pixeval.Download
             IllustrationViewModel illustration,
             string zipUrl,
             string destination,
-            UgoiraMetadataResponse metadata)
-            : base(illustration.Illustration.Title, illustration.Illustration.User?.Name, zipUrl, IOHelper.NormalizePath(destination), illustration.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium))
+            UgoiraMetadataResponse metadata) : base(illustration.Illustration.Title, illustration.Illustration.User?.Name, zipUrl, IOHelper.NormalizePath(destination), illustration.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium), null)
         {
             _metadata = metadata;
+        }
+
+        public override void DownloadStarting(DownloadStartingEventArgs args)
+        {
+            var deferral = args.GetDeferral();
+            if (!App.AppViewModel.AppSetting.OverwriteDownloadedFile && File.Exists(Destination))
+            {
+                deferral.Complete(false);
+            }
         }
 
         public async void Consume(IRandomAccessStream stream)

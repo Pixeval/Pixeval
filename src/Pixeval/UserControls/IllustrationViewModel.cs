@@ -170,7 +170,6 @@ namespace Pixeval.UserControls
                 return true;
             }
 
-            // TODO: Use loaded-failed image
             LoadingThumbnail = false;
             return false;
         }
@@ -181,15 +180,20 @@ namespace Pixeval.UserControls
             {
                 switch (await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle))
                 {
-                    case Result<IRandomAccessStream>.Success(var stream):
+                    case Result<IRandomAccessStream>.Success (var stream):
                         return stream;
-                    case Result<IRandomAccessStream>.Failure(OperationCanceledException):
+                    case Result<IRandomAccessStream>.Failure (OperationCanceledException):
                         LoadingThumbnailCancellationHandle.Reset();
                         return null;
                 }
             }
 
             return await AppContext.GetNotAvailableImageStreamAsync();
+        }
+
+        public Task SwitchBookmarkStateAsync()
+        {
+            return IsBookmarked ? RemoveBookmarkAsync() : PostPublicBookmarkAsync();
         }
 
         public Task RemoveBookmarkAsync()
@@ -220,6 +224,11 @@ namespace Pixeval.UserControls
             }
 
             return sb.ToString();
+        }
+
+        public string GetBookmarkContextItemText(bool isBookmarked)
+        {
+            return isBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
         }
 
         public void DisposeInternal()

@@ -22,11 +22,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Download;
-using Pixeval.Util.UI;
+using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Download
 {
@@ -55,6 +55,53 @@ namespace Pixeval.Pages.Download
         private void ModeFilterComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _viewModel.ResetFilter();
+        }
+
+        private void PauseAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            _viewModel.PauseAll();
+        }
+
+        private void ResumeAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            _viewModel.ResumeAll();
+        }
+
+        private void CancelAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            _viewModel.CancelAll();
+        }
+
+        private void ClearDownloadListButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            _viewModel.ClearDownloadList();
+        }
+
+        private void FilterAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            _viewModel.FilterTask(sender.Text);
+        }
+
+        private bool _queriedBySuggestion;
+
+        private void FilterAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            sender.Text = string.Empty;
+            _viewModel.CurrentOption = DownloadListOption.CustomSearch;
+            _viewModel.ResetFilter(Enumerates.EnumerableOf((IDownloadTask) args.SelectedItem));
+            _queriedBySuggestion = true;
+        }
+
+        private void FilterAutoSuggestBox_OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            if (_queriedBySuggestion)
+            {
+                _queriedBySuggestion = false;
+                return;
+            }
+            sender.Text = string.Empty;
+            _viewModel.CurrentOption = DownloadListOption.CustomSearch;
+            _viewModel.ResetFilter(_viewModel.FilteredTasks);
         }
     }
 }

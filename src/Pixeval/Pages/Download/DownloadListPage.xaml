@@ -27,22 +27,65 @@
                        VerticalAlignment="Center"
                        Style="{StaticResource BodyStrongTextBlockStyle}"
                        Text="{x:Bind _viewModel.SubtitleText(_viewModel.CurrentOption), Mode=OneWay}" />
-            <ComboBox x:Uid="/DownloadListPage/ModeFilterComboBox"
-                      HorizontalAlignment="Right"
-                      VerticalAlignment="Center"
-                      ItemsSource="{x:Bind download:DownloadListPageViewModel.AvailableDownloadListOptions}"
-                      SelectedItem="{x:Bind _viewModel.CurrentOption, Mode=TwoWay}"
-                      SelectionChanged="ModeFilterComboBox_OnSelectionChanged">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate x:DataType="download:DownloadListOption">
-                        <TextBlock Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent((download:DownloadListOption))}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
+            <Grid HorizontalAlignment="Right"
+                  ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <AutoSuggestBox x:Uid="/DownloadListPage/FilterAutoSuggestBox"
+                                Grid.Column="0"
+                                Width="140"
+                                VerticalAlignment="Center"
+                                ItemsSource="{x:Bind _viewModel.FilteredTasks}"
+                                QueryIcon="Find"
+                                QuerySubmitted="FilterAutoSuggestBox_OnQuerySubmitted"
+                                SuggestionChosen="FilterAutoSuggestBox_OnSuggestionChosen"
+                                TextChanged="FilterAutoSuggestBox_OnTextChanged">
+                    <AutoSuggestBox.ItemTemplate>
+                        <DataTemplate x:DataType="downloader:IDownloadTask">
+                            <TextBlock Text="{x:Bind Title}" />
+                        </DataTemplate>
+                    </AutoSuggestBox.ItemTemplate>
+                </AutoSuggestBox>
+                <Button x:Uid="/DownloadListPage/CancelAllButton"
+                        Grid.Column="1"
+                        Width="120"
+                        Tapped="CancelAllButton_OnTapped" />
+                <Button x:Uid="/DownloadListPage/ResumeAllButton"
+                        Grid.Column="2"
+                        Width="120"
+                        Background="{ThemeResource AccentFillColorDefaultBrush}"
+                        Tapped="ResumeAllButton_OnTapped" />
+                <Button x:Uid="/DownloadListPage/PauseAllButton"
+                        Grid.Column="3"
+                        Width="120"
+                        Tapped="PauseAllButton_OnTapped" />
+                <Button x:Uid="/DownloadListPage/ClearDownloadListButton"
+                        Grid.Column="4"
+                        Width="120"
+                        Tapped="ClearDownloadListButton_OnTapped" />
+                <ComboBox x:Uid="/DownloadListPage/ModeFilterComboBox"
+                          Grid.Column="5"
+                          VerticalAlignment="Center"
+                          ItemsSource="{x:Bind download:DownloadListPageViewModel.AvailableDownloadListOptions}"
+                          SelectedItem="{x:Bind _viewModel.CurrentOption, Mode=TwoWay}"
+                          SelectionChanged="ModeFilterComboBox_OnSelectionChanged">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="download:DownloadListOption">
+                            <TextBlock Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent((download:DownloadListOption))}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </Grid>
         </Grid>
         <ListView Grid.Row="3"
                   IsItemClickEnabled="False"
-                  ItemsSource="{x:Bind _viewModel.DownloadTasksView}">
+                  ItemsSource="{x:Bind _viewModel.DownloadTasksView, Mode=OneWay}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="Template">
@@ -62,7 +105,8 @@
                                                         ActionButtonBackground="{x:Bind download:DownloadListEntryViewModel.GetActionButtonBackground(DownloadTask.CurrentState), Mode=OneWay}"
                                                         ActionButtonContent="{x:Bind download:DownloadListEntryViewModel.GetEntryActionButtonContent(DownloadTask.CurrentState), Mode=OneWay}"
                                                         Description="{x:Bind DownloadTask.Description}"
-                                                        IsCancelItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetEntryCancelDownloadItemIsEnabled(DownloadTask.CurrentState), Mode=OneWay}"
+                                                        IsCancelItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsEntryCancelDownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
+                                                        IsShowErrorDetailDialogItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsShowErrorDetailDialogItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
                                                         Progress="{x:Bind DownloadTask.ProgressPercentage, Mode=OneWay}"
                                                         ProgressMessage="{x:Bind download:DownloadListEntryViewModel.GetEntryProgressMessage(DownloadTask.CurrentState, DownloadTask.ProgressPercentage, DownloadTask.ErrorCause), Mode=OneWay}"
                                                         Thumbnail="{x:Bind Thumbnail, Mode=OneWay}"

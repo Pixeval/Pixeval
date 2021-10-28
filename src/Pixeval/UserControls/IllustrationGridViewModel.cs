@@ -26,11 +26,16 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CommunityToolkit.AdvancedCollectionView;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
+using Pixeval.Popups;
 using Pixeval.Util;
+using Pixeval.Util.IO;
+using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using QRCoder;
 
 namespace Pixeval.UserControls
 {
@@ -39,6 +44,10 @@ namespace Pixeval.UserControls
         private bool _isAnyIllustrationSelected;
 
         private string _selectionLabel;
+
+        private SoftwareBitmapSource? _webQrCodeSource;
+
+        private SoftwareBitmapSource? _pixEzQrCodeSource;
 
         public IllustrationGridViewModel()
         {
@@ -141,6 +150,20 @@ namespace Pixeval.UserControls
         public void ClearSortDescription()
         {
             IllustrationsView.SortDescriptions.Clear();
+        }
+
+        public async Task ShowQrCodeForIllustrationAsync(IllustrationViewModel model)
+        {
+            _webQrCodeSource = await UIHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustrationWebUri(model.Id).ToString());
+
+            PopupManager.ShowPopup(PopupManager.CreatePopup(new QrCodePresenter(_webQrCodeSource), lightDismiss: true, closing: (_, _) => _webQrCodeSource.Dispose()));
+        }
+
+        public async Task ShowPixEzQrCodeForIllustrationAsync(IllustrationViewModel model)
+        {
+            _pixEzQrCodeSource = await UIHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustrationPixEzUri(model.Id).ToString());
+
+            PopupManager.ShowPopup(PopupManager.CreatePopup(new QrCodePresenter(_pixEzQrCodeSource), lightDismiss: true, closing: (_, _) => _pixEzQrCodeSource.Dispose()));
         }
 
         private void DisposeCurrent()

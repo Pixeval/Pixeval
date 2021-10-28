@@ -64,6 +64,12 @@ namespace Pixeval.Controls.Setting.UI.ActionableExpanderSettingEntry
             typeof(ActionableExpanderSettingEntry),
             PropertyMetadata.Create(DependencyProperty.UnsetValue));
 
+        public static readonly DependencyProperty ContentMarginProperty = DependencyProperty.Register(
+            nameof(ContentMargin),
+            typeof(Thickness),
+            typeof(ActionableExpanderSettingEntry),
+            PropertyMetadata.Create(DependencyProperty.UnsetValue));
+
         private ContentPresenter? _entryContentPresenter;
 
         private SettingEntryHeader? _entryHeader;
@@ -102,6 +108,12 @@ namespace Pixeval.Controls.Setting.UI.ActionableExpanderSettingEntry
         {
             get => GetValue(ActionContentProperty);
             set => SetValue(ActionContentProperty, value);
+        }
+
+        public Thickness ContentMargin
+        {
+            get => (Thickness)GetValue(ContentMarginProperty);
+            set => SetValue(ContentMarginProperty, value);
         }
 
         private void Update()

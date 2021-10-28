@@ -93,6 +93,7 @@
       <None Remove="Strings\zh-CN\DownloadListEntry.resw" />
       <None Remove="Strings\zh-CN\DownloadListPage.resw" />
       <None Remove="Strings\zh-CN\DownloadTask.resw" />
+      <None Remove="Strings\zh-CN\IllustrationGrid.resw" />
       <None Remove="Strings\zh-CN\IllustrationGridCommandBar.resw" />
       <None Remove="Strings\zh-CN\IllustrationInfoPage.resw" />
       <None Remove="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
@@ -248,6 +249,7 @@
       <PRIResource Include="Strings\zh-CN\DownloadListEntry.resw" />
       <PRIResource Include="Strings\zh-CN\DownloadListPage.resw" />
       <PRIResource Include="Strings\zh-CN\DownloadTask.resw" />
+      <PRIResource Include="Strings\zh-CN\IllustrationGrid.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationGridCommandBar.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationInfoPage.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />

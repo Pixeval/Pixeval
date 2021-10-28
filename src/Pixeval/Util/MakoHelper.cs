@@ -23,12 +23,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.UI;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Pixeval.CommunityToolkit.AdvancedCollectionView;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 using Pixeval.Options;
+using Pixeval.UserControls;
 using Pixeval.Util.Generic;
 using Pixeval.Utilities;
 using Enumerates = Pixeval.Utilities.Enumerates;
@@ -60,14 +64,29 @@ namespace Pixeval.Util
             };
         }
 
-        public static Uri GetIllustrationWebUri(string id)
+        public static Uri GenerateIllustrationWebUri(string id)
         {
             return new Uri($"https://www.pixiv.net/artworks/{id}");
+        }
+
+        public static Uri GenerateIllustrationPixEzUri(string id)
+        {
+            return new Uri($"pixez://www.pixiv.net/artworks/{id}");
+        }
+
+        public static Uri GenerateIllustrationAppUri(string id)
+        {
+            return new Uri($"{AppContext.AppProtocol}://illust/{id}");
         }
 
         public static string? GetOriginalUrl(this Illustration illustration)
         {
             return illustration.ImageUrls?.Original ?? illustration.MetaSinglePage?.OriginalImageUrl;
+        }
+
+        public static string GetImageFormat(this Illustration illustration)
+        {
+            return illustration.GetOriginalUrl() is { } url ? url[url.LastIndexOf(".", StringComparison.Ordinal)..] : string.Empty;
         }
 
         public static string GetIllustrationThumbnailCacheKey(this Illustration illustration)
@@ -120,6 +139,40 @@ namespace Pixeval.Util
         public static string GenerateStickerDownloadUrl(int id)
         {
             return $"https://s.pximg.net/common/images/stamp/generated-stamps/{id}_s.jpg";
+        }
+
+        public static IconSource GetBookmarkButtonIconSource(bool isBookmarked)
+        {
+            var systemThemeFontFamily = new FontFamily("Segoe MDL2 Assets");
+            return isBookmarked
+                ? new FontIconSource
+                {
+                    Glyph = "\xEB52", // HeartFill
+                    Foreground = new SolidColorBrush(Colors.Crimson),
+                    FontFamily = systemThemeFontFamily
+                }
+                : new FontIconSource
+                {
+                    Glyph = "\xEB51", // Heart
+                    FontFamily = systemThemeFontFamily
+                };
+        }
+
+        public static IconElement GetBookmarkButtonIcon(bool isBookmarked)
+        {
+            var systemThemeFontFamily = new FontFamily("Segoe MDL2 Assets");
+            return isBookmarked
+                ? new FontIcon
+                {
+                    Glyph = "\xEB52", // HeartFill
+                    Foreground = new SolidColorBrush(Colors.Crimson),
+                    FontFamily = systemThemeFontFamily
+                }
+                : new FontIcon
+                {
+                    Glyph = "\xEB51", // Heart
+                    FontFamily = systemThemeFontFamily
+                };
         }
     }
 }

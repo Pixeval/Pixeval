@@ -28,6 +28,8 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Graphics;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.UI.Text;
@@ -38,7 +40,10 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CommunityToolkit;
 using Pixeval.Misc;
+using Pixeval.Util.IO;
 using Pixeval.Utilities;
+using QRCoder;
+using WinRT.Interop;
 
 namespace Pixeval.Util.UI
 {
@@ -53,7 +58,7 @@ namespace Pixeval.Util.UI
 
         public static T GetDataContext<T>(this object element)
         {
-            return ((FrameworkElement) element).GetDataContext<T>(); // direct cast will throw exception if the type check failed, and that's exactly what we want
+            return ((FrameworkElement) element).GetDataContext<T>(); // direct cast will throw exception if the type check fails, and that's exactly what we want
         }
 
         public static ImageSource GetImageSourceFromUriRelativeToAssetsImageFolder(string relativeToAssetsImageFolder)
@@ -283,9 +288,43 @@ namespace Pixeval.Util.UI
             element.Visibility = Visibility.Visible;
         }
 
-        public static Size ToWinRTSize(this SizeInt32 size)
+        public static Size ToWinRtSize(this SizeInt32 size)
         {
             return new Size(size.Width, size.Height);
+        }
+
+        public static async Task<SoftwareBitmapSource> GenerateQrCodeForUrlAsync(string url)
+        {
+            var qrCodeGen = new QRCodeGenerator();
+            var urlPayload = new PayloadGenerator.Url(url);
+            var qrCodeData = qrCodeGen.CreateQrCode(urlPayload, QRCodeGenerator.ECCLevel.Q);
+            var qrCode = new BitmapByteQRCode(qrCodeData);
+            var bytes = qrCode.GetGraphic(20);
+            return await (await IOHelper.GetRandomAccessStreamFromByteArrayAsync(bytes)).GetSoftwareBitmapSourceAsync(true);
+        }
+
+        public static async Task<SoftwareBitmapSource> GenerateQrCodeAsync(string content)
+        {
+            var qrCodeGen = new QRCodeGenerator();
+            var qrCodeData = qrCodeGen.CreateQrCode(content, QRCodeGenerator.ECCLevel.Q);
+            var qrCode = new BitmapByteQRCode(qrCodeData);
+            var bytes = qrCode.GetGraphic(20);
+            return await (await IOHelper.GetRandomAccessStreamFromByteArrayAsync(bytes)).GetSoftwareBitmapSourceAsync(true);
+        }
+
+        public static IAsyncOperation<StorageFile?> OpenFileSavePickerAsync(string suggestedFileName, string fileTypeName, string fileTypeId)
+        {
+            var savePicker = new FileSavePicker
+            {
+                SuggestedStartLocation = PickerLocationId.PicturesLibrary,
+                FileTypeChoices =
+                {
+                    [fileTypeId] = new List<string> { fileTypeId }
+                },
+                SuggestedFileName = suggestedFileName
+            };
+            InitializeWithWindow.Initialize(savePicker, App.AppViewModel.GetMainWindowHandle());
+            return savePicker.PickSaveFileAsync();
         }
     }
 }

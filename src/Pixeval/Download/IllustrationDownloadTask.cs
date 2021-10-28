@@ -18,6 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
+using System.IO;
+using Windows.Storage.Streams;
 using Pixeval.Options;
 using Pixeval.UserControls;
 using Pixeval.Util;
@@ -30,10 +33,46 @@ namespace Pixeval.Download
         public IllustrationViewModel IllustrationViewModel { get; }
 
         public IllustrationDownloadTask(IllustrationViewModel illustrationViewModel, string destination) 
-            : base(illustrationViewModel.Illustration.Title, illustrationViewModel.Illustration.User?.Name, illustrationViewModel.Illustration.GetOriginalUrl()!, IOHelper.NormalizePath(destination), illustrationViewModel.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium))
+            : base(illustrationViewModel.Illustration.Title, illustrationViewModel.Illustration.User?.Name, illustrationViewModel.Illustration.GetOriginalUrl()!, IOHelper.NormalizePath(destination), illustrationViewModel.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium), illustrationViewModel.Illustration.GetIllustrationOriginalImageCacheKey())
         {
             IllustrationViewModel = illustrationViewModel;
             CurrentState = DownloadState.Created;
+        }
+
+        public override async void DownloadStarting(DownloadStartingEventArgs args)
+        {
+            var deferral = args.GetDeferral();
+            if (!App.AppViewModel.AppSetting.OverwriteDownloadedFile && File.Exists(Destination))
+            {
+                ProgressPercentage = 100;
+                CurrentState = DownloadState.Completed;
+                deferral.Complete(false);
+                return;
+            }
+            if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(IllustrationViewModel.Illustration.GetIllustrationOriginalImageCacheKey()) is { } stream)
+            {
+                // fast path
+                deferral.Complete(false);
+                ProgressPercentage = 100;
+                try
+                {
+                    using (stream)
+                    {
+                        IOHelper.CreateParentDirectories(Destination);
+                        await using var fs = File.Open(Destination, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
+                        await stream.AsStreamForRead().CopyToAsync(fs);
+                    }
+                }
+                catch (Exception e)
+                {
+                    CurrentState = DownloadState.Error;
+                    ErrorCause = e;
+                    return;
+                }
+                CurrentState = DownloadState.Completed;
+            }
+            // slow path
+            deferral.Complete(true);
         }
     }
 }

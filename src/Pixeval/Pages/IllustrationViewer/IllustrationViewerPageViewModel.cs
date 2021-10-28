@@ -26,7 +26,6 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -169,8 +168,6 @@ namespace Pixeval.Pages.IllustrationViewer
         {
             PlayGifCommand.NotifyCanExecuteChanged();
             CopyCommand.NotifyCanExecuteChanged();
-            SaveMangaCommand.NotifyCanExecuteChanged();
-            SaveMangaAsCommand.NotifyCanExecuteChanged();
         }
 
         private void InitializeCommands()
@@ -185,8 +182,8 @@ namespace Pixeval.Pages.IllustrationViewer
                         Key = VirtualKey.D
                     }
                 },
-                Label = FirstIllustrationViewModel.IsBookmarked ? IllustrationViewerPageResources.RemoveBookmark : IllustrationViewerPageResources.Bookmark,
-                IconSource = GetBookmarkButtonIcon()
+                Label = FirstIllustrationViewModel.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark,
+                IconSource = MakoHelper.GetBookmarkButtonIconSource(FirstIllustrationViewModel.IsBookmarked)
             };
 
             BookmarkCommand.ExecuteRequested += BookmarkCommandOnExecuteRequested;
@@ -203,30 +200,16 @@ namespace Pixeval.Pages.IllustrationViewer
             SaveCommand.ExecuteRequested += SaveCommandOnExecuteRequested;
             SaveAsCommand.ExecuteRequested += SaveAsCommandOnExecuteRequested;
 
-            SaveMangaCommand.CanExecuteRequested += SaveMangaCommandOnCanExecuteRequested;
-            SaveMangaCommand.ExecuteRequested += SaveMangaCommandOnExecuteRequested;
-
-            SaveMangaAsCommand.CanExecuteRequested += SaveMangaAsCommandOnCanExecuteRequested;
-            SaveMangaAsCommand.ExecuteRequested += SaveMangaAsCommandOnExecuteRequested;
-
             GenerateLinkCommand.ExecuteRequested += GenerateLinkCommandOnExecuteRequested;
             GenerateWebLinkCommand.ExecuteRequested += GenerateWebLinkCommandOnExecuteRequested;
             OpenInWebBrowserCommand.ExecuteRequested += OpenInWebBrowserCommandOnExecuteRequested;
             ShareCommand.ExecuteRequested += ShareCommandOnExecuteRequested;
-            ShowQrCodeCommand.ExecuteRequested += ShowQRCodeCommandOnExecuteRequested;
+            ShowQrCodeCommand.ExecuteRequested += ShowQrCodeCommandOnExecuteRequested;
         }
 
-        private async void ShowQRCodeCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        private async void ShowQrCodeCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
         {
-            if (_qrCodeSource is null)
-            {
-                var qrCodeGen = new QRCodeGenerator();
-                var urlPayload = new PayloadGenerator.Url(MakoHelper.GetIllustrationWebUri(Current.IllustrationViewModel.Id).ToString());
-                var qrCodeData = qrCodeGen.CreateQrCode(urlPayload, QRCodeGenerator.ECCLevel.Q);
-                var qrCode = new BitmapByteQRCode(qrCodeData);
-                var bytes = qrCode.GetGraphic(20);
-                _qrCodeSource = await (await IOHelper.GetRandomAccessStreamFromByteArrayAsync(bytes)).GetBitmapImageAsync(true);
-            }
+            _qrCodeSource ??= await UIHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustrationWebUri(Current.IllustrationViewModel.Id).ToString());
 
             PopupManager.ShowPopup(PopupManager.CreatePopup(new QrCodePresenter(_qrCodeSource), lightDismiss: true));
         }
@@ -245,12 +228,12 @@ namespace Pixeval.Pages.IllustrationViewer
 
         private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
         {
-            await Launcher.LaunchUriAsync(MakoHelper.GetIllustrationWebUri(Current.IllustrationViewModel.Id));
+            await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(Current.IllustrationViewModel.Id));
         }
 
         private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
         {
-            var link = MakoHelper.GetIllustrationWebUri(Current.IllustrationViewModel.Id).ToString();
+            var link = MakoHelper.GenerateIllustrationWebUri(Current.IllustrationViewModel.Id).ToString();
             UIHelper.SetClipboardContent(package => package.SetText(link));
             UIHelper.ShowTextToastNotification(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle, link);
         }
@@ -262,27 +245,7 @@ namespace Pixeval.Pages.IllustrationViewer
                 IsGenerateLinkTeachingTipOpen = true;
             }
 
-            UIHelper.SetClipboardContent(package => package.SetText(AppContext.GenerateAppLinkToIllustration(Current.IllustrationViewModel.Id).ToString()));
-        }
-
-        private void SaveMangaAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void SaveMangaAsCommandOnCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
-        {
-            args.CanExecute = IsManga;
-        }
-
-        private void SaveMangaCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void SaveMangaCommandOnCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
-        {
-            args.CanExecute = IsManga;
+            UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationAppUri(Current.IllustrationViewModel.Id).ToString()));
         }
 
         private void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -303,25 +266,8 @@ namespace Pixeval.Pages.IllustrationViewer
         {
             FirstImageViewerPageViewModel.SwitchBookmarkState();
             // update manually
-            BookmarkCommand.Label = FirstIllustrationViewModel.IsBookmarked ? IllustrationViewerPageResources.RemoveBookmark : IllustrationViewerPageResources.Bookmark;
-            BookmarkCommand.IconSource = GetBookmarkButtonIcon();
-        }
-
-        private IconSource GetBookmarkButtonIcon()
-        {
-            var systemThemeFontFamily = new FontFamily("Segoe MDL2 Assets");
-            return FirstIllustrationViewModel.IsBookmarked
-                ? new FontIconSource
-                {
-                    Glyph = "\xEB52", // HeartFill
-                    Foreground = new SolidColorBrush(Colors.Crimson),
-                    FontFamily = systemThemeFontFamily
-                }
-                : new FontIconSource
-                {
-                    Glyph = "\xEB51", // Heart
-                    FontFamily = systemThemeFontFamily
-                };
+            BookmarkCommand.Label = FirstIllustrationViewModel.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
+            BookmarkCommand.IconSource = MakoHelper.GetBookmarkButtonIconSource(FirstIllustrationViewModel.IsBookmarked);
         }
 
         private void PlayGifCommandOnCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
@@ -478,18 +424,6 @@ namespace Pixeval.Pages.IllustrationViewer
                 }
             },
             IconSource = FontIconSymbols.SaveAsE792.GetFontIconSource()
-        };
-
-        public XamlUICommand SaveMangaCommand { get; } = new()
-        {
-            Label = IllustrationViewerPageResources.SaveManga,
-            IconSource = FontIconSymbols.SaveCopyEA35.GetFontIconSource()
-        };
-
-        public XamlUICommand SaveMangaAsCommand { get; } = new()
-        {
-            Label = IllustrationViewerPageResources.SaveMangaAs,
-            IconSource = FontIconSymbols.LinkE71B.GetFontIconSource()
         };
 
         public XamlUICommand AddToBookmarkCommand { get; } = new()

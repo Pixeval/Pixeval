@@ -23,7 +23,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Channels;
@@ -93,7 +95,18 @@ namespace Pixeval.Download
 
         public void RemoveTask(TDownloadTask task)
         {
+            _taskQuerySet.Remove(task);
             _queuedTasks.Remove(task);
+        }
+
+        public void ClearTasks()
+        {
+            foreach (var task in _queuedTasks.Where(t => t.CurrentState is DownloadState.Running or DownloadState.Paused or DownloadState.Created or DownloadState.Queued))
+            {
+                task.CancellationHandle.Cancel();
+            }
+            _queuedTasks.Clear();
+            _taskQuerySet.Clear();
         }
 
         public bool TryExecuteInline(TDownloadTask task)
@@ -115,12 +128,29 @@ namespace Pixeval.Download
 
         private async Task Download(TDownloadTask task)
         {
+            await Task.Yield();
+            IncrementCounter();
+
+            var args = new DownloadStartingEventArgs();
+            task.DownloadStarting(args);
+            if (await args.DeferralAwaiter) // decide whether to continue depends on the Cancelled property
+            {
+                await DownloadInternal(task);
+            }
+
+            await DecrementCounterAsync();
+        }
+
+        private void IncrementCounter()
+        {
             if (Interlocked.Increment(ref _workingTasks) == ConcurrencyDegree)
             {
                 _throttle.Reset();
             }
+        }
 
-            await DownloadInternal(task);
+        private async Task DecrementCounterAsync()
+        {
             Interlocked.Decrement(ref _workingTasks);
             await _semaphoreSlim.WaitAsync();
             _throttle.SetResult(true);

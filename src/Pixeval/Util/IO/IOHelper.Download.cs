@@ -94,10 +94,9 @@ namespace Pixeval.Util.IO
             IProgress<int>? progress = null,
             CancellationHandle? cancellationHandle = default)
         {
-            var awaiter = new ReenterableAwaiter<bool>(true, true);
+            var awaiter = new ReenterableAwaiter<bool>(!cancellationHandle?.IsPaused ?? true, true);
             cancellationHandle?.RegisterPaused(() => awaiter.Reset());
             cancellationHandle?.RegisterResumed(() => awaiter.SetResult(true));
-            cancellationHandle?.Register(() => awaiter.SetResult(false));
             try
             {
                 using var response = await httpClient.GetResponseHeader(url);
@@ -123,15 +122,9 @@ namespace Pixeval.Util.IO
                     int bytesRead, totalRead = 0;
                     var buffer = ArrayPool<byte>.Shared.Rent(4096);
                     var lastReportedProgressPercentage = 0;
-                    while ((bytesRead = await contentStream.ReadAsync(buffer)) != 0)
+                    while ((bytesRead = await contentStream.ReadAsync(buffer)) != 0 && await awaiter)
                     {
                         if (cancellationHandle?.IsCancelled is true)
-                        {
-                            await resultStream.DisposeAsync();
-                            return Result<Stream>.OfFailure(CancellationMark);
-                        }
-
-                        if (!await awaiter)
                         {
                             await resultStream.DisposeAsync();
                             return Result<Stream>.OfFailure(CancellationMark);

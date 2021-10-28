@@ -37,6 +37,9 @@ namespace Pixeval.Pages.Download
         Cancelled,
 
         [LocalizedResource(typeof(DownloadListPageResources), nameof(DownloadListPageResources.DownloadListOptionError))]
-        Error
+        Error,
+
+        [LocalizedResource(typeof(DownloadListPageResources), nameof(DownloadListPageResources.DownloadListOptionCustomSearch))]
+        CustomSearch,
     }
 }

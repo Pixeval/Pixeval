@@ -117,46 +117,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CancelAllButton.Content" xml:space="preserve">
-    <value>取消所有任务</value>
+  <data name="AddToBookmarkContextItem.Text" xml:space="preserve">
+    <value>添加到收藏夹</value>
   </data>
-  <data name="ClearDownloadListButton.Content" xml:space="preserve">
-    <value>清空下载列表</value>
+  <data name="CopyAppLinkContextItem.Text" xml:space="preserve">
+    <value>复制应用链接</value>
   </data>
-  <data name="DownloadListOptionAllQueued" xml:space="preserve">
-    <value>所有下载任务</value>
+  <data name="CopyWebLinkContextItem.Text" xml:space="preserve">
+    <value>复制网页链接</value>
   </data>
-  <data name="DownloadListOptionCancelled" xml:space="preserve">
-    <value>已取消</value>
+  <data name="OpenInBrowserContextItem.Text" xml:space="preserve">
+    <value>在浏览器中打开</value>
   </data>
-  <data name="DownloadListOptionCompleted" xml:space="preserve">
-    <value>已下载</value>
+  <data name="SaveAsContextItem.Text" xml:space="preserve">
+    <value>另存为</value>
   </data>
-  <data name="DownloadListOptionCustomSearch" xml:space="preserve">
-    <value>自定义搜索</value>
+  <data name="SaveContextItem.Text" xml:space="preserve">
+    <value>保存</value>
   </data>
-  <data name="DownloadListOptionError" xml:space="preserve">
-    <value>下载失败</value>
+  <data name="SetAsBackgroundContextItem.Text" xml:space="preserve">
+    <value>壁纸</value>
   </data>
-  <data name="DownloadListOptionRunning" xml:space="preserve">
-    <value>正在下载</value>
+  <data name="SetAsLockScreenContextItem.Text" xml:space="preserve">
+    <value>锁屏</value>
   </data>
-  <data name="FilterAutoSuggestBox.PlaceholderText" xml:space="preserve">
-    <value>作品名/作品ID</value>
+  <data name="SetAsSubContextItem.Text" xml:space="preserve">
+    <value>设置为</value>
   </data>
-  <data name="FilterAutoSuggestBoxNoResultFound" xml:space="preserve">
-    <value>未找到任何结果</value>
+  <data name="ShowPixEzQrCodeContextItem.Text" xml:space="preserve">
+    <value>PixEz二维码</value>
   </data>
-  <data name="ModeFilterComboBox.PlaceholderText" xml:space="preserve">
-    <value>过滤选项</value>
-  </data>
-  <data name="PageTitleTextBlock.Text" xml:space="preserve">
-    <value>下载列表</value>
-  </data>
-  <data name="PauseAllButton.Content" xml:space="preserve">
-    <value>暂停所有任务</value>
-  </data>
-  <data name="ResumeAllButton.Content" xml:space="preserve">
-    <value>恢复所有任务</value>
+  <data name="ShowQrCodeContextItem.Text" xml:space="preserve">
+    <value>作品链接二维码</value>
   </data>
 </root>

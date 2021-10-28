@@ -120,9 +120,6 @@
   <data name="AddToBookmark" xml:space="preserve">
     <value>添加到收藏夹</value>
   </data>
-  <data name="Bookmark" xml:space="preserve">
-    <value>收藏</value>
-  </data>
   <data name="CannotShareImageForNowContent" xml:space="preserve">
     <value>您必须等待图片加载完毕才能分享，如果仅仅是为了分享链接，可以点击上方的“生成网页链接”或者“生成本页链接”按钮将图片链接复制到剪切板</value>
   </data>
@@ -133,7 +130,7 @@
     <value>评论</value>
   </data>
   <data name="GenerateLink" xml:space="preserve">
-    <value>生成链接</value>
+    <value>复制应用链接</value>
   </data>
   <data name="GenerateLinkToThisPageButtonTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>不再显示</value>
@@ -148,7 +145,7 @@
     <value>链接已经复制到剪切板</value>
   </data>
   <data name="GenerateWebLink" xml:space="preserve">
-    <value>作品网页链接</value>
+    <value>复制网页链接</value>
   </data>
   <data name="IllustrationInfoAndCommentsButton.Label" xml:space="preserve">
     <value>详情</value>
@@ -164,9 +161,6 @@
   </data>
   <data name="PlayGif" xml:space="preserve">
     <value>播放</value>
-  </data>
-  <data name="RemoveBookmark" xml:space="preserve">
-    <value>取消收藏</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>保存</value>

@@ -45,13 +45,11 @@ namespace Pixeval.Download
 
         double ProgressPercentage { get; set; }
 
-        event Action Paused;
+        Action? Paused { get; }
 
-        event Action Resumed;
+        Action? Resumed { get; }
 
-        void OnPaused();
-
-        void OnResumed();
+        void DownloadStarting(DownloadStartingEventArgs args);
     }
 
     public static class DownloadTaskHelper

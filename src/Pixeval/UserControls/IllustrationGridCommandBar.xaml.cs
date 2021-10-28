@@ -184,10 +184,19 @@ namespace Pixeval.UserControls
             }
         }
 
-        private void SaveAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        private async void SaveAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
+            if (ViewModel.SelectedIllustrations.Count >= 20 && await MessageDialogBuilder.CreateOkCancel(
+                    this,
+                    IllustrationGridCommandBarResources.SelectedTooManyItemsTitle,
+                    IllustrationGridCommandBarResources.SelectedTooManyItemsForSaveContent).ShowAsync()
+                != ContentDialogResult.Primary)
+            {
+                return;
+            }
+
             // That will run for quite a while
-            Task.Run(async () =>
+            _ = Task.Run(async () =>
             {
                 var tasks = await App.AppViewModel.Window.DispatcherQueue.EnqueueAsync(
                     async () => await Task.WhenAll(
@@ -216,7 +225,7 @@ namespace Pixeval.UserControls
 
                 foreach (var illustrationViewModel in selected)
                 {
-                    await Launcher.LaunchUriAsync(MakoHelper.GetIllustrationWebUri(illustrationViewModel.Id));
+                    await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(illustrationViewModel.Id));
                 }
             }
         }

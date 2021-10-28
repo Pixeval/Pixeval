@@ -26,18 +26,20 @@ namespace Pixeval.Download
 {
     public class ObservableDownloadTask : ObservableObject, IDownloadTask
     {
-        public ObservableDownloadTask(
+        protected ObservableDownloadTask(
             string? title,
             string? description, 
             string url, 
             string destination,
-            string? thumbnail)
+            string? thumbnail,
+            string? uniqueId)
         {
             Title = title;
             Description = description;
             Url = url;
             Destination = destination;
             Thumbnail = thumbnail;
+            UniqueId = uniqueId;
             CancellationHandle = new CancellationHandle();
             CurrentState = DownloadState.Created;
         }
@@ -78,18 +80,14 @@ namespace Pixeval.Download
             set => SetProperty(ref _progressPercentage, value);
         }
 
-        public event Action? Paused;
+        public string? UniqueId { get; }
 
-        public event Action? Resumed;
+        public Action? Paused { get; set; }
 
-        public void OnPaused()
+        public Action? Resumed { get; set; }
+
+        public virtual void DownloadStarting(DownloadStartingEventArgs args)
         {
-            Paused?.Invoke();
-        }
-
-        public void OnResumed()
-        {
-            Resumed?.Invoke();
         }
 
         protected bool Equals(ObservableDownloadTask other)

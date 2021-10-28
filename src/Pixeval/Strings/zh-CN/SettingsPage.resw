@@ -260,6 +260,12 @@
   <data name="OpenFontSettingsHyperlinkButton.Content" xml:space="preserve">
     <value>打开 Windows 系统字体设置</value>
   </data>
+  <data name="OverwriteDownloadedFileEntry.Description" xml:space="preserve">
+    <value>开启该选项则下载文件时将会覆写之前已经下载过的文件</value>
+  </data>
+  <data name="OverwriteDownloadedFileEntry.Header" xml:space="preserve">
+    <value>覆写已下载文件</value>
+  </data>
   <data name="PerformSignOutButton.Content" xml:space="preserve">
     <value>执行登出</value>
   </data>

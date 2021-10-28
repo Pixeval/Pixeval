@@ -68,18 +68,8 @@
                 <AppBarButton Command="{x:Bind _viewModel.CopyCommand}" />
                 <AppBarButton Command="{x:Bind _viewModel.SaveCommand}" />
                 <AppBarButton Command="{x:Bind _viewModel.SaveAsCommand}" />
-                <AppBarButton Command="{x:Bind _viewModel.SaveMangaCommand}"
-                              Visibility="{x:Bind _viewModel.IsManga}" />
-                <AppBarButton Command="{x:Bind _viewModel.SaveMangaAsCommand}"
-                              Visibility="{x:Bind _viewModel.IsManga}" />
                 <AppBarSeparator />
-                <AppBarButton Command="{x:Bind _viewModel.AddToBookmarkCommand}">
-                    <AppBarButton.Flyout>
-                        <MenuFlyout>
-                            <MenuFlyoutItem Text="本地收藏夹" />
-                        </MenuFlyout>
-                    </AppBarButton.Flyout>
-                </AppBarButton>
+                <AppBarButton Command="{x:Bind _viewModel.AddToBookmarkCommand}" />
                 <AppBarButton x:Name="GenerateLinkToThisPageButton"
                               Command="{x:Bind _viewModel.GenerateLinkCommand}" />
                 <AppBarButton Command="{x:Bind _viewModel.GenerateWebLinkCommand}" />

@@ -219,7 +219,7 @@ namespace Pixeval
 
         public Size GetAppWindowSize()
         {
-            return AppWindow.Size.ToWinRTSize();
+            return AppWindow.Size.ToWinRtSize();
         }
 
         public Size GetDpiAwareAppWindowSize()

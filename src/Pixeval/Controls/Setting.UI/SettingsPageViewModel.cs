@@ -240,6 +240,13 @@ namespace Pixeval.Controls.Setting.UI
             set => SetProperty(_appSetting.DefaultDownloadPathMacro, value, _appSetting, (settings, value) => settings.DefaultDownloadPathMacro = value);
         }
 
+        [DefaultValue(false)]
+        public bool OverwriteDownloadedFile
+        {
+            get => _appSetting.OverwriteDownloadedFile;
+            set => SetProperty(_appSetting.OverwriteDownloadedFile, value, _appSetting, (settings, value) => settings.OverwriteDownloadedFile = value);
+        }
+
         public DateTimeOffset GetMinSearchEndDate(DateTimeOffset startDate)
         {
             return startDate.AddDays(1);

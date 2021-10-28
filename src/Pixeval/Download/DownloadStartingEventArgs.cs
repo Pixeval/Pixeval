@@ -1,9 +1,8 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
-
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2021 Pixeval/FileExtensionMacro.cs
+// Copyright (c) 2021 Pixeval/DownloadStartingEventArgs.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,24 +16,29 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #endregion
 
-using System;
-using Pixeval.Download.MacroParser;
-using Pixeval.UserControls;
-using Pixeval.Util;
+using Pixeval.Util.Threading;
 
-namespace Pixeval.Download.Macros
+namespace Pixeval.Download
 {
-    [MetaPathMacro(typeof(IllustrationViewModel))]
-    public class FileExtensionMacro : IMacro<IllustrationViewModel>.ITransducer
+    public class DownloadStartingEventArgs
     {
-        public string Name => "illust_ext";
+        private readonly DownloadStartingDeferral _deferral;
 
-        public string Substitute(IllustrationViewModel context)
+        public ReenterableAwaiter<bool> DeferralAwaiter => _deferral.Signal;
+
+        public bool Cancelled { get; set; }
+
+        public DownloadStartingEventArgs()
         {
-            return context.Illustration.IsUgoira() ? ".gif" : context.Illustration.GetImageFormat();
+            _deferral = new DownloadStartingDeferral();
+        }
+
+        public DownloadStartingDeferral GetDeferral()
+        {
+            _deferral.Set();
+            return _deferral;
         }
     }
 }

@@ -45,7 +45,7 @@
                                   Height="35"
                                   HorizontalAlignment="Center"
                                   VerticalAlignment="Center" />
-                    <Image x:Name="ThumbnailImage"
+                    <Image Source="{x:Bind Thumbnail, Mode=OneWay}"
                            Stretch="UniformToFill" />
                 </Grid>
             </Border>
@@ -76,12 +76,11 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
                         Spacing="5">
-                <ProgressBar x:Name="DownloadProgressBar"
-                             HorizontalAlignment="Stretch"
+                <ProgressBar HorizontalAlignment="Stretch"
                              Value="{x:Bind Progress, Mode=OneWay}" />
-                <TextBlock x:Name="ProgressMessageTextBlock"
-                           FontSize="{StaticResource PixevalSubscriptFontSize}"
+                <TextBlock FontSize="{StaticResource PixevalSubscriptFontSize}"
                            Foreground="{ThemeResource PixevalTipTextForeground}"
+                           Text="{x:Bind ProgressMessage, Mode=OneWay}"
                            TextTrimming="CharacterEllipsis"
                            TextWrapping="NoWrap" />
             </StackPanel>
@@ -91,6 +90,7 @@
                     Grid.Column="3"
                     Width="120"
                     HorizontalAlignment="Center"
+                    Background="{x:Bind ActionButtonBackground, Mode=OneWay}"
                     Content="{x:Bind ActionButtonContent, Mode=OneWay}"
                     Tapped="ActionButton_OnTapped" />
             <AppBarButton x:Name="MoreOptionButton"
@@ -106,8 +106,7 @@
                           LabelPosition="Collapsed">
                 <AppBarButton.Flyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem x:Name="CancelDownloadItem"
-                                        x:Uid="/DownloadListEntry/CancelDownloadItem"
+                        <MenuFlyoutItem x:Uid="/DownloadListEntry/CancelDownloadItem"
                                         Icon="{ui:FontIcon Glyph=CancelE711}"
                                         IsEnabled="{x:Bind IsCancelItemEnabled, Mode=OneWay}"
                                         Tapped="CancelDownloadItem_OnTapped" />
@@ -120,6 +119,10 @@
                         <MenuFlyoutItem x:Uid="/DownloadListEntry/GoToPageItem"
                                         Icon="{ui:FontIcon Glyph=SlideshowE786}"
                                         Tapped="GoToPageItem_OnTapped" />
+                        <MenuFlyoutItem x:Uid="/DownloadListEntry/CheckErrorMessageInDetailItem"
+                                        Icon="{ui:FontIcon Glyph=DocumentE8A5}"
+                                        IsEnabled="{x:Bind IsShowErrorDetailDialogItemEnabled, Mode=OneWay}"
+                                        Tapped="CheckErrorMessageInDetail_OnTapped" />
                     </MenuFlyout>
                 </AppBarButton.Flyout>
             </AppBarButton>

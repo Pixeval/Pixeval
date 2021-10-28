@@ -51,6 +51,7 @@ namespace Pixeval.Pages.IllustrationViewer
         // Tags for IllustrationInfoAndCommentsNavigationView
 
         private NavigationViewTag? _illustrationInfo;
+
         private IllustrationViewerPageViewModel _viewModel = null!;
 
         public IllustrationViewerPage()
@@ -138,7 +139,7 @@ namespace Pixeval.Pages.IllustrationViewer
             var request = args.Request;
             var deferral = request.GetDeferral();
             var props = request.Data.Properties;
-            var webLink = MakoHelper.GetIllustrationWebUri(vm.Id);
+            var webLink = MakoHelper.GenerateIllustrationWebUri(vm.Id);
 
             props.Title = IllustrationViewerPageResources.ShareTitleFormatted.Format(vm.Id);
             props.Description = vm.Illustration.Title;
@@ -155,7 +156,7 @@ namespace Pixeval.Pages.IllustrationViewer
 
                 request.Data.SetStorageItems(Enumerates.ArrayOf(file), true);
                 request.Data.SetWebLink(webLink);
-                request.Data.SetApplicationLink(AppContext.GenerateAppLinkToIllustration(vm.Id));
+                request.Data.SetApplicationLink(MakoHelper.GenerateIllustrationAppUri(vm.Id));
             }
 
             deferral.Complete();

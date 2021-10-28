@@ -21,10 +21,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Pixeval.CommunityToolkit.AdvancedCollectionView;
 using Pixeval.Download;
 using Pixeval.Misc;
+using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Download
 {
@@ -56,13 +59,71 @@ namespace Pixeval.Pages.Download
             set => SetProperty(ref _downloadTasksView, value);
         }
 
+        private ObservableCollection<IDownloadTask> _filteredTasks;
+
+        public ObservableCollection<IDownloadTask> FilteredTasks
+        {
+            get => _filteredTasks;
+            set => SetProperty(ref _filteredTasks, value);
+        }
+
         public DownloadListPageViewModel(IList<DownloadListEntryViewModel> downloadTasks)
         {
             _downloadTasks = downloadTasks;
+            _filteredTasks = new ObservableCollection<IDownloadTask>();
             _downloadTasksView = new AdvancedCollectionView(downloadTasks as IList);
         }
 
-        public void ResetFilter()
+        public void PauseAll()
+        {
+            foreach (var downloadListEntryViewModel in _downloadTasks.Where(t => t.DownloadTask.CurrentState == DownloadState.Running))
+            {
+                downloadListEntryViewModel.DownloadTask.CancellationHandle.Pause();
+            }
+        }
+
+        public void ResumeAll()
+        {
+            foreach (var downloadListEntryViewModel in _downloadTasks.Where(t => t.DownloadTask.CurrentState == DownloadState.Paused))
+            {
+                downloadListEntryViewModel.DownloadTask.CancellationHandle.Resume();
+            }
+        }
+
+        public void CancelAll()
+        {
+            foreach (var downloadListEntryViewModel in _downloadTasks.Where(t => t.DownloadTask.CurrentState is DownloadState.Queued or DownloadState.Created or DownloadState.Running or DownloadState.Paused))
+            {
+                downloadListEntryViewModel.DownloadTask.CancellationHandle.Cancel();
+            }
+        }
+
+        public void ClearDownloadList()
+        {
+            App.AppViewModel.DownloadManager.ClearTasks();
+            DownloadTasksView.Clear();
+            DownloadTasksView.Refresh();
+        }
+
+        public void FilterTask(string key)
+        {
+            FilteredTasks.Clear();
+            if (key.IsNullOrBlank())
+            {
+                return;
+            }
+
+            FilteredTasks.AddRange(DownloadTasks.Where(Query).Select(t => t.DownloadTask));
+
+            bool Query(DownloadListEntryViewModel viewModel)
+            {
+                return (viewModel.DownloadTask.Title?.Contains(key) ?? false)
+                       || viewModel.DownloadTask is not IllustrationDownloadTask task
+                       || task.IllustrationViewModel.Id.Contains(key);
+            }
+        }
+
+        public void ResetFilter(IEnumerable<IDownloadTask>? customSearchResultTask = null)
         {
             DownloadTasksView.Filter = o => o switch
             {
@@ -73,6 +134,7 @@ namespace Pixeval.Pages.Download
                     DownloadListOption.Completed => task.CurrentState is DownloadState.Completed,
                     DownloadListOption.Cancelled => task.CurrentState is DownloadState.Cancelled,
                     DownloadListOption.Error => task.CurrentState is DownloadState.Error,
+                    DownloadListOption.CustomSearch => customSearchResultTask?.Contains(task) ?? true,
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 _ => false
