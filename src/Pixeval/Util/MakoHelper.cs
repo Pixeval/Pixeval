@@ -23,18 +23,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CommunityToolkit.WinUI.UI;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.CommunityToolkit.AdvancedCollectionView;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 using Pixeval.Options;
-using Pixeval.UserControls;
 using Pixeval.Util.Generic;
 using Pixeval.Utilities;
+using AppContext = Pixeval.AppManagement.AppContext;
 using Enumerates = Pixeval.Utilities.Enumerates;
 
 namespace Pixeval.Util

@@ -43,20 +43,27 @@ namespace Pixeval.Util.IO
         /// <returns></returns>
         public static async Task<SoftwareBitmapSource> EncodeSoftwareBitmapSourceAsync(this IRandomAccessStream imageStream, bool disposeOfImageStream)
         {
+            using var ras = await EncodeBitmapStreamAsync(imageStream, disposeOfImageStream);
+            var source = new SoftwareBitmapSource();
+            await source.SetBitmapAsync(await GetSoftwareBitmapFromStreamAsync(ras));
+
+            return source;
+        }
+
+        public static async Task<IRandomAccessStream> EncodeBitmapStreamAsync(this IRandomAccessStream imageStream, bool disposeOfImageStream)
+        {
             var bitmap = await GetSoftwareBitmapFromStreamAsync(imageStream);
-            using var inMemoryRandomAccessStream = new InMemoryRandomAccessStream();
+            var inMemoryRandomAccessStream = new InMemoryRandomAccessStream();
             var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, inMemoryRandomAccessStream);
             encoder.SetSoftwareBitmap(bitmap);
             encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Fant;
             await encoder.FlushAsync();
-            var source = new SoftwareBitmapSource();
-            await source.SetBitmapAsync(await GetSoftwareBitmapFromStreamAsync(inMemoryRandomAccessStream));
+            inMemoryRandomAccessStream.Seek(0);
             if (disposeOfImageStream)
             {
                 imageStream.Dispose();
             }
-
-            return source;
+            return inMemoryRandomAccessStream;
         }
 
         public static async Task<SoftwareBitmapSource> GetSoftwareBitmapSourceAsync(this IRandomAccessStream imageStream, bool disposeOfImageStream)

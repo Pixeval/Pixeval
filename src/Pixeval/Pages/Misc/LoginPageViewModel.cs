@@ -34,6 +34,7 @@ using JetBrains.Annotations;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.Win32;
+using Pixeval.AppManagement;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
@@ -44,6 +45,7 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.Misc
 {
@@ -136,7 +138,7 @@ namespace Pixeval.Pages.Misc
         ///     1. The <see cref="Session" /> object deserialized from the file is not null <br></br>
         ///     2. The <see cref="Session.RefreshToken" /> is not null <br></br>
         ///     3. The <see cref="Session.Cookie" /> is not null <br></br>
-        ///     4. The <see cref="Session.CookieCreation" /> is within last seven days <br></br>
+        ///     4. The <see cref="Session.CookieCreation" /> is within last fifteen days <br></br>
         /// </summary>
         /// <returns></returns>
         public bool CheckRefreshAvailable()
@@ -154,7 +156,7 @@ namespace Pixeval.Pages.Misc
             static bool CookieNotExpired(Session session)
             {
                 return DateTimeOffset.Now - session.CookieCreation <=
-                       TimeSpan.FromDays(7); // check if the cookie is created within the last one week
+                       TimeSpan.FromDays(15); // check if the cookie is created within the last one week
             }
         }
 
@@ -174,7 +176,7 @@ namespace Pixeval.Pages.Misc
                         LoginPageResources.RefreshingSessionIsNotPresentTitle,
                         LoginPageResources.RefreshingSessionIsNotPresentContent)
                     .ShowAsync();
-                await AppContext.ClearAppLocalFolderAsync();
+                await AppKnownFolders.Local.ClearAsync();
                 Application.Current.Exit();
             }
         }
@@ -199,7 +201,7 @@ namespace Pixeval.Pages.Misc
         /// </summary>
         public static async Task<Process> CallLoginProxyAsync(string culture)
         {
-            if (await AppContext.TryGetFileRelativeToLocalFolderAsync(Path.Combine(AppContext.AppLoginProxyFolder, "Pixeval.LoginProxy.exe")) is { } file)
+            if (await AppKnownFolders.LoginProxy.TryGetFileRelativeToSelfAsync("Pixeval.LoginProxy.exe") is { } file)
             {
                 return Process.Start(file.Path, culture);
             }

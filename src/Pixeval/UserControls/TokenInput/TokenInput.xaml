@@ -1,12 +1,12 @@
 ﻿<UserControl x:Class="Pixeval.UserControls.TokenInput.TokenInput"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:tokenInput="using:Pixeval.UserControls.TokenInput"
              xmlns:tokenInputTextBox="using:Pixeval.Controls.TokenInputTextBox"
              xmlns:ui="using:Pixeval.Util.UI"
-             xmlns:wrapPanel="using:Pixeval.CommunityToolkit.WrapPanel"
              mc:Ignorable="d">
     <StackPanel HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
@@ -47,8 +47,8 @@
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <wrapPanel:WrapPanel HorizontalSpacing="5"
-                                         VerticalSpacing="5" />
+                    <controls:WrapPanel HorizontalSpacing="5"
+                                        VerticalSpacing="5" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>

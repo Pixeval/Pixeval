@@ -150,6 +150,9 @@
   <data name="SaveCurrentImageButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>保存</value>
   </data>
+  <data name="SetAsSubItem.Text" xml:space="preserve">
+    <value>设置为</value>
+  </data>
   <data name="ZoomInButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>放大</value>
   </data>

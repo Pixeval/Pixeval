@@ -30,6 +30,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.AppManagement;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Options;
@@ -39,6 +40,7 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.IllustrationViewer
 {
@@ -146,7 +148,7 @@ namespace Pixeval.Pages.IllustrationViewer
             props.Square30x30Logo = RandomAccessStreamReference.CreateFromStream(await AppContext.GetAssetStreamAsync("Images/logo44x44.ico"));
 
             var thumbnailStream = await _viewModel.Current.IllustrationViewModel.GetThumbnail(ThumbnailUrlOption.SquareMedium);
-            var file = await AppContext.CreateTemporaryFileWithRandomNameAsync(_viewModel.IsUgoira ? "gif" : "png");
+            var file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(_viewModel.IsUgoira ? "gif" : "png");
 
             if (_viewModel.Current.OriginalImageStream is { } stream)
             {

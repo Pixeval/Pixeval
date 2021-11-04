@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Pixeval.Util.Threading;
 
@@ -39,9 +40,10 @@ namespace Pixeval.Download
             Url = url;
             Destination = destination;
             Thumbnail = thumbnail;
-            UniqueId = uniqueId;
+            UniqueCacheId = uniqueId;
             CancellationHandle = new CancellationHandle();
             CurrentState = DownloadState.Created;
+            Completion = new TaskCompletionSource();
         }
 
         public string? Title { get; }
@@ -57,6 +59,8 @@ namespace Pixeval.Download
         public CancellationHandle CancellationHandle { get; set; }
 
         private DownloadState _currentState;
+
+        public TaskCompletionSource Completion { get; }
 
         public DownloadState CurrentState
         {
@@ -80,7 +84,12 @@ namespace Pixeval.Download
             set => SetProperty(ref _progressPercentage, value);
         }
 
-        public string? UniqueId { get; }
+        /// <summary>
+        /// This task is cache-friendly which means it can effectively retrieves
+        /// information about the content to which this task currently indicate
+        /// is already in a cache using this id
+        /// </summary>
+        public string? UniqueCacheId { get; }
 
         public Action? Paused { get; set; }
 

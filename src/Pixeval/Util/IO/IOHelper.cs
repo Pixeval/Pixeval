@@ -31,6 +31,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -43,6 +44,22 @@ namespace Pixeval.Util.IO
 {
     public static partial class IOHelper
     {
+        public static async Task<string> Sha1Async(this IRandomAccessStream randomAccessStream)
+        {
+            using var sha1 = SHA1.Create();
+            var result = await sha1.ComputeHashAsync(randomAccessStream.AsStreamForRead());
+            randomAccessStream.Seek(0); // reset the stream
+            return result.Select(b => b.ToString("x2")).Aggregate((acc, str) => acc + str);
+        }
+
+        public static async Task CreateAndWriteToFileAsync(IRandomAccessStream contentStream, string path)
+        {
+            CreateParentDirectories(path);
+            await using var stream = File.Open(path, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
+            contentStream.Seek(0);
+            await contentStream.AsStreamForRead().CopyToAsync(stream);
+        }
+
         public static string NormalizePath(string path)
         {
             return Path.GetFullPath(Path.GetInvalidPathChars().Aggregate(path, (s, c) => s.Replace(c.ToString(), string.Empty)));
@@ -62,11 +79,6 @@ namespace Pixeval.Util.IO
         public static async Task ClearDirectoryAsync(this StorageFolder dir)
         {
             await Task.WhenAll((await dir.GetItemsAsync()).Select(f => f.DeleteAsync().AsTask()));
-        }
-
-        public static IRandomAccessStream AsRandomAccessStream(this IBuffer buffer)
-        {
-            return buffer.AsStream().AsRandomAccessStream();
         }
 
         public static async Task<IRandomAccessStream> GetRandomAccessStreamFromByteArrayAsync(byte[] byteArray)

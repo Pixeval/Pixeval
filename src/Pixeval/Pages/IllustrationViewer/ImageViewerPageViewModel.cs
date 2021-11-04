@@ -111,6 +111,8 @@ namespace Pixeval.Pages.IllustrationViewer
             set => SetPropertyAndNotifyOnCompletion(ref _loadingOriginalSourceTask!, value);
         }
 
+        public bool LoadingCompletedSuccessfully => LoadingOriginalSourceTask?.IsCompletedSuccessfully ?? false;
+
         public IllustrationViewModel IllustrationViewModel { get; }
 
         public CancellationHandle ImageLoadingCancellationHandle { get; }

@@ -23,6 +23,7 @@
 using System;
 using System.Linq;
 using Windows.System;
+using Windows.System.UserProfile;
 using Windows.UI.Core;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Input;

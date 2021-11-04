@@ -24,9 +24,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Windows.Foundation;
+using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.CommunityToolkit;
 using Pixeval.Controls.Setting.UI.Model;
 using Pixeval.Controls.Setting.UI.UserControls;
 

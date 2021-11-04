@@ -27,6 +27,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Pixeval.AppManagement;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Download;
 using Pixeval.Download.MacroParser;

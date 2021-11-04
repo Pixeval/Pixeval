@@ -18,12 +18,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.UserControls;
-
 namespace Pixeval.Download
 {
     public static class DownloadFactories
     {
-        public static readonly IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask> Illustration = new IllustrationDownloadTaskFactory();
+        public static readonly IllustrationDownloadTaskFactory Illustration = new();
     }
 }

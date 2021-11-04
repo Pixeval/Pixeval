@@ -135,15 +135,6 @@
   <data name="SaveContextItem.Text" xml:space="preserve">
     <value>保存</value>
   </data>
-  <data name="SetAsBackgroundContextItem.Text" xml:space="preserve">
-    <value>壁纸</value>
-  </data>
-  <data name="SetAsLockScreenContextItem.Text" xml:space="preserve">
-    <value>锁屏</value>
-  </data>
-  <data name="SetAsSubContextItem.Text" xml:space="preserve">
-    <value>设置为</value>
-  </data>
   <data name="ShowPixEzQrCodeContextItem.Text" xml:space="preserve">
     <value>PixEz二维码</value>
   </data>

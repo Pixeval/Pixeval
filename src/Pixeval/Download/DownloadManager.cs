@@ -23,7 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -67,7 +66,8 @@ namespace Pixeval.Download
 
         public void QueueTask(TDownloadTask task)
         {
-            if (_taskQuerySet.Contains(task))
+            // intrinsic download task are not counted
+            if (task is not IIntrinsicDownloadTask && _taskQuerySet.Contains(task))
             {
                 return;
             }
@@ -163,10 +163,7 @@ namespace Pixeval.Download
             task.CancellationHandle.Register(() => SetState(task, DownloadState.Cancelled));
             task.CancellationHandle.RegisterPaused(() => SetState(task, DownloadState.Paused));
             task.CancellationHandle.RegisterResumed(() => SetState(task, DownloadState.Running));
-            var ras = await _httpClient.DownloadAsIRandomAccessStreamAsync(
-                task.Url,
-                new Progress<int>(percentage => task.ProgressPercentage = percentage),
-                task.CancellationHandle);
+            var ras = await _httpClient.DownloadAsIRandomAccessStreamAsync(task.Url, new Progress<int>(percentage => task.ProgressPercentage = percentage), task.CancellationHandle);
             switch (ras)
             {
                 case Result<IRandomAccessStream>.Success (var resultStream):
@@ -180,10 +177,7 @@ namespace Pixeval.Download
                         {
                             using (resultStream)
                             {
-                                IOHelper.CreateParentDirectories(task.Destination);
-                                await using var stream = File.Open(task.Destination, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
-                                resultStream.Seek(0);
-                                await resultStream.AsStreamForRead().CopyToAsync(stream);
+                                await IOHelper.CreateAndWriteToFileAsync(resultStream, task.Destination);
                             }
                         }
                     }
@@ -192,16 +186,19 @@ namespace Pixeval.Download
                         Functions.IgnoreException(() => File.Delete(task.Destination));
                         App.AppViewModel.DispatchTask(() => task.ErrorCause = e);
                         SetState(task, DownloadState.Error);
+                        task.Completion.SetException(e);
                     }
 
                     SetState(task, DownloadState.Completed);
+                    task.Completion.SetResult();
                     break;
                 case Result<IRandomAccessStream>.Failure (var exception):
                     Functions.IgnoreException(() => File.Delete(task.Destination));
-                    if (exception is not OperationCanceledException)
+                    if (exception is not OperationCanceledException && exception is not null)
                     {
                         App.AppViewModel.DispatchTask(() => task.ErrorCause = exception);
                         SetState(task, DownloadState.Error);
+                        task.Completion.SetException(exception);
                     }
                     break;
             }

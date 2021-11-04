@@ -24,7 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Pixeval.CommunityToolkit.IncrementalLoadingCollection;
+using CommunityToolkit.Common.Collections;
 
 namespace Pixeval.Pages.IllustrationViewer
 {

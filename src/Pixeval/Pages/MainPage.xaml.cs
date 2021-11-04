@@ -25,6 +25,8 @@ using System.Linq;
 using System.Runtime;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using CommunityToolkit.WinUI.UI;
+using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -33,8 +35,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
-using Pixeval.CommunityToolkit;
-using Pixeval.CommunityToolkit.AdaptiveGridView;
+using Pixeval.Download;
 using Pixeval.Messages;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Download;
@@ -42,6 +43,7 @@ using Pixeval.Pages.Misc;
 using Pixeval.UserControls;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages
 {
@@ -106,7 +108,7 @@ namespace Pixeval.Pages
             // will lead the program into NullReferenceException on the access of QueuedTasks.
             if (args.SelectedItem.Equals(DownloadListTab))
             {
-                MainPageRootFrame.Navigate(typeof(DownloadListPage), App.AppViewModel.DownloadManager.QueuedTasks);
+                MainPageRootFrame.Navigate(typeof(DownloadListPage), App.AppViewModel.DownloadManager.QueuedTasks.Where(task => task is not IIntrinsicDownloadTask));
                 return;
             }
             MainPageRootFrame.NavigateByNavigationViewTag(sender, new SuppressNavigationTransitionInfo());

@@ -21,7 +21,6 @@
 #endregion
 
 using System;
-using System.Linq;
 using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
@@ -52,7 +51,6 @@ namespace Pixeval.Pages.IllustrationViewer
             var (deltaX, deltaY) = (e.Delta.Translation.X, e.Delta.Translation.Y);
             if (GetZoomFactor() > 1)
             {
-                const int overflowPermittedInPixel = 100;
                 var renderedImageWidth = IllustrationOriginalImage.ActualWidth * GetZoomFactor();
                 var renderedImageHeight = IllustrationOriginalImage.ActualHeight * GetZoomFactor();
                 var containerWidth = IllustrationOriginalImageContainer.ActualWidth;
@@ -62,8 +60,8 @@ namespace Pixeval.Pages.IllustrationViewer
                 {
                     switch (deltaX)
                     {
-                        case < 0 when imagePos.X > -(renderedImageWidth - containerWidth) - overflowPermittedInPixel:
-                        case > 0 when imagePos.X < overflowPermittedInPixel:
+                        case < 0 when imagePos.X > -(renderedImageWidth - containerWidth):
+                        case > 0 when imagePos.X < 0:
                             IllustrationOriginalImageRenderTransform.TranslateX += deltaX;
                             break;
                     }
@@ -73,53 +71,12 @@ namespace Pixeval.Pages.IllustrationViewer
                 {
                     switch (deltaY)
                     {
-                        case < 0 when imagePos.Y > -(renderedImageHeight - containerHeight) - overflowPermittedInPixel:
-                        case > 0 when imagePos.Y < overflowPermittedInPixel:
+                        case < 0 when imagePos.Y > -(renderedImageHeight - containerHeight):
+                        case > 0 when imagePos.Y < 0:
                             IllustrationOriginalImageRenderTransform.TranslateY += deltaY;
                             break;
                     }
                 }
-            }
-        }
-
-        private void IllustrationOriginalImage_OnManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
-        {
-            var renderedImageWidth = IllustrationOriginalImage.ActualWidth * GetZoomFactor();
-            var renderedImageHeight = IllustrationOriginalImage.ActualHeight * GetZoomFactor();
-            var containerWidth = IllustrationOriginalImageContainer.ActualWidth;
-            var containerHeight = IllustrationOriginalImageContainer.ActualHeight;
-            var pos = IllustrationOriginalImage.TransformToVisual(IllustrationOriginalImageContainer).TransformPoint(new Point(0, 0));
-
-            var sb = new Storyboard();
-            var animationDuration = TimeSpan.FromMilliseconds(200);
-            const string translateXProperty = nameof(CompositeTransform.TranslateX);
-            const string translateYProperty = nameof(CompositeTransform.TranslateY);
-            var xLowerBound = -(renderedImageWidth - containerWidth);
-            var yLowerBound = -(renderedImageHeight - containerHeight);
-
-            switch (pos.X)
-            {
-                case var x when x < xLowerBound && renderedImageWidth > containerWidth:
-                    sb.Children.Add(IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(translateXProperty, animationDuration, by: xLowerBound - x));
-                    break;
-                case > 0 when renderedImageWidth > containerWidth:
-                    sb.Children.Add(IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(translateXProperty, animationDuration, by: -pos.X));
-                    break;
-            }
-
-            switch (pos.Y)
-            {
-                case var y when y < yLowerBound && renderedImageHeight > containerHeight:
-                    sb.Children.Add(IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(translateYProperty, animationDuration, by: yLowerBound - y));
-                    break;
-                case > 0 when renderedImageHeight > containerHeight:
-                    sb.Children.Add(IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(translateYProperty, animationDuration, by: -pos.Y));
-                    break;
-            }
-
-            if (sb.Children.Any())
-            {
-                sb.Begin();
             }
         }
 
@@ -164,7 +121,7 @@ namespace Pixeval.Pages.IllustrationViewer
 
         private void IllustrationOriginalImageContainer_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
-            Zoom(e.GetCurrentPoint(null).Properties.MouseWheelDelta / 500d);
+            Zoom(e.GetCurrentPoint(null).Properties.MouseWheelDelta / 1000d);
         }
 
         private void ImageViewerPage_OnLoaded(object sender, RoutedEventArgs e)

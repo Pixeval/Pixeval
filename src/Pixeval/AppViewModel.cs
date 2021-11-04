@@ -26,6 +26,7 @@ using System.Diagnostics.Tracing;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Graphics;
+using CommunityToolkit.WinUI;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI;
 using Microsoft.UI.Dispatching;
@@ -34,7 +35,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using PInvoke;
-using Pixeval.CommunityToolkit;
+using Pixeval.AppManagement;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Net;
 using Pixeval.Download;
@@ -42,6 +43,7 @@ using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util.UI;
+using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
 #if DEBUG
 #endif
@@ -207,7 +209,7 @@ namespace Pixeval
             AppWindow.Show();
             AppWindow.SetIcon(await AppContext.GetIconAbsolutePath());
 
-            await AppContext.ClearTemporaryDirectory();
+            await AppKnownFolders.Temporary.ClearAsync();
             Cache = await FileCache.CreateDefaultAsync();
         }
 

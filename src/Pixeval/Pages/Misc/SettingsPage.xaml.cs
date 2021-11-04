@@ -30,10 +30,10 @@ using Pixeval.Controls.Setting.UI;
 using Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry;
 using Pixeval.Download.MacroParser;
 using Pixeval.UserControls.TokenInput;
-using Pixeval.Util;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.Misc
 {

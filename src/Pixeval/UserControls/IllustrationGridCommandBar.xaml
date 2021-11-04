@@ -2,22 +2,22 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:dockPanel="using:Pixeval.CommunityToolkit.DockPanel"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="using:Pixeval.Util.UI"
+             xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
              mc:Ignorable="d">
-    <dockPanel:DockPanel>
+    <controls:DockPanel>
         <StackPanel x:Name="ExtraCommandsBar"
                     Margin="5,0,0,0"
                     VerticalAlignment="Center"
-                    dockPanel:DockPanel.Dock="Left"
+                    controls:DockPanel.Dock="Left"
                     Background="Transparent"
                     FlowDirection="LeftToRight"
                     Orientation="Horizontal" />
         <CommandBar x:Name="CommandBar"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
-                    dockPanel:DockPanel.Dock="Right"
+                    controls:DockPanel.Dock="Right"
                     Background="Transparent"
                     DefaultLabelPosition="Right">
             <AppBarButton Icon="{ui:FontIcon Glyph=CancelE711}"
@@ -45,5 +45,5 @@
                           Icon="{ui:FontIcon Glyph=ShareE72D}"
                           Tapped="ShareButton_OnTapped" />
         </CommandBar>
-    </dockPanel:DockPanel>
+    </controls:DockPanel>
 </UserControl>

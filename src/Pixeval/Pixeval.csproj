@@ -64,7 +64,6 @@
       <None Remove="Assets\Images\empty-box.theme-light.png" />
       <None Remove="Assets\Images\logo44x44.ico" />
       <None Remove="Assets\Images\pixeval-mock.png" />
-      <None Remove="CommunityToolkit\Markdown\MarkdownTextBlock\MarkdownTextBlock.xaml" />
       <None Remove="Controls\Card\CardControl.xaml" />
       <None Remove="Controls\Expander\Expander.xaml" />
       <None Remove="Controls\IconButton\IconButton.xaml" />
@@ -138,13 +137,16 @@
       </AppxManifest>
    </ItemGroup>
    <ItemGroup>
+      <PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.1.1-preview3" />
+      <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.1-preview3" />
+      <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.1-preview3" />
       <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.0" />
       <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.0" />
       <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.0" />
       <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.0" />
       <PackageReference Include="Microsoft.Win32.Registry" Version="6.0.0-preview.5.21301.5" />
       <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" />
-      <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0-preview2" />
+      <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0-preview3" />
       <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.5" />
       <PackageReference Include="PInvoke.User32" Version="0.7.104" />
       <PackageReference Include="QRCoder" Version="1.4.1" />
@@ -236,10 +238,8 @@
    </ItemGroup>
    <ItemGroup>
       <Folder Include="Assets\Binary\" />
-      <Folder Include="CommunityToolkit\IncrementalLoadingCollection\" />
-      <Folder Include="CommunityToolkit\Markdown\Parsers\Markdown\Enums\" />
-      <Folder Include="CommunityToolkit\Markdown\Parsers\Markdown\Helpers\" />
       <Folder Include="Download\MacroParser\Ast\" />
+      <Folder Include="Database\" />
    </ItemGroup>
    <ItemGroup>
       <PRIResource Include="Strings\zh-CN\Activations.resw" />
@@ -274,9 +274,6 @@
       </Content>
    </ItemGroup>
    <ItemGroup>
-     <Page Update="CommunityToolkit\Markdown\MarkdownTextBlock\MarkdownTextBlock.xaml">
-       <Generator>MSBuild:Compile</Generator>
-     </Page>
      <Page Update="Controls\NotifyOnLoadedCalendarDatePicker\NotifyOnLoadedCalendarDatePicker.xaml">
        <Generator>MSBuild:Compile</Generator>
      </Page>

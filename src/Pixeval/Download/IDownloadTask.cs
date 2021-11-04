@@ -21,6 +21,7 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 using Pixeval.Util.Threading;
 
 namespace Pixeval.Download
@@ -39,11 +40,20 @@ namespace Pixeval.Download
 
         CancellationHandle CancellationHandle { get; set; }
 
+        TaskCompletionSource Completion { get; }
+
         DownloadState CurrentState { get; set; }
 
         Exception? ErrorCause { get; set; }
 
         double ProgressPercentage { get; set; }
+
+        /// <summary>
+        /// This task is cache-friendly which means it can effectively retrieves
+        /// information about the content to which this task currently indicate
+        /// is already in a cache using this id
+        /// </summary>
+        public string? UniqueCacheId { get; }
 
         Action? Paused { get; }
 

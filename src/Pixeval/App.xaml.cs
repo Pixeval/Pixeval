@@ -26,7 +26,9 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
+using Pixeval.AppManagement;
 using Pixeval.Util.UI;
+using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
 
 namespace Pixeval
@@ -62,6 +64,7 @@ namespace Pixeval
             }
 
             Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSetting.AppFontFamilyName);
+            await AppKnownFolders.InitializeAsync();
             await AppViewModel.InitializeAsync(isProtocolActivated);
         }
 

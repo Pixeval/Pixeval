@@ -3,11 +3,10 @@
                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                         xmlns:controls1="using:Pixeval.Controls"
                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                        xmlns:markdownTextBlock="using:Pixeval.CommunityToolkit.Markdown.MarkdownTextBlock"
                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                         xmlns:model="using:Pixeval.CoreApi.Model"
                         xmlns:viewer="using:Pixeval.Pages.IllustrationViewer"
-                        xmlns:wrapPanel="using:Pixeval.CommunityToolkit.WrapPanel"
+                        xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
                         Background="{ThemeResource PixevalPanelBackgroundThemeBrush}"
                         mc:Ignorable="d">
     <controls1:EnhancedPage.Resources>
@@ -67,7 +66,7 @@
             <!--#region Illustration Caption-->
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationCaptionTextBlock"
                        Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <markdownTextBlock:MarkdownTextBlock x:Name="IllustrationCaptionMarkdownTextBlock"
+            <controls:MarkdownTextBlock x:Name="IllustrationCaptionMarkdownTextBlock"
                                                  MaxHeight="200"
                                                  Margin="{StaticResource StackLayoutEntryPadding}"
                                                  Background="{ThemeResource PixevalPanelBackgroundThemeBrush}"
@@ -105,7 +104,7 @@
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <wrapPanel:WrapPanel HorizontalSpacing="5"
+                        <controls:WrapPanel HorizontalSpacing="5"
                                              VerticalSpacing="5" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>

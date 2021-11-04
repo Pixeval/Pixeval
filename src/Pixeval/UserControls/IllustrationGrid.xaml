@@ -1,9 +1,7 @@
 ﻿<UserControl x:Class="Pixeval.UserControls.IllustrationGrid"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:adaptiveGridView="using:Pixeval.CommunityToolkit.AdaptiveGridView"
              xmlns:card="using:Pixeval.Controls.Card"
-             xmlns:communityToolkit="using:Pixeval.CommunityToolkit"
              xmlns:core="using:Microsoft.Xaml.Interactions.Core"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -12,21 +10,23 @@
              xmlns:ui="using:Pixeval.Util.UI"
              xmlns:userControls="using:Pixeval.UserControls"
              xmlns:util="using:Pixeval.Util"
+             xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+             xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
              Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
              Loaded="IllustrationGrid_OnLoaded"
              mc:Ignorable="d">
-    <adaptiveGridView:AdaptiveGridView x:Name="IllustrationGridView"
-                                       communityToolkit:ItemsReorderAnimation.Duration="0:0:0.2"
+    <controls:AdaptiveGridView x:Name="IllustrationGridView"
+                                       animations:ItemsReorderAnimation.Duration="0:0:0.2"
                                        x:FieldModifier="public"
                                        IsItemClickEnabled="True"
                                        IsMultiSelectCheckBoxEnabled="False"
                                        ItemsSource="{x:Bind ViewModel.IllustrationsView}"
                                        SelectionMode="Extended"
                                        StretchContentForSingleRow="True">
-        <adaptiveGridView:AdaptiveGridView.ItemContainerTransitions>
+        <controls:AdaptiveGridView.ItemContainerTransitions>
             <AddDeleteThemeTransition />
-        </adaptiveGridView:AdaptiveGridView.ItemContainerTransitions>
-        <adaptiveGridView:AdaptiveGridView.ItemTemplate>
+        </controls:AdaptiveGridView.ItemContainerTransitions>
+        <controls:AdaptiveGridView.ItemTemplate>
             <DataTemplate x:DataType="userControls:IllustrationViewModel">
                 <GridViewItem x:Name="IllustrationThumbnailContainerItem"
                               EffectiveViewportChanged="IllustrationThumbnailContainerItem_OnEffectiveViewportChanged"
@@ -70,11 +70,6 @@
                                             Icon="{ui:FontIcon Glyph=Photo2EB9F}"
                                             Tapped="ShowPixEzQrCodeContextItem_OnTapped" />
                             <MenuFlyoutSeparator />
-                            <MenuFlyoutSubItem x:Uid="/IllustrationGrid/SetAsSubContextItem"
-                                               Icon="{ui:FontIcon Glyph=PersonalizeE771}">
-                                <MenuFlyoutItem x:Uid="/IllustrationGrid/SetAsBackgroundContextItem" />
-                                <MenuFlyoutItem x:Uid="/IllustrationGrid/SetAsLockScreenContextItem" />
-                            </MenuFlyoutSubItem>
                         </MenuFlyout>
                     </GridViewItem.ContextFlyout>
                     <card:CardControl CornerRadius="5">
@@ -286,6 +281,6 @@
                     </card:CardControl>
                 </GridViewItem>
             </DataTemplate>
-        </adaptiveGridView:AdaptiveGridView.ItemTemplate>
-    </adaptiveGridView:AdaptiveGridView>
+        </controls:AdaptiveGridView.ItemTemplate>
+    </controls:AdaptiveGridView>
 </UserControl>

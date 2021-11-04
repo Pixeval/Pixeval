@@ -25,17 +25,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.WinUI.UI;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.CommunityToolkit.AdvancedCollectionView;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Popups;
 using Pixeval.Util;
-using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using QRCoder;
 
 namespace Pixeval.UserControls
 {

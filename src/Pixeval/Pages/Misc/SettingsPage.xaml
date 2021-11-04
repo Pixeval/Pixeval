@@ -4,6 +4,7 @@
                        xmlns:actionableExpanderSettingEntry="using:Pixeval.Controls.Setting.UI.ActionableExpanderSettingEntry"
                        xmlns:actionableSettingEntry="using:Pixeval.Controls.Setting.UI.ActionableSettingEntry"
                        xmlns:controls="using:Pixeval.Controls"
+                       xmlns:controls1="using:CommunityToolkit.WinUI.UI.Controls"
                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                        xmlns:expanderSettingEntry="using:Pixeval.Controls.Setting.UI.ExpanderSettingEntry"
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -16,7 +17,6 @@
                        xmlns:system="using:System"
                        xmlns:tokenInput="using:Pixeval.UserControls.TokenInput"
                        xmlns:ui="using:Pixeval.Util.UI"
-                       xmlns:wrapPanel="using:Pixeval.CommunityToolkit.WrapPanel"
                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                        Loaded="SettingsPage_OnLoaded"
                        mc:Ignorable="d">
@@ -62,7 +62,7 @@
                     <StackPanel Grid.Column="1">
                         <TextBlock x:Uid="/SettingsPage/AppDescriptionTextBlock"
                                    TextWrapping="Wrap" />
-                        <wrapPanel:WrapPanel Margin="0,8,0,0"
+                        <controls1:WrapPanel Margin="0,8,0,0"
                                              HorizontalSpacing="24"
                                              IsTabStop="False"
                                              Orientation="Horizontal">
@@ -78,7 +78,7 @@
                                              NavigateUri="https://afdian.net/@dylech30th" />
                             <HyperlinkButton x:Uid="/SettingsPage/JoinFeedbackGroupHyperlinkButton"
                                              NavigateUri="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog" />
-                        </wrapPanel:WrapPanel>
+                        </controls1:WrapPanel>
                     </StackPanel>
                 </Grid>
                 <StackPanel Grid.Row="1"

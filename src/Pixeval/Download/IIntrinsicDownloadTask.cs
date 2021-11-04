@@ -1,9 +1,8 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
-
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2021 Pixeval/ScanningLoginProxyMessage.cs
+// Copyright (c) 2021 Pixeval/IIntrinsicDownloadTask.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,16 +16,14 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #endregion
 
-using Pixeval.AppManagement;
+using Windows.Storage.Streams;
 
-namespace Pixeval.Messages
+namespace Pixeval.Download
 {
-    /// <summary>
-    ///     This event will be published once the scan process of the login proxy's zip file is completed.
-    ///     See <see cref="AppContext.CopyLoginProxyIfRequiredAsync" />
-    /// </summary>
-    public record ScanningLoginProxyMessage;
+    public interface IIntrinsicDownloadTask : IDownloadTask
+    {
+        IRandomAccessStream Stream { get; }
+    }
 }

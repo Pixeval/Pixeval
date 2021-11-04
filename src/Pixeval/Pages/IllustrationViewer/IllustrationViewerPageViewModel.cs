@@ -21,16 +21,19 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
+using Windows.System.UserProfile;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.AppManagement;
 using Pixeval.Download;
 using Pixeval.Popups;
 using Pixeval.UserControls;
@@ -38,7 +41,7 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using QRCoder;
+using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.IllustrationViewer
 {
@@ -194,8 +197,8 @@ namespace Pixeval.Pages.IllustrationViewer
             PlayGifCommand.CanExecuteRequested += PlayGifCommandOnCanExecuteRequested;
             PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
 
-            ZoomOutCommand.ExecuteRequested += (_, _) => Current.Zoom(-0.5);
-            ZoomInCommand.ExecuteRequested += (_, _) => Current.Zoom(0.5);
+            ZoomOutCommand.ExecuteRequested += (_, _) => Current.Zoom(-0.5f);
+            ZoomInCommand.ExecuteRequested += (_, _) => Current.Zoom(0.5f);
 
             SaveCommand.ExecuteRequested += SaveCommandOnExecuteRequested;
             SaveAsCommand.ExecuteRequested += SaveAsCommandOnExecuteRequested;
@@ -205,6 +208,74 @@ namespace Pixeval.Pages.IllustrationViewer
             OpenInWebBrowserCommand.ExecuteRequested += OpenInWebBrowserCommandOnExecuteRequested;
             ShareCommand.ExecuteRequested += ShareCommandOnExecuteRequested;
             ShowQrCodeCommand.ExecuteRequested += ShowQrCodeCommandOnExecuteRequested;
+
+            SetAsLockScreenCommand.CanExecuteRequested += SetAsLockScreenCommandOnCanExecuteRequested;
+            SetAsLockScreenCommand.ExecuteRequested += SetAsLockScreenCommandOnExecuteRequested;
+
+            SetAsBackgroundCommand.CanExecuteRequested += SetAsBackgroundCommandOnCanExecuteRequested;
+            SetAsBackgroundCommand.ExecuteRequested += SetAsBackgroundCommandOnExecuteRequested;
+        }
+
+        private async void SetAsBackgroundCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            if (Current.OriginalImageStream is null)
+            {
+                UIHelper.ShowTextToastNotification(
+                    IllustrationViewerPageResources.OriginalmageStreamIsEmptyTitle,
+                    IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent,
+                    AppContext.AppLogoNoCaptionUri);
+                return;
+            }
+
+            var guid = await Current.OriginalImageStream.Sha1Async();
+            if (await AppKnownFolders.SavedWallPaper.TryGetFileRelativeToSelfAsync(guid) is null)
+            {
+                var path = Path.Combine(AppKnownFolders.SavedWallPaper.Self.Path, guid);
+                var intrinsicTask = await DownloadFactories.Illustration.TryCreateIntrinsicAsync(Current.IllustrationViewModel, Current.OriginalImageStream!, path);
+                App.AppViewModel.DownloadManager.QueueTask(intrinsicTask);
+                await intrinsicTask.Completion.Task;
+            }
+            await UserProfilePersonalizationSettings.Current.TrySetWallpaperImageAsync(await AppKnownFolders.SavedWallPaper.GetFileAsync(guid));
+            UIHelper.ShowTextToastNotification(
+                IllustrationViewerPageResources.SetAsSucceededTitle,
+                IllustrationViewerPageResources.SetAsBackgroundSucceededTitle,
+                AppContext.AppLogoNoCaptionUri);
+        }
+
+        private async void SetAsLockScreenCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+            if (Current.OriginalImageStream is null)
+            {
+                UIHelper.ShowTextToastNotification(
+                    IllustrationViewerPageResources.OriginalmageStreamIsEmptyTitle,
+                    IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent,
+                    AppContext.AppLogoNoCaptionUri);
+                return;
+            }
+
+            var guid = await Current.OriginalImageStream.Sha1Async();
+            if (await AppKnownFolders.SavedWallPaper.TryGetFileRelativeToSelfAsync(guid) is null)
+            {
+                var path = Path.Combine(AppKnownFolders.SavedWallPaper.Self.Path, guid);
+                var intrinsicTask = await DownloadFactories.Illustration.TryCreateIntrinsicAsync(Current.IllustrationViewModel, Current.OriginalImageStream!, path);
+                App.AppViewModel.DownloadManager.QueueTask(intrinsicTask);
+                await intrinsicTask.Completion.Task;
+            }
+            await UserProfilePersonalizationSettings.Current.TrySetLockScreenImageAsync(await AppKnownFolders.SavedWallPaper.GetFileAsync(guid));
+            UIHelper.ShowTextToastNotification(
+                IllustrationViewerPageResources.SetAsSucceededTitle,
+                IllustrationViewerPageResources.SetAsBackgroundSucceededTitle,
+                AppContext.AppLogoNoCaptionUri);
+        }
+
+        private void SetAsBackgroundCommandOnCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
+        {
+            args.CanExecute = !IsUgoira && Current.LoadingCompletedSuccessfully;
+        }
+
+        private void SetAsLockScreenCommandOnCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
+        {
+            args.CanExecute = !IsUgoira && Current.LoadingCompletedSuccessfully;
         }
 
         private async void ShowQrCodeCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -300,7 +371,7 @@ namespace Pixeval.Pages.IllustrationViewer
 
         private void CopyCommandOnCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
         {
-            args.CanExecute = Current.LoadingOriginalSourceTask?.IsCompletedSuccessfully ?? false;
+            args.CanExecute = Current.LoadingCompletedSuccessfully;
         }
 
         private async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -308,7 +379,7 @@ namespace Pixeval.Pages.IllustrationViewer
             await UIHelper.SetClipboardContentAsync(async package =>
             {
                 package.RequestedOperation = DataPackageOperation.Copy;
-                var file = await AppContext.CreateTemporaryFileWithNameAsync(GetCopyContentFileName(), IsUgoira ? "gif" : "png");
+                var file = await AppKnownFolders.CreateTemporaryFileWithNameAsync(GetCopyContentFileName(), IsUgoira ? "gif" : "png");
                 await Current.OriginalImageStream!.SaveToFileAsync(file);
                 package.SetStorageItems(Enumerates.ArrayOf(file), true);
             });
@@ -456,6 +527,16 @@ namespace Pixeval.Pages.IllustrationViewer
         {
             Label = IllustrationViewerPageResources.ShowQRCode,
             IconSource = FontIconSymbols.QRCodeED14.GetFontIconSource()
+        };
+
+        public XamlUICommand SetAsLockScreenCommand { get; } = new()
+        {
+            Label = IllustrationViewerPageResources.LockScreen
+        };
+
+        public XamlUICommand SetAsBackgroundCommand { get; } = new()
+        {
+            Label = IllustrationViewerPageResources.Background
         };
 
         #endregion

@@ -20,8 +20,8 @@
 
 #endregion
 
-using System.Diagnostics;
 using System.Threading.Tasks;
+using Windows.Storage.Streams;
 using Pixeval.Download.MacroParser;
 using Pixeval.UserControls;
 using Pixeval.Util;
@@ -49,6 +49,17 @@ namespace Pixeval.Download
             }
 
             return new IllustrationDownloadTask(context, PathParser.Reduce(rawPath, context));
+        }
+
+        /// <summary>
+        /// Try to create an <see cref="IntrinsicIllustrationDownloadTask"/>, if the context is of type 'ugoira' or
+        /// the <paramref name="imageStream"/> is unreadable, it decays to <see cref="AnimatedIllustrationDownloadTask"/>
+        /// </summary>
+        public Task<ObservableDownloadTask> TryCreateIntrinsicAsync(IllustrationViewModel context, IRandomAccessStream imageStream, string rawPath)
+        {
+            return context.Illustration.IsUgoira() || !imageStream.CanRead 
+                ? CreateAsync(context, rawPath) 
+                : Task.FromResult<ObservableDownloadTask>(new IntrinsicIllustrationDownloadTask(context, imageStream, rawPath));
         }
     }
 }

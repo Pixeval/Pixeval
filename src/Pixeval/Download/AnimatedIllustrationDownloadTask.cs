@@ -55,10 +55,7 @@ namespace Pixeval.Download
             using (stream)
             {
                 using var gifStream = await IOHelper.GetGifStreamFromZipStreamAsync(stream.AsStreamForRead(), _metadata);
-
-                IOHelper.CreateParentDirectories(Destination);
-                await using var fileStream = File.Open(Destination, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
-                await gifStream.AsStreamForRead().CopyToAsync(fileStream);
+                await IOHelper.CreateAndWriteToFileAsync(gifStream, Destination);
             }
         }
     }

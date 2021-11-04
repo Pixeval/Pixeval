@@ -28,7 +28,6 @@ using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.CommunityToolkit.AdaptiveGridView;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
@@ -38,6 +37,7 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Utilities;
+using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.UserControls
 {

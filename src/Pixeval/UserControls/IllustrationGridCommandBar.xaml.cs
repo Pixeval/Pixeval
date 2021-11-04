@@ -27,10 +27,10 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.System;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.CommunityToolkit;
 using Pixeval.Download;
 using Pixeval.Popups;
 using Pixeval.Popups.IllustrationResultFilter;
@@ -38,6 +38,7 @@ using Pixeval.UserControls.TokenInput;
 using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.UserControls
 {

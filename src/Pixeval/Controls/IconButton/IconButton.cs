@@ -20,9 +20,9 @@
 
 #endregion
 
+using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.CommunityToolkit;
 
 namespace Pixeval.Controls.IconButton
 {
