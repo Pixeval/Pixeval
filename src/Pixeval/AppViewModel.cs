@@ -67,7 +67,7 @@ namespace Pixeval
                 .ConfigureServices(services =>
                     services.AddSingleton<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>, IllustrationDownloadTaskFactory>()
                         .AddSingleton(new SQLiteAsyncConnection("PixevalData.db"))
-                        .AddSingleton<IPersistentManager<DownloadHistoryEntry>>(provider => provider.GetRequiredService<DownloadHistoryPersistentManager>()));
+                        .AddSingleton<IPersistentManager<DownloadHistoryEntry, ObservableDownloadTask>>(provider => provider.GetRequiredService<DownloadHistoryPersistentManager>()));
         }
 
         public AppViewModel(App app)
