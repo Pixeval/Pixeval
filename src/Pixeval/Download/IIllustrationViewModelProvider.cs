@@ -1,9 +1,8 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
-
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2021 Pixeval/IDownloadTaskFactory.cs
+// Copyright (c) 2021 Pixeval/IllustrationViewModelProvider.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,21 +16,15 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #endregion
 
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
-using Pixeval.Download.MacroParser;
+using Pixeval.UserControls;
 
 namespace Pixeval.Download
 {
-    public interface IDownloadTaskFactory<T, TDownloadTask> where TDownloadTask : IDownloadTask
+    public interface IIllustrationViewModelProvider
     {
-        IMetaPathParser<T> PathParser { get; }
-
-        Task<TDownloadTask> CreateAsync(T context, string rawPath);
-
-        Task<TDownloadTask> TryCreateIntrinsicAsync(T context, IRandomAccessStream stream, string rawPath);
+        Task<IllustrationViewModel> GetViewModelAsync();
     }
 }

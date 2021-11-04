@@ -266,8 +266,8 @@ namespace Pixeval.Pages.Download
         {
             switch (ViewModel)
             {
-                case IllustrationDownloadTask {IllustrationViewModel: var illustrationViewModel}:
-                    var viewModels = (!illustrationViewModel.IsManga ? illustrationViewModel : new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(illustrationViewModel.Id)))
+                case IIllustrationViewModelProvider provider:
+                    var viewModels = (await provider.GetViewModelAsync())
                         .GetMangaIllustrationViewModels()
                         .ToArray();
 

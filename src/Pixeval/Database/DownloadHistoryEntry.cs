@@ -27,17 +27,20 @@ namespace Pixeval.Database
     [Table("DownloadHistories")]
     public class DownloadHistoryEntry
     {
-        public DownloadHistoryEntry(DownloadHistoryType type, IDownloadTask task, string id)
+        public static DownloadHistoryEntry Create(DownloadHistoryType type, IDownloadTask task, string id)
         {
-            Type = type;
-            Id = id;
-            Title = task.Title;
-            Description = task.Description;
-            Url = task.Url;
-            Destination = task.Destination;
-            Thumbnail = task.Thumbnail;
-            ErrorCause = task.ErrorCause?.ToString();
-            UniqueCacheId = task.UniqueCacheId;
+            return new DownloadHistoryEntry
+            {
+                Type = type,
+                Id = id,
+                Title = task.Title,
+                Description = task.Description,
+                Url = task.Url,
+                Destination = task.Destination,
+                Thumbnail = task.Thumbnail,
+                ErrorCause = task.ErrorCause?.ToString(),
+                UniqueCacheId = task.UniqueCacheId,
+            };
         }
 
         [PrimaryKey]
@@ -48,27 +51,36 @@ namespace Pixeval.Database
         [Column("type")]
         public DownloadHistoryType Type { get; set; }
 
+        public DownloadState FinalState { get; set; }
+
         /// <summary>
         /// Id of the artwork, do not mix it with <see cref="UniqueId"/>, which is SQLite-compliant
         /// </summary>
         [Column("work_id")]
         public string? Id { get; set; }
         
-        public string? Title { get; }
+        [Column("work_title")]
+        public string? Title { get; set; }
 
-        public string? Description { get; }
+        [Column("work_desc")]
+        public string? Description { get; set; }
 
-        public string? Url { get; }
+        [Column("work_url")]
+        public string? Url { get; set; }
 
-        public string? Destination { get; }
+        [Column("destination")]
+        public string? Destination { get; set; }
 
-        public string? Thumbnail { get; }
+        [Column("work_thumbnail")]
+        public string? Thumbnail { get; set; }
 
-        public string? ErrorCause { get; }
+        [Column("work_error_cause")]
+        public string? ErrorCause { get; set; }
 
         /// <summary>
         /// See <see cref="IDownloadTask.UniqueCacheId"/>
         /// </summary>
-        public string? UniqueCacheId { get; }
+        [Column("work_unique_cache_id")]
+        public string? UniqueCacheId { get; set; }
     }
 }

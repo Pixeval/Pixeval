@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2021 Pixeval/DownloadFactories.cs
+// Copyright (c) 2021 Pixeval/IPersistentManager.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,10 +18,23 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-namespace Pixeval.Download
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using SQLite;
+
+namespace Pixeval.Database.Managers
 {
-    public static class DownloadFactories
+    public interface IPersistentManager<TEntry, TModel>
     {
-        public static readonly IllustrationDownloadTaskFactory Illustration = new();
+        SQLiteAsyncConnection Connection { get; }
+
+        void Insert(TEntry t);
+
+        Task<IEnumerable<TModel>> QueryAsync(Func<TEntry, bool> predicate);
+
+        Task Delete(Func<TEntry, bool> predicate);
+
+        Task<IEnumerable<TModel>> EnumerateAsync();
     }
 }

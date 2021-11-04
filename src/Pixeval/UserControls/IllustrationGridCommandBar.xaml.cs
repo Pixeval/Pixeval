@@ -28,6 +28,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.System;
 using CommunityToolkit.WinUI;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -196,6 +197,9 @@ namespace Pixeval.UserControls
                 return;
             }
 
+            using var scope = App.AppViewModel.AppServicesScope;
+            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
+
             // That will run for quite a while
             _ = Task.Run(async () =>
             {
@@ -203,7 +207,7 @@ namespace Pixeval.UserControls
                     async () => await Task.WhenAll(
                         ViewModel.SelectedIllustrations
                             .SelectMany(i => i.GetMangaIllustrationViewModels())
-                            .Select(i => DownloadFactories.Illustration.CreateAsync(i, App.AppViewModel.AppSetting.DefaultDownloadPathMacro))));
+                            .Select(i => factory.CreateAsync(i, App.AppViewModel.AppSetting.DefaultDownloadPathMacro))));
                 foreach (var viewModelSelectedIllustration in tasks)
                 {
                     App.AppViewModel.DownloadManager.QueueTask(viewModelSelectedIllustration);

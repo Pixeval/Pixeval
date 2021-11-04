@@ -7,14 +7,17 @@
                        xmlns:download="using:Pixeval.Pages.Download"
                        xmlns:downloader="using:Pixeval.Download"
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                       xmlns:toolkit="using:CommunityToolkit.WinUI.UI.Controls"
                        xmlns:util="using:Pixeval.Misc"
                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                       SizeChanged="DownloadListPage_OnSizeChanged"
                        mc:Ignorable="d">
     <Grid Padding="20,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition Height="50" />
-            <RowDefinition Height="50" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <TextBlock x:Uid="/DownloadListPage/PageTitleTextBlock"
@@ -22,68 +25,62 @@
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    Style="{StaticResource TitleTextBlockStyle}" />
-        <Grid Grid.Row="2">
-            <TextBlock HorizontalAlignment="Left"
-                       VerticalAlignment="Center"
-                       Style="{StaticResource BodyStrongTextBlockStyle}"
-                       Text="{x:Bind _viewModel.SubtitleText(_viewModel.CurrentOption), Mode=OneWay}" />
-            <Grid HorizontalAlignment="Right"
-                  ColumnSpacing="10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <AutoSuggestBox x:Uid="/DownloadListPage/FilterAutoSuggestBox"
-                                Grid.Column="0"
-                                Width="140"
-                                VerticalAlignment="Center"
-                                ItemsSource="{x:Bind _viewModel.FilteredTasks}"
-                                QueryIcon="Find"
-                                QuerySubmitted="FilterAutoSuggestBox_OnQuerySubmitted"
-                                SuggestionChosen="FilterAutoSuggestBox_OnSuggestionChosen"
-                                TextChanged="FilterAutoSuggestBox_OnTextChanged">
-                    <AutoSuggestBox.ItemTemplate>
-                        <DataTemplate x:DataType="downloader:IDownloadTask">
-                            <TextBlock Text="{x:Bind Title}" />
-                        </DataTemplate>
-                    </AutoSuggestBox.ItemTemplate>
-                </AutoSuggestBox>
-                <Button x:Uid="/DownloadListPage/CancelAllButton"
-                        Grid.Column="1"
-                        Width="120"
-                        Tapped="CancelAllButton_OnTapped" />
-                <Button x:Uid="/DownloadListPage/ResumeAllButton"
-                        Grid.Column="2"
-                        Width="120"
-                        Background="{ThemeResource AccentFillColorDefaultBrush}"
-                        Tapped="ResumeAllButton_OnTapped" />
-                <Button x:Uid="/DownloadListPage/PauseAllButton"
-                        Grid.Column="3"
-                        Width="120"
-                        Tapped="PauseAllButton_OnTapped" />
-                <Button x:Uid="/DownloadListPage/ClearDownloadListButton"
-                        Grid.Column="4"
-                        Width="120"
-                        Tapped="ClearDownloadListButton_OnTapped" />
-                <ComboBox x:Uid="/DownloadListPage/ModeFilterComboBox"
-                          Grid.Column="5"
-                          VerticalAlignment="Center"
-                          ItemsSource="{x:Bind download:DownloadListPageViewModel.AvailableDownloadListOptions}"
-                          SelectedItem="{x:Bind _viewModel.CurrentOption, Mode=TwoWay}"
-                          SelectionChanged="ModeFilterComboBox_OnSelectionChanged">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="download:DownloadListOption">
-                            <TextBlock Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent((download:DownloadListOption))}" />
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-            </Grid>
-        </Grid>
-        <ListView Grid.Row="3"
+        <TextBlock x:Name="FunctionBarTitleTextBlock"
+                   Grid.Row="2"
+                   Grid.RowSpan="2"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Center"
+                   Style="{StaticResource BodyStrongTextBlockStyle}"
+                   Text="{x:Bind _viewModel.SubtitleText(_viewModel.CurrentOption), Mode=OneWay}" />
+        <toolkit:WrapPanel x:Name="FunctionBar"
+                           Grid.Row="2"
+                           Grid.RowSpan="2"
+                           Margin="0,0,-9,0"
+                           Padding="0"
+                           HorizontalAlignment="Right"
+                           HorizontalSpacing="10"
+                           VerticalSpacing="10">
+            <AutoSuggestBox x:Uid="/DownloadListPage/FilterAutoSuggestBox"
+                            Width="135"
+                            VerticalAlignment="Center"
+                            ItemsSource="{x:Bind _viewModel.FilteredTasks}"
+                            QueryIcon="Find"
+                            QuerySubmitted="FilterAutoSuggestBox_OnQuerySubmitted"
+                            SuggestionChosen="FilterAutoSuggestBox_OnSuggestionChosen"
+                            TextChanged="FilterAutoSuggestBox_OnTextChanged">
+                <AutoSuggestBox.ItemTemplate>
+                    <DataTemplate x:DataType="downloader:IDownloadTask">
+                        <TextBlock Text="{x:Bind Title}" />
+                    </DataTemplate>
+                </AutoSuggestBox.ItemTemplate>
+            </AutoSuggestBox>
+            <Button x:Uid="/DownloadListPage/CancelAllButton"
+                    Width="135"
+                    Tapped="CancelAllButton_OnTapped" />
+            <Button x:Uid="/DownloadListPage/ResumeAllButton"
+                    Width="135"
+                    Background="{ThemeResource AccentFillColorDefaultBrush}"
+                    Tapped="ResumeAllButton_OnTapped" />
+            <Button x:Uid="/DownloadListPage/PauseAllButton"
+                    Width="135"
+                    Tapped="PauseAllButton_OnTapped" />
+            <Button x:Uid="/DownloadListPage/ClearDownloadListButton"
+                    Width="135"
+                    Tapped="ClearDownloadListButton_OnTapped" />
+            <ComboBox x:Uid="/DownloadListPage/ModeFilterComboBox"
+                      Width="135"
+                      VerticalAlignment="Center"
+                      ItemsSource="{x:Bind download:DownloadListPageViewModel.AvailableDownloadListOptions}"
+                      SelectedItem="{x:Bind _viewModel.CurrentOption, Mode=TwoWay}"
+                      SelectionChanged="ModeFilterComboBox_OnSelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="download:DownloadListOption">
+                        <TextBlock Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent((download:DownloadListOption))}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </toolkit:WrapPanel>
+        <ListView Grid.Row="4"
                   IsItemClickEnabled="False"
                   ItemsSource="{x:Bind _viewModel.DownloadTasksView, Mode=OneWay}">
             <ListView.ItemContainerStyle>

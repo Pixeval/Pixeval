@@ -20,6 +20,7 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Pixeval.Options;
 using Pixeval.UserControls;
@@ -28,7 +29,7 @@ using Pixeval.Util.IO;
 
 namespace Pixeval.Download
 {
-    public class IllustrationDownloadTask : ObservableDownloadTask
+    public class IllustrationDownloadTask : ObservableDownloadTask, IIllustrationViewModelProvider
     {
         public IllustrationViewModel IllustrationViewModel { get; }
 
@@ -73,6 +74,11 @@ namespace Pixeval.Download
             }
             // slow path
             deferral.Complete(true);
+        }
+
+        public Task<IllustrationViewModel> GetViewModelAsync()
+        {
+            return Task.FromResult(IllustrationViewModel);
         }
     }
 }

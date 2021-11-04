@@ -27,6 +27,8 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Graphics;
 using CommunityToolkit.WinUI;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI;
 using Microsoft.UI.Dispatching;
@@ -38,15 +40,18 @@ using PInvoke;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Net;
+using Pixeval.Database;
+using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Options;
+using Pixeval.UserControls;
+using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
+using SQLite;
 using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
-#if DEBUG
-#endif
 
 namespace Pixeval
 {
@@ -56,10 +61,24 @@ namespace Pixeval
     {
         private bool _activatedByProtocol;
 
+        private static IHostBuilder CreateHostBuilder()
+        {
+            return Host.CreateDefaultBuilder()
+                .ConfigureServices(services =>
+                    services.AddSingleton<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>, IllustrationDownloadTaskFactory>()
+                        .AddSingleton(new SQLiteAsyncConnection("PixevalData.db"))
+                        .AddSingleton<IPersistentManager<DownloadHistoryEntry>>(provider => provider.GetRequiredService<DownloadHistoryPersistentManager>()));
+        }
+
         public AppViewModel(App app)
         {
             App = app;
+            AppHost = CreateHostBuilder().Build();
         }
+
+        public IHost AppHost { get; }
+
+        public IServiceScope AppServicesScope => AppHost.Services.CreateScope();
 
         public App App { get; }
 
@@ -211,6 +230,8 @@ namespace Pixeval
 
             await AppKnownFolders.Temporary.ClearAsync();
             Cache = await FileCache.CreateDefaultAsync();
+
+           AppHost.RunAsync().Discard();
         }
 
         public (int, int) GetAppWindowSizeTuple()

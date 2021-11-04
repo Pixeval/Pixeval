@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.System.UserProfile;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -231,7 +232,9 @@ namespace Pixeval.Pages.IllustrationViewer
             if (await AppKnownFolders.SavedWallPaper.TryGetFileRelativeToSelfAsync(guid) is null)
             {
                 var path = Path.Combine(AppKnownFolders.SavedWallPaper.Self.Path, guid);
-                var intrinsicTask = await DownloadFactories.Illustration.TryCreateIntrinsicAsync(Current.IllustrationViewModel, Current.OriginalImageStream!, path);
+                using var scope = App.AppViewModel.AppServicesScope;
+                var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
+                var intrinsicTask = await factory.TryCreateIntrinsicAsync(Current.IllustrationViewModel, Current.OriginalImageStream!, path);
                 App.AppViewModel.DownloadManager.QueueTask(intrinsicTask);
                 await intrinsicTask.Completion.Task;
             }
@@ -257,7 +260,9 @@ namespace Pixeval.Pages.IllustrationViewer
             if (await AppKnownFolders.SavedWallPaper.TryGetFileRelativeToSelfAsync(guid) is null)
             {
                 var path = Path.Combine(AppKnownFolders.SavedWallPaper.Self.Path, guid);
-                var intrinsicTask = await DownloadFactories.Illustration.TryCreateIntrinsicAsync(Current.IllustrationViewModel, Current.OriginalImageStream!, path);
+                using var scope = App.AppViewModel.AppServicesScope;
+                var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
+                var intrinsicTask = await factory.TryCreateIntrinsicAsync(Current.IllustrationViewModel, Current.OriginalImageStream!, path);
                 App.AppViewModel.DownloadManager.QueueTask(intrinsicTask);
                 await intrinsicTask.Completion.Task;
             }
@@ -326,9 +331,11 @@ namespace Pixeval.Pages.IllustrationViewer
 
         private async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
         {
+            using var scope = App.AppViewModel.AppServicesScope;
+            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
             foreach (var mangaIllustrationViewModel in Current.IllustrationViewModel.GetMangaIllustrationViewModels())
             {
-                var downloadTask = await DownloadFactories.Illustration.CreateAsync(mangaIllustrationViewModel, App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
+                var downloadTask = await factory.CreateAsync(mangaIllustrationViewModel, App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
                 App.AppViewModel.DownloadManager.QueueTask(downloadTask);
             }
         }

@@ -19,6 +19,7 @@
 #endregion
 
 using System.IO;
+using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Options;
@@ -28,8 +29,9 @@ using Pixeval.Util.IO;
 
 namespace Pixeval.Download
 {
-    public class AnimatedIllustrationDownloadTask : ObservableDownloadTask, ICustomBehaviorDownloadTask
+    public class AnimatedIllustrationDownloadTask : ObservableDownloadTask, ICustomBehaviorDownloadTask, IIllustrationViewModelProvider
     {
+        private readonly IllustrationViewModel _illustration;
         private readonly UgoiraMetadataResponse _metadata;
 
         public AnimatedIllustrationDownloadTask(
@@ -38,7 +40,16 @@ namespace Pixeval.Download
             string destination,
             UgoiraMetadataResponse metadata) : base(illustration.Illustration.Title, illustration.Illustration.User?.Name, zipUrl, IOHelper.NormalizePath(destination), illustration.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium), null)
         {
+            _illustration = illustration;
             _metadata = metadata;
+        }
+
+        protected AnimatedIllustrationDownloadTask(string? title, string? description, string url, string destination, string? thumbnail, string? uniqueId)
+            : base(title, description, url, destination, thumbnail, uniqueId)
+        {
+            // derive classes won't need them
+            _metadata = null!;
+            _illustration = null!;
         }
 
         public override void DownloadStarting(DownloadStartingEventArgs args)
@@ -50,13 +61,18 @@ namespace Pixeval.Download
             }
         }
 
-        public async void Consume(IRandomAccessStream stream)
+        public virtual async void Consume(IRandomAccessStream stream)
         {
             using (stream)
             {
                 using var gifStream = await IOHelper.GetGifStreamFromZipStreamAsync(stream.AsStreamForRead(), _metadata);
                 await IOHelper.CreateAndWriteToFileAsync(gifStream, Destination);
             }
+        }
+
+        public virtual Task<IllustrationViewModel> GetViewModelAsync()
+        {
+            return Task.FromResult(_illustration);
         }
     }
 }

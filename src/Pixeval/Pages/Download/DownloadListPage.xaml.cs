@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
@@ -102,6 +103,17 @@ namespace Pixeval.Pages.Download
             sender.Text = string.Empty;
             _viewModel.CurrentOption = DownloadListOption.CustomSearch;
             _viewModel.ResetFilter(_viewModel.FilteredTasks);
+        }
+
+        // Remarks: The VisualStateManager won't work I really don't know why
+        private void DownloadListPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var greaterThan1000 = e.NewSize.Width > 1000;
+            Grid.SetRowSpan(FunctionBarTitleTextBlock, greaterThan1000 ? 2 : 1);
+            Grid.SetRow(FunctionBar, greaterThan1000 ? 2 : 3);
+            Grid.SetRowSpan(FunctionBar, greaterThan1000 ? 2 : 1);
+            FunctionBar.HorizontalAlignment = greaterThan1000 ? HorizontalAlignment.Right : HorizontalAlignment.Left;
+            FunctionBar.Margin = new Thickness(0, greaterThan1000 ? 0 : 10, 0, 0);
         }
     }
 }

@@ -26,6 +26,7 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi.Global.Enum;
@@ -40,12 +41,19 @@ namespace Pixeval.Controls.Setting.UI
 {
     public class SettingsPageViewModel : ObservableObject
     {
+        static SettingsPageViewModel()
+        {
+            using var scope = App.AppViewModel.AppServicesScope;
+            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
+            AvailableIllustMacros = factory.PathParser.MacroProvider.AvailableMacros
+                .Select(m => $"@{{{(m is IMacro<IllustrationViewModel>.IPredicate ? $"{m.Name}:" : m.Name)}}}")
+                .Select(s => new Token(s, false, false))
+                .ToList();
+        }
+
         public static readonly IEnumerable<string> AvailableFonts = new InstalledFontCollection().Families.Select(f => f.Name);
 
-        public static readonly ICollection<Token> AvailableIllustMacros = DownloadFactories.Illustration.PathParser.MacroProvider.AvailableMacros
-            .Select(m => $"@{{{(m is IMacro<IllustrationViewModel>.IPredicate ? $"{m.Name}:" : m.Name)}}}")
-            .Select(s => new Token(s, false, false))
-            .ToList();
+        public static readonly ICollection<Token> AvailableIllustMacros;
 
         private readonly AppSetting _appSetting;
 

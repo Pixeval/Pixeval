@@ -53,13 +53,14 @@ namespace Pixeval.Download
 
         /// <summary>
         /// Try to create an <see cref="IntrinsicIllustrationDownloadTask"/>, if the context is of type 'ugoira' or
-        /// the <paramref name="imageStream"/> is unreadable, it decays to <see cref="AnimatedIllustrationDownloadTask"/>
+        /// the <paramref name="stream"/> is unreadable, it decays to <see cref="AnimatedIllustrationDownloadTask"/>
+        /// or <see cref="IllustrationDownloadTask"/>
         /// </summary>
-        public Task<ObservableDownloadTask> TryCreateIntrinsicAsync(IllustrationViewModel context, IRandomAccessStream imageStream, string rawPath)
+        public Task<ObservableDownloadTask> TryCreateIntrinsicAsync(IllustrationViewModel context, IRandomAccessStream stream, string rawPath)
         {
-            return context.Illustration.IsUgoira() || !imageStream.CanRead 
+            return context.Illustration.IsUgoira() || !stream.CanRead 
                 ? CreateAsync(context, rawPath) 
-                : Task.FromResult<ObservableDownloadTask>(new IntrinsicIllustrationDownloadTask(context, imageStream, rawPath));
+                : Task.FromResult<ObservableDownloadTask>(new IntrinsicIllustrationDownloadTask(context, stream, rawPath));
         }
     }
 }

@@ -23,8 +23,8 @@
 using System;
 using System.Linq;
 using Windows.System;
-using Windows.System.UserProfile;
 using Windows.UI.Core;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
@@ -167,7 +167,9 @@ namespace Pixeval.UserControls
 
         private async void SaveContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            var task = await DownloadFactories.Illustration.CreateAsync(sender.GetDataContext<IllustrationViewModel>(), App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
+            using var scope = App.AppViewModel.AppServicesScope;
+            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
+            var task = await factory.CreateAsync(sender.GetDataContext<IllustrationViewModel>(), App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
             App.AppViewModel.DownloadManager.QueueTask(task);
         }
 
@@ -185,6 +187,7 @@ namespace Pixeval.UserControls
         {
             var viewModel = sender.GetDataContext<IllustrationViewModel>();
             var file = await UIHelper.OpenFileSavePickerAsync(viewModel.Id, $"{viewModel.Illustration.GetImageFormat().RemoveSurrounding(".", string.Empty)} file", viewModel.Illustration.GetImageFormat());
+            throw new NotImplementedException();
         }
 
         private void CopyWebLinkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)

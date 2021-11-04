@@ -140,6 +140,7 @@
       <PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.1.1-preview3" />
       <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.1-preview3" />
       <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.1-preview3" />
+      <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
       <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.0" />
       <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.0" />
       <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.0" />
@@ -239,7 +240,6 @@
    <ItemGroup>
       <Folder Include="Assets\Binary\" />
       <Folder Include="Download\MacroParser\Ast\" />
-      <Folder Include="Database\" />
    </ItemGroup>
    <ItemGroup>
       <PRIResource Include="Strings\zh-CN\Activations.resw" />
