@@ -35,6 +35,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
+using Pixeval.CoreApi.Model;
 using Pixeval.Download;
 using Pixeval.Messages;
 using Pixeval.Pages.Capability;
@@ -106,7 +107,9 @@ namespace Pixeval.Pages
             // so we cannot put a navigation tag inside MainPage and treat it as a field, since it will be initialized immediately after
             // the creation of the object while the App.AppViewModel.IllustrationDownloadManager is still null which
             // will lead the program into NullReferenceException on the access of QueuedTasks.
-            if (args.SelectedItem.Equals(DownloadListTab))
+
+            // args.SelectedItem may be null here
+            if (Equals(args.SelectedItem, DownloadListTab))
             {
                 MainPageRootFrame.Navigate(typeof(DownloadListPage), App.AppViewModel.DownloadManager.QueuedTasks.Where(task => task is not IIntrinsicDownloadTask));
                 return;
@@ -119,6 +122,11 @@ namespace Pixeval.Pages
             WeakReferenceMessenger.Default.Send(new MainPageFrameNavigatingEvent(this));
             GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect();
+        }
+        
+        private void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            (sender as AutoSuggestBox).IsSuggestionListOpen = true;
         }
 
         // 搜索并跳转至搜索结果
@@ -136,6 +144,11 @@ namespace Pixeval.Pages
             PerformSearch(args.QueryText);
         }
 
+        private void KeywordAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            sender.Text = (args.SelectedItem as Tag)?.Name;
+        }
+
         private async void KeywordAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
             if (sender.Text is { Length: > 0 } keyword)
@@ -145,6 +158,11 @@ namespace Pixeval.Pages
                 {
                     sender.ItemsSource = suggestions;
                 }
+            }
+            else
+            {
+                // Clear the suggestions when there is nothing to search
+                sender.ItemsSource = Array.Empty<Tag>();
             }
         }
 

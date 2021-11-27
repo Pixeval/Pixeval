@@ -28,6 +28,8 @@
                                 Grid.Column="0"
                                 VerticalAlignment="Center"
                                 QueryIcon="Find"
+                                GotFocus="KeywordAutoSuggestBox_GotFocus"
+                                SuggestionChosen="KeywordAutoSuggestBox_OnSuggestionChosen"
                                 QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
                                 TextChanged="KeywordAutoSuggestBox_OnTextChanged"
                                 TextMemberPath="Name">
