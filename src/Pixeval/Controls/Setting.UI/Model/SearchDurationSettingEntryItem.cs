@@ -29,7 +29,7 @@ namespace Pixeval.Controls.Setting.UI.Model
 {
     public record SearchDurationSettingEntryItem : IStringRepresentableItem
     {
-        public static readonly IEnumerable<IStringRepresentableItem> AvailableItems = Enum.GetValues<SearchDuration>().Select(s => new SearchDurationSettingEntryItem(s));
+        public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<SearchDuration>().Select(s => new SearchDurationSettingEntryItem(s));
 
         public SearchDurationSettingEntryItem(SearchDuration item)
         {

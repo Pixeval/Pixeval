@@ -30,7 +30,7 @@ namespace Pixeval.Controls.Setting.UI.Model
 {
     public record MainPageTabItemSettingEntryItem : IStringRepresentableItem
     {
-        public static readonly IEnumerable<IStringRepresentableItem> AvailableItems = Enum.GetValues<MainPageTabItem>().Select(m => new MainPageTabItemSettingEntryItem(m));
+        public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<MainPageTabItem>().Select(m => new MainPageTabItemSettingEntryItem(m));
 
         public MainPageTabItemSettingEntryItem(MainPageTabItem item)
         {

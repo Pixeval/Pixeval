@@ -55,7 +55,7 @@ namespace Pixeval.Pages.Capability
         public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
         {
             SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
-            RankOptionComboBox.SelectedItem = RankOptionWrapper.AvailableOptions().Of(RankOption.Day);
+            RankOptionComboBox.SelectedItem = LocalizedBoxHelper.Of<RankOption, RankOptionWrapper>(RankOption.Day);
             RankDateTimeCalendarDatePicker.Date = DateTime.Now.AddDays(-2);
             WeakReferenceMessenger.Default.Register<RankingsPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustrationContainer.ViewModel.FetchEngine?.Cancel());
         }

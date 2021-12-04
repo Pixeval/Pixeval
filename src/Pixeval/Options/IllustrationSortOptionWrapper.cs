@@ -26,7 +26,7 @@ using Pixeval.Util.Generic;
 
 namespace Pixeval.Options
 {
-    public record IllustrationSortOptionWrapper(IllustrationSortOption Value, string LocalizedString) : ILocalizedBox<IllustrationSortOption>
+    public record IllustrationSortOptionWrapper(IllustrationSortOption Value, string LocalizedString) : ILocalizedBox<IllustrationSortOption, IllustrationSortOptionWrapper>
     {
         public static IEnumerable<IllustrationSortOptionWrapper> AvailableOptions()
         {

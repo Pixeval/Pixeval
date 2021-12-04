@@ -30,10 +30,7 @@ namespace Pixeval.LoginProxy
     {
         public static string GetCodeVerify()
         {
-            var bytes = new byte[32];
-            var rng = new RNGCryptoServiceProvider();
-            rng.GetBytes(bytes);
-            return bytes.ToUrlSafeBase64String();
+            return RandomNumberGenerator.GetBytes(32).ToUrlSafeBase64String();
         }
 
         private static string ToUrlSafeBase64String(this byte[] bytes)
@@ -51,14 +48,7 @@ namespace Pixeval.LoginProxy
 
         private static string GetCodeChallenge(string code)
         {
-            return code.HashBytes<SHA256CryptoServiceProvider>(Encoding.ASCII).ToUrlSafeBase64String();
-        }
-
-        private static byte[] HashBytes<T>(this string str, Encoding? encoding = null) where T : HashAlgorithm, new()
-        {
-            using var crypt = new T();
-            var hashBytes = crypt.ComputeHash((encoding ?? Encoding.UTF8).GetBytes(str));
-            return hashBytes;
+            return SHA256.HashData(Encoding.ASCII.GetBytes(code)).ToUrlSafeBase64String();
         }
     }
 }

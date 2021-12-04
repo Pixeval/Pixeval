@@ -1,9 +1,8 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
-
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2021 Pixeval/ThumbnailDirectionSettingEntryItem.cs
+// Copyright (c) 2021 Pixeval/DependencyInjectionHelper.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,29 +16,24 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using Pixeval.Misc;
-using Pixeval.Options;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Pixeval.Controls.Setting.UI.Model
+namespace Pixeval.Util.DependencyInjection
 {
-    public record ThumbnailDirectionSettingEntryItem : IStringRepresentableItem
+    public static class DependencyInjectionHelper
     {
-        public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ThumbnailDirection>().Select(t => new ThumbnailDirectionSettingEntryItem(t));
-
-        public ThumbnailDirectionSettingEntryItem(ThumbnailDirection item)
+        public static T GetService<T>(this IServiceProvider provider, ServiceResolver<T> resolver)
         {
-            Item = item;
-            StringRepresentation = item.GetLocalizedResourceContent()!;
+            return provider.GetServices<T>().First(resolver.Invoke);
         }
 
-        public object Item { get; }
-
-        public string StringRepresentation { get; }
+        public static T? TryGetService<T>(this IServiceProvider provider, ServiceResolver<T> resolver)
+        {
+            return provider.GetServices<T>().FirstOrDefault(resolver.Invoke);
+        }
     }
 }

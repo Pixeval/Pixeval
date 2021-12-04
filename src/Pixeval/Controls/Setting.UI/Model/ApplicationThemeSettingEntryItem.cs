@@ -30,7 +30,7 @@ namespace Pixeval.Controls.Setting.UI.Model
 {
     public record ApplicationThemeSettingEntryItem : IStringRepresentableItem
     {
-        public static readonly IEnumerable<IStringRepresentableItem> AvailableItems = Enum.GetValues<ApplicationTheme>().Select(a => new ApplicationThemeSettingEntryItem(a));
+        public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ApplicationTheme>().Select(a => new ApplicationThemeSettingEntryItem(a));
 
         public ApplicationThemeSettingEntryItem(ApplicationTheme item)
         {

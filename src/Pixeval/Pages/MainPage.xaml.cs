@@ -126,7 +126,7 @@ namespace Pixeval.Pages
         
         private void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            (sender as AutoSuggestBox).IsSuggestionListOpen = true;
+            ((AutoSuggestBox) sender).IsSuggestionListOpen = true;
         }
 
         // 搜索并跳转至搜索结果

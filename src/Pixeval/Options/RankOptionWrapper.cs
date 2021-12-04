@@ -26,7 +26,7 @@ using Pixeval.Util.Generic;
 
 namespace Pixeval.Options
 {
-    public record RankOptionWrapper(RankOption Value, string LocalizedString) : ILocalizedBox<RankOption>
+    public record RankOptionWrapper(RankOption Value, string LocalizedString) : ILocalizedBox<RankOption, RankOptionWrapper>
     {
         public static IEnumerable<RankOptionWrapper> AvailableOptions()
         {

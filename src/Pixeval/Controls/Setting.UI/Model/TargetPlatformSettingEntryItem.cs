@@ -29,7 +29,7 @@ namespace Pixeval.Controls.Setting.UI.Model
 {
     public record TargetPlatformSettingEntryItem : IStringRepresentableItem
     {
-        public static readonly IEnumerable<IStringRepresentableItem> AvailableItems = Enum.GetValues<TargetFilter>().Select(t => new TargetPlatformSettingEntryItem(t));
+        public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<TargetFilter>().Select(t => new TargetPlatformSettingEntryItem(t));
 
         public TargetPlatformSettingEntryItem(TargetFilter item)
         {

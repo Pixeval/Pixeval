@@ -29,7 +29,7 @@ namespace Pixeval.Controls.Setting.UI.Model
 {
     public record IllustrationSortOptionSettingEntryItem : IStringRepresentableItem
     {
-        public static readonly IEnumerable<IStringRepresentableItem> AvailableItems = Enum.GetValues<IllustrationSortOption>().Select(i => new IllustrationSortOptionSettingEntryItem(i));
+        public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } =  Enum.GetValues<IllustrationSortOption>().Select(i => new IllustrationSortOptionSettingEntryItem(i));
 
         public IllustrationSortOptionSettingEntryItem(IllustrationSortOption item)
         {

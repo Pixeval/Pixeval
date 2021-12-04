@@ -1,9 +1,8 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
-
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2021 Pixeval/TargetFilterWrapper.cs
+// Copyright (c) 2021 Pixeval/GenericServiceResolver.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,24 +16,9 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #endregion
 
-using System.Collections.Generic;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Util.Generic;
-
-namespace Pixeval.Options
+namespace Pixeval.Util.DependencyInjection
 {
-    public record TargetFilterWrapper(TargetFilter Value, string LocalizedString) : ILocalizedBox<TargetFilter, TargetFilterWrapper>
-    {
-        public static IEnumerable<TargetFilterWrapper> AvailableOptions()
-        {
-            return new TargetFilterWrapper[]
-            {
-                new(TargetFilter.ForAndroid, MiscResources.TargetFilterForAndroid),
-                new(TargetFilter.ForIos, MiscResources.TargetFilterForIOS)
-            };
-        }
-    }
+    public delegate bool ServiceResolver<in T>(T service);
 }

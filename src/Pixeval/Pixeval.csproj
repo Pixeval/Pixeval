@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
       <OutputType>WinExe</OutputType>
-      <TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
+      <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
       <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
       <RootNamespace>Pixeval</RootNamespace>
       <Platforms>x86;x64;arm64</Platforms>
@@ -21,27 +21,11 @@
       <AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Release'">true</AppxPackageSigningEnabled>
       <AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Debug'">false</AppxPackageSigningEnabled>
       <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
-   </PropertyGroup>
-   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      <DefineConstants>TRACE;DEBUG</DefineConstants>
+      <LangVersion>preview</LangVersion>
       <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	  <DefineConstants Condition="'$(Configuration)' == 'Debug'">TRACE;DEBUG</DefineConstants>
    </PropertyGroup>
-   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-   </PropertyGroup>
-   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-   </PropertyGroup>
-   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm64'">
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-   </PropertyGroup>
-   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm64'">
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-   </PropertyGroup>
-   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-   </PropertyGroup>
-   <ItemGroup>
+	<ItemGroup>
       <ProjectCapability Include="TestContainer" />
    </ItemGroup>
    <ItemGroup>
@@ -137,24 +121,28 @@
       </AppxManifest>
    </ItemGroup>
    <ItemGroup>
-      <PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.1.1-preview3" />
-      <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.1-preview3" />
-      <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.1-preview3" />
-      <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+      <PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.1.2" />
+      <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
+      <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.2" />
+      <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
       <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.0" />
-      <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.0" />
-      <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.0" />
-      <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.0" />
+      <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
+      <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
+      <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.2" />
       <PackageReference Include="Microsoft.Win32.Registry" Version="6.0.0-preview.5.21301.5" />
-      <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" />
-      <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0-preview3" />
-      <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.5" />
+      <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.196" />
+      <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
+      <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.8" />
       <PackageReference Include="PInvoke.User32" Version="0.7.104" />
-      <PackageReference Include="QRCoder" Version="1.4.1" />
+      <!-- NEVER, EVER, UPDATE THIS DEPENDENCY, YES, WHAT I'M TALKING ABOUT IS EXACTLY THIS QRCODER LIB, I HAVE NO IDEA ABOUT WHY UPDATING IT WILL BREAK THE RESHARPER -->
       <PackageReference Include="ReverseMarkdown" Version="3.20.0" />
       <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
       <PackageReference Include="System.Linq.Async" Version="5.0.0" />
       <Manifest Include="$(ApplicationManifest)" />
+      <PackageReference Include="QRCoder" ExcludeAssets="Compile" Version="1.4.2" GeneratePathProperty="true" />
+      <Reference Include="QRCoder">
+	      <HintPath>$(PkgQRCoder)\lib\net5.0\QRCoder.dll</HintPath>
+      </Reference>
    </ItemGroup>
    <!-- #region Exposes PRI resources to the source generator -->
    <Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
@@ -173,7 +161,7 @@
          <LoginProxyPublishConfiguration>$(Configuration)</LoginProxyPublishConfiguration>
          <LoginProxyPublishPlatform>$(Platform)</LoginProxyPublishPlatform>
          <LoginProxyPublishProtocol>FileSystem</LoginProxyPublishProtocol>
-         <LoginProxyPublishTargetFramework>net5.0-windows</LoginProxyPublishTargetFramework>
+         <LoginProxyPublishTargetFramework>net6.0-windows</LoginProxyPublishTargetFramework>
          <LoginProxyPublishSelfContained>false</LoginProxyPublishSelfContained>
          <LoginProxyRuntimeIdentifier>$(RuntimeIdentifier)</LoginProxyRuntimeIdentifier>
       </PropertyGroup>

@@ -1,9 +1,8 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
-
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2021 Pixeval/ThumbnailDirectionSettingEntryItem.cs
+// Copyright (c) 2021 Pixeval/DatabaseHelper.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,29 +16,19 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Pixeval.Misc;
-using Pixeval.Options;
+using System.Threading.Tasks;
+using SQLite;
 
-namespace Pixeval.Controls.Setting.UI.Model
+namespace Pixeval.Util
 {
-    public record ThumbnailDirectionSettingEntryItem : IStringRepresentableItem
+    public static class DatabaseHelper
     {
-        public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ThumbnailDirection>().Select(t => new ThumbnailDirectionSettingEntryItem(t));
-
-        public ThumbnailDirectionSettingEntryItem(ThumbnailDirection item)
+        public static async Task<AsyncTableQuery<T>> GetOrCreateTableAsync<T>(this SQLiteAsyncConnection connection) where T : new()
         {
-            Item = item;
-            StringRepresentation = item.GetLocalizedResourceContent()!;
+            await connection.CreateTableAsync<T>();
+            return connection.Table<T>();
         }
-
-        public object Item { get; }
-
-        public string StringRepresentation { get; }
     }
 }
