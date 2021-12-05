@@ -21,22 +21,28 @@
 #endregion
 
 using System;
+using System.Collections.ObjectModel;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net;
+using Pixeval.Database;
+using Pixeval.Database.Managers;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Misc;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
+using Pixeval.Utilities;
 
 namespace Pixeval.Pages
 {
     public class MainPageViewModel : AutoActivateObservableRecipient, IRecipient<LoginCompletedMessage>
     {
         private ImageSource? _avatar;
+        private readonly ObservableCollection<SuggestionModel> _suggestions = new();
 
         public double MainPageRootNavigationViewOpenPanelLength => 250;
 
@@ -59,6 +65,11 @@ namespace Pixeval.Pages
             set => SetProperty(ref _avatar, value);
         }
 
+        public ObservableCollection<SuggestionModel> Suggestions
+        {
+            get => _suggestions;
+        }
+
         public void Receive(LoginCompletedMessage message)
         {
             DownloadAndSetAvatar();
@@ -75,6 +86,20 @@ namespace Pixeval.Pages
             Avatar = await (await makoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(makoClient.Session.AvatarUrl!))
                 .GetOrThrow()
                 .GetBitmapImageAsync(true);
+        }
+
+        public async void AppendSearchHistory()
+        {
+            using var scope = App.AppViewModel.AppServicesScope;
+            var manager = scope.ServiceProvider.GetRequiredService<IPersistentManager<SearchHistoryEntry, SearchHistoryEntry>>();
+            var histories = (await manager.QueryAsync(query =>
+            {
+                query = query.OrderByDescending(x => x.Time);
+                query = query.Take(4);
+                return query;
+            })).SelectNotNull(SuggestionModel.FromHistory);
+
+            _suggestions.ReplaceByUpdate(histories);
         }
     }
 }

@@ -45,6 +45,12 @@ using Pixeval.UserControls;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Collections.ObjectModel;
+using Pixeval.Database;
+using Pixeval.Database.Managers;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Pixeval.Pages
 {
@@ -57,7 +63,6 @@ namespace Pixeval.Pages
         private static IllustrationViewModel? _illustrationViewerContent;
 
         private readonly MainPageViewModel _viewModel = new();
-
         public MainPage()
         {
             InitializeComponent();
@@ -126,7 +131,11 @@ namespace Pixeval.Pages
         
         private void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            ((AutoSuggestBox) sender).IsSuggestionListOpen = true;
+            var suggestBox = ((AutoSuggestBox)sender);
+            suggestBox.IsSuggestionListOpen = true;
+
+            if (!_viewModel.Suggestions.Any()) 
+                _viewModel.AppendSearchHistory(); // Show search history
         }
 
         // 搜索并跳转至搜索结果
@@ -146,28 +155,41 @@ namespace Pixeval.Pages
 
         private void KeywordAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
-            sender.Text = (args.SelectedItem as Tag)?.Name;
+            sender.Text = (args.SelectedItem as SuggestionModel)?.Name;
         }
 
         private async void KeywordAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
+            var items = _viewModel.Suggestions;
+
             if (sender.Text is { Length: > 0 } keyword)
             {
-                var suggestions = await App.AppViewModel.MakoClient.GetAutoCompletionForKeyword(keyword);
-                if (suggestions.Any())
-                {
-                    sender.ItemsSource = suggestions;
-                }
+                var suggestions = (await App.AppViewModel.MakoClient.GetAutoCompletionForKeyword(keyword)).Select(SuggestionModel.FromTag);
+                items.ReplaceByUpdate(suggestions);
             }
             else
             {
                 // Clear the suggestions when there is nothing to search
-                sender.ItemsSource = Array.Empty<Tag>();
+                items.Clear();
+
+                // Show search history
+                _viewModel.AppendSearchHistory();
             }
         }
 
         private void PerformSearch(string text)
         {
+            using (var scope = App.AppViewModel.AppServicesScope)
+            {
+                var manager = scope.ServiceProvider.GetRequiredService<IPersistentManager<SearchHistoryEntry, SearchHistoryEntry>>();
+
+                manager.Insert(new SearchHistoryEntry
+                {
+                    Value = text,
+                    Time = DateTime.Now,
+                });
+            }
+
             var setting = App.AppViewModel.AppSetting;
             MainPageRootNavigationView.SelectedItem = null;
             MainPageRootFrame.Navigate(typeof(SearchResultsPage), App.AppViewModel.MakoClient.Search(

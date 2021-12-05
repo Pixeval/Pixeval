@@ -66,8 +66,10 @@ namespace Pixeval
             return Host.CreateDefaultBuilder()
                 .ConfigureServices(services =>
                     services.AddSingleton<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>, IllustrationDownloadTaskFactory>()
-                        .AddSingleton(new SQLiteAsyncConnection("PixevalData.db"))
-                        .AddSingleton<IPersistentManager<DownloadHistoryEntry, ObservableDownloadTask>>(provider => provider.GetRequiredService<DownloadHistoryPersistentManager>()));
+                        .AddSingleton(new SQLiteAsyncConnection(Windows.Storage.ApplicationData.Current.LocalFolder.Path + "//PixevalData.db", SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex | SQLiteOpenFlags.ReadWrite))
+                        .AddSingleton<IPersistentManager<DownloadHistoryEntry, ObservableDownloadTask>, DownloadHistoryPersistentManager>()
+                        .AddSingleton<IPersistentManager<SearchHistoryEntry, SearchHistoryEntry>, SearchHistoryPersistentManager>()
+                        );
         }
 
         public AppViewModel(App app)
@@ -231,7 +233,7 @@ namespace Pixeval
             await AppKnownFolders.Temporary.ClearAsync();
             Cache = await FileCache.CreateDefaultAsync();
 
-           AppHost.RunAsync().Discard();
+            AppHost.RunAsync().Discard();
         }
 
         public (int, int) GetAppWindowSizeTuple()

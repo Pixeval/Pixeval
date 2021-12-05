@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Pixeval.Download;
 using SQLite;
@@ -32,6 +33,7 @@ namespace Pixeval.Database.Managers
         public DownloadHistoryPersistentManager(SQLiteAsyncConnection connection)
         {
             Connection = connection;
+            Connection.CreateTableAsync<DownloadHistoryEntry>().Wait();
         }
 
         public SQLiteAsyncConnection Connection { get; }
@@ -41,14 +43,27 @@ namespace Pixeval.Database.Managers
             Connection.InsertAsync(t);
         }
 
-        public async Task<IEnumerable<ObservableDownloadTask>> QueryAsync(Func<DownloadHistoryEntry, bool> predicate)
+
+        public async Task<IEnumerable<ObservableDownloadTask>> QueryAsync(Func<AsyncTableQuery<DownloadHistoryEntry>, AsyncTableQuery<DownloadHistoryEntry>> action)
         {
-            return (await Connection.Table<DownloadHistoryEntry>().Where(entry => predicate(entry)).ToListAsync()).Select(ToObservableDownloadTask);
+            var query = Connection.Table<DownloadHistoryEntry>();
+            query = action(query);
+            return (await query.ToListAsync()).Select(ToObservableDownloadTask);
         }
 
-        public Task Delete(Func<DownloadHistoryEntry, bool> predicate)
+        public async Task<IEnumerable<ObservableDownloadTask>> SelectAsync(Expression<Func<DownloadHistoryEntry, bool>>? predicate = null, int? count = null)
         {
-            return Connection.Table<DownloadHistoryEntry>().DeleteAsync(entry => predicate(entry));
+            var query = Connection.Table<DownloadHistoryEntry>();
+            if (count != null)
+                query = query.Take((int)count);
+            if (predicate != null)
+                query = query.Where(predicate);
+            return (await query.ToListAsync()).Select(ToObservableDownloadTask);
+        }
+
+        public Task Delete(Expression<Func<DownloadHistoryEntry, bool>> predicate)
+        {
+            return Connection.Table<DownloadHistoryEntry>().DeleteAsync(predicate);
         }
 
         public async Task<IEnumerable<ObservableDownloadTask>> EnumerateAsync()

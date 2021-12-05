@@ -145,6 +145,38 @@ namespace Pixeval.Utilities
             return enumerable;
         }
 
+        /// <summary>
+        /// Replace a collection by update transactions, best to use with ObservableCollection
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dest">Collection to be updated</param>
+        /// <param name="source"></param>
+        public static void ReplaceByUpdate<T>(this IList<T> dest, IEnumerable<T> source)
+        {
+            if (source.Any())
+            {
+                dest.RemoveAll(x => !source.Contains(x));
+                source.Where(x => !dest.Contains(x)).ForEach(dest.Add);
+            }
+            else
+            {
+                dest.Clear();
+            }
+        }
+
+        public static void ReplaceByUpdate<T>(this ISet<T> dest, IEnumerable<T> source)
+        {
+            if (source.Any())
+            {
+                dest.ToArray().Where(x => !source.Contains(x)).ForEach(x => dest.Remove(x));
+                dest.AddRange(source);
+            }
+            else
+            {
+                dest.Clear();
+            }
+        }
+
         public static void AddRange<T>(this ICollection<T> dest, IEnumerable<T> source)
         {
             foreach (var t in source)

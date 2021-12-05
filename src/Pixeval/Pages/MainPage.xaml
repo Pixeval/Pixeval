@@ -34,19 +34,38 @@
                     QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
                     SuggestionChosen="KeywordAutoSuggestBox_OnSuggestionChosen"
                     TextChanged="KeywordAutoSuggestBox_OnTextChanged"
+                    ItemsSource="{x:Bind _viewModel.Suggestions, Mode=OneWay}"
                     TextMemberPath="Name">
+                    <AutoSuggestBox.ItemContainerTransitions>
+                        <TransitionCollection>
+                            <AddDeleteThemeTransition />
+                        </TransitionCollection>
+                    </AutoSuggestBox.ItemContainerTransitions>
                     <AutoSuggestBox.ItemTemplate>
-                        <DataTemplate x:DataType="model:Tag">
+                        <DataTemplate x:DataType="pages:SuggestionModel">
                             <Grid Height="50">
-                                <StackPanel VerticalAlignment="Center" Spacing="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="22" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter x:Name="IconContentPresenter"
+                                        Width="13"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="{x:Bind Icon}"
+                                        Grid.Column="0" />
+                                <StackPanel VerticalAlignment="Center" Spacing="1" Grid.Column="1">
                                     <TextBlock
                                         FontSize="{StaticResource PixevalContentFontSize}"
                                         Text="{x:Bind Name}"
+                                        TextTrimming="CharacterEllipsis"
                                         TextWrapping="WrapWholeWords" />
                                     <TextBlock
                                         FontSize="{StaticResource PixevalSubscriptFontSize}"
                                         Foreground="{ThemeResource PixevalTipTextForeground}"
                                         Text="{x:Bind TranslatedName}"
+                                        Visibility="{x:Bind TranslatedNameVisibility}"
+                                        TextTrimming="CharacterEllipsis"
                                         TextWrapping="WrapWholeWords" />
                                 </StackPanel>
                             </Grid>

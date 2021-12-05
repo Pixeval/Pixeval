@@ -20,20 +20,24 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using SQLite;
 
 namespace Pixeval.Database.Managers
 {
     public interface IPersistentManager<TEntry, TModel>
+        where TEntry: new()
     {
         SQLiteAsyncConnection Connection { get; }
 
         void Insert(TEntry t);
 
-        Task<IEnumerable<TModel>> QueryAsync(Func<TEntry, bool> predicate);
+        Task<IEnumerable<TModel>> QueryAsync(Func<AsyncTableQuery<TEntry>, AsyncTableQuery<TEntry>> action);
 
-        Task Delete(Func<TEntry, bool> predicate);
+        Task<IEnumerable<TModel>> SelectAsync(Expression<Func<TEntry, bool>>? predicate = null, int? count = null);
+
+        Task Delete(Expression<Func<TEntry, bool>> predicate);
 
         Task<IEnumerable<TModel>> EnumerateAsync();
     }
