@@ -14,10 +14,16 @@ jobs:
         runs-on: windows-latest
 
         steps:
+            - name: Setup .NET Core SDK
+              uses: actions/setup-dotnet@v1.9.0
+              with:
+                dotnet-version: '6.0.100'
+                include-prerelease: true
+  
             - name: Checkout
               uses: actions/checkout@v2
               with:
-                  fetch-depth: 0
+                fetch-depth: 0
                   
             - name: setup-msbuild
               uses: microsoft/setup-msbuild@v1
