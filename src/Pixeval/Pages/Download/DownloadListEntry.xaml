@@ -10,9 +10,12 @@
         <!--  ReSharper disable once Xaml.RedundantResource  -->
         <Visibility x:Key="AppBarButtonHasFlyoutChevronVisibility">Collapsed</Visibility>
     </UserControl.Resources>
+    <!--  The Transparent background makes the area that is not occupied by the child controls inside Grid click-able  -->
     <Grid Padding="10"
           HorizontalAlignment="Stretch"
-          VerticalAlignment="Center">
+          VerticalAlignment="Center"
+          Background="Transparent"
+          Tapped="BackgroundGrid_OnTapped">
         <Grid Margin="0,0">
             <Grid.RowDefinitions>
                 <RowDefinition />
@@ -103,7 +106,8 @@
                           VerticalAlignment="Center"
                           Icon="{ui:FontIcon Glyph=MoreE712}"
                           IsCompact="True"
-                          LabelPosition="Collapsed">
+                          LabelPosition="Collapsed"
+                          Tapped="MoreOptionButton_OnTapped">
                 <AppBarButton.Flyout>
                     <MenuFlyout>
                         <MenuFlyoutItem x:Uid="/DownloadListEntry/RedownloadItem"
@@ -117,9 +121,6 @@
                         <MenuFlyoutItem x:Uid="/DownloadListEntry/OpenDownloadLocationItem"
                                         Icon="{ui:FontIcon Glyph=OpenFolderHorizontalED25}"
                                         Tapped="OpenDownloadLocationItem_OnTapped" />
-                        <MenuFlyoutItem x:Uid="/DownloadListEntry/RemoveFromListItem"
-                                        Icon="{ui:FontIcon Glyph=RemoveFromECC9}"
-                                        Tapped="RemoveFromListItem_OnTapped" />
                         <MenuFlyoutItem x:Uid="/DownloadListEntry/GoToPageItem"
                                         Icon="{ui:FontIcon Glyph=SlideshowE786}"
                                         Tapped="GoToPageItem_OnTapped" />

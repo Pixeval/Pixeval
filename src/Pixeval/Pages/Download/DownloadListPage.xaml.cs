@@ -20,13 +20,17 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Dialogs;
 using Pixeval.Download;
+using Pixeval.Util.IO;
+using Pixeval.Util.Threading;
+using Pixeval.Util.UI;
 using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Download
@@ -60,22 +64,39 @@ namespace Pixeval.Pages.Download
 
         private void PauseAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            _viewModel.PauseAll();
+            _viewModel.PauseSelectedItems();
         }
 
         private void ResumeAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            _viewModel.ResumeAll();
+            _viewModel.ResumeSelectedItems();
         }
 
         private void CancelAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            _viewModel.CancelAll();
+            _viewModel.CancelSelectedItems();
         }
 
-        private void ClearDownloadListButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        private async void ClearDownloadListButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            _viewModel.ClearDownloadList(); // TODO
+            var dialogContent = new DownloadListPageDeleteTasksDialog();
+            var dialog = MessageDialogBuilder.Create().WithTitle(DownloadListPageResources.DeleteDownloadHistoryRecordsFormatted.Format(_viewModel.SelectedTasks.Count()))
+                .WithContent(dialogContent)
+                .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
+                .WithCloseButtonText(MessageContentDialogResources.CancelButtonContent)
+                .WithDefaultButton(ContentDialogButton.Primary)
+                .Build(this);
+            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+            {
+                if (dialogContent.DeleteLocalFiles)
+                {
+                    foreach (var downloadListEntryViewModel in _viewModel.SelectedTasks)
+                    {
+                        IOHelper.DeleteAsync(downloadListEntryViewModel.DownloadTask.Destination).Discard();
+                    }
+                }
+                await _viewModel.RemoveSelectedItemsAsync();
+            }
         }
 
         private void FilterAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -110,42 +131,20 @@ namespace Pixeval.Pages.Download
             _viewModel.ResetFilter(_viewModel.FilteredTasks);
         }
 
-        // Remarks: The VisualStateManager won't work I really don't know why
-        private void DownloadListPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            var greaterThan1000 = e.NewSize.Width > 1000;
-            //Grid.SetRowSpan(FunctionBarTitleTextBlock, greaterThan1000 ? 2 : 1);
-            //Grid.SetRow(FunctionBar, greaterThan1000 ? 2 : 3);
-            //Grid.SetRowSpan(FunctionBar, greaterThan1000 ? 2 : 1);
-            //FunctionBar.HorizontalAlignment = greaterThan1000 ? HorizontalAlignment.Right : HorizontalAlignment.Left;
-            //FunctionBar.Margin = new Thickness(0, greaterThan1000 ? 0 : 10, 0, 0);
-        }
-
-        private void DownloadListEntry_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            if (sender is DownloadListEntry entry)
-            {
-                entry.ViewModel.Selected = !entry.ViewModel.Selected;
-                if (entry.ViewModel.Selected)
-                    _viewModel.SelectedTasks.Add(entry.ViewModel);
-                else
-                    _viewModel.SelectedTasks.Remove(entry.ViewModel);
-                _viewModel.UpdateSelection();
-            }
-        }
-
         private void SelectAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            _viewModel.SelectedTasks.Clear();
-            _viewModel.SelectedTasks.AddRange(_viewModel.DownloadTasksView.Select(x => ((DownloadListEntryViewModel) x).DownloadTask));
-            _viewModel.SelectedTasks.ForEach(x => x.Selected = true);
+            _viewModel.DownloadTasks.ForEach(x => x.DownloadTask.Selected = true);
             _viewModel.UpdateSelection();
         }
 
         private void CancelSelectButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            _viewModel.SelectedTasks.ForEach(x => x.Selected = false);
-            _viewModel.SelectedTasks.Clear();
+            _viewModel.DownloadTasks.ForEach(x => x.DownloadTask.Selected = false);
+            _viewModel.UpdateSelection();
+        }
+
+        private void DownloadListEntry_OnSelected(object? sender, bool e)
+        {
             _viewModel.UpdateSelection();
         }
     }

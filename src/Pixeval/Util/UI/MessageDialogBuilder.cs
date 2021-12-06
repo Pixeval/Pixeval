@@ -22,7 +22,7 @@
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Pages.Misc;
+using Pixeval.Dialogs;
 
 namespace Pixeval.Util.UI
 {
@@ -100,6 +100,12 @@ namespace Pixeval.Util.UI
         public MessageDialogBuilder WithDefaultButton(ContentDialogButton button)
         {
             _contentDialog.DefaultButton = button;
+            return this;
+        }
+
+        public MessageDialogBuilder WithContent(object content)
+        {
+            _contentDialog.Content = content;
             return this;
         }
 

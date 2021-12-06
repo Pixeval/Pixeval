@@ -205,5 +205,17 @@ namespace Pixeval.Util.IO
             await FileIO.WriteBufferAsync(file, dataReader.ReadBuffer((uint) stream.Size));
             dataReader.DetachStream();
         }
+
+        public static async Task DeleteAsync(string path)
+        {
+            try
+            {
+                await using (new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None, 4096, FileOptions.DeleteOnClose)) { }
+            }
+            catch
+            {
+                // ignored
+            }
+        }
     }
 }

@@ -20,7 +20,7 @@
 
 #endregion
 
-namespace Pixeval.Pages.Misc
+namespace Pixeval.Dialogs
 {
     public sealed partial class MessageDialogContent
     {

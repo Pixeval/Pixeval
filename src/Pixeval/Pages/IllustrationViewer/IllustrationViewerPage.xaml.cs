@@ -41,6 +41,7 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
+using CommentRepliesBlock = Pixeval.Popups.CommentRepliesBlock;
 
 namespace Pixeval.Pages.IllustrationViewer
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -9,7 +10,6 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Download;
 using Pixeval.Pages.IllustrationViewer;
-using Pixeval.UserControls;
 using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Download
@@ -157,6 +157,14 @@ namespace Pixeval.Pages.Download
             set => SetValue(IsShowErrorDetailDialogItemEnabledProperty, value);
         }
 
+        private EventHandler<bool>? _selected;
+
+        public event EventHandler<bool> Selected
+        {
+            add => _selected += value;
+            remove => _selected -= value;
+        }
+
         public DownloadListEntry()
         {
             InitializeComponent();
@@ -233,8 +241,9 @@ namespace Pixeval.Pages.Download
             }
         }
 
-        private void ActionButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        private async void ActionButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
+            e.Handled = true;
             switch (ViewModel.CurrentState)
             {
                 case DownloadState.Created:
@@ -247,11 +256,7 @@ namespace Pixeval.Pages.Download
                 case DownloadState.Error:
                 case DownloadState.Cancelled:
                 case DownloadState.Completed:
-                    var startInfo = new ProcessStartInfo($"{ViewModel.Destination}")
-                    {
-                        Verb = "edit"
-                    };
-                    Process.Start(startInfo);
+                    await Launcher.LaunchUriAsync(new Uri(ViewModel.Destination));
                     break;
                 case DownloadState.Paused:
                     ViewModel.CancellationHandle.Resume();
@@ -277,12 +282,6 @@ namespace Pixeval.Pages.Download
             Process.Start("explorer.exe", $@"/select, ""{ViewModel.Destination}""");
         }
 
-        private void RemoveFromListItem_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            ViewModel.CancellationHandle.Cancel();
-            App.AppViewModel.DownloadManager.RemoveTask(ViewModel);
-        }
-
         private async void GoToPageItem_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             switch (ViewModel)
@@ -302,6 +301,17 @@ namespace Pixeval.Pages.Download
         {
             await MessageDialogBuilder.CreateAcknowledgement(App.AppViewModel.Window, DownloadListEntryResources.ErrorMessageDialogTitle, ViewModel.ErrorCause!.ToString())
                 .ShowAsync();
+        }
+
+        private void MoreOptionButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void BackgroundGrid_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            ViewModel.Selected = !ViewModel.Selected;
+            _selected?.Invoke(this, ViewModel.Selected);
         }
     }
 }

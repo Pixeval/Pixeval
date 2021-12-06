@@ -23,10 +23,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.WinUI.UI;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Pixeval.Database.Managers;
 using Pixeval.Download;
-using Pixeval.Misc;
 using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Download
@@ -67,20 +69,14 @@ namespace Pixeval.Pages.Download
             set => SetProperty(ref _filteredTasks, value);
         }
 
+        public IEnumerable<DownloadListEntryViewModel> SelectedTasks => DownloadTasks.Where(x => x.DownloadTask.Selected);
+
         private string _selectionLabel;
 
         public string SelectionLabel
         {
             get => _selectionLabel;
             set => SetProperty(ref _selectionLabel, value);
-        }
-
-        private ObservableCollection<ObservableDownloadTask> _selectedTasks;
-
-        public ObservableCollection<ObservableDownloadTask> SelectedTasks
-        {
-            get => _selectedTasks;
-            set => SetProperty(ref _selectedTasks, value);
         }
 
         private bool _isAnyEntrySelected;
@@ -96,48 +92,55 @@ namespace Pixeval.Pages.Download
             _downloadTasks = downloadTasks;
             _filteredTasks = new ObservableCollection<IDownloadTask>();
             _downloadTasksView = new AdvancedCollectionView(downloadTasks as IList);
-            _selectedTasks = new ObservableCollection<ObservableDownloadTask>();
             _selectionLabel = DownloadListPageResources.CancelSelectionButtonDefaultLabel;
         }
 
         public void UpdateSelection()
         {
-            var count = SelectedTasks.Count;
+            var count = SelectedTasks.Count();
             SelectionLabel = count == 0
                 ? DownloadListPageResources.CancelSelectionButtonDefaultLabel
                 : DownloadListPageResources.CancelSelectionButtonFormatted.Format(count);
             IsAnyEntrySelected = count != 0;
         }
 
-        public void PauseAll()
+        public void PauseSelectedItems()
         {
-            foreach (var downloadListEntryViewModel in _selectedTasks.Where(t => t.CurrentState == DownloadState.Running))
+            foreach (var downloadListEntryViewModel in SelectedTasks.Where(t => t.DownloadTask.CurrentState == DownloadState.Running))
             {
-                downloadListEntryViewModel.CancellationHandle.Pause();
+                downloadListEntryViewModel.DownloadTask.CancellationHandle.Pause();
             }
         }
 
-        public void ResumeAll()
+        public void ResumeSelectedItems()
         {
-            foreach (var downloadListEntryViewModel in _selectedTasks.Where(t => t.CurrentState == DownloadState.Paused))
+            foreach (var downloadListEntryViewModel in SelectedTasks.Where(t => t.DownloadTask.CurrentState == DownloadState.Paused))
             {
-                downloadListEntryViewModel.CancellationHandle.Resume();
+                downloadListEntryViewModel.DownloadTask.CancellationHandle.Resume();
             }
         }
 
-        public void CancelAll()
+        public void CancelSelectedItems()
         {
-            foreach (var downloadListEntryViewModel in _selectedTasks.Where(t => t.CurrentState is DownloadState.Queued or DownloadState.Created or DownloadState.Running or DownloadState.Paused))
+            foreach (var downloadListEntryViewModel in SelectedTasks.Where(t => t.DownloadTask.CurrentState is DownloadState.Queued or DownloadState.Created or DownloadState.Running or DownloadState.Paused))
             {
-                downloadListEntryViewModel.CancellationHandle.Cancel();
+                downloadListEntryViewModel.DownloadTask.CancellationHandle.Cancel();
             }
         }
 
-        public void ClearDownloadList()
+        public async Task RemoveSelectedItemsAsync()
         {
-            App.AppViewModel.DownloadManager.ClearTasks();
-            DownloadTasksView.Clear();
+            using var scope = App.AppViewModel.AppServicesScope;
+            var manager = await scope.ServiceProvider.GetRequiredService<Task<DownloadHistoryPersistentManager>>();
+            await Task.WhenAll(SelectedTasks.ToList().Select(task =>
+            {
+                App.AppViewModel.DownloadManager.RemoveTask(task.DownloadTask);
+                DownloadTasks.Remove(task);
+                return manager.DeleteAsync(m => m.Destination == task.DownloadTask.Destination);
+            }));
+
             DownloadTasksView.Refresh();
+            UpdateSelection();
         }
 
         public void FilterTask(string key)
@@ -175,22 +178,14 @@ namespace Pixeval.Pages.Download
                 _ => false
             };
             DownloadTasksView.Refresh();
-            SelectedTasks.RemoveAll(x =>
+            foreach (var downloadListEntryViewModel in DownloadTasks)
             {
-                if (!DownloadTasksView.Any(entry => Equals(((DownloadListEntryViewModel) entry).DownloadTask, x)))
+                if (!DownloadTasksView.Any(entry => downloadListEntryViewModel.DownloadTask.Equals(entry)))
                 {
-                    x.Selected = false;
-                    return false;
+                    downloadListEntryViewModel.DownloadTask.Selected = false;
                 }
-
-                return true;
-            });
+            }
             UpdateSelection();
-        }
-
-        public string? SubtitleText(DownloadListOption option)
-        {
-            return option.GetLocalizedResourceContent();
         }
     }
 }

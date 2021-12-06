@@ -98,7 +98,7 @@ namespace Pixeval.Pages.Download
 
         public static bool GetIsRedownloadItemEnabled(DownloadState currentState)
         {
-            return currentState is DownloadState.Completed;
+            return currentState is DownloadState.Completed or DownloadState.Error;
         }
 
         public static bool GetIsEntryCancelDownloadItemEnabled(DownloadState currentState)
@@ -113,9 +113,7 @@ namespace Pixeval.Pages.Download
 
         public static Brush GetActionButtonBackground(DownloadState currentState)
         {
-            return currentState is DownloadState.Running or DownloadState.Paused
-                ? (Brush) Application.Current.Resources["AccentFillColorDefaultBrush"]
-                : (Brush) Application.Current.Resources["ButtonBackground"];
+            return GetSelectedBackground(currentState is DownloadState.Running or DownloadState.Paused);
         }
 
         public static Brush GetSelectedBackground(bool selected)

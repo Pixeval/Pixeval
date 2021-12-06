@@ -68,6 +68,7 @@
       <None Remove="Pages\IllustrationViewer\PixivReplyEmojiListPage.xaml" />
       <None Remove="Pages\IllustrationViewer\PixivReplyStickerListPage.xaml" />
       <None Remove="Pages\Misc\BrowsingHistoryPage.xaml" />
+      <None Remove="Popups\DownloadListPageDeleteTasksPopup.xaml" />
       <None Remove="Popups\IllustrationResultFilterPopup.xaml" />
       <None Remove="Popups\IllustrationResultFilter\IllustrationResultFilterFunctionEntry.xaml" />
       <None Remove="Strings\zh-CN\Activations.resw" />
@@ -76,6 +77,7 @@
       <None Remove="Strings\zh-CN\CommentRepliesBlock.resw" />
       <None Remove="Strings\zh-CN\DownloadListEntry.resw" />
       <None Remove="Strings\zh-CN\DownloadListPage.resw" />
+      <None Remove="Strings\zh-CN\DownloadListPageDeleteTasksDialog.resw" />
       <None Remove="Strings\zh-CN\DownloadTask.resw" />
       <None Remove="Strings\zh-CN\IllustrationGrid.resw" />
       <None Remove="Strings\zh-CN\IllustrationGridCommandBar.resw" />
@@ -209,7 +211,7 @@
       </Page>
    </ItemGroup>
    <ItemGroup>
-      <Page Update="Pages\Misc\MessageDialogContent.xaml">
+      <Page Update="Dialogs\MessageDialogContent.xaml">
          <Generator>MSBuild:Compile</Generator>
       </Page>
    </ItemGroup>
@@ -234,6 +236,7 @@
       <PRIResource Include="Strings\zh-CN\CommentRepliesBlock.resw" />
       <PRIResource Include="Strings\zh-CN\DownloadListEntry.resw" />
       <PRIResource Include="Strings\zh-CN\DownloadListPage.resw" />
+      <PRIResource Include="Strings\zh-CN\DownloadListPageDeleteTasksDialog.resw" />
       <PRIResource Include="Strings\zh-CN\DownloadTask.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationGrid.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationGridCommandBar.resw" />
@@ -278,6 +281,9 @@
      <None Update="Pages\Capability\SearchResultsPage.xaml">
        <Generator>MSBuild:Compile</Generator>
      </None>
+     <Page Update="Dialogs\DownloadListPageDeleteTasksDialog.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
      <Page Update="Pages\Download\DownloadListEntry.xaml">
        <Generator>MSBuild:Compile</Generator>
      </Page>
