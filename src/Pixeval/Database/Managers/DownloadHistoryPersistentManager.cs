@@ -92,9 +92,11 @@ namespace Pixeval.Database.Managers
 
         private static ObservableDownloadTask ToObservableDownloadTask(DownloadHistoryEntry entry)
         {
-            return entry.IsUgoira
-                ? new LazyInitializedAnimatedIllustrationDownloadTask(entry) { ProgressPercentage = 100 }
-                : new LazyInitializedIllustrationDownloadTask(entry) { ProgressPercentage = 100 };
+            return entry.Type switch
+            {
+                DownloadItemType.Ugoira => new LazyInitializedAnimatedIllustrationDownloadTask(entry) { ProgressPercentage = 100 },
+                _ => new LazyInitializedIllustrationDownloadTask(entry) { ProgressPercentage = 100 }
+            };
         }
     }
 }

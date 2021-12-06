@@ -313,6 +313,17 @@ namespace Pixeval.Util.UI
             return await (await IOHelper.GetRandomAccessStreamFromByteArrayAsync(bytes)).GetSoftwareBitmapSourceAsync(true);
         }
 
+        public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(PickerLocationId suggestedStartLocation)
+        {
+            var folderPicker = new FolderPicker
+            {
+                SuggestedStartLocation = suggestedStartLocation,
+                FileTypeFilter = { "*" }
+            };
+            InitializeWithWindow.Initialize(folderPicker, App.AppViewModel.GetMainWindowHandle());
+            return folderPicker.PickSingleFolderAsync();
+        }
+
         public static IAsyncOperation<StorageFile?> OpenFileSavePickerAsync(string suggestedFileName, string fileTypeName, string fileTypeId)
         {
             var savePicker = new FileSavePicker
@@ -322,7 +333,7 @@ namespace Pixeval.Util.UI
                 {
                     [fileTypeId] = new List<string> { fileTypeId }
                 },
-                SuggestedFileName = suggestedFileName
+                SuggestedFileName = suggestedFileName,
             };
             InitializeWithWindow.Initialize(savePicker, App.AppViewModel.GetMainWindowHandle());
             return savePicker.PickSaveFileAsync();

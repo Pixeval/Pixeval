@@ -24,20 +24,18 @@ using System;
 using System.Linq;
 using Windows.System;
 using Windows.UI.Core;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Download;
 using Pixeval.Messages;
 using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
+using Pixeval.Util.IO;
 using Pixeval.Util.UI;
-using Pixeval.Utilities;
 
 namespace Pixeval.UserControls
 {
@@ -167,13 +165,12 @@ namespace Pixeval.UserControls
 
         private async void SaveContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            using var scope = App.AppViewModel.AppServicesScope;
-            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
-            foreach (var mangaIllustrationViewModel in sender.GetDataContext<IllustrationViewModel>().GetMangaIllustrationViewModels())
-            {
-                var task = await factory.CreateAsync(mangaIllustrationViewModel, App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
-                App.AppViewModel.DownloadManager.QueueTask(task);
-            }
+            await sender.GetDataContext<IllustrationViewModel>().SaveAsync();
+        }
+
+        private async void SaveAsContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            await sender.GetDataContext<IllustrationViewModel>().SaveAsAsync();
         }
 
         private async void OpenInBrowserContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -183,13 +180,6 @@ namespace Pixeval.UserControls
 
         private void AddToBookmarkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            throw new NotImplementedException();
-        }
-
-        private async void SaveAsContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            var viewModel = sender.GetDataContext<IllustrationViewModel>();
-            var file = await UIHelper.OpenFileSavePickerAsync(viewModel.Id, $"{viewModel.Illustration.GetImageFormat().RemoveSurrounding(".", string.Empty)} file", viewModel.Illustration.GetImageFormat());
             throw new NotImplementedException();
         }
 

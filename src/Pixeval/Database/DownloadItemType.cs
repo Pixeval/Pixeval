@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2021 Pixeval/DatabaseHelper.cs
+// Copyright (c) 2021 Pixeval/DownloadItemType.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,17 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Threading.Tasks;
-using SQLite;
+namespace Pixeval.Database;
 
-namespace Pixeval.Util
+public enum DownloadItemType
 {
-    public static class DatabaseHelper
-    {
-        public static async Task<AsyncTableQuery<T>> GetOrCreateTableAsync<T>(this SQLiteAsyncConnection connection) where T : new()
-        {
-            await connection.CreateTableAsync<T>();
-            return connection.Table<T>();
-        }
-    }
+    Manga, Ugoira, Illustration
 }

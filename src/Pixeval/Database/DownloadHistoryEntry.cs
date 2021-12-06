@@ -27,12 +27,12 @@ namespace Pixeval.Database
     [Table("DownloadHistories")]
     public class DownloadHistoryEntry : ObservableObject
     {
-        public DownloadHistoryEntry(DownloadState state, string? errorCause, string? destination, bool isUgoira, string? id, string? title, string? description, string? url, string? thumbnail)
+        public DownloadHistoryEntry(DownloadState state, string? errorCause, string? destination, DownloadItemType type, string? id, string? title, string? description, string? url, string? thumbnail)
         {
             _state = state;
             _errorCause = errorCause;
             Destination = destination;
-            IsUgoira = isUgoira;
+            Type = type;
             Id = id;
             Title = title;
             Description = description;
@@ -51,7 +51,7 @@ namespace Pixeval.Database
         public string? Destination { get; set; }
 
         [Column("type")]
-        public bool IsUgoira { get; set; }
+        public DownloadItemType Type { get; set; }
 
         private DownloadState _state;
 

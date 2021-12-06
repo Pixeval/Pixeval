@@ -61,7 +61,7 @@ namespace Pixeval.Download
                     var ugoiraMetadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(context.Id);
                     if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Medium is { } url)
                     {
-                        var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path, true, context.Id, context.Illustration.Title, context.Illustration.User?.Name, url, context.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
+                        var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path, DownloadItemType.Ugoira, context.Id, context.Illustration.Title, context.Illustration.User?.Name, url, context.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
                         return new AnimatedIllustrationDownloadTask(downloadHistoryEntry, context, ugoiraMetadata);
                     }
 
@@ -69,7 +69,7 @@ namespace Pixeval.Download
                 }),
                 false => Functions.Block(() =>
                 {
-                    var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path, false, context.Id, context.Illustration.Title, context.Illustration.User?.Name, context.Illustration.GetOriginalUrl()!, context.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
+                    var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path, context.IsManga ? DownloadItemType.Manga : DownloadItemType.Illustration, context.Id, context.Illustration.Title, context.Illustration.User?.Name, context.Illustration.GetOriginalUrl()!, context.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
                     return new IllustrationDownloadTask(downloadHistoryEntry, context);
                 })
             };
@@ -81,7 +81,13 @@ namespace Pixeval.Download
 
         public Task<ObservableDownloadTask> TryCreateIntrinsicAsync(IllustrationViewModel context, IRandomAccessStream stream, string rawPath)
         {
-            var entry = new DownloadHistoryEntry(DownloadState.Completed, null, rawPath, false, context.Id,
+            var type = context switch
+            {
+                { IsUgoira: true } => DownloadItemType.Ugoira,
+                { IsManga: true } => DownloadItemType.Manga,
+                _ => DownloadItemType.Illustration
+            };
+            var entry = new DownloadHistoryEntry(DownloadState.Completed, null, rawPath, type, context.Id,
                 context.Illustration.Title, context.Illustration.User?.Name, null, null);
             return Task.FromResult<ObservableDownloadTask>(new IntrinsicIllustrationDownloadTask(entry, context, stream));
         }

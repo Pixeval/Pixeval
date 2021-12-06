@@ -324,20 +324,14 @@ namespace Pixeval.Pages.IllustrationViewer
             UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationAppUri(Current.IllustrationViewModel.Id).ToString()));
         }
 
-        private void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        private async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
         {
-            throw new NotImplementedException();
+            await Current.IllustrationViewModel.SaveAsAsync();
         }
 
         private async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
         {
-            using var scope = App.AppViewModel.AppServicesScope;
-            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
-            foreach (var mangaIllustrationViewModel in Current.IllustrationViewModel.GetMangaIllustrationViewModels())
-            {
-                var downloadTask = await factory.CreateAsync(mangaIllustrationViewModel, App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
-                App.AppViewModel.DownloadManager.QueueTask(downloadTask);
-            }
+            await Current.IllustrationViewModel.SaveAsync();
         }
 
         private void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

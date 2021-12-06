@@ -26,9 +26,15 @@ using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IO;
+using Pixeval.Download;
+using Pixeval.UserControls;
 using Pixeval.Util.Threading;
+using Pixeval.Util.UI;
 using Pixeval.Utilities;
 
 namespace Pixeval.Util.IO
@@ -151,6 +157,45 @@ namespace Pixeval.Util.IO
             catch (Exception e)
             {
                 return Result<Stream>.OfFailure(e);
+            }
+        }
+
+        public static async Task SaveAsync(this IllustrationViewModel viewModel)
+        {
+            using var scope = App.AppViewModel.AppServicesScope;
+            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
+            foreach (var mangaIllustrationViewModel in viewModel.GetMangaIllustrationViewModels())
+            {
+                var downloadTask = await factory.CreateAsync(mangaIllustrationViewModel, App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
+                App.AppViewModel.DownloadManager.QueueTask(downloadTask);
+            }
+        }
+
+        public static async Task SaveAsAsync(this IllustrationViewModel viewModel)
+        {
+            IStorageItem? item = viewModel.IsManga
+                ? await UIHelper.OpenFolderPickerAsync(PickerLocationId.PicturesLibrary)
+                : await UIHelper.OpenFileSavePickerAsync(viewModel.Id, $"{viewModel.Illustration.GetImageFormat().RemoveSurrounding(".", string.Empty)} file", viewModel.Illustration.GetImageFormat());
+
+            using var scope = App.AppViewModel.AppServicesScope;
+            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
+            switch (item)
+            {
+                case StorageFile file:
+                    // the file save picker will create a file automatically, and we choose to create one
+                    // manually instead of using that file
+                    await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                    var task = await factory.CreateAsync(viewModel, file.Path);
+                    App.AppViewModel.DownloadManager.QueueTask(task);
+                    break;
+                case StorageFolder folder:
+                    foreach (var mangaIllustrationViewModel in viewModel.GetMangaIllustrationViewModels())
+                    {
+                        var mTask = await factory.CreateAsync(mangaIllustrationViewModel, Path.Combine(folder.Path, $"{viewModel.Id}_{mangaIllustrationViewModel.MangaIndex}"));
+                        App.AppViewModel.DownloadManager.QueueTask(mTask);
+                    }
+
+                    break;
             }
         }
     }
