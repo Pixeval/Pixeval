@@ -78,6 +78,7 @@ namespace Pixeval.Download
         }
 
         private bool _selected;
+
         public bool Selected
         {
             get => _selected;
