@@ -120,8 +120,17 @@
   <data name="CancelAllButton.Content" xml:space="preserve">
     <value>取消所有任务</value>
   </data>
+  <data name="CancelSelectionButtonDefaultLabel" xml:space="preserve">
+    <value>取消选择</value>
+  </data>
+  <data name="CancelSelectionButtonFormatted" xml:space="preserve">
+    <value>取消选择 ({0})</value>
+  </data>
   <data name="ClearDownloadListButton.Content" xml:space="preserve">
     <value>清空下载列表</value>
+  </data>
+  <data name="DeleteButton.Label" xml:space="preserve">
+    <value>删除</value>
   </data>
   <data name="DownloadListOptionAllQueued" xml:space="preserve">
     <value>所有下载任务</value>
@@ -156,7 +165,19 @@
   <data name="PauseAllButton.Content" xml:space="preserve">
     <value>暂停所有任务</value>
   </data>
+  <data name="PauseButton.Label" xml:space="preserve">
+    <value>暂停</value>
+  </data>
   <data name="ResumeAllButton.Content" xml:space="preserve">
     <value>恢复所有任务</value>
+  </data>
+  <data name="ResumeButton.Label" xml:space="preserve">
+    <value>恢复</value>
+  </data>
+  <data name="SelectAllButton.Label" xml:space="preserve">
+    <value>全选</value>
+  </data>
+  <data name="StopButton.Label" xml:space="preserve">
+    <value>取消下载</value>
   </data>
 </root>

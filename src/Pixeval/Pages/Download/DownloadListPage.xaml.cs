@@ -75,19 +75,25 @@ namespace Pixeval.Pages.Download
 
         private void ClearDownloadListButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            _viewModel.ClearDownloadList();
+            _viewModel.ClearDownloadList(); // TODO
         }
 
         private void FilterAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-            _viewModel.FilterTask(sender.Text);
+            if (sender.Text.IsNotNullOrBlank())
+                _viewModel.FilterTask(sender.Text);
+            else
+            {
+                _viewModel.ResetFilter();
+                _viewModel.CurrentOption = DownloadListOption.AllQueued;
+            }
         }
 
         private bool _queriedBySuggestion;
 
         private void FilterAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
-            sender.Text = string.Empty;
+            sender.Text = ((IDownloadTask)args.SelectedItem).Title;
             _viewModel.CurrentOption = DownloadListOption.CustomSearch;
             _viewModel.ResetFilter(Enumerates.EnumerableOf((IDownloadTask) args.SelectedItem));
             _queriedBySuggestion = true;
@@ -100,7 +106,6 @@ namespace Pixeval.Pages.Download
                 _queriedBySuggestion = false;
                 return;
             }
-            sender.Text = string.Empty;
             _viewModel.CurrentOption = DownloadListOption.CustomSearch;
             _viewModel.ResetFilter(_viewModel.FilteredTasks);
         }
@@ -109,11 +114,39 @@ namespace Pixeval.Pages.Download
         private void DownloadListPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             var greaterThan1000 = e.NewSize.Width > 1000;
-            Grid.SetRowSpan(FunctionBarTitleTextBlock, greaterThan1000 ? 2 : 1);
-            Grid.SetRow(FunctionBar, greaterThan1000 ? 2 : 3);
-            Grid.SetRowSpan(FunctionBar, greaterThan1000 ? 2 : 1);
-            FunctionBar.HorizontalAlignment = greaterThan1000 ? HorizontalAlignment.Right : HorizontalAlignment.Left;
-            FunctionBar.Margin = new Thickness(0, greaterThan1000 ? 0 : 10, 0, 0);
+            //Grid.SetRowSpan(FunctionBarTitleTextBlock, greaterThan1000 ? 2 : 1);
+            //Grid.SetRow(FunctionBar, greaterThan1000 ? 2 : 3);
+            //Grid.SetRowSpan(FunctionBar, greaterThan1000 ? 2 : 1);
+            //FunctionBar.HorizontalAlignment = greaterThan1000 ? HorizontalAlignment.Right : HorizontalAlignment.Left;
+            //FunctionBar.Margin = new Thickness(0, greaterThan1000 ? 0 : 10, 0, 0);
+        }
+
+        private void DownloadListEntry_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (sender is DownloadListEntry entry)
+            {
+                entry.ViewModel.Selected = !entry.ViewModel.Selected;
+                if (entry.ViewModel.Selected)
+                    _viewModel.SelectedTasks.Add(entry.ViewModel);
+                else
+                    _viewModel.SelectedTasks.Remove(entry.ViewModel);
+                _viewModel.UpdateSelection();
+            }
+        }
+
+        private void SelectAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            _viewModel.SelectedTasks.Clear();
+            _viewModel.SelectedTasks.AddRange(_viewModel.DownloadTasksView.Select(x => ((DownloadListEntryViewModel) x).DownloadTask));
+            _viewModel.SelectedTasks.ForEach(x => x.Selected = true);
+            _viewModel.UpdateSelection();
+        }
+
+        private void CancelSelectButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            _viewModel.SelectedTasks.ForEach(x => x.Selected = false);
+            _viewModel.SelectedTasks.Clear();
+            _viewModel.UpdateSelection();
         }
     }
 }

@@ -77,6 +77,13 @@ namespace Pixeval.Download
             set => SetProperty(ref _progressPercentage, value);
         }
 
+        private bool _selected;
+        public bool Selected
+        {
+            get => _selected;
+            set => SetProperty(ref _selected, value);
+        }
+
         public virtual void DownloadStarting(DownloadStartingEventArgs args)
         {
         }

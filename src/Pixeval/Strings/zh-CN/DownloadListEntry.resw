@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ActionButtonContentOpen" xml:space="preserve">
+    <value>打开</value>
+  </data>
   <data name="ActionButtonContentPause" xml:space="preserve">
     <value>暂停</value>
   </data>
@@ -164,6 +167,9 @@
   </data>
   <data name="OpenDownloadLocationItem.Text" xml:space="preserve">
     <value>打开下载位置</value>
+  </data>
+  <data name="RedownloadItem.Text" xml:space="preserve">
+    <value>重新下载</value>
   </data>
   <data name="RemoveFromListItem.Text" xml:space="preserve">
     <value>从下载队列移除</value>

@@ -318,7 +318,9 @@ namespace Pixeval.AppManagement
                     ConfigurationContainer.Values[nameof(AppSetting.SearchStartDate)].CastOrThrow<DateTimeOffset>(),
                     ConfigurationContainer.Values[nameof(AppSetting.SearchEndDate)].CastOrThrow<DateTimeOffset>(),
                     ConfigurationContainer.Values[nameof(AppSetting.DefaultDownloadPathMacro)].CastOrThrow<string>(),
-                    ConfigurationContainer.Values[nameof(AppSetting.OverwriteDownloadedFile)].CastOrThrow<bool>());
+                    ConfigurationContainer.Values[nameof(AppSetting.OverwriteDownloadedFile)].CastOrThrow<bool>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.MaximumDownloadHistoryRecords)].CastOrThrow<int>()
+                    );
             }
             catch
             {

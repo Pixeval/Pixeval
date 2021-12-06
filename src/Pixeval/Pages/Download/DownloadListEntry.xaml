@@ -106,6 +106,10 @@
                           LabelPosition="Collapsed">
                 <AppBarButton.Flyout>
                     <MenuFlyout>
+                        <MenuFlyoutItem x:Uid="/DownloadListEntry/RedownloadItem"
+                                        Icon="{ui:FontIcon Glyph=DownloadE896}"
+                                        IsEnabled="{x:Bind IsRedownloadItemEnabled, Mode=OneWay}"
+                                        Tapped="RedownloadItem_OnTapped" />
                         <MenuFlyoutItem x:Uid="/DownloadListEntry/CancelDownloadItem"
                                         Icon="{ui:FontIcon Glyph=CancelE711}"
                                         IsEnabled="{x:Bind IsCancelItemEnabled, Mode=OneWay}"

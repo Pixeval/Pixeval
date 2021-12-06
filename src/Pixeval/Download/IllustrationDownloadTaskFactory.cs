@@ -69,6 +69,7 @@ namespace Pixeval.Download
                 })
             };
             
+            // TODO Check for unique
             await manager.InsertAsync(task.DatabaseEntry);
             return task;
         }
