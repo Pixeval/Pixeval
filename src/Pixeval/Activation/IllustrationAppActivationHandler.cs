@@ -35,6 +35,8 @@ namespace Pixeval.Activation
 {
     public class IllustrationAppActivationHandler : IAppActivationHandler
     {
+        public string ActivationFragment => "illust";
+
         public Task Execute(string id)
         {
             WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(App.AppViewModel.AppWindowRootFrame));

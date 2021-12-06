@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
@@ -114,6 +115,11 @@ namespace Pixeval.AppManagement
         public Task ClearAsync()
         {
             return _deleter is not null ? _deleter(Self) : Self.ClearDirectoryAsync();
+        }
+
+        public string Resolve(string path)
+        {
+            return Path.Combine(Self.Path, path);
         }
     }
 }

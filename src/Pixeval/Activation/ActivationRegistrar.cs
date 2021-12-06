@@ -21,6 +21,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
 using Windows.ApplicationModel.Activation;
 using Microsoft.Windows.AppLifecycle;
 
@@ -28,18 +29,18 @@ namespace Pixeval.Activation
 {
     public static class ActivationRegistrar
     {
-        public const string IllustrationActivationFragment = "illust";
-
-        public static readonly Dictionary<string, IAppActivationHandler> FeatureHandlers = new();
+        public static readonly List<IAppActivationHandler> FeatureHandlers = new();
 
         static ActivationRegistrar()
         {
-            FeatureHandlers[IllustrationActivationFragment] = new IllustrationAppActivationHandler();
+            FeatureHandlers.Add(new IllustrationAppActivationHandler());
         }
 
         public static void Dispatch(AppActivationArguments args)
         {
-            if (args.Kind == ExtendedActivationKind.Protocol && args.Data is IProtocolActivatedEventArgs { Uri: var activationUri } && FeatureHandlers.TryGetValue(activationUri.Host, out var handler))
+            if (args.Kind == ExtendedActivationKind.Protocol &&
+                args.Data is IProtocolActivatedEventArgs { Uri: var activationUri } &&
+                FeatureHandlers.FirstOrDefault(f => f.ActivationFragment == activationUri.Host) is { } handler)
             {
                 handler.Execute(activationUri.PathAndQuery[1..]);
             }

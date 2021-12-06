@@ -28,8 +28,6 @@ namespace Pixeval.Download
 
         public ReenterableAwaiter<bool> DeferralAwaiter => _deferral.Signal;
 
-        public bool Cancelled { get; set; }
-
         public DownloadStartingEventArgs()
         {
             _deferral = new DownloadStartingDeferral();

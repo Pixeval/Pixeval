@@ -30,19 +30,39 @@ namespace Pixeval.Database.Managers
 {
     public class DownloadHistoryPersistentManager : IPersistentManager<DownloadHistoryEntry, ObservableDownloadTask>
     {
-        public DownloadHistoryPersistentManager(SQLiteAsyncConnection connection)
+        public SQLiteAsyncConnection Connection { get; init; } = null!;
+
+        private int _maximumRecords = 100;
+
+        public int MaximumRecords
         {
-            Connection = connection;
-            Connection.CreateTableAsync<DownloadHistoryEntry>().Wait();
+            get => _maximumRecords;
+            set
+            {
+                _maximumRecords = value;
+                Purge(value);
+            }
         }
 
-        public SQLiteAsyncConnection Connection { get; }
-
-        public void Insert(DownloadHistoryEntry t)
+        private async void Purge(int limit)
         {
-            Connection.InsertAsync(t);
+            var list = (await EnumerateAsync()).ToList();
+            if (list.Count > limit)
+            {
+                var last = list.Take(^limit..).Select(e => e.Destination).ToHashSet();
+                await DeleteAsync(e => !last.Contains(e.Destination!));
+            }
         }
 
+        public async Task InsertAsync(DownloadHistoryEntry t)
+        {
+            if (await Connection.Table<DownloadHistoryEntry>().CountAsync() > MaximumRecords)
+            {
+                Purge(MaximumRecords);
+            }
+            await Connection.InsertAsync(t);
+            t.PropertyChanged += (_, _) => Connection.UpdateAsync(t);
+        }
 
         public async Task<IEnumerable<ObservableDownloadTask>> QueryAsync(Func<AsyncTableQuery<DownloadHistoryEntry>, AsyncTableQuery<DownloadHistoryEntry>> action)
         {
@@ -55,13 +75,13 @@ namespace Pixeval.Database.Managers
         {
             var query = Connection.Table<DownloadHistoryEntry>();
             if (count != null)
-                query = query.Take((int)count);
+                query = query.Take((int) count);
             if (predicate != null)
                 query = query.Where(predicate);
             return (await query.ToListAsync()).Select(ToObservableDownloadTask);
         }
 
-        public Task Delete(Expression<Func<DownloadHistoryEntry, bool>> predicate)
+        public Task DeleteAsync(Expression<Func<DownloadHistoryEntry, bool>> predicate)
         {
             return Connection.Table<DownloadHistoryEntry>().DeleteAsync(predicate);
         }
@@ -73,18 +93,15 @@ namespace Pixeval.Database.Managers
 
         private static ObservableDownloadTask ToObservableDownloadTask(DownloadHistoryEntry entry)
         {
-            return entry.Type switch
-            {
-                DownloadHistoryType.Illustration => new LazyInitializedIllustrationDownloadTask(entry.Id!, entry.Title, entry.Description, entry.Url!, entry.Destination!, entry.Thumbnail, entry.UniqueCacheId, entry.FinalState)
+            return entry.IsUgoira
+                ? new LazyInitializedAnimatedIllustrationDownloadTask(entry)
                 {
-                    ProgressPercentage = 100,
-                },
-                DownloadHistoryType.AnimatedIllustration => new LazyInitializedAnimatedIllustrationDownloadTask(entry.Id!, entry.Title, entry.Description, entry.Url!, entry.Destination!, entry.Thumbnail, entry.UniqueCacheId, entry.FinalState)
+                    ProgressPercentage = 100
+                }
+                : new LazyInitializedIllustrationDownloadTask(entry)
                 {
-                    ProgressPercentage = 100,
-                },
-                _ => throw new ArgumentOutOfRangeException()
-            };
+                    ProgressPercentage = 100
+                };
         }
     }
 }

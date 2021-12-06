@@ -45,7 +45,6 @@ using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Messages;
 using Pixeval.Misc;
-using Pixeval.Options;
 using Pixeval.UserControls;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
@@ -66,10 +65,9 @@ namespace Pixeval
             return Host.CreateDefaultBuilder()
                 .ConfigureServices(services =>
                     services.AddSingleton<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>, IllustrationDownloadTaskFactory>()
-                        .AddSingleton(new SQLiteAsyncConnection(Windows.Storage.ApplicationData.Current.LocalFolder.Path + "//PixevalData.db", SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex | SQLiteOpenFlags.ReadWrite))
-                        .AddSingleton<IPersistentManager<DownloadHistoryEntry, ObservableDownloadTask>, DownloadHistoryPersistentManager>()
-                        .AddSingleton<IPersistentManager<SearchHistoryEntry, SearchHistoryEntry>, SearchHistoryPersistentManager>()
-                        );
+                        .AddSingleton(new SQLiteAsyncConnection(AppKnownFolders.Local.Resolve("PixevalData.db"), SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex | SQLiteOpenFlags.ReadWrite))
+                        .AddSingleton(provider => IPersistentManager<DownloadHistoryEntry, ObservableDownloadTask>.CreateAsync<DownloadHistoryPersistentManager>(provider.GetRequiredService<SQLiteAsyncConnection>()))
+                        .AddSingleton(provider => IPersistentManager<SearchHistoryEntry, SearchHistoryEntry>.CreateAsync<SearchHistoryPersistentManager>(provider.GetRequiredService<SQLiteAsyncConnection>())));
         }
 
         public AppViewModel(App app)
@@ -125,16 +123,6 @@ namespace Pixeval
                 ApplicationTheme.Light => ElementTheme.Light,
                 ApplicationTheme.SystemDefault => ElementTheme.Default,
                 _ => throw new ArgumentOutOfRangeException(nameof(theme), theme, null)
-            };
-        }
-
-        public Size DesiredThumbnailSize()
-        {
-            return App.AppViewModel.AppSetting.ThumbnailDirection switch
-            {
-                ThumbnailDirection.Landscape => new Size(250, 180),
-                ThumbnailDirection.Portrait => new Size(180, 250),
-                _ => throw new ArgumentOutOfRangeException()
             };
         }
 

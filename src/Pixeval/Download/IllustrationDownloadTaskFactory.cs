@@ -22,9 +22,14 @@
 
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
+using Microsoft.Extensions.DependencyInjection;
+using Pixeval.Database;
+using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
+using Pixeval.Options;
 using Pixeval.UserControls;
 using Pixeval.Util;
+using Pixeval.Util.IO;
 using Pixeval.Utilities;
 
 namespace Pixeval.Download
@@ -40,27 +45,39 @@ namespace Pixeval.Download
 
         public async Task<ObservableDownloadTask> CreateAsync(IllustrationViewModel context, string rawPath)
         {
-            if (context.Illustration.IsUgoira())
+            using var scope = App.AppViewModel.AppServicesScope;
+            var manager = await scope.ServiceProvider.GetRequiredService<Task<DownloadHistoryPersistentManager>>();
+            ObservableDownloadTask task = context.Illustration.IsUgoira() switch
             {
-                var ugoiraMetadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(context.Id);
-                return ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Medium is { } url
-                    ? new AnimatedIllustrationDownloadTask(context, url, PathParser.Reduce(rawPath, context), ugoiraMetadata)
-                    : throw new DownloadTaskInitializationException(DownloadTaskResources.GifSourceUrlNotFoundFormatted.Format(context.Id));
-            }
+                true => await Functions.Block(async () =>
+                {
+                    var ugoiraMetadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(context.Id);
+                    if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Medium is { } url)
+                    {
+                        var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, IOHelper.NormalizePath(PathParser.Reduce(rawPath, context)), true,
+                            context.Id, context.Illustration.Title, context.Illustration.User?.Name, url, context.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
+                        return new AnimatedIllustrationDownloadTask(downloadHistoryEntry, context, ugoiraMetadata);
+                    }
 
-            return new IllustrationDownloadTask(context, PathParser.Reduce(rawPath, context));
+                    throw new DownloadTaskInitializationException(DownloadTaskResources.GifSourceUrlNotFoundFormatted.Format(context.Id));
+                }),
+                false => Functions.Block(() =>
+                {
+                    var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, IOHelper.NormalizePath(PathParser.Reduce(rawPath, context)), false,
+                        context.Id, context.Illustration.Title, context.Illustration.User?.Name, context.Illustration.GetOriginalUrl()!, context.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
+                    return new IllustrationDownloadTask(downloadHistoryEntry, context);
+                })
+            };
+            
+            await manager.InsertAsync(task.DatabaseEntry);
+            return task;
         }
 
-        /// <summary>
-        /// Try to create an <see cref="IntrinsicIllustrationDownloadTask"/>, if the context is of type 'ugoira' or
-        /// the <paramref name="stream"/> is unreadable, it decays to <see cref="AnimatedIllustrationDownloadTask"/>
-        /// or <see cref="IllustrationDownloadTask"/>
-        /// </summary>
         public Task<ObservableDownloadTask> TryCreateIntrinsicAsync(IllustrationViewModel context, IRandomAccessStream stream, string rawPath)
         {
-            return context.Illustration.IsUgoira() || !stream.CanRead 
-                ? CreateAsync(context, rawPath) 
-                : Task.FromResult<ObservableDownloadTask>(new IntrinsicIllustrationDownloadTask(context, stream, rawPath));
+            var entry = new DownloadHistoryEntry(DownloadState.Completed, null, rawPath, false, context.Id,
+                context.Illustration.Title, context.Illustration.User?.Name, null, null);
+            return Task.FromResult<ObservableDownloadTask>(new IntrinsicIllustrationDownloadTask(entry, context, stream));
         }
     }
 }

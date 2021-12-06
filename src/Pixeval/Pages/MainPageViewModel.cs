@@ -22,12 +22,12 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net;
-using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Messages;
 using Pixeval.Misc;
@@ -42,7 +42,6 @@ namespace Pixeval.Pages
     public class MainPageViewModel : AutoActivateObservableRecipient, IRecipient<LoginCompletedMessage>
     {
         private ImageSource? _avatar;
-        private readonly ObservableCollection<SuggestionModel> _suggestions = new();
 
         public double MainPageRootNavigationViewOpenPanelLength => 250;
 
@@ -65,10 +64,7 @@ namespace Pixeval.Pages
             set => SetProperty(ref _avatar, value);
         }
 
-        public ObservableCollection<SuggestionModel> Suggestions
-        {
-            get => _suggestions;
-        }
+        public ObservableCollection<SuggestionModel> Suggestions { get; } = new();
 
         public void Receive(LoginCompletedMessage message)
         {
@@ -88,10 +84,10 @@ namespace Pixeval.Pages
                 .GetBitmapImageAsync(true);
         }
 
-        public async void AppendSearchHistory()
+        public async Task AppendSearchHistoryAsync()
         {
             using var scope = App.AppViewModel.AppServicesScope;
-            var manager = scope.ServiceProvider.GetRequiredService<IPersistentManager<SearchHistoryEntry, SearchHistoryEntry>>();
+            var manager = await scope.ServiceProvider.GetRequiredService<Task<SearchHistoryPersistentManager>>();
             var histories = (await manager.QueryAsync(query =>
             {
                 query = query.OrderByDescending(x => x.Time);
@@ -99,7 +95,7 @@ namespace Pixeval.Pages
                 return query;
             })).SelectNotNull(SuggestionModel.FromHistory);
 
-            _suggestions.ReplaceByUpdate(histories);
+            Suggestions.ReplaceByUpdate(histories);
         }
     }
 }

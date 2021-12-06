@@ -35,7 +35,6 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
-using Pixeval.CoreApi.Model;
 using Pixeval.Download;
 using Pixeval.Messages;
 using Pixeval.Pages.Capability;
@@ -45,9 +44,6 @@ using Pixeval.UserControls;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Microsoft.Extensions.DependencyInjection;
@@ -76,7 +72,7 @@ namespace Pixeval.Pages
 
         public override void OnPageActivated(NavigationEventArgs e)
         {
-            // little dirty tricks, the order of the menu items is the same as the order of the fields in MainPageTabItem
+            // dirty trick, the order of the menu items is the same as the order of the fields in MainPageTabItem
             // since enums are basically integers, we just need a cast to transform it to the correct offset.
             ((NavigationViewItem) MainPageRootNavigationView.MenuItems[(int) App.AppViewModel.AppSetting.DefaultSelectedTabItem]).IsSelected = true;
 
@@ -88,7 +84,7 @@ namespace Pixeval.Pages
 
             WeakReferenceMessenger.Default.Register<MainPage, MainPageFrameSetConnectedAnimationTargetMessage>(this, (_, message) => _connectedAnimationTarget = message.Sender);
             WeakReferenceMessenger.Default.Register<MainPage, NavigatingBackToMainPageMessage>(this, (_, message) => _illustrationViewerContent = message.IllustrationViewModel);
-            WeakReferenceMessenger.Default.Register<MainPage, IllustrationTagClickedMessage>(this, (_, message) => PerformSearch(message.Tag));
+            WeakReferenceMessenger.Default.Register<MainPage, IllustrationTagClickedMessage>(this, async (_, message) => await PerformSearchAsync(message.Tag));
 
             // Connected animation to the element located in MainPage
             if (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation") is { } animation)
@@ -129,17 +125,17 @@ namespace Pixeval.Pages
             GC.Collect();
         }
         
-        private void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
+        private async void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            var suggestBox = ((AutoSuggestBox)sender);
+            var suggestBox = (AutoSuggestBox) sender;
             suggestBox.IsSuggestionListOpen = true;
 
             if (!_viewModel.Suggestions.Any()) 
-                _viewModel.AppendSearchHistory(); // Show search history
+                await _viewModel.AppendSearchHistoryAsync(); // Show search history
         }
 
         // 搜索并跳转至搜索结果
-        private void KeywordAutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        private async void KeywordAutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             if (args.QueryText.IsNullOrBlank())
             {
@@ -150,7 +146,7 @@ namespace Pixeval.Pages
                 return;
             }
 
-            PerformSearch(args.QueryText);
+            await PerformSearchAsync(args.QueryText);
         }
 
         private void KeywordAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
@@ -173,17 +169,16 @@ namespace Pixeval.Pages
                 items.Clear();
 
                 // Show search history
-                _viewModel.AppendSearchHistory();
+                await _viewModel.AppendSearchHistoryAsync();
             }
         }
 
-        private void PerformSearch(string text)
+        private async Task PerformSearchAsync(string text)
         {
             using (var scope = App.AppViewModel.AppServicesScope)
             {
-                var manager = scope.ServiceProvider.GetRequiredService<IPersistentManager<SearchHistoryEntry, SearchHistoryEntry>>();
-
-                manager.Insert(new SearchHistoryEntry
+                var manager = await scope.ServiceProvider.GetRequiredService<Task<SearchHistoryPersistentManager>>();
+                await manager.InsertAsync(new SearchHistoryEntry
                 {
                     Value = text,
                     Time = DateTime.Now,

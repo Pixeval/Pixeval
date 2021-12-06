@@ -19,6 +19,7 @@
 #endregion
 
 using Windows.Storage.Streams;
+using Pixeval.Database;
 using Pixeval.UserControls;
 using Pixeval.Util.IO;
 
@@ -31,15 +32,15 @@ namespace Pixeval.Download
         /// <summary>
         /// The disposal of <paramref name="imageStream"/> is not handled
         /// </summary>
-        public IntrinsicIllustrationDownloadTask(IllustrationViewModel illustrationViewModel, IRandomAccessStream imageStream, string destination)
-            : base(illustrationViewModel, destination)
+        public IntrinsicIllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationViewModel illustrationViewModel, IRandomAccessStream imageStream)
+            : base(entry, illustrationViewModel)
         {
             Stream = imageStream;
         }
 
         public override async void DownloadStarting(DownloadStartingEventArgs args)
         {
-            args.Cancelled = true;
+            args.GetDeferral().Complete(false);
             await IOHelper.CreateAndWriteToFileAsync(Stream, Destination);
         }
     }

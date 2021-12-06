@@ -4,10 +4,6 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Database;
 using Pixeval.Util.UI;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixeval.Pages
 {
@@ -27,10 +23,7 @@ namespace Pixeval.Pages
             }
         }
 
-        public Visibility TranslatedNameVisibility
-        {
-            get => TranslatedName == null ? Visibility.Collapsed : Visibility.Visible;
-        }
+        public Visibility TranslatedNameVisibility => TranslatedName == null ? Visibility.Collapsed : Visibility.Visible;
 
         public SuggestionType SuggestionType { get; init; }
 

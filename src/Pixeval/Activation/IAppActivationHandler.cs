@@ -26,6 +26,8 @@ namespace Pixeval.Activation
 {
     public interface IAppActivationHandler
     {
+        string ActivationFragment { get; }
+
         Task Execute(string id);
     }
 }

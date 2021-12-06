@@ -18,10 +18,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Pixeval.CoreApi.Net.Response;
+using Pixeval.Database;
 using Pixeval.Options;
 using Pixeval.UserControls;
 using Pixeval.Util;
@@ -35,30 +37,25 @@ namespace Pixeval.Download
         private readonly UgoiraMetadataResponse _metadata;
 
         public AnimatedIllustrationDownloadTask(
+            DownloadHistoryEntry databaseEntry,
             IllustrationViewModel illustration,
-            string zipUrl,
-            string destination,
-            UgoiraMetadataResponse metadata) : base(illustration.Illustration.Title, illustration.Illustration.User?.Name, zipUrl, IOHelper.NormalizePath(destination), illustration.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium), null)
+            UgoiraMetadataResponse metadata) : base(databaseEntry)
         {
             _illustration = illustration;
             _metadata = metadata;
         }
 
-        protected AnimatedIllustrationDownloadTask(string? title, string? description, string url, string destination, string? thumbnail, string? uniqueId)
-            : base(title, description, url, destination, thumbnail, uniqueId)
+        protected AnimatedIllustrationDownloadTask(DownloadHistoryEntry databaseEntry)
+            : base(databaseEntry)
         {
-            // derive classes won't need them
+            // derived classes won't need them
             _metadata = null!;
             _illustration = null!;
         }
 
         public override void DownloadStarting(DownloadStartingEventArgs args)
         {
-            var deferral = args.GetDeferral();
-            if (!App.AppViewModel.AppSetting.OverwriteDownloadedFile && File.Exists(Destination))
-            {
-                deferral.Complete(false);
-            }
+            args.GetDeferral().Complete(App.AppViewModel.AppSetting.OverwriteDownloadedFile || !File.Exists(Destination));
         }
 
         public virtual async void Consume(IRandomAccessStream stream)

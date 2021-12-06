@@ -35,7 +35,7 @@ namespace Pixeval.Database.Managers
     /// This example shows how to get a registered manager.
     /// <code>
     /// using var scope = App.AppViewModel.AppServicesScope;
-    /// var manager = scope.ServiceProvider.GetRequiredService<IPersistentManager<Entry, Model>>();
+    /// var manager = scope.ServiceProvider.GetRequiredService&lt;IPersistentManager&lt;Entry, Model&gt;&gt;();
     /// </code>
     /// </example>
     /// 
@@ -43,17 +43,25 @@ namespace Pixeval.Database.Managers
     /// <typeparam name="TEntry">Entry to be serialized in database</typeparam>
     /// <typeparam name="TModel">Data model in the program</typeparam>
     public interface IPersistentManager<TEntry, TModel>
-        where TEntry: new()
+        where TEntry : new()
     {
-        SQLiteAsyncConnection Connection { get; }
+        public static async Task<TSelf> CreateAsync<TSelf>(SQLiteAsyncConnection conn)
+            where TSelf : IPersistentManager<TEntry, TModel>, new()
+        {
+            var manager = new TSelf { Connection = conn };
+            await manager.Connection.CreateTableAsync<TEntry>();
+            return manager;
+        }
 
-        void Insert(TEntry t);
+        SQLiteAsyncConnection Connection { get; init; }
+
+        Task InsertAsync(TEntry t);
 
         Task<IEnumerable<TModel>> QueryAsync(Func<AsyncTableQuery<TEntry>, AsyncTableQuery<TEntry>> action);
 
         Task<IEnumerable<TModel>> SelectAsync(Expression<Func<TEntry, bool>>? predicate = null, int? count = null);
 
-        Task Delete(Expression<Func<TEntry, bool>> predicate);
+        Task DeleteAsync(Expression<Func<TEntry, bool>> predicate);
 
         Task<IEnumerable<TModel>> EnumerateAsync();
     }

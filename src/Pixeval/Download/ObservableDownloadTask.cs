@@ -21,51 +21,40 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Pixeval.Database;
 using Pixeval.Util.Threading;
 
 namespace Pixeval.Download
 {
     public class ObservableDownloadTask : ObservableObject, IDownloadTask
     {
-        protected ObservableDownloadTask(
-            string? title,
-            string? description, 
-            string url, 
-            string destination,
-            string? thumbnail,
-            string? uniqueId)
+        protected ObservableDownloadTask(DownloadHistoryEntry entry)
         {
-            Title = title;
-            Description = description;
-            Url = url;
-            Destination = destination;
-            Thumbnail = thumbnail;
-            UniqueCacheId = uniqueId;
+            DatabaseEntry = entry;
             CancellationHandle = new CancellationHandle();
-            CurrentState = DownloadState.Created;
             Completion = new TaskCompletionSource();
         }
 
-        public string? Title { get; }
+        public DownloadHistoryEntry DatabaseEntry { get; }
 
-        public string? Description { get; }
+        public string? Title => DatabaseEntry.Title;
 
-        public string Url { get; }
+        public string? Description => DatabaseEntry.Description;
 
-        public string Destination { get; }
+        public string Url => DatabaseEntry.Url!;
 
-        public string? Thumbnail { get; }
+        public string Destination => DatabaseEntry.Destination!;
 
+        public string? Thumbnail => DatabaseEntry.Thumbnail;
+         
         public CancellationHandle CancellationHandle { get; set; }
-
-        private DownloadState _currentState;
 
         public TaskCompletionSource Completion { get; }
 
         public DownloadState CurrentState
         {
-            get => _currentState;
-            set => SetProperty(ref _currentState, value);
+            get => DatabaseEntry.State;
+            set => SetProperty(DatabaseEntry.State, value, DatabaseEntry, (entry, state) => entry.State = state);
         }
 
         private Exception? _errorCause;
@@ -73,7 +62,11 @@ namespace Pixeval.Download
         public Exception? ErrorCause
         {
             get => _errorCause;
-            set => SetProperty(ref _errorCause, value);
+            set => SetProperty(_errorCause, value, DatabaseEntry, (entry, exception) =>
+            {
+                _errorCause = value;
+                entry.ErrorCause = exception?.ToString();
+            });
         }
 
         private double _progressPercentage;
@@ -83,17 +76,6 @@ namespace Pixeval.Download
             get => _progressPercentage;
             set => SetProperty(ref _progressPercentage, value);
         }
-
-        /// <summary>
-        /// This task is cache-friendly which means it can effectively retrieves
-        /// information about the content to which this task currently indicate
-        /// is already in a cache using this id
-        /// </summary>
-        public string? UniqueCacheId { get; }
-
-        public Action? Paused { get; set; }
-
-        public Action? Resumed { get; set; }
 
         public virtual void DownloadStarting(DownloadStartingEventArgs args)
         {

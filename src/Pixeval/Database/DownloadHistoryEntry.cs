@@ -18,47 +18,53 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Pixeval.Download;
 using SQLite;
 
 namespace Pixeval.Database
 {
     [Table("DownloadHistories")]
-    public class DownloadHistoryEntry
+    public class DownloadHistoryEntry : ObservableObject
     {
-        public static DownloadHistoryEntry Create(DownloadHistoryType type, IDownloadTask task, string id)
+        public DownloadHistoryEntry(DownloadState state, string? errorCause, string? destination, bool isUgoira, string? id, string? title, string? description, string? url, string? thumbnail)
         {
-            return new DownloadHistoryEntry
-            {
-                Type = type,
-                Id = id,
-                Title = task.Title,
-                Description = task.Description,
-                Url = task.Url,
-                Destination = task.Destination,
-                Thumbnail = task.Thumbnail,
-                ErrorCause = task.ErrorCause?.ToString(),
-                UniqueCacheId = task.UniqueCacheId,
-            };
+            _state = state;
+            _errorCause = errorCause;
+            Destination = destination;
+            IsUgoira = isUgoira;
+            Id = id;
+            Title = title;
+            Description = description;
+            Url = url;
+            Thumbnail = thumbnail;
+        }
+
+        // ReSharper disable once UnusedMember.Global
+        public DownloadHistoryEntry()
+        {
+
         }
 
         [PrimaryKey]
-        [AutoIncrement]
-        [Column("unique_id")]
-        public Guid UniqueId { get; set; }
+        [Column("destination")]
+        public string? Destination { get; set; }
 
         [Column("type")]
-        public DownloadHistoryType Type { get; set; }
+        public bool IsUgoira { get; set; }
 
-        public DownloadState FinalState { get; set; }
+        private DownloadState _state;
 
-        /// <summary>
-        /// Id of the artwork, do not mix it with <see cref="UniqueId"/>, which is SQLite-compliant
-        /// </summary>
+        [Column("state")]
+        public DownloadState State
+        {
+            get => _state;
+            set => SetProperty(ref _state, value);
+        }
+
         [Column("work_id")]
         public string? Id { get; set; }
-        
+
         [Column("work_title")]
         public string? Title { get; set; }
 
@@ -68,19 +74,16 @@ namespace Pixeval.Database
         [Column("work_url")]
         public string? Url { get; set; }
 
-        [Column("destination")]
-        public string? Destination { get; set; }
-
         [Column("work_thumbnail")]
         public string? Thumbnail { get; set; }
 
-        [Column("work_error_cause")]
-        public string? ErrorCause { get; set; }
+        private string? _errorCause;
 
-        /// <summary>
-        /// See <see cref="IDownloadTask.UniqueCacheId"/>
-        /// </summary>
-        [Column("work_unique_cache_id")]
-        public string? UniqueCacheId { get; set; }
+        [Column("work_error_cause")]
+        public string? ErrorCause
+        {
+            get => _errorCause;
+            set => SetProperty(ref _errorCause, value);
+        }
     }
 }

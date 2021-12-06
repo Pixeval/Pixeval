@@ -5,7 +5,6 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:model="using:Pixeval.CoreApi.Model"
     xmlns:pages="using:Pixeval.Pages"
     xmlns:ui="using:Pixeval.Util.UI"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -30,12 +29,11 @@
                     Grid.Column="0"
                     VerticalAlignment="Center"
                     GotFocus="KeywordAutoSuggestBox_GotFocus"
+                    ItemsSource="{x:Bind _viewModel.Suggestions, Mode=OneWay}"
                     QueryIcon="Find"
                     QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
                     SuggestionChosen="KeywordAutoSuggestBox_OnSuggestionChosen"
-                    TextChanged="KeywordAutoSuggestBox_OnTextChanged"
-                    ItemsSource="{x:Bind _viewModel.Suggestions, Mode=OneWay}"
-                    TextMemberPath="Name">
+                    TextChanged="KeywordAutoSuggestBox_OnTextChanged">
                     <AutoSuggestBox.ItemContainerTransitions>
                         <TransitionCollection>
                             <AddDeleteThemeTransition />
@@ -48,13 +46,17 @@
                                     <ColumnDefinition Width="22" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <ContentPresenter x:Name="IconContentPresenter"
-                                        Width="13"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Center"
-                                        Content="{x:Bind Icon}"
-                                        Grid.Column="0" />
-                                <StackPanel VerticalAlignment="Center" Spacing="1" Grid.Column="1">
+                                <ContentPresenter
+                                    x:Name="IconContentPresenter"
+                                    Grid.Column="0"
+                                    Width="13"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Content="{x:Bind Icon}" />
+                                <StackPanel
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    Spacing="1">
                                     <TextBlock
                                         FontSize="{StaticResource PixevalContentFontSize}"
                                         Text="{x:Bind Name}"
@@ -64,9 +66,9 @@
                                         FontSize="{StaticResource PixevalSubscriptFontSize}"
                                         Foreground="{ThemeResource PixevalTipTextForeground}"
                                         Text="{x:Bind TranslatedName}"
-                                        Visibility="{x:Bind TranslatedNameVisibility}"
                                         TextTrimming="CharacterEllipsis"
-                                        TextWrapping="WrapWholeWords" />
+                                        TextWrapping="WrapWholeWords"
+                                        Visibility="{x:Bind TranslatedNameVisibility}" />
                                 </StackPanel>
                             </Grid>
                         </DataTemplate>

@@ -6,7 +6,6 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Collections.ObjectModel;
 
 namespace Pixeval.Utilities
 {
@@ -110,7 +109,7 @@ namespace Pixeval.Utilities
 
             _set.Clear();
 
-            OnCollectionChanged(ObservableHashSetSingletons._noItems, removed);
+            OnCollectionChanged(ObservableHashSetSingletons.NoItems, removed);
 
             OnCountPropertyChanged();
         }
@@ -237,7 +236,7 @@ namespace Pixeval.Utilities
 
             _set = copy;
 
-            OnCollectionChanged(added, ObservableHashSetSingletons._noItems);
+            OnCollectionChanged(added, ObservableHashSetSingletons.NoItems);
 
             OnCountPropertyChanged();
         }
@@ -264,7 +263,7 @@ namespace Pixeval.Utilities
 
             _set = copy;
 
-            OnCollectionChanged(ObservableHashSetSingletons._noItems, removed);
+            OnCollectionChanged(ObservableHashSetSingletons.NoItems, removed);
 
             OnCountPropertyChanged();
         }
@@ -290,7 +289,7 @@ namespace Pixeval.Utilities
 
             _set = copy;
 
-            OnCollectionChanged(ObservableHashSetSingletons._noItems, removed);
+            OnCollectionChanged(ObservableHashSetSingletons.NoItems, removed);
 
             OnCountPropertyChanged();
         }
@@ -431,7 +430,7 @@ namespace Pixeval.Utilities
 
             _set = copy;
 
-            OnCollectionChanged(ObservableHashSetSingletons._noItems, removed);
+            OnCollectionChanged(ObservableHashSetSingletons.NoItems, removed);
 
             OnCountPropertyChanged();
 
@@ -466,10 +465,10 @@ namespace Pixeval.Utilities
             => PropertyChanging?.Invoke(this, e);
 
         private void OnCountPropertyChanged()
-            => OnPropertyChanged(ObservableHashSetSingletons._countPropertyChanged);
+            => OnPropertyChanged(ObservableHashSetSingletons.CountPropertyChanged);
 
         private void OnCountPropertyChanging()
-            => OnPropertyChanging(ObservableHashSetSingletons._countPropertyChanging);
+            => OnPropertyChanging(ObservableHashSetSingletons.CountPropertyChanging);
 
         private void OnCollectionChanged(NotifyCollectionChangedAction action, object? item)
             => OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, item));
@@ -487,9 +486,9 @@ namespace Pixeval.Utilities
 
     internal static class ObservableHashSetSingletons
     {
-        public static readonly PropertyChangedEventArgs _countPropertyChanged = new("Count");
-        public static readonly PropertyChangingEventArgs _countPropertyChanging = new("Count");
+        public static readonly PropertyChangedEventArgs CountPropertyChanged = new("Count");
+        public static readonly PropertyChangingEventArgs CountPropertyChanging = new("Count");
 
-        public static readonly object[] _noItems = Array.Empty<object>();
+        public static readonly object[] NoItems = Array.Empty<object>();
     }
 }

@@ -69,7 +69,8 @@ namespace Pixeval.AppManagement
             DateTimeOffset searchStartDate,
             DateTimeOffset searchEndDate,
             string defaultDownloadPathMacro, 
-            bool overwriteDownloadedFile)
+            bool overwriteDownloadedFile,
+            int maximumDownloadHistoryRecords)
         {
             Theme = theme;
             FiltrateRestrictedContent = filtrateRestrictedContent;
@@ -99,6 +100,7 @@ namespace Pixeval.AppManagement
             SearchEndDate = searchEndDate;
             DefaultDownloadPathMacro = defaultDownloadPathMacro;
             OverwriteDownloadedFile = overwriteDownloadedFile;
+            MaximumDownloadHistoryRecords = maximumDownloadHistoryRecords;
         }
 
         /// <summary>
@@ -232,6 +234,9 @@ namespace Pixeval.AppManagement
 
         [DefaultValue(typeof(DownloadPathMacroDefaultValueProvider))]
         public string DefaultDownloadPathMacro { get; set; }
+
+        [DefaultValue(100)]
+        public int MaximumDownloadHistoryRecords { get; set; } 
 
         [DefaultValue(false)]
         public bool OverwriteDownloadedFile { get; set; }

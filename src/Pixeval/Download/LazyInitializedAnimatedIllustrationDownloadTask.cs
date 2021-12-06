@@ -22,6 +22,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
+using Pixeval.Database;
 using Pixeval.UserControls;
 using Pixeval.Util.IO;
 
@@ -33,20 +34,10 @@ namespace Pixeval.Download
 
         private readonly Lazy<Task<IllustrationViewModel>> _resultGenerator;
 
-        public LazyInitializedAnimatedIllustrationDownloadTask(
-            string illustId,
-            string? title, 
-            string? description,
-            string url, 
-            string destination, 
-            string? thumbnail, 
-            string? uniqueId,
-            DownloadState finalState)
-            : base(title, description, url, destination, thumbnail, uniqueId)
+        public LazyInitializedAnimatedIllustrationDownloadTask(DownloadHistoryEntry databaseEntry) : base(databaseEntry)
         {
-            CurrentState = finalState;
-            _illustId = illustId;
-            _resultGenerator = new Lazy<Task<IllustrationViewModel>>(async () => new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(illustId)));
+            _illustId = databaseEntry.Id!;
+            _resultGenerator = new Lazy<Task<IllustrationViewModel>>(async () => new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(_illustId)));
         }
 
         public override async void Consume(IRandomAccessStream stream)

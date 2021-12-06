@@ -22,7 +22,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
-using Pixeval.Options;
+using Pixeval.Database;
 using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.IO;
@@ -33,8 +33,7 @@ namespace Pixeval.Download
     {
         public IllustrationViewModel IllustrationViewModel { get; }
 
-        public IllustrationDownloadTask(IllustrationViewModel illustrationViewModel, string destination) 
-            : base(illustrationViewModel.Illustration.Title, illustrationViewModel.Illustration.User?.Name, illustrationViewModel.Illustration.GetOriginalUrl()!, IOHelper.NormalizePath(destination), illustrationViewModel.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium), illustrationViewModel.Illustration.GetIllustrationOriginalImageCacheKey())
+        public IllustrationDownloadTask(DownloadHistoryEntry dataBaseEntry, IllustrationViewModel illustrationViewModel) : base(dataBaseEntry)
         {
             IllustrationViewModel = illustrationViewModel;
             CurrentState = DownloadState.Created;

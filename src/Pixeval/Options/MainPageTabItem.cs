@@ -27,9 +27,8 @@ using Pixeval.Pages;
 namespace Pixeval.Options
 {
     /// <summary>
-    ///     We require a strict matching between the value of the enum member and the order of the
-    ///     <see cref="NavigationViewItem" />
-    ///     in <see cref="MainPage" />
+    /// We require a strict matching between the value of the enum member and the order of the
+    /// <see cref="NavigationViewItem" />in <see cref="MainPage" />
     /// </summary>
     public enum MainPageTabItem
     {

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using SQLite;
 
@@ -15,44 +13,36 @@ namespace Pixeval.Database.Managers
     public abstract class SimplePersistentManager<T> : IPersistentManager<T, T>
         where T : new()
     {
-        public SimplePersistentManager(SQLiteAsyncConnection connection)
-        {
-            Connection = connection;
-            Connection.CreateTableAsync<T>().Wait();
-        }
+        public SQLiteAsyncConnection Connection { get; init; } = null!;
 
-        public SQLiteAsyncConnection Connection { get; }
-
-        public void Insert(T t)
+        public Task InsertAsync(T t)
         {
-            Connection.InsertAsync(t);
+            return Connection.InsertAsync(t);
         }
 
         public async Task<IEnumerable<T>> QueryAsync(Func<AsyncTableQuery<T>, AsyncTableQuery<T>> action)
         {
-            var query = Connection.Table<T>();
-            query = action(query);
-            return await query.ToListAsync();
+            return await action(Connection.Table<T>()).ToListAsync();
         }
 
         public async Task<IEnumerable<T>> SelectAsync(Expression<Func<T, bool>>? predicate = null, int? count = null)
         {
             var query = Connection.Table<T>();
             if (count != null)
-                query = query.Take((int)count);
+                query = query.Take((int) count);
             if (predicate != null)
                 query = query.Where(predicate);
             return await query.ToListAsync();
         }
 
-        public Task Delete(Expression<Func<T, bool>> predicate)
+        public Task DeleteAsync(Expression<Func<T, bool>> predicate)
         {
             return Connection.Table<T>().DeleteAsync(predicate);
         }
 
         public async Task<IEnumerable<T>> EnumerateAsync()
         {
-            return (await Connection.Table<T>().ToListAsync());
+            return await Connection.Table<T>().ToListAsync();
         }
     }
 }

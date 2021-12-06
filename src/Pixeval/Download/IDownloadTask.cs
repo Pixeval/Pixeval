@@ -48,17 +48,6 @@ namespace Pixeval.Download
 
         double ProgressPercentage { get; set; }
 
-        /// <summary>
-        /// This task is cache-friendly which means it can effectively retrieves
-        /// information about the content to which this task currently indicate
-        /// is already in a cache using this id
-        /// </summary>
-        public string? UniqueCacheId { get; }
-
-        Action? Paused { get; }
-
-        Action? Resumed { get; }
-
         void DownloadStarting(DownloadStartingEventArgs args);
     }
 

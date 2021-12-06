@@ -128,12 +128,11 @@ namespace Pixeval.Download
 
         private async Task Download(TDownloadTask task)
         {
-            await Task.Yield();
             IncrementCounter();
 
             var args = new DownloadStartingEventArgs();
             task.DownloadStarting(args);
-            if (await args.DeferralAwaiter) // decide whether to continue depends on the Cancelled property
+            if (await args.DeferralAwaiter)
             {
                 await DownloadInternal(task);
             }
