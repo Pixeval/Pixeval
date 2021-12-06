@@ -110,7 +110,7 @@ namespace Pixeval.CoreApi.Engine
         {
             RawEntity = rawEntity;
             CurrentEntityEnumerator = GetNewEnumerator(rawEntity) ?? EmptyEnumerators<TEntity>.Sync;
-            PixivFetchEngine!.RequestedPages++;
+            PixivFetchEngine.RequestedPages++;
         }
     }
 
