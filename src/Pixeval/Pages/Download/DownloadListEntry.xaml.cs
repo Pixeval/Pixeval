@@ -109,6 +109,18 @@ namespace Pixeval.Pages.Download
             set => SetValue(ActionButtonContentProperty, value);
         }
 
+        public static readonly DependencyProperty IsRedownloadItemEnabledProperty = DependencyProperty.Register(
+            nameof(IsRedownloadItemEnabled),
+            typeof(bool),
+            typeof(DownloadListEntry),
+            PropertyMetadata.Create(DependencyProperty.UnsetValue));
+
+        public bool IsRedownloadItemEnabled
+        {
+            get => (bool)GetValue(IsRedownloadItemEnabledProperty);
+            set => SetValue(IsRedownloadItemEnabledProperty, value);
+        }
+
         public static readonly DependencyProperty IsCancelItemEnabledProperty = DependencyProperty.Register(
             nameof(IsCancelItemEnabled),
             typeof(bool),
@@ -235,8 +247,11 @@ namespace Pixeval.Pages.Download
                 case DownloadState.Error:
                 case DownloadState.Cancelled:
                 case DownloadState.Completed:
-                    ViewModel.Reset();
-                    App.AppViewModel.DownloadManager.TryExecuteInline(ViewModel);
+                    var startInfo = new ProcessStartInfo($"{ViewModel.Destination}")
+                    {
+                        Verb = "edit"
+                    };
+                    Process.Start(startInfo);
                     break;
                 case DownloadState.Paused:
                     ViewModel.CancellationHandle.Resume();
@@ -244,6 +259,12 @@ namespace Pixeval.Pages.Download
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        private void RedownloadItem_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            ViewModel.Reset();
+            App.AppViewModel.DownloadManager.TryExecuteInline(ViewModel);
         }
 
         private void CancelDownloadItem_OnTapped(object sender, TappedRoutedEventArgs e)

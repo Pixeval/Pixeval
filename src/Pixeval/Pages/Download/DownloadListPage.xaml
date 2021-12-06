@@ -9,7 +9,8 @@
     xmlns:downloader="using:Pixeval.Download"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:toolkit="using:CommunityToolkit.WinUI.UI.Controls"
-    xmlns:util="using:Pixeval.Misc"
+    xmlns:util="using:Pixeval.Misc" 
+    xmlns:ui="using:Pixeval.Util.UI"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     SizeChanged="DownloadListPage_OnSizeChanged"
     mc:Ignorable="d">
@@ -21,32 +22,83 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBlock
-            x:Uid="/DownloadListPage/PageTitleTextBlock"
-            Grid.Row="1"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Style="{StaticResource TitleTextBlockStyle}" />
-        <TextBlock
-            x:Name="FunctionBarTitleTextBlock"
+        <toolkit:DockPanel Grid.Row="1">
+            <TextBlock
+                x:Uid="/DownloadListPage/PageTitleTextBlock"
+                toolkit:DockPanel.Dock="Left"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Style="{StaticResource TitleTextBlockStyle}" />
+            <StackPanel x:Name="ExtraCommandsBar"
+                        Margin="5,0,0,0"
+                        VerticalAlignment="Center"
+                        toolkit:DockPanel.Dock="Left"
+                        Background="Transparent"
+                        FlowDirection="LeftToRight"
+                        Orientation="Horizontal" />
+            <CommandBar x:Name="CommandBar"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    toolkit:DockPanel.Dock="Right"
+                    Background="Transparent"
+                    DefaultLabelPosition="Right">
+                <AppBarButton Icon="{ui:FontIcon Glyph=CancelE711}"
+                          Label="{x:Bind _viewModel.SelectionLabel, Mode=OneWay}"
+                          IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
+                          Tapped="CancelSelectButton_OnTapped"
+                           />
+                <AppBarButton
+                          x:Uid="/DownloadListPage/SelectAllButton"
+                          Icon="{ui:FontIcon Glyph=SelectAllE8B3}"
+                          Tapped="SelectAllButton_OnTapped"
+                           />
+                <AppBarSeparator />
+                <AppBarButton x:Uid="/DownloadListPage/ResumeButton"
+                              Icon="{ui:FontIcon Glyph=PlaySolidF5B0}"
+                              Tapped="ResumeAllButton_OnTapped"
+                />
+                <AppBarButton x:Uid="/DownloadListPage/PauseButton"
+                          Icon="{ui:FontIcon Glyph=PauseE769}"
+                          Tapped="PauseAllButton_OnTapped"
+                            />
+                <AppBarButton x:Uid="/DownloadListPage/StopButton"
+                              Icon="{ui:FontIcon Glyph=CancelE711}"
+                              Tapped="CancelAllButton_OnTapped"
+                            />
+                <AppBarButton x:Uid="/DownloadListPage/DeleteButton"
+                              Icon="{ui:FontIcon Glyph=DeleteE74D}"
+                              Tapped="ClearDownloadListButton_OnTapped"
+                            />
+            </CommandBar>
+        </toolkit:DockPanel>
+        <ComboBox
+            x:Uid="/DownloadListPage/ModeFilterComboBox"
+            Width="135"
             Grid.Row="2"
-            Grid.RowSpan="2"
-            HorizontalAlignment="Left"
+            Grid.RowSpan="1"
+            HorizontalAlignment="Right"
             VerticalAlignment="Center"
-            Style="{StaticResource BodyStrongTextBlockStyle}"
-            Text="{x:Bind _viewModel.SubtitleText(_viewModel.CurrentOption), Mode=OneWay}" />
+            ItemsSource="{x:Bind download:DownloadListPageViewModel.AvailableDownloadListOptions}"
+            SelectedItem="{x:Bind _viewModel.CurrentOption, Mode=TwoWay}"
+            SelectionChanged="ModeFilterComboBox_OnSelectionChanged">
+            <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="download:DownloadListOption">
+                    <TextBlock Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent((download:DownloadListOption))}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
         <toolkit:WrapPanel
             x:Name="FunctionBar"
             Grid.Row="2"
             Grid.RowSpan="2"
             Margin="0,0,-9,0"
             Padding="0"
-            HorizontalAlignment="Right"
+            HorizontalAlignment="Left"
             HorizontalSpacing="10"
             VerticalSpacing="10">
             <AutoSuggestBox
                 x:Uid="/DownloadListPage/FilterAutoSuggestBox"
-                Width="135"
+                Width="265"
                 VerticalAlignment="Center"
                 ItemsSource="{x:Bind _viewModel.FilteredTasks}"
                 QueryIcon="Find"
@@ -59,36 +111,6 @@
                     </DataTemplate>
                 </AutoSuggestBox.ItemTemplate>
             </AutoSuggestBox>
-            <Button
-                x:Uid="/DownloadListPage/CancelAllButton"
-                Width="135"
-                Tapped="CancelAllButton_OnTapped" />
-            <Button
-                x:Uid="/DownloadListPage/ResumeAllButton"
-                Width="135"
-                Background="{ThemeResource AccentFillColorDefaultBrush}"
-                Tapped="ResumeAllButton_OnTapped" />
-            <Button
-                x:Uid="/DownloadListPage/PauseAllButton"
-                Width="135"
-                Tapped="PauseAllButton_OnTapped" />
-            <Button
-                x:Uid="/DownloadListPage/ClearDownloadListButton"
-                Width="135"
-                Tapped="ClearDownloadListButton_OnTapped" />
-            <ComboBox
-                x:Uid="/DownloadListPage/ModeFilterComboBox"
-                Width="135"
-                VerticalAlignment="Center"
-                ItemsSource="{x:Bind download:DownloadListPageViewModel.AvailableDownloadListOptions}"
-                SelectedItem="{x:Bind _viewModel.CurrentOption, Mode=TwoWay}"
-                SelectionChanged="ModeFilterComboBox_OnSelectionChanged">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate x:DataType="download:DownloadListOption">
-                        <TextBlock Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent((download:DownloadListOption))}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
         </toolkit:WrapPanel>
         <ListView
             Grid.Row="4"
@@ -109,17 +131,21 @@
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="download:DownloadListEntryViewModel">
                     <Grid Padding="0,3">
-                        <card:CardControl>
+                        <card:CardControl
+                            Background="{x:Bind download:DownloadListEntryViewModel.GetSelectedBackground(DownloadTask.Selected), Mode=OneWay}"
+                            >
                             <download:DownloadListEntry
                                 Title="{x:Bind DownloadTask.Title}"
                                 ActionButtonBackground="{x:Bind download:DownloadListEntryViewModel.GetActionButtonBackground(DownloadTask.CurrentState), Mode=OneWay}"
                                 ActionButtonContent="{x:Bind download:DownloadListEntryViewModel.GetEntryActionButtonContent(DownloadTask.CurrentState), Mode=OneWay}"
                                 Description="{x:Bind DownloadTask.Description}"
+                                IsRedownloadItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsRedownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
                                 IsCancelItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsEntryCancelDownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
                                 IsShowErrorDetailDialogItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsShowErrorDetailDialogItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
                                 Progress="{x:Bind DownloadTask.ProgressPercentage, Mode=OneWay}"
                                 ProgressMessage="{x:Bind download:DownloadListEntryViewModel.GetEntryProgressMessage(DownloadTask.CurrentState, DownloadTask.ProgressPercentage, DownloadTask.ErrorCause), Mode=OneWay}"
                                 Thumbnail="{x:Bind Thumbnail, Mode=OneWay}"
+                                Tapped="DownloadListEntry_OnTapped"
                                 ViewModel="{x:Bind DownloadTask}" />
                         </card:CardControl>
                     </Grid>

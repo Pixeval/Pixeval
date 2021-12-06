@@ -67,34 +67,69 @@ namespace Pixeval.Pages.Download
             set => SetProperty(ref _filteredTasks, value);
         }
 
+        private string _selectionLabel;
+
+        public string SelectionLabel
+        {
+            get => _selectionLabel;
+            set => SetProperty(ref _selectionLabel, value);
+        }
+
+        private ObservableCollection<ObservableDownloadTask> _selectedTasks;
+
+        public ObservableCollection<ObservableDownloadTask> SelectedTasks
+        {
+            get => _selectedTasks;
+            set => SetProperty(ref _selectedTasks, value);
+        }
+
+        private bool _isAnyEntrySelected;
+
+        public bool IsAnyEntrySelected
+        {
+            get => _isAnyEntrySelected;
+            set => SetProperty(ref _isAnyEntrySelected, value);
+        }
+
         public DownloadListPageViewModel(IList<DownloadListEntryViewModel> downloadTasks)
         {
             _downloadTasks = downloadTasks;
             _filteredTasks = new ObservableCollection<IDownloadTask>();
             _downloadTasksView = new AdvancedCollectionView(downloadTasks as IList);
+            _selectedTasks = new ObservableCollection<ObservableDownloadTask>();
+            _selectionLabel = DownloadListPageResources.CancelSelectionButtonDefaultLabel;
+        }
+
+        public void UpdateSelection()
+        {
+            var count = SelectedTasks.Count;
+            SelectionLabel = count == 0
+                ? DownloadListPageResources.CancelSelectionButtonDefaultLabel
+                : DownloadListPageResources.CancelSelectionButtonFormatted.Format(count);
+            IsAnyEntrySelected = count != 0;
         }
 
         public void PauseAll()
         {
-            foreach (var downloadListEntryViewModel in _downloadTasks.Where(t => t.DownloadTask.CurrentState == DownloadState.Running))
+            foreach (var downloadListEntryViewModel in _selectedTasks.Where(t => t.CurrentState == DownloadState.Running))
             {
-                downloadListEntryViewModel.DownloadTask.CancellationHandle.Pause();
+                downloadListEntryViewModel.CancellationHandle.Pause();
             }
         }
 
         public void ResumeAll()
         {
-            foreach (var downloadListEntryViewModel in _downloadTasks.Where(t => t.DownloadTask.CurrentState == DownloadState.Paused))
+            foreach (var downloadListEntryViewModel in _selectedTasks.Where(t => t.CurrentState == DownloadState.Paused))
             {
-                downloadListEntryViewModel.DownloadTask.CancellationHandle.Resume();
+                downloadListEntryViewModel.CancellationHandle.Resume();
             }
         }
 
         public void CancelAll()
         {
-            foreach (var downloadListEntryViewModel in _downloadTasks.Where(t => t.DownloadTask.CurrentState is DownloadState.Queued or DownloadState.Created or DownloadState.Running or DownloadState.Paused))
+            foreach (var downloadListEntryViewModel in _selectedTasks.Where(t => t.CurrentState is DownloadState.Queued or DownloadState.Created or DownloadState.Running or DownloadState.Paused))
             {
-                downloadListEntryViewModel.DownloadTask.CancellationHandle.Cancel();
+                downloadListEntryViewModel.CancellationHandle.Cancel();
             }
         }
 
@@ -140,6 +175,17 @@ namespace Pixeval.Pages.Download
                 _ => false
             };
             DownloadTasksView.Refresh();
+            SelectedTasks.RemoveAll(x =>
+            {
+                if (!DownloadTasksView.Any(entry => Equals(((DownloadListEntryViewModel) entry).DownloadTask, x)))
+                {
+                    x.Selected = false;
+                    return false;
+                }
+
+                return true;
+            });
+            UpdateSelection();
         }
 
         public string? SubtitleText(DownloadListOption option)

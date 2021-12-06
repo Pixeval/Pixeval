@@ -32,6 +32,7 @@ namespace Pixeval.Pages.Download
 {
     public class DownloadListEntryViewModel : ObservableObject, IDisposable
     {
+
         private SoftwareBitmapSource? _thumbnail;
 
         public SoftwareBitmapSource? Thumbnail
@@ -89,10 +90,15 @@ namespace Pixeval.Pages.Download
                 DownloadState.Created or DownloadState.Queued => DownloadListEntryResources.DownloadCancelledAction,
                 DownloadState.Running => DownloadListEntryResources.ActionButtonContentPause,
                 DownloadState.Cancelled or DownloadState.Error => DownloadListEntryResources.ActionButtonContentRetry,
-                DownloadState.Completed => DownloadListEntryResources.ActionButtonContentRedownload,
+                DownloadState.Completed => DownloadListEntryResources.ActionButtonContentOpen,
                 DownloadState.Paused => DownloadListEntryResources.ActionButtonContentResume,
                 _ => throw new ArgumentOutOfRangeException()
             };
+        }
+
+        public static bool GetIsRedownloadItemEnabled(DownloadState currentState)
+        {
+            return currentState is DownloadState.Completed;
         }
 
         public static bool GetIsEntryCancelDownloadItemEnabled(DownloadState currentState)
@@ -110,6 +116,13 @@ namespace Pixeval.Pages.Download
             return currentState is DownloadState.Running or DownloadState.Paused
                 ? (Brush) Application.Current.Resources["AccentFillColorDefaultBrush"]
                 : (Brush) Application.Current.Resources["ButtonBackground"];
+        }
+
+        public static Brush GetSelectedBackground(bool selected)
+        {
+            return selected
+                ? (Brush)Application.Current.Resources["AccentFillColorDefaultBrush"]
+                : (Brush)Application.Current.Resources["CardBackground"];
         }
 
         public void Dispose()
