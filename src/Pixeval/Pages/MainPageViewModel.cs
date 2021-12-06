@@ -88,12 +88,7 @@ namespace Pixeval.Pages
         {
             using var scope = App.AppViewModel.AppServicesScope;
             var manager = await scope.ServiceProvider.GetRequiredService<Task<SearchHistoryPersistentManager>>();
-            var histories = (await manager.QueryAsync(query =>
-            {
-                query = query.OrderByDescending(x => x.Time);
-                query = query.Take(4);
-                return query;
-            })).SelectNotNull(SuggestionModel.FromHistory);
+            var histories = (await manager.QueryAsync(query => query.OrderByDescending(x => x.Time))).SelectNotNull(SuggestionModel.FromHistory);
 
             Suggestions.ReplaceByUpdate(histories);
         }

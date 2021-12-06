@@ -169,8 +169,11 @@ namespace Pixeval.UserControls
         {
             using var scope = App.AppViewModel.AppServicesScope;
             var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
-            var task = await factory.CreateAsync(sender.GetDataContext<IllustrationViewModel>(), App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
-            App.AppViewModel.DownloadManager.QueueTask(task);
+            foreach (var mangaIllustrationViewModel in sender.GetDataContext<IllustrationViewModel>().GetMangaIllustrationViewModels())
+            {
+                var task = await factory.CreateAsync(mangaIllustrationViewModel, App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
+                App.AppViewModel.DownloadManager.QueueTask(task);
+            }
         }
 
         private async void OpenInBrowserContextItem_OnTapped(object sender, TappedRoutedEventArgs e)

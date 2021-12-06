@@ -12,6 +12,7 @@
       <Nullable>enable</Nullable>
       <DefaultLanguage>zh-CN</DefaultLanguage>
       <EnableNETAnalyzers>false</EnableNETAnalyzers>
+	  <EnablePreviewFeatures>true</EnablePreviewFeatures>
       <ApplicationIcon />
       <StartupObject />
       <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
@@ -138,6 +139,7 @@
       <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
       <PackageReference Include="System.Linq.Async" Version="5.0.0" />
       <PackageReference Include="QRCoder" Version="1.4.1" />
+      <PackageReference Include="System.Runtime.Experimental" Version="6.0.0" />
       <Manifest Include="$(ApplicationManifest)" />
    </ItemGroup>
    <!-- #region Exposes PRI resources to the source generator -->

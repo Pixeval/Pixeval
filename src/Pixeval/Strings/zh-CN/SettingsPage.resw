@@ -245,6 +245,24 @@
   <data name="MaxDownloadConcurrencyLevelEntry.Header" xml:space="preserve">
     <value>最大并行下载任务数</value>
   </data>
+  <data name="MaximumDownloadHistoryRecordsEntry.Description" xml:space="preserve">
+    <value>若下载历史数量超出该限制，旧的记录将会被删除</value>
+  </data>
+  <data name="MaximumDownloadHistoryRecordsEntry.Header" xml:space="preserve">
+    <value>下载历史限制</value>
+  </data>
+  <data name="MaximumDownloadHistoryRecordsNumberBox.PlaceholderText" xml:space="preserve">
+    <value>输入数量限制[10,200]</value>
+  </data>
+  <data name="MaximumSearchHistoryRecordsEntry.Description" xml:space="preserve">
+    <value>若搜索历史数量超出该限制，旧的记录将会被删除</value>
+  </data>
+  <data name="MaximumSearchHistoryRecordsEntry.Header" xml:space="preserve">
+    <value>搜索历史限制</value>
+  </data>
+  <data name="MaximumSearchHistoryRecordsNumberBox.PlaceholderText" xml:space="preserve">
+    <value>输入数量限制[10,50]</value>
+  </data>
   <data name="MaximumSearchPageLimit.Description" xml:space="preserve">
     <value>在使用侧边栏关键字搜索插画时，最多会搜索多少页（每页包含30张）</value>
   </data>

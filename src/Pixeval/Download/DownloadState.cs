@@ -29,7 +29,7 @@ namespace Pixeval.Download
         Queued,
 
         Running,
-
+        
         Cancelled,
 
         Error,
