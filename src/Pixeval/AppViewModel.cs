@@ -65,18 +65,17 @@ namespace Pixeval
             return Host.CreateDefaultBuilder()
                 .ConfigureServices(services =>
                     services.AddSingleton<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>, IllustrationDownloadTaskFactory>()
-                        .AddSingleton(new SQLiteAsyncConnection(AppKnownFolders.Local.Resolve("PixevalData.db"), SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex | SQLiteOpenFlags.ReadWrite))
-                        .AddSingleton(provider => IPersistentManager<DownloadHistoryEntry, ObservableDownloadTask>.CreateAsync<DownloadHistoryPersistentManager>(provider.GetRequiredService<SQLiteAsyncConnection>()))
-                        .AddSingleton(provider => IPersistentManager<SearchHistoryEntry, SearchHistoryEntry>.CreateAsync<SearchHistoryPersistentManager>(provider.GetRequiredService<SQLiteAsyncConnection>())));
+                        .AddSingleton(new SQLiteAsyncConnection(AppContext.DatabaseFilePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex | SQLiteOpenFlags.ReadWrite))
+                        .AddSingleton(provider => IPersistentManager<DownloadHistoryEntry, ObservableDownloadTask>.CreateAsync<DownloadHistoryPersistentManager>(provider.GetRequiredService<SQLiteAsyncConnection>(), App.AppViewModel.AppSetting.MaximumDownloadHistoryRecords))
+                        .AddSingleton(provider => IPersistentManager<SearchHistoryEntry, SearchHistoryEntry>.CreateAsync<SearchHistoryPersistentManager>(provider.GetRequiredService<SQLiteAsyncConnection>(), App.AppViewModel.AppSetting.MaximumSearchHistoryRecords)));
         }
 
         public AppViewModel(App app)
         {
             App = app;
-            AppHost = CreateHostBuilder().Build();
         }
 
-        public IHost AppHost { get; }
+        public IHost AppHost { get; private set; } = null!;
 
         public IServiceScope AppServicesScope => AppHost.Services.CreateScope();
 
@@ -105,9 +104,10 @@ namespace Pixeval
             AppContext.SaveContext();
         }
 
-        public void Receive(LoginCompletedMessage message)
+        public async void Receive(LoginCompletedMessage message)
         {
             DownloadManager = new DownloadManager<ObservableDownloadTask>(AppSetting.MaxDownloadTaskConcurrencyLevel, MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi));
+            await AppContext.RestoreHistories();
         }
 
         public IntPtr GetMainWindowHandle()
@@ -207,6 +207,8 @@ namespace Pixeval
         public async Task InitializeAsync(bool activatedByProtocol)
         {
             _activatedByProtocol = activatedByProtocol;
+
+            AppHost = CreateHostBuilder().Build();
 
             RegisterUnhandledExceptionHandler();
             await AppContext.WriteLogoIcoIfNotExist();

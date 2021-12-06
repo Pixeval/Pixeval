@@ -20,6 +20,7 @@
 
 #endregion
 
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,6 +48,12 @@ namespace Pixeval.Download
         {
             using var scope = App.AppViewModel.AppServicesScope;
             var manager = await scope.ServiceProvider.GetRequiredService<Task<DownloadHistoryPersistentManager>>();
+            var path = IOHelper.NormalizePath(PathParser.Reduce(rawPath, context));
+            if ((await manager.RawDataAsync()).Any(entry => entry.Destination == path))
+            {
+                // delete the original entry
+                await manager.DeleteAsync(entry => entry.Destination == path);
+            }
             ObservableDownloadTask task = context.Illustration.IsUgoira() switch
             {
                 true => await Functions.Block(async () =>
@@ -54,8 +61,7 @@ namespace Pixeval.Download
                     var ugoiraMetadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(context.Id);
                     if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Medium is { } url)
                     {
-                        var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, IOHelper.NormalizePath(PathParser.Reduce(rawPath, context)), true,
-                            context.Id, context.Illustration.Title, context.Illustration.User?.Name, url, context.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
+                        var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path, true, context.Id, context.Illustration.Title, context.Illustration.User?.Name, url, context.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
                         return new AnimatedIllustrationDownloadTask(downloadHistoryEntry, context, ugoiraMetadata);
                     }
 
@@ -63,8 +69,7 @@ namespace Pixeval.Download
                 }),
                 false => Functions.Block(() =>
                 {
-                    var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, IOHelper.NormalizePath(PathParser.Reduce(rawPath, context)), false,
-                        context.Id, context.Illustration.Title, context.Illustration.User?.Name, context.Illustration.GetOriginalUrl()!, context.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
+                    var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path, false, context.Id, context.Illustration.Title, context.Illustration.User?.Name, context.Illustration.GetOriginalUrl()!, context.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
                     return new IllustrationDownloadTask(downloadHistoryEntry, context);
                 })
             };

@@ -45,15 +45,18 @@ namespace Pixeval.Database.Managers
     public interface IPersistentManager<TEntry, TModel>
         where TEntry : new()
     {
-        public static async Task<TSelf> CreateAsync<TSelf>(SQLiteAsyncConnection conn)
+        public static async Task<TSelf> CreateAsync<TSelf>(SQLiteAsyncConnection conn, int maximumRecords)
             where TSelf : IPersistentManager<TEntry, TModel>, new()
         {
-            var manager = new TSelf { Connection = conn };
+            var manager = new TSelf { Connection = conn, MaximumRecords = maximumRecords };
             await manager.Connection.CreateTableAsync<TEntry>();
+            await manager.Purge(maximumRecords);
             return manager;
         }
 
         SQLiteAsyncConnection Connection { get; init; }
+
+        int MaximumRecords { get; set;  }
 
         Task InsertAsync(TEntry t);
 
@@ -64,5 +67,9 @@ namespace Pixeval.Database.Managers
         Task DeleteAsync(Expression<Func<TEntry, bool>> predicate);
 
         Task<IEnumerable<TModel>> EnumerateAsync();
+
+        Task<IEnumerable<TEntry>> RawDataAsync();
+
+        Task Purge(int limit);
     }
 }

@@ -28,10 +28,13 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Preference;
+using Pixeval.Database.Managers;
+using Pixeval.Download;
 using Pixeval.Messages;
 using Pixeval.Options;
 using Pixeval.Util.IO;
@@ -47,6 +50,8 @@ namespace Pixeval.AppManagement
         public const string AppIdentifier = "Pixeval";
 
         public const string AppProtocol = "pixeval";
+
+        public static readonly string DatabaseFilePath = AppKnownFolders.Local.Resolve("PixevalData.db");
 
         private const string SessionContainerKey = "Session";
 
@@ -188,14 +193,29 @@ namespace Pixeval.AppManagement
             return new X509Certificate2(await GetAssetBytesAsync("Certs/pixeval_ca.cer"));
         }
 
+        public static async Task RestoreHistories()
+        {
+            using var scope = App.AppViewModel.AppServicesScope;
+            var downloadHistoryManager = await scope.ServiceProvider.GetRequiredService<Task<DownloadHistoryPersistentManager>>();
+            // the HasFlag is not allow in expression tree
+            await downloadHistoryManager.DeleteAsync(entry => entry.State == DownloadState.Running ||
+                                                              entry.State == DownloadState.Queued ||
+                                                              entry.State == DownloadState.Created ||
+                                                              entry.State == DownloadState.Paused);
+            foreach (var observableDownloadTask in await downloadHistoryManager.EnumerateAsync())
+            {
+                App.AppViewModel.DownloadManager.QueueTask(observableDownloadTask);
+            }
+        }
+
         /// <summary>
         /// Erase all personal data, including session, configuration and image cache
         /// </summary>
         public static async Task ClearDataAsync()
         {
-            // TODO remove database file
             ApplicationData.Current.RoamingSettings.DeleteContainer(ConfigurationContainerKey);
             ApplicationData.Current.LocalSettings.DeleteContainer(SessionContainerKey);
+            await ApplicationData.Current.LocalFolder.ClearDirectoryAsync();
             await AppKnownFolders.Temporary.ClearAsync();
             await AppKnownFolders.SavedWallPaper.ClearAsync();
         }
@@ -258,6 +278,8 @@ namespace Pixeval.AppManagement
                 ConfigurationContainer.Values[nameof(AppSetting.SearchEndDate)] = appSetting.SearchEndDate;
                 ConfigurationContainer.Values[nameof(AppSetting.DefaultDownloadPathMacro)] = appSetting.DefaultDownloadPathMacro;
                 ConfigurationContainer.Values[nameof(AppSetting.OverwriteDownloadedFile)] = appSetting.OverwriteDownloadedFile;
+                ConfigurationContainer.Values[nameof(AppSetting.MaximumDownloadHistoryRecords)] = appSetting.MaximumDownloadHistoryRecords;
+                ConfigurationContainer.Values[nameof(AppSetting.MaximumSearchHistoryRecords)] = appSetting.MaximumSearchHistoryRecords;
             }
         }
 
@@ -318,7 +340,9 @@ namespace Pixeval.AppManagement
                     ConfigurationContainer.Values[nameof(AppSetting.SearchStartDate)].CastOrThrow<DateTimeOffset>(),
                     ConfigurationContainer.Values[nameof(AppSetting.SearchEndDate)].CastOrThrow<DateTimeOffset>(),
                     ConfigurationContainer.Values[nameof(AppSetting.DefaultDownloadPathMacro)].CastOrThrow<string>(),
-                    ConfigurationContainer.Values[nameof(AppSetting.OverwriteDownloadedFile)].CastOrThrow<bool>());
+                    ConfigurationContainer.Values[nameof(AppSetting.OverwriteDownloadedFile)].CastOrThrow<bool>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.MaximumDownloadHistoryRecords)].CastOrThrow<int>(),
+                    ConfigurationContainer.Values[nameof(AppSetting.MaximumSearchHistoryRecords)].CastOrThrow<int>());
             }
             catch
             {

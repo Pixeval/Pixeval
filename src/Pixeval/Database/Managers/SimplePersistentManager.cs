@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using SQLite;
@@ -14,10 +15,15 @@ namespace Pixeval.Database.Managers
         where T : new()
     {
         public SQLiteAsyncConnection Connection { get; init; } = null!;
+        public int MaximumRecords { get; set; }
 
-        public Task InsertAsync(T t)
+        public async Task InsertAsync(T t)
         {
-            return Connection.InsertAsync(t);
+            if (await Connection.Table<DownloadHistoryEntry>().CountAsync() > MaximumRecords)
+            {
+                await Purge(MaximumRecords);
+            }
+            await Connection.InsertAsync(t);
         }
 
         public async Task<IEnumerable<T>> QueryAsync(Func<AsyncTableQuery<T>, AsyncTableQuery<T>> action)
@@ -43,6 +49,21 @@ namespace Pixeval.Database.Managers
         public async Task<IEnumerable<T>> EnumerateAsync()
         {
             return await Connection.Table<T>().ToListAsync();
+        }
+
+        public Task<IEnumerable<T>> RawDataAsync()
+        {
+            return EnumerateAsync();
+        }
+
+        public async Task Purge(int limit)
+        {
+            var list = (await EnumerateAsync()).ToList();
+            if (list.Count > limit)
+            {
+                var last = list.Take(^limit..).ToHashSet();
+                await DeleteAsync(e => !last.Contains(e!));
+            }
         }
     }
 }

@@ -263,6 +263,13 @@ namespace Pixeval.Controls.Setting.UI
             set => SetProperty(_appSetting.MaximumDownloadHistoryRecords, value, _appSetting, (settings, value) => settings.MaximumDownloadHistoryRecords = value);
         }
 
+        [DefaultValue(50)]
+        public int MaximumSearchHistoryRecords
+        {
+            get => _appSetting.MaximumSearchHistoryRecords;
+            set => SetProperty(_appSetting.MaximumSearchHistoryRecords, value, _appSetting, (settings, value) => settings.MaximumSearchHistoryRecords = value);
+        }
+
         public DateTimeOffset GetMinSearchEndDate(DateTimeOffset startDate)
         {
             return startDate.AddDays(1);
