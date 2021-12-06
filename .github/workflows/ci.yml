@@ -11,7 +11,7 @@ jobs:
             matrix:
                 platform: ['x64','x86','arm64']
 
-        runs-on: windows-latest
+        runs-on: windows-2022
 
         steps:
             - name: Setup .NET Core SDK
