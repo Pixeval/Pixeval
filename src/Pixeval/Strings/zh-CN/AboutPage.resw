@@ -117,58 +117,64 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BookmarksTab.Content" xml:space="preserve">
-    <value>我的收藏</value>
+  <data name="DependenciesContentTextBlock.Text" xml:space="preserve">
+    <value>Pixeval依赖了许多开源项目，我在此感谢这些开源项目作者的付出以及无私奉献的精神</value>
   </data>
-  <data name="DownloadAndHistoriesTab.Content" xml:space="preserve">
-    <value>下载与历史</value>
+  <data name="DependenciesSubtitleTextBlock.Text" xml:space="preserve">
+    <value>项目依赖</value>
   </data>
-  <data name="DownloadListTab.Content" xml:space="preserve">
-    <value>下载列表</value>
+  <data name="MSHostingIntroductoryTextBlock.Text" xml:space="preserve">
+    <value>Microsoft.Extensions.Hosting提供了应用程序生命周期管理，包括IoC容器在内的功能</value>
   </data>
-  <data name="FeedsTab.Content" xml:space="preserve">
-    <value>关注动态</value>
+  <data name="OpenSourceLicenseContentPartI.Text" xml:space="preserve">
+    <value>Pixeval是一个基于GPL-v3协议的开源软件，该协议的原文本如下，如果您使用了Pixeval中的代码，或者正在基于Pixeval的代码开发，请确保遵循该许可证分发您的软件，您可以在</value>
   </data>
-  <data name="FollowingsTab.Content" xml:space="preserve">
-    <value>我的关注</value>
+  <data name="OpenSourceLicenseContentPartII.Text" xml:space="preserve">
+    <value>查看到有关GNU General Public License v3的更多详细信息</value>
   </data>
-  <data name="HelpTab.Content" xml:space="preserve">
-    <value>帮助</value>
+  <data name="OpenSourceLicenseHyperlinkContent.Text" xml:space="preserve">
+    <value>这里</value>
   </data>
-  <data name="HistoriesTab.Content" xml:space="preserve">
-    <value>浏览历史</value>
+  <data name="OpenSourceLicenseSubtitleTextBlock.Text" xml:space="preserve">
+    <value>开源许可</value>
   </data>
-  <data name="MainPageAutoSuggestionBox.PlaceholderText" xml:space="preserve">
-    <value>输入关键字</value>
+  <data name="PInvokeIntroductoryTextBlock.Text" xml:space="preserve">
+    <value>PInvoke.User32提供了Win32 API的包装函数</value>
   </data>
-  <data name="RecentPostsTab.Content" xml:space="preserve">
-    <value>关注新作</value>
+  <data name="QRCoderIntroductoryTextBlock.Text" xml:space="preserve">
+    <value>QRCoder提供了二维码的合成以及渲染实现</value>
   </data>
-  <data name="ReverseSearchTab.Content" xml:space="preserve">
-    <value>以图搜图</value>
+  <data name="RCMemoryStreamIntroductoryTextBlock.Text" xml:space="preserve">
+    <value>Microsoft.IO.RecyclableMemoryStream通过池化提供了对GC友好的MemoryStream实现</value>
   </data>
-  <data name="SettingsTab.Content" xml:space="preserve">
-    <value>设置</value>
+  <data name="ReverseMDIntroductoryTextBlock.Text" xml:space="preserve">
+    <value>ReverseMarkdown提供了用于将HTML转换为Markdown的函数</value>
   </data>
-  <data name="SpotlightsTab.Content" xml:space="preserve">
-    <value>特辑推荐</value>
+  <data name="SpecialThanksContentTextBlock.Text" xml:space="preserve">
+    <value>我的朋友们在该项目上给予我了极大的支持，才得以使我一直维持当初的热忱</value>
   </data>
-  <data name="RankingsTab.Content" xml:space="preserve">
-    <value>作品榜单</value>
+  <data name="SpecialThanksSubtitleTextBlock.Text" xml:space="preserve">
+    <value>鸣谢(排名不分先后)</value>
   </data>
-  <data name="RecommendationsTab.Content" xml:space="preserve">
-    <value>每日推荐</value>
+  <data name="SQLiteIntroductoryTextBlock.Text" xml:space="preserve">
+    <value>sqlite-net-pcl是一个用于SQLite数据库的ORM库，提供了基于表达式树的LINQ查询</value>
   </data>
-  <data name="SearchKeywordCannotBeBlankToastContent" xml:space="preserve">
-    <value>关键字的长度不能为空</value>
+  <data name="SupportMeContentPartI.Text" xml:space="preserve">
+    <value>作者除了日常的学业任务外，会抽出大量的时间放在维护Pixeval上，如果你觉得Pixeval做的还不错，欢迎前往</value>
   </data>
-  <data name="SearchKeywordCannotBeBlankToastTitle" xml:space="preserve">
-    <value>输入非法</value>
+  <data name="SupportMeContentPartII.Text" xml:space="preserve">
+    <value>赞助我，你的支持将会成为我维护的动力</value>
   </data>
-  <data name="OpenSearchSettingPopupButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>搜索设置</value>
+  <data name="SupportMeHyperlinkContent.Text" xml:space="preserve">
+    <value>这里</value>
   </data>
-  <data name="AboutTab.Content" xml:space="preserve">
-    <value>关于</value>
+  <data name="SupportMeSubtitleTextBlock.Text" xml:space="preserve">
+    <value>支持作者</value>
+  </data>
+  <data name="TitleTextBlock.Text" xml:space="preserve">
+    <value>关于Pixeval</value>
+  </data>
+  <data name="WCTKIntroductoryTextBlock.Text" xml:space="preserve">
+    <value>Windows Community Toolkit集工具类，拓展，以及额外控件于一身，大大提高了UWP/WinUI/.NET的开发体验，该库本身是.NET Foundation的一部分</value>
   </data>
 </root>

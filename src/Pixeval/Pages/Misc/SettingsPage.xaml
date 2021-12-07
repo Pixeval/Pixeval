@@ -35,7 +35,7 @@
         </Grid.RowDefinitions>
         <TextBlock x:Uid="/SettingsPage/TitleTextBlock"
                    Grid.Row="0"
-                   Margin="20,40,0,0"
+                   Margin="20,40,20,0"
                    Style="{StaticResource TitleTextBlockStyle}" />
         <ScrollViewer x:Name="SettingsPageScrollViewer"
                       Grid.Row="1"

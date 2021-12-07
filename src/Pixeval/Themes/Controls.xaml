@@ -21,6 +21,11 @@
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="FontSize" Value="{StaticResource PixevalTitleFontSize}" />
     </Style>
+    <Style x:Key="SubtitleTextBlockStyle"
+           TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{StaticResource PixevalSubtitleFontSize}" />
+    </Style>
     <Style x:Key="SettingsNumberBoxStyle"
            TargetType="NumberBox">
         <Setter Property="Width" Value="200" />

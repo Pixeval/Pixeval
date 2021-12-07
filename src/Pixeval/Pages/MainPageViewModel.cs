@@ -57,6 +57,8 @@ namespace Pixeval.Pages
 
         public readonly NavigationViewTag SettingsTag = new(typeof(SettingsPage), App.AppViewModel.MakoClient.Configuration);
 
+        public readonly NavigationViewTag AboutTag = new(typeof(AboutPage), null);
+
 
         public ImageSource? Avatar
         {

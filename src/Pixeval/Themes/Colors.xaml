@@ -19,8 +19,11 @@
             <SolidColorBrush x:Key="CardStrokeBrush"
                              Color="#0F000000" />
             <ui:Color x:Key="ExpanderHeaderCardPointerOverBackgroundColor">#F6F6F6</ui:Color>
+            <ui:Color x:Key="ActionableCardPointerOverBackgroundColor">#F6F6F6</ui:Color>
             <ui:Color x:Key="ExpanderContentBackgroundColor">#FAFCFD</ui:Color>
             <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground"
+                             Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
+            <SolidColorBrush x:Key="ActionableCardPointerOverBackground"
                              Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
             <SolidColorBrush x:Key="ExpanderContentBackground"
                              Color="{ThemeResource ExpanderContentBackgroundColor}" />
@@ -42,8 +45,11 @@
             <SolidColorBrush x:Key="CardStrokeBrush"
                              Color="#0F000000" />
             <ui:Color x:Key="ExpanderHeaderCardPointerOverBackgroundColor">#F6F6F6</ui:Color>
+            <ui:Color x:Key="ActionableCardPointerOverBackgroundColor">#F6F6F6</ui:Color>
             <ui:Color x:Key="ExpanderContentBackgroundColor">#FAFCFD</ui:Color>
             <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground"
+                             Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
+            <SolidColorBrush x:Key="ActionableCardPointerOverBackground"
                              Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
             <SolidColorBrush x:Key="ExpanderContentBackground"
                              Color="{ThemeResource ExpanderContentBackgroundColor}" />
@@ -65,8 +71,11 @@
             <SolidColorBrush x:Key="CardStrokeBrush"
                              Color="#19000000" />
             <ui:Color x:Key="ExpanderHeaderCardPointerOverBackgroundColor">#323232</ui:Color>
+            <ui:Color x:Key="ActionableCardPointerOverBackgroundColor">#323232</ui:Color>
             <ui:Color x:Key="ExpanderContentBackgroundColor">#2B2A2F</ui:Color>
             <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground"
+                             Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
+            <SolidColorBrush x:Key="ActionableCardPointerOverBackground"
                              Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
             <SolidColorBrush x:Key="ExpanderContentBackground"
                              Color="{ThemeResource ExpanderContentBackgroundColor}" />
@@ -85,8 +94,11 @@
             <SolidColorBrush x:Key="CardStrokeBrush"
                              Color="#FF0000" />
             <ui:Color x:Key="ExpanderHeaderCardPointerOverBackgroundColor">#323232</ui:Color>
+            <ui:Color x:Key="ActionableCardPointerOverBackgroundColor">#323232</ui:Color>
             <ui:Color x:Key="ExpanderContentBackgroundColor">#2B2A2F</ui:Color>
             <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground"
+                             Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
+            <SolidColorBrush x:Key="ActionableCardPointerOverBackground"
                              Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
             <SolidColorBrush x:Key="ExpanderContentBackground"
                              Color="{ThemeResource ExpanderContentBackgroundColor}" />
