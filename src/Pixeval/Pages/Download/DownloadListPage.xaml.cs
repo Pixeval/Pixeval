@@ -101,13 +101,7 @@ namespace Pixeval.Pages.Download
 
         private void FilterAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-            if (sender.Text.IsNotNullOrBlank())
-                _viewModel.FilterTask(sender.Text);
-            else
-            {
-                _viewModel.ResetFilter();
-                _viewModel.CurrentOption = DownloadListOption.AllQueued;
-            }
+            _viewModel.FilterTask(sender.Text);
         }
 
         private bool _queriedBySuggestion;
@@ -127,8 +121,17 @@ namespace Pixeval.Pages.Download
                 _queriedBySuggestion = false;
                 return;
             }
-            _viewModel.CurrentOption = DownloadListOption.CustomSearch;
-            _viewModel.ResetFilter(_viewModel.FilteredTasks);
+
+            if (sender.Text.IsNullOrBlank())
+            {
+                _viewModel.CurrentOption = DownloadListOption.AllQueued;
+                _viewModel.ResetFilter();
+            }
+            else
+            {
+                _viewModel.CurrentOption = DownloadListOption.CustomSearch;
+                _viewModel.ResetFilter(_viewModel.FilteredTasks);
+            }
         }
 
         private void SelectAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
