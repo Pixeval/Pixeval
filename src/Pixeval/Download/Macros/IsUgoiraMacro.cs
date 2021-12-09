@@ -24,16 +24,15 @@ using Pixeval.Download.MacroParser;
 using Pixeval.UserControls;
 using Pixeval.Util;
 
-namespace Pixeval.Download.Macros
-{
-    [MetaPathMacro(typeof(IllustrationViewModel))]
-    public class IsUgoiraMacro : IMacro<IllustrationViewModel>.IPredicate
-    {
-        public string Name => "if_gif";
+namespace Pixeval.Download.Macros;
 
-        public bool Match(IllustrationViewModel context)
-        {
-            return context.Illustration.IsUgoira();
-        }
+[MetaPathMacro(typeof(IllustrationViewModel))]
+public class IsUgoiraMacro : IMacro<IllustrationViewModel>.IPredicate
+{
+    public string Name => "if_gif";
+
+    public bool Match(IllustrationViewModel context)
+    {
+        return context.Illustration.IsUgoira();
     }
 }
