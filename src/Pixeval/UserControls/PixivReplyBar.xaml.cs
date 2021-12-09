@@ -30,7 +30,6 @@ using Pixeval.Misc;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.UserControls
 {
@@ -79,10 +78,9 @@ namespace Pixeval.UserControls
             ReplyContentRichEditBox.Document.GetText(TextGetOptions.UseObjectText, out var content);
             if (content.Length is 0 or > 140)
             {
-                UIHelper.ShowTextToastNotification(
+                MessageDialogBuilder.CreateAcknowledgement(this,
                     PixivReplyBarResources.CommentIsTooShortOrTooLongToastTitle,
-                    PixivReplyBarResources.CommentIsTooShortOrTooLongToastContentFormatted.Format(content.Length),
-                    AppContext.AppLogoNoCaptionUri);
+                    PixivReplyBarResources.CommentIsTooShortOrTooLongToastContentFormatted.Format(content.Length));
                 return;
             }
 

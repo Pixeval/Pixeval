@@ -123,10 +123,10 @@
   <data name="AddAllToBookmarkButton.Label" xml:space="preserve">
     <value>添加到收藏夹</value>
   </data>
-  <data name="AddAllToBookmarkToastContentFormatted" xml:space="preserve">
+  <data name="AddAllToBookmarkContentFormatted" xml:space="preserve">
     <value>收藏了{0}张图片</value>
   </data>
-  <data name="AddAllToBookmarkToastTitle" xml:space="preserve">
+  <data name="AddAllToBookmarkTitle" xml:space="preserve">
     <value>成功添加到收藏</value>
   </data>
   <data name="OpenAllInBrowserButton.Label" xml:space="preserve">

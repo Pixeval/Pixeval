@@ -55,6 +55,11 @@ namespace Pixeval
 
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
+            if (AppInstance.GetCurrent().GetActivatedEventArgs().Kind == ExtendedActivationKind.ToastNotification)
+            {
+                return;
+            }
+
             var isProtocolActivated = AppInstance.GetCurrent().GetActivatedEventArgs() is { Kind: ExtendedActivationKind.Protocol };
             if (isProtocolActivated && AppInstance.GetInstances().Count > 1)
             {

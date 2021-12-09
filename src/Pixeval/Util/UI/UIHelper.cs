@@ -70,6 +70,7 @@ namespace Pixeval.Util.UI
         public static void ShowTextToastNotification(string title, string content, string? logoUri = null, Action<ToastContentBuilder>? contentBuilder = null)
         {
             var builder = new ToastContentBuilder()
+                .SetBackgroundActivation()
                 .AddText(title, AdaptiveTextStyle.Header)
                 .AddText(content, AdaptiveTextStyle.Caption);
             contentBuilder?.Invoke(builder);

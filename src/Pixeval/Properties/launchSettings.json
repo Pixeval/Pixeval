@@ -6,7 +6,7 @@
       "remoteDebugEnabled": false,
       "allowLocalNetworkLoopbackProperty": true,
       "authenticationMode": "Windows",
-      "doNotLaunchApp": false,
+      "doNotLaunchApp": true,
       "remoteDebugMachine": "",
       "nativeDebugging": true
     }

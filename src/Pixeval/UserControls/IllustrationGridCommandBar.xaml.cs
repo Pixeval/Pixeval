@@ -39,7 +39,6 @@ using Pixeval.UserControls.TokenInput;
 using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.UserControls
 {
@@ -179,10 +178,9 @@ namespace Pixeval.UserControls
 
             if (viewModelSelectedIllustrations.Length is var c and > 0)
             {
-                UIHelper.ShowTextToastNotification(
-                    IllustrationGridCommandBarResources.AddAllToBookmarkToastTitle,
-                    IllustrationGridCommandBarResources.AddAllToBookmarkToastContentFormatted.Format(c),
-                    AppContext.AppLogoNoCaptionUri);
+                MessageDialogBuilder.CreateAcknowledgement(this,
+                    IllustrationGridCommandBarResources.AddAllToBookmarkTitle,
+                    IllustrationGridCommandBarResources.AddAllToBookmarkContentFormatted.Format(c));
             }
         }
 

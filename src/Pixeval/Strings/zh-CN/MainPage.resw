@@ -156,10 +156,10 @@
   <data name="RecommendationsTab.Content" xml:space="preserve">
     <value>每日推荐</value>
   </data>
-  <data name="SearchKeywordCannotBeBlankToastContent" xml:space="preserve">
+  <data name="SearchKeywordCannotBeBlankContent" xml:space="preserve">
     <value>关键字的长度不能为空</value>
   </data>
-  <data name="SearchKeywordCannotBeBlankToastTitle" xml:space="preserve">
+  <data name="SearchKeywordCannotBeBlankTitle" xml:space="preserve">
     <value>输入非法</value>
   </data>
   <data name="OpenSearchSettingPopupButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">

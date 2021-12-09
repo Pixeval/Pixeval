@@ -47,7 +47,6 @@ using Pixeval.Pages.Misc;
 using Pixeval.UserControls;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Microsoft.Extensions.DependencyInjection;
@@ -145,10 +144,9 @@ namespace Pixeval.Pages
         {
             if (args.QueryText.IsNullOrBlank())
             {
-                UIHelper.ShowTextToastNotification(
-                    MainPageResources.SearchKeywordCannotBeBlankToastTitle,
-                    MainPageResources.SearchKeywordCannotBeBlankToastContent,
-                    AppContext.AppLogoNoCaptionUri);
+                MessageDialogBuilder.CreateAcknowledgement(this,
+                    MainPageResources.SearchKeywordCannotBeBlankTitle,
+                    MainPageResources.SearchKeywordCannotBeBlankContent);
                 return;
             }
 
