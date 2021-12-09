@@ -43,106 +43,105 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 
-namespace Pixeval.Pages
+namespace Pixeval.Pages;
+
+public class MainPageViewModel : AutoActivateObservableRecipient, IRecipient<LoginCompletedMessage>
 {
-    public class MainPageViewModel : AutoActivateObservableRecipient, IRecipient<LoginCompletedMessage>
+    private ImageSource? _avatar;
+
+    public double MainPageRootNavigationViewOpenPanelLength => 280;
+
+    public readonly NavigationViewTag BookmarksTag = new(typeof(BookmarksPage), App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid!, PrivacyPolicy.Public, App.AppViewModel.AppSetting.TargetFilter));
+
+    public readonly NavigationViewTag HistoriesTag = new(typeof(BrowsingHistoryPage), null);
+
+    public readonly NavigationViewTag RankingsTag = new(typeof(RankingsPage), App.AppViewModel.MakoClient.Ranking(RankOption.Day, DateTime.Today - TimeSpan.FromDays(2)));
+
+    public readonly NavigationViewTag RecentPostsTag = new(typeof(RecentPostsPage), App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicy.Public));
+
+    public readonly NavigationViewTag RecommendsTag = new(typeof(RecommendationPage), App.AppViewModel.MakoClient.Recommendations(targetFilter: App.AppViewModel.AppSetting.TargetFilter));
+
+    public readonly NavigationViewTag SettingsTag = new(typeof(SettingsPage), App.AppViewModel.MakoClient.Configuration);
+
+    public readonly NavigationViewTag AboutTag = new(typeof(AboutPage), null);
+
+
+    public ImageSource? Avatar
     {
-        private ImageSource? _avatar;
+        get => _avatar;
+        set => SetProperty(ref _avatar, value);
+    }
 
-        public double MainPageRootNavigationViewOpenPanelLength => 280;
+    public ObservableCollection<SuggestionModel> Suggestions { get; } = new();
 
-        public readonly NavigationViewTag BookmarksTag = new(typeof(BookmarksPage), App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid!, PrivacyPolicy.Public, App.AppViewModel.AppSetting.TargetFilter));
+    public void Receive(LoginCompletedMessage message)
+    {
+        DownloadAndSetAvatar();
+    }
 
-        public readonly NavigationViewTag HistoriesTag = new(typeof(BrowsingHistoryPage), null);
+    /// <summary>
+    ///     Download user's avatar and set to the Avatar property.
+    /// </summary>
+    public async void DownloadAndSetAvatar()
+    {
+        var makoClient = App.AppViewModel.MakoClient;
+        // get byte array of avatar
+        // and set to the bitmap image
+        Avatar = await (await makoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(makoClient.Session.AvatarUrl!))
+            .GetOrThrow()
+            .GetBitmapImageAsync(true);
+    }
 
-        public readonly NavigationViewTag RankingsTag = new(typeof(RankingsPage), App.AppViewModel.MakoClient.Ranking(RankOption.Day, DateTime.Today - TimeSpan.FromDays(2)));
+    public async Task AppendSearchHistoryAsync()
+    {
+        using var scope = App.AppViewModel.AppServicesScope;
+        var manager = await scope.ServiceProvider.GetRequiredService<Task<SearchHistoryPersistentManager>>();
+        var histories = (await manager.QueryAsync(query => query.OrderByDescending(x => x.Time))).SelectNotNull(SuggestionModel.FromHistory);
 
-        public readonly NavigationViewTag RecentPostsTag = new(typeof(RecentPostsPage), App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicy.Public));
+        Suggestions.ReplaceByUpdate(histories);
+    }
 
-        public readonly NavigationViewTag RecommendsTag = new(typeof(RecommendationPage), App.AppViewModel.MakoClient.Recommendations(targetFilter: App.AppViewModel.AppSetting.TargetFilter));
-
-        public readonly NavigationViewTag SettingsTag = new(typeof(SettingsPage), App.AppViewModel.MakoClient.Configuration);
-
-        public readonly NavigationViewTag AboutTag = new(typeof(AboutPage), null);
-
-
-        public ImageSource? Avatar
+    public async Task ReverseSearchAsync(StorageFile storageFile)
+    {
+        try
         {
-            get => _avatar;
-            set => SetProperty(ref _avatar, value);
-        }
-
-        public ObservableCollection<SuggestionModel> Suggestions { get; } = new();
-
-        public void Receive(LoginCompletedMessage message)
-        {
-            DownloadAndSetAvatar();
-        }
-
-        /// <summary>
-        ///     Download user's avatar and set to the Avatar property.
-        /// </summary>
-        public async void DownloadAndSetAvatar()
-        {
-            var makoClient = App.AppViewModel.MakoClient;
-            // get byte array of avatar
-            // and set to the bitmap image
-            Avatar = await (await makoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(makoClient.Session.AvatarUrl!))
-                .GetOrThrow()
-                .GetBitmapImageAsync(true);
-        }
-
-        public async Task AppendSearchHistoryAsync()
-        {
-            using var scope = App.AppViewModel.AppServicesScope;
-            var manager = await scope.ServiceProvider.GetRequiredService<Task<SearchHistoryPersistentManager>>();
-            var histories = (await manager.QueryAsync(query => query.OrderByDescending(x => x.Time))).SelectNotNull(SuggestionModel.FromHistory);
-
-            Suggestions.ReplaceByUpdate(histories);
-        }
-
-        public async Task ReverseSearchAsync(StorageFile storageFile)
-        {
-            try
+            App.AppViewModel.Window.ShowProgressRing();
+            await using var stream = await storageFile.OpenStreamForReadAsync();
+            var result = await App.AppViewModel.MakoClient.ReverseSearchAsync(stream, App.AppViewModel.AppSetting.ReverseSearchApiKey!);
+            if (result.Header is not null)
             {
-                App.AppViewModel.Window.ShowProgressRing();
-                await using var stream = await storageFile.OpenStreamForReadAsync();
-                var result = await App.AppViewModel.MakoClient.ReverseSearchAsync(stream, App.AppViewModel.AppSetting.ReverseSearchApiKey!);
-                if (result.Header is not null)
+                switch (result.Header!.Status)
                 {
-                    switch (result.Header!.Status)
-                    {
-                        case 0:
-                            if (result.Results?.FirstOrDefault() is { Header.IndexId: 5 or 6 } first)
-                            {
-                                var viewModels = new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(first.Data!.PixivId.ToString()))
-                                    .GetMangaIllustrationViewModels()
-                                    .ToArray();
-                                App.AppViewModel.Window.HideProgressRing();
-                                ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
-                                App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
-                                return;
-                            }
+                    case 0:
+                        if (result.Results?.FirstOrDefault() is { Header.IndexId: 5 or 6 } first)
+                        {
+                            var viewModels = new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(first.Data!.PixivId.ToString()))
+                                .GetMangaIllustrationViewModels()
+                                .ToArray();
+                            App.AppViewModel.Window.HideProgressRing();
+                            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
+                            App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
+                            return;
+                        }
 
-                            break;
-                        case var s:
-                            await MessageDialogBuilder.CreateAcknowledgement(
-                                    App.AppViewModel.Window,
-                                    MainPageResources.ReverseSearchErrorTitle,
-                                    s > 0 ? MainPageResources.ReverseSearchServerSideErrorContent : MainPageResources.ReverseSearchClientSideErrorContent)
-                                .ShowAsync();
-                            break;
-                    }
-
-                    App.AppViewModel.Window.HideProgressRing();
-                    MessageDialogBuilder.CreateAcknowledgement(App.AppViewModel.Window, MainPageResources.ReverseSearchNotFoundTitle, MainPageResources.ReverseSearchNotFoundContent);
+                        break;
+                    case var s:
+                        await MessageDialogBuilder.CreateAcknowledgement(
+                                App.AppViewModel.Window,
+                                MainPageResources.ReverseSearchErrorTitle,
+                                s > 0 ? MainPageResources.ReverseSearchServerSideErrorContent : MainPageResources.ReverseSearchClientSideErrorContent)
+                            .ShowAsync();
+                        break;
                 }
-            }
-            catch (Exception e)
-            {
+
                 App.AppViewModel.Window.HideProgressRing();
-                await App.AppViewModel.ShowExceptionDialogAsync(e);
+                MessageDialogBuilder.CreateAcknowledgement(App.AppViewModel.Window, MainPageResources.ReverseSearchNotFoundTitle, MainPageResources.ReverseSearchNotFoundContent);
             }
+        }
+        catch (Exception e)
+        {
+            App.AppViewModel.Window.HideProgressRing();
+            await App.AppViewModel.ShowExceptionDialogAsync(e);
         }
     }
 }
