@@ -87,8 +87,9 @@ namespace Pixeval.Pages.Download
             set => SetProperty(ref _isAnyEntrySelected, value);
         }
 
-        public DownloadListPageViewModel(IList<DownloadListEntryViewModel> downloadTasks)
+        public DownloadListPageViewModel(List<DownloadListEntryViewModel> downloadTasks)
         {
+            downloadTasks.Reverse();
             _downloadTasks = downloadTasks;
             _filteredTasks = new ObservableCollection<IDownloadTask>();
             _downloadTasksView = new AdvancedCollectionView(downloadTasks as IList);
@@ -145,19 +146,19 @@ namespace Pixeval.Pages.Download
 
         public void FilterTask(string key)
         {
-            FilteredTasks.Clear();
             if (key.IsNullOrBlank())
             {
+                FilteredTasks.Clear();
                 return;
             }
 
-            FilteredTasks.AddRange(DownloadTasks.Where(Query).Select(t => t.DownloadTask));
+            var newTasks = DownloadTasks.Where(Query).Select(t => t.DownloadTask);
+            FilteredTasks.ReplaceByUpdate(newTasks);
 
             bool Query(DownloadListEntryViewModel viewModel)
             {
-                return (viewModel.DownloadTask.Title?.Contains(key) ?? false)
-                       || viewModel.DownloadTask is not IllustrationDownloadTask task
-                       || task.IllustrationViewModel.Id.Contains(key);
+                return (viewModel.DownloadTask.Title?.Contains(key) ?? false) ||
+                       ((viewModel.DownloadTask is IllustrationDownloadTask task ? task.IllustrationViewModel.Id : viewModel.DownloadTask.Id)?.Contains(key) ?? false);
             }
         }
 

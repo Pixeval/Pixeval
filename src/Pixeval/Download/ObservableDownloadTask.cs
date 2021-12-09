@@ -37,6 +37,8 @@ namespace Pixeval.Download
 
         public DownloadHistoryEntry DatabaseEntry { get; }
 
+        public string? Id => DatabaseEntry.Id;
+
         public string? Title => DatabaseEntry.Title;
 
         public string? Description => DatabaseEntry.Description;
