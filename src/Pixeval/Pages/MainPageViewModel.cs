@@ -22,17 +22,23 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net;
 using Pixeval.Database.Managers;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Pages.Capability;
+using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.Misc;
+using Pixeval.UserControls;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
@@ -43,7 +49,7 @@ namespace Pixeval.Pages
     {
         private ImageSource? _avatar;
 
-        public double MainPageRootNavigationViewOpenPanelLength => 250;
+        public double MainPageRootNavigationViewOpenPanelLength => 280;
 
         public readonly NavigationViewTag BookmarksTag = new(typeof(BookmarksPage), App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid!, PrivacyPolicy.Public, App.AppViewModel.AppSetting.TargetFilter));
 
@@ -93,6 +99,50 @@ namespace Pixeval.Pages
             var histories = (await manager.QueryAsync(query => query.OrderByDescending(x => x.Time))).SelectNotNull(SuggestionModel.FromHistory);
 
             Suggestions.ReplaceByUpdate(histories);
+        }
+
+        public async Task ReverseSearchAsync(StorageFile storageFile)
+        {
+            try
+            {
+                App.AppViewModel.Window.ShowProgressRing();
+                await using var stream = await storageFile.OpenStreamForReadAsync();
+                var result = await App.AppViewModel.MakoClient.ReverseSearchAsync(stream, App.AppViewModel.AppSetting.ReverseSearchApiKey!);
+                if (result.Header is not null)
+                {
+                    switch (result.Header!.Status)
+                    {
+                        case 0:
+                            if (result.Results?.FirstOrDefault() is { Header.IndexId: 5 or 6 } first)
+                            {
+                                var viewModels = new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(first.Data!.PixivId.ToString()))
+                                    .GetMangaIllustrationViewModels()
+                                    .ToArray();
+                                App.AppViewModel.Window.HideProgressRing();
+                                ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
+                                App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
+                                return;
+                            }
+
+                            break;
+                        case var s:
+                            await MessageDialogBuilder.CreateAcknowledgement(
+                                    App.AppViewModel.Window,
+                                    MainPageResources.ReverseSearchErrorTitle,
+                                    s > 0 ? MainPageResources.ReverseSearchServerSideErrorContent : MainPageResources.ReverseSearchClientSideErrorContent)
+                                .ShowAsync();
+                            break;
+                    }
+
+                    App.AppViewModel.Window.HideProgressRing();
+                    MessageDialogBuilder.CreateAcknowledgement(App.AppViewModel.Window, MainPageResources.ReverseSearchNotFoundTitle, MainPageResources.ReverseSearchNotFoundContent);
+                }
+            }
+            catch (Exception e)
+            {
+                App.AppViewModel.Window.HideProgressRing();
+                await App.AppViewModel.ShowExceptionDialogAsync(e);
+            }
         }
     }
 }

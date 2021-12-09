@@ -38,6 +38,7 @@ using Windows.Foundation;
 using Windows.Security.Cryptography;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using JetBrains.Annotations;
 using Pixeval.Utilities;
 
 namespace Pixeval.Util.IO
@@ -148,6 +149,7 @@ namespace Pixeval.Util.IO
             return (await storageFile.ReadBytesAsync())?.GetString(encoding);
         }
 
+        [ContractAnnotation("notnull => notnull")]
         public static async Task<byte[]?> ReadBytesAsync(this StorageFile? file)
         {
             if (file == null)

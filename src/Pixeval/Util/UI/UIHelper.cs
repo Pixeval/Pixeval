@@ -338,5 +338,17 @@ namespace Pixeval.Util.UI
             InitializeWithWindow.Initialize(savePicker, App.AppViewModel.GetMainWindowHandle());
             return savePicker.PickSaveFileAsync();
         }
+
+        public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync()
+        {
+            var openPicker = new FileOpenPicker
+            {
+                SuggestedStartLocation = PickerLocationId.PicturesLibrary,
+                ViewMode = PickerViewMode.Thumbnail,
+                FileTypeFilter = { "*" }
+            };
+            InitializeWithWindow.Initialize(openPicker, App.AppViewModel.GetMainWindowHandle());
+            return openPicker.PickSingleFileAsync();
+        }
     }
 }

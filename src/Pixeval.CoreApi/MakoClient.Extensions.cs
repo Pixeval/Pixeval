@@ -22,7 +22,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Global.Exception;
@@ -32,6 +34,7 @@ using Pixeval.CoreApi.Net.EndPoints;
 using Pixeval.CoreApi.Net.Request;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Utilities;
+using Refit;
 
 namespace Pixeval.CoreApi
 {
@@ -184,6 +187,11 @@ namespace Pixeval.CoreApi
         public Task DeleteCommentAsync(string commentId)
         {
             return Resolve<IAppApiEndPoint>().DeleteCommentAsync(new DeleteCommentRequest(commentId));
+        }
+
+        public Task<ReverseSearchResponse> ReverseSearchAsync(Stream imgStream, string apiKey)
+        {
+            return Resolve<IReverseSearchApiEndPoint>().GetSauceAsync(new ReverseSearchRequest(apiKey), new StreamPart(imgStream, "img"));
         }
     }
 }

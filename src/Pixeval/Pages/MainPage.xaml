@@ -22,12 +22,15 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="38" />
+                    <ColumnDefinition Width="38" />
                 </Grid.ColumnDefinitions>
                 <AutoSuggestBox x:Uid="/MainPage/MainPageAutoSuggestionBox"
                                 Grid.Column="0"
                                 VerticalAlignment="Center"
+                                AllowDrop="True"
                                 GotFocus="KeywordAutoSuggestBox_GotFocus"
                                 ItemsSource="{x:Bind _viewModel.Suggestions, Mode=OneWay}"
+                                KeyDown="MainPageAutoSuggestionBox_OnKeyDown"
                                 QueryIcon="Find"
                                 QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
                                 SuggestionChosen="KeywordAutoSuggestBox_OnSuggestionChosen"
@@ -78,6 +81,16 @@
                         Content="{ui:FontIcon Glyph=SettingE713,
                                               FontSize=13}"
                         Tapped="OpenSearchSettingPopupButton_OnTapped" />
+                <Button x:Uid="/MainPage/ReverseSearchButton"
+                        Grid.Column="2"
+                        Width="33"
+                        Height="33"
+                        Padding="0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Tapped="ReverseSearchButton_OnTapped"
+                        Content="{ui:FontIcon Glyph=SearchAndAppsE773,
+                                              FontSize=13}" />
             </Grid>
         </NavigationView.PaneCustomContent>
         <NavigationView.MenuItems>
@@ -99,8 +112,6 @@
             <NavigationViewItem x:Uid="/MainPage/RecentPostsTab"
                                 Icon="{ui:FontIcon Glyph=DevUpdateECC5}"
                                 Tag="{x:Bind _viewModel.RecentPostsTag}" />
-            <NavigationViewItem x:Uid="/MainPage/ReverseSearchTab"
-                                Icon="{ui:FontIcon Glyph=SearchAndAppsE773}" />
             <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />
             <NavigationViewItem x:Uid="/MainPage/HistoriesTab"
                                 Icon="{ui:FontIcon Glyph=HistoryE81C}"

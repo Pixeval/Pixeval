@@ -70,14 +70,14 @@ namespace Pixeval
             NavigationMode = e.NavigationMode;
         }
 
-        public void ShowActivationProgressRing()
+        public void ShowProgressRing()
         {
-            ProcessingActivation.Visibility = Visibility.Visible;
+            Processing.Visibility = Visibility.Visible;
         }
 
-        public void HideActivationProgressRing()
+        public void HideProgressRing()
         {
-            ProcessingActivation.Visibility = Visibility.Collapsed;
+            Processing.Visibility = Visibility.Collapsed;
         }
     }
 }

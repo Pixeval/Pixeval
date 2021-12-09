@@ -24,7 +24,11 @@ using System;
 using System.Linq;
 using System.Runtime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
+using Windows.Storage;
+using Windows.System;
+using Windows.UI.Core;
 using CommunityToolkit.WinUI.UI;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.Toolkit.Mvvm.Messaging;
@@ -47,6 +51,8 @@ using AppContext = Pixeval.AppManagement.AppContext;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Input;
+using Pixeval.Dialogs;
 
 namespace Pixeval.Pages
 {
@@ -211,6 +217,53 @@ namespace Pixeval.Pages
                 .TransformToVisual((UIElement) settingsPage.SettingsPageScrollViewer.Content)
                 .TransformPoint(new Point(0, 0));
             settingsPage.SettingsPageScrollViewer.ChangeView(null, position.Y, null, false);
+        }
+
+        // The AutoSuggestBox does not have a 'Paste' event, so we check the keyboard event accordingly
+        private async void MainPageAutoSuggestionBox_OnKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (App.AppViewModel.AppSetting.ReverseSearchApiKey is not { Length: > 0 })
+            {
+                await ShowReverseSearchApiKeyNotPresentDialog();
+                return;
+            }
+
+            if (InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.LeftControl).HasFlag(CoreVirtualKeyStates.Down) && e.Key == VirtualKey.V)
+            {
+                var content = Clipboard.GetContent();
+                if (content.AvailableFormats.Contains(StandardDataFormats.StorageItems) &&
+                    (await content.GetStorageItemsAsync()).FirstOrDefault(i => i.IsOfType(StorageItemTypes.File)) is StorageFile file)
+                {
+                    await _viewModel.ReverseSearchAsync(file);
+                }
+            }
+        }
+
+        private async void ReverseSearchButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (App.AppViewModel.AppSetting.ReverseSearchApiKey is { Length: > 0 })
+            {
+                if (await UIHelper.OpenFileOpenPickerAsync() is { } file)
+                {
+                    await _viewModel.ReverseSearchAsync(file);
+                }
+            }
+            else
+            {
+                await ShowReverseSearchApiKeyNotPresentDialog();
+            }
+        }
+
+        private static async Task ShowReverseSearchApiKeyNotPresentDialog()
+        {
+            var content = new ReverseSearchApiKeyNotPresentDialog();
+            var dialog = MessageDialogBuilder.Create().WithTitle(MainPageResources.ReverseSearchApiKeyNotPresentTitle)
+                .WithContent(content)
+                .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
+                .WithDefaultButton(ContentDialogButton.Primary)
+                .Build(App.AppViewModel.Window);
+            content.Owner = dialog;
+            await dialog.ShowAsync();
         }
     }
 }

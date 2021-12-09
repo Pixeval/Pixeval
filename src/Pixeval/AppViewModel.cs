@@ -175,12 +175,16 @@ namespace Pixeval
                 return Task.CompletedTask;
             }
 #elif RELEASE
-            async Task UncaughtExceptionHandler(Exception e)
+            Task UncaughtExceptionHandler(Exception e)
             {
-                await MessageDialogBuilder.CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
-                ExitWithPushedNotification();
+                return ShowExceptionDialogAsync(e);
             }
 #endif
+        }
+
+        public async Task ShowExceptionDialogAsync(Exception e)
+        {
+            await MessageDialogBuilder.CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
         }
 
         public void DispatchTask(DispatcherQueueHandler action)
@@ -253,12 +257,12 @@ namespace Pixeval
 
         public void PrepareForActivation()
         {
-            Window.ShowActivationProgressRing();
+            Window.ShowProgressRing();
         }
 
         public void ActivationProcessed()
         {
-            Window.HideActivationProgressRing();
+            Window.HideProgressRing();
         }
 
         /// <summary>

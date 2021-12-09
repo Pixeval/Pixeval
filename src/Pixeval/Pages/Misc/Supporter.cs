@@ -35,19 +35,19 @@ public record Supporter(string Nickname, string Name, ImageSource? ProfilePictur
     // ReSharper disable StringLiteralTypo
     public static readonly IEnumerable<Supporter> Supporters = new List<Supporter>
     {
-        new("Sep", "Guro2", SupportImageOf("sep.jpg"), new Uri("https://github.com/Guro2")),
-        new("无论时间", "wulunshijian", SupportImageOf("wulunshijian.jpg"), new Uri("https://github.com/wulunshijian")),
-        new("CN", "ControlNet", SupportImageOf("controlnet.png"), new Uri("https://github.com/ControlNet")),
-        new("CY", "Cyl18", SupportImageOf("cyl18.png"), new Uri("https://github.com/cyl18")),
-        new("对味", "duiweiya", SupportImageOf("duiweiya.jpg"), new Uri("https://github.com/duiweiya")),
-        new("LG", "Lasm_Gratel", SupportImageOf("lasm_gratel.jpg"), new Uri("https://github.com/LasmGratel")),
-        new("鱼鱼", "sovetskyfish", null, new Uri("https://github.com/sovetskyfish")),
-        new("探姬", "Perol_Notsfsssf", SupportImageOf("perol_notsfsssf.jpg"), new Uri("https://github.com/Notsfsssf")),
-        new("Summpot", "Summpot", SupportImageOf("summpot.jpg"), new Uri("https://github.com/Summpot")),
-        new("扑克", "Poker-sang", SupportImageOf("poker_sang.jpg"), new Uri("https://github.com/Poker-sang")),
-        new("南门二", "Rigil-Kentaurus", SupportImageOf("rigil_kentaurus.png"), new Uri("https://github.com/Rigil-Kentaurus")),
-        new("当妈", "TheRealKamisama", SupportImageOf("therealkamisama.png"), new Uri("https://github.com/TheRealKamisama")),
-        new("茶栗", "CharlieJiang", SupportImageOf("charlie_jiang.jpg"), new Uri("https://github.com/cqjjjzr"))
+        new("Sep", "@Guro2", SupportImageOf("sep.jpg"), new Uri("https://github.com/Guro2")),
+        new("无论时间", "@wulunshijian", SupportImageOf("wulunshijian.jpg"), new Uri("https://github.com/wulunshijian")),
+        new("CN", "@ControlNet", SupportImageOf("controlnet.png"), new Uri("https://github.com/ControlNet")),
+        new("CY", "@Cyl18", SupportImageOf("cyl18.png"), new Uri("https://github.com/cyl18")),
+        new("对味", "@duiweiya", SupportImageOf("duiweiya.jpg"), new Uri("https://github.com/duiweiya")),
+        new("LG", "@Lasm_Gratel", SupportImageOf("lasm_gratel.jpg"), new Uri("https://github.com/LasmGratel")),
+        new("鱼鱼", "@sovetskyfish", null, new Uri("https://github.com/sovetskyfish")),
+        new("探姬", "@Perol_Notsfsssf", SupportImageOf("perol_notsfsssf.jpg"), new Uri("https://github.com/Notsfsssf")),
+        new("Summpot", "@Summpot", SupportImageOf("summpot.jpg"), new Uri("https://github.com/Summpot")),
+        new("扑克", "@Poker-sang", SupportImageOf("poker_sang.jpg"), new Uri("https://github.com/Poker-sang")),
+        new("南门二", "@Rigil-Kentaurus", SupportImageOf("rigil_kentaurus.png"), new Uri("https://github.com/Rigil-Kentaurus")),
+        new("当妈", "@TheRealKamisama", SupportImageOf("therealkamisama.png"), new Uri("https://github.com/TheRealKamisama")),
+        new("茶栗", "@CharlieJiang", SupportImageOf("charlie_jiang.jpg"), new Uri("https://github.com/cqjjjzr"))
     };
     // ReSharper restore StringLiteralTypo
 }

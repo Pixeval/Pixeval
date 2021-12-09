@@ -71,7 +71,9 @@ namespace Pixeval.AppManagement
             string defaultDownloadPathMacro, 
             bool overwriteDownloadedFile,
             int maximumDownloadHistoryRecords,
-            int maximumSearchHistoryRecords)
+            int maximumSearchHistoryRecords,
+            string reverseSearchApiKey,
+            int reverseSearchResultSimilarityThreshold)
         {
             Theme = theme;
             FiltrateRestrictedContent = filtrateRestrictedContent;
@@ -103,6 +105,8 @@ namespace Pixeval.AppManagement
             OverwriteDownloadedFile = overwriteDownloadedFile;
             MaximumDownloadHistoryRecords = maximumDownloadHistoryRecords;
             MaximumSearchHistoryRecords = maximumSearchHistoryRecords;
+            ReverseSearchApiKey = reverseSearchApiKey;
+            ReverseSearchResultSimilarityThreshold = reverseSearchResultSimilarityThreshold;
         }
 
         /// <summary>
@@ -245,6 +249,12 @@ namespace Pixeval.AppManagement
 
         [DefaultValue(50)]
         public int MaximumSearchHistoryRecords { get; set; }
+
+        [DefaultValue(null)]
+        public string? ReverseSearchApiKey { get; set; }
+
+        [DefaultValue(80)]
+        public int ReverseSearchResultSimilarityThreshold { get; set; }
 
         public static AppSetting CreateDefault()
         {

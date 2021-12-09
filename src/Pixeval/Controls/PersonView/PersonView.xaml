@@ -7,7 +7,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="local:PersonView">
                     <card:CardControl x:Name="ContentContainer"
-                                      Width="190"
+                                      Width="185"
                                       Height="70">
                         <Grid>
                             <Grid.ColumnDefinitions>

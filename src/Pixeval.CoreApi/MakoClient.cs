@@ -173,6 +173,15 @@ namespace Pixeval.CoreApi
                     ExceptionFactory = async message => !message.IsSuccessStatusCode ? await MakoNetworkException.FromHttpResponseMessageAsync(message, context.Resolve<MakoClient>().Configuration.Bypass).ConfigureAwait(false) : null
                 });
             });
+
+            builder.Register(static c =>
+            {
+                var context = c.Resolve<IComponentContext>(); // or a System.ObjectDisposedException will thrown because the 'c' cannot be hold
+                return RestService.For<IReverseSearchApiEndPoint>("https://saucenao.com/", new RefitSettings
+                {
+                    ExceptionFactory = async message => !message.IsSuccessStatusCode ? await MakoNetworkException.FromHttpResponseMessageAsync(message, context.Resolve<MakoClient>().Configuration.Bypass).ConfigureAwait(false) : null
+                });
+            });
             return builder.Build();
         }
 

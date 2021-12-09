@@ -133,7 +133,7 @@
     <value>找不到用于登录的可执行文件，请重新打开应用或者联系开发者</value>
   </data>
   <data name="ExceptionEncountered" xml:space="preserve">
-    <value>应用程序遇到了异常，即将关闭</value>
+    <value>应用程序遇到了异常</value>
   </data>
   <data name="IllustrationSortOptionDoNotSort" xml:space="preserve">
     <value>不进行任何排序</value>

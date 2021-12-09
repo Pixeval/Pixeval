@@ -65,6 +65,7 @@
       <None Remove="Controls\Setting.UI\SwitchSettingEntry\SwitchSettingEntry.xaml" />
       <None Remove="Controls\Setting.UI\UserControls\SettingEntryHeader.xaml" />
       <None Remove="Controls\TokenInputTextBox\TokenInputTextBox.xaml" />
+      <None Remove="Dialogs\ReverseSearchApiKeyNotPresentDialog.xaml" />
       <None Remove="Pages\Download\DownloadListEntry.xaml" />
       <None Remove="Pages\IllustrationViewer\CommentRepliesPage.xaml" />
       <None Remove="Pages\IllustrationViewer\PixivReplyEmojiListPage.xaml" />
@@ -104,6 +105,7 @@
       <None Remove="Pages\ImageViewerPage.xaml" />
       <None Remove="Pages\RecommendationPage.xaml" />
       <None Remove="Pages\SettingsPage.xaml" />
+      <None Remove="Strings\zh-CN\ReverseSearchApiKeyNotPresentDialog.resw" />
       <None Remove="Strings\zh-CN\SettingsPage.resw" />
       <None Remove="Strings\zh-CN\SortOptionComboBox.resw" />
       <None Remove="Strings\zh-CN\TokenInputTextBox.resw" />
@@ -260,6 +262,7 @@
       <PRIResource Include="Strings\zh-CN\RecentPostsPage.resw" />
       <PRIResource Include="Strings\zh-CN\RecommendationsPage.resw" />
       <PRIResource Include="Strings\zh-CN\PixivReplyBar.resw" />
+      <PRIResource Include="Strings\zh-CN\ReverseSearchApiKeyNotPresentDialog.resw" />
       <PRIResource Include="Strings\zh-CN\SettingsPage.resw" />
       <PRIResource Include="Strings\zh-CN\SortOptionComboBox.resw" />
       <PRIResource Include="Strings\zh-CN\TokenInputTextBox.resw" />
@@ -283,6 +286,9 @@
        <Generator>MSBuild:Compile</Generator>
      </Page>
      <Page Update="Controls\PersonView\PersonView.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+     <Page Update="Dialogs\ReverseSearchApiKeyNotPresentDialog.xaml">
        <Generator>MSBuild:Compile</Generator>
      </Page>
      <None Update="Pages\Capability\RecentPostsPage.xaml">

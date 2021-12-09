@@ -31,7 +31,7 @@
                     <ItemsRepeater ItemsSource="{x:Bind misc:Supporter.Supporters}">
                         <ItemsRepeater.Layout>
                             <controls:WrapLayout HorizontalSpacing="5"
-                                                 VerticalSpacing="10" />
+                                                 VerticalSpacing="5" />
                         </ItemsRepeater.Layout>
                         <ItemsRepeater.ItemTemplate>
                             <DataTemplate x:DataType="misc:Supporter">

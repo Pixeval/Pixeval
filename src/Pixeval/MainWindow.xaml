@@ -17,7 +17,7 @@
                 </TransitionCollection>
             </Frame.ContentTransitions>
         </Frame>
-        <Grid x:Name="ProcessingActivation"
+        <Grid x:Name="Processing"
               Width="100"
               Height="100"
               HorizontalAlignment="Center"

@@ -116,7 +116,6 @@
                                 </Grid>
                             </actionableSettingEntry:ActionableSettingEntry.ActionContent>
                         </actionableSettingEntry:ActionableSettingEntry>
-
                         <switchSettingEntry:SwitchSettingEntry x:Uid="/SettingsPage/DownloadUpdateAutomaticallyEntry"
                                                                Icon="{ui:FontIcon Glyph=CommunicationsE95A}"
                                                                IsOn="{x:Bind _viewModel.DownloadUpdateAutomatically, Mode=TwoWay}" />
@@ -209,6 +208,22 @@
                     <settingsGroup:SettingsGroup x:Name="SearchSettingsGroup"
                                                  x:Uid="/SettingsPage/SearchSettingsGroup"
                                                  x:FieldModifier="public">
+
+                        <sliderSettingEntry:SliderSettingEntry x:Uid="/SettingsPage/ReverseSearchResultSimilarityThresholdEntry"
+                                                               Icon="{ui:FontIcon Glyph=FilterE71C}"
+                                                               Maximum="100"
+                                                               Minimum="1"
+                                                               Value="{x:Bind _viewModel.ReverseSearchResultSimilarityThreshold}" />
+
+                        <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/ReverseSearchApiKeyEntry"
+                                                                       Icon="{ui:FontIcon Glyph=SearchAndAppsE773}">
+                            <actionableSettingEntry:ActionableSettingEntry.Description>
+                                <HyperlinkButton x:Uid="/SettingsPage/ReverseSearchApiKeyEntryDescriptionHyperlinkButton" />
+                            </actionableSettingEntry:ActionableSettingEntry.Description>
+                            <TextBox x:Uid="/SettingsPage/ReverseSearchApiKeyTextBox"
+                                     Width="200"
+                                     Text="{x:Bind _viewModel.ReverseSearchApiKey, Mode=TwoWay}" />
+                        </actionableSettingEntry:ActionableSettingEntry>
 
                         <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/MaximumSearchHistoryRecordsEntry"
                                                                        Icon="{ui:FontIcon Glyph=HistoryE81C}">

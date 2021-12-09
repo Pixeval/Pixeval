@@ -270,6 +270,20 @@ namespace Pixeval.Controls.Setting.UI
             set => SetProperty(_appSetting.MaximumSearchHistoryRecords, value, _appSetting, (settings, value) => settings.MaximumSearchHistoryRecords = value);
         }
 
+        [DefaultValue(null)]
+        public string? ReverseSearchApiKey
+        {
+            get => _appSetting.ReverseSearchApiKey;
+            set => SetProperty(_appSetting.ReverseSearchApiKey, value, _appSetting, (settings, value) => settings.ReverseSearchApiKey = value);
+        }
+
+        [DefaultValue(80)]
+        public int ReverseSearchResultSimilarityThreshold
+        {
+            get => _appSetting.ReverseSearchResultSimilarityThreshold;
+            set => SetProperty(_appSetting.ReverseSearchResultSimilarityThreshold, value, _appSetting, (settings, value) => settings.ReverseSearchResultSimilarityThreshold = value);
+        }
+
         public DateTimeOffset GetMinSearchEndDate(DateTimeOffset startDate)
         {
             return startDate.AddDays(1);

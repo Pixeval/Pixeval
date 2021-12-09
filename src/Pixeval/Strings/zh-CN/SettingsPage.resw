@@ -323,6 +323,21 @@
   <data name="ResetSettingConfirmationDialogTitle" xml:space="preserve">
     <value>你确定要重置所有设置项吗？</value>
   </data>
+  <data name="ReverseSearchApiKeyEntry.Header" xml:space="preserve">
+    <value>SauceNAO的API Key</value>
+  </data>
+  <data name="ReverseSearchApiKeyEntryDescriptionHyperlinkButton.Content" xml:space="preserve">
+    <value>点击这里查看如何获取SaoceNao的API Key</value>
+  </data>
+  <data name="ReverseSearchApiKeyTextBox.PlaceholderText" xml:space="preserve">
+    <value>请输入API Key</value>
+  </data>
+  <data name="ReverseSearchResultSimilarityThresholdEntry.Description" xml:space="preserve">
+    <value>逆向搜索结果的阈值，如果搜索结果低于该阈值则会被忽略，值越高则说明搜索结果和原图越相似</value>
+  </data>
+  <data name="ReverseSearchResultSimilarityThresholdEntry.Header" xml:space="preserve">
+    <value>逆向搜索阈值</value>
+  </data>
   <data name="SearchDurationEntry.Description" xml:space="preserve">
     <value>搜索结果将会被限制在指定的时间区间内，如果”使用更精确的搜索范围限制“启用则此项被忽略</value>
   </data>
