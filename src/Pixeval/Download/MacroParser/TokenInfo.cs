@@ -22,10 +22,9 @@
 
 using System;
 
-namespace Pixeval.Download.MacroParser
+namespace Pixeval.Download.MacroParser;
+
+public record TokenInfo(TokenKind TokenKind, string Text, Range Position)
 {
-    public record TokenInfo(TokenKind TokenKind, string Text, Range Position)
-    {
-        public static readonly TokenInfo Empty = new(TokenKind.Trivia, string.Empty, Range.All);
-    }
+    public static readonly TokenInfo Empty = new(TokenKind.Trivia, string.Empty, Range.All);
 }

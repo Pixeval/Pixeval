@@ -24,28 +24,27 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 
-namespace Pixeval.CoreApi.Global.Exception
+namespace Pixeval.CoreApi.Global.Exception;
+
+[PublicAPI]
+public class MakoNetworkException : MakoException
 {
-    [PublicAPI]
-    public class MakoNetworkException : MakoException
+    public MakoNetworkException(string url, bool bypass, string? extraMsg, int statusCode)
+        : base($"Network error while requesting URL: {url}:\n {extraMsg}\n Bypassing: {bypass}\n Status code: {statusCode}")
     {
-        public MakoNetworkException(string url, bool bypass, string? extraMsg, int statusCode)
-            : base($"Network error while requesting URL: {url}:\n {extraMsg}\n Bypassing: {bypass}\n Status code: {statusCode}")
-        {
-            Url = url;
-            Bypass = bypass;
-            StatusCode = statusCode;
-        }
+        Url = url;
+        Bypass = bypass;
+        StatusCode = statusCode;
+    }
 
-        public string Url { get; set; }
+    public string Url { get; set; }
 
-        public bool Bypass { get; set; }
-        public int StatusCode { get; }
+    public bool Bypass { get; set; }
+    public int StatusCode { get; }
 
-        // We use Task<Exception> instead of Task<MakoNetworkException> to compromise with the generic variance
-        public static async Task<System.Exception> FromHttpResponseMessageAsync(HttpResponseMessage message, bool bypass)
-        {
-            return new MakoNetworkException(message.RequestMessage?.RequestUri?.ToString() ?? string.Empty, bypass, await message.Content.ReadAsStringAsync().ConfigureAwait(false), (int) message.StatusCode);
-        }
+    // We use Task<Exception> instead of Task<MakoNetworkException> to compromise with the generic variance
+    public static async Task<System.Exception> FromHttpResponseMessageAsync(HttpResponseMessage message, bool bypass)
+    {
+        return new MakoNetworkException(message.RequestMessage?.RequestUri?.ToString() ?? string.Empty, bypass, await message.Content.ReadAsStringAsync().ConfigureAwait(false), (int) message.StatusCode);
     }
 }

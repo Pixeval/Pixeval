@@ -23,28 +23,27 @@
 using Windows.Foundation;
 using Microsoft.UI.Xaml.Controls;
 
-namespace Pixeval.Controls.NotifyOnLoadedCalendarDatePicker
+namespace Pixeval.Controls.NotifyOnLoadedCalendarDatePicker;
+
+public class NotifyOnLoadedCalendarDatePicker : CalendarDatePicker
 {
-    public class NotifyOnLoadedCalendarDatePicker : CalendarDatePicker
+    private TypedEventHandler<CalendarDatePicker, CalendarDatePickerDateChangedEventArgs>? _dateChangedWhenLoaded;
+
+    public NotifyOnLoadedCalendarDatePicker()
     {
-        private TypedEventHandler<CalendarDatePicker, CalendarDatePickerDateChangedEventArgs>? _dateChangedWhenLoaded;
-
-        public NotifyOnLoadedCalendarDatePicker()
+        DefaultStyleKey = typeof(NotifyOnLoadedCalendarDatePicker);
+        DateChanged += (sender, args) =>
         {
-            DefaultStyleKey = typeof(NotifyOnLoadedCalendarDatePicker);
-            DateChanged += (sender, args) =>
+            if (IsLoaded)
             {
-                if (IsLoaded)
-                {
-                    _dateChangedWhenLoaded?.Invoke(sender, args);
-                }
-            };
-        }
+                _dateChangedWhenLoaded?.Invoke(sender, args);
+            }
+        };
+    }
 
-        public event TypedEventHandler<CalendarDatePicker, CalendarDatePickerDateChangedEventArgs> DateChangedWhenLoaded
-        {
-            add => _dateChangedWhenLoaded += value;
-            remove => _dateChangedWhenLoaded -= value;
-        }
+    public event TypedEventHandler<CalendarDatePicker, CalendarDatePickerDateChangedEventArgs> DateChangedWhenLoaded
+    {
+        add => _dateChangedWhenLoaded += value;
+        remove => _dateChangedWhenLoaded -= value;
     }
 }

@@ -20,7 +20,6 @@
 
 #endregion
 
-namespace Pixeval.Messages
-{
-    public record OpenSearchSettingMessage;
-}
+namespace Pixeval.Messages;
+
+public record OpenSearchSettingMessage;

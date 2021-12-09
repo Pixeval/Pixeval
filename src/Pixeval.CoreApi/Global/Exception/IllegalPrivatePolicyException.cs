@@ -24,35 +24,34 @@ using System.Runtime.Serialization;
 using JetBrains.Annotations;
 using Pixeval.CoreApi.Global.Enum;
 
-namespace Pixeval.CoreApi.Global.Exception
+namespace Pixeval.CoreApi.Global.Exception;
+
+/// <summary>
+///     When a <see cref="PrivacyPolicy" /> is set to <see cref="PrivacyPolicy.Private" /> while the uid is not equivalent
+///     to the <see cref="MakoClient.Session" />
+/// </summary>
+[PublicAPI]
+public class IllegalPrivatePolicyException : MakoException
 {
-    /// <summary>
-    ///     When a <see cref="PrivacyPolicy" /> is set to <see cref="PrivacyPolicy.Private" /> while the uid is not equivalent
-    ///     to the <see cref="MakoClient.Session" />
-    /// </summary>
-    [PublicAPI]
-    public class IllegalPrivatePolicyException : MakoException
+    public IllegalPrivatePolicyException(string uid)
     {
-        public IllegalPrivatePolicyException(string uid)
-        {
-            Uid = uid;
-        }
-
-        protected IllegalPrivatePolicyException(SerializationInfo info, StreamingContext context, string uid) : base(info, context)
-        {
-            Uid = uid;
-        }
-
-        public IllegalPrivatePolicyException(string? message, string uid) : base(message)
-        {
-            Uid = uid;
-        }
-
-        public IllegalPrivatePolicyException(string? message, System.Exception? innerException, string uid) : base(message, innerException)
-        {
-            Uid = uid;
-        }
-
-        public string Uid { get; }
+        Uid = uid;
     }
+
+    protected IllegalPrivatePolicyException(SerializationInfo info, StreamingContext context, string uid) : base(info, context)
+    {
+        Uid = uid;
+    }
+
+    public IllegalPrivatePolicyException(string? message, string uid) : base(message)
+    {
+        Uid = uid;
+    }
+
+    public IllegalPrivatePolicyException(string? message, System.Exception? innerException, string uid) : base(message, innerException)
+    {
+        Uid = uid;
+    }
+
+    public string Uid { get; }
 }

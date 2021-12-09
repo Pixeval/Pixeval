@@ -23,54 +23,53 @@
 using System;
 using System.Reflection;
 
-namespace Pixeval.Misc
+namespace Pixeval.Misc;
+
+public class DefaultValue : Attribute
 {
-    public class DefaultValue : Attribute
+    public DefaultValue(object? value)
     {
-        public DefaultValue(object? value)
-        {
-            Value = value;
-        }
-
-        /// <summary>
-        ///     Create a <see cref="DefaultValue" /> using a factory type, the type will be instantiated to provide the value
-        /// </summary>
-        /// <param name="valueFactoryType"></param>
-        public DefaultValue(Type? valueFactoryType)
-        {
-            ValueFactoryType = valueFactoryType;
-        }
-
-        public object? Value { get; }
-
-        public Type? ValueFactoryType { get; }
+        Value = value;
     }
 
-    public static class DefaultValueAttributeHelper
+    /// <summary>
+    ///     Create a <see cref="DefaultValue" /> using a factory type, the type will be instantiated to provide the value
+    /// </summary>
+    /// <param name="valueFactoryType"></param>
+    public DefaultValue(Type? valueFactoryType)
     {
-        public static object? GetDefaultValue(this PropertyInfo propInfo)
-        {
-            if (propInfo.GetCustomAttribute<DefaultValue>() is { } attribute)
-            {
-                if (attribute.ValueFactoryType is { } type)
-                {
-                    return type.IsAssignableTo(typeof(IDefaultValueProvider))
-                        ? ((IDefaultValueProvider) Activator.CreateInstance(type)!).ProvideValue()
-                        : Activator.CreateInstance(type);
-                }
+        ValueFactoryType = valueFactoryType;
+    }
 
-                return attribute.Value;
+    public object? Value { get; }
+
+    public Type? ValueFactoryType { get; }
+}
+
+public static class DefaultValueAttributeHelper
+{
+    public static object? GetDefaultValue(this PropertyInfo propInfo)
+    {
+        if (propInfo.GetCustomAttribute<DefaultValue>() is { } attribute)
+        {
+            if (attribute.ValueFactoryType is { } type)
+            {
+                return type.IsAssignableTo(typeof(IDefaultValueProvider))
+                    ? ((IDefaultValueProvider) Activator.CreateInstance(type)!).ProvideValue()
+                    : Activator.CreateInstance(type);
             }
 
-            return null;
+            return attribute.Value;
         }
 
-        public static void Initialize(object obj)
+        return null;
+    }
+
+    public static void Initialize(object obj)
+    {
+        foreach (var propertyInfo in obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
         {
-            foreach (var propertyInfo in obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
-            {
-                propertyInfo.SetValue(obj, propertyInfo.GetDefaultValue());
-            }
+            propertyInfo.SetValue(obj, propertyInfo.GetDefaultValue());
         }
     }
 }

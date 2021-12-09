@@ -25,34 +25,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Pixeval.Download.Macros
-{
-    public class MetaPathMacroAttribute : Attribute
-    {
-        public object Key;
+namespace Pixeval.Download.Macros;
 
-        public MetaPathMacroAttribute(object key)
-        {
-            Key = key;
-        }
+public class MetaPathMacroAttribute : Attribute
+{
+    public object Key;
+
+    public MetaPathMacroAttribute(object key)
+    {
+        Key = key;
+    }
+}
+
+public static class MetaPathMacroAttributeHelper
+{
+    public static IEnumerable<T> GetAttachedTypeInstances<T>()
+    {
+        return Assembly.GetExecutingAssembly().GetTypes()
+            .Where(it => it.GetCustomAttribute<MetaPathMacroAttribute>() is not null)
+            .Select(Activator.CreateInstance)
+            .OfType<T>();
     }
 
-    public static class MetaPathMacroAttributeHelper
+    public static IEnumerable<T> GetAttachedTypeInstances<T>(object key)
     {
-        public static IEnumerable<T> GetAttachedTypeInstances<T>()
-        {
-            return Assembly.GetExecutingAssembly().GetTypes()
-                .Where(it => it.GetCustomAttribute<MetaPathMacroAttribute>() is not null)
-                .Select(Activator.CreateInstance)
-                .OfType<T>();
-        }
-
-        public static IEnumerable<T> GetAttachedTypeInstances<T>(object key)
-        {
-            return Assembly.GetExecutingAssembly().GetTypes()
-                .Where(it => it.GetCustomAttribute<MetaPathMacroAttribute>() is { Key: var attrKey } && attrKey.Equals(key))
-                .Select(Activator.CreateInstance)
-                .OfType<T>();
-        }
+        return Assembly.GetExecutingAssembly().GetTypes()
+            .Where(it => it.GetCustomAttribute<MetaPathMacroAttribute>() is { Key: var attrKey } && attrKey.Equals(key))
+            .Select(Activator.CreateInstance)
+            .OfType<T>();
     }
 }

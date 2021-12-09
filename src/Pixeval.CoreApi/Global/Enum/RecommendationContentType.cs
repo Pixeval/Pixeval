@@ -22,14 +22,13 @@
 
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Global.Enum
-{
-    public enum RecommendationContentType
-    {
-        [Description("illust")]
-        Illust,
+namespace Pixeval.CoreApi.Global.Enum;
 
-        [Description("manga")]
-        Manga
-    }
+public enum RecommendationContentType
+{
+    [Description("illust")]
+    Illust,
+
+    [Description("manga")]
+    Manga
 }

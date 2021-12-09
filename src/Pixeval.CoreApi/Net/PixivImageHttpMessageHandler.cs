@@ -26,38 +26,37 @@ using System.Threading;
 using System.Threading.Tasks;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Net
+namespace Pixeval.CoreApi.Net;
+
+internal class PixivImageHttpMessageHandler : MakoClientSupportedHttpMessageHandler
 {
-    internal class PixivImageHttpMessageHandler : MakoClientSupportedHttpMessageHandler
+    public PixivImageHttpMessageHandler(MakoClient makoClient)
     {
-        public PixivImageHttpMessageHandler(MakoClient makoClient)
+        MakoClient = makoClient;
+    }
+
+    public sealed override MakoClient MakoClient { get; set; }
+
+    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        if (MakoClient.Configuration.Bypass)
         {
-            MakoClient = makoClient;
+            MakoHttpOptions.UseHttpScheme(request);
         }
 
-        public sealed override MakoClient MakoClient { get; set; }
-
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        var requestUri = request.RequestUri!;
+        if (requestUri.Host == MakoHttpOptions.ImageHost && MakoClient.Configuration.MirrorHost is { } mirror && mirror.IsNotNullOrBlank())
         {
-            if (MakoClient.Configuration.Bypass)
+            request.RequestUri = mirror switch
             {
-                MakoHttpOptions.UseHttpScheme(request);
-            }
-
-            var requestUri = request.RequestUri!;
-            if (requestUri.Host == MakoHttpOptions.ImageHost && MakoClient.Configuration.MirrorHost is { } mirror && mirror.IsNotNullOrBlank())
-            {
-                request.RequestUri = mirror switch
-                {
-                    _ when Uri.CheckHostName(mirror) is not UriHostNameType.Unknown => new UriBuilder(requestUri) { Host = mirror }.Uri,
-                    _ when Uri.IsWellFormedUriString(mirror, UriKind.Absolute) => new Uri(mirror).Let(mirrorUri => new UriBuilder(requestUri) { Host = mirrorUri!.Host, Scheme = mirrorUri.Scheme })!.Uri,
-                    _ => throw new UriFormatException("Expecting a valid Host or URI")
-                };
-            }
-
-            return MakoClient.GetHttpMessageInvoker(
-                MakoClient.Configuration.Bypass ? typeof(PixivImageNameResolver) : typeof(LocalMachineNameResolver)
-            ).SendAsync(request, cancellationToken);
+                _ when Uri.CheckHostName(mirror) is not UriHostNameType.Unknown => new UriBuilder(requestUri) { Host = mirror }.Uri,
+                _ when Uri.IsWellFormedUriString(mirror, UriKind.Absolute) => new Uri(mirror).Let(mirrorUri => new UriBuilder(requestUri) { Host = mirrorUri!.Host, Scheme = mirrorUri.Scheme })!.Uri,
+                _ => throw new UriFormatException("Expecting a valid Host or URI")
+            };
         }
+
+        return MakoClient.GetHttpMessageInvoker(
+            MakoClient.Configuration.Bypass ? typeof(PixivImageNameResolver) : typeof(LocalMachineNameResolver)
+        ).SendAsync(request, cancellationToken);
     }
 }

@@ -30,152 +30,151 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 
-namespace Pixeval.Pages.IllustrationViewer
+namespace Pixeval.Pages.IllustrationViewer;
+
+public sealed partial class ImageViewerPage
 {
-    public sealed partial class ImageViewerPage
+    private ImageViewerPageViewModel _viewModel = null!;
+
+    public ImageViewerPage()
     {
-        private ImageViewerPageViewModel _viewModel = null!;
+        InitializeComponent();
+    }
 
-        public ImageViewerPage()
-        {
-            InitializeComponent();
-        }
+    public override void OnPageActivated(NavigationEventArgs e)
+    {
+        _viewModel = (ImageViewerPageViewModel) e.Parameter;
+    }
 
-        public override void OnPageActivated(NavigationEventArgs e)
+    private void IllustrationOriginalImage_OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+    {
+        var (deltaX, deltaY) = (e.Delta.Translation.X, e.Delta.Translation.Y);
+        if (GetZoomFactor() > 1)
         {
-            _viewModel = (ImageViewerPageViewModel) e.Parameter;
-        }
-
-        private void IllustrationOriginalImage_OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
-        {
-            var (deltaX, deltaY) = (e.Delta.Translation.X, e.Delta.Translation.Y);
-            if (GetZoomFactor() > 1)
+            var renderedImageWidth = IllustrationOriginalImage.ActualWidth * GetZoomFactor();
+            var renderedImageHeight = IllustrationOriginalImage.ActualHeight * GetZoomFactor();
+            var containerWidth = IllustrationOriginalImageContainer.ActualWidth;
+            var containerHeight = IllustrationOriginalImageContainer.ActualHeight;
+            var imagePos = IllustrationOriginalImage.TransformToVisual(IllustrationOriginalImageContainer).TransformPoint(new Point(0, 0));
+            if (renderedImageWidth > containerWidth)
             {
-                var renderedImageWidth = IllustrationOriginalImage.ActualWidth * GetZoomFactor();
-                var renderedImageHeight = IllustrationOriginalImage.ActualHeight * GetZoomFactor();
-                var containerWidth = IllustrationOriginalImageContainer.ActualWidth;
-                var containerHeight = IllustrationOriginalImageContainer.ActualHeight;
-                var imagePos = IllustrationOriginalImage.TransformToVisual(IllustrationOriginalImageContainer).TransformPoint(new Point(0, 0));
-                if (renderedImageWidth > containerWidth)
+                switch (deltaX)
                 {
-                    switch (deltaX)
-                    {
-                        case < 0 when imagePos.X > -(renderedImageWidth - containerWidth):
-                        case > 0 when imagePos.X < 0:
-                            IllustrationOriginalImageRenderTransform.TranslateX += deltaX;
-                            break;
-                    }
+                    case < 0 when imagePos.X > -(renderedImageWidth - containerWidth):
+                    case > 0 when imagePos.X < 0:
+                        IllustrationOriginalImageRenderTransform.TranslateX += deltaX;
+                        break;
                 }
+            }
 
-                if (renderedImageHeight > containerHeight)
+            if (renderedImageHeight > containerHeight)
+            {
+                switch (deltaY)
                 {
-                    switch (deltaY)
-                    {
-                        case < 0 when imagePos.Y > -(renderedImageHeight - containerHeight):
-                        case > 0 when imagePos.Y < 0:
-                            IllustrationOriginalImageRenderTransform.TranslateY += deltaY;
-                            break;
-                    }
+                    case < 0 when imagePos.Y > -(renderedImageHeight - containerHeight):
+                    case > 0 when imagePos.Y < 0:
+                        IllustrationOriginalImageRenderTransform.TranslateY += deltaY;
+                        break;
                 }
             }
         }
+    }
 
-        private void IllustrationOriginalImage_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+    private void IllustrationOriginalImage_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+    {
+        if (GetZoomFactor() > 1)
         {
-            if (GetZoomFactor() > 1)
+            ResetImageScaleStoryboard.Begin();
+            ResetImageTranslationStoryboard.Begin();
+            if (_tappedScaled)
             {
-                ResetImageScaleStoryboard.Begin();
-                ResetImageTranslationStoryboard.Begin();
-                if (_tappedScaled)
-                {
-                    _tappedScaled.Inverse();
-                }
-            }
-            else
-            {
-                ImageScaledIn200PercentStoryboard.Begin();
                 _tappedScaled.Inverse();
             }
         }
-
-        private void ResetImageScaleStoryboard_OnCompleted(object? sender, object e)
+        else
         {
-            ResetImageScaleStoryboard.Stop();
-            IllustrationOriginalImageRenderTransform.ScaleX = 1;
-            IllustrationOriginalImageRenderTransform.ScaleY = 1;
+            ImageScaledIn200PercentStoryboard.Begin();
+            _tappedScaled.Inverse();
         }
-
-        private void ImageScaledIn200PercentStoryboard_OnCompleted(object? sender, object e)
-        {
-            ImageScaledIn200PercentStoryboard.Stop();
-            IllustrationOriginalImageRenderTransform.ScaleX = 2;
-            IllustrationOriginalImageRenderTransform.ScaleY = 2;
-        }
-
-        private void ResetImageTranslationStoryboard_OnCompleted(object? sender, object e)
-        {
-            ResetImageTranslationStoryboard.Stop();
-            IllustrationOriginalImageRenderTransform.TranslateX = 0;
-            IllustrationOriginalImageRenderTransform.TranslateY = 0;
-        }
-
-        private void IllustrationOriginalImageContainer_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
-        {
-            Zoom(e.GetCurrentPoint(null).Properties.MouseWheelDelta / 1000d);
-        }
-
-        private void ImageViewerPage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            CommandBorderDropShadow.Receivers.Add(IllustrationOriginalImageContainer);
-        }
-
-        private void IllustrationInfoAndCommentsMenuFlyoutItem_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            _viewModel.IllustrationViewerPageViewModel.IsInfoPaneOpen = true;
-        }
-
-        #region Helper Functions
-
-        private readonly EasingFunctionBase _easingFunction = new ExponentialEase
-        {
-            EasingMode = EasingMode.EaseOut,
-            Exponent = 12
-        };
-
-        private bool _tappedScaled;
-
-        private double GetZoomFactor()
-        {
-            return IllustrationOriginalImageRenderTransform.ScaleX;
-        }
-
-        private void ResetImagePosition()
-        {
-            if (IllustrationOriginalImageRenderTransform.TranslateX != 0)
-            {
-                IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(
-                    nameof(CompositeTransform.TranslateX),
-                    to: 0,
-                    duration: TimeSpan.FromMilliseconds(100),
-                    easingFunction: _easingFunction).BeginStoryboard();
-            }
-
-            if (IllustrationOriginalImageRenderTransform.TranslateY != 0)
-            {
-                IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(
-                    nameof(CompositeTransform.TranslateY),
-                    to: 0,
-                    duration: TimeSpan.FromMilliseconds(100),
-                    easingFunction: _easingFunction).BeginStoryboard();
-            }
-        }
-
-        private void Zoom(double delta)
-        {
-            ResetImagePosition();
-            _viewModel.Zoom(delta);
-        }
-
-        #endregion
     }
+
+    private void ResetImageScaleStoryboard_OnCompleted(object? sender, object e)
+    {
+        ResetImageScaleStoryboard.Stop();
+        IllustrationOriginalImageRenderTransform.ScaleX = 1;
+        IllustrationOriginalImageRenderTransform.ScaleY = 1;
+    }
+
+    private void ImageScaledIn200PercentStoryboard_OnCompleted(object? sender, object e)
+    {
+        ImageScaledIn200PercentStoryboard.Stop();
+        IllustrationOriginalImageRenderTransform.ScaleX = 2;
+        IllustrationOriginalImageRenderTransform.ScaleY = 2;
+    }
+
+    private void ResetImageTranslationStoryboard_OnCompleted(object? sender, object e)
+    {
+        ResetImageTranslationStoryboard.Stop();
+        IllustrationOriginalImageRenderTransform.TranslateX = 0;
+        IllustrationOriginalImageRenderTransform.TranslateY = 0;
+    }
+
+    private void IllustrationOriginalImageContainer_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
+    {
+        Zoom(e.GetCurrentPoint(null).Properties.MouseWheelDelta / 1000d);
+    }
+
+    private void ImageViewerPage_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        CommandBorderDropShadow.Receivers.Add(IllustrationOriginalImageContainer);
+    }
+
+    private void IllustrationInfoAndCommentsMenuFlyoutItem_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        _viewModel.IllustrationViewerPageViewModel.IsInfoPaneOpen = true;
+    }
+
+    #region Helper Functions
+
+    private readonly EasingFunctionBase _easingFunction = new ExponentialEase
+    {
+        EasingMode = EasingMode.EaseOut,
+        Exponent = 12
+    };
+
+    private bool _tappedScaled;
+
+    private double GetZoomFactor()
+    {
+        return IllustrationOriginalImageRenderTransform.ScaleX;
+    }
+
+    private void ResetImagePosition()
+    {
+        if (IllustrationOriginalImageRenderTransform.TranslateX != 0)
+        {
+            IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(
+                nameof(CompositeTransform.TranslateX),
+                to: 0,
+                duration: TimeSpan.FromMilliseconds(100),
+                easingFunction: _easingFunction).BeginStoryboard();
+        }
+
+        if (IllustrationOriginalImageRenderTransform.TranslateY != 0)
+        {
+            IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(
+                nameof(CompositeTransform.TranslateY),
+                to: 0,
+                duration: TimeSpan.FromMilliseconds(100),
+                easingFunction: _easingFunction).BeginStoryboard();
+        }
+    }
+
+    private void Zoom(double delta)
+    {
+        ResetImagePosition();
+        _viewModel.Zoom(delta);
+    }
+
+    #endregion
 }

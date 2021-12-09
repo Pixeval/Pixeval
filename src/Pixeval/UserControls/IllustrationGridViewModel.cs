@@ -35,149 +35,148 @@ using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 
-namespace Pixeval.UserControls
+namespace Pixeval.UserControls;
+
+public class IllustrationGridViewModel : ObservableObject, IDisposable
 {
-    public class IllustrationGridViewModel : ObservableObject, IDisposable
+    private bool _isAnyIllustrationSelected;
+
+    private string _selectionLabel;
+
+    private SoftwareBitmapSource? _webQrCodeSource;
+
+    private SoftwareBitmapSource? _pixEzQrCodeSource;
+
+    public IllustrationGridViewModel()
     {
-        private bool _isAnyIllustrationSelected;
+        SelectedIllustrations = new ObservableCollection<IllustrationViewModel>();
+        Illustrations = new ObservableCollection<IllustrationViewModel>();
+        IllustrationsView = new AdvancedCollectionView(Illustrations);
+        _selectionLabel = IllustrationGridCommandBarResources.CancelSelectionButtonDefaultLabel;
+    }
 
-        private string _selectionLabel;
+    public IFetchEngine<Illustration?>? FetchEngine { get; set; }
 
-        private SoftwareBitmapSource? _webQrCodeSource;
+    public ObservableCollection<IllustrationViewModel> Illustrations { get; }
 
-        private SoftwareBitmapSource? _pixEzQrCodeSource;
+    public AdvancedCollectionView IllustrationsView { get; }
 
-        public IllustrationGridViewModel()
+    public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; }
+
+    public bool IsAnyIllustrationSelected
+    {
+        get => _isAnyIllustrationSelected;
+        set => SetProperty(ref _isAnyIllustrationSelected, value);
+    }
+
+    public string SelectionLabel
+    {
+        get => _selectionLabel;
+        set => SetProperty(ref _selectionLabel, value);
+    }
+
+    public void Dispose()
+    {
+        DisposeCurrent();
+        GC.SuppressFinalize(this);
+    }
+
+    public async Task FillAsync(int? itemsLimit = null)
+    {
+        var added = new HashSet<long>();
+        await foreach (var illustration in FetchEngine!)
         {
-            SelectedIllustrations = new ObservableCollection<IllustrationViewModel>();
-            Illustrations = new ObservableCollection<IllustrationViewModel>();
-            IllustrationsView = new AdvancedCollectionView(Illustrations);
-            _selectionLabel = IllustrationGridCommandBarResources.CancelSelectionButtonDefaultLabel;
-        }
-
-        public IFetchEngine<Illustration?>? FetchEngine { get; set; }
-
-        public ObservableCollection<IllustrationViewModel> Illustrations { get; }
-
-        public AdvancedCollectionView IllustrationsView { get; }
-
-        public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; }
-
-        public bool IsAnyIllustrationSelected
-        {
-            get => _isAnyIllustrationSelected;
-            set => SetProperty(ref _isAnyIllustrationSelected, value);
-        }
-
-        public string SelectionLabel
-        {
-            get => _selectionLabel;
-            set => SetProperty(ref _selectionLabel, value);
-        }
-
-        public void Dispose()
-        {
-            DisposeCurrent();
-            GC.SuppressFinalize(this);
-        }
-
-        public async Task FillAsync(int? itemsLimit = null)
-        {
-            var added = new HashSet<long>();
-            await foreach (var illustration in FetchEngine!)
+            if (illustration is not null && !added.Contains(illustration.Id) /* Check for the repetition */)
             {
-                if (illustration is not null && !added.Contains(illustration.Id) /* Check for the repetition */)
+                if (added.Count >= itemsLimit)
                 {
-                    if (added.Count >= itemsLimit)
+                    FetchEngine.Cancel();
+                    break;
+                }
+
+                added.Add(illustration.Id); // add to the already-added-illustration list
+                var viewModel = new IllustrationViewModel(illustration);
+                viewModel.OnIsSelectedChanged += (_, model) => // add/remove the viewModel to/from SelectedIllustrations according to the IsSelected Property
+                {
+                    if (model.IsSelected)
                     {
-                        FetchEngine.Cancel();
-                        break;
+                        SelectedIllustrations.Add(model);
+                    }
+                    else
+                    {
+                        SelectedIllustrations.Remove(model);
                     }
 
-                    added.Add(illustration.Id); // add to the already-added-illustration list
-                    var viewModel = new IllustrationViewModel(illustration);
-                    viewModel.OnIsSelectedChanged += (_, model) => // add/remove the viewModel to/from SelectedIllustrations according to the IsSelected Property
-                    {
-                        if (model.IsSelected)
-                        {
-                            SelectedIllustrations.Add(model);
-                        }
-                        else
-                        {
-                            SelectedIllustrations.Remove(model);
-                        }
+                    // Update the IsAnyIllustrationSelected Property if any of the viewModel's IsSelected property changes
+                    IsAnyIllustrationSelected = SelectedIllustrations.Any();
 
-                        // Update the IsAnyIllustrationSelected Property if any of the viewModel's IsSelected property changes
-                        IsAnyIllustrationSelected = SelectedIllustrations.Any();
-
-                        var count = SelectedIllustrations.Count;
-                        SelectionLabel = count == 0
-                            ? IllustrationGridCommandBarResources.CancelSelectionButtonDefaultLabel
-                            : IllustrationGridCommandBarResources.CancelSelectionButtonFormatted.Format(count);
-                    };
-                    IllustrationsView.Add(viewModel);
-                }
+                    var count = SelectedIllustrations.Count;
+                    SelectionLabel = count == 0
+                        ? IllustrationGridCommandBarResources.CancelSelectionButtonDefaultLabel
+                        : IllustrationGridCommandBarResources.CancelSelectionButtonFormatted.Format(count);
+                };
+                IllustrationsView.Add(viewModel);
             }
         }
+    }
 
-        public async Task FillAsync(IFetchEngine<Illustration?>? newEngine, int? itemsLimit = null)
+    public async Task FillAsync(IFetchEngine<Illustration?>? newEngine, int? itemsLimit = null)
+    {
+        FetchEngine = newEngine;
+        await FillAsync(itemsLimit);
+    }
+
+    public async Task ResetAndFillAsync(IFetchEngine<Illustration?>? newEngine, int? itemLimit = null)
+    {
+        FetchEngine?.EngineHandle.Cancel();
+        FetchEngine = newEngine;
+        DisposeCurrent();
+        await FillAsync(itemLimit);
+    }
+
+    public void SetSortDescription(SortDescription description)
+    {
+        if (!IllustrationsView.SortDescriptions.Any())
         {
-            FetchEngine = newEngine;
-            await FillAsync(itemsLimit);
+            IllustrationsView.SortDescriptions.Add(description);
+            return;
         }
 
-        public async Task ResetAndFillAsync(IFetchEngine<Illustration?>? newEngine, int? itemLimit = null)
+        IllustrationsView.SortDescriptions[0] = description;
+    }
+
+    public void ClearSortDescription()
+    {
+        IllustrationsView.SortDescriptions.Clear();
+    }
+
+    public async Task ShowQrCodeForIllustrationAsync(IllustrationViewModel model)
+    {
+        _webQrCodeSource = await UIHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustrationWebUri(model.Id).ToString());
+
+        PopupManager.ShowPopup(PopupManager.CreatePopup(new QrCodePresenter(_webQrCodeSource), lightDismiss: true, closing: (_, _) => _webQrCodeSource.Dispose()));
+    }
+
+    public async Task ShowPixEzQrCodeForIllustrationAsync(IllustrationViewModel model)
+    {
+        _pixEzQrCodeSource = await UIHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustrationPixEzUri(model.Id).ToString());
+
+        PopupManager.ShowPopup(PopupManager.CreatePopup(new QrCodePresenter(_pixEzQrCodeSource), lightDismiss: true, closing: (_, _) => _pixEzQrCodeSource.Dispose()));
+    }
+
+    private void DisposeCurrent()
+    {
+        foreach (IllustrationViewModel illustrationViewModel in IllustrationsView)
         {
-            FetchEngine?.EngineHandle.Cancel();
-            FetchEngine = newEngine;
-            DisposeCurrent();
-            await FillAsync(itemLimit);
+            illustrationViewModel.Dispose();
         }
 
-        public void SetSortDescription(SortDescription description)
-        {
-            if (!IllustrationsView.SortDescriptions.Any())
-            {
-                IllustrationsView.SortDescriptions.Add(description);
-                return;
-            }
+        SelectedIllustrations.Clear();
+        IllustrationsView.Clear();
+    }
 
-            IllustrationsView.SortDescriptions[0] = description;
-        }
-
-        public void ClearSortDescription()
-        {
-            IllustrationsView.SortDescriptions.Clear();
-        }
-
-        public async Task ShowQrCodeForIllustrationAsync(IllustrationViewModel model)
-        {
-            _webQrCodeSource = await UIHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustrationWebUri(model.Id).ToString());
-
-            PopupManager.ShowPopup(PopupManager.CreatePopup(new QrCodePresenter(_webQrCodeSource), lightDismiss: true, closing: (_, _) => _webQrCodeSource.Dispose()));
-        }
-
-        public async Task ShowPixEzQrCodeForIllustrationAsync(IllustrationViewModel model)
-        {
-            _pixEzQrCodeSource = await UIHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustrationPixEzUri(model.Id).ToString());
-
-            PopupManager.ShowPopup(PopupManager.CreatePopup(new QrCodePresenter(_pixEzQrCodeSource), lightDismiss: true, closing: (_, _) => _pixEzQrCodeSource.Dispose()));
-        }
-
-        private void DisposeCurrent()
-        {
-            foreach (IllustrationViewModel illustrationViewModel in IllustrationsView)
-            {
-                illustrationViewModel.Dispose();
-            }
-
-            SelectedIllustrations.Clear();
-            IllustrationsView.Clear();
-        }
-
-        ~IllustrationGridViewModel()
-        {
-            Dispose();
-        }
+    ~IllustrationGridViewModel()
+    {
+        Dispose();
     }
 }

@@ -22,11 +22,10 @@
 
 using JetBrains.Annotations;
 
-namespace Pixeval.CoreApi.Engine
+namespace Pixeval.CoreApi.Engine;
+
+[PublicAPI]
+public interface ICompletionCallback<in T>
 {
-    [PublicAPI]
-    public interface ICompletionCallback<in T>
-    {
-        void OnCompletion(T param);
-    }
+    void OnCompletion(T param);
 }

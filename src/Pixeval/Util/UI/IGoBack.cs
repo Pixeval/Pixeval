@@ -20,10 +20,9 @@
 
 #endregion
 
-namespace Pixeval.Util.UI
+namespace Pixeval.Util.UI;
+
+public interface IGoBack
 {
-    public interface IGoBack
-    {
-        void GoBack();
-    }
+    void GoBack();
 }

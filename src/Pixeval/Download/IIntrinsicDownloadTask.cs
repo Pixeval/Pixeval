@@ -20,16 +20,15 @@
 
 using Windows.Storage.Streams;
 
-namespace Pixeval.Download
+namespace Pixeval.Download;
+
+/// <summary>
+/// An <see cref="IIntrinsicDownloadTask"/> is a special kind of <see cref="IDownloadTask"/> that will manually
+/// take care of the stream of the downloaded content, meanwhile, <see cref="IIntrinsicDownloadTask"/> will not
+/// be recorded by the <see cref="DownloadManager{TDownloadTask}"/>, such tasks are mostly used when the content
+/// is already present.
+/// </summary>
+public interface IIntrinsicDownloadTask : IDownloadTask
 {
-    /// <summary>
-    /// An <see cref="IIntrinsicDownloadTask"/> is a special kind of <see cref="IDownloadTask"/> that will manually
-    /// take care of the stream of the downloaded content, meanwhile, <see cref="IIntrinsicDownloadTask"/> will not
-    /// be recorded by the <see cref="DownloadManager{TDownloadTask}"/>, such tasks are mostly used when the content
-    /// is already present.
-    /// </summary>
-    public interface IIntrinsicDownloadTask : IDownloadTask
-    {
-        IRandomAccessStream Stream { get; }
-    }
+    IRandomAccessStream Stream { get; }
 }

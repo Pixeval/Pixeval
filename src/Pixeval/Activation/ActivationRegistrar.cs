@@ -25,25 +25,24 @@ using System.Linq;
 using Windows.ApplicationModel.Activation;
 using Microsoft.Windows.AppLifecycle;
 
-namespace Pixeval.Activation
+namespace Pixeval.Activation;
+
+public static class ActivationRegistrar
 {
-    public static class ActivationRegistrar
+    public static readonly List<IAppActivationHandler> FeatureHandlers = new();
+
+    static ActivationRegistrar()
     {
-        public static readonly List<IAppActivationHandler> FeatureHandlers = new();
+        FeatureHandlers.Add(new IllustrationAppActivationHandler());
+    }
 
-        static ActivationRegistrar()
+    public static void Dispatch(AppActivationArguments args)
+    {
+        if (args.Kind == ExtendedActivationKind.Protocol &&
+            args.Data is IProtocolActivatedEventArgs { Uri: var activationUri } &&
+            FeatureHandlers.FirstOrDefault(f => f.ActivationFragment == activationUri.Host) is { } handler)
         {
-            FeatureHandlers.Add(new IllustrationAppActivationHandler());
-        }
-
-        public static void Dispatch(AppActivationArguments args)
-        {
-            if (args.Kind == ExtendedActivationKind.Protocol &&
-                args.Data is IProtocolActivatedEventArgs { Uri: var activationUri } &&
-                FeatureHandlers.FirstOrDefault(f => f.ActivationFragment == activationUri.Host) is { } handler)
-            {
-                handler.Execute(activationUri.PathAndQuery[1..]);
-            }
+            handler.Execute(activationUri.PathAndQuery[1..]);
         }
     }
 }

@@ -22,13 +22,12 @@
 
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 
-namespace Pixeval.Util.UI
+namespace Pixeval.Util.UI;
+
+public class AutoActivateObservableRecipient : ObservableRecipient
 {
-    public class AutoActivateObservableRecipient : ObservableRecipient
+    public AutoActivateObservableRecipient()
     {
-        public AutoActivateObservableRecipient()
-        {
-            IsActive = true;
-        }
+        IsActive = true;
     }
 }

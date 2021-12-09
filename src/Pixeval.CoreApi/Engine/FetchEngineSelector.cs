@@ -25,61 +25,60 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Pixeval.CoreApi.Engine
+namespace Pixeval.CoreApi.Engine;
+
+internal class FetchEngineSelector<T, R> : IFetchEngine<R>
 {
-    internal class FetchEngineSelector<T, R> : IFetchEngine<R>
+    private readonly IFetchEngine<T> _delegateEngine;
+    private readonly Func<T, Task<R>> _selector;
+
+    public FetchEngineSelector(IFetchEngine<T> delegateEngine, Func<T, Task<R>> selector)
     {
-        private readonly IFetchEngine<T> _delegateEngine;
+        _delegateEngine = delegateEngine;
+        _selector = selector;
+        MakoClient = delegateEngine.MakoClient;
+        EngineHandle = delegateEngine.EngineHandle;
+        RequestedPages = 0;
+    }
+
+    public MakoClient MakoClient { get; }
+
+    public EngineHandle EngineHandle { get; }
+
+    public int RequestedPages { get; set; }
+
+    public IAsyncEnumerator<R> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    {
+        return new FetchEngineSelectorAsyncEnumerator(_delegateEngine.GetAsyncEnumerator(cancellationToken), _selector)!;
+    }
+
+    private class FetchEngineSelectorAsyncEnumerator : IAsyncEnumerator<R?>
+    {
+        private readonly IAsyncEnumerator<T> _delegateEnumerator;
         private readonly Func<T, Task<R>> _selector;
 
-        public FetchEngineSelector(IFetchEngine<T> delegateEngine, Func<T, Task<R>> selector)
+        public FetchEngineSelectorAsyncEnumerator(IAsyncEnumerator<T> delegateEnumerator, Func<T, Task<R>> selector)
         {
-            _delegateEngine = delegateEngine;
+            _delegateEnumerator = delegateEnumerator;
             _selector = selector;
-            MakoClient = delegateEngine.MakoClient;
-            EngineHandle = delegateEngine.EngineHandle;
-            RequestedPages = 0;
         }
 
-        public MakoClient MakoClient { get; }
-
-        public EngineHandle EngineHandle { get; }
-
-        public int RequestedPages { get; set; }
-
-        public IAsyncEnumerator<R> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+        public ValueTask DisposeAsync()
         {
-            return new FetchEngineSelectorAsyncEnumerator(_delegateEngine.GetAsyncEnumerator(cancellationToken), _selector)!;
+            return _delegateEnumerator.DisposeAsync();
         }
 
-        private class FetchEngineSelectorAsyncEnumerator : IAsyncEnumerator<R?>
+        public async ValueTask<bool> MoveNextAsync()
         {
-            private readonly IAsyncEnumerator<T> _delegateEnumerator;
-            private readonly Func<T, Task<R>> _selector;
-
-            public FetchEngineSelectorAsyncEnumerator(IAsyncEnumerator<T> delegateEnumerator, Func<T, Task<R>> selector)
+            if (await _delegateEnumerator.MoveNextAsync().ConfigureAwait(false))
             {
-                _delegateEnumerator = delegateEnumerator;
-                _selector = selector;
+                Current = await _selector(_delegateEnumerator.Current).ConfigureAwait(false);
+                return true;
             }
 
-            public ValueTask DisposeAsync()
-            {
-                return _delegateEnumerator.DisposeAsync();
-            }
-
-            public async ValueTask<bool> MoveNextAsync()
-            {
-                if (await _delegateEnumerator.MoveNextAsync().ConfigureAwait(false))
-                {
-                    Current = await _selector(_delegateEnumerator.Current).ConfigureAwait(false);
-                    return true;
-                }
-
-                return false;
-            }
-
-            public R? Current { get; private set; }
+            return false;
         }
+
+        public R? Current { get; private set; }
     }
 }

@@ -27,112 +27,111 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.UserControls.TokenInput;
 
-namespace Pixeval.Controls.TokenInputTextBox
+namespace Pixeval.Controls.TokenInputTextBox;
+
+public class TokenInputTextBox : Control
 {
-    public class TokenInputTextBox : Control
+    private const string PartTokenTextBox = "TokenTextBox";
+    private const string PartSubmitButton = "SubmitButton";
+
+    public static readonly DependencyProperty PlaceholderTextProperty = DependencyProperty.Register(
+        nameof(PlaceholderText),
+        typeof(string),
+        typeof(TokenInputTextBox),
+        PropertyMetadata.Create(DependencyProperty.UnsetValue));
+
+    public static readonly DependencyProperty SubmitEnableProperty = DependencyProperty.Register(
+        nameof(SubmitEnable),
+        typeof(bool),
+        typeof(TokenInputTextBox),
+        PropertyMetadata.Create(DependencyProperty.UnsetValue));
+
+    public static readonly DependencyProperty TokenProperty = DependencyProperty.Register(
+        nameof(Token),
+        typeof(Token),
+        typeof(TokenInputTextBox),
+        PropertyMetadata.Create(DependencyProperty.UnsetValue));
+
+    private IconButton.IconButton? _submitButton;
+
+    private EventHandler<Token>? _tokenSubmitted;
+
+    private TextBox? _tokenTextBox;
+
+    public TokenInputTextBox()
     {
-        private const string PartTokenTextBox = "TokenTextBox";
-        private const string PartSubmitButton = "SubmitButton";
+        DefaultStyleKey = typeof(TokenInputTextBox);
+    }
 
-        public static readonly DependencyProperty PlaceholderTextProperty = DependencyProperty.Register(
-            nameof(PlaceholderText),
-            typeof(string),
-            typeof(TokenInputTextBox),
-            PropertyMetadata.Create(DependencyProperty.UnsetValue));
+    public string PlaceholderText
+    {
+        get => (string) GetValue(PlaceholderTextProperty);
+        set => SetValue(PlaceholderTextProperty, value);
+    }
 
-        public static readonly DependencyProperty SubmitEnableProperty = DependencyProperty.Register(
-            nameof(SubmitEnable),
-            typeof(bool),
-            typeof(TokenInputTextBox),
-            PropertyMetadata.Create(DependencyProperty.UnsetValue));
+    public bool SubmitEnable
+    {
+        get => (bool) GetValue(SubmitEnableProperty);
+        set => SetValue(SubmitEnableProperty, value);
+    }
 
-        public static readonly DependencyProperty TokenProperty = DependencyProperty.Register(
-            nameof(Token),
-            typeof(Token),
-            typeof(TokenInputTextBox),
-            PropertyMetadata.Create(DependencyProperty.UnsetValue));
+    public Token Token
+    {
+        get => (Token) GetValue(TokenProperty);
+        set => SetValue(TokenProperty, value);
+    }
 
-        private IconButton.IconButton? _submitButton;
+    public event EventHandler<Token> TokenSubmitted
+    {
+        add => _tokenSubmitted += value;
+        remove => _tokenSubmitted -= value;
+    }
 
-        private EventHandler<Token>? _tokenSubmitted;
-
-        private TextBox? _tokenTextBox;
-
-        public TokenInputTextBox()
+    protected override void OnApplyTemplate()
+    {
+        if (_tokenTextBox is not null)
         {
-            DefaultStyleKey = typeof(TokenInputTextBox);
+            _tokenTextBox.KeyDown -= TokenTextBoxOnKeyDown;
         }
 
-        public string PlaceholderText
+        if ((_tokenTextBox = GetTemplateChild(PartTokenTextBox) as TextBox) is not null)
         {
-            get => (string) GetValue(PlaceholderTextProperty);
-            set => SetValue(PlaceholderTextProperty, value);
+            _tokenTextBox.KeyDown += TokenTextBoxOnKeyDown;
         }
 
-        public bool SubmitEnable
+        if (_submitButton is not null)
         {
-            get => (bool) GetValue(SubmitEnableProperty);
-            set => SetValue(SubmitEnableProperty, value);
+            _submitButton.Tapped -= SubmitButtonOnTapped;
         }
 
-        public Token Token
+        if ((_submitButton = GetTemplateChild(PartSubmitButton) as IconButton.IconButton) is not null)
         {
-            get => (Token) GetValue(TokenProperty);
-            set => SetValue(TokenProperty, value);
+            _submitButton.Tapped += SubmitButtonOnTapped;
         }
 
-        public event EventHandler<Token> TokenSubmitted
-        {
-            add => _tokenSubmitted += value;
-            remove => _tokenSubmitted -= value;
-        }
+        base.OnApplyTemplate();
+    }
 
-        protected override void OnApplyTemplate()
-        {
-            if (_tokenTextBox is not null)
-            {
-                _tokenTextBox.KeyDown -= TokenTextBoxOnKeyDown;
-            }
+    private void SubmitButtonOnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        SubmitToken();
+    }
 
-            if ((_tokenTextBox = GetTemplateChild(PartTokenTextBox) as TextBox) is not null)
-            {
-                _tokenTextBox.KeyDown += TokenTextBoxOnKeyDown;
-            }
-
-            if (_submitButton is not null)
-            {
-                _submitButton.Tapped -= SubmitButtonOnTapped;
-            }
-
-            if ((_submitButton = GetTemplateChild(PartSubmitButton) as IconButton.IconButton) is not null)
-            {
-                _submitButton.Tapped += SubmitButtonOnTapped;
-            }
-
-            base.OnApplyTemplate();
-        }
-
-        private void SubmitButtonOnTapped(object sender, TappedRoutedEventArgs e)
+    private void TokenTextBoxOnKeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        if (e.Key is VirtualKey.Enter or VirtualKey.Space)
         {
             SubmitToken();
+            e.Handled = true;
         }
+    }
 
-        private void TokenTextBoxOnKeyDown(object sender, KeyRoutedEventArgs e)
+    private void SubmitToken()
+    {
+        if (SubmitEnable && _tokenTextBox is { Text: { Length: > 0 } })
         {
-            if (e.Key is VirtualKey.Enter or VirtualKey.Space)
-            {
-                SubmitToken();
-                e.Handled = true;
-            }
-        }
-
-        private void SubmitToken()
-        {
-            if (SubmitEnable && _tokenTextBox is { Text: { Length: > 0 } })
-            {
-                _tokenSubmitted?.Invoke(this, (Token) Token.Clone());
-                _tokenTextBox.Text = string.Empty;
-            }
+            _tokenSubmitted?.Invoke(this, (Token) Token.Clone());
+            _tokenTextBox.Text = string.Empty;
         }
     }
 }

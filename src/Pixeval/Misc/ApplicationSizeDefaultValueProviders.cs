@@ -20,21 +20,20 @@
 
 #endregion
 
-namespace Pixeval.Misc
-{
-    public class AppWidthDefaultValueProvider : IDefaultValueProvider
-    {
-        public object ProvideValue()
-        {
-            return App.PredetermineEstimatedWindowSize().Item1;
-        }
-    }
+namespace Pixeval.Misc;
 
-    public class AppHeightDefaultValueProvider : IDefaultValueProvider
+public class AppWidthDefaultValueProvider : IDefaultValueProvider
+{
+    public object ProvideValue()
     {
-        public object ProvideValue()
-        {
-            return App.PredetermineEstimatedWindowSize().Item2;
-        }
+        return App.PredetermineEstimatedWindowSize().Item1;
+    }
+}
+
+public class AppHeightDefaultValueProvider : IDefaultValueProvider
+{
+    public object ProvideValue()
+    {
+        return App.PredetermineEstimatedWindowSize().Item2;
     }
 }

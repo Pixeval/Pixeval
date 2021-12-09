@@ -22,17 +22,16 @@
 
 using JetBrains.Annotations;
 
-namespace Pixeval.CoreApi.Net
+namespace Pixeval.CoreApi.Net;
+
+/// <summary>
+///     The several kinds of APIs that Mako will use
+/// </summary>
+[PublicAPI]
+public enum MakoApiKind
 {
-    /// <summary>
-    ///     The several kinds of APIs that Mako will use
-    /// </summary>
-    [PublicAPI]
-    public enum MakoApiKind
-    {
-        AppApi,
-        WebApi,
-        AuthApi,
-        ImageApi
-    }
+    AppApi,
+    WebApi,
+    AuthApi,
+    ImageApi
 }

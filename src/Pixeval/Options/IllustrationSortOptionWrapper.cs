@@ -24,19 +24,18 @@ using System.Collections.Generic;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Util.Generic;
 
-namespace Pixeval.Options
+namespace Pixeval.Options;
+
+public record IllustrationSortOptionWrapper(IllustrationSortOption Value, string LocalizedString) : ILocalizedBox<IllustrationSortOption, IllustrationSortOptionWrapper>
 {
-    public record IllustrationSortOptionWrapper(IllustrationSortOption Value, string LocalizedString) : ILocalizedBox<IllustrationSortOption, IllustrationSortOptionWrapper>
+    public static IEnumerable<IllustrationSortOptionWrapper> AvailableOptions()
     {
-        public static IEnumerable<IllustrationSortOptionWrapper> AvailableOptions()
+        return new IllustrationSortOptionWrapper[]
         {
-            return new IllustrationSortOptionWrapper[]
-            {
-                new(IllustrationSortOption.PublishDateDescending, MiscResources.IllustrationSortOptionPublishDateDescending),
-                new(IllustrationSortOption.PublishDateAscending, MiscResources.IllustrationSortOptionPublishDateAscending),
-                new(IllustrationSortOption.PopularityDescending, MiscResources.IllustrationSortOptionPopularityDescending),
-                new(IllustrationSortOption.DoNotSort, MiscResources.IllustrationSortOptionDoNotSort)
-            };
-        }
+            new(IllustrationSortOption.PublishDateDescending, MiscResources.IllustrationSortOptionPublishDateDescending),
+            new(IllustrationSortOption.PublishDateAscending, MiscResources.IllustrationSortOptionPublishDateAscending),
+            new(IllustrationSortOption.PopularityDescending, MiscResources.IllustrationSortOptionPopularityDescending),
+            new(IllustrationSortOption.DoNotSort, MiscResources.IllustrationSortOptionDoNotSort)
+        };
     }
 }

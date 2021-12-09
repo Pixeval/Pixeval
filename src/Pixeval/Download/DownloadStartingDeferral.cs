@@ -20,33 +20,32 @@
 
 using Pixeval.Util.Threading;
 
-namespace Pixeval.Download
+namespace Pixeval.Download;
+
+public class DownloadStartingDeferral
 {
-    public class DownloadStartingDeferral
+    public DownloadStartingDeferral()
     {
-        public DownloadStartingDeferral()
-        {
-            Signal = new ReenterableAwaiter<bool>(true, true);
-        }
+        Signal = new ReenterableAwaiter<bool>(true, true);
+    }
 
-        /// <summary>
-        /// Set its result to <see langword="true"/> if you want the download to proceed, otherwise, <see langword="false"/>
-        /// </summary>
-        public ReenterableAwaiter<bool> Signal { get; }
+    /// <summary>
+    /// Set its result to <see langword="true"/> if you want the download to proceed, otherwise, <see langword="false"/>
+    /// </summary>
+    public ReenterableAwaiter<bool> Signal { get; }
 
-        public void Set()
-        {
-            Signal.Reset();
-        }
+    public void Set()
+    {
+        Signal.Reset();
+    }
 
-        /// <summary>
-        /// Sets the value of <see cref="Signal"/> <br></br>
-        /// Pass <see langword="true"/> if you want the download to proceed, otherwise, <see langword="false"/>
-        /// </summary>
-        /// <param name="value"></param>
-        public void Complete(bool value)
-        {
-            Signal.SetResult(value);
-        }
+    /// <summary>
+    /// Sets the value of <see cref="Signal"/> <br></br>
+    /// Pass <see langword="true"/> if you want the download to proceed, otherwise, <see langword="false"/>
+    /// </summary>
+    /// <param name="value"></param>
+    public void Complete(bool value)
+    {
+        Signal.SetResult(value);
     }
 }

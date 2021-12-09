@@ -22,10 +22,9 @@
 
 using Windows.Storage.Streams;
 
-namespace Pixeval.Download
+namespace Pixeval.Download;
+
+public interface ICustomBehaviorDownloadTask : IDownloadTask
 {
-    public interface ICustomBehaviorDownloadTask : IDownloadTask
-    {
-        void Consume(IRandomAccessStream stream);
-    }
+    void Consume(IRandomAccessStream stream);
 }

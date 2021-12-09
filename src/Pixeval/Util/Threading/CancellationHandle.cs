@@ -23,80 +23,79 @@
 using System;
 using System.Threading;
 
-namespace Pixeval.Util.Threading
+namespace Pixeval.Util.Threading;
+
+/// <summary>
+///     A re-entrant cancellation helper that prevents the default behaviors of <see cref="CancellationToken" />, which is,
+///     throws an <see cref="OperationCanceledException" />
+/// </summary>
+public class CancellationHandle
 {
-    /// <summary>
-    ///     A re-entrant cancellation helper that prevents the default behaviors of <see cref="CancellationToken" />, which is,
-    ///     throws an <see cref="OperationCanceledException" />
-    /// </summary>
-    public class CancellationHandle
+    private int _isCancelled;
+
+    private int _paused;
+
+    private Action? _onCancellation;
+
+    private Action? _onPause;
+
+    private Action? _onResume;
+
+    public bool IsCancelled => _isCancelled == 1;
+
+    public bool IsPaused => _paused == 1;
+
+    public void Cancel()
     {
-        private int _isCancelled;
-
-        private int _paused;
-
-        private Action? _onCancellation;
-
-        private Action? _onPause;
-
-        private Action? _onResume;
-
-        public bool IsCancelled => _isCancelled == 1;
-
-        public bool IsPaused => _paused == 1;
-
-        public void Cancel()
+        if (!IsCancelled)
         {
-            if (!IsCancelled)
-            {
-                _onCancellation?.Invoke();
-                Interlocked.Increment(ref _isCancelled);
-            }
+            _onCancellation?.Invoke();
+            Interlocked.Increment(ref _isCancelled);
         }
+    }
 
-        public void Reset()
+    public void Reset()
+    {
+        if (IsPaused)
         {
-            if (IsPaused)
-            {
-                Interlocked.Decrement(ref _paused);
-            }
-            if (IsCancelled)
-            {
-                Interlocked.Decrement(ref _isCancelled);
-            }
+            Interlocked.Decrement(ref _paused);
         }
+        if (IsCancelled)
+        {
+            Interlocked.Decrement(ref _isCancelled);
+        }
+    }
 
-        public void Pause()
+    public void Pause()
+    {
+        if (!IsPaused)
         {
-            if (!IsPaused)
-            {
-                _onPause?.Invoke();
-                Interlocked.Increment(ref _paused);
-            }
+            _onPause?.Invoke();
+            Interlocked.Increment(ref _paused);
         }
+    }
 
-        public void Resume()
+    public void Resume()
+    {
+        if (IsPaused)
         {
-            if (IsPaused)
-            {
-                _onResume?.Invoke();
-                Interlocked.Decrement(ref _paused);
-            }
+            _onResume?.Invoke();
+            Interlocked.Decrement(ref _paused);
         }
+    }
 
-        public void Register(Action action)
-        {
-            _onCancellation += action;
-        }
+    public void Register(Action action)
+    {
+        _onCancellation += action;
+    }
 
-        public void RegisterPaused(Action action)
-        {
-            _onPause += action;
-        }
+    public void RegisterPaused(Action action)
+    {
+        _onPause += action;
+    }
 
-        public void RegisterResumed(Action action)
-        {
-            _onResume += action;
-        }
+    public void RegisterResumed(Action action)
+    {
+        _onResume += action;
     }
 }

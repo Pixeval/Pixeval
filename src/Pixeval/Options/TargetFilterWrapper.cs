@@ -24,17 +24,16 @@ using System.Collections.Generic;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Util.Generic;
 
-namespace Pixeval.Options
+namespace Pixeval.Options;
+
+public record TargetFilterWrapper(TargetFilter Value, string LocalizedString) : ILocalizedBox<TargetFilter, TargetFilterWrapper>
 {
-    public record TargetFilterWrapper(TargetFilter Value, string LocalizedString) : ILocalizedBox<TargetFilter, TargetFilterWrapper>
+    public static IEnumerable<TargetFilterWrapper> AvailableOptions()
     {
-        public static IEnumerable<TargetFilterWrapper> AvailableOptions()
+        return new TargetFilterWrapper[]
         {
-            return new TargetFilterWrapper[]
-            {
-                new(TargetFilter.ForAndroid, MiscResources.TargetFilterForAndroid),
-                new(TargetFilter.ForIos, MiscResources.TargetFilterForIOS)
-            };
-        }
+            new(TargetFilter.ForAndroid, MiscResources.TargetFilterForAndroid),
+            new(TargetFilter.ForIos, MiscResources.TargetFilterForIOS)
+        };
     }
 }

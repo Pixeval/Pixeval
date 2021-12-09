@@ -38,103 +38,102 @@ using Pixeval.UserControls;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 
-namespace Pixeval.Popups
+namespace Pixeval.Popups;
+
+public sealed partial class CommentRepliesBlock : IAppPopupContent
 {
-    public sealed partial class CommentRepliesBlock : IAppPopupContent
+    public static DependencyProperty ViewModelProperty = DependencyProperty.Register(
+        nameof(ViewModel),
+        typeof(CommentRepliesBlockViewModel),
+        typeof(CommentRepliesBlock),
+        PropertyMetadata.Create(DependencyProperty.UnsetValue, ViewModelChangedCallback));
+
+    private EventHandler<TappedRoutedEventArgs>? _closeButtonTapped;
+
+    public CommentRepliesBlock()
     {
-        public static DependencyProperty ViewModelProperty = DependencyProperty.Register(
-            nameof(ViewModel),
-            typeof(CommentRepliesBlockViewModel),
-            typeof(CommentRepliesBlock),
-            PropertyMetadata.Create(DependencyProperty.UnsetValue, ViewModelChangedCallback));
+        UniqueId = Guid.NewGuid();
+        InitializeComponent();
+    }
 
-        private EventHandler<TappedRoutedEventArgs>? _closeButtonTapped;
+    public CommentRepliesBlockViewModel ViewModel
+    {
+        get => (CommentRepliesBlockViewModel) GetValue(ViewModelProperty);
+        set => SetValue(ViewModelProperty, value);
+    }
 
-        public CommentRepliesBlock()
+    public Guid UniqueId { get; }
+
+    public FrameworkElement UIContent => this;
+
+    public event EventHandler<TappedRoutedEventArgs> CloseButtonTapped
+    {
+        add => _closeButtonTapped += value;
+        remove => _closeButtonTapped -= value;
+    }
+
+    private static void ViewModelChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var block = (CommentRepliesBlock) d;
+        var viewModel = (CommentRepliesBlockViewModel) e.NewValue;
+        block.RepliesAreEmptyPanel.Visibility = (!viewModel.HasReplies).ToVisibility();
+        block.CommentList.Visibility = viewModel.HasReplies.ToVisibility();
+        if (viewModel.HasReplies && viewModel.Comment.Replies is { } rs)
         {
-            UniqueId = Guid.NewGuid();
-            InitializeComponent();
+            block.CommentList.ItemsSource = rs;
+        }
+    }
+
+    private void CommentRepliesBlock_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        // Focus the popup content so that the hot key for closing can work properly
+        CloseButton.Focus(FocusState.Programmatic);
+    }
+
+    private void CloseButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        _closeButtonTapped?.Invoke(sender, e);
+    }
+
+    private void CommentList_OnRepliesHyperlinkButtonTapped(object? sender, TappedRoutedEventArgs e)
+    {
+        ReplyBar.FindDescendant<RichEditBox>()?.Focus(FocusState.Programmatic);
+    }
+
+    private async void ReplyBar_OnSendButtonTapped(object? sender, SendButtonTappedEventArgs e)
+    {
+        using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
+            ("illust_id", ViewModel.Comment.IllustrationId),
+            ("parent_comment_id", ViewModel.Comment.CommentId),
+            ("comment", e.ReplyContentRichEditBoxStringContent));
+
+        await AddComment(result);
+    }
+
+    private async void ReplyBar_OnStickerTapped(object? sender, StickerTappedEventArgs e)
+    {
+        using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
+            ("illust_id", ViewModel.Comment.IllustrationId),
+            ("parent_comment_id", ViewModel.Comment.CommentId),
+            ("stamp_id", e.StickerViewModel.StickerId.ToString()));
+
+        await AddComment(result);
+    }
+
+    private async Task AddComment(HttpResponseMessage postCommentResponse)
+    {
+        RepliesAreEmptyPanel.Visibility = Visibility.Collapsed;
+        CommentList.Visibility = Visibility.Visible;
+
+        if (CommentList.ItemsSource is IEnumerable<object> enumerable && !enumerable.Any())
+        {
+            CommentList.ItemsSource = new ObservableCollection<CommentBlockViewModel>();
         }
 
-        public CommentRepliesBlockViewModel ViewModel
+        if (postCommentResponse.IsSuccessStatusCode)
         {
-            get => (CommentRepliesBlockViewModel) GetValue(ViewModelProperty);
-            set => SetValue(ViewModelProperty, value);
-        }
-
-        public Guid UniqueId { get; }
-
-        public FrameworkElement UIContent => this;
-
-        public event EventHandler<TappedRoutedEventArgs> CloseButtonTapped
-        {
-            add => _closeButtonTapped += value;
-            remove => _closeButtonTapped -= value;
-        }
-
-        private static void ViewModelChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var block = (CommentRepliesBlock) d;
-            var viewModel = (CommentRepliesBlockViewModel) e.NewValue;
-            block.RepliesAreEmptyPanel.Visibility = (!viewModel.HasReplies).ToVisibility();
-            block.CommentList.Visibility = viewModel.HasReplies.ToVisibility();
-            if (viewModel.HasReplies && viewModel.Comment.Replies is { } rs)
-            {
-                block.CommentList.ItemsSource = rs;
-            }
-        }
-
-        private void CommentRepliesBlock_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            // Focus the popup content so that the hot key for closing can work properly
-            CloseButton.Focus(FocusState.Programmatic);
-        }
-
-        private void CloseButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            _closeButtonTapped?.Invoke(sender, e);
-        }
-
-        private void CommentList_OnRepliesHyperlinkButtonTapped(object? sender, TappedRoutedEventArgs e)
-        {
-            ReplyBar.FindDescendant<RichEditBox>()?.Focus(FocusState.Programmatic);
-        }
-
-        private async void ReplyBar_OnSendButtonTapped(object? sender, SendButtonTappedEventArgs e)
-        {
-            using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
-                ("illust_id", ViewModel.Comment.IllustrationId),
-                ("parent_comment_id", ViewModel.Comment.CommentId),
-                ("comment", e.ReplyContentRichEditBoxStringContent));
-
-            await AddComment(result);
-        }
-
-        private async void ReplyBar_OnStickerTapped(object? sender, StickerTappedEventArgs e)
-        {
-            using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
-                ("illust_id", ViewModel.Comment.IllustrationId),
-                ("parent_comment_id", ViewModel.Comment.CommentId),
-                ("stamp_id", e.StickerViewModel.StickerId.ToString()));
-
-            await AddComment(result);
-        }
-
-        private async Task AddComment(HttpResponseMessage postCommentResponse)
-        {
-            RepliesAreEmptyPanel.Visibility = Visibility.Collapsed;
-            CommentList.Visibility = Visibility.Visible;
-
-            if (CommentList.ItemsSource is IEnumerable<object> enumerable && !enumerable.Any())
-            {
-                CommentList.ItemsSource = new ObservableCollection<CommentBlockViewModel>();
-            }
-
-            if (postCommentResponse.IsSuccessStatusCode)
-            {
-                var response = await postCommentResponse.Content.ReadFromJsonAsync<PostCommentResponse>();
-                ((ObservableCollection<CommentBlockViewModel>) CommentList.ItemsSource).Insert(0, new CommentBlockViewModel(response?.Comment!, ViewModel.Comment.IllustrationId));
-            }
+            var response = await postCommentResponse.Content.ReadFromJsonAsync<PostCommentResponse>();
+            ((ObservableCollection<CommentBlockViewModel>) CommentList.ItemsSource).Insert(0, new CommentBlockViewModel(response?.Comment!, ViewModel.Comment.IllustrationId));
         }
     }
 }

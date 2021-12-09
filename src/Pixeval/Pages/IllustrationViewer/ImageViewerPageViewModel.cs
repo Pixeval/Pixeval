@@ -36,256 +36,255 @@ using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Utilities;
 
-namespace Pixeval.Pages.IllustrationViewer
+namespace Pixeval.Pages.IllustrationViewer;
+
+public class ImageViewerPageViewModel : ObservableObject, IDisposable
 {
-    public class ImageViewerPageViewModel : ObservableObject, IDisposable
+    public enum LoadingPhase
     {
-        public enum LoadingPhase
+        [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.CheckingCache))]
+        CheckingCache,
+
+        [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.LoadingFromCache))]
+        LoadingFromCache,
+
+        [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.DownloadingGifZipFormatted), DownloadingGifZip)]
+        DownloadingGifZip,
+
+        [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.MergingGifFrames))]
+        MergingGifFrames,
+
+        [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.DownloadingImageFormatted), DownloadingImage)]
+        DownloadingImage,
+
+        [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.LoadingImage))]
+        LoadingImage
+    }
+
+    private const int MaxZoomFactor = 8;
+
+    private const int MinZoomFactor = 1;
+
+    private bool _disposed;
+
+    private TaskNotifier? _loadingOriginalSourceTask;
+
+    private double _loadingProgress;
+
+    private string? _loadingText;
+
+    private ImageSource? _originalImageSource;
+
+    private double _scale = 1;
+
+    public ImageViewerPageViewModel(IllustrationViewerPageViewModel illustrationViewerPageViewModel, IllustrationViewModel illustrationViewModel)
+    {
+        IllustrationViewerPageViewModel = illustrationViewerPageViewModel;
+        IllustrationViewModel = illustrationViewModel;
+        ImageLoadingCancellationHandle = new CancellationHandle();
+        _ = LoadImage();
+    }
+
+    public double LoadingProgress
+    {
+        get => _loadingProgress;
+        set => SetProperty(ref _loadingProgress, value);
+    }
+
+    public double Scale
+    {
+        get => _scale;
+        set => SetProperty(ref _scale, value);
+    }
+
+    public string? LoadingText
+    {
+        get => _loadingText;
+        set => SetProperty(ref _loadingText, value);
+    }
+
+    public IRandomAccessStream? OriginalImageStream { get; private set; }
+
+    public Task? LoadingOriginalSourceTask
+    {
+        get => _loadingOriginalSourceTask!;
+        set => SetPropertyAndNotifyOnCompletion(ref _loadingOriginalSourceTask!, value);
+    }
+
+    public bool LoadingCompletedSuccessfully => LoadingOriginalSourceTask?.IsCompletedSuccessfully ?? false;
+
+    public IllustrationViewModel IllustrationViewModel { get; }
+
+    public CancellationHandle ImageLoadingCancellationHandle { get; }
+
+    /// <summary>
+    ///     The view model of the <see cref="IllustrationViewerPage" /> that hosts the owner <see cref="ImageViewerPage" />
+    ///     of this <see cref="ImageViewerPageViewModel" />
+    /// </summary>
+    public IllustrationViewerPageViewModel IllustrationViewerPageViewModel { get; }
+
+    public ImageSource? OriginalImageSource
+    {
+        get => _originalImageSource;
+        set => SetProperty(ref _originalImageSource, value);
+    }
+
+    public void Dispose()
+    {
+        _disposed = true;
+        DisposeInternal();
+        GC.SuppressFinalize(this);
+    }
+
+    public void Zoom(double delta)
+    {
+        var factor = Scale;
+        switch (delta)
         {
-            [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.CheckingCache))]
-            CheckingCache,
-
-            [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.LoadingFromCache))]
-            LoadingFromCache,
-
-            [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.DownloadingGifZipFormatted), DownloadingGifZip)]
-            DownloadingGifZip,
-
-            [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.MergingGifFrames))]
-            MergingGifFrames,
-
-            [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.DownloadingImageFormatted), DownloadingImage)]
-            DownloadingImage,
-
-            [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.LoadingImage))]
-            LoadingImage
-        }
-
-        private const int MaxZoomFactor = 8;
-
-        private const int MinZoomFactor = 1;
-
-        private bool _disposed;
-
-        private TaskNotifier? _loadingOriginalSourceTask;
-
-        private double _loadingProgress;
-
-        private string? _loadingText;
-
-        private ImageSource? _originalImageSource;
-
-        private double _scale = 1;
-
-        public ImageViewerPageViewModel(IllustrationViewerPageViewModel illustrationViewerPageViewModel, IllustrationViewModel illustrationViewModel)
-        {
-            IllustrationViewerPageViewModel = illustrationViewerPageViewModel;
-            IllustrationViewModel = illustrationViewModel;
-            ImageLoadingCancellationHandle = new CancellationHandle();
-            _ = LoadImage();
-        }
-
-        public double LoadingProgress
-        {
-            get => _loadingProgress;
-            set => SetProperty(ref _loadingProgress, value);
-        }
-
-        public double Scale
-        {
-            get => _scale;
-            set => SetProperty(ref _scale, value);
-        }
-
-        public string? LoadingText
-        {
-            get => _loadingText;
-            set => SetProperty(ref _loadingText, value);
-        }
-
-        public IRandomAccessStream? OriginalImageStream { get; private set; }
-
-        public Task? LoadingOriginalSourceTask
-        {
-            get => _loadingOriginalSourceTask!;
-            set => SetPropertyAndNotifyOnCompletion(ref _loadingOriginalSourceTask!, value);
-        }
-
-        public bool LoadingCompletedSuccessfully => LoadingOriginalSourceTask?.IsCompletedSuccessfully ?? false;
-
-        public IllustrationViewModel IllustrationViewModel { get; }
-
-        public CancellationHandle ImageLoadingCancellationHandle { get; }
-
-        /// <summary>
-        ///     The view model of the <see cref="IllustrationViewerPage" /> that hosts the owner <see cref="ImageViewerPage" />
-        ///     of this <see cref="ImageViewerPageViewModel" />
-        /// </summary>
-        public IllustrationViewerPageViewModel IllustrationViewerPageViewModel { get; }
-
-        public ImageSource? OriginalImageSource
-        {
-            get => _originalImageSource;
-            set => SetProperty(ref _originalImageSource, value);
-        }
-
-        public void Dispose()
-        {
-            _disposed = true;
-            DisposeInternal();
-            GC.SuppressFinalize(this);
-        }
-
-        public void Zoom(double delta)
-        {
-            var factor = Scale;
-            switch (delta)
-            {
-                case < 0 when factor > MinZoomFactor:
-                case > 0 when factor < MaxZoomFactor:
-                    delta = (factor + delta) switch
-                    {
-                        > MaxZoomFactor => MaxZoomFactor - factor,
-                        < MinZoomFactor => -(factor - MinZoomFactor),
-                        _ => delta
-                    };
-                    Scale += delta;
-                    break;
-            }
-        }
-
-        private void AdvancePhase(LoadingPhase phase)
-        {
-            LoadingText = phase.GetLocalizedResource() switch
-            {
-                { FormatKey: LoadingPhase } attr => attr.GetLocalizedResourceContent()?.Format((int) LoadingProgress),
-                var attr => attr?.GetLocalizedResourceContent()
-            };
-        }
-
-        private async Task LoadImage()
-        {
-            _ = IllustrationViewModel.LoadThumbnailIfRequired().ContinueWith(_ =>
-            {
-                OriginalImageSource ??= IllustrationViewModel.ThumbnailSource;
-            }, TaskScheduler.FromCurrentSynchronizationContext());
-            await LoadOriginalImage();
-        }
-
-        public async Task LoadOriginalImage()
-        {
-            var imageClient = App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi);
-            var cacheKey = IllustrationViewModel.Illustration.GetIllustrationOriginalImageCacheKey();
-            AdvancePhase(LoadingPhase.CheckingCache);
-            if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(cacheKey) is { } stream)
-            {
-                AdvancePhase(LoadingPhase.LoadingFromCache);
-                OriginalImageStream = stream;
-                OriginalImageSource = IllustrationViewModel.Illustration.IsUgoira()
-                    ? await OriginalImageStream.GetBitmapImageAsync(false)
-                    : await stream.EncodeSoftwareBitmapSourceAsync(false);
-                LoadingOriginalSourceTask = Task.CompletedTask;
-            }
-            else if (IllustrationViewModel.IsUgoira)
-            {
-                var ugoiraMetadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(IllustrationViewModel.Id);
-                if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Medium is { } url)
+            case < 0 when factor > MinZoomFactor:
+            case > 0 when factor < MaxZoomFactor:
+                delta = (factor + delta) switch
                 {
-                    AdvancePhase(LoadingPhase.DownloadingGifZip);
-                    switch (await imageClient.DownloadAsStreamAsync(url, new Progress<int>(d =>
-                    {
-                        LoadingProgress = d;
-                        AdvancePhase(LoadingPhase.DownloadingGifZip);
-                    }), ImageLoadingCancellationHandle))
-                    {
-                        case Result<Stream>.Success(var zipStream):
-                            AdvancePhase(LoadingPhase.MergingGifFrames);
-                            OriginalImageStream = await IOHelper.GetGifStreamFromZipStreamAsync(zipStream, ugoiraMetadata);
-                            break;
-                        case Result<Stream>.Failure(OperationCanceledException):
-                            // TODO add load failed image
-                            return;
-                    }
+                    > MaxZoomFactor => MaxZoomFactor - factor,
+                    < MinZoomFactor => -(factor - MinZoomFactor),
+                    _ => delta
+                };
+                Scale += delta;
+                break;
+        }
+    }
 
-                    AdvancePhase(LoadingPhase.LoadingImage);
-                    OriginalImageSource = await OriginalImageStream!.GetBitmapImageAsync(false);
-                    LoadingOriginalSourceTask = Task.CompletedTask;
-                }
-            }
-            else if (IllustrationViewModel.OriginalSourceUrl is { } src)
+    private void AdvancePhase(LoadingPhase phase)
+    {
+        LoadingText = phase.GetLocalizedResource() switch
+        {
+            { FormatKey: LoadingPhase } attr => attr.GetLocalizedResourceContent()?.Format((int) LoadingProgress),
+            var attr => attr?.GetLocalizedResourceContent()
+        };
+    }
+
+    private async Task LoadImage()
+    {
+        _ = IllustrationViewModel.LoadThumbnailIfRequired().ContinueWith(_ =>
+        {
+            OriginalImageSource ??= IllustrationViewModel.ThumbnailSource;
+        }, TaskScheduler.FromCurrentSynchronizationContext());
+        await LoadOriginalImage();
+    }
+
+    public async Task LoadOriginalImage()
+    {
+        var imageClient = App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi);
+        var cacheKey = IllustrationViewModel.Illustration.GetIllustrationOriginalImageCacheKey();
+        AdvancePhase(LoadingPhase.CheckingCache);
+        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(cacheKey) is { } stream)
+        {
+            AdvancePhase(LoadingPhase.LoadingFromCache);
+            OriginalImageStream = stream;
+            OriginalImageSource = IllustrationViewModel.Illustration.IsUgoira()
+                ? await OriginalImageStream.GetBitmapImageAsync(false)
+                : await stream.EncodeSoftwareBitmapSourceAsync(false);
+            LoadingOriginalSourceTask = Task.CompletedTask;
+        }
+        else if (IllustrationViewModel.IsUgoira)
+        {
+            var ugoiraMetadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(IllustrationViewModel.Id);
+            if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Medium is { } url)
             {
-                AdvancePhase(LoadingPhase.DownloadingImage);
-                switch (await imageClient.DownloadAsIRandomAccessStreamAsync(src, new Progress<int>(d =>
+                AdvancePhase(LoadingPhase.DownloadingGifZip);
+                switch (await imageClient.DownloadAsStreamAsync(url, new Progress<int>(d =>
+                        {
+                            LoadingProgress = d;
+                            AdvancePhase(LoadingPhase.DownloadingGifZip);
+                        }), ImageLoadingCancellationHandle))
                 {
-                    LoadingProgress = d;
-                    AdvancePhase(LoadingPhase.DownloadingImage);
-                }), ImageLoadingCancellationHandle))
-                {
-                    case Result<IRandomAccessStream>.Success (var s):
-                        OriginalImageStream = s;
+                    case Result<Stream>.Success(var zipStream):
+                        AdvancePhase(LoadingPhase.MergingGifFrames);
+                        OriginalImageStream = await IOHelper.GetGifStreamFromZipStreamAsync(zipStream, ugoiraMetadata);
                         break;
-                    case Result<IRandomAccessStream>.Failure (OperationCanceledException):
+                    case Result<Stream>.Failure(OperationCanceledException):
                         // TODO add load failed image
                         return;
                 }
 
                 AdvancePhase(LoadingPhase.LoadingImage);
-                OriginalImageSource = await OriginalImageStream!.EncodeSoftwareBitmapSourceAsync(false);
+                OriginalImageSource = await OriginalImageStream!.GetBitmapImageAsync(false);
                 LoadingOriginalSourceTask = Task.CompletedTask;
             }
-
-            if (OriginalImageStream is not null && !_disposed)
+        }
+        else if (IllustrationViewModel.OriginalSourceUrl is { } src)
+        {
+            AdvancePhase(LoadingPhase.DownloadingImage);
+            switch (await imageClient.DownloadAsIRandomAccessStreamAsync(src, new Progress<int>(d =>
+                    {
+                        LoadingProgress = d;
+                        AdvancePhase(LoadingPhase.DownloadingImage);
+                    }), ImageLoadingCancellationHandle))
             {
-                IllustrationViewerPageViewModel.UpdateCommandCanExecute();
-                if (App.AppViewModel.AppSetting.UseFileCache)
-                {
-                    await App.AppViewModel.Cache.TryAddAsync(cacheKey, OriginalImageStream!, TimeSpan.FromDays(1));
-                }
-
-                return;
+                case Result<IRandomAccessStream>.Success (var s):
+                    OriginalImageStream = s;
+                    break;
+                case Result<IRandomAccessStream>.Failure (OperationCanceledException):
+                    // TODO add load failed image
+                    return;
             }
 
-            throw new IllustrationSourceNotFoundException(ImageViewerPageResources.CannotFindImageSourceContent);
+            AdvancePhase(LoadingPhase.LoadingImage);
+            OriginalImageSource = await OriginalImageStream!.EncodeSoftwareBitmapSourceAsync(false);
+            LoadingOriginalSourceTask = Task.CompletedTask;
         }
 
-        /// <summary>
-        ///     We use the <see cref="IllustrationViewerPageViewModel" /> to remove and add bookmark
-        ///     because the manga have multiple works and those works aside of this one cannot receive
-        ///     the bookmark notification if we use <see cref="IllustrationViewModel" />
-        /// </summary>
-        public void SwitchBookmarkState()
+        if (OriginalImageStream is not null && !_disposed)
         {
-            if (IllustrationViewerPageViewModel.FirstIllustrationViewModel.IsBookmarked)
+            IllustrationViewerPageViewModel.UpdateCommandCanExecute();
+            if (App.AppViewModel.AppSetting.UseFileCache)
             {
-                IllustrationViewerPageViewModel.RemoveBookmarkAsync();
+                await App.AppViewModel.Cache.TryAddAsync(cacheKey, OriginalImageStream!, TimeSpan.FromDays(1));
             }
-            else
-            {
-                IllustrationViewerPageViewModel.PostPublicBookmarkAsync();
-            }
+
+            return;
         }
 
-        public Visibility GetLoadingMaskVisibility(Task? loadingTask)
-        {
-            return !(loadingTask?.IsCompletedSuccessfully ?? false) ? Visibility.Visible : Visibility.Collapsed;
-        }
+        throw new IllustrationSourceNotFoundException(ImageViewerPageResources.CannotFindImageSourceContent);
+    }
 
-        private void DisposeInternal()
+    /// <summary>
+    ///     We use the <see cref="IllustrationViewerPageViewModel" /> to remove and add bookmark
+    ///     because the manga have multiple works and those works aside of this one cannot receive
+    ///     the bookmark notification if we use <see cref="IllustrationViewModel" />
+    /// </summary>
+    public void SwitchBookmarkState()
+    {
+        if (IllustrationViewerPageViewModel.FirstIllustrationViewModel.IsBookmarked)
         {
-            OriginalImageStream?.Dispose();
-            // Remarks:
-            // if the loading task is null or hasn't been completed yet, the 
-            // OriginalImageSource would be the thumbnail source, its disposal may 
-            // causing the IllustrationGrid shows weird result such as an empty content
-            if (LoadingOriginalSourceTask?.IsCompletedSuccessfully is true)
-            {
-                (OriginalImageSource as SoftwareBitmapSource)?.Dispose();
-            }
+            IllustrationViewerPageViewModel.RemoveBookmarkAsync();
         }
+        else
+        {
+            IllustrationViewerPageViewModel.PostPublicBookmarkAsync();
+        }
+    }
 
-        ~ImageViewerPageViewModel()
+    public Visibility GetLoadingMaskVisibility(Task? loadingTask)
+    {
+        return !(loadingTask?.IsCompletedSuccessfully ?? false) ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void DisposeInternal()
+    {
+        OriginalImageStream?.Dispose();
+        // Remarks:
+        // if the loading task is null or hasn't been completed yet, the 
+        // OriginalImageSource would be the thumbnail source, its disposal may 
+        // causing the IllustrationGrid shows weird result such as an empty content
+        if (LoadingOriginalSourceTask?.IsCompletedSuccessfully is true)
         {
-            Dispose();
+            (OriginalImageSource as SoftwareBitmapSource)?.Dispose();
         }
+    }
+
+    ~ImageViewerPageViewModel()
+    {
+        Dispose();
     }
 }

@@ -25,101 +25,100 @@ using System.Text.RegularExpressions;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Pixeval.Utilities;
 
-namespace Pixeval.UserControls.TokenInput
+namespace Pixeval.UserControls.TokenInput;
+
+public sealed class Token : ObservableObject, IEquatable<Token>, ICloneable
 {
-    public sealed class Token : ObservableObject, IEquatable<Token>, ICloneable
+    private bool _caseSensitive;
+
+    private bool _isRegularExpression;
+    private string _tokenContent;
+
+    public Token(string tokenContent, bool caseSensitive, bool isRegularExpression)
     {
-        private bool _caseSensitive;
-
-        private bool _isRegularExpression;
-        private string _tokenContent;
-
-        public Token(string tokenContent, bool caseSensitive, bool isRegularExpression)
+        _tokenContent = tokenContent;
+        _caseSensitive = caseSensitive;
+        _isRegularExpression = isRegularExpression;
+        if (IsRegularExpression && !tokenContent.IsValidRegexPattern())
         {
-            _tokenContent = tokenContent;
-            _caseSensitive = caseSensitive;
-            _isRegularExpression = isRegularExpression;
-            if (IsRegularExpression && !tokenContent.IsValidRegexPattern())
-            {
-                throw new ArgumentException(nameof(tokenContent));
-            }
+            throw new ArgumentException(nameof(tokenContent));
+        }
+    }
+
+    public Token()
+    {
+        _tokenContent = string.Empty;
+    }
+
+    public string TokenContent
+    {
+        get => _tokenContent;
+        set => SetProperty(ref _tokenContent, value);
+    }
+
+    public bool CaseSensitive
+    {
+        get => _caseSensitive;
+        set => SetProperty(ref _caseSensitive, value);
+    }
+
+    public bool IsRegularExpression
+    {
+        get => _isRegularExpression;
+        set => SetProperty(ref _isRegularExpression, value);
+    }
+
+    public object Clone()
+    {
+        return MemberwiseClone();
+    }
+
+    public bool Equals(Token? other)
+    {
+        if (other is null)
+        {
+            return false;
         }
 
-        public Token()
+        if (ReferenceEquals(this, other))
         {
-            _tokenContent = string.Empty;
+            return true;
         }
 
-        public string TokenContent
+        return CaseSensitive
+            ? TokenContent == other.TokenContent
+            : TokenContent.Equals(other.TokenContent, StringComparison.OrdinalIgnoreCase);
+    }
+
+    public void Deconstruct(out string tokenContent, out bool caseSensitive, out bool isRegularExpression)
+    {
+        tokenContent = TokenContent;
+        caseSensitive = CaseSensitive;
+        isRegularExpression = IsRegularExpression;
+    }
+
+    public bool Match(string? input)
+    {
+        if (TokenContent.IsNullOrEmpty())
         {
-            get => _tokenContent;
-            set => SetProperty(ref _tokenContent, value);
+            return true;
         }
 
-        public bool CaseSensitive
+        if (input.IsNullOrEmpty())
         {
-            get => _caseSensitive;
-            set => SetProperty(ref _caseSensitive, value);
+            return false;
         }
 
-        public bool IsRegularExpression
+        if (IsRegularExpression)
         {
-            get => _isRegularExpression;
-            set => SetProperty(ref _isRegularExpression, value);
+            return Regex.IsMatch(input!, _tokenContent);
         }
 
-        public object Clone()
-        {
-            return MemberwiseClone();
-        }
+        return CaseSensitive ? input == _tokenContent : input!.Equals(_tokenContent, StringComparison.OrdinalIgnoreCase);
+    }
 
-        public bool Equals(Token? other)
-        {
-            if (other is null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            return CaseSensitive
-                ? TokenContent == other.TokenContent
-                : TokenContent.Equals(other.TokenContent, StringComparison.OrdinalIgnoreCase);
-        }
-
-        public void Deconstruct(out string tokenContent, out bool caseSensitive, out bool isRegularExpression)
-        {
-            tokenContent = TokenContent;
-            caseSensitive = CaseSensitive;
-            isRegularExpression = IsRegularExpression;
-        }
-
-        public bool Match(string? input)
-        {
-            if (TokenContent.IsNullOrEmpty())
-            {
-                return true;
-            }
-
-            if (input.IsNullOrEmpty())
-            {
-                return false;
-            }
-
-            if (IsRegularExpression)
-            {
-                return Regex.IsMatch(input!, _tokenContent);
-            }
-
-            return CaseSensitive ? input == _tokenContent : input!.Equals(_tokenContent, StringComparison.OrdinalIgnoreCase);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(CaseSensitive ? TokenContent : TokenContent.ToLower(), CaseSensitive, IsRegularExpression);
-        }
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(CaseSensitive ? TokenContent : TokenContent.ToLower(), CaseSensitive, IsRegularExpression);
     }
 }

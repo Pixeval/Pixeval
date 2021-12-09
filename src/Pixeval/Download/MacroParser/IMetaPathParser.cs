@@ -20,12 +20,11 @@
 
 #endregion
 
-namespace Pixeval.Download.MacroParser
-{
-    public interface IMetaPathParser<TContext>
-    {
-        IMetaPathMacroProvider<TContext> MacroProvider { get; }
+namespace Pixeval.Download.MacroParser;
 
-        string Reduce(string raw, TContext context);
-    }
+public interface IMetaPathParser<TContext>
+{
+    IMetaPathMacroProvider<TContext> MacroProvider { get; }
+
+    string Reduce(string raw, TContext context);
 }

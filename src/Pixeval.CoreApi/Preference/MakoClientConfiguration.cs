@@ -24,49 +24,48 @@ using System.Globalization;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
-namespace Pixeval.CoreApi.Preference
+namespace Pixeval.CoreApi.Preference;
+
+/// <summary>
+///     Contains all the user-configurable keys
+/// </summary>
+[PublicAPI]
+public record MakoClientConfiguration
 {
-    /// <summary>
-    ///     Contains all the user-configurable keys
-    /// </summary>
-    [PublicAPI]
-    public record MakoClientConfiguration
+    public MakoClientConfiguration()
     {
-        public MakoClientConfiguration()
-        {
-            CultureInfo = CultureInfo.CurrentCulture;
-            ConnectionTimeout = 5000;
-            Bypass = false;
-            MirrorHost = string.Empty;
-        }
-
-        public MakoClientConfiguration(int connectionTimeout, bool bypass, string? mirrorHost, CultureInfo cultureInfo)
-        {
-            ConnectionTimeout = connectionTimeout;
-            Bypass = bypass;
-            MirrorHost = mirrorHost;
-            CultureInfo = cultureInfo;
-        }
-
-        [JsonIgnore]
-        public CultureInfo CultureInfo { get; set; }
-
-        [JsonPropertyName("connectionTimeout")]
-        public int ConnectionTimeout { get; set; }
-
-        /// <summary>
-        ///     Automatically bypass GFW or not, default is set to true.
-        ///     If you are currently living in China Mainland, turn it on to make sure
-        ///     you can use Mako without using any kind of proxy, otherwise you will
-        ///     need a proper proxy server to bypass the GFW
-        /// </summary>
-        [JsonPropertyName("bypass")]
-        public bool Bypass { get; set; }
-
-        /// <summary>
-        ///     Mirror server's host of image downloading
-        /// </summary>
-        [JsonPropertyName("mirrorHost")]
-        public string? MirrorHost { get; set; }
+        CultureInfo = CultureInfo.CurrentCulture;
+        ConnectionTimeout = 5000;
+        Bypass = false;
+        MirrorHost = string.Empty;
     }
+
+    public MakoClientConfiguration(int connectionTimeout, bool bypass, string? mirrorHost, CultureInfo cultureInfo)
+    {
+        ConnectionTimeout = connectionTimeout;
+        Bypass = bypass;
+        MirrorHost = mirrorHost;
+        CultureInfo = cultureInfo;
+    }
+
+    [JsonIgnore]
+    public CultureInfo CultureInfo { get; set; }
+
+    [JsonPropertyName("connectionTimeout")]
+    public int ConnectionTimeout { get; set; }
+
+    /// <summary>
+    ///     Automatically bypass GFW or not, default is set to true.
+    ///     If you are currently living in China Mainland, turn it on to make sure
+    ///     you can use Mako without using any kind of proxy, otherwise you will
+    ///     need a proper proxy server to bypass the GFW
+    /// </summary>
+    [JsonPropertyName("bypass")]
+    public bool Bypass { get; set; }
+
+    /// <summary>
+    ///     Mirror server's host of image downloading
+    /// </summary>
+    [JsonPropertyName("mirrorHost")]
+    public string? MirrorHost { get; set; }
 }

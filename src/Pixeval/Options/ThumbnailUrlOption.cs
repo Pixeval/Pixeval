@@ -20,12 +20,11 @@
 
 #endregion
 
-namespace Pixeval.Options
+namespace Pixeval.Options;
+
+public enum ThumbnailUrlOption
 {
-    public enum ThumbnailUrlOption
-    {
-        Large,
-        Medium,
-        SquareMedium
-    }
+    Large,
+    Medium,
+    SquareMedium
 }

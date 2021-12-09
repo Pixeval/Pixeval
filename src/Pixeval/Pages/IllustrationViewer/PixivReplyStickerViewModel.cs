@@ -23,20 +23,19 @@
 using Windows.Storage.Streams;
 using Microsoft.UI.Xaml.Media;
 
-namespace Pixeval.Pages.IllustrationViewer
+namespace Pixeval.Pages.IllustrationViewer;
+
+public class PixivReplyStickerViewModel
 {
-    public class PixivReplyStickerViewModel
+    public PixivReplyStickerViewModel(int stickerId, IRandomAccessStream imageStream)
     {
-        public PixivReplyStickerViewModel(int stickerId, IRandomAccessStream imageStream)
-        {
-            StickerId = stickerId;
-            ImageStream = imageStream;
-        }
-
-        public int StickerId { get; }
-
-        public IRandomAccessStream ImageStream { get; }
-
-        public ImageSource? ImageSource { get; set; }
+        StickerId = stickerId;
+        ImageStream = imageStream;
     }
+
+    public int StickerId { get; }
+
+    public IRandomAccessStream ImageStream { get; }
+
+    public ImageSource? ImageSource { get; set; }
 }

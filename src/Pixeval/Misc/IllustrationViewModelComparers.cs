@@ -24,45 +24,44 @@ using System.Collections;
 using System.Collections.Generic;
 using Pixeval.UserControls;
 
-namespace Pixeval.Misc
+namespace Pixeval.Misc;
+
+public class IllustrationViewModelPublishDateComparer : IComparer<IllustrationViewModel>, IComparer
 {
-    public class IllustrationViewModelPublishDateComparer : IComparer<IllustrationViewModel>, IComparer
+    public static readonly IllustrationViewModelPublishDateComparer Instance = new();
+
+    public int Compare(object? x, object? y)
     {
-        public static readonly IllustrationViewModelPublishDateComparer Instance = new();
-
-        public int Compare(object? x, object? y)
-        {
-            return Compare(x as IllustrationViewModel, y as IllustrationViewModel);
-        }
-
-        public int Compare(IllustrationViewModel? x, IllustrationViewModel? y)
-        {
-            if (x is null || y is null)
-            {
-                return 0;
-            }
-
-            return x.PublishDate.CompareTo(y.PublishDate);
-        }
+        return Compare(x as IllustrationViewModel, y as IllustrationViewModel);
     }
 
-    public class IllustrationBookmarkComparer : IComparer<IllustrationViewModel>, IComparer
+    public int Compare(IllustrationViewModel? x, IllustrationViewModel? y)
     {
-        public static readonly IllustrationBookmarkComparer Instance = new();
-
-        public int Compare(object? x, object? y)
+        if (x is null || y is null)
         {
-            return Compare(x as IllustrationViewModel, y as IllustrationViewModel);
-        }
-
-        public int Compare(IllustrationViewModel? x, IllustrationViewModel? y)
-        {
-            if (x?.Illustration is { } xi && y?.Illustration is { } yi)
-            {
-                return xi.TotalBookmarks.CompareTo(yi.TotalBookmarks);
-            }
-
             return 0;
         }
+
+        return x.PublishDate.CompareTo(y.PublishDate);
+    }
+}
+
+public class IllustrationBookmarkComparer : IComparer<IllustrationViewModel>, IComparer
+{
+    public static readonly IllustrationBookmarkComparer Instance = new();
+
+    public int Compare(object? x, object? y)
+    {
+        return Compare(x as IllustrationViewModel, y as IllustrationViewModel);
+    }
+
+    public int Compare(IllustrationViewModel? x, IllustrationViewModel? y)
+    {
+        if (x?.Illustration is { } xi && y?.Illustration is { } yi)
+        {
+            return xi.TotalBookmarks.CompareTo(yi.TotalBookmarks);
+        }
+
+        return 0;
     }
 }

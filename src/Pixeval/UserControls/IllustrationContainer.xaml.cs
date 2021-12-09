@@ -27,49 +27,48 @@ using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-namespace Pixeval.UserControls
+namespace Pixeval.UserControls;
+
+public sealed partial class IllustrationContainer
 {
-    public sealed partial class IllustrationContainer
+    public IllustrationContainer()
     {
-        public IllustrationContainer()
+        InitializeComponent();
+        CommandBarElements = new ObservableCollection<UIElement>();
+        CommandBarElements.CollectionChanged += (_, args) =>
         {
-            InitializeComponent();
-            CommandBarElements = new ObservableCollection<UIElement>();
-            CommandBarElements.CollectionChanged += (_, args) =>
+            switch (args)
             {
-                switch (args)
-                {
-                    case { Action: NotifyCollectionChangedAction.Add }:
-                        if (args is { NewItems: not null })
+                case { Action: NotifyCollectionChangedAction.Add }:
+                    if (args is { NewItems: not null })
+                    {
+                        foreach (UIElement argsNewItem in args.NewItems)
                         {
-                            foreach (UIElement argsNewItem in args.NewItems)
-                            {
-                                TopCommandBar.CommandBarElements.Add(argsNewItem);
-                            }
+                            TopCommandBar.CommandBarElements.Add(argsNewItem);
                         }
+                    }
 
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            };
-        }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        };
+    }
 
-        public IllustrationGridViewModel ViewModel => IllustrationGrid.ViewModel;
+    public IllustrationGridViewModel ViewModel => IllustrationGrid.ViewModel;
 
-        /// <summary>
-        ///     The command elements that will appear at the left of the <see cref="TopCommandBar" />
-        /// </summary>
-        public ObservableCollection<UIElement> CommandBarElements { get; }
+    /// <summary>
+    ///     The command elements that will appear at the left of the <see cref="TopCommandBar" />
+    /// </summary>
+    public ObservableCollection<UIElement> CommandBarElements { get; }
 
-        private void IllustrationContainer_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            IllustrationGrid.Focus(FocusState.Programmatic);
-        }
+    private void IllustrationContainer_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        IllustrationGrid.Focus(FocusState.Programmatic);
+    }
 
-        public void ScrollToTop()
-        {
-            IllustrationGrid.IllustrationGridView.FindDescendant<ScrollViewer>()?.ChangeView(null, 0, null, false);
-        }
+    public void ScrollToTop()
+    {
+        IllustrationGrid.IllustrationGridView.FindDescendant<ScrollViewer>()?.ChangeView(null, 0, null, false);
     }
 }

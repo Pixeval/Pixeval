@@ -24,31 +24,30 @@ using System.Runtime.Serialization;
 using JetBrains.Annotations;
 using Pixeval.CoreApi.Model;
 
-namespace Pixeval.CoreApi.Global.Exception
+namespace Pixeval.CoreApi.Global.Exception;
+
+[PublicAPI]
+public class MangaPagesNotFoundException : MakoException
 {
-    [PublicAPI]
-    public class MangaPagesNotFoundException : MakoException
+    public MangaPagesNotFoundException(Illustration illustration)
     {
-        public MangaPagesNotFoundException(Illustration illustration)
-        {
-            Illustration = illustration;
-        }
-
-        protected MangaPagesNotFoundException(SerializationInfo info, StreamingContext context, Illustration illustration) : base(info, context)
-        {
-            Illustration = illustration;
-        }
-
-        public MangaPagesNotFoundException(string? message, Illustration illustration) : base(message)
-        {
-            Illustration = illustration;
-        }
-
-        public MangaPagesNotFoundException(string? message, System.Exception? innerException, Illustration illustration) : base(message, innerException)
-        {
-            Illustration = illustration;
-        }
-
-        public Illustration Illustration { get; }
+        Illustration = illustration;
     }
+
+    protected MangaPagesNotFoundException(SerializationInfo info, StreamingContext context, Illustration illustration) : base(info, context)
+    {
+        Illustration = illustration;
+    }
+
+    public MangaPagesNotFoundException(string? message, Illustration illustration) : base(message)
+    {
+        Illustration = illustration;
+    }
+
+    public MangaPagesNotFoundException(string? message, System.Exception? innerException, Illustration illustration) : base(message, innerException)
+    {
+        Illustration = illustration;
+    }
+
+    public Illustration Illustration { get; }
 }

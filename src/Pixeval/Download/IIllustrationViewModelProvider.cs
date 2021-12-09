@@ -21,10 +21,9 @@
 using System.Threading.Tasks;
 using Pixeval.UserControls;
 
-namespace Pixeval.Download
+namespace Pixeval.Download;
+
+public interface IIllustrationViewModelProvider
 {
-    public interface IIllustrationViewModelProvider
-    {
-        Task<IllustrationViewModel> GetViewModelAsync();
-    }
+    Task<IllustrationViewModel> GetViewModelAsync();
 }

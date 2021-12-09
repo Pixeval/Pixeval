@@ -25,88 +25,87 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Pixeval.Controls.Setting.UI.UserControls;
 
-namespace Pixeval.Controls.Setting.UI.SliderSettingEntry
+namespace Pixeval.Controls.Setting.UI.SliderSettingEntry;
+
+[TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
+[TemplatePart(Name = PartValueSlider, Type = typeof(Slider))]
+public class SliderSettingEntry : SettingEntryBase
 {
-    [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
-    [TemplatePart(Name = PartValueSlider, Type = typeof(Slider))]
-    public class SliderSettingEntry : SettingEntryBase
+    private const string PartValueSlider = "ValueSlider";
+
+    public static readonly DependencyProperty MaximumProperty = DependencyProperty.Register(
+        nameof(Maximum),
+        typeof(double),
+        typeof(SliderSettingEntry),
+        PropertyMetadata.Create(DependencyProperty.UnsetValue));
+
+    public static readonly DependencyProperty MinimumProperty = DependencyProperty.Register(
+        nameof(Minimum),
+        typeof(double),
+        typeof(SliderSettingEntry),
+        PropertyMetadata.Create(DependencyProperty.UnsetValue));
+
+    public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
+        nameof(Value),
+        typeof(double),
+        typeof(SliderSettingEntry),
+        PropertyMetadata.Create(DependencyProperty.UnsetValue, (o, args) => ValueChanged(o, args.NewValue)));
+
+    private Slider? _valueSlider;
+
+    public SliderSettingEntry()
     {
-        private const string PartValueSlider = "ValueSlider";
+        DefaultStyleKey = typeof(SliderSettingEntry);
+    }
 
-        public static readonly DependencyProperty MaximumProperty = DependencyProperty.Register(
-            nameof(Maximum),
-            typeof(double),
-            typeof(SliderSettingEntry),
-            PropertyMetadata.Create(DependencyProperty.UnsetValue));
+    public double Maximum
+    {
+        get => (double) GetValue(MaximumProperty);
+        set => SetValue(MaximumProperty, value);
+    }
 
-        public static readonly DependencyProperty MinimumProperty = DependencyProperty.Register(
-            nameof(Minimum),
-            typeof(double),
-            typeof(SliderSettingEntry),
-            PropertyMetadata.Create(DependencyProperty.UnsetValue));
+    public double Minimum
+    {
+        get => (double) GetValue(MinimumProperty);
+        set => SetValue(MinimumProperty, value);
+    }
 
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
-            nameof(Value),
-            typeof(double),
-            typeof(SliderSettingEntry),
-            PropertyMetadata.Create(DependencyProperty.UnsetValue, (o, args) => ValueChanged(o, args.NewValue)));
+    public double Value
+    {
+        get => (double) GetValue(ValueProperty);
+        set => SetValue(ValueProperty, value);
+    }
 
-        private Slider? _valueSlider;
-
-        public SliderSettingEntry()
+    private static void ValueChanged(DependencyObject d, object newValue)
+    {
+        if (d is SliderSettingEntry { _valueSlider: { } slider } && newValue is double value)
         {
-            DefaultStyleKey = typeof(SliderSettingEntry);
+            slider.Value = value;
+        }
+    }
+
+    private void ValueSliderOnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+    {
+        Value = e.NewValue;
+    }
+
+    protected override void OnApplyTemplate()
+    {
+        if (_valueSlider is not null)
+        {
+            _valueSlider.ValueChanged -= ValueSliderOnValueChanged;
         }
 
-        public double Maximum
+        if ((_valueSlider = GetTemplateChild(PartValueSlider) as Slider) is not null)
         {
-            get => (double) GetValue(MaximumProperty);
-            set => SetValue(MaximumProperty, value);
+            _valueSlider.ValueChanged += ValueSliderOnValueChanged;
         }
 
-        public double Minimum
-        {
-            get => (double) GetValue(MinimumProperty);
-            set => SetValue(MinimumProperty, value);
-        }
+        base.OnApplyTemplate();
+    }
 
-        public double Value
-        {
-            get => (double) GetValue(ValueProperty);
-            set => SetValue(ValueProperty, value);
-        }
-
-        private static void ValueChanged(DependencyObject d, object newValue)
-        {
-            if (d is SliderSettingEntry { _valueSlider: { } slider } && newValue is double value)
-            {
-                slider.Value = value;
-            }
-        }
-
-        private void ValueSliderOnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
-        {
-            Value = e.NewValue;
-        }
-
-        protected override void OnApplyTemplate()
-        {
-            if (_valueSlider is not null)
-            {
-                _valueSlider.ValueChanged -= ValueSliderOnValueChanged;
-            }
-
-            if ((_valueSlider = GetTemplateChild(PartValueSlider) as Slider) is not null)
-            {
-                _valueSlider.ValueChanged += ValueSliderOnValueChanged;
-            }
-
-            base.OnApplyTemplate();
-        }
-
-        protected override void Update()
-        {
-            ValueChanged(this, Value);
-        }
+    protected override void Update()
+    {
+        ValueChanged(this, Value);
     }
 }

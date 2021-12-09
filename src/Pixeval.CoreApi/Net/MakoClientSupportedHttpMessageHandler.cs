@@ -23,10 +23,9 @@
 using System.Net.Http;
 using Pixeval.CoreApi.Global;
 
-namespace Pixeval.CoreApi.Net
+namespace Pixeval.CoreApi.Net;
+
+public abstract class MakoClientSupportedHttpMessageHandler : HttpMessageHandler, IMakoClientSupport
 {
-    public abstract class MakoClientSupportedHttpMessageHandler : HttpMessageHandler, IMakoClientSupport
-    {
-        public abstract MakoClient MakoClient { get; set; }
-    }
+    public abstract MakoClient MakoClient { get; set; }
 }

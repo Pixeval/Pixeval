@@ -22,14 +22,13 @@
 
 using System.Collections.Generic;
 
-namespace Pixeval.Controls.Setting.UI.Model
+namespace Pixeval.Controls.Setting.UI.Model;
+
+public interface IStringRepresentableItem
 {
-    public interface IStringRepresentableItem
-    {
-        object Item { get; }
+    object Item { get; }
 
-        string StringRepresentation { get; }
+    string StringRepresentation { get; }
 
-        static abstract IEnumerable<IStringRepresentableItem> AvailableItems { get; }
-    }
+    static abstract IEnumerable<IStringRepresentableItem> AvailableItems { get; }
 }

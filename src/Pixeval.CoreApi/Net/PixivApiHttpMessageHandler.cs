@@ -25,46 +25,45 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Pixeval.CoreApi.Net
+namespace Pixeval.CoreApi.Net;
+
+internal class PixivApiHttpMessageHandler : MakoClientSupportedHttpMessageHandler
 {
-    internal class PixivApiHttpMessageHandler : MakoClientSupportedHttpMessageHandler
+    public PixivApiHttpMessageHandler(MakoClient makoClient)
     {
-        public PixivApiHttpMessageHandler(MakoClient makoClient)
+        MakoClient = makoClient;
+    }
+
+    public sealed override MakoClient MakoClient { get; set; }
+
+    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        var headers = request.Headers;
+        var host = request.RequestUri!.Host; // the 'RequestUri' is guaranteed to be nonnull here, because the 'HttpClient' will set it to 'BaseAddress' if its null
+
+        var bypass = MakoHttpOptions.BypassRequiredHost.IsMatch(host) && MakoClient.Configuration.Bypass || host == MakoHttpOptions.OAuthHost;
+
+        if (bypass)
         {
-            MakoClient = makoClient;
+            MakoHttpOptions.UseHttpScheme(request);
         }
 
-        public sealed override MakoClient MakoClient { get; set; }
+        headers.TryAddWithoutValidation("Accept-Language", MakoClient.Configuration.CultureInfo.Name);
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        var session = MakoClient.Session;
+
+        switch (host)
         {
-            var headers = request.Headers;
-            var host = request.RequestUri!.Host; // the 'RequestUri' is guaranteed to be nonnull here, because the 'HttpClient' will set it to 'BaseAddress' if its null
-
-            var bypass = MakoHttpOptions.BypassRequiredHost.IsMatch(host) && MakoClient.Configuration.Bypass || host == MakoHttpOptions.OAuthHost;
-
-            if (bypass)
-            {
-                MakoHttpOptions.UseHttpScheme(request);
-            }
-
-            headers.TryAddWithoutValidation("Accept-Language", MakoClient.Configuration.CultureInfo.Name);
-
-            var session = MakoClient.Session;
-
-            switch (host)
-            {
-                case MakoHttpOptions.WebApiHost:
-                    headers.TryAddWithoutValidation("Cookie", session.Cookie);
-                    break;
-                case MakoHttpOptions.AppApiHost:
-                    headers.Authorization = new AuthenticationHeaderValue("Bearer", session.AccessToken);
-                    break;
-            }
-
-            return MakoClient.GetHttpMessageInvoker(bypass
-                ? typeof(PixivApiNameResolver)
-                : typeof(LocalMachineNameResolver)).SendAsync(request, cancellationToken);
+            case MakoHttpOptions.WebApiHost:
+                headers.TryAddWithoutValidation("Cookie", session.Cookie);
+                break;
+            case MakoHttpOptions.AppApiHost:
+                headers.Authorization = new AuthenticationHeaderValue("Bearer", session.AccessToken);
+                break;
         }
+
+        return MakoClient.GetHttpMessageInvoker(bypass
+            ? typeof(PixivApiNameResolver)
+            : typeof(LocalMachineNameResolver)).SendAsync(request, cancellationToken);
     }
 }

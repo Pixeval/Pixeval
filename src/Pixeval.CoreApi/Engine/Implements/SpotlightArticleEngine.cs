@@ -27,44 +27,43 @@ using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Engine.Implements
+namespace Pixeval.CoreApi.Engine.Implements;
+
+internal class SpotlightArticleEngine : AbstractPixivFetchEngine<SpotlightArticle>
 {
-    internal class SpotlightArticleEngine : AbstractPixivFetchEngine<SpotlightArticle>
+    public SpotlightArticleEngine(MakoClient makoClient, EngineHandle? engineHandle) : base(makoClient, engineHandle)
     {
-        public SpotlightArticleEngine(MakoClient makoClient, EngineHandle? engineHandle) : base(makoClient, engineHandle)
+    }
+
+    public override IAsyncEnumerator<SpotlightArticle> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    {
+        return new SpotlightArticleAsyncEnumerator(this, MakoApiKind.AppApi)!;
+    }
+
+    private class SpotlightArticleAsyncEnumerator : RecursivePixivAsyncEnumerator<SpotlightArticle, PixivSpotlightResponse, SpotlightArticleEngine>
+    {
+        public SpotlightArticleAsyncEnumerator(SpotlightArticleEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
         {
         }
 
-        public override IAsyncEnumerator<SpotlightArticle> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+        protected override bool ValidateResponse(PixivSpotlightResponse rawEntity)
         {
-            return new SpotlightArticleAsyncEnumerator(this, MakoApiKind.AppApi)!;
+            return rawEntity.SpotlightArticles.IsNotNullOrEmpty();
         }
 
-        private class SpotlightArticleAsyncEnumerator : RecursivePixivAsyncEnumerator<SpotlightArticle, PixivSpotlightResponse, SpotlightArticleEngine>
+        protected override string? NextUrl(PixivSpotlightResponse? rawEntity)
         {
-            public SpotlightArticleAsyncEnumerator(SpotlightArticleEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
-            {
-            }
+            return rawEntity?.NextUrl;
+        }
 
-            protected override bool ValidateResponse(PixivSpotlightResponse rawEntity)
-            {
-                return rawEntity.SpotlightArticles.IsNotNullOrEmpty();
-            }
+        protected override string InitialUrl()
+        {
+            return "/v1/spotlight/articles?category=all";
+        }
 
-            protected override string? NextUrl(PixivSpotlightResponse? rawEntity)
-            {
-                return rawEntity?.NextUrl;
-            }
-
-            protected override string InitialUrl()
-            {
-                return "/v1/spotlight/articles?category=all";
-            }
-
-            protected override IEnumerator<SpotlightArticle>? GetNewEnumerator(PixivSpotlightResponse? rawEntity)
-            {
-                return rawEntity?.SpotlightArticles?.GetEnumerator();
-            }
+        protected override IEnumerator<SpotlightArticle>? GetNewEnumerator(PixivSpotlightResponse? rawEntity)
+        {
+            return rawEntity?.SpotlightArticles?.GetEnumerator();
         }
     }
 }

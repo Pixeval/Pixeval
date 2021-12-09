@@ -18,11 +18,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-namespace Pixeval.Database
+namespace Pixeval.Database;
+
+public enum DownloadHistoryType
 {
-    public enum DownloadHistoryType
-    {
-        Illustration,
-        AnimatedIllustration
-    }
+    Illustration,
+    AnimatedIllustration
 }

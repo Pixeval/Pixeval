@@ -22,21 +22,20 @@
 
 using System;
 
-namespace Pixeval.LoginProxy
+namespace Pixeval.LoginProxy;
+
+public enum Reason
 {
-    public enum Reason
+    ConnectToHostFailed = 1,
+    CertificateNotFound = 2
+}
+
+public class PixivWebLoginException : Exception
+{
+    public PixivWebLoginException(Reason reason)
     {
-        ConnectToHostFailed = 1,
-        CertificateNotFound = 2
+        Reason = reason;
     }
 
-    public class PixivWebLoginException : Exception
-    {
-        public PixivWebLoginException(Reason reason)
-        {
-            Reason = reason;
-        }
-
-        public Reason Reason { get; }
-    }
+    public Reason Reason { get; }
 }

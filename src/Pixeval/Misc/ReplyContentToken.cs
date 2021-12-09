@@ -20,12 +20,11 @@
 
 #endregion
 
-namespace Pixeval.Misc
-{
-    public abstract record ReplyContentToken
-    {
-        public record TextToken(string Content) : ReplyContentToken;
+namespace Pixeval.Misc;
 
-        public record EmojiToken(PixivReplyEmoji Emoji) : ReplyContentToken;
-    }
+public abstract record ReplyContentToken
+{
+    public record TextToken(string Content) : ReplyContentToken;
+
+    public record EmojiToken(PixivReplyEmoji Emoji) : ReplyContentToken;
 }

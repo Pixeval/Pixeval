@@ -24,70 +24,69 @@ using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-namespace Pixeval.Controls.IconButton
+namespace Pixeval.Controls.IconButton;
+
+public class IconButton : Button
 {
-    public class IconButton : Button
+    public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
+        nameof(Text),
+        typeof(string),
+        typeof(IconButton),
+        PropertyMetadata.Create(string.Empty, TextPropertyChangedCallback));
+
+    public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
+        nameof(Icon),
+        typeof(IconElement),
+        typeof(IconButton),
+        PropertyMetadata.Create(DependencyProperty.UnsetValue, IconChangedCallback));
+
+    public IconButton()
     {
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-            nameof(Text),
-            typeof(string),
-            typeof(IconButton),
-            PropertyMetadata.Create(string.Empty, TextPropertyChangedCallback));
-
-        public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
-            nameof(Icon),
-            typeof(IconElement),
-            typeof(IconButton),
-            PropertyMetadata.Create(DependencyProperty.UnsetValue, IconChangedCallback));
-
-        public IconButton()
+        DefaultStyleKey = typeof(IconButton);
+        Content = new StackPanel
         {
-            DefaultStyleKey = typeof(IconButton);
-            Content = new StackPanel
+            Orientation = Orientation.Horizontal,
+            Children =
             {
-                Orientation = Orientation.Horizontal,
-                Children =
+                new ContentPresenter
                 {
-                    new ContentPresenter
-                    {
-                        VerticalAlignment = VerticalAlignment.Center
-                    },
-                    new TextBlock
-                    {
-                        Margin = new Thickness(5, 0, 0, 0),
-                        VerticalAlignment = VerticalAlignment.Center
-                    }
+                    VerticalAlignment = VerticalAlignment.Center
+                },
+                new TextBlock
+                {
+                    Margin = new Thickness(5, 0, 0, 0),
+                    VerticalAlignment = VerticalAlignment.Center
                 }
-            };
-        }
-
-        public string Text
-        {
-            get => (string) GetValue(TextProperty);
-            set => SetValue(TextProperty, value);
-        }
-
-        public IconElement Icon
-        {
-            get => (IconElement) GetValue(IconProperty);
-            set => SetValue(IconProperty, value);
-        }
-
-        private static void TextPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var textBlock = ((StackPanel) ((Button) d).Content).FindDescendant<TextBlock>();
-            if (e.NewValue is null)
-            {
-                textBlock!.Visibility = Visibility.Collapsed;
-                return;
             }
+        };
+    }
 
-            textBlock!.Text = (string) e.NewValue;
-        }
+    public string Text
+    {
+        get => (string) GetValue(TextProperty);
+        set => SetValue(TextProperty, value);
+    }
 
-        private static void IconChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    public IconElement Icon
+    {
+        get => (IconElement) GetValue(IconProperty);
+        set => SetValue(IconProperty, value);
+    }
+
+    private static void TextPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var textBlock = ((StackPanel) ((Button) d).Content).FindDescendant<TextBlock>();
+        if (e.NewValue is null)
         {
-            ((StackPanel) ((Button) d).Content).FindDescendant<ContentPresenter>()!.Content = e.NewValue;
+            textBlock!.Visibility = Visibility.Collapsed;
+            return;
         }
+
+        textBlock!.Text = (string) e.NewValue;
+    }
+
+    private static void IconChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        ((StackPanel) ((Button) d).Content).FindDescendant<ContentPresenter>()!.Content = e.NewValue;
     }
 }

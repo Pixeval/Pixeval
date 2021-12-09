@@ -24,20 +24,19 @@ using Windows.Storage.Streams;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Misc;
 
-namespace Pixeval.Pages.IllustrationViewer
+namespace Pixeval.Pages.IllustrationViewer;
+
+public class PixivReplyEmojiViewModel
 {
-    public class PixivReplyEmojiViewModel
+    public PixivReplyEmojiViewModel(PixivReplyEmoji emojiEnumValue, IRandomAccessStream imageStream)
     {
-        public PixivReplyEmojiViewModel(PixivReplyEmoji emojiEnumValue, IRandomAccessStream imageStream)
-        {
-            EmojiEnumValue = emojiEnumValue;
-            ImageStream = imageStream;
-        }
-
-        public PixivReplyEmoji EmojiEnumValue { get; }
-
-        public IRandomAccessStream ImageStream { get; }
-
-        public ImageSource? ImageSource { get; set; }
+        EmojiEnumValue = emojiEnumValue;
+        ImageStream = imageStream;
     }
+
+    public PixivReplyEmoji EmojiEnumValue { get; }
+
+    public IRandomAccessStream ImageStream { get; }
+
+    public ImageSource? ImageSource { get; set; }
 }

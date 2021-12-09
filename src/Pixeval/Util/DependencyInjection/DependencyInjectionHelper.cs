@@ -22,18 +22,17 @@ using System;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Pixeval.Util.DependencyInjection
-{
-    public static class DependencyInjectionHelper
-    {
-        public static T GetService<T>(this IServiceProvider provider, ServiceResolver<T> resolver)
-        {
-            return provider.GetServices<T>().First(resolver.Invoke);
-        }
+namespace Pixeval.Util.DependencyInjection;
 
-        public static T? TryGetService<T>(this IServiceProvider provider, ServiceResolver<T> resolver)
-        {
-            return provider.GetServices<T>().FirstOrDefault(resolver.Invoke);
-        }
+public static class DependencyInjectionHelper
+{
+    public static T GetService<T>(this IServiceProvider provider, ServiceResolver<T> resolver)
+    {
+        return provider.GetServices<T>().First(resolver.Invoke);
+    }
+
+    public static T? TryGetService<T>(this IServiceProvider provider, ServiceResolver<T> resolver)
+    {
+        return provider.GetServices<T>().FirstOrDefault(resolver.Invoke);
     }
 }

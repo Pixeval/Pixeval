@@ -53,215 +53,214 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Input;
 using Pixeval.Dialogs;
 
-namespace Pixeval.Pages
+namespace Pixeval.Pages;
+
+public sealed partial class MainPage
 {
-    public sealed partial class MainPage
+    private static UIElement? _connectedAnimationTarget;
+
+    // This field contains the view model that the illustration viewer is
+    // currently holding if we're navigating back to the MainPage
+    private static IllustrationViewModel? _illustrationViewerContent;
+
+    private readonly MainPageViewModel _viewModel = new();
+    public MainPage()
     {
-        private static UIElement? _connectedAnimationTarget;
+        InitializeComponent();
+        DataContext = _viewModel;
+    }
 
-        // This field contains the view model that the illustration viewer is
-        // currently holding if we're navigating back to the MainPage
-        private static IllustrationViewModel? _illustrationViewerContent;
+    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
+    {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+    }
 
-        private readonly MainPageViewModel _viewModel = new();
-        public MainPage()
+    public override void OnPageActivated(NavigationEventArgs e)
+    {
+        // dirty trick, the order of the menu items is the same as the order of the fields in MainPageTabItem
+        // since enums are basically integers, we just need a cast to transform it to the correct offset.
+        ((NavigationViewItem) MainPageRootNavigationView.MenuItems[(int) App.AppViewModel.AppSetting.DefaultSelectedTabItem]).IsSelected = true;
+
+
+        if (App.AppViewModel.ConsumeProtocolActivation())
         {
-            InitializeComponent();
-            DataContext = _viewModel;
+            ActivationRegistrar.Dispatch(AppInstance.GetCurrent().GetActivatedEventArgs());
         }
 
-        public override void OnPageDeactivated(NavigatingCancelEventArgs e)
+        WeakReferenceMessenger.Default.Register<MainPage, MainPageFrameSetConnectedAnimationTargetMessage>(this, (_, message) => _connectedAnimationTarget = message.Sender);
+        WeakReferenceMessenger.Default.Register<MainPage, NavigatingBackToMainPageMessage>(this, (_, message) => _illustrationViewerContent = message.IllustrationViewModel);
+        WeakReferenceMessenger.Default.Register<MainPage, IllustrationTagClickedMessage>(this, async (_, message) => await PerformSearchAsync(message.Tag));
+
+        // Connected animation to the element located in MainPage
+        if (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation") is { } animation)
         {
-            WeakReferenceMessenger.Default.UnregisterAll(this);
+            animation.Configuration = new DirectConnectedAnimationConfiguration();
+            animation.TryStart(_connectedAnimationTarget ?? this);
+            _connectedAnimationTarget = null;
         }
 
-        public override void OnPageActivated(NavigationEventArgs e)
+        // Scroll the content to the item that were being browsed just now
+        if (_illustrationViewerContent is not null && MainPageRootFrame.FindDescendant<AdaptiveGridView>() is { } gridView)
         {
-            // dirty trick, the order of the menu items is the same as the order of the fields in MainPageTabItem
-            // since enums are basically integers, we just need a cast to transform it to the correct offset.
-            ((NavigationViewItem) MainPageRootNavigationView.MenuItems[(int) App.AppViewModel.AppSetting.DefaultSelectedTabItem]).IsSelected = true;
-
-
-            if (App.AppViewModel.ConsumeProtocolActivation())
-            {
-                ActivationRegistrar.Dispatch(AppInstance.GetCurrent().GetActivatedEventArgs());
-            }
-
-            WeakReferenceMessenger.Default.Register<MainPage, MainPageFrameSetConnectedAnimationTargetMessage>(this, (_, message) => _connectedAnimationTarget = message.Sender);
-            WeakReferenceMessenger.Default.Register<MainPage, NavigatingBackToMainPageMessage>(this, (_, message) => _illustrationViewerContent = message.IllustrationViewModel);
-            WeakReferenceMessenger.Default.Register<MainPage, IllustrationTagClickedMessage>(this, async (_, message) => await PerformSearchAsync(message.Tag));
-
-            // Connected animation to the element located in MainPage
-            if (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation") is { } animation)
-            {
-                animation.Configuration = new DirectConnectedAnimationConfiguration();
-                animation.TryStart(_connectedAnimationTarget ?? this);
-                _connectedAnimationTarget = null;
-            }
-
-            // Scroll the content to the item that were being browsed just now
-            if (_illustrationViewerContent is not null && MainPageRootFrame.FindDescendant<AdaptiveGridView>() is { } gridView)
-            {
-                gridView.ScrollIntoView(_illustrationViewerContent);
-                _illustrationViewerContent = null;
-            }
+            gridView.ScrollIntoView(_illustrationViewerContent);
+            _illustrationViewerContent = null;
         }
+    }
 
-        private void MainPageRootNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+    private void MainPageRootNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+    {
+        // The App.AppViewModel.IllustrationDownloadManager will be initialized after that of MainPage object
+        // so we cannot put a navigation tag inside MainPage and treat it as a field, since it will be initialized immediately after
+        // the creation of the object while the App.AppViewModel.IllustrationDownloadManager is still null which
+        // will lead the program into NullReferenceException on the access of QueuedTasks.
+
+        // args.SelectedItem may be null here
+        if (Equals(args.SelectedItem, DownloadListTab))
         {
-            // The App.AppViewModel.IllustrationDownloadManager will be initialized after that of MainPage object
-            // so we cannot put a navigation tag inside MainPage and treat it as a field, since it will be initialized immediately after
-            // the creation of the object while the App.AppViewModel.IllustrationDownloadManager is still null which
-            // will lead the program into NullReferenceException on the access of QueuedTasks.
-
-            // args.SelectedItem may be null here
-            if (Equals(args.SelectedItem, DownloadListTab))
-            {
-                MainPageRootFrame.Navigate(typeof(DownloadListPage), App.AppViewModel.DownloadManager.QueuedTasks.Where(task => task is not IIntrinsicDownloadTask));
-                return;
-            }
-            MainPageRootFrame.NavigateByNavigationViewTag(sender, new SuppressNavigationTransitionInfo());
+            MainPageRootFrame.Navigate(typeof(DownloadListPage), App.AppViewModel.DownloadManager.QueuedTasks.Where(task => task is not IIntrinsicDownloadTask));
+            return;
         }
+        MainPageRootFrame.NavigateByNavigationViewTag(sender, new SuppressNavigationTransitionInfo());
+    }
 
-        private void MainPageRootFrame_OnNavigated(object sender, NavigationEventArgs e)
-        {
-            WeakReferenceMessenger.Default.Send(new MainPageFrameNavigatingEvent(this));
-            GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
-            GC.Collect();
-        }
+    private void MainPageRootFrame_OnNavigated(object sender, NavigationEventArgs e)
+    {
+        WeakReferenceMessenger.Default.Send(new MainPageFrameNavigatingEvent(this));
+        GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+        GC.Collect();
+    }
         
-        private async void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            var suggestBox = (AutoSuggestBox) sender;
-            suggestBox.IsSuggestionListOpen = true;
+    private async void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
+    {
+        var suggestBox = (AutoSuggestBox) sender;
+        suggestBox.IsSuggestionListOpen = true;
 
-            if (!_viewModel.Suggestions.Any()) 
-                await _viewModel.AppendSearchHistoryAsync(); // Show search history
+        if (!_viewModel.Suggestions.Any()) 
+            await _viewModel.AppendSearchHistoryAsync(); // Show search history
+    }
+
+    // 搜索并跳转至搜索结果
+    private async void KeywordAutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+    {
+        if (args.QueryText.IsNullOrBlank())
+        {
+            MessageDialogBuilder.CreateAcknowledgement(this,
+                MainPageResources.SearchKeywordCannotBeBlankTitle,
+                MainPageResources.SearchKeywordCannotBeBlankContent);
+            return;
         }
 
-        // 搜索并跳转至搜索结果
-        private async void KeywordAutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
-        {
-            if (args.QueryText.IsNullOrBlank())
-            {
-                MessageDialogBuilder.CreateAcknowledgement(this,
-                    MainPageResources.SearchKeywordCannotBeBlankTitle,
-                    MainPageResources.SearchKeywordCannotBeBlankContent);
-                return;
-            }
+        await PerformSearchAsync(args.QueryText);
+    }
 
-            await PerformSearchAsync(args.QueryText);
+    private void KeywordAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+    {
+        sender.Text = (args.SelectedItem as SuggestionModel)?.Name;
+    }
+
+    private async void KeywordAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+    {
+        var items = _viewModel.Suggestions;
+
+        if (sender.Text is { Length: > 0 } keyword)
+        {
+            var suggestions = (await App.AppViewModel.MakoClient.GetAutoCompletionForKeyword(keyword)).Select(SuggestionModel.FromTag);
+            items.ReplaceByUpdate(suggestions);
+        }
+        else
+        {
+            // Clear the suggestions when there is nothing to search
+            items.Clear();
+
+            // Show search history
+            await _viewModel.AppendSearchHistoryAsync();
+        }
+    }
+
+    private async Task PerformSearchAsync(string text)
+    {
+        using (var scope = App.AppViewModel.AppServicesScope)
+        {
+            var manager = await scope.ServiceProvider.GetRequiredService<Task<SearchHistoryPersistentManager>>();
+            await manager.InsertAsync(new SearchHistoryEntry
+            {
+                Value = text,
+                Time = DateTime.Now,
+            });
         }
 
-        private void KeywordAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        var setting = App.AppViewModel.AppSetting;
+        MainPageRootNavigationView.SelectedItem = null;
+        MainPageRootFrame.Navigate(typeof(SearchResultsPage), App.AppViewModel.MakoClient.Search(
+            text,
+            setting.SearchStartingFromPageNumber,
+            setting.PageLimitForKeywordSearch,
+            setting.TagMatchOption,
+            setting.DefaultSortOption,
+            setting.SearchDuration,
+            setting.TargetFilter,
+            setting.UsePreciseRangeForSearch ? setting.SearchStartDate : null,
+            setting.UsePreciseRangeForSearch ? setting.SearchEndDate : null));
+    }
+
+    private async void OpenSearchSettingPopupButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        MainPageRootNavigationView.SelectedItem = SettingsTab;
+        WeakReferenceMessenger.Default.Send(new OpenSearchSettingMessage());
+        // The stupid delay here does merely nothing but wait the navigation to complete, apparently
+        // the navigation is asynchronous and there's no way to wait for it
+        await Task.Delay(500);
+        var settingsPage = MainPageRootFrame.FindDescendant<SettingsPage>()!;
+        var position = settingsPage.SearchSettingsGroup
+            .TransformToVisual((UIElement) settingsPage.SettingsPageScrollViewer.Content)
+            .TransformPoint(new Point(0, 0));
+        settingsPage.SettingsPageScrollViewer.ChangeView(null, position.Y, null, false);
+    }
+
+    // The AutoSuggestBox does not have a 'Paste' event, so we check the keyboard event accordingly
+    private async void MainPageAutoSuggestionBox_OnKeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        if (App.AppViewModel.AppSetting.ReverseSearchApiKey is not { Length: > 0 })
         {
-            sender.Text = (args.SelectedItem as SuggestionModel)?.Name;
+            await ShowReverseSearchApiKeyNotPresentDialog();
+            return;
         }
 
-        private async void KeywordAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        if (InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.LeftControl).HasFlag(CoreVirtualKeyStates.Down) && e.Key == VirtualKey.V)
         {
-            var items = _viewModel.Suggestions;
-
-            if (sender.Text is { Length: > 0 } keyword)
+            var content = Clipboard.GetContent();
+            if (content.AvailableFormats.Contains(StandardDataFormats.StorageItems) &&
+                (await content.GetStorageItemsAsync()).FirstOrDefault(i => i.IsOfType(StorageItemTypes.File)) is StorageFile file)
             {
-                var suggestions = (await App.AppViewModel.MakoClient.GetAutoCompletionForKeyword(keyword)).Select(SuggestionModel.FromTag);
-                items.ReplaceByUpdate(suggestions);
-            }
-            else
-            {
-                // Clear the suggestions when there is nothing to search
-                items.Clear();
-
-                // Show search history
-                await _viewModel.AppendSearchHistoryAsync();
-            }
-        }
-
-        private async Task PerformSearchAsync(string text)
-        {
-            using (var scope = App.AppViewModel.AppServicesScope)
-            {
-                var manager = await scope.ServiceProvider.GetRequiredService<Task<SearchHistoryPersistentManager>>();
-                await manager.InsertAsync(new SearchHistoryEntry
-                {
-                    Value = text,
-                    Time = DateTime.Now,
-                });
-            }
-
-            var setting = App.AppViewModel.AppSetting;
-            MainPageRootNavigationView.SelectedItem = null;
-            MainPageRootFrame.Navigate(typeof(SearchResultsPage), App.AppViewModel.MakoClient.Search(
-                text,
-                setting.SearchStartingFromPageNumber,
-                setting.PageLimitForKeywordSearch,
-                setting.TagMatchOption,
-                setting.DefaultSortOption,
-                setting.SearchDuration,
-                setting.TargetFilter,
-                setting.UsePreciseRangeForSearch ? setting.SearchStartDate : null,
-                setting.UsePreciseRangeForSearch ? setting.SearchEndDate : null));
-        }
-
-        private async void OpenSearchSettingPopupButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            MainPageRootNavigationView.SelectedItem = SettingsTab;
-            WeakReferenceMessenger.Default.Send(new OpenSearchSettingMessage());
-            // The stupid delay here does merely nothing but wait the navigation to complete, apparently
-            // the navigation is asynchronous and there's no way to wait for it
-            await Task.Delay(500);
-            var settingsPage = MainPageRootFrame.FindDescendant<SettingsPage>()!;
-            var position = settingsPage.SearchSettingsGroup
-                .TransformToVisual((UIElement) settingsPage.SettingsPageScrollViewer.Content)
-                .TransformPoint(new Point(0, 0));
-            settingsPage.SettingsPageScrollViewer.ChangeView(null, position.Y, null, false);
-        }
-
-        // The AutoSuggestBox does not have a 'Paste' event, so we check the keyboard event accordingly
-        private async void MainPageAutoSuggestionBox_OnKeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (App.AppViewModel.AppSetting.ReverseSearchApiKey is not { Length: > 0 })
-            {
-                await ShowReverseSearchApiKeyNotPresentDialog();
-                return;
-            }
-
-            if (InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.LeftControl).HasFlag(CoreVirtualKeyStates.Down) && e.Key == VirtualKey.V)
-            {
-                var content = Clipboard.GetContent();
-                if (content.AvailableFormats.Contains(StandardDataFormats.StorageItems) &&
-                    (await content.GetStorageItemsAsync()).FirstOrDefault(i => i.IsOfType(StorageItemTypes.File)) is StorageFile file)
-                {
-                    await _viewModel.ReverseSearchAsync(file);
-                }
-            }
-        }
-
-        private async void ReverseSearchButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            if (App.AppViewModel.AppSetting.ReverseSearchApiKey is { Length: > 0 })
-            {
-                if (await UIHelper.OpenFileOpenPickerAsync() is { } file)
-                {
-                    await _viewModel.ReverseSearchAsync(file);
-                }
-            }
-            else
-            {
-                await ShowReverseSearchApiKeyNotPresentDialog();
+                await _viewModel.ReverseSearchAsync(file);
             }
         }
+    }
 
-        private static async Task ShowReverseSearchApiKeyNotPresentDialog()
+    private async void ReverseSearchButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (App.AppViewModel.AppSetting.ReverseSearchApiKey is { Length: > 0 })
         {
-            var content = new ReverseSearchApiKeyNotPresentDialog();
-            var dialog = MessageDialogBuilder.Create().WithTitle(MainPageResources.ReverseSearchApiKeyNotPresentTitle)
-                .WithContent(content)
-                .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
-                .WithDefaultButton(ContentDialogButton.Primary)
-                .Build(App.AppViewModel.Window);
-            content.Owner = dialog;
-            await dialog.ShowAsync();
+            if (await UIHelper.OpenFileOpenPickerAsync() is { } file)
+            {
+                await _viewModel.ReverseSearchAsync(file);
+            }
         }
+        else
+        {
+            await ShowReverseSearchApiKeyNotPresentDialog();
+        }
+    }
+
+    private static async Task ShowReverseSearchApiKeyNotPresentDialog()
+    {
+        var content = new ReverseSearchApiKeyNotPresentDialog();
+        var dialog = MessageDialogBuilder.Create().WithTitle(MainPageResources.ReverseSearchApiKeyNotPresentTitle)
+            .WithContent(content)
+            .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
+            .WithDefaultButton(ContentDialogButton.Primary)
+            .Build(App.AppViewModel.Window);
+        content.Owner = dialog;
+        await dialog.ShowAsync();
     }
 }

@@ -22,17 +22,16 @@
 
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 
-namespace Pixeval.Pages.IllustrationViewer
+namespace Pixeval.Pages.IllustrationViewer;
+
+public class CommentRepliesBlockViewModel : ObservableObject
 {
-    public class CommentRepliesBlockViewModel : ObservableObject
+    public CommentRepliesBlockViewModel(CommentBlockViewModel comment)
     {
-        public CommentRepliesBlockViewModel(CommentBlockViewModel comment)
-        {
-            Comment = comment;
-        }
-
-        public CommentBlockViewModel Comment { get; }
-
-        public bool HasReplies => Comment.HasReplies;
+        Comment = comment;
     }
+
+    public CommentBlockViewModel Comment { get; }
+
+    public bool HasReplies => Comment.HasReplies;
 }

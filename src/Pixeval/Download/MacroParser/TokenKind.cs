@@ -20,15 +20,14 @@
 
 #endregion
 
-namespace Pixeval.Download.MacroParser
+namespace Pixeval.Download.MacroParser;
+
+public enum TokenKind
 {
-    public enum TokenKind
-    {
-        Trivia,
-        PlainText,
-        At,
-        LBrace,
-        RBrace,
-        Colon
-    }
+    Trivia,
+    PlainText,
+    At,
+    LBrace,
+    RBrace,
+    Colon
 }

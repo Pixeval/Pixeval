@@ -22,20 +22,19 @@
 
 using Refit;
 
-namespace Pixeval.CoreApi.Net.Request
+namespace Pixeval.CoreApi.Net.Request;
+
+public class AutoCompletionRequest
 {
-    public class AutoCompletionRequest
+    public AutoCompletionRequest(string word)
     {
-        public AutoCompletionRequest(string word)
-        {
-            MergePlainKeywordResult = true;
-            Word = word;
-        }
-
-        [AliasAs("merge_plain_keyword_results=true")]
-        public bool MergePlainKeywordResult { get; }
-
-        [AliasAs("word")]
-        public string Word { get; }
+        MergePlainKeywordResult = true;
+        Word = word;
     }
+
+    [AliasAs("merge_plain_keyword_results=true")]
+    public bool MergePlainKeywordResult { get; }
+
+    [AliasAs("word")]
+    public string Word { get; }
 }

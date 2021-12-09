@@ -23,24 +23,23 @@
 using System;
 using Pixeval.Util;
 
-namespace Pixeval.Misc
-{
-    [AttributeUsage(AttributeTargets.Field)]
-    public class Metadata : Attribute
-    {
-        public Metadata(string key)
-        {
-            Key = key;
-        }
+namespace Pixeval.Misc;
 
-        public string Key { get; }
+[AttributeUsage(AttributeTargets.Field)]
+public class Metadata : Attribute
+{
+    public Metadata(string key)
+    {
+        Key = key;
     }
 
-    public static class MetadataAttributeHelper
+    public string Key { get; }
+}
+
+public static class MetadataAttributeHelper
+{
+    public static string? GetMetadataOnEnumMember(this Enum e)
     {
-        public static string? GetMetadataOnEnumMember(this Enum e)
-        {
-            return e.GetCustomAttribute<Metadata>()?.Key;
-        }
+        return e.GetCustomAttribute<Metadata>()?.Key;
     }
 }

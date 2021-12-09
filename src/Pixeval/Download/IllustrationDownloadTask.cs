@@ -27,57 +27,56 @@ using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 
-namespace Pixeval.Download
+namespace Pixeval.Download;
+
+public class IllustrationDownloadTask : ObservableDownloadTask, IIllustrationViewModelProvider
 {
-    public class IllustrationDownloadTask : ObservableDownloadTask, IIllustrationViewModelProvider
+    public IllustrationViewModel IllustrationViewModel { get; }
+
+    public IllustrationDownloadTask(DownloadHistoryEntry dataBaseEntry, IllustrationViewModel illustrationViewModel) : base(dataBaseEntry)
     {
-        public IllustrationViewModel IllustrationViewModel { get; }
+        IllustrationViewModel = illustrationViewModel;
+        CurrentState = DownloadState.Created;
+    }
 
-        public IllustrationDownloadTask(DownloadHistoryEntry dataBaseEntry, IllustrationViewModel illustrationViewModel) : base(dataBaseEntry)
+    public override async void DownloadStarting(DownloadStartingEventArgs args)
+    {
+        var deferral = args.GetDeferral();
+        if (!App.AppViewModel.AppSetting.OverwriteDownloadedFile && File.Exists(Destination))
         {
-            IllustrationViewModel = illustrationViewModel;
-            CurrentState = DownloadState.Created;
+            ProgressPercentage = 100;
+            CurrentState = DownloadState.Completed;
+            deferral.Complete(false);
+            return;
         }
-
-        public override async void DownloadStarting(DownloadStartingEventArgs args)
+        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(IllustrationViewModel.Illustration.GetIllustrationOriginalImageCacheKey()) is { } stream)
         {
-            var deferral = args.GetDeferral();
-            if (!App.AppViewModel.AppSetting.OverwriteDownloadedFile && File.Exists(Destination))
+            // fast path
+            deferral.Complete(false);
+            ProgressPercentage = 100;
+            try
             {
-                ProgressPercentage = 100;
-                CurrentState = DownloadState.Completed;
-                deferral.Complete(false);
+                using (stream)
+                {
+                    IOHelper.CreateParentDirectories(Destination);
+                    await using var fs = File.Open(Destination, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
+                    await stream.AsStreamForRead().CopyToAsync(fs);
+                }
+            }
+            catch (Exception e)
+            {
+                CurrentState = DownloadState.Error;
+                ErrorCause = e;
                 return;
             }
-            if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(IllustrationViewModel.Illustration.GetIllustrationOriginalImageCacheKey()) is { } stream)
-            {
-                // fast path
-                deferral.Complete(false);
-                ProgressPercentage = 100;
-                try
-                {
-                    using (stream)
-                    {
-                        IOHelper.CreateParentDirectories(Destination);
-                        await using var fs = File.Open(Destination, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
-                        await stream.AsStreamForRead().CopyToAsync(fs);
-                    }
-                }
-                catch (Exception e)
-                {
-                    CurrentState = DownloadState.Error;
-                    ErrorCause = e;
-                    return;
-                }
-                CurrentState = DownloadState.Completed;
-            }
-            // slow path
-            deferral.Complete(true);
+            CurrentState = DownloadState.Completed;
         }
+        // slow path
+        deferral.Complete(true);
+    }
 
-        public Task<IllustrationViewModel> GetViewModelAsync()
-        {
-            return Task.FromResult(IllustrationViewModel);
-        }
+    public Task<IllustrationViewModel> GetViewModelAsync()
+    {
+        return Task.FromResult(IllustrationViewModel);
     }
 }

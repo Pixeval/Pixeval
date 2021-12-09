@@ -27,22 +27,21 @@ using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Engine.Implements
+namespace Pixeval.CoreApi.Engine.Implements;
+
+internal class RecommendIllustratorEngine : AbstractPixivFetchEngine<User>
 {
-    internal class RecommendIllustratorEngine : AbstractPixivFetchEngine<User>
+    private readonly TargetFilter _targetFilter;
+
+    public RecommendIllustratorEngine(MakoClient makoClient, TargetFilter targetFilter, EngineHandle? engineHandle) : base(makoClient, engineHandle)
     {
-        private readonly TargetFilter _targetFilter;
+        _targetFilter = targetFilter;
+    }
 
-        public RecommendIllustratorEngine(MakoClient makoClient, TargetFilter targetFilter, EngineHandle? engineHandle) : base(makoClient, engineHandle)
-        {
-            _targetFilter = targetFilter;
-        }
-
-        public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new())
-        {
-            return RecursivePixivAsyncEnumerators.User<RecommendIllustratorEngine>
-                .WithInitialUrl(this, MakoApiKind.AppApi, engine => "/v1/user/recommended"
-                                                                    + $"?filter={engine._targetFilter.GetDescription()}")!;
-        }
+    public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    {
+        return RecursivePixivAsyncEnumerators.User<RecommendIllustratorEngine>
+            .WithInitialUrl(this, MakoApiKind.AppApi, engine => "/v1/user/recommended"
+                                                                + $"?filter={engine._targetFilter.GetDescription()}")!;
     }
 }

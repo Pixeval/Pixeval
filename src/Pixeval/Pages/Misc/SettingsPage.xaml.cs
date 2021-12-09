@@ -35,130 +35,129 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
-namespace Pixeval.Pages.Misc
+namespace Pixeval.Pages.Misc;
+
+// set language, clear database
+public sealed partial class SettingsPage
 {
-    // set language, clear database
-    public sealed partial class SettingsPage
+    private static readonly MacroParser<string> TestParser = new();
+    private readonly SettingsPageViewModel _viewModel;
+
+    private string _previousPath;
+
+    public SettingsPage()
     {
-        private static readonly MacroParser<string> TestParser = new();
-        private readonly SettingsPageViewModel _viewModel;
+        InitializeComponent();
+        _viewModel = new SettingsPageViewModel(App.AppViewModel.AppSetting);
+        _previousPath = _viewModel.DefaultDownloadPathMacro;
+    }
 
-        private string _previousPath;
+    private void SettingsPage_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        CheckForUpdatesEntry.Header = AppContext.AppVersion.ToString();
+    }
 
-        public SettingsPage()
+    private void SingleSelectionSettingEntry_OnSelectionChanged(SingleSelectionSettingEntry sender, SelectionChangedEventArgs args)
+    {
+        App.AppViewModel.SwitchTheme(_viewModel.Theme);
+    }
+
+    private async void ThemeEntryDescriptionHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        await Launcher.LaunchUriAsync(new Uri("ms-settings:themes"));
+    }
+
+    private void ImageMirrorServerTextBox_OnGotFocus(object sender, RoutedEventArgs e)
+    {
+        ImageMirrorServerTextBoxTeachingTip.IsOpen = false;
+    }
+
+    private void ImageMirrorServerTextBox_OnLosingFocus(UIElement sender, LosingFocusEventArgs args)
+    {
+        if (_viewModel.MirrorHost.IsNotNullOrEmpty() && Uri.CheckHostName(_viewModel.MirrorHost) == UriHostNameType.Unknown)
         {
-            InitializeComponent();
-            _viewModel = new SettingsPageViewModel(App.AppViewModel.AppSetting);
-            _previousPath = _viewModel.DefaultDownloadPathMacro;
+            ImageMirrorServerTextBox.Text = string.Empty;
+            ImageMirrorServerTextBoxTeachingTip.IsOpen = true;
+        }
+    }
+
+    private async void CheckForUpdateButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        _viewModel.LastCheckedUpdate = DateTimeOffset.Now;
+        CheckForUpdateButton.Invisible();
+        CheckingForUpdatePanel.Visible();
+        // TODO add update check
+        await Task.Delay(2000);
+        CheckForUpdateButton.Visible();
+        CheckingForUpdatePanel.Invisible();
+    }
+
+    private void FeedbackByEmailHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        Launcher.LaunchUriAsync(new Uri("mailto:decem0730@hotmail.com")).Discard();
+    }
+
+    private void OpenFontSettingsHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        Launcher.LaunchUriAsync(new Uri("ms-settings:fonts")).Discard();
+    }
+
+    private async void PerformSignOutButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        var dialog = MessageDialogBuilder.CreateOkCancel(
+            App.AppViewModel.Window,
+            SettingsPageResources.SignOutConfirmationDialogTitle,
+            SettingsPageResources.SignOutConfirmationDialogContent);
+        if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+        {
+            await AppContext.ClearDataAsync();
+            App.AppViewModel.Window.Close();
+        }
+    }
+
+    private async void ResetDefaultSettingsButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        var dialog = MessageDialogBuilder.CreateOkCancel(
+            App.AppViewModel.Window,
+            SettingsPageResources.ResetSettingConfirmationDialogTitle,
+            SettingsPageResources.ResetSettingConfirmationDialogContent);
+        if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+        {
+            _viewModel.ResetDefault();
+        }
+    }
+
+    private void DefaultDownloadPathMacroTextBox_OnLostFocus(object sender, RoutedEventArgs e)
+    {
+        if (_viewModel.DefaultDownloadPathMacro.IsNullOrBlank())
+        {
+            DownloadPathMacroInvalidTeachingTip.IsOpen = true;
+            DownloadPathMacroInvalidTeachingTip.Subtitle = SettingsPageResources.DownloadPathMacroInvalidTeachingTipInputCannotBeBlank;
+            _viewModel.DefaultDownloadPathMacro = _previousPath;
+            return;
         }
 
-        private void SettingsPage_OnLoaded(object sender, RoutedEventArgs e)
+        try
         {
-            CheckForUpdatesEntry.Header = AppContext.AppVersion.ToString();
+            TestParser.SetupParsingEnvironment(new Lexer(_viewModel.DefaultDownloadPathMacro));
+            TestParser.Parse();
         }
-
-        private void SingleSelectionSettingEntry_OnSelectionChanged(SingleSelectionSettingEntry sender, SelectionChangedEventArgs args)
+        catch (Exception exception)
         {
-            App.AppViewModel.SwitchTheme(_viewModel.Theme);
+            DownloadPathMacroInvalidTeachingTip.IsOpen = true;
+            DownloadPathMacroInvalidTeachingTip.Subtitle = SettingsPageResources.DownloadPathMacroInvalidTeachingTipMacroInvalidFormatted.Format(exception.Message);
+            _viewModel.DefaultDownloadPathMacro = _previousPath;
         }
+    }
 
-        private async void ThemeEntryDescriptionHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            await Launcher.LaunchUriAsync(new Uri("ms-settings:themes"));
-        }
+    private void DefaultDownloadPathMacroTextBox_OnGotFocus(object sender, RoutedEventArgs e)
+    {
+        DownloadPathMacroInvalidTeachingTip.IsOpen = false;
+        _previousPath = _viewModel.DefaultDownloadPathMacro;
+    }
 
-        private void ImageMirrorServerTextBox_OnGotFocus(object sender, RoutedEventArgs e)
-        {
-            ImageMirrorServerTextBoxTeachingTip.IsOpen = false;
-        }
-
-        private void ImageMirrorServerTextBox_OnLosingFocus(UIElement sender, LosingFocusEventArgs args)
-        {
-            if (_viewModel.MirrorHost.IsNotNullOrEmpty() && Uri.CheckHostName(_viewModel.MirrorHost) == UriHostNameType.Unknown)
-            {
-                ImageMirrorServerTextBox.Text = string.Empty;
-                ImageMirrorServerTextBoxTeachingTip.IsOpen = true;
-            }
-        }
-
-        private async void CheckForUpdateButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            _viewModel.LastCheckedUpdate = DateTimeOffset.Now;
-            CheckForUpdateButton.Invisible();
-            CheckingForUpdatePanel.Visible();
-            // TODO add update check
-            await Task.Delay(2000);
-            CheckForUpdateButton.Visible();
-            CheckingForUpdatePanel.Invisible();
-        }
-
-        private void FeedbackByEmailHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            Launcher.LaunchUriAsync(new Uri("mailto:decem0730@hotmail.com")).Discard();
-        }
-
-        private void OpenFontSettingsHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            Launcher.LaunchUriAsync(new Uri("ms-settings:fonts")).Discard();
-        }
-
-        private async void PerformSignOutButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            var dialog = MessageDialogBuilder.CreateOkCancel(
-                App.AppViewModel.Window,
-                SettingsPageResources.SignOutConfirmationDialogTitle,
-                SettingsPageResources.SignOutConfirmationDialogContent);
-            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
-            {
-                await AppContext.ClearDataAsync();
-                App.AppViewModel.Window.Close();
-            }
-        }
-
-        private async void ResetDefaultSettingsButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            var dialog = MessageDialogBuilder.CreateOkCancel(
-                App.AppViewModel.Window,
-                SettingsPageResources.ResetSettingConfirmationDialogTitle,
-                SettingsPageResources.ResetSettingConfirmationDialogContent);
-            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
-            {
-                _viewModel.ResetDefault();
-            }
-        }
-
-        private void DefaultDownloadPathMacroTextBox_OnLostFocus(object sender, RoutedEventArgs e)
-        {
-            if (_viewModel.DefaultDownloadPathMacro.IsNullOrBlank())
-            {
-                DownloadPathMacroInvalidTeachingTip.IsOpen = true;
-                DownloadPathMacroInvalidTeachingTip.Subtitle = SettingsPageResources.DownloadPathMacroInvalidTeachingTipInputCannotBeBlank;
-                _viewModel.DefaultDownloadPathMacro = _previousPath;
-                return;
-            }
-
-            try
-            {
-                TestParser.SetupParsingEnvironment(new Lexer(_viewModel.DefaultDownloadPathMacro));
-                TestParser.Parse();
-            }
-            catch (Exception exception)
-            {
-                DownloadPathMacroInvalidTeachingTip.IsOpen = true;
-                DownloadPathMacroInvalidTeachingTip.Subtitle = SettingsPageResources.DownloadPathMacroInvalidTeachingTipMacroInvalidFormatted.Format(exception.Message);
-                _viewModel.DefaultDownloadPathMacro = _previousPath;
-            }
-        }
-
-        private void DefaultDownloadPathMacroTextBox_OnGotFocus(object sender, RoutedEventArgs e)
-        {
-            DownloadPathMacroInvalidTeachingTip.IsOpen = false;
-            _previousPath = _viewModel.DefaultDownloadPathMacro;
-        }
-
-        private void MacroTokenInputBox_OnTokenTapped(object? sender, Token e)
-        {
-            _viewModel.DefaultDownloadPathMacro = _viewModel.DefaultDownloadPathMacro.Insert(DefaultDownloadPathMacroTextBox.SelectionStart, e.TokenContent);
-        }
+    private void MacroTokenInputBox_OnTokenTapped(object? sender, Token e)
+    {
+        _viewModel.DefaultDownloadPathMacro = _viewModel.DefaultDownloadPathMacro.Insert(DefaultDownloadPathMacroTextBox.SelectionStart, e.TokenContent);
     }
 }

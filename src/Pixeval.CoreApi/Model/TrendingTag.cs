@@ -22,15 +22,14 @@
 
 using JetBrains.Annotations;
 
-namespace Pixeval.CoreApi.Model
+namespace Pixeval.CoreApi.Model;
+
+[PublicAPI]
+public record TrendingTag
 {
-    [PublicAPI]
-    public record TrendingTag
-    {
-        public string? Tag { get; set; }
+    public string? Tag { get; set; }
 
-        public string? Translation { get; set; }
+    public string? Translation { get; set; }
 
-        public Illustration? Illustration { get; set; }
-    }
+    public Illustration? Illustration { get; set; }
 }

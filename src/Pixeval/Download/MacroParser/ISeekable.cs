@@ -20,24 +20,23 @@
 
 #endregion
 
-namespace Pixeval.Download.MacroParser
+namespace Pixeval.Download.MacroParser;
+
+public interface ISeekable<out T>
 {
-    public interface ISeekable<out T>
-    {
-        void Seek(int pos);
+    void Seek(int pos);
 
-        T Peek();
+    T Peek();
 
-        void Advance();
+    void Advance();
 
-        void Advance(int n);
+    void Advance(int n);
 
-        T[] GetWindow();
+    T[] GetWindow();
 
-        void AdvanceMarker();
+    void AdvanceMarker();
 
-        void ResetForward();
+    void ResetForward();
 
-        void Return();
-    }
+    void Return();
 }

@@ -23,41 +23,40 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
-namespace Pixeval.Controls
+namespace Pixeval.Controls;
+
+public class EnhancedPage : Page
 {
-    public class EnhancedPage : Page
+    public EnhancedPage()
     {
-        public EnhancedPage()
+        Loaded += (_, _) =>
         {
-            Loaded += (_, _) =>
+            if (!Initialized)
             {
-                if (!Initialized)
-                {
-                    Initialized = true;
-                }
-            };
-        }
+                Initialized = true;
+            }
+        };
+    }
 
-        public bool Initialized { get; private set; }
+    public bool Initialized { get; private set; }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            OnPageActivated(e);
-        }
+    protected override void OnNavigatedTo(NavigationEventArgs e)
+    {
+        base.OnNavigatedTo(e);
+        OnPageActivated(e);
+    }
 
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
-        {
-            base.OnNavigatingFrom(e);
-            OnPageDeactivated(e);
-        }
+    protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+    {
+        base.OnNavigatingFrom(e);
+        OnPageDeactivated(e);
+    }
 
-        public virtual void OnPageDeactivated(NavigatingCancelEventArgs e)
-        {
-        }
+    public virtual void OnPageDeactivated(NavigatingCancelEventArgs e)
+    {
+    }
 
-        public virtual void OnPageActivated(NavigationEventArgs e)
-        {
-        }
+    public virtual void OnPageActivated(NavigationEventArgs e)
+    {
     }
 }

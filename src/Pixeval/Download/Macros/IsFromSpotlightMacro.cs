@@ -23,16 +23,15 @@
 using Pixeval.Download.MacroParser;
 using Pixeval.UserControls;
 
-namespace Pixeval.Download.Macros
-{
-    [MetaPathMacro(typeof(IllustrationViewModel))]
-    public class IsFromSpotlightMacro : IMacro<IllustrationViewModel>.IPredicate
-    {
-        public string Name => "if_spot";
+namespace Pixeval.Download.Macros;
 
-        public bool Match(IllustrationViewModel context)
-        {
-            return context.Illustration.FromSpotlight;
-        }
+[MetaPathMacro(typeof(IllustrationViewModel))]
+public class IsFromSpotlightMacro : IMacro<IllustrationViewModel>.IPredicate
+{
+    public string Name => "if_spot";
+
+    public bool Match(IllustrationViewModel context)
+    {
+        return context.Illustration.FromSpotlight;
     }
 }

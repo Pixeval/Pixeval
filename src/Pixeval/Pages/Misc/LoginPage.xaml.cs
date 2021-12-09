@@ -33,86 +33,85 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
-namespace Pixeval.Pages.Misc
+namespace Pixeval.Pages.Misc;
+
+public sealed partial class LoginPage
 {
-    public sealed partial class LoginPage
+    private readonly LoginPageViewModel _viewModel = new();
+
+    public LoginPage()
     {
-        private readonly LoginPageViewModel _viewModel = new();
+        InitializeComponent();
+        DataContext = _viewModel;
+    }
 
-        public LoginPage()
+    private async void LoginPage_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        try
         {
-            InitializeComponent();
-            DataContext = _viewModel;
-        }
-
-        private async void LoginPage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            try
+            if (_viewModel.CheckRefreshAvailable())
             {
-                if (_viewModel.CheckRefreshAvailable())
-                {
-                    await _viewModel.RefreshAsync();
-                    Frame.Navigate(typeof(MainPage), null, new DrillInNavigationTransitionInfo());
-                }
-                else
-                {
-                    await EnsureCertificateIsInstalled();
-                    await EnsureWebView2IsInstalled();
-                    await _viewModel.WebLoginAsync();
-                    Frame.Navigate(typeof(MainPage), null, new DrillInNavigationTransitionInfo());
-                }
-
-                AppContext.SaveContext();
-                WeakReferenceMessenger.Default.Send(new LoginCompletedMessage(this, App.AppViewModel.MakoClient.Session));
+                await _viewModel.RefreshAsync();
+                Frame.Navigate(typeof(MainPage), null, new DrillInNavigationTransitionInfo());
             }
-            catch (Exception exception)
+            else
             {
-                _ = await MessageDialogBuilder.CreateAcknowledgement(
-                        this,
-                        LoginPageResources.ErrorWhileLoggingInTitle,
-                        LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.Message))
-                    .ShowAsync();
-                Application.Current.Exit();
+                await EnsureCertificateIsInstalled();
+                await EnsureWebView2IsInstalled();
+                await _viewModel.WebLoginAsync();
+                Frame.Navigate(typeof(MainPage), null, new DrillInNavigationTransitionInfo());
             }
-        }
 
-        private async Task EnsureCertificateIsInstalled()
+            AppContext.SaveContext();
+            WeakReferenceMessenger.Default.Send(new LoginCompletedMessage(this, App.AppViewModel.MakoClient.Session));
+        }
+        catch (Exception exception)
         {
-            if (!await _viewModel.CheckFakeRootCertificateInstallationAsync())
+            _ = await MessageDialogBuilder.CreateAcknowledgement(
+                    this,
+                    LoginPageResources.ErrorWhileLoggingInTitle,
+                    LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.Message))
+                .ShowAsync();
+            Application.Current.Exit();
+        }
+    }
+
+    private async Task EnsureCertificateIsInstalled()
+    {
+        if (!await _viewModel.CheckFakeRootCertificateInstallationAsync())
+        {
+            var dialogResult = await MessageDialogBuilder.CreateOkCancel(this,
+                LoginPageResources.RootCertificateInstallationRequiredTitle,
+                LoginPageResources.RootCertificateInstallationRequiredContent).ShowAsync();
+            if (dialogResult == ContentDialogResult.Primary)
             {
-                var dialogResult = await MessageDialogBuilder.CreateOkCancel(this,
-                    LoginPageResources.RootCertificateInstallationRequiredTitle,
-                    LoginPageResources.RootCertificateInstallationRequiredContent).ShowAsync();
-                if (dialogResult == ContentDialogResult.Primary)
-                {
-                    await _viewModel.InstallFakeRootCertificateAsync();
-                }
-                else
-                {
-                    App.AppViewModel.ExitWithPushedNotification();
-                }
+                await _viewModel.InstallFakeRootCertificateAsync();
             }
-        }
-
-        private async Task EnsureWebView2IsInstalled()
-        {
-            if (!_viewModel.CheckWebView2Installation())
+            else
             {
-                var dialogResult = await MessageDialogBuilder.CreateOkCancel(this,
-                    LoginPageResources.WebView2InstallationRequiredTitle,
-                    LoginPageResources.WebView2InstallationRequiredContent).ShowAsync();
-                if (dialogResult == ContentDialogResult.Primary)
-                {
-                    await Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/p/?LinkId=2124703"));
-                }
-
                 App.AppViewModel.ExitWithPushedNotification();
             }
         }
+    }
 
-        public override void OnPageDeactivated(NavigatingCancelEventArgs e)
+    private async Task EnsureWebView2IsInstalled()
+    {
+        if (!_viewModel.CheckWebView2Installation())
         {
-            _viewModel.Deactivate();
+            var dialogResult = await MessageDialogBuilder.CreateOkCancel(this,
+                LoginPageResources.WebView2InstallationRequiredTitle,
+                LoginPageResources.WebView2InstallationRequiredContent).ShowAsync();
+            if (dialogResult == ContentDialogResult.Primary)
+            {
+                await Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/p/?LinkId=2124703"));
+            }
+
+            App.AppViewModel.ExitWithPushedNotification();
         }
+    }
+
+    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
+    {
+        _viewModel.Deactivate();
     }
 }

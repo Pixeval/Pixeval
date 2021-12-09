@@ -24,41 +24,40 @@ using System;
 using System.Threading.Tasks;
 using Pixeval.Util.Threading;
 
-namespace Pixeval.Download
+namespace Pixeval.Download;
+
+public interface IDownloadTask
 {
-    public interface IDownloadTask
+    string? Title { get; }
+
+    string? Description { get; }
+
+    string Url { get; }
+
+    string Destination { get; }
+
+    string? Thumbnail { get; }
+
+    CancellationHandle CancellationHandle { get; set; }
+
+    TaskCompletionSource Completion { get; }
+
+    DownloadState CurrentState { get; set; }
+
+    Exception? ErrorCause { get; set; }
+
+    double ProgressPercentage { get; set; }
+
+    void DownloadStarting(DownloadStartingEventArgs args);
+}
+
+public static class DownloadTaskHelper
+{
+    public static void Reset(this IDownloadTask task)
     {
-        string? Title { get; }
-
-        string? Description { get; }
-
-        string Url { get; }
-
-        string Destination { get; }
-
-        string? Thumbnail { get; }
-
-        CancellationHandle CancellationHandle { get; set; }
-
-        TaskCompletionSource Completion { get; }
-
-        DownloadState CurrentState { get; set; }
-
-        Exception? ErrorCause { get; set; }
-
-        double ProgressPercentage { get; set; }
-
-        void DownloadStarting(DownloadStartingEventArgs args);
-    }
-
-    public static class DownloadTaskHelper
-    {
-        public static void Reset(this IDownloadTask task)
-        {
-            task.CancellationHandle.Reset();
-            task.ProgressPercentage = 0;
-            task.CurrentState = DownloadState.Created;
-            task.ErrorCause = null;
-        }
+        task.CancellationHandle.Reset();
+        task.ProgressPercentage = 0;
+        task.CurrentState = DownloadState.Created;
+        task.ErrorCause = null;
     }
 }

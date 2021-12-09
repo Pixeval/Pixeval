@@ -23,20 +23,19 @@
 using JetBrains.Annotations;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Global.Enum
+namespace Pixeval.CoreApi.Global.Enum;
+
+[PublicAPI]
+public enum SearchDuration
 {
-    [PublicAPI]
-    public enum SearchDuration
-    {
-        Undecided,
+    Undecided,
 
-        [Description("within_last_day")]
-        WithinLastDay,
+    [Description("within_last_day")]
+    WithinLastDay,
 
-        [Description("within_last_week")]
-        WithinLastWeek,
+    [Description("within_last_week")]
+    WithinLastWeek,
 
-        [Description("within_last_month")]
-        WithinLastMonth
-    }
+    [Description("within_last_month")]
+    WithinLastMonth
 }

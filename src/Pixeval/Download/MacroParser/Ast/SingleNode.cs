@@ -20,10 +20,9 @@
 
 #endregion
 
-namespace Pixeval.Download.MacroParser.Ast
+namespace Pixeval.Download.MacroParser.Ast;
+
+public abstract record SingleNode<TContext> : IMetaPathNode<TContext>
 {
-    public abstract record SingleNode<TContext> : IMetaPathNode<TContext>
-    {
-        public abstract string Evaluate(IMetaPathMacroProvider<TContext> env, TContext context);
-    }
+    public abstract string Evaluate(IMetaPathMacroProvider<TContext> env, TContext context);
 }

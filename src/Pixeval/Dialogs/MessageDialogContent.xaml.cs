@@ -20,16 +20,15 @@
 
 #endregion
 
-namespace Pixeval.Dialogs
-{
-    public sealed partial class MessageDialogContent
-    {
-        public MessageDialogContent(string content)
-        {
-            ContentText = content;
-            InitializeComponent();
-        }
+namespace Pixeval.Dialogs;
 
-        public string ContentText { get; }
+public sealed partial class MessageDialogContent
+{
+    public MessageDialogContent(string content)
+    {
+        ContentText = content;
+        InitializeComponent();
     }
+
+    public string ContentText { get; }
 }

@@ -24,26 +24,25 @@ using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 
-namespace Pixeval.Popups
+namespace Pixeval.Popups;
+
+public sealed partial class QrCodePresenter : IAppPopupContent
 {
-    public sealed partial class QrCodePresenter : IAppPopupContent
+    private readonly ImageSource _qrCodeImageSource;
+
+    public QrCodePresenter(ImageSource qrCodeImageSource)
     {
-        private readonly ImageSource _qrCodeImageSource;
+        _qrCodeImageSource = qrCodeImageSource;
+        UniqueId = Guid.NewGuid();
+        InitializeComponent();
+    }
 
-        public QrCodePresenter(ImageSource qrCodeImageSource)
-        {
-            _qrCodeImageSource = qrCodeImageSource;
-            UniqueId = Guid.NewGuid();
-            InitializeComponent();
-        }
+    public Guid UniqueId { get; }
 
-        public Guid UniqueId { get; }
+    public FrameworkElement UIContent => this;
 
-        public FrameworkElement UIContent => this;
-
-        private void QrCodeImage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            QrCodeImage.Source = _qrCodeImageSource;
-        }
+    private void QrCodeImage_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        QrCodeImage.Source = _qrCodeImageSource;
     }
 }

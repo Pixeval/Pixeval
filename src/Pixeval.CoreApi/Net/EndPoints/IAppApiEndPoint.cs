@@ -26,38 +26,37 @@ using Pixeval.CoreApi.Net.Request;
 using Pixeval.CoreApi.Net.Response;
 using Refit;
 
-namespace Pixeval.CoreApi.Net.EndPoints
+namespace Pixeval.CoreApi.Net.EndPoints;
+
+internal interface IAppApiEndPoint
 {
-    internal interface IAppApiEndPoint
-    {
-        [Post("/v2/illust/bookmark/add")]
-        Task<HttpResponseMessage> AddBookmarkAsync([Body(BodySerializationMethod.UrlEncoded)] AddBookmarkRequest request);
+    [Post("/v2/illust/bookmark/add")]
+    Task<HttpResponseMessage> AddBookmarkAsync([Body(BodySerializationMethod.UrlEncoded)] AddBookmarkRequest request);
 
-        [Post("/v1/illust/bookmark/delete")]
-        Task<HttpResponseMessage> RemoveBookmarkAsync([Body(BodySerializationMethod.UrlEncoded)] RemoveBookmarkRequest request);
+    [Post("/v1/illust/bookmark/delete")]
+    Task<HttpResponseMessage> RemoveBookmarkAsync([Body(BodySerializationMethod.UrlEncoded)] RemoveBookmarkRequest request);
 
-        [Get("/v1/illust/detail")]
-        Task<PixivSingleIllustResponse> GetSingleAsync([AliasAs("illust_id")] string id);
+    [Get("/v1/illust/detail")]
+    Task<PixivSingleIllustResponse> GetSingleAsync([AliasAs("illust_id")] string id);
 
-        [Get("/v1/user/detail")]
-        Task<PixivSingleUserResponse> GetSingleUserAsync(SingleUserRequest request);
+    [Get("/v1/user/detail")]
+    Task<PixivSingleUserResponse> GetSingleUserAsync(SingleUserRequest request);
 
-        [Post("/v1/user/follow/add")]
-        Task<HttpResponseMessage> FollowUserAsync([Body(BodySerializationMethod.UrlEncoded)] FollowUserRequest request);
+    [Post("/v1/user/follow/add")]
+    Task<HttpResponseMessage> FollowUserAsync([Body(BodySerializationMethod.UrlEncoded)] FollowUserRequest request);
 
-        [Post("/v1/user/follow/delete")]
-        Task<HttpResponseMessage> RemoveFollowUserAsync([Body(BodySerializationMethod.UrlEncoded)] RemoveFollowUserRequest request);
+    [Post("/v1/user/follow/delete")]
+    Task<HttpResponseMessage> RemoveFollowUserAsync([Body(BodySerializationMethod.UrlEncoded)] RemoveFollowUserRequest request);
 
-        [Get("/v1/trending-tags/illust")]
-        Task<TrendingTagResponse> GetTrendingTagsAsync([AliasAs("filter")] string filter);
+    [Get("/v1/trending-tags/illust")]
+    Task<TrendingTagResponse> GetTrendingTagsAsync([AliasAs("filter")] string filter);
 
-        [Get("/v1/ugoira/metadata")]
-        Task<UgoiraMetadataResponse> GetUgoiraMetadataAsync([AliasAs("illust_id")] string id);
+    [Get("/v1/ugoira/metadata")]
+    Task<UgoiraMetadataResponse> GetUgoiraMetadataAsync([AliasAs("illust_id")] string id);
 
-        [Post("/v1/illust/comment/delete")]
-        Task DeleteCommentAsync([Body(BodySerializationMethod.UrlEncoded)] DeleteCommentRequest request);
+    [Post("/v1/illust/comment/delete")]
+    Task DeleteCommentAsync([Body(BodySerializationMethod.UrlEncoded)] DeleteCommentRequest request);
 
-        [Get("/v2/search/autocomplete")]
-        Task<AutoCompletionResponse> GetAutoCompletionAsync(AutoCompletionRequest autoCompletionRequest);
-    }
+    [Get("/v2/search/autocomplete")]
+    Task<AutoCompletionResponse> GetAutoCompletionAsync(AutoCompletionRequest autoCompletionRequest);
 }

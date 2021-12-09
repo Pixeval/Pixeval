@@ -40,206 +40,205 @@ using Pixeval.Util.Threading;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
-namespace Pixeval.UserControls
+namespace Pixeval.UserControls;
+
+/// <summary>
+///     A view model that communicates between the model <see cref="Illustration" /> and the view
+///     <see cref="IllustrationGrid" />.
+///     It is responsible for being the elements of the <see cref="AdaptiveGridView" /> to present the thumbnail of an
+///     illustration
+/// </summary>
+public class IllustrationViewModel : ObservableObject, IDisposable
 {
-    /// <summary>
-    ///     A view model that communicates between the model <see cref="Illustration" /> and the view
-    ///     <see cref="IllustrationGrid" />.
-    ///     It is responsible for being the elements of the <see cref="AdaptiveGridView" /> to present the thumbnail of an
-    ///     illustration
-    /// </summary>
-    public class IllustrationViewModel : ObservableObject, IDisposable
+    private bool _isSelected;
+
+    private SoftwareBitmapSource? _thumbnailSource;
+
+    public IllustrationViewModel(Illustration illustration)
     {
-        private bool _isSelected;
+        Illustration = illustration;
+        LoadingThumbnailCancellationHandle = new CancellationHandle();
+    }
 
-        private SoftwareBitmapSource? _thumbnailSource;
+    public Illustration Illustration { get; }
 
-        public IllustrationViewModel(Illustration illustration)
+    public int MangaIndex { get; set; }
+
+    public bool IsRestricted => Illustration.IsRestricted();
+
+    public bool IsManga => Illustration.IsManga();
+
+    public string RestrictionCaption => Illustration.RestrictLevel().GetMetadataOnEnumMember()!;
+
+    public string Id => Illustration.Id.ToString();
+
+    public int Bookmark => Illustration.TotalBookmarks;
+
+    public DateTimeOffset PublishDate => Illustration.CreateDate;
+
+    public string? OriginalSourceUrl => Illustration.GetOriginalUrl();
+
+    public bool IsBookmarked
+    {
+        get => Illustration.IsBookmarked;
+        set => SetProperty(Illustration.IsBookmarked, value, m => Illustration.IsBookmarked = m);
+    }
+
+    public bool IsSelected
+    {
+        get => _isSelected;
+        set => SetProperty(_isSelected, value, this, (_, b) =>
         {
-            Illustration = illustration;
-            LoadingThumbnailCancellationHandle = new CancellationHandle();
+            _isSelected = b;
+            OnIsSelectedChanged?.Invoke(this, this);
+        });
+    }
+
+    public SoftwareBitmapSource? ThumbnailSource
+    {
+        get => _thumbnailSource;
+        set => SetProperty(ref _thumbnailSource, value);
+    }
+
+    public CancellationHandle LoadingThumbnailCancellationHandle { get; }
+
+    public bool LoadingThumbnail { get; private set; }
+
+    public bool IsUgoira => Illustration.IsUgoira();
+
+    public void Dispose()
+    {
+        DisposeInternal();
+        GC.SuppressFinalize(this);
+    }
+
+    public event EventHandler<IllustrationViewModel>? OnIsSelectedChanged;
+
+    /// <summary>
+    ///     An illustration may contains multiple works and such illustrations are named "manga".
+    ///     This method attempts to get the works and wrap into <see cref="IllustrationViewModel" />
+    /// </summary>
+    /// <returns>
+    ///     A collection of a single <see cref="IllustrationViewModel" />, if the illustration is not
+    ///     a manga, that is to say, contains only a single work.
+    ///     A collection of multiple <see cref="IllustrationViewModel" />, if the illustration is a manga
+    ///     that consist of multiple works
+    /// </returns>
+    public IEnumerable<IllustrationViewModel> GetMangaIllustrationViewModels()
+    {
+        if (Illustration.PageCount <= 1)
+        {
+            return new[] { this };
         }
 
-        public Illustration Illustration { get; }
+        // The API result of manga (a work with multiple illustrations) is a single Illustration object
+        // that only differs from the illustrations of a single work on the MetaPages property, this property
+        // contains the download urls of the manga
 
-        public int MangaIndex { get; set; }
-
-        public bool IsRestricted => Illustration.IsRestricted();
-
-        public bool IsManga => Illustration.IsManga();
-
-        public string RestrictionCaption => Illustration.RestrictLevel().GetMetadataOnEnumMember()!;
-
-        public string Id => Illustration.Id.ToString();
-
-        public int Bookmark => Illustration.TotalBookmarks;
-
-        public DateTimeOffset PublishDate => Illustration.CreateDate;
-
-        public string? OriginalSourceUrl => Illustration.GetOriginalUrl();
-
-        public bool IsBookmarked
+        return Illustration.MetaPages!.Select(m => Illustration with
         {
-            get => Illustration.IsBookmarked;
-            set => SetProperty(Illustration.IsBookmarked, value, m => Illustration.IsBookmarked = m);
-        }
-
-        public bool IsSelected
+            ImageUrls = m.ImageUrls
+        }).Select((p, i) => new IllustrationViewModel(p)
         {
-            get => _isSelected;
-            set => SetProperty(_isSelected, value, this, (_, b) =>
-            {
-                _isSelected = b;
-                OnIsSelectedChanged?.Invoke(this, this);
-            });
-        }
+            MangaIndex = i
+        });
+    }
 
-        public SoftwareBitmapSource? ThumbnailSource
+    public async Task<bool> LoadThumbnailIfRequired()
+    {
+        if (ThumbnailSource is not null || LoadingThumbnail)
         {
-            get => _thumbnailSource;
-            set => SetProperty(ref _thumbnailSource, value);
-        }
-
-        public CancellationHandle LoadingThumbnailCancellationHandle { get; }
-
-        public bool LoadingThumbnail { get; private set; }
-
-        public bool IsUgoira => Illustration.IsUgoira();
-
-        public void Dispose()
-        {
-            DisposeInternal();
-            GC.SuppressFinalize(this);
-        }
-
-        public event EventHandler<IllustrationViewModel>? OnIsSelectedChanged;
-
-        /// <summary>
-        ///     An illustration may contains multiple works and such illustrations are named "manga".
-        ///     This method attempts to get the works and wrap into <see cref="IllustrationViewModel" />
-        /// </summary>
-        /// <returns>
-        ///     A collection of a single <see cref="IllustrationViewModel" />, if the illustration is not
-        ///     a manga, that is to say, contains only a single work.
-        ///     A collection of multiple <see cref="IllustrationViewModel" />, if the illustration is a manga
-        ///     that consist of multiple works
-        /// </returns>
-        public IEnumerable<IllustrationViewModel> GetMangaIllustrationViewModels()
-        {
-            if (Illustration.PageCount <= 1)
-            {
-                return new[] { this };
-            }
-
-            // The API result of manga (a work with multiple illustrations) is a single Illustration object
-            // that only differs from the illustrations of a single work on the MetaPages property, this property
-            // contains the download urls of the manga
-
-            return Illustration.MetaPages!.Select(m => Illustration with
-            {
-                ImageUrls = m.ImageUrls
-            }).Select((p, i) => new IllustrationViewModel(p)
-            {
-                MangaIndex = i
-            });
-        }
-
-        public async Task<bool> LoadThumbnailIfRequired()
-        {
-            if (ThumbnailSource is not null || LoadingThumbnail)
-            {
-                return false;
-            }
-
-            LoadingThumbnail = true;
-            if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(Illustration.GetIllustrationThumbnailCacheKey()) is { } stream)
-            {
-                ThumbnailSource = await stream.GetSoftwareBitmapSourceAsync(true);
-                LoadingThumbnail = false;
-                return true;
-            }
-
-            if (await GetThumbnail(ThumbnailUrlOption.Medium) is { } ras)
-            {
-                using (ras)
-                {
-                    await App.AppViewModel.Cache.TryAddAsync(Illustration.GetIllustrationThumbnailCacheKey(), ras, TimeSpan.FromDays(1));
-                    ThumbnailSource = await ras.GetSoftwareBitmapSourceAsync(false);
-                }
-
-                LoadingThumbnail = false;
-                return true;
-            }
-
-            LoadingThumbnail = false;
             return false;
         }
 
-        public async Task<IRandomAccessStream?> GetThumbnail(ThumbnailUrlOption thumbnailUrlOptions)
+        LoadingThumbnail = true;
+        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(Illustration.GetIllustrationThumbnailCacheKey()) is { } stream)
         {
-            if (Illustration.GetThumbnailUrl(thumbnailUrlOptions) is { } url)
+            ThumbnailSource = await stream.GetSoftwareBitmapSourceAsync(true);
+            LoadingThumbnail = false;
+            return true;
+        }
+
+        if (await GetThumbnail(ThumbnailUrlOption.Medium) is { } ras)
+        {
+            using (ras)
             {
-                switch (await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle))
-                {
-                    case Result<IRandomAccessStream>.Success (var stream):
-                        return stream;
-                    case Result<IRandomAccessStream>.Failure (OperationCanceledException):
-                        LoadingThumbnailCancellationHandle.Reset();
-                        return null;
-                }
+                await App.AppViewModel.Cache.TryAddAsync(Illustration.GetIllustrationThumbnailCacheKey(), ras, TimeSpan.FromDays(1));
+                ThumbnailSource = await ras.GetSoftwareBitmapSourceAsync(false);
             }
 
-            return await AppContext.GetNotAvailableImageStreamAsync();
+            LoadingThumbnail = false;
+            return true;
         }
 
-        public Task SwitchBookmarkStateAsync()
-        {
-            return IsBookmarked ? RemoveBookmarkAsync() : PostPublicBookmarkAsync();
-        }
+        LoadingThumbnail = false;
+        return false;
+    }
 
-        public Task RemoveBookmarkAsync()
+    public async Task<IRandomAccessStream?> GetThumbnail(ThumbnailUrlOption thumbnailUrlOptions)
+    {
+        if (Illustration.GetThumbnailUrl(thumbnailUrlOptions) is { } url)
         {
-            IsBookmarked = false;
-            return App.AppViewModel.MakoClient.RemoveBookmarkAsync(Id);
-        }
-
-        public Task PostPublicBookmarkAsync()
-        {
-            IsBookmarked = true;
-            return App.AppViewModel.MakoClient.PostBookmarkAsync(Id, PrivacyPolicy.Public);
-        }
-
-        public string GetTooltip()
-        {
-            var sb = new StringBuilder(Id);
-            if (Illustration.IsUgoira())
+            switch (await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle))
             {
-                sb.AppendLine();
-                sb.Append(MiscResources.TheIllustrationIsAnUgoira);
+                case Result<IRandomAccessStream>.Success (var stream):
+                    return stream;
+                case Result<IRandomAccessStream>.Failure (OperationCanceledException):
+                    LoadingThumbnailCancellationHandle.Reset();
+                    return null;
             }
-
-            if (Illustration.IsManga())
-            {
-                sb.AppendLine();
-                sb.Append(MiscResources.TheIllustrationIsAMangaFormatted.Format(Illustration.PageCount));
-            }
-
-            return sb.ToString();
         }
 
-        public string GetBookmarkContextItemText(bool isBookmarked)
+        return await AppContext.GetNotAvailableImageStreamAsync();
+    }
+
+    public Task SwitchBookmarkStateAsync()
+    {
+        return IsBookmarked ? RemoveBookmarkAsync() : PostPublicBookmarkAsync();
+    }
+
+    public Task RemoveBookmarkAsync()
+    {
+        IsBookmarked = false;
+        return App.AppViewModel.MakoClient.RemoveBookmarkAsync(Id);
+    }
+
+    public Task PostPublicBookmarkAsync()
+    {
+        IsBookmarked = true;
+        return App.AppViewModel.MakoClient.PostBookmarkAsync(Id, PrivacyPolicy.Public);
+    }
+
+    public string GetTooltip()
+    {
+        var sb = new StringBuilder(Id);
+        if (Illustration.IsUgoira())
         {
-            return isBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
+            sb.AppendLine();
+            sb.Append(MiscResources.TheIllustrationIsAnUgoira);
         }
 
-        public void DisposeInternal()
+        if (Illustration.IsManga())
         {
-            _thumbnailSource?.Dispose();
+            sb.AppendLine();
+            sb.Append(MiscResources.TheIllustrationIsAMangaFormatted.Format(Illustration.PageCount));
         }
 
-        ~IllustrationViewModel()
-        {
-            Dispose();
-        }
+        return sb.ToString();
+    }
+
+    public string GetBookmarkContextItemText(bool isBookmarked)
+    {
+        return isBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
+    }
+
+    public void DisposeInternal()
+    {
+        _thumbnailSource?.Dispose();
+    }
+
+    ~IllustrationViewModel()
+    {
+        Dispose();
     }
 }

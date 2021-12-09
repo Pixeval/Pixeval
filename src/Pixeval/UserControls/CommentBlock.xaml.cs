@@ -30,92 +30,91 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
-namespace Pixeval.UserControls
+namespace Pixeval.UserControls;
+
+public sealed partial class CommentBlock
 {
-    public sealed partial class CommentBlock
+    public static DependencyProperty ViewModelProperty = DependencyProperty.Register(
+        nameof(ViewModel),
+        typeof(CommentBlockViewModel),
+        typeof(CommentBlock),
+        PropertyMetadata.Create(DependencyProperty.UnsetValue, PropertyChangedCallback));
+
+    private EventHandler<TappedRoutedEventArgs>? _deleteHyperlinkButtonTapped;
+
+    private EventHandler<TappedRoutedEventArgs>? _repliesHyperlinkButtonTapped;
+
+    public CommentBlock()
     {
-        public static DependencyProperty ViewModelProperty = DependencyProperty.Register(
-            nameof(ViewModel),
-            typeof(CommentBlockViewModel),
-            typeof(CommentBlock),
-            PropertyMetadata.Create(DependencyProperty.UnsetValue, PropertyChangedCallback));
+        InitializeComponent();
+    }
 
-        private EventHandler<TappedRoutedEventArgs>? _deleteHyperlinkButtonTapped;
+    public CommentBlockViewModel ViewModel
+    {
+        get => (CommentBlockViewModel) GetValue(ViewModelProperty);
+        set => SetValue(ViewModelProperty, value);
+    }
 
-        private EventHandler<TappedRoutedEventArgs>? _repliesHyperlinkButtonTapped;
+    public event EventHandler<TappedRoutedEventArgs> RepliesHyperlinkButtonTapped
+    {
+        add => _repliesHyperlinkButtonTapped += value;
+        remove => _repliesHyperlinkButtonTapped -= value;
+    }
 
-        public CommentBlock()
+    public event EventHandler<TappedRoutedEventArgs> DeleteHyperlinkButtonTapped
+    {
+        add => _deleteHyperlinkButtonTapped += value;
+        remove => _deleteHyperlinkButtonTapped -= value;
+    }
+
+    private static async void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var block = (CommentBlock) d;
+        if (e.NewValue is not CommentBlockViewModel viewModel)
         {
-            InitializeComponent();
+            return;
         }
 
-        public CommentBlockViewModel ViewModel
+        if (viewModel.HasReplies)
         {
-            get => (CommentBlockViewModel) GetValue(ViewModelProperty);
-            set => SetValue(ViewModelProperty, value);
+            _ = viewModel.LoadRepliesAsync().ContinueWith(_ => block.OpenRepliesHyperlinkButton.Content = CommentBlockResources.RepliesNavigationStringFormatted.Format(viewModel.Replies!.Count), TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        else
+        {
+            block.OpenRepliesHyperlinkButton.Content = CommentBlockResources.EmptyRepliesNavigationString;
         }
 
-        public event EventHandler<TappedRoutedEventArgs> RepliesHyperlinkButtonTapped
+        block.PosterPersonPicture.ProfilePicture = await viewModel.GetAvatarSource();
+        block.PosterTextBlock.Text = viewModel.Poster;
+        block.PostDateTextBlock.Text = viewModel.PostDate.ToString("yyyy-MM-dd dddd");
+        block.CommentContent.Visibility = (!viewModel.IsStamp).ToVisibility();
+        block.StickerImageContent.Visibility = viewModel.IsStamp.ToVisibility();
+        block.DeleteReplyHyperlinkButton.Visibility = (viewModel.PosterId == App.AppViewModel.PixivUid).ToVisibility();
+        if (viewModel.IsStamp)
         {
-            add => _repliesHyperlinkButtonTapped += value;
-            remove => _repliesHyperlinkButtonTapped -= value;
+            block.StickerImageContent.Source = viewModel.StampSource is { } url
+                ? await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceResultAsync(url).GetOrElseAsync(await AppContext.GetNotAvailableImageAsync())
+                : await AppContext.GetNotAvailableImageAsync();
         }
-
-        public event EventHandler<TappedRoutedEventArgs> DeleteHyperlinkButtonTapped
+        else
         {
-            add => _deleteHyperlinkButtonTapped += value;
-            remove => _deleteHyperlinkButtonTapped -= value;
+            block.CommentContent.Blocks.Add(await viewModel.GetReplyContentParagraphAsync());
         }
+    }
 
-        private static async void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var block = (CommentBlock) d;
-            if (e.NewValue is not CommentBlockViewModel viewModel)
-            {
-                return;
-            }
+    private void PosterPersonPicture_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        // TODO
+        // throw new NotImplementedException();
+    }
 
-            if (viewModel.HasReplies)
-            {
-                _ = viewModel.LoadRepliesAsync().ContinueWith(_ => block.OpenRepliesHyperlinkButton.Content = CommentBlockResources.RepliesNavigationStringFormatted.Format(viewModel.Replies!.Count), TaskScheduler.FromCurrentSynchronizationContext());
-            }
-            else
-            {
-                block.OpenRepliesHyperlinkButton.Content = CommentBlockResources.EmptyRepliesNavigationString;
-            }
+    private void OpenRepliesHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        _repliesHyperlinkButtonTapped?.Invoke(sender, e);
+    }
 
-            block.PosterPersonPicture.ProfilePicture = await viewModel.GetAvatarSource();
-            block.PosterTextBlock.Text = viewModel.Poster;
-            block.PostDateTextBlock.Text = viewModel.PostDate.ToString("yyyy-MM-dd dddd");
-            block.CommentContent.Visibility = (!viewModel.IsStamp).ToVisibility();
-            block.StickerImageContent.Visibility = viewModel.IsStamp.ToVisibility();
-            block.DeleteReplyHyperlinkButton.Visibility = (viewModel.PosterId == App.AppViewModel.PixivUid).ToVisibility();
-            if (viewModel.IsStamp)
-            {
-                block.StickerImageContent.Source = viewModel.StampSource is { } url
-                    ? await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceResultAsync(url).GetOrElseAsync(await AppContext.GetNotAvailableImageAsync())
-                    : await AppContext.GetNotAvailableImageAsync();
-            }
-            else
-            {
-                block.CommentContent.Blocks.Add(await viewModel.GetReplyContentParagraphAsync());
-            }
-        }
-
-        private void PosterPersonPicture_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            // TODO
-            // throw new NotImplementedException();
-        }
-
-        private void OpenRepliesHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            _repliesHyperlinkButtonTapped?.Invoke(sender, e);
-        }
-
-        private void DeleteReplyHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            _deleteHyperlinkButtonTapped?.Invoke(sender, e);
-        }
+    private void DeleteReplyHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        _deleteHyperlinkButtonTapped?.Invoke(sender, e);
     }
 }

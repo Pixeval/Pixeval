@@ -20,18 +20,17 @@
 
 #endregion
 
-namespace Pixeval.CoreApi.Model
+namespace Pixeval.CoreApi.Model;
+
+public record CountedTag
 {
-    public record CountedTag
+    public CountedTag(Tag tag, long count)
     {
-        public CountedTag(Tag tag, long count)
-        {
-            Tag = tag;
-            Count = count;
-        }
-
-        public Tag Tag { get; }
-
-        public long Count { get; }
+        Tag = tag;
+        Count = count;
     }
+
+    public Tag Tag { get; }
+
+    public long Count { get; }
 }

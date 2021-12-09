@@ -22,11 +22,10 @@
 
 using JetBrains.Annotations;
 
-namespace Pixeval.CoreApi.Engine
+namespace Pixeval.CoreApi.Engine;
+
+[PublicAPI]
+public interface INotifyCompletion
 {
-    [PublicAPI]
-    public interface INotifyCompletion
-    {
-        bool IsCompleted { get; set; }
-    }
+    bool IsCompleted { get; set; }
 }

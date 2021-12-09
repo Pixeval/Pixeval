@@ -25,16 +25,15 @@ using Pixeval.UserControls;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 
-namespace Pixeval.Download.Macros
-{
-    [MetaPathMacro(typeof(IllustrationViewModel))]
-    public class IllustratorNameMacro : IMacro<IllustrationViewModel>.ITransducer
-    {
-        public string Name => "artist_name";
+namespace Pixeval.Download.Macros;
 
-        public string Substitute(IllustrationViewModel context)
-        {
-            return context.Illustration.User?.Name?.Let(IOHelper.NormalizePathSegment) ?? MacroParserResources.UnknownArtist;
-        }
+[MetaPathMacro(typeof(IllustrationViewModel))]
+public class IllustratorNameMacro : IMacro<IllustrationViewModel>.ITransducer
+{
+    public string Name => "artist_name";
+
+    public string Substitute(IllustrationViewModel context)
+    {
+        return context.Illustration.User?.Name?.Let(IOHelper.NormalizePathSegment) ?? MacroParserResources.UnknownArtist;
     }
 }

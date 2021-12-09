@@ -25,16 +25,15 @@ using Pixeval.UserControls;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 
-namespace Pixeval.Download.Macros
-{
-    [MetaPathMacro(typeof(IllustrationViewModel))]
-    public class SpotlightTitleMacro : IMacro<IllustrationViewModel>.ITransducer
-    {
-        public string Name => "spot_title";
+namespace Pixeval.Download.Macros;
 
-        public string Substitute(IllustrationViewModel context)
-        {
-            return context.Illustration.SpotlightTitle?.Let(IOHelper.NormalizePathSegment) ?? MacroParserResources.UnknownSpotlightTitle;
-        }
+[MetaPathMacro(typeof(IllustrationViewModel))]
+public class SpotlightTitleMacro : IMacro<IllustrationViewModel>.ITransducer
+{
+    public string Name => "spot_title";
+
+    public string Substitute(IllustrationViewModel context)
+    {
+        return context.Illustration.SpotlightTitle?.Let(IOHelper.NormalizePathSegment) ?? MacroParserResources.UnknownSpotlightTitle;
     }
 }

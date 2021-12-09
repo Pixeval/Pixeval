@@ -25,26 +25,25 @@ using System.Collections.Generic;
 using System.Linq;
 using Pixeval.CoreApi.Global.Enum;
 
-namespace Pixeval.Controls.Setting.UI.Model
+namespace Pixeval.Controls.Setting.UI.Model;
+
+public record SearchTagMatchOptionSettingEntryItem : IStringRepresentableItem
 {
-    public record SearchTagMatchOptionSettingEntryItem : IStringRepresentableItem
+    public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } =  Enum.GetValues<SearchTagMatchOption>().Select(i => new SearchTagMatchOptionSettingEntryItem(i));
+
+    public SearchTagMatchOptionSettingEntryItem(SearchTagMatchOption item)
     {
-        public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } =  Enum.GetValues<SearchTagMatchOption>().Select(i => new SearchTagMatchOptionSettingEntryItem(i));
-
-        public SearchTagMatchOptionSettingEntryItem(SearchTagMatchOption item)
+        Item = item;
+        StringRepresentation = item switch
         {
-            Item = item;
-            StringRepresentation = item switch
-            {
-                SearchTagMatchOption.PartialMatchForTags => MiscResources.SearchTagMatchOptionPartialMatchForTags,
-                SearchTagMatchOption.ExactMatchForTags => MiscResources.SearchTagMatchOptionExactMatchForTags,
-                SearchTagMatchOption.TitleAndCaption => MiscResources.SearchTagMatchOptionTitleAndCaption,
-                _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
-            };
-        }
-
-        public object Item { get; }
-
-        public string StringRepresentation { get; }
+            SearchTagMatchOption.PartialMatchForTags => MiscResources.SearchTagMatchOptionPartialMatchForTags,
+            SearchTagMatchOption.ExactMatchForTags => MiscResources.SearchTagMatchOptionExactMatchForTags,
+            SearchTagMatchOption.TitleAndCaption => MiscResources.SearchTagMatchOptionTitleAndCaption,
+            _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
+        };
     }
+
+    public object Item { get; }
+
+    public string StringRepresentation { get; }
 }

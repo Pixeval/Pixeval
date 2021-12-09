@@ -23,95 +23,94 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Pixeval.Util.Threading
+namespace Pixeval.Util.Threading;
+
+public class ReenterableAwaiter : INotifyCompletion
 {
-    public class ReenterableAwaiter : INotifyCompletion
+    private Action? _continuation;
+    private Exception? _exception;
+    private bool _continueOnCapturedContext; // whether the continuation should be posted to the captured SynchronizationContext
+
+    public bool IsCompleted { get; set; }
+
+    public ReenterableAwaiter(bool initialSignal)
     {
-        private Action? _continuation;
-        private Exception? _exception;
-        private bool _continueOnCapturedContext; // whether the continuation should be posted to the captured SynchronizationContext
+        IsCompleted = initialSignal;
+        _continueOnCapturedContext = true;
+    }
 
-        public bool IsCompleted { get; set; }
+    public void Reset()
+    {
+        IsCompleted = false; // Set the awaiter to non-completed
+        _continuation = null;
+        _exception = null;
+    }
 
-        public ReenterableAwaiter(bool initialSignal)
+    public void OnCompleted(Action continuation)
+    {
+        // Stores the continuation
+        // If your awaiter is intended to be used across multiple
+        // task boundaries, you can use a thread-safe collection
+        // to hold all the continuations
+        _continuation = continuation;
+    }
+
+    public void GetResult()
+    {
+        if (_exception is not null)
         {
-            IsCompleted = initialSignal;
-            _continueOnCapturedContext = true;
+            throw _exception;
+        }
+    }
+
+    // Signals the awaiter to complete successfully
+    public void SetResult()
+    {
+        if (!IsCompleted)
+        {
+            IsCompleted = true;
+            _continuation?.Invoke();
+        }
+    }
+
+    // Signals the awaiter to complete unsuccessfully
+    public void SetException(Exception exception)
+    {
+        if (!IsCompleted)
+        {
+            IsCompleted = true;
+            _exception = exception;
+            CompleteInternal();
+        }
+    }
+
+    // Queue the continuation to SynchronizationContext.Current if _continueOnCapturedContext is true,
+    // otherwise schedule it on the default TaskScheduler
+    private void CompleteInternal()
+    {
+        if (_continuation is null)
+        {
+            return;
         }
 
-        public void Reset()
+        if (_continueOnCapturedContext && SynchronizationContext.Current is { } context)
         {
-            IsCompleted = false; // Set the awaiter to non-completed
-            _continuation = null;
-            _exception = null;
+            context.Post(cont => (cont as Action)?.Invoke(), _continuation);
         }
-
-        public void OnCompleted(Action continuation)
+        else
         {
-            // Stores the continuation
-            // If your awaiter is intended to be used across multiple
-            // task boundaries, you can use a thread-safe collection
-            // to hold all the continuations
-            _continuation = continuation;
+            Task.Factory.StartNew(_continuation, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
         }
+    }
 
-        public void GetResult()
-        {
-            if (_exception is not null)
-            {
-                throw _exception;
-            }
-        }
+    public ReenterableAwaiter ConfigureAwait(bool continueOnCapturedContext)
+    {
+        _continueOnCapturedContext = continueOnCapturedContext;
+        return this;
+    }
 
-        // Signals the awaiter to complete successfully
-        public void SetResult()
-        {
-            if (!IsCompleted)
-            {
-                IsCompleted = true;
-                _continuation?.Invoke();
-            }
-        }
-
-        // Signals the awaiter to complete unsuccessfully
-        public void SetException(Exception exception)
-        {
-            if (!IsCompleted)
-            {
-                IsCompleted = true;
-                _exception = exception;
-                CompleteInternal();
-            }
-        }
-
-        // Queue the continuation to SynchronizationContext.Current if _continueOnCapturedContext is true,
-        // otherwise schedule it on the default TaskScheduler
-        private void CompleteInternal()
-        {
-            if (_continuation is null)
-            {
-                return;
-            }
-
-            if (_continueOnCapturedContext && SynchronizationContext.Current is { } context)
-            {
-                context.Post(cont => (cont as Action)?.Invoke(), _continuation);
-            }
-            else
-            {
-                Task.Factory.StartNew(_continuation, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
-            }
-        }
-
-        public ReenterableAwaiter ConfigureAwait(bool continueOnCapturedContext)
-        {
-            _continueOnCapturedContext = continueOnCapturedContext;
-            return this;
-        }
-
-        public ReenterableAwaiter GetAwaiter()
-        {
-            return this;
-        }
+    public ReenterableAwaiter GetAwaiter()
+    {
+        return this;
     }
 }

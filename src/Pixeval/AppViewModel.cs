@@ -52,228 +52,227 @@ using SQLite;
 using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
 
-namespace Pixeval
+namespace Pixeval;
+
+public class AppViewModel : AutoActivateObservableRecipient,
+    IRecipient<ApplicationExitingMessage>,
+    IRecipient<LoginCompletedMessage>
 {
-    public class AppViewModel : AutoActivateObservableRecipient,
-        IRecipient<ApplicationExitingMessage>,
-        IRecipient<LoginCompletedMessage>
+    private bool _activatedByProtocol;
+
+    private static IHostBuilder CreateHostBuilder()
     {
-        private bool _activatedByProtocol;
+        return Host.CreateDefaultBuilder()
+            .ConfigureServices(services =>
+                services.AddSingleton<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>, IllustrationDownloadTaskFactory>()
+                    .AddSingleton(new SQLiteAsyncConnection(AppContext.DatabaseFilePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex | SQLiteOpenFlags.ReadWrite))
+                    .AddSingleton(provider => IPersistentManager<DownloadHistoryEntry, ObservableDownloadTask>.CreateAsync<DownloadHistoryPersistentManager>(provider.GetRequiredService<SQLiteAsyncConnection>(), App.AppViewModel.AppSetting.MaximumDownloadHistoryRecords))
+                    .AddSingleton(provider => IPersistentManager<SearchHistoryEntry, SearchHistoryEntry>.CreateAsync<SearchHistoryPersistentManager>(provider.GetRequiredService<SQLiteAsyncConnection>(), App.AppViewModel.AppSetting.MaximumSearchHistoryRecords)));
+    }
 
-        private static IHostBuilder CreateHostBuilder()
+    public AppViewModel(App app)
+    {
+        App = app;
+    }
+
+    public IHost AppHost { get; private set; } = null!;
+
+    public IServiceScope AppServicesScope => AppHost.Services.CreateScope();
+
+    public App App { get; }
+
+    public MainWindow Window { get; private set; } = null!;
+
+    public AppWindow AppWindow { get; private set; } = null!;
+
+    public DownloadManager<ObservableDownloadTask> DownloadManager { get; private set; } = null!;
+
+    public Frame AppWindowRootFrame => Window.PixevalAppRootFrame;
+
+    public MakoClient MakoClient { get; set; } = null!; // The null-state of MakoClient is transient
+
+    public AppSetting AppSetting { get; set; } = null!;
+
+    public FileCache Cache { get; private set; } = null!;
+
+    public ElementTheme AppRootFrameTheme => AppWindowRootFrame.RequestedTheme;
+
+    public string? PixivUid => MakoClient.Session.Id;
+
+    public void Receive(ApplicationExitingMessage message)
+    {
+        AppContext.SaveContext();
+    }
+
+    public async void Receive(LoginCompletedMessage message)
+    {
+        DownloadManager = new DownloadManager<ObservableDownloadTask>(AppSetting.MaxDownloadTaskConcurrencyLevel, MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi));
+        await AppContext.RestoreHistories();
+    }
+
+    public IntPtr GetMainWindowHandle()
+    {
+        return Window.GetWindowHandle();
+    }
+
+    public void SwitchTheme(ApplicationTheme theme)
+    {
+        Window.PixevalAppRootFrame.RequestedTheme = theme switch
         {
-            return Host.CreateDefaultBuilder()
-                .ConfigureServices(services =>
-                    services.AddSingleton<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>, IllustrationDownloadTaskFactory>()
-                        .AddSingleton(new SQLiteAsyncConnection(AppContext.DatabaseFilePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex | SQLiteOpenFlags.ReadWrite))
-                        .AddSingleton(provider => IPersistentManager<DownloadHistoryEntry, ObservableDownloadTask>.CreateAsync<DownloadHistoryPersistentManager>(provider.GetRequiredService<SQLiteAsyncConnection>(), App.AppViewModel.AppSetting.MaximumDownloadHistoryRecords))
-                        .AddSingleton(provider => IPersistentManager<SearchHistoryEntry, SearchHistoryEntry>.CreateAsync<SearchHistoryPersistentManager>(provider.GetRequiredService<SQLiteAsyncConnection>(), App.AppViewModel.AppSetting.MaximumSearchHistoryRecords)));
-        }
+            ApplicationTheme.Dark => ElementTheme.Dark,
+            ApplicationTheme.Light => ElementTheme.Light,
+            ApplicationTheme.SystemDefault => ElementTheme.Default,
+            _ => throw new ArgumentOutOfRangeException(nameof(theme), theme, null)
+        };
+    }
 
-        public AppViewModel(App app)
+    public void RootFrameNavigate(Type type, object parameter, NavigationTransitionInfo infoOverride)
+    {
+        AppWindowRootFrame.Navigate(type, parameter, infoOverride);
+    }
+
+    public void RootFrameNavigate(Type type, object parameter)
+    {
+        AppWindowRootFrame.Navigate(type, parameter);
+    }
+
+    public void RootFrameNavigate(Type type)
+    {
+        AppWindowRootFrame.Navigate(type);
+    }
+
+    private void RegisterUnhandledExceptionHandler()
+    {
+        App.UnhandledException += async (_, args) =>
         {
-            App = app;
-        }
+            args.Handled = true;
+            await Window.DispatcherQueue.EnqueueAsync(async () => await UncaughtExceptionHandler(args.Exception));
+        };
 
-        public IHost AppHost { get; private set; } = null!;
-
-        public IServiceScope AppServicesScope => AppHost.Services.CreateScope();
-
-        public App App { get; }
-
-        public MainWindow Window { get; private set; } = null!;
-
-        public AppWindow AppWindow { get; private set; } = null!;
-
-        public DownloadManager<ObservableDownloadTask> DownloadManager { get; private set; } = null!;
-
-        public Frame AppWindowRootFrame => Window.PixevalAppRootFrame;
-
-        public MakoClient MakoClient { get; set; } = null!; // The null-state of MakoClient is transient
-
-        public AppSetting AppSetting { get; set; } = null!;
-
-        public FileCache Cache { get; private set; } = null!;
-
-        public ElementTheme AppRootFrameTheme => AppWindowRootFrame.RequestedTheme;
-
-        public string? PixivUid => MakoClient.Session.Id;
-
-        public void Receive(ApplicationExitingMessage message)
+        TaskScheduler.UnobservedTaskException += async (_, args) =>
         {
-            AppContext.SaveContext();
-        }
+            args.SetObserved();
+            await Window.DispatcherQueue.EnqueueAsync(async () => await UncaughtExceptionHandler(args.Exception));
+        };
 
-        public async void Receive(LoginCompletedMessage message)
+        AppDomain.CurrentDomain.UnhandledException += async (_, args) =>
         {
-            DownloadManager = new DownloadManager<ObservableDownloadTask>(AppSetting.MaxDownloadTaskConcurrencyLevel, MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi));
-            await AppContext.RestoreHistories();
-        }
-
-        public IntPtr GetMainWindowHandle()
-        {
-            return Window.GetWindowHandle();
-        }
-
-        public void SwitchTheme(ApplicationTheme theme)
-        {
-            Window.PixevalAppRootFrame.RequestedTheme = theme switch
+            if (args.ExceptionObject is Exception e)
             {
-                ApplicationTheme.Dark => ElementTheme.Dark,
-                ApplicationTheme.Light => ElementTheme.Light,
-                ApplicationTheme.SystemDefault => ElementTheme.Default,
-                _ => throw new ArgumentOutOfRangeException(nameof(theme), theme, null)
-            };
-        }
-
-        public void RootFrameNavigate(Type type, object parameter, NavigationTransitionInfo infoOverride)
-        {
-            AppWindowRootFrame.Navigate(type, parameter, infoOverride);
-        }
-
-        public void RootFrameNavigate(Type type, object parameter)
-        {
-            AppWindowRootFrame.Navigate(type, parameter);
-        }
-
-        public void RootFrameNavigate(Type type)
-        {
-            AppWindowRootFrame.Navigate(type);
-        }
-
-        private void RegisterUnhandledExceptionHandler()
-        {
-            App.UnhandledException += async (_, args) =>
+                await Window.DispatcherQueue.EnqueueAsync(async () => await UncaughtExceptionHandler(e));
+            }
+            else
             {
-                args.Handled = true;
-                await Window.DispatcherQueue.EnqueueAsync(async () => await UncaughtExceptionHandler(args.Exception));
-            };
-
-            TaskScheduler.UnobservedTaskException += async (_, args) =>
-            {
-                args.SetObserved();
-                await Window.DispatcherQueue.EnqueueAsync(async () => await UncaughtExceptionHandler(args.Exception));
-            };
-
-            AppDomain.CurrentDomain.UnhandledException += async (_, args) =>
-            {
-                if (args.ExceptionObject is Exception e)
-                {
-                    await Window.DispatcherQueue.EnqueueAsync(async () => await UncaughtExceptionHandler(e));
-                }
-                else
-                {
-                    ExitWithPushedNotification();
-                }
-            };
+                ExitWithPushedNotification();
+            }
+        };
 
 #if DEBUG
-            // ReSharper disable once UnusedParameter.Local
-            static Task UncaughtExceptionHandler(Exception e)
-            {
-                Debugger.Break();
-                return Task.CompletedTask;
-            }
+        // ReSharper disable once UnusedParameter.Local
+        static Task UncaughtExceptionHandler(Exception e)
+        {
+            Debugger.Break();
+            return Task.CompletedTask;
+        }
 #elif RELEASE
             Task UncaughtExceptionHandler(Exception e)
             {
                 return ShowExceptionDialogAsync(e);
             }
 #endif
-        }
+    }
 
-        public async Task ShowExceptionDialogAsync(Exception e)
-        {
-            await MessageDialogBuilder.CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
-        }
+    public async Task ShowExceptionDialogAsync(Exception e)
+    {
+        await MessageDialogBuilder.CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
+    }
 
-        public void DispatchTask(DispatcherQueueHandler action)
-        {
-            Window.DispatcherQueue.TryEnqueue(action);
-        }
+    public void DispatchTask(DispatcherQueueHandler action)
+    {
+        Window.DispatcherQueue.TryEnqueue(action);
+    }
 
-        public Task DispatchTaskAsync(Func<Task> action)
-        {
-            return Window.DispatcherQueue.EnqueueAsync(action);
-        }
+    public Task DispatchTaskAsync(Func<Task> action)
+    {
+        return Window.DispatcherQueue.EnqueueAsync(action);
+    }
 
-        /// <summary>
-        ///     Exit the notification after pushing an <see cref="ApplicationExitingMessage" />
-        ///     to the <see cref="EventChannel" />
-        /// </summary>
-        /// <returns></returns>
-        public void ExitWithPushedNotification()
-        {
-            WeakReferenceMessenger.Default.Send(new ApplicationExitingMessage());
-            Application.Current.Exit();
-        }
+    /// <summary>
+    ///     Exit the notification after pushing an <see cref="ApplicationExitingMessage" />
+    ///     to the <see cref="EventChannel" />
+    /// </summary>
+    /// <returns></returns>
+    public void ExitWithPushedNotification()
+    {
+        WeakReferenceMessenger.Default.Send(new ApplicationExitingMessage());
+        Application.Current.Exit();
+    }
 
-        public async Task InitializeAsync(bool activatedByProtocol)
-        {
-            _activatedByProtocol = activatedByProtocol;
+    public async Task InitializeAsync(bool activatedByProtocol)
+    {
+        _activatedByProtocol = activatedByProtocol;
 
-            AppHost = CreateHostBuilder().Build();
+        AppHost = CreateHostBuilder().Build();
 
-            RegisterUnhandledExceptionHandler();
-            await AppContext.WriteLogoIcoIfNotExist();
+        RegisterUnhandledExceptionHandler();
+        await AppContext.WriteLogoIcoIfNotExist();
 
-            Window = new MainWindow();
-            AppWindow = AppWindow.GetFromWindowId(Win32Interop.GetWindowIdFromWindow(GetMainWindowHandle()));
-            AppWindow.Title = AppContext.AppIdentifier;
-            AppWindow.Resize(new SizeInt32(AppSetting.WindowWidth, AppSetting.WindowHeight));
-            AppWindow.Show();
-            AppWindow.SetIcon(await AppContext.GetIconAbsolutePath());
+        Window = new MainWindow();
+        AppWindow = AppWindow.GetFromWindowId(Win32Interop.GetWindowIdFromWindow(GetMainWindowHandle()));
+        AppWindow.Title = AppContext.AppIdentifier;
+        AppWindow.Resize(new SizeInt32(AppSetting.WindowWidth, AppSetting.WindowHeight));
+        AppWindow.Show();
+        AppWindow.SetIcon(await AppContext.GetIconAbsolutePath());
 
-            await AppKnownFolders.Temporary.ClearAsync();
-            Cache = await FileCache.CreateDefaultAsync();
+        await AppKnownFolders.Temporary.ClearAsync();
+        Cache = await FileCache.CreateDefaultAsync();
 
-            AppHost.RunAsync().Discard();
-        }
+        AppHost.RunAsync().Discard();
+    }
 
-        public (int, int) GetAppWindowSizeTuple()
-        {
-            var windowSize = AppWindow.Size;
-            return (windowSize.Width, windowSize.Height);
-        }
+    public (int, int) GetAppWindowSizeTuple()
+    {
+        var windowSize = AppWindow.Size;
+        return (windowSize.Width, windowSize.Height);
+    }
 
-        public Size GetAppWindowSize()
-        {
-            return AppWindow.Size.ToWinRtSize();
-        }
+    public Size GetAppWindowSize()
+    {
+        return AppWindow.Size.ToWinRtSize();
+    }
 
-        public Size GetDpiAwareAppWindowSize()
-        {
-            var dpi = User32.GetDpiForWindow(GetMainWindowHandle());
-            var size = GetAppWindowSize();
-            var scalingFactor = (float) dpi / 96;
-            return new Size(size.Width / scalingFactor, size.Height / scalingFactor);
-        }
+    public Size GetDpiAwareAppWindowSize()
+    {
+        var dpi = User32.GetDpiForWindow(GetMainWindowHandle());
+        var size = GetAppWindowSize();
+        var scalingFactor = (float) dpi / 96;
+        return new Size(size.Width / scalingFactor, size.Height / scalingFactor);
+    }
 
-        public (int, int) GetDpiAwareAppWindowSizeTuple()
-        {
-            var size = GetDpiAwareAppWindowSize();
-            return ((int, int)) (size.Width, size.Height);
-        }
+    public (int, int) GetDpiAwareAppWindowSizeTuple()
+    {
+        var size = GetDpiAwareAppWindowSize();
+        return ((int, int)) (size.Width, size.Height);
+    }
 
-        public void PrepareForActivation()
-        {
-            Window.ShowProgressRing();
-        }
+    public void PrepareForActivation()
+    {
+        Window.ShowProgressRing();
+    }
 
-        public void ActivationProcessed()
-        {
-            Window.HideProgressRing();
-        }
+    public void ActivationProcessed()
+    {
+        Window.HideProgressRing();
+    }
 
-        /// <summary>
-        ///     Gets and resets the <see cref="_activatedByProtocol" /> field, used for one-time activation process
-        ///     during the app start
-        /// </summary>
-        public bool ConsumeProtocolActivation()
-        {
-            var original = _activatedByProtocol;
-            _activatedByProtocol = false;
-            return original;
-        }
+    /// <summary>
+    ///     Gets and resets the <see cref="_activatedByProtocol" /> field, used for one-time activation process
+    ///     during the app start
+    /// </summary>
+    public bool ConsumeProtocolActivation()
+    {
+        var original = _activatedByProtocol;
+        _activatedByProtocol = false;
+        return original;
     }
 }

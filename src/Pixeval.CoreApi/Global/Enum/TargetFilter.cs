@@ -23,15 +23,14 @@
 using JetBrains.Annotations;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Global.Enum
-{
-    [PublicAPI]
-    public enum TargetFilter
-    {
-        [Description("for_android")]
-        ForAndroid,
+namespace Pixeval.CoreApi.Global.Enum;
 
-        [Description("for_ios")]
-        ForIos
-    }
+[PublicAPI]
+public enum TargetFilter
+{
+    [Description("for_android")]
+    ForAndroid,
+
+    [Description("for_ios")]
+    ForIos
 }

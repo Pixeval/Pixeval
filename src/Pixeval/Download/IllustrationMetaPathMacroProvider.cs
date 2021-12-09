@@ -25,15 +25,14 @@ using Pixeval.Download.MacroParser;
 using Pixeval.Download.Macros;
 using Pixeval.UserControls;
 
-namespace Pixeval.Download
-{
-    public class IllustrationMetaPathMacroProvider : IMetaPathMacroProvider<IllustrationViewModel>
-    {
-        public IllustrationMetaPathMacroProvider()
-        {
-            AvailableMacros = MetaPathMacroAttributeHelper.GetAttachedTypeInstances<IMacro<IllustrationViewModel>>(typeof(IllustrationViewModel));
-        }
+namespace Pixeval.Download;
 
-        public IEnumerable<IMacro<IllustrationViewModel>> AvailableMacros { get; }
+public class IllustrationMetaPathMacroProvider : IMetaPathMacroProvider<IllustrationViewModel>
+{
+    public IllustrationMetaPathMacroProvider()
+    {
+        AvailableMacros = MetaPathMacroAttributeHelper.GetAttachedTypeInstances<IMacro<IllustrationViewModel>>(typeof(IllustrationViewModel));
     }
+
+    public IEnumerable<IMacro<IllustrationViewModel>> AvailableMacros { get; }
 }

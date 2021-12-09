@@ -23,23 +23,22 @@
 using System.Threading.Tasks;
 using Windows.Foundation;
 
-namespace Pixeval.Util.Threading
+namespace Pixeval.Util.Threading;
+
+public static class AsyncHelper
 {
-    public static class AsyncHelper
+    public static void Discard<T>(this IAsyncOperation<T> _)
     {
-        public static void Discard<T>(this IAsyncOperation<T> _)
-        {
-            // nop
-        }
+        // nop
+    }
 
-        public static void Discard(this IAsyncAction _)
-        {
-            // nop
-        }
+    public static void Discard(this IAsyncAction _)
+    {
+        // nop
+    }
 
-        public static void Discard(this Task _)
-        {
-            // nop
-        }
+    public static void Discard(this Task _)
+    {
+        // nop
     }
 }

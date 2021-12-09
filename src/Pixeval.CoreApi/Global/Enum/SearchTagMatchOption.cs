@@ -23,18 +23,17 @@
 using JetBrains.Annotations;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Global.Enum
+namespace Pixeval.CoreApi.Global.Enum;
+
+[PublicAPI]
+public enum SearchTagMatchOption
 {
-    [PublicAPI]
-    public enum SearchTagMatchOption
-    {
-        [Description("partial_match_for_tags")]
-        PartialMatchForTags,
+    [Description("partial_match_for_tags")]
+    PartialMatchForTags,
 
-        [Description("exact_match_for_tags")]
-        ExactMatchForTags,
+    [Description("exact_match_for_tags")]
+    ExactMatchForTags,
 
-        [Description("title_and_caption")]
-        TitleAndCaption
-    }
+    [Description("title_and_caption")]
+    TitleAndCaption
 }

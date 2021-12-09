@@ -23,16 +23,15 @@
 using Pixeval.Download.MacroParser;
 using Pixeval.UserControls;
 
-namespace Pixeval.Download.Macros
-{
-    [MetaPathMacro(typeof(IllustrationViewModel))]
-    public class SpotlightIdMacro : IMacro<IllustrationViewModel>.ITransducer
-    {
-        public string Name => "spot_id";
+namespace Pixeval.Download.Macros;
 
-        public string Substitute(IllustrationViewModel context)
-        {
-            return context.Illustration.SpotlightId ?? MacroParserResources.UnknownSpotlightId;
-        }
+[MetaPathMacro(typeof(IllustrationViewModel))]
+public class SpotlightIdMacro : IMacro<IllustrationViewModel>.ITransducer
+{
+    public string Name => "spot_id";
+
+    public string Substitute(IllustrationViewModel context)
+    {
+        return context.Illustration.SpotlightId ?? MacroParserResources.UnknownSpotlightId;
     }
 }

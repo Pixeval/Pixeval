@@ -22,13 +22,12 @@
 
 using Microsoft.UI.Xaml.Controls;
 
-namespace Pixeval.Controls.Card
+namespace Pixeval.Controls.Card;
+
+public sealed class CardControl : ContentControl
 {
-    public sealed class CardControl : ContentControl
+    public CardControl()
     {
-        public CardControl()
-        {
-            DefaultStyleKey = typeof(CardControl);
-        }
+        DefaultStyleKey = typeof(CardControl);
     }
 }

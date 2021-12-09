@@ -22,68 +22,67 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Pixeval.Download;
 using SQLite;
 
-namespace Pixeval.Database
+namespace Pixeval.Database;
+
+[Table("DownloadHistories")]
+public class DownloadHistoryEntry : ObservableObject
 {
-    [Table("DownloadHistories")]
-    public class DownloadHistoryEntry : ObservableObject
+    public DownloadHistoryEntry(DownloadState state, string? errorCause, string? destination, DownloadItemType type, string? id, string? title, string? description, string? url, string? thumbnail)
     {
-        public DownloadHistoryEntry(DownloadState state, string? errorCause, string? destination, DownloadItemType type, string? id, string? title, string? description, string? url, string? thumbnail)
-        {
-            _state = state;
-            _errorCause = errorCause;
-            Destination = destination;
-            Type = type;
-            Id = id;
-            Title = title;
-            Description = description;
-            Url = url;
-            Thumbnail = thumbnail;
-        }
+        _state = state;
+        _errorCause = errorCause;
+        Destination = destination;
+        Type = type;
+        Id = id;
+        Title = title;
+        Description = description;
+        Url = url;
+        Thumbnail = thumbnail;
+    }
 
-        // ReSharper disable once UnusedMember.Global
-        public DownloadHistoryEntry()
-        {
+    // ReSharper disable once UnusedMember.Global
+    public DownloadHistoryEntry()
+    {
 
-        }
+    }
 
-        [PrimaryKey]
-        [Column("destination")]
-        public string? Destination { get; set; }
+    [PrimaryKey]
+    [Column("destination")]
+    public string? Destination { get; set; }
 
-        [Column("type")]
-        public DownloadItemType Type { get; set; }
+    [Column("type")]
+    public DownloadItemType Type { get; set; }
 
-        private DownloadState _state;
+    private DownloadState _state;
 
-        [Column("state")]
-        public DownloadState State
-        {
-            get => _state;
-            set => SetProperty(ref _state, value);
-        }
+    [Column("state")]
+    public DownloadState State
+    {
+        get => _state;
+        set => SetProperty(ref _state, value);
+    }
 
-        [Column("work_id")]
-        public string? Id { get; set; }
+    [Column("work_id")]
+    public string? Id { get; set; }
 
-        [Column("work_title")]
-        public string? Title { get; set; }
+    [Column("work_title")]
+    public string? Title { get; set; }
 
-        [Column("work_desc")]
-        public string? Description { get; set; }
+    [Column("work_desc")]
+    public string? Description { get; set; }
 
-        [Column("work_url")]
-        public string? Url { get; set; }
+    [Column("work_url")]
+    public string? Url { get; set; }
 
-        [Column("work_thumbnail")]
-        public string? Thumbnail { get; set; }
+    [Column("work_thumbnail")]
+    public string? Thumbnail { get; set; }
 
-        private string? _errorCause;
+    private string? _errorCause;
 
-        [Column("work_error_cause")]
-        public string? ErrorCause
-        {
-            get => _errorCause;
-            set => SetProperty(ref _errorCause, value);
-        }
+    [Column("work_error_cause")]
+    public string? ErrorCause
+    {
+        get => _errorCause;
+        set => SetProperty(ref _errorCause, value);
     }
 }

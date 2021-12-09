@@ -22,17 +22,16 @@
 
 using Pixeval.Misc;
 
-namespace Pixeval.Options
+namespace Pixeval.Options;
+
+public enum XRestrictLevel
 {
-    public enum XRestrictLevel
-    {
-        [Metadata("")]
-        Ordinary = 0,
+    [Metadata("")]
+    Ordinary = 0,
 
-        [Metadata("R-18")]
-        R18 = 1,
+    [Metadata("R-18")]
+    R18 = 1,
 
-        [Metadata("R-18G")]
-        R18G = 2
-    }
+    [Metadata("R-18G")]
+    R18G = 2
 }

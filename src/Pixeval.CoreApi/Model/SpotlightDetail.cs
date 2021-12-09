@@ -23,8 +23,7 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace Pixeval.CoreApi.Model
-{
-    [PublicAPI]
-    public record SpotlightDetail(SpotlightArticle SpotlightArticle, string Introduction, IEnumerable<Illustration> Illustrations);
-}
+namespace Pixeval.CoreApi.Model;
+
+[PublicAPI]
+public record SpotlightDetail(SpotlightArticle SpotlightArticle, string Introduction, IEnumerable<Illustration> Illustrations);

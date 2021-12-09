@@ -24,29 +24,28 @@ using Pixeval.Download.MacroParser;
 using Pixeval.UserControls;
 using Pixeval.Utilities;
 
-namespace Pixeval.Download
+namespace Pixeval.Download;
+
+public class IllustrationMetaPathParser : IMetaPathParser<IllustrationViewModel>
 {
-    public class IllustrationMetaPathParser : IMetaPathParser<IllustrationViewModel>
+    private readonly MacroParser<IllustrationViewModel> _parser = new();
+
+    public IllustrationMetaPathParser()
     {
-        private readonly MacroParser<IllustrationViewModel> _parser = new();
+        MacroProvider = new IllustrationMetaPathMacroProvider();
+    }
 
-        public IllustrationMetaPathParser()
+    public IMetaPathMacroProvider<IllustrationViewModel> MacroProvider { get; }
+
+    public string Reduce(string raw, IllustrationViewModel context)
+    {
+        _parser.SetupParsingEnvironment(new Lexer(raw));
+        if (_parser.Parse() is { } root)
         {
-            MacroProvider = new IllustrationMetaPathMacroProvider();
+            var result = root.Evaluate(MacroProvider, context);
+            return result.IsNotNullOrBlank() ? result : throw new MacroParseException(MacroParserResources.ResultIsEmpty);
         }
 
-        public IMetaPathMacroProvider<IllustrationViewModel> MacroProvider { get; }
-
-        public string Reduce(string raw, IllustrationViewModel context)
-        {
-            _parser.SetupParsingEnvironment(new Lexer(raw));
-            if (_parser.Parse() is { } root)
-            {
-                var result = root.Evaluate(MacroProvider, context);
-                return result.IsNotNullOrBlank() ? result : throw new MacroParseException(MacroParserResources.ResultIsEmpty);
-            }
-
-            throw new MacroParseException(MacroParserResources.ResultIsEmpty);
-        }
+        throw new MacroParseException(MacroParserResources.ResultIsEmpty);
     }
 }

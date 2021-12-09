@@ -26,77 +26,76 @@ using System.Threading.Tasks;
 using Pixeval.Download;
 using SQLite;
 
-namespace Pixeval.Database.Managers
+namespace Pixeval.Database.Managers;
+
+public class DownloadHistoryPersistentManager : IPersistentManager<DownloadHistoryEntry, ObservableDownloadTask>
 {
-    public class DownloadHistoryPersistentManager : IPersistentManager<DownloadHistoryEntry, ObservableDownloadTask>
+    public SQLiteAsyncConnection Connection { get; init; } = null!;
+
+    public int MaximumRecords { get; set; }
+
+    public async Task InsertAsync(DownloadHistoryEntry t)
     {
-        public SQLiteAsyncConnection Connection { get; init; } = null!;
-
-        public int MaximumRecords { get; set; }
-
-        public async Task InsertAsync(DownloadHistoryEntry t)
+        if (await Connection.Table<DownloadHistoryEntry>().CountAsync() > MaximumRecords)
         {
-            if (await Connection.Table<DownloadHistoryEntry>().CountAsync() > MaximumRecords)
+            await Purge(MaximumRecords);
+        }
+        await Connection.InsertAsync(t);
+        t.PropertyChanged += async (_, _) =>
+        {
+            if ((await RawDataAsync()).Any(entry => entry.Destination == t.Destination))
             {
-                await Purge(MaximumRecords);
+                await Connection.UpdateAsync(t);
             }
-            await Connection.InsertAsync(t);
-            t.PropertyChanged += async (_, _) =>
-            {
-                if ((await RawDataAsync()).Any(entry => entry.Destination == t.Destination))
-                {
-                    await Connection.UpdateAsync(t);
-                }
-            };
-        }
+        };
+    }
 
-        public async Task<IEnumerable<ObservableDownloadTask>> QueryAsync(Func<AsyncTableQuery<DownloadHistoryEntry>, AsyncTableQuery<DownloadHistoryEntry>> action)
-        {
-            return (await action(Connection.Table<DownloadHistoryEntry>()).ToListAsync()).Select(ToObservableDownloadTask);
-        }
+    public async Task<IEnumerable<ObservableDownloadTask>> QueryAsync(Func<AsyncTableQuery<DownloadHistoryEntry>, AsyncTableQuery<DownloadHistoryEntry>> action)
+    {
+        return (await action(Connection.Table<DownloadHistoryEntry>()).ToListAsync()).Select(ToObservableDownloadTask);
+    }
 
-        public async Task<IEnumerable<ObservableDownloadTask>> SelectAsync(Expression<Func<DownloadHistoryEntry, bool>>? predicate = null, int? count = null)
-        {
-            var query = Connection.Table<DownloadHistoryEntry>();
-            if (count != null)
-                query = query.Take((int) count);
-            if (predicate != null)
-                query = query.Where(predicate);
-            return (await query.ToListAsync()).Select(ToObservableDownloadTask);
-        }
+    public async Task<IEnumerable<ObservableDownloadTask>> SelectAsync(Expression<Func<DownloadHistoryEntry, bool>>? predicate = null, int? count = null)
+    {
+        var query = Connection.Table<DownloadHistoryEntry>();
+        if (count != null)
+            query = query.Take((int) count);
+        if (predicate != null)
+            query = query.Where(predicate);
+        return (await query.ToListAsync()).Select(ToObservableDownloadTask);
+    }
 
-        public Task DeleteAsync(Expression<Func<DownloadHistoryEntry, bool>> predicate)
-        {
-            return Connection.Table<DownloadHistoryEntry>().DeleteAsync(predicate);
-        }
+    public Task DeleteAsync(Expression<Func<DownloadHistoryEntry, bool>> predicate)
+    {
+        return Connection.Table<DownloadHistoryEntry>().DeleteAsync(predicate);
+    }
 
-        public async Task<IEnumerable<ObservableDownloadTask>> EnumerateAsync()
-        {
-            return (await RawDataAsync()).Select(ToObservableDownloadTask);
-        }
+    public async Task<IEnumerable<ObservableDownloadTask>> EnumerateAsync()
+    {
+        return (await RawDataAsync()).Select(ToObservableDownloadTask);
+    }
 
-        public async Task<IEnumerable<DownloadHistoryEntry>> RawDataAsync()
-        {
-            return await Connection.Table<DownloadHistoryEntry>().ToListAsync();
-        }
+    public async Task<IEnumerable<DownloadHistoryEntry>> RawDataAsync()
+    {
+        return await Connection.Table<DownloadHistoryEntry>().ToListAsync();
+    }
 
-        public async Task Purge(int limit)
+    public async Task Purge(int limit)
+    {
+        var list = await Connection.Table<DownloadHistoryEntry>().ToListAsync();
+        if (list.Count > limit)
         {
-            var list = await Connection.Table<DownloadHistoryEntry>().ToListAsync();
-            if (list.Count > limit)
-            {
-                var last = list.Take(^limit..).Select(e => e.Destination).ToHashSet();
-                await DeleteAsync(e => !last.Contains(e.Destination!));
-            }
+            var last = list.Take(^limit..).Select(e => e.Destination).ToHashSet();
+            await DeleteAsync(e => !last.Contains(e.Destination!));
         }
+    }
 
-        private static ObservableDownloadTask ToObservableDownloadTask(DownloadHistoryEntry entry)
+    private static ObservableDownloadTask ToObservableDownloadTask(DownloadHistoryEntry entry)
+    {
+        return entry.Type switch
         {
-            return entry.Type switch
-            {
-                DownloadItemType.Ugoira => new LazyInitializedAnimatedIllustrationDownloadTask(entry) { ProgressPercentage = 100 },
-                _ => new LazyInitializedIllustrationDownloadTask(entry) { ProgressPercentage = 100 }
-            };
-        }
+            DownloadItemType.Ugoira => new LazyInitializedAnimatedIllustrationDownloadTask(entry) { ProgressPercentage = 100 },
+            _ => new LazyInitializedIllustrationDownloadTask(entry) { ProgressPercentage = 100 }
+        };
     }
 }

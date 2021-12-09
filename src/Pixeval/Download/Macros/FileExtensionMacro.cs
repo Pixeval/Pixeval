@@ -25,16 +25,15 @@ using Pixeval.Download.MacroParser;
 using Pixeval.UserControls;
 using Pixeval.Util;
 
-namespace Pixeval.Download.Macros
-{
-    [MetaPathMacro(typeof(IllustrationViewModel))]
-    public class FileExtensionMacro : IMacro<IllustrationViewModel>.ITransducer
-    {
-        public string Name => "illust_ext";
+namespace Pixeval.Download.Macros;
 
-        public string Substitute(IllustrationViewModel context)
-        {
-            return context.Illustration.IsUgoira() ? ".gif" : context.Illustration.GetImageFormat();
-        }
+[MetaPathMacro(typeof(IllustrationViewModel))]
+public class FileExtensionMacro : IMacro<IllustrationViewModel>.ITransducer
+{
+    public string Name => "illust_ext";
+
+    public string Substitute(IllustrationViewModel context)
+    {
+        return context.Illustration.IsUgoira() ? ".gif" : context.Illustration.GetImageFormat();
     }
 }

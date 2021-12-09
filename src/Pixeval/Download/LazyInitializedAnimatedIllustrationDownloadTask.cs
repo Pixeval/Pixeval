@@ -26,33 +26,32 @@ using Pixeval.Database;
 using Pixeval.UserControls;
 using Pixeval.Util.IO;
 
-namespace Pixeval.Download
+namespace Pixeval.Download;
+
+public class LazyInitializedAnimatedIllustrationDownloadTask : AnimatedIllustrationDownloadTask
 {
-    public class LazyInitializedAnimatedIllustrationDownloadTask : AnimatedIllustrationDownloadTask
+    private readonly string _illustId;
+
+    private readonly Lazy<Task<IllustrationViewModel>> _resultGenerator;
+
+    public LazyInitializedAnimatedIllustrationDownloadTask(DownloadHistoryEntry databaseEntry) : base(databaseEntry)
     {
-        private readonly string _illustId;
+        _illustId = databaseEntry.Id!;
+        _resultGenerator = new Lazy<Task<IllustrationViewModel>>(async () => new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(_illustId)));
+    }
 
-        private readonly Lazy<Task<IllustrationViewModel>> _resultGenerator;
-
-        public LazyInitializedAnimatedIllustrationDownloadTask(DownloadHistoryEntry databaseEntry) : base(databaseEntry)
+    public override async void Consume(IRandomAccessStream stream)
+    {
+        using (stream)
         {
-            _illustId = databaseEntry.Id!;
-            _resultGenerator = new Lazy<Task<IllustrationViewModel>>(async () => new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(_illustId)));
+            var metadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(_illustId);
+            using var gifStream = await IOHelper.GetGifStreamFromZipStreamAsync(stream.AsStreamForRead(), metadata);
+            await IOHelper.CreateAndWriteToFileAsync(gifStream, Destination);
         }
+    }
 
-        public override async void Consume(IRandomAccessStream stream)
-        {
-            using (stream)
-            {
-                var metadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(_illustId);
-                using var gifStream = await IOHelper.GetGifStreamFromZipStreamAsync(stream.AsStreamForRead(), metadata);
-                await IOHelper.CreateAndWriteToFileAsync(gifStream, Destination);
-            }
-        }
-
-        public override Task<IllustrationViewModel> GetViewModelAsync()
-        {
-            return _resultGenerator.Value;
-        }
+    public override Task<IllustrationViewModel> GetViewModelAsync()
+    {
+        return _resultGenerator.Value;
     }
 }

@@ -23,20 +23,19 @@ using System.Threading.Tasks;
 using Pixeval.Database;
 using Pixeval.UserControls;
 
-namespace Pixeval.Download
+namespace Pixeval.Download;
+
+public class LazyInitializedIllustrationDownloadTask : ObservableDownloadTask, IIllustrationViewModelProvider
 {
-    public class LazyInitializedIllustrationDownloadTask : ObservableDownloadTask, IIllustrationViewModelProvider
+    private readonly Lazy<Task<IllustrationViewModel>> _resultGenerator;
+
+    public LazyInitializedIllustrationDownloadTask(DownloadHistoryEntry databaseEntry) : base(databaseEntry)
     {
-        private readonly Lazy<Task<IllustrationViewModel>> _resultGenerator;
+        _resultGenerator = new Lazy<Task<IllustrationViewModel>>(async () => new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(databaseEntry.Id!)));
+    }
 
-        public LazyInitializedIllustrationDownloadTask(DownloadHistoryEntry databaseEntry) : base(databaseEntry)
-        {
-            _resultGenerator = new Lazy<Task<IllustrationViewModel>>(async () => new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(databaseEntry.Id!)));
-        }
-
-        public Task<IllustrationViewModel> GetViewModelAsync()
-        {
-            return _resultGenerator.Value;
-        }
+    public Task<IllustrationViewModel> GetViewModelAsync()
+    {
+        return _resultGenerator.Value;
     }
 }

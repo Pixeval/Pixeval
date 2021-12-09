@@ -20,7 +20,6 @@
 
 #endregion
 
-namespace Pixeval.Messages
-{
-    public record CommentRepliesHyperlinkButtonTappedMessage(object? Sender);
-}
+namespace Pixeval.Messages;
+
+public record CommentRepliesHyperlinkButtonTappedMessage(object? Sender);

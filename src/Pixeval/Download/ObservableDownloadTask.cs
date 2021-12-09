@@ -24,86 +24,85 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Pixeval.Database;
 using Pixeval.Util.Threading;
 
-namespace Pixeval.Download
+namespace Pixeval.Download;
+
+public class ObservableDownloadTask : ObservableObject, IDownloadTask
 {
-    public class ObservableDownloadTask : ObservableObject, IDownloadTask
+    protected ObservableDownloadTask(DownloadHistoryEntry entry)
     {
-        protected ObservableDownloadTask(DownloadHistoryEntry entry)
-        {
-            DatabaseEntry = entry;
-            CancellationHandle = new CancellationHandle();
-            Completion = new TaskCompletionSource();
-        }
+        DatabaseEntry = entry;
+        CancellationHandle = new CancellationHandle();
+        Completion = new TaskCompletionSource();
+    }
 
-        public DownloadHistoryEntry DatabaseEntry { get; }
+    public DownloadHistoryEntry DatabaseEntry { get; }
 
-        public string? Id => DatabaseEntry.Id;
+    public string? Id => DatabaseEntry.Id;
 
-        public string? Title => DatabaseEntry.Title;
+    public string? Title => DatabaseEntry.Title;
 
-        public string? Description => DatabaseEntry.Description;
+    public string? Description => DatabaseEntry.Description;
 
-        public string Url => DatabaseEntry.Url!;
+    public string Url => DatabaseEntry.Url!;
 
-        public string Destination => DatabaseEntry.Destination!;
+    public string Destination => DatabaseEntry.Destination!;
 
-        public string? Thumbnail => DatabaseEntry.Thumbnail;
+    public string? Thumbnail => DatabaseEntry.Thumbnail;
          
-        public CancellationHandle CancellationHandle { get; set; }
+    public CancellationHandle CancellationHandle { get; set; }
 
-        public TaskCompletionSource Completion { get; }
+    public TaskCompletionSource Completion { get; }
 
-        public DownloadState CurrentState
+    public DownloadState CurrentState
+    {
+        get => DatabaseEntry.State;
+        set => SetProperty(DatabaseEntry.State, value, DatabaseEntry, (entry, state) => entry.State = state);
+    }
+
+    private Exception? _errorCause;
+
+    public Exception? ErrorCause
+    {
+        get => _errorCause;
+        set => SetProperty(_errorCause, value, DatabaseEntry, (entry, exception) =>
         {
-            get => DatabaseEntry.State;
-            set => SetProperty(DatabaseEntry.State, value, DatabaseEntry, (entry, state) => entry.State = state);
-        }
+            _errorCause = value;
+            entry.ErrorCause = exception?.ToString();
+        });
+    }
 
-        private Exception? _errorCause;
+    private double _progressPercentage;
 
-        public Exception? ErrorCause
-        {
-            get => _errorCause;
-            set => SetProperty(_errorCause, value, DatabaseEntry, (entry, exception) =>
-            {
-                _errorCause = value;
-                entry.ErrorCause = exception?.ToString();
-            });
-        }
+    public double ProgressPercentage
+    {
+        get => _progressPercentage;
+        set => SetProperty(ref _progressPercentage, value);
+    }
 
-        private double _progressPercentage;
+    private bool _selected;
 
-        public double ProgressPercentage
-        {
-            get => _progressPercentage;
-            set => SetProperty(ref _progressPercentage, value);
-        }
+    public bool Selected
+    {
+        get => _selected;
+        set => SetProperty(ref _selected, value);
+    }
 
-        private bool _selected;
+    public virtual void DownloadStarting(DownloadStartingEventArgs args)
+    {
+    }
 
-        public bool Selected
-        {
-            get => _selected;
-            set => SetProperty(ref _selected, value);
-        }
+    protected bool Equals(ObservableDownloadTask other)
+    {
+        return Url == other.Url;
+    }
 
-        public virtual void DownloadStarting(DownloadStartingEventArgs args)
-        {
-        }
+    public override bool Equals(object? obj)
+    {
+        return !ReferenceEquals(null, obj) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((ObservableDownloadTask) obj));
+    }
 
-        protected bool Equals(ObservableDownloadTask other)
-        {
-            return Url == other.Url;
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return !ReferenceEquals(null, obj) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((ObservableDownloadTask) obj));
-        }
-
-        public override int GetHashCode()
-        {
-            return Url.GetHashCode();
-        }
+    public override int GetHashCode()
+    {
+        return Url.GetHashCode();
     }
 }

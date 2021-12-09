@@ -24,25 +24,24 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Utilities;
 
-namespace Pixeval.Util
+namespace Pixeval.Util;
+
+public static class ServiceCollectionHelper
 {
-    public static class ServiceCollectionHelper
+    public static void AddAllGenericTypes<T>(this IServiceCollection services, ServiceLifetime lifetime)
     {
-        public static void AddAllGenericTypes<T>(this IServiceCollection services, ServiceLifetime lifetime)
+        if (!typeof(T).IsGenericType)
         {
-            if (!typeof(T).IsGenericType)
-            {
-                return;
-            }
-            var types = Assembly.GetExecutingAssembly().DefinedTypes
-                .Where(x => x.GetInterfaces().Any(i => i.IsGenericType
-                                                       && i.GetGenericTypeDefinition() == typeof(T)
-                                                       && i.GetGenericArguments().SequenceEquals(typeof(T).GetGenericArguments())));
-            foreach (var typeInfo in types)
-            {
-                services.Add(new ServiceDescriptor(typeof(T), typeInfo, lifetime));
-                services.Add(new ServiceDescriptor(typeInfo, typeInfo, lifetime));
-            }
+            return;
+        }
+        var types = Assembly.GetExecutingAssembly().DefinedTypes
+            .Where(x => x.GetInterfaces().Any(i => i.IsGenericType
+                                                   && i.GetGenericTypeDefinition() == typeof(T)
+                                                   && i.GetGenericArguments().SequenceEquals(typeof(T).GetGenericArguments())));
+        foreach (var typeInfo in types)
+        {
+            services.Add(new ServiceDescriptor(typeof(T), typeInfo, lifetime));
+            services.Add(new ServiceDescriptor(typeInfo, typeInfo, lifetime));
         }
     }
 }

@@ -20,23 +20,22 @@
 
 using Pixeval.Util.Threading;
 
-namespace Pixeval.Download
+namespace Pixeval.Download;
+
+public class DownloadStartingEventArgs
 {
-    public class DownloadStartingEventArgs
+    private readonly DownloadStartingDeferral _deferral;
+
+    public ReenterableAwaiter<bool> DeferralAwaiter => _deferral.Signal;
+
+    public DownloadStartingEventArgs()
     {
-        private readonly DownloadStartingDeferral _deferral;
+        _deferral = new DownloadStartingDeferral();
+    }
 
-        public ReenterableAwaiter<bool> DeferralAwaiter => _deferral.Signal;
-
-        public DownloadStartingEventArgs()
-        {
-            _deferral = new DownloadStartingDeferral();
-        }
-
-        public DownloadStartingDeferral GetDeferral()
-        {
-            _deferral.Set();
-            return _deferral;
-        }
+    public DownloadStartingDeferral GetDeferral()
+    {
+        _deferral.Set();
+        return _deferral;
     }
 }

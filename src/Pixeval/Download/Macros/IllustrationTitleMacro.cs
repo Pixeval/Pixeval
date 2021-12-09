@@ -25,16 +25,15 @@ using Pixeval.UserControls;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 
-namespace Pixeval.Download.Macros
-{
-    [MetaPathMacro(typeof(IllustrationViewModel))]
-    public class IllustrationTitleMacro : IMacro<IllustrationViewModel>.ITransducer
-    {
-        public string Name => "illust_title";
+namespace Pixeval.Download.Macros;
 
-        public string Substitute(IllustrationViewModel context)
-        {
-            return context.Illustration.Title?.Let(IOHelper.NormalizePathSegment) ?? MacroParserResources.UnknownIllustrationTitle;
-        }
+[MetaPathMacro(typeof(IllustrationViewModel))]
+public class IllustrationTitleMacro : IMacro<IllustrationViewModel>.ITransducer
+{
+    public string Name => "illust_title";
+
+    public string Substitute(IllustrationViewModel context)
+    {
+        return context.Illustration.Title?.Let(IOHelper.NormalizePathSegment) ?? MacroParserResources.UnknownIllustrationTitle;
     }
 }

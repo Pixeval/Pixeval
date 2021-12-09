@@ -23,10 +23,9 @@
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Pixeval.CoreApi.Net
+namespace Pixeval.CoreApi.Net;
+
+public interface INameResolver
 {
-    public interface INameResolver
-    {
-        Task<IPAddress[]> Lookup(string hostname);
-    }
+    Task<IPAddress[]> Lookup(string hostname);
 }

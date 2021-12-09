@@ -23,28 +23,27 @@
 using System.Runtime.Serialization;
 using JetBrains.Annotations;
 
-namespace Pixeval.CoreApi.Global.Exception
+namespace Pixeval.CoreApi.Global.Exception;
+
+/// <summary>
+///     Raised if you're trying to set the sort option to popular_desc without a premium access
+/// </summary>
+[PublicAPI]
+public class IllegalSortOptionException : MakoException
 {
-    /// <summary>
-    ///     Raised if you're trying to set the sort option to popular_desc without a premium access
-    /// </summary>
-    [PublicAPI]
-    public class IllegalSortOptionException : MakoException
+    public IllegalSortOptionException()
     {
-        public IllegalSortOptionException()
-        {
-        }
+    }
 
-        protected IllegalSortOptionException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+    protected IllegalSortOptionException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
+    }
 
-        public IllegalSortOptionException(string? message) : base(message)
-        {
-        }
+    public IllegalSortOptionException(string? message) : base(message)
+    {
+    }
 
-        public IllegalSortOptionException(string? message, System.Exception? innerException) : base(message, innerException)
-        {
-        }
+    public IllegalSortOptionException(string? message, System.Exception? innerException) : base(message, innerException)
+    {
     }
 }

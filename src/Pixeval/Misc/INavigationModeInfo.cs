@@ -22,12 +22,11 @@
 
 using Microsoft.UI.Xaml.Navigation;
 
-namespace Pixeval.Misc
-{
-    public interface INavigationModeInfo
-    {
-        NavigationMode? NavigationMode { get; }
+namespace Pixeval.Misc;
 
-        NavigationMode? GetNavigationModeAndReset();
-    }
+public interface INavigationModeInfo
+{
+    NavigationMode? NavigationMode { get; }
+
+    NavigationMode? GetNavigationModeAndReset();
 }

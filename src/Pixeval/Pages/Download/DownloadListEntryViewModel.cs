@@ -28,104 +28,103 @@ using Pixeval.Download;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 
-namespace Pixeval.Pages.Download
+namespace Pixeval.Pages.Download;
+
+public class DownloadListEntryViewModel : ObservableObject, IDisposable
 {
-    public class DownloadListEntryViewModel : ObservableObject, IDisposable
+
+    private SoftwareBitmapSource? _thumbnail;
+
+    public SoftwareBitmapSource? Thumbnail
     {
+        get => _thumbnail;
+        set => SetProperty(ref _thumbnail, value);
+    }
 
-        private SoftwareBitmapSource? _thumbnail;
+    private ObservableDownloadTask _downloadTask;
 
-        public SoftwareBitmapSource? Thumbnail
+    public ObservableDownloadTask DownloadTask
+    {
+        get => _downloadTask;
+        set => SetProperty(ref _downloadTask, value);
+    }
+
+    public DownloadListEntryViewModel(ObservableDownloadTask downloadTask)
+    {
+        _downloadTask = downloadTask;
+        LoadThumbnail();
+    }
+
+    public async void LoadThumbnail()
+    {
+        if (DownloadTask.Thumbnail is { } url)
         {
-            get => _thumbnail;
-            set => SetProperty(ref _thumbnail, value);
-        }
-
-        private ObservableDownloadTask _downloadTask;
-
-        public ObservableDownloadTask DownloadTask
-        {
-            get => _downloadTask;
-            set => SetProperty(ref _downloadTask, value);
-        }
-
-        public DownloadListEntryViewModel(ObservableDownloadTask downloadTask)
-        {
-            _downloadTask = downloadTask;
-            LoadThumbnail();
-        }
-
-        public async void LoadThumbnail()
-        {
-            if (DownloadTask.Thumbnail is { } url)
+            var stream = (await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url))
+                .GetOrElse(null);
+            if (stream is not null)
             {
-                var stream = (await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url))
-                    .GetOrElse(null);
-                if (stream is not null)
-                {
-                    Thumbnail = await stream.GetSoftwareBitmapSourceAsync(true);
-                }
+                Thumbnail = await stream.GetSoftwareBitmapSourceAsync(true);
             }
         }
+    }
 
-        public static string GetEntryProgressMessage(DownloadState currentState, double progress, Exception? errorCause)
+    public static string GetEntryProgressMessage(DownloadState currentState, double progress, Exception? errorCause)
+    {
+        return currentState switch
         {
-            return currentState switch
-            {
-                DownloadState.Created => string.Empty,
-                DownloadState.Running => DownloadListEntryResources.DownloadRunningFormatted.Format((int) progress),
-                DownloadState.Queued => DownloadListEntryResources.DownloadQueued,
-                DownloadState.Error => DownloadListEntryResources.DownloadErrorMessageFormatted.Format(errorCause!.Message),
-                DownloadState.Completed => DownloadListEntryResources.DownloadCompleted,
-                DownloadState.Cancelled => DownloadListEntryResources.DownloadCancelled,
-                DownloadState.Paused => DownloadListEntryResources.DownloadPaused,
-                _ => throw new ArgumentOutOfRangeException(nameof(currentState), currentState, null)
-            };
-        }
+            DownloadState.Created => string.Empty,
+            DownloadState.Running => DownloadListEntryResources.DownloadRunningFormatted.Format((int) progress),
+            DownloadState.Queued => DownloadListEntryResources.DownloadQueued,
+            DownloadState.Error => DownloadListEntryResources.DownloadErrorMessageFormatted.Format(errorCause!.Message),
+            DownloadState.Completed => DownloadListEntryResources.DownloadCompleted,
+            DownloadState.Cancelled => DownloadListEntryResources.DownloadCancelled,
+            DownloadState.Paused => DownloadListEntryResources.DownloadPaused,
+            _ => throw new ArgumentOutOfRangeException(nameof(currentState), currentState, null)
+        };
+    }
 
-        public static string GetEntryActionButtonContent(DownloadState currentState)
+    public static string GetEntryActionButtonContent(DownloadState currentState)
+    {
+        return currentState switch
         {
-            return currentState switch
-            {
-                DownloadState.Created or DownloadState.Queued => DownloadListEntryResources.DownloadCancelledAction,
-                DownloadState.Running => DownloadListEntryResources.ActionButtonContentPause,
-                DownloadState.Cancelled or DownloadState.Error => DownloadListEntryResources.ActionButtonContentRetry,
-                DownloadState.Completed => DownloadListEntryResources.ActionButtonContentOpen,
-                DownloadState.Paused => DownloadListEntryResources.ActionButtonContentResume,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-        }
+            DownloadState.Created or DownloadState.Queued => DownloadListEntryResources.DownloadCancelledAction,
+            DownloadState.Running => DownloadListEntryResources.ActionButtonContentPause,
+            DownloadState.Cancelled or DownloadState.Error => DownloadListEntryResources.ActionButtonContentRetry,
+            DownloadState.Completed => DownloadListEntryResources.ActionButtonContentOpen,
+            DownloadState.Paused => DownloadListEntryResources.ActionButtonContentResume,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
 
-        public static bool GetIsRedownloadItemEnabled(DownloadState currentState)
-        {
-            return currentState is DownloadState.Completed or DownloadState.Error;
-        }
+    public static bool GetIsRedownloadItemEnabled(DownloadState currentState)
+    {
+        return currentState is DownloadState.Completed or DownloadState.Error;
+    }
 
-        public static bool GetIsEntryCancelDownloadItemEnabled(DownloadState currentState)
-        {
-            return currentState is DownloadState.Running or DownloadState.Created or DownloadState.Queued;
-        }
+    public static bool GetIsEntryCancelDownloadItemEnabled(DownloadState currentState)
+    {
+        return currentState is DownloadState.Running or DownloadState.Created or DownloadState.Queued;
+    }
 
-        public static bool GetIsShowErrorDetailDialogItemEnabled(DownloadState currentState)
-        {
-            return currentState == DownloadState.Error;
-        }
+    public static bool GetIsShowErrorDetailDialogItemEnabled(DownloadState currentState)
+    {
+        return currentState == DownloadState.Error;
+    }
 
-        public static Brush GetActionButtonBackground(DownloadState currentState)
-        {
-            return GetSelectedBackground(currentState is DownloadState.Running or DownloadState.Paused);
-        }
+    public static Brush GetActionButtonBackground(DownloadState currentState)
+    {
+        return GetSelectedBackground(currentState is DownloadState.Running or DownloadState.Paused);
+    }
 
-        public static Brush GetSelectedBackground(bool selected)
-        {
-            return selected
-                ? (Brush)Application.Current.Resources["AccentFillColorDefaultBrush"]
-                : (Brush)Application.Current.Resources["CardBackground"];
-        }
+    public static Brush GetSelectedBackground(bool selected)
+    {
+        return selected
+            ? (Brush)Application.Current.Resources["AccentFillColorDefaultBrush"]
+            : (Brush)Application.Current.Resources["CardBackground"];
+    }
 
-        public void Dispose()
-        {
-            _thumbnail?.Dispose();
-        }
+    public void Dispose()
+    {
+        _thumbnail?.Dispose();
     }
 }

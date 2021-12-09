@@ -22,18 +22,17 @@
 
 using Refit;
 
-namespace Pixeval.CoreApi.Net.Request
-{
-    // ReSharper disable UnusedAutoPropertyAccessor.Global
-    // ReSharper disable MemberCanBePrivate.Global
-    internal class RemoveFollowUserRequest
-    {
-        public RemoveFollowUserRequest(string userId)
-        {
-            UserId = userId;
-        }
+namespace Pixeval.CoreApi.Net.Request;
 
-        [AliasAs("user_id")]
-        public string UserId { get; }
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable MemberCanBePrivate.Global
+internal class RemoveFollowUserRequest
+{
+    public RemoveFollowUserRequest(string userId)
+    {
+        UserId = userId;
     }
+
+    [AliasAs("user_id")]
+    public string UserId { get; }
 }

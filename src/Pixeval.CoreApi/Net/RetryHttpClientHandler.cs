@@ -27,50 +27,49 @@ using System.Threading.Tasks;
 using Pixeval.CoreApi.Global;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Net
+namespace Pixeval.CoreApi.Net;
+
+internal class RetryHttpClientHandler : HttpMessageHandler
 {
-    internal class RetryHttpClientHandler : HttpMessageHandler
+    private readonly HttpMessageInvoker _delegatedHandler;
+    private readonly int _timeout;
+
+    public RetryHttpClientHandler(HttpMessageHandler delegatedHandler, int timeout)
     {
-        private readonly HttpMessageInvoker _delegatedHandler;
-        private readonly int _timeout;
-
-        public RetryHttpClientHandler(HttpMessageHandler delegatedHandler, int timeout)
-        {
-            _timeout = timeout;
-            _delegatedHandler = new HttpMessageInvoker(delegatedHandler);
-        }
-
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        {
-            return await Functions.RetryAsync(() => _delegatedHandler.SendAsync(request, cancellationToken), 2, _timeout).ConfigureAwait(false) switch
-            {
-                Result<HttpResponseMessage>.Success(var response) => response,
-                Result<HttpResponseMessage>.Failure failure => throw failure.Cause ?? new HttpRequestException(),
-                _ => throw new InvalidOperationException("Unexpected case")
-            };
-        }
+        _timeout = timeout;
+        _delegatedHandler = new HttpMessageInvoker(delegatedHandler);
     }
 
-    internal class MakoRetryHttpClientHandler : HttpMessageHandler, IMakoClientSupport
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        private readonly HttpMessageInvoker _delegatedHandler;
-
-        public MakoRetryHttpClientHandler(HttpMessageHandler delegatedHandler)
+        return await Functions.RetryAsync(() => _delegatedHandler.SendAsync(request, cancellationToken), 2, _timeout).ConfigureAwait(false) switch
         {
-            _delegatedHandler = new HttpMessageInvoker(delegatedHandler);
-        }
+            Result<HttpResponseMessage>.Success(var response) => response,
+            Result<HttpResponseMessage>.Failure failure => throw failure.Cause ?? new HttpRequestException(),
+            _ => throw new InvalidOperationException("Unexpected case")
+        };
+    }
+}
 
-        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global ! Dependency Injected
-        public MakoClient MakoClient { get; set; } = null!;
+internal class MakoRetryHttpClientHandler : HttpMessageHandler, IMakoClientSupport
+{
+    private readonly HttpMessageInvoker _delegatedHandler;
 
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    public MakoRetryHttpClientHandler(HttpMessageHandler delegatedHandler)
+    {
+        _delegatedHandler = new HttpMessageInvoker(delegatedHandler);
+    }
+
+    // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global ! Dependency Injected
+    public MakoClient MakoClient { get; set; } = null!;
+
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        return await Functions.RetryAsync(() => _delegatedHandler.SendAsync(request, cancellationToken), 2, MakoClient!.Configuration.ConnectionTimeout).ConfigureAwait(false) switch
         {
-            return await Functions.RetryAsync(() => _delegatedHandler.SendAsync(request, cancellationToken), 2, MakoClient!.Configuration.ConnectionTimeout).ConfigureAwait(false) switch
-            {
-                Result<HttpResponseMessage>.Success (var response) => response,
-                Result<HttpResponseMessage>.Failure failure => throw failure.Cause ?? new HttpRequestException(),
-                _ => throw new InvalidOperationException("Unexpected case")
-            };
-        }
+            Result<HttpResponseMessage>.Success (var response) => response,
+            Result<HttpResponseMessage>.Failure failure => throw failure.Cause ?? new HttpRequestException(),
+            _ => throw new InvalidOperationException("Unexpected case")
+        };
     }
 }

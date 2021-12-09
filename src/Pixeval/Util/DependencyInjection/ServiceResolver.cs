@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-namespace Pixeval.Util.DependencyInjection
-{
-    public delegate bool ServiceResolver<in T>(T service);
-}
+namespace Pixeval.Util.DependencyInjection;
+
+public delegate bool ServiceResolver<in T>(T service);

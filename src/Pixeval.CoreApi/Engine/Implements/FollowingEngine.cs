@@ -27,26 +27,25 @@ using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Engine.Implements
+namespace Pixeval.CoreApi.Engine.Implements;
+
+internal class FollowingEngine : AbstractPixivFetchEngine<User>
 {
-    internal class FollowingEngine : AbstractPixivFetchEngine<User>
+    private readonly PrivacyPolicy _privacyPolicy;
+    private readonly string _uid;
+
+    public FollowingEngine(MakoClient makoClient, PrivacyPolicy privacyPolicy, string uid, EngineHandle? engineHandle) : base(makoClient, engineHandle)
     {
-        private readonly PrivacyPolicy _privacyPolicy;
-        private readonly string _uid;
+        _privacyPolicy = privacyPolicy;
+        _uid = uid;
+    }
 
-        public FollowingEngine(MakoClient makoClient, PrivacyPolicy privacyPolicy, string uid, EngineHandle? engineHandle) : base(makoClient, engineHandle)
-        {
-            _privacyPolicy = privacyPolicy;
-            _uid = uid;
-        }
-
-        public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new())
-        {
-            return RecursivePixivAsyncEnumerators.User<FollowingEngine>
-                .WithInitialUrl(this, MakoApiKind.AppApi,
-                    engine => "/v1/user/following"
-                              + $"?user_id={engine._uid}"
-                              + $"&restrict={engine._privacyPolicy.GetDescription()}")!;
-        }
+    public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    {
+        return RecursivePixivAsyncEnumerators.User<FollowingEngine>
+            .WithInitialUrl(this, MakoApiKind.AppApi,
+                engine => "/v1/user/following"
+                          + $"?user_id={engine._uid}"
+                          + $"&restrict={engine._privacyPolicy.GetDescription()}")!;
     }
 }

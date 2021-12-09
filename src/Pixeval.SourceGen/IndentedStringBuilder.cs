@@ -23,131 +23,130 @@
 using System;
 using System.Text;
 
-namespace Pixeval.SourceGen
+namespace Pixeval.SourceGen;
+
+public class IndentedStringBuilder
 {
-    public class IndentedStringBuilder
+    private readonly int _indentation;
+    private readonly StringBuilder _stringBuilder = new();
+    private int _indentationLevel;
+
+    public IndentedStringBuilder(int indentation)
     {
-        private readonly int _indentation;
-        private readonly StringBuilder _stringBuilder = new();
-        private int _indentationLevel;
-
-        public IndentedStringBuilder(int indentation)
-        {
-            _indentation = indentation;
-        }
-
-        public IndentedStringBuilder PushIndent()
-        {
-            _indentationLevel++;
-            return this;
-        }
-
-        public IndentedStringBuilder PopIndent()
-        {
-            if (--_indentationLevel < 0)
-            {
-                throw new IndexOutOfRangeException(nameof(_indentationLevel));
-            }
-
-            return this;
-        }
-
-        public IndentedStringBuilder Append(string s)
-        {
-            AppendIndent();
-            _stringBuilder.Append(s);
-            return this;
-        }
-
-        public IndentedStringBuilder Append(object o)
-        {
-            AppendIndent();
-            _stringBuilder.Append(o);
-            return this;
-        }
-
-        public IndentedStringBuilder AppendLine(string s)
-        {
-            AppendIndent();
-            _stringBuilder.AppendLine(s);
-            return this;
-        }
-
-        public IndentedStringBuilder AppendLine(object o)
-        {
-            AppendIndent();
-            _stringBuilder.AppendLine(o.ToString());
-            return this;
-        }
-
-        public BlockIndentedStringBuilder Block(string prefix, char open, char close)
-        {
-            Append(prefix + "\n" + open + "\n");
-            return new BlockIndentedStringBuilder(this, close);
-        }
-
-        private void AppendIndent()
-        {
-            _stringBuilder.Append(new string(' ', _indentationLevel * _indentation));
-        }
-
-        public override string ToString()
-        {
-            return _stringBuilder.ToString();
-        }
+        _indentation = indentation;
     }
 
-    public class BlockIndentedStringBuilder : IDisposable
+    public IndentedStringBuilder PushIndent()
     {
-        private readonly char _close;
-        private readonly IndentedStringBuilder _stringBuilder;
+        _indentationLevel++;
+        return this;
+    }
 
-        public BlockIndentedStringBuilder(IndentedStringBuilder stringBuilder, char close)
+    public IndentedStringBuilder PopIndent()
+    {
+        if (--_indentationLevel < 0)
         {
-            _stringBuilder = stringBuilder;
-            _close = close;
-            PushIndent();
+            throw new IndexOutOfRangeException(nameof(_indentationLevel));
         }
 
-        public void Dispose()
-        {
-            PopIndent();
-            AppendLine(_close);
-        }
+        return this;
+    }
 
-        public IndentedStringBuilder PushIndent()
-        {
-            return _stringBuilder.PushIndent();
-        }
+    public IndentedStringBuilder Append(string s)
+    {
+        AppendIndent();
+        _stringBuilder.Append(s);
+        return this;
+    }
 
-        public IndentedStringBuilder PopIndent()
-        {
-            return _stringBuilder.PopIndent();
-        }
+    public IndentedStringBuilder Append(object o)
+    {
+        AppendIndent();
+        _stringBuilder.Append(o);
+        return this;
+    }
 
-        public IndentedStringBuilder Append(string s)
-        {
-            return _stringBuilder.Append(s);
-        }
+    public IndentedStringBuilder AppendLine(string s)
+    {
+        AppendIndent();
+        _stringBuilder.AppendLine(s);
+        return this;
+    }
 
-        public IndentedStringBuilder Append(object o)
-        {
-            return _stringBuilder.Append(o);
-        }
+    public IndentedStringBuilder AppendLine(object o)
+    {
+        AppendIndent();
+        _stringBuilder.AppendLine(o.ToString());
+        return this;
+    }
 
-        public IndentedStringBuilder AppendLine(string s)
-        {
-            return _stringBuilder.AppendLine(s);
-        }
+    public BlockIndentedStringBuilder Block(string prefix, char open, char close)
+    {
+        Append(prefix + "\n" + open + "\n");
+        return new BlockIndentedStringBuilder(this, close);
+    }
 
-        public IndentedStringBuilder AppendLine(object o)
-        {
-            return _stringBuilder.AppendLine(o);
-        }
+    private void AppendIndent()
+    {
+        _stringBuilder.Append(new string(' ', _indentationLevel * _indentation));
+    }
 
-        public BlockIndentedStringBuilder Block(string prefix, char open, char close)
-        {
-            return _stringBuilder.Block(prefix, open, close);
-        }
+    public override string ToString()
+    {
+        return _stringBuilder.ToString();
+    }
+}
+
+public class BlockIndentedStringBuilder : IDisposable
+{
+    private readonly char _close;
+    private readonly IndentedStringBuilder _stringBuilder;
+
+    public BlockIndentedStringBuilder(IndentedStringBuilder stringBuilder, char close)
+    {
+        _stringBuilder = stringBuilder;
+        _close = close;
+        PushIndent();
+    }
+
+    public void Dispose()
+    {
+        PopIndent();
+        AppendLine(_close);
+    }
+
+    public IndentedStringBuilder PushIndent()
+    {
+        return _stringBuilder.PushIndent();
+    }
+
+    public IndentedStringBuilder PopIndent()
+    {
+        return _stringBuilder.PopIndent();
+    }
+
+    public IndentedStringBuilder Append(string s)
+    {
+        return _stringBuilder.Append(s);
+    }
+
+    public IndentedStringBuilder Append(object o)
+    {
+        return _stringBuilder.Append(o);
+    }
+
+    public IndentedStringBuilder AppendLine(string s)
+    {
+        return _stringBuilder.AppendLine(s);
+    }
+
+    public IndentedStringBuilder AppendLine(object o)
+    {
+        return _stringBuilder.AppendLine(o);
+    }
+
+    public BlockIndentedStringBuilder Block(string prefix, char open, char close)
+    {
+        return _stringBuilder.Block(prefix, open, close);
     }
 }

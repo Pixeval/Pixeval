@@ -23,15 +23,14 @@
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
-namespace Pixeval.CoreApi.Model
-{
-    [PublicAPI]
-    public record Tag
-    {
-        [JsonPropertyName("name")]
-        public string? Name { get; init; }
+namespace Pixeval.CoreApi.Model;
 
-        [JsonPropertyName("translated_name")]
-        public string? TranslatedName { get; init; }
-    }
+[PublicAPI]
+public record Tag
+{
+    [JsonPropertyName("name")]
+    public string? Name { get; init; }
+
+    [JsonPropertyName("translated_name")]
+    public string? TranslatedName { get; init; }
 }

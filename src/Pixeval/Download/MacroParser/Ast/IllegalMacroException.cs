@@ -22,12 +22,11 @@
 
 using System;
 
-namespace Pixeval.Download.MacroParser.Ast
+namespace Pixeval.Download.MacroParser.Ast;
+
+public class IllegalMacroException : Exception
 {
-    public class IllegalMacroException : Exception
+    public IllegalMacroException(string? message) : base(message)
     {
-        public IllegalMacroException(string? message) : base(message)
-        {
-        }
     }
 }

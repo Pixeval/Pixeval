@@ -27,29 +27,28 @@ using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Engine.Implements
+namespace Pixeval.CoreApi.Engine.Implements;
+
+public class PostedNovelEngine : AbstractPixivFetchEngine<Novel>
 {
-    public class PostedNovelEngine : AbstractPixivFetchEngine<Novel>
+    private readonly TargetFilter _targetFilter;
+    private readonly string _uid;
+
+    public PostedNovelEngine(
+        MakoClient makoClient,
+        string uid,
+        TargetFilter targetFilter,
+        EngineHandle? engineHandle) : base(makoClient, engineHandle)
     {
-        private readonly TargetFilter _targetFilter;
-        private readonly string _uid;
+        _uid = uid;
+        _targetFilter = targetFilter;
+    }
 
-        public PostedNovelEngine(
-            MakoClient makoClient,
-            string uid,
-            TargetFilter targetFilter,
-            EngineHandle? engineHandle) : base(makoClient, engineHandle)
-        {
-            _uid = uid;
-            _targetFilter = targetFilter;
-        }
-
-        public override IAsyncEnumerator<Novel> GetAsyncEnumerator(CancellationToken cancellationToken = new())
-        {
-            return RecursivePixivAsyncEnumerators.Novel<PostedNovelEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
-                engine => "/v1/user/novels"
-                          + $"?user_id={engine._uid}"
-                          + $"&filter={engine._targetFilter.GetDescription()}")!;
-        }
+    public override IAsyncEnumerator<Novel> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    {
+        return RecursivePixivAsyncEnumerators.Novel<PostedNovelEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
+            engine => "/v1/user/novels"
+                      + $"?user_id={engine._uid}"
+                      + $"&filter={engine._targetFilter.GetDescription()}")!;
     }
 }

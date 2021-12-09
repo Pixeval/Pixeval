@@ -24,18 +24,17 @@ using System.Threading.Tasks;
 using Pixeval.CoreApi.Net.EndPoints;
 using Pixeval.CoreApi.Net.Request;
 
-namespace Pixeval.CoreApi.Preference
+namespace Pixeval.CoreApi.Preference;
+
+public class RefreshTokenSessionUpdate : ISessionUpdate
 {
-    public class RefreshTokenSessionUpdate : ISessionUpdate
+    public async Task<Session> RefreshAsync(MakoClient makoClient)
     {
-        public async Task<Session> RefreshAsync(MakoClient makoClient)
-        {
-            return (await makoClient.Resolve<IAuthEndPoint>().RefreshAsync(new RefreshSessionRequest(makoClient.Session.RefreshToken)).ConfigureAwait(false))
-                .ToSession() with
-                {
-                    Cookie = makoClient.Session.Cookie,
-                    CookieCreation = makoClient.Session.CookieCreation
-                };
-        }
+        return (await makoClient.Resolve<IAuthEndPoint>().RefreshAsync(new RefreshSessionRequest(makoClient.Session.RefreshToken)).ConfigureAwait(false))
+            .ToSession() with
+            {
+                Cookie = makoClient.Session.Cookie,
+                CookieCreation = makoClient.Session.CookieCreation
+            };
     }
 }

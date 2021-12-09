@@ -31,60 +31,59 @@ using Pixeval.Util.UI;
 using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
 
-namespace Pixeval
+namespace Pixeval;
+
+public partial class App
 {
-    public partial class App
+    private const string ApplicationWideFontKey = "ContentControlThemeFontFamily";
+
+    public App()
     {
-        private const string ApplicationWideFontKey = "ContentControlThemeFontFamily";
-
-        public App()
+        // The theme can only be changed in ctor
+        AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadSetting() ?? AppSetting.CreateDefault() };
+        RequestedTheme = AppViewModel.AppSetting.Theme switch
         {
-            // The theme can only be changed in ctor
-            AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadSetting() ?? AppSetting.CreateDefault() };
-            RequestedTheme = AppViewModel.AppSetting.Theme switch
-            {
-                ApplicationTheme.Dark => Microsoft.UI.Xaml.ApplicationTheme.Dark,
-                ApplicationTheme.Light => Microsoft.UI.Xaml.ApplicationTheme.Light,
-                _ => RequestedTheme
-            };
-            AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);
-            InitializeComponent();
+            ApplicationTheme.Dark => Microsoft.UI.Xaml.ApplicationTheme.Dark,
+            ApplicationTheme.Light => Microsoft.UI.Xaml.ApplicationTheme.Light,
+            _ => RequestedTheme
+        };
+        AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);
+        InitializeComponent();
+    }
+
+    public static AppViewModel AppViewModel { get; private set; } = null!;
+
+    protected override async void OnLaunched(LaunchActivatedEventArgs args)
+    {
+        if (AppInstance.GetCurrent().GetActivatedEventArgs().Kind == ExtendedActivationKind.ToastNotification)
+        {
+            return;
         }
 
-        public static AppViewModel AppViewModel { get; private set; } = null!;
-
-        protected override async void OnLaunched(LaunchActivatedEventArgs args)
+        var isProtocolActivated = AppInstance.GetCurrent().GetActivatedEventArgs() is { Kind: ExtendedActivationKind.Protocol };
+        if (isProtocolActivated && AppInstance.GetInstances().Count > 1)
         {
-            if (AppInstance.GetCurrent().GetActivatedEventArgs().Kind == ExtendedActivationKind.ToastNotification)
-            {
-                return;
-            }
-
-            var isProtocolActivated = AppInstance.GetCurrent().GetActivatedEventArgs() is { Kind: ExtendedActivationKind.Protocol };
-            if (isProtocolActivated && AppInstance.GetInstances().Count > 1)
-            {
-                var notCurrent = AppInstance.GetInstances().First(ins => !ins.IsCurrent);
-                await notCurrent.RedirectActivationToAsync(AppInstance.GetCurrent().GetActivatedEventArgs());
-                return;
-            }
-
-            Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSetting.AppFontFamilyName);
-            await AppKnownFolders.InitializeAsync();
-            await AppViewModel.InitializeAsync(isProtocolActivated);
+            var notCurrent = AppInstance.GetInstances().First(ins => !ins.IsCurrent);
+            await notCurrent.RedirectActivationToAsync(AppInstance.GetCurrent().GetActivatedEventArgs());
+            return;
         }
 
-        /// <summary>
-        ///     Calculate the window size by current resolution
-        /// </summary>
-        public static (int, int) PredetermineEstimatedWindowSize()
+        Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSetting.AppFontFamilyName);
+        await AppKnownFolders.InitializeAsync();
+        await AppViewModel.InitializeAsync(isProtocolActivated);
+    }
+
+    /// <summary>
+    ///     Calculate the window size by current resolution
+    /// </summary>
+    public static (int, int) PredetermineEstimatedWindowSize()
+    {
+        return UIHelper.GetScreenSize() switch
         {
-            return UIHelper.GetScreenSize() switch
-            {
-                // 这 就 是 C #
-                (>= 2560, >= 1440) => (1600, 900),
-                (> 1600, > 900) => (1280, 720),
-                _ => (800, 600)
-            };
-        }
+            // 这 就 是 C #
+            (>= 2560, >= 1440) => (1600, 900),
+            (> 1600, > 900) => (1280, 720),
+            _ => (800, 600)
+        };
     }
 }

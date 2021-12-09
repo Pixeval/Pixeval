@@ -23,28 +23,27 @@
 using System.Runtime.Serialization;
 using JetBrains.Annotations;
 
-namespace Pixeval.CoreApi.Global.Exception
+namespace Pixeval.CoreApi.Global.Exception;
+
+/// <summary>
+///     搜索榜单时设定的日期大于等于当前日期-2天
+/// </summary>
+[PublicAPI]
+public class RankingDateOutOfRangeException : MakoException
 {
-    /// <summary>
-    ///     搜索榜单时设定的日期大于等于当前日期-2天
-    /// </summary>
-    [PublicAPI]
-    public class RankingDateOutOfRangeException : MakoException
+    public RankingDateOutOfRangeException()
     {
-        public RankingDateOutOfRangeException()
-        {
-        }
+    }
 
-        protected RankingDateOutOfRangeException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+    protected RankingDateOutOfRangeException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
+    }
 
-        public RankingDateOutOfRangeException(string? message) : base(message)
-        {
-        }
+    public RankingDateOutOfRangeException(string? message) : base(message)
+    {
+    }
 
-        public RankingDateOutOfRangeException(string? message, System.Exception? innerException) : base(message, innerException)
-        {
-        }
+    public RankingDateOutOfRangeException(string? message, System.Exception? innerException) : base(message, innerException)
+    {
     }
 }

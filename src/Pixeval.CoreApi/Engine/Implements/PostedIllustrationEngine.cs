@@ -25,24 +25,23 @@ using System.Threading;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 
-namespace Pixeval.CoreApi.Engine.Implements
+namespace Pixeval.CoreApi.Engine.Implements;
+
+internal class PostedIllustrationEngine : AbstractPixivFetchEngine<Illustration>
 {
-    internal class PostedIllustrationEngine : AbstractPixivFetchEngine<Illustration>
+    private readonly string _uid;
+
+    public PostedIllustrationEngine(MakoClient makoClient, string uid, EngineHandle? engineHandle) : base(makoClient, engineHandle)
     {
-        private readonly string _uid;
+        _uid = uid;
+    }
 
-        public PostedIllustrationEngine(MakoClient makoClient, string uid, EngineHandle? engineHandle) : base(makoClient, engineHandle)
-        {
-            _uid = uid;
-        }
-
-        public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new())
-        {
-            return RecursivePixivAsyncEnumerators.Illustration<PostedIllustrationEngine>
-                .WithInitialUrl(this, MakoApiKind.AppApi, engine => "/v1/user/illusts"
-                                                                    + $"?user_id={engine._uid}"
-                                                                    + "&filter=for_android"
-                                                                    + "&type=illust")!;
-        }
+    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    {
+        return RecursivePixivAsyncEnumerators.Illustration<PostedIllustrationEngine>
+            .WithInitialUrl(this, MakoApiKind.AppApi, engine => "/v1/user/illusts"
+                                                                + $"?user_id={engine._uid}"
+                                                                + "&filter=for_android"
+                                                                + "&type=illust")!;
     }
 }

@@ -22,29 +22,28 @@
 
 using Pixeval.UserControls;
 
-namespace Pixeval.Misc
+namespace Pixeval.Misc;
+
+public interface ISortedIllustrationContainerPageHelper
 {
-    public interface ISortedIllustrationContainerPageHelper
+    IllustrationContainer ViewModelProvider { get; }
+
+    SortOptionComboBox SortOptionProvider { get; }
+
+    public void OnSortOptionChanged()
     {
-        IllustrationContainer ViewModelProvider { get; }
-
-        SortOptionComboBox SortOptionProvider { get; }
-
-        public void OnSortOptionChanged()
+        switch (SortOptionProvider.GetSortDescription())
         {
-            switch (SortOptionProvider.GetSortDescription())
-            {
-                case { } desc:
-                    ViewModelProvider.ViewModel.SetSortDescription(desc);
-                    ViewModelProvider.ScrollToTop();
-                    break;
-                default:
-                    // reset the view so that it can resort its item to the initial order
-                    ViewModelProvider.ViewModel.ClearSortDescription();
-                    ViewModelProvider.ViewModel.IllustrationsView.Refresh();
-                    ViewModelProvider.ScrollToTop();
-                    break;
-            }
+            case { } desc:
+                ViewModelProvider.ViewModel.SetSortDescription(desc);
+                ViewModelProvider.ScrollToTop();
+                break;
+            default:
+                // reset the view so that it can resort its item to the initial order
+                ViewModelProvider.ViewModel.ClearSortDescription();
+                ViewModelProvider.ViewModel.IllustrationsView.Refresh();
+                ViewModelProvider.ScrollToTop();
+                break;
         }
     }
 }

@@ -20,22 +20,21 @@
 
 #endregion
 
-namespace Pixeval.Download
+namespace Pixeval.Download;
+
+public enum DownloadState
 {
-    public enum DownloadState
-    {
-        Created,
+    Created,
 
-        Queued,
+    Queued,
 
-        Running,
+    Running,
         
-        Cancelled,
+    Cancelled,
 
-        Error,
+    Error,
 
-        Completed,
+    Completed,
 
-        Paused
-    }
+    Paused
 }

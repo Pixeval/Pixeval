@@ -37,166 +37,165 @@ using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 
-namespace Pixeval.Util.IO
+namespace Pixeval.Util.IO;
+
+public static partial class IOHelper
 {
-    public static partial class IOHelper
+    private const int BlockSizeInBytes = 1024; // 1KB
+
+    private const int LargeBufferMultipleInBytes = 1024 * BlockSizeInBytes; // 1MB
+
+    private const int MaxBufferSizeInBytes = 16 * 1024 * BlockSizeInBytes; // 16MB
+
+    private const int MaximumLargeBufferPoolSizeInBytes = 24 * 1024 * BlockSizeInBytes; // 24MB
+
+    private const int MaximumSmallBufferPoolSizeInBytes = 24 * 1024 * BlockSizeInBytes; // 24MB
+
+    private static readonly RecyclableMemoryStreamManager RecyclableMemoryStreamManager = new(
+        BlockSizeInBytes,
+        LargeBufferMultipleInBytes,
+        MaxBufferSizeInBytes,
+        MaximumSmallBufferPoolSizeInBytes,
+        MaximumLargeBufferPoolSizeInBytes);
+
+    // Remarks:
+    // To avoid collecting stack trace, which is quite a time-consuming task
+    // and this exception is intended to be used at a massive magnitude
+    private static readonly OperationCanceledException CancellationMark = new();
+
+    /// <summary>
+    ///     Attempts to download the content that are located by the <paramref name="url" /> argument
+    ///     to a <see cref="Memory{T}" /> asynchronously
+    /// </summary>
+    public static Task<Result<Memory<byte>>> DownloadByteArrayAsync(this HttpClient httpClient, string url)
     {
-        private const int BlockSizeInBytes = 1024; // 1KB
+        return Functions.TryCatchAsync(async () => Result<Memory<byte>>.OfSuccess(await httpClient.GetByteArrayAsync(url)), e => Task.FromResult(Result<Memory<byte>>.OfFailure(e)));
+    }
 
-        private const int LargeBufferMultipleInBytes = 1024 * BlockSizeInBytes; // 1MB
+    /// <summary>
+    ///     <para>
+    ///         Attempts to download the content that are located by the <paramref name="url" /> to a
+    ///         <see cref="IRandomAccessStream" /> with
+    ///         progress support
+    ///     </para>
+    ///     <remarks>
+    ///         A <see cref="CancellationHandle" /> is used instead of <see cref="CancellationToken" />, since this function
+    ///         will be called in
+    ///         such a frequent manner that the default behavior of <see cref="CancellationToken" /> will brings a huge impact
+    ///         on performance
+    ///     </remarks>
+    /// </summary>
+    public static async Task<Result<IRandomAccessStream>> DownloadAsIRandomAccessStreamAsync(
+        this HttpClient httpClient,
+        string url,
+        IProgress<int>? progress = null,
+        CancellationHandle? cancellationHandle = default)
+    {
+        return (await httpClient.DownloadAsStreamAsync(url, progress, cancellationHandle)).Bind(stream => stream.AsRandomAccessStream());
+    }
 
-        private const int MaxBufferSizeInBytes = 16 * 1024 * BlockSizeInBytes; // 16MB
-
-        private const int MaximumLargeBufferPoolSizeInBytes = 24 * 1024 * BlockSizeInBytes; // 24MB
-
-        private const int MaximumSmallBufferPoolSizeInBytes = 24 * 1024 * BlockSizeInBytes; // 24MB
-
-        private static readonly RecyclableMemoryStreamManager RecyclableMemoryStreamManager = new(
-            BlockSizeInBytes,
-            LargeBufferMultipleInBytes,
-            MaxBufferSizeInBytes,
-            MaximumSmallBufferPoolSizeInBytes,
-            MaximumLargeBufferPoolSizeInBytes);
-
-        // Remarks:
-        // To avoid collecting stack trace, which is quite a time-consuming task
-        // and this exception is intended to be used at a massive magnitude
-        private static readonly OperationCanceledException CancellationMark = new();
-
-        /// <summary>
-        ///     Attempts to download the content that are located by the <paramref name="url" /> argument
-        ///     to a <see cref="Memory{T}" /> asynchronously
-        /// </summary>
-        public static Task<Result<Memory<byte>>> DownloadByteArrayAsync(this HttpClient httpClient, string url)
+    public static async Task<Result<Stream>> DownloadAsStreamAsync(
+        this HttpClient httpClient,
+        string url,
+        IProgress<int>? progress = null,
+        CancellationHandle? cancellationHandle = default)
+    {
+        var awaiter = new ReenterableAwaiter<bool>(!cancellationHandle?.IsPaused ?? true, true);
+        cancellationHandle?.RegisterPaused(() => awaiter.Reset());
+        cancellationHandle?.RegisterResumed(() => awaiter.SetResult(true));
+        try
         {
-            return Functions.TryCatchAsync(async () => Result<Memory<byte>>.OfSuccess(await httpClient.GetByteArrayAsync(url)), e => Task.FromResult(Result<Memory<byte>>.OfFailure(e)));
-        }
-
-        /// <summary>
-        ///     <para>
-        ///         Attempts to download the content that are located by the <paramref name="url" /> to a
-        ///         <see cref="IRandomAccessStream" /> with
-        ///         progress support
-        ///     </para>
-        ///     <remarks>
-        ///         A <see cref="CancellationHandle" /> is used instead of <see cref="CancellationToken" />, since this function
-        ///         will be called in
-        ///         such a frequent manner that the default behavior of <see cref="CancellationToken" /> will brings a huge impact
-        ///         on performance
-        ///     </remarks>
-        /// </summary>
-        public static async Task<Result<IRandomAccessStream>> DownloadAsIRandomAccessStreamAsync(
-            this HttpClient httpClient,
-            string url,
-            IProgress<int>? progress = null,
-            CancellationHandle? cancellationHandle = default)
-        {
-            return (await httpClient.DownloadAsStreamAsync(url, progress, cancellationHandle)).Bind(stream => stream.AsRandomAccessStream());
-        }
-
-        public static async Task<Result<Stream>> DownloadAsStreamAsync(
-            this HttpClient httpClient,
-            string url,
-            IProgress<int>? progress = null,
-            CancellationHandle? cancellationHandle = default)
-        {
-            var awaiter = new ReenterableAwaiter<bool>(!cancellationHandle?.IsPaused ?? true, true);
-            cancellationHandle?.RegisterPaused(() => awaiter.Reset());
-            cancellationHandle?.RegisterResumed(() => awaiter.SetResult(true));
-            try
+            using var response = await httpClient.GetResponseHeader(url);
+            if (response.Content.Headers.ContentLength is { } responseLength)
             {
-                using var response = await httpClient.GetResponseHeader(url);
-                if (response.Content.Headers.ContentLength is { } responseLength)
+                response.EnsureSuccessStatusCode();
+                if (cancellationHandle?.IsCancelled is true)
                 {
-                    response.EnsureSuccessStatusCode();
-                    if (cancellationHandle?.IsCancelled is true)
-                    {
-                        return Result<Stream>.OfFailure(CancellationMark);
-                    }
-
-                    await using var contentStream = await response.Content.ReadAsStreamAsync();
-                    // Remarks:
-                    // Most cancellation happens when users are panning the ScrollViewer, where the
-                    // cancellation occurs while the `await response.Content.ReadAsStreamAsync()` is 
-                    // running, so we check the state right after the completion of that statement
-                    if (cancellationHandle?.IsCancelled is true)
-                    {
-                        return Result<Stream>.OfFailure(CancellationMark);
-                    }
-
-                    var resultStream = new MemoryStream();
-                    int bytesRead, totalRead = 0;
-                    var buffer = ArrayPool<byte>.Shared.Rent(4096);
-                    var lastReportedProgressPercentage = 0;
-                    while ((bytesRead = await contentStream.ReadAsync(buffer)) != 0 && await awaiter)
-                    {
-                        if (cancellationHandle?.IsCancelled is true)
-                        {
-                            await resultStream.DisposeAsync();
-                            return Result<Stream>.OfFailure(CancellationMark);
-                        }
-
-                        await resultStream.WriteAsync(buffer, 0, bytesRead);
-                        totalRead += bytesRead;
-                        // Remarks:
-                        // reduce the frequency of the invocation of the callback, otherwise it will draws a severe performance impact
-                        if ((int) (totalRead / (double) responseLength * 100) is var percentage && percentage - lastReportedProgressPercentage >= 1)
-                        {
-                            lastReportedProgressPercentage = percentage;
-                            progress?.Report(percentage); // percentage, 100 as base
-                        }
-                    }
-
-                    ArrayPool<byte>.Shared.Return(buffer, true);
-                    resultStream.Seek(0, SeekOrigin.Begin);
-                    return Result<Stream>.OfSuccess(resultStream);
+                    return Result<Stream>.OfFailure(CancellationMark);
                 }
 
-                return (await httpClient.DownloadByteArrayAsync(url)).Bind(m => (Stream) RecyclableMemoryStreamManager.GetStream(m.Span));
-            }
-            catch (Exception e)
-            {
-                return Result<Stream>.OfFailure(e);
-            }
-        }
+                await using var contentStream = await response.Content.ReadAsStreamAsync();
+                // Remarks:
+                // Most cancellation happens when users are panning the ScrollViewer, where the
+                // cancellation occurs while the `await response.Content.ReadAsStreamAsync()` is 
+                // running, so we check the state right after the completion of that statement
+                if (cancellationHandle?.IsCancelled is true)
+                {
+                    return Result<Stream>.OfFailure(CancellationMark);
+                }
 
-        public static async Task SaveAsync(this IllustrationViewModel viewModel)
-        {
-            using var scope = App.AppViewModel.AppServicesScope;
-            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
-            foreach (var mangaIllustrationViewModel in viewModel.GetMangaIllustrationViewModels())
-            {
-                var downloadTask = await factory.CreateAsync(mangaIllustrationViewModel, App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
-                App.AppViewModel.DownloadManager.QueueTask(downloadTask);
-            }
-        }
-
-        public static async Task SaveAsAsync(this IllustrationViewModel viewModel)
-        {
-            IStorageItem? item = viewModel.IsManga
-                ? await UIHelper.OpenFolderPickerAsync(PickerLocationId.PicturesLibrary)
-                : await UIHelper.OpenFileSavePickerAsync(viewModel.Id, $"{viewModel.Illustration.GetImageFormat().RemoveSurrounding(".", string.Empty)} file", viewModel.Illustration.GetImageFormat());
-
-            using var scope = App.AppViewModel.AppServicesScope;
-            var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
-            switch (item)
-            {
-                case StorageFile file:
-                    // the file save picker will create a file automatically, and we choose to create one
-                    // manually instead of using that file
-                    await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
-                    var task = await factory.CreateAsync(viewModel, file.Path);
-                    App.AppViewModel.DownloadManager.QueueTask(task);
-                    break;
-                case StorageFolder folder:
-                    foreach (var mangaIllustrationViewModel in viewModel.GetMangaIllustrationViewModels())
+                var resultStream = new MemoryStream();
+                int bytesRead, totalRead = 0;
+                var buffer = ArrayPool<byte>.Shared.Rent(4096);
+                var lastReportedProgressPercentage = 0;
+                while ((bytesRead = await contentStream.ReadAsync(buffer)) != 0 && await awaiter)
+                {
+                    if (cancellationHandle?.IsCancelled is true)
                     {
-                        var mTask = await factory.CreateAsync(mangaIllustrationViewModel, Path.Combine(folder.Path, $"{viewModel.Id}_{mangaIllustrationViewModel.MangaIndex}"));
-                        App.AppViewModel.DownloadManager.QueueTask(mTask);
+                        await resultStream.DisposeAsync();
+                        return Result<Stream>.OfFailure(CancellationMark);
                     }
 
-                    break;
+                    await resultStream.WriteAsync(buffer, 0, bytesRead);
+                    totalRead += bytesRead;
+                    // Remarks:
+                    // reduce the frequency of the invocation of the callback, otherwise it will draws a severe performance impact
+                    if ((int) (totalRead / (double) responseLength * 100) is var percentage && percentage - lastReportedProgressPercentage >= 1)
+                    {
+                        lastReportedProgressPercentage = percentage;
+                        progress?.Report(percentage); // percentage, 100 as base
+                    }
+                }
+
+                ArrayPool<byte>.Shared.Return(buffer, true);
+                resultStream.Seek(0, SeekOrigin.Begin);
+                return Result<Stream>.OfSuccess(resultStream);
             }
+
+            return (await httpClient.DownloadByteArrayAsync(url)).Bind(m => (Stream) RecyclableMemoryStreamManager.GetStream(m.Span));
+        }
+        catch (Exception e)
+        {
+            return Result<Stream>.OfFailure(e);
+        }
+    }
+
+    public static async Task SaveAsync(this IllustrationViewModel viewModel)
+    {
+        using var scope = App.AppViewModel.AppServicesScope;
+        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
+        foreach (var mangaIllustrationViewModel in viewModel.GetMangaIllustrationViewModels())
+        {
+            var downloadTask = await factory.CreateAsync(mangaIllustrationViewModel, App.AppViewModel.AppSetting.DefaultDownloadPathMacro);
+            App.AppViewModel.DownloadManager.QueueTask(downloadTask);
+        }
+    }
+
+    public static async Task SaveAsAsync(this IllustrationViewModel viewModel)
+    {
+        IStorageItem? item = viewModel.IsManga
+            ? await UIHelper.OpenFolderPickerAsync(PickerLocationId.PicturesLibrary)
+            : await UIHelper.OpenFileSavePickerAsync(viewModel.Id, $"{viewModel.Illustration.GetImageFormat().RemoveSurrounding(".", string.Empty)} file", viewModel.Illustration.GetImageFormat());
+
+        using var scope = App.AppViewModel.AppServicesScope;
+        var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
+        switch (item)
+        {
+            case StorageFile file:
+                // the file save picker will create a file automatically, and we choose to create one
+                // manually instead of using that file
+                await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                var task = await factory.CreateAsync(viewModel, file.Path);
+                App.AppViewModel.DownloadManager.QueueTask(task);
+                break;
+            case StorageFolder folder:
+                foreach (var mangaIllustrationViewModel in viewModel.GetMangaIllustrationViewModels())
+                {
+                    var mTask = await factory.CreateAsync(mangaIllustrationViewModel, Path.Combine(folder.Path, $"{viewModel.Id}_{mangaIllustrationViewModel.MangaIndex}"));
+                    App.AppViewModel.DownloadManager.QueueTask(mTask);
+                }
+
+                break;
         }
     }
 }

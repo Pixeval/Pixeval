@@ -23,11 +23,10 @@
 using System.Threading;
 using JetBrains.Annotations;
 
-namespace Pixeval.CoreApi.Engine
+namespace Pixeval.CoreApi.Engine;
+
+[PublicAPI]
+public interface ICancellable
 {
-    [PublicAPI]
-    public interface ICancellable
-    {
-        CancellationTokenSource CancellationTokenSource { get; set; }
-    }
+    CancellationTokenSource CancellationTokenSource { get; set; }
 }

@@ -27,33 +27,32 @@ using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Engine.Implements
+namespace Pixeval.CoreApi.Engine.Implements;
+
+public class NovelBookmarkEngine : AbstractPixivFetchEngine<Novel>
 {
-    public class NovelBookmarkEngine : AbstractPixivFetchEngine<Novel>
+    private readonly PrivacyPolicy _privacyPolicy;
+    private readonly TargetFilter _targetFilter;
+    private readonly string _uid;
+
+    public NovelBookmarkEngine(
+        MakoClient makoClient,
+        string uid,
+        PrivacyPolicy privacyPolicy,
+        TargetFilter targetFilter,
+        EngineHandle? engineHandle) : base(makoClient, engineHandle)
     {
-        private readonly PrivacyPolicy _privacyPolicy;
-        private readonly TargetFilter _targetFilter;
-        private readonly string _uid;
+        _uid = uid;
+        _privacyPolicy = privacyPolicy;
+        _targetFilter = targetFilter;
+    }
 
-        public NovelBookmarkEngine(
-            MakoClient makoClient,
-            string uid,
-            PrivacyPolicy privacyPolicy,
-            TargetFilter targetFilter,
-            EngineHandle? engineHandle) : base(makoClient, engineHandle)
-        {
-            _uid = uid;
-            _privacyPolicy = privacyPolicy;
-            _targetFilter = targetFilter;
-        }
-
-        public override IAsyncEnumerator<Novel> GetAsyncEnumerator(CancellationToken cancellationToken = new())
-        {
-            return RecursivePixivAsyncEnumerators.Novel<NovelBookmarkEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
-                engine => "/v1/user/bookmarks/novel"
-                          + $"?user_id={engine._uid}"
-                          + $"&restrict={engine._privacyPolicy.GetDescription()}"
-                          + $"&filter={engine._targetFilter.GetDescription()}")!;
-        }
+    public override IAsyncEnumerator<Novel> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    {
+        return RecursivePixivAsyncEnumerators.Novel<NovelBookmarkEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
+            engine => "/v1/user/bookmarks/novel"
+                      + $"?user_id={engine._uid}"
+                      + $"&restrict={engine._privacyPolicy.GetDescription()}"
+                      + $"&filter={engine._targetFilter.GetDescription()}")!;
     }
 }

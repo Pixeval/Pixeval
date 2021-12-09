@@ -23,25 +23,24 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-namespace Pixeval.Controls.Setting.UI.SettingsGroup
+namespace Pixeval.Controls.Setting.UI.SettingsGroup;
+
+public class SettingsGroup : ItemsControl
 {
-    public class SettingsGroup : ItemsControl
+    public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(
+        nameof(Header),
+        typeof(string),
+        typeof(SettingsGroup),
+        PropertyMetadata.Create(DependencyProperty.UnsetValue));
+
+    public SettingsGroup()
     {
-        public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(
-            nameof(Header),
-            typeof(string),
-            typeof(SettingsGroup),
-            PropertyMetadata.Create(DependencyProperty.UnsetValue));
+        DefaultStyleKey = typeof(SettingsGroup);
+    }
 
-        public SettingsGroup()
-        {
-            DefaultStyleKey = typeof(SettingsGroup);
-        }
-
-        public string Header
-        {
-            get => (string) GetValue(HeaderProperty);
-            set => SetValue(HeaderProperty, value);
-        }
+    public string Header
+    {
+        get => (string) GetValue(HeaderProperty);
+        set => SetValue(HeaderProperty, value);
     }
 }

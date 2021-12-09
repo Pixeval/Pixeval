@@ -26,20 +26,19 @@ using System.Linq;
 using Pixeval.Misc;
 using Pixeval.Options;
 
-namespace Pixeval.Controls.Setting.UI.Model
+namespace Pixeval.Controls.Setting.UI.Model;
+
+public record ThumbnailDirectionSettingEntryItem : IStringRepresentableItem
 {
-    public record ThumbnailDirectionSettingEntryItem : IStringRepresentableItem
+    public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ThumbnailDirection>().Select(t => new ThumbnailDirectionSettingEntryItem(t));
+
+    public ThumbnailDirectionSettingEntryItem(ThumbnailDirection item)
     {
-        public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ThumbnailDirection>().Select(t => new ThumbnailDirectionSettingEntryItem(t));
-
-        public ThumbnailDirectionSettingEntryItem(ThumbnailDirection item)
-        {
-            Item = item;
-            StringRepresentation = item.GetLocalizedResourceContent()!;
-        }
-
-        public object Item { get; }
-
-        public string StringRepresentation { get; }
+        Item = item;
+        StringRepresentation = item.GetLocalizedResourceContent()!;
     }
+
+    public object Item { get; }
+
+    public string StringRepresentation { get; }
 }

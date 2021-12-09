@@ -31,40 +31,39 @@ using Pixeval.UserControls;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 
-namespace Pixeval.Activation
+namespace Pixeval.Activation;
+
+public class IllustrationAppActivationHandler : IAppActivationHandler
 {
-    public class IllustrationAppActivationHandler : IAppActivationHandler
+    public string ActivationFragment => "illust";
+
+    public Task Execute(string id)
     {
-        public string ActivationFragment => "illust";
+        WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(App.AppViewModel.AppWindowRootFrame));
 
-        public Task Execute(string id)
+        return App.AppViewModel.DispatchTaskAsync(async () =>
         {
-            WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(App.AppViewModel.AppWindowRootFrame));
+            App.AppViewModel.PrepareForActivation();
 
-            return App.AppViewModel.DispatchTaskAsync(async () =>
+            try
             {
-                App.AppViewModel.PrepareForActivation();
+                var viewModels = new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id))
+                    .GetMangaIllustrationViewModels()
+                    .ToArray();
 
-                try
-                {
-                    var viewModels = new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id))
-                        .GetMangaIllustrationViewModels()
-                        .ToArray();
-
-                    ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
-                    App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
-                }
-                catch (Exception e)
-                {
-                    UIHelper.ShowTextToastNotification(
-                        ActivationsResources.IllustrationActivationFailedTitle,
-                        ActivationsResources.IllustrationActivationFailedContentFormatted.Format(e.Message));
-                }
-                finally
-                {
-                    App.AppViewModel.ActivationProcessed();
-                }
-            });
-        }
+                ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
+                App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
+            }
+            catch (Exception e)
+            {
+                UIHelper.ShowTextToastNotification(
+                    ActivationsResources.IllustrationActivationFailedTitle,
+                    ActivationsResources.IllustrationActivationFailedContentFormatted.Format(e.Message));
+            }
+            finally
+            {
+                App.AppViewModel.ActivationProcessed();
+            }
+        });
     }
 }

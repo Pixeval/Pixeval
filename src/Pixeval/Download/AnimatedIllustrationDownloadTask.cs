@@ -29,47 +29,46 @@ using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 
-namespace Pixeval.Download
+namespace Pixeval.Download;
+
+public class AnimatedIllustrationDownloadTask : ObservableDownloadTask, ICustomBehaviorDownloadTask, IIllustrationViewModelProvider
 {
-    public class AnimatedIllustrationDownloadTask : ObservableDownloadTask, ICustomBehaviorDownloadTask, IIllustrationViewModelProvider
+    private readonly IllustrationViewModel _illustration;
+    private readonly UgoiraMetadataResponse _metadata;
+
+    public AnimatedIllustrationDownloadTask(
+        DownloadHistoryEntry databaseEntry,
+        IllustrationViewModel illustration,
+        UgoiraMetadataResponse metadata) : base(databaseEntry)
     {
-        private readonly IllustrationViewModel _illustration;
-        private readonly UgoiraMetadataResponse _metadata;
+        _illustration = illustration;
+        _metadata = metadata;
+    }
 
-        public AnimatedIllustrationDownloadTask(
-            DownloadHistoryEntry databaseEntry,
-            IllustrationViewModel illustration,
-            UgoiraMetadataResponse metadata) : base(databaseEntry)
-        {
-            _illustration = illustration;
-            _metadata = metadata;
-        }
+    protected AnimatedIllustrationDownloadTask(DownloadHistoryEntry databaseEntry)
+        : base(databaseEntry)
+    {
+        // derived classes won't need them
+        _metadata = null!;
+        _illustration = null!;
+    }
 
-        protected AnimatedIllustrationDownloadTask(DownloadHistoryEntry databaseEntry)
-            : base(databaseEntry)
-        {
-            // derived classes won't need them
-            _metadata = null!;
-            _illustration = null!;
-        }
+    public override void DownloadStarting(DownloadStartingEventArgs args)
+    {
+        args.GetDeferral().Complete(App.AppViewModel.AppSetting.OverwriteDownloadedFile || !File.Exists(Destination));
+    }
 
-        public override void DownloadStarting(DownloadStartingEventArgs args)
+    public virtual async void Consume(IRandomAccessStream stream)
+    {
+        using (stream)
         {
-            args.GetDeferral().Complete(App.AppViewModel.AppSetting.OverwriteDownloadedFile || !File.Exists(Destination));
+            using var gifStream = await IOHelper.GetGifStreamFromZipStreamAsync(stream.AsStreamForRead(), _metadata);
+            await IOHelper.CreateAndWriteToFileAsync(gifStream, Destination);
         }
+    }
 
-        public virtual async void Consume(IRandomAccessStream stream)
-        {
-            using (stream)
-            {
-                using var gifStream = await IOHelper.GetGifStreamFromZipStreamAsync(stream.AsStreamForRead(), _metadata);
-                await IOHelper.CreateAndWriteToFileAsync(gifStream, Destination);
-            }
-        }
-
-        public virtual Task<IllustrationViewModel> GetViewModelAsync()
-        {
-            return Task.FromResult(_illustration);
-        }
+    public virtual Task<IllustrationViewModel> GetViewModelAsync()
+    {
+        return Task.FromResult(_illustration);
     }
 }

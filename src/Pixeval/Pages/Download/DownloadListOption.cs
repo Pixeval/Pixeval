@@ -20,26 +20,25 @@
 
 using Pixeval.Misc;
 
-namespace Pixeval.Pages.Download
+namespace Pixeval.Pages.Download;
+
+public enum DownloadListOption
 {
-    public enum DownloadListOption
-    {
-        [LocalizedResource(typeof(DownloadListPageResources), nameof(DownloadListPageResources.DownloadListOptionAllQueued))]
-        AllQueued,
+    [LocalizedResource(typeof(DownloadListPageResources), nameof(DownloadListPageResources.DownloadListOptionAllQueued))]
+    AllQueued,
 
-        [LocalizedResource(typeof(DownloadListPageResources), nameof(DownloadListPageResources.DownloadListOptionRunning))]
-        Running,
+    [LocalizedResource(typeof(DownloadListPageResources), nameof(DownloadListPageResources.DownloadListOptionRunning))]
+    Running,
 
-        [LocalizedResource(typeof(DownloadListPageResources), nameof(DownloadListPageResources.DownloadListOptionCompleted))]
-        Completed,
+    [LocalizedResource(typeof(DownloadListPageResources), nameof(DownloadListPageResources.DownloadListOptionCompleted))]
+    Completed,
 
-        [LocalizedResource(typeof(DownloadListPageResources), nameof(DownloadListPageResources.DownloadListOptionCancelled))]
-        Cancelled,
+    [LocalizedResource(typeof(DownloadListPageResources), nameof(DownloadListPageResources.DownloadListOptionCancelled))]
+    Cancelled,
 
-        [LocalizedResource(typeof(DownloadListPageResources), nameof(DownloadListPageResources.DownloadListOptionError))]
-        Error,
+    [LocalizedResource(typeof(DownloadListPageResources), nameof(DownloadListPageResources.DownloadListOptionError))]
+    Error,
 
-        [LocalizedResource(typeof(DownloadListPageResources), nameof(DownloadListPageResources.DownloadListOptionCustomSearch))]
-        CustomSearch,
-    }
+    [LocalizedResource(typeof(DownloadListPageResources), nameof(DownloadListPageResources.DownloadListOptionCustomSearch))]
+    CustomSearch,
 }

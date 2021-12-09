@@ -23,28 +23,27 @@
 using System;
 using Microsoft.UI.Xaml.Controls;
 
-namespace Pixeval.Controls.NotifyOnLoadedComboBox
+namespace Pixeval.Controls.NotifyOnLoadedComboBox;
+
+public class NotifyOnLoadedComboBox : ComboBox
 {
-    public class NotifyOnLoadedComboBox : ComboBox
+    private EventHandler<SelectionChangedEventArgs>? _selectionChangedWhenLoaded;
+
+    public NotifyOnLoadedComboBox()
     {
-        private EventHandler<SelectionChangedEventArgs>? _selectionChangedWhenLoaded;
-
-        public NotifyOnLoadedComboBox()
+        DefaultStyleKey = typeof(NotifyOnLoadedComboBox);
+        SelectionChanged += (sender, args) =>
         {
-            DefaultStyleKey = typeof(NotifyOnLoadedComboBox);
-            SelectionChanged += (sender, args) =>
+            if (IsDropDownOpen)
             {
-                if (IsDropDownOpen)
-                {
-                    _selectionChangedWhenLoaded?.Invoke(sender, args);
-                }
-            };
-        }
+                _selectionChangedWhenLoaded?.Invoke(sender, args);
+            }
+        };
+    }
 
-        public event EventHandler<SelectionChangedEventArgs> SelectionChangedWhenLoaded
-        {
-            add => _selectionChangedWhenLoaded += value;
-            remove => _selectionChangedWhenLoaded -= value;
-        }
+    public event EventHandler<SelectionChangedEventArgs> SelectionChangedWhenLoaded
+    {
+        add => _selectionChangedWhenLoaded += value;
+        remove => _selectionChangedWhenLoaded -= value;
     }
 }

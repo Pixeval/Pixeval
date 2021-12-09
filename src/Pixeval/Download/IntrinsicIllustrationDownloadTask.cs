@@ -23,25 +23,24 @@ using Pixeval.Database;
 using Pixeval.UserControls;
 using Pixeval.Util.IO;
 
-namespace Pixeval.Download
+namespace Pixeval.Download;
+
+public class IntrinsicIllustrationDownloadTask : IllustrationDownloadTask, IIntrinsicDownloadTask
 {
-    public class IntrinsicIllustrationDownloadTask : IllustrationDownloadTask, IIntrinsicDownloadTask
+    public IRandomAccessStream Stream { get; }
+
+    /// <summary>
+    /// The disposal of <paramref name="imageStream"/> is not handled
+    /// </summary>
+    public IntrinsicIllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationViewModel illustrationViewModel, IRandomAccessStream imageStream)
+        : base(entry, illustrationViewModel)
     {
-        public IRandomAccessStream Stream { get; }
+        Stream = imageStream;
+    }
 
-        /// <summary>
-        /// The disposal of <paramref name="imageStream"/> is not handled
-        /// </summary>
-        public IntrinsicIllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationViewModel illustrationViewModel, IRandomAccessStream imageStream)
-            : base(entry, illustrationViewModel)
-        {
-            Stream = imageStream;
-        }
-
-        public override async void DownloadStarting(DownloadStartingEventArgs args)
-        {
-            args.GetDeferral().Complete(false);
-            await IOHelper.CreateAndWriteToFileAsync(Stream, Destination);
-        }
+    public override async void DownloadStarting(DownloadStartingEventArgs args)
+    {
+        args.GetDeferral().Complete(false);
+        await IOHelper.CreateAndWriteToFileAsync(Stream, Destination);
     }
 }

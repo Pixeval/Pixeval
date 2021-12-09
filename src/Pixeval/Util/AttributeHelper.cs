@@ -23,13 +23,12 @@
 using System;
 using System.Reflection;
 
-namespace Pixeval.Util
+namespace Pixeval.Util;
+
+public static class AttributeHelper
 {
-    public static class AttributeHelper
+    public static TAttribute? GetCustomAttribute<TAttribute>(this Enum e) where TAttribute : Attribute
     {
-        public static TAttribute? GetCustomAttribute<TAttribute>(this Enum e) where TAttribute : Attribute
-        {
-            return e.GetType().GetField(e.ToString())?.GetCustomAttribute(typeof(TAttribute), false) as TAttribute;
-        }
+        return e.GetType().GetField(e.ToString())?.GetCustomAttribute(typeof(TAttribute), false) as TAttribute;
     }
 }

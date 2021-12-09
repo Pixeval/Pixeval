@@ -20,10 +20,9 @@
 
 #endregion
 
-namespace Pixeval.Misc
+namespace Pixeval.Misc;
+
+public interface IDefaultValueProvider
 {
-    public interface IDefaultValueProvider
-    {
-        object ProvideValue();
-    }
+    object ProvideValue();
 }

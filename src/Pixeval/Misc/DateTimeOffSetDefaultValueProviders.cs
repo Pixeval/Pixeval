@@ -22,37 +22,36 @@
 
 using System;
 
-namespace Pixeval.Misc
+namespace Pixeval.Misc;
+
+public class MinDateTimeOffSetDefaultValueProvider : IDefaultValueProvider
 {
-    public class MinDateTimeOffSetDefaultValueProvider : IDefaultValueProvider
+    public object ProvideValue()
     {
-        public object ProvideValue()
-        {
-            return DateTimeOffset.MinValue;
-        }
+        return DateTimeOffset.MinValue;
     }
+}
 
-    public class MaxDateTimeOffSetDefaultValueProvider : IDefaultValueProvider
+public class MaxDateTimeOffSetDefaultValueProvider : IDefaultValueProvider
+{
+    public object ProvideValue()
     {
-        public object ProvideValue()
-        {
-            return DateTimeOffset.MaxValue;
-        }
+        return DateTimeOffset.MaxValue;
     }
+}
 
-    public class CurrentDateTimeOffSetDefaultValueProvider : IDefaultValueProvider
+public class CurrentDateTimeOffSetDefaultValueProvider : IDefaultValueProvider
+{
+    public object ProvideValue()
     {
-        public object ProvideValue()
-        {
-            return DateTimeOffset.Now;
-        }
+        return DateTimeOffset.Now;
     }
+}
 
-    public class DecrementedDateTimeOffSetDefaultValueProvider : IDefaultValueProvider
+public class DecrementedDateTimeOffSetDefaultValueProvider : IDefaultValueProvider
+{
+    public object ProvideValue()
     {
-        public object ProvideValue()
-        {
-            return DateTimeOffset.Now - TimeSpan.FromDays(1);
-        }
+        return DateTimeOffset.Now - TimeSpan.FromDays(1);
     }
 }

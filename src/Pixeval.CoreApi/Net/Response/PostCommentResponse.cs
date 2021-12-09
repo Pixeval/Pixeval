@@ -23,11 +23,10 @@
 using Pixeval.CoreApi.Model;
 using Refit;
 
-namespace Pixeval.CoreApi.Net.Response
+namespace Pixeval.CoreApi.Net.Response;
+
+public class PostCommentResponse
 {
-    public class PostCommentResponse
-    {
-        [AliasAs("comment")]
-        public Comment? Comment { get; set; }
-    }
+    [AliasAs("comment")]
+    public Comment? Comment { get; set; }
 }

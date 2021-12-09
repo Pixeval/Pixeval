@@ -23,12 +23,11 @@
 using System.Text.Json.Serialization;
 using Pixeval.CoreApi.Model;
 
-namespace Pixeval.CoreApi.Net.Response
+namespace Pixeval.CoreApi.Net.Response;
+
+// ReSharper disable once UnusedAutoPropertyAccessor.Global
+internal class PixivSingleIllustResponse
 {
-    // ReSharper disable once UnusedAutoPropertyAccessor.Global
-    internal class PixivSingleIllustResponse
-    {
-        [JsonPropertyName("illust")]
-        public Illustration? Illust { get; set; }
-    }
+    [JsonPropertyName("illust")]
+    public Illustration? Illust { get; set; }
 }

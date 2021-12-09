@@ -27,22 +27,21 @@ using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Engine.Implements
+namespace Pixeval.CoreApi.Engine.Implements;
+
+public class RecentPostedIllustrationEngine : AbstractPixivFetchEngine<Illustration>
 {
-    public class RecentPostedIllustrationEngine : AbstractPixivFetchEngine<Illustration>
+    private readonly PrivacyPolicy _privacyPolicy;
+
+    public RecentPostedIllustrationEngine(MakoClient makoClient, PrivacyPolicy privacyPolicy, EngineHandle? engineHandle) : base(makoClient, engineHandle)
     {
-        private readonly PrivacyPolicy _privacyPolicy;
+        _privacyPolicy = privacyPolicy;
+    }
 
-        public RecentPostedIllustrationEngine(MakoClient makoClient, PrivacyPolicy privacyPolicy, EngineHandle? engineHandle) : base(makoClient, engineHandle)
-        {
-            _privacyPolicy = privacyPolicy;
-        }
-
-        public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new())
-        {
-            return RecursivePixivAsyncEnumerators.Illustration<RecentPostedIllustrationEngine>
-                .WithInitialUrl(this, MakoApiKind.AppApi, engine => "/v2/illust/follow"
-                                                                    + $"?restrict={engine._privacyPolicy.GetDescription()}")!;
-        }
+    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    {
+        return RecursivePixivAsyncEnumerators.Illustration<RecentPostedIllustrationEngine>
+            .WithInitialUrl(this, MakoApiKind.AppApi, engine => "/v2/illust/follow"
+                                                                + $"?restrict={engine._privacyPolicy.GetDescription()}")!;
     }
 }

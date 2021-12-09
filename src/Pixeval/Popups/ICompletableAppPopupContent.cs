@@ -20,10 +20,9 @@
 
 #endregion
 
-namespace Pixeval.Popups
+namespace Pixeval.Popups;
+
+public interface ICompletableAppPopupContent : IAppPopupContent
 {
-    public interface ICompletableAppPopupContent : IAppPopupContent
-    {
-        object GetCompletionResult();
-    }
+    object GetCompletionResult();
 }

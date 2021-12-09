@@ -25,73 +25,72 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Controls.Setting.UI.UserControls;
 
-namespace Pixeval.Controls.Setting.UI.SwitchSettingEntry
+namespace Pixeval.Controls.Setting.UI.SwitchSettingEntry;
+
+[TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
+[TemplatePart(Name = PartSwitch, Type = typeof(ToggleSwitch))]
+public class SwitchSettingEntry : SettingEntryBase
 {
-    [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
-    [TemplatePart(Name = PartSwitch, Type = typeof(ToggleSwitch))]
-    public class SwitchSettingEntry : SettingEntryBase
+    private const string PartSwitch = "Switch";
+
+    public static readonly DependencyProperty IsOnProperty = DependencyProperty.Register(
+        nameof(IsOn),
+        typeof(bool),
+        typeof(SwitchSettingEntry),
+        PropertyMetadata.Create(DependencyProperty.UnsetValue, (o, args) => IsOnChanged(o, args.NewValue)));
+
+    private ToggleSwitch? _switch;
+
+    private TypedEventHandler<SwitchSettingEntry, RoutedEventArgs>? _toggled;
+
+    public SwitchSettingEntry()
     {
-        private const string PartSwitch = "Switch";
+        DefaultStyleKey = typeof(SwitchSettingEntry);
+    }
 
-        public static readonly DependencyProperty IsOnProperty = DependencyProperty.Register(
-            nameof(IsOn),
-            typeof(bool),
-            typeof(SwitchSettingEntry),
-            PropertyMetadata.Create(DependencyProperty.UnsetValue, (o, args) => IsOnChanged(o, args.NewValue)));
+    public bool IsOn
+    {
+        get => (bool) GetValue(IsOnProperty);
+        set => SetValue(IsOnProperty, value);
+    }
 
-        private ToggleSwitch? _switch;
+    public event TypedEventHandler<SwitchSettingEntry, RoutedEventArgs> Toggled
+    {
+        add => _toggled += value;
+        remove => _toggled -= value;
+    }
 
-        private TypedEventHandler<SwitchSettingEntry, RoutedEventArgs>? _toggled;
-
-        public SwitchSettingEntry()
+    private static void IsOnChanged(DependencyObject d, object newValue)
+    {
+        if (d is SwitchSettingEntry { _switch: { } sh })
         {
-            DefaultStyleKey = typeof(SwitchSettingEntry);
+            sh.IsOn = (bool) newValue;
+        }
+    }
+
+    private void SwitchOnToggled(object sender, RoutedEventArgs e)
+    {
+        IsOn = _switch!.IsOn;
+        _toggled?.Invoke(this, e);
+    }
+
+    protected override void Update()
+    {
+        IsOnChanged(this, IsOn);
+    }
+
+    protected override void OnApplyTemplate()
+    {
+        if (_switch is not null)
+        {
+            _switch.Toggled -= SwitchOnToggled;
         }
 
-        public bool IsOn
+        if ((_switch = GetTemplateChild(PartSwitch) as ToggleSwitch) is not null)
         {
-            get => (bool) GetValue(IsOnProperty);
-            set => SetValue(IsOnProperty, value);
+            _switch.Toggled += SwitchOnToggled;
         }
 
-        public event TypedEventHandler<SwitchSettingEntry, RoutedEventArgs> Toggled
-        {
-            add => _toggled += value;
-            remove => _toggled -= value;
-        }
-
-        private static void IsOnChanged(DependencyObject d, object newValue)
-        {
-            if (d is SwitchSettingEntry { _switch: { } sh })
-            {
-                sh.IsOn = (bool) newValue;
-            }
-        }
-
-        private void SwitchOnToggled(object sender, RoutedEventArgs e)
-        {
-            IsOn = _switch!.IsOn;
-            _toggled?.Invoke(this, e);
-        }
-
-        protected override void Update()
-        {
-            IsOnChanged(this, IsOn);
-        }
-
-        protected override void OnApplyTemplate()
-        {
-            if (_switch is not null)
-            {
-                _switch.Toggled -= SwitchOnToggled;
-            }
-
-            if ((_switch = GetTemplateChild(PartSwitch) as ToggleSwitch) is not null)
-            {
-                _switch.Toggled += SwitchOnToggled;
-            }
-
-            base.OnApplyTemplate();
-        }
+        base.OnApplyTemplate();
     }
 }

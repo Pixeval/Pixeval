@@ -33,63 +33,62 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 
-namespace Pixeval.Download
+namespace Pixeval.Download;
+
+public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>
 {
-    public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>
+    public IllustrationDownloadTaskFactory()
     {
-        public IllustrationDownloadTaskFactory()
+        PathParser = new IllustrationMetaPathParser();
+    }
+
+    public IMetaPathParser<IllustrationViewModel> PathParser { get; }
+
+    public async Task<ObservableDownloadTask> CreateAsync(IllustrationViewModel context, string rawPath)
+    {
+        using var scope = App.AppViewModel.AppServicesScope;
+        var manager = await scope.ServiceProvider.GetRequiredService<Task<DownloadHistoryPersistentManager>>();
+        var path = IOHelper.NormalizePath(PathParser.Reduce(rawPath, context));
+        if ((await manager.RawDataAsync()).Any(entry => entry.Destination == path))
         {
-            PathParser = new IllustrationMetaPathParser();
+            // delete the original entry
+            await manager.DeleteAsync(entry => entry.Destination == path);
         }
-
-        public IMetaPathParser<IllustrationViewModel> PathParser { get; }
-
-        public async Task<ObservableDownloadTask> CreateAsync(IllustrationViewModel context, string rawPath)
+        ObservableDownloadTask task = context.Illustration.IsUgoira() switch
         {
-            using var scope = App.AppViewModel.AppServicesScope;
-            var manager = await scope.ServiceProvider.GetRequiredService<Task<DownloadHistoryPersistentManager>>();
-            var path = IOHelper.NormalizePath(PathParser.Reduce(rawPath, context));
-            if ((await manager.RawDataAsync()).Any(entry => entry.Destination == path))
+            true => await Functions.Block(async () =>
             {
-                // delete the original entry
-                await manager.DeleteAsync(entry => entry.Destination == path);
-            }
-            ObservableDownloadTask task = context.Illustration.IsUgoira() switch
-            {
-                true => await Functions.Block(async () =>
+                var ugoiraMetadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(context.Id);
+                if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Medium is { } url)
                 {
-                    var ugoiraMetadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(context.Id);
-                    if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Medium is { } url)
-                    {
-                        var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path, DownloadItemType.Ugoira, context.Id, context.Illustration.Title, context.Illustration.User?.Name, url, context.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
-                        return new AnimatedIllustrationDownloadTask(downloadHistoryEntry, context, ugoiraMetadata);
-                    }
+                    var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path, DownloadItemType.Ugoira, context.Id, context.Illustration.Title, context.Illustration.User?.Name, url, context.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
+                    return new AnimatedIllustrationDownloadTask(downloadHistoryEntry, context, ugoiraMetadata);
+                }
 
-                    throw new DownloadTaskInitializationException(DownloadTaskResources.GifSourceUrlNotFoundFormatted.Format(context.Id));
-                }),
-                false => Functions.Block(() =>
-                {
-                    var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path, context.IsManga ? DownloadItemType.Manga : DownloadItemType.Illustration, context.Id, context.Illustration.Title, context.Illustration.User?.Name, context.Illustration.GetOriginalUrl()!, context.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
-                    return new IllustrationDownloadTask(downloadHistoryEntry, context);
-                })
-            };
+                throw new DownloadTaskInitializationException(DownloadTaskResources.GifSourceUrlNotFoundFormatted.Format(context.Id));
+            }),
+            false => Functions.Block(() =>
+            {
+                var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path, context.IsManga ? DownloadItemType.Manga : DownloadItemType.Illustration, context.Id, context.Illustration.Title, context.Illustration.User?.Name, context.Illustration.GetOriginalUrl()!, context.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
+                return new IllustrationDownloadTask(downloadHistoryEntry, context);
+            })
+        };
             
-            // TODO Check for unique
-            await manager.InsertAsync(task.DatabaseEntry);
-            return task;
-        }
+        // TODO Check for unique
+        await manager.InsertAsync(task.DatabaseEntry);
+        return task;
+    }
 
-        public Task<ObservableDownloadTask> TryCreateIntrinsicAsync(IllustrationViewModel context, IRandomAccessStream stream, string rawPath)
+    public Task<ObservableDownloadTask> TryCreateIntrinsicAsync(IllustrationViewModel context, IRandomAccessStream stream, string rawPath)
+    {
+        var type = context switch
         {
-            var type = context switch
-            {
-                { IsUgoira: true } => DownloadItemType.Ugoira,
-                { IsManga: true } => DownloadItemType.Manga,
-                _ => DownloadItemType.Illustration
-            };
-            var entry = new DownloadHistoryEntry(DownloadState.Completed, null, rawPath, type, context.Id,
-                context.Illustration.Title, context.Illustration.User?.Name, null, null);
-            return Task.FromResult<ObservableDownloadTask>(new IntrinsicIllustrationDownloadTask(entry, context, stream));
-        }
+            { IsUgoira: true } => DownloadItemType.Ugoira,
+            { IsManga: true } => DownloadItemType.Manga,
+            _ => DownloadItemType.Illustration
+        };
+        var entry = new DownloadHistoryEntry(DownloadState.Completed, null, rawPath, type, context.Id,
+            context.Illustration.Title, context.Illustration.User?.Name, null, null);
+        return Task.FromResult<ObservableDownloadTask>(new IntrinsicIllustrationDownloadTask(entry, context, stream));
     }
 }

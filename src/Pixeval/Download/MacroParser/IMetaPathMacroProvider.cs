@@ -23,15 +23,14 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Pixeval.Download.MacroParser
-{
-    public interface IMetaPathMacroProvider<TContext>
-    {
-        IEnumerable<IMacro<TContext>> AvailableMacros { get; }
+namespace Pixeval.Download.MacroParser;
 
-        IMacro<TContext> TryResolve(string macro)
-        {
-            return AvailableMacros.FirstOrDefault(m => m.Name == macro) ?? new IMacro<TContext>.Unknown();
-        }
+public interface IMetaPathMacroProvider<TContext>
+{
+    IEnumerable<IMacro<TContext>> AvailableMacros { get; }
+
+    IMacro<TContext> TryResolve(string macro)
+    {
+        return AvailableMacros.FirstOrDefault(m => m.Name == macro) ?? new IMacro<TContext>.Unknown();
     }
 }

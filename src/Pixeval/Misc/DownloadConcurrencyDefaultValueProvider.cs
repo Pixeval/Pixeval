@@ -22,13 +22,12 @@
 
 using System;
 
-namespace Pixeval.Misc
+namespace Pixeval.Misc;
+
+public class DownloadConcurrencyDefaultValueProvider : IDefaultValueProvider
 {
-    public class DownloadConcurrencyDefaultValueProvider : IDefaultValueProvider
+    public object ProvideValue()
     {
-        public object ProvideValue()
-        {
-            return Environment.ProcessorCount / 2;
-        }
+        return Environment.ProcessorCount / 2;
     }
 }

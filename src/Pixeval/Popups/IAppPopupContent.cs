@@ -23,12 +23,11 @@
 using System;
 using Microsoft.UI.Xaml;
 
-namespace Pixeval.Popups
-{
-    public interface IAppPopupContent
-    {
-        Guid UniqueId { get; }
+namespace Pixeval.Popups;
 
-        FrameworkElement UIContent { get; }
-    }
+public interface IAppPopupContent
+{
+    Guid UniqueId { get; }
+
+    FrameworkElement UIContent { get; }
 }

@@ -25,12 +25,11 @@ using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net.Request;
 using Refit;
 
-namespace Pixeval.CoreApi.Net.EndPoints
+namespace Pixeval.CoreApi.Net.EndPoints;
+
+[Headers("User-Agent: PixivAndroidApp/5.0.64 (Android 6.0)", "Content-Type: application/x-www-form-urlencoded")]
+internal interface IAuthEndPoint
 {
-    [Headers("User-Agent: PixivAndroidApp/5.0.64 (Android 6.0)", "Content-Type: application/x-www-form-urlencoded")]
-    internal interface IAuthEndPoint
-    {
-        [Post("/auth/token")]
-        Task<TokenResponse> RefreshAsync([Body(BodySerializationMethod.UrlEncoded)] RefreshSessionRequest request);
-    }
+    [Post("/auth/token")]
+    Task<TokenResponse> RefreshAsync([Body(BodySerializationMethod.UrlEncoded)] RefreshSessionRequest request);
 }

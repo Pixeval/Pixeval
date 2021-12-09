@@ -30,62 +30,61 @@ using System.Threading;
 using System.Threading.Tasks;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Net
+namespace Pixeval.CoreApi.Net;
+
+public static class MakoHttpOptions
 {
-    public static class MakoHttpOptions
+    public const string AppApiBaseUrl = "https://app-api.pixiv.net";
+
+    public const string WebApiBaseUrl = "https://www.pixiv.net";
+
+    public const string OAuthBaseUrl = "https://oauth.secure.pixiv.net";
+
+    public const string ImageHost = "i.pximg.net";
+
+    public const string WebApiHost = "www.pixiv.net"; // experiments revealed that the secondary domain 'www' is required 
+
+    public const string AppApiHost = "app-api.pixiv.net";
+
+    public const string OAuthHost = "oauth.secure.pixiv.net";
+
+    public static readonly Regex BypassRequiredHost = "^app-api\\.pixiv\\.net$|^www\\.pixiv\\.net$".ToRegex();
+
+    public static void UseHttpScheme(HttpRequestMessage request)
     {
-        public const string AppApiBaseUrl = "https://app-api.pixiv.net";
-
-        public const string WebApiBaseUrl = "https://www.pixiv.net";
-
-        public const string OAuthBaseUrl = "https://oauth.secure.pixiv.net";
-
-        public const string ImageHost = "i.pximg.net";
-
-        public const string WebApiHost = "www.pixiv.net"; // experiments revealed that the secondary domain 'www' is required 
-
-        public const string AppApiHost = "app-api.pixiv.net";
-
-        public const string OAuthHost = "oauth.secure.pixiv.net";
-
-        public static readonly Regex BypassRequiredHost = "^app-api\\.pixiv\\.net$|^www\\.pixiv\\.net$".ToRegex();
-
-        public static void UseHttpScheme(HttpRequestMessage request)
+        if (request.RequestUri != null)
         {
-            if (request.RequestUri != null)
+            request.RequestUri = new UriBuilder(request.RequestUri)
             {
-                request.RequestUri = new UriBuilder(request.RequestUri)
-                {
-                    Scheme = "http"
-                }.Uri;
-            }
+                Scheme = "http"
+            }.Uri;
         }
+    }
 
-        public static HttpMessageInvoker CreateHttpMessageInvoker(INameResolver nameResolver)
+    public static HttpMessageInvoker CreateHttpMessageInvoker(INameResolver nameResolver)
+    {
+        return new HttpMessageInvoker(new SocketsHttpHandler
         {
-            return new HttpMessageInvoker(new SocketsHttpHandler
-            {
-                ConnectCallback = BypassedConnectCallback(nameResolver)
-            });
-        }
+            ConnectCallback = BypassedConnectCallback(nameResolver)
+        });
+    }
 
-        public static HttpMessageInvoker CreateDirectHttpMessageInvoker()
+    public static HttpMessageInvoker CreateDirectHttpMessageInvoker()
+    {
+        return new HttpMessageInvoker(new SocketsHttpHandler());
+    }
+
+
+    private static Func<SocketsHttpConnectionContext, CancellationToken, ValueTask<Stream>> BypassedConnectCallback(INameResolver nameResolver)
+    {
+        return async (context, token) =>
         {
-            return new HttpMessageInvoker(new SocketsHttpHandler());
-        }
-
-
-        private static Func<SocketsHttpConnectionContext, CancellationToken, ValueTask<Stream>> BypassedConnectCallback(INameResolver nameResolver)
-        {
-            return async (context, token) =>
-            {
-                var sockets = new Socket(SocketType.Stream, ProtocolType.Tcp); // disposed by networkStream
-                await sockets.ConnectAsync(await nameResolver.Lookup(context.InitialRequestMessage.RequestUri!.Host).ConfigureAwait(false), 443, token).ConfigureAwait(false);
-                var networkStream = new NetworkStream(sockets, true); // disposed by sslStream
-                var sslStream = new SslStream(networkStream, false, (_, _, _, _) => true);
-                await sslStream.AuthenticateAsClientAsync(string.Empty).ConfigureAwait(false);
-                return sslStream;
-            };
-        }
+            var sockets = new Socket(SocketType.Stream, ProtocolType.Tcp); // disposed by networkStream
+            await sockets.ConnectAsync(await nameResolver.Lookup(context.InitialRequestMessage.RequestUri!.Host).ConfigureAwait(false), 443, token).ConfigureAwait(false);
+            var networkStream = new NetworkStream(sockets, true); // disposed by sslStream
+            var sslStream = new SslStream(networkStream, false, (_, _, _, _) => true);
+            await sslStream.AuthenticateAsClientAsync(string.Empty).ConfigureAwait(false);
+            return sslStream;
+        };
     }
 }

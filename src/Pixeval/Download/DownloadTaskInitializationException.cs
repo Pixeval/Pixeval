@@ -23,24 +23,23 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Pixeval.Download
+namespace Pixeval.Download;
+
+public class DownloadTaskInitializationException : Exception
 {
-    public class DownloadTaskInitializationException : Exception
+    public DownloadTaskInitializationException()
     {
-        public DownloadTaskInitializationException()
-        {
-        }
+    }
 
-        protected DownloadTaskInitializationException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+    protected DownloadTaskInitializationException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
+    }
 
-        public DownloadTaskInitializationException(string? message) : base(message)
-        {
-        }
+    public DownloadTaskInitializationException(string? message) : base(message)
+    {
+    }
 
-        public DownloadTaskInitializationException(string? message, Exception? innerException) : base(message, innerException)
-        {
-        }
+    public DownloadTaskInitializationException(string? message, Exception? innerException) : base(message, innerException)
+    {
     }
 }

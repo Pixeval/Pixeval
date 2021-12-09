@@ -23,32 +23,31 @@
 using JetBrains.Annotations;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Global.Enum
+namespace Pixeval.CoreApi.Global.Enum;
+
+[PublicAPI]
+public enum IllustrationSortOption
 {
-    [PublicAPI]
-    public enum IllustrationSortOption
-    {
-        [Description("popular_desc")]
-        PopularityDescending,
+    [Description("popular_desc")]
+    PopularityDescending,
 
-        [Description("date_asc")]
-        PublishDateAscending,
+    [Description("date_asc")]
+    PublishDateAscending,
 
-        [Description("date_desc")]
-        PublishDateDescending,
+    [Description("date_desc")]
+    PublishDateDescending,
 
-        DoNotSort
-    }
+    DoNotSort
+}
 
-    [PublicAPI]
-    public enum UserSortOption
-    {
-        [Description("date_asc")]
-        DateAscending,
+[PublicAPI]
+public enum UserSortOption
+{
+    [Description("date_asc")]
+    DateAscending,
 
-        [Description("date_desc")]
-        DateDescending,
+    [Description("date_desc")]
+    DateDescending,
 
-        DoNotSort
-    }
+    DoNotSort
 }

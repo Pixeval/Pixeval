@@ -25,27 +25,26 @@ using System.Collections.Generic;
 using System.Linq;
 using Pixeval.CoreApi.Global.Enum;
 
-namespace Pixeval.Controls.Setting.UI.Model
+namespace Pixeval.Controls.Setting.UI.Model;
+
+public record IllustrationSortOptionSettingEntryItem : IStringRepresentableItem
 {
-    public record IllustrationSortOptionSettingEntryItem : IStringRepresentableItem
+    public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } =  Enum.GetValues<IllustrationSortOption>().Select(i => new IllustrationSortOptionSettingEntryItem(i));
+
+    public IllustrationSortOptionSettingEntryItem(IllustrationSortOption item)
     {
-        public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } =  Enum.GetValues<IllustrationSortOption>().Select(i => new IllustrationSortOptionSettingEntryItem(i));
-
-        public IllustrationSortOptionSettingEntryItem(IllustrationSortOption item)
+        Item = item;
+        StringRepresentation = item switch
         {
-            Item = item;
-            StringRepresentation = item switch
-            {
-                IllustrationSortOption.PopularityDescending => MiscResources.IllustrationSortOptionPopularityDescending,
-                IllustrationSortOption.PublishDateAscending => MiscResources.IllustrationSortOptionPublishDateAscending,
-                IllustrationSortOption.PublishDateDescending => MiscResources.IllustrationSortOptionPublishDateDescending,
-                IllustrationSortOption.DoNotSort => MiscResources.IllustrationSortOptionDoNotSort,
-                _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
-            };
-        }
-
-        public object Item { get; }
-
-        public string StringRepresentation { get; }
+            IllustrationSortOption.PopularityDescending => MiscResources.IllustrationSortOptionPopularityDescending,
+            IllustrationSortOption.PublishDateAscending => MiscResources.IllustrationSortOptionPublishDateAscending,
+            IllustrationSortOption.PublishDateDescending => MiscResources.IllustrationSortOptionPublishDateDescending,
+            IllustrationSortOption.DoNotSort => MiscResources.IllustrationSortOptionDoNotSort,
+            _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
+        };
     }
+
+    public object Item { get; }
+
+    public string StringRepresentation { get; }
 }

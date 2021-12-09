@@ -23,25 +23,24 @@
 using System.Runtime.Serialization;
 using JetBrains.Annotations;
 
-namespace Pixeval.CoreApi.Global.Exception
+namespace Pixeval.CoreApi.Global.Exception;
+
+[PublicAPI]
+public class MakoException : System.Exception
 {
-    [PublicAPI]
-    public class MakoException : System.Exception
+    public MakoException()
     {
-        public MakoException()
-        {
-        }
+    }
 
-        protected MakoException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+    protected MakoException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
+    }
 
-        public MakoException(string? message) : base(message)
-        {
-        }
+    public MakoException(string? message) : base(message)
+    {
+    }
 
-        public MakoException(string? message, System.Exception? innerException) : base(message, innerException)
-        {
-        }
+    public MakoException(string? message, System.Exception? innerException) : base(message, innerException)
+    {
     }
 }

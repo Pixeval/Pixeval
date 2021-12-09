@@ -22,15 +22,14 @@
 
 using System;
 
-namespace Pixeval.Misc
+namespace Pixeval.Misc;
+
+public class DownloadPathMacroDefaultValueProvider : IDefaultValueProvider
 {
-    public class DownloadPathMacroDefaultValueProvider : IDefaultValueProvider
+    public object ProvideValue()
     {
-        public object ProvideValue()
-        {
-            var segment1 = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures, Environment.SpecialFolderOption.Create);
-            const string segment2 = @"\@{if_spot:@{spot_title}}\@{if_manga:[@{artist_name}]@{illust_title}}\[@{artist_name}]@{illust_id}@{if_manga:p@{manga_index}}@{illust_ext}";
-            return segment1 + segment2;
-        }
+        var segment1 = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures, Environment.SpecialFolderOption.Create);
+        const string segment2 = @"\@{if_spot:@{spot_title}}\@{if_manga:[@{artist_name}]@{illust_title}}\[@{artist_name}]@{illust_id}@{if_manga:p@{manga_index}}@{illust_ext}";
+        return segment1 + segment2;
     }
 }

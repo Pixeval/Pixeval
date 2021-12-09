@@ -28,277 +28,276 @@ using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Engine
+namespace Pixeval.CoreApi.Engine;
+
+internal abstract class RecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine> : AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine>
+    where TEntity : class
+    where TFetchEngine : class, IFetchEngine<TEntity>
 {
-    internal abstract class RecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine> : AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine>
-        where TEntity : class
-        where TFetchEngine : class, IFetchEngine<TEntity>
+    protected RecursivePixivAsyncEnumerator(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind)
+        : base(pixivFetchEngine, makoApiKind)
     {
-        protected RecursivePixivAsyncEnumerator(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind)
-            : base(pixivFetchEngine, makoApiKind)
+    }
+
+    private TRawEntity? RawEntity { get; set; }
+
+    protected abstract string? NextUrl(TRawEntity? rawEntity);
+
+    protected abstract string InitialUrl();
+
+    protected abstract IEnumerator<TEntity>? GetNewEnumerator(TRawEntity? rawEntity);
+
+    protected virtual bool HasNextPage()
+    {
+        return NextUrl(RawEntity).IsNotNullOrEmpty();
+    }
+
+    public override async ValueTask<bool> MoveNextAsync()
+    {
+        if (IsCancellationRequested)
         {
+            PixivFetchEngine.EngineHandle.Complete(); // Set the state of the 'PixivFetchEngine' to Completed
+            return false;
         }
 
-        private TRawEntity? RawEntity { get; set; }
-
-        protected abstract string? NextUrl(TRawEntity? rawEntity);
-
-        protected abstract string InitialUrl();
-
-        protected abstract IEnumerator<TEntity>? GetNewEnumerator(TRawEntity? rawEntity);
-
-        protected virtual bool HasNextPage()
+        if (RawEntity is null)
         {
-            return NextUrl(RawEntity).IsNotNullOrEmpty();
+            var first = InitialUrl();
+            switch (await GetJsonResponseAsync(first).ConfigureAwait(false))
+            {
+                case Result<TRawEntity>.Success (var raw):
+                    Update(raw);
+                    break;
+                case Result<TRawEntity>.Failure (var exception):
+                    if (exception is { } e)
+                    {
+                        throw e;
+                    }
+
+                    PixivFetchEngine.EngineHandle.Complete();
+                    return false;
+            }
         }
 
-        public override async ValueTask<bool> MoveNextAsync()
+        if (CurrentEntityEnumerator!.MoveNext()) // If the enumerator can proceeds then return true
+        {
+            return true;
+        }
+
+        if (!HasNextPage()) // Check if there are more pages, return false if not
+        {
+            PixivFetchEngine.EngineHandle.Complete();
+            return false;
+        }
+
+        if (await GetJsonResponseAsync(NextUrl(RawEntity)!).ConfigureAwait(false) is Result<TRawEntity>.Success (var value)) // Else request a new page
         {
             if (IsCancellationRequested)
-            {
-                PixivFetchEngine.EngineHandle.Complete(); // Set the state of the 'PixivFetchEngine' to Completed
-                return false;
-            }
-
-            if (RawEntity is null)
-            {
-                var first = InitialUrl();
-                switch (await GetJsonResponseAsync(first).ConfigureAwait(false))
-                {
-                    case Result<TRawEntity>.Success (var raw):
-                        Update(raw);
-                        break;
-                    case Result<TRawEntity>.Failure (var exception):
-                        if (exception is { } e)
-                        {
-                            throw e;
-                        }
-
-                        PixivFetchEngine.EngineHandle.Complete();
-                        return false;
-                }
-            }
-
-            if (CurrentEntityEnumerator!.MoveNext()) // If the enumerator can proceeds then return true
-            {
-                return true;
-            }
-
-            if (!HasNextPage()) // Check if there are more pages, return false if not
             {
                 PixivFetchEngine.EngineHandle.Complete();
                 return false;
             }
 
-            if (await GetJsonResponseAsync(NextUrl(RawEntity)!).ConfigureAwait(false) is Result<TRawEntity>.Success (var value)) // Else request a new page
-            {
-                if (IsCancellationRequested)
-                {
-                    PixivFetchEngine.EngineHandle.Complete();
-                    return false;
-                }
-
-                Update(value);
-                return true;
-            }
-
-            PixivFetchEngine.EngineHandle.Complete();
-            return false;
+            Update(value);
+            return true;
         }
 
-        private void Update(TRawEntity rawEntity)
+        PixivFetchEngine.EngineHandle.Complete();
+        return false;
+    }
+
+    private void Update(TRawEntity rawEntity)
+    {
+        RawEntity = rawEntity;
+        CurrentEntityEnumerator = GetNewEnumerator(rawEntity) ?? EmptyEnumerators<TEntity>.Sync;
+        PixivFetchEngine.RequestedPages++;
+    }
+}
+
+internal static class RecursivePixivAsyncEnumerators
+{
+    public abstract class User<TFetchEngine> : RecursivePixivAsyncEnumerator<User, PixivUserResponse, TFetchEngine>
+        where TFetchEngine : class, IFetchEngine<User>
+    {
+        protected User(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
         {
-            RawEntity = rawEntity;
-            CurrentEntityEnumerator = GetNewEnumerator(rawEntity) ?? EmptyEnumerators<TEntity>.Sync;
-            PixivFetchEngine.RequestedPages++;
+        }
+
+        protected override bool ValidateResponse(PixivUserResponse rawEntity)
+        {
+            return rawEntity.Users.IsNotNullOrEmpty();
+        }
+
+        protected override string? NextUrl(PixivUserResponse? rawEntity)
+        {
+            return rawEntity?.NextUrl;
+        }
+
+        protected abstract override string InitialUrl();
+
+        protected override IEnumerator<User>? GetNewEnumerator(PixivUserResponse? rawEntity)
+        {
+            var tasks = rawEntity?.Users;
+            return tasks?.GetEnumerator();
+        }
+
+        public static User<TFetchEngine> WithInitialUrl(TFetchEngine engine, MakoApiKind kind, Func<TFetchEngine, string> initialUrlFactory)
+        {
+            return new UserImpl<TFetchEngine>(engine, kind, initialUrlFactory);
         }
     }
 
-    internal static class RecursivePixivAsyncEnumerators
+    private class UserImpl<TFetchEngine> : User<TFetchEngine>
+        where TFetchEngine : class, IFetchEngine<User>
     {
-        public abstract class User<TFetchEngine> : RecursivePixivAsyncEnumerator<User, PixivUserResponse, TFetchEngine>
-            where TFetchEngine : class, IFetchEngine<User>
+        private readonly Func<TFetchEngine, string> _initialUrlFactory;
+
+        public UserImpl(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, Func<TFetchEngine, string> initialUrlFactory) : base(pixivFetchEngine, makoApiKind)
         {
-            protected User(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
-            {
-            }
-
-            protected override bool ValidateResponse(PixivUserResponse rawEntity)
-            {
-                return rawEntity.Users.IsNotNullOrEmpty();
-            }
-
-            protected override string? NextUrl(PixivUserResponse? rawEntity)
-            {
-                return rawEntity?.NextUrl;
-            }
-
-            protected abstract override string InitialUrl();
-
-            protected override IEnumerator<User>? GetNewEnumerator(PixivUserResponse? rawEntity)
-            {
-                var tasks = rawEntity?.Users;
-                return tasks?.GetEnumerator();
-            }
-
-            public static User<TFetchEngine> WithInitialUrl(TFetchEngine engine, MakoApiKind kind, Func<TFetchEngine, string> initialUrlFactory)
-            {
-                return new UserImpl<TFetchEngine>(engine, kind, initialUrlFactory);
-            }
+            _initialUrlFactory = initialUrlFactory;
         }
 
-        private class UserImpl<TFetchEngine> : User<TFetchEngine>
-            where TFetchEngine : class, IFetchEngine<User>
+        protected override string InitialUrl()
         {
-            private readonly Func<TFetchEngine, string> _initialUrlFactory;
+            return _initialUrlFactory(PixivFetchEngine);
+        }
+    }
 
-            public UserImpl(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, Func<TFetchEngine, string> initialUrlFactory) : base(pixivFetchEngine, makoApiKind)
-            {
-                _initialUrlFactory = initialUrlFactory;
-            }
-
-            protected override string InitialUrl()
-            {
-                return _initialUrlFactory(PixivFetchEngine);
-            }
+    public abstract class Illustration<TFetchEngine> : RecursivePixivAsyncEnumerator<Illustration, PixivResponse, TFetchEngine>
+        where TFetchEngine : class, IFetchEngine<Illustration>
+    {
+        protected Illustration(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
+        {
         }
 
-        public abstract class Illustration<TFetchEngine> : RecursivePixivAsyncEnumerator<Illustration, PixivResponse, TFetchEngine>
-            where TFetchEngine : class, IFetchEngine<Illustration>
+        protected override bool ValidateResponse(PixivResponse rawEntity)
         {
-            protected Illustration(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
-            {
-            }
-
-            protected override bool ValidateResponse(PixivResponse rawEntity)
-            {
-                return rawEntity.Illusts.IsNotNullOrEmpty();
-            }
-
-            protected override string? NextUrl(PixivResponse? rawEntity)
-            {
-                return rawEntity?.NextUrl;
-            }
-
-            protected abstract override string InitialUrl();
-
-            protected override IEnumerator<Illustration>? GetNewEnumerator(PixivResponse? rawEntity)
-            {
-                return rawEntity?.Illusts?.GetEnumerator();
-            }
-
-            public static Illustration<TFetchEngine> WithInitialUrl(TFetchEngine engine, MakoApiKind kind, Func<TFetchEngine, string> initialUrlFactory)
-            {
-                return new IllustrationImpl<TFetchEngine>(engine, kind, initialUrlFactory);
-            }
+            return rawEntity.Illusts.IsNotNullOrEmpty();
         }
 
-        private class IllustrationImpl<TFetchEngine> : Illustration<TFetchEngine>
-            where TFetchEngine : class, IFetchEngine<Illustration>
+        protected override string? NextUrl(PixivResponse? rawEntity)
         {
-            private readonly Func<TFetchEngine, string> _initialUrlFactory;
-
-            public IllustrationImpl(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, Func<TFetchEngine, string> initialUrlFactory) : base(pixivFetchEngine, makoApiKind)
-            {
-                _initialUrlFactory = initialUrlFactory;
-            }
-
-            protected override string InitialUrl()
-            {
-                return _initialUrlFactory(PixivFetchEngine);
-            }
+            return rawEntity?.NextUrl;
         }
 
-        public abstract class Novel<TFetchEngine> : RecursivePixivAsyncEnumerator<Novel, PixivNovelResponse, TFetchEngine>
-            where TFetchEngine : class, IFetchEngine<Novel>
+        protected abstract override string InitialUrl();
+
+        protected override IEnumerator<Illustration>? GetNewEnumerator(PixivResponse? rawEntity)
         {
-            protected Novel(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
-            {
-            }
-
-            protected override bool ValidateResponse(PixivNovelResponse rawEntity)
-            {
-                return rawEntity.Novels.IsNotNullOrEmpty();
-            }
-
-            protected override string? NextUrl(PixivNovelResponse? rawEntity)
-            {
-                return rawEntity?.NextUrl;
-            }
-
-            protected abstract override string InitialUrl();
-
-            protected override IEnumerator<Novel>? GetNewEnumerator(PixivNovelResponse? rawEntity)
-            {
-                return rawEntity?.Novels?.GetEnumerator();
-            }
-
-            public static Novel<TFetchEngine> WithInitialUrl(TFetchEngine engine, MakoApiKind kind, Func<TFetchEngine, string> initialUrlFactory)
-            {
-                return new NovelImpl<TFetchEngine>(engine, kind, initialUrlFactory);
-            }
+            return rawEntity?.Illusts?.GetEnumerator();
         }
 
-        private class NovelImpl<TFetchEngine> : Novel<TFetchEngine>
-            where TFetchEngine : class, IFetchEngine<Novel>
+        public static Illustration<TFetchEngine> WithInitialUrl(TFetchEngine engine, MakoApiKind kind, Func<TFetchEngine, string> initialUrlFactory)
         {
-            private readonly Func<TFetchEngine, string> _initialUrlFactory;
+            return new IllustrationImpl<TFetchEngine>(engine, kind, initialUrlFactory);
+        }
+    }
 
-            public NovelImpl(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, Func<TFetchEngine, string> initialUrlFactory) : base(pixivFetchEngine, makoApiKind)
-            {
-                _initialUrlFactory = initialUrlFactory;
-            }
+    private class IllustrationImpl<TFetchEngine> : Illustration<TFetchEngine>
+        where TFetchEngine : class, IFetchEngine<Illustration>
+    {
+        private readonly Func<TFetchEngine, string> _initialUrlFactory;
 
-            protected override string InitialUrl()
-            {
-                return _initialUrlFactory(PixivFetchEngine);
-            }
+        public IllustrationImpl(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, Func<TFetchEngine, string> initialUrlFactory) : base(pixivFetchEngine, makoApiKind)
+        {
+            _initialUrlFactory = initialUrlFactory;
         }
 
-        public abstract class Comment<TFetchEngine> : RecursivePixivAsyncEnumerator<Comment, IllustrationCommentsResponse, TFetchEngine>
-            where TFetchEngine : class, IFetchEngine<Comment>
+        protected override string InitialUrl()
         {
-            protected Comment(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
-            {
-            }
+            return _initialUrlFactory(PixivFetchEngine);
+        }
+    }
 
-            protected override bool ValidateResponse(IllustrationCommentsResponse rawEntity)
-            {
-                return rawEntity.Comments.IsNotNullOrEmpty();
-            }
-
-            protected override string? NextUrl(IllustrationCommentsResponse? rawEntity)
-            {
-                return rawEntity?.NextUrl;
-            }
-
-            protected abstract override string InitialUrl();
-
-            protected override IEnumerator<Comment>? GetNewEnumerator(IllustrationCommentsResponse? rawEntity)
-            {
-                return rawEntity?.Comments?.GetEnumerator();
-            }
-
-            public static Comment<TFetchEngine> WithInitialUrl(TFetchEngine engine, MakoApiKind kind, Func<TFetchEngine, string> initialUrlFactory)
-            {
-                return new CommentImpl<TFetchEngine>(engine, kind, initialUrlFactory);
-            }
+    public abstract class Novel<TFetchEngine> : RecursivePixivAsyncEnumerator<Novel, PixivNovelResponse, TFetchEngine>
+        where TFetchEngine : class, IFetchEngine<Novel>
+    {
+        protected Novel(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
+        {
         }
 
-        private class CommentImpl<TFetchEngine> : Comment<TFetchEngine>
-            where TFetchEngine : class, IFetchEngine<Comment>
+        protected override bool ValidateResponse(PixivNovelResponse rawEntity)
         {
-            private readonly Func<TFetchEngine, string> _initialUrlFactory;
+            return rawEntity.Novels.IsNotNullOrEmpty();
+        }
 
-            public CommentImpl(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, Func<TFetchEngine, string> initialUrlFactory) : base(pixivFetchEngine, makoApiKind)
-            {
-                _initialUrlFactory = initialUrlFactory;
-            }
+        protected override string? NextUrl(PixivNovelResponse? rawEntity)
+        {
+            return rawEntity?.NextUrl;
+        }
 
-            protected override string InitialUrl()
-            {
-                return _initialUrlFactory(PixivFetchEngine);
-            }
+        protected abstract override string InitialUrl();
+
+        protected override IEnumerator<Novel>? GetNewEnumerator(PixivNovelResponse? rawEntity)
+        {
+            return rawEntity?.Novels?.GetEnumerator();
+        }
+
+        public static Novel<TFetchEngine> WithInitialUrl(TFetchEngine engine, MakoApiKind kind, Func<TFetchEngine, string> initialUrlFactory)
+        {
+            return new NovelImpl<TFetchEngine>(engine, kind, initialUrlFactory);
+        }
+    }
+
+    private class NovelImpl<TFetchEngine> : Novel<TFetchEngine>
+        where TFetchEngine : class, IFetchEngine<Novel>
+    {
+        private readonly Func<TFetchEngine, string> _initialUrlFactory;
+
+        public NovelImpl(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, Func<TFetchEngine, string> initialUrlFactory) : base(pixivFetchEngine, makoApiKind)
+        {
+            _initialUrlFactory = initialUrlFactory;
+        }
+
+        protected override string InitialUrl()
+        {
+            return _initialUrlFactory(PixivFetchEngine);
+        }
+    }
+
+    public abstract class Comment<TFetchEngine> : RecursivePixivAsyncEnumerator<Comment, IllustrationCommentsResponse, TFetchEngine>
+        where TFetchEngine : class, IFetchEngine<Comment>
+    {
+        protected Comment(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
+        {
+        }
+
+        protected override bool ValidateResponse(IllustrationCommentsResponse rawEntity)
+        {
+            return rawEntity.Comments.IsNotNullOrEmpty();
+        }
+
+        protected override string? NextUrl(IllustrationCommentsResponse? rawEntity)
+        {
+            return rawEntity?.NextUrl;
+        }
+
+        protected abstract override string InitialUrl();
+
+        protected override IEnumerator<Comment>? GetNewEnumerator(IllustrationCommentsResponse? rawEntity)
+        {
+            return rawEntity?.Comments?.GetEnumerator();
+        }
+
+        public static Comment<TFetchEngine> WithInitialUrl(TFetchEngine engine, MakoApiKind kind, Func<TFetchEngine, string> initialUrlFactory)
+        {
+            return new CommentImpl<TFetchEngine>(engine, kind, initialUrlFactory);
+        }
+    }
+
+    private class CommentImpl<TFetchEngine> : Comment<TFetchEngine>
+        where TFetchEngine : class, IFetchEngine<Comment>
+    {
+        private readonly Func<TFetchEngine, string> _initialUrlFactory;
+
+        public CommentImpl(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind, Func<TFetchEngine, string> initialUrlFactory) : base(pixivFetchEngine, makoApiKind)
+        {
+            _initialUrlFactory = initialUrlFactory;
+        }
+
+        protected override string InitialUrl()
+        {
+            return _initialUrlFactory(PixivFetchEngine);
         }
     }
 }

@@ -24,24 +24,23 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Pixeval.CoreApi.Model;
 
-namespace Pixeval.CoreApi.Net.Response
+namespace Pixeval.CoreApi.Net.Response;
+
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+internal class TrendingTagResponse
 {
-    // ReSharper disable UnusedAutoPropertyAccessor.Global
-    internal class TrendingTagResponse
+    [JsonPropertyName("trend_tags")]
+    public IEnumerable<TrendTag>? TrendTags { get; set; }
+
+    public class TrendTag
     {
-        [JsonPropertyName("trend_tags")]
-        public IEnumerable<TrendTag>? TrendTags { get; set; }
+        [JsonPropertyName("tag")]
+        public string? TagStr { get; set; }
 
-        public class TrendTag
-        {
-            [JsonPropertyName("tag")]
-            public string? TagStr { get; set; }
+        [JsonPropertyName("translated_name")]
+        public string? TranslatedName { get; set; }
 
-            [JsonPropertyName("translated_name")]
-            public string? TranslatedName { get; set; }
-
-            [JsonPropertyName("illust")]
-            public Illustration? Illust { get; set; }
-        }
+        [JsonPropertyName("illust")]
+        public Illustration? Illust { get; set; }
     }
 }

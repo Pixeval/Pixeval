@@ -37,142 +37,141 @@ using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using Enumerates = Pixeval.Utilities.Enumerates;
 
-namespace Pixeval.Util
+namespace Pixeval.Util;
+
+public static class MakoHelper
 {
-    public static class MakoHelper
+    public static IReadOnlyList<int> StickerIds = Enumerates.EnumerableOf(
+            Enumerable.Range(301, 10),
+            Enumerable.Range(401, 10),
+            Enumerable.Range(201, 10),
+            Enumerable.Range(101, 10))
+        .SelectMany(Functions.Identity<IEnumerable<int>>()).ToList();
+
+    public static IllustrationSortOptionWrapper GetAppSettingDefaultSortOptionWrapper()
     {
-        public static IReadOnlyList<int> StickerIds = Enumerates.EnumerableOf(
-                Enumerable.Range(301, 10),
-                Enumerable.Range(401, 10),
-                Enumerable.Range(201, 10),
-                Enumerable.Range(101, 10))
-            .SelectMany(Functions.Identity<IEnumerable<int>>()).ToList();
+        return LocalizedBoxHelper.Of<IllustrationSortOption, IllustrationSortOptionWrapper>(App.AppViewModel.AppSetting.DefaultSortOption);
+    }
 
-        public static IllustrationSortOptionWrapper GetAppSettingDefaultSortOptionWrapper()
+    public static string? GetThumbnailUrl(this Illustration illustration, ThumbnailUrlOption option)
+    {
+        return option switch
         {
-            return LocalizedBoxHelper.Of<IllustrationSortOption, IllustrationSortOptionWrapper>(App.AppViewModel.AppSetting.DefaultSortOption);
-        }
+            ThumbnailUrlOption.Large => illustration.ImageUrls?.Large,
+            ThumbnailUrlOption.Medium => illustration.ImageUrls?.Medium,
+            ThumbnailUrlOption.SquareMedium => illustration.ImageUrls?.SquareMedium,
+            _ => throw new ArgumentOutOfRangeException(nameof(option), option, null)
+        };
+    }
 
-        public static string? GetThumbnailUrl(this Illustration illustration, ThumbnailUrlOption option)
+    public static Uri GenerateIllustrationWebUri(string id)
+    {
+        return new Uri($"https://www.pixiv.net/artworks/{id}");
+    }
+
+    public static Uri GenerateIllustrationPixEzUri(string id)
+    {
+        return new Uri($"pixez://www.pixiv.net/artworks/{id}");
+    }
+
+    public static Uri GenerateIllustrationAppUri(string id)
+    {
+        return new Uri($"{AppContext.AppProtocol}://illust/{id}");
+    }
+
+    public static string? GetOriginalUrl(this Illustration illustration)
+    {
+        return illustration.ImageUrls?.Original ?? illustration.MetaSinglePage?.OriginalImageUrl;
+    }
+
+    public static string GetImageFormat(this Illustration illustration)
+    {
+        return illustration.GetOriginalUrl() is { } url ? url[url.LastIndexOf(".", StringComparison.Ordinal)..] : string.Empty;
+    }
+
+    public static string GetIllustrationThumbnailCacheKey(this Illustration illustration)
+    {
+        return $"thumbnail-{illustration.GetOriginalUrl() ?? illustration.Id.ToString()}";
+    }
+
+    public static string GetIllustrationOriginalImageCacheKey(this Illustration illustration)
+    {
+        return $"original-{illustration.GetOriginalUrl() ?? illustration.Id.ToString()}";
+    }
+
+    public static SortDescription? GetSortDescriptionForIllustration(IllustrationSortOption sortOption)
+    {
+        return sortOption switch
         {
-            return option switch
+            IllustrationSortOption.PopularityDescending => new SortDescription(SortDirection.Descending, IllustrationBookmarkComparer.Instance),
+            IllustrationSortOption.PublishDateAscending => new SortDescription(SortDirection.Ascending, IllustrationViewModelPublishDateComparer.Instance),
+            IllustrationSortOption.PublishDateDescending => new SortDescription(SortDirection.Descending, IllustrationViewModelPublishDateComparer.Instance),
+            IllustrationSortOption.DoNotSort => null,
+            _ => throw new ArgumentOutOfRangeException(nameof(sortOption), sortOption, null)
+        };
+    }
+
+    public static bool IsUgoira(this Illustration illustration)
+    {
+        return illustration.Type!.Equals("ugoira", StringComparison.OrdinalIgnoreCase);
+    }
+
+    public static bool IsManga(this Illustration illustration)
+    {
+        return illustration.PageCount > 1;
+    }
+
+    public static void Cancel<T>(this IFetchEngine<T> engine)
+    {
+        engine.EngineHandle.Cancel();
+    }
+
+    public static bool IsRestricted(this Illustration illustration)
+    {
+        return illustration.XRestrict != 0;
+    }
+
+    public static XRestrictLevel RestrictLevel(this Illustration illustration)
+    {
+        return (XRestrictLevel) illustration.XRestrict;
+    }
+
+    public static string GenerateStickerDownloadUrl(int id)
+    {
+        return $"https://s.pximg.net/common/images/stamp/generated-stamps/{id}_s.jpg";
+    }
+
+    public static IconSource GetBookmarkButtonIconSource(bool isBookmarked)
+    {
+        var systemThemeFontFamily = new FontFamily("Segoe MDL2 Assets");
+        return isBookmarked
+            ? new FontIconSource
             {
-                ThumbnailUrlOption.Large => illustration.ImageUrls?.Large,
-                ThumbnailUrlOption.Medium => illustration.ImageUrls?.Medium,
-                ThumbnailUrlOption.SquareMedium => illustration.ImageUrls?.SquareMedium,
-                _ => throw new ArgumentOutOfRangeException(nameof(option), option, null)
-            };
-        }
-
-        public static Uri GenerateIllustrationWebUri(string id)
-        {
-            return new Uri($"https://www.pixiv.net/artworks/{id}");
-        }
-
-        public static Uri GenerateIllustrationPixEzUri(string id)
-        {
-            return new Uri($"pixez://www.pixiv.net/artworks/{id}");
-        }
-
-        public static Uri GenerateIllustrationAppUri(string id)
-        {
-            return new Uri($"{AppContext.AppProtocol}://illust/{id}");
-        }
-
-        public static string? GetOriginalUrl(this Illustration illustration)
-        {
-            return illustration.ImageUrls?.Original ?? illustration.MetaSinglePage?.OriginalImageUrl;
-        }
-
-        public static string GetImageFormat(this Illustration illustration)
-        {
-            return illustration.GetOriginalUrl() is { } url ? url[url.LastIndexOf(".", StringComparison.Ordinal)..] : string.Empty;
-        }
-
-        public static string GetIllustrationThumbnailCacheKey(this Illustration illustration)
-        {
-            return $"thumbnail-{illustration.GetOriginalUrl() ?? illustration.Id.ToString()}";
-        }
-
-        public static string GetIllustrationOriginalImageCacheKey(this Illustration illustration)
-        {
-            return $"original-{illustration.GetOriginalUrl() ?? illustration.Id.ToString()}";
-        }
-
-        public static SortDescription? GetSortDescriptionForIllustration(IllustrationSortOption sortOption)
-        {
-            return sortOption switch
+                Glyph = "\xEB52", // HeartFill
+                Foreground = new SolidColorBrush(Colors.Crimson),
+                FontFamily = systemThemeFontFamily
+            }
+            : new FontIconSource
             {
-                IllustrationSortOption.PopularityDescending => new SortDescription(SortDirection.Descending, IllustrationBookmarkComparer.Instance),
-                IllustrationSortOption.PublishDateAscending => new SortDescription(SortDirection.Ascending, IllustrationViewModelPublishDateComparer.Instance),
-                IllustrationSortOption.PublishDateDescending => new SortDescription(SortDirection.Descending, IllustrationViewModelPublishDateComparer.Instance),
-                IllustrationSortOption.DoNotSort => null,
-                _ => throw new ArgumentOutOfRangeException(nameof(sortOption), sortOption, null)
+                Glyph = "\xEB51", // Heart
+                FontFamily = systemThemeFontFamily
             };
-        }
+    }
 
-        public static bool IsUgoira(this Illustration illustration)
-        {
-            return illustration.Type!.Equals("ugoira", StringComparison.OrdinalIgnoreCase);
-        }
-
-        public static bool IsManga(this Illustration illustration)
-        {
-            return illustration.PageCount > 1;
-        }
-
-        public static void Cancel<T>(this IFetchEngine<T> engine)
-        {
-            engine.EngineHandle.Cancel();
-        }
-
-        public static bool IsRestricted(this Illustration illustration)
-        {
-            return illustration.XRestrict != 0;
-        }
-
-        public static XRestrictLevel RestrictLevel(this Illustration illustration)
-        {
-            return (XRestrictLevel) illustration.XRestrict;
-        }
-
-        public static string GenerateStickerDownloadUrl(int id)
-        {
-            return $"https://s.pximg.net/common/images/stamp/generated-stamps/{id}_s.jpg";
-        }
-
-        public static IconSource GetBookmarkButtonIconSource(bool isBookmarked)
-        {
-            var systemThemeFontFamily = new FontFamily("Segoe MDL2 Assets");
-            return isBookmarked
-                ? new FontIconSource
-                {
-                    Glyph = "\xEB52", // HeartFill
-                    Foreground = new SolidColorBrush(Colors.Crimson),
-                    FontFamily = systemThemeFontFamily
-                }
-                : new FontIconSource
-                {
-                    Glyph = "\xEB51", // Heart
-                    FontFamily = systemThemeFontFamily
-                };
-        }
-
-        public static IconElement GetBookmarkButtonIcon(bool isBookmarked)
-        {
-            var systemThemeFontFamily = new FontFamily("Segoe MDL2 Assets");
-            return isBookmarked
-                ? new FontIcon
-                {
-                    Glyph = "\xEB52", // HeartFill
-                    Foreground = new SolidColorBrush(Colors.Crimson),
-                    FontFamily = systemThemeFontFamily
-                }
-                : new FontIcon
-                {
-                    Glyph = "\xEB51", // Heart
-                    FontFamily = systemThemeFontFamily
-                };
-        }
+    public static IconElement GetBookmarkButtonIcon(bool isBookmarked)
+    {
+        var systemThemeFontFamily = new FontFamily("Segoe MDL2 Assets");
+        return isBookmarked
+            ? new FontIcon
+            {
+                Glyph = "\xEB52", // HeartFill
+                Foreground = new SolidColorBrush(Colors.Crimson),
+                FontFamily = systemThemeFontFamily
+            }
+            : new FontIcon
+            {
+                Glyph = "\xEB51", // Heart
+                FontFamily = systemThemeFontFamily
+            };
     }
 }

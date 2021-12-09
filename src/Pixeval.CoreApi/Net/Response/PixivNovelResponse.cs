@@ -24,14 +24,13 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Pixeval.CoreApi.Model;
 
-namespace Pixeval.CoreApi.Net.Response
-{
-    internal class PixivNovelResponse
-    {
-        [JsonPropertyName("novels")]
-        public IEnumerable<Novel>? Novels { get; set; }
+namespace Pixeval.CoreApi.Net.Response;
 
-        [JsonPropertyName("next_url")]
-        public string? NextUrl { get; set; }
-    }
+internal class PixivNovelResponse
+{
+    [JsonPropertyName("novels")]
+    public IEnumerable<Novel>? Novels { get; set; }
+
+    [JsonPropertyName("next_url")]
+    public string? NextUrl { get; set; }
 }

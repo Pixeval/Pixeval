@@ -27,61 +27,60 @@ using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Engine.Implements
+namespace Pixeval.CoreApi.Engine.Implements;
+
+/// <summary>
+///     Get the bookmarks that have user-defined tags associate with them, only returns their ID in string representation
+///     This API is not supposed to have other usages
+/// </summary>
+internal class TaggedBookmarksIdEngine : AbstractPixivFetchEngine<string>
 {
-    /// <summary>
-    ///     Get the bookmarks that have user-defined tags associate with them, only returns their ID in string representation
-    ///     This API is not supposed to have other usages
-    /// </summary>
-    internal class TaggedBookmarksIdEngine : AbstractPixivFetchEngine<string>
+    private readonly string _tag;
+    private readonly string _uid;
+
+    public TaggedBookmarksIdEngine(MakoClient makoClient, EngineHandle? engineHandle, string uid, string tag) : base(makoClient, engineHandle)
     {
-        private readonly string _tag;
-        private readonly string _uid;
+        _uid = uid;
+        _tag = tag;
+    }
 
-        public TaggedBookmarksIdEngine(MakoClient makoClient, EngineHandle? engineHandle, string uid, string tag) : base(makoClient, engineHandle)
+    public override IAsyncEnumerator<string> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    {
+        return new TaggedBookmarksIdAsyncEnumerator(this, MakoApiKind.WebApi)!;
+    }
+
+    private class TaggedBookmarksIdAsyncEnumerator : RecursivePixivAsyncEnumerator<string, WebApiBookmarksWithTagResponse, TaggedBookmarksIdEngine>
+    {
+        private int _currentIndex;
+
+        public TaggedBookmarksIdAsyncEnumerator(TaggedBookmarksIdEngine pixivFetchEngine, MakoApiKind apiKind) : base(pixivFetchEngine, apiKind)
         {
-            _uid = uid;
-            _tag = tag;
         }
 
-        public override IAsyncEnumerator<string> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+        protected override bool ValidateResponse(WebApiBookmarksWithTagResponse rawEntity)
         {
-            return new TaggedBookmarksIdAsyncEnumerator(this, MakoApiKind.WebApi)!;
+            return rawEntity.ResponseBody?.Works.IsNotNullOrEmpty() ?? false;
         }
 
-        private class TaggedBookmarksIdAsyncEnumerator : RecursivePixivAsyncEnumerator<string, WebApiBookmarksWithTagResponse, TaggedBookmarksIdEngine>
+        protected override string NextUrl(WebApiBookmarksWithTagResponse? rawEntity)
         {
-            private int _currentIndex;
+            return GetUrl();
+        }
 
-            public TaggedBookmarksIdAsyncEnumerator(TaggedBookmarksIdEngine pixivFetchEngine, MakoApiKind apiKind) : base(pixivFetchEngine, apiKind)
-            {
-            }
+        protected override string InitialUrl()
+        {
+            return GetUrl();
+        }
 
-            protected override bool ValidateResponse(WebApiBookmarksWithTagResponse rawEntity)
-            {
-                return rawEntity.ResponseBody?.Works.IsNotNullOrEmpty() ?? false;
-            }
+        protected override IEnumerator<string>? GetNewEnumerator(WebApiBookmarksWithTagResponse? rawEntity)
+        {
+            _currentIndex++; // Cannot put it in the GetUrl() because the NextUrl() gonna be called twice at each iteration which will increases the _currentIndex by 2
+            return rawEntity?.ResponseBody?.Works?.SelectNotNull(w => w.Id, w => w.Id!).GetEnumerator();
+        }
 
-            protected override string NextUrl(WebApiBookmarksWithTagResponse? rawEntity)
-            {
-                return GetUrl();
-            }
-
-            protected override string InitialUrl()
-            {
-                return GetUrl();
-            }
-
-            protected override IEnumerator<string>? GetNewEnumerator(WebApiBookmarksWithTagResponse? rawEntity)
-            {
-                _currentIndex++; // Cannot put it in the GetUrl() because the NextUrl() gonna be called twice at each iteration which will increases the _currentIndex by 2
-                return rawEntity?.ResponseBody?.Works?.SelectNotNull(w => w.Id, w => w.Id!).GetEnumerator();
-            }
-
-            private string GetUrl()
-            {
-                return $"/ajax/user/{PixivFetchEngine._uid}/illusts/bookmarks?tag={HttpUtility.UrlEncode(PixivFetchEngine._tag)}&offset={_currentIndex * 100}&limit=100&rest=show&lang=";
-            }
+        private string GetUrl()
+        {
+            return $"/ajax/user/{PixivFetchEngine._uid}/illusts/bookmarks?tag={HttpUtility.UrlEncode(PixivFetchEngine._tag)}&offset={_currentIndex * 100}&limit=100&rest=show&lang=";
         }
     }
 }

@@ -37,170 +37,169 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 
-namespace Pixeval.UserControls
+namespace Pixeval.UserControls;
+
+// use "load failed" image for those thumbnails who failed to load its source due to various reasons
+// note: please ALWAYS add e.Handled = true before every "tapped" event for the buttons
+public sealed partial class IllustrationGrid
 {
-    // use "load failed" image for those thumbnails who failed to load its source due to various reasons
-    // note: please ALWAYS add e.Handled = true before every "tapped" event for the buttons
-    public sealed partial class IllustrationGrid
+    private static readonly ExponentialEase ImageSourceSetEasingFunction = new()
     {
-        private static readonly ExponentialEase ImageSourceSetEasingFunction = new()
-        {
-            EasingMode = EasingMode.EaseOut,
-            Exponent = 12
-        };
+        EasingMode = EasingMode.EaseOut,
+        Exponent = 12
+    };
 
-        public IllustrationGrid()
+    public IllustrationGrid()
+    {
+        InitializeComponent();
+        ViewModel = new IllustrationGridViewModel();
+    }
+
+    public IllustrationGridViewModel ViewModel { get; set; }
+
+    private void IllustrationGrid_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        switch (App.AppViewModel.AppSetting.ThumbnailDirection)
         {
-            InitializeComponent();
-            ViewModel = new IllustrationGridViewModel();
+            case ThumbnailDirection.Landscape:
+                IllustrationGridView.ItemHeight = 180;
+                IllustrationGridView.DesiredWidth = 250;
+                break;
+            case ThumbnailDirection.Portrait:
+                IllustrationGridView.ItemHeight = 250;
+                IllustrationGridView.DesiredWidth = 180;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    private async void RemoveBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        e.Handled = true;
+        var viewModel = sender.GetDataContext<IllustrationViewModel>();
+        await viewModel.RemoveBookmarkAsync();
+    }
+
+    private async void PostBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        e.Handled = true;
+        var viewModel = sender.GetDataContext<IllustrationViewModel>();
+        await viewModel.PostPublicBookmarkAsync();
+    }
+
+    private void Thumbnail_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Shift).HasFlag(CoreVirtualKeyStates.Down))
+        {
+            // User is doing the range selection
+            return;
         }
 
-        public IllustrationGridViewModel ViewModel { get; set; }
+        e.Handled = true;
+        WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(sender as UIElement));
 
-        private void IllustrationGrid_OnLoaded(object sender, RoutedEventArgs e)
+        var viewModels = sender.GetDataContext<IllustrationViewModel>()
+            .GetMangaIllustrationViewModels()
+            .ToArray();
+
+        ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement) sender);
+        App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo());
+    }
+
+    private void IllustrationThumbnailContainerItem_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        e.Handled = true;
+    }
+
+    private async void IllustrationThumbnailContainerItem_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
+    {
+        var context = sender.GetDataContext<IllustrationViewModel>();
+        var preloadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
+        if (args.BringIntoViewDistanceY <= sender.ActualHeight * preloadRows) // [preloadRows] element ahead
         {
-            switch (App.AppViewModel.AppSetting.ThumbnailDirection)
+            if (await context.LoadThumbnailIfRequired())
             {
-                case ThumbnailDirection.Landscape:
-                    IllustrationGridView.ItemHeight = 180;
-                    IllustrationGridView.DesiredWidth = 250;
-                    break;
-                case ThumbnailDirection.Portrait:
-                    IllustrationGridView.ItemHeight = 250;
-                    IllustrationGridView.DesiredWidth = 180;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        private async void RemoveBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            e.Handled = true;
-            var viewModel = sender.GetDataContext<IllustrationViewModel>();
-            await viewModel.RemoveBookmarkAsync();
-        }
-
-        private async void PostBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            e.Handled = true;
-            var viewModel = sender.GetDataContext<IllustrationViewModel>();
-            await viewModel.PostPublicBookmarkAsync();
-        }
-
-        private void Thumbnail_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            if (InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Shift).HasFlag(CoreVirtualKeyStates.Down))
-            {
-                // User is doing the range selection
-                return;
-            }
-
-            e.Handled = true;
-            WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(sender as UIElement));
-
-            var viewModels = sender.GetDataContext<IllustrationViewModel>()
-                .GetMangaIllustrationViewModels()
-                .ToArray();
-
-            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement) sender);
-            App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo());
-        }
-
-        private void IllustrationThumbnailContainerItem_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        private async void IllustrationThumbnailContainerItem_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
-        {
-            var context = sender.GetDataContext<IllustrationViewModel>();
-            var preloadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
-            if (args.BringIntoViewDistanceY <= sender.ActualHeight * preloadRows) // [preloadRows] element ahead
-            {
-                if (await context.LoadThumbnailIfRequired())
+                var transform = (ScaleTransform)sender.RenderTransform;
+                if (sender.IsFullyOrPartiallyVisible(this))
                 {
-                    var transform = (ScaleTransform)sender.RenderTransform;
-                    if (sender.IsFullyOrPartiallyVisible(this))
-                    {
-                        var scaleXAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleX), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
-                        var scaleYAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleY), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
-                        var opacityAnimation = sender.CreateDoubleAnimation(nameof(sender.Opacity), from: 0, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
-                        UIHelper.CreateStoryboard(scaleXAnimation, scaleYAnimation, opacityAnimation).Begin();
-                    }
-                    else
-                    {
-                        transform.ScaleX = 1;
-                        transform.ScaleY = 1;
-                        sender.Opacity = 1;
-                    }
+                    var scaleXAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleX), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
+                    var scaleYAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleY), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
+                    var opacityAnimation = sender.CreateDoubleAnimation(nameof(sender.Opacity), from: 0, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
+                    UIHelper.CreateStoryboard(scaleXAnimation, scaleYAnimation, opacityAnimation).Begin();
                 }
-
-                return;
+                else
+                {
+                    transform.ScaleX = 1;
+                    transform.ScaleY = 1;
+                    sender.Opacity = 1;
+                }
             }
 
-            // small tricks to reduce memory consumption
-            switch (context)
-            {
-                case { LoadingThumbnail: true }:
-                    context.LoadingThumbnailCancellationHandle.Cancel();
-                    break;
-                case { ThumbnailSource: not null }:
-                    var source = context.ThumbnailSource;
-                    context.ThumbnailSource = null;
-                    source.Dispose();
-                    break;
-            }
+            return;
         }
 
-        public UIElement? GetItemContainer(IllustrationViewModel viewModel)
+        // small tricks to reduce memory consumption
+        switch (context)
         {
-            return IllustrationGridView.ContainerFromItem(viewModel) as UIElement;
+            case { LoadingThumbnail: true }:
+                context.LoadingThumbnailCancellationHandle.Cancel();
+                break;
+            case { ThumbnailSource: not null }:
+                var source = context.ThumbnailSource;
+                context.ThumbnailSource = null;
+                source.Dispose();
+                break;
         }
+    }
 
-        private void BookmarkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            sender.GetDataContext<IllustrationViewModel>().SwitchBookmarkStateAsync();
-        }
+    public UIElement? GetItemContainer(IllustrationViewModel viewModel)
+    {
+        return IllustrationGridView.ContainerFromItem(viewModel) as UIElement;
+    }
 
-        private async void SaveContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            await sender.GetDataContext<IllustrationViewModel>().SaveAsync();
-        }
+    private void BookmarkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        sender.GetDataContext<IllustrationViewModel>().SwitchBookmarkStateAsync();
+    }
 
-        private async void SaveAsContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            await sender.GetDataContext<IllustrationViewModel>().SaveAsAsync();
-        }
+    private async void SaveContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        await sender.GetDataContext<IllustrationViewModel>().SaveAsync();
+    }
 
-        private async void OpenInBrowserContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<IllustrationViewModel>().Id));
-        }
+    private async void SaveAsContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        await sender.GetDataContext<IllustrationViewModel>().SaveAsAsync();
+    }
 
-        private void AddToBookmarkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
+    private async void OpenInBrowserContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<IllustrationViewModel>().Id));
+    }
 
-        private void CopyWebLinkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString()));
-        }
+    private void AddToBookmarkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        throw new NotImplementedException();
+    }
 
-        private void CopyAppLinkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationAppUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString()));
-        }
+    private void CopyWebLinkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString()));
+    }
 
-        private async void ShowQrCodeContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            await ViewModel.ShowQrCodeForIllustrationAsync(sender.GetDataContext<IllustrationViewModel>());
-        }
+    private void CopyAppLinkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationAppUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString()));
+    }
 
-        private async void ShowPixEzQrCodeContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            await ViewModel.ShowPixEzQrCodeForIllustrationAsync(sender.GetDataContext<IllustrationViewModel>());
-        }
+    private async void ShowQrCodeContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        await ViewModel.ShowQrCodeForIllustrationAsync(sender.GetDataContext<IllustrationViewModel>());
+    }
+
+    private async void ShowPixEzQrCodeContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        await ViewModel.ShowPixEzQrCodeForIllustrationAsync(sender.GetDataContext<IllustrationViewModel>());
     }
 }

@@ -25,101 +25,100 @@ using Windows.Foundation;
 using Windows.Storage;
 using Pixeval.Util.IO;
 
-namespace Pixeval.AppManagement
+namespace Pixeval.AppManagement;
+
+public class AppKnownFolders
 {
-    public class AppKnownFolders
+    public static AppKnownFolders Local = new(ApplicationData.Current.LocalFolder, _ => ApplicationData.Current.ClearAsync(ApplicationDataLocality.Local).AsTask());
+
+    public static AppKnownFolders LoginProxy = null!;
+
+    public static AppKnownFolders SavedWallPaper = null!;
+
+    public static AppKnownFolders Temporary = new(ApplicationData.Current.TemporaryFolder, _ => ApplicationData.Current.ClearAsync(ApplicationDataLocality.Temporary).AsTask());
+
+    private static async Task<AppKnownFolders> GetOrCreate(AppKnownFolders folder, string subfolderName)
     {
-        public static AppKnownFolders Local = new(ApplicationData.Current.LocalFolder, _ => ApplicationData.Current.ClearAsync(ApplicationDataLocality.Local).AsTask());
+        return new AppKnownFolders(await folder.Self.GetOrCreateFolderAsync(subfolderName));
+    }
 
-        public static AppKnownFolders LoginProxy = null!;
+    public static async Task InitializeAsync()
+    {
+        LoginProxy = await GetOrCreate(Local, "LoginProxy");
+        SavedWallPaper = await GetOrCreate(Local, "Wallpapers");
+    }
 
-        public static AppKnownFolders SavedWallPaper = null!;
+    public static IAsyncOperation<StorageFile> CreateTemporaryFileWithRandomNameAsync(string? extension = null)
+    {
+        return Temporary.CreateFileAsync($"{Guid.NewGuid().ToString()}.{extension ?? "temp"}");
+    }
 
-        public static AppKnownFolders Temporary = new(ApplicationData.Current.TemporaryFolder, _ => ApplicationData.Current.ClearAsync(ApplicationDataLocality.Temporary).AsTask());
+    public static IAsyncOperation<StorageFile> CreateTemporaryFileWithNameAsync(string name, string? extension = null)
+    {
+        return Temporary.CreateFileAsync($"{name}.{extension ?? "temp"}");
+    }
 
-        private static async Task<AppKnownFolders> GetOrCreate(AppKnownFolders folder, string subfolderName)
-        {
-            return new AppKnownFolders(await folder.Self.GetOrCreateFolderAsync(subfolderName));
-        }
+    private readonly Func<StorageFolder, Task>? _deleter;
 
-        public static async Task InitializeAsync()
-        {
-            LoginProxy = await GetOrCreate(Local, "LoginProxy");
-            SavedWallPaper = await GetOrCreate(Local, "Wallpapers");
-        }
+    public StorageFolder Self { get; }
 
-        public static IAsyncOperation<StorageFile> CreateTemporaryFileWithRandomNameAsync(string? extension = null)
-        {
-            return Temporary.CreateFileAsync($"{Guid.NewGuid().ToString()}.{extension ?? "temp"}");
-        }
+    public AppKnownFolders(StorageFolder self)
+    {
+        Self = self;
+    }
 
-        public static IAsyncOperation<StorageFile> CreateTemporaryFileWithNameAsync(string name, string? extension = null)
-        {
-            return Temporary.CreateFileAsync($"{name}.{extension ?? "temp"}");
-        }
+    private AppKnownFolders(StorageFolder self, Func<StorageFolder, Task> deleter) : this(self)
+    {
+        _deleter = deleter;
+    }
 
-        private readonly Func<StorageFolder, Task>? _deleter;
+    public IAsyncOperation<StorageFile> GetFileAsync(string name)
+    {
+        return Self.GetFileAsync(name);
+    }
 
-        public StorageFolder Self { get; }
+    public IAsyncOperation<StorageFolder> GetFolderAsync(string name)
+    {
+        return Self.GetFolderAsync(name);
+    }
 
-        public AppKnownFolders(StorageFolder self)
-        {
-            Self = self;
-        }
+    public async Task<StorageFolder?> TryGetFolderRelativeToSelfAsync(string pathWithoutSlash)
+    {
+        return await Self.TryGetItemAsync(pathWithoutSlash) as StorageFolder;
+    }
 
-        private AppKnownFolders(StorageFolder self, Func<StorageFolder, Task> deleter) : this(self)
-        {
-            _deleter = deleter;
-        }
+    public async Task<StorageFile?> TryGetFileRelativeToSelfAsync(string pathWithoutSlash)
+    {
+        return await Self.TryGetItemAsync(pathWithoutSlash) as StorageFile;
+    }
 
-        public IAsyncOperation<StorageFile> GetFileAsync(string name)
-        {
-            return Self.GetFileAsync(name);
-        }
+    public IAsyncOperation<StorageFile> CreateFileAsync(string name, CreationCollisionOption collisionOption = CreationCollisionOption.ReplaceExisting)
+    {
+        return Self.CreateFileAsync(name, collisionOption);
+    }
 
-        public IAsyncOperation<StorageFolder> GetFolderAsync(string name)
-        {
-            return Self.GetFolderAsync(name);
-        }
+    public IAsyncOperation<StorageFolder> CreateFolderAsync(string name, CreationCollisionOption collisionOption = CreationCollisionOption.ReplaceExisting)
+    {
+        return Self.CreateFolderAsync(name, collisionOption);
+    }
 
-        public async Task<StorageFolder?> TryGetFolderRelativeToSelfAsync(string pathWithoutSlash)
-        {
-            return await Self.TryGetItemAsync(pathWithoutSlash) as StorageFolder;
-        }
+    public Task<StorageFile> GetOrCreateFileAsync(string name)
+    {
+        return Self.GetOrCreateFileAsync(name);
+    }
 
-        public async Task<StorageFile?> TryGetFileRelativeToSelfAsync(string pathWithoutSlash)
-        {
-            return await Self.TryGetItemAsync(pathWithoutSlash) as StorageFile;
-        }
+    public Task<StorageFolder> GetOrCreateFolderAsync(string name)
+    {
+        return Self.GetOrCreateFolderAsync(name);
+    }
 
-        public IAsyncOperation<StorageFile> CreateFileAsync(string name, CreationCollisionOption collisionOption = CreationCollisionOption.ReplaceExisting)
-        {
-            return Self.CreateFileAsync(name, collisionOption);
-        }
+    public Task ClearAsync()
+    {
+        return _deleter is not null ? _deleter(Self) : Self.ClearDirectoryAsync();
+    }
 
-        public IAsyncOperation<StorageFolder> CreateFolderAsync(string name, CreationCollisionOption collisionOption = CreationCollisionOption.ReplaceExisting)
-        {
-            return Self.CreateFolderAsync(name, collisionOption);
-        }
-
-        public Task<StorageFile> GetOrCreateFileAsync(string name)
-        {
-            return Self.GetOrCreateFileAsync(name);
-        }
-
-        public Task<StorageFolder> GetOrCreateFolderAsync(string name)
-        {
-            return Self.GetOrCreateFolderAsync(name);
-        }
-
-        public Task ClearAsync()
-        {
-            return _deleter is not null ? _deleter(Self) : Self.ClearDirectoryAsync();
-        }
-
-        public string Resolve(string path)
-        {
-            return Path.Combine(Self.Path, path);
-        }
+    public string Resolve(string path)
+    {
+        return Path.Combine(Self.Path, path);
     }
 }
