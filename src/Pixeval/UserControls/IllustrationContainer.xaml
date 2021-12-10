@@ -12,6 +12,8 @@
         <local:IllustrationGridCommandBar x:Name="TopCommandBar"
                                           HorizontalAlignment="Stretch"
                                           controls:DockPanel.Dock="Top"
+                                          PrimaryCommandsSupplements="{x:Bind PrimaryCommandsSupplements, Mode=OneWay}"
+                                          SecondaryCommandsSupplements="{x:Bind SecondaryCommandsSupplements, Mode=TwoWay}"
                                           IsDefaultCommandsEnabled="{x:Bind TopCommandBar.ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
                                           ViewModel="{x:Bind IllustrationGrid.ViewModel}" />
         <local:IllustrationGrid x:Name="IllustrationGrid" />

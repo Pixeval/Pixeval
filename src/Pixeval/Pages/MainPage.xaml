@@ -104,7 +104,8 @@
                                 Icon="{ui:FontIcon Glyph=LibraryE8F1}"
                                 Tag="{x:Bind _viewModel.BookmarksTag}" />
             <NavigationViewItem x:Uid="/MainPage/FollowingsTab"
-                                Icon="{ui:FontIcon Glyph=PeopleE716}" />
+                                Icon="{ui:FontIcon Glyph=PeopleE716}"
+                                Tag="{x:Bind _viewModel.FollowingsTag}" />
             <NavigationViewItem x:Uid="/MainPage/SpotlightsTab"
                                 Icon="{ui:FontIcon Glyph=MapLayersE81E}" />
             <NavigationViewItem x:Uid="/MainPage/FeedsTab"

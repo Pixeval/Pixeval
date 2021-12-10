@@ -90,7 +90,7 @@ public sealed partial class IllustrationInfoPage
 
     private string GetIllustratorIdText()
     {
-        return IllustrationInfoPageResources.IllustratorNameFormatted.Format(_viewModel.IllustratorUid);
+        return IllustrationInfoPageResources.IllustratorIdFormatted.Format(_viewModel.IllustratorUid);
     }
 
     private string GetIllustrationDimensionText()

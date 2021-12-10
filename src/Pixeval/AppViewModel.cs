@@ -67,7 +67,8 @@ public class AppViewModel : AutoActivateObservableRecipient,
                 services.AddSingleton<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>, IllustrationDownloadTaskFactory>()
                     .AddSingleton(new SQLiteAsyncConnection(AppContext.DatabaseFilePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex | SQLiteOpenFlags.ReadWrite))
                     .AddSingleton(provider => IPersistentManager<DownloadHistoryEntry, ObservableDownloadTask>.CreateAsync<DownloadHistoryPersistentManager>(provider.GetRequiredService<SQLiteAsyncConnection>(), App.AppViewModel.AppSetting.MaximumDownloadHistoryRecords))
-                    .AddSingleton(provider => IPersistentManager<SearchHistoryEntry, SearchHistoryEntry>.CreateAsync<SearchHistoryPersistentManager>(provider.GetRequiredService<SQLiteAsyncConnection>(), App.AppViewModel.AppSetting.MaximumSearchHistoryRecords)));
+                    .AddSingleton(provider => IPersistentManager<SearchHistoryEntry, SearchHistoryEntry>.CreateAsync<SearchHistoryPersistentManager>(provider.GetRequiredService<SQLiteAsyncConnection>(), App.AppViewModel.AppSetting.MaximumSearchHistoryRecords))
+                    .AddSingleton(provider => IPersistentManager<BrowseHistoryEntry, BrowseHistoryEntry>.CreateAsync<BrowseHistoryPersistentManager>(provider.GetRequiredService<SQLiteAsyncConnection>(), App.AppViewModel.AppSetting.MaximumBrowseHistoryRecords)));
     }
 
     public AppViewModel(App app)

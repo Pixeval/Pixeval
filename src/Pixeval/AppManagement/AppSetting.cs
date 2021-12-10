@@ -72,6 +72,7 @@ public record AppSetting
         bool overwriteDownloadedFile,
         int maximumDownloadHistoryRecords,
         int maximumSearchHistoryRecords,
+        int maximumBrowseHistoryRecords,
         string reverseSearchApiKey,
         int reverseSearchResultSimilarityThreshold)
     {
@@ -105,6 +106,7 @@ public record AppSetting
         OverwriteDownloadedFile = overwriteDownloadedFile;
         MaximumDownloadHistoryRecords = maximumDownloadHistoryRecords;
         MaximumSearchHistoryRecords = maximumSearchHistoryRecords;
+        MaximumBrowseHistoryRecords = maximumBrowseHistoryRecords;
         ReverseSearchApiKey = reverseSearchApiKey;
         ReverseSearchResultSimilarityThreshold = reverseSearchResultSimilarityThreshold;
     }
@@ -249,6 +251,9 @@ public record AppSetting
 
     [DefaultValue(50)]
     public int MaximumSearchHistoryRecords { get; set; }
+
+    [DefaultValue(100)]
+    public int MaximumBrowseHistoryRecords { get; set; }
 
     [DefaultValue(null)]
     public string? ReverseSearchApiKey { get; set; }

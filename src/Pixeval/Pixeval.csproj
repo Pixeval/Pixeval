@@ -53,6 +53,7 @@
       <None Remove="Controls\Card\CardControl.xaml" />
       <None Remove="Controls\Expander\Expander.xaml" />
       <None Remove="Controls\IconButton\IconButton.xaml" />
+      <None Remove="Controls\IllustratorView\IllustratorView.xaml" />
       <None Remove="Controls\NotifyOnLoadedCalendarDatePicker\NotifyOnLoadedCalendarDatePicker.xaml" />
       <None Remove="Controls\NotifyOnLoadedComboBox\NotifyOnLoadedComboBox.xaml" />
       <None Remove="Controls\PersonView\PersonView.xaml" />
@@ -66,6 +67,7 @@
       <None Remove="Controls\Setting.UI\UserControls\SettingEntryHeader.xaml" />
       <None Remove="Controls\TokenInputTextBox\TokenInputTextBox.xaml" />
       <None Remove="Dialogs\ReverseSearchApiKeyNotPresentDialog.xaml" />
+      <None Remove="Pages\Capability\FollowingsPage.xaml" />
       <None Remove="Pages\Download\DownloadListEntry.xaml" />
       <None Remove="Pages\IllustrationViewer\CommentRepliesPage.xaml" />
       <None Remove="Pages\IllustrationViewer\PixivReplyEmojiListPage.xaml" />
@@ -84,6 +86,7 @@
       <None Remove="Strings\zh-CN\DownloadListPage.resw" />
       <None Remove="Strings\zh-CN\DownloadListPageDeleteTasksDialog.resw" />
       <None Remove="Strings\zh-CN\DownloadTask.resw" />
+      <None Remove="Strings\zh-CN\FollowingsPage.resw" />
       <None Remove="Strings\zh-CN\IllustrationGrid.resw" />
       <None Remove="Strings\zh-CN\IllustrationGridCommandBar.resw" />
       <None Remove="Strings\zh-CN\IllustrationInfoPage.resw" />
@@ -184,6 +187,9 @@
       <ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
    </ItemGroup>
    <ItemGroup>
+      <Page Update="Controls\IllustratorView\IllustratorView.xaml">
+        <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      </Page>
       <Page Update="Pages\Capability\SearchResultsPage.xaml">
         <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       </Page>
@@ -247,6 +253,7 @@
       <PRIResource Include="Strings\zh-CN\DownloadListPage.resw" />
       <PRIResource Include="Strings\zh-CN\DownloadListPageDeleteTasksDialog.resw" />
       <PRIResource Include="Strings\zh-CN\DownloadTask.resw" />
+      <PRIResource Include="Strings\zh-CN\FollowingsPage.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationGrid.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationGridCommandBar.resw" />
       <PRIResource Include="Strings\zh-CN\IllustrationInfoPage.resw" />
@@ -289,6 +296,9 @@
        <Generator>MSBuild:Compile</Generator>
      </Page>
      <Page Update="Dialogs\ReverseSearchApiKeyNotPresentDialog.xaml">
+       <Generator>MSBuild:Compile</Generator>
+     </Page>
+     <Page Update="Pages\Capability\FollowingsPage.xaml">
        <Generator>MSBuild:Compile</Generator>
      </Page>
      <None Update="Pages\Capability\RecentPostsPage.xaml">

@@ -270,6 +270,13 @@ public class SettingsPageViewModel : ObservableObject
         set => SetProperty(_appSetting.MaximumSearchHistoryRecords, value, _appSetting, (settings, value) => settings.MaximumSearchHistoryRecords = value);
     }
 
+    [DefaultValue(100)]
+    public int MaximumBrowseHistoryRecords
+    {
+        get => _appSetting.MaximumBrowseHistoryRecords;
+        set => SetProperty(_appSetting.MaximumBrowseHistoryRecords, value, _appSetting, (settings, value) => settings.MaximumBrowseHistoryRecords = value);
+    }
+
     [DefaultValue(null)]
     public string? ReverseSearchApiKey
     {

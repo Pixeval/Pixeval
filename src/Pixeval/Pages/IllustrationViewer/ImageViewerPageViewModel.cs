@@ -24,11 +24,14 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Net;
+using Pixeval.Database;
+using Pixeval.Database.Managers;
 using Pixeval.Misc;
 using Pixeval.UserControls;
 using Pixeval.Util;
@@ -163,12 +166,21 @@ public class ImageViewerPageViewModel : ObservableObject, IDisposable
         };
     }
 
+    private async Task AddHistory()
+    {
+        using var scope = App.AppViewModel.AppServicesScope;
+        var manager = await scope.ServiceProvider.GetRequiredService<Task<BrowseHistoryPersistentManager>>();
+        await manager.DeleteAsync(x => x.Id == IllustrationViewerPageViewModel.IllustrationId);
+        await manager.InsertAsync(new BrowseHistoryEntry { Id = IllustrationViewerPageViewModel.IllustrationId });
+    }
+
     private async Task LoadImage()
     {
         _ = IllustrationViewModel.LoadThumbnailIfRequired().ContinueWith(_ =>
         {
             OriginalImageSource ??= IllustrationViewModel.ThumbnailSource;
         }, TaskScheduler.FromCurrentSynchronizationContext());
+        await AddHistory();
         await LoadOriginalImage();
     }
 

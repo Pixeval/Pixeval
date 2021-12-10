@@ -29,7 +29,7 @@ namespace Pixeval.CoreApi.Net.Response;
 internal class PixivSingleUserResponse
 {
     [JsonPropertyName("user")]
-    public User.Info? UserEntity { get; set; }
+    public UserInfo? UserEntity { get; set; }
 
     [JsonPropertyName("profile")]
     public Profile? UserProfile { get; set; }

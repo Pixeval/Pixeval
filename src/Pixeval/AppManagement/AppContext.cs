@@ -280,6 +280,7 @@ public static class AppContext
             ConfigurationContainer.Values[nameof(AppSetting.OverwriteDownloadedFile)] = appSetting.OverwriteDownloadedFile;
             ConfigurationContainer.Values[nameof(AppSetting.MaximumDownloadHistoryRecords)] = appSetting.MaximumDownloadHistoryRecords;
             ConfigurationContainer.Values[nameof(AppSetting.MaximumSearchHistoryRecords)] = appSetting.MaximumSearchHistoryRecords;
+            ConfigurationContainer.Values[nameof(AppSetting.MaximumBrowseHistoryRecords)] = appSetting.MaximumBrowseHistoryRecords;
             ConfigurationContainer.Values[nameof(AppSetting.ReverseSearchApiKey)] = appSetting.ReverseSearchApiKey;
             ConfigurationContainer.Values[nameof(AppSetting.ReverseSearchResultSimilarityThreshold)] = appSetting.ReverseSearchResultSimilarityThreshold;
         }
@@ -345,6 +346,7 @@ public static class AppContext
                 ConfigurationContainer.Values[nameof(AppSetting.OverwriteDownloadedFile)].CastOrThrow<bool>(),
                 ConfigurationContainer.Values[nameof(AppSetting.MaximumDownloadHistoryRecords)].CastOrThrow<int>(),
                 ConfigurationContainer.Values[nameof(AppSetting.MaximumSearchHistoryRecords)].CastOrThrow<int>(),
+                ConfigurationContainer.Values[nameof(AppSetting.MaximumBrowseHistoryRecords)].CastOrThrow<int>(),
                 ConfigurationContainer.Values[nameof(AppSetting.ReverseSearchApiKey)].CastOrThrow<string>(),
                 ConfigurationContainer.Values[nameof(AppSetting.ReverseSearchResultSimilarityThreshold)].CastOrThrow<int>());
         }

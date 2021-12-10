@@ -59,6 +59,8 @@ public class MainPageViewModel : AutoActivateObservableRecipient, IRecipient<Log
 
     public readonly NavigationViewTag RecentPostsTag = new(typeof(RecentPostsPage), App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicy.Public));
 
+    public readonly NavigationViewTag FollowingsTag = new(typeof(FollowingsPage), null);
+
     public readonly NavigationViewTag RecommendsTag = new(typeof(RecommendationPage), App.AppViewModel.MakoClient.Recommendations(targetFilter: App.AppViewModel.AppSetting.TargetFilter));
 
     public readonly NavigationViewTag SettingsTag = new(typeof(SettingsPage), App.AppViewModel.MakoClient.Configuration);

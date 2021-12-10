@@ -363,6 +363,17 @@
                             </actionableSettingEntry:ActionableSettingEntry.ActionContent>
                         </actionableSettingEntry:ActionableSettingEntry>
 
+                        <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/MaximumBrowseHistoryRecordsEntry"
+                                                                       Icon="{ui:FontIcon Glyph=HistoryE81C}">
+                            <actionableSettingEntry:ActionableSettingEntry.ActionContent>
+                                <NumberBox x:Uid="/SettingsPage/MaximumBrowseHistoryRecordsNumberBox"
+                                           Maximum="200"
+                                           Minimum="10"
+                                           Style="{StaticResource SettingsNumberBoxStyle}"
+                                           Value="{x:Bind _viewModel.MaximumBrowseHistoryRecords, Mode=TwoWay}" />
+                            </actionableSettingEntry:ActionableSettingEntry.ActionContent>
+                        </actionableSettingEntry:ActionableSettingEntry>
+
                         <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/ImageMirrorServerEntry"
                                                                        Icon="{ui:FontIcon Glyph=HardDriveEDA2}">
                             <TextBox x:Name="ImageMirrorServerTextBox"

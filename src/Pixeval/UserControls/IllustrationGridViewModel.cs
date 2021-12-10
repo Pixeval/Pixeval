@@ -95,29 +95,33 @@ public class IllustrationGridViewModel : ObservableObject, IDisposable
                 }
 
                 added.Add(illustration.Id); // add to the already-added-illustration list
-                var viewModel = new IllustrationViewModel(illustration);
-                viewModel.OnIsSelectedChanged += (_, model) => // add/remove the viewModel to/from SelectedIllustrations according to the IsSelected Property
-                {
-                    if (model.IsSelected)
-                    {
-                        SelectedIllustrations.Add(model);
-                    }
-                    else
-                    {
-                        SelectedIllustrations.Remove(model);
-                    }
-
-                    // Update the IsAnyIllustrationSelected Property if any of the viewModel's IsSelected property changes
-                    IsAnyIllustrationSelected = SelectedIllustrations.Any();
-
-                    var count = SelectedIllustrations.Count;
-                    SelectionLabel = count == 0
-                        ? IllustrationGridCommandBarResources.CancelSelectionButtonDefaultLabel
-                        : IllustrationGridCommandBarResources.CancelSelectionButtonFormatted.Format(count);
-                };
-                IllustrationsView.Add(viewModel);
+                AddIllustrationViewModel(new IllustrationViewModel(illustration));
             }
         }
+    }
+
+    public void AddIllustrationViewModel(IllustrationViewModel viewModel)
+    {
+        viewModel.OnIsSelectedChanged += (_, model) => // add/remove the viewModel to/from SelectedIllustrations according to the IsSelected Property
+        {
+            if (model.IsSelected)
+            {
+                SelectedIllustrations.Add(model);
+            }
+            else
+            {
+                SelectedIllustrations.Remove(model);
+            }
+
+            // Update the IsAnyIllustrationSelected Property if any of the viewModel's IsSelected property changes
+            IsAnyIllustrationSelected = SelectedIllustrations.Any();
+
+            var count = SelectedIllustrations.Count;
+            SelectionLabel = count == 0
+                ? IllustrationGridCommandBarResources.CancelSelectionButtonDefaultLabel
+                : IllustrationGridCommandBarResources.CancelSelectionButtonFormatted.Format(count);
+        };
+        IllustrationsView.Add(viewModel);
     }
 
     public async Task FillAsync(IFetchEngine<Illustration?>? newEngine, int? itemsLimit = null)
