@@ -43,8 +43,6 @@ jobs:
 
             - name: Publish the application
               run:  msbuild -t:publish -p:Configuration=Release -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:PackageCertificateThumbprint="$env:private_key_thumbprint"
-            - name: Remove pfx
-              run: rm ./temp.pfx
             - name: Upload a Build Artifact
               uses: actions/upload-artifact@v2
               with:
