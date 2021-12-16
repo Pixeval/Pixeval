@@ -15,6 +15,8 @@ jobs:
 
         env:
             private_key: ${{ secrets.PRIVATE_KEY }}
+            private_key_thumbprint: ${{ secrets.PRIVATE_KEY_THUMBPRINT }}
+            private_key_password: ${{ secrets.PRIVATE_KEY_PASSWORD }}
         steps:
             - name: Setup .NET Core SDK
               uses: actions/setup-dotnet@v1.9.0
@@ -30,14 +32,17 @@ jobs:
             - name: setup-msbuild
               uses: microsoft/setup-msbuild@v1
             - name: Get pfx
-              run: '[io.file]::WriteAllBytes("./temp.pfx",[convert]::FromBase64String($env:private_key))'
+              run: |
+                '[io.file]::WriteAllBytes("./temp.pfx",[convert]::FromBase64String($env:private_key))'
+                Import-PfxCertificate -FilePath ./temp.pfx -CertStoreLocation Cert:\LocalMachine\Root -Password (ConvertTo-SecureString -AsPlainText "$env:private_key_password")
+                Remove-Item -Path "./temp.pfx"
               shell: pwsh
 
             - name: Restore the application
               run: msbuild -t:restore -p:Platform=${{ matrix.platform }}
 
             - name: Publish the application
-              run:  msbuild -t:publish -p:Configuration=Release -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:PackageCertificateKeyFile="./temp.pfx"
+              run:  msbuild -t:publish -p:Configuration=Release -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:PackageCertificateThumbprint="$env:private_key_thumbprint"
             - name: Remove pfx
               run: rm ./temp.pfx
             - name: Upload a Build Artifact
