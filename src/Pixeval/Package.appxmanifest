@@ -8,12 +8,12 @@
 
   <Identity
     Name="9a360099-e513-45d0-b3f1-3e599691ea06"
-    Publisher="CN=Dylech30th"
+    Publisher="CN=Pixeval"
     Version="1.0.1.0" />
 
   <Properties>
     <DisplayName>Pixeval</DisplayName>
-    <PublisherDisplayName>Dylech30th</PublisherDisplayName>
+    <PublisherDisplayName>Pixeval</PublisherDisplayName>
     <Logo>Assets\Images\Tiles\StoreLogo.png</Logo>
   </Properties>
 
