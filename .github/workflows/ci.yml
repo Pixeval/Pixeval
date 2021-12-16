@@ -33,7 +33,7 @@ jobs:
               uses: microsoft/setup-msbuild@v1
             - name: Get pfx
               run: |
-                '[io.file]::WriteAllBytes("$PWD/temp.pfx",[convert]::FromBase64String($env:private_key))'
+                [io.file]::WriteAllBytes("$PWD/temp.pfx",[convert]::FromBase64String($env:private_key))
                 Import-PfxCertificate -FilePath $PWD/temp.pfx -CertStoreLocation Cert:\LocalMachine\Root -Password (ConvertTo-SecureString -AsPlainText "$env:private_key_password")
                 Remove-Item -Path "$PWD/temp.pfx"
               shell: pwsh
