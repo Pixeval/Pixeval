@@ -42,9 +42,10 @@ jobs:
               run: msbuild -t:restore -p:Platform=${{ matrix.platform }}
 
             - name: Publish the application
-              run:  msbuild -t:publish -p:Configuration=Release -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:PackageCertificateThumbprint="$env:private_key_thumbprint"
+              run:  msbuild -t:publish -p:Configuration=Release -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:PackageCertificateThumbprint="$env:private_key_thumbprint" -p:OutDir="$PWD\output"
+              shell: pwsh
             - name: Upload a Build Artifact
               uses: actions/upload-artifact@v2
               with:
                   name: Pixeval
-                  path: "./src/Pixeval/AppPackages/*"
+                  path: "./output/AppPackages/*"
