@@ -70,7 +70,7 @@ public sealed partial class LoginPage
             _ = await MessageDialogBuilder.CreateAcknowledgement(
                     this,
                     LoginPageResources.ErrorWhileLoggingInTitle,
-                    LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.Message))
+                    LoginPageResources.ErrorWhileLogginInContentFormatted.Format(exception.StackTrace))
                 .ShowAsync();
             Application.Current.Exit();
         }

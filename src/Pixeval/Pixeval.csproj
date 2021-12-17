@@ -14,7 +14,7 @@
       <EnableNETAnalyzers>false</EnableNETAnalyzers>
 	  <EnablePreviewFeatures>true</EnablePreviewFeatures>
       <ApplicationIcon />
-      <StartupObject />
+      <StartupObject>Pixeval.Program</StartupObject>
       <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
       <PublishProfile>Properties\PublishProfiles\win-$(Platform).pubxml</PublishProfile>
       <EnableDefaultPriItems>false</EnableDefaultPriItems>
@@ -146,10 +146,10 @@
       <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
       <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.8" />
       <PackageReference Include="PInvoke.User32" Version="0.7.104" />
+      <PackageReference Include="Pixeval.QRCoder" Version="1.4.3" />
       <PackageReference Include="ReverseMarkdown" Version="3.20.0" />
       <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
       <PackageReference Include="System.Linq.Async" Version="5.0.0" />
-      <PackageReference Include="QRCoder" Version="1.4.1" />
       <PackageReference Include="System.Runtime.Experimental" Version="6.0.0" />
       <Manifest Include="$(ApplicationManifest)" />
    </ItemGroup>
