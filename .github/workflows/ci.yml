@@ -44,8 +44,9 @@ jobs:
             - name: Publish the application
               run:  msbuild -t:publish -p:Configuration=Release -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:PackageCertificateThumbprint="$env:private_key_thumbprint" -p:OutDir="$PWD\output"
               shell: pwsh
+
             - name: Upload a Build Artifact
               uses: actions/upload-artifact@v2
               with:
-                  name: Pixeval
+                  name: Pixeval-${{ matrix.platform }}
                   path: "./output/AppPackages/*"
