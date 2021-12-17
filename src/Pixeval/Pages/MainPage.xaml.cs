@@ -89,7 +89,7 @@ public sealed partial class MainPage
 
         WeakReferenceMessenger.Default.Register<MainPage, MainPageFrameSetConnectedAnimationTargetMessage>(this, (_, message) => _connectedAnimationTarget = message.Sender);
         WeakReferenceMessenger.Default.Register<MainPage, NavigatingBackToMainPageMessage>(this, (_, message) => _illustrationViewerContent = message.IllustrationViewModel);
-        WeakReferenceMessenger.Default.Register<MainPage, IllustrationTagClickedMessage>(this, async (_, message) => await PerformSearchAsync(message.Tag));
+        WeakReferenceMessenger.Default.Register<MainPage, IllustrationTagClickedMessage>(this,  (_, message) =>  PerformSearch(message.Tag));
 
         // Connected animation to the element located in MainPage
         if (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation") is { } animation)
@@ -130,17 +130,17 @@ public sealed partial class MainPage
         GC.Collect();
     }
         
-    private async void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
+    private void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
     {
         var suggestBox = (AutoSuggestBox) sender;
         suggestBox.IsSuggestionListOpen = true;
 
         if (!_viewModel.Suggestions.Any()) 
-            await _viewModel.AppendSearchHistoryAsync(); // Show search history
+             _viewModel.AppendSearchHistory(); // Show search history
     }
 
     // 搜索并跳转至搜索结果
-    private async void KeywordAutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+    private void KeywordAutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
     {
         if (args.QueryText.IsNullOrBlank())
         {
@@ -150,7 +150,7 @@ public sealed partial class MainPage
             return;
         }
 
-        await PerformSearchAsync(args.QueryText);
+         PerformSearch(args.QueryText);
     }
 
     private void KeywordAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
@@ -173,16 +173,16 @@ public sealed partial class MainPage
             items.Clear();
 
             // Show search history
-            await _viewModel.AppendSearchHistoryAsync();
+             _viewModel.AppendSearchHistory();
         }
     }
 
-    private async Task PerformSearchAsync(string text)
+    private void PerformSearch(string text)
     {
         using (var scope = App.AppViewModel.AppServicesScope)
         {
-            var manager = await scope.ServiceProvider.GetRequiredService<Task<SearchHistoryPersistentManager>>();
-            await manager.InsertAsync(new SearchHistoryEntry
+            var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
+            manager.Insert(new SearchHistoryEntry
             {
                 Value = text,
                 Time = DateTime.Now,

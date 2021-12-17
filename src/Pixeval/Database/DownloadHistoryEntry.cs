@@ -18,13 +18,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using LiteDB;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Pixeval.Download;
-using SQLite;
 
 namespace Pixeval.Database;
 
-[Table("DownloadHistories")]
 public class DownloadHistoryEntry : ObservableObject
 {
     public DownloadHistoryEntry(DownloadState state, string? errorCause, string? destination, DownloadItemType type, string? id, string? title, string? description, string? url, string? thumbnail)
@@ -45,41 +44,32 @@ public class DownloadHistoryEntry : ObservableObject
     {
 
     }
-
-    [PrimaryKey]
-    [Column("destination")]
+    [BsonId]
+    public ObjectId DownloadHistoryEntryId { get; set; }
     public string? Destination { get; set; }
 
-    [Column("type")]
     public DownloadItemType Type { get; set; }
 
     private DownloadState _state;
-
-    [Column("state")]
+    
     public DownloadState State
     {
         get => _state;
         set => SetProperty(ref _state, value);
     }
-
-    [Column("work_id")]
+    
     public string? Id { get; set; }
-
-    [Column("work_title")]
+    
     public string? Title { get; set; }
-
-    [Column("work_desc")]
+    
     public string? Description { get; set; }
-
-    [Column("work_url")]
+    
     public string? Url { get; set; }
-
-    [Column("work_thumbnail")]
+    
     public string? Thumbnail { get; set; }
 
     private string? _errorCause;
-
-    [Column("work_error_cause")]
+    
     public string? ErrorCause
     {
         get => _errorCause;

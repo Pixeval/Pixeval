@@ -104,7 +104,7 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
     /// </summary>
     public int? IllustrationIndex => ContainerGridViewModel?.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
 
-    public ImageViewerPageViewModel[] ImageViewerPageViewModels { get; }
+    public ImageViewerPageViewModel[]? ImageViewerPageViewModels { get; }
 
     public int CurrentIndex
     {
@@ -132,19 +132,19 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
         set => SetProperty(ref _userProfileImageSource, value);
     }
 
-    public string IllustrationId => FirstIllustrationViewModel.Illustration.Id.ToString();
+    public string IllustrationId => FirstIllustrationViewModel?.Illustration?.Id.ToString();
 
     public string? IllustratorName => FirstIllustrationViewModel.Illustration.User?.Name;
 
     public string? IllustratorUid => FirstIllustrationViewModel.Illustration.User?.Id.ToString();
 
-    public bool IsManga => ImageViewerPageViewModels.Length > 1;
+    public bool IsManga => ImageViewerPageViewModels?.Length > 1;
 
     public bool IsUgoira => Current.IllustrationViewModel.Illustration.IsUgoira();
 
-    public IllustrationViewModel FirstIllustrationViewModel => FirstImageViewerPageViewModel.IllustrationViewModel;
+    public IllustrationViewModel? FirstIllustrationViewModel => FirstImageViewerPageViewModel?.IllustrationViewModel;
 
-    public ImageViewerPageViewModel FirstImageViewerPageViewModel => ImageViewerPageViewModels[0];
+    public ImageViewerPageViewModel? FirstImageViewerPageViewModel => ImageViewerPageViewModels?.FirstOrDefault();
 
     public bool IsInfoPaneOpen
     {

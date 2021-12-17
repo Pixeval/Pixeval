@@ -161,17 +161,17 @@ public class ImageViewerPageViewModel : ObservableObject, IDisposable
     {
         LoadingText = phase.GetLocalizedResource() switch
         {
-            { FormatKey: LoadingPhase } attr => attr.GetLocalizedResourceContent()?.Format((int) LoadingProgress),
+            { FormatKey: LoadingPhase } attr => attr.GetLocalizedResourceContent()?.Format((int)LoadingProgress),
             var attr => attr?.GetLocalizedResourceContent()
         };
     }
 
-    private async Task AddHistory()
+    private void AddHistory()
     {
         using var scope = App.AppViewModel.AppServicesScope;
-        var manager = await scope.ServiceProvider.GetRequiredService<Task<BrowseHistoryPersistentManager>>();
-        await manager.DeleteAsync(x => x.Id == IllustrationViewerPageViewModel.IllustrationId);
-        await manager.InsertAsync(new BrowseHistoryEntry { Id = IllustrationViewerPageViewModel.IllustrationId });
+        var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
+        manager.Delete(x => x.Id == IllustrationViewerPageViewModel.IllustrationId);
+        manager.Insert(new BrowseHistoryEntry { Id = IllustrationViewerPageViewModel.IllustrationId });
     }
 
     private async Task LoadImage()
@@ -180,7 +180,7 @@ public class ImageViewerPageViewModel : ObservableObject, IDisposable
         {
             OriginalImageSource ??= IllustrationViewModel.ThumbnailSource;
         }, TaskScheduler.FromCurrentSynchronizationContext());
-        await AddHistory();
+        AddHistory();
         await LoadOriginalImage();
     }
 
@@ -233,10 +233,10 @@ public class ImageViewerPageViewModel : ObservableObject, IDisposable
                         AdvancePhase(LoadingPhase.DownloadingImage);
                     }), ImageLoadingCancellationHandle))
             {
-                case Result<IRandomAccessStream>.Success (var s):
+                case Result<IRandomAccessStream>.Success(var s):
                     OriginalImageStream = s;
                     break;
-                case Result<IRandomAccessStream>.Failure (OperationCanceledException):
+                case Result<IRandomAccessStream>.Failure(OperationCanceledException):
                     // TODO add load failed image
                     return;
             }

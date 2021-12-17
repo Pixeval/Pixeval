@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using SQLite;
+using LiteDB;
 
 namespace Pixeval.Database.Managers;
 
@@ -14,55 +14,49 @@ namespace Pixeval.Database.Managers;
 public abstract class SimplePersistentManager<T> : IPersistentManager<T, T>
     where T : new()
 {
-    public SQLiteAsyncConnection Connection { get; init; } = null!;
+    public ILiteCollection<T> Collection { get; init; }
     public int MaximumRecords { get; set; }
-
-    public async Task InsertAsync(T t)
+    public void Insert(T t)
     {
-        if (await Connection.Table<DownloadHistoryEntry>().CountAsync() > MaximumRecords)
+        if (Collection.Count() > MaximumRecords)
         {
-            await Purge(MaximumRecords);
+            Purge(MaximumRecords);
         }
-        await Connection.InsertAsync(t);
+
+        Collection.Insert(t);
     }
 
-    public async Task<IEnumerable<T>> QueryAsync(Func<AsyncTableQuery<T>, AsyncTableQuery<T>> action)
+    public IEnumerable<T> Query(Expression<Func<T, bool>> predicate)
     {
-        return await action(Connection.Table<T>()).ToListAsync();
+        return Collection.Find(predicate);
     }
 
-    public async Task<IEnumerable<T>> SelectAsync(Expression<Func<T, bool>>? predicate = null, int? count = null)
+    public IEnumerable<T> Select(Expression<Func<T, bool>>? predicate = null, int? count = null)
     {
-        var query = Connection.Table<T>();
-        if (count != null)
-            query = query.Take((int) count);
+        var query = Collection.FindAll();
+        if (count.HasValue)
+            query = query.Take(count.Value);
         if (predicate != null)
-            query = query.Where(predicate);
-        return await query.ToListAsync();
+            query = query.Where(predicate.Compile());
+        return query.ToList();
     }
 
-    public Task DeleteAsync(Expression<Func<T, bool>> predicate)
+    public int Delete(Expression<Func<T, bool>> predicate)
     {
-        return Connection.Table<T>().DeleteAsync(predicate);
+        return Collection.DeleteMany(predicate);
     }
 
-    public async Task<IEnumerable<T>> EnumerateAsync()
+    public IEnumerable<T> Enumerate()
     {
-        return await Connection.Table<T>().ToListAsync();
+        return Collection.FindAll();
     }
 
-    public Task<IEnumerable<T>> RawDataAsync()
+    public void Purge(int limit)
     {
-        return EnumerateAsync();
-    }
-
-    public async Task Purge(int limit)
-    {
-        var list = (await EnumerateAsync()).ToList();
-        if (list.Count > limit)
+        if (Collection.Count() > limit)
         {
-            var last = list.Take(^limit..).ToHashSet();
-            await DeleteAsync(e => !last.Contains(e!));
+            var last = Collection.FindAll().Take(^limit..).ToHashSet();
+            Delete(e => !last.Contains(e!));
         }
     }
 }

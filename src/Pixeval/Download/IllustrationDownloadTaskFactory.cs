@@ -47,12 +47,12 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
     public async Task<ObservableDownloadTask> CreateAsync(IllustrationViewModel context, string rawPath)
     {
         using var scope = App.AppViewModel.AppServicesScope;
-        var manager = await scope.ServiceProvider.GetRequiredService<Task<DownloadHistoryPersistentManager>>();
+        var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         var path = IOHelper.NormalizePath(PathParser.Reduce(rawPath, context));
-        if ((await manager.RawDataAsync()).Any(entry => entry.Destination == path))
+        if ((manager.Collection.Find(entry => entry.Destination == path).Any()))
         {
             // delete the original entry
-            await manager.DeleteAsync(entry => entry.Destination == path);
+            manager.Delete(entry => entry.Destination == path);
         }
         ObservableDownloadTask task = context.Illustration.IsUgoira() switch
         {
@@ -75,7 +75,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
         };
             
         // TODO Check for unique
-        await manager.InsertAsync(task.DatabaseEntry);
+        manager.Insert(task.DatabaseEntry);
         return task;
     }
 

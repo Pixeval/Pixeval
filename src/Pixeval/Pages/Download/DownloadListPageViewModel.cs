@@ -129,16 +129,16 @@ public class DownloadListPageViewModel : ObservableObject
         }
     }
 
-    public async Task RemoveSelectedItemsAsync()
+    public void RemoveSelectedItems()
     {
         using var scope = App.AppViewModel.AppServicesScope;
-        var manager = await scope.ServiceProvider.GetRequiredService<Task<DownloadHistoryPersistentManager>>();
-        await Task.WhenAll(SelectedTasks.ToList().Select(task =>
+        var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
+        SelectedTasks.ToList().ForEach(task =>
         {
             App.AppViewModel.DownloadManager.RemoveTask(task.DownloadTask);
             DownloadTasks.Remove(task);
-            return manager.DeleteAsync(m => m.Destination == task.DownloadTask.Destination);
-        }));
+            manager.Delete(m => m.Destination == task.DownloadTask.Destination);
+        });
 
         DownloadTasksView.Refresh();
         UpdateSelection();
