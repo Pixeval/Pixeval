@@ -44,7 +44,7 @@ public class DownloadHistoryEntry : ObservableObject
     {
 
     }
-    [BsonId]
+    [BsonId(true)]
     public ObjectId DownloadHistoryEntryId { get; set; }
     public string? Destination { get; set; }
 

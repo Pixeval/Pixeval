@@ -9,7 +9,7 @@ namespace Pixeval.Database;
 
 public class SearchHistoryEntry
 {
-    [BsonId]
+    [BsonId(true)]
     public ObjectId Id { get; set; }
 
     /// <summary>
