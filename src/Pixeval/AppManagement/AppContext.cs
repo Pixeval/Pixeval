@@ -51,7 +51,7 @@ public static class AppContext
 
     public const string AppProtocol = "pixeval";
 
-    public static readonly string DatabaseFilePath = AppKnownFolders.Local.Resolve("PixevalData.db");
+    public static readonly string DatabaseFilePath = AppKnownFolders.Local.Resolve("PixevalData.litedb");
 
     private const string SessionContainerKey = "Session";
 
@@ -193,16 +193,16 @@ public static class AppContext
         return new X509Certificate2(await GetAssetBytesAsync("Certs/pixeval_ca.cer"));
     }
 
-    public static async Task RestoreHistories()
+    public static void RestoreHistories()
     {
         using var scope = App.AppViewModel.AppServicesScope;
-        var downloadHistoryManager = await scope.ServiceProvider.GetRequiredService<Task<DownloadHistoryPersistentManager>>();
+        var downloadHistoryManager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         // the HasFlag is not allow in expression tree
-        await downloadHistoryManager.DeleteAsync(entry => entry.State == DownloadState.Running ||
+        downloadHistoryManager.Delete(entry => entry.State == DownloadState.Running ||
                                                           entry.State == DownloadState.Queued ||
                                                           entry.State == DownloadState.Created ||
                                                           entry.State == DownloadState.Paused);
-        foreach (var observableDownloadTask in await downloadHistoryManager.EnumerateAsync())
+        foreach (var observableDownloadTask in downloadHistoryManager.Enumerate())
         {
             App.AppViewModel.DownloadManager.QueueTask(observableDownloadTask);
         }

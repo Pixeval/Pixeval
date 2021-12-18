@@ -22,7 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using SQLite;
+using LiteDB;
 
 namespace Pixeval.Database.Managers;
 
@@ -42,33 +42,31 @@ namespace Pixeval.Database.Managers;
 /// <see cref="AppViewModel.CreateHostBuilder">Register the manager in AppViewModel</see>
 /// <typeparam name="TEntry">Entry to be serialized in database</typeparam>
 /// <typeparam name="TModel">Data model in the program</typeparam>
-public interface IPersistentManager<TEntry, TModel>
+public interface IPersistentManager<TEntry,TModel>
     where TEntry : new()
 {
-    public static async Task<TSelf> CreateAsync<TSelf>(SQLiteAsyncConnection conn, int maximumRecords)
+    public static TSelf Create<TSelf>(LiteDatabase db, int maximumRecords)
         where TSelf : IPersistentManager<TEntry, TModel>, new()
     {
-        var manager = new TSelf { Connection = conn, MaximumRecords = maximumRecords };
-        await manager.Connection.CreateTableAsync<TEntry>();
-        await manager.Purge(maximumRecords);
+        var collection = db.GetCollection<TEntry>(typeof(TEntry).Name);
+        var manager = new TSelf { Collection = collection };
         return manager;
     }
 
-    SQLiteAsyncConnection Connection { get; init; }
+    ILiteCollection<TEntry> Collection { get; init; }
 
     int MaximumRecords { get; set;  }
 
-    Task InsertAsync(TEntry t);
+    void Insert(TEntry t);
 
-    Task<IEnumerable<TModel>> QueryAsync(Func<AsyncTableQuery<TEntry>, AsyncTableQuery<TEntry>> action);
+    IEnumerable<TModel> Query(Expression<Func<TEntry, bool>> predicate);
 
-    Task<IEnumerable<TModel>> SelectAsync(Expression<Func<TEntry, bool>>? predicate = null, int? count = null);
+    IEnumerable<TModel> Select(Expression<Func<TEntry, bool>>? predicate = null, int? count = null);
 
-    Task DeleteAsync(Expression<Func<TEntry, bool>> predicate);
+    int Delete(Expression<Func<TEntry, bool>> predicate);
 
-    Task<IEnumerable<TModel>> EnumerateAsync();
+    IEnumerable<TModel> Enumerate();
+    
 
-    Task<IEnumerable<TEntry>> RawDataAsync();
-
-    Task Purge(int limit);
+    void Purge(int limit);
 }

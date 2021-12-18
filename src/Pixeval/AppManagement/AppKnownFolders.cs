@@ -50,8 +50,8 @@ public class AppKnownFolders
 
     public static IAsyncOperation<StorageFile> CreateTemporaryFileWithRandomNameAsync(string? extension = null)
     {
-        return Temporary.CreateFileAsync($"{Guid.NewGuid().ToString()}.{extension ?? "temp"}");
-    }
+        return Temporary.CreateFileAsync($"{Guid.NewGuid()}.{extension ?? "temp"}");
+    } 
 
     public static IAsyncOperation<StorageFile> CreateTemporaryFileWithNameAsync(string name, string? extension = null)
     {

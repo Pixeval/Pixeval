@@ -94,11 +94,11 @@ public class MainPageViewModel : AutoActivateObservableRecipient, IRecipient<Log
             .GetBitmapImageAsync(true);
     }
 
-    public async Task AppendSearchHistoryAsync()
+    public void AppendSearchHistory()
     {
         using var scope = App.AppViewModel.AppServicesScope;
-        var manager = await scope.ServiceProvider.GetRequiredService<Task<SearchHistoryPersistentManager>>();
-        var histories = (await manager.QueryAsync(query => query.OrderByDescending(x => x.Time))).SelectNotNull(SuggestionModel.FromHistory);
+        var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
+        var histories = manager.Enumerate().OrderByDescending(e=>e.Time).SelectNotNull(SuggestionModel.FromHistory);
 
         Suggestions.ReplaceByUpdate(histories);
     }

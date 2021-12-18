@@ -23,70 +23,64 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using LiteDB;
 using Pixeval.Download;
-using SQLite;
 
 namespace Pixeval.Database.Managers;
 
 public class DownloadHistoryPersistentManager : IPersistentManager<DownloadHistoryEntry, ObservableDownloadTask>
 {
-    public SQLiteAsyncConnection Connection { get; init; } = null!;
+    public ILiteCollection<DownloadHistoryEntry> Collection { get; init; } = null!;
 
     public int MaximumRecords { get; set; }
 
-    public async Task InsertAsync(DownloadHistoryEntry t)
+    public void Insert(DownloadHistoryEntry t)
     {
-        if (await Connection.Table<DownloadHistoryEntry>().CountAsync() > MaximumRecords)
+        if (Collection.Count() > MaximumRecords)
         {
-            await Purge(MaximumRecords);
+            Purge(MaximumRecords);
         }
-        await Connection.InsertAsync(t);
-        t.PropertyChanged += async (_, _) =>
+        Collection.Insert(t);
+        t.PropertyChanged += (_, _) =>
         {
-            if ((await RawDataAsync()).Any(entry => entry.Destination == t.Destination))
+            if (Collection.Find(entry => entry.Destination == t.Destination).Any())
             {
-                await Connection.UpdateAsync(t);
+                 Collection.Update(t);
             }
         };
     }
 
-    public async Task<IEnumerable<ObservableDownloadTask>> QueryAsync(Func<AsyncTableQuery<DownloadHistoryEntry>, AsyncTableQuery<DownloadHistoryEntry>> action)
+    public IEnumerable<ObservableDownloadTask> Query(Expression<Func<DownloadHistoryEntry, bool>> predicate)
     {
-        return (await action(Connection.Table<DownloadHistoryEntry>()).ToListAsync()).Select(ToObservableDownloadTask);
+        return Collection.Find(predicate).Select(ToObservableDownloadTask);
     }
 
-    public async Task<IEnumerable<ObservableDownloadTask>> SelectAsync(Expression<Func<DownloadHistoryEntry, bool>>? predicate = null, int? count = null)
+    public IEnumerable<ObservableDownloadTask> Select(Expression<Func<DownloadHistoryEntry, bool>>? predicate = null, int? count = null)
     {
-        var query = Connection.Table<DownloadHistoryEntry>();
-        if (count != null)
-            query = query.Take((int) count);
+        var query = Collection.FindAll();
+        if (count.HasValue)
+            query = query.Take(count.Value);
         if (predicate != null)
-            query = query.Where(predicate);
-        return (await query.ToListAsync()).Select(ToObservableDownloadTask);
+            query = query.Where(predicate.Compile());
+        return query.Select(ToObservableDownloadTask);
     }
 
-    public Task DeleteAsync(Expression<Func<DownloadHistoryEntry, bool>> predicate)
+    public int Delete(Expression<Func<DownloadHistoryEntry, bool>> predicate)
     {
-        return Connection.Table<DownloadHistoryEntry>().DeleteAsync(predicate);
+        return Collection.DeleteMany(predicate);
     }
 
-    public async Task<IEnumerable<ObservableDownloadTask>> EnumerateAsync()
+    public IEnumerable<ObservableDownloadTask> Enumerate()
     {
-        return (await RawDataAsync()).Select(ToObservableDownloadTask);
+        return Collection.FindAll().Select(ToObservableDownloadTask);
     }
 
-    public async Task<IEnumerable<DownloadHistoryEntry>> RawDataAsync()
+    public void Purge(int limit)
     {
-        return await Connection.Table<DownloadHistoryEntry>().ToListAsync();
-    }
-
-    public async Task Purge(int limit)
-    {
-        var list = await Connection.Table<DownloadHistoryEntry>().ToListAsync();
-        if (list.Count > limit)
+        if (Collection.Count() > limit)
         {
-            var last = list.Take(^limit..).Select(e => e.Destination).ToHashSet();
-            await DeleteAsync(e => !last.Contains(e.Destination!));
+            var last = Collection.FindAll().Take(^limit..).Select(e => e.Destination).ToHashSet();
+            Delete(e => !last.Contains(e.Destination!));
         }
     }
 

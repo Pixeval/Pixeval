@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SQLite;
+using LiteDB;
 
 namespace Pixeval.Database;
 
-[Table("BrowseHistories")]
 public class BrowseHistoryEntry
 {
-    [PrimaryKey]
-    [Column("work_id")]
+    [BsonId(true)]
+    public ObjectId BrowseHistoryEntryId { get; set; }
     public string? Id { get; set; }
 }

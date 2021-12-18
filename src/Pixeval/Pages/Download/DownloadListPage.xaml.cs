@@ -95,7 +95,7 @@ public sealed partial class DownloadListPage
                     IOHelper.DeleteAsync(downloadListEntryViewModel.DownloadTask.Destination).Discard();
                 }
             }
-            await _viewModel.RemoveSelectedItemsAsync();
+             _viewModel.RemoveSelectedItems();
         }
     }
 

@@ -98,7 +98,7 @@ public class ObservableDownloadTask : ObservableObject, IDownloadTask
 
     public override bool Equals(object? obj)
     {
-        return !ReferenceEquals(null, obj) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((ObservableDownloadTask) obj));
+        return obj is not null && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((ObservableDownloadTask) obj));
     }
 
     public override int GetHashCode()

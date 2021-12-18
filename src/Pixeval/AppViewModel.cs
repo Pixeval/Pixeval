@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Graphics;
 using CommunityToolkit.WinUI;
+using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Toolkit.Mvvm.Messaging;
@@ -48,7 +49,6 @@ using Pixeval.Misc;
 using Pixeval.UserControls;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
-using SQLite;
 using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
 
@@ -65,10 +65,10 @@ public class AppViewModel : AutoActivateObservableRecipient,
         return Host.CreateDefaultBuilder()
             .ConfigureServices(services =>
                 services.AddSingleton<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>, IllustrationDownloadTaskFactory>()
-                    .AddSingleton(new SQLiteAsyncConnection(AppContext.DatabaseFilePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex | SQLiteOpenFlags.ReadWrite))
-                    .AddSingleton(provider => IPersistentManager<DownloadHistoryEntry, ObservableDownloadTask>.CreateAsync<DownloadHistoryPersistentManager>(provider.GetRequiredService<SQLiteAsyncConnection>(), App.AppViewModel.AppSetting.MaximumDownloadHistoryRecords))
-                    .AddSingleton(provider => IPersistentManager<SearchHistoryEntry, SearchHistoryEntry>.CreateAsync<SearchHistoryPersistentManager>(provider.GetRequiredService<SQLiteAsyncConnection>(), App.AppViewModel.AppSetting.MaximumSearchHistoryRecords))
-                    .AddSingleton(provider => IPersistentManager<BrowseHistoryEntry, BrowseHistoryEntry>.CreateAsync<BrowseHistoryPersistentManager>(provider.GetRequiredService<SQLiteAsyncConnection>(), App.AppViewModel.AppSetting.MaximumBrowseHistoryRecords)));
+                    .AddSingleton(new LiteDatabase(AppContext.DatabaseFilePath))
+                    .AddSingleton(provider => IPersistentManager<DownloadHistoryEntry, ObservableDownloadTask>.Create<DownloadHistoryPersistentManager>(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSetting.MaximumDownloadHistoryRecords))
+                    .AddSingleton(provider => IPersistentManager<SearchHistoryEntry, SearchHistoryEntry>.Create<SearchHistoryPersistentManager>(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSetting.MaximumSearchHistoryRecords))
+                    .AddSingleton(provider => IPersistentManager<BrowseHistoryEntry, BrowseHistoryEntry>.Create<BrowseHistoryPersistentManager>(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSetting.MaximumBrowseHistoryRecords)));
     }
 
     public AppViewModel(App app)
@@ -105,10 +105,10 @@ public class AppViewModel : AutoActivateObservableRecipient,
         AppContext.SaveContext();
     }
 
-    public async void Receive(LoginCompletedMessage message)
+    public void Receive(LoginCompletedMessage message)
     {
         DownloadManager = new DownloadManager<ObservableDownloadTask>(AppSetting.MaxDownloadTaskConcurrencyLevel, MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi));
-        await AppContext.RestoreHistories();
+        AppContext.RestoreHistories();
     }
 
     public IntPtr GetMainWindowHandle()

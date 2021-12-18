@@ -69,8 +69,8 @@ public sealed partial class BrowsingHistoryPage : ISortedIllustrationContainerPa
     private async Task FetchAndFill()
     {
         using var scope = App.AppViewModel.AppServicesScope;
-        var manager = await scope.ServiceProvider.GetRequiredService<Task<BrowseHistoryPersistentManager>>();
-        foreach (var entry in await manager.SelectAsync(count: 100))
+        var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
+        foreach (var entry in manager.Select(count: 100))
         {
             var illustration = await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(entry.Id!);
             IllustrationContainer!.ViewModel.AddIllustrationViewModel(new IllustrationViewModel(illustration));
