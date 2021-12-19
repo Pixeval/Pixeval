@@ -153,7 +153,7 @@
 		<PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
 		<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta13" />
 		<PackageReference Include="System.Linq.Async" Version="5.1.0" />
-		<PackageReference Include="System.Runtime.Experimental" Version="6.0.0" />
+		<PackageReference Include="Nerdbank.GitVersioning" Version="3.4.244" PrivateAssets="All" Condition="!Exists('packages.config')" />
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
 	<!-- #region Exposes PRI resources to the source generator -->
@@ -310,6 +310,7 @@
 		<None Update="Pages\Capability\SearchResultsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</None>
+		<PackageReference Update="Nerdbank.GitVersioning" Version="3.4.244" />
 		<Page Update="Pages\Misc\AboutPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
