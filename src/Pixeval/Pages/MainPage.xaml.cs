@@ -21,6 +21,7 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Linq;
 using System.Runtime;
 using System.Threading.Tasks;
@@ -52,6 +53,7 @@ using Pixeval.Database.Managers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Input;
 using Pixeval.Dialogs;
+using Image = SixLabors.ImageSharp.Image;
 
 namespace Pixeval.Pages;
 
@@ -226,12 +228,16 @@ public sealed partial class MainPage
             if (content.AvailableFormats.Contains(StandardDataFormats.StorageItems) &&
                 (await content.GetStorageItemsAsync()).FirstOrDefault(i => i.IsOfType(StorageItemTypes.File)) is StorageFile file)
             {
-                if (App.AppViewModel.AppSetting.ReverseSearchApiKey is not { Length: > 0 })
+                await using var stream = await file.OpenStreamForReadAsync();
+                if (await Image.DetectFormatAsync(stream) is not null)
                 {
-                    await ShowReverseSearchApiKeyNotPresentDialog();
-                    return;
+                    if (App.AppViewModel.AppSetting.ReverseSearchApiKey is not { Length: > 0 })
+                    {
+                        await ShowReverseSearchApiKeyNotPresentDialog();
+                        return;
+                    }
+                    await _viewModel.ReverseSearchAsync(stream);
                 }
-                await _viewModel.ReverseSearchAsync(file);
             }
         }
     }
@@ -242,7 +248,8 @@ public sealed partial class MainPage
         {
             if (await UIHelper.OpenFileOpenPickerAsync() is { } file)
             {
-                await _viewModel.ReverseSearchAsync(file);
+                await using var stream = await file.OpenStreamForReadAsync();
+                await _viewModel.ReverseSearchAsync(stream);
             }
         }
         else

@@ -103,12 +103,11 @@ public class MainPageViewModel : AutoActivateObservableRecipient, IRecipient<Log
         Suggestions.ReplaceByUpdate(histories);
     }
 
-    public async Task ReverseSearchAsync(StorageFile storageFile)
+    public async Task ReverseSearchAsync(Stream stream)
     {
         try
         {
             App.AppViewModel.Window.ShowProgressRing();
-            await using var stream = await storageFile.OpenStreamForReadAsync();
             var result = await App.AppViewModel.MakoClient.ReverseSearchAsync(stream, App.AppViewModel.AppSetting.ReverseSearchApiKey!);
             if (result.Header is not null)
             {
