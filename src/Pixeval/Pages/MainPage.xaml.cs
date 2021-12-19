@@ -220,18 +220,17 @@ public sealed partial class MainPage
     // The AutoSuggestBox does not have a 'Paste' event, so we check the keyboard event accordingly
     private async void MainPageAutoSuggestionBox_OnKeyDown(object sender, KeyRoutedEventArgs e)
     {
-        if (App.AppViewModel.AppSetting.ReverseSearchApiKey is not { Length: > 0 })
-        {
-            await ShowReverseSearchApiKeyNotPresentDialog();
-            return;
-        }
-
         if (InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.LeftControl).HasFlag(CoreVirtualKeyStates.Down) && e.Key == VirtualKey.V)
         {
             var content = Clipboard.GetContent();
             if (content.AvailableFormats.Contains(StandardDataFormats.StorageItems) &&
                 (await content.GetStorageItemsAsync()).FirstOrDefault(i => i.IsOfType(StorageItemTypes.File)) is StorageFile file)
             {
+                if (App.AppViewModel.AppSetting.ReverseSearchApiKey is not { Length: > 0 })
+                {
+                    await ShowReverseSearchApiKeyNotPresentDialog();
+                    return;
+                }
                 await _viewModel.ReverseSearchAsync(file);
             }
         }
