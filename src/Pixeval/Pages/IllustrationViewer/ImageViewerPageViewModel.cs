@@ -171,7 +171,7 @@ public class ImageViewerPageViewModel : ObservableObject, IDisposable
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
         manager.Delete(x => x.Id == IllustrationViewerPageViewModel.IllustrationId);
-        manager.Insert(new BrowseHistoryEntry { Id = IllustrationViewerPageViewModel.IllustrationId });
+        manager.Insert(new BrowseHistoryEntry { Id = IllustrationViewModel.Id });
     }
 
     private async Task LoadImage()
