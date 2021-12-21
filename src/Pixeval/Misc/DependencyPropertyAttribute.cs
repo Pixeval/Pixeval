@@ -2,6 +2,13 @@
 
 namespace Pixeval.Misc;
 
+/// <summary>
+/// 生成如下代码
+/// <code>
+/// public static readonly DependencyProperty Property = DependencyProperty.Register("Field", typeof(Type), typeof(TClass), new PropertyMetadata(DefaultValue, OnPropertyChanged));
+/// public Type Field { get => (Type)GetValue(Property); set => SetValue(Property, value); }
+/// </code>
+/// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
 public sealed class DependencyPropertyAttribute : Attribute
 {
