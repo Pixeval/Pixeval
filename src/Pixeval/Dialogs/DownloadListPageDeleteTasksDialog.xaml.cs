@@ -1,23 +1,14 @@
 ﻿using Microsoft.UI.Xaml;
+using Pixeval.Misc;
 
 namespace Pixeval.Dialogs;
 
+[DependencyProperty("DeleteLocalFiles", typeof(bool), DefaultValue = "false")]
 public sealed partial class DownloadListPageDeleteTasksDialog
 {
     public DownloadListPageDeleteTasksDialog()
     {
         InitializeComponent();
     }
-
-    public static readonly DependencyProperty DeleteLocalFilesProperty = DependencyProperty.Register(
-        nameof(DeleteLocalFiles),
-        typeof(bool),
-        typeof(DownloadListPageDeleteTasksDialog),
-        PropertyMetadata.Create(false));
-
-    public bool DeleteLocalFiles
-    {
-        get => (bool) GetValue(DeleteLocalFilesProperty);
-        set => SetValue(DeleteLocalFilesProperty, value);
-    }
+    
 }

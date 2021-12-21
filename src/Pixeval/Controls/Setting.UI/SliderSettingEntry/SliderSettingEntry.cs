@@ -24,56 +24,29 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Pixeval.Controls.Setting.UI.UserControls;
+using Pixeval.Misc;
 
 namespace Pixeval.Controls.Setting.UI.SliderSettingEntry;
 
 [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
 [TemplatePart(Name = PartValueSlider, Type = typeof(Slider))]
-public class SliderSettingEntry : SettingEntryBase
+[DependencyProperty("Maximum", typeof(double))]
+[DependencyProperty("Minimum", typeof(double))]
+[DependencyProperty("Value", typeof(double),InstanceChangedCallback = true)]
+public partial class SliderSettingEntry : SettingEntryBase
 {
     private const string PartValueSlider = "ValueSlider";
 
-    public static readonly DependencyProperty MaximumProperty = DependencyProperty.Register(
-        nameof(Maximum),
-        typeof(double),
-        typeof(SliderSettingEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public static readonly DependencyProperty MinimumProperty = DependencyProperty.Register(
-        nameof(Minimum),
-        typeof(double),
-        typeof(SliderSettingEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
-        nameof(Value),
-        typeof(double),
-        typeof(SliderSettingEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue, (o, args) => ValueChanged(o, args.NewValue)));
+    private static void OnValueChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
+    {
+        ValueChanged(o, args.NewValue);
+    }
 
     private Slider? _valueSlider;
 
     public SliderSettingEntry()
     {
         DefaultStyleKey = typeof(SliderSettingEntry);
-    }
-
-    public double Maximum
-    {
-        get => (double) GetValue(MaximumProperty);
-        set => SetValue(MaximumProperty, value);
-    }
-
-    public double Minimum
-    {
-        get => (double) GetValue(MinimumProperty);
-        set => SetValue(MinimumProperty, value);
-    }
-
-    public double Value
-    {
-        get => (double) GetValue(ValueProperty);
-        set => SetValue(ValueProperty, value);
     }
 
     private static void ValueChanged(DependencyObject d, object newValue)

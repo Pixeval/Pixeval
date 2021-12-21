@@ -25,32 +25,18 @@ using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.Misc;
 using Pixeval.UserControls.TokenInput;
 
 namespace Pixeval.Controls.TokenInputTextBox;
 
-public class TokenInputTextBox : Control
+[DependencyProperty("PlaceholderText", typeof(string))]
+[DependencyProperty("SubmitEnable", typeof(bool))]
+[DependencyProperty("Token", typeof(Token))]
+public partial class TokenInputTextBox : Control
 {
     private const string PartTokenTextBox = "TokenTextBox";
     private const string PartSubmitButton = "SubmitButton";
-
-    public static readonly DependencyProperty PlaceholderTextProperty = DependencyProperty.Register(
-        nameof(PlaceholderText),
-        typeof(string),
-        typeof(TokenInputTextBox),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public static readonly DependencyProperty SubmitEnableProperty = DependencyProperty.Register(
-        nameof(SubmitEnable),
-        typeof(bool),
-        typeof(TokenInputTextBox),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public static readonly DependencyProperty TokenProperty = DependencyProperty.Register(
-        nameof(Token),
-        typeof(Token),
-        typeof(TokenInputTextBox),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
 
     private IconButton.IconButton? _submitButton;
 
@@ -61,24 +47,6 @@ public class TokenInputTextBox : Control
     public TokenInputTextBox()
     {
         DefaultStyleKey = typeof(TokenInputTextBox);
-    }
-
-    public string PlaceholderText
-    {
-        get => (string) GetValue(PlaceholderTextProperty);
-        set => SetValue(PlaceholderTextProperty, value);
-    }
-
-    public bool SubmitEnable
-    {
-        get => (bool) GetValue(SubmitEnableProperty);
-        set => SetValue(SubmitEnableProperty, value);
-    }
-
-    public Token Token
-    {
-        get => (Token) GetValue(TokenProperty);
-        set => SetValue(TokenProperty, value);
     }
 
     public event EventHandler<Token> TokenSubmitted

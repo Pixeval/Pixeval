@@ -24,6 +24,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.Misc;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
@@ -32,13 +33,9 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.UserControls;
 
+[DependencyProperty("ViewModel", typeof(CommentBlockViewModel),InstanceChangedCallback = true)]
 public sealed partial class CommentBlock
 {
-    public static DependencyProperty ViewModelProperty = DependencyProperty.Register(
-        nameof(ViewModel),
-        typeof(CommentBlockViewModel),
-        typeof(CommentBlock),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue, PropertyChangedCallback));
 
     private EventHandler<TappedRoutedEventArgs>? _deleteHyperlinkButtonTapped;
 
@@ -47,12 +44,6 @@ public sealed partial class CommentBlock
     public CommentBlock()
     {
         InitializeComponent();
-    }
-
-    public CommentBlockViewModel ViewModel
-    {
-        get => (CommentBlockViewModel) GetValue(ViewModelProperty);
-        set => SetValue(ViewModelProperty, value);
     }
 
     public event EventHandler<TappedRoutedEventArgs> RepliesHyperlinkButtonTapped
@@ -67,7 +58,7 @@ public sealed partial class CommentBlock
         remove => _deleteHyperlinkButtonTapped -= value;
     }
 
-    private static async void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static async void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var block = (CommentBlock) d;
         if (e.NewValue is not CommentBlockViewModel viewModel)

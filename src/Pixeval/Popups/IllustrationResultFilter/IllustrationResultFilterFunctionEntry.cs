@@ -22,25 +22,15 @@
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Misc;
 
 namespace Pixeval.Popups.IllustrationResultFilter;
 
-public class IllustrationResultFilterFunctionEntry : ContentControl
+[DependencyProperty("Header",typeof(string))]
+public partial class IllustrationResultFilterFunctionEntry : ContentControl
 {
-    public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(
-        nameof(Header),
-        typeof(string),
-        typeof(IllustrationResultFilterFunctionEntry),
-        new PropertyMetadata(DependencyProperty.UnsetValue));
-
     public IllustrationResultFilterFunctionEntry()
     {
         DefaultStyleKey = typeof(IllustrationResultFilterFunctionEntry);
-    }
-
-    public string Header
-    {
-        get => (string) GetValue(HeaderProperty);
-        set => SetValue(HeaderProperty, value);
     }
 }

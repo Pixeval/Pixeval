@@ -43,7 +43,7 @@ internal class DependencyPropertyGenerator : ISourceGenerator
                     continue;
 
                 var isSetterPublic = true;
-                string? defaultValue = null;
+                string defaultValue = "DependencyProperty.UnsetValue";
                 var isNullable = false;
                 var instanceChangedCallback = false;
 
@@ -60,18 +60,10 @@ internal class DependencyPropertyGenerator : ISourceGenerator
                 var fieldName = propertyName + "Property";
 
                 namespaces.UseNamespace(usedTypes, specificClass, type);
-                var defaultValueExpression = defaultValue is null ? LiteralExpression(SyntaxKind.NullLiteralExpression) : ParseExpression(defaultValue);
+                var defaultValueExpression = ParseExpression(defaultValue);
                 var metadataCreation = GetObjectCreationExpression(defaultValueExpression);
                 if (instanceChangedCallback)
-                {
-                    var partialMethodName = $"On{propertyName}Changed";
-                    var oldValueExpression = GetCastExpression(isNullable, type, "OldValue");
-                    var newValueExpression = GetCastExpression(isNullable, type, "NewValue");
-                    var lambdaBody = GetInvocationExpression(partialMethodName, specificClass, oldValueExpression, newValueExpression);
-                    metadataCreation = GetMetadataCreation(metadataCreation, lambdaBody);
-                    var partialMethod = GetMethodDeclaration(partialMethodName, isNullable, type);
-                    members.Add(partialMethod);
-                }
+                    metadataCreation = GetMetadataCreation(metadataCreation, $"On{propertyName}Changed");
                 var registration = GetRegistration(propertyName, type, specificClass, metadataCreation);
                 var staticFieldDeclaration = GetStaticFieldDeclaration(fieldName, registration);
                 var getter = GetGetter(fieldName, isNullable, type ,context);
@@ -106,69 +98,19 @@ internal class DependencyPropertyGenerator : ISourceGenerator
         return ObjectCreationExpression(IdentifierName("PropertyMetadata"))
             .AddArgumentListArguments(Argument(defaultValueExpression));
     }
-    
-    /// <summary>
-    /// 生成如下代码
-    /// <code>
-    /// <paramref name="type"/>&lt;<paramref name="isNullable"/>&gt; <paramref name="identifierName"/>;
-    /// </code>
-    /// </summary>
-    /// <returns>CastExpression</returns>
-    private static CastExpressionSyntax GetCastExpression(bool isNullable, INamedTypeSymbol type, string identifierName)
-    {
-        return CastExpression(type.GetTypeSyntax(isNullable),
-            MemberAccessExpression(
-                SyntaxKind.SimpleMemberAccessExpression,
-                IdentifierName("e"), IdentifierName(identifierName)));
-    }
 
     /// <summary>
     /// 生成如下代码
     /// <code>
-    /// (d, e) => ((<paramref name="specificClass"/>)d).<paramref name="partialMethodName"/>((<paramref name="oldValueExpression"/>)e.OldValue, (<paramref name="newValueExpression"/>)e.NewValue)
-    /// </code>
-    /// </summary>
-    /// <returns>InvocationExpression</returns>
-    private static InvocationExpressionSyntax GetInvocationExpression(string partialMethodName,  INamedTypeSymbol specificClass, CastExpressionSyntax oldValueExpression, CastExpressionSyntax newValueExpression)
-    {
-        return InvocationExpression(MemberAccessExpression(
-                SyntaxKind.SimpleMemberAccessExpression,
-                ParenthesizedExpression(CastExpression(specificClass.GetTypeSyntax(false), IdentifierName("d"))),
-                IdentifierName(partialMethodName)))
-            .AddArgumentListArguments(Argument(oldValueExpression), Argument(newValueExpression));
-    }
-
-    /// <summary>
-    /// 生成如下代码
-    /// <code>
-    /// new PropertyMetadata(<paramref name="metadataCreation"/>, <paramref name="lambdaBody"/>)
+    /// new PropertyMetadata(<paramref name="metadataCreation"/>, <paramref name="partialMethodName"/>)
     /// </code>
     /// </summary>
     /// <returns>MetadataCreation</returns>
-    private static ObjectCreationExpressionSyntax GetMetadataCreation(ObjectCreationExpressionSyntax metadataCreation, InvocationExpressionSyntax lambdaBody)
+    private static ObjectCreationExpressionSyntax GetMetadataCreation(ObjectCreationExpressionSyntax metadataCreation, string partialMethodName)
     {
-        return metadataCreation.AddArgumentListArguments(Argument(ParenthesizedLambdaExpression()
-            .AddParameterListParameters(Parameter(Identifier("d")), Parameter(Identifier("e")))
-            .WithExpressionBody(lambdaBody)));
+        return metadataCreation.AddArgumentListArguments(Argument(IdentifierName(partialMethodName)));
     }
-
-    /// <summary>
-    /// 生成如下代码
-    /// <code>
-    /// partial void <paramref name="partialMethodName"/>(<paramref name="type"/>&lt;<paramref name="isNullable"/>&gt; oldValue, <paramref name="type"/>&lt;<paramref name="isNullable"/>&gt; newValue);
-    /// </code>
-    /// </summary>
-    /// <returns>MethodDeclaration</returns>
-    private static MethodDeclarationSyntax GetMethodDeclaration(string partialMethodName, bool isNullable, INamedTypeSymbol type)
-    {
-        return MethodDeclaration(PredefinedType(Token(SyntaxKind.VoidKeyword)), partialMethodName)
-            .AddParameterListParameters(
-                Parameter(Identifier("oldValue")).WithType(type.GetTypeSyntax(isNullable)),
-                Parameter(Identifier("newValue")).WithType(type.GetTypeSyntax(isNullable)))
-            .AddModifiers(Token(SyntaxKind.PartialKeyword))
-            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
-    }
-
+    
     /// <summary>
     /// 生成如下代码
     /// <code>

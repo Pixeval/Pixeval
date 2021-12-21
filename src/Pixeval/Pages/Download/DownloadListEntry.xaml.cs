@@ -9,26 +9,26 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Download;
+using Pixeval.Misc;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Download;
 
+[DependencyProperty("ViewModel", typeof(ObservableDownloadTask), InstanceChangedCallback = true)]
+[DependencyProperty("Thumbnail", typeof(ImageSource))]
+[DependencyProperty("Title", typeof(string))]
+[DependencyProperty("Description", typeof(string))]
+[DependencyProperty("Progress", typeof(double))]
+[DependencyProperty("ProgressMessage", typeof(string))]
+[DependencyProperty("ActionButtonContent", typeof(string))]
+[DependencyProperty("IsRedownloadItemEnabled", typeof(bool))]
+[DependencyProperty("IsCancelItemEnabled", typeof(bool))]
+[DependencyProperty("ActionButtonBackground", typeof(Brush))]
+[DependencyProperty("IsShowErrorDetailDialogItemEnabled", typeof(bool))]
 public sealed partial class DownloadListEntry
 {
-    public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
-        nameof(ViewModel),
-        typeof(ObservableDownloadTask),
-        typeof(DownloadListEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue, ViewModelChanged));
-
-    public ObservableDownloadTask ViewModel
-    {
-        get => (ObservableDownloadTask) GetValue(ViewModelProperty);
-        set => SetValue(ViewModelProperty, value);
-    }
-
-    private static void ViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is DownloadListEntry entry && e.NewValue is ObservableDownloadTask value)
         {
@@ -36,127 +36,6 @@ public sealed partial class DownloadListEntry
             ToolTipService.SetPlacement(entry, PlacementMode.Mouse);
         }
     }
-
-    public static readonly DependencyProperty ThumbnailProperty = DependencyProperty.Register(
-        nameof(Thumbnail),
-        typeof(ImageSource),
-        typeof(DownloadListEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public ImageSource Thumbnail
-    {
-        get => (ImageSource)GetValue(ThumbnailProperty);
-        set => SetValue(ThumbnailProperty, value);
-    }
-
-    public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
-        nameof(Title),
-        typeof(string),
-        typeof(DownloadListEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public string Title
-    {
-        get => (string) GetValue(TitleProperty);
-        set => SetValue(TitleProperty, value);
-    }
-
-    public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register(
-        nameof(Description),
-        typeof(string),
-        typeof(DownloadListEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public string Description
-    {
-        get => (string) GetValue(DescriptionProperty);
-        set => SetValue(DescriptionProperty, value);
-    }
-
-    public static readonly DependencyProperty ProgressProperty = DependencyProperty.Register(
-        nameof(Progress),
-        typeof(double),
-        typeof(DownloadListEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public double Progress
-    {
-        get => (double) GetValue(ProgressProperty);
-        set => SetValue(ProgressProperty, value);
-    }
-
-    public static readonly DependencyProperty ProgressMessageProperty = DependencyProperty.Register(
-        nameof(ProgressMessage),
-        typeof(string),
-        typeof(DownloadListEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public string ProgressMessage
-    {
-        get => (string) GetValue(ProgressMessageProperty);
-        set => SetValue(ProgressMessageProperty, value);
-    }
-
-    public static readonly DependencyProperty ActionButtonContentProperty = DependencyProperty.Register(
-        nameof(ActionButtonContent),
-        typeof(string),
-        typeof(DownloadListEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public string ActionButtonContent
-    {
-        get => (string) GetValue(ActionButtonContentProperty);
-        set => SetValue(ActionButtonContentProperty, value);
-    }
-
-    public static readonly DependencyProperty IsRedownloadItemEnabledProperty = DependencyProperty.Register(
-        nameof(IsRedownloadItemEnabled),
-        typeof(bool),
-        typeof(DownloadListEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public bool IsRedownloadItemEnabled
-    {
-        get => (bool)GetValue(IsRedownloadItemEnabledProperty);
-        set => SetValue(IsRedownloadItemEnabledProperty, value);
-    }
-
-    public static readonly DependencyProperty IsCancelItemEnabledProperty = DependencyProperty.Register(
-        nameof(IsCancelItemEnabled),
-        typeof(bool),
-        typeof(DownloadListEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public bool IsCancelItemEnabled
-    {
-        get => (bool) GetValue(IsCancelItemEnabledProperty);
-        set => SetValue(IsCancelItemEnabledProperty, value);
-    }
-
-    public static readonly DependencyProperty ActionButtonBackgroundProperty = DependencyProperty.Register(
-        nameof(ActionButtonBackground),
-        typeof(Brush),
-        typeof(DownloadListEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public Brush ActionButtonBackground
-    {
-        get => (Brush) GetValue(ActionButtonBackgroundProperty);
-        set => SetValue(ActionButtonBackgroundProperty, value);
-    }
-
-    public static readonly DependencyProperty IsShowErrorDetailDialogItemEnabledProperty = DependencyProperty.Register(
-        nameof(IsShowErrorDetailDialogItemEnabled),
-        typeof(bool),
-        typeof(DownloadListEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public bool IsShowErrorDetailDialogItemEnabled
-    {
-        get => (bool) GetValue(IsShowErrorDetailDialogItemEnabledProperty);
-        set => SetValue(IsShowErrorDetailDialogItemEnabledProperty, value);
-    }
-
     private EventHandler<bool>? _selected;
 
     public event EventHandler<bool> Selected

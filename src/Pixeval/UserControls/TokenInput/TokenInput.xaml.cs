@@ -25,35 +25,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.Misc;
 using Pixeval.Util.UI;
 
 namespace Pixeval.UserControls.TokenInput;
 
+[DependencyProperty("PlaceholderText", typeof(string))]
+[DependencyProperty("TokenSource", typeof(ICollection<Token>))]
+[DependencyProperty("TokenInputTextBoxVisibility", typeof(Visibility),DefaultValue = "Visibility.Visible")]
+[DependencyProperty("IsTokenTappedDefaultBehaviorEnabled", typeof(bool),DefaultValue = "true")]
 public sealed partial class TokenInput
 {
-    public static readonly DependencyProperty PlaceholderTextProperty = DependencyProperty.Register(
-        nameof(PlaceholderText),
-        typeof(string),
-        typeof(TokenInput),
-        new PropertyMetadata(DependencyProperty.UnsetValue));
-
-    public static readonly DependencyProperty TokenSourceProperty = DependencyProperty.Register(
-        nameof(TokenSource),
-        typeof(ICollection<Token>),
-        typeof(TokenInput),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public static readonly DependencyProperty TokenInputTextBoxVisibilityProperty = DependencyProperty.Register(
-        nameof(TokenInputTextBoxVisibility),
-        typeof(Visibility),
-        typeof(TokenInput),
-        PropertyMetadata.Create(Visibility.Visible));
-
-    public static readonly DependencyProperty IsTokenTappedDefaultBehaviorEnabledProperty = DependencyProperty.Register(
-        nameof(IsTokenTappedDefaultBehaviorEnabled),
-        typeof(bool),
-        typeof(TokenInput),
-        PropertyMetadata.Create(true));
 
     private EventHandler<Token>? _tokenAdded;
 
@@ -70,32 +52,7 @@ public sealed partial class TokenInput
         InitializeComponent();
         Token = new Token();
     }
-
     public Token Token { get; }
-
-    public string PlaceholderText
-    {
-        get => (string) GetValue(PlaceholderTextProperty);
-        set => SetValue(PlaceholderTextProperty, value);
-    }
-
-    public ICollection<Token> TokenSource
-    {
-        get => (ICollection<Token>) GetValue(TokenSourceProperty);
-        set => SetValue(TokenSourceProperty, value);
-    }
-
-    public Visibility TokenInputTextBoxVisibility
-    {
-        get => (Visibility) GetValue(TokenInputTextBoxVisibilityProperty);
-        set => SetValue(TokenInputTextBoxVisibilityProperty, value);
-    }
-
-    public bool IsTokenTappedDefaultBehaviorEnabled
-    {
-        get => (bool) GetValue(IsTokenTappedDefaultBehaviorEnabledProperty);
-        set => SetValue(IsTokenTappedDefaultBehaviorEnabledProperty, value);
-    }
 
     public event EventHandler<TokenAddingEventArgs> TokenAdding
     {

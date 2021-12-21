@@ -33,6 +33,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Download;
+using Pixeval.Misc;
 using Pixeval.Popups;
 using Pixeval.Popups.IllustrationResultFilter;
 using Pixeval.UserControls.TokenInput;
@@ -41,38 +42,28 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 
 namespace Pixeval.UserControls;
-
+[DependencyProperty("PrimaryCommandsSupplements", typeof(ObservableCollection<ICommandBarElement>), DefaultValue = "new ObservableCollection<ICommandBarElement>()", InstanceChangedCallback = true)]
+[DependencyProperty("SecondaryCommandsSupplements", typeof(ObservableCollection<ICommandBarElement>), DefaultValue = "new ObservableCollection<ICommandBarElement>()", InstanceChangedCallback = true)]
+[DependencyProperty("IsDefaultCommandsEnabled", typeof(bool), DefaultValue = "true", InstanceChangedCallback = true)]
+[DependencyProperty("ViewModel", typeof(IllustrationGridViewModel), DefaultValue = "new IllustrationGridViewModel()")]
 public sealed partial class IllustrationGridCommandBar
 {
-    public static DependencyProperty PrimaryCommandSupplementsProperty = DependencyProperty.Register(
-        nameof(PrimaryCommandsSupplements),
-        typeof(ObservableCollection<ICommandBarElement>),
-        typeof(IllustrationGridCommandBar),
-        PropertyMetadata.Create(
-            new ObservableCollection<ICommandBarElement>(),
-            (o, args) => AddCommandCallback(args, ((IllustrationGridCommandBar) o).CommandBar.PrimaryCommands)));
+    private static void OnPrimaryCommandsSupplementsChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
+    {
+        AddCommandCallback(args, ((IllustrationGridCommandBar)o).CommandBar.PrimaryCommands);
+    }
 
-    public static DependencyProperty SecondaryCommandsSupplementsProperty = DependencyProperty.Register(
-        nameof(SecondaryCommandsSupplements),
-        typeof(ObservableCollection<ICommandBarElement>),
-        typeof(IllustrationGridCommandBar),
-        PropertyMetadata.Create(
-            new ObservableCollection<ICommandBarElement>(),
-            (o, args) => AddCommandCallback(args, ((IllustrationGridCommandBar) o).CommandBar.SecondaryCommands)));
-
-    public static DependencyProperty IsDefaultCommandsEnabledProperty = DependencyProperty.Register(
-        nameof(IsDefaultCommandsEnabled),
-        typeof(bool),
-        typeof(IllustrationGridCommandBar),
-        PropertyMetadata.Create(true,
-            (o, args) => ((IllustrationGridCommandBar) o)._defaultCommands.Where(c => c != ((IllustrationGridCommandBar) o).SelectAllButton).ForEach(c => c.IsEnabled = (bool) args.NewValue)));
-
-    public static DependencyProperty ViewModelProperty = DependencyProperty.Register(
-        nameof(ViewModel),
-        typeof(IllustrationGridViewModel),
-        typeof(IllustrationGridCommandBar),
-        PropertyMetadata.Create(new IllustrationGridViewModel()));
-
+    private static void OnSecondaryCommandsSupplementsChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
+    {
+        AddCommandCallback(args, ((IllustrationGridCommandBar)o).CommandBar.SecondaryCommands);
+    }
+    private static void OnIsDefaultCommandsEnabledChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
+    {
+        ((IllustrationGridCommandBar)o)._defaultCommands
+            .Where(c => c != ((IllustrationGridCommandBar)o).SelectAllButton)
+            .ForEach(c => c.IsEnabled = (bool)args.NewValue);
+    }
+    
     private readonly IEnumerable<Control> _defaultCommands;
 
     private readonly IllustrationResultFilterPopupViewModel _filterPopupViewModel = new();
@@ -104,31 +95,8 @@ public sealed partial class IllustrationGridCommandBar
         };
     }
 
-    public ObservableCollection<ICommandBarElement> PrimaryCommandsSupplements
-    {
-        get => (ObservableCollection<ICommandBarElement>) GetValue(PrimaryCommandSupplementsProperty);
-        set => SetValue(PrimaryCommandSupplementsProperty, value);
-    }
-
-    public ObservableCollection<ICommandBarElement> SecondaryCommandsSupplements
-    {
-        get => (ObservableCollection<ICommandBarElement>) GetValue(SecondaryCommandsSupplementsProperty);
-        set => SetValue(SecondaryCommandsSupplementsProperty, value);
-    }
-
-    public bool IsDefaultCommandsEnabled
-    {
-        get => (bool) GetValue(IsDefaultCommandsEnabledProperty);
-        set => SetValue(IsDefaultCommandsEnabledProperty, value);
-    }
-
+    
     public ObservableCollection<UIElement> CommandBarElements { get; }
-
-    public IllustrationGridViewModel ViewModel
-    {
-        get => (IllustrationGridViewModel) GetValue(ViewModelProperty);
-        set => SetValue(ViewModelProperty, value);
-    }
 
     private static void AddCommandCallback(DependencyPropertyChangedEventArgs e, ICollection<ICommandBarElement> commands)
     {

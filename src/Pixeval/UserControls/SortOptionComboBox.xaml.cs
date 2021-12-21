@@ -24,34 +24,21 @@ using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.CoreApi.Global.Enum;
+using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util;
 
 namespace Pixeval.UserControls;
 
+[DependencyProperty("SelectedItem", typeof(object))]
 public sealed partial class SortOptionComboBox
 {
-    public static DependencyProperty SelectedItemProperty = DependencyProperty.Register(
-        nameof(SelectedItem),
-        typeof(object),
-        typeof(SortOptionComboBox),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
 
     private SelectionChangedEventHandler? _selectionChangedWhenLoadedInternal;
 
     public SortOptionComboBox()
     {
         InitializeComponent();
-    }
-
-    public object SelectedItem
-    {
-        get => GetValue(SelectedItemProperty);
-        set
-        {
-            SetValue(SelectedItemProperty, value);
-            ComboBox.SelectedItem = value;
-        }
     }
 
     public IllustrationSortOption SelectedOption => ((IllustrationSortOptionWrapper) SelectedItem).Value;

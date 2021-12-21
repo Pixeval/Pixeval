@@ -23,51 +23,19 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Markup;
 using Pixeval.Controls.Setting.UI.UserControls;
+using Pixeval.Misc;
 
 namespace Pixeval.Controls.Setting.UI.ExpanderSettingEntry;
 
-[ContentProperty(Name = nameof(Content))]
+[ContentProperty(Name = "Content")]
 [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
-public class ExpanderSettingEntry : SettingEntryBase
+[DependencyProperty("HeaderHeight",typeof(double))]
+[DependencyProperty("Content", typeof(object))]
+[DependencyProperty("ContentMargin", typeof(Thickness))]
+public partial class ExpanderSettingEntry : SettingEntryBase
 {
-    public static readonly DependencyProperty HeaderHeightProperty = DependencyProperty.Register(
-        nameof(HeaderHeight),
-        typeof(double),
-        typeof(ExpanderSettingEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(
-        nameof(Content),
-        typeof(object),
-        typeof(ExpanderSettingEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public static readonly DependencyProperty ContentMarginProperty = DependencyProperty.Register(
-        nameof(ContentMargin),
-        typeof(Thickness),
-        typeof(ExpanderSettingEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
     public ExpanderSettingEntry()
     {
         DefaultStyleKey = typeof(ExpanderSettingEntry);
-    }
-
-    public double HeaderHeight
-    {
-        get => (double) GetValue(HeaderHeightProperty);
-        set => SetValue(HeaderHeightProperty, value);
-    }
-
-    public object Content
-    {
-        get => GetValue(ContentProperty);
-        set => SetValue(ContentProperty, value);
-    }
-
-    public Thickness ContentMargin
-    {
-        get => (Thickness) GetValue(ContentMarginProperty);
-        set => SetValue(ContentMarginProperty, value);
     }
 }
