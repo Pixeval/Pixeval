@@ -26,9 +26,7 @@ namespace Pixeval.AppManagement;
 
 public enum IterationStage
 {
-    Alpha,
     Preview,
-    ReleaseCandidate,
     Stable
 }
 
@@ -75,9 +73,7 @@ public record AppVersion(IterationStage Stage, int Major, int Minor, int Patch, 
         var versionNumber = $"v{Major}.{Minor}.{Patch}";
         var str = Stage switch
         {
-            IterationStage.Alpha => $"{versionNumber}-alpha",
             IterationStage.Preview => $"{versionNumber}-preview",
-            IterationStage.ReleaseCandidate => $"{versionNumber}-rc",
             IterationStage.Stable => $"{versionNumber}",
             _ => throw new ArgumentOutOfRangeException()
         };
