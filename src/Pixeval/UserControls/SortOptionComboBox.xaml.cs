@@ -21,7 +21,6 @@
 #endregion
 
 using CommunityToolkit.WinUI.UI;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Misc;

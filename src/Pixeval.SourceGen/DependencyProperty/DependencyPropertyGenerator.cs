@@ -4,7 +4,6 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Pixeval.SourceGen.DependencyProperty;
 
@@ -23,7 +22,7 @@ internal class DependencyPropertyGenerator : ISourceGenerator
         if (context.Compilation.GetTypeByMetadataName(AttributePath) is not { } attributeType)
             return;
 
-        foreach (var classDeclaration in ((AttributeReceiver)context.SyntaxContextReceiver!).CandidateClasses)
+        foreach (var classDeclaration in ((AttributeReceiver) context.SyntaxContextReceiver!).CandidateClasses)
         {
             var semanticModel = context.Compilation.GetSemanticModel(classDeclaration.SyntaxTree);
 
@@ -36,37 +35,46 @@ internal class DependencyPropertyGenerator : ISourceGenerator
 
             foreach (var attribute in specificClass.GetAttributes().Where(attribute => SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, attributeType)))
             {
-                if (attribute.ConstructorArguments[0].Value is not string propertyName)
-                    continue;
-
-                if (attribute.ConstructorArguments[1].Value is not INamedTypeSymbol type)
+                if (attribute.ConstructorArguments[0].Value is not string propertyName || attribute.ConstructorArguments[1].Value is not INamedTypeSymbol type)
                     continue;
 
                 var isSetterPublic = true;
-                string defaultValue = "DependencyProperty.UnsetValue";
+                var defaultValue = "DependencyProperty.UnsetValue";
                 var isNullable = false;
                 var instanceChangedCallback = false;
 
                 foreach (var namedArgument in attribute.NamedArguments)
+                {
                     if (namedArgument.Value.Value is { } value)
+                    {
                         switch (namedArgument.Key)
                         {
-                            case "IsSetterPublic": isSetterPublic = (bool)value; break;
-                            case "DefaultValue": defaultValue = (string)value; break;
-                            case "IsNullable": isNullable = (bool)value; break;
-                            case "InstanceChangedCallback": instanceChangedCallback = (bool)value; break;
+                            case "IsSetterPublic":
+                                isSetterPublic = (bool) value;
+                                break;
+                            case "DefaultValue":
+                                defaultValue = (string) value;
+                                break;
+                            case "IsNullable":
+                                isNullable = (bool) value;
+                                break;
+                            case "InstanceChangedCallback":
+                                instanceChangedCallback = (bool) value;
+                                break;
                         }
+                    }
+                }
 
                 var fieldName = propertyName + "Property";
 
                 namespaces.UseNamespace(usedTypes, specificClass, type);
-                var defaultValueExpression = ParseExpression(defaultValue);
+                var defaultValueExpression = SyntaxFactory.ParseExpression(defaultValue);
                 var metadataCreation = GetObjectCreationExpression(defaultValueExpression);
                 if (instanceChangedCallback)
                     metadataCreation = GetMetadataCreation(metadataCreation, $"On{propertyName}Changed");
                 var registration = GetRegistration(propertyName, type, specificClass, metadataCreation);
                 var staticFieldDeclaration = GetStaticFieldDeclaration(fieldName, registration);
-                var getter = GetGetter(fieldName, isNullable, type ,context);
+                var getter = GetGetter(fieldName, isNullable, type, context);
                 var setter = GetSetter(fieldName, isSetterPublic);
                 var propertyDeclaration = GetPropertyDeclaration(propertyName, isNullable, type, getter, setter);
 
@@ -81,7 +89,7 @@ internal class DependencyPropertyGenerator : ISourceGenerator
                 var compilationUnit = GetCompilationUnit(generatedNamespace, namespaces);
                 var fileName = specificClass.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat
                     .WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted)) + ".g.cs";
-                context.AddSource(fileName, SyntaxTree(compilationUnit, encoding: Encoding.UTF8).GetText());
+                context.AddSource(fileName, SyntaxFactory.SyntaxTree(compilationUnit, encoding: Encoding.UTF8).GetText());
             }
         }
     }
@@ -95,8 +103,8 @@ internal class DependencyPropertyGenerator : ISourceGenerator
     /// <returns>ObjectCreationExpression</returns>
     private static ObjectCreationExpressionSyntax GetObjectCreationExpression(ExpressionSyntax defaultValueExpression)
     {
-        return ObjectCreationExpression(IdentifierName("PropertyMetadata"))
-            .AddArgumentListArguments(Argument(defaultValueExpression));
+        return SyntaxFactory.ObjectCreationExpression(SyntaxFactory.IdentifierName("PropertyMetadata"))
+            .AddArgumentListArguments(SyntaxFactory.Argument(defaultValueExpression));
     }
 
     /// <summary>
@@ -108,7 +116,7 @@ internal class DependencyPropertyGenerator : ISourceGenerator
     /// <returns>MetadataCreation</returns>
     private static ObjectCreationExpressionSyntax GetMetadataCreation(ObjectCreationExpressionSyntax metadataCreation, string partialMethodName)
     {
-        return metadataCreation.AddArgumentListArguments(Argument(IdentifierName(partialMethodName)));
+        return metadataCreation.AddArgumentListArguments(SyntaxFactory.Argument(SyntaxFactory.IdentifierName(partialMethodName)));
     }
     
     /// <summary>
@@ -118,18 +126,11 @@ internal class DependencyPropertyGenerator : ISourceGenerator
     /// </code>
     /// </summary>
     /// <returns>Registration</returns>
-    private static InvocationExpressionSyntax GetRegistration(string propertyName, INamedTypeSymbol type, INamedTypeSymbol specificClass, ObjectCreationExpressionSyntax metadataCreation)
+    private static InvocationExpressionSyntax GetRegistration(string propertyName, ITypeSymbol type, ITypeSymbol specificClass, ExpressionSyntax metadataCreation)
     {
-        return InvocationExpression(
-                MemberAccessExpression(
-                    SyntaxKind.SimpleMemberAccessExpression,
-                    IdentifierName("DependencyProperty"),
-                    IdentifierName("Register")))
-            .AddArgumentListArguments(
-                Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(propertyName))),
-                Argument(TypeOfExpression(type.GetTypeSyntax(false))),
-                Argument(TypeOfExpression(specificClass.GetTypeSyntax(false))),
-                Argument(metadataCreation));
+        return SyntaxFactory.InvocationExpression(SyntaxFactory.MemberAccessExpression(
+                    SyntaxKind.SimpleMemberAccessExpression, SyntaxFactory.IdentifierName("DependencyProperty"), SyntaxFactory.IdentifierName("Register")))
+            .AddArgumentListArguments(SyntaxFactory.Argument(SyntaxFactory.LiteralExpression(SyntaxKind.StringLiteralExpression, SyntaxFactory.Literal(propertyName))), SyntaxFactory.Argument(SyntaxFactory.TypeOfExpression(type.GetTypeSyntax(false))), SyntaxFactory.Argument(SyntaxFactory.TypeOfExpression(specificClass.GetTypeSyntax(false))), SyntaxFactory.Argument(metadataCreation));
     }
 
     /// <summary>
@@ -139,14 +140,11 @@ internal class DependencyPropertyGenerator : ISourceGenerator
     /// </code>
     /// </summary>
     /// <returns>StaticFieldDeclaration</returns>
-    private static FieldDeclarationSyntax GetStaticFieldDeclaration(string fieldName, InvocationExpressionSyntax registration)
+    private static FieldDeclarationSyntax GetStaticFieldDeclaration(string fieldName, ExpressionSyntax registration)
     {
-        return FieldDeclaration(VariableDeclaration(IdentifierName("DependencyProperty")))
-            .AddModifiers(
-                Token(SyntaxKind.PublicKeyword),
-                Token(SyntaxKind.StaticKeyword),
-                Token(SyntaxKind.ReadOnlyKeyword))
-            .AddDeclarationVariables(VariableDeclarator(fieldName).WithInitializer(EqualsValueClause(registration)));
+        return SyntaxFactory.FieldDeclaration(SyntaxFactory.VariableDeclaration(SyntaxFactory.IdentifierName("DependencyProperty")))
+            .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.StaticKeyword), SyntaxFactory.Token(SyntaxKind.ReadOnlyKeyword))
+            .AddDeclarationVariables(SyntaxFactory.VariableDeclarator(fieldName).WithInitializer(SyntaxFactory.EqualsValueClause(registration)));
     }
 
     /// <summary>
@@ -156,16 +154,16 @@ internal class DependencyPropertyGenerator : ISourceGenerator
     /// </code>
     /// </summary>
     /// <returns>Getter</returns>
-    private static AccessorDeclarationSyntax GetGetter(string fieldName, bool isNullable, INamedTypeSymbol type, GeneratorExecutionContext context)
+    private static AccessorDeclarationSyntax GetGetter(string fieldName, bool isNullable, ITypeSymbol type, GeneratorExecutionContext context)
     {
-        ExpressionSyntax getProperty = InvocationExpression(IdentifierName("GetValue"))
-            .AddArgumentListArguments(Argument(IdentifierName(fieldName)));
+        ExpressionSyntax getProperty = SyntaxFactory.InvocationExpression(SyntaxFactory.IdentifierName("GetValue"))
+            .AddArgumentListArguments(SyntaxFactory.Argument(SyntaxFactory.IdentifierName(fieldName)));
         if (!SymbolEqualityComparer.Default.Equals(type, context.Compilation.GetSpecialType(SpecialType.System_Object)))
-            getProperty = CastExpression(type.GetTypeSyntax(isNullable), getProperty);
+            getProperty = SyntaxFactory.CastExpression(type.GetTypeSyntax(isNullable), getProperty);
 
-        return AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
-            .WithExpressionBody(ArrowExpressionClause(getProperty))
-            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
+        return SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
+            .WithExpressionBody(SyntaxFactory.ArrowExpressionClause(getProperty))
+            .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
     }
 
     /// <summary>
@@ -177,14 +175,12 @@ internal class DependencyPropertyGenerator : ISourceGenerator
     /// <returns>Setter</returns>
     private static AccessorDeclarationSyntax GetSetter(string fieldName, bool isSetterPublic)
     {
-        ExpressionSyntax setProperty = InvocationExpression(IdentifierName("SetValue"))
-            .AddArgumentListArguments(
-                Argument(IdentifierName(fieldName)),
-                Argument(IdentifierName("value")));
-        var setter = AccessorDeclaration(SyntaxKind.SetAccessorDeclaration)
-            .WithExpressionBody(ArrowExpressionClause(setProperty))
-            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
-        return !isSetterPublic ? setter.AddModifiers(Token(SyntaxKind.PrivateKeyword)) : setter;
+        ExpressionSyntax setProperty = SyntaxFactory.InvocationExpression(SyntaxFactory.IdentifierName("SetValue"))
+            .AddArgumentListArguments(SyntaxFactory.Argument(SyntaxFactory.IdentifierName(fieldName)), SyntaxFactory.Argument(SyntaxFactory.IdentifierName("value")));
+        var setter = SyntaxFactory.AccessorDeclaration(SyntaxKind.SetAccessorDeclaration)
+            .WithExpressionBody(SyntaxFactory.ArrowExpressionClause(setProperty))
+            .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
+        return !isSetterPublic ? setter.AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword)) : setter;
     }
 
     /// <summary>
@@ -194,10 +190,10 @@ internal class DependencyPropertyGenerator : ISourceGenerator
     /// </code>
     /// </summary>
     /// <returns>PropertyDeclaration</returns>
-    private static PropertyDeclarationSyntax GetPropertyDeclaration(string propertyName, bool isNullable, INamedTypeSymbol type, AccessorDeclarationSyntax getter, AccessorDeclarationSyntax setter)
+    private static PropertyDeclarationSyntax GetPropertyDeclaration(string propertyName, bool isNullable, ITypeSymbol type, AccessorDeclarationSyntax getter, AccessorDeclarationSyntax setter)
     {
-        return PropertyDeclaration(type.GetTypeSyntax(isNullable), propertyName)
-            .AddModifiers(Token(SyntaxKind.PublicKeyword))
+        return SyntaxFactory.PropertyDeclaration(type.GetTypeSyntax(isNullable), propertyName)
+            .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
             .AddAccessorListAccessors(getter, setter);
     }
 
@@ -209,10 +205,10 @@ internal class DependencyPropertyGenerator : ISourceGenerator
     /// </code>
     /// </summary>
     /// <returns>ClassDeclaration</returns>
-    private static ClassDeclarationSyntax GetClassDeclaration(INamedTypeSymbol specificClass, List<MemberDeclarationSyntax> members)
+    private static ClassDeclarationSyntax GetClassDeclaration(ISymbol specificClass, List<MemberDeclarationSyntax> members)
     {
-        return ClassDeclaration(specificClass.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat))
-            .AddModifiers(Token(SyntaxKind.PartialKeyword))
+        return SyntaxFactory.ClassDeclaration(specificClass.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat))
+            .AddModifiers(SyntaxFactory.Token(SyntaxKind.PartialKeyword))
             .AddMembers(members.ToArray());
     }
 
@@ -224,12 +220,12 @@ internal class DependencyPropertyGenerator : ISourceGenerator
     /// </code>
     /// </summary>
     /// <returns>NamespaceDeclaration</returns>
-    private static NamespaceDeclarationSyntax GetNamespaceDeclaration(INamedTypeSymbol specificClass, ClassDeclarationSyntax generatedClass)
+    private static NamespaceDeclarationSyntax GetNamespaceDeclaration(ISymbol specificClass, MemberDeclarationSyntax generatedClass)
     {
-        return NamespaceDeclaration(ParseName(specificClass.ContainingNamespace.ToDisplayString()))
+        return SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName(specificClass.ContainingNamespace.ToDisplayString()))
             .AddMembers(generatedClass)
-            .WithNamespaceKeyword(Token(SyntaxKind.NamespaceKeyword)
-                .WithLeadingTrivia(Trivia(NullableDirectiveTrivia(Token(SyntaxKind.EnableKeyword), true))));
+            .WithNamespaceKeyword(SyntaxFactory.Token(SyntaxKind.NamespaceKeyword)
+                .WithLeadingTrivia(SyntaxFactory.Trivia(SyntaxFactory.NullableDirectiveTrivia(SyntaxFactory.Token(SyntaxKind.EnableKeyword), true))));
     }
 
     /// <summary>
@@ -241,11 +237,11 @@ internal class DependencyPropertyGenerator : ISourceGenerator
     /// </code>
     /// </summary>
     /// <returns>CompilationUnit</returns>
-    private static CompilationUnitSyntax GetCompilationUnit(NamespaceDeclarationSyntax generatedNamespace, HashSet<string> namespaces)
+    private static CompilationUnitSyntax GetCompilationUnit(MemberDeclarationSyntax generatedNamespace, IEnumerable<string> namespaces)
     {
-        return CompilationUnit()
+        return SyntaxFactory.CompilationUnit()
             .AddMembers(generatedNamespace)
-            .AddUsings(namespaces.Select(ns => UsingDirective(ParseName(ns))).ToArray())
+            .AddUsings(namespaces.Select(ns => SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(ns))).ToArray())
             .NormalizeWhitespace();
     }
 }

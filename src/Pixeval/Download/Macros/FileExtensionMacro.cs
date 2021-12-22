@@ -20,7 +20,6 @@
 
 #endregion
 
-using System;
 using Pixeval.Download.MacroParser;
 using Pixeval.UserControls;
 using Pixeval.Util;

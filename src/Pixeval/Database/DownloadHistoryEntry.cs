@@ -44,32 +44,34 @@ public class DownloadHistoryEntry : ObservableObject
     {
 
     }
+
     [BsonId(true)]
-    public ObjectId DownloadHistoryEntryId { get; set; }
+    public ObjectId? DownloadHistoryEntryId { get; set; }
+
     public string? Destination { get; set; }
 
     public DownloadItemType Type { get; set; }
 
     private DownloadState _state;
-    
+
     public DownloadState State
     {
         get => _state;
         set => SetProperty(ref _state, value);
     }
-    
+
     public string? Id { get; set; }
-    
+
     public string? Title { get; set; }
-    
+
     public string? Description { get; set; }
-    
+
     public string? Url { get; set; }
-    
+
     public string? Thumbnail { get; set; }
 
     private string? _errorCause;
-    
+
     public string? ErrorCause
     {
         get => _errorCause;

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -18,27 +19,16 @@ internal class AttributeReceiver : ISyntaxContextReceiver
 
     public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
     {
-        _attributeSymbol ??= context.SemanticModel.Compilation
-            .GetTypeByMetadataName(_attributeName);
+        _attributeSymbol ??= context.SemanticModel.Compilation.GetTypeByMetadataName(_attributeName);
 
         if (_attributeSymbol is null)
             return;
 
-        if (context.Node is ClassDeclarationSyntax classDeclaration)
+        if (context.Node is ClassDeclarationSyntax classDeclaration && (from l in classDeclaration.AttributeLists
+                from attribute in l.Attributes
+                select context.SemanticModel.GetSymbolInfo(attribute)).Any(symbolInfo => SymbolEqualityComparer.Default.Equals(symbolInfo.Symbol?.ContainingType, _attributeSymbol)))
         {
-            foreach (var l in classDeclaration.AttributeLists)
-            {
-                foreach (var attribute in l.Attributes)
-                {
-                    var symbolInfo = context.SemanticModel.GetSymbolInfo(attribute);
-                    if (SymbolEqualityComparer.Default.Equals(symbolInfo.Symbol?.ContainingType,
-                            _attributeSymbol))
-                    {
-                        _candidateClasses.Add(classDeclaration);
-                        return;
-                    }
-                }
-            }
+            _candidateClasses.Add(classDeclaration);
         }
     }
 }

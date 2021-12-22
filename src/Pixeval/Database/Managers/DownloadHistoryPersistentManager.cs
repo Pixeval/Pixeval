@@ -22,7 +22,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using LiteDB;
 using Pixeval.Download;
 
@@ -30,7 +29,13 @@ namespace Pixeval.Database.Managers;
 
 public class DownloadHistoryPersistentManager : IPersistentManager<DownloadHistoryEntry, ObservableDownloadTask>
 {
-    public ILiteCollection<DownloadHistoryEntry> Collection { get; init; } = null!;
+    public DownloadHistoryPersistentManager(ILiteDatabase collection, int maximumRecords)
+    {
+        Collection = collection.GetCollection<DownloadHistoryEntry>(nameof(DownloadHistoryEntry));
+        MaximumRecords = maximumRecords;
+    }
+
+    public ILiteCollection<DownloadHistoryEntry> Collection { get; init; }
 
     public int MaximumRecords { get; set; }
 

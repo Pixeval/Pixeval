@@ -1,5 +1,4 @@
-﻿using Microsoft.UI.Xaml;
-using Pixeval.Misc;
+﻿using Pixeval.Misc;
 
 namespace Pixeval.Dialogs;
 

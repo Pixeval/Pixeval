@@ -16,12 +16,19 @@ public sealed class DependencyPropertyAttribute : Attribute
     {
         Name = name;
         Type = type;
+        IsSetterPublic = true;
+        IsNullable = true;
     }
 
     public string Name { get; }
+
     public Type Type { get; }
-    public bool IsSetterPublic { get; init; } = true;
-    public bool IsNullable { get; init; } = true;
+
+    public bool IsSetterPublic { get; init; }
+
+    public bool IsNullable { get; init; }
+
     public string DefaultValue { get; init; } = "DependencyProperty.UnsetValue";
+
     public bool InstanceChangedCallback { get; init; }
 }

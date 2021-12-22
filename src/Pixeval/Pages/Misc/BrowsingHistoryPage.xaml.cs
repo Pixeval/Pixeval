@@ -25,12 +25,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.CoreApi.Engine;
-using Pixeval.CoreApi.Model;
 using Pixeval.Database.Managers;
 using Pixeval.Messages;
 using Pixeval.Misc;
-using Pixeval.Pages.Capability;
 using Pixeval.UserControls;
 using Pixeval.Util;
 

@@ -166,7 +166,7 @@ public sealed partial class IllustrationGridCommandBar
         using var scope = App.AppViewModel.AppServicesScope;
         var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
 
-        // That will run for quite a while
+        // This will run for quite a while
         _ = Task.Run(async () =>
         {
             var tasks = await App.AppViewModel.Window.DispatcherQueue.EnqueueAsync(

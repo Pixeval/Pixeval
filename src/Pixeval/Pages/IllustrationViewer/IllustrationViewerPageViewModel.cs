@@ -132,11 +132,11 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
         set => SetProperty(ref _userProfileImageSource, value);
     }
 
-    public string IllustrationId => FirstIllustrationViewModel?.Illustration?.Id.ToString();
+    public string IllustrationId => FirstIllustrationViewModel?.Illustration.Id.ToString() ?? string.Empty;
 
-    public string? IllustratorName => FirstIllustrationViewModel.Illustration.User?.Name;
+    public string? IllustratorName => FirstIllustrationViewModel?.Illustration.User?.Name;
 
-    public string? IllustratorUid => FirstIllustrationViewModel.Illustration.User?.Id.ToString();
+    public string? IllustratorUid => FirstIllustrationViewModel?.Illustration.User?.Id.ToString();
 
     public bool IsManga => ImageViewerPageViewModels?.Length > 1;
 
@@ -160,10 +160,14 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
 
     public void Dispose()
     {
-        foreach (var imageViewerPageViewModel in ImageViewerPageViewModels)
+        if (ImageViewerPageViewModels is not null)
         {
-            imageViewerPageViewModel.Dispose();
+            foreach (var imageViewerPageViewModel in ImageViewerPageViewModels)
+            {
+                imageViewerPageViewModel.Dispose();
+            }
         }
+        
 
         (_userProfileImageSource as SoftwareBitmapSource)?.Dispose();
     }
@@ -186,7 +190,7 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
                     Key = VirtualKey.D
                 }
             },
-            Label = FirstIllustrationViewModel.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark,
+            Label = FirstIllustrationViewModel!.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark,
             IconSource = MakoHelper.GetBookmarkButtonIconSource(FirstIllustrationViewModel.IsBookmarked)
         };
 
@@ -336,9 +340,9 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
 
     private void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        FirstImageViewerPageViewModel.SwitchBookmarkState();
+        FirstImageViewerPageViewModel!.SwitchBookmarkState();
         // update manually
-        BookmarkCommand.Label = FirstIllustrationViewModel.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
+        BookmarkCommand.Label = FirstIllustrationViewModel!.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
         BookmarkCommand.IconSource = MakoHelper.GetBookmarkButtonIconSource(FirstIllustrationViewModel.IsBookmarked);
     }
 
@@ -393,13 +397,13 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
 
     public ImageViewerPageViewModel Next()
     {
-        Current = ImageViewerPageViewModels[++CurrentIndex];
+        Current = ImageViewerPageViewModels![++CurrentIndex];
         return Current;
     }
 
     public ImageViewerPageViewModel Prev()
     {
-        Current = ImageViewerPageViewModels[--CurrentIndex];
+        Current = ImageViewerPageViewModels![--CurrentIndex];
         return Current;
     }
 
@@ -412,7 +416,7 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
             IllustrationViewModelInTheGridView.IsBookmarked = true;
         }
 
-        return FirstIllustrationViewModel.PostPublicBookmarkAsync();
+        return FirstIllustrationViewModel!.PostPublicBookmarkAsync();
     }
 
     public Task RemoveBookmarkAsync()
@@ -422,12 +426,12 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
             IllustrationViewModelInTheGridView.IsBookmarked = false;
         }
 
-        return FirstIllustrationViewModel.RemoveBookmarkAsync();
+        return FirstIllustrationViewModel!.RemoveBookmarkAsync();
     }
 
     private async Task LoadUserProfileImage()
     {
-        if (FirstIllustrationViewModel.Illustration.User?.ProfileImageUrls?.Medium is { } profileImage)
+        if (FirstIllustrationViewModel!.Illustration.User?.ProfileImageUrls?.Medium is { } profileImage)
         {
             UserProfileImageSource = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceResultAsync(profileImage)
                 .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync());
@@ -551,7 +555,7 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
             return Visibility.Collapsed;
         }
 
-        return index < ImageViewerPageViewModels.Length - 1 ? Visibility.Visible : Visibility.Collapsed;
+        return index < ImageViewerPageViewModels!.Length - 1 ? Visibility.Visible : Visibility.Collapsed;
     }
 
     public Visibility CalculatePrevImageButtonVisibility(int index)

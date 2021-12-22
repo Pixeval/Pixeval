@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls.IllustratorView;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Model;
-using Pixeval.Util.IO;
-using Pixeval.Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.Capability;
 

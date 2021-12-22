@@ -267,7 +267,7 @@ public class ImageViewerPageViewModel : ObservableObject, IDisposable
     /// </summary>
     public void SwitchBookmarkState()
     {
-        if (IllustrationViewerPageViewModel.FirstIllustrationViewModel.IsBookmarked)
+        if (IllustrationViewerPageViewModel.FirstIllustrationViewModel?.IsBookmarked is true)
         {
             IllustrationViewerPageViewModel.RemoveBookmarkAsync();
         }

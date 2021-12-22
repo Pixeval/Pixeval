@@ -84,7 +84,7 @@ public sealed partial class IllustrationViewerPage : IGoBack
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
     {
-        foreach (var imageViewerPageViewModel in _viewModel.ImageViewerPageViewModels)
+        foreach (var imageViewerPageViewModel in _viewModel.ImageViewerPageViewModels!)
         {
             imageViewerPageViewModel.ImageLoadingCancellationHandle.Cancel();
         }

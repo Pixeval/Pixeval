@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using LiteDB;
 
 namespace Pixeval.Database.Managers;
@@ -14,8 +13,16 @@ namespace Pixeval.Database.Managers;
 public abstract class SimplePersistentManager<T> : IPersistentManager<T, T>
     where T : new()
 {
+    protected SimplePersistentManager(ILiteDatabase db, int maximumRecords)
+    {
+        Collection = db.GetCollection<T>(typeof(T).Name);
+        MaximumRecords = maximumRecords;
+    }
+
     public ILiteCollection<T> Collection { get; init; }
+
     public int MaximumRecords { get; set; }
+
     public void Insert(T t)
     {
         if (Collection.Count() > MaximumRecords)

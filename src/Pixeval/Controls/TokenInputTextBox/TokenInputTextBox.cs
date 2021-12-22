@@ -22,7 +22,6 @@
 
 using System;
 using Windows.System;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Misc;
@@ -96,7 +95,7 @@ public partial class TokenInputTextBox : Control
 
     private void SubmitToken()
     {
-        if (SubmitEnable && _tokenTextBox is { Text: { Length: > 0 } })
+        if (SubmitEnable && _tokenTextBox is { Text.Length: > 0 })
         {
             _tokenSubmitted?.Invoke(this, (Token) Token.Clone());
             _tokenTextBox.Text = string.Empty;
