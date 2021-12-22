@@ -25,18 +25,19 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.Misc;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.UI;
 
 namespace Pixeval.UserControls;
 
+[DependencyProperty("ItemsSource", typeof(object),DefaultValue = "System.Linq.Enumerable.Empty<Pixeval.Pages.IllustrationViewer.CommentBlockViewModel>()", InstanceChangedCallback = true)]
 public sealed partial class CommentList
 {
-    public static DependencyProperty ItemsSourceProperty = DependencyProperty.Register(
-        nameof(ItemsSource),
-        typeof(object),
-        typeof(CommentList),
-        PropertyMetadata.Create(Enumerable.Empty<CommentBlockViewModel>(), (o, args) => ((CommentList) o).CommentsList.ItemsSource = args.NewValue));
+    private static void OnItemsSourceChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
+    {
+        ((CommentList)o).CommentsList.ItemsSource = args.NewValue;
+    }
 
     private EventHandler<TappedRoutedEventArgs>? _repliesHyperlinkButtonTapped;
 
@@ -44,12 +45,7 @@ public sealed partial class CommentList
     {
         InitializeComponent();
     }
-
-    public object ItemsSource
-    {
-        get => GetValue(ItemsSourceProperty);
-        set => SetValue(ItemsSourceProperty, value);
-    }
+    
 
     public event EventHandler<TappedRoutedEventArgs> RepliesHyperlinkButtonTapped
     {

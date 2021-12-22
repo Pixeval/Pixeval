@@ -25,11 +25,16 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls.Card;
+using Pixeval.Misc;
 
 namespace Pixeval.Controls.IllustratorView;
 
 [TemplatePart(Name = PartContentContainer, Type = typeof(CardControl))]
-public class IllustratorView : Control
+[DependencyProperty("IllustratorName",typeof(string))]
+[DependencyProperty("IllustratorDescription", typeof(string))]
+[DependencyProperty("IllustratorProfileNavigateUri", typeof(Uri))]
+[DependencyProperty("IllustratorPicture", typeof(ImageSource))]
+public partial class IllustratorView : Control
 {
     private const string PartContentContainer = "ContentContainer";
 
@@ -38,54 +43,6 @@ public class IllustratorView : Control
     public IllustratorView()
     {
         DefaultStyleKey = typeof(IllustratorView);
-    }
-
-    public static readonly DependencyProperty IllustratorNameProperty = DependencyProperty.Register(
-        nameof(IllustratorName),
-        typeof(string),
-        typeof(IllustratorView),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public string IllustratorName
-    {
-        get => (string) GetValue(IllustratorNameProperty);
-        set => SetValue(IllustratorNameProperty, value);
-    }
-
-    public static readonly DependencyProperty IllustratorDescriptionProperty = DependencyProperty.Register(
-        nameof(IllustratorDescription),
-        typeof(string),
-        typeof(IllustratorView),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public string IllustratorDescription
-    {
-        get => (string) GetValue(IllustratorDescriptionProperty);
-        set => SetValue(IllustratorDescriptionProperty, value);
-    }
-
-    public static readonly DependencyProperty IllustratorProfileNavigateUriProperty = DependencyProperty.Register(
-        nameof(IllustratorProfileNavigateUri),
-        typeof(Uri),
-        typeof(IllustratorView),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public Uri IllustratorProfileNavigateUri
-    {
-        get => (Uri) GetValue(IllustratorProfileNavigateUriProperty);
-        set => SetValue(IllustratorProfileNavigateUriProperty, value);
-    }
-
-    public static readonly DependencyProperty IllustratorPictureProperty = DependencyProperty.Register(
-        nameof(IllustratorPicture),
-        typeof(ImageSource),
-        typeof(IllustratorView),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public ImageSource IllustratorPicture
-    {
-        get => (ImageSource) GetValue(IllustratorPictureProperty);
-        set => SetValue(IllustratorPictureProperty, value);
     }
 
     protected override void OnApplyTemplate()

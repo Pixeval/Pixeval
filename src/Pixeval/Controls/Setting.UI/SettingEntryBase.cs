@@ -23,30 +23,25 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Controls.Setting.UI.UserControls;
+using Pixeval.Misc;
 
 namespace Pixeval.Controls.Setting.UI;
 
-public class SettingEntryBase : Control
+[DependencyProperty("Icon", typeof(IconElement), InstanceChangedCallback = true)]
+[DependencyProperty("Header", typeof(string))]
+[DependencyProperty("Description", typeof(object), InstanceChangedCallback = true)]
+public partial class SettingEntryBase : Control
 {
     protected const string PartEntryHeader = "EntryHeader";
 
-    public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
-        nameof(Icon),
-        typeof(IconElement),
-        typeof(SettingEntryBase),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue, (o, args) => IconChanged(o, args.NewValue)));
-
-    public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(
-        nameof(Header),
-        typeof(string),
-        typeof(SettingEntryBase),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register(
-        nameof(Description),
-        typeof(object),
-        typeof(SettingEntryBase),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue, (o, args) => DescriptionChanged(o, args.NewValue)));
+    private static void OnIconChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
+    {
+        IconChanged(o, args.NewValue);
+    }
+    private static void OnDescriptionChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
+    {
+        DescriptionChanged(o, args.NewValue);
+    }
 
     protected SettingEntryHeader? SettingEntryHeader;
 
@@ -58,24 +53,6 @@ public class SettingEntryBase : Control
             DescriptionChanged(this, Description);
             Update();
         };
-    }
-
-    public IconElement Icon
-    {
-        get => (IconElement) GetValue(IconProperty);
-        set => SetValue(IconProperty, value);
-    }
-
-    public string Header
-    {
-        get => (string) GetValue(HeaderProperty);
-        set => SetValue(HeaderProperty, value);
-    }
-
-    public object Description
-    {
-        get => GetValue(DescriptionProperty);
-        set => SetValue(DescriptionProperty, value);
     }
 
     private static void IconChanged(DependencyObject dependencyObject, object argsNewValue)

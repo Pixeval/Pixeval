@@ -22,26 +22,16 @@
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Markup;
+using Pixeval.Misc;
 
 namespace Pixeval.Controls.Setting.UI.ActionableSettingEntry;
 
-[ContentProperty(Name = nameof(ActionContent))]
-public class ActionableSettingEntry : SettingEntryBase
+[ContentProperty(Name = "ActionContent")]
+[DependencyProperty("ActionContent", typeof(object))]
+public partial class ActionableSettingEntry : SettingEntryBase
 {
-    public static readonly DependencyProperty ActionContentProperty = DependencyProperty.Register(
-        nameof(ActionContent),
-        typeof(object),
-        typeof(ActionableSettingEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
     public ActionableSettingEntry()
     {
         DefaultStyleKey = typeof(ActionableSettingEntry);
-    }
-
-    public object ActionContent
-    {
-        get => GetValue(ActionContentProperty);
-        set => SetValue(ActionContentProperty, value);
     }
 }

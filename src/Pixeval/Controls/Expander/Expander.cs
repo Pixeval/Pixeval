@@ -20,11 +20,13 @@
 
 #endregion
 
+using System.Diagnostics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls.Card;
+using Pixeval.Misc;
 using Pixeval.Util.UI;
 
 namespace Pixeval.Controls.Expander;
@@ -34,37 +36,17 @@ namespace Pixeval.Controls.Expander;
 [TemplatePart(Name = PartRootPanel, Type = typeof(Grid))]
 [TemplateVisualState(GroupName = "CommonStates", Name = "Normal")]
 [TemplateVisualState(GroupName = "CommonStates", Name = "Expanded")]
-public sealed class Expander : ContentControl
+[DependencyProperty("HeaderHeight", typeof(double),InstanceChangedCallback = true)]
+[DependencyProperty("NegativeHeaderHeight", typeof(double))]
+[DependencyProperty("IsExpanded", typeof(bool),DefaultValue = "false")]
+[DependencyProperty("Header", typeof(object))]
+public sealed partial class Expander : ContentControl
 {
     private const string PartContentCardContainer = "ContentCardContainer";
     private const string PartHeaderCardContainer = "HeaderCardContainer";
     private const string PartExpandOrFoldExpanderPresenter = "ExpandOrFoldExpanderPresenter";
     private const string PartRootPanel = "RootPanel";
-
-    public static readonly DependencyProperty HeaderHeightProperty = DependencyProperty.Register(
-        nameof(HeaderHeight),
-        typeof(double),
-        typeof(Expander),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue, HeaderHeightChanged));
-
-    public static readonly DependencyProperty NegativeHeaderHeightProperty = DependencyProperty.Register(
-        nameof(NegativeHeaderHeight),
-        typeof(double),
-        typeof(Expander),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public static readonly DependencyProperty IsExpandedProperty = DependencyProperty.Register(
-        nameof(IsExpanded),
-        typeof(bool),
-        typeof(Expander),
-        PropertyMetadata.Create(false, IsExpandedChanged));
-
-    public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(
-        nameof(Header),
-        typeof(object),
-        typeof(Expander),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
+    
     private CardControl? _contentCardContainer;
     private ContentPresenter? _expandOrFoldExpanderPresenter;
     private CardControl? _headerCardContainer;
@@ -75,32 +57,7 @@ public sealed class Expander : ContentControl
         DefaultStyleKey = typeof(Expander);
         Loaded += OnLoaded;
     }
-
-    public double HeaderHeight
-    {
-        get => (double) GetValue(HeaderHeightProperty);
-        set => SetValue(HeaderHeightProperty, value);
-    }
-
-    public double NegativeHeaderHeight
-    {
-        get => (double) GetValue(NegativeHeaderHeightProperty);
-        set => SetValue(NegativeHeaderHeightProperty, value);
-    }
-
-    public bool IsExpanded
-    {
-        get => (bool) GetValue(IsExpandedProperty);
-        set => SetValue(IsExpandedProperty, value);
-    }
-
-    public object Header
-    {
-        get => GetValue(HeaderProperty);
-        set => SetValue(HeaderProperty, value);
-    }
-
-    private static void HeaderHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnHeaderHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (e.NewValue is double value && d is Expander expander)
         {

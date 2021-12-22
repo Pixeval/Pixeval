@@ -25,11 +25,16 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls.Card;
+using Pixeval.Misc;
 
 namespace Pixeval.Controls.PersonView;
 
 [TemplatePart(Name = PartContentContainer, Type = typeof(CardControl))]
-public class PersonView : Control
+[DependencyProperty("PersonNickname",typeof(string))]
+[DependencyProperty("PersonName",typeof(string))]
+[DependencyProperty("PersonProfileNavigateUri", typeof(Uri))]
+[DependencyProperty("PersonPicture", typeof(ImageSource))]
+public partial class PersonView : Control
 {
     private const string PartContentContainer = "ContentContainer";
 
@@ -39,55 +44,7 @@ public class PersonView : Control
     {
         DefaultStyleKey = typeof(PersonView);
     }
-
-    public static readonly DependencyProperty PersonNicknameProperty = DependencyProperty.Register(
-        nameof(PersonNickname),
-        typeof(string),
-        typeof(PersonView),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public string PersonNickname
-    {
-        get => (string) GetValue(PersonNicknameProperty);
-        set => SetValue(PersonNicknameProperty, value);
-    }
-
-    public static readonly DependencyProperty PersonNameProperty = DependencyProperty.Register(
-        nameof(PersonName),
-        typeof(string),
-        typeof(PersonView),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public string PersonName
-    {
-        get => (string) GetValue(PersonNameProperty);
-        set => SetValue(PersonNameProperty, value);
-    }
-
-    public static readonly DependencyProperty PersonProfileNavigateUriProperty = DependencyProperty.Register(
-        nameof(PersonProfileNavigateUri),
-        typeof(Uri),
-        typeof(PersonView),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public Uri PersonProfileNavigateUri
-    {
-        get => (Uri) GetValue(PersonProfileNavigateUriProperty);
-        set => SetValue(PersonProfileNavigateUriProperty, value);
-    }
-
-    public static readonly DependencyProperty PersonPictureProperty = DependencyProperty.Register(
-        nameof(PersonPicture),
-        typeof(ImageSource),
-        typeof(PersonView),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public ImageSource PersonPicture
-    {
-        get => (ImageSource) GetValue(PersonPictureProperty);
-        set => SetValue(PersonPictureProperty, value);
-    }
-
+    
     protected override void OnApplyTemplate()
     {
         if (_contentContainer is not null)
