@@ -3,7 +3,7 @@ name: CD
 on:
   push:
     tags:
-      -'v\d+(?:\.\d+)?'
+      - 'v\d+(?:\.\d+)?'
   
 
 jobs:
