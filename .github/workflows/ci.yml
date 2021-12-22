@@ -2,14 +2,13 @@ name: CI
 
 on:
     push:
-    pull_request:
   
 
 jobs:
     build:
         strategy:
             matrix:
-                platform: ['x64','x86','arm64']
+                platform: ['x64','x86']
 
         runs-on: windows-2022
 
@@ -31,7 +30,7 @@ jobs:
                   
             - name: setup-msbuild
               uses: microsoft/setup-msbuild@v1
-            - name: Get pfx
+            - name: Install pfx
               run: |
                 [io.file]::WriteAllBytes("$PWD/temp.pfx",[convert]::FromBase64String($env:private_key))
                 Import-PfxCertificate -FilePath $PWD/temp.pfx -CertStoreLocation Cert:\CurrentUser\My -Password (ConvertTo-SecureString -AsPlainText "$env:private_key_password")
