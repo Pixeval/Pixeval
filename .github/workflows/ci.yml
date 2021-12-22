@@ -33,17 +33,21 @@ jobs:
               uses: microsoft/setup-msbuild@v1
             - name: Get pfx
               run: |
-                if(-not $env:GITHUB_EVENT_NAME -eq "pull_request"){
+                if($env:GITHUB_EVENT_NAME -eq "push"){
                 [io.file]::WriteAllBytes("$PWD/temp.pfx",[convert]::FromBase64String($env:private_key))
                 Import-PfxCertificate -FilePath $PWD/temp.pfx -CertStoreLocation Cert:\CurrentUser\My -Password (ConvertTo-SecureString -AsPlainText "$env:private_key_password")
-                Remove-Item -Path "$PWD/temp.pfx"}
+                Remove-Item -Path "$PWD/temp.pfx"
+                $env:configuration = "Release"
+                }else{
+                    $env:configuration = "Debug"
+                }
               shell: pwsh
 
             - name: Restore the application
               run: msbuild -t:restore -p:Platform=${{ matrix.platform }}
 
             - name: Publish the application
-              run:  msbuild -t:publish -p:Configuration="$env:Configuration" -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:PackageCertificateThumbprint="$env:private_key_thumbprint" -p:OutDir="$PWD\output"
+              run:  msbuild -t:publish -p:Configuration="$env:configuration" -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:PackageCertificateThumbprint="$env:private_key_thumbprint" -p:OutDir="$PWD\output"
               shell: pwsh
 
             - name: Upload a Build Artifact
