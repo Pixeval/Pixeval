@@ -37,7 +37,7 @@ public class FollowingsPageViewModel : ObservableObject
         {
             var model = new IllustratorViewModel(user.UserInfo!);
             _illustrators.Add(model);
-            _ = model.LoadAvatarSource();
+            _ = model.Load();
         }
     }
 }

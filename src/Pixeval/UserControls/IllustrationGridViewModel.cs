@@ -30,6 +30,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
+using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Popups;
 using Pixeval.Util;
 using Pixeval.Util.UI;
@@ -37,7 +38,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.UserControls;
 
-public class IllustrationGridViewModel : ObservableObject, IDisposable
+public class IllustrationGridViewModel : ObservableObject, IDisposable, IIllustrationVisualizer
 {
     private bool _isAnyIllustrationSelected;
 
@@ -52,6 +53,7 @@ public class IllustrationGridViewModel : ObservableObject, IDisposable
         SelectedIllustrations = new ObservableCollection<IllustrationViewModel>();
         Illustrations = new ObservableCollection<IllustrationViewModel>();
         IllustrationsView = new AdvancedCollectionView(Illustrations);
+        VisualizationController = new IllustrationVisualizationController(this);
         _selectionLabel = IllustrationGridCommandBarResources.CancelSelectionButtonDefaultLabel;
     }
 
@@ -75,29 +77,12 @@ public class IllustrationGridViewModel : ObservableObject, IDisposable
         set => SetProperty(ref _selectionLabel, value);
     }
 
+    public IllustrationVisualizationController VisualizationController { get; internal set; }
+
     public void Dispose()
     {
-        DisposeCurrent();
+        VisualizationController.Dispose();
         GC.SuppressFinalize(this);
-    }
-
-    public async Task FillAsync(int? itemsLimit = null)
-    {
-        var added = new HashSet<long>();
-        await foreach (var illustration in FetchEngine!)
-        {
-            if (illustration is not null && !added.Contains(illustration.Id) /* Check for the repetition */)
-            {
-                if (added.Count >= itemsLimit)
-                {
-                    FetchEngine.Cancel();
-                    break;
-                }
-
-                added.Add(illustration.Id); // add to the already-added-illustration list
-                AddIllustrationViewModel(new IllustrationViewModel(illustration));
-            }
-        }
     }
 
     public void AddIllustrationViewModel(IllustrationViewModel viewModel)
@@ -122,20 +107,6 @@ public class IllustrationGridViewModel : ObservableObject, IDisposable
                 : IllustrationGridCommandBarResources.CancelSelectionButtonFormatted.Format(count);
         };
         IllustrationsView.Add(viewModel);
-    }
-
-    public async Task FillAsync(IFetchEngine<Illustration?>? newEngine, int? itemsLimit = null)
-    {
-        FetchEngine = newEngine;
-        await FillAsync(itemsLimit);
-    }
-
-    public async Task ResetAndFillAsync(IFetchEngine<Illustration?>? newEngine, int? itemLimit = null)
-    {
-        FetchEngine?.EngineHandle.Cancel();
-        FetchEngine = newEngine;
-        DisposeCurrent();
-        await FillAsync(itemLimit);
     }
 
     public void SetSortDescription(SortDescription description)
@@ -168,7 +139,7 @@ public class IllustrationGridViewModel : ObservableObject, IDisposable
         PopupManager.ShowPopup(PopupManager.CreatePopup(new QrCodePresenter(_pixEzQrCodeSource), lightDismiss: true, closing: (_, _) => _pixEzQrCodeSource.Dispose()));
     }
 
-    private void DisposeCurrent()
+    public void DisposeCurrent()
     {
         foreach (IllustrationViewModel illustrationViewModel in IllustrationsView)
         {

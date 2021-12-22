@@ -40,6 +40,24 @@ public class IllustratorView : Control
         DefaultStyleKey = typeof(IllustratorView);
     }
 
+    public static readonly DependencyProperty ThumbnailSourcesProperty = DependencyProperty.Register(
+        "ThumbnailSources", typeof(object), typeof(IllustratorView), new PropertyMetadata(default));
+
+    public object ThumbnailSources
+    {
+        get => GetValue(ThumbnailSourcesProperty);
+        set => SetValue(ThumbnailSourcesProperty, value);
+    }
+
+    public static readonly DependencyProperty ThumbnailItemTemplateProperty = DependencyProperty.Register(
+        "ThumbnailItemTemplate", typeof(DataTemplate), typeof(IllustratorView), new PropertyMetadata(default(DataTemplate)));
+
+    public DataTemplate ThumbnailItemTemplate
+    {
+        get { return (DataTemplate)GetValue(ThumbnailItemTemplateProperty); }
+        set { SetValue(ThumbnailItemTemplateProperty, value); }
+    }
+
     public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
         "ViewModel", typeof(IllustratorViewModel), typeof(IllustratorView), new PropertyMetadata(default(IllustratorViewModel)));
 

@@ -201,7 +201,7 @@ namespace Pixeval.Pages.Capability
 
         private void ChangeSource()
         {
-            _ = ViewModelProvider.ViewModel.ResetAndFillAsync(App.AppViewModel.MakoClient.Posts(_viewModel.Id.ToString()), 100);
+            _ = ViewModelProvider.ViewModel.VisualizationController.ResetAndFillAsync(_viewModel.FetchEngine, 100);
         }
 
         private void IllustratorPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
