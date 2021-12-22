@@ -2,14 +2,13 @@ name: CI
 
 on:
     push:
-    pull_request:
   
 
 jobs:
     build:
         strategy:
             matrix:
-                platform: ['x64','x86','arm64']
+                platform: ['x64','x86']
 
         runs-on: windows-2022
 
@@ -31,23 +30,18 @@ jobs:
                   
             - name: setup-msbuild
               uses: microsoft/setup-msbuild@v1
-            - name: Get pfx
+            - name: Install pfx
               run: |
-                if($env:GITHUB_EVENT_NAME -eq "push"){
                 [io.file]::WriteAllBytes("$PWD/temp.pfx",[convert]::FromBase64String($env:private_key))
                 Import-PfxCertificate -FilePath $PWD/temp.pfx -CertStoreLocation Cert:\CurrentUser\My -Password (ConvertTo-SecureString -AsPlainText "$env:private_key_password")
                 Remove-Item -Path "$PWD/temp.pfx"
-                $env:configuration = "Release"
-                }else{
-                    $env:configuration = "Debug"
-                }
               shell: pwsh
 
             - name: Restore the application
               run: msbuild -t:restore -p:Platform=${{ matrix.platform }}
 
             - name: Publish the application
-              run:  msbuild -t:publish -p:Configuration="$env:configuration" -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:PackageCertificateThumbprint="$env:private_key_thumbprint" -p:OutDir="$PWD\output"
+              run:  msbuild -t:publish -p:Configuration=Release -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:PackageCertificateThumbprint="$env:private_key_thumbprint" -p:OutDir="$PWD\output"
               shell: pwsh
 
             - name: Upload a Build Artifact
