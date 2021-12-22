@@ -22,7 +22,7 @@
                                 <TextBlock Margin="0,6,0,0"
                                            Foreground="{ThemeResource PixevalTipTextForeground}"
                                            Style="{StaticResource CaptionTextBlockStyle}"
-                                           Text="{TemplateBinding IllustratorDescription}" />
+                                           Text="{TemplateBinding IllustratorId}" />
                             </StackPanel>
                             <PersonPicture Grid.Column="1"
                                            Width="50"

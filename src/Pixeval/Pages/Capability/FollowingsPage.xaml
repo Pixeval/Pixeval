@@ -32,7 +32,12 @@
                         </ItemsRepeater.Layout>
                         <ItemsRepeater.ItemTemplate>
                             <DataTemplate x:DataType="illustratorView:IllustratorViewModel">
-                                <illustratorView:IllustratorView IllustratorName="{x:Bind Name}" IllustratorDescription="{x:Bind Id}" IllustratorPicture="{x:Bind AvatarSource, Mode=OneWay}"></illustratorView:IllustratorView>
+                                <illustratorView:IllustratorView
+                                    Tapped="IllustratorView_OnTapped"
+                                    ViewModel="{x:Bind}"
+                                    IllustratorName="{x:Bind Name}"
+                                    IllustratorId="{x:Bind Id}"
+                                    IllustratorPicture="{x:Bind AvatarSource, Mode=OneWay}"></illustratorView:IllustratorView>
                             </DataTemplate>
                         </ItemsRepeater.ItemTemplate>
                     </ItemsRepeater>

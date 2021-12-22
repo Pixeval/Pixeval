@@ -69,6 +69,7 @@
 		<None Remove="Controls\TokenInputTextBox\TokenInputTextBox.xaml" />
 		<None Remove="Dialogs\ReverseSearchApiKeyNotPresentDialog.xaml" />
 		<None Remove="Pages\Capability\FollowingsPage.xaml" />
+		<None Remove="Pages\Capability\IllustratorPage.xaml" />
 		<None Remove="Pages\Download\DownloadListEntry.xaml" />
 		<None Remove="Pages\IllustrationViewer\CommentRepliesPage.xaml" />
 		<None Remove="Pages\IllustrationViewer\PixivReplyEmojiListPage.xaml" />
@@ -303,6 +304,9 @@
 		</Page>
 		<Page Update="Pages\Capability\FollowingsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Pages\IllustratorViewer\IllustratorPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</Page>
 		<None Update="Pages\Capability\RecentPostsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>

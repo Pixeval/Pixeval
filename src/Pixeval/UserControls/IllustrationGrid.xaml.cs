@@ -49,6 +49,18 @@ public sealed partial class IllustrationGrid
         Exponent = 12
     };
 
+    public static readonly DependencyProperty GridHeaderProperty = DependencyProperty.Register(
+        nameof(GridHeader),
+        typeof(object),
+        typeof(IllustrationGrid),
+        PropertyMetadata.Create(DependencyProperty.UnsetValue));
+
+    public object GridHeader
+    {
+        get => (object)GetValue(GridHeaderProperty);
+        set => SetValue(GridHeaderProperty, value);
+    }
+
     public IllustrationGrid()
     {
         InitializeComponent();

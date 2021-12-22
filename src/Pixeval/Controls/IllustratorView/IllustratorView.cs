@@ -40,6 +40,15 @@ public class IllustratorView : Control
         DefaultStyleKey = typeof(IllustratorView);
     }
 
+    public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
+        "ViewModel", typeof(IllustratorViewModel), typeof(IllustratorView), new PropertyMetadata(default(IllustratorViewModel)));
+
+    public IllustratorViewModel ViewModel
+    {
+        get => (IllustratorViewModel)GetValue(ViewModelProperty);
+        set => SetValue(ViewModelProperty, value);
+    }
+
     public static readonly DependencyProperty IllustratorNameProperty = DependencyProperty.Register(
         nameof(IllustratorName),
         typeof(string),
@@ -52,16 +61,16 @@ public class IllustratorView : Control
         set => SetValue(IllustratorNameProperty, value);
     }
 
-    public static readonly DependencyProperty IllustratorDescriptionProperty = DependencyProperty.Register(
-        nameof(IllustratorDescription),
+    public static readonly DependencyProperty IllustratorIdProperty = DependencyProperty.Register(
+        nameof(IllustratorId),
         typeof(string),
         typeof(IllustratorView),
         PropertyMetadata.Create(DependencyProperty.UnsetValue));
 
-    public string IllustratorDescription
+    public string IllustratorId
     {
-        get => (string) GetValue(IllustratorDescriptionProperty);
-        set => SetValue(IllustratorDescriptionProperty, value);
+        get => (string) GetValue(IllustratorIdProperty);
+        set => SetValue(IllustratorIdProperty, value);
     }
 
     public static readonly DependencyProperty IllustratorProfileNavigateUriProperty = DependencyProperty.Register(
@@ -94,22 +103,15 @@ public class IllustratorView : Control
         {
             _contentContainer.PointerEntered -= ContentContainerOnPointerEntered;
             _contentContainer.PointerExited -= ContentContainerOnPointerExited;
-            _contentContainer.Tapped -= ContentContainerOnTapped;
         }
 
         if ((_contentContainer = GetTemplateChild(PartContentContainer) as CardControl) is not null)
         {
             _contentContainer.PointerEntered += ContentContainerOnPointerEntered;
             _contentContainer.PointerExited += ContentContainerOnPointerExited;
-            _contentContainer.Tapped += ContentContainerOnTapped;
         }
 
         base.OnApplyTemplate();
-    }
-
-    private async void ContentContainerOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        await Launcher.LaunchUriAsync(IllustratorProfileNavigateUri);
     }
 
     private void ContentContainerOnPointerExited(object sender, PointerRoutedEventArgs e)

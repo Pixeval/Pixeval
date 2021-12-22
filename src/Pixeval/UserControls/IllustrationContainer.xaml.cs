@@ -70,7 +70,19 @@ public sealed partial class IllustrationContainer
     }
 
     public IllustrationGridViewModel ViewModel => IllustrationGrid.ViewModel;
-    
+
+    public static readonly DependencyProperty GridHeaderProperty = DependencyProperty.Register(
+        nameof(GridHeader),
+        typeof(object),
+        typeof(IllustrationContainer),
+        PropertyMetadata.Create(DependencyProperty.UnsetValue));
+
+    public object GridHeader
+    {
+        get => (object)GetValue(GridHeaderProperty);
+        set => SetValue(GridHeaderProperty, value);
+    }
+
     public ObservableCollection<ICommandBarElement> PrimaryCommandsSupplements
     {
         get => (ObservableCollection<ICommandBarElement>)GetValue(PrimaryCommandSupplementsProperty);
