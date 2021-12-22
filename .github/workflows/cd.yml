@@ -40,18 +40,23 @@ jobs:
   
             - name: Checkout
               uses: actions/checkout@v2
-              with:
-                fetch-depth: 0
+            
+            - name: Install nbgv
+              run: dotnet tool install -g nbgv
                   
             - name: setup-msbuild
               uses: microsoft/setup-msbuild@v1
+              
             - name: Install pfx
               run: |
                 [io.file]::WriteAllBytes("$PWD/temp.pfx",[convert]::FromBase64String($env:private_key))
                 Import-PfxCertificate -FilePath $PWD/temp.pfx -CertStoreLocation Cert:\CurrentUser\My -Password (ConvertTo-SecureString -AsPlainText "$env:private_key_password")
                 Remove-Item -Path "$PWD/temp.pfx"
               shell: pwsh
-
+            
+            - name: Prepare release
+              run: nbgv prepare-release --versionIncrement Minor
+              
             - name: Restore the application
               run: msbuild -t:restore -p:Platform=${{ matrix.platform }}
 
@@ -68,10 +73,4 @@ jobs:
                 upload_url: ${{ jobs.release.steps.create_release.outputs.upload_url }}
                 asset_path: ./**/Pixeval*.msix
                 asset_name: Minecraft-Mod-Language-Package-1.12.2.zip
-                asset_content_type: application/zip
-            
-            - name: Upload a Build Artifact
-              uses: actions/upload-artifact@v2
-              with:
-                  name: Pixeval-${{ matrix.platform }}
-                  path: "./output/AppPackages/*"
+                asset_content_type: application/msix
