@@ -26,7 +26,7 @@ using Pixeval.Util.Threading;
 
 namespace Pixeval.Download;
 
-public class ObservableDownloadTask : ObservableObject, IDownloadTask
+public partial class ObservableDownloadTask : ObservableObject, IDownloadTask
 {
     protected ObservableDownloadTask(DownloadHistoryEntry entry)
     {
@@ -71,21 +71,10 @@ public class ObservableDownloadTask : ObservableObject, IDownloadTask
         });
     }
 
-    private double _progressPercentage;
+    [ObservableProperty] private double _progressPercentage;
+    
 
-    public double ProgressPercentage
-    {
-        get => _progressPercentage;
-        set => SetProperty(ref _progressPercentage, value);
-    }
-
-    private bool _selected;
-
-    public bool Selected
-    {
-        get => _selected;
-        set => SetProperty(ref _selected, value);
-    }
+    [ObservableProperty] private bool _selected;
 
     public virtual void DownloadStarting(DownloadStartingEventArgs args)
     {

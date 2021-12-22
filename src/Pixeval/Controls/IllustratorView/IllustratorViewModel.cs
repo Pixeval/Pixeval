@@ -12,20 +12,14 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Controls.IllustratorView;
 
-public class IllustratorViewModel : ObservableObject
+public partial class IllustratorViewModel : ObservableObject
 {
     public string Name { get; set; }
 
     public string AvatarUrl { get; set; }
 
-    private ImageSource? _avatarSource;
-
-    public ImageSource? AvatarSource
-    {
-        get => _avatarSource;
-        set => SetProperty(ref _avatarSource, value);
-    }
-
+    [ObservableProperty] private ImageSource? _avatarSource;
+    
     public long Id { get; set; }
     
     public string? Account { get; set; }

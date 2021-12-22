@@ -15,16 +15,10 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.Capability;
 
-public class FollowingsPageViewModel : ObservableObject
+public partial class FollowingsPageViewModel : ObservableObject
 {
-    private ObservableCollection<IllustratorViewModel> _illustrators;
-
-    public ObservableCollection<IllustratorViewModel> Illustrators
-    {
-        get => _illustrators;
-        set => SetProperty(ref _illustrators, value);
-    }
-
+    [ObservableProperty] private ObservableCollection<IllustratorViewModel> _illustrators;
+    
     public FollowingsPageViewModel()
     {
         _illustrators = new ObservableCollection<IllustratorViewModel>();

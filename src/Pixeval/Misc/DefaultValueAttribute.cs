@@ -21,22 +21,24 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Reflection;
 
 namespace Pixeval.Misc;
 
-public class DefaultValue : Attribute
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+public class DefaultValueAttribute : Attribute
 {
-    public DefaultValue(object? value)
+    public DefaultValueAttribute(object? value)
     {
         Value = value;
     }
 
     /// <summary>
-    ///     Create a <see cref="DefaultValue" /> using a factory type, the type will be instantiated to provide the value
+    ///     Create a <see cref="DefaultValueAttribute" /> using a factory type, the type will be instantiated to provide the value
     /// </summary>
     /// <param name="valueFactoryType"></param>
-    public DefaultValue(Type? valueFactoryType)
+    public DefaultValueAttribute(Type? valueFactoryType)
     {
         ValueFactoryType = valueFactoryType;
     }
@@ -50,7 +52,7 @@ public static class DefaultValueAttributeHelper
 {
     public static object? GetDefaultValue(this PropertyInfo propInfo)
     {
-        if (propInfo.GetCustomAttribute<DefaultValue>() is { } attribute)
+        if (propInfo.GetCustomAttribute<DefaultValueAttribute>() is { } attribute)
         {
             if (attribute.ValueFactoryType is { } type)
             {
@@ -61,7 +63,7 @@ public static class DefaultValueAttributeHelper
 
             return attribute.Value;
         }
-
+        //TODO 为什么要设为null？
         return null;
     }
 
@@ -71,5 +73,13 @@ public static class DefaultValueAttributeHelper
         {
             propertyInfo.SetValue(obj, propertyInfo.GetDefaultValue());
         }
+        foreach (var fieldInfo in obj.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
+        {
+            var fieldName = fieldInfo.Name.TrimStart('_');
+
+            if (obj.GetType().GetProperty(fieldName[..1].ToUpperInvariant() + fieldName[1..]) is { } propertyInfo)
+                propertyInfo.SetValue(obj, propertyInfo.GetDefaultValue());
+        }
     }
+
 }

@@ -24,7 +24,7 @@ using Pixeval.Download;
 
 namespace Pixeval.Database;
 
-public class DownloadHistoryEntry : ObservableObject
+public partial class DownloadHistoryEntry : ObservableObject
 {
     public DownloadHistoryEntry(DownloadState state, string? errorCause, string? destination, DownloadItemType type, string? id, string? title, string? description, string? url, string? thumbnail)
     {
@@ -50,13 +50,8 @@ public class DownloadHistoryEntry : ObservableObject
 
     public DownloadItemType Type { get; set; }
 
-    private DownloadState _state;
+    [ObservableProperty] private DownloadState _state;
     
-    public DownloadState State
-    {
-        get => _state;
-        set => SetProperty(ref _state, value);
-    }
     
     public string? Id { get; set; }
     
@@ -68,11 +63,5 @@ public class DownloadHistoryEntry : ObservableObject
     
     public string? Thumbnail { get; set; }
 
-    private string? _errorCause;
-    
-    public string? ErrorCause
-    {
-        get => _errorCause;
-        set => SetProperty(ref _errorCause, value);
-    }
+    [ObservableProperty] private string? _errorCause;
 }
