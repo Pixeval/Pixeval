@@ -54,7 +54,7 @@ public sealed partial class SettingsPage
 
     private void SettingsPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        CheckForUpdatesEntry.Header = AppContext.AppVersion.ToString();
+        CheckForUpdatesEntry.Header = ThisAssembly.AssemblyInformationalVersion;
     }
 
     private void SingleSelectionSettingEntry_OnSelectionChanged(SingleSelectionSettingEntry sender, SelectionChangedEventArgs args)

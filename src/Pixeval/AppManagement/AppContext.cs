@@ -59,8 +59,6 @@ public static class AppContext
 
     public const string AppLogoNoCaptionUri = "ms-appx:///Assets/Images/logo-no-caption.png";
 
-    public static readonly AppVersion AppVersion = new(IterationStage.Preview, 0, 1, 0, 1);
-
     private static readonly ApplicationDataContainer SessionContainer;
 
     private static readonly ApplicationDataContainer ConfigurationContainer;
