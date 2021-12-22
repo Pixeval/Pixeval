@@ -25,7 +25,7 @@ using Pixeval.Misc;
 
 namespace Pixeval.Popups.IllustrationResultFilter;
 
-[DependencyProperty("Header",typeof(string))]
+[DependencyProperty("Header", typeof(string))]
 public partial class IllustrationResultFilterFunctionEntry : ContentControl
 {
     public IllustrationResultFilterFunctionEntry()

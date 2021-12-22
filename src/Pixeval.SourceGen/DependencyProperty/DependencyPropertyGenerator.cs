@@ -1,4 +1,26 @@
-﻿using System.Collections.Generic;
+﻿#region Copyright (c) Pixeval/Pixeval.SourceGen
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval.SourceGen
+// Copyright (c) 2021 Pixeval.SourceGen/DependencyPropertyGenerator.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -10,24 +32,28 @@ namespace Pixeval.SourceGen.DependencyProperty;
 [Generator]
 internal class DependencyPropertyGenerator : ISourceGenerator
 {
+    private const string AttributePath = "Pixeval.Misc.DependencyPropertyAttribute";
+
     public void Initialize(GeneratorInitializationContext context)
     {
         context.RegisterForSyntaxNotifications(() => new AttributeReceiver(AttributePath));
     }
 
-    private const string AttributePath = "Pixeval.Misc.DependencyPropertyAttribute";
-
     public void Execute(GeneratorExecutionContext context)
     {
         if (context.Compilation.GetTypeByMetadataName(AttributePath) is not { } attributeType)
+        {
             return;
+        }
 
         foreach (var classDeclaration in ((AttributeReceiver) context.SyntaxContextReceiver!).CandidateClasses)
         {
             var semanticModel = context.Compilation.GetSemanticModel(classDeclaration.SyntaxTree);
 
             if (semanticModel.GetDeclaredSymbol(classDeclaration) is not { } specificClass)
+            {
                 continue;
+            }
 
             var members = new List<MemberDeclarationSyntax>();
             var namespaces = new HashSet<string> { "Microsoft.UI.Xaml" };
@@ -36,7 +62,9 @@ internal class DependencyPropertyGenerator : ISourceGenerator
             foreach (var attribute in specificClass.GetAttributes().Where(attribute => SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, attributeType)))
             {
                 if (attribute.ConstructorArguments[0].Value is not string propertyName || attribute.ConstructorArguments[1].Value is not INamedTypeSymbol type)
+                {
                     continue;
+                }
 
                 var isSetterPublic = true;
                 var defaultValue = "DependencyProperty.UnsetValue";
@@ -71,7 +99,10 @@ internal class DependencyPropertyGenerator : ISourceGenerator
                 var defaultValueExpression = SyntaxFactory.ParseExpression(defaultValue);
                 var metadataCreation = GetObjectCreationExpression(defaultValueExpression);
                 if (instanceChangedCallback)
+                {
                     metadataCreation = GetMetadataCreation(metadataCreation, $"On{propertyName}Changed");
+                }
+
                 var registration = GetRegistration(propertyName, type, specificClass, metadataCreation);
                 var staticFieldDeclaration = GetStaticFieldDeclaration(fieldName, registration);
                 var getter = GetGetter(fieldName, isNullable, type, context);
@@ -95,9 +126,9 @@ internal class DependencyPropertyGenerator : ISourceGenerator
     }
 
     /// <summary>
-    /// 生成如下代码
-    /// <code>
-    /// new PropertyMetadata(<paramref name="defaultValueExpression"/>);
+    ///     生成如下代码
+    ///     <code>
+    /// new PropertyMetadata(<paramref name="defaultValueExpression" />);
     /// </code>
     /// </summary>
     /// <returns>ObjectCreationExpression</returns>
@@ -108,9 +139,9 @@ internal class DependencyPropertyGenerator : ISourceGenerator
     }
 
     /// <summary>
-    /// 生成如下代码
-    /// <code>
-    /// new PropertyMetadata(<paramref name="metadataCreation"/>, <paramref name="partialMethodName"/>)
+    ///     生成如下代码
+    ///     <code>
+    /// new PropertyMetadata(<paramref name="metadataCreation" />, <paramref name="partialMethodName" />)
     /// </code>
     /// </summary>
     /// <returns>MetadataCreation</returns>
@@ -118,25 +149,26 @@ internal class DependencyPropertyGenerator : ISourceGenerator
     {
         return metadataCreation.AddArgumentListArguments(SyntaxFactory.Argument(SyntaxFactory.IdentifierName(partialMethodName)));
     }
-    
+
     /// <summary>
-    /// 生成如下代码
-    /// <code>
-    /// DependencyProperty.Register("<paramref name="propertyName"/>", typeof(<paramref name="type"/>), typeof(<paramref name="specificClass"/>), <paramref name="metadataCreation"/>);
+    ///     生成如下代码
+    ///     <code>
+    /// DependencyProperty.Register("<paramref name="propertyName" />", typeof(<paramref name="type" />), typeof(<paramref
+    ///             name="specificClass" />), <paramref name="metadataCreation" />);
     /// </code>
     /// </summary>
     /// <returns>Registration</returns>
     private static InvocationExpressionSyntax GetRegistration(string propertyName, ITypeSymbol type, ITypeSymbol specificClass, ExpressionSyntax metadataCreation)
     {
         return SyntaxFactory.InvocationExpression(SyntaxFactory.MemberAccessExpression(
-                    SyntaxKind.SimpleMemberAccessExpression, SyntaxFactory.IdentifierName("DependencyProperty"), SyntaxFactory.IdentifierName("Register")))
+                SyntaxKind.SimpleMemberAccessExpression, SyntaxFactory.IdentifierName("DependencyProperty"), SyntaxFactory.IdentifierName("Register")))
             .AddArgumentListArguments(SyntaxFactory.Argument(SyntaxFactory.LiteralExpression(SyntaxKind.StringLiteralExpression, SyntaxFactory.Literal(propertyName))), SyntaxFactory.Argument(SyntaxFactory.TypeOfExpression(type.GetTypeSyntax(false))), SyntaxFactory.Argument(SyntaxFactory.TypeOfExpression(specificClass.GetTypeSyntax(false))), SyntaxFactory.Argument(metadataCreation));
     }
 
     /// <summary>
-    /// 生成如下代码
-    /// <code>
-    /// public static readonly DependencyProperty <paramref name="fieldName"/> = <paramref name="registration"/>;
+    ///     生成如下代码
+    ///     <code>
+    /// public static readonly DependencyProperty <paramref name="fieldName" /> = <paramref name="registration" />;
     /// </code>
     /// </summary>
     /// <returns>StaticFieldDeclaration</returns>
@@ -148,9 +180,9 @@ internal class DependencyPropertyGenerator : ISourceGenerator
     }
 
     /// <summary>
-    /// 生成如下代码
-    /// <code>
-    /// get => (<paramref name="type"/>&lt;<paramref name="isNullable"/>&gt;)GetValue(<paramref name="fieldName"/>);
+    ///     生成如下代码
+    ///     <code>
+    /// get => (<paramref name="type" />&lt;<paramref name="isNullable" />&gt;)GetValue(<paramref name="fieldName" />);
     /// </code>
     /// </summary>
     /// <returns>Getter</returns>
@@ -159,7 +191,9 @@ internal class DependencyPropertyGenerator : ISourceGenerator
         ExpressionSyntax getProperty = SyntaxFactory.InvocationExpression(SyntaxFactory.IdentifierName("GetValue"))
             .AddArgumentListArguments(SyntaxFactory.Argument(SyntaxFactory.IdentifierName(fieldName)));
         if (!SymbolEqualityComparer.Default.Equals(type, context.Compilation.GetSpecialType(SpecialType.System_Object)))
+        {
             getProperty = SyntaxFactory.CastExpression(type.GetTypeSyntax(isNullable), getProperty);
+        }
 
         return SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
             .WithExpressionBody(SyntaxFactory.ArrowExpressionClause(getProperty))
@@ -167,9 +201,9 @@ internal class DependencyPropertyGenerator : ISourceGenerator
     }
 
     /// <summary>
-    /// 生成如下代码
-    /// <code>
-    /// &lt;<paramref name="isSetterPublic"/>&gt; set => SetValue(<paramref name="fieldName"/>, value);
+    ///     生成如下代码
+    ///     <code>
+    /// &lt;<paramref name="isSetterPublic" />&gt; set => SetValue(<paramref name="fieldName" />, value);
     /// </code>
     /// </summary>
     /// <returns>Setter</returns>
@@ -184,9 +218,10 @@ internal class DependencyPropertyGenerator : ISourceGenerator
     }
 
     /// <summary>
-    /// 生成如下代码
-    /// <code>
-    /// public <paramref name="type"/>&lt;<paramref name="isNullable"/>&gt; <paramref name="propertyName"/> { <paramref name="getter"/>; <paramref name="setter"/>; }
+    ///     生成如下代码
+    ///     <code>
+    /// public <paramref name="type" />&lt;<paramref name="isNullable" />&gt; <paramref name="propertyName" /> { <paramref
+    ///             name="getter" />; <paramref name="setter" />; }
     /// </code>
     /// </summary>
     /// <returns>PropertyDeclaration</returns>
@@ -198,10 +233,10 @@ internal class DependencyPropertyGenerator : ISourceGenerator
     }
 
     /// <summary>
-    /// 生成如下代码
-    /// <code>
-    /// partial class <paramref name="specificClass"/><br/>
-    /// {<br/> <paramref name="members"/><br/>}
+    ///     生成如下代码
+    ///     <code>
+    /// partial class <paramref name="specificClass" /><br />
+    /// {<br /> <paramref name="members" /><br />}
     /// </code>
     /// </summary>
     /// <returns>ClassDeclaration</returns>
@@ -213,10 +248,10 @@ internal class DependencyPropertyGenerator : ISourceGenerator
     }
 
     /// <summary>
-    /// 生成如下代码
-    /// <code>
-    /// namespace <paramref name="specificClass"/>.ContainingNamespace<br/>
-    /// {<br/> <paramref name="generatedClass"/><br/>}
+    ///     生成如下代码
+    ///     <code>
+    /// namespace <paramref name="specificClass" />.ContainingNamespace<br />
+    /// {<br /> <paramref name="generatedClass" /><br />}
     /// </code>
     /// </summary>
     /// <returns>NamespaceDeclaration</returns>
@@ -229,11 +264,11 @@ internal class DependencyPropertyGenerator : ISourceGenerator
     }
 
     /// <summary>
-    /// 生成如下代码
-    /// <code>
-    /// using Microsoft.UI.Xaml;<br/>
-    /// ...<br/>
-    /// <paramref name="generatedNamespace"/>
+    ///     生成如下代码
+    ///     <code>
+    /// using Microsoft.UI.Xaml;<br />
+    /// ...<br />
+    /// <paramref name="generatedNamespace" />
     /// </code>
     /// </summary>
     /// <returns>CompilationUnit</returns>

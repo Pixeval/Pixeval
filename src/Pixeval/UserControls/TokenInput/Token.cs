@@ -34,7 +34,7 @@ public sealed partial class Token : ObservableObject, IEquatable<Token>, IClonea
 
     [ObservableProperty]
     private bool _isRegularExpression;
-    
+
     [ObservableProperty]
     private string _tokenContent;
 

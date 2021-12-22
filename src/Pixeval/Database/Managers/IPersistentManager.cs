@@ -1,4 +1,5 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
@@ -26,18 +28,16 @@ using LiteDB;
 namespace Pixeval.Database.Managers;
 
 /// <summary>
-/// Manage persistent data stored in SQLite.
-/// You may call CreateTable in the constructor.
+///     Manage persistent data stored in SQLite.
+///     You may call CreateTable in the constructor.
 /// </summary>
-/// 
 /// <example>
-/// This example shows how to get a registered manager.
-/// <code>
+///     This example shows how to get a registered manager.
+///     <code>
 /// using var scope = App.AppViewModel.AppServicesScope;
 /// var manager = scope.ServiceProvider.GetRequiredService&lt;IPersistentManager&lt;Entry, Model&gt;&gt;();
 /// </code>
 /// </example>
-/// 
 /// <see cref="AppViewModel.CreateHostBuilder">Register the manager in AppViewModel</see>
 /// <typeparam name="TEntry">Entry to be serialized in database</typeparam>
 /// <typeparam name="TModel">Data model in the program</typeparam>

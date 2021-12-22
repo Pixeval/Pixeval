@@ -1,4 +1,5 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
@@ -28,10 +30,8 @@ namespace Pixeval.Util.Threading;
 public class ReenterableAwaiter : INotifyCompletion
 {
     private Action? _continuation;
-    private Exception? _exception;
     private bool _continueOnCapturedContext; // whether the continuation should be posted to the captured SynchronizationContext
-
-    public bool IsCompleted { get; set; }
+    private Exception? _exception;
 
     public ReenterableAwaiter(bool initialSignal)
     {
@@ -39,12 +39,7 @@ public class ReenterableAwaiter : INotifyCompletion
         _continueOnCapturedContext = true;
     }
 
-    public void Reset()
-    {
-        IsCompleted = false; // Set the awaiter to non-completed
-        _continuation = null;
-        _exception = null;
-    }
+    public bool IsCompleted { get; set; }
 
     public void OnCompleted(Action continuation)
     {
@@ -53,6 +48,13 @@ public class ReenterableAwaiter : INotifyCompletion
         // task boundaries, you can use a thread-safe collection
         // to hold all the continuations
         _continuation = continuation;
+    }
+
+    public void Reset()
+    {
+        IsCompleted = false; // Set the awaiter to non-completed
+        _continuation = null;
+        _exception = null;
     }
 
     public void GetResult()

@@ -28,9 +28,9 @@ using Pixeval.Misc;
 
 namespace Pixeval.Controls.Setting.UI.UserControls;
 
-[DependencyProperty("Header", typeof(string),InstanceChangedCallback = true)]
-[DependencyProperty("Description", typeof(object),InstanceChangedCallback = true)]
-[DependencyProperty("Icon", typeof(IconElement),InstanceChangedCallback = true)]
+[DependencyProperty("Header", typeof(string), InstanceChangedCallback = true)]
+[DependencyProperty("Description", typeof(object), InstanceChangedCallback = true)]
+[DependencyProperty("Icon", typeof(IconElement), InstanceChangedCallback = true)]
 public sealed partial class SettingEntryHeader
 {
     public SettingEntryHeader()
@@ -45,6 +45,7 @@ public sealed partial class SettingEntryHeader
             }
         };
     }
+
     private static void OnHeaderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (e.NewValue is string str)

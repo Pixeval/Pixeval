@@ -29,8 +29,9 @@ using Microsoft.UI.Xaml.Controls;
 using Pixeval.Misc;
 
 namespace Pixeval.UserControls;
-[DependencyProperty("PrimaryCommandsSupplements", typeof(ObservableCollection<ICommandBarElement>),DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
-[DependencyProperty("SecondaryCommandsSupplements",typeof(ObservableCollection<ICommandBarElement>),DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
+
+[DependencyProperty("PrimaryCommandsSupplements", typeof(ObservableCollection<ICommandBarElement>), DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
+[DependencyProperty("SecondaryCommandsSupplements", typeof(ObservableCollection<ICommandBarElement>), DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
 public sealed partial class IllustrationContainer
 {
     public IllustrationContainer()
@@ -58,7 +59,7 @@ public sealed partial class IllustrationContainer
     }
 
     public IllustrationGridViewModel ViewModel => IllustrationGrid.ViewModel;
-    
+
 
     /// <summary>
     ///     The command elements that will appear at the left of the <see cref="TopCommandBar" />

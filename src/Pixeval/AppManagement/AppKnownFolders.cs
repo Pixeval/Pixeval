@@ -1,8 +1,9 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2021 Pixeval/KnownFolders.cs
+// Copyright (c) 2021 Pixeval/AppKnownFolders.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
@@ -37,6 +39,20 @@ public class AppKnownFolders
 
     public static AppKnownFolders Temporary = new(ApplicationData.Current.TemporaryFolder, _ => ApplicationData.Current.ClearAsync(ApplicationDataLocality.Temporary).AsTask());
 
+    private readonly Func<StorageFolder, Task>? _deleter;
+
+    public AppKnownFolders(StorageFolder self)
+    {
+        Self = self;
+    }
+
+    private AppKnownFolders(StorageFolder self, Func<StorageFolder, Task> deleter) : this(self)
+    {
+        _deleter = deleter;
+    }
+
+    public StorageFolder Self { get; }
+
     private static async Task<AppKnownFolders> GetOrCreate(AppKnownFolders folder, string subfolderName)
     {
         return new AppKnownFolders(await folder.Self.GetOrCreateFolderAsync(subfolderName));
@@ -51,25 +67,11 @@ public class AppKnownFolders
     public static IAsyncOperation<StorageFile> CreateTemporaryFileWithRandomNameAsync(string? extension = null)
     {
         return Temporary.CreateFileAsync($"{Guid.NewGuid()}.{extension ?? "temp"}");
-    } 
+    }
 
     public static IAsyncOperation<StorageFile> CreateTemporaryFileWithNameAsync(string name, string? extension = null)
     {
         return Temporary.CreateFileAsync($"{name}.{extension ?? "temp"}");
-    }
-
-    private readonly Func<StorageFolder, Task>? _deleter;
-
-    public StorageFolder Self { get; }
-
-    public AppKnownFolders(StorageFolder self)
-    {
-        Self = self;
-    }
-
-    private AppKnownFolders(StorageFolder self, Func<StorageFolder, Task> deleter) : this(self)
-    {
-        _deleter = deleter;
     }
 
     public IAsyncOperation<StorageFile> GetFileAsync(string name)

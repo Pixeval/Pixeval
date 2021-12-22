@@ -68,7 +68,7 @@ public record AppSetting
         bool usePreciseRangeForSearch,
         DateTimeOffset searchStartDate,
         DateTimeOffset searchEndDate,
-        string defaultDownloadPathMacro, 
+        string defaultDownloadPathMacro,
         bool overwriteDownloadedFile,
         int maximumDownloadHistoryRecords,
         int maximumSearchHistoryRecords,

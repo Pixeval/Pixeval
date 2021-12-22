@@ -30,15 +30,10 @@ namespace Pixeval.Controls.Setting.UI.SwitchSettingEntry;
 
 [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
 [TemplatePart(Name = PartSwitch, Type = typeof(ToggleSwitch))]
-[DependencyProperty("IsOn",typeof(bool),InstanceChangedCallback = true)]
+[DependencyProperty("IsOn", typeof(bool), InstanceChangedCallback = true)]
 public partial class SwitchSettingEntry : SettingEntryBase
 {
     private const string PartSwitch = "Switch";
-
-    private static void OnIsOnChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
-    {
-        IsOnChanged(o, args.NewValue);
-    }
 
     private ToggleSwitch? _switch;
 
@@ -47,6 +42,11 @@ public partial class SwitchSettingEntry : SettingEntryBase
     public SwitchSettingEntry()
     {
         DefaultStyleKey = typeof(SwitchSettingEntry);
+    }
+
+    private static void OnIsOnChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
+    {
+        IsOnChanged(o, args.NewValue);
     }
 
     public event TypedEventHandler<SwitchSettingEntry, RoutedEventArgs> Toggled

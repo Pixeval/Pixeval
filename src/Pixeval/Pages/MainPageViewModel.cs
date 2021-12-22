@@ -26,6 +26,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -44,13 +45,13 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Pages;
 
-public class MainPageViewModel : AutoActivateObservableRecipient, IRecipient<LoginCompletedMessage>
+public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecipient<LoginCompletedMessage>
 {
-    private ImageSource? _avatar;
-
-    public double MainPageRootNavigationViewOpenPanelLength => 280;
+    public readonly NavigationViewTag AboutTag = new(typeof(AboutPage), null);
 
     public readonly NavigationViewTag BookmarksTag = new(typeof(BookmarksPage), App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid!, PrivacyPolicy.Public, App.AppViewModel.AppSetting.TargetFilter));
+
+    public readonly NavigationViewTag FollowingsTag = new(typeof(FollowingsPage), null);
 
     public readonly NavigationViewTag HistoriesTag = new(typeof(BrowsingHistoryPage), null);
 
@@ -58,20 +59,14 @@ public class MainPageViewModel : AutoActivateObservableRecipient, IRecipient<Log
 
     public readonly NavigationViewTag RecentPostsTag = new(typeof(RecentPostsPage), App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicy.Public));
 
-    public readonly NavigationViewTag FollowingsTag = new(typeof(FollowingsPage), null);
-
     public readonly NavigationViewTag RecommendsTag = new(typeof(RecommendationPage), App.AppViewModel.MakoClient.Recommendations(targetFilter: App.AppViewModel.AppSetting.TargetFilter));
 
     public readonly NavigationViewTag SettingsTag = new(typeof(SettingsPage), App.AppViewModel.MakoClient.Configuration);
 
-    public readonly NavigationViewTag AboutTag = new(typeof(AboutPage), null);
+    [ObservableProperty]
+    private ImageSource? _avatar;
 
-
-    public ImageSource? Avatar
-    {
-        get => _avatar;
-        set => SetProperty(ref _avatar, value);
-    }
+    public double MainPageRootNavigationViewOpenPanelLength => 280;
 
     public ObservableCollection<SuggestionModel> Suggestions { get; } = new();
 
@@ -97,7 +92,7 @@ public class MainPageViewModel : AutoActivateObservableRecipient, IRecipient<Log
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
-        var histories = manager.Enumerate().OrderByDescending(e=>e.Time).SelectNotNull(SuggestionModel.FromHistory);
+        var histories = manager.Enumerate().OrderByDescending(e => e.Time).SelectNotNull(SuggestionModel.FromHistory);
 
         Suggestions.ReplaceByUpdate(histories);
     }

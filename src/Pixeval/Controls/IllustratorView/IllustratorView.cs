@@ -1,4 +1,5 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
@@ -30,7 +32,7 @@ using Pixeval.Misc;
 namespace Pixeval.Controls.IllustratorView;
 
 [TemplatePart(Name = PartContentContainer, Type = typeof(CardControl))]
-[DependencyProperty("IllustratorName",typeof(string))]
+[DependencyProperty("IllustratorName", typeof(string))]
 [DependencyProperty("IllustratorDescription", typeof(string))]
 [DependencyProperty("IllustratorProfileNavigateUri", typeof(Uri))]
 [DependencyProperty("IllustratorPicture", typeof(ImageSource))]

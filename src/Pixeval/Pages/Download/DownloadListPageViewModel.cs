@@ -1,4 +1,5 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -16,10 +17,10 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -32,68 +33,38 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Download;
 
-public class DownloadListPageViewModel : ObservableObject
+public partial class DownloadListPageViewModel : ObservableObject
 {
     public static readonly IEnumerable<DownloadListOption> AvailableDownloadListOptions = Enum.GetValues<DownloadListOption>();
 
+    [ObservableProperty]
     private DownloadListOption _currentOption;
 
-    public DownloadListOption CurrentOption
-    {
-        get => _currentOption;
-        set => SetProperty(ref _currentOption, value);
-    }
-
+    [ObservableProperty]
     private IList<DownloadListEntryViewModel> _downloadTasks;
 
-    public IList<DownloadListEntryViewModel> DownloadTasks
-    {
-        get => _downloadTasks;
-        set => SetProperty(ref _downloadTasks, value);
-    }
-
+    [ObservableProperty]
     private AdvancedCollectionView _downloadTasksView;
 
-    public AdvancedCollectionView DownloadTasksView
-    {
-        get => _downloadTasksView;
-        set => SetProperty(ref _downloadTasksView, value);
-    }
-
+    [ObservableProperty]
     private ObservableCollection<IDownloadTask> _filteredTasks;
 
-    public ObservableCollection<IDownloadTask> FilteredTasks
-    {
-        get => _filteredTasks;
-        set => SetProperty(ref _filteredTasks, value);
-    }
-
-    public IEnumerable<DownloadListEntryViewModel> SelectedTasks => DownloadTasks.Where(x => x.DownloadTask.Selected);
-
-    private string _selectionLabel;
-
-    public string SelectionLabel
-    {
-        get => _selectionLabel;
-        set => SetProperty(ref _selectionLabel, value);
-    }
-
+    [ObservableProperty]
     private bool _isAnyEntrySelected;
 
-    public bool IsAnyEntrySelected
-    {
-        get => _isAnyEntrySelected;
-        set => SetProperty(ref _isAnyEntrySelected, value);
-    }
+    [ObservableProperty]
+    private string _selectionLabel;
 
     public DownloadListPageViewModel(List<DownloadListEntryViewModel> downloadTasks)
     {
         downloadTasks.Reverse();
         _downloadTasks = downloadTasks;
         _filteredTasks = new ObservableCollection<IDownloadTask>();
-        _downloadTasksView = new AdvancedCollectionView(downloadTasks as IList);
+        _downloadTasksView = new AdvancedCollectionView(downloadTasks);
         _selectionLabel = DownloadListPageResources.CancelSelectionButtonDefaultLabel;
     }
+
+    public IEnumerable<DownloadListEntryViewModel> SelectedTasks => DownloadTasks.Where(x => x.DownloadTask.Selected);
 
     public void UpdateSelection()
     {
@@ -185,6 +156,7 @@ public class DownloadListPageViewModel : ObservableObject
                 downloadListEntryViewModel.DownloadTask.Selected = false;
             }
         }
+
         UpdateSelection();
     }
 }

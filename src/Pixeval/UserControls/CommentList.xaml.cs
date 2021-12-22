@@ -30,21 +30,21 @@ using Pixeval.Util.UI;
 
 namespace Pixeval.UserControls;
 
-[DependencyProperty("ItemsSource", typeof(object),DefaultValue = "System.Linq.Enumerable.Empty<Pixeval.Pages.IllustrationViewer.CommentBlockViewModel>()", InstanceChangedCallback = true)]
+[DependencyProperty("ItemsSource", typeof(object), DefaultValue = "System.Linq.Enumerable.Empty<Pixeval.Pages.IllustrationViewer.CommentBlockViewModel>()", InstanceChangedCallback = true)]
 public sealed partial class CommentList
 {
-    private static void OnItemsSourceChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
-    {
-        ((CommentList)o).CommentsList.ItemsSource = args.NewValue;
-    }
-
     private EventHandler<TappedRoutedEventArgs>? _repliesHyperlinkButtonTapped;
 
     public CommentList()
     {
         InitializeComponent();
     }
-    
+
+    private static void OnItemsSourceChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
+    {
+        ((CommentList) o).CommentsList.ItemsSource = args.NewValue;
+    }
+
 
     public event EventHandler<TappedRoutedEventArgs> RepliesHyperlinkButtonTapped
     {

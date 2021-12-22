@@ -88,7 +88,8 @@
                                                                        Icon="{ui:FontIcon Glyph=SyncE895}">
                             <actionableSettingEntry:ActionableSettingEntry.Description>
                                 <StackPanel Spacing="3">
-                                    <TextBlock Text="{x:Bind _viewModel.GetLastUpdateCheckDisplayString(_viewModel.LastCheckedUpdate), Mode=OneWay}" />
+                                    <TextBlock
+                                        Text="{x:Bind _viewModel.GetLastUpdateCheckDisplayString(_viewModel.LastCheckedUpdate), Mode=OneWay}" />
                                     <!--  TODO add release note hyperlink  -->
                                     <HyperlinkButton x:Uid="/SettingsPage/ReleaseNotesHyperlinkButton" />
                                 </StackPanel>
@@ -143,10 +144,10 @@
                     <settingsGroup:SettingsGroup x:Uid="/SettingsPage/ApplicationSettingsGroup">
 
                         <singleSelectionSettingEntry:SingleSelectionSettingEntry x:Uid="/SettingsPage/ThemeEntry"
-                                                                                 Icon="{ui:FontIcon Glyph=ColorE790}"
-                                                                                 ItemsSource="{x:Bind model:ApplicationThemeSettingEntryItem.AvailableItems}"
-                                                                                 SelectedItem="{x:Bind _viewModel.Theme, Mode=TwoWay}"
-                                                                                 SelectionChanged="SingleSelectionSettingEntry_OnSelectionChanged">
+                            Icon="{ui:FontIcon Glyph=ColorE790}"
+                            ItemsSource="{x:Bind model:ApplicationThemeSettingEntryItem.AvailableItems}"
+                            SelectedItem="{x:Bind _viewModel.Theme, Mode=TwoWay}"
+                            SelectionChanged="SingleSelectionSettingEntry_OnSelectionChanged">
                             <singleSelectionSettingEntry:SingleSelectionSettingEntry.Description>
                                 <HyperlinkButton x:Uid="/SettingsPage/ThemeEntryDescriptionHyperlinkButton"
                                                  Tapped="ThemeEntryDescriptionHyperlinkButton_OnTapped" />
@@ -160,9 +161,10 @@
                                 <HyperlinkButton x:Uid="/SettingsPage/OpenFontSettingsHyperlinkButton"
                                                  Tapped="OpenFontSettingsHyperlinkButton_OnTapped" />
                             </expanderSettingEntry:ExpanderSettingEntry.Description>
-                            <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/AppFontFamilyComboBoxEntry"
-                                                                           Icon="{ui:FontIcon Glyph=SpellingF87B}"
-                                                                           Style="{StaticResource ExpanderContentSettingEntryStyle}">
+                            <actionableSettingEntry:ActionableSettingEntry
+                                x:Uid="/SettingsPage/AppFontFamilyComboBoxEntry"
+                                Icon="{ui:FontIcon Glyph=SpellingF87B}"
+                                Style="{StaticResource ExpanderContentSettingEntryStyle}">
                                 <actionableSettingEntry:ActionableSettingEntry.ActionContent>
                                     <ComboBox x:Uid="/SettingsPage/AppFontFamilyComboBoxEntryComboBox"
                                               Width="200"
@@ -184,49 +186,55 @@
                                                                Icon="{ui:FontIcon Glyph=LinkE71B}"
                                                                IsOn="{x:Bind _viewModel.DisplayTeachingTipWhenGeneratingAppLink, Mode=TwoWay}" />
 
-                        <singleSelectionSettingEntry:SingleSelectionSettingEntry x:Uid="/SettingsPage/DefaultSelectedTabEntry"
-                                                                                 Icon="{ui:FontIcon Glyph=CheckMarkE73E}"
-                                                                                 ItemsSource="{x:Bind model:MainPageTabItemSettingEntryItem.AvailableItems}"
-                                                                                 SelectedItem="{x:Bind _viewModel.DefaultSelectedTabItem, Mode=TwoWay}" />
+                        <singleSelectionSettingEntry:SingleSelectionSettingEntry
+                            x:Uid="/SettingsPage/DefaultSelectedTabEntry"
+                            Icon="{ui:FontIcon Glyph=CheckMarkE73E}"
+                            ItemsSource="{x:Bind model:MainPageTabItemSettingEntryItem.AvailableItems}"
+                            SelectedItem="{x:Bind _viewModel.DefaultSelectedTabItem, Mode=TwoWay}" />
                     </settingsGroup:SettingsGroup>
 
                     <settingsGroup:SettingsGroup x:Uid="/SettingsPage/BrowsingExperienceSettingsGroup">
-                        <singleSelectionSettingEntry:SingleSelectionSettingEntry x:Uid="/SettingsPage/ThumbnailDirectionEntry"
-                                                                                 Icon="{ui:FontIcon Glyph=LandscapeOrientationEF6B}"
-                                                                                 ItemsSource="{x:Bind model:ThumbnailDirectionSettingEntryItem.AvailableItems}"
-                                                                                 SelectedItem="{x:Bind _viewModel.ThumbnailDirection, Mode=TwoWay}" />
+                        <singleSelectionSettingEntry:SingleSelectionSettingEntry
+                            x:Uid="/SettingsPage/ThumbnailDirectionEntry"
+                            Icon="{ui:FontIcon Glyph=LandscapeOrientationEF6B}"
+                            ItemsSource="{x:Bind model:ThumbnailDirectionSettingEntryItem.AvailableItems}"
+                            SelectedItem="{x:Bind _viewModel.ThumbnailDirection, Mode=TwoWay}" />
                         <switchSettingEntry:SwitchSettingEntry x:Uid="/SettingsPage/FiltrateRestrictedContentEntry"
                                                                Icon="{ui:FontIcon Glyph=BlockContactE8F8}"
                                                                IsOn="{x:Bind _viewModel.FiltrateRestrictedContent, Mode=TwoWay}" />
 
-                        <singleSelectionSettingEntry:SingleSelectionSettingEntry x:Uid="/SettingsPage/TargetAPIPlatformEntry"
-                                                                                 Icon="{ui:FontIcon Glyph=CommandPromptE756}"
-                                                                                 ItemsSource="{x:Bind model:TargetPlatformSettingEntryItem.AvailableItems}"
-                                                                                 SelectedItem="{x:Bind _viewModel.TargetFilter, Mode=TwoWay}" />
+                        <singleSelectionSettingEntry:SingleSelectionSettingEntry
+                            x:Uid="/SettingsPage/TargetAPIPlatformEntry"
+                            Icon="{ui:FontIcon Glyph=CommandPromptE756}"
+                            ItemsSource="{x:Bind model:TargetPlatformSettingEntryItem.AvailableItems}"
+                            SelectedItem="{x:Bind _viewModel.TargetFilter, Mode=TwoWay}" />
                     </settingsGroup:SettingsGroup>
 
                     <settingsGroup:SettingsGroup x:Name="SearchSettingsGroup"
                                                  x:Uid="/SettingsPage/SearchSettingsGroup"
                                                  x:FieldModifier="public">
 
-                        <sliderSettingEntry:SliderSettingEntry x:Uid="/SettingsPage/ReverseSearchResultSimilarityThresholdEntry"
-                                                               Icon="{ui:FontIcon Glyph=FilterE71C}"
-                                                               Maximum="100"
-                                                               Minimum="1"
-                                                               Value="{x:Bind _viewModel.ReverseSearchResultSimilarityThreshold}" />
+                        <sliderSettingEntry:SliderSettingEntry
+                            x:Uid="/SettingsPage/ReverseSearchResultSimilarityThresholdEntry"
+                            Icon="{ui:FontIcon Glyph=FilterE71C}"
+                            Maximum="100"
+                            Minimum="1"
+                            Value="{x:Bind _viewModel.ReverseSearchResultSimilarityThreshold}" />
 
                         <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/ReverseSearchApiKeyEntry"
                                                                        Icon="{ui:FontIcon Glyph=SearchAndAppsE773}">
                             <actionableSettingEntry:ActionableSettingEntry.Description>
-                                <HyperlinkButton x:Uid="/SettingsPage/ReverseSearchApiKeyEntryDescriptionHyperlinkButton" />
+                                <HyperlinkButton
+                                    x:Uid="/SettingsPage/ReverseSearchApiKeyEntryDescriptionHyperlinkButton" />
                             </actionableSettingEntry:ActionableSettingEntry.Description>
                             <TextBox x:Uid="/SettingsPage/ReverseSearchApiKeyTextBox"
                                      Width="200"
                                      Text="{x:Bind _viewModel.ReverseSearchApiKey, Mode=TwoWay}" />
                         </actionableSettingEntry:ActionableSettingEntry>
 
-                        <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/MaximumSearchHistoryRecordsEntry"
-                                                                       Icon="{ui:FontIcon Glyph=HistoryE81C}">
+                        <actionableSettingEntry:ActionableSettingEntry
+                            x:Uid="/SettingsPage/MaximumSearchHistoryRecordsEntry"
+                            Icon="{ui:FontIcon Glyph=HistoryE81C}">
                             <actionableSettingEntry:ActionableSettingEntry.ActionContent>
                                 <NumberBox x:Uid="/SettingsPage/MaximumSearchHistoryRecordsNumberBox"
                                            Maximum="200"
@@ -236,15 +244,17 @@
                             </actionableSettingEntry:ActionableSettingEntry.ActionContent>
                         </actionableSettingEntry:ActionableSettingEntry>
 
-                        <singleSelectionSettingEntry:SingleSelectionSettingEntry x:Uid="/SettingsPage/DefaultSearchSortOptionEntry"
-                                                                                 Icon="{ui:FontIcon Glyph=SortE8CB}"
-                                                                                 ItemsSource="{x:Bind model:IllustrationSortOptionSettingEntryItem.AvailableItems}"
-                                                                                 SelectedItem="{x:Bind _viewModel.DefaultSortOption, Mode=TwoWay}" />
+                        <singleSelectionSettingEntry:SingleSelectionSettingEntry
+                            x:Uid="/SettingsPage/DefaultSearchSortOptionEntry"
+                            Icon="{ui:FontIcon Glyph=SortE8CB}"
+                            ItemsSource="{x:Bind model:IllustrationSortOptionSettingEntryItem.AvailableItems}"
+                            SelectedItem="{x:Bind _viewModel.DefaultSortOption, Mode=TwoWay}" />
 
-                        <singleSelectionSettingEntry:SingleSelectionSettingEntry x:Uid="/SettingsPage/DefaultSearchTagMatchOptionEntry"
-                                                                                 Icon="{ui:FontIcon Glyph=PassiveAuthenticationF32A}"
-                                                                                 ItemsSource="{x:Bind model:SearchTagMatchOptionSettingEntryItem.AvailableItems}"
-                                                                                 SelectedItem="{x:Bind _viewModel.TagMatchOption, Mode=TwoWay}" />
+                        <singleSelectionSettingEntry:SingleSelectionSettingEntry
+                            x:Uid="/SettingsPage/DefaultSearchTagMatchOptionEntry"
+                            Icon="{ui:FontIcon Glyph=PassiveAuthenticationF32A}"
+                            ItemsSource="{x:Bind model:SearchTagMatchOptionSettingEntryItem.AvailableItems}"
+                            SelectedItem="{x:Bind _viewModel.TagMatchOption, Mode=TwoWay}" />
 
                         <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/MaximumSearchPageLimit"
                                                                        Icon="{ui:FontIcon Glyph=RulerED5E}">
@@ -268,21 +278,24 @@
                             </actionableSettingEntry:ActionableSettingEntry.ActionContent>
                         </actionableSettingEntry:ActionableSettingEntry>
 
-                        <singleSelectionSettingEntry:SingleSelectionSettingEntry x:Uid="/SettingsPage/SearchDurationEntry"
-                                                                                 Icon="{ui:FontIcon Glyph=EaseOfAccessE776}"
-                                                                                 ItemsSource="{x:Bind model:SearchDurationSettingEntryItem.AvailableItems}"
-                                                                                 SelectedItem="{x:Bind _viewModel.SearchDuration, Mode=TwoWay}" />
+                        <singleSelectionSettingEntry:SingleSelectionSettingEntry
+                            x:Uid="/SettingsPage/SearchDurationEntry"
+                            Icon="{ui:FontIcon Glyph=EaseOfAccessE776}"
+                            ItemsSource="{x:Bind model:SearchDurationSettingEntryItem.AvailableItems}"
+                            SelectedItem="{x:Bind _viewModel.SearchDuration, Mode=TwoWay}" />
 
-                        <actionableExpanderSettingEntry:ActionableExpanderSettingEntry x:Uid="/SettingsPage/UsePreciseRangeForSearchEntry"
-                                                                                       Icon="{ui:FontIcon Glyph=StopwatchE916}">
+                        <actionableExpanderSettingEntry:ActionableExpanderSettingEntry
+                            x:Uid="/SettingsPage/UsePreciseRangeForSearchEntry"
+                            Icon="{ui:FontIcon Glyph=StopwatchE916}">
                             <actionableExpanderSettingEntry:ActionableExpanderSettingEntry.ActionContent>
                                 <ToggleSwitch IsOn="{x:Bind _viewModel.UsePreciseRangeForSearch, Mode=TwoWay}" />
                             </actionableExpanderSettingEntry:ActionableExpanderSettingEntry.ActionContent>
                             <StackPanel>
-                                <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/SearchStartDateEntry"
-                                                                               Icon="{ui:FontIcon Glyph=PageLeftE760}"
-                                                                               IsEnabled="{x:Bind _viewModel.UsePreciseRangeForSearch, Mode=OneWay}"
-                                                                               Style="{StaticResource ExpanderContentSettingEntryStyle}">
+                                <actionableSettingEntry:ActionableSettingEntry
+                                    x:Uid="/SettingsPage/SearchStartDateEntry"
+                                    Icon="{ui:FontIcon Glyph=PageLeftE760}"
+                                    IsEnabled="{x:Bind _viewModel.UsePreciseRangeForSearch, Mode=OneWay}"
+                                    Style="{StaticResource ExpanderContentSettingEntryStyle}">
                                     <CalendarDatePicker x:Uid="/SettingsPage/SearchStartCalendarDatePicker"
                                                         Date="{x:Bind _viewModel.SearchStartDate, Mode=TwoWay}" />
                                 </actionableSettingEntry:ActionableSettingEntry>
@@ -300,8 +313,9 @@
 
                     <settingsGroup:SettingsGroup x:Uid="/SettingsPage/DownloadSettingsGroup">
 
-                        <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/MaximumDownloadHistoryRecordsEntry"
-                                                                       Icon="{ui:FontIcon Glyph=HistoryE81C}">
+                        <actionableSettingEntry:ActionableSettingEntry
+                            x:Uid="/SettingsPage/MaximumDownloadHistoryRecordsEntry"
+                            Icon="{ui:FontIcon Glyph=HistoryE81C}">
                             <actionableSettingEntry:ActionableSettingEntry.ActionContent>
                                 <NumberBox x:Uid="/SettingsPage/MaximumDownloadHistoryRecordsNumberBox"
                                            Maximum="200"
@@ -341,8 +355,9 @@
 
                     <settingsGroup:SettingsGroup x:Uid="/SettingsPage/MiscSettingsGroup">
 
-                        <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/SpotlightSearchPageLimitEntry"
-                                                                       Icon="{ui:FontIcon Glyph=PictureE8B9}">
+                        <actionableSettingEntry:ActionableSettingEntry
+                            x:Uid="/SettingsPage/SpotlightSearchPageLimitEntry"
+                            Icon="{ui:FontIcon Glyph=PictureE8B9}">
                             <actionableSettingEntry:ActionableSettingEntry.ActionContent>
                                 <NumberBox x:Uid="/SettingsPage/SpotlightSearchPageLimitNumberBox"
                                            Maximum="100"
@@ -352,8 +367,9 @@
                             </actionableSettingEntry:ActionableSettingEntry.ActionContent>
                         </actionableSettingEntry:ActionableSettingEntry>
 
-                        <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/RecommendationItemLimitEntry"
-                                                                       Icon="{ui:FontIcon Glyph=DialShape1F156}">
+                        <actionableSettingEntry:ActionableSettingEntry
+                            x:Uid="/SettingsPage/RecommendationItemLimitEntry"
+                            Icon="{ui:FontIcon Glyph=DialShape1F156}">
                             <actionableSettingEntry:ActionableSettingEntry.ActionContent>
                                 <NumberBox x:Uid="/SettingsPage/RecommendationItemLimitNumberBox"
                                            Maximum="2500"
@@ -363,8 +379,9 @@
                             </actionableSettingEntry:ActionableSettingEntry.ActionContent>
                         </actionableSettingEntry:ActionableSettingEntry>
 
-                        <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/MaximumBrowseHistoryRecordsEntry"
-                                                                       Icon="{ui:FontIcon Glyph=HistoryE81C}">
+                        <actionableSettingEntry:ActionableSettingEntry
+                            x:Uid="/SettingsPage/MaximumBrowseHistoryRecordsEntry"
+                            Icon="{ui:FontIcon Glyph=HistoryE81C}">
                             <actionableSettingEntry:ActionableSettingEntry.ActionContent>
                                 <NumberBox x:Uid="/SettingsPage/MaximumBrowseHistoryRecordsNumberBox"
                                            Maximum="200"

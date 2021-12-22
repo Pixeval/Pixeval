@@ -35,9 +35,9 @@ namespace Pixeval.Controls.Expander;
 [TemplatePart(Name = PartRootPanel, Type = typeof(Grid))]
 [TemplateVisualState(GroupName = "CommonStates", Name = "Normal")]
 [TemplateVisualState(GroupName = "CommonStates", Name = "Expanded")]
-[DependencyProperty("HeaderHeight", typeof(double),InstanceChangedCallback = true)]
+[DependencyProperty("HeaderHeight", typeof(double), InstanceChangedCallback = true)]
 [DependencyProperty("NegativeHeaderHeight", typeof(double))]
-[DependencyProperty("IsExpanded", typeof(bool),DefaultValue = "false")]
+[DependencyProperty("IsExpanded", typeof(bool), DefaultValue = "false")]
 [DependencyProperty("Header", typeof(object))]
 public sealed partial class Expander : ContentControl
 {
@@ -45,7 +45,7 @@ public sealed partial class Expander : ContentControl
     private const string PartHeaderCardContainer = "HeaderCardContainer";
     private const string PartExpandOrFoldExpanderPresenter = "ExpandOrFoldExpanderPresenter";
     private const string PartRootPanel = "RootPanel";
-    
+
     private CardControl? _contentCardContainer;
     private ContentPresenter? _expandOrFoldExpanderPresenter;
     private CardControl? _headerCardContainer;
@@ -56,6 +56,7 @@ public sealed partial class Expander : ContentControl
         DefaultStyleKey = typeof(Expander);
         Loaded += OnLoaded;
     }
+
     private static void OnHeaderHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (e.NewValue is double value && d is Expander expander)

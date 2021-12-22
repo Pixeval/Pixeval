@@ -32,7 +32,6 @@ namespace Pixeval.UserControls;
 [DependencyProperty("SelectedItem", typeof(object))]
 public sealed partial class SortOptionComboBox
 {
-
     private SelectionChangedEventHandler? _selectionChangedWhenLoadedInternal;
 
     public SortOptionComboBox()

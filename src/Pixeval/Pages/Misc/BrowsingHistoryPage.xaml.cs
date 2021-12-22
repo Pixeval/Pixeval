@@ -76,6 +76,6 @@ public sealed partial class BrowsingHistoryPage : ISortedIllustrationContainerPa
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
+        ((ISortedIllustrationContainerPageHelper) this).OnSortOptionChanged();
     }
 }

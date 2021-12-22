@@ -41,6 +41,12 @@ namespace Pixeval.Controls.Setting.UI;
 
 public class SettingsPageViewModel : ObservableObject
 {
+    public static readonly IEnumerable<string> AvailableFonts = new InstalledFontCollection().Families.Select(f => f.Name);
+
+    public static readonly ICollection<Token> AvailableIllustMacros;
+
+    private readonly AppSetting _appSetting;
+
     static SettingsPageViewModel()
     {
         using var scope = App.AppViewModel.AppServicesScope;
@@ -50,12 +56,6 @@ public class SettingsPageViewModel : ObservableObject
             .Select(s => new Token(s, false, false))
             .ToList();
     }
-
-    public static readonly IEnumerable<string> AvailableFonts = new InstalledFontCollection().Families.Select(f => f.Name);
-
-    public static readonly ICollection<Token> AvailableIllustMacros;
-
-    private readonly AppSetting _appSetting;
 
     public SettingsPageViewModel(AppSetting appSetting)
     {

@@ -41,11 +41,6 @@ namespace Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry;
 public sealed partial class SingleSelectionSettingEntry : SettingEntryBase
 {
     private const string PartSelectorRadioButtons = "SelectorRadioButtons";
-    
-    private static void OnSelectedItemChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
-    {
-        SelectedItemChanged(o, args.NewValue);
-    }
 
     private TypedEventHandler<SingleSelectionSettingEntry, SelectionChangedEventArgs>? _selectionChanged;
 
@@ -55,7 +50,12 @@ public sealed partial class SingleSelectionSettingEntry : SettingEntryBase
     {
         DefaultStyleKey = typeof(SingleSelectionSettingEntry);
     }
-    
+
+    private static void OnSelectedItemChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
+    {
+        SelectedItemChanged(o, args.NewValue);
+    }
+
     public event TypedEventHandler<SingleSelectionSettingEntry, SelectionChangedEventArgs> SelectionChanged
     {
         add => _selectionChanged += value;

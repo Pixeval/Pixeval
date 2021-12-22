@@ -1,4 +1,5 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
@@ -30,8 +32,8 @@ using Pixeval.Misc;
 namespace Pixeval.Controls.PersonView;
 
 [TemplatePart(Name = PartContentContainer, Type = typeof(CardControl))]
-[DependencyProperty("PersonNickname",typeof(string))]
-[DependencyProperty("PersonName",typeof(string))]
+[DependencyProperty("PersonNickname", typeof(string))]
+[DependencyProperty("PersonName", typeof(string))]
 [DependencyProperty("PersonProfileNavigateUri", typeof(Uri))]
 [DependencyProperty("PersonPicture", typeof(ImageSource))]
 public partial class PersonView : Control
@@ -44,7 +46,7 @@ public partial class PersonView : Control
     {
         DefaultStyleKey = typeof(PersonView);
     }
-    
+
     protected override void OnApplyTemplate()
     {
         if (_contentContainer is not null)

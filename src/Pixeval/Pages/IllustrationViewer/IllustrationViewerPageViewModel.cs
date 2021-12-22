@@ -46,18 +46,31 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
+public partial class IllustrationViewerPageViewModel : ObservableObject, IDisposable
 {
+    [ObservableProperty]
     private ImageViewerPageViewModel _current = null!;
 
+    [ObservableProperty]
     private int _currentIndex;
 
+    [ObservableProperty]
     private bool _isGenerateLinkTeachingTipOpen;
 
+    [ObservableProperty]
     private bool _isInfoPaneOpen;
 
     private ImageSource? _qrCodeSource;
 
+    // Remarks:
+    // The reason why we don't put UserProfileImageSource into IllustrationViewModel
+    // is because the whole array of Illustrations is just representing the same 
+    // illustration's different manga pages, so all of them have the same illustrator
+    // If the UserProfileImageSource is in IllustrationViewModel and the illustration
+    // itself is a manga then all of the IllustrationViewModel in Illustrations will
+    // request the same user profile image which is pointless and will (inevitably) causing
+    // the waste of system resource
+    [ObservableProperty]
     private ImageSource? _userProfileImageSource;
 
     // Remarks:
@@ -106,32 +119,6 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
 
     public ImageViewerPageViewModel[]? ImageViewerPageViewModels { get; }
 
-    public int CurrentIndex
-    {
-        get => _currentIndex;
-        private set => SetProperty(ref _currentIndex, value);
-    }
-
-    public ImageViewerPageViewModel Current
-    {
-        get => _current;
-        set => SetProperty(ref _current, value);
-    }
-
-    // Remarks:
-    // The reason why we don't put UserProfileImageSource into IllustrationViewModel
-    // is because the whole array of Illustrations is just representing the same 
-    // illustration's different manga pages, so all of them have the same illustrator
-    // If the UserProfileImageSource is in IllustrationViewModel and the illustration
-    // itself is a manga then all of the IllustrationViewModel in Illustrations will
-    // request the same user profile image which is pointless and will (inevitably) causing
-    // the waste of system resource
-    public ImageSource? UserProfileImageSource
-    {
-        get => _userProfileImageSource;
-        set => SetProperty(ref _userProfileImageSource, value);
-    }
-
     public string IllustrationId => FirstIllustrationViewModel?.Illustration.Id.ToString() ?? string.Empty;
 
     public string? IllustratorName => FirstIllustrationViewModel?.Illustration.User?.Name;
@@ -146,18 +133,6 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
 
     public ImageViewerPageViewModel? FirstImageViewerPageViewModel => ImageViewerPageViewModels?.FirstOrDefault();
 
-    public bool IsInfoPaneOpen
-    {
-        get => _isInfoPaneOpen;
-        set => SetProperty(ref _isInfoPaneOpen, value);
-    }
-
-    public bool IsGenerateLinkTeachingTipOpen
-    {
-        get => _isGenerateLinkTeachingTipOpen;
-        set => SetProperty(ref _isGenerateLinkTeachingTipOpen, value);
-    }
-
     public void Dispose()
     {
         if (ImageViewerPageViewModels is not null)
@@ -167,7 +142,7 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
                 imageViewerPageViewModel.Dispose();
             }
         }
-        
+
 
         (_userProfileImageSource as SoftwareBitmapSource)?.Dispose();
     }
@@ -242,6 +217,7 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
             App.AppViewModel.DownloadManager.QueueTask(intrinsicTask);
             await intrinsicTask.Completion.Task;
         }
+
         await UserProfilePersonalizationSettings.Current.TrySetWallpaperImageAsync(await AppKnownFolders.SavedWallPaper.GetFileAsync(guid));
         UIHelper.ShowTextToastNotification(
             IllustrationViewerPageResources.SetAsSucceededTitle,
@@ -270,6 +246,7 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
             App.AppViewModel.DownloadManager.QueueTask(intrinsicTask);
             await intrinsicTask.Completion.Task;
         }
+
         await UserProfilePersonalizationSettings.Current.TrySetLockScreenImageAsync(await AppKnownFolders.SavedWallPaper.GetFileAsync(guid));
         UIHelper.ShowTextToastNotification(
             IllustrationViewerPageResources.SetAsSucceededTitle,

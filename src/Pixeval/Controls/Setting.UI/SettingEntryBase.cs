@@ -34,15 +34,6 @@ public partial class SettingEntryBase : Control
 {
     protected const string PartEntryHeader = "EntryHeader";
 
-    private static void OnIconChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
-    {
-        IconChanged(o, args.NewValue);
-    }
-    private static void OnDescriptionChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
-    {
-        DescriptionChanged(o, args.NewValue);
-    }
-
     protected SettingEntryHeader? SettingEntryHeader;
 
     public SettingEntryBase()
@@ -53,6 +44,16 @@ public partial class SettingEntryBase : Control
             DescriptionChanged(this, Description);
             Update();
         };
+    }
+
+    private static void OnIconChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
+    {
+        IconChanged(o, args.NewValue);
+    }
+
+    private static void OnDescriptionChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
+    {
+        DescriptionChanged(o, args.NewValue);
     }
 
     private static void IconChanged(DependencyObject dependencyObject, object argsNewValue)

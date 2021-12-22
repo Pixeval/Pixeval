@@ -32,21 +32,21 @@ namespace Pixeval.Controls.Setting.UI.SliderSettingEntry;
 [TemplatePart(Name = PartValueSlider, Type = typeof(Slider))]
 [DependencyProperty("Maximum", typeof(double))]
 [DependencyProperty("Minimum", typeof(double))]
-[DependencyProperty("Value", typeof(double),InstanceChangedCallback = true)]
+[DependencyProperty("Value", typeof(double), InstanceChangedCallback = true)]
 public partial class SliderSettingEntry : SettingEntryBase
 {
     private const string PartValueSlider = "ValueSlider";
-
-    private static void OnValueChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
-    {
-        ValueChanged(o, args.NewValue);
-    }
 
     private Slider? _valueSlider;
 
     public SliderSettingEntry()
     {
         DefaultStyleKey = typeof(SliderSettingEntry);
+    }
+
+    private static void OnValueChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
+    {
+        ValueChanged(o, args.NewValue);
     }
 
     private static void ValueChanged(DependencyObject d, object newValue)

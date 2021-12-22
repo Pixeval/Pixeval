@@ -26,6 +26,7 @@ using Microsoft.UI.Xaml.Controls;
 using Pixeval.Misc;
 
 namespace Pixeval.Controls.IconButton;
+
 [DependencyProperty("Text", typeof(string))]
 [DependencyProperty("Icon", typeof(IconElement))]
 public partial class IconButton : Button

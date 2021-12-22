@@ -1,4 +1,5 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using LiteDB;
@@ -24,8 +26,15 @@ using Pixeval.Download;
 
 namespace Pixeval.Database;
 
-public class DownloadHistoryEntry : ObservableObject
+public partial class DownloadHistoryEntry : ObservableObject
 {
+    [ObservableProperty]
+    private string? _errorCause;
+
+
+    [ObservableProperty]
+    private DownloadState _state;
+
     public DownloadHistoryEntry(DownloadState state, string? errorCause, string? destination, DownloadItemType type, string? id, string? title, string? description, string? url, string? thumbnail)
     {
         _state = state;
@@ -42,7 +51,6 @@ public class DownloadHistoryEntry : ObservableObject
     // ReSharper disable once UnusedMember.Global
     public DownloadHistoryEntry()
     {
-
     }
 
     [BsonId(true)]
@@ -51,14 +59,6 @@ public class DownloadHistoryEntry : ObservableObject
     public string? Destination { get; set; }
 
     public DownloadItemType Type { get; set; }
-
-    private DownloadState _state;
-
-    public DownloadState State
-    {
-        get => _state;
-        set => SetProperty(ref _state, value);
-    }
 
     public string? Id { get; set; }
 
@@ -69,12 +69,4 @@ public class DownloadHistoryEntry : ObservableObject
     public string? Url { get; set; }
 
     public string? Thumbnail { get; set; }
-
-    private string? _errorCause;
-
-    public string? ErrorCause
-    {
-        get => _errorCause;
-        set => SetProperty(ref _errorCause, value);
-    }
 }

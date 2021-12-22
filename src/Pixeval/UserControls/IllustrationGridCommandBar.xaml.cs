@@ -42,28 +42,13 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 
 namespace Pixeval.UserControls;
+
 [DependencyProperty("PrimaryCommandsSupplements", typeof(ObservableCollection<ICommandBarElement>), DefaultValue = "new ObservableCollection<ICommandBarElement>()", InstanceChangedCallback = true)]
 [DependencyProperty("SecondaryCommandsSupplements", typeof(ObservableCollection<ICommandBarElement>), DefaultValue = "new ObservableCollection<ICommandBarElement>()", InstanceChangedCallback = true)]
 [DependencyProperty("IsDefaultCommandsEnabled", typeof(bool), DefaultValue = "true", InstanceChangedCallback = true)]
 [DependencyProperty("ViewModel", typeof(IllustrationGridViewModel), DefaultValue = "new IllustrationGridViewModel()")]
 public sealed partial class IllustrationGridCommandBar
 {
-    private static void OnPrimaryCommandsSupplementsChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
-    {
-        AddCommandCallback(args, ((IllustrationGridCommandBar)o).CommandBar.PrimaryCommands);
-    }
-
-    private static void OnSecondaryCommandsSupplementsChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
-    {
-        AddCommandCallback(args, ((IllustrationGridCommandBar)o).CommandBar.SecondaryCommands);
-    }
-    private static void OnIsDefaultCommandsEnabledChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
-    {
-        ((IllustrationGridCommandBar)o)._defaultCommands
-            .Where(c => c != ((IllustrationGridCommandBar)o).SelectAllButton)
-            .ForEach(c => c.IsEnabled = (bool)args.NewValue);
-    }
-    
     private readonly IEnumerable<Control> _defaultCommands;
 
     private readonly IllustrationResultFilterPopupViewModel _filterPopupViewModel = new();
@@ -95,8 +80,25 @@ public sealed partial class IllustrationGridCommandBar
         };
     }
 
-    
+
     public ObservableCollection<UIElement> CommandBarElements { get; }
+
+    private static void OnPrimaryCommandsSupplementsChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
+    {
+        AddCommandCallback(args, ((IllustrationGridCommandBar) o).CommandBar.PrimaryCommands);
+    }
+
+    private static void OnSecondaryCommandsSupplementsChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
+    {
+        AddCommandCallback(args, ((IllustrationGridCommandBar) o).CommandBar.SecondaryCommands);
+    }
+
+    private static void OnIsDefaultCommandsEnabledChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
+    {
+        ((IllustrationGridCommandBar) o)._defaultCommands
+            .Where(c => c != ((IllustrationGridCommandBar) o).SelectAllButton)
+            .ForEach(c => c.IsEnabled = (bool) args.NewValue);
+    }
 
     private static void AddCommandCallback(DependencyPropertyChangedEventArgs e, ICollection<ICommandBarElement> commands)
     {

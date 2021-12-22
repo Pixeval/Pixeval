@@ -29,7 +29,7 @@ namespace Pixeval.Controls.Setting.UI.ActionableExpanderSettingEntry;
 
 [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
 [TemplatePart(Name = PartEntryContentPresenter, Type = typeof(ContentPresenter))]
-[DependencyProperty("Icon", typeof(IconElement),InstanceChangedCallback = true)]
+[DependencyProperty("Icon", typeof(IconElement), InstanceChangedCallback = true)]
 [DependencyProperty("Header", typeof(string))]
 [DependencyProperty("Description", typeof(object), InstanceChangedCallback = true)]
 [DependencyProperty("HeaderHeight", typeof(double))]
@@ -40,7 +40,6 @@ public partial class ActionableExpanderSettingEntry : ContentControl
     private const string PartEntryHeader = "EntryHeader";
     private const string PartEntryContentPresenter = "EntryContentPresenter";
 
-    
 
     private ContentPresenter? _entryContentPresenter;
 
@@ -51,7 +50,7 @@ public partial class ActionableExpanderSettingEntry : ContentControl
         DefaultStyleKey = typeof(ActionableExpanderSettingEntry);
         Loaded += (_, _) => Update();
     }
-    
+
     private void Update()
     {
         OnDescriptionChanged(this, Description);
