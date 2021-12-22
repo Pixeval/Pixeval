@@ -41,7 +41,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public class ImageViewerPageViewModel : ObservableObject, IDisposable
+public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
 {
     public enum LoadingPhase
     {
@@ -72,13 +72,13 @@ public class ImageViewerPageViewModel : ObservableObject, IDisposable
 
     private TaskNotifier? _loadingOriginalSourceTask;
 
-    private double _loadingProgress;
+    [ObservableProperty] private double _loadingProgress;
 
-    private string? _loadingText;
+    [ObservableProperty] private string? _loadingText;
 
-    private ImageSource? _originalImageSource;
+    [ObservableProperty] private ImageSource? _originalImageSource;
 
-    private double _scale = 1;
+    [ObservableProperty] private double _scale = 1;
 
     public ImageViewerPageViewModel(IllustrationViewerPageViewModel illustrationViewerPageViewModel, IllustrationViewModel illustrationViewModel)
     {
@@ -87,25 +87,7 @@ public class ImageViewerPageViewModel : ObservableObject, IDisposable
         ImageLoadingCancellationHandle = new CancellationHandle();
         _ = LoadImage();
     }
-
-    public double LoadingProgress
-    {
-        get => _loadingProgress;
-        set => SetProperty(ref _loadingProgress, value);
-    }
-
-    public double Scale
-    {
-        get => _scale;
-        set => SetProperty(ref _scale, value);
-    }
-
-    public string? LoadingText
-    {
-        get => _loadingText;
-        set => SetProperty(ref _loadingText, value);
-    }
-
+    
     public IRandomAccessStream? OriginalImageStream { get; private set; }
 
     public Task? LoadingOriginalSourceTask
@@ -125,13 +107,7 @@ public class ImageViewerPageViewModel : ObservableObject, IDisposable
     ///     of this <see cref="ImageViewerPageViewModel" />
     /// </summary>
     public IllustrationViewerPageViewModel IllustrationViewerPageViewModel { get; }
-
-    public ImageSource? OriginalImageSource
-    {
-        get => _originalImageSource;
-        set => SetProperty(ref _originalImageSource, value);
-    }
-
+    
     public void Dispose()
     {
         _disposed = true;

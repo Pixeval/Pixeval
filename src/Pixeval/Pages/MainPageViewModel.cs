@@ -27,6 +27,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -45,9 +46,9 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Pages;
 
-public class MainPageViewModel : AutoActivateObservableRecipient, IRecipient<LoginCompletedMessage>
+public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecipient<LoginCompletedMessage>
 {
-    private ImageSource? _avatar;
+    [ObservableProperty] private ImageSource? _avatar;
 
     public double MainPageRootNavigationViewOpenPanelLength => 280;
 
@@ -67,13 +68,7 @@ public class MainPageViewModel : AutoActivateObservableRecipient, IRecipient<Log
 
     public readonly NavigationViewTag AboutTag = new(typeof(AboutPage), null);
 
-
-    public ImageSource? Avatar
-    {
-        get => _avatar;
-        set => SetProperty(ref _avatar, value);
-    }
-
+    
     public ObservableCollection<SuggestionModel> Suggestions { get; } = new();
 
     public void Receive(LoginCompletedMessage message)

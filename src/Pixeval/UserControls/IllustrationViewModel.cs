@@ -48,11 +48,11 @@ namespace Pixeval.UserControls;
 ///     It is responsible for being the elements of the <see cref="AdaptiveGridView" /> to present the thumbnail of an
 ///     illustration
 /// </summary>
-public class IllustrationViewModel : ObservableObject, IDisposable
+public partial class IllustrationViewModel : ObservableObject, IDisposable
 {
     private bool _isSelected;
 
-    private SoftwareBitmapSource? _thumbnailSource;
+    [ObservableProperty] private SoftwareBitmapSource? _thumbnailSource;
 
     public IllustrationViewModel(Illustration illustration)
     {
@@ -93,12 +93,7 @@ public class IllustrationViewModel : ObservableObject, IDisposable
             OnIsSelectedChanged?.Invoke(this, this);
         });
     }
-
-    public SoftwareBitmapSource? ThumbnailSource
-    {
-        get => _thumbnailSource;
-        set => SetProperty(ref _thumbnailSource, value);
-    }
+    
 
     public CancellationHandle LoadingThumbnailCancellationHandle { get; }
 

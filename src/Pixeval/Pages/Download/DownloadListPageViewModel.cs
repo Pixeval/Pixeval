@@ -33,59 +33,23 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Download;
 
-public class DownloadListPageViewModel : ObservableObject
+public partial class DownloadListPageViewModel : ObservableObject
 {
     public static readonly IEnumerable<DownloadListOption> AvailableDownloadListOptions = Enum.GetValues<DownloadListOption>();
 
-    private DownloadListOption _currentOption;
+    [ObservableProperty] private DownloadListOption _currentOption;
 
-    public DownloadListOption CurrentOption
-    {
-        get => _currentOption;
-        set => SetProperty(ref _currentOption, value);
-    }
+    [ObservableProperty] private IList<DownloadListEntryViewModel> _downloadTasks;
 
-    private IList<DownloadListEntryViewModel> _downloadTasks;
+    [ObservableProperty] private AdvancedCollectionView _downloadTasksView;
 
-    public IList<DownloadListEntryViewModel> DownloadTasks
-    {
-        get => _downloadTasks;
-        set => SetProperty(ref _downloadTasks, value);
-    }
-
-    private AdvancedCollectionView _downloadTasksView;
-
-    public AdvancedCollectionView DownloadTasksView
-    {
-        get => _downloadTasksView;
-        set => SetProperty(ref _downloadTasksView, value);
-    }
-
-    private ObservableCollection<IDownloadTask> _filteredTasks;
-
-    public ObservableCollection<IDownloadTask> FilteredTasks
-    {
-        get => _filteredTasks;
-        set => SetProperty(ref _filteredTasks, value);
-    }
-
+    [ObservableProperty] private ObservableCollection<IDownloadTask> _filteredTasks;
+    
     public IEnumerable<DownloadListEntryViewModel> SelectedTasks => DownloadTasks.Where(x => x.DownloadTask.Selected);
 
-    private string _selectionLabel;
+    [ObservableProperty] private string _selectionLabel;
 
-    public string SelectionLabel
-    {
-        get => _selectionLabel;
-        set => SetProperty(ref _selectionLabel, value);
-    }
-
-    private bool _isAnyEntrySelected;
-
-    public bool IsAnyEntrySelected
-    {
-        get => _isAnyEntrySelected;
-        set => SetProperty(ref _isAnyEntrySelected, value);
-    }
+    [ObservableProperty] private bool _isAnyEntrySelected;
 
     public DownloadListPageViewModel(List<DownloadListEntryViewModel> downloadTasks)
     {

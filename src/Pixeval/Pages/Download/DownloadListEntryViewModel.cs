@@ -30,24 +30,12 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Download;
 
-public class DownloadListEntryViewModel : ObservableObject, IDisposable
+public partial class DownloadListEntryViewModel : ObservableObject, IDisposable
 {
 
-    private SoftwareBitmapSource? _thumbnail;
+    [ObservableProperty] private SoftwareBitmapSource? _thumbnail;
 
-    public SoftwareBitmapSource? Thumbnail
-    {
-        get => _thumbnail;
-        set => SetProperty(ref _thumbnail, value);
-    }
-
-    private ObservableDownloadTask _downloadTask;
-
-    public ObservableDownloadTask DownloadTask
-    {
-        get => _downloadTask;
-        set => SetProperty(ref _downloadTask, value);
-    }
+    [ObservableProperty] private ObservableDownloadTask _downloadTask;
 
     public DownloadListEntryViewModel(ObservableDownloadTask downloadTask)
     {

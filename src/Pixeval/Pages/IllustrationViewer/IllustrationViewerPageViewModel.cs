@@ -46,19 +46,19 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
+public partial class IllustrationViewerPageViewModel : ObservableObject, IDisposable
 {
-    private ImageViewerPageViewModel _current = null!;
+    [ObservableProperty] private ImageViewerPageViewModel _current = null!;
 
-    private int _currentIndex;
+    [ObservableProperty] private int _currentIndex;
 
-    private bool _isGenerateLinkTeachingTipOpen;
+    [ObservableProperty] private bool _isGenerateLinkTeachingTipOpen;
 
-    private bool _isInfoPaneOpen;
+    [ObservableProperty] private bool _isInfoPaneOpen;
 
     private ImageSource? _qrCodeSource;
 
-    private ImageSource? _userProfileImageSource;
+    [ObservableProperty] private ImageSource? _userProfileImageSource;
 
     // Remarks:
     // illustrations should contains only one item if the illustration is a single
@@ -105,18 +105,7 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
     public int? IllustrationIndex => ContainerGridViewModel?.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
 
     public ImageViewerPageViewModel[]? ImageViewerPageViewModels { get; }
-
-    public int CurrentIndex
-    {
-        get => _currentIndex;
-        private set => SetProperty(ref _currentIndex, value);
-    }
-
-    public ImageViewerPageViewModel Current
-    {
-        get => _current;
-        set => SetProperty(ref _current, value);
-    }
+    
 
     // Remarks:
     // The reason why we don't put UserProfileImageSource into IllustrationViewModel
@@ -126,11 +115,6 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
     // itself is a manga then all of the IllustrationViewModel in Illustrations will
     // request the same user profile image which is pointless and will (inevitably) causing
     // the waste of system resource
-    public ImageSource? UserProfileImageSource
-    {
-        get => _userProfileImageSource;
-        set => SetProperty(ref _userProfileImageSource, value);
-    }
 
     public string IllustrationId => FirstIllustrationViewModel?.Illustration?.Id.ToString();
 
@@ -145,19 +129,7 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
     public IllustrationViewModel? FirstIllustrationViewModel => FirstImageViewerPageViewModel?.IllustrationViewModel;
 
     public ImageViewerPageViewModel? FirstImageViewerPageViewModel => ImageViewerPageViewModels?.FirstOrDefault();
-
-    public bool IsInfoPaneOpen
-    {
-        get => _isInfoPaneOpen;
-        set => SetProperty(ref _isInfoPaneOpen, value);
-    }
-
-    public bool IsGenerateLinkTeachingTipOpen
-    {
-        get => _isGenerateLinkTeachingTipOpen;
-        set => SetProperty(ref _isGenerateLinkTeachingTipOpen, value);
-    }
-
+    
     public void Dispose()
     {
         foreach (var imageViewerPageViewModel in ImageViewerPageViewModels)

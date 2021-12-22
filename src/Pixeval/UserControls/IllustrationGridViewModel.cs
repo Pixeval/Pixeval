@@ -37,11 +37,11 @@ using Pixeval.Utilities;
 
 namespace Pixeval.UserControls;
 
-public class IllustrationGridViewModel : ObservableObject, IDisposable
+public partial class IllustrationGridViewModel : ObservableObject, IDisposable
 {
-    private bool _isAnyIllustrationSelected;
+    [ObservableProperty] private bool _isAnyIllustrationSelected;
 
-    private string _selectionLabel;
+    [ObservableProperty] private string _selectionLabel;
 
     private SoftwareBitmapSource? _webQrCodeSource;
 
@@ -62,18 +62,6 @@ public class IllustrationGridViewModel : ObservableObject, IDisposable
     public AdvancedCollectionView IllustrationsView { get; }
 
     public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; }
-
-    public bool IsAnyIllustrationSelected
-    {
-        get => _isAnyIllustrationSelected;
-        set => SetProperty(ref _isAnyIllustrationSelected, value);
-    }
-
-    public string SelectionLabel
-    {
-        get => _selectionLabel;
-        set => SetProperty(ref _selectionLabel, value);
-    }
 
     public void Dispose()
     {
