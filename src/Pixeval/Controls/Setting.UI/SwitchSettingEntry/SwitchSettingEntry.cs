@@ -24,20 +24,16 @@ using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Controls.Setting.UI.UserControls;
+using Pixeval.Misc;
 
 namespace Pixeval.Controls.Setting.UI.SwitchSettingEntry;
 
 [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
 [TemplatePart(Name = PartSwitch, Type = typeof(ToggleSwitch))]
-public class SwitchSettingEntry : SettingEntryBase
+[DependencyProperty("IsOn", typeof(bool), InstanceChangedCallback = true)]
+public partial class SwitchSettingEntry : SettingEntryBase
 {
     private const string PartSwitch = "Switch";
-
-    public static readonly DependencyProperty IsOnProperty = DependencyProperty.Register(
-        nameof(IsOn),
-        typeof(bool),
-        typeof(SwitchSettingEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue, (o, args) => IsOnChanged(o, args.NewValue)));
 
     private ToggleSwitch? _switch;
 
@@ -48,10 +44,9 @@ public class SwitchSettingEntry : SettingEntryBase
         DefaultStyleKey = typeof(SwitchSettingEntry);
     }
 
-    public bool IsOn
+    private static void OnIsOnChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
-        get => (bool) GetValue(IsOnProperty);
-        set => SetValue(IsOnProperty, value);
+        IsOnChanged(o, args.NewValue);
     }
 
     public event TypedEventHandler<SwitchSettingEntry, RoutedEventArgs> Toggled

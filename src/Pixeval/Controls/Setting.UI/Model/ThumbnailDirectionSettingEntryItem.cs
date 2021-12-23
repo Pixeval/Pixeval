@@ -30,13 +30,13 @@ namespace Pixeval.Controls.Setting.UI.Model;
 
 public record ThumbnailDirectionSettingEntryItem : IStringRepresentableItem
 {
-    public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ThumbnailDirection>().Select(t => new ThumbnailDirectionSettingEntryItem(t));
-
     public ThumbnailDirectionSettingEntryItem(ThumbnailDirection item)
     {
         Item = item;
         StringRepresentation = item.GetLocalizedResourceContent()!;
     }
+
+    public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ThumbnailDirection>().Select(t => new ThumbnailDirectionSettingEntryItem(t));
 
     public object Item { get; }
 

@@ -31,6 +31,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Messages;
+using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
@@ -41,6 +42,7 @@ namespace Pixeval.UserControls;
 
 // use "load failed" image for those thumbnails who failed to load its source due to various reasons
 // note: please ALWAYS add e.Handled = true before every "tapped" event for the buttons
+[DependencyProperty("Header", typeof(object))]
 public sealed partial class IllustrationGrid
 {
     private static readonly ExponentialEase ImageSourceSetEasingFunction = new()
@@ -48,18 +50,6 @@ public sealed partial class IllustrationGrid
         EasingMode = EasingMode.EaseOut,
         Exponent = 12
     };
-
-    public static readonly DependencyProperty GridHeaderProperty = DependencyProperty.Register(
-        nameof(GridHeader),
-        typeof(object),
-        typeof(IllustrationGrid),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public object GridHeader
-    {
-        get => (object)GetValue(GridHeaderProperty);
-        set => SetValue(GridHeaderProperty, value);
-    }
 
     public IllustrationGrid()
     {
@@ -132,7 +122,7 @@ public sealed partial class IllustrationGrid
         {
             if (await context.LoadThumbnailIfRequired())
             {
-                var transform = (ScaleTransform)sender.RenderTransform;
+                var transform = (ScaleTransform) sender.RenderTransform;
                 if (sender.IsFullyOrPartiallyVisible(this))
                 {
                     var scaleXAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleX), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));

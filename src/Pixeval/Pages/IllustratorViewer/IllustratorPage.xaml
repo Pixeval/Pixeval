@@ -17,31 +17,21 @@
     <controls1:DockPanel x:Name="IllustrationPresenterDockPanel"
                         HorizontalAlignment="Stretch"
                         LastChildFill="True">
-        <CommandBar controls1:DockPanel.Dock="Top"
-                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                    DefaultLabelPosition="Right">
-            <CommandBar.Content>
-                <AppBarButton Width="48"
-                              Icon="Back"
-                              LabelPosition="Collapsed"
-                              Tapped="BackButton_OnTapped" />
-            </CommandBar.Content>
-        </CommandBar>
-        
-        <userControls:IllustrationGrid x:Name="IllustrationGrid">
-            <userControls:IllustrationGrid.GridHeader>
-                <Grid x:Name="Header" Height="200" VerticalAlignment="Top">
-                    <Rectangle x:Name="BackgroundRectangle" Height="200" Width="1050" HorizontalAlignment="Left" VerticalAlignment="Top" >
+        <userControls:IllustrationContainer x:Name="IllustrationContainer"  controls1:DockPanel.Dock="Top">
+            <userControls:IllustrationContainer.Header>
+                <Grid x:Name="Header" Height="200" VerticalAlignment="Center" controls1:DockPanel.Dock="Top">
+                    <Rectangle x:Name="BackgroundRectangle" Height="200" HorizontalAlignment="Stretch" VerticalAlignment="Top" >
                         <Rectangle.Fill>
                             <ImageBrush x:Name="BackgroundImage" ImageSource="ms-appx:///Assets/Images/pixeval-mock.png" Stretch="UniformToFill" Opacity="0.6"/>
                         </Rectangle.Fill>
                     </Rectangle>
-                    <Rectangle x:Name="OverlayRectangle" Fill="#BFCFB5C0" Width="1050" Height="200" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="TextContainer">
+                    <Rectangle x:Name="OverlayRectangle" Fill="#BFCFB5C0" HorizontalAlignment="Stretch" Height="200" VerticalAlignment="Top"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="TextContainer">
                         <Ellipse x:Name="ProfileImage"
                                  Height="100"
                                  Width="100"
-                                 Margin="20,20,20,20">
+                                 VerticalAlignment="Center"
+                                 Margin="20,0,20,0">
                             <Ellipse.Fill>
                                 <ImageBrush ImageSource="{x:Bind _viewModel.AvatarSource, Mode=OneWay}" Stretch="UniformToFill"/>
                             </Ellipse.Fill>
@@ -53,24 +43,12 @@
                                         <Run Text="{x:Bind _viewModel.Comment}">
                                         </Run>
                             </TextBlock>
-                            <TextBlock x:Name="MoreText" Text="More" Foreground="White" Margin="0,10,0,0"/>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,10,0,0">
                                 <StackPanel Orientation="Horizontal" x:Name="ButtonPanel">
-                                    <Button Padding="0" Foreground="White" Style="{ThemeResource TextBlockButtonStyle}">
+                                    <Button Padding="0" Foreground="White" Style="{ThemeResource TextBlockButtonStyle}" Tapped="OpenLinkButton_OnTapped">
                                         <StackPanel Orientation="Horizontal">
-                                            <SymbolIcon Symbol="Play"/>
-                                            <TextBlock Text="Play" Margin="10,0,0,0"/>
-                                        </StackPanel>
-                                    </Button>
-                                    <Button Padding="0" Foreground="White" Style="{ThemeResource TextBlockButtonStyle}">
-                                        <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
-                                            <SymbolIcon Symbol="Add"/>
-                                            <TextBlock Text="Add" Margin="10,0,0,0"/>
-                                        </StackPanel>
-                                    </Button>
-                                    <Button Padding="0" Foreground="White" Style="{ThemeResource TextBlockButtonStyle}">
-                                        <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
-                                            <SymbolIcon Symbol="More"/>
+                                            <SymbolIcon Symbol="Link"/>
+                                            <TextBlock x:Uid="/IllustratorPage/OpenLink" Margin="10,0,0,0"/>
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
@@ -78,7 +56,14 @@
                         </StackPanel>
                     </StackPanel>
                 </Grid>
-            </userControls:IllustrationGrid.GridHeader>
-        </userControls:IllustrationGrid>
+            </userControls:IllustrationContainer.Header>
+            <userControls:IllustrationContainer.CommandBarElements>
+                <AppBarButton Width="48"
+                              Icon="Back"
+                              LabelPosition="Collapsed"
+                              Tapped="BackButton_OnTapped" />
+            </userControls:IllustrationContainer.CommandBarElements>
+        </userControls:IllustrationContainer>
+        
     </controls1:DockPanel>
 </controls:EnhancedPage>

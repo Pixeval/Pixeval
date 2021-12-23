@@ -31,6 +31,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Windows.Globalization;
 using JetBrains.Annotations;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.Win32;
@@ -49,7 +50,7 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.Misc;
 
-public class LoginPageViewModel : AutoActivateObservableRecipient,
+public partial class LoginPageViewModel : AutoActivateObservableRecipient,
     IRecipient<ScanningLoginProxyMessage>,
     IRecipient<ApplicationExitingMessage>
 {
@@ -82,15 +83,10 @@ public class LoginPageViewModel : AutoActivateObservableRecipient,
     // Note: the scan process consist of checksum matching and optionally file unzipping, see AppContext.CopyLoginProxyIfRequired()
     private readonly TaskCompletionSource _scanLoginProxyTask = new();
 
+    [ObservableProperty]
     private LoginPhaseEnum _loginPhase;
 
     private Process? _loginProxyProcess;
-
-    public LoginPhaseEnum LoginPhase
-    {
-        get => _loginPhase;
-        set => SetProperty(ref _loginPhase, value);
-    }
 
     public void Receive(ApplicationExitingMessage message)
     {

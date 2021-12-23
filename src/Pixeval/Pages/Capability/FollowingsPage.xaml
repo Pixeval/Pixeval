@@ -14,7 +14,7 @@
     mc:Ignorable="d"
     Loaded="FollowingsPage_OnLoaded"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    <Grid Margin="10,40,10,20">
+    <Grid Margin="20,40,10,20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
@@ -26,13 +26,13 @@
             <StackPanel Spacing="10">
                 <ItemsRepeater ItemsSource="{x:Bind _viewModel.Illustrators, Mode=OneWay}">
                     <ItemsRepeater.Layout>
-                        <controls1:WrapLayout HorizontalSpacing="5"
-                                              VerticalSpacing="5" />
+                        <StackLayout Spacing="10"></StackLayout>
                     </ItemsRepeater.Layout>
                     <ItemsRepeater.ItemTemplate>
                         <DataTemplate x:DataType="illustratorView:IllustratorViewModel">
                             <illustratorView:IllustratorView
                                 Tapped="IllustratorView_OnTapped"
+                                HorizontalAlignment="Stretch"
                                 ViewModel="{x:Bind}"
                                 ThumbnailSources="{x:Bind Illustrations, Mode=OneWay}"
                                 IllustratorName="{x:Bind Name}"
@@ -41,8 +41,8 @@
                                 <illustratorView:IllustratorView.ThumbnailItemTemplate>
                                     <DataTemplate x:DataType="userControls:IllustrationViewModel">
                                         <Image Source="{x:Bind ThumbnailSource, Mode=OneWay}" 
-                                               Height="250"
-                                               Width="170"
+                                               Height="70"
+                                               Width="70"
                                                HorizontalAlignment="Stretch"
                                                VerticalAlignment="Stretch" Stretch="UniformToFill"></Image>
                                     </DataTemplate>

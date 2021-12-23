@@ -1,4 +1,5 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -16,11 +17,11 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Utilities;
 
@@ -34,6 +35,7 @@ public static class ServiceCollectionHelper
         {
             return;
         }
+
         var types = Assembly.GetExecutingAssembly().DefinedTypes
             .Where(x => x.GetInterfaces().Any(i => i.IsGenericType
                                                    && i.GetGenericTypeDefinition() == typeof(T)

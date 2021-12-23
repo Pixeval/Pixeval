@@ -1,4 +1,5 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
@@ -25,94 +27,30 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls.Card;
+using Pixeval.Misc;
 
 namespace Pixeval.Controls.IllustratorView;
 
 [TemplatePart(Name = PartContentContainer, Type = typeof(CardControl))]
-public class IllustratorView : Control
+[TemplatePart(Name = PartAvatar, Type = typeof(PersonPicture))]
+[DependencyProperty("IllustratorName", typeof(string))]
+[DependencyProperty("IllustratorId", typeof(string))]
+[DependencyProperty("ThumbnailSources", typeof(object))]
+[DependencyProperty("ThumbnailItemTemplate", typeof(object))]
+[DependencyProperty("IllustratorPicture", typeof(ImageSource))]
+[DependencyProperty("ViewModel", typeof(IllustratorViewModel))]
+public partial class IllustratorView : Control
 {
     private const string PartContentContainer = "ContentContainer";
+    private const string PartAvatar = "Avatar";
 
     private CardControl? _contentContainer;
+
+    public PersonPicture? Avatar { get; private set; }
 
     public IllustratorView()
     {
         DefaultStyleKey = typeof(IllustratorView);
-    }
-
-    public static readonly DependencyProperty ThumbnailSourcesProperty = DependencyProperty.Register(
-        "ThumbnailSources", typeof(object), typeof(IllustratorView), new PropertyMetadata(default));
-
-    public object ThumbnailSources
-    {
-        get => GetValue(ThumbnailSourcesProperty);
-        set => SetValue(ThumbnailSourcesProperty, value);
-    }
-
-    public static readonly DependencyProperty ThumbnailItemTemplateProperty = DependencyProperty.Register(
-        "ThumbnailItemTemplate", typeof(DataTemplate), typeof(IllustratorView), new PropertyMetadata(default(DataTemplate)));
-
-    public DataTemplate ThumbnailItemTemplate
-    {
-        get { return (DataTemplate)GetValue(ThumbnailItemTemplateProperty); }
-        set { SetValue(ThumbnailItemTemplateProperty, value); }
-    }
-
-    public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
-        "ViewModel", typeof(IllustratorViewModel), typeof(IllustratorView), new PropertyMetadata(default(IllustratorViewModel)));
-
-    public IllustratorViewModel ViewModel
-    {
-        get => (IllustratorViewModel)GetValue(ViewModelProperty);
-        set => SetValue(ViewModelProperty, value);
-    }
-
-    public static readonly DependencyProperty IllustratorNameProperty = DependencyProperty.Register(
-        nameof(IllustratorName),
-        typeof(string),
-        typeof(IllustratorView),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public string IllustratorName
-    {
-        get => (string) GetValue(IllustratorNameProperty);
-        set => SetValue(IllustratorNameProperty, value);
-    }
-
-    public static readonly DependencyProperty IllustratorIdProperty = DependencyProperty.Register(
-        nameof(IllustratorId),
-        typeof(string),
-        typeof(IllustratorView),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public string IllustratorId
-    {
-        get => (string) GetValue(IllustratorIdProperty);
-        set => SetValue(IllustratorIdProperty, value);
-    }
-
-    public static readonly DependencyProperty IllustratorProfileNavigateUriProperty = DependencyProperty.Register(
-        nameof(IllustratorProfileNavigateUri),
-        typeof(Uri),
-        typeof(IllustratorView),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public Uri IllustratorProfileNavigateUri
-    {
-        get => (Uri) GetValue(IllustratorProfileNavigateUriProperty);
-        set => SetValue(IllustratorProfileNavigateUriProperty, value);
-    }
-
-    public static readonly DependencyProperty IllustratorPictureProperty = DependencyProperty.Register(
-        nameof(IllustratorPicture),
-        typeof(ImageSource),
-        typeof(IllustratorView),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public ImageSource IllustratorPicture
-    {
-        get => (ImageSource) GetValue(IllustratorPictureProperty);
-        set => SetValue(IllustratorPictureProperty, value);
     }
 
     protected override void OnApplyTemplate()
@@ -128,6 +66,9 @@ public class IllustratorView : Control
             _contentContainer.PointerEntered += ContentContainerOnPointerEntered;
             _contentContainer.PointerExited += ContentContainerOnPointerExited;
         }
+
+        if ((Avatar = GetTemplateChild(PartAvatar) as PersonPicture) is not null)
+        {}
 
         base.OnApplyTemplate();
     }

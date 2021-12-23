@@ -35,6 +35,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
+using Pixeval.CoreApi.Model;
 using Pixeval.Download;
 using Pixeval.Popups;
 using Pixeval.UserControls;
@@ -46,19 +47,36 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
+public partial class IllustrationViewerPageViewModel : ObservableObject, IDisposable
 {
+    [ObservableProperty]
     private ImageViewerPageViewModel _current = null!;
 
+    [ObservableProperty]
     private int _currentIndex;
 
+    [ObservableProperty]
     private bool _isGenerateLinkTeachingTipOpen;
 
+    [ObservableProperty]
     private bool _isInfoPaneOpen;
 
     private ImageSource? _qrCodeSource;
 
+    // Remarks:
+    // The reason why we don't put UserProfileImageSource into IllustrationViewModel
+    // is because the whole array of Illustrations is just representing the same 
+    // illustration's different manga pages, so all of them have the same illustrator
+    // If the UserProfileImageSource is in IllustrationViewModel and the illustration
+    // itself is a manga then all of the IllustrationViewModel in Illustrations will
+    // request the same user profile image which is pointless and will (inevitably) causing
+    // the waste of system resource
+    [ObservableProperty]
     private ImageSource? _userProfileImageSource;
+
+    // Preserved for illustrator view use
+    [ObservableProperty]
+    private UserInfo? _userInfo;
 
     // Remarks:
     // illustrations should contains only one item if the illustration is a single
@@ -71,7 +89,7 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
         ContainerGridViewModel = gridView.ViewModel;
         IllustrationViewModelInTheGridView = ContainerGridViewModel.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
         InitializeCommands();
-        _ = LoadUserProfileImage();
+        _ = LoadUserProfile();
     }
 
     public IllustrationViewerPageViewModel(params IllustrationViewModel[] illustrations)
@@ -79,7 +97,7 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
         ImageViewerPageViewModels = illustrations.Select(i => new ImageViewerPageViewModel(this, i)).ToArray();
         Current = ImageViewerPageViewModels[CurrentIndex];
         InitializeCommands();
-        _ = LoadUserProfileImage();
+        _ = LoadUserProfile();
     }
 
     /// <summary>
@@ -106,37 +124,11 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
 
     public ImageViewerPageViewModel[]? ImageViewerPageViewModels { get; }
 
-    public int CurrentIndex
-    {
-        get => _currentIndex;
-        private set => SetProperty(ref _currentIndex, value);
-    }
+    public string IllustrationId => FirstIllustrationViewModel?.Illustration.Id.ToString() ?? string.Empty;
 
-    public ImageViewerPageViewModel Current
-    {
-        get => _current;
-        set => SetProperty(ref _current, value);
-    }
+    public string? IllustratorName => FirstIllustrationViewModel?.Illustration.User?.Name;
 
-    // Remarks:
-    // The reason why we don't put UserProfileImageSource into IllustrationViewModel
-    // is because the whole array of Illustrations is just representing the same 
-    // illustration's different manga pages, so all of them have the same illustrator
-    // If the UserProfileImageSource is in IllustrationViewModel and the illustration
-    // itself is a manga then all of the IllustrationViewModel in Illustrations will
-    // request the same user profile image which is pointless and will (inevitably) causing
-    // the waste of system resource
-    public ImageSource? UserProfileImageSource
-    {
-        get => _userProfileImageSource;
-        set => SetProperty(ref _userProfileImageSource, value);
-    }
-
-    public string IllustrationId => FirstIllustrationViewModel?.Illustration?.Id.ToString();
-
-    public string? IllustratorName => FirstIllustrationViewModel.Illustration.User?.Name;
-
-    public string? IllustratorUid => FirstIllustrationViewModel.Illustration.User?.Id.ToString();
+    public string? IllustratorUid => FirstIllustrationViewModel?.Illustration.User?.Id.ToString();
 
     public bool IsManga => ImageViewerPageViewModels?.Length > 1;
 
@@ -146,24 +138,16 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
 
     public ImageViewerPageViewModel? FirstImageViewerPageViewModel => ImageViewerPageViewModels?.FirstOrDefault();
 
-    public bool IsInfoPaneOpen
-    {
-        get => _isInfoPaneOpen;
-        set => SetProperty(ref _isInfoPaneOpen, value);
-    }
-
-    public bool IsGenerateLinkTeachingTipOpen
-    {
-        get => _isGenerateLinkTeachingTipOpen;
-        set => SetProperty(ref _isGenerateLinkTeachingTipOpen, value);
-    }
-
     public void Dispose()
     {
-        foreach (var imageViewerPageViewModel in ImageViewerPageViewModels)
+        if (ImageViewerPageViewModels is not null)
         {
-            imageViewerPageViewModel.Dispose();
+            foreach (var imageViewerPageViewModel in ImageViewerPageViewModels)
+            {
+                imageViewerPageViewModel.Dispose();
+            }
         }
+
 
         (_userProfileImageSource as SoftwareBitmapSource)?.Dispose();
     }
@@ -186,7 +170,7 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
                     Key = VirtualKey.D
                 }
             },
-            Label = FirstIllustrationViewModel.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark,
+            Label = FirstIllustrationViewModel!.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark,
             IconSource = MakoHelper.GetBookmarkButtonIconSource(FirstIllustrationViewModel.IsBookmarked)
         };
 
@@ -238,6 +222,7 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
             App.AppViewModel.DownloadManager.QueueTask(intrinsicTask);
             await intrinsicTask.Completion.Task;
         }
+
         await UserProfilePersonalizationSettings.Current.TrySetWallpaperImageAsync(await AppKnownFolders.SavedWallPaper.GetFileAsync(guid));
         UIHelper.ShowTextToastNotification(
             IllustrationViewerPageResources.SetAsSucceededTitle,
@@ -266,6 +251,7 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
             App.AppViewModel.DownloadManager.QueueTask(intrinsicTask);
             await intrinsicTask.Completion.Task;
         }
+
         await UserProfilePersonalizationSettings.Current.TrySetLockScreenImageAsync(await AppKnownFolders.SavedWallPaper.GetFileAsync(guid));
         UIHelper.ShowTextToastNotification(
             IllustrationViewerPageResources.SetAsSucceededTitle,
@@ -336,9 +322,9 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
 
     private void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        FirstImageViewerPageViewModel.SwitchBookmarkState();
+        FirstImageViewerPageViewModel!.SwitchBookmarkState();
         // update manually
-        BookmarkCommand.Label = FirstIllustrationViewModel.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
+        BookmarkCommand.Label = FirstIllustrationViewModel!.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
         BookmarkCommand.IconSource = MakoHelper.GetBookmarkButtonIconSource(FirstIllustrationViewModel.IsBookmarked);
     }
 
@@ -393,13 +379,13 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
 
     public ImageViewerPageViewModel Next()
     {
-        Current = ImageViewerPageViewModels[++CurrentIndex];
+        Current = ImageViewerPageViewModels![++CurrentIndex];
         return Current;
     }
 
     public ImageViewerPageViewModel Prev()
     {
-        Current = ImageViewerPageViewModels[--CurrentIndex];
+        Current = ImageViewerPageViewModels![--CurrentIndex];
         return Current;
     }
 
@@ -412,7 +398,7 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
             IllustrationViewModelInTheGridView.IsBookmarked = true;
         }
 
-        return FirstIllustrationViewModel.PostPublicBookmarkAsync();
+        return FirstIllustrationViewModel!.PostPublicBookmarkAsync();
     }
 
     public Task RemoveBookmarkAsync()
@@ -422,15 +408,19 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
             IllustrationViewModelInTheGridView.IsBookmarked = false;
         }
 
-        return FirstIllustrationViewModel.RemoveBookmarkAsync();
+        return FirstIllustrationViewModel!.RemoveBookmarkAsync();
     }
 
-    private async Task LoadUserProfileImage()
+    private async Task LoadUserProfile()
     {
-        if (FirstIllustrationViewModel.Illustration.User?.ProfileImageUrls?.Medium is { } profileImage)
+        if (FirstIllustrationViewModel!.Illustration.User is { } userInfo)
         {
-            UserProfileImageSource = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceResultAsync(profileImage)
-                .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync());
+            UserInfo = userInfo;
+            if (userInfo.ProfileImageUrls?.Medium is { } profileImage)
+            {
+                UserProfileImageSource = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceResultAsync(profileImage)
+                    .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync());
+            }
         }
     }
 
@@ -551,7 +541,7 @@ public class IllustrationViewerPageViewModel : ObservableObject, IDisposable
             return Visibility.Collapsed;
         }
 
-        return index < ImageViewerPageViewModels.Length - 1 ? Visibility.Visible : Visibility.Collapsed;
+        return index < ImageViewerPageViewModels!.Length - 1 ? Visibility.Visible : Visibility.Collapsed;
     }
 
     public Visibility CalculatePrevImageButtonVisibility(int index)

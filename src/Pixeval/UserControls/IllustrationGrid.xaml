@@ -16,14 +16,14 @@
              Loaded="IllustrationGrid_OnLoaded"
              mc:Ignorable="d">
     <controls:AdaptiveGridView x:Name="IllustrationGridView"
-                                       animations:ItemsReorderAnimation.Duration="0:0:0.2"
-                                       x:FieldModifier="public"
-                                       IsItemClickEnabled="True"
-                                       IsMultiSelectCheckBoxEnabled="False"
-                                       ItemsSource="{x:Bind ViewModel.IllustrationsView}"
-                                       SelectionMode="Extended"
-                                       Header="{x:Bind GridHeader, Mode=OneWay}"
-                                       StretchContentForSingleRow="True">
+                               animations:ItemsReorderAnimation.Duration="0:0:0.2"
+                               x:FieldModifier="public"
+                               IsItemClickEnabled="True"
+                               IsMultiSelectCheckBoxEnabled="False"
+                               ItemsSource="{x:Bind ViewModel.IllustrationsView}"
+                               SelectionMode="Extended"
+                               Header="{x:Bind Header, Mode=OneWay}"
+                               StretchContentForSingleRow="True">
         <controls:AdaptiveGridView.ItemContainerTransitions>
             <AddDeleteThemeTransition />
         </controls:AdaptiveGridView.ItemContainerTransitions>
@@ -175,7 +175,8 @@
                         </card:CardControl.Resources>
                         <interactivity:Interaction.Behaviors>
                             <core:EventTriggerBehavior EventName="PointerEntered">
-                                <media:ControlStoryboardAction Storyboard="{StaticResource ThumbnailScaleOutStoryboard}" />
+                                <media:ControlStoryboardAction
+                                    Storyboard="{StaticResource ThumbnailScaleOutStoryboard}" />
                             </core:EventTriggerBehavior>
                             <core:EventTriggerBehavior EventName="PointerExited">
                                 <media:ControlStoryboardAction ControlStoryboardOption="Play"

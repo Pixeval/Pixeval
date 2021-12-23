@@ -38,23 +38,25 @@ using Pixeval.Utilities;
 
 namespace Pixeval.UserControls;
 
-public class IllustrationGridViewModel : ObservableObject, IDisposable, IIllustrationVisualizer
+public partial class IllustrationGridViewModel : ObservableObject, IDisposable, IIllustrationVisualizer
 {
+    [ObservableProperty]
     private bool _isAnyIllustrationSelected;
 
+    private SoftwareBitmapSource? _pixEzQrCodeSource;
+
+    [ObservableProperty]
     private string _selectionLabel;
 
     private SoftwareBitmapSource? _webQrCodeSource;
-
-    private SoftwareBitmapSource? _pixEzQrCodeSource;
 
     public IllustrationGridViewModel()
     {
         SelectedIllustrations = new ObservableCollection<IllustrationViewModel>();
         Illustrations = new ObservableCollection<IllustrationViewModel>();
         IllustrationsView = new AdvancedCollectionView(Illustrations);
-        VisualizationController = new IllustrationVisualizationController(this);
         _selectionLabel = IllustrationGridCommandBarResources.CancelSelectionButtonDefaultLabel;
+        VisualizationController = new IllustrationVisualizationController(this);
     }
 
     public IFetchEngine<Illustration?>? FetchEngine { get; set; }
@@ -65,23 +67,11 @@ public class IllustrationGridViewModel : ObservableObject, IDisposable, IIllustr
 
     public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; }
 
-    public bool IsAnyIllustrationSelected
-    {
-        get => _isAnyIllustrationSelected;
-        set => SetProperty(ref _isAnyIllustrationSelected, value);
-    }
-
-    public string SelectionLabel
-    {
-        get => _selectionLabel;
-        set => SetProperty(ref _selectionLabel, value);
-    }
-
     public IllustrationVisualizationController VisualizationController { get; internal set; }
 
     public void Dispose()
     {
-        VisualizationController.Dispose();
+        DisposeCurrent();
         GC.SuppressFinalize(this);
     }
 

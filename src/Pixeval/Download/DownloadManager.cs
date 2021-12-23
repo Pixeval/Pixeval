@@ -38,13 +38,15 @@ namespace Pixeval.Download;
 
 public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : IDownloadTask
 {
-    // the generic parameter is used to simplify the code, the expression can be embedded directly into the condition of the while loop
-    private readonly ReenterableAwaiter<bool> _throttle;
+    private readonly Channel<TDownloadTask> _downloadTaskChannel;
     private readonly HttpClient _httpClient;
     private readonly ObservableCollection<TDownloadTask> _queuedTasks;
-    private readonly ISet<TDownloadTask> _taskQuerySet;
-    private readonly Channel<TDownloadTask> _downloadTaskChannel;
     private readonly SemaphoreSlim _semaphoreSlim;
+
+    private readonly ISet<TDownloadTask> _taskQuerySet;
+
+    // the generic parameter is used to simplify the code, the expression can be embedded directly into the condition of the while loop
+    private readonly ReenterableAwaiter<bool> _throttle;
     private int _workingTasks;
 
     public DownloadManager(int concurrencyDegree, HttpClient? httpClient = null)
@@ -63,6 +65,12 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
     public int ConcurrencyDegree { get; set; }
 
     public IList<TDownloadTask> QueuedTasks => _queuedTasks;
+
+    public void Dispose()
+    {
+        _httpClient.Dispose();
+        _semaphoreSlim.Dispose();
+    }
 
     public void QueueTask(TDownloadTask task)
     {
@@ -105,6 +113,7 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
         {
             task.CancellationHandle.Cancel();
         }
+
         _queuedTasks.Clear();
         _taskQuerySet.Clear();
     }
@@ -199,6 +208,7 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
                     SetState(task, DownloadState.Error);
                     task.Completion.SetException(exception);
                 }
+
                 break;
         }
     }
@@ -206,11 +216,5 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
     private static void SetState(TDownloadTask task, DownloadState state)
     {
         App.AppViewModel.DispatchTask(() => task.CurrentState = state);
-    }
-
-    public void Dispose()
-    {
-        _httpClient.Dispose();
-        _semaphoreSlim.Dispose();
     }
 }

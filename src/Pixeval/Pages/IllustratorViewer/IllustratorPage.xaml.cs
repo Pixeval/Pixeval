@@ -11,8 +11,10 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System;
 using CommunityToolkit.WinUI.UI;
 using CommunityToolkit.WinUI.UI.Animations.Expressions;
 using Microsoft.Graphics.Canvas.Effects;
@@ -48,7 +50,7 @@ namespace Pixeval.Pages.Capability
         private Compositor _compositor;
         private SpriteVisual? _blurredBackgroundImageVisual;
 
-        public IllustrationGrid ViewModelProvider => IllustrationGrid;
+        public IllustrationContainer ViewModelProvider => IllustrationContainer;
 
         public IllustratorPage()
         {
@@ -57,17 +59,31 @@ namespace Pixeval.Pages.Capability
 
         public override void OnPageDeactivated(NavigatingCancelEventArgs navigatingCancelEventArgs)
         {
-            IllustrationGrid.ViewModel.Dispose();
+            ViewModelProvider.ViewModel.Dispose();
             WeakReferenceMessenger.Default.UnregisterAll(this);
         }
 
         public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
         {
-            if (navigationEventArgs.Parameter is IllustratorViewModel viewModel)
+            switch (navigationEventArgs.Parameter)
             {
-                _viewModel = viewModel;
+                case Tuple<UIElement, IllustratorViewModel> tuple:
+                    var (sender, viewModel) = tuple;
+                    WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(sender));
+                    var anim = ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation");
+                    if (anim != null)
+                    {
+                        anim.TryStart(ProfileImage);
+                    }
+                    _viewModel = viewModel;
+                    break;
+                case IllustratorViewModel viewModel1:
+                    _viewModel = viewModel1;
+                    break;
             }
-            WeakReferenceMessenger.Default.Register<IllustratorPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustrationGrid.ViewModel.FetchEngine?.Cancel());
+
+            WeakReferenceMessenger.Default.Register<IllustratorPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.ViewModelProvider.ViewModel.FetchEngine?.Cancel());
+
             ChangeSource();
         }
 
@@ -78,7 +94,7 @@ namespace Pixeval.Pages.Capability
                 ChangeSource();
             }
             // Retrieve the ScrollViewer that the GridView is using internally
-            var scrollViewer = IllustrationGrid.IllustrationGridView.FindDescendant<ScrollViewer>();
+            var scrollViewer = IllustrationContainer.IllustrationGrid.FindDescendant<ScrollViewer>();
 
             // Update the ZIndex of the header container so that the header is above the items when scrolling
             var headerPresenter = (UIElement)VisualTreeHelper.GetParent(Header);
@@ -168,7 +184,6 @@ namespace Pixeval.Pages.Capability
             // Get backing visuals for the text blocks so that their properties can be animated
             var blurbVisual = ElementCompositionPreview.GetElementVisual(Blurb);
             var subtitleVisual = ElementCompositionPreview.GetElementVisual(SubtitleBlock);
-            var moreVisual = ElementCompositionPreview.GetElementVisual(MoreText);
 
             // Create an ExpressionAnimation that moves between 1 and 0 with scroll progress, to be used for text block opacity
             ExpressionNode textOpacityAnimation = ExpressionFunctions.Clamp(1 - (progressNode * 2), 0, 1);
@@ -181,10 +196,6 @@ namespace Pixeval.Pages.Capability
             subtitleVisual.StartAnimation("Opacity", textOpacityAnimation);
             subtitleVisual.StartAnimation("Scale.X", scaleAnimation);
             subtitleVisual.StartAnimation("Scale.Y", scaleAnimation);
-
-            moreVisual.StartAnimation("Opacity", textOpacityAnimation);
-            moreVisual.StartAnimation("Scale.X", scaleAnimation);
-            moreVisual.StartAnimation("Scale.Y", scaleAnimation);
 
             // Get the backing visuals for the text and button containers so that their properites can be animated
             var textVisual = ElementCompositionPreview.GetElementVisual(TextContainer);
@@ -214,7 +225,7 @@ namespace Pixeval.Pages.Capability
 
         public void GoBack()
         {
-            App.AppViewModel.AppWindowRootFrame.BackStack.RemoveAll(entry => entry.SourcePageType == typeof(IllustratorPage));
+            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", ProfileImage);
             if (App.AppViewModel.AppWindowRootFrame.CanGoBack)
             {
                 App.AppViewModel.AppWindowRootFrame.GoBack(new SuppressNavigationTransitionInfo());
@@ -224,6 +235,11 @@ namespace Pixeval.Pages.Capability
         private void BackButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             GoBack();
+        }
+
+        private async void OpenLinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri($"https://www.pixiv.net/users/{_viewModel.Id}"));
         }
     }
 }

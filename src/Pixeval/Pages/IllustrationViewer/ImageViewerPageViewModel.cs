@@ -41,7 +41,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public class ImageViewerPageViewModel : ObservableObject, IDisposable
+public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
 {
     public enum LoadingPhase
     {
@@ -72,12 +72,16 @@ public class ImageViewerPageViewModel : ObservableObject, IDisposable
 
     private TaskNotifier? _loadingOriginalSourceTask;
 
+    [ObservableProperty]
     private double _loadingProgress;
 
+    [ObservableProperty]
     private string? _loadingText;
 
+    [ObservableProperty]
     private ImageSource? _originalImageSource;
 
+    [ObservableProperty]
     private double _scale = 1;
 
     public ImageViewerPageViewModel(IllustrationViewerPageViewModel illustrationViewerPageViewModel, IllustrationViewModel illustrationViewModel)
@@ -88,23 +92,6 @@ public class ImageViewerPageViewModel : ObservableObject, IDisposable
         _ = LoadImage();
     }
 
-    public double LoadingProgress
-    {
-        get => _loadingProgress;
-        set => SetProperty(ref _loadingProgress, value);
-    }
-
-    public double Scale
-    {
-        get => _scale;
-        set => SetProperty(ref _scale, value);
-    }
-
-    public string? LoadingText
-    {
-        get => _loadingText;
-        set => SetProperty(ref _loadingText, value);
-    }
 
     public IRandomAccessStream? OriginalImageStream { get; private set; }
 
@@ -125,12 +112,6 @@ public class ImageViewerPageViewModel : ObservableObject, IDisposable
     ///     of this <see cref="ImageViewerPageViewModel" />
     /// </summary>
     public IllustrationViewerPageViewModel IllustrationViewerPageViewModel { get; }
-
-    public ImageSource? OriginalImageSource
-    {
-        get => _originalImageSource;
-        set => SetProperty(ref _originalImageSource, value);
-    }
 
     public void Dispose()
     {
@@ -161,7 +142,7 @@ public class ImageViewerPageViewModel : ObservableObject, IDisposable
     {
         LoadingText = phase.GetLocalizedResource() switch
         {
-            { FormatKey: LoadingPhase } attr => attr.GetLocalizedResourceContent()?.Format((int)LoadingProgress),
+            { FormatKey: LoadingPhase } attr => attr.GetLocalizedResourceContent()?.Format((int) LoadingProgress),
             var attr => attr?.GetLocalizedResourceContent()
         };
     }
@@ -267,7 +248,7 @@ public class ImageViewerPageViewModel : ObservableObject, IDisposable
     /// </summary>
     public void SwitchBookmarkState()
     {
-        if (IllustrationViewerPageViewModel.FirstIllustrationViewModel.IsBookmarked)
+        if (IllustrationViewerPageViewModel.FirstIllustrationViewModel?.IsBookmarked is true)
         {
             IllustrationViewerPageViewModel.RemoveBookmarkAsync();
         }

@@ -17,26 +17,21 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Controls.IllustratorView;
 
-public class IllustratorViewModel : ObservableObject, IIllustrationVisualizer
+public partial class IllustratorViewModel : ObservableObject, IIllustrationVisualizer
 {
     public string Name { get; set; }
 
     public string AvatarUrl { get; set; }
 
+    [ObservableProperty]
     private ImageSource? _avatarSource;
-
-    public ImageSource? AvatarSource
-    {
-        get => _avatarSource;
-        set => SetProperty(ref _avatarSource, value);
-    }
 
     public IFetchEngine<Illustration?> FetchEngine => App.AppViewModel.MakoClient.Posts(Id.ToString());
 
     public long Id { get; set; }
-    
+
     public string? Account { get; set; }
-    
+
     public string? Comment { get; set; }
 
     public ObservableCollection<IllustrationViewModel> Illustrations { get; }
@@ -52,13 +47,18 @@ public class IllustratorViewModel : ObservableObject, IIllustrationVisualizer
         Comment = info.Comment;
         Illustrations = new ObservableCollection<IllustrationViewModel>();
         VisualizationController = new IllustrationVisualizationController(this);
+        _ = LoadAvatar();
     }
 
-    public async Task Load()
+    public async Task LoadAvatar()
     {
         if (AvatarSource != null) return;
         AvatarSource = (await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(AvatarUrl)
             .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync())!)!;
+    }
+
+    public async Task LoadThumbnail()
+    {
         await VisualizationController.ResetAndFillAsync(FetchEngine, 3);
         foreach (var model in Illustrations)
         {

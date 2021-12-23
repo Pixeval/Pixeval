@@ -37,6 +37,7 @@ namespace Pixeval.Pages.Download;
 
 public sealed partial class DownloadListPage
 {
+    private bool _queriedBySuggestion;
     private DownloadListPageViewModel _viewModel = null!;
 
     public DownloadListPage()
@@ -95,7 +96,8 @@ public sealed partial class DownloadListPage
                     IOHelper.DeleteAsync(downloadListEntryViewModel.DownloadTask.Destination).Discard();
                 }
             }
-             _viewModel.RemoveSelectedItems();
+
+            _viewModel.RemoveSelectedItems();
         }
     }
 
@@ -104,11 +106,9 @@ public sealed partial class DownloadListPage
         _viewModel.FilterTask(sender.Text);
     }
 
-    private bool _queriedBySuggestion;
-
     private void FilterAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
     {
-        sender.Text = ((IDownloadTask)args.SelectedItem).Title;
+        sender.Text = ((IDownloadTask) args.SelectedItem).Title;
         _viewModel.CurrentOption = DownloadListOption.CustomSearch;
         _viewModel.ResetFilter(Enumerates.EnumerableOf((IDownloadTask) args.SelectedItem));
         _queriedBySuggestion = true;

@@ -146,7 +146,7 @@ public static class Enumerates
     }
 
     /// <summary>
-    /// Replace a collection by update transactions, best to use with ObservableCollection
+    ///     Replace a collection by update transactions, best to use with ObservableCollection
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="dest">Collection to be updated</param>

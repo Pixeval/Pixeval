@@ -27,11 +27,15 @@ using Pixeval.Utilities;
 
 namespace Pixeval.UserControls.TokenInput;
 
-public sealed class Token : ObservableObject, IEquatable<Token>, ICloneable
+public sealed partial class Token : ObservableObject, IEquatable<Token>, ICloneable
 {
+    [ObservableProperty]
     private bool _caseSensitive;
 
+    [ObservableProperty]
     private bool _isRegularExpression;
+
+    [ObservableProperty]
     private string _tokenContent;
 
     public Token(string tokenContent, bool caseSensitive, bool isRegularExpression)
@@ -48,24 +52,6 @@ public sealed class Token : ObservableObject, IEquatable<Token>, ICloneable
     public Token()
     {
         _tokenContent = string.Empty;
-    }
-
-    public string TokenContent
-    {
-        get => _tokenContent;
-        set => SetProperty(ref _tokenContent, value);
-    }
-
-    public bool CaseSensitive
-    {
-        get => _caseSensitive;
-        set => SetProperty(ref _caseSensitive, value);
-    }
-
-    public bool IsRegularExpression
-    {
-        get => _isRegularExpression;
-        set => SetProperty(ref _isRegularExpression, value);
     }
 
     public object Clone()

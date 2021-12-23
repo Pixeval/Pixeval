@@ -26,25 +26,15 @@ using System.Collections.Specialized;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Misc;
 
 namespace Pixeval.UserControls;
 
+[DependencyProperty("PrimaryCommandsSupplements", typeof(ObservableCollection<ICommandBarElement>), DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
+[DependencyProperty("SecondaryCommandsSupplements", typeof(ObservableCollection<ICommandBarElement>), DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
+[DependencyProperty("Header", typeof(object))]
 public sealed partial class IllustrationContainer
 {
-    public static DependencyProperty PrimaryCommandSupplementsProperty = DependencyProperty.Register(
-        nameof(PrimaryCommandsSupplements),
-        typeof(ObservableCollection<ICommandBarElement>),
-        typeof(IllustrationContainer),
-        PropertyMetadata.Create(
-            new ObservableCollection<ICommandBarElement>()));
-
-    public static DependencyProperty SecondaryCommandsSupplementsProperty = DependencyProperty.Register(
-        nameof(SecondaryCommandsSupplements),
-        typeof(ObservableCollection<ICommandBarElement>),
-        typeof(IllustrationContainer),
-        PropertyMetadata.Create(
-            new ObservableCollection<ICommandBarElement>()));
-
     public IllustrationContainer()
     {
         InitializeComponent();
@@ -71,29 +61,6 @@ public sealed partial class IllustrationContainer
 
     public IllustrationGridViewModel ViewModel => IllustrationGrid.ViewModel;
 
-    public static readonly DependencyProperty GridHeaderProperty = DependencyProperty.Register(
-        nameof(GridHeader),
-        typeof(object),
-        typeof(IllustrationContainer),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public object GridHeader
-    {
-        get => (object)GetValue(GridHeaderProperty);
-        set => SetValue(GridHeaderProperty, value);
-    }
-
-    public ObservableCollection<ICommandBarElement> PrimaryCommandsSupplements
-    {
-        get => (ObservableCollection<ICommandBarElement>)GetValue(PrimaryCommandSupplementsProperty);
-        set => SetValue(PrimaryCommandSupplementsProperty, value);
-    }
-
-    public ObservableCollection<ICommandBarElement> SecondaryCommandsSupplements
-    {
-        get => (ObservableCollection<ICommandBarElement>)GetValue(SecondaryCommandsSupplementsProperty);
-        set => SetValue(SecondaryCommandsSupplementsProperty, value);
-    }
 
     /// <summary>
     ///     The command elements that will appear at the left of the <see cref="TopCommandBar" />

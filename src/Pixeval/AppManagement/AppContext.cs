@@ -51,13 +51,13 @@ public static class AppContext
 
     public const string AppProtocol = "pixeval";
 
-    public static readonly string DatabaseFilePath = AppKnownFolders.Local.Resolve("PixevalData.litedb");
-
     private const string SessionContainerKey = "Session";
 
     private const string ConfigurationContainerKey = "Config";
 
     public const string AppLogoNoCaptionUri = "ms-appx:///Assets/Images/logo-no-caption.png";
+
+    public static readonly string DatabaseFilePath = AppKnownFolders.Local.Resolve("PixevalData.litedb");
 
     public static readonly AppVersion AppVersion = new(IterationStage.Alpha, 0, 1, 0, 1);
 
@@ -199,9 +199,9 @@ public static class AppContext
         var downloadHistoryManager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         // the HasFlag is not allow in expression tree
         downloadHistoryManager.Delete(entry => entry.State == DownloadState.Running ||
-                                                          entry.State == DownloadState.Queued ||
-                                                          entry.State == DownloadState.Created ||
-                                                          entry.State == DownloadState.Paused);
+                                               entry.State == DownloadState.Queued ||
+                                               entry.State == DownloadState.Created ||
+                                               entry.State == DownloadState.Paused);
         foreach (var observableDownloadTask in downloadHistoryManager.Enumerate())
         {
             App.AppViewModel.DownloadManager.QueueTask(observableDownloadTask);
@@ -209,7 +209,7 @@ public static class AppContext
     }
 
     /// <summary>
-    /// Erase all personal data, including session, configuration and image cache
+    ///     Erase all personal data, including session, configuration and image cache
     /// </summary>
     public static async Task ClearDataAsync()
     {

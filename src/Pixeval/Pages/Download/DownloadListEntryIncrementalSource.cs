@@ -1,4 +1,5 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System.Collections.Generic;
@@ -36,7 +38,7 @@ public class ObservableDownloadTaskIncrementalSource : IIncrementalSource<Observ
         _source = source;
     }
 
-    public Task<IEnumerable<ObservableDownloadTask>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
+    public Task<IEnumerable<ObservableDownloadTask>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new())
     {
         return Task.FromResult(_source.Skip(pageIndex * pageSize).Take(pageSize));
     }

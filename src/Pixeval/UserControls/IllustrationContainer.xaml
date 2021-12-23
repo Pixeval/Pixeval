@@ -17,7 +17,8 @@
                                           IsDefaultCommandsEnabled="{x:Bind TopCommandBar.ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
                                           ViewModel="{x:Bind IllustrationGrid.ViewModel}" />
         <local:IllustrationGrid x:Name="IllustrationGrid"
-                                GridHeader="{x:Bind GridHeader, Mode=OneWay}"
+                                x:FieldModifier="public"
+                                Header="{x:Bind Header, Mode=OneWay}"
             />
     </controls:DockPanel>
 </UserControl>

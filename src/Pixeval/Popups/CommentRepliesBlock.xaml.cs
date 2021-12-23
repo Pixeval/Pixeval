@@ -33,6 +33,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
+using Pixeval.Misc;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.UserControls;
 using Pixeval.Util.IO;
@@ -40,14 +41,9 @@ using Pixeval.Util.UI;
 
 namespace Pixeval.Popups;
 
+[DependencyProperty("ViewModel", typeof(CommentRepliesBlockViewModel), InstanceChangedCallback = true)]
 public sealed partial class CommentRepliesBlock : IAppPopupContent
 {
-    public static DependencyProperty ViewModelProperty = DependencyProperty.Register(
-        nameof(ViewModel),
-        typeof(CommentRepliesBlockViewModel),
-        typeof(CommentRepliesBlock),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue, ViewModelChangedCallback));
-
     private EventHandler<TappedRoutedEventArgs>? _closeButtonTapped;
 
     public CommentRepliesBlock()
@@ -56,11 +52,6 @@ public sealed partial class CommentRepliesBlock : IAppPopupContent
         InitializeComponent();
     }
 
-    public CommentRepliesBlockViewModel ViewModel
-    {
-        get => (CommentRepliesBlockViewModel) GetValue(ViewModelProperty);
-        set => SetValue(ViewModelProperty, value);
-    }
 
     public Guid UniqueId { get; }
 
@@ -72,7 +63,7 @@ public sealed partial class CommentRepliesBlock : IAppPopupContent
         remove => _closeButtonTapped -= value;
     }
 
-    private static void ViewModelChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var block = (CommentRepliesBlock) d;
         var viewModel = (CommentRepliesBlockViewModel) e.NewValue;

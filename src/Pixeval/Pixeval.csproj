@@ -94,6 +94,7 @@
 		<None Remove="Strings\zh-CN\IllustrationInfoPage.resw" />
 		<None Remove="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
 		<None Remove="Strings\zh-CN\IllustrationViewerPage.resw" />
+		<None Remove="Strings\zh-CN\IllustratorPage.resw" />
 		<None Remove="Strings\zh-CN\ImageViewerPage.resw" />
 		<None Remove="Strings\zh-CN\MacroParser.resw" />
 		<None Remove="Strings\zh-CN\PixivReplyBar.resw" />
@@ -263,6 +264,7 @@
 		<PRIResource Include="Strings\zh-CN\IllustrationInfoPage.resw" />
 		<PRIResource Include="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
 		<PRIResource Include="Strings\zh-CN\IllustrationViewerPage.resw" />
+		<PRIResource Include="Strings\zh-CN\IllustratorPage.resw" />
 		<PRIResource Include="Strings\zh-CN\ImageViewerPage.resw" />
 		<PRIResource Include="Strings\zh-CN\LoginPage.resw" />
 		<PRIResource Include="Strings\zh-CN\MacroParser.resw" />

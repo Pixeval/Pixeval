@@ -29,7 +29,7 @@ public enum DownloadState
     Queued,
 
     Running,
-        
+
     Cancelled,
 
     Error,

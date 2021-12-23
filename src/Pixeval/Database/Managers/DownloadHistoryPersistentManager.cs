@@ -1,4 +1,5 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -16,13 +17,13 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using LiteDB;
 using Pixeval.Download;
 
@@ -30,7 +31,13 @@ namespace Pixeval.Database.Managers;
 
 public class DownloadHistoryPersistentManager : IPersistentManager<DownloadHistoryEntry, ObservableDownloadTask>
 {
-    public ILiteCollection<DownloadHistoryEntry> Collection { get; init; } = null!;
+    public DownloadHistoryPersistentManager(ILiteDatabase collection, int maximumRecords)
+    {
+        Collection = collection.GetCollection<DownloadHistoryEntry>(nameof(DownloadHistoryEntry));
+        MaximumRecords = maximumRecords;
+    }
+
+    public ILiteCollection<DownloadHistoryEntry> Collection { get; init; }
 
     public int MaximumRecords { get; set; }
 
@@ -40,12 +47,13 @@ public class DownloadHistoryPersistentManager : IPersistentManager<DownloadHisto
         {
             Purge(MaximumRecords);
         }
+
         Collection.Insert(t);
         t.PropertyChanged += (_, _) =>
         {
             if (Collection.Find(entry => entry.Destination == t.Destination).Any())
             {
-                 Collection.Update(t);
+                Collection.Update(t);
             }
         };
     }
@@ -59,9 +67,15 @@ public class DownloadHistoryPersistentManager : IPersistentManager<DownloadHisto
     {
         var query = Collection.FindAll();
         if (count.HasValue)
+        {
             query = query.Take(count.Value);
+        }
+
         if (predicate != null)
+        {
             query = query.Where(predicate.Compile());
+        }
+
         return query.Select(ToObservableDownloadTask);
     }
 
