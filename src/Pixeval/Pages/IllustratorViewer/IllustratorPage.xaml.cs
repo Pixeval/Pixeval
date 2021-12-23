@@ -168,7 +168,6 @@ namespace Pixeval.Pages.Capability
             // Get backing visuals for the text blocks so that their properties can be animated
             var blurbVisual = ElementCompositionPreview.GetElementVisual(Blurb);
             var subtitleVisual = ElementCompositionPreview.GetElementVisual(SubtitleBlock);
-            var moreVisual = ElementCompositionPreview.GetElementVisual(MoreText);
 
             // Create an ExpressionAnimation that moves between 1 and 0 with scroll progress, to be used for text block opacity
             ExpressionNode textOpacityAnimation = ExpressionFunctions.Clamp(1 - (progressNode * 2), 0, 1);
@@ -181,10 +180,6 @@ namespace Pixeval.Pages.Capability
             subtitleVisual.StartAnimation("Opacity", textOpacityAnimation);
             subtitleVisual.StartAnimation("Scale.X", scaleAnimation);
             subtitleVisual.StartAnimation("Scale.Y", scaleAnimation);
-
-            moreVisual.StartAnimation("Opacity", textOpacityAnimation);
-            moreVisual.StartAnimation("Scale.X", scaleAnimation);
-            moreVisual.StartAnimation("Scale.Y", scaleAnimation);
 
             // Get the backing visuals for the text and button containers so that their properites can be animated
             var textVisual = ElementCompositionPreview.GetElementVisual(TextContainer);

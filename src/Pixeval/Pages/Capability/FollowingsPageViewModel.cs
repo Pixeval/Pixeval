@@ -45,7 +45,7 @@ public partial class FollowingsPageViewModel : ObservableObject
         {
             var model = new IllustratorViewModel(user.UserInfo!);
             _illustrators.Add(model);
-            _ = model.Load();
+            _ = model.LoadThumbnail();
         }
     }
 }
