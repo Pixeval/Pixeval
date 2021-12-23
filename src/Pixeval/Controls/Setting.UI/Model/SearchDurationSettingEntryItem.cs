@@ -29,8 +29,6 @@ namespace Pixeval.Controls.Setting.UI.Model;
 
 public record SearchDurationSettingEntryItem : IStringRepresentableItem
 {
-    public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<SearchDuration>().Select(s => new SearchDurationSettingEntryItem(s));
-
     public SearchDurationSettingEntryItem(SearchDuration item)
     {
         Item = item;
@@ -43,6 +41,8 @@ public record SearchDurationSettingEntryItem : IStringRepresentableItem
             _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
         };
     }
+
+    public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<SearchDuration>().Select(s => new SearchDurationSettingEntryItem(s));
 
     public object Item { get; }
     public string StringRepresentation { get; }

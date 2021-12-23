@@ -29,8 +29,6 @@ namespace Pixeval.Controls.Setting.UI.Model;
 
 public record TargetPlatformSettingEntryItem : IStringRepresentableItem
 {
-    public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<TargetFilter>().Select(t => new TargetPlatformSettingEntryItem(t));
-
     public TargetPlatformSettingEntryItem(TargetFilter item)
     {
         Item = item;
@@ -41,6 +39,8 @@ public record TargetPlatformSettingEntryItem : IStringRepresentableItem
             _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
         };
     }
+
+    public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<TargetFilter>().Select(t => new TargetPlatformSettingEntryItem(t));
 
     public object Item { get; }
 

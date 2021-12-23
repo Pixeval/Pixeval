@@ -29,7 +29,7 @@
         </CommandBar>
         
         <userControls:IllustrationGrid x:Name="IllustrationGrid">
-            <userControls:IllustrationGrid.GridHeader>
+            <userControls:IllustrationGrid.Header>
                 <Grid x:Name="Header" Height="200" VerticalAlignment="Top">
                     <Rectangle x:Name="BackgroundRectangle" Height="200" Width="1050" HorizontalAlignment="Left" VerticalAlignment="Top" >
                         <Rectangle.Fill>
@@ -78,7 +78,7 @@
                         </StackPanel>
                     </StackPanel>
                 </Grid>
-            </userControls:IllustrationGrid.GridHeader>
+            </userControls:IllustrationGrid.Header>
         </userControls:IllustrationGrid>
     </controls1:DockPanel>
 </controls:EnhancedPage>

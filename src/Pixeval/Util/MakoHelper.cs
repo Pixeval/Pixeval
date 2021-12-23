@@ -35,7 +35,6 @@ using Pixeval.Options;
 using Pixeval.Util.Generic;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
-using Enumerates = Pixeval.Utilities.Enumerates;
 
 namespace Pixeval.Util;
 

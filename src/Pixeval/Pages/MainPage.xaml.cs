@@ -32,7 +32,9 @@ using Windows.System;
 using Windows.UI.Core;
 using CommunityToolkit.WinUI.UI;
 using CommunityToolkit.WinUI.UI.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -40,6 +42,9 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
+using Pixeval.Database;
+using Pixeval.Database.Managers;
+using Pixeval.Dialogs;
 using Pixeval.Download;
 using Pixeval.Messages;
 using Pixeval.Pages.Capability;
@@ -48,11 +53,6 @@ using Pixeval.Pages.Misc;
 using Pixeval.UserControls;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Pixeval.Database;
-using Pixeval.Database.Managers;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Input;
-using Pixeval.Dialogs;
 using Image = SixLabors.ImageSharp.Image;
 
 namespace Pixeval.Pages;
@@ -66,6 +66,7 @@ public sealed partial class MainPage
     private static IllustrationViewModel? _illustrationViewerContent;
 
     private readonly MainPageViewModel _viewModel = new();
+
     public MainPage()
     {
         InitializeComponent();
@@ -91,7 +92,7 @@ public sealed partial class MainPage
 
         WeakReferenceMessenger.Default.Register<MainPage, MainPageFrameSetConnectedAnimationTargetMessage>(this, (_, message) => _connectedAnimationTarget = message.Sender);
         WeakReferenceMessenger.Default.Register<MainPage, NavigatingBackToMainPageMessage>(this, (_, message) => _illustrationViewerContent = message.IllustrationViewModel);
-        WeakReferenceMessenger.Default.Register<MainPage, IllustrationTagClickedMessage>(this,  (_, message) =>  PerformSearch(message.Tag));
+        WeakReferenceMessenger.Default.Register<MainPage, IllustrationTagClickedMessage>(this, (_, message) => PerformSearch(message.Tag));
 
         // Connected animation to the element located in MainPage
         if (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation") is { } animation)
@@ -122,6 +123,7 @@ public sealed partial class MainPage
             MainPageRootFrame.Navigate(typeof(DownloadListPage), App.AppViewModel.DownloadManager.QueuedTasks.Where(task => task is not IIntrinsicDownloadTask));
             return;
         }
+
         MainPageRootFrame.NavigateByNavigationViewTag(sender, new SuppressNavigationTransitionInfo());
     }
 
@@ -131,14 +133,16 @@ public sealed partial class MainPage
         GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
         GC.Collect();
     }
-        
+
     private void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
     {
         var suggestBox = (AutoSuggestBox) sender;
         suggestBox.IsSuggestionListOpen = true;
 
-        if (!_viewModel.Suggestions.Any()) 
-             _viewModel.AppendSearchHistory(); // Show search history
+        if (!_viewModel.Suggestions.Any())
+        {
+            _viewModel.AppendSearchHistory(); // Show search history
+        }
     }
 
     // 搜索并跳转至搜索结果
@@ -152,7 +156,7 @@ public sealed partial class MainPage
             return;
         }
 
-         PerformSearch(args.QueryText);
+        PerformSearch(args.QueryText);
     }
 
     private void KeywordAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
@@ -175,7 +179,7 @@ public sealed partial class MainPage
             items.Clear();
 
             // Show search history
-             _viewModel.AppendSearchHistory();
+            _viewModel.AppendSearchHistory();
         }
     }
 
@@ -187,7 +191,7 @@ public sealed partial class MainPage
             manager.Insert(new SearchHistoryEntry
             {
                 Value = text,
-                Time = DateTime.Now,
+                Time = DateTime.Now
             });
         }
 
@@ -236,6 +240,7 @@ public sealed partial class MainPage
                         await ShowReverseSearchApiKeyNotPresentDialog();
                         return;
                     }
+
                     await _viewModel.ReverseSearchAsync(stream);
                 }
             }

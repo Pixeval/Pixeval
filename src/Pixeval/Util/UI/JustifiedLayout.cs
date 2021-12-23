@@ -1,23 +1,23 @@
-﻿#region Copyright 2019 SmugMug, Inc.
-// The MIT License (MIT)
+﻿#region Copyright (c) Pixeval/Pixeval
 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and / or sell copies
-// of the Software, and to permit persons to whom the Software is furnished to do
-// so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// GPL v3 License
+// 
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/JustifiedLayout.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
@@ -28,24 +28,24 @@ using Microsoft.UI.Xaml;
 namespace Pixeval.Util.UI;
 
 /// <summary>
-/// Flickr's Justified Layout in C#
-/// https://github.com/flickr/justified-layout
+///     Flickr's Justified Layout in C#
+///     https://github.com/flickr/justified-layout
 /// </summary>
 public class JustifiedLayout
 {
-    public JustifiedLayoutConfig Config { get; set; }
-
-    public List<JustifiedLayoutRow> Rows = new();
+    public double ContainerHeight;
 
     public List<LayoutItem> LayoutItems = new();
 
-    public double ContainerHeight;
+    public List<JustifiedLayoutRow> Rows = new();
 
     public JustifiedLayout(JustifiedLayoutConfig? config = null)
     {
         Config = config ?? new JustifiedLayoutConfig();
         ContainerHeight = Config.ContainerPadding.Top;
     }
+
+    public JustifiedLayoutConfig Config { get; set; }
 
     public JustifiedLayoutRow CreateNewRow()
     {
@@ -114,7 +114,11 @@ public class JustifiedLayout
             // Attempt to add item to the current row.
             itemAdded = currentRow.AddItem(itemData);
 
-            if (!currentRow.IsLayoutComplete()) return false;
+            if (!currentRow.IsLayoutComplete())
+            {
+                return false;
+            }
+
             // Row is filled; add it and start a new one
             laidOutItems.AddRange(AddRow(currentRow));
 
@@ -126,16 +130,25 @@ public class JustifiedLayout
             currentRow = CreateNewRow();
 
             // Item was rejected; add it to its own row
-            if (itemAdded) return false;
+            if (itemAdded)
+            {
+                return false;
+            }
+
             itemAdded = currentRow.AddItem(itemData);
 
-            if (!currentRow.IsLayoutComplete()) return false;
+            if (!currentRow.IsLayoutComplete())
+            {
+                return false;
+            }
+
             // If the rejected item fills a row on its own, add the row and start another new one
             laidOutItems.AddRange(AddRow(currentRow));
             if (Rows.Count >= Config.MaxNumRows)
             {
                 return true;
             }
+
             currentRow = CreateNewRow();
 
             return false;
@@ -145,7 +158,6 @@ public class JustifiedLayout
         // in this layout update, and in the total content set.
         if (currentRow != null && currentRow.Items.Count > 0 && Config.ShowWidows)
         {
-
             // Last page of all content or orphan suppression is suppressed; lay out orphans.
             if (Rows.Count > 0)
             {
@@ -156,14 +168,12 @@ public class JustifiedLayout
             }
             else
             {
-
                 // ...else use target height if there is no other row height to reference.
                 currentRow.ForceComplete();
-
             }
+
             laidOutItems.AddRange(AddRow(currentRow));
             Config.WidowCount = currentRow.Items.Count;
-
         }
 
         // We need to clean up the bottom container padding
@@ -190,9 +200,6 @@ public record ComputedLayout
 
 public record Spacing
 {
-    public int Horizontal { get; set; }
-    public int Vertical { get; set; }
-
     public Spacing(int horizontal, int vertical)
     {
         Horizontal = horizontal;
@@ -204,6 +211,9 @@ public record Spacing
         Horizontal = value;
         Vertical = value;
     }
+
+    public int Horizontal { get; set; }
+    public int Vertical { get; set; }
 }
 
 public record JustifiedLayoutConfig
@@ -224,6 +234,14 @@ public record JustifiedLayoutConfig
 
 public class JustifiedLayoutRow
 {
+    public IList<LayoutItem> Items;
+
+    public JustifiedLayoutRow()
+    {
+        Height = 0;
+        Items = new List<LayoutItem>();
+    }
+
     public double Top { get; set; }
     public double Left { get; set; }
     public double Height { get; set; }
@@ -241,14 +259,6 @@ public class JustifiedLayoutRow
     public WidowLayoutStyle LayoutStyle { get; set; }
     public bool IsBreakoutRow { get; set; }
 
-    public IList<LayoutItem> Items;
-
-    public JustifiedLayoutRow()
-    {
-        Height = 0;
-        Items = new List<LayoutItem>();
-    }
-
     public JustifiedLayoutRow Init()
     {
         MinAspectRatio = Width / TargetRowHeight * (1 - TargetRowHeightTolerance);
@@ -256,7 +266,10 @@ public class JustifiedLayoutRow
         return this;
     }
 
-    public bool IsLayoutComplete() => Height > 0;
+    public bool IsLayoutComplete()
+    {
+        return Height > 0;
+    }
 
 
     public bool AddItem(LayoutItem itemData)
@@ -287,30 +300,25 @@ public class JustifiedLayoutRow
 
         if (newAspectRatio < MinAspectRatio)
         {
-
             // New aspect ratio is too narrow / scaled row height is too tall.
             // Accept this item and leave row open for more items.
             Items.Add(itemData with { });
             return true;
-
         }
 
         if (newAspectRatio > MaxAspectRatio)
         {
-
             // New aspect ratio is too wide / scaled row height will be too short.
             // Accept item if the resulting aspect ratio is closer to target than it would be without the item.
             // NOTE: Any row that falls into this block will require cropping/padding on individual items.
 
             if (Items.Count == 0)
             {
-
                 // When there are no existing items, force acceptance of the new item and complete the layout.
                 // This is the pano special case.
                 Items.Add(itemData with { });
                 CompleteLayout(rowWidthWithoutSpacing / newAspectRatio, WidowLayoutStyle.Justify);
                 return true;
-
             }
 
             // Calculate width/aspect ratio for row before adding new item
@@ -320,11 +328,9 @@ public class JustifiedLayoutRow
 
             if (Math.Abs(newAspectRatio - targetAspectRatio) > Math.Abs(previousAspectRatio - previousTargetAspectRatio))
             {
-
                 // Row with new item is us farther away from target than row without; complete layout and reject item.
                 CompleteLayout(previousRowWidthWithoutSpacing / previousAspectRatio, WidowLayoutStyle.Justify);
                 return false;
-
             }
 
             // Row with new item is us closer to target than row without;
@@ -332,7 +338,6 @@ public class JustifiedLayoutRow
             Items.Add(itemData with { });
             CompleteLayout(rowWidthWithoutSpacing / newAspectRatio, WidowLayoutStyle.Justify);
             return true;
-
         }
 
         // New aspect ratio / scaled row height is within tolerance;
@@ -350,7 +355,6 @@ public class JustifiedLayoutRow
 	 * @param newHeight {Number} Set row height to this value.
 	 * @param widowLayoutStyle {String} How should widows display? Supported: left | justify | center
 	 */
-
     public void CompleteLayout(double newHeight, WidowLayoutStyle? widowLayoutStyle)
     {
         var itemWidthSum = Left;
@@ -365,21 +369,17 @@ public class JustifiedLayoutRow
 
         if (newHeight != clampedHeight)
         {
-
             // If row height was clamped, the resulting row/item aspect ratio will be off,
             // so force it to fit the width (recalculate aspectRatio to match clamped height).
             // NOTE: this will result in cropping/padding commensurate to the amount of clamping.
             Height = clampedHeight;
             clampedToNativeRatio = rowWidthWithoutSpacing / clampedHeight / (rowWidthWithoutSpacing / newHeight);
-
         }
         else
         {
-
             // If not clamped, leave ratio at 1.0.
             Height = newHeight;
             clampedToNativeRatio = 1.0;
-
         }
 
         // Compute item geometry based on newHeight.
@@ -403,53 +403,51 @@ public class JustifiedLayoutRow
             // If specified, ensure items fill row and distribute error
             // caused by rounding width and height across all items.
             case WidowLayoutStyle.Justify:
+            {
+                itemWidthSum -= Spacing + Left;
+
+                var errorWidthPerItem = (itemWidthSum - Width) / Items.Count;
+                var roundedCumulativeErrors = Items.Select((_, i) => Math.Round((i + 1) * errorWidthPerItem)).ToList();
+
+
+                if (Items.Count == 1)
                 {
-                    itemWidthSum -= Spacing + Left;
-
-                    var errorWidthPerItem = (itemWidthSum - Width) / Items.Count;
-                    var roundedCumulativeErrors = Items.Select((_, i) => Math.Round((i + 1) * errorWidthPerItem)).ToList();
-
-
-                    if (Items.Count == 1)
+                    // For rows with only one item, adjust item width to fill row.
+                    var singleItemGeometry = Items[0];
+                    singleItemGeometry.Width -= Math.Round(errorWidthPerItem);
+                }
+                else
+                {
+                    // For rows with multiple items, adjust item width and shift items to fill the row,
+                    // while maintaining equal spacing between items in the row.
+                    for (var i = 0; i < Items.Count; i++)
                     {
-
-                        // For rows with only one item, adjust item width to fill row.
-                        var singleItemGeometry = Items[0];
-                        singleItemGeometry.Width -= Math.Round(errorWidthPerItem);
-                    }
-                    else
-                    {
-
-                        // For rows with multiple items, adjust item width and shift items to fill the row,
-                        // while maintaining equal spacing between items in the row.
-                        for (var i = 0; i < Items.Count; i++)
+                        var item = Items[i];
+                        if (i > 0)
                         {
-                            var item = Items[i];
-                            if (i > 0)
-                            {
-                                item.Left -= roundedCumulativeErrors[i - 1];
-                                item.Width -= roundedCumulativeErrors[i] - roundedCumulativeErrors[i - 1];
-                            }
-                            else
-                            {
-                                item.Width -= roundedCumulativeErrors[i];
-                            }
+                            item.Left -= roundedCumulativeErrors[i - 1];
+                            item.Width -= roundedCumulativeErrors[i] - roundedCumulativeErrors[i - 1];
                         }
-
+                        else
+                        {
+                            item.Width -= roundedCumulativeErrors[i];
+                        }
                     }
-
-                    break;
                 }
+
+                break;
+            }
             case WidowLayoutStyle.Center:
+            {
+                // Center widows
+                var centerOffset = (Width - itemWidthSum) / 2;
+                foreach (var item in Items)
                 {
-                    // Center widows
-                    var centerOffset = (Width - itemWidthSum) / 2;
-                    foreach (var item in Items)
-                    {
-                        item.Left += centerOffset + Spacing;
-                    }
-                    break;
+                    item.Left += centerOffset + Spacing;
                 }
+
+                break;
+            }
         }
     }
 
@@ -467,15 +465,6 @@ public class JustifiedLayoutRow
 
 public record LayoutItem
 {
-    public double AspectRatio { get; set; }
-    public double? ForceAspectRatio { get; set; }
-    public double Top { get; set; }
-    public double Left { get; set; }
-    public double Width { get; set; }
-    public double Height { get; set; }
-
-    public Thickness Margin => new(Left, Top, 0, 0);
-
     public LayoutItem(double ratio)
     {
         AspectRatio = ratio;
@@ -485,6 +474,15 @@ public record LayoutItem
     {
         AspectRatio = width / height;
     }
+
+    public double AspectRatio { get; set; }
+    public double? ForceAspectRatio { get; set; }
+    public double Top { get; set; }
+    public double Left { get; set; }
+    public double Width { get; set; }
+    public double Height { get; set; }
+
+    public Thickness Margin => new(Left, Top, 0, 0);
 }
 
 public enum WidowLayoutStyle

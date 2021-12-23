@@ -34,9 +34,9 @@ public class IllustratorViewModel : ObservableObject, IIllustrationVisualizer
     public IFetchEngine<Illustration?> FetchEngine => App.AppViewModel.MakoClient.Posts(Id.ToString());
 
     public long Id { get; set; }
-    
+
     public string? Account { get; set; }
-    
+
     public string? Comment { get; set; }
 
     public ObservableCollection<IllustrationViewModel> Illustrations { get; }

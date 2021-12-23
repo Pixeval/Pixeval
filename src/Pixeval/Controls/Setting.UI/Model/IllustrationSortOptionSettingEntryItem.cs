@@ -29,8 +29,6 @@ namespace Pixeval.Controls.Setting.UI.Model;
 
 public record IllustrationSortOptionSettingEntryItem : IStringRepresentableItem
 {
-    public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } =  Enum.GetValues<IllustrationSortOption>().Select(i => new IllustrationSortOptionSettingEntryItem(i));
-
     public IllustrationSortOptionSettingEntryItem(IllustrationSortOption item)
     {
         Item = item;
@@ -43,6 +41,8 @@ public record IllustrationSortOptionSettingEntryItem : IStringRepresentableItem
             _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
         };
     }
+
+    public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<IllustrationSortOption>().Select(i => new IllustrationSortOptionSettingEntryItem(i));
 
     public object Item { get; }
 

@@ -1,4 +1,5 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using Pixeval.Util.Threading;
@@ -30,7 +32,7 @@ public class DownloadStartingDeferral
     }
 
     /// <summary>
-    /// Set its result to <see langword="true"/> if you want the download to proceed, otherwise, <see langword="false"/>
+    ///     Set its result to <see langword="true" /> if you want the download to proceed, otherwise, <see langword="false" />
     /// </summary>
     public ReenterableAwaiter<bool> Signal { get; }
 
@@ -40,8 +42,8 @@ public class DownloadStartingDeferral
     }
 
     /// <summary>
-    /// Sets the value of <see cref="Signal"/> <br></br>
-    /// Pass <see langword="true"/> if you want the download to proceed, otherwise, <see langword="false"/>
+    ///     Sets the value of <see cref="Signal" /> <br></br>
+    ///     Pass <see langword="true" /> if you want the download to proceed, otherwise, <see langword="false" />
     /// </summary>
     /// <param name="value"></param>
     public void Complete(bool value)

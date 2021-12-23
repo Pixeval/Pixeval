@@ -1,4 +1,5 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
@@ -31,12 +33,17 @@ namespace Pixeval.Download;
 
 public class IllustrationDownloadTask : ObservableDownloadTask, IIllustrationViewModelProvider
 {
-    public IllustrationViewModel IllustrationViewModel { get; }
-
     public IllustrationDownloadTask(DownloadHistoryEntry dataBaseEntry, IllustrationViewModel illustrationViewModel) : base(dataBaseEntry)
     {
         IllustrationViewModel = illustrationViewModel;
         CurrentState = DownloadState.Created;
+    }
+
+    public IllustrationViewModel IllustrationViewModel { get; }
+
+    public Task<IllustrationViewModel> GetViewModelAsync()
+    {
+        return Task.FromResult(IllustrationViewModel);
     }
 
     public override async void DownloadStarting(DownloadStartingEventArgs args)
@@ -49,6 +56,7 @@ public class IllustrationDownloadTask : ObservableDownloadTask, IIllustrationVie
             deferral.Complete(false);
             return;
         }
+
         if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(IllustrationViewModel.Illustration.GetIllustrationOriginalImageCacheKey()) is { } stream)
         {
             // fast path
@@ -69,14 +77,11 @@ public class IllustrationDownloadTask : ObservableDownloadTask, IIllustrationVie
                 ErrorCause = e;
                 return;
             }
+
             CurrentState = DownloadState.Completed;
         }
+
         // slow path
         deferral.Complete(true);
-    }
-
-    public Task<IllustrationViewModel> GetViewModelAsync()
-    {
-        return Task.FromResult(IllustrationViewModel);
     }
 }

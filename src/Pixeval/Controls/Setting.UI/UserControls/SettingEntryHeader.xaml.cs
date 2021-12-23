@@ -24,29 +24,15 @@ using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Pixeval.Misc;
 
 namespace Pixeval.Controls.Setting.UI.UserControls;
 
+[DependencyProperty("Header", typeof(string), InstanceChangedCallback = true)]
+[DependencyProperty("Description", typeof(object), InstanceChangedCallback = true)]
+[DependencyProperty("Icon", typeof(IconElement), InstanceChangedCallback = true)]
 public sealed partial class SettingEntryHeader
 {
-    public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(
-        nameof(Header),
-        typeof(string),
-        typeof(SettingEntryHeader),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue, HeaderChanged));
-
-    public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register(
-        nameof(Description),
-        typeof(object),
-        typeof(SettingEntryHeader),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue, DescriptionChanged));
-
-    public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
-        nameof(Icon),
-        typeof(IconElement),
-        typeof(SettingEntryHeader),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue, IconChanged));
-
     public SettingEntryHeader()
     {
         InitializeComponent();
@@ -60,25 +46,7 @@ public sealed partial class SettingEntryHeader
         };
     }
 
-    public string Header
-    {
-        get => (string) GetValue(HeaderProperty);
-        set => SetValue(HeaderProperty, value);
-    }
-
-    public object Description
-    {
-        get => GetValue(DescriptionProperty);
-        set => SetValue(DescriptionProperty, value);
-    }
-
-    public IconElement Icon
-    {
-        get => (IconElement) GetValue(IconProperty);
-        set => SetValue(IconProperty, value);
-    }
-
-    private static void HeaderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnHeaderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (e.NewValue is string str)
         {
@@ -86,7 +54,7 @@ public sealed partial class SettingEntryHeader
         }
     }
 
-    private static void DescriptionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnDescriptionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (e.NewValue is { } content)
         {
@@ -94,7 +62,7 @@ public sealed partial class SettingEntryHeader
         }
     }
 
-    private static void IconChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnIconChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var presenter = ((SettingEntryHeader) d).IconContentPresenter;
         if (e.NewValue is IconElement icon)

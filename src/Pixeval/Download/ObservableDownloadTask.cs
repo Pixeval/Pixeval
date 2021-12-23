@@ -1,4 +1,5 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
@@ -26,8 +28,16 @@ using Pixeval.Util.Threading;
 
 namespace Pixeval.Download;
 
-public class ObservableDownloadTask : ObservableObject, IDownloadTask
+public partial class ObservableDownloadTask : ObservableObject, IDownloadTask
 {
+    private Exception? _errorCause;
+
+    [ObservableProperty]
+    private double _progressPercentage;
+
+    [ObservableProperty]
+    private bool _selected;
+
     protected ObservableDownloadTask(DownloadHistoryEntry entry)
     {
         DatabaseEntry = entry;
@@ -48,7 +58,7 @@ public class ObservableDownloadTask : ObservableObject, IDownloadTask
     public string Destination => DatabaseEntry.Destination!;
 
     public string? Thumbnail => DatabaseEntry.Thumbnail;
-         
+
     public CancellationHandle CancellationHandle { get; set; }
 
     public TaskCompletionSource Completion { get; }
@@ -59,8 +69,6 @@ public class ObservableDownloadTask : ObservableObject, IDownloadTask
         set => SetProperty(DatabaseEntry.State, value, DatabaseEntry, (entry, state) => entry.State = state);
     }
 
-    private Exception? _errorCause;
-
     public Exception? ErrorCause
     {
         get => _errorCause;
@@ -69,22 +77,6 @@ public class ObservableDownloadTask : ObservableObject, IDownloadTask
             _errorCause = value;
             entry.ErrorCause = exception?.ToString();
         });
-    }
-
-    private double _progressPercentage;
-
-    public double ProgressPercentage
-    {
-        get => _progressPercentage;
-        set => SetProperty(ref _progressPercentage, value);
-    }
-
-    private bool _selected;
-
-    public bool Selected
-    {
-        get => _selected;
-        set => SetProperty(ref _selected, value);
     }
 
     public virtual void DownloadStarting(DownloadStartingEventArgs args)
