@@ -66,9 +66,12 @@
 		<None Remove="Controls\Setting.UI\SliderSettingEntry\SliderSettingEntry.xaml" />
 		<None Remove="Controls\Setting.UI\SwitchSettingEntry\SwitchSettingEntry.xaml" />
 		<None Remove="Controls\Setting.UI\UserControls\SettingEntryHeader.xaml" />
+		<None Remove="Controls\SlideView\Slide.xaml" />
+		<None Remove="Controls\SlideView\SlideView.xaml" />
 		<None Remove="Controls\TokenInputTextBox\TokenInputTextBox.xaml" />
 		<None Remove="Dialogs\ReverseSearchApiKeyNotPresentDialog.xaml" />
 		<None Remove="Pages\Capability\FollowingsPage.xaml" />
+		<None Remove="Pages\Capability\SpotlightPage.xaml" />
 		<None Remove="Pages\Download\DownloadListEntry.xaml" />
 		<None Remove="Pages\IllustrationViewer\CommentRepliesPage.xaml" />
 		<None Remove="Pages\IllustrationViewer\PixivReplyEmojiListPage.xaml" />
@@ -304,12 +307,21 @@
 		<Page Update="Pages\Capability\FollowingsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
+		<Page Update="Controls\SlideView\SlideView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Controls\SlideView\Slide.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
 		<None Update="Pages\Capability\RecentPostsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</None>
 		<None Update="Pages\Capability\SearchResultsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</None>
+		<Page Update="Pages\Capability\SpotlightPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
 		<Page Update="Pages\Misc\AboutPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>

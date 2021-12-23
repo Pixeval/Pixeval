@@ -27,8 +27,8 @@ using Pixeval.Misc;
 
 namespace Pixeval.Controls.IconButton;
 
-[DependencyProperty("Text", typeof(string))]
-[DependencyProperty("Icon", typeof(IconElement))]
+[DependencyProperty("Text", typeof(string), InstanceChangedCallback = true)]
+[DependencyProperty("Icon", typeof(IconElement), InstanceChangedCallback = true)]
 public partial class IconButton : Button
 {
     public IconButton()

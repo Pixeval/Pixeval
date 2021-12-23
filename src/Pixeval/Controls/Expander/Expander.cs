@@ -37,7 +37,7 @@ namespace Pixeval.Controls.Expander;
 [TemplateVisualState(GroupName = "CommonStates", Name = "Expanded")]
 [DependencyProperty("HeaderHeight", typeof(double), InstanceChangedCallback = true)]
 [DependencyProperty("NegativeHeaderHeight", typeof(double))]
-[DependencyProperty("IsExpanded", typeof(bool), DefaultValue = "false")]
+[DependencyProperty("IsExpanded", typeof(bool), DefaultValue = "false", InstanceChangedCallback = true)]
 [DependencyProperty("Header", typeof(object))]
 public sealed partial class Expander : ContentControl
 {
@@ -65,7 +65,7 @@ public sealed partial class Expander : ContentControl
         }
     }
 
-    private static void IsExpandedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnIsExpandedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (e.NewValue is bool value && d is Expander { _expandOrFoldExpanderPresenter: { } presenter } expander)
         {
