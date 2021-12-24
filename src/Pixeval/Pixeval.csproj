@@ -26,6 +26,9 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<DefineConstants Condition="'$(Configuration)' == 'Debug'">TRACE;DEBUG</DefineConstants>
 	</PropertyGroup>
+	<PropertyGroup>
+		<IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
+	</PropertyGroup>
 	<ItemGroup>
 		<ProjectCapability Include="TestContainer" />
 	</ItemGroup>

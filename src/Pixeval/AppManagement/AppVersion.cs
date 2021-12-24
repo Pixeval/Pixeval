@@ -21,6 +21,7 @@
 #endregion
 
 using System;
+using Windows.ApplicationModel.Activation;
 
 namespace Pixeval.AppManagement;
 
@@ -31,7 +32,7 @@ public enum IterationStage
 }
 
 // A slightly modified semantic version
-public record AppVersion(IterationStage Stage, int Major, int Minor, int Patch, int? PreReleaseSpecifier = null) : IComparable<AppVersion>
+internal record AppVersion(int Major, int Minor, int Patch, IterationStage Stage, int? PreReleaseSpecifier = null) : IComparable<AppVersion>
 {
     public int CompareTo(AppVersion? other)
     {
