@@ -137,6 +137,10 @@
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.1.2" />
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.2" />
+		<PackageReference Include="GitVersion.MsBuild" Version="5.8.1">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="LiteDB" Version="5.0.11" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
 		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.0" />
@@ -153,7 +157,6 @@
 		<PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
 		<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta13" />
 		<PackageReference Include="System.Linq.Async" Version="5.1.0" />
-		<PackageReference Include="Nerdbank.GitVersioning" Version="3.4.244" PrivateAssets="All" Condition="!Exists('packages.config')" />
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
 	<!-- #region Exposes PRI resources to the source generator -->

@@ -54,7 +54,7 @@ public sealed partial class SettingsPage
 
     private void SettingsPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        CheckForUpdatesEntry.Header = ThisAssembly.AssemblyInformationalVersion;
+        CheckForUpdatesEntry.Header = GitVersionInformation.SemVer;
     }
 
     private void SingleSelectionSettingEntry_OnSelectionChanged(SingleSelectionSettingEntry sender, SelectionChangedEventArgs args)
