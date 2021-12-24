@@ -14,7 +14,9 @@ namespace Pixeval.Database.Managers;
 public abstract class SimplePersistentManager<T> : IPersistentManager<T, T>
     where T : new()
 {
+#nullable disable
     public ILiteCollection<T> Collection { get; init; }
+#nullable restore
     public int MaximumRecords { get; set; }
     public void Insert(T t)
     {

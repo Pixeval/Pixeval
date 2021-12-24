@@ -45,7 +45,7 @@ public class DownloadHistoryEntry : ObservableObject
 
     }
     [BsonId(true)]
-    public ObjectId DownloadHistoryEntryId { get; set; }
+    public ObjectId? DownloadHistoryEntryId { get; set; }
     public string? Destination { get; set; }
 
     public DownloadItemType Type { get; set; }
