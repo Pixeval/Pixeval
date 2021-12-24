@@ -1,13 +1,16 @@
 name: CD
 
 on:
+  workflow_dispatch:
   push:
     tags:
-      - 'v\d+(?:\.\d+)?'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
   
 
 jobs:
-    release:
+    create_release:
+        outputs:
+            release_upload_url: ${{ steps.create_release.outputs.upload_url }}
         runs-on: windows-2022
         steps:
           - name: Create release
@@ -21,6 +24,7 @@ jobs:
               draft: false
               prerelease: false
     build:
+        needs: create_release
         strategy:
             matrix:
                 platform: ['x64','x86']
@@ -53,7 +57,7 @@ jobs:
                 Import-PfxCertificate -FilePath $PWD/temp.pfx -CertStoreLocation Cert:\CurrentUser\My -Password (ConvertTo-SecureString -AsPlainText "$env:private_key_password")
                 Remove-Item -Path "$PWD/temp.pfx"
               shell: pwsh
-            
+
             - name: Prepare release
               run: nbgv prepare-release --versionIncrement Minor
               
@@ -70,7 +74,7 @@ jobs:
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
-                upload_url: ${{ jobs.release.steps.create_release.outputs.upload_url }}
+                upload_url: ${{  needs.create_release.outputs.release_upload_url }}
                 asset_path: ./**/Pixeval*.msix
                 asset_name: Minecraft-Mod-Language-Package-1.12.2.zip
                 asset_content_type: application/msix
