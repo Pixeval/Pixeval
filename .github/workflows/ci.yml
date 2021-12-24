@@ -47,7 +47,7 @@ jobs:
 
             - name: Copy files
               run: |
-                $files = Get-ChildItem -Recurse|Where-Object -Property Name -Like Pixeval*.msix
+                $files = @(Get-ChildItem -Recurse|Where-Object -Property Name -Like Pixeval*.msix)
                 $files += Get-Item -Path Pixeval_PublicKey.cer
                 Copy-Item $files -Destination ( New-Item -Path ./output -ItemType Directory)
 
