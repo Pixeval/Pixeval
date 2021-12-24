@@ -20,6 +20,8 @@
 
 #endregion
 
+using System;
+using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -51,7 +53,8 @@ public sealed partial class FollowingsPage
     {
         if (sender is IllustratorView view)
         {
-            App.AppViewModel.RootFrameNavigate(typeof(IllustratorPage), view.ViewModel, new SlideNavigationTransitionInfo
+            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", view.Avatar);
+            App.AppViewModel.RootFrameNavigate(typeof(IllustratorPage), Tuple.Create<UIElement, IllustratorViewModel>(view.Avatar!, view.ViewModel), new SlideNavigationTransitionInfo
             {
                 Effect = SlideNavigationTransitionEffect.FromRight
             });
