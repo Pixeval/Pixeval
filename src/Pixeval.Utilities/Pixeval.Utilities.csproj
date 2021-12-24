@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" PrivateAssets="True" />
-    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.0" PrivateAssets="True" />
+    <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" PrivateAssets="True" />
+    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" PrivateAssets="True" />
   </ItemGroup>
 
 </Project>
