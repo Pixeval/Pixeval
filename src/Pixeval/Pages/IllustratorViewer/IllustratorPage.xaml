@@ -17,20 +17,9 @@
     <controls1:DockPanel x:Name="IllustrationPresenterDockPanel"
                         HorizontalAlignment="Stretch"
                         LastChildFill="True">
-        <CommandBar controls1:DockPanel.Dock="Top"
-                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                    DefaultLabelPosition="Right">
-            <CommandBar.Content>
-                <AppBarButton Width="48"
-                              Icon="Back"
-                              LabelPosition="Collapsed"
-                              Tapped="BackButton_OnTapped" />
-            </CommandBar.Content>
-        </CommandBar>
-        
-        <userControls:IllustrationGrid x:Name="IllustrationGrid">
-            <userControls:IllustrationGrid.Header>
-                <Grid x:Name="Header" Height="200" VerticalAlignment="Center">
+        <userControls:IllustrationContainer x:Name="IllustrationContainer"  controls1:DockPanel.Dock="Top">
+            <userControls:IllustrationContainer.Header>
+                <Grid x:Name="Header" Height="200" VerticalAlignment="Center" controls1:DockPanel.Dock="Top">
                     <Rectangle x:Name="BackgroundRectangle" Height="200" HorizontalAlignment="Stretch" VerticalAlignment="Top" >
                         <Rectangle.Fill>
                             <ImageBrush x:Name="BackgroundImage" ImageSource="ms-appx:///Assets/Images/pixeval-mock.png" Stretch="UniformToFill" Opacity="0.6"/>
@@ -56,7 +45,7 @@
                             </TextBlock>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,10,0,0">
                                 <StackPanel Orientation="Horizontal" x:Name="ButtonPanel">
-                                    <Button Padding="0" Foreground="White" Style="{ThemeResource TextBlockButtonStyle}">
+                                    <Button Padding="0" Foreground="White" Style="{ThemeResource TextBlockButtonStyle}" Tapped="OpenLinkButton_OnTapped">
                                         <StackPanel Orientation="Horizontal">
                                             <SymbolIcon Symbol="Link"/>
                                             <TextBlock x:Uid="/IllustratorPage/OpenLink" Margin="10,0,0,0"/>
@@ -67,7 +56,14 @@
                         </StackPanel>
                     </StackPanel>
                 </Grid>
-            </userControls:IllustrationGrid.Header>
-        </userControls:IllustrationGrid>
+            </userControls:IllustrationContainer.Header>
+            <userControls:IllustrationContainer.CommandBarElements>
+                <AppBarButton Width="48"
+                              Icon="Back"
+                              LabelPosition="Collapsed"
+                              Tapped="BackButton_OnTapped" />
+            </userControls:IllustrationContainer.CommandBarElements>
+        </userControls:IllustrationContainer>
+        
     </controls1:DockPanel>
 </controls:EnhancedPage>

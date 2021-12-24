@@ -11,8 +11,10 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System;
 using CommunityToolkit.WinUI.UI;
 using CommunityToolkit.WinUI.UI.Animations.Expressions;
 using Microsoft.Graphics.Canvas.Effects;
@@ -48,7 +50,7 @@ namespace Pixeval.Pages.Capability
         private Compositor _compositor;
         private SpriteVisual? _blurredBackgroundImageVisual;
 
-        public IllustrationGrid ViewModelProvider => IllustrationGrid;
+        public IllustrationContainer ViewModelProvider => IllustrationContainer;
 
         public IllustratorPage()
         {
@@ -57,7 +59,7 @@ namespace Pixeval.Pages.Capability
 
         public override void OnPageDeactivated(NavigatingCancelEventArgs navigatingCancelEventArgs)
         {
-            IllustrationGrid.ViewModel.Dispose();
+            ViewModelProvider.ViewModel.Dispose();
             WeakReferenceMessenger.Default.UnregisterAll(this);
         }
 
@@ -67,7 +69,7 @@ namespace Pixeval.Pages.Capability
             {
                 _viewModel = viewModel;
             }
-            WeakReferenceMessenger.Default.Register<IllustratorPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustrationGrid.ViewModel.FetchEngine?.Cancel());
+            WeakReferenceMessenger.Default.Register<IllustratorPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.ViewModelProvider.ViewModel.FetchEngine?.Cancel());
             ChangeSource();
         }
 
@@ -78,7 +80,7 @@ namespace Pixeval.Pages.Capability
                 ChangeSource();
             }
             // Retrieve the ScrollViewer that the GridView is using internally
-            var scrollViewer = IllustrationGrid.IllustrationGridView.FindDescendant<ScrollViewer>();
+            var scrollViewer = IllustrationContainer.IllustrationGrid.FindDescendant<ScrollViewer>();
 
             // Update the ZIndex of the header container so that the header is above the items when scrolling
             var headerPresenter = (UIElement)VisualTreeHelper.GetParent(Header);
@@ -219,6 +221,11 @@ namespace Pixeval.Pages.Capability
         private void BackButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             GoBack();
+        }
+
+        private async void OpenLinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri($"https://www.pixiv.net/users/{_viewModel.Id}"));
         }
     }
 }

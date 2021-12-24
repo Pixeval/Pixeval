@@ -208,7 +208,7 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
 
     public string GetTooltip()
     {
-        var sb = new StringBuilder(Id);
+        var sb = new StringBuilder(Illustration.Title);
         if (Illustration.IsUgoira())
         {
             sb.AppendLine();
