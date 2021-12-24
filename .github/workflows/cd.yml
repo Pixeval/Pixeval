@@ -19,8 +19,8 @@ jobs:
             env:
               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             with:
-              tag_name: ${{ env.GITHUB_REF_NAME }}
-              release_name: Pixeval ${{ env.GITHUB_REF_NAME }}
+              tag_name: ${{ github.ref_name }}
+              release_name: Pixeval ${{ github.ref_name }}
               draft: false
               prerelease: false
     build:
@@ -45,8 +45,6 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v2
             
-            - name: Install nbgv
-              run: dotnet tool install -g nbgv
                   
             - name: setup-msbuild
               uses: microsoft/setup-msbuild@v1
@@ -57,9 +55,6 @@ jobs:
                 Import-PfxCertificate -FilePath $PWD/temp.pfx -CertStoreLocation Cert:\CurrentUser\My -Password (ConvertTo-SecureString -AsPlainText "$env:private_key_password")
                 Remove-Item -Path "$PWD/temp.pfx"
               shell: pwsh
-
-            - name: Prepare release
-              run: nbgv prepare-release --versionIncrement Minor
               
             - name: Restore the application
               run: msbuild -t:restore -p:Platform=${{ matrix.platform }}
