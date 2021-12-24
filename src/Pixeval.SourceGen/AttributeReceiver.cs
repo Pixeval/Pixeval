@@ -21,17 +21,18 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Pixeval.SourceGen.DependencyProperty;
+namespace Pixeval.SourceGen;
 
 internal class AttributeReceiver : ISyntaxContextReceiver
 {
     private readonly string _attributeName;
-    private readonly List<ClassDeclarationSyntax> _candidateClasses = new();
+    private readonly List<TypeDeclarationSyntax> _candidateTypes = new();
 
     private INamedTypeSymbol? _attributeSymbol;
 
@@ -40,7 +41,7 @@ internal class AttributeReceiver : ISyntaxContextReceiver
         _attributeName = attributeName;
     }
 
-    public IReadOnlyList<ClassDeclarationSyntax> CandidateClasses => _candidateClasses;
+    public IReadOnlyList<TypeDeclarationSyntax> CandidateTypes => _candidateTypes;
 
     public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
     {
@@ -50,12 +51,12 @@ internal class AttributeReceiver : ISyntaxContextReceiver
         {
             return;
         }
-
-        if (context.Node is ClassDeclarationSyntax classDeclaration && (from l in classDeclaration.AttributeLists
-                from attribute in l.Attributes
-                select context.SemanticModel.GetSymbolInfo(attribute)).Any(symbolInfo => SymbolEqualityComparer.Default.Equals(symbolInfo.Symbol?.ContainingType, _attributeSymbol)))
+        
+        if (context.Node is TypeDeclarationSyntax typeDeclaration && typeDeclaration.AttributeLists
+                .SelectMany(l => l.Attributes, (_, attribute) => context.SemanticModel.GetSymbolInfo(attribute))
+                .Any(symbolInfo => SymbolEqualityComparer.Default.Equals(symbolInfo.Symbol?.ContainingType, _attributeSymbol)))
         {
-            _candidateClasses.Add(classDeclaration);
+            _candidateTypes.Add(typeDeclaration);
         }
     }
 }

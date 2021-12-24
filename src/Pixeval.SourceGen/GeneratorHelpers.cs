@@ -25,7 +25,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Pixeval.SourceGen.DependencyProperty;
+namespace Pixeval.SourceGen;
 
 internal static class GeneratorHelpers
 {

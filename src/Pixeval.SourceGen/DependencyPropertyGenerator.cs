@@ -20,110 +20,92 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-namespace Pixeval.SourceGen.DependencyProperty;
+namespace Pixeval.SourceGen;
 
 [Generator]
-internal class DependencyPropertyGenerator : ISourceGenerator
+internal class DependencyPropertyGenerator : GetAttributeGenerator
 {
-    private const string AttributePath = "Pixeval.Misc.DependencyPropertyAttribute";
+    protected override string AttributePathGetter() => "Pixeval.Misc.DependencyPropertyAttribute";
 
-    public void Initialize(GeneratorInitializationContext context)
+    protected override void ExecuteForEach(GeneratorExecutionContext context, INamedTypeSymbol attributeType, TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol specificClass)
     {
-        context.RegisterForSyntaxNotifications(() => new AttributeReceiver(AttributePath));
-    }
 
-    public void Execute(GeneratorExecutionContext context)
-    {
-        if (context.Compilation.GetTypeByMetadataName(AttributePath) is not { } attributeType)
+        var members = new List<MemberDeclarationSyntax>();
+        var namespaces = new HashSet<string> { "Microsoft.UI.Xaml" };
+        var usedTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
+
+        foreach (var attribute in specificClass.GetAttributes().Where(attribute => SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, attributeType)))
         {
-            return;
-        }
-
-        foreach (var classDeclaration in ((AttributeReceiver) context.SyntaxContextReceiver!).CandidateClasses)
-        {
-            var semanticModel = context.Compilation.GetSemanticModel(classDeclaration.SyntaxTree);
-
-            if (semanticModel.GetDeclaredSymbol(classDeclaration) is not { } specificClass)
+            if (attribute.ConstructorArguments[0].Value is not string propertyName || attribute.ConstructorArguments[1].Value is not INamedTypeSymbol type)
             {
                 continue;
             }
 
-            var members = new List<MemberDeclarationSyntax>();
-            var namespaces = new HashSet<string> { "Microsoft.UI.Xaml" };
-            var usedTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
+            var isSetterPublic = true;
+            var defaultValue = "DependencyProperty.UnsetValue";
+            var isNullable = false;
+            var instanceChangedCallback = false;
 
-            foreach (var attribute in specificClass.GetAttributes().Where(attribute => SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, attributeType)))
+            foreach (var namedArgument in attribute.NamedArguments)
             {
-                if (attribute.ConstructorArguments[0].Value is not string propertyName || attribute.ConstructorArguments[1].Value is not INamedTypeSymbol type)
+                if (namedArgument.Value.Value is { } value)
                 {
-                    continue;
-                }
-
-                var isSetterPublic = true;
-                var defaultValue = "DependencyProperty.UnsetValue";
-                var isNullable = false;
-                var instanceChangedCallback = false;
-
-                foreach (var namedArgument in attribute.NamedArguments)
-                {
-                    if (namedArgument.Value.Value is { } value)
+                    switch (namedArgument.Key)
                     {
-                        switch (namedArgument.Key)
-                        {
-                            case "IsSetterPublic":
-                                isSetterPublic = (bool) value;
-                                break;
-                            case "DefaultValue":
-                                defaultValue = (string) value;
-                                break;
-                            case "IsNullable":
-                                isNullable = (bool) value;
-                                break;
-                            case "InstanceChangedCallback":
-                                instanceChangedCallback = (bool) value;
-                                break;
-                        }
+                        case "IsSetterPublic":
+                            isSetterPublic = (bool)value;
+                            break;
+                        case "DefaultValue":
+                            defaultValue = (string)value;
+                            break;
+                        case "IsNullable":
+                            isNullable = (bool)value;
+                            break;
+                        case "InstanceChangedCallback":
+                            instanceChangedCallback = (bool)value;
+                            break;
                     }
                 }
-
-                var fieldName = propertyName + "Property";
-
-                namespaces.UseNamespace(usedTypes, specificClass, type);
-                var defaultValueExpression = SyntaxFactory.ParseExpression(defaultValue);
-                var metadataCreation = GetObjectCreationExpression(defaultValueExpression);
-                if (instanceChangedCallback)
-                {
-                    metadataCreation = GetMetadataCreation(metadataCreation, $"On{propertyName}Changed");
-                }
-
-                var registration = GetRegistration(propertyName, type, specificClass, metadataCreation);
-                var staticFieldDeclaration = GetStaticFieldDeclaration(fieldName, registration);
-                var getter = GetGetter(fieldName, isNullable, type, context);
-                var setter = GetSetter(fieldName, isSetterPublic);
-                var propertyDeclaration = GetPropertyDeclaration(propertyName, isNullable, type, getter, setter);
-
-                members.Add(staticFieldDeclaration);
-                members.Add(propertyDeclaration);
             }
 
-            if (members.Count > 0)
+            var fieldName = propertyName + "Property";
+
+            namespaces.UseNamespace(usedTypes, specificClass, type);
+            var defaultValueExpression = SyntaxFactory.ParseExpression(defaultValue);
+            var metadataCreation = GetObjectCreationExpression(defaultValueExpression);
+            if (instanceChangedCallback)
             {
-                var generatedClass = GetClassDeclaration(specificClass, members);
-                var generatedNamespace = GetNamespaceDeclaration(specificClass, generatedClass);
-                var compilationUnit = GetCompilationUnit(generatedNamespace, namespaces);
-                var fileName = specificClass.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat
-                    .WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted)) + ".g.cs";
-                context.AddSource(fileName, SyntaxFactory.SyntaxTree(compilationUnit, encoding: Encoding.UTF8).GetText());
+                metadataCreation = GetMetadataCreation(metadataCreation, $"On{propertyName}Changed");
             }
+
+            var registration = GetRegistration(propertyName, type, specificClass, metadataCreation);
+            var staticFieldDeclaration = GetStaticFieldDeclaration(fieldName, registration);
+            var getter = GetGetter(fieldName, isNullable, type, context);
+            var setter = GetSetter(fieldName, isSetterPublic);
+            var propertyDeclaration = GetPropertyDeclaration(propertyName, isNullable, type, getter, setter);
+
+            members.Add(staticFieldDeclaration);
+            members.Add(propertyDeclaration);
+        }
+
+        if (members.Count > 0)
+        {
+            var generatedClass = GetClassDeclaration(specificClass, members);
+            var generatedNamespace = GetNamespaceDeclaration(specificClass, generatedClass);
+            var compilationUnit = GetCompilationUnit(generatedNamespace, namespaces);
+            var fileName = specificClass.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat
+                .WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted)) + ".g.cs";
+            context.AddSource(fileName, SyntaxFactory.SyntaxTree(compilationUnit, encoding: Encoding.UTF8).GetText());
         }
     }
+
 
     /// <summary>
     ///     生成如下代码
@@ -240,7 +222,7 @@ internal class DependencyPropertyGenerator : ISourceGenerator
     /// </code>
     /// </summary>
     /// <returns>ClassDeclaration</returns>
-    private static ClassDeclarationSyntax GetClassDeclaration(ISymbol specificClass, List<MemberDeclarationSyntax> members)
+    private static ClassDeclarationSyntax GetClassDeclaration(ISymbol specificClass, IEnumerable<MemberDeclarationSyntax> members)
     {
         return SyntaxFactory.ClassDeclaration(specificClass.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat))
             .AddModifiers(SyntaxFactory.Token(SyntaxKind.PartialKeyword))
