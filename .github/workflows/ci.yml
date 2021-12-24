@@ -1,6 +1,7 @@
 name: CI
 
 on:
+    workflow_dispatch:
     push:
   
 
@@ -34,11 +35,17 @@ jobs:
               run: msbuild -t:restore -p:Platform=${{ matrix.platform }}
 
             - name: Publish the application
-              run:  msbuild -t:publish -p:Configuration=Release -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:PackageCertificateThumbprint="$env:private_key_thumbprint" -p:OutDir="$PWD\output" -m
+              run:  msbuild -t:publish -p:Configuration=Release -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:PackageCertificateThumbprint="$env:private_key_thumbprint" -p:OutDir="$PWD\build" -m
               shell: pwsh
+
+            - name: Copy files
+              run: |
+                $files = Get-ChildItem -Recurse|Where-Object -Property Name -Like Pixeval*.msix
+                $files += Get-Item -Path Pixeval_PublicKey.cer
+                Copy-Item $files -Destination ( New-Item -Path ./output -ItemType Directory)
 
             - name: Upload a Build Artifact
               uses: actions/upload-artifact@v2
               with:
                   name: Pixeval-${{ matrix.platform }}
-                  path: "./output/AppPackages/*"
+                  path: "./output/*"
