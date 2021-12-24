@@ -37,7 +37,7 @@ namespace Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry;
 [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
 [DependencyProperty("HeaderHeight", typeof(double))]
 [DependencyProperty("ItemsSource", typeof(IEnumerable<IStringRepresentableItem>))]
-[DependencyProperty("SelectedItem", typeof(object))]
+[DependencyProperty("SelectedItem", typeof(object), InstanceChangedCallback = true)]
 public sealed partial class SingleSelectionSettingEntry : SettingEntryBase
 {
     private const string PartSelectorRadioButtons = "SelectorRadioButtons";

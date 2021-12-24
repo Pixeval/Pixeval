@@ -23,8 +23,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
 
 namespace Pixeval.SourceGen;
@@ -130,11 +128,15 @@ partial class {name}
     {
         var record = $"            ConfigurationContainer.Values[nameof({typeName}.{name})] = appSetting.{name}";
         if (!PrimitiveTypes.Contains(type.Name))
-            if (type.Name is "String")
-                record += " ?? string.Empty";
-            else if (type.TypeKind is TypeKind.Enum)
-                record += ".CastOrThrow<int>()";
-            else throw new InvalidCastException("Only primitive and Enum types are supported.");
+        {
+            record += type switch
+            {
+                { Name: "String" } => " ?? string.Empty",
+                { TypeKind: TypeKind.Enum } => ".CastOrThrow<int>",
+                _ => throw new InvalidCastException("Only primitive and Enum types are supported.")
+            };
+        }
+
         return record + ";\n";
     }
 }

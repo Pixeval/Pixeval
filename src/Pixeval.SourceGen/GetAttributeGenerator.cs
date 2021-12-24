@@ -31,6 +31,7 @@ internal abstract class GetAttributeGenerator : ISourceGenerator
     }
 
     protected abstract string AttributePathGetter();
+
     protected abstract void ExecuteForEach(GeneratorExecutionContext context, INamedTypeSymbol attributeType, TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol specificType);
 
     private string AttributePath => AttributePathGetter();

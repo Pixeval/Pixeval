@@ -41,11 +41,9 @@ internal class DependencyPropertyGenerator : GetAttributeGenerator
         var namespaces = new HashSet<string> { "Microsoft.UI.Xaml" };
         var usedTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
 
-        foreach (var attribute in specificClass.GetAttributes().Where(attribute =>
-                     SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, attributeType)))
+        foreach (var attribute in specificClass.GetAttributes().Where(attribute => SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, attributeType)))
         {
-            if (attribute.ConstructorArguments[0].Value is not string propertyName ||
-                attribute.ConstructorArguments[1].Value is not INamedTypeSymbol type)
+            if (attribute.ConstructorArguments[0].Value is not string propertyName || attribute.ConstructorArguments[1].Value is not INamedTypeSymbol type)
             {
                 continue;
             }
