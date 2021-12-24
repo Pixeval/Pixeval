@@ -1,9 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.LoginProxy
-
+﻿#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
-// Pixeval/Pixeval.LoginProxy
-// Copyright (c) 2021 Pixeval.LoginProxy/PixivProxyServer.cs
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/PixivAuthenticationProxyServer.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,29 +16,27 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #endregion
 
 using System;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Pixeval.Utilities;
 
-namespace Pixeval.LoginProxy;
+namespace Pixeval.Util;
 
-public class PixivProxyServer : IDisposable
+public class PixivAuthenticationProxyServer : IDisposable
 {
     private readonly X509Certificate2? _certificate;
     private readonly TcpListener? _tcpListener;
 
-    private PixivProxyServer(X509Certificate2 certificate, TcpListener tcpListener)
+    private PixivAuthenticationProxyServer(X509Certificate2 certificate, TcpListener tcpListener)
     {
         _certificate = certificate;
         _tcpListener = tcpListener;
@@ -65,9 +62,9 @@ public class PixivProxyServer : IDisposable
             });
     }
 
-    public static PixivProxyServer Create(IPAddress ip, int port, X509Certificate2 certificate)
+    public static PixivAuthenticationProxyServer Create(IPAddress ip, int port, X509Certificate2 certificate)
     {
-        return new PixivProxyServer(certificate, new TcpListener(ip, port));
+        return new PixivAuthenticationProxyServer(certificate, new TcpListener(ip, port));
     }
 
     private async void AcceptTcpClientCallback(IAsyncResult result)
@@ -107,12 +104,9 @@ public class PixivProxyServer : IDisposable
                 }
             }
         }
-        catch (Exception e)
+        catch
         {
-            if (e is PixivWebLoginException pixivWebLoginException)
-            {
-                throw pixivWebLoginException;
-            }
+            // ignore
         }
     }
 
@@ -133,18 +127,5 @@ public class PixivProxyServer : IDisposable
             await sslStream.DisposeAsync();
             throw;
         }
-    }
-
-    public static int NegotiatePort()
-    {
-        var unavailable = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections().Select(t => t.LocalEndPoint.Port).ToArray();
-        var rd = new Random();
-        var proxyPort = rd.Next(3000, 65536);
-        while (Array.BinarySearch(unavailable, proxyPort) >= 0)
-        {
-            proxyPort = rd.Next(3000, 65536);
-        }
-
-        return proxyPort;
     }
 }

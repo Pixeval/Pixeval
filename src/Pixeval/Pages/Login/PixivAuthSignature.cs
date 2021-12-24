@@ -1,9 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.LoginProxy
-
+﻿#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
-// Pixeval/Pixeval.LoginProxy
-// Copyright (c) 2021 Pixeval.LoginProxy/PixivAuth.cs
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/PixivAuthSignature.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,16 +16,15 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #endregion
 
 using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Pixeval.LoginProxy;
+namespace Pixeval.Pages.Login;
 
-public static class PixivAuth
+public static class PixivAuthSignature
 {
     public static string GetCodeVerify()
     {

@@ -122,4 +122,16 @@ public static class Functions
     {
         return block();
     }
+
+    public static async Task IgnoreExceptionAsync(Func<Task> action)
+    {
+        try
+        {
+            await action();
+        }
+        catch
+        {
+            // ignore
+        }
+    }
 }

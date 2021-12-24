@@ -132,7 +132,7 @@ partial class {name}
             record += type switch
             {
                 { Name: "String" } => " ?? string.Empty",
-                { TypeKind: TypeKind.Enum } => ".CastOrThrow<int>",
+                { TypeKind: TypeKind.Enum } => ".CastOrThrow<int>()",
                 _ => throw new InvalidCastException("Only primitive and Enum types are supported.")
             };
         }

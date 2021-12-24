@@ -111,6 +111,7 @@ public sealed partial class SettingsPage
         if (await dialog.ShowAsync() == ContentDialogResult.Primary)
         {
             await AppContext.ClearDataAsync();
+            App.AppViewModel.SignOutExit = true;
             App.AppViewModel.Window.Close();
         }
     }
