@@ -67,7 +67,7 @@ jobs:
             - name: Copy files
               run: |
                 $files = Get-ChildItem -Recurse|Where-Object -Property Name -Like Pixeval*.msix
-                Copy-Item $files -Destination ( New-Item -Path ./output -ItemType Directory)
+                Copy-Item $files -Destination ( New-Item -Path ./output -ItemType Directory -ErrorAction SilentlyContinue)
               shell: pwsh
 
             - name: Update release asset
