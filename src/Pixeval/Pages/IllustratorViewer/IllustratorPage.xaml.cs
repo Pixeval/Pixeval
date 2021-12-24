@@ -65,11 +65,25 @@ namespace Pixeval.Pages.Capability
 
         public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
         {
-            if (navigationEventArgs.Parameter is IllustratorViewModel viewModel)
+            switch (navigationEventArgs.Parameter)
             {
-                _viewModel = viewModel;
+                case Tuple<UIElement, IllustratorViewModel> tuple:
+                    var (sender, viewModel) = tuple;
+                    WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(sender));
+                    var anim = ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation");
+                    if (anim != null)
+                    {
+                        anim.TryStart(ProfileImage);
+                    }
+                    _viewModel = viewModel;
+                    break;
+                case IllustratorViewModel viewModel1:
+                    _viewModel = viewModel1;
+                    break;
             }
+
             WeakReferenceMessenger.Default.Register<IllustratorPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.ViewModelProvider.ViewModel.FetchEngine?.Cancel());
+
             ChangeSource();
         }
 
@@ -211,7 +225,7 @@ namespace Pixeval.Pages.Capability
 
         public void GoBack()
         {
-            App.AppViewModel.AppWindowRootFrame.BackStack.RemoveAll(entry => entry.SourcePageType == typeof(IllustratorPage));
+            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", ProfileImage);
             if (App.AppViewModel.AppWindowRootFrame.CanGoBack)
             {
                 App.AppViewModel.AppWindowRootFrame.GoBack(new SuppressNavigationTransitionInfo());

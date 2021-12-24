@@ -32,6 +32,7 @@ using Pixeval.Misc;
 namespace Pixeval.Controls.IllustratorView;
 
 [TemplatePart(Name = PartContentContainer, Type = typeof(CardControl))]
+[TemplatePart(Name = PartAvatar, Type = typeof(PersonPicture))]
 [DependencyProperty("IllustratorName", typeof(string))]
 [DependencyProperty("IllustratorId", typeof(string))]
 [DependencyProperty("ThumbnailSources", typeof(object))]
@@ -41,8 +42,11 @@ namespace Pixeval.Controls.IllustratorView;
 public partial class IllustratorView : Control
 {
     private const string PartContentContainer = "ContentContainer";
+    private const string PartAvatar = "Avatar";
 
     private CardControl? _contentContainer;
+
+    public PersonPicture? Avatar { get; private set; }
 
     public IllustratorView()
     {
@@ -62,6 +66,9 @@ public partial class IllustratorView : Control
             _contentContainer.PointerEntered += ContentContainerOnPointerEntered;
             _contentContainer.PointerExited += ContentContainerOnPointerExited;
         }
+
+        if ((Avatar = GetTemplateChild(PartAvatar) as PersonPicture) is not null)
+        {}
 
         base.OnApplyTemplate();
     }

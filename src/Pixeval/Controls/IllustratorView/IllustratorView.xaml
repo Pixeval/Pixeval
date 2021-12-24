@@ -31,6 +31,7 @@
                                                HorizontalAlignment="Left"
                                                VerticalAlignment="Center"
                                                PreferSmallImage="True"
+                                               x:Name="Avatar"
                                                ProfilePicture="{TemplateBinding IllustratorPicture}" />
                                 <StackPanel Grid.Column="1"
                                             Margin="5,0,0,0"
