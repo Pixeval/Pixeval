@@ -9,6 +9,7 @@ on:
 
 jobs:
     create_release:
+        name: Create release
         outputs:
             release_upload_url: ${{ steps.create_release.outputs.upload_url }}
         runs-on: windows-2022
@@ -27,7 +28,7 @@ jobs:
         needs: create_release
         strategy:
             matrix:
-                platform: ['x64','x86']
+                platform: ['x64','x86','arm64']
 
         runs-on: windows-2022
 
@@ -36,12 +37,6 @@ jobs:
             private_key_thumbprint: ${{ secrets.PRIVATE_KEY_THUMBPRINT }}
             private_key_password: ${{ secrets.PRIVATE_KEY_PASSWORD }}
         steps:
-            - name: Setup .NET Core SDK
-              uses: actions/setup-dotnet@v1.9.0
-              with:
-                dotnet-version: '6.0.100'
-                include-prerelease: true
-  
             - name: Checkout
               uses: actions/checkout@v2
             

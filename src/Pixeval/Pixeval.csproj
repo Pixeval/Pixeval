@@ -24,14 +24,10 @@
 		<RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
 		<LangVersion>preview</LangVersion>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<DefineConstants Condition="'$(Configuration)' == 'Debug'">TRACE;DEBUG</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup>
 		<IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
 	</PropertyGroup>
-	<ItemGroup>
-		<ProjectCapability Include="TestContainer" />
-	</ItemGroup>
 	<ItemGroup>
 		<Content Include="Assets\Binary\Pixeval.LoginProxy.zip" />
 		<Content Remove="Assets\Images\logo-no-caption.png" />
@@ -136,13 +132,14 @@
 			<SubType>Designer</SubType>
 		</AppxManifest>
 	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.1.2" />
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.2" />
 		<PackageReference Include="GitVersion.MsBuild" Version="5.8.1">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="LiteDB" Version="5.0.11" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
@@ -162,6 +159,13 @@
 		<PackageReference Include="System.Linq.Async" Version="5.1.0" />
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
+		<ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
+	</ItemGroup>
+
 	<!-- #region Exposes PRI resources to the source generator -->
 	<Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
 		<ItemGroup>
@@ -172,6 +176,8 @@
 		<CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
 	</ItemGroup>
 	<!-- #endregion Exposes PRI resources to the source generator -->
+
+
 	<Target Name="PackageLoginProxy" BeforeTargets="PrepareForBuild">
 		<PropertyGroup>
 			<LoginProxyAssetsPath>$(MSBuildProjectDirectory)\Assets\Binary\Pixeval.LoginProxy.zip</LoginProxyAssetsPath>
@@ -190,62 +196,8 @@
 		<ZipDirectory DestinationFile="$(LoginProxyAssetsPath)" SourceDirectory="$(LoginProxyPublishDir)" />
 		<RemoveDir Directories="$(LoginProxyPublishDir)" />
 	</Target>
-	<ItemGroup>
-		<ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
-		<ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-		<ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-		<Page Update="Controls\IllustratorView\IllustratorView.xaml">
-			<XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-		</Page>
-		<Page Update="Pages\Capability\SearchResultsPage.xaml">
-			<XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-		</Page>
-		<Page Update="Pages\Misc\SettingsPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-	</ItemGroup>
-	<ItemGroup>
-		<Page Update="Pages\Download\DownloadListPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-	</ItemGroup>
-	<ItemGroup>
-		<Page Update="Pages\IllustrationViewer\IllustrationViewerPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-	</ItemGroup>
-	<ItemGroup>
-		<Page Update="UserControls\IllustrationGridCommandBar.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-	</ItemGroup>
-	<ItemGroup>
-		<Page Update="Pages\Capabilities\RecommendationPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-	</ItemGroup>
-	<ItemGroup>
-		<Page Update="UserControls\IllustrationGrid.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-	</ItemGroup>
-	<ItemGroup>
-		<Page Update="Dialogs\MessageDialogContent.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-	</ItemGroup>
-	<ItemGroup>
-		<Page Update="Pages\MainPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-	</ItemGroup>
-	<ItemGroup>
-		<Page Update="Pages\Misc\LoginPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-	</ItemGroup>
+
+
 	<ItemGroup>
 		<Folder Include="Assets\Binary\" />
 		<Folder Include="Assets\Images\Supporters\" />
@@ -283,12 +235,42 @@
 		<PRIResource Include="Strings\zh-CN\SortOptionComboBox.resw" />
 		<PRIResource Include="Strings\zh-CN\TokenInputTextBox.resw" />
 	</ItemGroup>
+
+	<!--  XAML  -->
 	<ItemGroup>
-		<Content Update="Assets\Images\logo44x44.ico">
-			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>
-	<ItemGroup>
+		<Page Update="Controls\IllustratorView\IllustratorView.xaml">
+			<XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+		</Page>
+		<Page Update="Pages\Capability\SearchResultsPage.xaml">
+			<XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+		</Page>
+		<Page Update="Pages\Misc\SettingsPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Pages\Download\DownloadListPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Pages\IllustrationViewer\IllustrationViewerPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="UserControls\IllustrationGridCommandBar.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Pages\Capabilities\RecommendationPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="UserControls\IllustrationGrid.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Dialogs\MessageDialogContent.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Pages\MainPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Pages\Misc\LoginPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
 		<Page Update="Controls\NotifyOnLoadedCalendarDatePicker\NotifyOnLoadedCalendarDatePicker.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
@@ -310,13 +292,12 @@
 		<Page Update="Pages\Capability\FollowingsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<None Update="Pages\Capability\RecentPostsPage.xaml">
+		<Page Update="Pages\Capability\RecentPostsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
-		</None>
-		<None Update="Pages\Capability\SearchResultsPage.xaml">
+		</Page>
+		<Page Update="Pages\Capability\SearchResultsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
-		</None>
-		<PackageReference Update="Nerdbank.GitVersioning" Version="3.4.244" />
+		</Page>
 		<Page Update="Pages\Misc\AboutPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
@@ -338,146 +319,90 @@
 		<Page Update="Popups\IllustrationResultFilter\IllustrationResultFilterPopupContent.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Controls\Setting.UI\ActionableExpanderSettingEntry\ActionableExpanderSettingEntry.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Controls\Setting.UI\ExpanderSettingEntry\ExpanderSettingEntry.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Controls\Setting.UI\ActionableSettingEntry\ActionableSettingEntry.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Controls\Setting.UI\SettingsGroup\SettingsGroup.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Controls\Setting.UI\SliderSettingEntry\SliderSettingEntry.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Controls\Setting.UI\SwitchSettingEntry\SwitchSettingEntry.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Controls\Expander\Expander.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Controls\Setting.UI\SingleSelectionSettingEntry\SingleSelectionSettingEntry.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Controls\Setting.UI\UserControls\SettingEntryHeader.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Controls\Card\CardControl.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Update="Themes\Generic.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Themes\Card.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Popups\QrCodePresenter.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="UserControls\PixivReplyBar.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Pages\IllustrationViewer\PixivReplyStickerListPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Pages\IllustrationViewer\PixivReplyEmojiListPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Styles\Controls.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="UserControls\CommentList.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Popups\CommentRepliesBlock.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="UserControls\CommentBlock.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="UserControls\SortOptionComboBox.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Pages\Capability\RecentPostsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="UserControls\IllustrationContainer.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Pages\Capability\RankingsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Styles\Colors.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Pages\IllustrationViewer\CommentsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Pages\IllustrationViewer\IllustrationInfoPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Pages\IllustrationViewer\ImageViewerPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Pages\Capabilities\BookmarksPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
