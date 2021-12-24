@@ -112,31 +112,6 @@ public static partial class AppContext
         return _pixivNoProfileStream ??= await GetAssetStreamAsync("Images/pixiv_no_profile.png");
     }
 
-    /// <summary>
-    ///     Copy and extract the login proxy zip to a local folder if:
-    ///     1. The local file's checksum doesn't match with the one in the Assets folder(Assets/Binary/Pixeval.LoginProxy.zip)
-    ///     2. The local file doesn't exist
-    /// </summary>
-    /// <returns>A task completes when the copy and extraction operation completes</returns>
-    public static async Task CopyLoginProxyIfRequiredAsync()
-    {
-        var assetFile = await GetAssetBytesAsync("Binary/Pixeval.LoginProxy.zip");
-        var assetChecksum = await SHA256.Create().HashAsync(assetFile);
-        if (await AppKnownFolders.LoginProxy.TryGetFileRelativeToSelfAsync("checksum.sha256") is { } checksum)
-        {
-            if (await checksum.ReadStringAsync() != assetChecksum)
-            {
-                await CopyLoginProxyZipFileAndExtractInternalAsync(assetFile, assetChecksum);
-            }
-
-            WeakReferenceMessenger.Default.Send(new ScanningLoginProxyMessage());
-            return;
-        }
-
-        await CopyLoginProxyZipFileAndExtractInternalAsync(assetFile, assetChecksum);
-        WeakReferenceMessenger.Default.Send(new ScanningLoginProxyMessage());
-    }
-
     public static async Task WriteLogoIcoIfNotExist()
     {
         const string iconName = "logo44x44.ico";
@@ -151,16 +126,6 @@ public static partial class AppContext
     {
         const string iconName = "logo44x44.ico";
         return (await AppKnownFolders.Local.GetFileAsync(iconName)).Path;
-    }
-
-    private static async Task CopyLoginProxyZipFileAndExtractInternalAsync(byte[] assetFile, string checksum)
-    {
-        var loginProxyFolder = AppKnownFolders.LoginProxy;
-        await loginProxyFolder.ClearAsync();
-        await using var memoryStream = new MemoryStream(assetFile);
-        using var zipArchive = new ZipArchive(memoryStream);
-        zipArchive.ExtractToDirectory(loginProxyFolder.Self.Path);
-        await (await loginProxyFolder.CreateFileAsync("checksum.sha256")).WriteStringAsync(checksum);
     }
 
     /// <summary>

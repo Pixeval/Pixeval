@@ -178,6 +178,8 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
 
         var content = new LoginWebViewPopup();
         var webViewPopup = PopupManager.CreatePopup(content, widthMargin: 150, heightMargin: 100, minHeight: 400, minWidth: 600);
+
+        AdvancePhase(LoginPhaseEnum.ExecutingWebView2);
         PopupManager.ShowPopup(webViewPopup);
 
         await content.LoginWebView.EnsureCoreWebView2Async();
