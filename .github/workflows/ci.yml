@@ -31,6 +31,13 @@ jobs:
                 Remove-Item -Path "$PWD/temp.pfx"
               shell: pwsh
 
+            - uses: actions/cache@v2
+              with:
+                path: ~/.nuget/packages
+                key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+                restore-keys: |
+                    ${{ runner.os }}-nuget-
+
             - name: Restore the application
               run: msbuild -t:restore -p:Platform=${{ matrix.platform }}
 
