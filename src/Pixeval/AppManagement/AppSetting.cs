@@ -32,7 +32,7 @@ using Pixeval.Options;
 namespace Pixeval.AppManagement;
 
 [GenerateConstructor]
-public partial record AppSetting : IDataOnlyClass
+public partial record AppSetting
 {
 #pragma warning disable CS8618
     public AppSetting()
