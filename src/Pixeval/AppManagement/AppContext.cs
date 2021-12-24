@@ -21,19 +21,14 @@
 #endregion
 
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
-using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using System;
-using System.IO;
-using System.IO.Compression;
-using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Windows.Storage;
