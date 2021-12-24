@@ -23,6 +23,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 namespace Pixeval.SourceGen;
@@ -78,7 +79,7 @@ partial class {name}
                          .Cast<IPropertySymbol>())
             {
                 loadConfigurationContent += LoadRecord(member.Name, member.Type.Name, type.Name);
-                saveConfigurationContent += SaveRecord(member.Name, member.Type.Name, type.Name);
+                saveConfigurationContent += SaveRecord(member.Name, member.Type, type.Name);
                 namespaces.UseNamespace(usedTypes, specificType, member.Type);
             }
 
@@ -117,16 +118,21 @@ partial class {name}
         nameof(Single),
         nameof(Double),
         nameof(Boolean),
-        nameof(Decimal)
+        nameof(Char),
+        nameof(DateTime),
+        nameof(TimeSpan),
+        nameof(Guid)
     };
 
-    private static string SaveRecord(string name, string type, string typeName)
+    private static string SaveRecord(string name, ITypeSymbol type, string typeName)
     {
         var record = $"            ConfigurationContainer.Values[nameof({typeName}.{name})] = appSetting.{name}";
-        if (!PrimitiveTypes.Contains(type))
-            if (type is "String")
+        if (!PrimitiveTypes.Contains(type.Name))
+            if (type.Name is "String")
                 record += " ?? string.Empty";
-            else record += $".CastOrThrow<{type}>()";
+            else if (type.TypeKind is TypeKind.Enum)
+                record += ".CastOrThrow<int>()";
+            else throw new InvalidCastException("Only primitive and Enum types are supported.");
         return record + ";\n";
     }
 }
