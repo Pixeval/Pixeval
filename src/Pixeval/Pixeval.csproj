@@ -30,7 +30,6 @@
 		<ProjectCapability Include="TestContainer" />
 	</ItemGroup>
 	<ItemGroup>
-		<Content Include="Assets\Binary\Pixeval.LoginProxy.zip" />
 		<Content Remove="Assets\Images\logo-no-caption.png" />
 		<Content Remove="Strings\zh-CN\BookmarksPage.resw" />
 		<Content Remove="Strings\zh-CN\IllustrationGridCommandBar.resw" />
@@ -79,6 +78,7 @@
 		<None Remove="Popups\DownloadListPageDeleteTasksPopup.xaml" />
 		<None Remove="Popups\IllustrationResultFilterPopup.xaml" />
 		<None Remove="Popups\IllustrationResultFilter\IllustrationResultFilterFunctionEntry.xaml" />
+		<None Remove="Popups\LoginWebViewPopup.xaml" />
 		<None Remove="Strings\zh-CN\AboutPage.resw" />
 		<None Remove="Strings\zh-CN\Activations.resw" />
 		<None Remove="Strings\zh-CN\BookmarksPage.resw" />
@@ -168,24 +168,6 @@
 		<CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
 	</ItemGroup>
 	<!-- #endregion Exposes PRI resources to the source generator -->
-	<Target Name="PackageLoginProxy" BeforeTargets="PrepareForBuild">
-		<PropertyGroup>
-			<LoginProxyAssetsPath>$(MSBuildProjectDirectory)\Assets\Binary\Pixeval.LoginProxy.zip</LoginProxyAssetsPath>
-			<LoginProxyPublishDir>$(TEMP)\LoginProxy-$(Configuration)-$(Platform)</LoginProxyPublishDir>
-			<LoginProxyPublishConfiguration>$(Configuration)</LoginProxyPublishConfiguration>
-			<LoginProxyPublishPlatform>$(Platform)</LoginProxyPublishPlatform>
-			<LoginProxyPublishProtocol>FileSystem</LoginProxyPublishProtocol>
-			<LoginProxyPublishTargetFramework>net6.0-windows</LoginProxyPublishTargetFramework>
-			<LoginProxyPublishSelfContained>false</LoginProxyPublishSelfContained>
-			<LoginProxyRuntimeIdentifier>$(RuntimeIdentifier)</LoginProxyRuntimeIdentifier>
-		</PropertyGroup>
-		<RemoveDir Directories="$(LoginProxyPublishDir)" ContinueOnError="true" />
-		<MSBuild Projects="$(MSBuildProjectDirectory)\..\Pixeval.LoginProxy\Pixeval.LoginProxy.csproj" Targets="publish" Properties="Configuration=$(LoginProxyPublishConfiguration);RuntimeIdentifier=$(LoginProxyRuntimeIdentifier);Platform=$(LoginProxyPublishPlatform);PublishDir=$(LoginProxyPublishDir);PublishProtocol=$(LoginProxyPublishProtocol);TargetFramework=$(LoginProxyPublishTargetFramework);SelfContained=$(LoginProxyPublishSelfContained);" />
-		<Delete Files="$(LoginProxyAssetsPath)" />
-		<MakeDir Directories="$(MSBuildProjectDirectory)\Assets\Binary" />
-		<ZipDirectory DestinationFile="$(LoginProxyAssetsPath)" SourceDirectory="$(LoginProxyPublishDir)" />
-		<RemoveDir Directories="$(LoginProxyPublishDir)" />
-	</Target>
 	<ItemGroup>
 		<ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
 		<ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
@@ -238,12 +220,11 @@
 		</Page>
 	</ItemGroup>
 	<ItemGroup>
-		<Page Update="Pages\Misc\LoginPage.xaml">
+		<Page Update="Pages\Login\LoginPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 	</ItemGroup>
 	<ItemGroup>
-		<Folder Include="Assets\Binary\" />
 		<Folder Include="Assets\Images\Supporters\" />
 		<Folder Include="Download\MacroParser\Ast\" />
 		<Folder Include="Properties\PublishProfiles\" />
@@ -316,6 +297,9 @@
 		<None Update="Pages\Capability\SearchResultsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</None>
+		<Page Update="Popups\LoginWebViewPopup.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
 		<Page Update="Pages\Misc\AboutPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>

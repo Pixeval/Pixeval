@@ -193,6 +193,11 @@ public static partial class AppContext
         return new X509Certificate2(await GetAssetBytesAsync("Certs/pixeval_ca.cer"));
     }
 
+    public static async Task<X509Certificate2> GetFakeServerCertificateAsync()
+    {
+        return new X509Certificate2(await GetAssetBytesAsync("Certs/pixeval_server_cert.pfx"), "pixeval", X509KeyStorageFlags.UserKeySet);
+    }
+
     public static void RestoreHistories()
     {
         using var scope = App.AppViewModel.AppServicesScope;
@@ -211,21 +216,27 @@ public static partial class AppContext
     /// <summary>
     ///     Erase all personal data, including session, configuration and image cache
     /// </summary>
-    public static async Task ClearDataAsync()
+    public static Task ClearDataAsync()
     {
-        ApplicationData.Current.RoamingSettings.DeleteContainer(ConfigurationContainerKey);
-        ApplicationData.Current.LocalSettings.DeleteContainer(SessionContainerKey);
-        await ApplicationData.Current.LocalFolder.ClearDirectoryAsync();
-        await AppKnownFolders.Temporary.ClearAsync();
-        await AppKnownFolders.SavedWallPaper.ClearAsync();
+        return Functions.IgnoreExceptionAsync(async () =>
+        {
+            ApplicationData.Current.RoamingSettings.DeleteContainer(ConfigurationContainerKey);
+            ApplicationData.Current.LocalSettings.DeleteContainer(SessionContainerKey);
+            await ApplicationData.Current.LocalFolder.ClearDirectoryAsync();
+            await AppKnownFolders.Temporary.ClearAsync();
+            await AppKnownFolders.SavedWallPaper.ClearAsync();
+        });
     }
 
     public static void SaveContext()
     {
         // Save the current resolution
         (App.AppViewModel.AppSetting.WindowWidth, App.AppViewModel.AppSetting.WindowHeight) = App.AppViewModel.GetAppWindowSizeTuple();
-        SaveSession();
-        SaveConfiguration(App.AppViewModel.AppSetting);
+        if (!App.AppViewModel.SignOutExit)
+        {
+            SaveSession();
+            SaveConfiguration(App.AppViewModel.AppSetting);
+        }
     }
 
     public static void SaveSession()

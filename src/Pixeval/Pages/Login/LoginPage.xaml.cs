@@ -33,7 +33,7 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
-namespace Pixeval.Pages.Misc;
+namespace Pixeval.Pages.Login;
 
 public sealed partial class LoginPage
 {
