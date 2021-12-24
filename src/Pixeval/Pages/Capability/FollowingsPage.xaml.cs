@@ -21,6 +21,10 @@
 #endregion
 
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.Controls.IllustratorView;
+using Pixeval.CoreApi.Global.Enum;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -41,5 +45,16 @@ public sealed partial class FollowingsPage
     private async void FollowingsPage_OnLoaded(object sender, RoutedEventArgs e)
     {
         await _viewModel.LoadFollowings();
+    }
+
+    private void IllustratorView_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (sender is IllustratorView view)
+        {
+            App.AppViewModel.RootFrameNavigate(typeof(IllustratorPage), view.ViewModel, new SlideNavigationTransitionInfo
+            {
+                Effect = SlideNavigationTransitionEffect.FromRight
+            });
+        }
     }
 }

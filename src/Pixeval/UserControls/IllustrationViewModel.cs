@@ -204,6 +204,8 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
         return App.AppViewModel.MakoClient.PostBookmarkAsync(Id, PrivacyPolicy.Public);
     }
 
+    public string Tooltip => GetTooltip();
+
     public string GetTooltip()
     {
         var sb = new StringBuilder(Id);

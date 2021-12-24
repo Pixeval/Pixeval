@@ -33,9 +33,11 @@ namespace Pixeval.Controls.IllustratorView;
 
 [TemplatePart(Name = PartContentContainer, Type = typeof(CardControl))]
 [DependencyProperty("IllustratorName", typeof(string))]
-[DependencyProperty("IllustratorDescription", typeof(string))]
-[DependencyProperty("IllustratorProfileNavigateUri", typeof(Uri))]
+[DependencyProperty("IllustratorId", typeof(string))]
+[DependencyProperty("ThumbnailSources", typeof(object))]
+[DependencyProperty("ThumbnailItemTemplate", typeof(object))]
 [DependencyProperty("IllustratorPicture", typeof(ImageSource))]
+[DependencyProperty("ViewModel", typeof(IllustratorViewModel))]
 public partial class IllustratorView : Control
 {
     private const string PartContentContainer = "ContentContainer";
@@ -53,22 +55,15 @@ public partial class IllustratorView : Control
         {
             _contentContainer.PointerEntered -= ContentContainerOnPointerEntered;
             _contentContainer.PointerExited -= ContentContainerOnPointerExited;
-            _contentContainer.Tapped -= ContentContainerOnTapped;
         }
 
         if ((_contentContainer = GetTemplateChild(PartContentContainer) as CardControl) is not null)
         {
             _contentContainer.PointerEntered += ContentContainerOnPointerEntered;
             _contentContainer.PointerExited += ContentContainerOnPointerExited;
-            _contentContainer.Tapped += ContentContainerOnTapped;
         }
 
         base.OnApplyTemplate();
-    }
-
-    private async void ContentContainerOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        await Launcher.LaunchUriAsync(IllustratorProfileNavigateUri);
     }
 
     private void ContentContainerOnPointerExited(object sender, PointerRoutedEventArgs e)

@@ -69,6 +69,7 @@
 		<None Remove="Controls\TokenInputTextBox\TokenInputTextBox.xaml" />
 		<None Remove="Dialogs\ReverseSearchApiKeyNotPresentDialog.xaml" />
 		<None Remove="Pages\Capability\FollowingsPage.xaml" />
+		<None Remove="Pages\Capability\IllustratorPage.xaml" />
 		<None Remove="Pages\Download\DownloadListEntry.xaml" />
 		<None Remove="Pages\IllustrationViewer\CommentRepliesPage.xaml" />
 		<None Remove="Pages\IllustrationViewer\PixivReplyEmojiListPage.xaml" />
@@ -93,6 +94,7 @@
 		<None Remove="Strings\zh-CN\IllustrationInfoPage.resw" />
 		<None Remove="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
 		<None Remove="Strings\zh-CN\IllustrationViewerPage.resw" />
+		<None Remove="Strings\zh-CN\IllustratorPage.resw" />
 		<None Remove="Strings\zh-CN\ImageViewerPage.resw" />
 		<None Remove="Strings\zh-CN\MacroParser.resw" />
 		<None Remove="Strings\zh-CN\PixivReplyBar.resw" />
@@ -262,6 +264,7 @@
 		<PRIResource Include="Strings\zh-CN\IllustrationInfoPage.resw" />
 		<PRIResource Include="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
 		<PRIResource Include="Strings\zh-CN\IllustrationViewerPage.resw" />
+		<PRIResource Include="Strings\zh-CN\IllustratorPage.resw" />
 		<PRIResource Include="Strings\zh-CN\ImageViewerPage.resw" />
 		<PRIResource Include="Strings\zh-CN\LoginPage.resw" />
 		<PRIResource Include="Strings\zh-CN\MacroParser.resw" />
@@ -303,6 +306,9 @@
 		</Page>
 		<Page Update="Pages\Capability\FollowingsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Pages\IllustratorViewer\IllustratorPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</Page>
 		<None Update="Pages\Capability\RecentPostsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>

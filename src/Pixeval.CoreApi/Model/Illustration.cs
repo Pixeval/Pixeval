@@ -126,24 +126,6 @@ public record Illustration
         public string? Original { get; set; }
     }
 
-    public class UserInfo
-    {
-        [JsonPropertyName("id")]
-        public long Id { get; set; }
-
-        [JsonPropertyName("name")]
-        public string? Name { get; set; }
-
-        [JsonPropertyName("account")]
-        public string? Account { get; set; }
-
-        [JsonPropertyName("profile_image_urls")]
-        public ProfileImageUrls? ProfileImageUrls { get; set; }
-
-        [JsonPropertyName("is_followed")]
-        public bool IsFollowed { get; set; }
-    }
-
     public class MetaPage
     {
         [JsonPropertyName("image_urls")]

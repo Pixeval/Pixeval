@@ -1,0 +1,73 @@
+﻿<controls:EnhancedPage
+    x:Class="Pixeval.Pages.Capability.IllustratorPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Pixeval.Pages.Capability"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:userControls="using:Pixeval.UserControls"
+    xmlns:notifyOnLoadedComboBox="using:Pixeval.Controls.NotifyOnLoadedComboBox"
+    xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
+    xmlns:controls1="using:CommunityToolkit.WinUI.UI.Controls"
+    mc:Ignorable="d"
+    Loaded="IllustratorPage_OnLoaded"
+    SizeChanged="IllustratorPage_OnSizeChanged"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <controls1:DockPanel x:Name="IllustrationPresenterDockPanel"
+                        HorizontalAlignment="Stretch"
+                        LastChildFill="True">
+        <CommandBar controls1:DockPanel.Dock="Top"
+                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                    DefaultLabelPosition="Right">
+            <CommandBar.Content>
+                <AppBarButton Width="48"
+                              Icon="Back"
+                              LabelPosition="Collapsed"
+                              Tapped="BackButton_OnTapped" />
+            </CommandBar.Content>
+        </CommandBar>
+        
+        <userControls:IllustrationGrid x:Name="IllustrationGrid">
+            <userControls:IllustrationGrid.Header>
+                <Grid x:Name="Header" Height="200" VerticalAlignment="Center">
+                    <Rectangle x:Name="BackgroundRectangle" Height="200" HorizontalAlignment="Stretch" VerticalAlignment="Top" >
+                        <Rectangle.Fill>
+                            <ImageBrush x:Name="BackgroundImage" ImageSource="ms-appx:///Assets/Images/pixeval-mock.png" Stretch="UniformToFill" Opacity="0.6"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Rectangle x:Name="OverlayRectangle" Fill="#BFCFB5C0" HorizontalAlignment="Stretch" Height="200" VerticalAlignment="Top"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="TextContainer">
+                        <Ellipse x:Name="ProfileImage"
+                                 Height="100"
+                                 Width="100"
+                                 VerticalAlignment="Center"
+                                 Margin="20,0,20,0">
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="{x:Bind _viewModel.AvatarSource, Mode=OneWay}" Stretch="UniformToFill"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,20,0,0">
+                            <TextBlock x:Name="TitleBlock" Text="{x:Bind _viewModel.Name, Mode=OneWay}" Foreground="White" FontSize="20"/>
+                            <TextBlock x:Name="SubtitleBlock" Text="{x:Bind _viewModel.Id, Mode=OneWay}" Foreground="White" FontSize="10" Margin="0,10,0,0"/>
+                            <TextBlock x:Name="Blurb" Foreground="White" FontSize="12" Width="400" TextWrapping="Wrap" Margin="0,20,0,0">
+                                        <Run Text="{x:Bind _viewModel.Comment}">
+                                        </Run>
+                            </TextBlock>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,10,0,0">
+                                <StackPanel Orientation="Horizontal" x:Name="ButtonPanel">
+                                    <Button Padding="0" Foreground="White" Style="{ThemeResource TextBlockButtonStyle}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <SymbolIcon Symbol="Link"/>
+                                            <TextBlock x:Uid="/IllustratorPage/OpenLink" Margin="10,0,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </userControls:IllustrationGrid.Header>
+        </userControls:IllustrationGrid>
+    </controls1:DockPanel>
+</controls:EnhancedPage>

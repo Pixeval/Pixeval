@@ -16,6 +16,8 @@
                                           SecondaryCommandsSupplements="{x:Bind SecondaryCommandsSupplements, Mode=TwoWay}"
                                           IsDefaultCommandsEnabled="{x:Bind TopCommandBar.ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
                                           ViewModel="{x:Bind IllustrationGrid.ViewModel}" />
-        <local:IllustrationGrid x:Name="IllustrationGrid" />
+        <local:IllustrationGrid x:Name="IllustrationGrid"
+                                Header="{x:Bind Header, Mode=OneWay}"
+            />
     </controls:DockPanel>
 </UserControl>

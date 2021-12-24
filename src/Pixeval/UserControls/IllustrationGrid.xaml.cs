@@ -31,6 +31,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Messages;
+using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
@@ -41,6 +42,7 @@ namespace Pixeval.UserControls;
 
 // use "load failed" image for those thumbnails who failed to load its source due to various reasons
 // note: please ALWAYS add e.Handled = true before every "tapped" event for the buttons
+[DependencyProperty("Header", typeof(object))]
 public sealed partial class IllustrationGrid
 {
     private static readonly ExponentialEase ImageSourceSetEasingFunction = new()

@@ -35,6 +35,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
+using Pixeval.CoreApi.Model;
 using Pixeval.Download;
 using Pixeval.Popups;
 using Pixeval.UserControls;
@@ -73,6 +74,10 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     [ObservableProperty]
     private ImageSource? _userProfileImageSource;
 
+    // Preserved for illustrator view use
+    [ObservableProperty]
+    private UserInfo? _userInfo;
+
     // Remarks:
     // illustrations should contains only one item if the illustration is a single
     // otherwise it contains the entire manga data
@@ -84,7 +89,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         ContainerGridViewModel = gridView.ViewModel;
         IllustrationViewModelInTheGridView = ContainerGridViewModel.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
         InitializeCommands();
-        _ = LoadUserProfileImage();
+        _ = LoadUserProfile();
     }
 
     public IllustrationViewerPageViewModel(params IllustrationViewModel[] illustrations)
@@ -92,7 +97,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         ImageViewerPageViewModels = illustrations.Select(i => new ImageViewerPageViewModel(this, i)).ToArray();
         Current = ImageViewerPageViewModels[CurrentIndex];
         InitializeCommands();
-        _ = LoadUserProfileImage();
+        _ = LoadUserProfile();
     }
 
     /// <summary>
@@ -406,12 +411,16 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         return FirstIllustrationViewModel!.RemoveBookmarkAsync();
     }
 
-    private async Task LoadUserProfileImage()
+    private async Task LoadUserProfile()
     {
-        if (FirstIllustrationViewModel!.Illustration.User?.ProfileImageUrls?.Medium is { } profileImage)
+        if (FirstIllustrationViewModel!.Illustration.User is { } userInfo)
         {
-            UserProfileImageSource = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceResultAsync(profileImage)
-                .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync());
+            UserInfo = userInfo;
+            if (userInfo.ProfileImageUrls?.Medium is { } profileImage)
+            {
+                UserProfileImageSource = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceResultAsync(profileImage)
+                    .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync());
+            }
         }
     }
 

@@ -22,6 +22,7 @@
                                IsMultiSelectCheckBoxEnabled="False"
                                ItemsSource="{x:Bind ViewModel.IllustrationsView}"
                                SelectionMode="Extended"
+                               Header="{x:Bind Header, Mode=OneWay}"
                                StretchContentForSingleRow="True">
         <controls:AdaptiveGridView.ItemContainerTransitions>
             <AddDeleteThemeTransition />
