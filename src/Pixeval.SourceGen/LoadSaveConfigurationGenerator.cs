@@ -23,6 +23,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
@@ -121,7 +122,8 @@ partial class {name}
         nameof(Char),
         nameof(DateTime),
         nameof(TimeSpan),
-        nameof(Guid)
+        nameof(Guid),
+        nameof(DateTimeOffset)
     };
 
     private static string SaveRecord(string name, ITypeSymbol type, string typeName)
