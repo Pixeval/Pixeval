@@ -52,10 +52,10 @@ jobs:
               shell: pwsh
               
             - name: Restore the application
-              run: msbuild -t:restore -p:Platform=${{ matrix.platform }}
+              run: msbuild -t:restore -p:Platform=${{ matrix.platform }} -v:diag
 
             - name: Publish the application
-              run:  msbuild -t:publish -p:Configuration=Release -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:PackageCertificateThumbprint="$env:private_key_thumbprint" -p:OutDir="$PWD\output"
+              run:  msbuild -t:publish -p:Configuration=Release -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:PackageCertificateThumbprint="$env:private_key_thumbprint" -p:OutDir="$PWD\output" -v:diag
               shell: pwsh
             
             - name: Update release asset
