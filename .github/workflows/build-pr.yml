@@ -28,10 +28,10 @@ jobs:
                     ${{ runner.os }}-nuget-
 
             - name: Restore the application
-              run: msbuild -t:restore -p:Platform=${{ matrix.platform }} -p:RestoreLockedMode=true
+              run: msbuild -t:restore -p:Platform=${{ matrix.platform }} -p:RestoreLockedMode=true -m
 
             - name: Publish the application
-              run:  msbuild -t:publish -p:Configuration=Debug -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:OutDir="$PWD\build"
+              run:  msbuild -t:publish -p:Configuration=Debug -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:OutDir="$PWD\build" -m
               shell: pwsh
 
             - name: Copy files
