@@ -29,8 +29,7 @@
 	<PropertyGroup>
 		<UpdateVersionProperties>true</UpdateVersionProperties>
 		<IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
-		<GitVersionTargetsBefore>$(GitVersionTargetsBefore);_ValidateWindowsPackageType;PrepareForBuild</GitVersionTargetsBefore>
-		<PrepareForBuildDependsOn>$(PrepareForBuildDependsOn);GeneratePackageAppxManifest</PrepareForBuildDependsOn>
+		<GitVersionTargetsBefore>$(GitVersionTargetsBefore);_ValidateWindowsPackageType</GitVersionTargetsBefore>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -177,6 +176,9 @@
 	<!-- #endregion Exposes PRI resources to the source generator -->
 
 
+	<Target Name="PrepareForUpdateAssemblyInfo" BeforeTargets="UpdateAssemblyInfo" >
+		<MakeDir Directories="$(OutDir);$(IntermediateOutputPath);@(DocFileItem->'%(RelativeDir)');@(CreateDirectory)" ContinueOnError="True"/>
+	</Target>
 	<Target Name="PackageLoginProxy" BeforeTargets="PrepareForBuild">
 		<PropertyGroup>
 			<LoginProxyAssetsPath>$(MSBuildProjectDirectory)\Assets\Binary\Pixeval.LoginProxy.zip</LoginProxyAssetsPath>
