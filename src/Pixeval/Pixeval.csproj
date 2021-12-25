@@ -195,7 +195,7 @@
 		<RemoveDir Directories="$(LoginProxyPublishDir)" />
 	</Target>
 
-	<Target Name="GeneratePackageAppxManifest" BeforeTargets="PrepareForPublish;_ValidatePresenceOfAppxManifestItems;_CreateFinalAppxManifestItem;_ValidateWindowsPackageType" AfterTargets="GetVersion">
+	<Target Name="GeneratePackageAppxManifest" BeforeTargets="_ValidateWindowsPackageType" DependsOnTargets="GetVersion">
 		<PropertyGroup>
 			<ManifestText>
 				&lt;?xml version="1.0" encoding="utf-8"?&gt;
