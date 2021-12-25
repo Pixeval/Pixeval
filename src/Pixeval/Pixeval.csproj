@@ -30,6 +30,7 @@
 		<UpdateVersionProperties>true</UpdateVersionProperties>
 		<IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
 		<GitVersionTargetsBefore>$(GitVersionTargetsBefore);_ValidateWindowsPackageType;PrepareForBuild</GitVersionTargetsBefore>
+		<PrepareForBuildDependsOn>$(PrepareForBuildDependsOn);GeneratePackageAppxManifest</PrepareForBuildDependsOn>
 	</PropertyGroup>
 
 	<ItemGroup>
