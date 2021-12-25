@@ -478,10 +478,4 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 	</ItemGroup>
-	<ItemGroup>
-	  <None Remove="Package.appxmanifest" />
-	</ItemGroup>
-	<ItemGroup>
-	  <AppxManifest Include="Package.appxmanifest" />
-	</ItemGroup>
 </Project>
