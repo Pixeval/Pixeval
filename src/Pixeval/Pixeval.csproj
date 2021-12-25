@@ -192,7 +192,7 @@
 		<RemoveDir Directories="$(LoginProxyPublishDir)" />
 	</Target>
 
-	<Target Name="GeneratePackageAppxManifest" BeforeTargets="_ValidatePresenceOfAppxManifestItems" AfterTargets="GetVersion">
+	<Target Name="GeneratePackageAppxManifest" BeforeTargets="_ValidatePresenceOfAppxManifestItems;_ValidateWindowsPackageType" AfterTargets="GetVersion">
 		<ItemGroup>
 			<AppxManifest Remove="Package.appxmanifest" />
 		</ItemGroup>
