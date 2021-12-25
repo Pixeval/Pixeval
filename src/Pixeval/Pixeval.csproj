@@ -16,7 +16,6 @@
 		<ApplicationIcon />
 		<StartupObject>Pixeval.Program</StartupObject>
 		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
-		<WindowsPackageType>MSIX</WindowsPackageType>
 		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 		<EnableDefaultPriItems>false</EnableDefaultPriItems>
 		<NeutralLanguage>zh-CN</NeutralLanguage>
@@ -178,6 +177,12 @@
 
 	<Target Name="PrepareForGenerateGitVersionInformation" BeforeTargets="GenerateGitVersionInformation">
 		<MakeDir Directories="$(OutDir);$(IntermediateOutputPath);@(DocFileItem->'%(RelativeDir)');@(CreateDirectory)" ContinueOnError="True" />
+		<ItemGroup>
+			<AppxManifest Include="Package.appxmanifest"></AppxManifest>
+		</ItemGroup>
+		<PropertyGroup>
+			<WindowsPackageType>MSIX</WindowsPackageType>
+		</PropertyGroup>
 	</Target>
 
 	<Target Name="PackageLoginProxy" BeforeTargets="PrepareForBuild">
