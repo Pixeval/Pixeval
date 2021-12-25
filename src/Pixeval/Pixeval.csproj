@@ -193,9 +193,6 @@
 	</Target>
 
 	<Target Name="GeneratePackageAppxManifest" BeforeTargets="_ValidatePresenceOfAppxManifestItems;_ValidateWindowsPackageType" AfterTargets="GetVersion">
-		<ItemGroup>
-			<AppxManifest Remove="Package.appxmanifest" />
-		</ItemGroup>
 		<PropertyGroup>
 			<ManifestText>
 				&lt;?xml version="1.0" encoding="utf-8"?&gt;
@@ -263,9 +260,6 @@
 			</ManifestText>
 		</PropertyGroup>
 		<WriteLinesToFile File="$(MSBuildProjectDirectory)\Package.appxmanifest" Overwrite="true" Lines="$(ManifestText)" />
-		<ItemGroup>
-			<AppxManifest Include="$(MSBuildProjectDirectory)\Package.appxmanifest"></AppxManifest>
-		</ItemGroup>
 	</Target>
 
 
