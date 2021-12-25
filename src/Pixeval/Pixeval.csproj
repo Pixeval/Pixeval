@@ -16,6 +16,7 @@
 		<ApplicationIcon />
 		<StartupObject>Pixeval.Program</StartupObject>
 		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+		<DisableAppxManifestItemPackageContentValidation>true</DisableAppxManifestItemPackageContentValidation>
 		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 		<EnableDefaultPriItems>false</EnableDefaultPriItems>
 		<NeutralLanguage>zh-CN</NeutralLanguage>
@@ -192,7 +193,7 @@
 		<RemoveDir Directories="$(LoginProxyPublishDir)" />
 	</Target>
 
-	<Target Name="GeneratePackageAppxManifest" BeforeTargets="_ValidatePresenceOfAppxManifestItems;_ValidateWindowsPackageType" AfterTargets="GetVersion">
+	<Target Name="GeneratePackageAppxManifest" BeforeTargets="PrepareForPublish" AfterTargets="GetVersion">
 		<PropertyGroup>
 			<ManifestText>
 				&lt;?xml version="1.0" encoding="utf-8"?&gt;
@@ -471,5 +472,10 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 	</ItemGroup>
-	
+	<ItemGroup>
+	  <None Remove="Package.appxmanifest" />
+	</ItemGroup>
+	<ItemGroup>
+	  <AppxManifest Include="Package.appxmanifest" />
+	</ItemGroup>
 </Project>
