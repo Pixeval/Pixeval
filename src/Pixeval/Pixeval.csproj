@@ -192,7 +192,10 @@
 		<RemoveDir Directories="$(LoginProxyPublishDir)" />
 	</Target>
 
-	<Target Name="GeneratePackageAppxManifest" BeforeTargets="BeforeBuild"  AfterTargets="GetVersion">
+	<Target Name="GeneratePackageAppxManifest" BeforeTargets="_ValidatePresenceOfAppxManifestItems" AfterTargets="GetVersion">
+		<ItemGroup>
+			<AppxManifest Remove="Package.appxmanifest" />
+		</ItemGroup>
 		<PropertyGroup>
 			<ManifestText>
 				&lt;?xml version="1.0" encoding="utf-8"?&gt;
@@ -259,11 +262,10 @@
 				&lt;/Package&gt;
 			</ManifestText>
 		</PropertyGroup>
-		<WriteLinesToFile
-			File="$(MSBuildProjectDirectory)\Package.appxmanifest"
-			Overwrite="true"
-			Lines="$(ManifestText)" />
-		
+		<WriteLinesToFile File="$(MSBuildProjectDirectory)\Package.appxmanifest" Overwrite="true" Lines="$(ManifestText)" />
+		<ItemGroup>
+			<AppxManifest Include="$(MSBuildProjectDirectory)\Package.appxmanifest"></AppxManifest>
+		</ItemGroup>
 	</Target>
 
 
@@ -475,4 +477,5 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 	</ItemGroup>
+	
 </Project>
