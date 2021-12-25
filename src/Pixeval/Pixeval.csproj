@@ -29,7 +29,7 @@
 	<PropertyGroup>
 		<UpdateVersionProperties>true</UpdateVersionProperties>
 		<IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
-		<GitVersionTargetsBefore>$(GitVersionTargetsBefore);_ValidateWindowsPackageType;PrepareForUpdateAssemblyInfo</GitVersionTargetsBefore>
+		<GitVersionTargetsBefore>$(GitVersionTargetsBefore);_ValidateWindowsPackageType</GitVersionTargetsBefore>
 	</PropertyGroup>
 
 	<ItemGroup>
