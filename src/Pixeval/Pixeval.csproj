@@ -17,6 +17,7 @@
 		<StartupObject>Pixeval.Program</StartupObject>
 		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
 		<WindowsPackageType>MSIX</WindowsPackageType>
+		<AppxManifest>Package.appxmanifest</AppxManifest>
 		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 		<EnableDefaultPriItems>false</EnableDefaultPriItems>
 		<NeutralLanguage>zh-CN</NeutralLanguage>
