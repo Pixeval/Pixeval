@@ -35,7 +35,7 @@ internal class RecommendationEngine : AbstractPixivFetchEngine<Illustration>
     private readonly uint? _maxBookmarkIdForRecommend;
     private readonly uint? _minBookmarkIdForRecentIllust;
 
-    private readonly RecommendationContentType _recommendContentType;
+    public readonly RecommendationContentType _recommendContentType;
 
     public RecommendationEngine(MakoClient makoClient, RecommendationContentType? recommendContentType, TargetFilter filter, uint? maxBookmarkIdForRecommend, uint? minBookmarkIdForRecentIllust, EngineHandle? engineHandle) : base(makoClient, engineHandle)
     {

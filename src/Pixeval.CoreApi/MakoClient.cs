@@ -60,10 +60,7 @@ public partial class MakoClient : ICancellable
         Session = session;
         MakoServices = BuildContainer();
         Configuration = configuration;
-        CancellationTokenSource = new CancellationTokenSource();
-        // each running instance has its own 'CancellationTokenSource', because we want to have the ability to cancel a particular instance
-        // while also be able to cancel all of them from 'MakoClient'
-        CancellationTokenSource.Token.Register(() => _runningInstances.ForEach(instance => instance.EngineHandle.Cancel()));
+        IsCancelled = false;
     }
 
     /// <summary>
@@ -86,10 +83,6 @@ public partial class MakoClient : ICancellable
         Session = session;
         MakoServices = BuildContainer();
         Configuration = new MakoClientConfiguration();
-        CancellationTokenSource = new CancellationTokenSource();
-        // each running instance has its own 'CancellationTokenSource', because we want to have the ability to cancel a particular instance
-        // while also be able to cancel all of them from 'MakoClient'
-        CancellationTokenSource.Token.Register(() => _runningInstances.ForEach(instance => instance.EngineHandle.Cancel()));
     }
 
     /// <summary>
@@ -193,13 +186,13 @@ public partial class MakoClient : ICancellable
     public void Cancel()
     {
         Session = new Session();
-        CancellationTokenSource.Cancel();
+        _runningInstances.ForEach(instance => instance.EngineHandle.Cancel());
     }
 
     // Ensures the current instances hasn't been cancelled
     private void EnsureNotCancelled()
     {
-        if (CancellationTokenSource.IsCancellationRequested)
+        if (IsCancelled)
         {
             throw new OperationCanceledException($"MakoClient({Id}) has been cancelled");
         }

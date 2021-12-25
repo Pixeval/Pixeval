@@ -28,5 +28,5 @@ namespace Pixeval.CoreApi.Engine;
 [PublicAPI]
 public interface ICancellable
 {
-    CancellationTokenSource CancellationTokenSource { get; set; }
+    bool IsCancelled { get; set; }
 }
