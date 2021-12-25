@@ -28,7 +28,9 @@
 	<PropertyGroup>
 		<UpdateVersionProperties>true</UpdateVersionProperties>
 		<IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
+		<GitVersionTargetsBefore>$(GitVersionTargetsBefore);_ValidateWindowsPackageType</GitVersionTargetsBefore>
 	</PropertyGroup>
+
 	<ItemGroup>
 		<Content Include="Assets\Binary\Pixeval.LoginProxy.zip" />
 		<Content Remove="Assets\Images\logo-no-caption.png" />
@@ -173,6 +175,16 @@
 	<!-- #endregion Exposes PRI resources to the source generator -->
 
 
+	<Target Name="PrepareForGenerateGitVersionInformation" BeforeTargets="GenerateGitVersionInformation">
+		<MakeDir Directories="$(OutDir);$(IntermediateOutputPath);@(DocFileItem->'%(RelativeDir)');@(CreateDirectory)" ContinueOnError="True" />
+		<ItemGroup>
+			<AppxManifest Include="Package.appxmanifest"></AppxManifest>
+		</ItemGroup>
+		<PropertyGroup>
+			<WindowsPackageType>MSIX</WindowsPackageType>
+		</PropertyGroup>
+	</Target>
+
 	<Target Name="PackageLoginProxy" BeforeTargets="PrepareForBuild">
 		<PropertyGroup>
 			<LoginProxyAssetsPath>$(MSBuildProjectDirectory)\Assets\Binary\Pixeval.LoginProxy.zip</LoginProxyAssetsPath>
@@ -192,7 +204,7 @@
 		<RemoveDir Directories="$(LoginProxyPublishDir)" />
 	</Target>
 
-	<Target Name="GeneratePackageAppxManifest" BeforeTargets="PrepareForPublish" AfterTargets="GetVersion">
+	<Target Name="GeneratePackageAppxManifest" BeforeTargets="_ValidateWindowsPackageType" DependsOnTargets="GetVersion">
 		<PropertyGroup>
 			<ManifestText>
 				&lt;?xml version="1.0" encoding="utf-8"?&gt;
@@ -259,11 +271,7 @@
 				&lt;/Package&gt;
 			</ManifestText>
 		</PropertyGroup>
-		<WriteLinesToFile
-			File="$(MSBuildProjectDirectory)\Package.appxmanifest"
-			Overwrite="true"
-			Lines="$(ManifestText)" />
-		
+		<WriteLinesToFile File="$(MSBuildProjectDirectory)\Package.appxmanifest" Overwrite="true" Lines="$(ManifestText)" />
 	</Target>
 
 
