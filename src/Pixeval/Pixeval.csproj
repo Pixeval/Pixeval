@@ -176,8 +176,8 @@
 	<!-- #endregion Exposes PRI resources to the source generator -->
 
 
-	<Target Name="PrepareForUpdateAssemblyInfo" BeforeTargets="UpdateAssemblyInfo" >
-		<MakeDir Directories="$(OutDir);$(IntermediateOutputPath);@(DocFileItem->'%(RelativeDir)');@(CreateDirectory)" ContinueOnError="True"/>
+	<Target Name="PrepareForGenerateGitVersionInformation" BeforeTargets="GenerateGitVersionInformation">
+		<MakeDir Directories="$(OutDir);$(IntermediateOutputPath);@(DocFileItem->'%(RelativeDir)');@(CreateDirectory)" ContinueOnError="True" />
 	</Target>
 
 	<Target Name="PackageLoginProxy" BeforeTargets="PrepareForBuild">
