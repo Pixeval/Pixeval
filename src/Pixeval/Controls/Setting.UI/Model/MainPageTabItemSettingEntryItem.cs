@@ -23,7 +23,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Pixeval.Misc;
+using Pixeval.Attributes;
+
 using Pixeval.Options;
 
 namespace Pixeval.Controls.Setting.UI.Model;

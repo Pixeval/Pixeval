@@ -40,7 +40,7 @@ public partial class App
     public App()
     {
         // The theme can only be changed in ctor
-        AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadSetting() ?? AppSetting.CreateDefault() };
+        AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadConfiguration() ?? AppSetting.CreateDefault() };
         RequestedTheme = AppViewModel.AppSetting.Theme switch
         {
             ApplicationTheme.Dark => Microsoft.UI.Xaml.ApplicationTheme.Dark,

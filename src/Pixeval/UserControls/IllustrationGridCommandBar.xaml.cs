@@ -32,8 +32,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.Attributes;
 using Pixeval.Download;
-using Pixeval.Misc;
+
 using Pixeval.Popups;
 using Pixeval.Popups.IllustrationResultFilter;
 using Pixeval.UserControls.TokenInput;
@@ -43,9 +44,9 @@ using Pixeval.Utilities;
 
 namespace Pixeval.UserControls;
 
-[DependencyProperty("PrimaryCommandsSupplements", typeof(ObservableCollection<ICommandBarElement>), DefaultValue = "new ObservableCollection<ICommandBarElement>()", InstanceChangedCallback = true)]
-[DependencyProperty("SecondaryCommandsSupplements", typeof(ObservableCollection<ICommandBarElement>), DefaultValue = "new ObservableCollection<ICommandBarElement>()", InstanceChangedCallback = true)]
-[DependencyProperty("IsDefaultCommandsEnabled", typeof(bool), DefaultValue = "true", InstanceChangedCallback = true)]
+[DependencyProperty("PrimaryCommandsSupplements", typeof(ObservableCollection<ICommandBarElement>), nameof(OnPrimaryCommandsSupplementsChanged), DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
+[DependencyProperty("SecondaryCommandsSupplements", typeof(ObservableCollection<ICommandBarElement>), nameof(OnSecondaryCommandsSupplementsChanged), DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
+[DependencyProperty("IsDefaultCommandsEnabled", typeof(bool), nameof(OnIsDefaultCommandsEnabledChanged), DefaultValue = "true")]
 [DependencyProperty("ViewModel", typeof(IllustrationGridViewModel), DefaultValue = "new IllustrationGridViewModel()")]
 public sealed partial class IllustrationGridCommandBar
 {

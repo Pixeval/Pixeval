@@ -2,41 +2,55 @@
     x:Class="Pixeval.Pages.Capability.FollowingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Pixeval.Pages.Capability"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:Pixeval.Controls"
+    xmlns:controls="using:Pixeval.Controls" 
+    xmlns:misc="using:Pixeval.Pages.Misc" 
+    xmlns:card="using:Pixeval.Controls.Card" 
     xmlns:illustratorView="using:Pixeval.Controls.IllustratorView"
-    xmlns:controls1="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:controls1="using:CommunityToolkit.WinUI.UI.Controls" 
+    xmlns:userControls="using:Pixeval.UserControls"
     mc:Ignorable="d"
     Loaded="FollowingsPage_OnLoaded"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    <Grid Margin="20,40,20,20">
+    <Grid Margin="20,40,10,20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <TextBlock x:Uid="/FollowingsPage/TitleTextBlock"
                    Grid.Row="0"
                    Style="{StaticResource TitleTextBlockStyle}" />
-        <ScrollViewer Grid.Row="2">
-            <StackPanel Spacing="20">
-                <StackPanel Spacing="10">
-                    <ItemsRepeater ItemsSource="{x:Bind _viewModel.Illustrators, Mode=OneWay}">
-                        <ItemsRepeater.Layout>
-                            <controls1:WrapLayout HorizontalSpacing="5"
-                                                  VerticalSpacing="5" />
-                        </ItemsRepeater.Layout>
-                        <ItemsRepeater.ItemTemplate>
-                            <DataTemplate x:DataType="illustratorView:IllustratorViewModel">
-                                <illustratorView:IllustratorView IllustratorName="{x:Bind Name}"
-                                                                 IllustratorDescription="{x:Bind Id}"
-                                                                 IllustratorPicture="{x:Bind AvatarSource, Mode=OneWay}" />
-                            </DataTemplate>
-                        </ItemsRepeater.ItemTemplate>
-                    </ItemsRepeater>
-
-                </StackPanel>
+        <ScrollViewer Grid.Row="1">
+            <StackPanel Spacing="10">
+                <ItemsRepeater ItemsSource="{x:Bind _viewModel.Illustrators, Mode=OneWay}">
+                    <ItemsRepeater.Layout>
+                        <StackLayout Spacing="10"></StackLayout>
+                    </ItemsRepeater.Layout>
+                    <ItemsRepeater.ItemTemplate>
+                        <DataTemplate x:DataType="illustratorView:IllustratorViewModel">
+                            <illustratorView:IllustratorView
+                                Tapped="IllustratorView_OnTapped"
+                                HorizontalAlignment="Stretch"
+                                ViewModel="{x:Bind}"
+                                ThumbnailSources="{x:Bind Illustrations, Mode=OneWay}"
+                                IllustratorName="{x:Bind Name}"
+                                IllustratorId="{x:Bind Id}"
+                                IllustratorPicture="{x:Bind AvatarSource, Mode=OneWay}" >
+                                <illustratorView:IllustratorView.ThumbnailItemTemplate>
+                                    <DataTemplate x:DataType="userControls:IllustrationViewModel">
+                                        <Image Source="{x:Bind ThumbnailSource, Mode=OneWay}" 
+                                               Height="70"
+                                               Width="70"
+                                               HorizontalAlignment="Stretch"
+                                               VerticalAlignment="Stretch" Stretch="UniformToFill"></Image>
+                                    </DataTemplate>
+                                </illustratorView:IllustratorView.ThumbnailItemTemplate>
+                            </illustratorView:IllustratorView>
+                        </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                </ItemsRepeater>
             </StackPanel>
         </ScrollViewer>
     </Grid>

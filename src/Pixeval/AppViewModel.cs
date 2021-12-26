@@ -68,6 +68,11 @@ public class AppViewModel : AutoActivateObservableRecipient,
 
     public IServiceScope AppServicesScope => AppHost.Services.CreateScope();
 
+    /// <summary>
+    /// Indicates whether the exit is caused by a logout action
+    /// </summary>
+    public bool SignOutExit { get; set; }
+
     public App App { get; }
 
     public MainWindow Window { get; private set; } = null!;

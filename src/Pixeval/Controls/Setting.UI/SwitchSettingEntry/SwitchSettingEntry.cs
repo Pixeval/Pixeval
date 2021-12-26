@@ -23,14 +23,15 @@
 using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Attributes;
 using Pixeval.Controls.Setting.UI.UserControls;
-using Pixeval.Misc;
+
 
 namespace Pixeval.Controls.Setting.UI.SwitchSettingEntry;
 
 [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
 [TemplatePart(Name = PartSwitch, Type = typeof(ToggleSwitch))]
-[DependencyProperty("IsOn", typeof(bool), InstanceChangedCallback = true)]
+[DependencyProperty("IsOn", typeof(bool), nameof(OnIsOnChanged))]
 public partial class SwitchSettingEntry : SettingEntryBase
 {
     private const string PartSwitch = "Switch";

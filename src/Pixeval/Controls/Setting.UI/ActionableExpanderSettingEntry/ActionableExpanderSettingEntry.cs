@@ -22,16 +22,17 @@
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Attributes;
 using Pixeval.Controls.Setting.UI.UserControls;
-using Pixeval.Misc;
+
 
 namespace Pixeval.Controls.Setting.UI.ActionableExpanderSettingEntry;
 
 [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
 [TemplatePart(Name = PartEntryContentPresenter, Type = typeof(ContentPresenter))]
-[DependencyProperty("Icon", typeof(IconElement), InstanceChangedCallback = true)]
+[DependencyProperty("Icon", typeof(IconElement), nameof(OnIconChanged))]
 [DependencyProperty("Header", typeof(string))]
-[DependencyProperty("Description", typeof(object), InstanceChangedCallback = true)]
+[DependencyProperty("Description", typeof(object), nameof(OnDescriptionChanged))]
 [DependencyProperty("HeaderHeight", typeof(double))]
 [DependencyProperty("ActionContent", typeof(object))]
 [DependencyProperty("ContentMargin", typeof(Thickness))]

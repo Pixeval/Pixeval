@@ -25,6 +25,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
 using Pixeval.Misc;
+using Pixeval.Pages.Login;
 using Pixeval.Pages.Misc;
 
 namespace Pixeval;

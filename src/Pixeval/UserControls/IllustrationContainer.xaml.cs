@@ -26,12 +26,14 @@ using System.Collections.Specialized;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Misc;
+using Pixeval.Attributes;
+
 
 namespace Pixeval.UserControls;
 
 [DependencyProperty("PrimaryCommandsSupplements", typeof(ObservableCollection<ICommandBarElement>), DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
 [DependencyProperty("SecondaryCommandsSupplements", typeof(ObservableCollection<ICommandBarElement>), DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
+[DependencyProperty("Header", typeof(object))]
 public sealed partial class IllustrationContainer
 {
     public IllustrationContainer()

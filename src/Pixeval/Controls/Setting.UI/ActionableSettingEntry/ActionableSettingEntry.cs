@@ -21,7 +21,8 @@
 #endregion
 
 using Microsoft.UI.Xaml.Markup;
-using Pixeval.Misc;
+using Pixeval.Attributes;
+
 
 namespace Pixeval.Controls.Setting.UI.ActionableSettingEntry;
 

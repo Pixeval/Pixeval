@@ -24,7 +24,8 @@ using System;
 using Windows.System;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.Misc;
+using Pixeval.Attributes;
+
 using Pixeval.UserControls.TokenInput;
 
 namespace Pixeval.Controls.TokenInputTextBox;

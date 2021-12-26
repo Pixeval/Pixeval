@@ -7,11 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pixeval", "src\Pixeval\Pixe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pixeval.SourceGen", "src\Pixeval.SourceGen\Pixeval.SourceGen.csproj", "{29F8F1E7-1B87-4030-B9E8-1DDEF7A552B5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pixeval.LoginProxy", "src\Pixeval.LoginProxy\Pixeval.LoginProxy.csproj", "{9508EEE4-A7F4-44A8-BE11-E7A25857D443}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1663D266-BE8A-4035-BE44-AB6D2BAFE62A}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\ci.yml = .github\workflows\ci.yml
+		.github\workflows\build-pr.yml = .github\workflows\build-pr.yml
+		.github\workflows\build.yml = .github\workflows\build.yml
+		.github\workflows\release.yml = .github\workflows\release.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pixeval.CoreApi", "src\Pixeval.CoreApi\Pixeval.CoreApi.csproj", "{8DDC779F-33E3-43CF-BEAC-3A9355F13C55}"
@@ -70,22 +70,6 @@ Global
 		{29F8F1E7-1B87-4030-B9E8-1DDEF7A552B5}.Release|x64.Build.0 = Release|Any CPU
 		{29F8F1E7-1B87-4030-B9E8-1DDEF7A552B5}.Release|x86.ActiveCfg = Release|Any CPU
 		{29F8F1E7-1B87-4030-B9E8-1DDEF7A552B5}.Release|x86.Build.0 = Release|Any CPU
-		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Debug|arm64.ActiveCfg = Debug|Any CPU
-		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Debug|arm64.Build.0 = Debug|Any CPU
-		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Debug|x64.Build.0 = Debug|Any CPU
-		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Debug|x86.Build.0 = Debug|Any CPU
-		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Release|arm64.ActiveCfg = Release|Any CPU
-		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Release|arm64.Build.0 = Release|Any CPU
-		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Release|x64.ActiveCfg = Release|Any CPU
-		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Release|x64.Build.0 = Release|Any CPU
-		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Release|x86.ActiveCfg = Release|Any CPU
-		{9508EEE4-A7F4-44A8-BE11-E7A25857D443}.Release|x86.Build.0 = Release|Any CPU
 		{8DDC779F-33E3-43CF-BEAC-3A9355F13C55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8DDC779F-33E3-43CF-BEAC-3A9355F13C55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DDC779F-33E3-43CF-BEAC-3A9355F13C55}.Debug|arm64.ActiveCfg = Debug|Any CPU

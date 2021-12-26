@@ -1,0 +1,46 @@
+name: Build-PR
+
+on:
+  pull_request:
+  
+
+jobs:
+    build:
+        strategy:
+            matrix:
+                platform: ['x64','x86','arm64']
+
+        runs-on: windows-2022
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+              with:
+                fetch-depth: 0
+            - name: setup-msbuild
+              uses: microsoft/setup-msbuild@v1
+
+            - uses: actions/cache@v2
+              with:
+                path: ~/.nuget/packages
+                key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+                restore-keys: |
+                    ${{ runner.os }}-nuget-
+
+            - name: Restore the application
+              run: msbuild -t:restore -p:Platform=${{ matrix.platform }} -p:RestoreLockedMode=true -m
+
+            - name: Publish the application
+              run:  msbuild -t:publish -p:Configuration=Debug -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:OutDir="$PWD\build" -m
+              shell: pwsh
+
+            - name: Copy files
+              run: |
+                $files = @(Get-ChildItem -Recurse|Where-Object -Property Name -Like Pixeval*.msix)
+                Copy-Item $files -Destination ( New-Item -Path ./output -ItemType Directory)
+
+            - name: Upload a Build Artifact
+              uses: actions/upload-artifact@v2
+              with:
+                  name: Pixeval-${{ matrix.platform }}
+                  path: "./output/*"

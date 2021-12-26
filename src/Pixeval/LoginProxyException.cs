@@ -35,15 +35,15 @@ public class LoginProxyException : Exception
     {
     }
 
-    protected LoginProxyException([NotNull] SerializationInfo info, StreamingContext context) : base(info, context)
+    protected LoginProxyException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
 
-    public LoginProxyException([CanBeNull] string? message) : base(message)
+    public LoginProxyException(string? message) : base(message)
     {
     }
 
-    public LoginProxyException([CanBeNull] string? message, [CanBeNull] Exception? innerException) : base(message, innerException)
+    public LoginProxyException(string? message, Exception? innerException) : base(message, innerException)
     {
     }
 }

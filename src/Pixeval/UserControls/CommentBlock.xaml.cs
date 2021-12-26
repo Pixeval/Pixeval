@@ -24,7 +24,8 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.Misc;
+using Pixeval.Attributes;
+
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
@@ -33,7 +34,7 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.UserControls;
 
-[DependencyProperty("ViewModel", typeof(CommentBlockViewModel), InstanceChangedCallback = true)]
+[DependencyProperty("ViewModel", typeof(CommentBlockViewModel), nameof(OnViewModelChanged))]
 public sealed partial class CommentBlock
 {
     private EventHandler<TappedRoutedEventArgs>? _deleteHyperlinkButtonTapped;

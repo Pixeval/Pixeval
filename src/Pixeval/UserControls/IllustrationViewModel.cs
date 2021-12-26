@@ -29,10 +29,11 @@ using Windows.Storage.Streams;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.Attributes;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
-using Pixeval.Misc;
+
 using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
@@ -204,9 +205,11 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
         return App.AppViewModel.MakoClient.PostBookmarkAsync(Id, PrivacyPolicy.Public);
     }
 
+    public string Tooltip => GetTooltip();
+
     public string GetTooltip()
     {
-        var sb = new StringBuilder(Id);
+        var sb = new StringBuilder(Illustration.Title);
         if (Illustration.IsUgoira())
         {
             sb.AppendLine();

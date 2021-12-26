@@ -26,6 +26,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Microsoft.CodeAnalysis;
+using Pixeval.SourceGen.Utilities;
 
 namespace Pixeval.SourceGen;
 

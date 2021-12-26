@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using Autofac;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Preference;
@@ -49,9 +48,5 @@ public partial class MakoClient
     /// </summary>
     internal IContainer MakoServices { get; init; }
 
-    /// <summary>
-    ///     The <see cref="CancellationTokenSource" /> that is used to cancel ths <see cref="MakoClient" />\
-    ///     and all of its running engines
-    /// </summary>
-    public CancellationTokenSource CancellationTokenSource { get; set; }
+    public bool IsCancelled { get; set; }
 }

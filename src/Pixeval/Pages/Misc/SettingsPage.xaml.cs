@@ -26,6 +26,7 @@ using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.AppManagement;
 using Pixeval.Controls.Setting.UI;
 using Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry;
 using Pixeval.Download.MacroParser;
@@ -54,7 +55,7 @@ public sealed partial class SettingsPage
 
     private void SettingsPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        CheckForUpdatesEntry.Header = AppContext.AppVersion.ToString();
+        CheckForUpdatesEntry.Header = GitVersionInformation.SemVer;
     }
 
     private void SingleSelectionSettingEntry_OnSelectionChanged(SingleSelectionSettingEntry sender, SelectionChangedEventArgs args)
@@ -111,6 +112,7 @@ public sealed partial class SettingsPage
         if (await dialog.ShowAsync() == ContentDialogResult.Primary)
         {
             await AppContext.ClearDataAsync();
+            App.AppViewModel.SignOutExit = true;
             App.AppViewModel.Window.Close();
         }
     }
