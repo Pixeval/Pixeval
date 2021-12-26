@@ -22,8 +22,9 @@
 
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Attributes;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Misc;
+
 using Pixeval.Options;
 using Pixeval.Util;
 

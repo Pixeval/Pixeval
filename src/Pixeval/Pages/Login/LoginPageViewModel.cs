@@ -34,6 +34,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Win32;
 using Pixeval.AppManagement;
+using Pixeval.Attributes;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;

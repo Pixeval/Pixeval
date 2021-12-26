@@ -27,13 +27,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Pixeval.SourceGen.Utilities;
 
 namespace Pixeval.SourceGen;
 
 [Generator]
 internal class GenerateConstructorGenerator : GetAttributeGenerator
 {
-    protected override string AttributePathGetter() => "Pixeval.Misc.GenerateConstructorAttribute";
+    protected override string AttributePathGetter() => "Pixeval.Attributes.GenerateConstructorAttribute";
 
     protected override void ExecuteForEach(GeneratorExecutionContext context, INamedTypeSymbol attributeType, TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol specificType)
     {

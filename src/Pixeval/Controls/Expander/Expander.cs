@@ -24,8 +24,8 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Pixeval.Attributes;
 using Pixeval.Controls.Card;
-using Pixeval.Misc;
 using Pixeval.Util.UI;
 
 namespace Pixeval.Controls.Expander;
@@ -35,9 +35,9 @@ namespace Pixeval.Controls.Expander;
 [TemplatePart(Name = PartRootPanel, Type = typeof(Grid))]
 [TemplateVisualState(GroupName = "CommonStates", Name = "Normal")]
 [TemplateVisualState(GroupName = "CommonStates", Name = "Expanded")]
-[DependencyProperty("HeaderHeight", typeof(double), InstanceChangedCallback = true)]
+[DependencyProperty("HeaderHeight", typeof(double), nameof(OnHeaderHeightChanged))]
 [DependencyProperty("NegativeHeaderHeight", typeof(double))]
-[DependencyProperty("IsExpanded", typeof(bool), DefaultValue = "false", InstanceChangedCallback = true)]
+[DependencyProperty("IsExpanded", typeof(bool), nameof(OnIsExpandedChanged), DefaultValue = "false")]
 [DependencyProperty("Header", typeof(object))]
 public sealed partial class Expander : ContentControl
 {

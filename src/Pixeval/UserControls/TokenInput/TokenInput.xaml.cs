@@ -25,7 +25,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.Misc;
+using Pixeval.Attributes;
+
 using Pixeval.Util.UI;
 
 namespace Pixeval.UserControls.TokenInput;

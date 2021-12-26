@@ -23,7 +23,7 @@
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 
-namespace Pixeval.SourceGen;
+namespace Pixeval.SourceGen.Utilities;
 
 public class AdditionalTextEqualityComparer : IEqualityComparer<AdditionalText>
 {

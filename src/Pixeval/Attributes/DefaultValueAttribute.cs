@@ -22,8 +22,10 @@
 
 using System;
 using System.Reflection;
+using Pixeval.Misc;
 
-namespace Pixeval.Misc;
+
+namespace Pixeval.Attributes;
 
 public class DefaultValue : Attribute
 {

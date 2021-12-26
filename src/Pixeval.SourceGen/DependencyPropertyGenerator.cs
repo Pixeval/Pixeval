@@ -26,13 +26,14 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Pixeval.SourceGen.Utilities;
 
 namespace Pixeval.SourceGen;
 
 [Generator]
 internal class DependencyPropertyGenerator : GetAttributeGenerator
 {
-    protected override string AttributePathGetter() => "Pixeval.Misc.DependencyPropertyAttribute";
+    protected override string AttributePathGetter() => "Pixeval.Attributes.DependencyPropertyAttribute";
 
     protected override void ExecuteForEach(GeneratorExecutionContext context, INamedTypeSymbol attributeType, TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol specificClass)
     {
@@ -43,7 +44,7 @@ internal class DependencyPropertyGenerator : GetAttributeGenerator
 
         foreach (var attribute in specificClass.GetAttributes().Where(attribute => SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, attributeType)))
         {
-            if (attribute.ConstructorArguments[0].Value is not string propertyName || attribute.ConstructorArguments[1].Value is not INamedTypeSymbol type)
+            if (attribute.ConstructorArguments[0].Value is not string propertyName || attribute.ConstructorArguments[1].Value is not INamedTypeSymbol type || attribute.ConstructorArguments[2].Value is not string propertyChanged)
             {
                 continue;
             }
@@ -51,7 +52,6 @@ internal class DependencyPropertyGenerator : GetAttributeGenerator
             var isSetterPublic = true;
             var defaultValue = "DependencyProperty.UnsetValue";
             var isNullable = false;
-            var instanceChangedCallback = false;
 
             foreach (var namedArgument in attribute.NamedArguments)
             {
@@ -68,9 +68,6 @@ internal class DependencyPropertyGenerator : GetAttributeGenerator
                         case "IsNullable":
                             isNullable = (bool)value;
                             break;
-                        case "InstanceChangedCallback":
-                            instanceChangedCallback = (bool)value;
-                            break;
                     }
                 }
             }
@@ -80,9 +77,9 @@ internal class DependencyPropertyGenerator : GetAttributeGenerator
             namespaces.UseNamespace(usedTypes, specificClass, type);
             var defaultValueExpression = SyntaxFactory.ParseExpression(defaultValue);
             var metadataCreation = GetObjectCreationExpression(defaultValueExpression);
-            if (instanceChangedCallback)
+            if (propertyChanged is not "")
             {
-                metadataCreation = GetMetadataCreation(metadataCreation, $"On{propertyName}Changed");
+                metadataCreation = GetMetadataCreation(metadataCreation, propertyChanged);
             }
 
             var registration = GetRegistration(propertyName, type, specificClass, metadataCreation);

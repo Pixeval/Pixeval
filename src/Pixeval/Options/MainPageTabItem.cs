@@ -21,7 +21,8 @@
 #endregion
 
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Misc;
+using Pixeval.Attributes;
+
 using Pixeval.Pages;
 
 namespace Pixeval.Options;
