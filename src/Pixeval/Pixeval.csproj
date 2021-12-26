@@ -178,7 +178,7 @@
 
 	<Target Name="PrepareForGenerateGitVersionInformation" BeforeTargets="GenerateGitVersionInformation">
 		<MakeDir Directories="$(OutDir);$(IntermediateOutputPath);@(DocFileItem->'%(RelativeDir)');@(CreateDirectory)" ContinueOnError="True" />
-		<ItemGroup>
+		<ItemGroup Condition="'@(AppxManifest)'==''">
 			<AppxManifest Include="Package.appxmanifest"></AppxManifest>
 		</ItemGroup>
 		<PropertyGroup>
