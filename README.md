@@ -89,7 +89,7 @@
 * [@Lasm_Gratel](https://github.com/LasmGratel)
 * [@TheRealKamisama](https://github.com/TheRealKamisama)
 * [@Summpot](https://github.com/Summpot)
-* [@Poker-sang](https://github.com/Poker-sang)
+* [@Poker](https://github.com/Poker-sang)
 
 ## 支持作者:
 
