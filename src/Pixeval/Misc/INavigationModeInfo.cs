@@ -26,7 +26,7 @@ namespace Pixeval.Misc;
 
 public interface INavigationModeInfo
 {
-    NavigationMode? NavigationMode { get; }
+    static abstract NavigationMode? NavigationMode { get; }
 
-    NavigationMode? GetNavigationModeAndReset();
+    static abstract NavigationMode? GetNavigationModeAndReset();
 }

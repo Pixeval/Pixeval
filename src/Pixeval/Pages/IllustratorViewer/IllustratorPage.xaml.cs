@@ -18,14 +18,8 @@ using Pixeval.Messages;
 using Pixeval.UserControls;
 using Pixeval.Util;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace Pixeval.Pages.IllustratorViewer
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class IllustratorPage
     {
         private IllustratorViewModel? _viewModel;
@@ -74,7 +68,7 @@ namespace Pixeval.Pages.IllustratorViewer
 
         private void IllustratorPage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (App.AppViewModel.Window.GetNavigationModeAndReset() is not NavigationMode.Back)
+            if (MainWindow.GetNavigationModeAndReset() is not NavigationMode.Back)
             {
                 ChangeSource();
             }

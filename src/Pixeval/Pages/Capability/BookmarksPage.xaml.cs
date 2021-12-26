@@ -59,7 +59,7 @@ public sealed partial class BookmarksPage : ISortedIllustrationContainerPageHelp
 
     private void BookmarksPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (App.AppViewModel.Window.GetNavigationModeAndReset() is not NavigationMode.Back)
+        if (MainWindow.GetNavigationModeAndReset() is not NavigationMode.Back)
         {
             ChangeSource();
         }
