@@ -30,6 +30,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.Attributes;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Options;

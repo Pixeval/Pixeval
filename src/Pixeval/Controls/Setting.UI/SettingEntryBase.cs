@@ -22,14 +22,15 @@
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Attributes;
 using Pixeval.Controls.Setting.UI.UserControls;
 using Pixeval.Misc;
 
 namespace Pixeval.Controls.Setting.UI;
 
-[DependencyProperty("Icon", typeof(IconElement), InstanceChangedCallback = true)]
+[DependencyProperty("Icon", typeof(IconElement), nameof(OnIconChanged))]
 [DependencyProperty("Header", typeof(string))]
-[DependencyProperty("Description", typeof(object), InstanceChangedCallback = true)]
+[DependencyProperty("Description", typeof(object), nameof(OnDescriptionChanged))]
 public partial class SettingEntryBase : Control
 {
     protected const string PartEntryHeader = "EntryHeader";

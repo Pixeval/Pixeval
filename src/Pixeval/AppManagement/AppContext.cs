@@ -22,10 +22,10 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.Attributes;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
-using Pixeval.Misc;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using System;

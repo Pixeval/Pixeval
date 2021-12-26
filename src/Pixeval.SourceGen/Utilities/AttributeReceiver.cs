@@ -21,13 +21,12 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Pixeval.SourceGen;
+namespace Pixeval.SourceGen.Utilities;
 
 internal class AttributeReceiver : ISyntaxContextReceiver
 {
@@ -47,16 +46,12 @@ internal class AttributeReceiver : ISyntaxContextReceiver
     {
         _attributeSymbol ??= context.SemanticModel.Compilation.GetTypeByMetadataName(_attributeName);
 
-        if (_attributeSymbol is null)
-        {
-            return;
-        }
-        
+        if (_attributeSymbol is null) return;
+
         if (context.Node is TypeDeclarationSyntax typeDeclaration && typeDeclaration.AttributeLists
                 .SelectMany(l => l.Attributes, (_, attribute) => context.SemanticModel.GetSymbolInfo(attribute))
-                .Any(symbolInfo => SymbolEqualityComparer.Default.Equals(symbolInfo.Symbol?.ContainingType, _attributeSymbol)))
-        {
+                .Any(symbolInfo =>
+                    SymbolEqualityComparer.Default.Equals(symbolInfo.Symbol?.ContainingType, _attributeSymbol)))
             _candidateTypes.Add(typeDeclaration);
-        }
     }
 }

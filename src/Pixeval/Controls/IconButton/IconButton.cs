@@ -23,12 +23,13 @@
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Attributes;
 using Pixeval.Misc;
 
 namespace Pixeval.Controls.IconButton;
 
-[DependencyProperty("Text", typeof(string), InstanceChangedCallback = true)]
-[DependencyProperty("Icon", typeof(IconElement), InstanceChangedCallback = true)]
+[DependencyProperty("Text", typeof(string), nameof(OnTextChanged))]
+[DependencyProperty("Icon", typeof(IconElement), nameof(OnIconChanged))]
 public partial class IconButton : Button
 {
     public IconButton()

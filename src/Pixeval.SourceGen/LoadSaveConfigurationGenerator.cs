@@ -24,13 +24,14 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Pixeval.SourceGen.Utilities;
 
 namespace Pixeval.SourceGen;
 
 [Generator]
 internal class LoadSaveConfigurationGenerator : GetAttributeGenerator
 {
-    protected override string AttributePathGetter() => "Pixeval.Misc.LoadSaveConfigurationAttribute";
+    protected override string AttributePathGetter() => "Pixeval.Attributes.LoadSaveConfigurationAttribute";
 
     protected override void ExecuteForEach(GeneratorExecutionContext context, INamedTypeSymbol attributeType,
         TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol specificType)

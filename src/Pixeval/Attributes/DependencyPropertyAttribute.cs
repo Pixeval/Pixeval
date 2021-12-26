@@ -22,7 +22,7 @@
 
 using System;
 
-namespace Pixeval.Misc;
+namespace Pixeval.Attributes;
 
 /// <summary>
 ///     生成如下代码
@@ -34,10 +34,11 @@ namespace Pixeval.Misc;
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
 public sealed class DependencyPropertyAttribute : Attribute
 {
-    public DependencyPropertyAttribute(string name, Type type)
+    public DependencyPropertyAttribute(string name, Type type,string propertyChanged = "")
     {
         Name = name;
         Type = type;
+        PropertyChanged = propertyChanged;
         IsSetterPublic = true;
         IsNullable = true;
     }
@@ -46,11 +47,11 @@ public sealed class DependencyPropertyAttribute : Attribute
 
     public Type Type { get; }
 
+    public string PropertyChanged { get; init; }
+
     public bool IsSetterPublic { get; init; }
 
     public bool IsNullable { get; init; }
 
     public string DefaultValue { get; init; } = "DependencyProperty.UnsetValue";
-
-    public bool InstanceChangedCallback { get; init; }
 }

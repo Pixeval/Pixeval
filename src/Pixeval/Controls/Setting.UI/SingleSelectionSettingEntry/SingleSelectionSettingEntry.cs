@@ -27,6 +27,7 @@ using Windows.Foundation;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Attributes;
 using Pixeval.Controls.Setting.UI.Model;
 using Pixeval.Controls.Setting.UI.UserControls;
 using Pixeval.Misc;
@@ -37,7 +38,7 @@ namespace Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry;
 [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
 [DependencyProperty("HeaderHeight", typeof(double))]
 [DependencyProperty("ItemsSource", typeof(IEnumerable<IStringRepresentableItem>))]
-[DependencyProperty("SelectedItem", typeof(object), InstanceChangedCallback = true)]
+[DependencyProperty("SelectedItem", typeof(object), nameof(OnSelectedItemChanged))]
 public sealed partial class SingleSelectionSettingEntry : SettingEntryBase
 {
     private const string PartSelectorRadioButtons = "SelectorRadioButtons";

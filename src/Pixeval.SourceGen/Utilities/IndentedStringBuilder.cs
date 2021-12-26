@@ -23,7 +23,7 @@
 using System;
 using System.Text;
 
-namespace Pixeval.SourceGen;
+namespace Pixeval.SourceGen.Utilities;
 
 public class IndentedStringBuilder
 {

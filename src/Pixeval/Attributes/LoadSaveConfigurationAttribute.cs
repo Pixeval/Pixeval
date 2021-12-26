@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pixeval.Misc;
+namespace Pixeval.Attributes;
 
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public class LoadSaveConfigurationAttribute : Attribute

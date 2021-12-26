@@ -40,6 +40,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.Attributes;
 using Pixeval.Misc;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
