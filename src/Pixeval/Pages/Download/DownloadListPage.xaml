@@ -10,6 +10,7 @@
                        xmlns:toolkit="using:CommunityToolkit.WinUI.UI.Controls"
                        xmlns:ui="using:Pixeval.Util.UI"
                        xmlns:util="using:Pixeval.Misc"
+                       xmlns:attributes="using:Pixeval.Attributes"
                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                        mc:Ignorable="d">
     <Grid Padding="20,0">
@@ -70,7 +71,7 @@
             <ComboBox.ItemTemplate>
                 <DataTemplate x:DataType="download:DownloadListOption">
                     <TextBlock
-                        Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent((download:DownloadListOption))}" />
+                        Text="{x:Bind attributes:LocalizedResourceAttributeHelper.GetLocalizedResourceContent((download:DownloadListOption))}" />
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>

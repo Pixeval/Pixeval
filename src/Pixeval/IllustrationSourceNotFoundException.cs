@@ -32,15 +32,15 @@ public class IllustrationSourceNotFoundException : Exception
     {
     }
 
-    protected IllustrationSourceNotFoundException([NotNull] SerializationInfo info, StreamingContext context) : base(info, context)
+    protected IllustrationSourceNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
 
-    public IllustrationSourceNotFoundException([CanBeNull] string? message) : base(message)
+    public IllustrationSourceNotFoundException(string? message) : base(message)
     {
     }
 
-    public IllustrationSourceNotFoundException([CanBeNull] string? message, [CanBeNull] Exception? innerException) : base(message, innerException)
+    public IllustrationSourceNotFoundException(string? message, Exception? innerException) : base(message, innerException)
     {
     }
 }

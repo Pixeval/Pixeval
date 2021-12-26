@@ -20,7 +20,8 @@
 
 #endregion
 
-using Pixeval.Misc;
+using Pixeval.Attributes;
+
 
 namespace Pixeval.Pages.Download;
 

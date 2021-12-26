@@ -118,7 +118,8 @@ internal class DependencyPropertyGenerator : ISourceGenerator
                 var generatedClass = GetClassDeclaration(specificClass, members);
                 var generatedNamespace = GetNamespaceDeclaration(specificClass, generatedClass);
                 var compilationUnit = GetCompilationUnit(generatedNamespace, namespaces);
-                var fileName = specificClass.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat.WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted)) + ".g.cs";
+                var fileName = specificClass.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat
+                    .WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted)) + ".g.cs";
                 context.AddSource(fileName, SyntaxFactory.SyntaxTree(compilationUnit, encoding: Encoding.UTF8).GetText());
             }
         }

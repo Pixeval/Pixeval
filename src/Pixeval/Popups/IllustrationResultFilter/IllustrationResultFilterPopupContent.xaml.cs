@@ -24,7 +24,8 @@ using System;
 using System.Reflection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.Misc;
+using Pixeval.Attributes;
+
 
 namespace Pixeval.Popups.IllustrationResultFilter;
 

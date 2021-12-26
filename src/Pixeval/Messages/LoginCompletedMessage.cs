@@ -21,6 +21,7 @@
 #endregion
 
 using Pixeval.CoreApi.Preference;
+using Pixeval.Pages.Login;
 using Pixeval.Pages.Misc;
 
 namespace Pixeval.Messages;

@@ -26,21 +26,28 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Pixeval.Attributes;
 using Pixeval.Controls.Card;
-using Pixeval.Misc;
+
 
 namespace Pixeval.Controls.IllustratorView;
 
 [TemplatePart(Name = PartContentContainer, Type = typeof(CardControl))]
+[TemplatePart(Name = PartAvatar, Type = typeof(PersonPicture))]
 [DependencyProperty("IllustratorName", typeof(string))]
-[DependencyProperty("IllustratorDescription", typeof(string))]
-[DependencyProperty("IllustratorProfileNavigateUri", typeof(Uri))]
+[DependencyProperty("IllustratorId", typeof(string))]
+[DependencyProperty("ThumbnailSources", typeof(object))]
+[DependencyProperty("ThumbnailItemTemplate", typeof(object))]
 [DependencyProperty("IllustratorPicture", typeof(ImageSource))]
+[DependencyProperty("ViewModel", typeof(IllustratorViewModel))]
 public partial class IllustratorView : Control
 {
     private const string PartContentContainer = "ContentContainer";
+    private const string PartAvatar = "Avatar";
 
     private CardControl? _contentContainer;
+
+    public PersonPicture? Avatar { get; private set; }
 
     public IllustratorView()
     {
@@ -53,22 +60,18 @@ public partial class IllustratorView : Control
         {
             _contentContainer.PointerEntered -= ContentContainerOnPointerEntered;
             _contentContainer.PointerExited -= ContentContainerOnPointerExited;
-            _contentContainer.Tapped -= ContentContainerOnTapped;
         }
 
         if ((_contentContainer = GetTemplateChild(PartContentContainer) as CardControl) is not null)
         {
             _contentContainer.PointerEntered += ContentContainerOnPointerEntered;
             _contentContainer.PointerExited += ContentContainerOnPointerExited;
-            _contentContainer.Tapped += ContentContainerOnTapped;
         }
 
-        base.OnApplyTemplate();
-    }
+        if ((Avatar = GetTemplateChild(PartAvatar) as PersonPicture) is not null)
+        {}
 
-    private async void ContentContainerOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        await Launcher.LaunchUriAsync(IllustratorProfileNavigateUri);
+        base.OnApplyTemplate();
     }
 
     private void ContentContainerOnPointerExited(object sender, PointerRoutedEventArgs e)

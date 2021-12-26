@@ -1,39 +1,37 @@
-﻿#region Copyright (c) Pixeval/Pixeval
-
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2021 Pixeval/IllustratorViewModel.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-#endregion
-
+﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.AppManagement;
+using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
+using Pixeval.Pages.IllustrationViewer;
+using Pixeval.UserControls;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
+using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Controls.IllustratorView;
 
-public partial class IllustratorViewModel : ObservableObject
+public partial class IllustratorViewModel : ObservableObject, IIllustrationVisualizer
 {
+    public string Name { get; set; }
+
+    public string AvatarUrl { get; set; }
+
     [ObservableProperty]
     private ImageSource? _avatarSource;
+
+    public IFetchEngine<Illustration?> FetchEngine => App.AppViewModel.MakoClient.Posts(Id.ToString());
+
+    public long Id { get; set; }
+
+    public string? Account { get; set; }
+
+    public string? Comment { get; set; }
+
+    public ObservableCollection<IllustrationViewModel> Illustrations { get; }
+
+    public IllustrationVisualizationController VisualizationController { get; internal set; }
 
     public IllustratorViewModel(UserInfo info)
     {
@@ -42,25 +40,34 @@ public partial class IllustratorViewModel : ObservableObject
         Id = info.Id;
         Account = info.Account;
         Comment = info.Comment;
+        Illustrations = new ObservableCollection<IllustrationViewModel>();
+        VisualizationController = new IllustrationVisualizationController(this);
+        _ = LoadAvatar();
     }
 
-    public string Name { get; set; }
-
-    public string AvatarUrl { get; set; }
-
-    public long Id { get; set; }
-
-    public string? Account { get; set; }
-
-    public string? Comment { get; set; }
-
-    public async Task LoadAvatarSource()
+    public async Task LoadAvatar()
     {
-        if (AvatarSource != null)
-        {
-            return;
-        }
+        if (AvatarSource != null) return;
+        AvatarSource = (await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(AvatarUrl)
+            .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync())!)!;
+    }
 
-        AvatarSource = (await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(AvatarUrl).GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync()))!;
+    public async Task LoadThumbnail()
+    {
+        await VisualizationController.ResetAndFillAsync(FetchEngine, 3);
+        foreach (var model in Illustrations)
+        {
+            await model.LoadThumbnailIfRequired();
+        }
+    }
+
+    public void DisposeCurrent()
+    {
+        Illustrations.Clear();
+    }
+
+    public void AddIllustrationViewModel(IllustrationViewModel viewModel)
+    {
+        Illustrations.Add(viewModel);
     }
 }

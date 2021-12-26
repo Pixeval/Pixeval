@@ -4,18 +4,21 @@
         <ResourceDictionary Source="ms-appx:///Controls/PersonView/PersonView.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/IllustratorView/IllustratorView.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/Expander/Expander.xaml" />
-        <ResourceDictionary Source="ms-appx:///Controls/Setting.UI/SingleSelectionSettingEntry/SingleSelectionSettingEntry.xaml" />
+        <ResourceDictionary
+            Source="ms-appx:///Controls/Setting.UI/SingleSelectionSettingEntry/SingleSelectionSettingEntry.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/Setting.UI/SwitchSettingEntry/SwitchSettingEntry.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/Setting.UI/SliderSettingEntry/SliderSettingEntry.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/Setting.UI/SettingsGroup/SettingsGroup.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/Setting.UI/ExpanderSettingEntry/ExpanderSettingEntry.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/Setting.UI/ActionableSettingEntry/ActionableSettingEntry.xaml" />
-        <ResourceDictionary Source="ms-appx:///Controls/Setting.UI/ActionableExpanderSettingEntry/ActionableExpanderSettingEntry.xaml" />
-        <ResourceDictionary Source="ms-appx:///Controls/NotifyOnLoadedCalendarDatePicker/NotifyOnLoadedCalendarDatePicker.xaml" />
+        <ResourceDictionary
+            Source="ms-appx:///Controls/Setting.UI/ActionableExpanderSettingEntry/ActionableExpanderSettingEntry.xaml" />
+        <ResourceDictionary
+            Source="ms-appx:///Controls/NotifyOnLoadedCalendarDatePicker/NotifyOnLoadedCalendarDatePicker.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/NotifyOnLoadedComboBox/NotifyOnLoadedComboBox.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/IconButton/IconButton.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/TokenInputTextBox/TokenInputTextBox.xaml" />
-        <ResourceDictionary Source="ms-appx:///Controls/SlideView/SlideView.xaml" />
-        <ResourceDictionary Source="ms-appx:///Popups/IllustrationResultFilter/IllustrationResultFilterFunctionEntry.xaml" />
+        <ResourceDictionary
+            Source="ms-appx:///Popups/IllustrationResultFilter/IllustrationResultFilterFunctionEntry.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

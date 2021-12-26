@@ -42,6 +42,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
+using Pixeval.Controls.IllustratorView;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Dialogs;
@@ -64,6 +65,9 @@ public sealed partial class MainPage
     // This field contains the view model that the illustration viewer is
     // currently holding if we're navigating back to the MainPage
     private static IllustrationViewModel? _illustrationViewerContent;
+    
+    // Similar to the previous field, this field contains a illustrator model
+    private static IllustratorViewModel? _illustratorViewerContent;
 
     private readonly MainPageViewModel _viewModel = new();
 

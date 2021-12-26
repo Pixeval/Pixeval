@@ -1,9 +1,9 @@
-#region Copyright (c) Pixeval/Pixeval.LoginProxy
+﻿#region Copyright (c) Pixeval/Pixeval
 
 // GPL v3 License
 // 
-// Pixeval/Pixeval.LoginProxy
-// Copyright (c) 2021 Pixeval.LoginProxy/AssemblyInfo.cs
+// Pixeval/Pixeval
+// Copyright (c) 2021 Pixeval/MetadataAttributes.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,13 +20,26 @@
 
 #endregion
 
-using System.Windows;
+using System;
+using Pixeval.Util;
 
-[assembly: ThemeInfo(
-    ResourceDictionaryLocation.None, //where theme specific resource dictionaries are located
-    //(used if a resource is not found in the page,
-    // or application resource dictionaries)
-    ResourceDictionaryLocation.SourceAssembly //where the generic resource dictionary is located
-    //(used if a resource is not found in the page,
-    // app, or any theme specific resource dictionaries)
-)]
+namespace Pixeval.Attributes;
+
+[AttributeUsage(AttributeTargets.Field)]
+public class Metadata : Attribute
+{
+    public Metadata(string key)
+    {
+        Key = key;
+    }
+
+    public string Key { get; }
+}
+
+public static class MetadataAttributeHelper
+{
+    public static string? GetMetadataOnEnumMember(this Enum e)
+    {
+        return e.GetCustomAttribute<Metadata>()?.Key;
+    }
+}
