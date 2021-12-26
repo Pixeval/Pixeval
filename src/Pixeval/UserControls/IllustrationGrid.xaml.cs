@@ -24,9 +24,11 @@ using System;
 using System.Linq;
 using Windows.System;
 using Windows.UI.Core;
+using CommunityToolkit.WinUI.UI;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -117,11 +119,21 @@ public sealed partial class IllustrationGrid
     private async void IllustrationThumbnailContainerItem_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
     {
         var context = sender.GetDataContext<IllustrationViewModel>();
-        var preloadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
-        if (args.BringIntoViewDistanceY <= sender.ActualHeight * preloadRows) // [preloadRows] element ahead
+        var preLoadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+        if (context is null || IllustrationGridView.ContainerFromItem(context)?.FindDescendant("Thumbnail") is not Border border)
+        {
+            return;
+        }
+        if (args.BringIntoViewDistanceY <= sender.ActualHeight * preLoadRows) // [preLoadRows] element ahead
         {
             if (await context.LoadThumbnailIfRequired())
             {
+                border.Background = new ImageBrush
+                {
+                    Stretch = Stretch.UniformToFill,
+                    ImageSource = context.ThumbnailSource
+                };
                 var transform = (ScaleTransform) sender.RenderTransform;
                 if (sender.IsFullyOrPartiallyVisible(this))
                 {
@@ -148,6 +160,7 @@ public sealed partial class IllustrationGrid
                 context.LoadingThumbnailCancellationHandle.Cancel();
                 break;
             case { ThumbnailSource: not null }:
+                border.Background = null;
                 var source = context.ThumbnailSource;
                 context.ThumbnailSource = null;
                 source.Dispose();
