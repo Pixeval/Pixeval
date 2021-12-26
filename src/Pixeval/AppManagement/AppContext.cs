@@ -54,7 +54,7 @@ public static partial class AppContext
 
     public static readonly string DatabaseFilePath = AppKnownFolders.Local.Resolve("PixevalData.litedb");
 
-    public static readonly AppVersion AppVersion = new(IterationStage.Alpha, 0, 1, 0, 1);
+    public static readonly string AppVersion = GitVersionInformation.AssemblySemVer;
 
     private static readonly ApplicationDataContainer SessionContainer;
 

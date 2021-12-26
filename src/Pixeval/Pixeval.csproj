@@ -137,8 +137,8 @@
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.2" />
 		<PackageReference Include="GitVersion.MsBuild" Version="5.8.1">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="LiteDB" Version="5.0.11" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
@@ -170,11 +170,10 @@
 		<ItemGroup>
 			<AdditionalFiles Include="@(PRIResource)" SourceItemGroup="PRIResource" />
 		</ItemGroup>
-		<ItemGroup>
-			<CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
-		</ItemGroup>
 	</Target>
-	
+	<ItemGroup>
+		<CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
+	</ItemGroup>
 	<!-- #endregion Exposes PRI resources to the source generator -->
 
 	<Target Name="PrepareForGenerateGitVersionInformation" BeforeTargets="GenerateGitVersionInformation">
@@ -296,46 +295,30 @@
 
 	<!--  XAML  -->
 	<ItemGroup>
-		<ItemGroup>
-			<Page Update="Pages\Download\DownloadListPage.xaml">
-				<Generator>MSBuild:Compile</Generator>
-			</Page>
-		</ItemGroup>
-		<ItemGroup>
-			<Page Update="Pages\IllustrationViewer\IllustrationViewerPage.xaml">
-				<Generator>MSBuild:Compile</Generator>
-			</Page>
-		</ItemGroup>
-		<ItemGroup>
-			<Page Update="UserControls\IllustrationGridCommandBar.xaml">
-				<Generator>MSBuild:Compile</Generator>
-			</Page>
-		</ItemGroup>
-		<ItemGroup>
-			<Page Update="Pages\Capabilities\RecommendationPage.xaml">
-				<Generator>MSBuild:Compile</Generator>
-			</Page>
-		</ItemGroup>
-		<ItemGroup>
-			<Page Update="UserControls\IllustrationGrid.xaml">
-				<Generator>MSBuild:Compile</Generator>
-			</Page>
-		</ItemGroup>
-		<ItemGroup>
-			<Page Update="Dialogs\MessageDialogContent.xaml">
-				<Generator>MSBuild:Compile</Generator>
-			</Page>
-		</ItemGroup>
-		<ItemGroup>
-			<Page Update="Pages\MainPage.xaml">
-				<Generator>MSBuild:Compile</Generator>
-			</Page>
-		</ItemGroup>
-		<ItemGroup>
-			<Page Update="Pages\Login\LoginPage.xaml">
-				<Generator>MSBuild:Compile</Generator>
-			</Page>
-		</ItemGroup>
+		<Page Update="Pages\Download\DownloadListPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Pages\IllustrationViewer\IllustrationViewerPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="UserControls\IllustrationGridCommandBar.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Pages\Capabilities\RecommendationPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="UserControls\IllustrationGrid.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Dialogs\MessageDialogContent.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Pages\MainPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Pages\Login\LoginPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
 		<Page Update="Controls\IllustratorView\IllustratorView.xaml">
 			<XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
 		</Page>
@@ -391,7 +374,7 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Update="Pages\IllustratorViewer\IllustratorPage.xaml">
-		  <Generator>MSBuild:Compile</Generator>
+			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Update="Pages\Capability\RecentPostsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
@@ -400,7 +383,7 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Update="Popups\LoginWebViewPopup.xaml">
-		  <Generator>MSBuild:Compile</Generator>
+			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Update="Pages\Misc\AboutPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
