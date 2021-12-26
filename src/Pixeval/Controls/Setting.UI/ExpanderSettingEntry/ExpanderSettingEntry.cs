@@ -24,7 +24,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Markup;
 using Pixeval.Attributes;
 using Pixeval.Controls.Setting.UI.UserControls;
-using Pixeval.Misc;
 
 
 namespace Pixeval.Controls.Setting.UI.ExpanderSettingEntry;
