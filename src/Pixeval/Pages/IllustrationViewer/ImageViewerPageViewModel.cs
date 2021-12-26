@@ -33,7 +33,7 @@ using Pixeval.Attributes;
 using Pixeval.CoreApi.Net;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
-using Pixeval.Misc;
+
 using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.IO;

@@ -34,7 +34,7 @@ using Microsoft.UI.Xaml.Input;
 using Pixeval.Attributes;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
-using Pixeval.Misc;
+
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.UserControls;
 using Pixeval.Util.IO;

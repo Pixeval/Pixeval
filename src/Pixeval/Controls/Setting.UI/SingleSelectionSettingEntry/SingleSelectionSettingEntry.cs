@@ -30,7 +30,7 @@ using Microsoft.UI.Xaml.Controls;
 using Pixeval.Attributes;
 using Pixeval.Controls.Setting.UI.Model;
 using Pixeval.Controls.Setting.UI.UserControls;
-using Pixeval.Misc;
+
 
 namespace Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry;
 

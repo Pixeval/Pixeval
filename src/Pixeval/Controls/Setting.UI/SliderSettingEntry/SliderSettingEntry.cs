@@ -25,7 +25,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Pixeval.Attributes;
 using Pixeval.Controls.Setting.UI.UserControls;
-using Pixeval.Misc;
+
 
 namespace Pixeval.Controls.Setting.UI.SliderSettingEntry;
 

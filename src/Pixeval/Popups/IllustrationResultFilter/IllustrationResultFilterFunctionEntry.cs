@@ -22,7 +22,7 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Attributes;
-using Pixeval.Misc;
+
 
 namespace Pixeval.Popups.IllustrationResultFilter;
 

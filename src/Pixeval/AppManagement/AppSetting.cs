@@ -32,7 +32,7 @@ using Pixeval.Options;
 
 namespace Pixeval.AppManagement;
 
-[GenerateConstructor]
+[Attributes.GenerateConstructor]
 public partial record AppSetting
 {
 #pragma warning disable CS8618

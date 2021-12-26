@@ -34,7 +34,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Attributes;
 using Pixeval.Download;
-using Pixeval.Misc;
+
 using Pixeval.Popups;
 using Pixeval.Popups.IllustrationResultFilter;
 using Pixeval.UserControls.TokenInput;

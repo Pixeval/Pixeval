@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Attributes;
-using Pixeval.Misc;
+
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.UI;
 
