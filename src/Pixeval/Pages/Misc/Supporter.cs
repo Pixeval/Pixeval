@@ -1,4 +1,5 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
@@ -27,11 +29,6 @@ namespace Pixeval.Pages.Misc;
 
 public record Supporter(string Nickname, string Name, ImageSource? ProfilePicture, Uri ProfileUri)
 {
-    private static ImageSource SupportImageOf(string supporterImgFileName)
-    {
-        return new BitmapImage(new Uri($"ms-appx:///Assets/Images/Supporters/{supporterImgFileName}"));
-    }
-
     // ReSharper disable StringLiteralTypo
     public static readonly IEnumerable<Supporter> Supporters = new List<Supporter>
     {
@@ -50,4 +47,9 @@ public record Supporter(string Nickname, string Name, ImageSource? ProfilePictur
         new("茶栗", "@CharlieJiang", SupportImageOf("charlie_jiang.jpg"), new Uri("https://github.com/cqjjjzr"))
     };
     // ReSharper restore StringLiteralTypo
+
+    private static ImageSource SupportImageOf(string supporterImgFileName)
+    {
+        return new BitmapImage(new Uri($"ms-appx:///Assets/Images/Supporters/{supporterImgFileName}"));
+    }
 }

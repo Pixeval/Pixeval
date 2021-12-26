@@ -21,21 +21,20 @@
 #endregion
 
 using System;
-using System.Threading;
 using JetBrains.Annotations;
 
 namespace Pixeval.CoreApi.Engine;
 
 [PublicAPI]
 #pragma warning disable 660,661 // Object.Equals() and Object.GetHashCode() are not overwritten
-public struct EngineHandle : ICancellable, INotifyCompletion, ICompletionCallback<EngineHandle>
+public class EngineHandle : ICancellable, INotifyCompletion, ICompletionCallback<EngineHandle>
 #pragma warning restore 660,661
 {
     private readonly Action<EngineHandle>? _onCompletion;
 
     public bool Equals(EngineHandle other)
     {
-        return Id == other.Id && CancellationTokenSource.IsCancellationRequested == other.CancellationTokenSource.IsCancellationRequested && IsCompleted == other.IsCompleted;
+        return Id == other.Id && IsCancelled == other.IsCancelled && IsCompleted == other.IsCompleted;
     }
 
     /// <summary>
@@ -46,7 +45,7 @@ public struct EngineHandle : ICancellable, INotifyCompletion, ICompletionCallbac
     /// <summary>
     ///     指示该句柄对应的搜索引擎是否已经被取消
     /// </summary>
-    public CancellationTokenSource CancellationTokenSource { get; set; }
+    public bool IsCancelled { get; set; }
 
     /// <summary>
     ///     指示该句柄对应的搜索引擎是否已经结束运行
@@ -57,7 +56,7 @@ public struct EngineHandle : ICancellable, INotifyCompletion, ICompletionCallbac
     {
         _onCompletion = onCompletion;
         Id = id;
-        CancellationTokenSource = new CancellationTokenSource();
+        IsCancelled = false;
         IsCompleted = false;
     }
 
@@ -65,7 +64,7 @@ public struct EngineHandle : ICancellable, INotifyCompletion, ICompletionCallbac
     {
         _onCompletion = onCompletion;
         Id = Guid.NewGuid();
-        CancellationTokenSource = new CancellationTokenSource();
+        IsCancelled = false;
         IsCompleted = false;
     }
 
@@ -74,7 +73,7 @@ public struct EngineHandle : ICancellable, INotifyCompletion, ICompletionCallbac
     /// </summary>
     public void Cancel()
     {
-        CancellationTokenSource.Cancel(true);
+        IsCancelled = true;
     }
 
     /// <summary>
@@ -88,7 +87,7 @@ public struct EngineHandle : ICancellable, INotifyCompletion, ICompletionCallbac
 
     public static bool operator ==(EngineHandle lhs, EngineHandle rhs)
     {
-        return lhs.Id == rhs.Id && lhs.CancellationTokenSource.IsCancellationRequested == rhs.CancellationTokenSource.IsCancellationRequested && lhs.IsCompleted == rhs.IsCompleted;
+        return lhs.Id == rhs.Id && lhs.IsCancelled == rhs.IsCancelled && lhs.IsCompleted == rhs.IsCompleted;
     }
 
     public static bool operator !=(EngineHandle lhs, EngineHandle rhs)

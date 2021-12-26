@@ -69,7 +69,7 @@ public abstract class AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEn
     /// <summary>
     ///     Indicates if the current operation has been cancelled
     /// </summary>
-    protected bool IsCancellationRequested => PixivFetchEngine.EngineHandle.CancellationTokenSource.IsCancellationRequested;
+    protected bool IsCancellationRequested => PixivFetchEngine.EngineHandle.IsCancelled;
 
     /// <summary>
     ///     The current result entry of <see cref="CurrentEntityEnumerator" />

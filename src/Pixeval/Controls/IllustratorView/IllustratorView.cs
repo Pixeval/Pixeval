@@ -1,4 +1,5 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
@@ -25,67 +27,30 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls.Card;
+using Pixeval.Misc;
 
 namespace Pixeval.Controls.IllustratorView;
 
 [TemplatePart(Name = PartContentContainer, Type = typeof(CardControl))]
-public class IllustratorView : Control
+[TemplatePart(Name = PartAvatar, Type = typeof(PersonPicture))]
+[DependencyProperty("IllustratorName", typeof(string))]
+[DependencyProperty("IllustratorId", typeof(string))]
+[DependencyProperty("ThumbnailSources", typeof(object))]
+[DependencyProperty("ThumbnailItemTemplate", typeof(object))]
+[DependencyProperty("IllustratorPicture", typeof(ImageSource))]
+[DependencyProperty("ViewModel", typeof(IllustratorViewModel))]
+public partial class IllustratorView : Control
 {
     private const string PartContentContainer = "ContentContainer";
+    private const string PartAvatar = "Avatar";
 
     private CardControl? _contentContainer;
+
+    public PersonPicture? Avatar { get; private set; }
 
     public IllustratorView()
     {
         DefaultStyleKey = typeof(IllustratorView);
-    }
-
-    public static readonly DependencyProperty IllustratorNameProperty = DependencyProperty.Register(
-        nameof(IllustratorName),
-        typeof(string),
-        typeof(IllustratorView),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public string IllustratorName
-    {
-        get => (string) GetValue(IllustratorNameProperty);
-        set => SetValue(IllustratorNameProperty, value);
-    }
-
-    public static readonly DependencyProperty IllustratorDescriptionProperty = DependencyProperty.Register(
-        nameof(IllustratorDescription),
-        typeof(string),
-        typeof(IllustratorView),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public string IllustratorDescription
-    {
-        get => (string) GetValue(IllustratorDescriptionProperty);
-        set => SetValue(IllustratorDescriptionProperty, value);
-    }
-
-    public static readonly DependencyProperty IllustratorProfileNavigateUriProperty = DependencyProperty.Register(
-        nameof(IllustratorProfileNavigateUri),
-        typeof(Uri),
-        typeof(IllustratorView),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public Uri IllustratorProfileNavigateUri
-    {
-        get => (Uri) GetValue(IllustratorProfileNavigateUriProperty);
-        set => SetValue(IllustratorProfileNavigateUriProperty, value);
-    }
-
-    public static readonly DependencyProperty IllustratorPictureProperty = DependencyProperty.Register(
-        nameof(IllustratorPicture),
-        typeof(ImageSource),
-        typeof(IllustratorView),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public ImageSource IllustratorPicture
-    {
-        get => (ImageSource) GetValue(IllustratorPictureProperty);
-        set => SetValue(IllustratorPictureProperty, value);
     }
 
     protected override void OnApplyTemplate()
@@ -94,22 +59,18 @@ public class IllustratorView : Control
         {
             _contentContainer.PointerEntered -= ContentContainerOnPointerEntered;
             _contentContainer.PointerExited -= ContentContainerOnPointerExited;
-            _contentContainer.Tapped -= ContentContainerOnTapped;
         }
 
         if ((_contentContainer = GetTemplateChild(PartContentContainer) as CardControl) is not null)
         {
             _contentContainer.PointerEntered += ContentContainerOnPointerEntered;
             _contentContainer.PointerExited += ContentContainerOnPointerExited;
-            _contentContainer.Tapped += ContentContainerOnTapped;
         }
 
-        base.OnApplyTemplate();
-    }
+        if ((Avatar = GetTemplateChild(PartAvatar) as PersonPicture) is not null)
+        {}
 
-    private async void ContentContainerOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        await Launcher.LaunchUriAsync(IllustratorProfileNavigateUri);
+        base.OnApplyTemplate();
     }
 
     private void ContentContainerOnPointerExited(object sender, PointerRoutedEventArgs e)

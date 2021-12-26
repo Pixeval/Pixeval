@@ -41,7 +41,6 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
-using CommentRepliesBlock = Pixeval.Popups.CommentRepliesBlock;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -84,7 +83,7 @@ public sealed partial class IllustrationViewerPage : IGoBack
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
     {
-        foreach (var imageViewerPageViewModel in _viewModel.ImageViewerPageViewModels)
+        foreach (var imageViewerPageViewModel in _viewModel.ImageViewerPageViewModels!)
         {
             imageViewerPageViewModel.ImageLoadingCancellationHandle.Cancel();
         }

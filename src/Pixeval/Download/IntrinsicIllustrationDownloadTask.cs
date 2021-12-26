@@ -1,4 +1,5 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using Windows.Storage.Streams;
@@ -27,16 +29,16 @@ namespace Pixeval.Download;
 
 public class IntrinsicIllustrationDownloadTask : IllustrationDownloadTask, IIntrinsicDownloadTask
 {
-    public IRandomAccessStream Stream { get; }
-
     /// <summary>
-    /// The disposal of <paramref name="imageStream"/> is not handled
+    ///     The disposal of <paramref name="imageStream" /> is not handled
     /// </summary>
     public IntrinsicIllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationViewModel illustrationViewModel, IRandomAccessStream imageStream)
         : base(entry, illustrationViewModel)
     {
         Stream = imageStream;
     }
+
+    public IRandomAccessStream Stream { get; }
 
     public override async void DownloadStarting(DownloadStartingEventArgs args)
     {

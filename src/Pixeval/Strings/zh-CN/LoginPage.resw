@@ -134,8 +134,8 @@
   <data name="LoginPhaseCheckingWebView2Installation" xml:space="preserve">
     <value>正在检查WebView2安装情况...</value>
   </data>
-  <data name="LoginPhaseExecutingLoginProxy" xml:space="preserve">
-    <value>正在调用登录代理，请在新打开的窗口中完成登录...</value>
+  <data name="LoginPhaseExecutingWebView2" xml:space="preserve">
+    <value>正在打开WebView2，请在弹出的窗口中完成登录</value>
   </data>
   <data name="LoginPhaseInstallingCertificate" xml:space="preserve">
     <value>正在安装证书，请在打开的对话框中点击确认...</value>

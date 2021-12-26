@@ -1,4 +1,5 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
@@ -30,29 +32,23 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Download;
 
-public class DownloadListEntryViewModel : ObservableObject, IDisposable
+public partial class DownloadListEntryViewModel : ObservableObject, IDisposable
 {
-
-    private SoftwareBitmapSource? _thumbnail;
-
-    public SoftwareBitmapSource? Thumbnail
-    {
-        get => _thumbnail;
-        set => SetProperty(ref _thumbnail, value);
-    }
-
+    [ObservableProperty]
     private ObservableDownloadTask _downloadTask;
 
-    public ObservableDownloadTask DownloadTask
-    {
-        get => _downloadTask;
-        set => SetProperty(ref _downloadTask, value);
-    }
+    [ObservableProperty]
+    private SoftwareBitmapSource? _thumbnail;
 
     public DownloadListEntryViewModel(ObservableDownloadTask downloadTask)
     {
         _downloadTask = downloadTask;
         LoadThumbnail();
+    }
+
+    public void Dispose()
+    {
+        _thumbnail?.Dispose();
     }
 
     public async void LoadThumbnail()
@@ -119,12 +115,7 @@ public class DownloadListEntryViewModel : ObservableObject, IDisposable
     public static Brush GetSelectedBackground(bool selected)
     {
         return selected
-            ? (Brush)Application.Current.Resources["AccentFillColorDefaultBrush"]
-            : (Brush)Application.Current.Resources["CardBackground"];
-    }
-
-    public void Dispose()
-    {
-        _thumbnail?.Dispose();
+            ? (Brush) Application.Current.Resources["AccentFillColorDefaultBrush"]
+            : (Brush) Application.Current.Resources["CardBackground"];
     }
 }

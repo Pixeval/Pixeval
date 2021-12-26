@@ -29,32 +29,18 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Controls.Setting.UI.Model;
 using Pixeval.Controls.Setting.UI.UserControls;
+using Pixeval.Misc;
 
 namespace Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry;
 
 [TemplatePart(Name = PartSelectorRadioButtons, Type = typeof(RadioButtons))]
 [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
-public sealed class SingleSelectionSettingEntry : SettingEntryBase
+[DependencyProperty("HeaderHeight", typeof(double))]
+[DependencyProperty("ItemsSource", typeof(IEnumerable<IStringRepresentableItem>))]
+[DependencyProperty("SelectedItem", typeof(object), InstanceChangedCallback = true)]
+public sealed partial class SingleSelectionSettingEntry : SettingEntryBase
 {
     private const string PartSelectorRadioButtons = "SelectorRadioButtons";
-
-    public static readonly DependencyProperty HeaderHeightProperty = DependencyProperty.Register(
-        nameof(HeaderHeight),
-        typeof(double),
-        typeof(SingleSelectionSettingEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(
-        nameof(ItemsSource),
-        typeof(IEnumerable<IStringRepresentableItem>),
-        typeof(SingleSelectionSettingEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
-    public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(
-        nameof(SelectedItem),
-        typeof(object),
-        typeof(SingleSelectionSettingEntry),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue, (o, args) => SelectedItemChanged(o, args.NewValue)));
 
     private TypedEventHandler<SingleSelectionSettingEntry, SelectionChangedEventArgs>? _selectionChanged;
 
@@ -65,22 +51,9 @@ public sealed class SingleSelectionSettingEntry : SettingEntryBase
         DefaultStyleKey = typeof(SingleSelectionSettingEntry);
     }
 
-    public double HeaderHeight
+    private static void OnSelectedItemChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
-        get => (double) GetValue(HeaderHeightProperty);
-        set => SetValue(HeaderHeightProperty, value);
-    }
-
-    public IEnumerable<IStringRepresentableItem> ItemsSource
-    {
-        get => (IEnumerable<IStringRepresentableItem>) GetValue(ItemsSourceProperty);
-        set => SetValue(ItemsSourceProperty, value);
-    }
-
-    public object SelectedItem
-    {
-        get => GetValue(SelectedItemProperty);
-        set => SetValue(SelectedItemProperty, value);
+        SelectedItemChanged(o, args.NewValue);
     }
 
     public event TypedEventHandler<SingleSelectionSettingEntry, SelectionChangedEventArgs> SelectionChanged

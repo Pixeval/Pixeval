@@ -49,11 +49,12 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         var path = IOHelper.NormalizePath(PathParser.Reduce(rawPath, context));
-        if ((manager.Collection.Find(entry => entry.Destination == path).Any()))
+        if (manager.Collection.Find(entry => entry.Destination == path).Any())
         {
             // delete the original entry
             manager.Delete(entry => entry.Destination == path);
         }
+
         ObservableDownloadTask task = context.Illustration.IsUgoira() switch
         {
             true => await Functions.Block(async () =>
@@ -73,7 +74,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
                 return new IllustrationDownloadTask(downloadHistoryEntry, context);
             })
         };
-            
+
         // TODO Check for unique
         manager.Insert(task.DatabaseEntry);
         return task;

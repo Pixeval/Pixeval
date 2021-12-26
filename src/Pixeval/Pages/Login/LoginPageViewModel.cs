@@ -21,37 +21,34 @@
 #endregion
 
 using System;
-using System.Diagnostics;
-using System.IO;
-using System.IO.Pipes;
+using System.Globalization;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.NetworkInformation;
 using System.Security.Cryptography.X509Certificates;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Windows.Globalization;
-using JetBrains.Annotations;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using System.Web;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
+using Microsoft.Web.WebView2.Core;
 using Microsoft.Win32;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Preference;
-using Pixeval.Messages;
 using Pixeval.Misc;
+using Pixeval.Popups;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
-namespace Pixeval.Pages.Misc;
+namespace Pixeval.Pages.Login;
 
-public class LoginPageViewModel : AutoActivateObservableRecipient,
-    IRecipient<ScanningLoginProxyMessage>,
-    IRecipient<ApplicationExitingMessage>
+public partial class LoginPageViewModel : AutoActivateObservableRecipient
 {
     public enum LoginPhaseEnum
     {
@@ -64,8 +61,8 @@ public class LoginPageViewModel : AutoActivateObservableRecipient,
         [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseNegotiatingPort))]
         NegotiatingPort,
 
-        [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseExecutingLoginProxy))]
-        ExecutingLoginProxy,
+        [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseExecutingWebView2))]
+        ExecutingWebView2,
 
         [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseCheckingCertificateInstallation))]
         CheckingCertificateInstallation,
@@ -77,30 +74,8 @@ public class LoginPageViewModel : AutoActivateObservableRecipient,
         CheckingWebView2Installation
     }
 
-    // Remarks:
-    // A Task that completes when the scan process of the Pixeval.LoginProxy completes
-    // Note: the scan process consist of checksum matching and optionally file unzipping, see AppContext.CopyLoginProxyIfRequired()
-    private readonly TaskCompletionSource _scanLoginProxyTask = new();
-
+    [ObservableProperty]
     private LoginPhaseEnum _loginPhase;
-
-    private Process? _loginProxyProcess;
-
-    public LoginPhaseEnum LoginPhase
-    {
-        get => _loginPhase;
-        set => SetProperty(ref _loginPhase, value);
-    }
-
-    public void Receive(ApplicationExitingMessage message)
-    {
-        _loginProxyProcess?.Kill();
-    }
-
-    public void Receive(ScanningLoginProxyMessage message)
-    {
-        _scanLoginProxyTask.SetResult();
-    }
 
     public void AdvancePhase(LoginPhaseEnum newPhase)
     {
@@ -181,58 +156,49 @@ public class LoginPageViewModel : AutoActivateObservableRecipient,
         }
     }
 
+    private static int NegotiatePort()
+    {
+        var unavailable = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections().Select(t => t.LocalEndPoint.Port).ToArray();
+        var rd = new Random();
+        var proxyPort = rd.Next(3000, 65536);
+        while (Array.BinarySearch(unavailable, proxyPort) >= 0)
+        {
+            proxyPort = rd.Next(3000, 65536);
+        }
+
+        return proxyPort;
+    }
+
     public async Task WebLoginAsync()
     {
-        // the web login requires another process to be created and started from this process
-        // so check its presence before starts the login procedure
-        await AppContext.CopyLoginProxyIfRequiredAsync();
         AdvancePhase(LoginPhaseEnum.NegotiatingPort);
-        AdvancePhase(LoginPhaseEnum.ExecutingLoginProxy);
-        await _scanLoginProxyTask.Task; // awaits the copy and extract operations to complete
-        _loginProxyProcess = await CallLoginProxyAsync(ApplicationLanguages.ManifestLanguages[0]); // calls the login proxy process and passes the language and IPC server port
-        var (cookie, code, verifier) = await WhenLoginTokenRequestedAsync(); // awaits the login proxy to sends the post request which contains the login result
+        var port = NegotiatePort();
+        using var proxyServer = PixivAuthenticationProxyServer.Create(IPAddress.Loopback, port, await AppContext.GetFakeServerCertificateAsync());
+        Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", $"--proxy-server=127.0.0.1:{port} --ignore-certificate-errors");
+
+        var content = new LoginWebViewPopup();
+        var webViewPopup = PopupManager.CreatePopup(content, widthMargin: 150, heightMargin: 100, minHeight: 400, minWidth: 600);
+
+        AdvancePhase(LoginPhaseEnum.ExecutingWebView2);
+        PopupManager.ShowPopup(webViewPopup);
+
+        await content.LoginWebView.EnsureCoreWebView2Async();
+        content.LoginWebView.CoreWebView2.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All);
+        content.LoginWebView.CoreWebView2.WebResourceRequested += (_, args) =>
+        {
+            args.Request.Headers.SetHeader("Accept-Language", args.Request.Uri.Contains("recaptcha") ? "zh-cn" : CultureInfo.CurrentUICulture.Name);
+        };
+
+        var verifier = PixivAuthSignature.GetCodeVerify();
+        content.LoginWebView.Source = new Uri(PixivAuthSignature.GenerateWebPageUrl(verifier));
+
+        var (url, cookie) = await content.CookieCompletion.Task;
+        PopupManager.ClosePopup(webViewPopup);
+
+        var code = HttpUtility.ParseQueryString(new Uri(url).Query)["code"]!;
+
         var session = await AuthCodeToSessionAsync(code, verifier, cookie);
-        _loginProxyProcess = null; // if we reach here then the login procedure completes successfully, the login proxy process has been closed by itself, we do not need the control over it
         App.AppViewModel.MakoClient = new MakoClient(session, App.AppViewModel.AppSetting.ToMakoClientConfiguration(), new RefreshTokenSessionUpdate());
-    }
-
-    /// <summary>
-    ///     Starts the login proxy's executable. and passes the required parameters
-    /// </summary>
-    public static async Task<Process> CallLoginProxyAsync(string culture)
-    {
-        if (await AppKnownFolders.LoginProxy.TryGetFileRelativeToSelfAsync("Pixeval.LoginProxy.exe") is { } file)
-        {
-            return Process.Start(file.Path, culture);
-        }
-
-        throw new FileNotFoundException(MiscResources.CannotFindLoginProxyServerExecutable, "Pixeval.LoginProxy.exe");
-    }
-
-    [ContractAnnotation("=> halt")]
-    public static async Task<(string cookie, string code, string verifier)> WhenLoginTokenRequestedAsync()
-    {
-        var pipeServer = new NamedPipeServerStream("pixiv_login");
-        await pipeServer.WaitForConnectionAsync();
-        var json = await JsonSerializer.DeserializeAsync<LoginTokenResponse>(pipeServer);
-        if (json?.Errno is { } and not 0)
-        {
-            throw new LoginProxyException(json.Errno switch
-            {
-                1 => LoginPageResources.LoginProxyConnectToHostFailed,
-                2 => LoginPageResources.LoginProxyCannotFindCertificate,
-                _ => MiscResources.UnexpectedBehavior
-            });
-        }
-
-        if (json?.Cookie is { } cookie && json.Code is { } token && json.Verifier is { } verifier)
-        {
-            pipeServer.Disconnect();
-            return (cookie, token, verifier);
-        }
-
-        pipeServer.Disconnect();
-        throw new LoginProxyException(LoginPageResources.LoginProxyConnectToHostFailed);
     }
 
     public static async Task<Session> AuthCodeToSessionAsync(string code, string verifier, string cookie)
@@ -259,20 +225,5 @@ public class LoginPageViewModel : AutoActivateObservableRecipient,
             CookieCreation = DateTimeOffset.Now
         };
         return session;
-    }
-
-    public class LoginTokenResponse
-    {
-        [JsonPropertyName("errno")]
-        public int Errno { get; set; }
-
-        [JsonPropertyName("cookie")]
-        public string? Cookie { get; set; }
-
-        [JsonPropertyName("code")]
-        public string? Code { get; set; }
-
-        [JsonPropertyName("verifier")]
-        public string? Verifier { get; set; }
     }
 }

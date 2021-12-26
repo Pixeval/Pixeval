@@ -33,13 +33,13 @@ public class CancellationHandle
 {
     private int _isCancelled;
 
-    private int _paused;
-
     private Action? _onCancellation;
 
     private Action? _onPause;
 
     private Action? _onResume;
+
+    private int _paused;
 
     public bool IsCancelled => _isCancelled == 1;
 
@@ -60,6 +60,7 @@ public class CancellationHandle
         {
             Interlocked.Decrement(ref _paused);
         }
+
         if (IsCancelled)
         {
             Interlocked.Decrement(ref _isCancelled);

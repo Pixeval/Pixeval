@@ -31,9 +31,12 @@ using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls.IllustratorView;
 using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
+using Pixeval.Pages.Capability;
 using Pixeval.Utilities;
 using ReverseMarkdown;
 
@@ -67,8 +70,14 @@ public sealed partial class IllustrationInfoPage
 
     private void IllustratorPersonPicture_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        // TODO
-        // throw new NotImplementedException();
+        if (_viewModel.UserInfo is { } userInfo)
+        {
+            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement)sender);
+            App.AppViewModel.RootFrameNavigate(typeof(IllustratorPage), Tuple.Create((UIElement)sender, new IllustratorViewModel(userInfo)), new SlideNavigationTransitionInfo
+            {
+                Effect = SlideNavigationTransitionEffect.FromRight
+            });
+        }
     }
 
     #region Helper Functions

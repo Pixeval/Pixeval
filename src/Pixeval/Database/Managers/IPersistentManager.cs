@@ -1,4 +1,5 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -16,46 +17,36 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using LiteDB;
 
 namespace Pixeval.Database.Managers;
 
 /// <summary>
-/// Manage persistent data stored in SQLite.
-/// You may call CreateTable in the constructor.
+///     Manage persistent data stored in SQLite.
+///     You may call CreateTable in the constructor.
 /// </summary>
-/// 
 /// <example>
-/// This example shows how to get a registered manager.
-/// <code>
+///     This example shows how to get a registered manager.
+///     <code>
 /// using var scope = App.AppViewModel.AppServicesScope;
 /// var manager = scope.ServiceProvider.GetRequiredService&lt;IPersistentManager&lt;Entry, Model&gt;&gt;();
 /// </code>
 /// </example>
-/// 
 /// <see cref="AppViewModel.CreateHostBuilder">Register the manager in AppViewModel</see>
 /// <typeparam name="TEntry">Entry to be serialized in database</typeparam>
 /// <typeparam name="TModel">Data model in the program</typeparam>
-public interface IPersistentManager<TEntry,TModel>
+public interface IPersistentManager<TEntry, out TModel>
     where TEntry : new()
 {
-    public static TSelf Create<TSelf>(LiteDatabase db, int maximumRecords)
-        where TSelf : IPersistentManager<TEntry, TModel>, new()
-    {
-        var collection = db.GetCollection<TEntry>(typeof(TEntry).Name);
-        var manager = new TSelf { Collection = collection };
-        return manager;
-    }
-
     ILiteCollection<TEntry> Collection { get; init; }
 
-    int MaximumRecords { get; set;  }
+    int MaximumRecords { get; set; }
 
     void Insert(TEntry t);
 
@@ -66,7 +57,6 @@ public interface IPersistentManager<TEntry,TModel>
     int Delete(Expression<Func<TEntry, bool>> predicate);
 
     IEnumerable<TModel> Enumerate();
-    
 
     void Purge(int limit);
 }

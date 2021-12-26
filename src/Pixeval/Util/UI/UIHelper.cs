@@ -334,7 +334,7 @@ public static partial class UIHelper
             {
                 [fileTypeId] = new List<string> { fileTypeId }
             },
-            SuggestedFileName = suggestedFileName,
+            SuggestedFileName = suggestedFileName
         };
         InitializeWithWindow.Initialize(savePicker, App.AppViewModel.GetMainWindowHandle());
         return savePicker.PickSaveFileAsync();

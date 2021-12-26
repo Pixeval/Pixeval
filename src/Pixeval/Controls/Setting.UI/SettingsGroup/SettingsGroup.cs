@@ -20,27 +20,16 @@
 
 #endregion
 
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Misc;
 
 namespace Pixeval.Controls.Setting.UI.SettingsGroup;
 
-public class SettingsGroup : ItemsControl
+[DependencyProperty("Header", typeof(string))]
+public partial class SettingsGroup : ItemsControl
 {
-    public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(
-        nameof(Header),
-        typeof(string),
-        typeof(SettingsGroup),
-        PropertyMetadata.Create(DependencyProperty.UnsetValue));
-
     public SettingsGroup()
     {
         DefaultStyleKey = typeof(SettingsGroup);
-    }
-
-    public string Header
-    {
-        get => (string) GetValue(HeaderProperty);
-        set => SetValue(HeaderProperty, value);
     }
 }

@@ -29,8 +29,6 @@ namespace Pixeval.Controls.Setting.UI.Model;
 
 public record SearchTagMatchOptionSettingEntryItem : IStringRepresentableItem
 {
-    public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } =  Enum.GetValues<SearchTagMatchOption>().Select(i => new SearchTagMatchOptionSettingEntryItem(i));
-
     public SearchTagMatchOptionSettingEntryItem(SearchTagMatchOption item)
     {
         Item = item;
@@ -42,6 +40,8 @@ public record SearchTagMatchOptionSettingEntryItem : IStringRepresentableItem
             _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
         };
     }
+
+    public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<SearchTagMatchOption>().Select(i => new SearchTagMatchOptionSettingEntryItem(i));
 
     public object Item { get; }
 

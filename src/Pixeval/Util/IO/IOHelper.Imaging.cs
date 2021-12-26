@@ -63,6 +63,7 @@ public static partial class IOHelper
         {
             imageStream.Dispose();
         }
+
         return inMemoryRandomAccessStream;
     }
 

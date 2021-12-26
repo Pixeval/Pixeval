@@ -66,7 +66,10 @@
                                     Spacing="5">
                             <TextBlock FontSize="15"
                                        FontWeight="SemiBold">
-                                <Hyperlink NavigateUri="https://github.com/dotnet/runtime/tree/main/src/libraries/Microsoft.Extensions.Hosting">Microsoft.Extensions.Hosting</Hyperlink>
+                                <Hyperlink
+                                    NavigateUri="https://github.com/dotnet/runtime/tree/main/src/libraries/Microsoft.Extensions.Hosting">
+                                    Microsoft.Extensions.Hosting
+                                </Hyperlink>
                             </TextBlock>
                             <TextBlock x:Uid="/AboutPage/MSHostingIntroductoryTextBlock"
                                        TextWrapping="Wrap" />
@@ -78,7 +81,10 @@
                                     Spacing="5">
                             <TextBlock FontSize="15"
                                        FontWeight="SemiBold">
-                                <Hyperlink NavigateUri="https://github.com/microsoft/Microsoft.IO.RecyclableMemoryStream">Microsoft.IO.RecyclableMemoryStream</Hyperlink>
+                                <Hyperlink
+                                    NavigateUri="https://github.com/microsoft/Microsoft.IO.RecyclableMemoryStream">
+                                    Microsoft.IO.RecyclableMemoryStream
+                                </Hyperlink>
                             </TextBlock>
                             <TextBlock x:Uid="/AboutPage/RCMemoryStreamIntroductoryTextBlock"
                                        TextWrapping="Wrap" />

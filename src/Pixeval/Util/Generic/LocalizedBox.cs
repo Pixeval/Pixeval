@@ -38,7 +38,7 @@ public static class LocalizedBoxHelper
 {
     public static TLocalizedBox Of<TOption, TLocalizedBox>(TOption option)
         where TLocalizedBox : ILocalizedBox<TOption, TLocalizedBox>
-    {   
+    {
         return TLocalizedBox.AvailableOptions().First(t => t.Value!.Equals(option));
     }
 }

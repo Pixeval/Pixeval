@@ -32,7 +32,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Content Include="Assets\Binary\Pixeval.LoginProxy.zip" />
 		<Content Remove="Assets\Images\logo-no-caption.png" />
 		<Content Remove="Strings\zh-CN\BookmarksPage.resw" />
 		<Content Remove="Strings\zh-CN\IllustrationGridCommandBar.resw" />
@@ -71,6 +70,7 @@
 		<None Remove="Controls\TokenInputTextBox\TokenInputTextBox.xaml" />
 		<None Remove="Dialogs\ReverseSearchApiKeyNotPresentDialog.xaml" />
 		<None Remove="Pages\Capability\FollowingsPage.xaml" />
+		<None Remove="Pages\Capability\IllustratorPage.xaml" />
 		<None Remove="Pages\Download\DownloadListEntry.xaml" />
 		<None Remove="Pages\IllustrationViewer\CommentRepliesPage.xaml" />
 		<None Remove="Pages\IllustrationViewer\PixivReplyEmojiListPage.xaml" />
@@ -80,6 +80,7 @@
 		<None Remove="Popups\DownloadListPageDeleteTasksPopup.xaml" />
 		<None Remove="Popups\IllustrationResultFilterPopup.xaml" />
 		<None Remove="Popups\IllustrationResultFilter\IllustrationResultFilterFunctionEntry.xaml" />
+		<None Remove="Popups\LoginWebViewPopup.xaml" />
 		<None Remove="Strings\zh-CN\AboutPage.resw" />
 		<None Remove="Strings\zh-CN\Activations.resw" />
 		<None Remove="Strings\zh-CN\BookmarksPage.resw" />
@@ -95,6 +96,7 @@
 		<None Remove="Strings\zh-CN\IllustrationInfoPage.resw" />
 		<None Remove="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
 		<None Remove="Strings\zh-CN\IllustrationViewerPage.resw" />
+		<None Remove="Strings\zh-CN\IllustratorPage.resw" />
 		<None Remove="Strings\zh-CN\ImageViewerPage.resw" />
 		<None Remove="Strings\zh-CN\MacroParser.resw" />
 		<None Remove="Strings\zh-CN\PixivReplyBar.resw" />
@@ -135,8 +137,8 @@
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.2" />
 		<PackageReference Include="GitVersion.MsBuild" Version="5.8.1">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="LiteDB" Version="5.0.11" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
@@ -174,34 +176,14 @@
 	</ItemGroup>
 	<!-- #endregion Exposes PRI resources to the source generator -->
 
-
 	<Target Name="PrepareForGenerateGitVersionInformation" BeforeTargets="GenerateGitVersionInformation">
 		<MakeDir Directories="$(OutDir);$(IntermediateOutputPath);@(DocFileItem->'%(RelativeDir)');@(CreateDirectory)" ContinueOnError="True" />
-		<ItemGroup>
+		<ItemGroup Condition="'@(AppxManifest)'==''">
 			<AppxManifest Include="Package.appxmanifest"></AppxManifest>
 		</ItemGroup>
 		<PropertyGroup>
 			<WindowsPackageType>MSIX</WindowsPackageType>
 		</PropertyGroup>
-	</Target>
-
-	<Target Name="PackageLoginProxy" BeforeTargets="PrepareForBuild">
-		<PropertyGroup>
-			<LoginProxyAssetsPath>$(MSBuildProjectDirectory)\Assets\Binary\Pixeval.LoginProxy.zip</LoginProxyAssetsPath>
-			<LoginProxyPublishDir>$(TEMP)\LoginProxy-$(Configuration)-$(Platform)</LoginProxyPublishDir>
-			<LoginProxyPublishConfiguration>$(Configuration)</LoginProxyPublishConfiguration>
-			<LoginProxyPublishPlatform>$(Platform)</LoginProxyPublishPlatform>
-			<LoginProxyPublishProtocol>FileSystem</LoginProxyPublishProtocol>
-			<LoginProxyPublishTargetFramework>net6.0-windows</LoginProxyPublishTargetFramework>
-			<LoginProxyPublishSelfContained>false</LoginProxyPublishSelfContained>
-			<LoginProxyRuntimeIdentifier>$(RuntimeIdentifier)</LoginProxyRuntimeIdentifier>
-		</PropertyGroup>
-		<RemoveDir Directories="$(LoginProxyPublishDir)" ContinueOnError="true" />
-		<MSBuild Projects="$(MSBuildProjectDirectory)\..\Pixeval.LoginProxy\Pixeval.LoginProxy.csproj" Targets="publish" Properties="Configuration=$(LoginProxyPublishConfiguration);RuntimeIdentifier=$(LoginProxyRuntimeIdentifier);Platform=$(LoginProxyPublishPlatform);PublishDir=$(LoginProxyPublishDir);PublishProtocol=$(LoginProxyPublishProtocol);TargetFramework=$(LoginProxyPublishTargetFramework);SelfContained=$(LoginProxyPublishSelfContained);" />
-		<Delete Files="$(LoginProxyAssetsPath)" />
-		<MakeDir Directories="$(MSBuildProjectDirectory)\Assets\Binary" />
-		<ZipDirectory DestinationFile="$(LoginProxyAssetsPath)" SourceDirectory="$(LoginProxyPublishDir)" />
-		<RemoveDir Directories="$(LoginProxyPublishDir)" />
 	</Target>
 
 	<Target Name="GeneratePackageAppxManifest" BeforeTargets="_ValidateWindowsPackageType" DependsOnTargets="GetVersion">
@@ -274,9 +256,7 @@
 		<WriteLinesToFile File="$(MSBuildProjectDirectory)\Package.appxmanifest" Overwrite="true" Lines="$(ManifestText)" />
 	</Target>
 
-
 	<ItemGroup>
-		<Folder Include="Assets\Binary\" />
 		<Folder Include="Assets\Images\Supporters\" />
 		<Folder Include="Download\MacroParser\Ast\" />
 	</ItemGroup>
@@ -296,6 +276,7 @@
 		<PRIResource Include="Strings\zh-CN\IllustrationInfoPage.resw" />
 		<PRIResource Include="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
 		<PRIResource Include="Strings\zh-CN\IllustrationViewerPage.resw" />
+		<PRIResource Include="Strings\zh-CN\IllustratorPage.resw" />
 		<PRIResource Include="Strings\zh-CN\ImageViewerPage.resw" />
 		<PRIResource Include="Strings\zh-CN\LoginPage.resw" />
 		<PRIResource Include="Strings\zh-CN\MacroParser.resw" />
@@ -314,6 +295,30 @@
 
 	<!--  XAML  -->
 	<ItemGroup>
+		<Page Update="Pages\Download\DownloadListPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Pages\IllustrationViewer\IllustrationViewerPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="UserControls\IllustrationGridCommandBar.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Pages\Capabilities\RecommendationPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="UserControls\IllustrationGrid.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Dialogs\MessageDialogContent.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Pages\MainPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Pages\Login\LoginPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
 		<Page Update="Controls\IllustratorView\IllustratorView.xaml">
 			<XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
 		</Page>
@@ -368,10 +373,16 @@
 		<Page Update="Pages\Capability\FollowingsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
+		<Page Update="Pages\IllustratorViewer\IllustratorPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
 		<Page Update="Pages\Capability\RecentPostsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Update="Pages\Capability\SearchResultsPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Popups\LoginWebViewPopup.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Update="Pages\Misc\AboutPage.xaml">
