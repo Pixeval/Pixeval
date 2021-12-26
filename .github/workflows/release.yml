@@ -1,0 +1,85 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+  
+
+jobs:
+    create_release:
+        name: Create release
+        outputs:
+            release_upload_url: ${{ steps.create_release.outputs.upload_url }}
+        runs-on: windows-2022
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v2
+
+          - name: Create release
+            id: create_release
+            uses: shogo82148/actions-create-release@v1
+            with:
+              tag_name: ${{ github.ref_name }}
+              release_name: Pixeval ${{ github.ref_name }}
+
+          - name: Update release asset
+            uses: shogo82148/actions-upload-release-asset@v1
+            with:
+                upload_url: ${{  steps.create_release.outputs.upload_url }}
+                asset_path: ./Pixeval_PublicKey.cer
+
+    build:
+        needs: create_release
+        strategy:
+            matrix:
+                platform: ['x64','x86','arm64']
+
+        runs-on: windows-2022
+
+        env:
+            private_key: ${{ secrets.PRIVATE_KEY }}
+            private_key_thumbprint: ${{ secrets.PRIVATE_KEY_THUMBPRINT }}
+            private_key_password: ${{ secrets.PRIVATE_KEY_PASSWORD }}
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+              with:
+                fetch-depth: 0
+                  
+            - name: setup-msbuild
+              uses: microsoft/setup-msbuild@v1
+              
+            - name: Install pfx
+              run: |
+                [io.file]::WriteAllBytes("$PWD/temp.pfx",[convert]::FromBase64String($env:private_key))
+                Import-PfxCertificate -FilePath $PWD/temp.pfx -CertStoreLocation Cert:\CurrentUser\My -Password (ConvertTo-SecureString -AsPlainText "$env:private_key_password")
+                Remove-Item -Path "$PWD/temp.pfx"
+              shell: pwsh
+            
+            - uses: actions/cache@v2
+              with:
+                path: ~/.nuget/packages
+                key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+                restore-keys: |
+                    ${{ runner.os }}-nuget-
+
+            - name: Restore the application
+              run: msbuild -t:restore -p:Platform=${{ matrix.platform }} -p:RestoreLockedMode=true -m
+
+            - name: Publish the application
+              run:  msbuild -t:publish -p:Configuration=Release -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:PackageCertificateThumbprint="$env:private_key_thumbprint" -p:OutDir="$PWD\build" -m
+              shell: pwsh
+            
+            - name: Copy files
+              run: |
+                $files = @(Get-ChildItem -Recurse|Where-Object -Property Name -Like Pixeval*.msix)
+                Copy-Item $files -Destination ( New-Item -Path ./output -ItemType Directory -ErrorAction SilentlyContinue)
+              shell: pwsh
+
+            - name: Update release asset
+              id: upload-release-asset1
+              uses: shogo82148/actions-upload-release-asset@v1
+              with:
+                upload_url: ${{  needs.create_release.outputs.release_upload_url }}
+                asset_path: ./output/*

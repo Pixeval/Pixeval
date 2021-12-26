@@ -41,8 +41,9 @@ public abstract class SimplePersistentManager<T> : IPersistentManager<T, T>
         MaximumRecords = maximumRecords;
     }
 
+#nullable disable
     public ILiteCollection<T> Collection { get; init; }
-
+#nullable restore
     public int MaximumRecords { get; set; }
 
     public void Insert(T t)
