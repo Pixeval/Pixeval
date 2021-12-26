@@ -42,6 +42,77 @@ public partial record AppSetting
         DefaultValueAttributeHelper.Initialize(this);
     }
 
+    // ReSharper disable once UnusedMember.Global
+    public AppSetting(
+        ApplicationTheme theme,
+        bool disableDomainFronting,
+        IllustrationSortOption defaultSortOption,
+        SearchTagMatchOption tagMatchOption,
+        TargetFilter targetFilter,
+        int preLoadRows,
+        int pageLimitForKeywordSearch,
+        int searchStartingFromPageNumber,
+        int pageLimitForSpotlight,
+        string? mirrorHost,
+        int maxDownloadTaskConcurrencyLevel,
+        bool displayTeachingTipWhenGeneratingAppLink,
+        int itemsNumberLimitForDailyRecommendations,
+        bool filtrateRestrictedContent,
+        bool useFileCache,
+        int windowWidth,
+        int windowHeight,
+        ThumbnailDirection thumbnailDirection,
+        DateTimeOffset lastCheckedUpdate,
+        bool downloadUpdateAutomatically,
+        string appFontFamilyName,
+        MainPageTabItem defaultSelectedTabItem,
+        SearchDuration searchDuration,
+        bool usePreciseRangeForSearch,
+        DateTimeOffset searchStartDate,
+        DateTimeOffset searchEndDate,
+        string defaultDownloadPathMacro,
+        bool overwriteDownloadedFile,
+        int maximumDownloadHistoryRecords,
+        int maximumSearchHistoryRecords,
+        int maximumBrowseHistoryRecords,
+        string reverseSearchApiKey,
+        int reverseSearchResultSimilarityThreshold)
+    {
+        Theme = theme;
+        FiltrateRestrictedContent = filtrateRestrictedContent;
+        DisableDomainFronting = disableDomainFronting;
+        DefaultSortOption = defaultSortOption;
+        TagMatchOption = tagMatchOption;
+        TargetFilter = targetFilter;
+        PreLoadRows = preLoadRows;
+        PageLimitForKeywordSearch = pageLimitForKeywordSearch;
+        SearchStartingFromPageNumber = searchStartingFromPageNumber;
+        PageLimitForSpotlight = pageLimitForSpotlight;
+        MirrorHost = mirrorHost;
+        MaxDownloadTaskConcurrencyLevel = maxDownloadTaskConcurrencyLevel;
+        DisplayTeachingTipWhenGeneratingAppLink = displayTeachingTipWhenGeneratingAppLink;
+        ItemsNumberLimitForDailyRecommendations = itemsNumberLimitForDailyRecommendations;
+        UseFileCache = useFileCache;
+        WindowWidth = windowWidth;
+        WindowHeight = windowHeight;
+        ThumbnailDirection = thumbnailDirection;
+        LastCheckedUpdate = lastCheckedUpdate;
+        DownloadUpdateAutomatically = downloadUpdateAutomatically;
+        AppFontFamilyName = appFontFamilyName;
+        DefaultSelectedTabItem = defaultSelectedTabItem;
+        SearchDuration = searchDuration;
+        UsePreciseRangeForSearch = usePreciseRangeForSearch;
+        SearchStartDate = searchStartDate;
+        SearchEndDate = searchEndDate;
+        DefaultDownloadPathMacro = defaultDownloadPathMacro;
+        OverwriteDownloadedFile = overwriteDownloadedFile;
+        MaximumDownloadHistoryRecords = maximumDownloadHistoryRecords;
+        MaximumSearchHistoryRecords = maximumSearchHistoryRecords;
+        MaximumBrowseHistoryRecords = maximumBrowseHistoryRecords;
+        ReverseSearchApiKey = reverseSearchApiKey;
+        ReverseSearchResultSimilarityThreshold = reverseSearchResultSimilarityThreshold;
+    }
+
     /// <summary>
     ///     The Application Theme
     /// </summary>
