@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-      <PackageReference Include="Autofac" Version="6.2.0" PrivateAssets="True" />
-      <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" PrivateAssets="True" />
-      <PackageReference Include="Refit" Version="6.0.38" PrivateAssets="True" />
+      <PackageReference Include="Autofac" Version="6.3.0" PrivateAssets="True" />
+      <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" PrivateAssets="True" />
+      <PackageReference Include="Refit" Version="6.1.15" PrivateAssets="True" />
   </ItemGroup>
 
   <ItemGroup>
