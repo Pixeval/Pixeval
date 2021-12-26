@@ -21,15 +21,11 @@
 #endregion
 
 using System;
-using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Controls.IllustratorView;
-using Pixeval.CoreApi.Global.Enum;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using Pixeval.Pages.IllustratorViewer;
 
 namespace Pixeval.Pages.Capability;
 
