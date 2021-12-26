@@ -28,7 +28,6 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Attributes;
 using Pixeval.Controls.Card;
-using Pixeval.Misc;
 
 
 namespace Pixeval.Controls.PersonView;

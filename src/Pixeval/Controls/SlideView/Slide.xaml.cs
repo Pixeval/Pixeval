@@ -1,10 +1,10 @@
 ﻿using Microsoft.UI.Xaml;
-using Pixeval.Misc;
+using Pixeval.Attributes;
 
 namespace Pixeval.Controls.SlideView
 {
-    [DependencyProperty("ContentTemplate", typeof(DataTemplate), InstanceChangedCallback = true)]
-    [DependencyProperty("SlideContent", typeof(object), InstanceChangedCallback = true)]
+    [DependencyProperty("ContentTemplate", typeof(DataTemplate), nameof(OnContentTemplateChanged))]
+    [DependencyProperty("SlideContent", typeof(object), nameof(OnSlideContentChanged))]
     public sealed partial class Slide
     {
         public Slide()

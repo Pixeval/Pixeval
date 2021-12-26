@@ -24,14 +24,14 @@ using System.Numerics;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Misc;
+using Pixeval.Attributes;
 
 namespace Pixeval.Controls.SlideView;
 
-[DependencyProperty("AnimationDuration", typeof(TimeSpan), DefaultValue = "TimeSpan.FromMilliseconds(500)", InstanceChangedCallback = true)]
+[DependencyProperty("AnimationDuration", typeof(TimeSpan),nameof(OnAnimationDurationChanged), DefaultValue = "TimeSpan.FromMilliseconds(500)")]
 [DependencyProperty("ContentTemplate", typeof(DataTemplate))]
-[DependencyProperty("Interval", typeof(TimeSpan), DefaultValue = "TimeSpan.FromSeconds(2)", InstanceChangedCallback = true)]
-[DependencyProperty("Slides", typeof(ICollection<object>), InstanceChangedCallback = true)]
+[DependencyProperty("Interval", typeof(TimeSpan), nameof(OnIntervalChanged),DefaultValue = "TimeSpan.FromSeconds(2)")]
+[DependencyProperty("Slides", typeof(ICollection<object>),nameof(OnSlidesChanged))]
 [TemplatePart(Name = PartAlternatorContainer, Type = typeof(Grid))]
 public partial class SlideView : Control
 {
