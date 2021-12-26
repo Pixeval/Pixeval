@@ -62,7 +62,7 @@ public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelpe
 
     private void RankingsPage_OnLoaded(object? sender, RoutedEventArgs e)
     {
-        if (App.AppViewModel.Window.GetNavigationModeAndReset() is not NavigationMode.Back)
+        if (MainWindow.GetNavigationModeAndReset() is not NavigationMode.Back)
         {
             ChangeSource();
         }

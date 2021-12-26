@@ -39,6 +39,7 @@ using Pixeval.Messages;
 using Pixeval.Pages.Capability;
 using Pixeval.Utilities;
 using ReverseMarkdown;
+using IllustratorPage = Pixeval.Pages.IllustratorViewer.IllustratorPage;
 
 namespace Pixeval.Pages.IllustrationViewer;
 

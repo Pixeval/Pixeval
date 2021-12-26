@@ -17,8 +17,7 @@
                     PaneTitle="Pixeval"
                     SelectionChanged="MainPageRootNavigationView_OnSelectionChanged">
         <NavigationView.PaneCustomContent>
-            <Grid Margin="15,5,15,10"
-                  Visibility="{x:Bind MainPageRootNavigationView.IsPaneOpen, Mode=OneWay}">
+            <Grid Margin="15,5,15,10" Visibility="{x:Bind MainPageRootNavigationView.IsPaneOpen, Mode=OneWay}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="38" />
@@ -88,9 +87,9 @@
                         Padding="0"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        Tapped="ReverseSearchButton_OnTapped"
                         Content="{ui:FontIcon Glyph=SearchAndAppsE773,
-                                              FontSize=13}" />
+                                              FontSize=13}"
+                        Tapped="ReverseSearchButton_OnTapped" />
             </Grid>
         </NavigationView.PaneCustomContent>
         <NavigationView.MenuItems>
@@ -106,10 +105,8 @@
             <NavigationViewItem x:Uid="/MainPage/FollowingsTab"
                                 Icon="{ui:FontIcon Glyph=PeopleE716}"
                                 Tag="{x:Bind _viewModel.FollowingsTag}" />
-            <NavigationViewItem x:Uid="/MainPage/SpotlightsTab"
-                                Icon="{ui:FontIcon Glyph=MapLayersE81E}" />
-            <NavigationViewItem x:Uid="/MainPage/FeedsTab"
-                                Icon="{ui:FontIcon Glyph=MobLocationEC43}" />
+            <NavigationViewItem x:Uid="/MainPage/SpotlightsTab" Icon="{ui:FontIcon Glyph=MapLayersE81E}" />
+            <NavigationViewItem x:Uid="/MainPage/FeedsTab" Icon="{ui:FontIcon Glyph=MobLocationEC43}" />
             <NavigationViewItem x:Uid="/MainPage/RecentPostsTab"
                                 Icon="{ui:FontIcon Glyph=DevUpdateECC5}"
                                 Tag="{x:Bind _viewModel.RecentPostsTag}" />
@@ -122,8 +119,7 @@
                                 Icon="{ui:FontIcon Glyph=CheckListE9D5}" />
         </NavigationView.MenuItems>
         <NavigationView.FooterMenuItems>
-            <NavigationViewItem x:Uid="/MainPage/HelpTab"
-                                Icon="{ui:FontIcon Glyph=HelpE897}" />
+            <NavigationViewItem x:Uid="/MainPage/HelpTab" Icon="{ui:FontIcon Glyph=HelpE897}" />
             <NavigationViewItem x:Uid="/MainPage/AboutTab"
                                 Icon="{ui:FontIcon Glyph=RingerBadge12EDAC}"
                                 Tag="{x:Bind _viewModel.AboutTag}" />
@@ -132,7 +128,6 @@
                                 Icon="{ui:FontIcon Glyph=SettingE713}"
                                 Tag="{x:Bind _viewModel.SettingsTag}" />
         </NavigationView.FooterMenuItems>
-        <Frame x:Name="MainPageRootFrame"
-               Navigated="MainPageRootFrame_OnNavigated" />
+        <Frame x:Name="MainPageRootFrame" Navigated="MainPageRootFrame_OnNavigated" />
     </NavigationView>
 </controls:EnhancedPage>

@@ -6,6 +6,8 @@
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:userControls="using:Pixeval.UserControls"
                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                       ClearCacheAfterNavigation="True"
+                       NavigationCacheMode="Disabled"
                        mc:Ignorable="d">
     <userControls:IllustrationContainer x:Name="IllustrationContainer">
         <userControls:IllustrationContainer.CommandBarElements>

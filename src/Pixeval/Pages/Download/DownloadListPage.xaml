@@ -11,6 +11,7 @@
                        xmlns:ui="using:Pixeval.Util.UI"
                        xmlns:util="using:Pixeval.Misc"
                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                       ClearCacheAfterNavigation="True"
                        mc:Ignorable="d">
     <Grid Padding="20,0">
         <Grid.RowDefinitions>
@@ -69,8 +70,7 @@
                   SelectionChanged="ModeFilterComboBox_OnSelectionChanged">
             <ComboBox.ItemTemplate>
                 <DataTemplate x:DataType="download:DownloadListOption">
-                    <TextBlock
-                        Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent((download:DownloadListOption))}" />
+                    <TextBlock Text="{x:Bind util:LocalizedResourceAttributeHelper.GetLocalizedResourceContent((download:DownloadListOption))}" />
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
@@ -114,8 +114,7 @@
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="download:DownloadListEntryViewModel">
                     <Grid Padding="0,3">
-                        <card:CardControl
-                            Background="{x:Bind download:DownloadListEntryViewModel.GetSelectedBackground(DownloadTask.Selected), Mode=OneWay}">
+                        <card:CardControl Background="{x:Bind download:DownloadListEntryViewModel.GetSelectedBackground(DownloadTask.Selected), Mode=OneWay}">
                             <download:DownloadListEntry Title="{x:Bind DownloadTask.Title}"
                                                         ActionButtonBackground="{x:Bind download:DownloadListEntryViewModel.GetActionButtonBackground(DownloadTask.CurrentState), Mode=OneWay}"
                                                         ActionButtonContent="{x:Bind download:DownloadListEntryViewModel.GetEntryActionButtonContent(DownloadTask.CurrentState), Mode=OneWay}"

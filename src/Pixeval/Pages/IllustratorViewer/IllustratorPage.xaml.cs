@@ -1,42 +1,27 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System;
 using System.Numerics;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.System;
 using CommunityToolkit.WinUI.UI;
 using CommunityToolkit.WinUI.UI.Animations.Expressions;
 using Microsoft.Graphics.Canvas.Effects;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Composition;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Hosting;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls.IllustratorView;
-using Pixeval.CoreApi.Engine;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
-using Pixeval.Pages.IllustrationViewer;
 using Pixeval.UserControls;
 using Pixeval.Util;
-using Pixeval.Utilities;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace Pixeval.Pages.Capability
+namespace Pixeval.Pages.IllustratorViewer
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -54,7 +39,7 @@ namespace Pixeval.Pages.Capability
 
         public IllustratorPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         public override void OnPageDeactivated(NavigatingCancelEventArgs navigatingCancelEventArgs)
@@ -89,7 +74,7 @@ namespace Pixeval.Pages.Capability
 
         private void IllustratorPage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (App.AppViewModel.Window.GetNavigationModeAndReset() is not NavigationMode.Back)
+            if (MainWindow.GetNavigationModeAndReset() is not NavigationMode.Back)
             {
                 ChangeSource();
             }
@@ -99,7 +84,7 @@ namespace Pixeval.Pages.Capability
             // Update the ZIndex of the header container so that the header is above the items when scrolling
             var headerPresenter = (UIElement)VisualTreeHelper.GetParent(Header);
             var headerContainer = (UIElement)VisualTreeHelper.GetParent(headerPresenter);
-            Canvas.SetZIndex((UIElement)headerContainer, 1);
+            Canvas.SetZIndex(headerContainer, 1);
 
             // Get the PropertySet that contains the scroll values from the ScrollViewer
             _scrollerPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(scrollViewer);

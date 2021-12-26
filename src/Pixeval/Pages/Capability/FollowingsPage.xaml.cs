@@ -21,12 +21,10 @@
 #endregion
 
 using System;
-using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Controls.IllustratorView;
-using Pixeval.CoreApi.Global.Enum;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -54,7 +52,7 @@ public sealed partial class FollowingsPage
         if (sender is IllustratorView view)
         {
             ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", view.Avatar);
-            App.AppViewModel.RootFrameNavigate(typeof(IllustratorPage), Tuple.Create<UIElement, IllustratorViewModel>(view.Avatar!, view.ViewModel), new SlideNavigationTransitionInfo
+            App.AppViewModel.RootFrameNavigate(typeof(IllustratorViewer.IllustratorPage), Tuple.Create<UIElement, IllustratorViewModel>(view.Avatar!, view.ViewModel), new SlideNavigationTransitionInfo
             {
                 Effect = SlideNavigationTransitionEffect.FromRight
             });

@@ -34,10 +34,9 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Microsoft.Toolkit.Diagnostics;
-using Pixeval.Util.IO;
 using Pixeval.Utilities;
 
-namespace Pixeval.Misc;
+namespace Pixeval.Util.IO;
 
 public class FileCache
 {

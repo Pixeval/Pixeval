@@ -27,6 +27,12 @@
 		<DefineConstants Condition="'$(Configuration)' == 'Debug'">TRACE;DEBUG</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
+	  <Compile Remove="Properties\PublishProfiles\**" />
+	  <EmbeddedResource Remove="Properties\PublishProfiles\**" />
+	  <None Remove="Properties\PublishProfiles\**" />
+	  <Page Remove="Properties\PublishProfiles\**" />
+	</ItemGroup>
+	<ItemGroup>
 		<ProjectCapability Include="TestContainer" />
 	</ItemGroup>
 	<ItemGroup>
@@ -227,7 +233,6 @@
 	<ItemGroup>
 		<Folder Include="Assets\Images\Supporters\" />
 		<Folder Include="Download\MacroParser\Ast\" />
-		<Folder Include="Properties\PublishProfiles\" />
 	</ItemGroup>
 	<ItemGroup>
 		<PRIResource Include="Strings\zh-CN\AboutPage.resw" />

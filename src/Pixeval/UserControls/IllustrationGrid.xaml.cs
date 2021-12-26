@@ -21,6 +21,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Windows.System;
 using Windows.UI.Core;
@@ -47,6 +48,8 @@ namespace Pixeval.UserControls;
 [DependencyProperty("Header", typeof(object))]
 public sealed partial class IllustrationGrid
 {
+    private readonly IDictionary<string, Border> _cachedContainers = new Dictionary<string, Border>();
+
     private static readonly ExponentialEase ImageSourceSetEasingFunction = new()
     {
         EasingMode = EasingMode.EaseOut,
@@ -118,14 +121,28 @@ public sealed partial class IllustrationGrid
 
     private async void IllustrationThumbnailContainerItem_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
     {
+#nullable disable
         var context = sender.GetDataContext<IllustrationViewModel>();
-        var preLoadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-        if (context is null || IllustrationGridView.ContainerFromItem(context)?.FindDescendant("Thumbnail") is not Border border)
+        if (context is null)
         {
             return;
         }
-        if (args.BringIntoViewDistanceY <= sender.ActualHeight * preLoadRows) // [preLoadRows] element ahead
+        var preLoadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
+
+        if (!_cachedContainers.TryGetValue(context.Id, out var border)) // fast path
+        {
+            if (IllustrationGridView.ContainerFromItem(context)?.FindDescendant("Thumbnail") is Border b) // slow path
+            {
+                border = _cachedContainers[context.Id] = b;
+            }
+            else
+            {
+                return;
+            }
+        }
+
+#nullable enable
+        if (args.BringIntoViewDistanceY <= sender.ActualHeight * preLoadRows)
         {
             if (await context.LoadThumbnailIfRequired())
             {
@@ -139,7 +156,7 @@ public sealed partial class IllustrationGrid
                 {
                     var scaleXAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleX), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
                     var scaleYAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleY), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
-                    var opacityAnimation = sender.CreateDoubleAnimation(nameof(sender.Opacity), from: 0, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
+                    var opacityAnimation = sender.CreateDoubleAnimation(nameof(sender.Opacity), from: 0, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2)); 
                     UIHelper.CreateStoryboard(scaleXAnimation, scaleYAnimation, opacityAnimation).Begin();
                 }
                 else
@@ -160,7 +177,6 @@ public sealed partial class IllustrationGrid
                 context.LoadingThumbnailCancellationHandle.Cancel();
                 break;
             case { ThumbnailSource: not null }:
-                border.Background = null;
                 var source = context.ThumbnailSource;
                 context.ThumbnailSource = null;
                 source.Dispose();

@@ -38,6 +38,8 @@ public class EnhancedPage : Page
         };
     }
 
+    public bool ClearCacheAfterNavigation { get; set; }
+
     public bool Initialized { get; private set; }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -50,6 +52,14 @@ public class EnhancedPage : Page
     {
         base.OnNavigatingFrom(e);
         OnPageDeactivated(e);
+
+        if (ClearCacheAfterNavigation)
+        {
+            NavigationCacheMode = NavigationCacheMode.Disabled;
+            var cacheSize = ((Frame) Parent).CacheSize;
+            ((Frame) Parent).CacheSize = 0;
+            ((Frame) Parent).CacheSize = cacheSize;
+        }
     }
 
     public virtual void OnPageDeactivated(NavigatingCancelEventArgs e)

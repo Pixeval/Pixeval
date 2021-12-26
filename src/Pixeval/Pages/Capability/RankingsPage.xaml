@@ -4,12 +4,13 @@
                        xmlns:controls="using:Pixeval.Controls"
                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                       xmlns:notifyOnLoadedCalendarDatePicker="using:Pixeval.Controls.NotifyOnLoadedCalendarDatePicker"
+                       xmlns:notifyOnLoadedComboBox="using:Pixeval.Controls.NotifyOnLoadedComboBox"
                        xmlns:options="using:Pixeval.Options"
                        xmlns:system="using:System"
                        xmlns:userControls="using:Pixeval.UserControls"
-                       xmlns:notifyOnLoadedCalendarDatePicker="using:Pixeval.Controls.NotifyOnLoadedCalendarDatePicker"
-                       xmlns:notifyOnLoadedComboBox="using:Pixeval.Controls.NotifyOnLoadedComboBox"
                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                       ClearCacheAfterNavigation="True"
                        Loaded="RankingsPage_OnLoaded"
                        mc:Ignorable="d">
     <userControls:IllustrationContainer x:Name="IllustrationContainer">
