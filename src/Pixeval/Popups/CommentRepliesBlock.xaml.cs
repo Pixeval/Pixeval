@@ -31,6 +31,7 @@ using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.Attributes;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Misc;
@@ -41,7 +42,7 @@ using Pixeval.Util.UI;
 
 namespace Pixeval.Popups;
 
-[DependencyProperty("ViewModel", typeof(CommentRepliesBlockViewModel), InstanceChangedCallback = true)]
+[DependencyProperty("ViewModel", typeof(CommentRepliesBlockViewModel), nameof(OnViewModelChanged))]
 public sealed partial class CommentRepliesBlock : IAppPopupContent
 {
     private EventHandler<TappedRoutedEventArgs>? _closeButtonTapped;

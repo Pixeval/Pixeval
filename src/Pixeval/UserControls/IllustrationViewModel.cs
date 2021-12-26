@@ -29,6 +29,7 @@ using Windows.Storage.Streams;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.Attributes;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;

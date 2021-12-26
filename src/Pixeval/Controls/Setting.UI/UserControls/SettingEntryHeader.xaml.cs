@@ -24,13 +24,14 @@ using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Pixeval.Attributes;
 using Pixeval.Misc;
 
 namespace Pixeval.Controls.Setting.UI.UserControls;
 
-[DependencyProperty("Header", typeof(string), InstanceChangedCallback = true)]
-[DependencyProperty("Description", typeof(object), InstanceChangedCallback = true)]
-[DependencyProperty("Icon", typeof(IconElement), InstanceChangedCallback = true)]
+[DependencyProperty("Header", typeof(string), nameof(OnHeaderChanged))]
+[DependencyProperty("Description", typeof(object), nameof(OnDescriptionChanged))]
+[DependencyProperty("Icon", typeof(IconElement), nameof(OnIconChanged))]
 public sealed partial class SettingEntryHeader
 {
     public SettingEntryHeader()

@@ -30,6 +30,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.Attributes;
 using Pixeval.Download;
 using Pixeval.Misc;
 using Pixeval.Pages.IllustrationViewer;
@@ -37,7 +38,7 @@ using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Download;
 
-[DependencyProperty("ViewModel", typeof(ObservableDownloadTask), InstanceChangedCallback = true)]
+[DependencyProperty("ViewModel", typeof(ObservableDownloadTask), nameof(OnViewModelChanged))]
 [DependencyProperty("Thumbnail", typeof(ImageSource))]
 [DependencyProperty("Title", typeof(string))]
 [DependencyProperty("Description", typeof(string))]

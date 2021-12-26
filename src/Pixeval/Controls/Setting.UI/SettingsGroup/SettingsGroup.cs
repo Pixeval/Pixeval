@@ -21,6 +21,7 @@
 #endregion
 
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Attributes;
 using Pixeval.Misc;
 
 namespace Pixeval.Controls.Setting.UI.SettingsGroup;

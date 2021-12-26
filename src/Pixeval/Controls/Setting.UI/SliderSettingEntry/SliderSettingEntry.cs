@@ -23,6 +23,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Pixeval.Attributes;
 using Pixeval.Controls.Setting.UI.UserControls;
 using Pixeval.Misc;
 
@@ -32,7 +33,7 @@ namespace Pixeval.Controls.Setting.UI.SliderSettingEntry;
 [TemplatePart(Name = PartValueSlider, Type = typeof(Slider))]
 [DependencyProperty("Maximum", typeof(double))]
 [DependencyProperty("Minimum", typeof(double))]
-[DependencyProperty("Value", typeof(double), InstanceChangedCallback = true)]
+[DependencyProperty("Value", typeof(double), nameof(OnValueChanged))]
 public partial class SliderSettingEntry : SettingEntryBase
 {
     private const string PartValueSlider = "ValueSlider";

@@ -24,13 +24,14 @@ using System;
 using System.Collections.Generic;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.Attributes;
 using Pixeval.Misc;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.UI;
 
 namespace Pixeval.UserControls;
 
-[DependencyProperty("ItemsSource", typeof(object), DefaultValue = "System.Linq.Enumerable.Empty<Pixeval.Pages.IllustrationViewer.CommentBlockViewModel>()", InstanceChangedCallback = true)]
+[DependencyProperty("ItemsSource", typeof(object), nameof(OnItemsSourceChanged), DefaultValue = "System.Linq.Enumerable.Empty<Pixeval.Pages.IllustrationViewer.CommentBlockViewModel>()")]
 public sealed partial class CommentList
 {
     private EventHandler<TappedRoutedEventArgs>? _repliesHyperlinkButtonTapped;

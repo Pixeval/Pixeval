@@ -23,7 +23,7 @@
 using System;
 using Pixeval.Util;
 
-namespace Pixeval.Misc;
+namespace Pixeval.Attributes;
 
 [AttributeUsage(AttributeTargets.Field)]
 public class LocalizedResource : Attribute
