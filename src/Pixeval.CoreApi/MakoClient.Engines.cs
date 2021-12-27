@@ -200,7 +200,7 @@ public partial class MakoClient
     ///     The <see cref="FollowingEngine" /> containing following users.
     /// </returns>
     /// <exception cref="IllegalPrivatePolicyException"></exception>
-    public IFetchEngine<User> Following(string uid, PrivacyPolicy privacyPolicy)
+    public IFetchEngine<User?> Following(string uid, PrivacyPolicy privacyPolicy)
     {
         EnsureNotCancelled();
         if (!CheckPrivacyPolicy(uid, privacyPolicy))

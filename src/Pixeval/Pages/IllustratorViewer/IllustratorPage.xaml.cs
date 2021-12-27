@@ -72,14 +72,9 @@ public sealed partial class IllustratorPage
     {
         switch (navigationEventArgs.Parameter)
         {
-            case Tuple<UIElement, IllustratorViewModel> tuple:
-                var (sender, viewModel) = tuple;
+            case (UIElement sender, IllustratorViewModel viewModel):
                 WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(sender));
-                var anim = ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation");
-                if (anim != null)
-                {
-                    anim.TryStart(ProfileImage);
-                }
+                ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation")?.TryStart(ProfileImage);
                 _viewModel = viewModel;
                 break;
             case IllustratorViewModel viewModel1:

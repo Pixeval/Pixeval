@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Pixeval.Controls.IllustratorView;
 using Pixeval.CoreApi.Global.Enum;
+using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Pages.Capability;
 
@@ -43,9 +44,12 @@ public partial class FollowingsPageViewModel : ObservableObject
         var fetchEngine = App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public);
         await foreach (var user in fetchEngine)
         {
-            var model = new IllustratorViewModel(user.UserInfo!);
-            _illustrators.Add(model);
-            _ = model.LoadThumbnail();
+            if (user?.UserInfo is { } info)
+            {
+                var model = new IllustratorViewModel(info);
+                _illustrators.Add(model);
+                _ = model.LoadThumbnail();
+            }
         }
     }
 }

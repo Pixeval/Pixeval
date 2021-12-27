@@ -50,7 +50,7 @@ public sealed partial class FollowingsPage
         if (sender is IllustratorView view)
         {
             ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", view.Avatar);
-            App.AppViewModel.RootFrameNavigate(typeof(IllustratorPage), Tuple.Create<UIElement, IllustratorViewModel>(view.Avatar!, view.ViewModel), new SlideNavigationTransitionInfo
+            App.AppViewModel.RootFrameNavigate(typeof(IllustratorPage), (view.Avatar!, view.ViewModel), new SlideNavigationTransitionInfo
             {
                 Effect = SlideNavigationTransitionEffect.FromRight
             });
