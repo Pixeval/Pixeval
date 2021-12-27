@@ -44,7 +44,12 @@ internal class DependencyPropertyGenerator : GetAttributeGenerator
 
         foreach (var attribute in specificClass.GetAttributes().Where(attribute => SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, attributeType)))
         {
-            if (attribute.ConstructorArguments[0].Value is not string propertyName || attribute.ConstructorArguments[1].Value is not INamedTypeSymbol type || attribute.ConstructorArguments[2].Value is not string propertyChanged)
+            if (attribute.ConstructorArguments[0].Value is not string propertyName || attribute.ConstructorArguments[1].Value is not INamedTypeSymbol type)
+            {
+                continue;
+            }
+
+            if (attribute.ConstructorArguments.Length < 3 || attribute.ConstructorArguments[2].Value is not string propertyChanged)
             {
                 continue;
             }

@@ -34,7 +34,7 @@ namespace Pixeval.Attributes;
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
 public sealed class DependencyPropertyAttribute : Attribute
 {
-    public DependencyPropertyAttribute(string name, Type type,string propertyChanged = "")
+    public DependencyPropertyAttribute(string name, Type type, string propertyChanged = "")
     {
         Name = name;
         Type = type;
