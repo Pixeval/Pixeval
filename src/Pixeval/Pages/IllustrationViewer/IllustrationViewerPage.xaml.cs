@@ -100,7 +100,10 @@ public sealed partial class IllustrationViewerPage : IGoBack
             animation.TryStart(IllustrationImageShowcaseFrame);
         }
 
-        _viewModel = (IllustrationViewerPageViewModel) e.Parameter;
+        if (e.Parameter is IllustrationViewerPageViewModel viewModel)
+        {
+            _viewModel = viewModel.IsDisposed ? viewModel.CreateNew() : viewModel;
+        }
         _illustrationInfo = new NavigationViewTag(typeof(IllustrationInfoPage), _viewModel);
         _comments = new NavigationViewTag(typeof(CommentsPage), (App.AppViewModel.MakoClient.IllustrationComments(_viewModel.IllustrationId).Where(c => c is not null), _viewModel.IllustrationId)); // TODO
 

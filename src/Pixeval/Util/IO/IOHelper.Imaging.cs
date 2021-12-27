@@ -151,8 +151,9 @@ public static partial class IOHelper
     ///     Decodes the <paramref name="imageStream" /> to a <see cref="SoftwareBitmap" />
     /// </summary>
     /// <returns></returns>
-    public static async Task<SoftwareBitmap?> GetSoftwareBitmapFromStreamAsync(IRandomAccessStream imageStream)
+    public static async Task<SoftwareBitmap?> GetSoftwareBitmapFromStreamAsync(IRandomAccessStream? imageStream)
     {
+        if (imageStream == null) return null;
         var decoder = await BitmapDecoder.CreateAsync(imageStream);
         return await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
     }

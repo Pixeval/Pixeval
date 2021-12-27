@@ -106,7 +106,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
 
     public IllustrationViewModel IllustrationViewModel { get; }
 
-    public CancellationHandle ImageLoadingCancellationHandle { get; }
+    public CancellationHandle ImageLoadingCancellationHandle { get; private set; }
 
     /// <summary>
     ///     The view model of the <see cref="IllustrationViewerPage" /> that hosts the owner <see cref="ImageViewerPage" />
@@ -156,14 +156,18 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         manager.Insert(new BrowseHistoryEntry { Id = IllustrationViewModel.Id });
     }
 
-    private async Task LoadImage()
+    public async Task LoadImage()
     {
-        _ = IllustrationViewModel.LoadThumbnailIfRequired().ContinueWith(_ =>
+        if (LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true } || _disposed)
         {
-            OriginalImageSource ??= IllustrationViewModel.ThumbnailSource;
-        }, TaskScheduler.FromCurrentSynchronizationContext());
-        AddHistory();
-        await LoadOriginalImage();
+            _disposed = false;
+            _ = IllustrationViewModel.LoadThumbnailIfRequired().ContinueWith(_ =>
+            {
+                OriginalImageSource ??= IllustrationViewModel.ThumbnailSource;
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+            AddHistory();
+            await LoadOriginalImage();
+        }
     }
 
     public async Task LoadOriginalImage()
@@ -275,6 +279,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         {
             (OriginalImageSource as SoftwareBitmapSource)?.Dispose();
         }
+        LoadingOriginalSourceTask?.Dispose();
     }
 
     ~ImageViewerPageViewModel()

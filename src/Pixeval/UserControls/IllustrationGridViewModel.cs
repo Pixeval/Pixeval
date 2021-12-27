@@ -96,7 +96,7 @@ public partial class IllustrationGridViewModel : ObservableObject, IDisposable, 
                 ? IllustrationGridCommandBarResources.CancelSelectionButtonDefaultLabel
                 : IllustrationGridCommandBarResources.CancelSelectionButtonFormatted.Format(count);
         };
-        IllustrationsView.Add(viewModel);
+        Illustrations.Add(viewModel);
     }
 
     public void SetSortDescription(SortDescription description)
@@ -131,12 +131,13 @@ public partial class IllustrationGridViewModel : ObservableObject, IDisposable, 
 
     public void DisposeCurrent()
     {
-        foreach (IllustrationViewModel illustrationViewModel in IllustrationsView)
+        foreach (var illustrationViewModel in Illustrations)
         {
             illustrationViewModel.Dispose();
         }
 
         SelectedIllustrations.Clear();
+        Illustrations.Clear();
         IllustrationsView.Clear();
     }
 

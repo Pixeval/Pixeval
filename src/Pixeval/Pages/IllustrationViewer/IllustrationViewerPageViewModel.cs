@@ -78,26 +78,35 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     [ObservableProperty]
     private UserInfo? _userInfo;
 
+    private IllustrationViewModel[] _illustrations;
+    public bool IsDisposed = false;
+
     // Remarks:
     // illustrations should contains only one item if the illustration is a single
     // otherwise it contains the entire manga data
-    public IllustrationViewerPageViewModel(IllustrationGrid gridView, params IllustrationViewModel[] illustrations)
+    public IllustrationViewerPageViewModel(IllustrationGrid gridView, params IllustrationViewModel[] illustrations) : this(illustrations)
     {
-        ImageViewerPageViewModels = illustrations.Select(i => new ImageViewerPageViewModel(this, i)).ToArray();
-        Current = ImageViewerPageViewModels[CurrentIndex];
         IllustrationGrid = gridView;
         ContainerGridViewModel = gridView.ViewModel;
         IllustrationViewModelInTheGridView = ContainerGridViewModel.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
-        InitializeCommands();
-        _ = LoadUserProfile();
     }
 
     public IllustrationViewerPageViewModel(params IllustrationViewModel[] illustrations)
     {
+        _illustrations = illustrations;
         ImageViewerPageViewModels = illustrations.Select(i => new ImageViewerPageViewModel(this, i)).ToArray();
         Current = ImageViewerPageViewModels[CurrentIndex];
         InitializeCommands();
         _ = LoadUserProfile();
+    }
+
+    /// <summary>
+    /// Copy a new view model
+    /// </summary>
+    /// <returns></returns>
+    public IllustrationViewerPageViewModel CreateNew()
+    {
+        return IllustrationGrid is not null ? new IllustrationViewerPageViewModel(IllustrationGrid, _illustrations) : new IllustrationViewerPageViewModel(_illustrations);
     }
 
     /// <summary>
@@ -150,6 +159,8 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
 
         (_userProfileImageSource as SoftwareBitmapSource)?.Dispose();
+        _userProfileImageSource = null;
+        IsDisposed = true;
     }
 
     public void UpdateCommandCanExecute()
@@ -411,9 +422,9 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         return FirstIllustrationViewModel!.RemoveBookmarkAsync();
     }
 
-    private async Task LoadUserProfile()
+    public async Task LoadUserProfile()
     {
-        if (FirstIllustrationViewModel!.Illustration.User is { } userInfo)
+        if (FirstIllustrationViewModel!.Illustration.User is { } userInfo && UserProfileImageSource is null)
         {
             UserInfo = userInfo;
             if (userInfo.ProfileImageUrls?.Medium is { } profileImage)

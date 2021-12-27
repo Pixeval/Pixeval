@@ -8,7 +8,7 @@
                        xmlns:local="using:Pixeval.Pages.Capability"
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:notifyOnLoadedComboBox="using:Pixeval.Controls.NotifyOnLoadedComboBox"
-                       xmlns:userControls="using:Pixeval.UserControls"
+                       xmlns:userControls="using:Pixeval.UserControls" 
                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                        Loaded="IllustratorPage_OnLoaded"
                        SizeChanged="IllustratorPage_OnSizeChanged"
@@ -19,11 +19,11 @@
         <userControls:IllustrationContainer x:Name="IllustrationContainer" controls1:DockPanel.Dock="Top">
             <userControls:IllustrationContainer.Header>
                 <Grid x:Name="Header"
-                      Height="200"
+                      Height="250"
                       VerticalAlignment="Center"
                       controls1:DockPanel.Dock="Top">
                     <Rectangle x:Name="BackgroundRectangle"
-                               Height="200"
+                               Height="250"
                                HorizontalAlignment="Stretch"
                                VerticalAlignment="Top">
                         <Rectangle.Fill>
@@ -34,24 +34,23 @@
                         </Rectangle.Fill>
                     </Rectangle>
                     <Rectangle x:Name="OverlayRectangle"
-                               Height="200"
+                               Height="250"
                                HorizontalAlignment="Stretch"
                                VerticalAlignment="Top"
                                Fill="#BFCFB5C0" />
                     <StackPanel x:Name="TextContainer"
                                 HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
                                 Orientation="Horizontal">
                         <Ellipse x:Name="ProfileImage"
                                  Width="100"
                                  Height="100"
-                                 Margin="20,0,20,0"
-                                 VerticalAlignment="Center">
+                                 Margin="20,65,20,0"
+                                 VerticalAlignment="Top">
                             <Ellipse.Fill>
                                 <ImageBrush ImageSource="{x:Bind _viewModel.AvatarSource, Mode=OneWay}" Stretch="UniformToFill" />
                             </Ellipse.Fill>
                         </Ellipse>
-                        <StackPanel Margin="0,20,0,0"
+                        <StackPanel Margin="0,65,0,0"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Top"
                                     Orientation="Vertical">
@@ -72,20 +71,16 @@
                                        TextWrapping="Wrap">
                                 <Run Text="{x:Bind _viewModel.Comment}" />
                             </TextBlock>
-                            <StackPanel Margin="0,10,0,0"
-                                        HorizontalAlignment="Left"
-                                        Orientation="Horizontal">
-                                <StackPanel x:Name="ButtonPanel" Orientation="Horizontal">
-                                    <Button Padding="0"
-                                            Foreground="White"
-                                            Style="{ThemeResource TextBlockButtonStyle}"
-                                            Tapped="OpenLinkButton_OnTapped">
-                                        <StackPanel Orientation="Horizontal">
-                                            <SymbolIcon Symbol="Link" />
-                                            <TextBlock x:Uid="/IllustratorPage/OpenLink" Margin="10,0,0,0" />
-                                        </StackPanel>
-                                    </Button>
-                                </StackPanel>
+                            <StackPanel Margin="-15,50,0,20" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+                                <CommandBar x:Name="CommandBar"
+                                            Background="Transparent"
+                                            DefaultLabelPosition="Right">
+                                    <AppBarButton Tapped="OpenLinkButton_OnTapped" Command="{x:Bind OpenLinkCommand}"></AppBarButton>
+                                    <AppBarButton Tapped="FollowButton_OnTapped" IsEnabled="{x:Bind _viewModel.IsFollowButtonEnabled, Mode=OneWay}"  Visibility="{x:Bind _viewModel.IsNotFollowed(_viewModel.IsFollowed), Mode=OneWay}" Command="{x:Bind FollowCommand}"></AppBarButton>
+                                    <AppBarButton Tapped="PrivateFollowButton_OnTapped" IsEnabled="{x:Bind _viewModel.IsFollowButtonEnabled, Mode=OneWay}"  Visibility="{x:Bind _viewModel.IsNotFollowed(_viewModel.IsFollowed), Mode=OneWay}" Command="{x:Bind PrivateFollowCommand}"></AppBarButton>
+                                    <AppBarButton Tapped="UnfollowButton_OnTapped" IsEnabled="{x:Bind _viewModel.IsFollowButtonEnabled, Mode=OneWay}" Visibility="{x:Bind _viewModel.IsFollowed, Mode=OneWay}" Command="{x:Bind UnfollowCommand}"></AppBarButton>
+
+                                </CommandBar>
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>
