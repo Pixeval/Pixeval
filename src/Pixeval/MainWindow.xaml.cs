@@ -26,7 +26,6 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
 using Pixeval.Misc;
 using Pixeval.Pages.Login;
-using Pixeval.Pages.Misc;
 
 namespace Pixeval;
 
@@ -41,9 +40,9 @@ public sealed partial class MainWindow : INavigationModeInfo
         new SuppressNavigationTransitionInfo();
 
     // Remarks: The parameter of OnNavigatedTo is always NavigationMode.New
-    public NavigationMode? NavigationMode { get; private set; }
+    public static NavigationMode? NavigationMode { get; private set; }
 
-    public NavigationMode? GetNavigationModeAndReset()
+    public static NavigationMode? GetNavigationModeAndReset()
     {
         var mode = NavigationMode;
         NavigationMode = null;

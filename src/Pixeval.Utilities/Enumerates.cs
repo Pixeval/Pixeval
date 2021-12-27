@@ -153,10 +153,11 @@ public static class Enumerates
     /// <param name="source"></param>
     public static void ReplaceByUpdate<T>(this IList<T> dest, IEnumerable<T> source)
     {
-        if (source.Any())
+        var enumerable = source as T[] ?? source.ToArray();
+        if (enumerable.Any())
         {
-            dest.RemoveAll(x => !source.Contains(x));
-            source.Where(x => !dest.Contains(x)).ForEach(dest.Add);
+            dest.RemoveAll(x => !enumerable.Contains(x));
+            enumerable.Where(x => !dest.Contains(x)).ForEach(dest.Add);
         }
         else
         {
@@ -166,10 +167,11 @@ public static class Enumerates
 
     public static void ReplaceByUpdate<T>(this ISet<T> dest, IEnumerable<T> source)
     {
-        if (source.Any())
+        var enumerable = source as T[] ?? source.ToArray();
+        if (enumerable.Any())
         {
-            dest.ToArray().Where(x => !source.Contains(x)).ForEach(x => dest.Remove(x));
-            dest.AddRange(source);
+            dest.ToArray().Where(x => !enumerable.Contains(x)).ForEach(x => dest.Remove(x));
+            dest.AddRange(enumerable);
         }
         else
         {

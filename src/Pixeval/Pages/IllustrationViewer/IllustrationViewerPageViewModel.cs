@@ -122,7 +122,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     /// </summary>
     public int? IllustrationIndex => ContainerGridViewModel?.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
 
-    public ImageViewerPageViewModel[] ImageViewerPageViewModels { get; }
+    public ImageViewerPageViewModel[]? ImageViewerPageViewModels { get; }
 
     public string IllustrationId => FirstIllustrationViewModel?.Illustration.Id.ToString() ?? string.Empty;
 
@@ -134,9 +134,9 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     public bool IsUgoira => Current.IllustrationViewModel.Illustration.IsUgoira();
 
-    public IllustrationViewModel FirstIllustrationViewModel => FirstImageViewerPageViewModel.IllustrationViewModel;
+    public IllustrationViewModel? FirstIllustrationViewModel => FirstImageViewerPageViewModel?.IllustrationViewModel;
 
-    public ImageViewerPageViewModel FirstImageViewerPageViewModel => ImageViewerPageViewModels.FirstOrDefault();
+    public ImageViewerPageViewModel? FirstImageViewerPageViewModel => ImageViewerPageViewModels?.FirstOrDefault();
 
     public void Dispose()
     {
