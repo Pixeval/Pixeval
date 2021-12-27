@@ -176,20 +176,12 @@
 	</ItemGroup>
 	<!-- #endregion Exposes PRI resources to the source generator -->
 
-	<Target Name="BuildHooks" AfterTargets="PrepareForBuild" BeforeTargets="PrepareForPublish">
-		<PropertyGroup Condition="'$(Platform)'=='x64'">
-			<HookPlatform>x64</HookPlatform>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Platform)'=='x86'">
-			<HookPlatform>Win32</HookPlatform>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Platform)'=='arm64'">
-			<HookPlatform>ARM64</HookPlatform>
-		</PropertyGroup>
-		<MSBuild Projects="$(SolutionDir)src/Pixeval.Hooks/Pixeval.Hooks.vcxproj" Targets="Build;GetTargetPath" Properties="Configuration=$(Configuration);Platform=$(HookPlatform)">
+	<Target Name="CopyHooks" AfterTargets="Build" BeforeTargets="PrepareForPublish">
+		<MSBuild Projects="$(SolutionDir)src/Pixeval.Hooks/Pixeval.Hooks.vcxproj" Targets="GetTargetPath">
 			<Output TaskParameter="TargetOutputs" ItemName="BuildHooksOutputs"></Output>
 		</MSBuild>
 		<Copy SourceFiles="@(BuildHooksOutputs)" DestinationFolder="$(OutDir)"></Copy>
+		<Message Text="Copy @(BuildHooksOutputs) to $(OutDir)" Importance="high"></Message>
 	</Target> 
 
 	<Target Name="PrepareForGenerateGitVersionInformation" BeforeTargets="GenerateGitVersionInformation">
