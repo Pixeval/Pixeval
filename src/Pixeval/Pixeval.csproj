@@ -189,7 +189,6 @@
 		<MSBuild Projects="$(SolutionDir)src/Pixeval.Hooks/Pixeval.Hooks.vcxproj" Targets="Build;GetTargetPath" Properties="Configuration=$(Configuration);Platform=$(HookPlatform)">
 			<Output TaskParameter="TargetOutputs" ItemName="BuildHooksOutputs"></Output>
 		</MSBuild>
-		<Message Text="@(BuildHooksOutputs)" Importance="high"></Message>
 		<Copy SourceFiles="@(BuildHooksOutputs)" DestinationFolder="$(OutDir)"></Copy>
 	</Target> 
 
