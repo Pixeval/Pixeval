@@ -180,8 +180,7 @@
 		<MSBuild Projects="$(SolutionDir)src/Pixeval.Hooks/Pixeval.Hooks.vcxproj" Targets="GetTargetPath">
 			<Output TaskParameter="TargetOutputs" ItemName="BuildHooksOutputs"></Output>
 		</MSBuild>
-		<Copy SourceFiles="@(BuildHooksOutputs)" DestinationFolder="$(OutDir)"></Copy>
-		<Message Text="Copy @(BuildHooksOutputs) to $(OutDir)" Importance="high"></Message>
+		<Copy SourceFiles="@(BuildHooksOutputs)" DestinationFolder="$(OutDir)" Overwrite="true"></Copy>
 	</Target> 
 
 	<Target Name="PrepareForGenerateGitVersionInformation" BeforeTargets="GenerateGitVersionInformation">
