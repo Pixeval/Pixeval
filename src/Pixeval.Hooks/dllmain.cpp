@@ -9,6 +9,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     {
     case DLL_PROCESS_ATTACH:
         DetourTransactionBegin();
+        MessageBoxW(nullptr, L"Hello, world!",  L"Hello", MB_OK);
         DetourTransactionCommit();
     case DLL_THREAD_ATTACH:
     case DLL_THREAD_DETACH:

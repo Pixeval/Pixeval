@@ -176,6 +176,23 @@
 	</ItemGroup>
 	<!-- #endregion Exposes PRI resources to the source generator -->
 
+	<Target Name="BuildHooks" AfterTargets="PrepareForBuild" BeforeTargets="PrepareForPublish">
+		<PropertyGroup Condition="'$(Platform)'=='x64'">
+			<HookPlatform>x64</HookPlatform>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Platform)'=='x86'">
+			<HookPlatform>Win32</HookPlatform>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Platform)'=='arm64'">
+			<HookPlatform>ARM64</HookPlatform>
+		</PropertyGroup>
+		<MSBuild Projects="$(SolutionDir)src/Pixeval.Hooks/Pixeval.Hooks.vcxproj" Targets="Build;GetTargetPath" Properties="Configuration=$(Configuration);Platform=$(HookPlatform)">
+			<Output TaskParameter="TargetOutputs" ItemName="BuildHooksOutputs"></Output>
+		</MSBuild>
+		<Message Text="@(BuildHooksOutputs)" Importance="high"></Message>
+		<Copy SourceFiles="@(BuildHooksOutputs)" DestinationFolder="$(OutDir)"></Copy>
+	</Target> 
+
 	<Target Name="PrepareForGenerateGitVersionInformation" BeforeTargets="GenerateGitVersionInformation">
 		<MakeDir Directories="$(OutDir);$(IntermediateOutputPath);@(DocFileItem->'%(RelativeDir)');@(CreateDirectory)" ContinueOnError="True" />
 		<ItemGroup Condition="'@(AppxManifest)'==''">
