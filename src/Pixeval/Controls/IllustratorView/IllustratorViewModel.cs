@@ -1,8 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.CoreApi.Engine;
+using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.UserControls;
@@ -17,6 +19,15 @@ public partial class IllustratorViewModel : ObservableObject, IIllustrationVisua
     public string Name { get; set; }
 
     public string AvatarUrl { get; set; }
+
+    [ObservableProperty]
+    private bool _isFollowed;
+
+    /// <summary>
+    /// disable the follow button while follow request is being sent
+    /// </summary>
+    [ObservableProperty]
+    private bool _isFollowButtonEnabled;
 
     [ObservableProperty]
     private ImageSource? _avatarSource;
@@ -40,8 +51,10 @@ public partial class IllustratorViewModel : ObservableObject, IIllustrationVisua
         Id = info.Id;
         Account = info.Account;
         Comment = info.Comment;
+        IsFollowed = info.IsFollowed;
         Illustrations = new ObservableCollection<IllustrationViewModel>();
         VisualizationController = new IllustrationVisualizationController(this);
+        IsFollowButtonEnabled = true;
         _ = LoadAvatar();
     }
 
@@ -61,6 +74,30 @@ public partial class IllustratorViewModel : ObservableObject, IIllustrationVisua
         }
     }
 
+    public async Task Follow()
+    {
+        IsFollowButtonEnabled = false;
+        await App.AppViewModel.MakoClient.PostFollowUserAsync(Id.ToString(), PrivacyPolicy.Public);
+        IsFollowed = true;
+        IsFollowButtonEnabled = true;
+    }
+
+    public async Task PrivateFollow()
+    {
+        IsFollowButtonEnabled = false;
+        await App.AppViewModel.MakoClient.PostFollowUserAsync(Id.ToString(), PrivacyPolicy.Private);
+        IsFollowed = true;
+        IsFollowButtonEnabled = true;
+    }
+
+    public async Task Unfollow()
+    {
+        IsFollowButtonEnabled = false;
+        await App.AppViewModel.MakoClient.RemoveFollowUserAsync(Id.ToString());
+        IsFollowed = false;
+        IsFollowButtonEnabled = true;
+    }
+
     public void DisposeCurrent()
     {
         Illustrations.Clear();
@@ -70,4 +107,6 @@ public partial class IllustratorViewModel : ObservableObject, IIllustrationVisua
     {
         Illustrations.Add(viewModel);
     }
+
+    public Visibility IsNotFollowed(bool followed) => followed ? Visibility.Collapsed : Visibility.Visible;
 }

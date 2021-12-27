@@ -239,15 +239,20 @@ public static partial class UIHelper
         return icon;
     }
 
-    public static FontIconSource GetFontIconSource(this FontIconSymbols symbol, double? fontSize = null)
+    public static FontIconSource GetFontIconSource(this FontIconSymbols symbol, double? fontSize = null, Brush? foregroundBrush = null)
     {
         var icon = new FontIconSource
         {
-            Glyph = symbol.GetMetadataOnEnumMember()
+            Glyph = symbol.GetMetadataOnEnumMember(),
         };
         if (fontSize is not null)
         {
             icon.FontSize = fontSize.Value;
+        }
+
+        if (foregroundBrush is not null)
+        {
+            icon.Foreground = foregroundBrush;
         }
 
         return icon;

@@ -104,6 +104,16 @@ public record Illustration
     [JsonPropertyName("is_muted")]
     public bool IsMuted { get; set; }
 
+    public override int GetHashCode()
+    {
+        return Id.GetHashCode();
+    }
+
+    public virtual bool Equals(Illustration? other)
+    {
+        return other?.Id == Id;
+    }
+
 
     public class IllustrationMetaSinglePage
     {

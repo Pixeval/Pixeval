@@ -230,6 +230,16 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
         return isBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
     }
 
+    public bool Equals(IllustrationViewModel x, IllustrationViewModel y)
+    {
+        return x.Illustration.Equals(y.Illustration);
+    }
+
+    public int GetHashCode(IllustrationViewModel obj)
+    {
+        return obj.Illustration.GetHashCode();
+    }
+
     public void DisposeInternal()
     {
         _thumbnailSource?.Dispose();
