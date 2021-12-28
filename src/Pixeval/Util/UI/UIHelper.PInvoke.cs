@@ -23,8 +23,8 @@
 using System;
 using Windows.ApplicationModel.DataTransfer;
 using Microsoft.UI.Xaml;
-using PInvoke;
 using Pixeval.Interop;
+using Vanara.PInvoke;
 using WinRT;
 
 namespace Pixeval.Util.UI;

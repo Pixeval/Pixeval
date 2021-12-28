@@ -37,7 +37,6 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
-using PInvoke;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Net;
@@ -48,6 +47,7 @@ using Pixeval.UserControls;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
+using Vanara.PInvoke;
 using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
 

@@ -150,12 +150,12 @@
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22523-preview" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
 		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.8" />
-		<PackageReference Include="PInvoke.User32" Version="0.7.104" />
 		<PackageReference Include="Pixeval.QRCoder" Version="1.4.5" />
 		<PackageReference Include="ReverseMarkdown" Version="3.20.0" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
 		<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta13" />
 		<PackageReference Include="System.Linq.Async" Version="5.1.0" />
+		<PackageReference Include="Vanara.PInvoke.User32" Version="3.3.14" />
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
 
@@ -180,7 +180,15 @@
 		<MSBuild Projects="$(SolutionDir)src/Pixeval.Hooks/Pixeval.Hooks.vcxproj" Targets="GetTargetPath">
 			<Output TaskParameter="TargetOutputs" ItemName="BuildHooksOutputs"></Output>
 		</MSBuild>
-		<Copy SourceFiles="@(BuildHooksOutputs)" DestinationFolder="$(OutDir)" Overwrite="true"></Copy>
+		<Copy SourceFiles="@(BuildHooksOutputs)" DestinationFolder="$(OutDir)">
+			<Output TaskParameter="DestinationFiles" ItemName="HooksFilesCopied"></Output>
+		</Copy>
+		<ItemGroup>
+			<ResolvedFileToPublish Include="@(HooksFilesCopied->'%(FullPath)')">
+				<RelativePath>@(HooksFilesCopied->'%(Filename)%(Extension)')</RelativePath>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			</ResolvedFileToPublish>
+		</ItemGroup>
 	</Target> 
 
 	<Target Name="PrepareForGenerateGitVersionInformation" BeforeTargets="GenerateGitVersionInformation">

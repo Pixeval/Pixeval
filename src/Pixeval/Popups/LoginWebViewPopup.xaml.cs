@@ -3,6 +3,8 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Web.WebView2.Core;
+using Pixeval.Misc;
+using Vanara.PInvoke;
 
 namespace Pixeval.Popups
 {
@@ -31,6 +33,8 @@ namespace Pixeval.Popups
         private async void LoginWebView_OnCoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
         {
             await LoginWebView.CoreWebView2.CallDevToolsProtocolMethodAsync("Security.setIgnoreCertificateErrors", "{ \"ignore\": true }");
+            var browserProcessId = LoginWebView.CoreWebView2.BrowserProcessId;
+            HookInjector.Inject(browserProcessId);
         }
     }
 }
