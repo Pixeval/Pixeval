@@ -1615,6 +1615,9 @@
           "Refit": "6.1.15"
         }
       },
+      "pixeval.hooks": {
+        "type": "Project"
+      },
       "pixeval.utilities": {
         "type": "Project",
         "dependencies": {
