@@ -31,7 +31,7 @@ jobs:
               run: msbuild -t:restore -p:Platform=${{ matrix.platform }} -p:RestoreLockedMode=true -m
 
             - name: Publish the application
-              run:  msbuild -t:publish -p:Configuration=Debug -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:OutDir="$PWD\build" -m
+              run:  msbuild -t:build -p:Configuration=Debug -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:OutDir="$PWD\build" -m
               shell: pwsh
 
             - name: Copy files
