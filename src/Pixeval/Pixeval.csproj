@@ -161,6 +161,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
+		<ProjectReference Include="..\Pixeval.Hooks\Pixeval.Hooks.vcxproj"/>
 		<ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 		<ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
 	</ItemGroup>
@@ -176,18 +177,12 @@
 	</ItemGroup>
 	<!-- #endregion Exposes PRI resources to the source generator -->
 
-	<Target Name="CopyHooks" AfterTargets="Build" BeforeTargets="PrepareForPublish">
+	<Target Name="ResolveHooksFiles" AfterTargets="PrepareForBuild" BeforeTargets="_CopyFilesMarkedCopyLocal">
 		<MSBuild Projects="$(SolutionDir)src/Pixeval.Hooks/Pixeval.Hooks.vcxproj" Targets="GetTargetPath">
 			<Output TaskParameter="TargetOutputs" ItemName="BuildHooksOutputs"></Output>
 		</MSBuild>
-		<Copy SourceFiles="@(BuildHooksOutputs)" DestinationFolder="$(OutDir)">
-			<Output TaskParameter="DestinationFiles" ItemName="HooksFilesCopied"></Output>
-		</Copy>
 		<ItemGroup>
-			<ResolvedFileToPublish Include="@(HooksFilesCopied->'%(FullPath)')">
-				<RelativePath>@(HooksFilesCopied->'%(Filename)%(Extension)')</RelativePath>
-				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-			</ResolvedFileToPublish>
+			<ReferenceCopyLocalPaths Include="@(BuildHooksOutputs)"></ReferenceCopyLocalPaths>
 		</ItemGroup>
 	</Target> 
 
