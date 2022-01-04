@@ -83,7 +83,7 @@ After your development, Please create a [Pull Request](https://github.com/Pixeva
 * [@Lasm_Gratel](https://github.com/LasmGratel)
 * [@TheRealKamisama](https://github.com/TheRealKamisama)
 * [@Summpot](https://github.com/Summpot)
-* [@Poker-sang](https://github.com/Poker-sang)
+* [@Poker](https://github.com/Poker-sang)
 
 ## Support me
 If this project meets your requirements perfectly, welcome the buy me a coffee at [afdian](https://afdian.net/@dylech30th). It's my pleasure to having your rewards. Thanks!
