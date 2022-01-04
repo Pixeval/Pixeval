@@ -1,5 +1,4 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
-
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -17,7 +16,6 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #endregion
 
 using System;
@@ -32,8 +30,8 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Popups;
 using Pixeval.Util;
+using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
-using Pixeval.Utilities;
 
 namespace Pixeval.UserControls;
 
@@ -49,18 +47,29 @@ public partial class IllustrationGridViewModel : ObservableObject, IDisposable, 
 
     private SoftwareBitmapSource? _webQrCodeSource;
 
+    private ObservableCollection<IllustrationViewModel> _illustrations;
+
+    public ObservableCollection<IllustrationViewModel> Illustrations
+    {
+        get => _illustrations;
+        set
+        {
+            SetProperty(ref _illustrations, value);
+            IllustrationsView.Source = _illustrations;
+            IllustrationsView.LoadMoreItemsAsync(20).Discard();
+        }
+    }
+
     public IllustrationGridViewModel()
     {
         SelectedIllustrations = new ObservableCollection<IllustrationViewModel>();
-        Illustrations = new ObservableCollection<IllustrationViewModel>();
+        _illustrations = new ObservableCollection<IllustrationViewModel>();
         IllustrationsView = new AdvancedCollectionView(Illustrations);
         _selectionLabel = IllustrationGridCommandBarResources.CancelSelectionButtonDefaultLabel;
         VisualizationController = new IllustrationVisualizationController(this);
     }
 
     public IFetchEngine<Illustration?>? FetchEngine { get; set; }
-
-    public ObservableCollection<IllustrationViewModel> Illustrations { get; }
 
     public AdvancedCollectionView IllustrationsView { get; }
 
@@ -77,25 +86,6 @@ public partial class IllustrationGridViewModel : ObservableObject, IDisposable, 
 
     public void AddIllustrationViewModel(IllustrationViewModel viewModel)
     {
-        viewModel.OnIsSelectedChanged += (_, model) => // add/remove the viewModel to/from SelectedIllustrations according to the IsSelected Property
-        {
-            if (model.IsSelected)
-            {
-                SelectedIllustrations.Add(model);
-            }
-            else
-            {
-                SelectedIllustrations.Remove(model);
-            }
-
-            // Update the IsAnyIllustrationSelected Property if any of the viewModel's IsSelected property changes
-            IsAnyIllustrationSelected = SelectedIllustrations.Any();
-
-            var count = SelectedIllustrations.Count;
-            SelectionLabel = count == 0
-                ? IllustrationGridCommandBarResources.CancelSelectionButtonDefaultLabel
-                : IllustrationGridCommandBarResources.CancelSelectionButtonFormatted.Format(count);
-        };
         Illustrations.Add(viewModel);
     }
 

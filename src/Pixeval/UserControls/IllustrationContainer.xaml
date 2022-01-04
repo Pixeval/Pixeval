@@ -12,13 +12,12 @@
         <local:IllustrationGridCommandBar x:Name="TopCommandBar"
                                           HorizontalAlignment="Stretch"
                                           controls:DockPanel.Dock="Top"
+                                          IsDefaultCommandsEnabled="{x:Bind TopCommandBar.ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
                                           PrimaryCommandsSupplements="{x:Bind PrimaryCommandsSupplements, Mode=OneWay}"
                                           SecondaryCommandsSupplements="{x:Bind SecondaryCommandsSupplements, Mode=TwoWay}"
-                                          IsDefaultCommandsEnabled="{x:Bind TopCommandBar.ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
                                           ViewModel="{x:Bind IllustrationGrid.ViewModel}" />
         <local:IllustrationGrid x:Name="IllustrationGrid"
                                 x:FieldModifier="public"
-                                Header="{x:Bind Header, Mode=OneWay}"
-            />
+                                Header="{x:Bind Header, Mode=OneWay}" />
     </controls:DockPanel>
 </UserControl>

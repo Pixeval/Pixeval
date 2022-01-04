@@ -186,6 +186,9 @@
                                     CornerRadius="5"
                                     RenderTransformOrigin="0.5,0.5"
                                     Tapped="Thumbnail_OnTapped">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="{x:Bind ThumbnailSource, Mode=OneWay}" Stretch="UniformToFill" />
+                                </Border.Background>
                                 <Border.RenderTransform>
                                     <ScaleTransform />
                                 </Border.RenderTransform>

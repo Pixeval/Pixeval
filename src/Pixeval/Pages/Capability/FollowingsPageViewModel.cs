@@ -1,5 +1,4 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
-
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -17,7 +16,6 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #endregion
 
 using System.Collections.ObjectModel;
@@ -25,7 +23,6 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Pixeval.Controls.IllustratorView;
 using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Pages.Capability;
 
