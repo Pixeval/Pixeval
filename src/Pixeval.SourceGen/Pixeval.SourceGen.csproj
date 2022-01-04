@@ -10,7 +10,6 @@
 
 	<ItemGroup>
 		<Compile Remove="Configuration\**" />
-		<Compile Remove="DependencyProperty\**" />
 		<EmbeddedResource Remove="Configuration\**" />
 		<EmbeddedResource Remove="DependencyProperty\**" />
 		<None Remove="Configuration\**" />
