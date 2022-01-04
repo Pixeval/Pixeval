@@ -37,7 +37,7 @@ namespace Pixeval.AppManagement;
 /// <summary>
 ///     Provide miscellaneous information about the app
 /// </summary>
-[LoadSaveConfiguration(typeof(AppSetting))]
+[LoadSaveConfiguration(typeof(AppSetting), nameof(ConfigurationContainer), CastMethod = "Pixeval.Utilities.Objects.CastOrThrow")]
 public static partial class AppContext
 {
     public const string AppIdentifier = "Pixeval";

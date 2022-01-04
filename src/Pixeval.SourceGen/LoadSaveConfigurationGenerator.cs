@@ -18,11 +18,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Pixeval.SourceGen.Utilities;
 
 namespace Pixeval.SourceGen;
@@ -40,9 +41,34 @@ internal class LoadSaveConfigurationGenerator : GetAttributeGenerator
         {
             if (attribute.ConstructorArguments[0].Value is not INamedTypeSymbol type)
                 continue;
+            if (attribute.ConstructorArguments[1].Value is not string containerName)
+                continue;
+
+            string? staticClassName = null;
+            string? methodName = null;
+
+            foreach (var namedArgument in attribute.NamedArguments)
+            {
+                if (namedArgument.Value.Value is { } value)
+                {
+                    switch (namedArgument.Key)
+                    {
+                        case "CastMethod":
+                            var temp = (string)value;
+                            var tempIndex = temp.LastIndexOf('.');
+                            if (tempIndex is -1)
+                                throw new InvalidDataException("CastMethod must contain the full name.");
+                            staticClassName = "static " + temp.Substring(0, tempIndex);
+                            methodName = temp.Substring(tempIndex + 1);
+                            break;
+                    }
+                }
+            }
 
             var name = specificType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-            var namespaces = new HashSet<string> { "Pixeval.Utilities" };
+            var namespaces = new HashSet<string>();
+            if (staticClassName is not null)
+                namespaces.Add(staticClassName);//methodName方法所用namespace
             var usedTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
             const string nullable = "#nullable enable\n";
             var classBegin = @$"namespace {specificType.ContainingNamespace.ToDisplayString()};
@@ -64,9 +90,9 @@ partial class {name}
         }}
     }}";
             var saveConfigurationBegin = $@"
-    public static void SaveConfiguration({type.Name}? setting)
+    public static void SaveConfiguration({type.Name}? configuration)
     {{
-        if (setting is {{ }} appSetting)
+        if (configuration is {{ }} appConfiguration)
         {{";
             var saveConfigurationContent = "\n";
             const string saveConfigurationEnd = $@"      }}
@@ -77,13 +103,12 @@ partial class {name}
                              member is { Kind: SymbolKind.Property } and not { Name: "EqualityContract" })
                          .Cast<IPropertySymbol>())
             {
-                loadConfigurationContent += LoadRecord(member.Name, member.Type.Name, type.Name);
-                saveConfigurationContent += SaveRecord(member.Name, member.Type, type.Name);
+                loadConfigurationContent += LoadRecord(member.Name, member.Type.Name, type.Name, containerName, methodName);
+                saveConfigurationContent += SaveRecord(member.Name, member.Type, type.Name, containerName, methodName);
                 namespaces.UseNamespace(usedTypes, specificType, member.Type);
             }
 
-            loadConfigurationContent =
-                loadConfigurationContent.Substring(0, loadConfigurationContent.Length - 2) + "\n";
+            loadConfigurationContent = loadConfigurationContent.Substring(0, loadConfigurationContent.Length - 2) + "\n";
 
             var namespaceNames = namespaces.Aggregate("", (current, ns) => current + $"using {ns};\n");
             var fileName = specificType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat
@@ -99,9 +124,19 @@ partial class {name}
         }
     }
 
-    private static string LoadRecord(string name, string type, string typeName)
+    private static string Spacing(int n)
     {
-        return $"                ConfigurationContainer.Values[nameof({typeName}.{name})].CastOrThrow<{type}>(),\n";
+        var temp = "";
+        for (var i = 0; i < n; i++)
+            temp += "    ";
+        return temp;
+    }
+
+    private static string LoadRecord(string name, string type, string typeName, string containerName, string? methodName)
+    {
+        return methodName is null
+            ? $"{Spacing(4)}({type}){containerName}.Values[nameof({typeName}.{name})],\n"
+            : $"{Spacing(4)}{containerName}.Values[nameof({typeName}.{name})].{methodName}<{type}>(),\n";
     }
 
     private static readonly HashSet<string> PrimitiveTypes = new()
@@ -124,19 +159,20 @@ partial class {name}
         nameof(DateTimeOffset)
     };
 
-    private static string SaveRecord(string name, ITypeSymbol type, string typeName)
+    private static string SaveRecord(string name, ITypeSymbol type, string typeName, string containerName, string? methodName)
     {
-        var record = $"            ConfigurationContainer.Values[nameof({typeName}.{name})] = appSetting.{name}";
+        var body = $"{containerName}.Values[nameof({typeName}.{name})] = appConfiguration.{name}";
         if (!PrimitiveTypes.Contains(type.Name))
         {
-            record += type switch
+            return type switch
             {
-                { Name: "String" } => " ?? string.Empty",
-                { TypeKind: TypeKind.Enum } => ".CastOrThrow<int>()",
+                { Name: nameof(String) } => $"{Spacing(3)}{body} ?? string.Empty;\n",
+                { TypeKind: TypeKind.Enum } => methodName is null
+                    ? $"{Spacing(3)}(int)({body});\n"
+                    : $"{Spacing(3)}{body}.{methodName}<int>();\n",
                 _ => throw new InvalidCastException("Only primitive and Enum types are supported.")
             };
         }
-
-        return record + ";\n";
+        return $"{Spacing(3)}{body};\n";
     }
 }

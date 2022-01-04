@@ -1,8 +1,9 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+﻿#region Copyright (c) Pixeval/Pixeval.SourceGen
+
 // GPL v3 License
 // 
-// Pixeval/Pixeval
-// Copyright (c) 2021 Pixeval/LoadSaveConfigurationAttribute.cs
+// Pixeval/Pixeval.SourceGen
+// Copyright (c) 2021 Pixeval.SourceGen/DependencyPropertyGenerator.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +17,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
 using System;
@@ -25,9 +27,12 @@ namespace Pixeval.Attributes;
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public class LoadSaveConfigurationAttribute : Attribute
 {
-    public LoadSaveConfigurationAttribute(Type targetType)
+    public LoadSaveConfigurationAttribute(Type targetType, string containerName)
     {
         TargetType = targetType;
+        ContainerName = containerName;
     }
     public Type TargetType { get; }
+    public string ContainerName { get; }
+    public string CastMethod { get; set; } = "null!";
 }
