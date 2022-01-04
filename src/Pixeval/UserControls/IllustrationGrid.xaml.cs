@@ -140,6 +140,18 @@ public sealed partial class IllustrationGrid
             return;
         }
 
+        // small tricks to reduce memory consumption
+        switch (context)
+        {
+            case { LoadingThumbnail: true }:
+                context.LoadingThumbnailCancellationHandle.Cancel();
+                break;
+            case { ThumbnailSource: not null }:
+                var source = context.ThumbnailSource;
+                context.ThumbnailSource = null;
+                source.Dispose();
+                break;
+        }
     }
 
     public UIElement? GetItemContainer(IllustrationViewModel viewModel)
