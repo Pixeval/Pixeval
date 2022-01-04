@@ -1,5 +1,4 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
-
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -17,7 +16,6 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #endregion
 
 using System;
@@ -89,11 +87,7 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
     public bool IsSelected
     {
         get => _isSelected;
-        set => SetProperty(_isSelected, value, this, (_, b) =>
-        {
-            _isSelected = b;
-            OnIsSelectedChanged?.Invoke(this, this);
-        });
+        set => SetProperty(_isSelected, value, this, (_, b) => _isSelected = b);
     }
 
     public CancellationHandle LoadingThumbnailCancellationHandle { get; }
@@ -107,8 +101,6 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
         DisposeInternal();
         GC.SuppressFinalize(this);
     }
-
-    public event EventHandler<IllustrationViewModel>? OnIsSelectedChanged;
 
     /// <summary>
     ///     An illustration may contains multiple works and such illustrations are named "manga".

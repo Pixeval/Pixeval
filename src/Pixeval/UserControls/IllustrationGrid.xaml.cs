@@ -1,5 +1,4 @@
 ﻿#region Copyright (c) Pixeval/Pixeval
-
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -17,19 +16,15 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Windows.System;
 using Windows.UI.Core;
-using CommunityToolkit.WinUI.UI;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -48,8 +43,6 @@ namespace Pixeval.UserControls;
 [DependencyProperty("Header", typeof(object))]
 public sealed partial class IllustrationGrid
 {
-    private readonly IDictionary<string, Border> _cachedContainers = new Dictionary<string, Border>();
-
     private static readonly ExponentialEase ImageSourceSetEasingFunction = new()
     {
         EasingMode = EasingMode.EaseOut,
@@ -121,37 +114,14 @@ public sealed partial class IllustrationGrid
 
     private async void IllustrationThumbnailContainerItem_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
     {
-#nullable disable
         var context = sender.GetDataContext<IllustrationViewModel>();
-        if (context is null)
-        {
-            return;
-        }
         var preLoadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
 
-        if (!_cachedContainers.TryGetValue(context.Id, out var border)) // fast path
-        {
-            if (IllustrationGridView.ContainerFromItem(context)?.FindDescendant("Thumbnail") is Border b) // slow path
-            {
-                border = _cachedContainers[context.Id] = b;
-            }
-            else
-            {
-                return;
-            }
-        }
-
-#nullable enable
         if (args.BringIntoViewDistanceY <= sender.ActualHeight * preLoadRows)
         {
             if (await context.LoadThumbnailIfRequired())
             {
-                border.Background = new ImageBrush
-                {
-                    Stretch = Stretch.UniformToFill,
-                    ImageSource = context.ThumbnailSource
-                };
-                var transform = (ScaleTransform)sender.RenderTransform;
+                var transform = (ScaleTransform) sender.RenderTransform;
                 if (sender.IsFullyOrPartiallyVisible(this))
                 {
                     var scaleXAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleX), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
@@ -170,18 +140,6 @@ public sealed partial class IllustrationGrid
             return;
         }
 
-        // small tricks to reduce memory consumption
-        switch (context)
-        {
-            case { LoadingThumbnail: true }:
-                context.LoadingThumbnailCancellationHandle.Cancel();
-                break;
-            case { ThumbnailSource: not null }:
-                var source = context.ThumbnailSource;
-                context.ThumbnailSource = null;
-                source.Dispose();
-                break;
-        }
     }
 
     public UIElement? GetItemContainer(IllustrationViewModel viewModel)

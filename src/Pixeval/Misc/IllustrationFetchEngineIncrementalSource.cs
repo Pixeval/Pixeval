@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2021 Pixeval/MainPageFrameSetConnectedAnimationTargetMessage.cs
+// Copyright (c) 2022 Pixeval/IllustrationFetchEngineIncrementalSource.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,12 +18,25 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Microsoft.UI.Xaml;
+using System.Collections.Generic;
+using Pixeval.CoreApi.Model;
+using Pixeval.UserControls;
 
-namespace Pixeval.Messages;
+namespace Pixeval.Misc;
 
-/// <summary>
-///     This event occurs when the target of the connected animation between MainPage
-///     and the other one page is selected
-/// </summary>
-public record MainPageFrameSetConnectedAnimationTargetMessage(UIElement? Sender);
+public class IllustrationFetchEngineIncrementalSource : FetchEngineIncrementalSource<Illustration, IllustrationViewModel>
+{
+    public IllustrationFetchEngineIncrementalSource(IAsyncEnumerable<Illustration> asyncEnumerator, int? limit = null) : base(asyncEnumerator, limit)
+    {
+    }
+
+    protected override long Identifier(Illustration entity)
+    {
+        return entity.Id;
+    }
+
+    protected override IllustrationViewModel Select(Illustration entity)
+    {
+        return new IllustrationViewModel(entity);
+    }
+}
