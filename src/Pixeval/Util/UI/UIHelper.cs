@@ -21,7 +21,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
@@ -31,7 +30,6 @@ using Windows.Storage.Pickers;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -49,8 +47,6 @@ namespace Pixeval.Util.UI;
 
 public static partial class UIHelper
 {
-    private static readonly PropertyInfo AppLogoOverrideUriProperty = typeof(ToastContentBuilder).GetProperty("AppLogoOverrideUri", BindingFlags.NonPublic | BindingFlags.Instance)!;
-
     public static T GetDataContext<T>(this FrameworkElement element)
     {
         return (T) element.DataContext;
@@ -64,84 +60,6 @@ public static partial class UIHelper
     public static ImageSource GetImageSourceFromUriRelativeToAssetsImageFolder(string relativeToAssetsImageFolder)
     {
         return new BitmapImage(new Uri($"ms-appx:///Assets/Images/{relativeToAssetsImageFolder}"));
-    }
-
-    public static void ShowTextToastNotification(string title, string content, string? logoUri = null, Action<ToastContentBuilder>? contentBuilder = null)
-    {
-        var builder = new ToastContentBuilder()
-            .SetBackgroundActivation()
-            .AddText(title, AdaptiveTextStyle.Header)
-            .AddText(content, AdaptiveTextStyle.Caption);
-        contentBuilder?.Invoke(builder);
-        if (logoUri is not null)
-        {
-            builder.AddAppLogoOverride(logoUri, ToastGenericAppLogoCrop.Default);
-        }
-
-        builder.Show();
-    }
-
-    public static ToastContentBuilder AddAppLogoOverride(
-        this ToastContentBuilder builder,
-        string uri,
-        ToastGenericAppLogoCrop? hintCrop = default,
-        string? alternateText = default,
-        bool? addImageQuery = default)
-    {
-        var appLogoOverrideUri = new ToastGenericAppLogo
-        {
-            Source = uri
-        };
-
-        if (hintCrop is { } crop)
-        {
-            appLogoOverrideUri.HintCrop = crop;
-        }
-
-        if (alternateText is { } alt)
-        {
-            appLogoOverrideUri.AlternateText = alt;
-        }
-
-        if (addImageQuery is { } query)
-        {
-            appLogoOverrideUri.AddImageQuery = query;
-        }
-
-        AppLogoOverrideUriProperty.SetValue(builder, appLogoOverrideUri);
-
-        return builder;
-    }
-
-    public static ToastContentBuilder AddInlineImage(
-        this ToastContentBuilder builder,
-        string uri,
-        string? alternateText = default,
-        bool? addImageQuery = default,
-        AdaptiveImageCrop? hintCrop = default,
-        bool? hintRemoveMargin = default)
-    {
-        var inlineImage = new AdaptiveImage
-        {
-            Source = uri
-        };
-
-        if (hintCrop != null)
-        {
-            inlineImage.HintCrop = hintCrop.Value;
-        }
-
-        if (alternateText != default)
-        {
-            inlineImage.AlternateText = alternateText;
-        }
-
-        if (addImageQuery != default)
-        {
-            inlineImage.AddImageQuery = addImageQuery;
-        }
-
-        return builder.AddVisualChild(inlineImage);
     }
 
     public static void ScrollToElement(this ScrollViewer scrollViewer, UIElement element)

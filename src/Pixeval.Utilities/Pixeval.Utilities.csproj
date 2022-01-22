@@ -4,8 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
+	<ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" PrivateAssets="True" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" PrivateAssets="True" />
   </ItemGroup>

@@ -54,7 +54,7 @@ public class IllustrationAppActivationHandler : IAppActivationHandler
             }
             catch (Exception e)
             {
-                UIHelper.ShowTextToastNotification(
+                ToastNotificationHelper.ShowTextToastNotification(
                     ActivationsResources.IllustrationActivationFailedTitle,
                     ActivationsResources.IllustrationActivationFailedContentFormatted.Format(e.Message));
             }

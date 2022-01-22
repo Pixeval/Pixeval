@@ -209,7 +209,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         if (Current.OriginalImageStream is null)
         {
-            UIHelper.ShowTextToastNotification(
+            ToastNotificationHelper.ShowTextToastNotification(
                 IllustrationViewerPageResources.OriginalmageStreamIsEmptyTitle,
                 IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent,
                 AppContext.AppLogoNoCaptionUri);
@@ -228,7 +228,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         }
 
         await UserProfilePersonalizationSettings.Current.TrySetWallpaperImageAsync(await AppKnownFolders.SavedWallPaper.GetFileAsync(guid));
-        UIHelper.ShowTextToastNotification(
+        ToastNotificationHelper.ShowTextToastNotification(
             IllustrationViewerPageResources.SetAsSucceededTitle,
             IllustrationViewerPageResources.SetAsBackgroundSucceededTitle,
             AppContext.AppLogoNoCaptionUri);
@@ -238,7 +238,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         if (Current.OriginalImageStream is null)
         {
-            UIHelper.ShowTextToastNotification(
+            ToastNotificationHelper.ShowTextToastNotification(
                 IllustrationViewerPageResources.OriginalmageStreamIsEmptyTitle,
                 IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent,
                 AppContext.AppLogoNoCaptionUri);
@@ -248,7 +248,6 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         var guid = await Current.OriginalImageStream.Sha1Async();
         if (await AppKnownFolders.SavedWallPaper.TryGetFileRelativeToSelfAsync(guid) is null)
         {
-            // TODO add loading bar
             var path = Path.Combine(AppKnownFolders.SavedWallPaper.Self.Path, guid);
             using var scope = App.AppViewModel.AppServicesScope;
             var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
@@ -258,7 +257,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         }
 
         await UserProfilePersonalizationSettings.Current.TrySetLockScreenImageAsync(await AppKnownFolders.SavedWallPaper.GetFileAsync(guid));
-        UIHelper.ShowTextToastNotification(
+        ToastNotificationHelper.ShowTextToastNotification(
             IllustrationViewerPageResources.SetAsSucceededTitle,
             IllustrationViewerPageResources.SetAsBackgroundSucceededTitle,
             AppContext.AppLogoNoCaptionUri);
@@ -302,7 +301,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         var link = MakoHelper.GenerateIllustrationWebUri(Current.IllustrationViewModel.Id).ToString();
         UIHelper.SetClipboardContent(package => package.SetText(link));
-        UIHelper.ShowTextToastNotification(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle, link);
+        ToastNotificationHelper.ShowTextToastNotification(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle, link);
     }
 
     private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

@@ -41,6 +41,16 @@ public static class Objects
 {
     public static readonly IEqualityComparer<string> CaseIgnoredComparer = new CaseIgnoredStringComparer();
 
+    /// <summary>
+    /// Normalize a double to a value between 0 and 1
+    /// </summary>
+    /// <param name="value">The value to be normalized</param>
+    /// <returns>[0, 1]</returns>
+    public static double Normalize(this double value, int max, int min)
+    {
+        return (value - min) / (max - min);
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Regex ToRegex(this string str)
     {
