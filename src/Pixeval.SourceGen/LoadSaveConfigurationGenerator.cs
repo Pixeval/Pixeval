@@ -54,7 +54,7 @@ internal class LoadSaveConfigurationGenerator : GetAttributeGenerator
                     switch (namedArgument.Key)
                     {
                         case "CastMethod":
-                            var temp = (string)value;
+                            var temp = (string) value;
                             var tempIndex = temp.LastIndexOf('.');
                             if (tempIndex is -1)
                                 throw new InvalidDataException("CastMethod must contain the full name.");

@@ -60,8 +60,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     private bool _isInfoPaneOpen;
 
     private ImageSource? _qrCodeSource;
-
-    // Remarks:
+    
     // The reason why we don't put UserProfileImageSource into IllustrationViewModel
     // is because the whole array of Illustrations is just representing the same 
     // illustration's different manga pages, so all of them have the same illustrator
@@ -76,10 +75,10 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     [ObservableProperty]
     private UserInfo? _userInfo;
 
-    private IllustrationViewModel[] _illustrations;
-    public bool IsDisposed = false;
+    private readonly IllustrationViewModel[] _illustrations;
 
-    // Remarks:
+    public bool IsDisposed;
+    
     // illustrations should contains only one item if the illustration is a single
     // otherwise it contains the entire manga data
     public IllustrationViewerPageViewModel(IllustrationGrid gridView, params IllustrationViewModel[] illustrations) : this(illustrations)
@@ -147,14 +146,10 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     public void Dispose()
     {
-        if (ImageViewerPageViewModels is not null)
-        {
-            foreach (var imageViewerPageViewModel in ImageViewerPageViewModels)
-            {
-                imageViewerPageViewModel.Dispose();
-            }
-        }
-
+        ImageViewerPageViewModels?.ForEach(i => i.Dispose());
+        // The first ImageViewerPageViewModel contains the thumbnail that is used to be displayed in the GridView
+        // disposing of it will also empty the corresponding image in GridView.
+        ImageViewerPageViewModels?.Skip(1).ForEach(i => i.IllustrationViewModel.Dispose());
 
         (_userProfileImageSource as SoftwareBitmapSource)?.Dispose();
         _userProfileImageSource = null;
@@ -253,6 +248,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         var guid = await Current.OriginalImageStream.Sha1Async();
         if (await AppKnownFolders.SavedWallPaper.TryGetFileRelativeToSelfAsync(guid) is null)
         {
+            // TODO add loading bar
             var path = Path.Combine(AppKnownFolders.SavedWallPaper.Self.Path, guid);
             using var scope = App.AppViewModel.AppServicesScope;
             var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();

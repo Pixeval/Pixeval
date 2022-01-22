@@ -63,13 +63,13 @@ internal class DependencyPropertyGenerator : GetAttributeGenerator
                     switch (namedArgument.Key)
                     {
                         case "IsSetterPublic":
-                            isSetterPublic = (bool)value;
+                            isSetterPublic = (bool) value;
                             break;
                         case "DefaultValue":
-                            defaultValue = (string)value;
+                            defaultValue = (string) value;
                             break;
                         case "IsNullable":
-                            isNullable = (bool)value;
+                            isNullable = (bool) value;
                             break;
                     }
                 }

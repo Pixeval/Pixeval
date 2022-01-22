@@ -227,6 +227,9 @@ public class AppViewModel : AutoActivateObservableRecipient,
         AppWindow.Show();
         AppWindow.SetIcon(await AppContext.GetIconAbsolutePath());
 
+        // Window.ExtendsContentIntoTitleBar = true;
+        // Window.SetTitleBar(Window.CustomTitleBar);
+
         await AppKnownFolders.Temporary.ClearAsync();
         Cache = await FileCache.CreateDefaultAsync();
 

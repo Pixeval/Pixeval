@@ -232,7 +232,7 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
         return obj.Illustration.GetHashCode();
     }
 
-    public void DisposeInternal()
+    private void DisposeInternal()
     {
         _thumbnailSource?.Dispose();
     }

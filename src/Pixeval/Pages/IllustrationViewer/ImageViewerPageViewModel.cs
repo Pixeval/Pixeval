@@ -188,11 +188,12 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
             if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Medium is { } url)
             {
                 AdvancePhase(LoadingPhase.DownloadingGifZip);
-                switch (await imageClient.DownloadAsStreamAsync(url, new Progress<int>(d =>
-                        {
-                            LoadingProgress = d;
-                            AdvancePhase(LoadingPhase.DownloadingGifZip);
-                        }), ImageLoadingCancellationHandle))
+                var downloadRes = await imageClient.DownloadAsStreamAsync(url, new Progress<int>(d =>
+                {
+                    LoadingProgress = d;
+                    AdvancePhase(LoadingPhase.DownloadingGifZip);
+                }), ImageLoadingCancellationHandle);
+                switch (downloadRes)
                 {
                     case Result<Stream>.Success(var zipStream):
                         AdvancePhase(LoadingPhase.MergingGifFrames);
@@ -269,7 +270,6 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
     private void DisposeInternal()
     {
         OriginalImageStream?.Dispose();
-        // Remarks:
         // if the loading task is null or hasn't been completed yet, the 
         // OriginalImageSource would be the thumbnail source, its disposal may 
         // causing the IllustrationGrid shows weird result such as an empty content
