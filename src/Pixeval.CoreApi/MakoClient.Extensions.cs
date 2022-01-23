@@ -101,8 +101,7 @@ public partial class MakoClient
             return null;
         }
 
-        var illustrations = await (result.ResponseBody.First().Illusts?.SelectNotNull(illust => Task.Run(() => GetIllustrationFromIdAsync(illust.IllustId.ToString()))).WhenAll()
-                                   ?? Task.FromResult(Array.Empty<Illustration>())).ConfigureAwait(false);
+        var illustrations = await (result.ResponseBody.First().Illusts?.SelectNotNull(illust => GetIllustrationFromIdAsync(illust.IllustId.ToString())).WhenAll() ?? Task.FromResult(Array.Empty<Illustration>())).ConfigureAwait(false);
         foreach (var illustration in illustrations)
         {
             illustration.FromSpotlight = true;
@@ -144,6 +143,17 @@ public partial class MakoClient
         });
     }
 
+    public async Task<IEnumerable<TrendingTag>> GetTrendingTagsForNovelAsync(TargetFilter targetFilter)
+    {
+        EnsureNotCancelled();
+        return ((await Resolve<IAppApiEndPoint>().GetTrendingTagsForNovelAsync(targetFilter.GetDescription()).ConfigureAwait(false)).TrendTags ?? Enumerable.Empty<TrendingTagResponse.TrendTag>()).Select(t => new TrendingTag
+        {
+            Tag = t.TagStr,
+            Translation = t.TranslatedName,
+            Illustration = t.Illust
+        });
+    }
+    
     /// <summary>
     ///     Gets the tags that are created by users to classify their bookmarks
     /// </summary>

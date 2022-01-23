@@ -49,6 +49,9 @@ internal interface IAppApiEndPoint
     [Get("/v1/trending-tags/illust")]
     Task<TrendingTagResponse> GetTrendingTagsAsync([AliasAs("filter")] string filter);
 
+    [Get("/v1/trending-tags/novel")]
+    Task<TrendingTagResponse> GetTrendingTagsForNovelAsync([AliasAs("filter")] string filter);
+
     [Get("/v1/ugoira/metadata")]
     Task<UgoiraMetadataResponse> GetUgoiraMetadataAsync([AliasAs("illust_id")] string id);
 

@@ -340,4 +340,10 @@ public partial class MakoClient
         EnsureNotCancelled();
         return new IllustrationCommentRepliesEngine(commentId, this, new EngineHandle(CancelInstance));
     }
+
+    public IFetchEngine<Illustration> RelatedWorks(string illustId)
+    {
+        EnsureNotCancelled();
+        return new RelatedWorksFetchEngine(illustId, this, new EngineHandle(CancelInstance));
+    }
 }
