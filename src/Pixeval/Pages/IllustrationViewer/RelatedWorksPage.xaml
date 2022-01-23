@@ -8,5 +8,7 @@
                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                        NavigationCacheMode="Required"
                        mc:Ignorable="d">
-    <userControls:IllustrationGrid ItemTapped="RelatedWorksIllustrationGrid_OnItemTapped" x:Name="RelatedWorksIllustrationGrid" Margin="5,0" />
+    <userControls:IllustrationGrid x:Name="RelatedWorksIllustrationGrid"
+                                   Margin="10,0,5,0"
+                                   ItemTapped="RelatedWorksIllustrationGrid_OnItemTapped" />
 </controls:EnhancedPage>
