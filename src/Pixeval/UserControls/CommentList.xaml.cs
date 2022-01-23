@@ -29,8 +29,8 @@ using Pixeval.Util.UI;
 
 namespace Pixeval.UserControls;
 
-[DependencyProperty("ItemsSource", typeof(object), nameof(OnItemsSourceChanged), DefaultValue = "System.Linq.Enumerable.Empty<Pixeval.Pages.IllustrationViewer.CommentBlockViewModel>()")]
-public sealed partial class CommentList
+[DependencyProperty("ItemsSource", typeof(object), nameof(OnItemsSourceChanged), DefaultValue = "System.Linq.Enumerable.Empty<Pixeval.Pages.IllustrationViewer.CommentBlockViewModel>()", IsNullable = true)]
+public sealed partial class CommentList : IDisposable
 {
     private EventHandler<TappedRoutedEventArgs>? _repliesHyperlinkButtonTapped;
 
@@ -64,5 +64,10 @@ public sealed partial class CommentList
         {
             list.Remove(viewModel);
         }
+    }
+
+    public void Dispose()
+    {
+        (ItemsSource as IList<CommentBlockViewModel>)?.Clear();
     }
 }

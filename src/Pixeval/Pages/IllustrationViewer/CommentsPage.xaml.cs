@@ -33,6 +33,7 @@ using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Messages;
 using Pixeval.UserControls;
+using Pixeval.Util;
 using Pixeval.Util.IO;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -48,11 +49,20 @@ public sealed partial class CommentsPage
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
+        // Dispose current page contents if the parent page (IllustrationViewerPage) is navigating
+        WeakReferenceMessenger.Default.TryRegister<CommentsPage, NavigatingFromIllustrationViewerMessage>(this, (recipient, _) =>
+        {
+            recipient.CommentList.Dispose();
+            WeakReferenceMessenger.Default.UnregisterAll(this);
+        });
+
         var (engine, illustId) = ((IAsyncEnumerable<Comment>, string)) e.Parameter;
         _illustId = illustId;
-        CommentList.ItemsSource = new IncrementalLoadingCollection<CommentsIncrementalSource, CommentBlockViewModel>(
-            new CommentsIncrementalSource(engine.Select(c => new CommentBlockViewModel(c, illustId))),
-            30);
+        if (CommentList.ItemsSource is not ICollection<CommentBlockViewModel>)
+        {
+            CommentList.ItemsSource = new IncrementalLoadingCollection<CommentsIncrementalSource, CommentBlockViewModel>(
+                new CommentsIncrementalSource(engine.Select(c => new CommentBlockViewModel(c, illustId))), 30);
+        }
     }
 
     private void CommentList_OnRepliesHyperlinkButtonTapped(object? sender, TappedRoutedEventArgs e)
@@ -88,7 +98,7 @@ public sealed partial class CommentsPage
         if (postCommentResponse.IsSuccessStatusCode)
         {
             var response = await postCommentResponse.Content.ReadFromJsonAsync<PostCommentResponse>();
-            ((ObservableCollection<CommentBlockViewModel>) CommentList.ItemsSource).Insert(0, new CommentBlockViewModel(response?.Comment!, _illustId!));
+            (CommentList.ItemsSource as ObservableCollection<CommentBlockViewModel>)?.Insert(0, new CommentBlockViewModel(response?.Comment!, _illustId!));
         }
     }
 }

@@ -55,7 +55,15 @@ public sealed partial class IllustrationGrid
         ViewModel = new IllustrationGridViewModel();
     }
 
-    public IllustrationGridViewModel ViewModel { get; set; }
+    private EventHandler<IllustrationViewModel>? _itemTapped;
+
+    public event EventHandler<IllustrationViewModel> ItemTapped
+    {
+        add => _itemTapped += value;
+        remove => _itemTapped -= value;
+    }
+
+    public IllustrationGridViewModel ViewModel { get; }
 
     private void IllustrationGrid_OnLoaded(object sender, RoutedEventArgs e)
     {
@@ -98,6 +106,8 @@ public sealed partial class IllustrationGrid
 
         e.Handled = true;
         WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(sender as UIElement));
+
+        _itemTapped?.Invoke(this, sender.GetDataContext<IllustrationViewModel>());
 
         var viewModels = sender.GetDataContext<IllustrationViewModel>()
             .GetMangaIllustrationViewModels()

@@ -36,7 +36,6 @@ public abstract class FetchEngineIncrementalSource<T, TModel> : IIncrementalSour
 
     private int _yieldedCounter;
 
-
     protected abstract long Identifier(T entity);
 
     protected abstract TModel Select(T entity);

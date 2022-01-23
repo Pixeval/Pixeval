@@ -35,11 +35,10 @@
                         <NavigationViewItem x:Uid="/IllustrationViewerPage/IllustrationInfoTab"
                                             IsSelected="True"
                                             Tag="{x:Bind _illustrationInfo}" />
-                        <NavigationViewItem x:Uid="/IllustrationViewerPage/CommentsTab"
-                                            Tag="{x:Bind _comments}" />
+                        <NavigationViewItem x:Uid="/IllustrationViewerPage/CommentsTab" Tag="{x:Bind _comments}" />
+                        <NavigationViewItem x:Uid="/IllustrationViewerPage/RelatedWorksTab" Tag="{x:Bind _relatedWorksTag}" />
                     </NavigationView.MenuItems>
-                    <Frame x:Name="IllustrationInfoAndCommentsFrame"
-                           Width="320" />
+                    <Frame x:Name="IllustrationInfoAndCommentsFrame" Width="320" />
                 </NavigationView>
             </Grid>
         </SplitView.Pane>
@@ -62,15 +61,13 @@
                         <KeyboardAccelerator Key="F12" />
                     </AppBarToggleButton.KeyboardAccelerators>
                 </AppBarToggleButton>
-                <AppBarButton Command="{x:Bind _viewModel.PlayGifCommand}"
-                              Visibility="{x:Bind _viewModel.IsUgoira}" />
+                <AppBarButton Command="{x:Bind _viewModel.PlayGifCommand}" Visibility="{x:Bind _viewModel.IsUgoira}" />
                 <AppBarSeparator />
                 <AppBarButton Command="{x:Bind _viewModel.CopyCommand}" />
                 <AppBarButton Command="{x:Bind _viewModel.SaveCommand}" />
                 <AppBarButton Command="{x:Bind _viewModel.SaveAsCommand}" />
                 <AppBarSeparator />
-                <AppBarButton x:Uid="/IllustrationViewerPage/SetAsButton"
-                              Icon="{ui:FontIcon Glyph=PersonalizeE771}">
+                <AppBarButton x:Uid="/IllustrationViewerPage/SetAsButton" Icon="{ui:FontIcon Glyph=PersonalizeE771}">
                     <AppBarButton.Flyout>
                         <MenuFlyout>
                             <MenuFlyoutItem Command="{x:Bind _viewModel.SetAsBackgroundCommand}" />
@@ -80,8 +77,7 @@
                 </AppBarButton>
                 <AppBarSeparator />
                 <AppBarButton Command="{x:Bind _viewModel.AddToBookmarkCommand}" />
-                <AppBarButton x:Name="GenerateLinkToThisPageButton"
-                              Command="{x:Bind _viewModel.GenerateLinkCommand}" />
+                <AppBarButton x:Name="GenerateLinkToThisPageButton" Command="{x:Bind _viewModel.GenerateLinkCommand}" />
                 <AppBarButton Command="{x:Bind _viewModel.GenerateWebLinkCommand}" />
                 <AppBarButton Command="{x:Bind _viewModel.OpenInWebBrowserCommand}" />
                 <AppBarButton Command="{x:Bind _viewModel.ShowQrCodeCommand}" />
@@ -95,8 +91,7 @@
                     <Image Source="../../Assets/Images/illust-app-link-sample.png" />
                 </TeachingTip.HeroContent>
             </TeachingTip>
-            <Grid Width="50"
-                  controls:DockPanel.Dock="Left">
+            <Grid Width="50" controls:DockPanel.Dock="Left">
                 <AppBarButton Width="40"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"
@@ -112,8 +107,7 @@
                               Tapped="PrevIllustrationAppBarButton_OnTapped"
                               Visibility="{x:Bind _viewModel.CalculatePrevIllustrationButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
             </Grid>
-            <Grid Width="50"
-                  controls:DockPanel.Dock="Right">
+            <Grid Width="50" controls:DockPanel.Dock="Right">
                 <AppBarButton Width="40"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"
@@ -129,8 +123,7 @@
                               Tapped="NextIllustrationAppBarButton_OnTapped"
                               Visibility="{x:Bind _viewModel.CalculateNextIllustrationButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
             </Grid>
-            <Grid Height="30"
-                  controls:DockPanel.Dock="Bottom" />
+            <Grid Height="30" controls:DockPanel.Dock="Bottom" />
             <Frame x:Name="IllustrationImageShowcaseFrame"
                    HorizontalAlignment="Stretch"
                    VerticalAlignment="Stretch" />

@@ -50,6 +50,7 @@ using Pixeval.Pages.Capability;
 using Pixeval.Pages.Download;
 using Pixeval.Pages.Misc;
 using Pixeval.UserControls;
+using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Image = SixLabors.ImageSharp.Image;
@@ -75,11 +76,6 @@ public sealed partial class MainPage
         DataContext = _viewModel;
     }
 
-    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
-    {
-        WeakReferenceMessenger.Default.UnregisterAll(this);
-    }
-
     public override void OnPageActivated(NavigationEventArgs e)
     {
         // dirty trick, the order of the menu items is the same as the order of the fields in MainPageTabItem
@@ -92,9 +88,9 @@ public sealed partial class MainPage
             ActivationRegistrar.Dispatch(AppInstance.GetCurrent().GetActivatedEventArgs());
         }
 
-        WeakReferenceMessenger.Default.Register<MainPage, MainPageFrameSetConnectedAnimationTargetMessage>(this, (_, message) => _connectedAnimationTarget = message.Sender);
-        WeakReferenceMessenger.Default.Register<MainPage, NavigatingBackToMainPageMessage>(this, (_, message) => _illustrationViewerContent = message.IllustrationViewModel);
-        WeakReferenceMessenger.Default.Register<MainPage, IllustrationTagClickedMessage>(this, (_, message) => PerformSearch(message.Tag));
+        WeakReferenceMessenger.Default.TryRegister<MainPage, MainPageFrameSetConnectedAnimationTargetMessage>(this, (_, message) => _connectedAnimationTarget = message.Sender);
+        WeakReferenceMessenger.Default.TryRegister<MainPage, NavigatingBackToMainPageMessage>(this, (_, message) => _illustrationViewerContent = message.IllustrationViewModel);
+        WeakReferenceMessenger.Default.TryRegister<MainPage, IllustrationTagClickedMessage>(this, (_, message) => PerformSearch(message.Tag));
 
         // Connected animation to the element located in MainPage
         if (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation") is { } animation)

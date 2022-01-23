@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Streams;
@@ -44,11 +45,22 @@ namespace Pixeval.Pages.IllustrationViewer;
 
 public sealed partial class IllustrationViewerPage : IGoBack
 {
+    // The navigation between ImageViewerPages contain two difference kinds: 
+    // 1. The navigation happens at the same level, for example, navigating forth and back in the same IllustrationGrid
+    // 2. The navigation navigates into another IllustrationGrid, i.e. , navigates between difference level, for example,
+    //    navigated by clicking items in RelatedWorksPage
+    // When we click the go back button, we only want to go back to the last page that performs navigation between different
+    // levels, so we need to record which page takes such navigation, and remove all the other pages (which are those who
+    // navigates at the same level) from the navigation stack.
+    internal static readonly Stack<(string, int?)> NavigatingStackEntriesFromRelatedWorksStack = new();
+
     private AppPopup? _commentRepliesPopup;
 
-    private NavigationViewTag? _comments;
-
     // Tags for IllustrationInfoAndCommentsNavigationView
+
+    private NavigationViewTag? _relatedWorksTag;
+
+    private NavigationViewTag? _comments;
 
     private NavigationViewTag? _illustrationInfo;
 
@@ -65,8 +77,28 @@ public sealed partial class IllustrationViewerPage : IGoBack
     {
         ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", IllustrationImageShowcaseFrame);
         WeakReferenceMessenger.Default.Send(new NavigatingBackToMainPageMessage(_viewModel.IllustrationViewModelInTheGridView));
+        WeakReferenceMessenger.Default.Send(new NavigatingFromIllustrationViewerMessage());
 
-        App.AppViewModel.AppWindowRootFrame.BackStack.RemoveAll(entry => entry.SourcePageType == typeof(IllustrationViewerPage));
+        if (!NavigatingStackEntriesFromRelatedWorksStack.Any())
+        {
+            while (App.AppViewModel.AppWindowRootFrame.BackStack.LastOrDefault() is { Parameter: IllustrationViewerPageViewModel})
+            {
+                var stack = App.AppViewModel.AppWindowRootFrame.BackStack;
+                stack.RemoveAt(stack.Count - 1);
+            }
+        }
+        else
+        {
+            while (App.AppViewModel.AppWindowRootFrame.BackStack.LastOrDefault() is { Parameter: IllustrationViewerPageViewModel viewModel } &&
+                   NavigatingStackEntriesFromRelatedWorksStack.Peek() is var (vm, idx) &&
+                   (viewModel.IllustrationId != vm || idx != null && viewModel.CurrentIndex != idx))
+            {
+                var stack = App.AppViewModel.AppWindowRootFrame.BackStack;
+                stack.RemoveAt(stack.Count - 1);
+            }
+        }
+
+        NavigatingStackEntriesFromRelatedWorksStack.TryPop(out _);
         if (App.AppViewModel.AppWindowRootFrame.CanGoBack)
         {
             App.AppViewModel.AppWindowRootFrame.GoBack(new SuppressNavigationTransitionInfo());
@@ -81,6 +113,7 @@ public sealed partial class IllustrationViewerPage : IGoBack
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
     {
+        WeakReferenceMessenger.Default.Send(new NavigatingFromIllustrationViewerMessage());
         foreach (var imageViewerPageViewModel in _viewModel.ImageViewerPageViewModels!)
         {
             imageViewerPageViewModel.ImageLoadingCancellationHandle.Cancel();
@@ -102,8 +135,10 @@ public sealed partial class IllustrationViewerPage : IGoBack
         {
             _viewModel = viewModel.IsDisposed ? viewModel.CreateNew() : viewModel;
         }
+
+        _relatedWorksTag = new NavigationViewTag(typeof(RelatedWorksPage), _viewModel);
         _illustrationInfo = new NavigationViewTag(typeof(IllustrationInfoPage), _viewModel);
-        _comments = new NavigationViewTag(typeof(CommentsPage), (App.AppViewModel.MakoClient.IllustrationComments(_viewModel.IllustrationId).Where(c => c is not null), _viewModel.IllustrationId)); // TODO
+        _comments = new NavigationViewTag(typeof(CommentsPage), (App.AppViewModel.MakoClient.IllustrationComments(_viewModel.IllustrationId).Where(c => c is not null), _viewModel.IllustrationId));
 
         IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), _viewModel.Current);
 
@@ -132,7 +167,7 @@ public sealed partial class IllustrationViewerPage : IGoBack
 
     private async void OnDataTransferManagerOnDataRequested(DataTransferManager _, DataRequestedEventArgs args)
     {
-        // Remarks: all the illustrations in _viewModels only differ in different image sources
+        // all the illustrations in _viewModels only differ in different image sources
         var vm = _viewModel.Current.IllustrationViewModel;
         if (_viewModel.Current.LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true })
         {
@@ -243,15 +278,7 @@ public sealed partial class IllustrationViewerPage : IGoBack
     {
         if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag })
         {
-            IllustrationInfoAndCommentsFrame.Navigate(tag.NavigateTo, tag.Parameter, new SlideNavigationTransitionInfo
-            {
-                Effect = tag switch
-                {
-                    var x when x == _illustrationInfo => SlideNavigationTransitionEffect.FromLeft,
-                    var x when x == _comments => SlideNavigationTransitionEffect.FromRight,
-                    _ => throw new ArgumentOutOfRangeException()
-                }
-            });
+            IllustrationInfoAndCommentsFrame.Navigate(tag.NavigateTo, tag.Parameter, new SlideNavigationTransitionInfo());
         }
     }
 }

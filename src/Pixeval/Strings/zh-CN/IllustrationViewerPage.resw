@@ -171,6 +171,9 @@
   <data name="PlayGif" xml:space="preserve">
     <value>播放</value>
   </data>
+  <data name="RelatedWorksTab.Content" xml:space="preserve">
+    <value>推荐作品</value>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>保存</value>
   </data>

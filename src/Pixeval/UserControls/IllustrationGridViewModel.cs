@@ -75,6 +75,7 @@ public partial class IllustrationGridViewModel : ObservableObject, IDisposable, 
 
     public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; }
 
+    // Use this to add illustrations to IllustrationGrid
     public IllustrationVisualizationController VisualizationController { get; internal set; }
 
     public void Dispose()

@@ -75,6 +75,7 @@
 		<None Remove="Pages\IllustrationViewer\CommentRepliesPage.xaml" />
 		<None Remove="Pages\IllustrationViewer\PixivReplyEmojiListPage.xaml" />
 		<None Remove="Pages\IllustrationViewer\PixivReplyStickerListPage.xaml" />
+		<None Remove="Pages\IllustrationViewer\RelatedWorksPage.xaml" />
 		<None Remove="Pages\Misc\AboutPage.xaml" />
 		<None Remove="Pages\Misc\BrowsingHistoryPage.xaml" />
 		<None Remove="Popups\DownloadListPageDeleteTasksPopup.xaml" />
@@ -292,6 +293,11 @@
 		<PRIResource Include="Strings\zh-CN\SettingsPage.resw" />
 		<PRIResource Include="Strings\zh-CN\SortOptionComboBox.resw" />
 		<PRIResource Include="Strings\zh-CN\TokenInputTextBox.resw" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="Pages\IllustrationViewer\RelatedWorksPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 	<ItemGroup>
 	  <Page Update="UserControls\SnackBar.xaml">
