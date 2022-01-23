@@ -281,4 +281,9 @@ public class AppViewModel : AutoActivateObservableRecipient,
         _activatedByProtocol = false;
         return original;
     }
+
+    public void ShowSnack(string text, int duration)
+    {
+        Window.PixevalAppSnackBar.Show(text, duration);
+    }
 }

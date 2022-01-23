@@ -128,6 +128,7 @@
 		<None Remove="UserControls\OverlayPopupContent.xaml" />
 		<None Remove="UserControls\PixivReplyBar.xaml" />
 		<None Remove="UserControls\QrCodePresenter%27.xaml" />
+		<None Remove="UserControls\SnackBar.xaml" />
 		<None Remove="UserControls\SortOptionComboBox.xaml" />
 		<None Remove="UserControls\TokenInput.xaml" />
 	</ItemGroup>
@@ -291,6 +292,11 @@
 		<PRIResource Include="Strings\zh-CN\SettingsPage.resw" />
 		<PRIResource Include="Strings\zh-CN\SortOptionComboBox.resw" />
 		<PRIResource Include="Strings\zh-CN\TokenInputTextBox.resw" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="UserControls\SnackBar.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 
 	<!--  XAML  -->

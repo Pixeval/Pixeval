@@ -209,10 +209,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         if (Current.OriginalImageStream is null)
         {
-            ToastNotificationHelper.ShowTextToastNotification(
-                IllustrationViewerPageResources.OriginalmageStreamIsEmptyTitle,
-                IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent,
-                AppContext.AppLogoNoCaptionUri);
+            App.AppViewModel.ShowSnack(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, 5000);
             return;
         }
 
@@ -238,10 +235,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         if (Current.OriginalImageStream is null)
         {
-            ToastNotificationHelper.ShowTextToastNotification(
-                IllustrationViewerPageResources.OriginalmageStreamIsEmptyTitle,
-                IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent,
-                AppContext.AppLogoNoCaptionUri);
+            App.AppViewModel.ShowSnack(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, 5000);
             return;
         }
 
@@ -301,7 +295,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         var link = MakoHelper.GenerateIllustrationWebUri(Current.IllustrationViewModel.Id).ToString();
         UIHelper.SetClipboardContent(package => package.SetText(link));
-        ToastNotificationHelper.ShowTextToastNotification(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle, link);
+        App.AppViewModel.ShowSnack(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle, 5000);
     }
 
     private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

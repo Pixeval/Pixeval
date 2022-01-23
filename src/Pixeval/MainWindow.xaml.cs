@@ -77,4 +77,9 @@ public sealed partial class MainWindow : INavigationModeInfo
     {
         Processing.Visibility = Visibility.Collapsed;
     }
+
+    private void PixevalAppSnackBar_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        SnackBarShadow.Receivers.Add(PixevalAppRootFrame);
+    }
 }

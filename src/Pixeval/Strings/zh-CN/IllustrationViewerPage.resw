@@ -165,9 +165,6 @@
   <data name="OriginalmageStreamIsEmptyContent" xml:space="preserve">
     <value>图片流为空</value>
   </data>
-  <data name="OriginalmageStreamIsEmptyTitle" xml:space="preserve">
-    <value>设置失败</value>
-  </data>
   <data name="PauseGif" xml:space="preserve">
     <value>暂停</value>
   </data>
