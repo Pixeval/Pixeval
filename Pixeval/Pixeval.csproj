@@ -91,4 +91,8 @@
     <Resource Include="Resources\pxlogo.ico" />
     <Resource Include="Resources\saucenao.png" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
+  </ItemGroup>
 </Project>

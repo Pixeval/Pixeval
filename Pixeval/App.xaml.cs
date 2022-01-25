@@ -27,7 +27,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Win32;
-using Pixeval.Core;
 using Pixeval.Core.Persistent;
 using Pixeval.Objects;
 using Pixeval.Objects.I18n;
@@ -77,8 +76,13 @@ namespace Pixeval
         
         private static bool CheckWebViewVersion()
         {
-            var regKey1 = Registry.LocalMachine.OpenSubKey("SOFTWARE\\WOW6432Node\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}")?.GetValue("pv") as string;
-            var regKey2 = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}")?.GetValue("pv") as string;
+            var regKey1 = Registry.LocalMachine.OpenSubKey(Environment.Is64BitOperatingSystem
+                ? "SOFTWARE\\WOW6432Node\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
+                : "SOFTWARE\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}")?.GetValue("pv") as string;
+            var regKey2 = Registry.LocalMachine.OpenSubKey(Environment.Is64BitOperatingSystem
+                ? "SOFTWARE\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
+                : "Software\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}")?.GetValue("pv") as string;
+
             return !regKey1.IsNullOrEmpty() || !regKey2.IsNullOrEmpty();
         }
 
