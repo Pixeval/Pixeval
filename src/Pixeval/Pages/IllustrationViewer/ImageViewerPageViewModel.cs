@@ -200,7 +200,6 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
                         OriginalImageStream = await IOHelper.GetGifStreamFromZipStreamAsync(zipStream, ugoiraMetadata);
                         break;
                     case Result<Stream>.Failure(OperationCanceledException):
-                        // TODO add load failed image
                         return;
                 }
 

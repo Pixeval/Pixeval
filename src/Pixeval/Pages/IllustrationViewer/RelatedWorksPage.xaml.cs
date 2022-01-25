@@ -23,8 +23,11 @@ public sealed partial class RelatedWorksPage
             recipient.RelatedWorksIllustrationGrid.ViewModel.Dispose();
             WeakReferenceMessenger.Default.UnregisterAll(this);
         });
-        _illustrationViewerPageViewModel = (IllustrationViewerPageViewModel?) e.Parameter;
-        await RelatedWorksIllustrationGrid.ViewModel.VisualizationController.ResetAndFillAsync(App.AppViewModel.MakoClient.RelatedWorks(_illustrationViewerPageViewModel!.IllustrationId));
+        if (_illustrationViewerPageViewModel is null)
+        {
+            _illustrationViewerPageViewModel = e.Parameter as IllustrationViewerPageViewModel;
+            await RelatedWorksIllustrationGrid.ViewModel.VisualizationController.ResetAndFillAsync(App.AppViewModel.MakoClient.RelatedWorks(_illustrationViewerPageViewModel!.IllustrationId));
+        }
     }
 
     private void RelatedWorksIllustrationGrid_OnItemTapped(object? sender, IllustrationViewModel e)

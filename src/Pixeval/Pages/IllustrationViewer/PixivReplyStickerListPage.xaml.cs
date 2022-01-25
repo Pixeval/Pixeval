@@ -56,6 +56,9 @@ public sealed partial class PixivReplyStickerListPage
         _replyBarStickerTappedEventHandler = (((Guid, EventHandler<StickerTappedEventArgs>)) e.Parameter).Item2;
     }
 
+    /// <summary>
+    /// Load stickers once for all
+    /// </summary>
     private static async void LoadStickers()
     {
         using var semaphoreSlim = new SemaphoreSlim(1, 1);
@@ -65,9 +68,10 @@ public sealed partial class PixivReplyStickerListPage
             var results = await Task.WhenAll(MakoHelper.StickerIds
                 .Select(async id => (id, await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(MakoHelper.GenerateStickerDownloadUrl(id)))));
             var tasks = results.Where(r => r.Item2 is Result<IRandomAccessStream>.Success)
-                .Select(async r => new PixivReplyStickerViewModel(r.id, ((Result<IRandomAccessStream>.Success) r.Item2).Value)
+                .Select(r => (r.id, (Result<IRandomAccessStream>.Success) r.Item2))
+                .Select(async r => new PixivReplyStickerViewModel(r.id, r.Item2.Value)
                 {
-                    ImageSource = await ((Result<IRandomAccessStream>.Success) r.Item2).Value.GetBitmapImageAsync(false)
+                    ImageSource = await r.Item2.Value.GetBitmapImageAsync(false)
                 });
             Stickers.AddRange(await Task.WhenAll(tasks));
         }

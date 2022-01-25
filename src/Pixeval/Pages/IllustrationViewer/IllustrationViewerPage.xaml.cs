@@ -60,9 +60,9 @@ public sealed partial class IllustrationViewerPage : IGoBack
 
     private NavigationViewTag? _relatedWorksTag;
 
-    private NavigationViewTag? _comments;
+    private NavigationViewTag? _commentsTag;
 
-    private NavigationViewTag? _illustrationInfo;
+    private NavigationViewTag? _illustrationInfoTag;
 
     private IllustrationViewerPageViewModel _viewModel = null!;
 
@@ -137,8 +137,8 @@ public sealed partial class IllustrationViewerPage : IGoBack
         }
 
         _relatedWorksTag = new NavigationViewTag(typeof(RelatedWorksPage), _viewModel);
-        _illustrationInfo = new NavigationViewTag(typeof(IllustrationInfoPage), _viewModel);
-        _comments = new NavigationViewTag(typeof(CommentsPage), (App.AppViewModel.MakoClient.IllustrationComments(_viewModel.IllustrationId).Where(c => c is not null), _viewModel.IllustrationId));
+        _illustrationInfoTag = new NavigationViewTag(typeof(IllustrationInfoPage), _viewModel);
+        _commentsTag = new NavigationViewTag(typeof(CommentsPage), (App.AppViewModel.MakoClient.IllustrationComments(_viewModel.IllustrationId).Where(c => c is not null), _viewModel.IllustrationId));
 
         IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), _viewModel.Current);
 
@@ -278,7 +278,7 @@ public sealed partial class IllustrationViewerPage : IGoBack
     {
         if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag })
         {
-            IllustrationInfoAndCommentsFrame.Navigate(tag.NavigateTo, tag.Parameter, new SlideNavigationTransitionInfo());
+            IllustrationInfoAndCommentsFrame.Navigate(tag.NavigateTo, tag.Parameter, args.RecommendedNavigationTransitionInfo);
         }
     }
 }

@@ -82,7 +82,7 @@ public sealed partial class MainPage
         // since enums are basically integers, we just need a cast to transform it to the correct offset.
         ((NavigationViewItem) MainPageRootNavigationView.MenuItems[(int) App.AppViewModel.AppSetting.DefaultSelectedTabItem]).IsSelected = true;
 
-
+        // The application is invoked by a protocol, call the corresponding protocol handler.
         if (App.AppViewModel.ConsumeProtocolActivation())
         {
             ActivationRegistrar.Dispatch(AppInstance.GetCurrent().GetActivatedEventArgs());
@@ -169,6 +169,7 @@ public sealed partial class MainPage
         if (sender.Text is { Length: > 0 } keyword)
         {
             var suggestions = (await App.AppViewModel.MakoClient.GetAutoCompletionForKeyword(keyword)).Select(SuggestionModel.FromTag);
+            // Incremental update
             items.ReplaceByUpdate(suggestions);
         }
         else
@@ -230,6 +231,7 @@ public sealed partial class MainPage
             if (content.AvailableFormats.Contains(StandardDataFormats.StorageItems) &&
                 (await content.GetStorageItemsAsync()).FirstOrDefault(i => i.IsOfType(StorageItemTypes.File)) is StorageFile file)
             {
+                e.Handled = true; // prevent the event from bubbling if it contains an image, since it means that we want to do reverse search.
                 await using var stream = await file.OpenStreamForReadAsync();
                 if (await Image.DetectFormatAsync(stream) is not null)
                 {

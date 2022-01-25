@@ -123,7 +123,7 @@ public sealed partial class CommentRepliesBlock : IAppPopupContent
         if (postCommentResponse.IsSuccessStatusCode)
         {
             var response = await postCommentResponse.Content.ReadFromJsonAsync<PostCommentResponse>();
-            ((ObservableCollection<CommentBlockViewModel>) CommentList.ItemsSource).Insert(0, new CommentBlockViewModel(response?.Comment!, ViewModel.Comment.IllustrationId));
+            (CommentList.ItemsSource as ObservableCollection<CommentBlockViewModel>)?.Insert(0, new CommentBlockViewModel(response?.Comment!, ViewModel.Comment.IllustrationId));
         }
     }
 }

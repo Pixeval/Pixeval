@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Engine.Implements;
 using Pixeval.CoreApi.Global.Enum;
@@ -345,5 +346,10 @@ public partial class MakoClient
     {
         EnsureNotCancelled();
         return new RelatedWorksFetchEngine(illustId, this, new EngineHandle(CancelInstance));
+    }
+
+    public IFetchEngine<T> Computed<T>(IAsyncEnumerable<T> result)
+    {
+        return new ComputedFetchEngine<T>(result, this, new EngineHandle(CancelInstance));
     }
 }

@@ -80,7 +80,7 @@ public class CommentBlockViewModel
     public async Task<ImageSource> GetAvatarSource()
     {
         return (await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(Comment.CommentPoster!.ProfileImageUrls!.Medium!)
-            .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync())!)!;
+            .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync()))!;
     }
 
     public async Task<Paragraph> GetReplyContentParagraphAsync()

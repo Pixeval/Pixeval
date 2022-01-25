@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
@@ -65,11 +66,9 @@ public sealed partial class BrowsingHistoryPage : ISortedIllustrationContainerPa
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-        foreach (var entry in manager.Select(count: 100))
-        {
-            var illustration = await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(entry.Id!);
-            IllustrationContainer!.ViewModel.AddIllustrationViewModel(new IllustrationViewModel(illustration));
-        }
+        await IllustrationContainer.ViewModel.VisualizationController.ResetAndFillAsync(
+            App.AppViewModel.MakoClient.Computed(manager.Enumerate().ToAsyncEnumerable().SelectAwait(async t =>
+                await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(t.Id!))));
     }
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

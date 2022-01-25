@@ -272,8 +272,8 @@ public class AppViewModel : AutoActivateObservableRecipient,
     }
 
     /// <summary>
-    ///     Gets and resets the <see cref="_activatedByProtocol" /> field, used for one-time activation process
-    ///     during the app start
+    /// Gets and resets the <see cref="_activatedByProtocol" /> field, used for one-time activation process
+    /// during the app start
     /// </summary>
     public bool ConsumeProtocolActivation()
     {

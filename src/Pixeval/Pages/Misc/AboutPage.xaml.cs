@@ -24,8 +24,12 @@ using Pixeval.AppManagement;
 
 namespace Pixeval.Pages.Misc;
 
+/// <summary>
+/// Page that contains the information about this application, including contributor, sponsor, open source library and open source license
+/// </summary>
 public sealed partial class AboutPage
 {
+    // TODO add sponsors
     public AboutPage()
     {
         InitializeComponent();

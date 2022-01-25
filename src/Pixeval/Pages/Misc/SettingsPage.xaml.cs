@@ -36,12 +36,15 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.Misc;
 
-// set language, clear database
+// TODO set language, clear database
 public sealed partial class SettingsPage
 {
+    // This TestParser is used to test whether the user input meta path is legal
     private static readonly MacroParser<string> TestParser = new();
     private readonly SettingsPageViewModel _viewModel;
 
+    // The previous meta path after user changes the path field, if the path is illegal
+    // its value will be reverted to this field.
     private string _previousPath;
 
     public SettingsPage()

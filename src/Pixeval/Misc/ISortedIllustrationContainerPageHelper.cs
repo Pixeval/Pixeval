@@ -22,10 +22,20 @@ using Pixeval.UserControls;
 
 namespace Pixeval.Misc;
 
+/// <summary>
+/// A base class for all the pages whose illustration contents are sortable, call <see cref="OnSortOptionChanged"/> to manually update
+/// the sort condition and refresh the view
+/// </summary>
 public interface ISortedIllustrationContainerPageHelper
 {
+    /// <summary>
+    /// The <see cref="IllustrationContainer"/> that contains the illustration contents of this page
+    /// </summary>
     IllustrationContainer ViewModelProvider { get; }
 
+    /// <summary>
+    /// The <see cref="SortOptionComboBox"/> that provides several order options.
+    /// </summary>
     SortOptionComboBox SortOptionProvider { get; }
 
     public void OnSortOptionChanged()

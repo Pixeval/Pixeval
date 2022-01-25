@@ -34,8 +34,8 @@
                     <NavigationView.MenuItems>
                         <NavigationViewItem x:Uid="/IllustrationViewerPage/IllustrationInfoTab"
                                             IsSelected="True"
-                                            Tag="{x:Bind _illustrationInfo}" />
-                        <NavigationViewItem x:Uid="/IllustrationViewerPage/CommentsTab" Tag="{x:Bind _comments}" />
+                                            Tag="{x:Bind _illustrationInfoTag}" />
+                        <NavigationViewItem x:Uid="/IllustrationViewerPage/CommentsTab" Tag="{x:Bind _commentsTag}" />
                         <NavigationViewItem x:Uid="/IllustrationViewerPage/RelatedWorksTab" Tag="{x:Bind _relatedWorksTag}" />
                     </NavigationView.MenuItems>
                     <Frame x:Name="IllustrationInfoAndCommentsFrame" Width="320" />
