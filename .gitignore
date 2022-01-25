@@ -365,6 +365,3 @@ src/Pixeval/Assets/Binary/Pixeval.LoginProxy.zip
 # JetBrains Rider
 .idea/
 *.sln.iml
-
-# Package.appxmanifest
-Package.appxmanifest
