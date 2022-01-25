@@ -21,8 +21,6 @@
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Pixeval.Core;
 using Pixeval.Data.ViewModel;
 
@@ -57,12 +55,5 @@ namespace Pixeval
         public static int ProxyPort { get; set; }
 
         public static int PacPort { get; set; }
-
-        public static async ValueTask<bool> UpdateAvailable()
-        {
-            const string Url = "http://47.95.218.243/Pixeval/version.txt";
-            using var httpClient = new HttpClient();
-            return await httpClient.GetStringAsync(Url) != CurrentVersion;
-        }
     }
 }

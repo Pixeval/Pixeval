@@ -91,9 +91,4 @@
     <Resource Include="Resources\pxlogo.ico" />
     <Resource Include="Resources\saucenao.png" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="UI\Themes\" />
-  </ItemGroup>
-
 </Project>

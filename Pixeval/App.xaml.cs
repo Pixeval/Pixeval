@@ -77,12 +77,9 @@ namespace Pixeval
         
         private static bool CheckWebViewVersion()
         {
-            var regKey = Registry.LocalMachine.OpenSubKey(
-                Environment.Is64BitOperatingSystem
-                    ? "SOFTWARE\\WOW6432Node\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
-                    : "SOFTWARE\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
-            );
-            return regKey != null && !(regKey.GetValue("pv") as string).IsNullOrEmpty();
+            var regKey1 = Registry.LocalMachine.OpenSubKey("SOFTWARE\\WOW6432Node\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}")?.GetValue("pv") as string;
+            var regKey2 = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}")?.GetValue("pv") as string;
+            return !regKey1.IsNullOrEmpty() || !regKey2.IsNullOrEmpty();
         }
 
         private static async Task RootCaCertInstallation()

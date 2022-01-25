@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -50,16 +49,6 @@ namespace Pixeval.UI
             if (Session.Current == null)
                 return false;
             return Session.Current.RefreshToken != null && DateTime.Now - Session.Current.CookieCreation <= TimeSpan.FromDays(7);
-        }
-
-        private async Task CheckUpdate()
-        {
-            if (await PixevalContext.UpdateAvailable() && await MessageDialog.Show(MessageDialogHost,AkaI18N.PixevalUpdateAvailable, AkaI18N.PixevalUpdateAvailableTitle, true) == MessageDialogResult.Yes)
-            {
-                Process.Start(@"updater\Pixeval.Updater.exe");
-                Environment.Exit(0);
-            }
-            MessageDialogHost.Visibility = Visibility.Hidden;
         }
 
         private async Task LoginAndClose(string token, string cookie, string codeVer = null, bool refresh = false)
@@ -120,7 +109,6 @@ namespace Pixeval.UI
         {
             try
             {
-                await CheckUpdate();
                 await PerformLogin();
             }
             catch (Exception exception)
