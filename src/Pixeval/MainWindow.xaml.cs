@@ -34,10 +34,9 @@ public sealed partial class MainWindow : INavigationModeInfo
         InitializeComponent();
     }
 
-    public NavigationTransitionInfo? DefaultNavigationTransitionInfo { get; internal set; } =
-        new SuppressNavigationTransitionInfo();
+    public NavigationTransitionInfo? DefaultNavigationTransitionInfo { get; internal set; } = new SuppressNavigationTransitionInfo();
 
-    // Remarks: The parameter of OnNavigatedTo is always NavigationMode.New
+    // The parameter of OnNavigatedTo is always NavigationMode.New
     public static NavigationMode? NavigationMode { get; private set; }
 
     public static NavigationMode? GetNavigationModeAndReset()

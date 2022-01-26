@@ -149,12 +149,11 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
 
         if (await GetThumbnail(ThumbnailUrlOption.Medium) is { } ras)
         {
-            using (ras)
+            if (App.AppViewModel.AppSetting.UseFileCache)
             {
                 await App.AppViewModel.Cache.TryAddAsync(Illustration.GetIllustrationThumbnailCacheKey(), ras, TimeSpan.FromDays(1));
-                ThumbnailSource = await ras.GetSoftwareBitmapSourceAsync(false);
             }
-
+            ThumbnailSource = await ras.GetSoftwareBitmapSourceAsync(true);
             LoadingThumbnail = false;
             return true;
         }

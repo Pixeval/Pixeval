@@ -97,7 +97,7 @@ public static partial class IOHelper
         {
             try
             {
-                // Remarks: the await keyword here is vital, the exception inside a task can be caught only if you await it
+                // The await keyword here is vital, the exception inside a task can be caught only if you await it
                 // otherwise it will be caught by the TaskScheduler.UnobservedTaskException
                 return await GetSoftwareBitmapFromStreamAsync(stream);
             }
@@ -105,7 +105,7 @@ public static partial class IOHelper
             {
                 return e.HResult switch
                 {
-                    // Remarks: the GIF images are consist of multiple frames, some of them may be corrupted or having
+                    // The GIF images are consist of multiple frames, some of them may be corrupted or having
                     // a illegal format and thus are incapable of being encoded in to the GIF file, such frames will raise
                     // a COMException indicating an unsuccessful HResult WIN_CODEC_ERR_COMPONENT_NOT_FOUND(0x88982F50),
                     // there is no way to fix this, so instead of try to repair the image, we just simply drop that frame
