@@ -147,7 +147,7 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
             return true;
         }
 
-        if (await GetThumbnail(ThumbnailUrlOption.Medium) is { } ras)
+        if (await GetThumbnail(ThumbnailUrlOption.SquareMedium) is { } ras)
         {
             if (App.AppViewModel.AppSetting.UseFileCache)
             {
