@@ -26,19 +26,23 @@ using Pixeval.Controls.Setting.UI.UserControls;
 
 namespace Pixeval.Controls.Setting.UI.ActionableExpanderSettingEntry;
 
+/// <summary>
+/// The <see cref="ActionableExpanderSettingEntry"/> is an expandable setting entry that contains a <see cref="SettingEntryHeader"/>
+/// at left and a custom control at right, you can set the custom control by <see cref="ContentControl.Content"/>
+/// property, and set the expander content by <see cref="ActionContent"/>
+/// </summary>
 [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
 [TemplatePart(Name = PartEntryContentPresenter, Type = typeof(ContentPresenter))]
-[DependencyProperty("Icon", typeof(IconElement), nameof(OnIconChanged))]
-[DependencyProperty("Header", typeof(string))]
-[DependencyProperty("Description", typeof(object), nameof(OnDescriptionChanged))]
-[DependencyProperty("HeaderHeight", typeof(double))]
-[DependencyProperty("ActionContent", typeof(object))]
-[DependencyProperty("ContentMargin", typeof(Thickness))]
+[DependencyProperty("Icon", typeof(IconElement), nameof(OnIconChanged))] // The icon appears at the leftmost of the entry
+[DependencyProperty("Header", typeof(string))] // The header of the SettingsEntryHeader
+[DependencyProperty("Description", typeof(object), nameof(OnDescriptionChanged))] // The description of the SettingsEntryHeader
+[DependencyProperty("HeaderHeight", typeof(double))] // height of the SettingsEntryHeader
+[DependencyProperty("ActionContent", typeof(object))] // The content of the expander
+[DependencyProperty("ActionContentMargin", typeof(Thickness))] // the margin of the ActionContent
 public partial class ActionableExpanderSettingEntry : ContentControl
 {
     private const string PartEntryHeader = "EntryHeader";
     private const string PartEntryContentPresenter = "EntryContentPresenter";
-
 
     private ContentPresenter? _entryContentPresenter;
 

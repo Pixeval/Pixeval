@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2021 Pixeval/ActionableSettingEntry.cs
+// Copyright (c) 2022 Pixeval/SuggestionModelDataTemplateSelector.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,23 +18,26 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Microsoft.UI.Xaml.Markup;
-using Pixeval.Attributes;
-using Expander = Pixeval.Controls.Expander.Expander;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
+namespace Pixeval.Pages;
 
-namespace Pixeval.Controls.Setting.UI.ActionableSettingEntry;
-
-/// <summary>
-/// <see cref="ActionableSettingEntry"/> is a setting entry that supports custom content, similar to the <see cref="ActionableExpanderSettingEntry"/>,
-/// but without the <see cref="Expander"/>
-/// </summary>
-[ContentProperty(Name = "ActionContent")] // The content of the custom action
-[DependencyProperty("ActionContent", typeof(object))]
-public partial class ActionableSettingEntry : SettingEntryBase
+public class SuggestionModelDataTemplateSelector : DataTemplateSelector
 {
-    public ActionableSettingEntry()
+    public DataTemplate? IllustrationHeader { get; set; }
+
+    public DataTemplate? NovelHeader { get; set; }
+
+    public DataTemplate? CommonSuggestion { get; set; }
+
+    protected override DataTemplate SelectTemplateCore(object item)
     {
-        DefaultStyleKey = typeof(ActionableSettingEntry);
+        return (SuggestionModel) item switch
+        {
+            { SuggestionType: SuggestionType.IllustrationTrendingTagHeader } => IllustrationHeader!,
+            { SuggestionType: SuggestionType.NovelTrendingTagHeader } => NovelHeader!,
+            _ => CommonSuggestion!
+        };
     }
 }

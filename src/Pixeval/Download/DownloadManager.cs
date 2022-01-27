@@ -116,6 +116,9 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
         _taskQuerySet.Clear();
     }
 
+    /// <summary>
+    /// Tries to redownload a task only if its already queued and not running
+    /// </summary>
     public bool TryExecuteInline(TDownloadTask task)
     {
         // Execute the task only if it's already queued and is not running

@@ -190,6 +190,9 @@ public partial record AppSetting
     [DefaultValue(80)]
     public int ReverseSearchResultSimilarityThreshold { get; set; }
 
+    [DefaultValue(10)]
+    public int MaximumSuggestionBoxSearchHistory { get; set; }
+
     public static AppSetting CreateDefault()
     {
         return new AppSetting();

@@ -23,16 +23,11 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="ImageColumn"
-                                  Width="60" />
-                <ColumnDefinition x:Name="CaptionColumn"
-                                  Width="*" />
-                <ColumnDefinition x:Name="ProgressColumn"
-                                  Width="5*" />
-                <ColumnDefinition x:Name="ButtonColumn"
-                                  Width="130" />
-                <ColumnDefinition x:Name="OptionColumn"
-                                  Width="45" />
+                <ColumnDefinition x:Name="ImageColumn" Width="60" />
+                <ColumnDefinition x:Name="CaptionColumn" Width="*" />
+                <ColumnDefinition x:Name="ProgressColumn" Width="5*" />
+                <ColumnDefinition x:Name="ButtonColumn" Width="130" />
+                <ColumnDefinition x:Name="OptionColumn" Width="45" />
             </Grid.ColumnDefinitions>
             <Border x:Name="ThumbnailImageContainer"
                     Grid.Row="0"
@@ -48,8 +43,7 @@
                                   Height="35"
                                   HorizontalAlignment="Center"
                                   VerticalAlignment="Center" />
-                    <Image Source="{x:Bind Thumbnail, Mode=OneWay}"
-                           Stretch="UniformToFill" />
+                    <Image Source="{x:Bind Thumbnail, Mode=OneWay}" Stretch="UniformToFill" />
                 </Grid>
             </Border>
             <StackPanel x:Name="CaptionContainer"
@@ -60,12 +54,12 @@
                         VerticalAlignment="Center"
                         Spacing="1">
                 <TextBlock MaxWidth="250"
-                           FontSize="13"
+                           FontSize="{StaticResource PixevalBaseFontSize}"
                            Text="{x:Bind Title, Mode=OneWay}"
                            TextTrimming="CharacterEllipsis"
                            TextWrapping="NoWrap" />
                 <TextBlock MaxWidth="250"
-                           FontSize="{StaticResource PixevalSubscriptFontSize}"
+                           FontSize="{StaticResource PixevalCaptionFontSize}"
                            Foreground="{ThemeResource PixevalTipTextForeground}"
                            Text="{x:Bind Description, Mode=OneWay}"
                            TextTrimming="CharacterEllipsis"
@@ -79,8 +73,7 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
                         Spacing="5">
-                <ProgressBar HorizontalAlignment="Stretch"
-                             Value="{x:Bind Progress, Mode=OneWay}" />
+                <ProgressBar HorizontalAlignment="Stretch" Value="{x:Bind Progress, Mode=OneWay}" />
                 <TextBlock FontSize="{StaticResource PixevalSubscriptFontSize}"
                            Foreground="{ThemeResource PixevalTipTextForeground}"
                            Text="{x:Bind ProgressMessage, Mode=OneWay}"

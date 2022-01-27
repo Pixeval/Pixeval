@@ -132,15 +132,11 @@ public sealed partial class MainPage
         GC.Collect();
     }
 
-    private void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
+    private async void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
     {
         var suggestBox = (AutoSuggestBox) sender;
         suggestBox.IsSuggestionListOpen = true;
-
-        if (!_viewModel.Suggestions.Any())
-        {
-            _viewModel.AppendSearchHistory(); // Show search history
-        }
+        await _viewModel.SuggestionProvider.UpdateAsync(suggestBox.Text);
     }
 
     // 搜索并跳转至搜索结果
@@ -154,44 +150,44 @@ public sealed partial class MainPage
             return;
         }
 
-        PerformSearch(args.QueryText);
+        if (args.ChosenSuggestion is SuggestionModel({ } name, var translatedName, _))
+        {
+            PerformSearch(name, translatedName);
+        }
+        else
+        {
+            PerformSearch(args.QueryText);
+        }
     }
 
     private void KeywordAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
     {
-        sender.Text = (args.SelectedItem as SuggestionModel)?.Name;
-    }
+        if (args.SelectedItem is SuggestionModel { Name: { Length: > 0 } name })
+        {
+            sender.Text = name;
+        }
+    } 
 
     private async void KeywordAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
     {
-        var items = _viewModel.Suggestions;
-
-        if (sender.Text is { Length: > 0 } keyword)
-        {
-            var suggestions = (await App.AppViewModel.MakoClient.GetAutoCompletionForKeyword(keyword)).Select(SuggestionModel.FromTag);
-            // Incremental update
-            items.ReplaceByUpdate(suggestions);
-        }
-        else
-        {
-            // Clear the suggestions when there is nothing to search
-            items.Clear();
-
-            // Show search history
-            _viewModel.AppendSearchHistory();
-        }
+        await _viewModel.SuggestionProvider.UpdateAsync(sender.Text);
     }
 
-    private void PerformSearch(string text)
+    private void PerformSearch(string text, string? optTranslatedName = null)
     {
         using (var scope = App.AppViewModel.AppServicesScope)
         {
             var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
-            manager.Insert(new SearchHistoryEntry
+            // TODO distinguish search illustrations, manga, novels, and users.
+            if (manager.Select(count: 1).FirstOrDefault() is { Value: var last } && last != text)
             {
-                Value = text,
-                Time = DateTime.Now
-            });
+                manager.Insert(new SearchHistoryEntry
+                {
+                    Value = text,
+                    TranslatedName = optTranslatedName,
+                    Time = DateTime.Now
+                });
+            }
         }
 
         var setting = App.AppViewModel.AppSetting;

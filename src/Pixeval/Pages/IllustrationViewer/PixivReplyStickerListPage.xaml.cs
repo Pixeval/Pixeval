@@ -69,10 +69,7 @@ public sealed partial class PixivReplyStickerListPage
                 .Select(async id => (id, await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(MakoHelper.GenerateStickerDownloadUrl(id)))));
             var tasks = results.Where(r => r.Item2 is Result<IRandomAccessStream>.Success)
                 .Select(r => (r.id, (Result<IRandomAccessStream>.Success) r.Item2))
-                .Select(async r => new PixivReplyStickerViewModel(r.id, r.Item2.Value)
-                {
-                    ImageSource = await r.Item2.Value.GetBitmapImageAsync(false)
-                });
+                .Select(async r => new PixivReplyStickerViewModel(r.id, await r.Item2.Value.GetBitmapImageAsync(true, 83)));
             Stickers.AddRange(await Task.WhenAll(tasks));
         }
     }

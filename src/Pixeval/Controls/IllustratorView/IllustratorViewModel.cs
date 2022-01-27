@@ -81,7 +81,7 @@ public partial class IllustratorViewModel : ObservableObject, IIllustrationVisua
     public async Task LoadAvatar()
     {
         if (AvatarSource != null) return;
-        AvatarSource = (await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(AvatarUrl)
+        AvatarSource = (await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(AvatarUrl, 60)
             .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync())!)!;
     }
 

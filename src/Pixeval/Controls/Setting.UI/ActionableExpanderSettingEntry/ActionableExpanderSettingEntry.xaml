@@ -13,11 +13,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ActionableExpanderSettingEntry">
-                    <expander:Expander CornerRadius="{TemplateBinding CornerRadius}"
-                                       HeaderHeight="{TemplateBinding HeaderHeight}">
+                    <expander:Expander CornerRadius="{TemplateBinding CornerRadius}" HeaderHeight="{TemplateBinding HeaderHeight}">
                         <expander:Expander.Header>
-                            <Grid HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Center">
+                            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
@@ -36,7 +34,7 @@
                                                                  Icon="{TemplateBinding Icon}" />
                                 <ContentPresenter x:Name="ActionContentPresenter"
                                                   Grid.Column="1"
-                                                  Margin="{TemplateBinding ContentMargin}"
+                                                  Margin="{TemplateBinding ActionContentMargin}"
                                                   HorizontalAlignment="Right"
                                                   VerticalAlignment="Center"
                                                   Content="{TemplateBinding ActionContent}" />

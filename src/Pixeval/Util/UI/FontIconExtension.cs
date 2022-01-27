@@ -40,7 +40,7 @@ public class FontIconExtension : TextIconExtension
         var fontIcon = new FontIcon
         {
             Glyph = Glyph.GetMetadataOnEnumMember(),
-            FontFamily = FontFamily ?? SegoeMDL2AssetsFontFamily,
+            FontFamily = FontFamily ?? new FontFamily("Segoe Fluent Icons"),
             FontWeight = FontWeight,
             FontStyle = FontStyle,
             IsTextScaleFactorEnabled = IsTextScaleFactorEnabled,

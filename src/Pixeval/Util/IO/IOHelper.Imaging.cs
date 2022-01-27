@@ -133,9 +133,16 @@ public static partial class IOHelper
         await encoder.FlushAsync();
     }
 
-    public static async Task<BitmapImage> GetBitmapImageAsync(this IRandomAccessStream imageStream, bool disposeOfImageStream)
+    public static async Task<BitmapImage> GetBitmapImageAsync(this IRandomAccessStream imageStream, bool disposeOfImageStream, int? desiredWidth = 0)
     {
-        var bitmapImage = new BitmapImage();
+        var bitmapImage = new BitmapImage
+        {
+            DecodePixelType = DecodePixelType.Logical
+        };
+        if (desiredWidth is { } width)
+        {
+            bitmapImage.DecodePixelWidth = width;
+        }
         await bitmapImage.SetSourceAsync(imageStream);
         if (disposeOfImageStream)
         {

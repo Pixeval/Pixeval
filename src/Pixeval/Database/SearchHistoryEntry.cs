@@ -33,5 +33,7 @@ public class SearchHistoryEntry
     /// </summary>
     public string? Value { get; set; }
 
+    public string? TranslatedName { get; set; }
+
     public DateTime Time { get; set; }
 }

@@ -72,8 +72,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
                 return new IllustrationDownloadTask(downloadHistoryEntry, context);
             })
         };
-
-        // TODO Check for unique
+        
         manager.Insert(task.DatabaseEntry);
         return task;
     }

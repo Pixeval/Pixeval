@@ -281,6 +281,12 @@
   <data name="MaximumSearchPageLimitNumberBox.PlaceholderText" xml:space="preserve">
     <value>搜索页数限制[1,100]</value>
   </data>
+  <data name="MaximumSuggestionBoxSearchHistoryEntry.Description" xml:space="preserve">
+    <value>如果保存的搜索历史条目数多于该选项指定的数量，则在主页的搜索框中只会显示该项指定数量的条目(按照日期倒序排序)</value>
+  </data>
+  <data name="MaximumSuggestionBoxSearchHistoryEntry.Header" xml:space="preserve">
+    <value>搜索框搜索历史数量限制</value>
+  </data>
   <data name="MiscSettingsGroup.Header" xml:space="preserve">
     <value>杂项</value>
   </data>

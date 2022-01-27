@@ -79,7 +79,7 @@ public class CommentBlockViewModel
 
     public async Task<ImageSource> GetAvatarSource()
     {
-        return (await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(Comment.CommentPoster!.ProfileImageUrls!.Medium!)
+        return (await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(Comment.CommentPoster!.ProfileImageUrls!.Medium!, 35)
             .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync()))!;
     }
 
@@ -102,7 +102,7 @@ public class CommentBlockViewModel
                         Child = new Image
                         {
                             VerticalAlignment = VerticalAlignment.Bottom,
-                            Source = await emojiSource.GetBitmapImageAsync(true),
+                            Source = await emojiSource.GetBitmapImageAsync(true, 14),
                             Width = 14,
                             Height = 14
                         }

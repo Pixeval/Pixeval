@@ -290,6 +290,13 @@ public class SettingsPageViewModel : ObservableObject
         set => SetProperty(_appSetting.ReverseSearchResultSimilarityThreshold, value, _appSetting, (settings, value) => settings.ReverseSearchResultSimilarityThreshold = value);
     }
 
+    [DefaultValue(10)]
+    public int MaximumSuggestionBoxSearchHistory
+    {
+        get => _appSetting.MaximumSuggestionBoxSearchHistory;
+        set => SetProperty(_appSetting.MaximumSuggestionBoxSearchHistory, value, _appSetting, (settings, value) => settings.MaximumSuggestionBoxSearchHistory = value);
+    }
+
     public DateTimeOffset GetMinSearchEndDate(DateTimeOffset startDate)
     {
         return startDate.AddDays(1);

@@ -34,9 +34,9 @@ public static partial class IOHelper
             .BindAsync(async m => (ImageSource) await m.GetSoftwareBitmapSourceAsync(true));
     }
 
-    public static async Task<Result<ImageSource>> DownloadBitmapImageResultAsync(this MakoClient client, string url)
+    public static async Task<Result<ImageSource>> DownloadBitmapImageResultAsync(this MakoClient client, string url, int? desiredWidth)
     {
         return await (await client.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url))
-            .BindAsync(async m => (ImageSource) await m.GetBitmapImageAsync(true));
+            .BindAsync(async m => (ImageSource) await m.GetBitmapImageAsync(true, desiredWidth));
     }
 }

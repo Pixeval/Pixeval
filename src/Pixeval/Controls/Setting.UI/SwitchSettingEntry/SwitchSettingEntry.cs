@@ -27,6 +27,10 @@ using Pixeval.Controls.Setting.UI.UserControls;
 
 namespace Pixeval.Controls.Setting.UI.SwitchSettingEntry;
 
+/// <summary>
+/// The <see cref="SwitchSettingEntry"/> is a preset setting entry with a <see cref="ToggleSwitch"/> as its content, user can control over
+/// it by <see cref="IsOn"/> property, two-way binding is supported
+/// </summary>
 [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
 [TemplatePart(Name = PartSwitch, Type = typeof(ToggleSwitch))]
 [DependencyProperty("IsOn", typeof(bool), nameof(OnIsOnChanged))]

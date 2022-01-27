@@ -221,7 +221,6 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
                     OriginalImageStream = s;
                     break;
                 case Result<IRandomAccessStream>.Failure(OperationCanceledException):
-                    // TODO add load failed image
                     return;
             }
 
@@ -276,6 +275,8 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         {
             (OriginalImageSource as SoftwareBitmapSource)?.Dispose();
         }
+
+        OriginalImageSource = null;
         LoadingOriginalSourceTask?.Dispose();
     }
 

@@ -26,6 +26,10 @@ using Pixeval.Controls.Setting.UI.UserControls;
 
 namespace Pixeval.Controls.Setting.UI;
 
+/// <summary>
+/// The <see cref="SettingEntryBase"/> provides the required property and methods for a series of setting entry kinds, note that
+/// the setting entry control is not required to derive from this class, derive only if you can reuse the content of this class
+/// </summary>
 [DependencyProperty("Icon", typeof(IconElement), nameof(OnIconChanged))]
 [DependencyProperty("Header", typeof(string))]
 [DependencyProperty("Description", typeof(object), nameof(OnDescriptionChanged))]

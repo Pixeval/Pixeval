@@ -54,9 +54,12 @@ public class EnhancedPage : Page
         if (ClearCacheAfterNavigation)
         {
             NavigationCacheMode = NavigationCacheMode.Disabled;
-            var cacheSize = ((Frame) Parent).CacheSize;
-            ((Frame) Parent).CacheSize = 0;
-            ((Frame) Parent).CacheSize = cacheSize;
+            if (Parent is Frame frame)
+            {
+                var cacheSize = frame.CacheSize;
+                frame.CacheSize = 0;
+                frame.CacheSize = cacheSize;
+            }
         }
     }
 

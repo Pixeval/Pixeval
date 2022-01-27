@@ -175,12 +175,18 @@ public partial class MakoClient
         var dic = new Dictionary<CountedTag, PrivacyPolicy>();
         if (tags?.ResponseBody?.Public is { } publicTags)
         {
-            publicTags.ForEach(tag => dic[new CountedTag(new Tag { Name = tag.Name }, tag.Count)] = PrivacyPolicy.Public);
+            foreach (var tag in publicTags.Where(t => t.Name is not null))
+            {
+                dic[new CountedTag(new Tag(tag.Name!, null), tag.Count)] = PrivacyPolicy.Public;
+            }
         }
 
         if (tags?.ResponseBody?.Private is { } privateTags)
         {
-            privateTags.ForEach(tag => dic[new CountedTag(new Tag { Name = tag.Name }, tag.Count)] = PrivacyPolicy.Private);
+            foreach (var tag in privateTags.Where(t => t.Name is not null))
+            {
+                dic[new CountedTag(new Tag(tag.Name!, null), tag.Count)] = PrivacyPolicy.Private;
+            }
         }
 
         return dic;

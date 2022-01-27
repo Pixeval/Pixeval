@@ -192,4 +192,10 @@
   <data name="ReverseSearchServerSideErrorContent" xml:space="preserve">
     <value>服务器端发生错误</value>
   </data>
+  <data name="IllustrationHeaderSuggestionTextBlock.Text" xml:space="preserve">
+    <value>插画趋势</value>
+  </data>
+  <data name="NovelHeaderSuggestionTextBlock.Text" xml:space="preserve">
+    <value>小说趋势</value>
+  </data>
 </root>

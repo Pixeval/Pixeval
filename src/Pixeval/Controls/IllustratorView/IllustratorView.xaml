@@ -2,43 +2,39 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:card="using:Pixeval.Controls.Card"
                     xmlns:local="using:Pixeval.Controls.IllustratorView"
-                    xmlns:userControls="using:Pixeval.UserControls" 
-                    xmlns:ui="using:Pixeval.Util.UI" 
-                    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
-                    xmlns:iconButton="using:Pixeval.Controls.IconButton">
+                    xmlns:ui="using:Pixeval.Util.UI">
     <Style TargetType="local:IllustratorView">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:IllustratorView">
                     <card:CardControl x:Name="ContentContainer"
-                                      HorizontalAlignment="Stretch"
-                                      Height="80">
+                                      Height="80"
+                                      HorizontalAlignment="Stretch">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="20" />
                             </Grid.ColumnDefinitions>
                             <Grid Grid.Column="0">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="80"/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="80" />
+                                    <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <PersonPicture Grid.Column="0"
+                                <PersonPicture x:Name="Avatar"
+                                               Grid.Column="0"
                                                Width="60"
                                                Height="60"
-                                               Margin="10, 0, 0, 0"
+                                               Margin="10,0,0,0"
                                                HorizontalAlignment="Left"
                                                VerticalAlignment="Center"
                                                PreferSmallImage="True"
-                                               x:Name="Avatar"
                                                ProfilePicture="{TemplateBinding IllustratorPicture}" />
                                 <StackPanel Grid.Column="1"
                                             Margin="5,0,0,0"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center">
-                                    <TextBlock FontSize="{StaticResource PixevalContentFontSize}"
-                                               Text="{TemplateBinding IllustratorName}" />
+                                    <TextBlock FontSize="{StaticResource PixevalContentFontSize}" Text="{TemplateBinding IllustratorName}" />
                                     <TextBlock Margin="0,6,0,0"
                                                Foreground="{ThemeResource PixevalTipTextForeground}"
                                                Style="{StaticResource CaptionTextBlockStyle}"
@@ -46,17 +42,23 @@
                                 </StackPanel>
                             </Grid>
 
-                            <ItemsRepeater Grid.Column="1"
-                                           x:Name="ThumbnailListView"
+                            <ItemsRepeater x:Name="ThumbnailListView"
+                                           Grid.Column="1"
                                            HorizontalAlignment="Right"
                                            VerticalAlignment="Center"
-                                           ItemsSource="{TemplateBinding ThumbnailSources}"
-                                           ItemTemplate="{TemplateBinding ThumbnailItemTemplate}">
+                                           ItemTemplate="{TemplateBinding ThumbnailItemTemplate}"
+                                           ItemsSource="{TemplateBinding ThumbnailSources}">
                                 <ItemsRepeater.Layout>
-                                    <UniformGridLayout MinColumnSpacing="5" ItemsJustification="End" ItemsStretch="Uniform"  Orientation="Horizontal"></UniformGridLayout>
+                                    <UniformGridLayout ItemsJustification="End"
+                                                       ItemsStretch="Uniform"
+                                                       MinColumnSpacing="5"
+                                                       Orientation="Horizontal" />
                                 </ItemsRepeater.Layout>
                             </ItemsRepeater>
-                            <AppBarButton Grid.Column="2" Icon="{ui:FontIcon Glyph=ForwardE72A}" Width="20" VerticalAlignment="Stretch"/>
+                            <AppBarButton Grid.Column="2"
+                                          Width="20"
+                                          VerticalAlignment="Stretch"
+                                          Icon="{ui:FontIcon Glyph=ForwardE72A}" />
                         </Grid>
                     </card:CardControl>
                 </ControlTemplate>

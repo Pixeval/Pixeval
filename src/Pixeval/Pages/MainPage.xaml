@@ -9,6 +9,55 @@
                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                        NavigationCacheMode="Required"
                        mc:Ignorable="d">
+    <controls:EnhancedPage.Resources>
+        <DataTemplate x:Name="IllustrationHeaderSuggestionTemplate">
+            <TextBlock x:Uid="/MainPage/IllustrationHeaderSuggestionTextBlock"
+                       FontSize="{StaticResource PixevalContentFontSize}"
+                       FontWeight="Bold" />
+        </DataTemplate>
+
+        <DataTemplate x:Name="NovelHeaderSuggestionTemplate">
+            <TextBlock x:Uid="/MainPage/NovelHeaderSuggestionTextBlock"
+                       FontSize="{StaticResource PixevalContentFontSize}"
+                       FontWeight="Bold" />
+        </DataTemplate>
+
+        <DataTemplate x:Name="CommonSuggestionModelTemplate" x:DataType="pages:SuggestionModel">
+            <Grid Height="50">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="22" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <ContentPresenter x:Name="IconContentPresenter"
+                                  Grid.Column="0"
+                                  Width="13"
+                                  HorizontalAlignment="Left"
+                                  VerticalAlignment="Center"
+                                  Content="{x:Bind Icon}" />
+                <StackPanel Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Spacing="1">
+                    <TextBlock MaxHeight="35"
+                               FontSize="{StaticResource PixevalBaseFontSize}"
+                               Text="{x:Bind Name}"
+                               TextTrimming="CharacterEllipsis"
+                               TextWrapping="WrapWholeWords" />
+                    <TextBlock MaxHeight="15"
+                               FontSize="{StaticResource PixevalCaptionFontSize}"
+                               Foreground="{ThemeResource PixevalTipTextForeground}"
+                               Text="{x:Bind TranslatedName}"
+                               TextTrimming="CharacterEllipsis"
+                               TextWrapping="WrapWholeWords"
+                               Visibility="{x:Bind TranslatedNameVisibility}" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <pages:SuggestionModelDataTemplateSelector x:Name="SuggestionModelDataTemplateSelector"
+                                                   CommonSuggestion="{StaticResource CommonSuggestionModelTemplate}"
+                                                   IllustrationHeader="{StaticResource IllustrationHeaderSuggestionTemplate}"
+                                                   NovelHeader="{StaticResource NovelHeaderSuggestionTemplate}" />
+    </controls:EnhancedPage.Resources>
     <NavigationView x:Name="MainPageRootNavigationView"
                     d:DataContext="{d:DesignInstance pages:MainPageViewModel}"
                     IsBackButtonVisible="Collapsed"
@@ -28,7 +77,8 @@
                                 VerticalAlignment="Center"
                                 AllowDrop="True"
                                 GotFocus="KeywordAutoSuggestBox_GotFocus"
-                                ItemsSource="{x:Bind _viewModel.Suggestions, Mode=OneWay}"
+                                ItemTemplateSelector="{StaticResource SuggestionModelDataTemplateSelector}"
+                                ItemsSource="{x:Bind _viewModel.SuggestionProvider.Suggestions, Mode=OneWay}"
                                 KeyDown="MainPageAutoSuggestionBox_OnKeyDown"
                                 QueryIcon="Find"
                                 QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
@@ -39,36 +89,6 @@
                             <AddDeleteThemeTransition />
                         </TransitionCollection>
                     </AutoSuggestBox.ItemContainerTransitions>
-                    <AutoSuggestBox.ItemTemplate>
-                        <DataTemplate x:DataType="pages:SuggestionModel">
-                            <Grid Height="50">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="22" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <ContentPresenter x:Name="IconContentPresenter"
-                                                  Grid.Column="0"
-                                                  Width="13"
-                                                  HorizontalAlignment="Left"
-                                                  VerticalAlignment="Center"
-                                                  Content="{x:Bind Icon}" />
-                                <StackPanel Grid.Column="1"
-                                            VerticalAlignment="Center"
-                                            Spacing="1">
-                                    <TextBlock FontSize="{StaticResource PixevalContentFontSize}"
-                                               Text="{x:Bind Name}"
-                                               TextTrimming="CharacterEllipsis"
-                                               TextWrapping="WrapWholeWords" />
-                                    <TextBlock FontSize="{StaticResource PixevalSubscriptFontSize}"
-                                               Foreground="{ThemeResource PixevalTipTextForeground}"
-                                               Text="{x:Bind TranslatedName}"
-                                               TextTrimming="CharacterEllipsis"
-                                               TextWrapping="WrapWholeWords"
-                                               Visibility="{x:Bind TranslatedNameVisibility}" />
-                                </StackPanel>
-                            </Grid>
-                        </DataTemplate>
-                    </AutoSuggestBox.ItemTemplate>
                 </AutoSuggestBox>
                 <Button x:Uid="/MainPage/OpenSearchSettingPopupButton"
                         Grid.Column="1"

@@ -20,15 +20,4 @@
 
 namespace Pixeval.CoreApi.Model;
 
-public record CountedTag
-{
-    public CountedTag(Tag tag, long count)
-    {
-        Tag = tag;
-        Count = count;
-    }
-
-    public Tag Tag { get; }
-
-    public long Count { get; }
-}
+public record CountedTag(Tag Tag, long Count);

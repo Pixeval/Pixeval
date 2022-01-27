@@ -22,14 +22,18 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Markup;
 using Pixeval.Attributes;
 using Pixeval.Controls.Setting.UI.UserControls;
+using Expander = Pixeval.Controls.Expander.Expander;
 
 
 namespace Pixeval.Controls.Setting.UI.ExpanderSettingEntry;
 
+/// <summary>
+/// <see cref="ExpanderSettingEntry"/> is a setting entry with an <see cref="Expander"/>
+/// </summary>
 [ContentProperty(Name = "Content")]
 [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
 [DependencyProperty("HeaderHeight", typeof(double))]
-[DependencyProperty("Content", typeof(object))]
+[DependencyProperty("Content", typeof(object))] // The content of the Expander
 [DependencyProperty("ContentMargin", typeof(Thickness))]
 public partial class ExpanderSettingEntry : SettingEntryBase
 {

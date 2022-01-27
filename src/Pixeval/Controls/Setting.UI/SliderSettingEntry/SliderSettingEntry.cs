@@ -27,6 +27,11 @@ using Pixeval.Controls.Setting.UI.UserControls;
 
 namespace Pixeval.Controls.Setting.UI.SliderSettingEntry;
 
+/// <summary>
+/// The <see cref="SliderSettingEntry"/> is a preset setting entry with a <see cref="Slider"/> as its content, user can specify the range of
+/// value by setting <see cref="Maximum"/> and <see cref="Minimum"/> properties, the direct manipulation of the value of the slider
+/// is through <see cref="Value"/> property, two-way binding is supported
+/// </summary>
 [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
 [TemplatePart(Name = PartValueSlider, Type = typeof(Slider))]
 [DependencyProperty("Maximum", typeof(double))]

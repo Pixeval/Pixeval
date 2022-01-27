@@ -228,6 +228,7 @@ public sealed partial class IllustrationGridCommandBar
 
     private void ConditionPopupClosing(IAppPopupContent popup, object? arg)
     {
+        // 
         OpenConditionDialogButton.IsChecked = false;
         if (arg is FilterSettings(
                 var includeTags,

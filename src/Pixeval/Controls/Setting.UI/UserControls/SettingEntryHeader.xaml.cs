@@ -27,6 +27,11 @@ using Pixeval.Attributes;
 
 namespace Pixeval.Controls.Setting.UI.UserControls;
 
+/// <summary>
+/// The <see cref="SettingEntryHeader"/> provide use information about a setting entry, includes <see cref="Header"/>, which
+/// is the name of the entry, and <see cref="Description"/>, which is a brief introduction of the entry, apart from these, it
+/// also includes an <see cref="Icon"/> to give user a hint that can be immediately understand
+/// </summary>
 [DependencyProperty("Header", typeof(string), nameof(OnHeaderChanged))]
 [DependencyProperty("Description", typeof(object), nameof(OnDescriptionChanged))]
 [DependencyProperty("Icon", typeof(IconElement), nameof(OnIconChanged))]

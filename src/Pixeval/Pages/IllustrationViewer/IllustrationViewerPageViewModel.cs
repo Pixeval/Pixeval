@@ -479,7 +479,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         {
             new KeyboardAccelerator
             {
-                Modifiers = VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, // todo
+                Modifiers = VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift,
                 Key = VirtualKey.S
             }
         },

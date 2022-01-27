@@ -24,7 +24,6 @@ using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.AppManagement;
 using Pixeval.Controls.Setting.UI;
 using Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry;
 using Pixeval.Download.MacroParser;

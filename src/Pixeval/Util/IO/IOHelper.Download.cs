@@ -56,14 +56,13 @@ public static partial class IOHelper
         MaximumSmallBufferPoolSizeInBytes,
         MaximumLargeBufferPoolSizeInBytes);
 
-    // Remarks:
     // To avoid collecting stack trace, which is quite a time-consuming task
     // and this exception is intended to be used at a massive magnitude
     private static readonly OperationCanceledException CancellationMark = new();
 
     /// <summary>
-    ///     Attempts to download the content that are located by the <paramref name="url" /> argument
-    ///     to a <see cref="Memory{T}" /> asynchronously
+    /// Attempts to download the content that are located by the <paramref name="url" /> argument
+    /// to a <see cref="Memory{T}" /> asynchronously
     /// </summary>
     public static Task<Result<Memory<byte>>> DownloadByteArrayAsync(this HttpClient httpClient, string url)
     {
@@ -71,17 +70,17 @@ public static partial class IOHelper
     }
 
     /// <summary>
-    ///     <para>
-    ///         Attempts to download the content that are located by the <paramref name="url" /> to a
-    ///         <see cref="IRandomAccessStream" /> with
-    ///         progress support
-    ///     </para>
-    ///     <remarks>
-    ///         A <see cref="CancellationHandle" /> is used instead of <see cref="CancellationToken" />, since this function
-    ///         will be called in
-    ///         such a frequent manner that the default behavior of <see cref="CancellationToken" /> will brings a huge impact
-    ///         on performance
-    ///     </remarks>
+    /// <para>
+    /// Attempts to download the content that are located by the <paramref name="url" /> to a
+    /// <see cref="IRandomAccessStream" /> with
+    /// progress support
+    /// </para>
+    /// <remarks>
+    /// A <see cref="CancellationHandle" /> is used instead of <see cref="CancellationToken" />, since this function
+    /// will be called in
+    /// such a frequent manner that the default behavior of <see cref="CancellationToken" /> will brings a huge impact
+    /// on performance
+    /// </remarks>
     /// </summary>
     public static async Task<Result<IRandomAccessStream>> DownloadAsIRandomAccessStreamAsync(
         this HttpClient httpClient,
@@ -113,7 +112,6 @@ public static partial class IOHelper
                 }
 
                 await using var contentStream = await response.Content.ReadAsStreamAsync();
-                // Remarks:
                 // Most cancellation happens when users are panning the ScrollViewer, where the
                 // cancellation occurs while the `await response.Content.ReadAsStreamAsync()` is 
                 // running, so we check the state right after the completion of that statement
@@ -136,7 +134,6 @@ public static partial class IOHelper
 
                     await resultStream.WriteAsync(buffer, 0, bytesRead);
                     totalRead += bytesRead;
-                    // Remarks:
                     // reduce the frequency of the invocation of the callback, otherwise it will draws a severe performance impact
                     if ((int) (totalRead / (double) responseLength * 100) is var percentage && percentage - lastReportedProgressPercentage >= 1)
                     {

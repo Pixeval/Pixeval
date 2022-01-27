@@ -32,11 +32,15 @@ using Pixeval.Controls.Setting.UI.UserControls;
 
 namespace Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry;
 
+/// <summary>
+/// The <see cref="SingleSelectionSettingEntry"/> is a preset setting entry with an expander that contains a list of mutually
+/// exclusive selections, user can select one of the items
+/// </summary>
 [TemplatePart(Name = PartSelectorRadioButtons, Type = typeof(RadioButtons))]
 [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
-[DependencyProperty("HeaderHeight", typeof(double))]
-[DependencyProperty("ItemsSource", typeof(IEnumerable<IStringRepresentableItem>))]
-[DependencyProperty("SelectedItem", typeof(object), nameof(OnSelectedItemChanged))]
+[DependencyProperty("HeaderHeight", typeof(double))] // The height of SettingsEntryHeader
+[DependencyProperty("ItemsSource", typeof(IEnumerable<IStringRepresentableItem>))] // The list of selectable items
+[DependencyProperty("SelectedItem", typeof(object), nameof(OnSelectedItemChanged))] // The selected item, two-way binding is supported
 public sealed partial class SingleSelectionSettingEntry : SettingEntryBase
 {
     private const string PartSelectorRadioButtons = "SelectorRadioButtons";

@@ -67,7 +67,8 @@ public sealed partial class PixivReplyEmojiListPage
                 .Select(async emoji => (emoji, await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(emoji.GetReplyEmojiDownloadUrl()))));
             var tasks = results.Where(r => r.Item2 is Result<IRandomAccessStream>.Success).Select(async r => new PixivReplyEmojiViewModel(r.emoji, ((Result<IRandomAccessStream>.Success) r.Item2).Value)
             {
-                ImageSource = await ((Result<IRandomAccessStream>.Success) r.Item2).Value.GetBitmapImageAsync(false)
+                // We don't dispose of the image here because it will be used when inserting emoji to the rich edit box.
+                ImageSource = await ((Result<IRandomAccessStream>.Success) r.Item2).Value.GetBitmapImageAsync(false, 35)
             });
             EmojiList.AddRange(await Task.WhenAll(tasks));
         }

@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 
 namespace Pixeval.Utilities;
@@ -209,6 +210,16 @@ public static class Enumerates
         {
             collection.Add(item);
         }
+    }
+
+    public static Task<IEnumerable<TResult>> WhereAsync<TResult>(this Task<IEnumerable<TResult>> enumerable, Func<TResult, bool> selector)
+    {
+        return enumerable.ContinueWith(t => t.Result.Where(selector));
+    }
+
+    public static Task<IEnumerable<TResult>> SelectAsync<T, TResult>(this Task<IEnumerable<T>> enumerable, Func<T, TResult> selector)
+    {
+        return enumerable.ContinueWith(t => t.Result.Select(selector));
     }
 }
 

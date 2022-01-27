@@ -32,18 +32,18 @@
                         Grid.Column="2"
                         Height="35">
                 <TextBlock x:Name="PosterTextBlock"
-                           FontSize="12"
+                           FontSize="{StaticResource PixevalBaseFontSize}"
                            Text="{x:Bind ViewModel.Poster, Mode=OneWay}" />
                 <!--  TipTextColor  -->
                 <TextBlock x:Name="PostDateTextBlock"
                            Margin="0,5,0,0"
-                           FontSize="10"
+                           FontSize="{StaticResource PixevalCaptionFontSize}"
                            Foreground="{ThemeResource PixevalTipTextForeground}" />
             </StackPanel>
             <RichTextBlock x:Name="CommentContent"
                            Grid.Row="2"
                            Grid.Column="2"
-                           FontSize="12"
+                           FontSize="{StaticResource PixevalBaseFontSize}"
                            LineHeight="14.4"
                            TextWrapping="Wrap" />
             <Image x:Name="StickerImageContent"
@@ -59,13 +59,13 @@
                         Orientation="Horizontal">
                 <HyperlinkButton x:Name="OpenRepliesHyperlinkButton"
                                  Padding="0"
-                                 FontSize="10"
+                                 FontSize="{StaticResource PixevalCaptionFontSize}"
                                  Tapped="OpenRepliesHyperlinkButton_OnTapped" />
                 <HyperlinkButton x:Name="DeleteReplyHyperlinkButton"
                                  x:Uid="/CommentBlock/DeleteReplyHyperlinkButton"
                                  Margin="10,0,0,0"
                                  Padding="0"
-                                 FontSize="10"
+                                 FontSize="{StaticResource PixevalCaptionFontSize}"
                                  Tapped="DeleteReplyHyperlinkButton_OnTapped" />
             </StackPanel>
         </Grid>

@@ -24,6 +24,10 @@ using Pixeval.Attributes;
 
 namespace Pixeval.Controls.Setting.UI.SettingsGroup;
 
+/// <summary>
+/// The <see cref="SettingsGroup"/> manages a set of setting entries, with a <see cref="Header"/> property to specify the
+/// usage of the content of this group
+/// </summary>
 [DependencyProperty("Header", typeof(string))]
 public partial class SettingsGroup : ItemsControl
 {

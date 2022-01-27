@@ -19,18 +19,15 @@
 #endregion
 
 using System;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net;
-using Pixeval.Database.Managers;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Pages.Capability;
@@ -39,7 +36,6 @@ using Pixeval.Pages.Misc;
 using Pixeval.UserControls;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
-using Pixeval.Utilities;
 
 namespace Pixeval.Pages;
 
@@ -66,11 +62,12 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
 
     public double MainPageRootNavigationViewOpenPanelLength => 280;
 
-    public ObservableCollection<SuggestionModel> Suggestions { get; } = new();
+    public SuggestionStateMachine SuggestionProvider { get; } = new();
 
     public void Receive(LoginCompletedMessage message)
     {
-        DownloadAndSetAvatar();
+        // TODO
+        // DownloadAndSetAvatar();
     }
 
     /// <summary>
@@ -84,15 +81,6 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
         Avatar = await (await makoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(makoClient.Session.AvatarUrl!))
             .GetOrThrow()
             .GetBitmapImageAsync(true);
-    }
-
-    public void AppendSearchHistory()
-    {
-        using var scope = App.AppViewModel.AppServicesScope;
-        var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
-        var histories = manager.Enumerate().OrderByDescending(e => e.Time).SelectNotNull(SuggestionModel.FromHistory);
-
-        Suggestions.ReplaceByUpdate(histories);
     }
 
     public async Task ReverseSearchAsync(Stream stream)

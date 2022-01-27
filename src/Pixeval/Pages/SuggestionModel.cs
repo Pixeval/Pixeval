@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.CoreApi.Model;
@@ -27,8 +26,12 @@ using Pixeval.Util.UI;
 
 namespace Pixeval.Pages;
 
-public class SuggestionModel : IEquatable<SuggestionModel?>
+public record SuggestionModel(string? Name, string? TranslatedName, SuggestionType SuggestionType)
 {
+    public static readonly SuggestionModel IllustrationTrendingTagHeader = new(null, null, SuggestionType.IllustrationTrendingTagHeader);
+
+    public static readonly SuggestionModel NovelTrendingTagHeader = new(null, null, SuggestionType.NovelTrendingTagHeader);
+
     public FontIcon? Icon => SuggestionType switch
     {
         SuggestionType.Tag => FontIconSymbols.TagE8EC.GetFontIcon(12),
@@ -39,46 +42,14 @@ public class SuggestionModel : IEquatable<SuggestionModel?>
 
     public Visibility TranslatedNameVisibility => TranslatedName == null ? Visibility.Collapsed : Visibility.Visible;
 
-    public SuggestionType SuggestionType { get; init; }
-
-    public string? Name { get; init; }
-
-    public string? TranslatedName { get; init; }
-
-    public bool Equals(SuggestionModel? other)
-    {
-        return other != null &&
-               SuggestionType == other.SuggestionType &&
-               Name == other.Name;
-    }
-
     public static SuggestionModel FromTag(Tag tag)
     {
-        return new SuggestionModel
-        {
-            Name = tag.Name,
-            TranslatedName = tag.TranslatedName,
-            SuggestionType = SuggestionType.Tag
-        };
+        return new SuggestionModel(tag.Name, tag.TranslatedName, SuggestionType.Tag);
     }
 
     public static SuggestionModel FromHistory(SearchHistoryEntry history)
     {
-        return new SuggestionModel
-        {
-            Name = history.Value,
-            SuggestionType = SuggestionType.History
-        };
-    }
-
-    public override bool Equals(object? obj)
-    {
-        return Equals(obj as SuggestionModel);
-    }
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(SuggestionType, Name);
+        return new SuggestionModel(history.Value, null, SuggestionType.History);
     }
 }
 
@@ -86,5 +57,7 @@ public enum SuggestionType
 {
     Tag,
     Settings,
-    History
+    History,
+    IllustrationTrendingTagHeader,
+    NovelTrendingTagHeader
 }

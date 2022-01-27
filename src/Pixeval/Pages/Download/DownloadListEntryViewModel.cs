@@ -36,7 +36,7 @@ public partial class DownloadListEntryViewModel : ObservableObject, IDisposable
     private ObservableDownloadTask _downloadTask;
 
     [ObservableProperty]
-    private SoftwareBitmapSource? _thumbnail;
+    private BitmapImage? _thumbnail;
 
     public DownloadListEntryViewModel(ObservableDownloadTask downloadTask)
     {
@@ -46,7 +46,7 @@ public partial class DownloadListEntryViewModel : ObservableObject, IDisposable
 
     public void Dispose()
     {
-        _thumbnail?.Dispose();
+        _thumbnail = null;
     }
 
     public async void LoadThumbnail()
@@ -57,7 +57,7 @@ public partial class DownloadListEntryViewModel : ObservableObject, IDisposable
                 .GetOrElse(null);
             if (stream is not null)
             {
-                Thumbnail = await stream.GetSoftwareBitmapSourceAsync(true);
+                Thumbnail = await stream.GetBitmapImageAsync(true, 50);
             }
         }
     }
