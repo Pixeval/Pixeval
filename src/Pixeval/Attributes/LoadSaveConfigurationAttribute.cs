@@ -27,12 +27,12 @@ namespace Pixeval.Attributes;
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public class LoadSaveConfigurationAttribute : Attribute
 {
-    public LoadSaveConfigurationAttribute(Type targetType, string containerName)
+    public LoadSaveConfigurationAttribute(Type settingType, string containerName)
     {
-        TargetType = targetType;
+        SettingType = settingType;
         ContainerName = containerName;
     }
-    public Type TargetType { get; }
+    public Type SettingType { get; }
     public string ContainerName { get; }
     public string CastMethod { get; set; } = "null!";
 }

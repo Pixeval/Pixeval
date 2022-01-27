@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using Windows.ApplicationModel.Activation;
 
 namespace Pixeval.AppManagement;
 

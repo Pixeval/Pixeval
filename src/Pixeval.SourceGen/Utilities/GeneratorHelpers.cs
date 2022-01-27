@@ -18,10 +18,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Generic;
 
 namespace Pixeval.SourceGen.Utilities;
 
@@ -33,7 +33,13 @@ internal static class GeneratorHelpers
         return isNullable ? SyntaxFactory.NullableType(typeName) : typeName;
     }
 
-    public static void UseNamespace(this HashSet<string> namespaces, HashSet<ITypeSymbol> usedTypes, INamedTypeSymbol baseClass, ITypeSymbol symbol)
+    /// <summary>
+    /// 添加命名空间列表
+    /// </summary>
+    /// <param name="namespaces">已包含命名空间</param>
+    /// <param name="usedTypes">已记录过的类型</param>
+    /// <param name="symbol">判断是否为新类型</param>
+    public static void UseNamespace(this HashSet<string> namespaces, HashSet<ITypeSymbol> usedTypes, ITypeSymbol symbol)
     {
         if (usedTypes.Contains(symbol))
         {
@@ -42,18 +48,21 @@ internal static class GeneratorHelpers
 
         usedTypes.Add(symbol);
 
-        var ns = symbol.ContainingNamespace;
-        if (!SymbolEqualityComparer.Default.Equals(ns, baseClass.ContainingNamespace))
-        {
-            namespaces.Add(ns.ToDisplayString());
-        }
+        _ = namespaces.Add(symbol.ContainingNamespace.ToDisplayString());
 
         if (symbol is INamedTypeSymbol { IsGenericType: true } genericSymbol)
         {
             foreach (var a in genericSymbol.TypeArguments)
             {
-                UseNamespace(namespaces, usedTypes, baseClass, a);
+                UseNamespace(namespaces, usedTypes, a);
             }
         }
+    }
+    public static string Spacing(int n)
+    {
+        var temp = "";
+        for (var i = 0; i < n; i++)
+            temp += "    ";
+        return temp;
     }
 }
