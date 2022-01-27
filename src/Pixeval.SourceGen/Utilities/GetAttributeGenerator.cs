@@ -38,7 +38,7 @@ internal abstract class GetAttributeGenerator : ISourceGenerator
             return;
         }
 
-        foreach (var typeDeclaration in ((AttributeReceiver)context.SyntaxContextReceiver!).CandidateTypes)
+        foreach (var typeDeclaration in ((AttributeReceiver) context.SyntaxContextReceiver!).CandidateTypes)
         {
             var semanticModel = context.Compilation.GetSemanticModel(typeDeclaration.SyntaxTree);
 

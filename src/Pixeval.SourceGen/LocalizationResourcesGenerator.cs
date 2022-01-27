@@ -40,11 +40,10 @@ public class LocalizationResourcesGenerator : ISourceGenerator
 
     public void Execute(GeneratorExecutionContext context)
     {
-        if (context.AdditionalFiles.Where(
-                f => context.AnalyzerConfigOptions.GetOptions(f).TryGetValue(SourceItemGroupMetadata, out var sourceItemGroup)
-                     && sourceItemGroup == "PRIResource"
-                     && f.Path.EndsWith(".resw")).Distinct(new AdditionalTextEqualityComparer()).ToImmutableArray() is var resources
-            && resources.Any())
+        if (context.AdditionalFiles.Where(f => context.AnalyzerConfigOptions.GetOptions(f).TryGetValue(SourceItemGroupMetadata, out var sourceItemGroup)
+                                               && sourceItemGroup == "PRIResource"
+                                               && f.Path.EndsWith(".resw")).Distinct(new AdditionalTextEqualityComparer()).ToImmutableArray()
+                is var resources && resources.Any())
         {
             const char open = '{';
             const char close = '}';

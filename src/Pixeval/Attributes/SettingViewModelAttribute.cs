@@ -10,5 +10,6 @@ public class SettingViewModelAttribute : Attribute
         SettingName = settingName;
     }
     public Type SettingType { get; }
+
     public string SettingName { get; }
 }

@@ -55,7 +55,7 @@ internal class LoadSaveConfigurationGenerator : GetAttributeGenerator
                     switch (namedArgument.Key)
                     {
                         case "CastMethod":
-                            var temp = (string)value;
+                            var temp = (string) value;
                             var tempIndex = temp.LastIndexOf('.');
                             if (tempIndex is -1)
                                 throw new InvalidDataException("CastMethod must contain the full name.");
@@ -69,7 +69,7 @@ internal class LoadSaveConfigurationGenerator : GetAttributeGenerator
             var name = specificType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
             var namespaces = new HashSet<string> { specificType.ContainingNamespace.ToDisplayString() };
             if (staticClassName is not null)
-                namespaces.Add(staticClassName);//methodName方法所用namespace
+                namespaces.Add(staticClassName); //methodName方法所用namespace
             var usedTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
             const string nullable = "#nullable enable\n";
             var classBegin = @$"namespace {specificType.ContainingNamespace.ToDisplayString()};
@@ -83,23 +83,23 @@ partial class {name}
         {{
             return new {type.Name}(";
             var loadConfigurationContent = "\n";
-            const string loadConfigurationEnd = $@"           );
-        }}
+            const string loadConfigurationEnd = @"           );
+        }
         catch
-        {{
+        {
             return null;
-        }}
-    }}";
+        }
+    }";
             var saveConfigurationBegin = $@"
     public static void SaveConfiguration({type.Name}? configuration)
     {{
         if (configuration is {{ }} appConfiguration)
         {{";
             var saveConfigurationContent = "\n";
-            const string saveConfigurationEnd = $@"      }}
-    }}";
-            const string classEnd = $@"
-}}";
+            const string saveConfigurationEnd = @"      }
+    }";
+            const string classEnd = @"
+}";
             foreach (var member in type.GetMembers().Where(member =>
                              member is { Kind: SymbolKind.Property } and not { Name: "EqualityContract" })
                          .Cast<IPropertySymbol>())
@@ -166,6 +166,7 @@ partial class {name}
                 _ => throw new InvalidCastException("Only primitive and Enum types are supported.")
             };
         }
+
         return $"{Spacing(3)}{body};\n";
     }
 }

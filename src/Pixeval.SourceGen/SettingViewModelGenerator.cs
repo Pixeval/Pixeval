@@ -53,7 +53,7 @@ internal class SettingViewModelGenerator : GetAttributeGenerator
 partial class {name}
 {{";
             var propertySentences = new List<string>();
-            const string classEnd = $@"}}";
+            const string classEnd = @"}";
 
             foreach (var property in type.GetMembers().Where(property =>
                              property is { Kind: SymbolKind.Property } and not { Name: "EqualityContract" }
@@ -64,12 +64,9 @@ partial class {name}
                 foreach (var propertyAttribute in property.GetAttributes())
                 {
                     namespaces.UseNamespace(usedTypes, propertyAttribute.AttributeClass!);
-                    foreach (var attrConstructorArgument in propertyAttribute.ConstructorArguments)
+                    foreach (var attrConstructorArgument in propertyAttribute.ConstructorArguments.Where(arg => arg.Value is INamedTypeSymbol))
                     {
-                        if (attrConstructorArgument.Value is INamedTypeSymbol value)
-                        {
-                            namespaces.UseNamespace(usedTypes, value);
-                        }
+                        namespaces.UseNamespace(usedTypes, (ITypeSymbol) attrConstructorArgument.Value!);
                     }
                 }
 
@@ -87,11 +84,7 @@ partial class {name}
             allPropertySentences = allPropertySentences.Substring(0, allPropertySentences.Length - 1);
             var fileName = specificType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat
                 .WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted)) + ".g.cs";
-            var compilationUnit =
-                nullable + namespaceNames
-                         + classBegin
-                         + allPropertySentences
-                         + classEnd;
+            var compilationUnit =  nullable + namespaceNames + classBegin + allPropertySentences + classEnd;
             context.AddSource(fileName, compilationUnit);
             break;
         }
