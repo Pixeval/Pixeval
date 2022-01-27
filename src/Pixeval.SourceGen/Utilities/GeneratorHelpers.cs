@@ -58,6 +58,7 @@ internal static class GeneratorHelpers
             }
         }
     }
+
     public static string Spacing(int n)
     {
         var temp = "";

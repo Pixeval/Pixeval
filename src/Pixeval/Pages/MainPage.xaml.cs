@@ -179,7 +179,7 @@ public sealed partial class MainPage
         {
             var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
             // TODO distinguish search illustrations, manga, novels, and users.
-            if (manager.Select(count: 1).FirstOrDefault() is { Value: var last } && last != text)
+            if (manager.Count == 0 || manager.Select(count: 1).FirstOrDefault() is { Value: var last } && last != text)
             {
                 manager.Insert(new SearchHistoryEntry
                 {

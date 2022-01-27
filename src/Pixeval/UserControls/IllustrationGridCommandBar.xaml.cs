@@ -228,7 +228,7 @@ public sealed partial class IllustrationGridCommandBar
 
     private void ConditionPopupClosing(IAppPopupContent popup, object? arg)
     {
-        // 
+        // TODO 检测如果和上一个一样就不要继续
         OpenConditionDialogButton.IsChecked = false;
         if (arg is FilterSettings(
                 var includeTags,

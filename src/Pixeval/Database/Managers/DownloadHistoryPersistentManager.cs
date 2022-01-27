@@ -39,6 +39,8 @@ public class DownloadHistoryPersistentManager : IPersistentManager<DownloadHisto
 
     public int MaximumRecords { get; set; }
 
+    public int Count => Collection.Count();
+
     public void Insert(DownloadHistoryEntry t)
     {
         if (Collection.Count() > MaximumRecords)
@@ -66,7 +68,7 @@ public class DownloadHistoryPersistentManager : IPersistentManager<DownloadHisto
         var query = Collection.FindAll();
         if (count.HasValue)
         {
-            query = query.Take(count.Value);
+            query = query.TakeLast(count.Value);
         }
 
         if (predicate != null)

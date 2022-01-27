@@ -135,23 +135,13 @@ public partial class MakoClient
     public async Task<IEnumerable<TrendingTag>> GetTrendingTagsAsync(TargetFilter targetFilter)
     {
         EnsureNotCancelled();
-        return ((await Resolve<IAppApiEndPoint>().GetTrendingTagsAsync(targetFilter.GetDescription()).ConfigureAwait(false)).TrendTags ?? Enumerable.Empty<TrendingTagResponse.TrendTag>()).Select(t => new TrendingTag
-        {
-            Tag = t.TagStr,
-            Translation = t.TranslatedName,
-            Illustration = t.Illust
-        });
+        return ((await Resolve<IAppApiEndPoint>().GetTrendingTagsAsync(targetFilter.GetDescription()).ConfigureAwait(false)).TrendTags ?? Enumerable.Empty<TrendingTagResponse.TrendTag>()).Select(t => new TrendingTag(t.TagStr, t.TranslatedName, t.Illust));
     }
 
     public async Task<IEnumerable<TrendingTag>> GetTrendingTagsForNovelAsync(TargetFilter targetFilter)
     {
         EnsureNotCancelled();
-        return ((await Resolve<IAppApiEndPoint>().GetTrendingTagsForNovelAsync(targetFilter.GetDescription()).ConfigureAwait(false)).TrendTags ?? Enumerable.Empty<TrendingTagResponse.TrendTag>()).Select(t => new TrendingTag
-        {
-            Tag = t.TagStr,
-            Translation = t.TranslatedName,
-            Illustration = t.Illust
-        });
+        return ((await Resolve<IAppApiEndPoint>().GetTrendingTagsForNovelAsync(targetFilter.GetDescription()).ConfigureAwait(false)).TrendTags ?? Enumerable.Empty<TrendingTagResponse.TrendTag>()).Select(t => new TrendingTag(t.TagStr, t.TranslatedName, t.Illust));
     }
     
     /// <summary>

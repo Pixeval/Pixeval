@@ -44,6 +44,8 @@ public abstract class SimplePersistentManager<T> : IPersistentManager<T, T>
 #nullable restore
     public int MaximumRecords { get; set; }
 
+    public int Count => Collection.Count();
+
     public void Insert(T t)
     {
         if (Collection.Count() > MaximumRecords)
@@ -64,7 +66,7 @@ public abstract class SimplePersistentManager<T> : IPersistentManager<T, T>
         var query = Collection.FindAll();
         if (count.HasValue)
         {
-            query = query.Take(count.Value);
+            query = query.TakeLast(count.Value);
         }
 
         if (predicate != null)
