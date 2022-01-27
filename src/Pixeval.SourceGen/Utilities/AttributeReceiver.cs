@@ -18,11 +18,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Pixeval.SourceGen.Utilities;
 
@@ -48,8 +48,7 @@ internal class AttributeReceiver : ISyntaxContextReceiver
 
         if (context.Node is TypeDeclarationSyntax typeDeclaration && typeDeclaration.AttributeLists
                 .SelectMany(l => l.Attributes, (_, attribute) => context.SemanticModel.GetSymbolInfo(attribute))
-                .Any(symbolInfo =>
-                    SymbolEqualityComparer.Default.Equals(symbolInfo.Symbol?.ContainingType, _attributeSymbol)))
+                .Any(symbolInfo => SymbolEqualityComparer.Default.Equals(symbolInfo.Symbol?.ContainingType, _attributeSymbol)))
             _candidateTypes.Add(typeDeclaration);
     }
 }

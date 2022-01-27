@@ -21,11 +21,11 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Pixeval.SourceGen.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Pixeval.SourceGen.Utilities;
 
 namespace Pixeval.SourceGen;
 
@@ -37,7 +37,7 @@ internal class GenerateConstructorGenerator : GetAttributeGenerator
     protected override void ExecuteForEach(GeneratorExecutionContext context, INamedTypeSymbol attributeType, TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol specificType)
     {
         var name = specificType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-        var namespaces = new HashSet<string>();
+        var namespaces = new HashSet<string> { specificType.ContainingNamespace.ToDisplayString() };
         var usedTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
         var ctor = SyntaxFactory.ConstructorDeclaration(name)
             .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword)));
@@ -46,12 +46,12 @@ internal class GenerateConstructorGenerator : GetAttributeGenerator
                      .Cast<IPropertySymbol>())
         {
             ctor = GetDeclaration(member, ctor);
-            namespaces.UseNamespace(usedTypes, specificType, member.Type);
+            namespaces.UseNamespace(usedTypes, member.Type);
         }
 
         var generatedType = GetDeclaration(name, typeDeclaration, ctor);
         var generatedNamespace = GetNamespaceDeclaration(specificType, generatedType);
-        var compilationUnit = GetCompilationUnit(generatedNamespace, namespaces);
+        var compilationUnit = GetCompilationUnit(generatedNamespace, namespaces.Skip(1));
         var fileName = specificType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat
             .WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted)) + ".g.cs";
         context.AddSource(fileName, SyntaxFactory.SyntaxTree(compilationUnit, encoding: Encoding.UTF8).GetText());

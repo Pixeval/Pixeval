@@ -18,13 +18,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Pixeval.SourceGen.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Pixeval.SourceGen.Utilities;
+using static Pixeval.SourceGen.Utilities.GeneratorHelpers;
 
 namespace Pixeval.SourceGen;
 
@@ -54,7 +55,7 @@ internal class LoadSaveConfigurationGenerator : GetAttributeGenerator
                     switch (namedArgument.Key)
                     {
                         case "CastMethod":
-                            var temp = (string) value;
+                            var temp = (string)value;
                             var tempIndex = temp.LastIndexOf('.');
                             if (tempIndex is -1)
                                 throw new InvalidDataException("CastMethod must contain the full name.");
@@ -66,7 +67,7 @@ internal class LoadSaveConfigurationGenerator : GetAttributeGenerator
             }
 
             var name = specificType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-            var namespaces = new HashSet<string>();
+            var namespaces = new HashSet<string> { specificType.ContainingNamespace.ToDisplayString() };
             if (staticClassName is not null)
                 namespaces.Add(staticClassName);//methodName方法所用namespace
             var usedTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
@@ -105,12 +106,12 @@ partial class {name}
             {
                 loadConfigurationContent += LoadRecord(member.Name, member.Type.Name, type.Name, containerName, methodName);
                 saveConfigurationContent += SaveRecord(member.Name, member.Type, type.Name, containerName, methodName);
-                namespaces.UseNamespace(usedTypes, specificType, member.Type);
+                namespaces.UseNamespace(usedTypes, member.Type);
             }
 
             loadConfigurationContent = loadConfigurationContent.Substring(0, loadConfigurationContent.Length - 2) + "\n";
 
-            var namespaceNames = namespaces.Aggregate("", (current, ns) => current + $"using {ns};\n");
+            var namespaceNames = namespaces.Skip(1).Aggregate("", (current, ns) => current + $"using {ns};\n");
             var fileName = specificType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat
                 .WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted)) + ".g.cs";
             var loadConfiguration =
@@ -122,14 +123,6 @@ partial class {name}
             context.AddSource(fileName, loadConfiguration);
             break;
         }
-    }
-
-    private static string Spacing(int n)
-    {
-        var temp = "";
-        for (var i = 0; i < n; i++)
-            temp += "    ";
-        return temp;
     }
 
     private static string LoadRecord(string name, string type, string typeName, string containerName, string? methodName)

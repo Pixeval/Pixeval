@@ -21,10 +21,10 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Pixeval.SourceGen.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Pixeval.SourceGen.Utilities;
 
 namespace Pixeval.SourceGen;
 
@@ -37,7 +37,7 @@ internal class DependencyPropertyGenerator : GetAttributeGenerator
     {
 
         var members = new List<MemberDeclarationSyntax>();
-        var namespaces = new HashSet<string> { "Microsoft.UI.Xaml" };
+        var namespaces = new HashSet<string> { specificClass.ContainingNamespace.ToDisplayString(), "Microsoft.UI.Xaml" };
         var usedTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
 
         foreach (var attribute in specificClass.GetAttributes().Where(attribute => SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, attributeType)))
@@ -63,13 +63,13 @@ internal class DependencyPropertyGenerator : GetAttributeGenerator
                     switch (namedArgument.Key)
                     {
                         case "IsSetterPublic":
-                            isSetterPublic = (bool) value;
+                            isSetterPublic = (bool)value;
                             break;
                         case "DefaultValue":
-                            defaultValue = (string) value;
+                            defaultValue = (string)value;
                             break;
                         case "IsNullable":
-                            isNullable = (bool) value;
+                            isNullable = (bool)value;
                             break;
                     }
                 }
@@ -77,7 +77,7 @@ internal class DependencyPropertyGenerator : GetAttributeGenerator
 
             var fieldName = propertyName + "Property";
 
-            namespaces.UseNamespace(usedTypes, specificClass, type);
+            namespaces.UseNamespace(usedTypes, type);
             var defaultValueExpression = SyntaxFactory.ParseExpression(defaultValue);
             var metadataCreation = GetObjectCreationExpression(defaultValueExpression);
             if (propertyChanged is not "")
@@ -99,7 +99,7 @@ internal class DependencyPropertyGenerator : GetAttributeGenerator
         {
             var generatedClass = GetClassDeclaration(specificClass, members);
             var generatedNamespace = GetNamespaceDeclaration(specificClass, generatedClass);
-            var compilationUnit = GetCompilationUnit(generatedNamespace, namespaces);
+            var compilationUnit = GetCompilationUnit(generatedNamespace, namespaces.Skip(1));
             var fileName = specificClass.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat
                 .WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted)) + ".g.cs";
             context.AddSource(fileName, SyntaxFactory.SyntaxTree(compilationUnit, encoding: Encoding.UTF8).GetText());
