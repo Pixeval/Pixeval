@@ -18,8 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
+using System.Collections.Generic;
 
 namespace Pixeval.SourceGen.Utilities;
 

@@ -53,6 +53,13 @@ internal abstract class GetAttributeGenerator : ISourceGenerator
 
     protected abstract string AttributePathGetter();
 
+    /// <summary>
+    /// 获取包含指定attribute的类型
+    /// </summary>
+    /// <param name="context">生成器运行上下文</param>
+    /// <param name="attributeType">指定的attribute类型</param>
+    /// <param name="typeDeclaration">该类型的声明</param>
+    /// <param name="specificType">该类型</param>
     protected abstract void ExecuteForEach(GeneratorExecutionContext context, INamedTypeSymbol attributeType, TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol specificType);
 
     private string AttributePath => AttributePathGetter();

@@ -18,13 +18,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Microsoft.CodeAnalysis;
+using Pixeval.SourceGen.Utilities;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
-using Microsoft.CodeAnalysis;
-using Pixeval.SourceGen.Utilities;
 
 namespace Pixeval.SourceGen;
 
