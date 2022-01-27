@@ -28,11 +28,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
-using Pixeval.CoreApi.Global.Enum;
+using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Download.MacroParser;
 using Pixeval.Misc;
-using Pixeval.Options;
 using Pixeval.UserControls;
 using Pixeval.UserControls.TokenInput;
 
@@ -96,12 +95,6 @@ public partial class SettingsPageViewModel : ObservableObject
         });
     }
 
-    [DefaultValue(10)]
-    public int MaximumSuggestionBoxSearchHistory
-    {
-        get => _appSetting.MaximumSuggestionBoxSearchHistory;
-        set => SetProperty(_appSetting.MaximumSuggestionBoxSearchHistory, value, _appSetting, (settings, value) => settings.MaximumSuggestionBoxSearchHistory = value);
-    }
     public DateTimeOffset GetMinSearchEndDate(DateTimeOffset startDate)
     {
         return startDate.AddDays(1);
@@ -118,5 +111,17 @@ public partial class SettingsPageViewModel : ObservableObject
         {
             propertyInfo.SetValue(this, propertyInfo.GetDefaultValue());
         }
+    }
+
+    public void ClearData<T, TModel>(ClearDataKind kind, IPersistentManager<T, TModel> manager) where T : new()
+    {
+        manager.Clear();
+        App.AppViewModel.ShowSnack(kind switch
+        {
+            ClearDataKind.BrowseHistory => SettingsPageResources.BrowseHistoriesCleared,
+            ClearDataKind.SearchHistory => SettingsPageResources.SearchHistoriesCleared,
+            ClearDataKind.DownloadHistory => SettingsPageResources.DownloadHistoriesCleared,
+            _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null)
+        }, 2000);
     }
 }

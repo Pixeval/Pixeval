@@ -93,4 +93,9 @@ public abstract class SimplePersistentManager<T> : IPersistentManager<T, T>
             Delete(e => !last.Contains(e!));
         }
     }
+
+    public void Clear()
+    {
+        Collection.DeleteAll();
+    }
 }

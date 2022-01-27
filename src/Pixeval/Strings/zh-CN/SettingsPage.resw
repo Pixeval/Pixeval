@@ -137,6 +137,9 @@
   <data name="ApplicationSettingsGroup.Header" xml:space="preserve">
     <value>应用程序相关设置</value>
   </data>
+  <data name="BrowseHistoriesCleared" xml:space="preserve">
+    <value>已删除所有的浏览记录</value>
+  </data>
   <data name="BrowsingExperienceSettingsGroup.Header" xml:space="preserve">
     <value>浏览体验设置</value>
   </data>
@@ -173,6 +176,33 @@
   <data name="DefaultSelectedTabEntry.Header" xml:space="preserve">
     <value>默认标签栏</value>
   </data>
+  <data name="DeleteBrowseHistoriesButton.Content" xml:space="preserve">
+    <value>删除记录</value>
+  </data>
+  <data name="DeleteBrowseHistoriesEntry.Description" xml:space="preserve">
+    <value>该按钮会清空所有的浏览记录</value>
+  </data>
+  <data name="DeleteBrowseHistoriesEntry.Header" xml:space="preserve">
+    <value>清空浏览记录</value>
+  </data>
+  <data name="DeleteDownloadHistoriesButton.Content" xml:space="preserve">
+    <value>删除记录</value>
+  </data>
+  <data name="DeleteDownloadHistoriesEntry.Description" xml:space="preserve">
+    <value>该按钮会清空所有的下载记录</value>
+  </data>
+  <data name="DeleteDownloadHistoriesEntry.Header" xml:space="preserve">
+    <value>清空下载记录</value>
+  </data>
+  <data name="DeleteSearchHistoriesButton.Content" xml:space="preserve">
+    <value>删除记录</value>
+  </data>
+  <data name="DeleteSearchHistoriesEntry.Description" xml:space="preserve">
+    <value>该按钮会清空所有的搜索记录</value>
+  </data>
+  <data name="DeleteSearchHistoriesEntry.Header" xml:space="preserve">
+    <value>清空搜索记录</value>
+  </data>
   <data name="DisableDomainFrontingEntry.Description" xml:space="preserve">
     <value>开启此选项将导致在 Pixiv 被屏蔽的国家或地区的用户无法正常使用</value>
   </data>
@@ -181,6 +211,9 @@
   </data>
   <data name="DonateDeveloperHyperlinkButton.Content" xml:space="preserve">
     <value>支持作者</value>
+  </data>
+  <data name="DownloadHistoriesCleared" xml:space="preserve">
+    <value>已删除所有的下载记录</value>
   </data>
   <data name="DownloadPathMacroInvalidTeachingTip.Title" xml:space="preserve">
     <value>宏解析失败</value>
@@ -364,6 +397,9 @@
   </data>
   <data name="SearchEndDateEntry.Header" xml:space="preserve">
     <value>设置搜索的结束日期</value>
+  </data>
+  <data name="SearchHistoriesCleared" xml:space="preserve">
+    <value>已删除所有的搜索记录</value>
   </data>
   <data name="SearchSettingsGroup.Header" xml:space="preserve">
     <value>搜索设置</value>

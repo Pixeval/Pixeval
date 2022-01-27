@@ -57,4 +57,6 @@ public interface IPersistentManager<TEntry, out TModel>
     IEnumerable<TModel> Enumerate();
 
     void Purge(int limit);
+
+    void Clear();
 }

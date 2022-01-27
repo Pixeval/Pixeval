@@ -21,11 +21,13 @@
 using System;
 using System.Threading.Tasks;
 using Windows.System;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls.Setting.UI;
 using Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry;
+using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
 using Pixeval.UserControls.TokenInput;
 using Pixeval.Util.Threading;
@@ -35,7 +37,7 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.Misc;
 
-// TODO set language, clear database
+// TODO set language
 public sealed partial class SettingsPage
 {
     // This TestParser is used to test whether the user input meta path is legal
@@ -161,5 +163,26 @@ public sealed partial class SettingsPage
     private void MacroTokenInputBox_OnTokenTapped(object? sender, Token e)
     {
         _viewModel.DefaultDownloadPathMacro = _viewModel.DefaultDownloadPathMacro.Insert(DefaultDownloadPathMacroTextBox.SelectionStart, e.TokenContent);
+    }
+
+    private void DeleteSearchHistoriesButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        using var scope = App.AppViewModel.AppServicesScope;
+        var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
+        _viewModel.ClearData(ClearDataKind.SearchHistory, manager);
+    }
+
+    private void DeleteBrowseHistoriesButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        using var scope = App.AppViewModel.AppServicesScope;
+        var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
+        _viewModel.ClearData(ClearDataKind.BrowseHistory, manager);
+    }
+
+    private void DeleteDownloadHistoriesButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        using var scope = App.AppViewModel.AppServicesScope;
+        var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
+        _viewModel.ClearData(ClearDataKind.DownloadHistory, manager);
     }
 }

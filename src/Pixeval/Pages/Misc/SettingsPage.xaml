@@ -118,11 +118,29 @@
                                 <Button x:Uid="/SettingsPage/PerformSignOutButton" Tapped="PerformSignOutButton_OnTapped" />
                             </actionableSettingEntry:ActionableSettingEntry.ActionContent>
                         </actionableSettingEntry:ActionableSettingEntry>
-                        <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/ResetDefaultSettingsEntry" Icon="{ui:FontIcon Glyph=AppIconDefaultECAA}">
-                            <actionableSettingEntry:ActionableSettingEntry.ActionContent>
+
+                        <actionableExpanderSettingEntry:ActionableExpanderSettingEntry x:Uid="/SettingsPage/ResetDefaultSettingsEntry" Icon="{ui:FontIcon Glyph=AppIconDefaultECAA}">
+                            <actionableExpanderSettingEntry:ActionableExpanderSettingEntry.ActionContent>
                                 <Button x:Uid="/SettingsPage/ResetDefaultSettingsButton" Tapped="ResetDefaultSettingsButton_OnTapped" />
-                            </actionableSettingEntry:ActionableSettingEntry.ActionContent>
-                        </actionableSettingEntry:ActionableSettingEntry>
+                            </actionableExpanderSettingEntry:ActionableExpanderSettingEntry.ActionContent>
+                            <StackPanel>
+                                <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/DeleteSearchHistoriesEntry"
+                                                                               Icon="{ui:FontIcon Glyph=DeleteE74D}"
+                                                                               Style="{StaticResource ExpanderContentSettingEntryStyle}">
+                                    <Button x:Uid="/SettingsPage/DeleteSearchHistoriesButton" Tapped="DeleteSearchHistoriesButton_OnTapped" />
+                                </actionableSettingEntry:ActionableSettingEntry>
+                                <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/DeleteBrowseHistoriesEntry"
+                                                                               Icon="{ui:FontIcon Glyph=DeleteE74D}"
+                                                                               Style="{StaticResource ExpanderContentSettingEntryStyle}">
+                                    <Button x:Uid="/SettingsPage/DeleteBrowseHistoriesButton" Tapped="DeleteBrowseHistoriesButton_OnTapped" />
+                                </actionableSettingEntry:ActionableSettingEntry>
+                                <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/DeleteDownloadHistoriesEntry"
+                                                                               Icon="{ui:FontIcon Glyph=DeleteE74D}"
+                                                                               Style="{StaticResource ExpanderContentSettingEntryStyle}">
+                                    <Button x:Uid="/SettingsPage/DeleteDownloadHistoriesButton" Tapped="DeleteDownloadHistoriesButton_OnTapped" />
+                                </actionableSettingEntry:ActionableSettingEntry>
+                            </StackPanel>
+                        </actionableExpanderSettingEntry:ActionableExpanderSettingEntry>
 
                     </settingsGroup:SettingsGroup>
 

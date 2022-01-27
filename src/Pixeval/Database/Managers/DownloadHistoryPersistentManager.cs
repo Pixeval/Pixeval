@@ -96,6 +96,12 @@ public class DownloadHistoryPersistentManager : IPersistentManager<DownloadHisto
         }
     }
 
+    public void Clear()
+    {
+        Collection.DeleteAll();
+        App.AppViewModel.DownloadManager.ClearTasks();
+    }
+
     private static ObservableDownloadTask ToObservableDownloadTask(DownloadHistoryEntry entry)
     {
         return entry.Type switch
