@@ -72,6 +72,15 @@ public partial class App
     }
 
     /// <summary>
+    ///     Are we Windows 11 or not?
+    /// </summary>
+    public static bool IsWindows11()
+    {
+        // Windows 11 starts with 10.0.22000
+        return Environment.OSVersion.Version.Build >= 22000;
+    }
+
+    /// <summary>
     ///     Calculate the window size by current resolution
     /// </summary>
     public static (int, int) PredetermineEstimatedWindowSize()
