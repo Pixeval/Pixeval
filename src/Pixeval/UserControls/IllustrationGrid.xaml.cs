@@ -218,7 +218,7 @@ public sealed partial class IllustrationGrid
 
     private void IllustrationGridView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        ViewModel.SelectedIllustrations.RemoveAll(vm => e.RemovedItems.Any(x => x.Equals(vm)));
-        ViewModel.SelectedIllustrations.AddRange(e.AddedItems.Where(it => it is not null).Cast<IllustrationViewModel>());
+        ViewModel.UpdateSelection(e.RemovedItems.Where(it => it is not null).Cast<IllustrationViewModel>(),
+            e.AddedItems.Where(it => it is not null).Cast<IllustrationViewModel>());
     }
 }

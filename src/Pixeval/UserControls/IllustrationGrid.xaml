@@ -18,11 +18,11 @@
     <controls:AdaptiveGridView x:Name="IllustrationGridView"
                                animations:ItemsReorderAnimation.Duration="0:0:0.2"
                                x:FieldModifier="public"
-                               SelectionChanged="IllustrationGridView_OnSelectionChanged"
                                Header="{x:Bind Header, Mode=OneWay}"
                                IsItemClickEnabled="True"
                                IsMultiSelectCheckBoxEnabled="False"
                                ItemsSource="{x:Bind ViewModel.IllustrationsView}"
+                               SelectionChanged="IllustrationGridView_OnSelectionChanged"
                                SelectionMode="Extended"
                                StretchContentForSingleRow="True">
         <controls:AdaptiveGridView.ItemContainerTransitions>

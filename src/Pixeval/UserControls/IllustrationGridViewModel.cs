@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,6 +33,7 @@ using Pixeval.Popups;
 using Pixeval.Util;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
+using Pixeval.Utilities;
 
 namespace Pixeval.UserControls;
 
@@ -130,6 +132,13 @@ public partial class IllustrationGridViewModel : ObservableObject, IDisposable, 
         SelectedIllustrations.Clear();
         Illustrations.Clear();
         IllustrationsView.Clear();
+    }
+
+    public void UpdateSelection(IEnumerable<IllustrationViewModel> addedItems, IEnumerable<IllustrationViewModel> removedItems)
+    {
+        SelectedIllustrations.RemoveAll(vm => removedItems.Any(x => x.Equals(vm)));
+        SelectedIllustrations.AddRange(addedItems);
+        IsAnyIllustrationSelected = SelectedIllustrations.Count != 0;
     }
 
     ~IllustrationGridViewModel()
