@@ -25,6 +25,7 @@ using Windows.UI.Core;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -35,6 +36,7 @@ using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
+using Pixeval.Utilities;
 
 namespace Pixeval.UserControls;
 
@@ -212,5 +214,11 @@ public sealed partial class IllustrationGrid
     private async void ShowPixEzQrCodeContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         await ViewModel.ShowPixEzQrCodeForIllustrationAsync(sender.GetDataContext<IllustrationViewModel>());
+    }
+
+    private void IllustrationGridView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        ViewModel.SelectedIllustrations.RemoveAll(vm => e.RemovedItems.Any(x => x.Equals(vm)));
+        ViewModel.SelectedIllustrations.AddRange(e.AddedItems.Where(it => it is not null).Cast<IllustrationViewModel>());
     }
 }

@@ -233,6 +233,7 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
     private void DisposeInternal()
     {
         _thumbnailSource?.Dispose();
+        _thumbnailSource = null;
     }
 
     ~IllustrationViewModel()
