@@ -29,9 +29,9 @@ using static Pixeval.SourceGen.Utilities.GeneratorHelpers;
 namespace Pixeval.SourceGen;
 
 [Generator]
-internal class SettingViewModelGenerator : GetAttributeGenerator
+internal class SettingsViewModelGenerator : GetAttributeGenerator
 {
-    protected override string AttributePathGetter() => "Pixeval.Attributes.SettingViewModelAttribute";
+    protected override string AttributePathGetter() => "Pixeval.Attributes.SettingsViewModelAttribute";
 
     protected override void ExecuteForEach(GeneratorExecutionContext context, INamedTypeSymbol attributeType,
         TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol specificType)
@@ -57,7 +57,7 @@ partial class {name}
 
             foreach (var property in type.GetMembers().Where(property =>
                              property is { Kind: SymbolKind.Property } and not { Name: "EqualityContract" }
-                             && !property.GetAttributes().Any(propertyAttribute => propertyAttribute.AttributeClass!.Name is "SettingViewModelExclusionAttribute"))
+                             && !property.GetAttributes().Any(propertyAttribute => propertyAttribute.AttributeClass!.Name is "SettingsViewModelExclusionAttribute"))
                          .Cast<IPropertySymbol>())
             {
                 namespaces.UseNamespace(usedTypes, property.Type);

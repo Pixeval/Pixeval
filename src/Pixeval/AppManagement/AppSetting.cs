@@ -59,7 +59,7 @@ public partial record AppSetting
     ///     GFW
     /// </summary>
     [DefaultValue(false)]
-    [SettingViewModelExclusion]
+    [SettingsViewModelExclusion]
     public bool DisableDomainFronting { get; set; }
 
     /// <summary>
@@ -112,14 +112,14 @@ public partial record AppSetting
     ///     changes the host of the original url(i.pximg.net) to this one.
     /// </summary>
     [DefaultValue(null)]
-    [SettingViewModelExclusion]
+    [SettingsViewModelExclusion]
     public string? MirrorHost { get; set; }
 
     /// <summary>
     ///     The max download tasks that are allowed to run concurrently
     /// </summary>
     [DefaultValue(typeof(DownloadConcurrencyDefaultValueProvider))]
-    [SettingViewModelExclusion]
+    [SettingsViewModelExclusion]
     public int MaxDownloadTaskConcurrencyLevel { get; set; }
 
     /// <summary>

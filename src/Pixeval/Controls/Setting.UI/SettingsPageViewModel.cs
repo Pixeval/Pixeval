@@ -37,7 +37,7 @@ using Pixeval.UserControls.TokenInput;
 
 namespace Pixeval.Controls.Setting.UI;
 
-[SettingViewModel(typeof(AppSetting), nameof(_appSetting))]
+[SettingsViewModel(typeof(AppSetting), nameof(_appSetting))]
 public partial class SettingsPageViewModel : ObservableObject
 {
     public static readonly IEnumerable<string> AvailableFonts = new InstalledFontCollection().Families.Select(f => f.Name);
