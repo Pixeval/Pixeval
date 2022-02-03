@@ -37,19 +37,17 @@ public sealed class DependencyPropertyAttribute : Attribute
         Name = name;
         Type = type;
         PropertyChanged = propertyChanged;
-        IsSetterPublic = true;
-        IsNullable = true;
     }
 
     public string Name { get; }
 
     public Type Type { get; }
 
-    public string PropertyChanged { get; init; }
+    public string PropertyChanged { get; }
 
-    public bool IsSetterPublic { get; init; }
+    public bool IsSetterPublic { get; init; } = true;
 
-    public bool IsNullable { get; init; }
+    public bool IsNullable { get; init; } = true;
 
     public string DefaultValue { get; init; } = "DependencyProperty.UnsetValue";
 }
