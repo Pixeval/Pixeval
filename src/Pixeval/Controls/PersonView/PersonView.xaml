@@ -7,29 +7,31 @@
             <Setter.Value>
                 <ControlTemplate TargetType="local:PersonView">
                     <card:CardControl x:Name="ContentContainer"
-                                      Width="185"
-                                      Height="70">
+                                      Width="{TemplateBinding Width}"
+                                      Height="{TemplateBinding Height}">
                         <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="70" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0"
-                                        Margin="10,0,0,0"
-                                        VerticalAlignment="Center">
-                                <TextBlock FontSize="{StaticResource PixevalContentFontSize}"
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="2.3*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <PersonPicture Grid.Row="0"
+                                           Width="75"
+                                           Height="75"
+                                           Margin="0,-5,0,0"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           ProfilePicture="{TemplateBinding PersonPicture}" />
+                            <StackPanel Grid.Row="1"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top">
+                                <TextBlock HorizontalAlignment="Center"
+                                           FontSize="{StaticResource PixevalContentFontSize}"
                                            Text="{TemplateBinding PersonNickname}" />
-                                <TextBlock Margin="0,6,0,0"
+                                <TextBlock HorizontalAlignment="Center"
                                            Foreground="{ThemeResource PixevalTipTextForeground}"
                                            Style="{StaticResource CaptionTextBlockStyle}"
                                            Text="{TemplateBinding PersonName}" />
                             </StackPanel>
-                            <PersonPicture Grid.Column="1"
-                                           Width="50"
-                                           Height="50"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"
-                                           ProfilePicture="{TemplateBinding PersonPicture}" />
                         </Grid>
                     </card:CardControl>
                 </ControlTemplate>

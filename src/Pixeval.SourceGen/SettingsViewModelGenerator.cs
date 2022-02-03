@@ -84,7 +84,7 @@ partial class {name}
             allPropertySentences = allPropertySentences.Substring(0, allPropertySentences.Length - 1);
             var fileName = specificType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat
                 .WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted)) + ".g.cs";
-            var compilationUnit =  nullable + namespaceNames + classBegin + allPropertySentences + classEnd;
+            var compilationUnit = nullable + namespaceNames + classBegin + allPropertySentences + classEnd;
             context.AddSource(fileName, compilationUnit);
             break;
         }
