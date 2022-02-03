@@ -1,6 +1,7 @@
 ﻿<controls:EnhancedPage x:Class="Pixeval.Pages.MainPage"
                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                       xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
                        xmlns:controls="using:Pixeval.Controls"
                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -106,8 +107,16 @@
                         Padding="0"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        Content="{ui:FontIcon Glyph=SearchAndAppsE773, FontSize=13}"
-                        Tapped="ReverseSearchButton_OnTapped" />
+                        Tapped="ReverseSearchButton_OnTapped">
+                    <AnimatedIcon Width="18" Height="18">
+                        <AnimatedIcon.Source>
+                            <animatedVisuals:AnimatedFindVisualSource />
+                        </AnimatedIcon.Source>
+                        <AnimatedIcon.FallbackIconSource>
+                            <SymbolIconSource Symbol="Find" />
+                        </AnimatedIcon.FallbackIconSource>
+                    </AnimatedIcon>
+                </Button>
             </Grid>
         </NavigationView.PaneCustomContent>
         <NavigationView.MenuItems>
@@ -143,8 +152,18 @@
                                 Tag="{x:Bind _viewModel.AboutTag}" />
             <NavigationViewItem x:Name="SettingsTab"
                                 x:Uid="/MainPage/SettingsTab"
-                                Icon="{ui:FontIcon Glyph=SettingE713}"
-                                Tag="{x:Bind _viewModel.SettingsTag}" />
+                                Tag="{x:Bind _viewModel.SettingsTag}">
+                <NavigationViewItem.Icon>
+                    <AnimatedIcon>
+                        <AnimatedIcon.Source>
+                            <animatedVisuals:AnimatedSettingsVisualSource />
+                        </AnimatedIcon.Source>
+                        <AnimatedIcon.FallbackIconSource>
+                            <SymbolIconSource Symbol="Setting" />
+                        </AnimatedIcon.FallbackIconSource>
+                    </AnimatedIcon>
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
         </NavigationView.FooterMenuItems>
         <Frame x:Name="MainPageRootFrame" Navigated="MainPageRootFrame_OnNavigated" />
     </NavigationView>
