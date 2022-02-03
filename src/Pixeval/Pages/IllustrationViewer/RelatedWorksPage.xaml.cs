@@ -46,7 +46,7 @@ public sealed partial class RelatedWorksPage
         if (_illustrationViewerPageViewModel is null)
         {
             _illustrationViewerPageViewModel = e.Parameter as IllustrationViewerPageViewModel;
-            await RelatedWorksIllustrationGrid.ViewModel.VisualizationController.ResetAndFillAsync(App.AppViewModel.MakoClient.RelatedWorks(_illustrationViewerPageViewModel!.IllustrationId));
+            await RelatedWorksIllustrationGrid.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.RelatedWorks(_illustrationViewerPageViewModel!.IllustrationId));
         }
     }
 

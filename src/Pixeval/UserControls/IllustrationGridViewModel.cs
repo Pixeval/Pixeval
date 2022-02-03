@@ -31,7 +31,6 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Popups;
 using Pixeval.Util;
-using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 
@@ -47,6 +46,9 @@ public partial class IllustrationGridViewModel : ObservableObject, IDisposable, 
     [ObservableProperty]
     private string _selectionLabel;
 
+    [ObservableProperty]
+    private bool _hasNoItems;
+
     private SoftwareBitmapSource? _webQrCodeSource;
 
     private ObservableCollection<IllustrationViewModel> _illustrations;
@@ -58,7 +60,6 @@ public partial class IllustrationGridViewModel : ObservableObject, IDisposable, 
         {
             SetProperty(ref _illustrations, value);
             IllustrationsView.Source = _illustrations;
-            IllustrationsView.LoadMoreItemsAsync(20).Discard();
         }
     }
 
@@ -68,7 +69,7 @@ public partial class IllustrationGridViewModel : ObservableObject, IDisposable, 
         _illustrations = new ObservableCollection<IllustrationViewModel>();
         IllustrationsView = new AdvancedCollectionView(Illustrations);
         _selectionLabel = IllustrationGridCommandBarResources.CancelSelectionButtonDefaultLabel;
-        VisualizationController = new IllustrationVisualizationController(this)
+        _visualizationController = new IllustrationVisualizationController(this)
         {
             CollectionChanged = (_, args) =>
             {
@@ -112,11 +113,11 @@ public partial class IllustrationGridViewModel : ObservableObject, IDisposable, 
     public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; }
 
     // Use this to add illustrations to IllustrationGrid
-    public IllustrationVisualizationController VisualizationController { get; internal set; }
+    private readonly IllustrationVisualizationController _visualizationController;
 
     public void Dispose()
     {
-        VisualizationController.FetchEngine?.Cancel();
+        _visualizationController.FetchEngine?.Cancel();
         DisposeCurrent();
         GC.SuppressFinalize(this);
     }
@@ -154,6 +155,11 @@ public partial class IllustrationGridViewModel : ObservableObject, IDisposable, 
         _pixEzQrCodeSource = await UIHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustrationPixEzUri(model.Id).ToString());
 
         PopupManager.ShowPopup(PopupManager.CreatePopup(new QrCodePresenter(_pixEzQrCodeSource), lightDismiss: true, closing: (_, _) => _pixEzQrCodeSource.Dispose()));
+    }
+
+    public async Task ResetEngineAndFillAsync(IFetchEngine<Illustration?>? newEngine, int? itemLimit = null)
+    {
+        HasNoItems = !await _visualizationController.ResetAndFillAsync(newEngine, itemLimit);
     }
 
     public void DisposeCurrent()

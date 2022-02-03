@@ -66,7 +66,7 @@ public sealed partial class BrowsingHistoryPage : ISortedIllustrationContainerPa
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-        await IllustrationContainer.ViewModel.VisualizationController.ResetAndFillAsync(
+        await IllustrationContainer.ViewModel.ResetEngineAndFillAsync(
             App.AppViewModel.MakoClient.Computed(manager.Enumerate().ToAsyncEnumerable().SelectAwait(async t =>
                 await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(t.Id!))));
     }

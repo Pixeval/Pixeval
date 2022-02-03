@@ -42,11 +42,13 @@ public class IllustrationVisualizationController : IDisposable
         _visualizer = visualizer;
     }
 
-    public Task FillAsync(int? itemsLimit = null)
+    public async Task<bool> FillAsync(int? itemsLimit = null)
     {
-        _visualizer.Illustrations = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, itemsLimit));
+        var collection = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, itemsLimit));
+        _visualizer.Illustrations = collection;
+        await collection.LoadMoreItemsAsync(20);
         _visualizer.Illustrations.CollectionChanged += CollectionChanged;
-        return Task.CompletedTask;
+        return _visualizer.Illustrations.Count > 0;
     }
 
     public async Task FillAsync(IFetchEngine<Illustration?>? newEngine, int? itemsLimit = null)
@@ -55,12 +57,12 @@ public class IllustrationVisualizationController : IDisposable
         await FillAsync(itemsLimit);
     }
 
-    public async Task ResetAndFillAsync(IFetchEngine<Illustration?>? newEngine, int? itemLimit = null)
+    public Task<bool> ResetAndFillAsync(IFetchEngine<Illustration?>? newEngine, int? itemLimit = null)
     {
         FetchEngine?.EngineHandle.Cancel();
         FetchEngine = newEngine;
         _visualizer.DisposeCurrent();
-        await FillAsync(itemLimit);
+        return FillAsync(itemLimit);
     }
 
     public void Dispose()
