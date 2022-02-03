@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2021 Pixeval/SettingsPageViewModel.cs
+// Copyright (c) 2022 Pixeval/SettingsPageViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ using Pixeval.UserControls.TokenInput;
 
 namespace Pixeval.Controls.Setting.UI;
 
-[SettingViewModel(typeof(AppSetting), nameof(_appSetting))]
+[SettingsViewModel(typeof(AppSetting), nameof(_appSetting))]
 public partial class SettingsPageViewModel : ObservableObject
 {
     public static readonly IEnumerable<string> AvailableFonts = new InstalledFontCollection().Families.Select(f => f.Name);

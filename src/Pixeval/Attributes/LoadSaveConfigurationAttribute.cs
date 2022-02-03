@@ -1,9 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval.SourceGen
-
+﻿#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
-// Pixeval/Pixeval.SourceGen
-// Copyright (c) 2021 Pixeval.SourceGen/DependencyPropertyGenerator.cs
+// Pixeval/Pixeval
+// Copyright (c) 2022 Pixeval/LoadSaveConfigurationAttribute.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,7 +16,6 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #endregion
 
 using System;

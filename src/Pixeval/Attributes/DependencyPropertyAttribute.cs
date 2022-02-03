@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2021 Pixeval/DependencyPropertyAttribute.cs
+// Copyright (c) 2022 Pixeval/DependencyPropertyAttribute.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -37,19 +37,17 @@ public sealed class DependencyPropertyAttribute : Attribute
         Name = name;
         Type = type;
         PropertyChanged = propertyChanged;
-        IsSetterPublic = true;
-        IsNullable = true;
     }
 
     public string Name { get; }
 
     public Type Type { get; }
 
-    public string PropertyChanged { get; init; }
+    public string PropertyChanged { get; }
 
-    public bool IsSetterPublic { get; init; }
+    public bool IsSetterPublic { get; init; } = true;
 
-    public bool IsNullable { get; init; }
+    public bool IsNullable { get; init; } = true;
 
     public string DefaultValue { get; init; } = "DependencyProperty.UnsetValue";
 }

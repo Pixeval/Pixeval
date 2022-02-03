@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IllustratorIdMacro.cs
+// Copyright (c) 2022 Pixeval/SettingsViewModelExclusionAttribute.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,18 +18,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Download.MacroParser;
-using Pixeval.UserControls;
+using System;
 
-namespace Pixeval.Download.Macros;
+namespace Pixeval.Attributes;
 
-[MetaPathMacro(typeof(IllustrationViewModel))]
-public class IllustratorIdMacro : IMacro<IllustrationViewModel>.ITransducer
+/// <summary>
+/// <see cref="SettingsViewModelAttribute"/>类不生成属性的例外，放在设置类属性上
+/// </summary>
+[AttributeUsage(AttributeTargets.Property)]
+public class SettingsViewModelExclusionAttribute : Attribute
 {
-    public string Name => "artist_id";
 
-    public string Substitute(IllustrationViewModel context)
-    {
-        return context.Illustration.User?.Id.ToString() ?? string.Empty;
-    }
 }
