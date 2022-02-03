@@ -23,15 +23,13 @@
         <ScrollViewer Grid.Row="2">
             <StackPanel Spacing="20">
                 <StackPanel Spacing="10">
-                    <TextBlock x:Uid="/AboutPage/SpecialThanksSubtitleTextBlock"
-                               Style="{StaticResource SubtitleTextBlockStyle}" />
+                    <TextBlock x:Uid="/AboutPage/SpecialThanksSubtitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />
                     <TextBlock x:Uid="/AboutPage/SpecialThanksContentTextBlock"
                                FontSize="{StaticResource PixevalContentFontSize}"
                                TextWrapping="Wrap" />
                     <ItemsRepeater ItemsSource="{x:Bind misc:Supporter.Supporters}">
                         <ItemsRepeater.Layout>
-                            <controls:WrapLayout HorizontalSpacing="5"
-                                                 VerticalSpacing="5" />
+                            <controls:WrapLayout HorizontalSpacing="5" VerticalSpacing="5" />
                         </ItemsRepeater.Layout>
                         <ItemsRepeater.ItemTemplate>
                             <DataTemplate x:DataType="misc:Supporter">
@@ -44,107 +42,81 @@
                     </ItemsRepeater>
                 </StackPanel>
                 <StackPanel Spacing="10">
-                    <TextBlock x:Uid="/AboutPage/DependenciesSubtitleTextBlock"
-                               Style="{StaticResource SubtitleTextBlockStyle}" />
+                    <TextBlock x:Uid="/AboutPage/DependenciesSubtitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />
                     <TextBlock x:Uid="/AboutPage/DependenciesContentTextBlock"
                                FontSize="{StaticResource PixevalContentFontSize}"
                                TextWrapping="Wrap" />
                     <card:CardControl>
-                        <StackPanel Margin="10"
-                                    Spacing="5">
-                            <TextBlock FontSize="15"
-                                       FontWeight="SemiBold">
+                        <StackPanel Margin="10" Spacing="5">
+                            <TextBlock FontSize="15" FontWeight="SemiBold">
                                 <Hyperlink NavigateUri="https://github.com/CommunityToolkit/WindowsCommunityToolkit">Windows Community Toolkit</Hyperlink>
                             </TextBlock>
-                            <TextBlock x:Uid="/AboutPage/WCTKIntroductoryTextBlock"
-                                       TextWrapping="Wrap" />
+                            <TextBlock x:Uid="/AboutPage/WCTKIntroductoryTextBlock" TextWrapping="Wrap" />
                         </StackPanel>
                     </card:CardControl>
 
                     <card:CardControl>
-                        <StackPanel Margin="10"
-                                    Spacing="5">
-                            <TextBlock FontSize="15"
-                                       FontWeight="SemiBold">
-                                <Hyperlink
-                                    NavigateUri="https://github.com/dotnet/runtime/tree/main/src/libraries/Microsoft.Extensions.Hosting">
+                        <StackPanel Margin="10" Spacing="5">
+                            <TextBlock FontSize="15" FontWeight="SemiBold">
+                                <Hyperlink NavigateUri="https://github.com/dotnet/runtime/tree/main/src/libraries/Microsoft.Extensions.Hosting">
                                     Microsoft.Extensions.Hosting
                                 </Hyperlink>
                             </TextBlock>
-                            <TextBlock x:Uid="/AboutPage/MSHostingIntroductoryTextBlock"
-                                       TextWrapping="Wrap" />
+                            <TextBlock x:Uid="/AboutPage/MSHostingIntroductoryTextBlock" TextWrapping="Wrap" />
                         </StackPanel>
                     </card:CardControl>
 
                     <card:CardControl>
-                        <StackPanel Margin="10"
-                                    Spacing="5">
-                            <TextBlock FontSize="15"
-                                       FontWeight="SemiBold">
-                                <Hyperlink
-                                    NavigateUri="https://github.com/microsoft/Microsoft.IO.RecyclableMemoryStream">
+                        <StackPanel Margin="10" Spacing="5">
+                            <TextBlock FontSize="15" FontWeight="SemiBold">
+                                <Hyperlink NavigateUri="https://github.com/microsoft/Microsoft.IO.RecyclableMemoryStream">
                                     Microsoft.IO.RecyclableMemoryStream
                                 </Hyperlink>
                             </TextBlock>
-                            <TextBlock x:Uid="/AboutPage/RCMemoryStreamIntroductoryTextBlock"
-                                       TextWrapping="Wrap" />
+                            <TextBlock x:Uid="/AboutPage/RCMemoryStreamIntroductoryTextBlock" TextWrapping="Wrap" />
                         </StackPanel>
                     </card:CardControl>
 
                     <card:CardControl>
-                        <StackPanel Margin="10"
-                                    Spacing="5">
-                            <TextBlock FontSize="15"
-                                       FontWeight="SemiBold">
+                        <StackPanel Margin="10" Spacing="5">
+                            <TextBlock FontSize="15" FontWeight="SemiBold">
                                 <Hyperlink NavigateUri="https://github.com/mysticmind/reversemarkdown-net">ReverseMarkdown</Hyperlink>
                             </TextBlock>
-                            <TextBlock x:Uid="/AboutPage/ReverseMDIntroductoryTextBlock"
-                                       TextWrapping="Wrap" />
+                            <TextBlock x:Uid="/AboutPage/ReverseMDIntroductoryTextBlock" TextWrapping="Wrap" />
                         </StackPanel>
                     </card:CardControl>
 
                     <card:CardControl>
-                        <StackPanel Margin="10"
-                                    Spacing="5">
-                            <TextBlock FontSize="15"
-                                       FontWeight="SemiBold">
+                        <StackPanel Margin="10" Spacing="5">
+                            <TextBlock FontSize="15" FontWeight="SemiBold">
                                 <Hyperlink NavigateUri="https://github.com/praeclarum/sqlite-net">sqlite-net-pcl</Hyperlink>
                             </TextBlock>
-                            <TextBlock x:Uid="/AboutPage/SQLiteIntroductoryTextBlock"
-                                       TextWrapping="Wrap" />
+                            <TextBlock x:Uid="/AboutPage/SQLiteIntroductoryTextBlock" TextWrapping="Wrap" />
                         </StackPanel>
                     </card:CardControl>
 
 
                     <card:CardControl>
-                        <StackPanel Margin="10"
-                                    Spacing="5">
-                            <TextBlock FontSize="15"
-                                       FontWeight="SemiBold">
+                        <StackPanel Margin="10" Spacing="5">
+                            <TextBlock FontSize="15" FontWeight="SemiBold">
                                 <Hyperlink NavigateUri="https://github.com/codebude/QRCoder">QRCoder</Hyperlink>
                             </TextBlock>
-                            <TextBlock x:Uid="/AboutPage/QRCoderIntroductoryTextBlock"
-                                       TextWrapping="Wrap" />
+                            <TextBlock x:Uid="/AboutPage/QRCoderIntroductoryTextBlock" TextWrapping="Wrap" />
                         </StackPanel>
                     </card:CardControl>
 
                     <card:CardControl>
-                        <StackPanel Margin="10"
-                                    Spacing="5">
-                            <TextBlock FontSize="15"
-                                       FontWeight="SemiBold">
+                        <StackPanel Margin="10" Spacing="5">
+                            <TextBlock FontSize="15" FontWeight="SemiBold">
                                 <Hyperlink NavigateUri="https://github.com/dotnet/pinvoke">PInvoke.User32</Hyperlink>
                             </TextBlock>
-                            <TextBlock x:Uid="/AboutPage/PInvokeIntroductoryTextBlock"
-                                       TextWrapping="Wrap" />
+                            <TextBlock x:Uid="/AboutPage/PInvokeIntroductoryTextBlock" TextWrapping="Wrap" />
                         </StackPanel>
                     </card:CardControl>
                 </StackPanel>
                 <StackPanel Spacing="10">
-                    <TextBlock x:Uid="/AboutPage/SupportMeSubtitleTextBlock"
-                               Style="{StaticResource SubtitleTextBlockStyle}" />
-                    <TextBlock FontSize="{StaticResource PixevalContentFontSize}"
-                               TextWrapping="Wrap">
+                    <TextBlock x:Uid="/AboutPage/SupportMeSubtitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />
+                    <TextBlock FontSize="{StaticResource PixevalContentFontSize}" TextWrapping="Wrap">
                         <Run x:Uid="/AboutPage/SupportMeContentPartI" />
                         <Hyperlink NavigateUri="https://afdian.net/@dylech30th">
                             <Hyperlink.Inlines>
@@ -155,10 +127,8 @@
                     </TextBlock>
                 </StackPanel>
                 <StackPanel Spacing="10">
-                    <TextBlock x:Uid="/AboutPage/OpenSourceLicenseSubtitleTextBlock"
-                               Style="{StaticResource SubtitleTextBlockStyle}" />
-                    <TextBlock FontSize="{StaticResource PixevalContentFontSize}"
-                               TextWrapping="Wrap">
+                    <TextBlock x:Uid="/AboutPage/OpenSourceLicenseSubtitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />
+                    <TextBlock FontSize="{StaticResource PixevalContentFontSize}" TextWrapping="Wrap">
                         <Run x:Uid="/AboutPage/OpenSourceLicenseContentPartI" />
                         <Hyperlink NavigateUri="https://www.gnu.org/licenses/gpl-3.0.en.html">
                             <Hyperlink.Inlines>

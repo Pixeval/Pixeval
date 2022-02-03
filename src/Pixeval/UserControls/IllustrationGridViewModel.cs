@@ -19,8 +19,8 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.UI;
@@ -68,7 +68,41 @@ public partial class IllustrationGridViewModel : ObservableObject, IDisposable, 
         _illustrations = new ObservableCollection<IllustrationViewModel>();
         IllustrationsView = new AdvancedCollectionView(Illustrations);
         _selectionLabel = IllustrationGridCommandBarResources.CancelSelectionButtonDefaultLabel;
-        VisualizationController = new IllustrationVisualizationController(this);
+        VisualizationController = new IllustrationVisualizationController(this)
+        {
+            CollectionChanged = (_, args) =>
+            {
+                void OnIsSelectedChanged(object? sender, IllustrationViewModel model)
+                {
+                    if (model.IsSelected)
+                    {
+                        SelectedIllustrations.Add(model);
+                    }
+                    else
+                    {
+                        SelectedIllustrations.Remove(model);
+                    }
+
+                    // Update the IsAnyIllustrationSelected Property if any of the viewModel's IsSelected property changes
+                    IsAnyIllustrationSelected = SelectedIllustrations.Count != 0;
+
+                    var count = SelectedIllustrations.Count;
+                    SelectionLabel = count == 0
+                        ? IllustrationGridCommandBarResources.CancelSelectionButtonDefaultLabel
+                        : IllustrationGridCommandBarResources.CancelSelectionButtonFormatted.Format(count);
+                }
+
+                switch (args)
+                {
+                    case { Action: NotifyCollectionChangedAction.Add }:
+                        args.NewItems?.OfType<IllustrationViewModel>().ForEach(i => i.IsSelectedChanged += OnIsSelectedChanged);
+                        break;
+                    case { Action: NotifyCollectionChangedAction.Remove }:
+                        args.OldItems?.OfType<IllustrationViewModel>().ForEach(i => i.IsSelectedChanged -= OnIsSelectedChanged);
+                        break;
+                }
+            }
+        };
     }
 
     public IFetchEngine<Illustration?>? FetchEngine { get; set; }
@@ -132,17 +166,5 @@ public partial class IllustrationGridViewModel : ObservableObject, IDisposable, 
         SelectedIllustrations.Clear();
         Illustrations.Clear();
         IllustrationsView.Clear();
-    }
-
-    public void UpdateSelection(IEnumerable<IllustrationViewModel> addedItems, IEnumerable<IllustrationViewModel> removedItems)
-    {
-        SelectedIllustrations.RemoveAll(vm => removedItems.Any(x => x.Equals(vm)));
-        SelectedIllustrations.AddRange(addedItems);
-        IsAnyIllustrationSelected = SelectedIllustrations.Count != 0;
-    }
-
-    ~IllustrationGridViewModel()
-    {
-        Dispose();
     }
 }

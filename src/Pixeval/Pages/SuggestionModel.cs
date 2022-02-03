@@ -44,7 +44,8 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
 
     public static SuggestionModel FromTag(Tag tag)
     {
-        return new SuggestionModel(tag.Name, tag.TranslatedName, SuggestionType.Tag);
+        var (name, translatedName) = tag;
+        return new SuggestionModel(name, translatedName, SuggestionType.Tag);
     }
 
     public static SuggestionModel FromHistory(SearchHistoryEntry history)

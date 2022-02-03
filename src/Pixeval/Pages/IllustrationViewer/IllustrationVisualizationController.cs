@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Collections.Specialized;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
 using Pixeval.CoreApi.Engine;
@@ -34,6 +35,8 @@ public class IllustrationVisualizationController : IDisposable
 
     public IFetchEngine<Illustration?>? FetchEngine { get; set; }
 
+    public NotifyCollectionChangedEventHandler? CollectionChanged { get; set; }
+
     public IllustrationVisualizationController(IIllustrationVisualizer visualizer)
     {
         _visualizer = visualizer;
@@ -42,6 +45,7 @@ public class IllustrationVisualizationController : IDisposable
     public Task FillAsync(int? itemsLimit = null)
     {
         _visualizer.Illustrations = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, itemsLimit));
+        _visualizer.Illustrations.CollectionChanged += CollectionChanged;
         return Task.CompletedTask;
     }
 

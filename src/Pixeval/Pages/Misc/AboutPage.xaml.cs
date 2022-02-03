@@ -20,6 +20,7 @@
 
 using System.Text;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
 
 namespace Pixeval.Pages.Misc;

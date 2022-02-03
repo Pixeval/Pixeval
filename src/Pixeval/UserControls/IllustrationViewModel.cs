@@ -86,7 +86,19 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
     public bool IsSelected
     {
         get => _isSelected;
-        set => SetProperty(_isSelected, value, this, (_, b) => _isSelected = b);
+        set => SetProperty(_isSelected, value, this, (_, b) =>
+        {
+            _isSelected = b;
+            _isSelectedChanged?.Invoke(this, this);
+        });
+    }
+
+    private EventHandler<IllustrationViewModel>? _isSelectedChanged;
+
+    public event EventHandler<IllustrationViewModel> IsSelectedChanged
+    {
+        add => _isSelectedChanged += value; 
+        remove => _isSelectedChanged -= value;
     }
 
     public CancellationHandle LoadingThumbnailCancellationHandle { get; }
@@ -234,10 +246,5 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
     {
         _thumbnailSource?.Dispose();
         _thumbnailSource = null;
-    }
-
-    ~IllustrationViewModel()
-    {
-        Dispose();
     }
 }

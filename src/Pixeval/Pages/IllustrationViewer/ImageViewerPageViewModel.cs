@@ -279,9 +279,4 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         OriginalImageSource = null;
         LoadingOriginalSourceTask?.Dispose();
     }
-
-    ~ImageViewerPageViewModel()
-    {
-        Dispose();
-    }
 }

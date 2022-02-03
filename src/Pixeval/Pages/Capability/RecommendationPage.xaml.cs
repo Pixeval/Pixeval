@@ -44,6 +44,8 @@ public sealed partial class RecommendationPage : ISortedIllustrationContainerPag
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs navigatingCancelEventArgs)
     {
+        ModeSelectionComboBox.SelectionChangedWhenLoaded -= ModeSelectionComboBox_OnSelectionChangedWhenLoaded;
+        SortOptionComboBox.SelectionChangedWhenLoaded -= SortOptionComboBox_OnSelectionChangedWhenLoaded;
         IllustrationContainer.ViewModel.Dispose();
         WeakReferenceMessenger.Default.UnregisterAll(this);
     }
@@ -63,12 +65,12 @@ public sealed partial class RecommendationPage : ISortedIllustrationContainerPag
         }
     }
 
-    private void ModeSelectionComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
+    private void ModeSelectionComboBox_OnSelectionChangedWhenLoaded(object? sender, SelectionChangedEventArgs e)
     {
         ChangeSource();
     }
 
-    private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void SortOptionComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
     {
         // FUCK C#, the default implementations are not inherited. We have to use this stupid cast here.
         // even a donkey knows "this" is an "ISortedIllustrationContainerPageHelper"

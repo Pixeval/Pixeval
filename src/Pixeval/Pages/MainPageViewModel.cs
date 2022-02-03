@@ -57,6 +57,8 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
 
     public readonly NavigationViewTag SettingsTag = new(typeof(SettingsPage), App.AppViewModel.MakoClient.Configuration);
 
+    public readonly NavigationViewTag SpotlightsTag = new(typeof(SpotlightsPage), null);
+
     [ObservableProperty]
     private ImageSource? _avatar;
 

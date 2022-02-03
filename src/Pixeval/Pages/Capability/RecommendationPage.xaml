@@ -25,7 +25,7 @@
             </notifyOnLoadedComboBox:NotifyOnLoadedComboBox>
             <userControls:SortOptionComboBox x:Name="SortOptionComboBox"
                                              Margin="10,0,0,0"
-                                             SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
+                                             SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChangedWhenLoaded" />
         </userControls:IllustrationContainer.CommandBarElements>
     </userControls:IllustrationContainer>
 </controls:EnhancedPage>

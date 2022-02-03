@@ -25,6 +25,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls.Setting.UI;
 using Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry;
 using Pixeval.Database.Managers;
@@ -42,7 +43,7 @@ public sealed partial class SettingsPage
 {
     // This TestParser is used to test whether the user input meta path is legal
     private static readonly MacroParser<string> TestParser = new();
-    private readonly SettingsPageViewModel _viewModel;
+    private SettingsPageViewModel _viewModel;
 
     // The previous meta path after user changes the path field, if the path is illegal
     // its value will be reverted to this field.
@@ -53,6 +54,13 @@ public sealed partial class SettingsPage
         InitializeComponent();
         _viewModel = new SettingsPageViewModel(App.AppViewModel.AppSetting);
         _previousPath = _viewModel.DefaultDownloadPathMacro;
+    }
+
+    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
+    {
+        Bindings.StopTracking();
+        _viewModel = null!;
+        base.OnPageDeactivated(e);
     }
 
     private void SettingsPage_OnLoaded(object sender, RoutedEventArgs e)

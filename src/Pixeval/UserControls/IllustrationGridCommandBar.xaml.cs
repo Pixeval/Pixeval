@@ -123,7 +123,7 @@ public sealed partial class IllustrationGridCommandBar
 
     private void SelectAllToggleButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        ViewModel.IllustrationsView.OfType<IllustrationViewModel>().ForEach(v => v.IsSelected = true);
+        ViewModel.Illustrations.WhereNotNull().ForEach(i => i.IsSelected = true);
     }
 
     private async void AddAllToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -210,7 +210,7 @@ public sealed partial class IllustrationGridCommandBar
 
     private void CancelSelectionButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        ViewModel.Illustrations.ForEach(v => v.IsSelected = false);
+        ViewModel.Illustrations.WhereNotNull().ForEach(i => i.IsSelected = false);
     }
 
     private void OpenConditionDialogButton_OnChecked(object sender, RoutedEventArgs e)
