@@ -127,6 +127,16 @@ public sealed partial class IllustrationGrid
         var context = sender.GetDataContext<IllustrationViewModel>();
         var preLoadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
 
+        // fix Incremental Loading
+        if (Equals(context, ViewModel.IllustrationsView.Last()))
+        {
+            var y = args.BringIntoViewDistanceY;
+            if (y <= sender.ActualHeight * 2)
+            {
+                _ = ViewModel.LoadMoreItemsAsync(20);
+            }
+        }
+
         if (args.BringIntoViewDistanceY <= sender.ActualHeight * preLoadRows)
         {
             if (await context.LoadThumbnailIfRequired())

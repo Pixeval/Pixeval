@@ -20,12 +20,14 @@
 
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using CommunityToolkit.WinUI;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
+using Pixeval.Misc;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.UserControls;
 using Pixeval.Util.IO;
@@ -120,12 +122,19 @@ public partial class IllustratorViewModel : ObservableObject, IIllustrationVisua
 
     public void DisposeCurrent()
     {
+        IncrementalLoadingCollection?.Clear();
         Illustrations.Clear();
     }
 
     public void AddIllustrationViewModel(IllustrationViewModel viewModel)
     {
         Illustrations.Add(viewModel);
+    }
+
+    public IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel> IncrementalLoadingCollection
+    {
+        get;
+        set;
     }
 
     public Visibility IsNotFollowed(bool followed) => followed ? Visibility.Collapsed : Visibility.Visible;

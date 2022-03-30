@@ -26,6 +26,7 @@ using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 using Pixeval.UserControls;
+using Pixeval.Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -45,9 +46,10 @@ public class IllustrationVisualizationController : IDisposable
     public async Task<bool> FillAsync(int? itemsLimit = null)
     {
         var collection = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, itemsLimit));
-        _visualizer.Illustrations = collection;
-        await collection.LoadMoreItemsAsync(20);
+        _visualizer.IncrementalLoadingCollection = collection;
+        await collection.LoadMoreItemsAsync((uint)(itemsLimit ?? 20));
         _visualizer.Illustrations.CollectionChanged += CollectionChanged;
+        _visualizer.Illustrations.AddRange(collection);
         return _visualizer.Illustrations.Count > 0;
     }
 
