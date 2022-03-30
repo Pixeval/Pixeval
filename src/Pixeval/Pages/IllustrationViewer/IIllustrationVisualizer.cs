@@ -19,6 +19,9 @@
 #endregion
 
 using System.Collections.ObjectModel;
+using CommunityToolkit.WinUI;
+using Pixeval.CoreApi.Model;
+using Pixeval.Misc;
 using Pixeval.UserControls;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -37,4 +40,10 @@ public interface IIllustrationVisualizer
     /// </summary>
     /// <param name="viewModel">The view model, usually fetched from FetchEngine</param>
     void AddIllustrationViewModel(IllustrationViewModel viewModel);
+
+    public IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel> IncrementalLoadingCollection
+    {
+        get;
+        set;
+    }
 }
