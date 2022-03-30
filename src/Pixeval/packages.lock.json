@@ -129,9 +129,9 @@
       },
       "Microsoft.WindowsAppSDK": {
         "type": "Direct",
-        "requested": "[1.0.0, )",
-        "resolved": "1.0.0",
-        "contentHash": "nQRK4KuaRDWk9YX78k4Vn1D9w2Z07ki1mTmuT+4oCIEJNM01c40A7DUC6GiBdTjmHJbBq4hm7EyFQUb+kBSW8A==",
+        "requested": "[1.0.1, )",
+        "resolved": "1.0.1",
+        "contentHash": "JpGOsTzW6jQ29DZxxGyelgZ/8GvLdhbh/KKgAbIofZvRWIA/h/eMxhUdlYA5QJJyzOVN/MmBueiJF8GTS5+HhQ==",
         "dependencies": {
           "Microsoft.Windows.SDK.BuildTools": "10.0.22000.194"
         }
@@ -1638,9 +1638,9 @@
       },
       "Microsoft.WindowsAppSDK": {
         "type": "Direct",
-        "requested": "[1.0.0, )",
-        "resolved": "1.0.0",
-        "contentHash": "nQRK4KuaRDWk9YX78k4Vn1D9w2Z07ki1mTmuT+4oCIEJNM01c40A7DUC6GiBdTjmHJbBq4hm7EyFQUb+kBSW8A==",
+        "requested": "[1.0.1, )",
+        "resolved": "1.0.1",
+        "contentHash": "JpGOsTzW6jQ29DZxxGyelgZ/8GvLdhbh/KKgAbIofZvRWIA/h/eMxhUdlYA5QJJyzOVN/MmBueiJF8GTS5+HhQ==",
         "dependencies": {
           "Microsoft.Windows.SDK.BuildTools": "10.0.22000.194"
         }
@@ -2527,9 +2527,9 @@
       },
       "Microsoft.WindowsAppSDK": {
         "type": "Direct",
-        "requested": "[1.0.0, )",
-        "resolved": "1.0.0",
-        "contentHash": "nQRK4KuaRDWk9YX78k4Vn1D9w2Z07ki1mTmuT+4oCIEJNM01c40A7DUC6GiBdTjmHJbBq4hm7EyFQUb+kBSW8A==",
+        "requested": "[1.0.1, )",
+        "resolved": "1.0.1",
+        "contentHash": "JpGOsTzW6jQ29DZxxGyelgZ/8GvLdhbh/KKgAbIofZvRWIA/h/eMxhUdlYA5QJJyzOVN/MmBueiJF8GTS5+HhQ==",
         "dependencies": {
           "Microsoft.Windows.SDK.BuildTools": "10.0.22000.194"
         }
@@ -3416,9 +3416,9 @@
       },
       "Microsoft.WindowsAppSDK": {
         "type": "Direct",
-        "requested": "[1.0.0, )",
-        "resolved": "1.0.0",
-        "contentHash": "nQRK4KuaRDWk9YX78k4Vn1D9w2Z07ki1mTmuT+4oCIEJNM01c40A7DUC6GiBdTjmHJbBq4hm7EyFQUb+kBSW8A==",
+        "requested": "[1.0.1, )",
+        "resolved": "1.0.1",
+        "contentHash": "JpGOsTzW6jQ29DZxxGyelgZ/8GvLdhbh/KKgAbIofZvRWIA/h/eMxhUdlYA5QJJyzOVN/MmBueiJF8GTS5+HhQ==",
         "dependencies": {
           "Microsoft.Windows.SDK.BuildTools": "10.0.22000.194"
         }
