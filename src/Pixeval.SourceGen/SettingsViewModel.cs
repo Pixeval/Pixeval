@@ -18,37 +18,32 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Pixeval.SourceGen.Utilities;
+using static Pixeval.SourceGen.Utils;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using static Pixeval.SourceGen.Utilities.GeneratorHelpers;
 
 namespace Pixeval.SourceGen;
 
-[Generator]
-internal class SettingsViewModelGenerator : GetAttributeGenerator
+internal static partial class TypeWithAttributeDelegates
 {
-    protected override string AttributePathGetter() => "Pixeval.Attributes.SettingsViewModelAttribute";
-
-    protected override void ExecuteForEach(GeneratorExecutionContext context, INamedTypeSymbol attributeType,
-        TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol specificType)
+    public static string? SettingsViewModel(TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol typeSymbol, Func<AttributeData, bool> attributeEqualityComparer)
     {
-        foreach (var typeAttribute in specificType.GetAttributes().Where(attribute =>
-                     SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, attributeType)))
+        foreach (var typeAttribute in typeSymbol.GetAttributes().Where(attributeEqualityComparer))
         {
             if (typeAttribute.ConstructorArguments[0].Value is not INamedTypeSymbol type)
                 continue;
             if (typeAttribute.ConstructorArguments[1].Value is not string settingName)
                 continue;
 
-            var name = specificType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-            var namespaces = new HashSet<string> { specificType.ContainingNamespace.ToDisplayString() };
+            var name = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+            var namespaces = new HashSet<string> { typeSymbol.ContainingNamespace.ToDisplayString() };
             var usedTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
             const string nullable = "#nullable enable\n";
-            var classBegin = @$"namespace {specificType.ContainingNamespace.ToDisplayString()};
+            var classBegin = @$"namespace {typeSymbol.ContainingNamespace.ToDisplayString()};
 
 partial class {name}
 {{";
@@ -60,13 +55,13 @@ partial class {name}
                              && !property.GetAttributes().Any(propertyAttribute => propertyAttribute.AttributeClass!.Name is "SettingsViewModelExclusionAttribute"))
                          .Cast<IPropertySymbol>())
             {
-                namespaces.UseNamespace(usedTypes, property.Type);
+                namespaces.UseNamespace(usedTypes, typeSymbol, property.Type);
                 foreach (var propertyAttribute in property.GetAttributes())
                 {
-                    namespaces.UseNamespace(usedTypes, propertyAttribute.AttributeClass!);
+                    namespaces.UseNamespace(usedTypes, typeSymbol, propertyAttribute.AttributeClass!);
                     foreach (var attrConstructorArgument in propertyAttribute.ConstructorArguments.Where(arg => arg.Value is INamedTypeSymbol))
                     {
-                        namespaces.UseNamespace(usedTypes, (ITypeSymbol) attrConstructorArgument.Value!);
+                        namespaces.UseNamespace(usedTypes, typeSymbol, (ITypeSymbol) attrConstructorArgument.Value!);
                     }
                 }
 
@@ -82,11 +77,10 @@ partial class {name}
             var namespaceNames = namespaces.Skip(1).Aggregate("", (current, ns) => current + $"using {ns};\n");
             var allPropertySentences = propertySentences.Aggregate("\n", (current, ps) => current + $"{ps}\n\n");
             allPropertySentences = allPropertySentences.Substring(0, allPropertySentences.Length - 1);
-            var fileName = specificType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat
-                .WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted)) + ".g.cs";
             var compilationUnit = nullable + namespaceNames + classBegin + allPropertySentences + classEnd;
-            context.AddSource(fileName, compilationUnit);
-            break;
+            return compilationUnit;
         }
+
+        return null;
     }
 }
