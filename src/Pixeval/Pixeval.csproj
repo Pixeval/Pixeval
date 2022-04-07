@@ -32,6 +32,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.19041.22" RuntimeFrameworkVersion="10.0.19041.22" />
 		<Content Remove="Assets\Images\logo-no-caption.png" />
 		<Content Remove="Strings\zh-CN\BookmarksPage.resw" />
 		<Content Remove="Strings\zh-CN\IllustrationGridCommandBar.resw" />
