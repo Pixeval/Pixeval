@@ -23,13 +23,11 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
-using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
-using Pixeval.Misc;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Popups;
 using Pixeval.Util;
@@ -51,9 +49,6 @@ public partial class IllustrationGridViewModel : ObservableObject, IDisposable, 
     [ObservableProperty]
     private bool _hasNoItems;
 
-    [ObservableProperty]
-    private bool _isLoading;
-
     private SoftwareBitmapSource? _webQrCodeSource;
 
     private ObservableCollection<IllustrationViewModel> _illustrations;
@@ -66,12 +61,6 @@ public partial class IllustrationGridViewModel : ObservableObject, IDisposable, 
             SetProperty(ref _illustrations, value);
             IllustrationsView.Source = _illustrations;
         }
-    }
-
-    public IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel> IncrementalLoadingCollection
-    {
-        get;
-        set;
     }
 
     public IllustrationGridViewModel()
@@ -173,17 +162,6 @@ public partial class IllustrationGridViewModel : ObservableObject, IDisposable, 
         HasNoItems = !await _visualizationController.ResetAndFillAsync(newEngine, itemLimit);
     }
 
-    public async Task LoadMoreItemsAsync(uint count = 20)
-    {
-        if (!IsLoading)
-        {
-            IsLoading = true;
-            await IncrementalLoadingCollection.LoadMoreItemsAsync(count);
-            Illustrations.AddRange(IncrementalLoadingCollection.Skip(Illustrations.Count));
-            IsLoading = false;
-        }
-    }
-
     public void DisposeCurrent()
     {
         foreach (var illustrationViewModel in Illustrations)
@@ -194,6 +172,5 @@ public partial class IllustrationGridViewModel : ObservableObject, IDisposable, 
         SelectedIllustrations.Clear();
         Illustrations.Clear();
         IllustrationsView.Clear();
-        IncrementalLoadingCollection?.Clear();
     }
 }
