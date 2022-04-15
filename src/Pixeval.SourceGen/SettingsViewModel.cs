@@ -1,4 +1,5 @@
 ﻿#region Copyright (c) Pixeval/Pixeval.SourceGen
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval.SourceGen
@@ -16,71 +17,71 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using System;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using static Pixeval.SourceGen.Utils;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using static Pixeval.SourceGen.Utils;
 
 namespace Pixeval.SourceGen;
 
 internal static partial class TypeWithAttributeDelegates
 {
-    public static string? SettingsViewModel(TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol typeSymbol, Func<AttributeData, bool> attributeEqualityComparer)
+    public static string? SettingsViewModel(TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol typeSymbol,
+        List<AttributeData> attributeList)
     {
-        foreach (var typeAttribute in typeSymbol.GetAttributes().Where(attributeEqualityComparer))
-        {
-            if (typeAttribute.ConstructorArguments[0].Value is not INamedTypeSymbol type)
-                continue;
-            if (typeAttribute.ConstructorArguments[1].Value is not string settingName)
-                continue;
+        var attribute = attributeList[0];
+        if (attribute.ConstructorArguments[0].Value is not INamedTypeSymbol type)
+            return null;
+        if (attribute.ConstructorArguments[1].Value is not string settingName)
+            return null;
 
-            var name = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-            var namespaces = new HashSet<string> { typeSymbol.ContainingNamespace.ToDisplayString() };
-            var usedTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
-            const string nullable = "#nullable enable\n";
-            var classBegin = @$"namespace {typeSymbol.ContainingNamespace.ToDisplayString()};
+        var name = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+        var namespaces = new HashSet<string> { typeSymbol.ContainingNamespace.ToDisplayString() };
+        var usedTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
+        const string nullable = "#nullable enable\n";
+        var classBegin = @$"namespace {typeSymbol.ContainingNamespace.ToDisplayString()};
 
 partial class {name}
 {{";
-            var propertySentences = new List<string>();
-            const string classEnd = @"}";
+        var propertySentences = new List<string>();
+        const string classEnd = @"}";
 
-            foreach (var property in type.GetMembers().Where(property =>
-                             property is { Kind: SymbolKind.Property } and not { Name: "EqualityContract" }
-                             && !property.GetAttributes().Any(propertyAttribute => propertyAttribute.AttributeClass!.Name is "SettingsViewModelExclusionAttribute"))
-                         .Cast<IPropertySymbol>())
+        foreach (var property in type.GetMembers().Where(property =>
+                         property is { Kind: SymbolKind.Property } and not { Name: "EqualityContract" }
+                         && !property.GetAttributes().Any(propertyAttribute =>
+                             propertyAttribute.AttributeClass!.Name is "SettingsViewModelExclusionAttribute"))
+                     .Cast<IPropertySymbol>())
+        {
+            namespaces.UseNamespace(usedTypes, typeSymbol, property.Type);
+            foreach (var propertyAttribute in property.GetAttributes())
             {
-                namespaces.UseNamespace(usedTypes, typeSymbol, property.Type);
-                foreach (var propertyAttribute in property.GetAttributes())
+                namespaces.UseNamespace(usedTypes, typeSymbol, propertyAttribute.AttributeClass!);
+                foreach (var attrConstructorArgument in propertyAttribute.ConstructorArguments.Where(arg =>
+                             arg.Value is INamedTypeSymbol))
                 {
-                    namespaces.UseNamespace(usedTypes, typeSymbol, propertyAttribute.AttributeClass!);
-                    foreach (var attrConstructorArgument in propertyAttribute.ConstructorArguments.Where(arg => arg.Value is INamedTypeSymbol))
-                    {
-                        namespaces.UseNamespace(usedTypes, typeSymbol, (ITypeSymbol) attrConstructorArgument.Value!);
-                    }
+                    namespaces.UseNamespace(usedTypes, typeSymbol, (ITypeSymbol)attrConstructorArgument.Value!);
                 }
+            }
 
-                propertySentences.Add(Spacing(1) + Regex.Replace(property.DeclaringSyntaxReferences[0].GetSyntax().ToString(), @"{[\s\S]+}",
-                    $@"
+            propertySentences.Add(Spacing(1) + Regex.Replace(
+                property.DeclaringSyntaxReferences[0].GetSyntax().ToString(), @"{[\s\S]+}",
+                $@"
     {{
         get => {settingName}.{property.Name};
         set => SetProperty({settingName}.{property.Name}, value, {settingName}, (setting, value) => setting.{property.Name} = value);
     }}"));
-            }
-
-
-            var namespaceNames = namespaces.Skip(1).Aggregate("", (current, ns) => current + $"using {ns};\n");
-            var allPropertySentences = propertySentences.Aggregate("\n", (current, ps) => current + $"{ps}\n\n");
-            allPropertySentences = allPropertySentences.Substring(0, allPropertySentences.Length - 1);
-            var compilationUnit = nullable + namespaceNames + classBegin + allPropertySentences + classEnd;
-            return compilationUnit;
         }
 
-        return null;
+
+        var namespaceNames = namespaces.Skip(1).Aggregate("", (current, ns) => current + $"using {ns};\n");
+        var allPropertySentences = propertySentences.Aggregate("\n", (current, ps) => current + $"{ps}\n\n");
+        allPropertySentences = allPropertySentences.Substring(0, allPropertySentences.Length - 1);
+        var compilationUnit = nullable + namespaceNames + classBegin + allPropertySentences + classEnd;
+        return compilationUnit;
     }
 }
