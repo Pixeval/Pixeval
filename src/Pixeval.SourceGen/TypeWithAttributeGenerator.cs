@@ -116,30 +116,25 @@ public class TypeWithAttributeGenerator : IIncrementalGenerator
                 continue;
 
             // 同种attribute只判断一遍
-            var usedAttributes = new HashSet<string>();
+            var usedAttributes = new Dictionary<string, List<AttributeData>>();
 
             // 遍历class上每个Attribute
-            //[...,...]
-            //[...,...]
-            foreach (var attributeListSyntax in typeDeclarationSyntax.AttributeLists)
-                //[...,...]
-                foreach (var attributeSyntax in attributeListSyntax.Attributes)
-                {
-                    if (semanticModel.GetSymbolInfo(attributeSyntax).Symbol is not IMethodSymbol attributeCtorSymbol)
-                        continue;
-                    var attributeName = attributeCtorSymbol.ContainingType.ToDisplayString();
-                    if (!Attributes.ContainsKey(attributeName))
-                        continue;
-                    if(usedAttributes.Contains(attributeName))
-                        continue;
-                    usedAttributes.Add(attributeName);
+            foreach (var attribute in typeSymbol.GetAttributes())
+            {
+                var attributeName = attribute.AttributeClass!.ToDisplayString();
+                if (!Attributes.ContainsKey(attributeName))
+                    continue;
+                if (usedAttributes.ContainsKey(attributeName))
+                    usedAttributes[attributeName].Add(attribute);
+                else usedAttributes[attributeName] = new List<AttributeData> { attribute };
+            }
 
-                    if (Attributes[attributeName](typeDeclarationSyntax, typeSymbol, attribute => SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, attributeCtorSymbol.ContainingType)) is { } source)
-                        context.AddSource(
-                            // 不能重名
-                            $"{typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat.WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted))}_{attributeName}.g.cs",
-                            source);
-                }
+            foreach (var usedAttribute in usedAttributes)
+                if (Attributes[usedAttribute.Key](typeDeclarationSyntax, typeSymbol, usedAttribute.Value) is { } source)
+                    context.AddSource(
+                        // 不能重名
+                        $"{typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat.WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted))}_{usedAttribute.Key}.g.cs",
+                        source);
         }
     }
 }
