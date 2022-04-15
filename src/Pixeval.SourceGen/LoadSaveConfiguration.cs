@@ -43,9 +43,8 @@ internal static partial class TypeWithAttributeDelegates
         string? staticClassName = null;
         string? methodName = null;
 
-        if (attribute.NamedArguments[0].Key is "CastMethod" && attribute.NamedArguments[0].Value.Value is { } value)
+        if (attribute.NamedArguments[0].Key is "CastMethod" && attribute.NamedArguments[0].Value.Value is string castMethodFullName)
         {
-            var castMethodFullName = (string)value;
             var dotPosition = castMethodFullName.LastIndexOf('.');
             if (dotPosition is -1)
                 throw new InvalidDataException("\"CastMethod\" must contain the full name.");
