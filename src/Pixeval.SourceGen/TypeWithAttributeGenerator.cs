@@ -1,4 +1,25 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval.SourceGen
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval.SourceGen
+// Copyright (c) 2021 Pixeval.SourceGen/LoadSaveConfigurationGenerator.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
@@ -20,9 +41,9 @@ public class TypeWithAttributeGenerator : IIncrementalGenerator
     /// </summary>
     /// <param name="typeDeclarationSyntax"></param>
     /// <param name="typeSymbol"></param>
-    /// <param name="attributeEqualityComparer">判断是否是指定的attribute的比较器</param>
+    /// <param name="attributeList">该类的某种Attribute</param>
     /// <returns>生成的代码</returns>
-    private delegate string? TypeWithAttribute(TypeDeclarationSyntax typeDeclarationSyntax, INamedTypeSymbol typeSymbol, Func<AttributeData, bool> attributeEqualityComparer);
+    private delegate string? TypeWithAttribute(TypeDeclarationSyntax typeDeclarationSyntax, INamedTypeSymbol typeSymbol, List<AttributeData> attributeList);
 
     /// <summary>
     /// 需要生成的Attribute
@@ -95,30 +116,25 @@ public class TypeWithAttributeGenerator : IIncrementalGenerator
                 continue;
 
             // 同种attribute只判断一遍
-            var usedAttributes = new HashSet<string>();
+            var usedAttributes = new Dictionary<string, List<AttributeData>>();
 
             // 遍历class上每个Attribute
-            //[...,...]
-            //[...,...]
-            foreach (var attributeListSyntax in typeDeclarationSyntax.AttributeLists)
-                //[...,...]
-                foreach (var attributeSyntax in attributeListSyntax.Attributes)
-                {
-                    if (semanticModel.GetSymbolInfo(attributeSyntax).Symbol is not IMethodSymbol attributeCtorSymbol)
-                        continue;
-                    var attributeName = attributeCtorSymbol.ContainingType.ToDisplayString();
-                    if (!Attributes.ContainsKey(attributeName))
-                        continue;
-                    if(usedAttributes.Contains(attributeName))
-                        continue;
-                    usedAttributes.Add(attributeName);
+            foreach (var attribute in typeSymbol.GetAttributes())
+            {
+                var attributeName = attribute.AttributeClass!.ToDisplayString();
+                if (!Attributes.ContainsKey(attributeName))
+                    continue;
+                if (usedAttributes.ContainsKey(attributeName))
+                    usedAttributes[attributeName].Add(attribute);
+                else usedAttributes[attributeName] = new List<AttributeData> { attribute };
+            }
 
-                    if (Attributes[attributeName](typeDeclarationSyntax, typeSymbol, attribute => SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, attributeCtorSymbol.ContainingType)) is { } source)
-                        context.AddSource(
-                            // 不能重名
-                            $"{typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat.WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted))}_{attributeName}.g.cs",
-                            source);
-                }
+            foreach (var usedAttribute in usedAttributes)
+                if (Attributes[usedAttribute.Key](typeDeclarationSyntax, typeSymbol, usedAttribute.Value) is { } source)
+                    context.AddSource(
+                        // 不能重名
+                        $"{typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat.WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted))}_{usedAttribute.Key}.g.cs",
+                        source);
         }
     }
 }

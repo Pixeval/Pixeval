@@ -1,8 +1,28 @@
-﻿using System;
+﻿#region Copyright (c) Pixeval/Pixeval.SourceGen
+
+// GPL v3 License
+// 
+// Pixeval/Pixeval.SourceGen
+// Copyright (c) 2021 Pixeval.SourceGen/LoadSaveConfigurationGenerator.cs
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#endregion
+
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Pixeval.SourceGen.Utils;
@@ -11,13 +31,13 @@ namespace Pixeval.SourceGen;
 
 internal static partial class TypeWithAttributeDelegates
 {
-    public static string? DependencyProperty(TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol typeSymbol, Func<AttributeData, bool> attributeEqualityComparer)
+    public static string? DependencyProperty(TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol typeSymbol, List<AttributeData> attributeList)
     {
         var members = new List<MemberDeclarationSyntax>();
         var namespaces = new HashSet<string> { "Microsoft.UI.Xaml" };
         var usedTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
 
-        foreach (var attribute in typeSymbol.GetAttributes().Where(attributeEqualityComparer))
+        foreach (var attribute in attributeList)
         {
             if (attribute.ConstructorArguments[0].Value is not string propertyName || attribute.ConstructorArguments[1].Value is not INamedTypeSymbol type)
                 continue;
