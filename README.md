@@ -10,6 +10,7 @@
         <a href="https://jq.qq.com/?_wv=1027&k=5hGmJbQ" target="_blank">
             <img src="https://img.shields.io/static/v1?label=chatting&message=qq&color=blue&style=flat-square">
         </a>
+<a href="https://app.fossa.com/projects/git%2Bgithub.com%2FPixeval%2FPixeval?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2FPixeval%2FPixeval.svg?type=shield"/></a>
         <a href="https://github.com/Pixeval/Pixeval/blob/master/LICENSE" target="_blank">
             <img src="https://img.shields.io/github/license/Pixeval/Pixeval?style=flat-square">
         </a>
@@ -35,6 +36,9 @@
 更多详细信息请前往 [项目主页](https://sora.ink/pixeval) 查看
 
 **WinUI3版本提供了更好的UI，更好的项目结构以及更好的开发体验，如果你想要了解目前的开发进度，可以通过以下方法来下载并编译该项目**
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FPixeval%2FPixeval.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FPixeval%2FPixeval?ref=badge_large)
+
 ## 准备
 1. 带有WinUI 3工作负载的Visual Studio
    2022，你可以在 [创建你的第一个WinUI 3 app](https://docs.microsoft.com/zh-cn/windows/apps/winui/winui3/create-your-first-winui3-app?tabs=desktop-csharp) 的"先决条件"部分查看更多信息
