@@ -29,7 +29,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.UI;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;

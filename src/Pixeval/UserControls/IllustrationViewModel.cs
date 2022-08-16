@@ -25,7 +25,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using CommunityToolkit.WinUI.UI.Controls;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Attributes;
 using Pixeval.CoreApi.Global.Enum;

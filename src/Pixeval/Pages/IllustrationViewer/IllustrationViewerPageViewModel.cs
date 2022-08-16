@@ -26,7 +26,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.System.UserProfile;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;

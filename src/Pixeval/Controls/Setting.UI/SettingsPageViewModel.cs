@@ -25,7 +25,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Database.Managers;

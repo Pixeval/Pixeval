@@ -22,7 +22,7 @@ using System;
 using System.Linq;
 using Windows.System;
 using Windows.UI.Core;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;

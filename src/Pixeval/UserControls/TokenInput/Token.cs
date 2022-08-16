@@ -20,7 +20,7 @@
 
 using System;
 using System.Text.RegularExpressions;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Utilities;
 
 namespace Pixeval.UserControls.TokenInput;
