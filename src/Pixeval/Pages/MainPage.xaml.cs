@@ -31,7 +31,7 @@ using Windows.UI.Core;
 using CommunityToolkit.WinUI.UI;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -64,7 +64,7 @@ public sealed partial class MainPage
     // This field contains the view model that the illustration viewer is
     // currently holding if we're navigating back to the MainPage
     private static IllustrationViewModel? _illustrationViewerContent;
-    
+
     // Similar to the previous field, this field contains a illustrator model
     private static IllustratorViewModel? _illustratorViewerContent;
 
@@ -80,7 +80,7 @@ public sealed partial class MainPage
     {
         // dirty trick, the order of the menu items is the same as the order of the fields in MainPageTabItem
         // since enums are basically integers, we just need a cast to transform it to the correct offset.
-        ((NavigationViewItem) MainPageRootNavigationView.MenuItems[(int) App.AppViewModel.AppSetting.DefaultSelectedTabItem]).IsSelected = true;
+        ((NavigationViewItem)MainPageRootNavigationView.MenuItems[(int)App.AppViewModel.AppSetting.DefaultSelectedTabItem]).IsSelected = true;
 
         // The application is invoked by a protocol, call the corresponding protocol handler.
         if (App.AppViewModel.ConsumeProtocolActivation())
@@ -134,7 +134,7 @@ public sealed partial class MainPage
 
     private async void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
     {
-        var suggestBox = (AutoSuggestBox) sender;
+        var suggestBox = (AutoSuggestBox)sender;
         suggestBox.IsSuggestionListOpen = true;
         await _viewModel.SuggestionProvider.UpdateAsync(suggestBox.Text);
     }
@@ -166,7 +166,7 @@ public sealed partial class MainPage
         {
             sender.Text = name;
         }
-    } 
+    }
 
     private async void KeywordAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
     {
@@ -213,7 +213,7 @@ public sealed partial class MainPage
         await Task.Delay(500);
         var settingsPage = MainPageRootFrame.FindDescendant<SettingsPage>()!;
         var position = settingsPage.SearchSettingsGroup
-            .TransformToVisual((UIElement) settingsPage.SettingsPageScrollViewer.Content)
+            .TransformToVisual((UIElement)settingsPage.SettingsPageScrollViewer.Content)
             .TransformPoint(new Point(0, 0));
         settingsPage.SettingsPageScrollViewer.ChangeView(null, position.Y, null, false);
     }

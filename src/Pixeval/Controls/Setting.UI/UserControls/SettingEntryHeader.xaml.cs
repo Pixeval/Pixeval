@@ -54,7 +54,7 @@ public sealed partial class SettingEntryHeader
     {
         if (e.NewValue is string str)
         {
-            ((SettingEntryHeader) d).HeaderTextBlock.Text = str;
+            ((SettingEntryHeader)d).HeaderTextBlock.Text = str;
         }
     }
 
@@ -62,13 +62,13 @@ public sealed partial class SettingEntryHeader
     {
         if (e.NewValue is { } content)
         {
-            ((SettingEntryHeader) d).DescriptionPresenter.Content = content;
+            ((SettingEntryHeader)d).DescriptionPresenter.Content = content;
         }
     }
 
     private static void OnIconChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var presenter = ((SettingEntryHeader) d).IconContentPresenter;
+        var presenter = ((SettingEntryHeader)d).IconContentPresenter;
         if (e.NewValue is IconElement icon)
         {
             presenter.Visibility = Visibility.Visible;

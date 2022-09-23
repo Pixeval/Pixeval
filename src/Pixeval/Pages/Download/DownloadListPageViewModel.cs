@@ -24,7 +24,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Utilities;

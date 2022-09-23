@@ -143,7 +143,7 @@ public partial class MakoClient
         EnsureNotCancelled();
         return ((await Resolve<IAppApiEndPoint>().GetTrendingTagsForNovelAsync(targetFilter.GetDescription()).ConfigureAwait(false)).TrendTags ?? Enumerable.Empty<TrendingTagResponse.TrendTag>()).Select(t => new TrendingTag(t.TagStr, t.TranslatedName, t.Illust));
     }
-    
+
     /// <summary>
     ///     Gets the tags that are created by users to classify their bookmarks
     /// </summary>

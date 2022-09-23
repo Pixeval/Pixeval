@@ -175,7 +175,7 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
         var ras = await _httpClient.DownloadAsIRandomAccessStreamAsync(task.Url, new Progress<int>(percentage => task.ProgressPercentage = percentage), task.CancellationHandle);
         switch (ras)
         {
-            case Result<IRandomAccessStream>.Success (var resultStream):
+            case Result<IRandomAccessStream>.Success(var resultStream):
                 try
                 {
                     if (task is ICustomBehaviorDownloadTask customBehaviorDownloadTask)
@@ -201,7 +201,7 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
                 SetState(task, DownloadState.Completed);
                 task.Completion.SetResult();
                 break;
-            case Result<IRandomAccessStream>.Failure (var exception):
+            case Result<IRandomAccessStream>.Failure(var exception):
                 Functions.IgnoreException(() => File.Delete(task.Destination));
                 if (exception is not OperationCanceledException && exception is not null)
                 {

@@ -26,7 +26,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.System.UserProfile;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -60,7 +60,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     private bool _isInfoPaneOpen;
 
     private ImageSource? _qrCodeSource;
-    
+
     // The reason why we don't put UserProfileImageSource into IllustrationViewModel
     // is because the whole array of Illustrations is just representing the same 
     // illustration's different manga pages, so all of them have the same illustrator
@@ -78,7 +78,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     private readonly IllustrationViewModel[] _illustrations;
 
     public bool IsDisposed;
-    
+
     // illustrations should contains only one item if the illustration is a single
     // otherwise it contains the entire manga data
     public IllustrationViewerPageViewModel(IllustrationGrid gridView, params IllustrationViewModel[] illustrations) : this(illustrations)
@@ -333,7 +333,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     private void PlayGifCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        var bitmap = (BitmapImage) Current.OriginalImageSource!;
+        var bitmap = (BitmapImage)Current.OriginalImageSource!;
         if (bitmap.IsPlaying)
         {
             bitmap.Stop();

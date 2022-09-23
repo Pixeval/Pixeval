@@ -4,6 +4,9 @@ on:
     workflow_dispatch:
     push:
   
+defaults:
+  run:
+    shell: pwsh
 
 jobs:
     build:
@@ -11,7 +14,7 @@ jobs:
             matrix:
                 platform: ['x64','x86','arm64']
 
-        runs-on: windows-2022
+        runs-on: windows-latest
 
         env:
             private_key: ${{ secrets.PRIVATE_KEY }}
@@ -22,14 +25,18 @@ jobs:
               uses: actions/checkout@v2
               with:
                 fetch-depth: 0
-            - name: setup-msbuild
-              uses: microsoft/setup-msbuild@v1
+
+            - uses: actions/setup-dotnet@v2
+              with:
+                global-json-file: global.json
+                include-prerelease: true
+
             - name: Install pfx
+              if: github.repository_owner == 'Pixeval'
               run: |
                 [io.file]::WriteAllBytes("$PWD/temp.pfx",[convert]::FromBase64String($env:private_key))
                 Import-PfxCertificate -FilePath $PWD/temp.pfx -CertStoreLocation Cert:\CurrentUser\My -Password (ConvertTo-SecureString -AsPlainText "$env:private_key_password")
                 Remove-Item -Path "$PWD/temp.pfx"
-              shell: pwsh
 
             - uses: actions/cache@v2
               with:
@@ -39,11 +46,17 @@ jobs:
                     ${{ runner.os }}-nuget-
 
             - name: Restore the application
-              run: msbuild -t:restore -p:Platform=${{ matrix.platform }} -p:RestoreLockedMode=true -m
+              run: dotnet msbuild -t:restore -p:Platform=${{ matrix.platform }} -p:RestoreLockedMode=true -m
 
             - name: Publish the application
-              run:  msbuild -t:publish -p:Configuration=Release -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:PackageCertificateThumbprint="$env:private_key_thumbprint" -p:OutDir="$PWD\build" -m
-              shell: pwsh
+              run: |
+                if($env:GITHUB_REPOSITORY_OWNER -eq "Pixeval"){
+                    dotnet msbuild -t:publish -p:Configuration=Release -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:PackageCertificateThumbprint="$env:private_key_thumbprint" -p:OutDir="$PWD\build" -m
+                }
+                else{
+                    dotnet msbuild -t:publish -p:Configuration=Release -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:AppxPackageSigningEnabled="false" -p:OutDir="$PWD\build"  -m
+                }
+                
 
             - name: Copy files
               run: |

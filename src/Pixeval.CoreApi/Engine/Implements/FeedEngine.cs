@@ -60,7 +60,7 @@ internal class FeedEngine : AbstractPixivFetchEngine<Feed>
             {
                 switch (await GetResponseAsync(BuildRequestUrl()).ConfigureAwait(false))
                 {
-                    case Result<string>.Success (var response):
+                    case Result<string>.Success(var response):
                         if (TryParsePreloadJsonFromHtml(response, out var result))
                         {
                             await UpdateAsync(result).ConfigureAwait(false);
@@ -253,12 +253,12 @@ internal class FeedEngine : AbstractPixivFetchEngine<Feed>
                 switch (feedType)
                 {
                     case FeedType.AddBookmark or FeedType.AddIllust:
-                    {
-                        var illustration = illusts.FirstOrNull(i => i.Name == feedTargetId);
-                        feedObject.ArtistName = users.FirstOrNull(u => u.Name == (illustration?.GetPropertyOrNull("post_user")?.GetPropertyOrNull("id")?.GetString() ?? string.Empty))?.GetPropertyOrNull("name")?.GetString();
-                        feedObject.FeedName = illustration?.GetPropertyOrNull("title")?.GetString();
-                        break;
-                    }
+                        {
+                            var illustration = illusts.FirstOrNull(i => i.Name == feedTargetId);
+                            feedObject.ArtistName = users.FirstOrNull(u => u.Name == (illustration?.GetPropertyOrNull("post_user")?.GetPropertyOrNull("id")?.GetString() ?? string.Empty))?.GetPropertyOrNull("name")?.GetString();
+                            feedObject.FeedName = illustration?.GetPropertyOrNull("title")?.GetString();
+                            break;
+                        }
                     case FeedType.AddFavorite:
                         feedObject.FeedName = users.FirstOrNull(u => u.Name == feedTargetId)?.GetPropertyOrNull("name")?.GetString();
                         feedObject.IsTargetRefersToUser = true;
@@ -295,12 +295,12 @@ internal class FeedEngine : AbstractPixivFetchEngine<Feed>
             try
             {
                 return await MakoClient.ResolveKeyed<HttpClient>(MakoApiKind.WebApi)
-                    .GetStringResultAsync(url, async responseMessage => new MakoNetworkException(url, MakoClient.Configuration.Bypass, await responseMessage.Content.ReadAsStringAsync(), (int) responseMessage.StatusCode))
+                    .GetStringResultAsync(url, async responseMessage => new MakoNetworkException(url, MakoClient.Configuration.Bypass, await responseMessage.Content.ReadAsStringAsync(), (int)responseMessage.StatusCode))
                     .ConfigureAwait(false);
             }
             catch (HttpRequestException e)
             {
-                return Result<string>.OfFailure(new MakoNetworkException(url, MakoClient.Configuration.Bypass, e.Message, (int?) e.StatusCode ?? -1));
+                return Result<string>.OfFailure(new MakoNetworkException(url, MakoClient.Configuration.Bypass, e.Message, (int?)e.StatusCode ?? -1));
             }
         }
     }
@@ -311,19 +311,19 @@ internal class FeedEngine : AbstractPixivFetchEngine<Feed>
     private record FeedRequestContext
     {
         public FeedRequestContext(string unifyToken, string sid, string mode, bool isLastPage)
-        {
-            UnifyToken = unifyToken;
-            Sid = sid;
-            Mode = mode;
-            IsLastPage = isLastPage;
-        }
-
-        public string UnifyToken { get; }
-
-        public string Sid { get; }
-
-        public string Mode { get; }
-
-        public bool IsLastPage { get; }
+    {
+        UnifyToken = unifyToken;
+        Sid = sid;
+        Mode = mode;
+        IsLastPage = isLastPage;
     }
+
+    public string UnifyToken { get; }
+
+    public string Sid { get; }
+
+    public string Mode { get; }
+
+    public bool IsLastPage { get; }
+}
 }

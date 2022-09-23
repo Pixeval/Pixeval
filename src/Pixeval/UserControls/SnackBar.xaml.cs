@@ -35,7 +35,7 @@ namespace Pixeval.UserControls
 
         public UIElement ShadowReceiver
         {
-            get => (UIElement) GetValue(ShadowReceiverProperty);
+            get => (UIElement)GetValue(ShadowReceiverProperty);
             set => SetValue(ShadowReceiverProperty, value);
         }
 

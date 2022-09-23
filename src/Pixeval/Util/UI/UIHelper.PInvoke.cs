@@ -30,7 +30,7 @@ namespace Pixeval.Util.UI;
 public static partial class UIHelper
 {
     // ReSharper disable once SuspiciousTypeConversion.Global
-    private static readonly ITaskBarList3 TaskBarList3Instance = (ITaskBarList3) new TaskBarInstance();
+    private static readonly ITaskBarList3 TaskBarList3Instance = (ITaskBarList3)new TaskBarInstance();
 
     // see https://github.com/microsoft/Windows-classic-samples/blob/main/Samples/ShareSource/wpf/DataTransferManagerHelper.cs
     private static readonly Guid RiId = new(0xa5caee9b, 0x8708, 0x49d1, 0x8d, 0x36, 0x67, 0xd2, 0x5a, 0x8d, 0xa0, 0x0c);
@@ -50,9 +50,9 @@ public static partial class UIHelper
     {
         var windowNative = window.As<IWindowNative>();
         var dpi = User32.GetDpiForWindow(windowNative.WindowHandle);
-        var scalingFactor = (float) dpi / 96;
-        var scaledWidth = (int) (width * scalingFactor);
-        var scaledHeight = (int) (height * scalingFactor);
+        var scalingFactor = (float)dpi / 96;
+        var scaledWidth = (int)(width * scalingFactor);
+        var scaledHeight = (int)(height * scalingFactor);
 
         User32.SetWindowPos(windowNative.WindowHandle, User32.SpecialWindowHandles.HWND_TOP,
             0, 0, scaledWidth, scaledHeight,
@@ -82,7 +82,7 @@ public static partial class UIHelper
         var manager = IntPtr.Zero;
         fixed (Guid* id = &RiId)
         {
-            interop.GetForWindow(App.AppViewModel.GetMainWindowHandle(), id, (void**) &manager);
+            interop.GetForWindow(App.AppViewModel.GetMainWindowHandle(), id, (void**)&manager);
             return DataTransferManager.FromAbi(manager);
         }
     }

@@ -52,7 +52,7 @@ public abstract class SimplePersistentManager<T> : IPersistentManager<T, T>
         {
             Purge(MaximumRecords);
         }
-        
+
         Collection.Insert(t);
     }
 

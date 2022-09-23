@@ -18,7 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -70,7 +70,7 @@ public sealed partial class BookmarksPage : ISortedIllustrationContainerPageHelp
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        ((ISortedIllustrationContainerPageHelper) this).OnSortOptionChanged();
+        ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
     }
 
     private void ChangeSource()

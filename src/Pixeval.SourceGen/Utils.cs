@@ -33,7 +33,7 @@ namespace Pixeval.SourceGen;
 internal static class Utils
 {
     internal static INamedTypeSymbol ObjectSymbol { get; set; } = null!;
-    
+
     #region Abstract Syntax Tree Generate
 
     /// <summary>

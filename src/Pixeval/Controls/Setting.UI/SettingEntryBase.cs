@@ -108,7 +108,7 @@ public partial class SettingEntryBase : Control
 
     protected override void OnApplyTemplate()
     {
-        SettingEntryHeader = (SettingEntryHeader?) GetTemplateChild(PartEntryHeader);
+        SettingEntryHeader = (SettingEntryHeader?)GetTemplateChild(PartEntryHeader);
         base.OnApplyTemplate();
     }
 }

@@ -135,7 +135,7 @@ public static partial class IOHelper
                     await resultStream.WriteAsync(buffer, 0, bytesRead);
                     totalRead += bytesRead;
                     // reduce the frequency of the invocation of the callback, otherwise it will draws a severe performance impact
-                    if ((int) (totalRead / (double) responseLength * 100) is var percentage && percentage - lastReportedProgressPercentage >= 1)
+                    if ((int)(totalRead / (double)responseLength * 100) is var percentage && percentage - lastReportedProgressPercentage >= 1)
                     {
                         lastReportedProgressPercentage = percentage;
                         progress?.Report(percentage); // percentage, 100 as base
@@ -147,7 +147,7 @@ public static partial class IOHelper
                 return Result<Stream>.OfSuccess(resultStream);
             }
 
-            return (await httpClient.DownloadByteArrayAsync(url)).Bind(m => (Stream) RecyclableMemoryStreamManager.GetStream(m.Span));
+            return (await httpClient.DownloadByteArrayAsync(url)).Bind(m => (Stream)RecyclableMemoryStreamManager.GetStream(m.Span));
         }
         catch (Exception e)
         {

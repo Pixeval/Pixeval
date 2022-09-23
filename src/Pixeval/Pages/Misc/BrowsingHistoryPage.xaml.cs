@@ -21,7 +21,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Database.Managers;
@@ -73,6 +73,6 @@ public sealed partial class BrowsingHistoryPage : ISortedIllustrationContainerPa
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        ((ISortedIllustrationContainerPageHelper) this).OnSortOptionChanged();
+        ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
     }
 }

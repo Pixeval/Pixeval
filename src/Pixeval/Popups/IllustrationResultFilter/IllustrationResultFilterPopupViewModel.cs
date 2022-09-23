@@ -20,7 +20,7 @@
 
 using System;
 using System.Collections.ObjectModel;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Attributes;
 using Pixeval.Misc;
 using Pixeval.UserControls.TokenInput;

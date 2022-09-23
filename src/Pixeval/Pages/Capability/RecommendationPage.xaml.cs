@@ -18,7 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -74,7 +74,7 @@ public sealed partial class RecommendationPage : ISortedIllustrationContainerPag
     {
         // FUCK C#, the default implementations are not inherited. We have to use this stupid cast here.
         // even a donkey knows "this" is an "ISortedIllustrationContainerPageHelper"
-        ((ISortedIllustrationContainerPageHelper) this).OnSortOptionChanged();
+        ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
     }
 
     private void ChangeSource()

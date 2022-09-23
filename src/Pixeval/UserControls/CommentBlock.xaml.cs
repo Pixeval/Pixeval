@@ -58,7 +58,7 @@ public sealed partial class CommentBlock
 
     private static async void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var block = (CommentBlock) d;
+        var block = (CommentBlock)d;
         if (e.NewValue is not CommentBlockViewModel viewModel)
         {
             return;

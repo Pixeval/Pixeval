@@ -90,53 +90,53 @@ public record Novel
     public bool IsXRestricted { get; set; }
 
     public class ImageUrls
-    {
-        [JsonPropertyName("square_medium")]
-        public string? SquareMedium { get; set; }
+{
+    [JsonPropertyName("square_medium")]
+    public string? SquareMedium { get; set; }
 
-        [JsonPropertyName("medium")]
-        public string? Medium { get; set; }
+    [JsonPropertyName("medium")]
+    public string? Medium { get; set; }
 
-        [JsonPropertyName("large")]
-        public string? Large { get; set; }
-    }
+    [JsonPropertyName("large")]
+    public string? Large { get; set; }
+}
 
-    public class Series
-    {
-        [JsonPropertyName("id")]
-        public long Id { get; set; }
+public class Series
+{
+    [JsonPropertyName("id")]
+    public long Id { get; set; }
 
-        [JsonPropertyName("title")]
-        public string? Title { get; set; }
-    }
+    [JsonPropertyName("title")]
+    public string? Title { get; set; }
+}
 
-    public class Tag
-    {
-        [JsonPropertyName("name")]
-        public string? Name { get; set; }
+public class Tag
+{
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
 
-        [JsonPropertyName("translated_name")]
-        public string? TranslatedName { get; set; }
+    [JsonPropertyName("translated_name")]
+    public string? TranslatedName { get; set; }
 
-        [JsonPropertyName("added_by_uploaded_user")]
-        public bool AddedByUploadedUser { get; set; }
-    }
+    [JsonPropertyName("added_by_uploaded_user")]
+    public bool AddedByUploadedUser { get; set; }
+}
 
-    public class UserInfo
-    {
-        [JsonPropertyName("id")]
-        public long Id { get; set; }
+public class UserInfo
+{
+    [JsonPropertyName("id")]
+    public long Id { get; set; }
 
-        [JsonPropertyName("name")]
-        public string? Name { get; set; }
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
 
-        [JsonPropertyName("account")]
-        public string? Account { get; set; }
+    [JsonPropertyName("account")]
+    public string? Account { get; set; }
 
-        [JsonPropertyName("profile_image_urls")]
-        public ProfileImageUrls? ProfileImageUrls { get; set; }
+    [JsonPropertyName("profile_image_urls")]
+    public ProfileImageUrls? ProfileImageUrls { get; set; }
 
-        [JsonPropertyName("is_followed")]
-        public bool IsFollowed { get; set; }
-    }
+    [JsonPropertyName("is_followed")]
+    public bool IsFollowed { get; set; }
+}
 }

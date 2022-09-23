@@ -45,7 +45,7 @@ public sealed partial class DownloadListPage
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        _viewModel = new DownloadListPageViewModel(((IEnumerable<ObservableDownloadTask>) e.Parameter).Select(o => new DownloadListEntryViewModel(o)).ToList());
+        _viewModel = new DownloadListPageViewModel(((IEnumerable<ObservableDownloadTask>)e.Parameter).Select(o => new DownloadListEntryViewModel(o)).ToList());
     }
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
@@ -106,9 +106,9 @@ public sealed partial class DownloadListPage
 
     private void FilterAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
     {
-        sender.Text = ((IDownloadTask) args.SelectedItem).Title;
+        sender.Text = ((IDownloadTask)args.SelectedItem).Title;
         _viewModel.CurrentOption = DownloadListOption.CustomSearch;
-        _viewModel.ResetFilter(Enumerates.EnumerableOf((IDownloadTask) args.SelectedItem));
+        _viewModel.ResetFilter(Enumerates.EnumerableOf((IDownloadTask)args.SelectedItem));
         _queriedBySuggestion = true;
     }
 

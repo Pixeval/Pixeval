@@ -129,13 +129,13 @@ public sealed partial class Expander : ContentControl
 
     private void RootPanelOnPointerExited(object sender, PointerRoutedEventArgs e)
     {
-        _headerCardContainer!.Background = (Brush) Application.Current.Resources["ExpanderContentBackground"];
+        _headerCardContainer!.Background = (Brush)Application.Current.Resources["ExpanderContentBackground"];
         _headerCardContainer.BorderThickness = new Thickness(1);
     }
 
     private void RootPanelOnPointerEntered(object sender, PointerRoutedEventArgs e)
     {
-        _headerCardContainer!.Background = (Brush) Application.Current.Resources["ExpanderHeaderCardPointerOverBackground"];
+        _headerCardContainer!.Background = (Brush)Application.Current.Resources["ExpanderHeaderCardPointerOverBackground"];
         _headerCardContainer.BorderThickness = new Thickness(1, 1, 1, 1.5);
     }
 

@@ -53,7 +53,7 @@ public sealed partial class PixivReplyStickerListPage
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        _replyBarStickerTappedEventHandler = (((Guid, EventHandler<StickerTappedEventArgs>)) e.Parameter).Item2;
+        _replyBarStickerTappedEventHandler = (((Guid, EventHandler<StickerTappedEventArgs>))e.Parameter).Item2;
     }
 
     /// <summary>
@@ -68,7 +68,7 @@ public sealed partial class PixivReplyStickerListPage
             var results = await Task.WhenAll(MakoHelper.StickerIds
                 .Select(async id => (id, await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(MakoHelper.GenerateStickerDownloadUrl(id)))));
             var tasks = results.Where(r => r.Item2 is Result<IRandomAccessStream>.Success)
-                .Select(r => (r.id, (Result<IRandomAccessStream>.Success) r.Item2))
+                .Select(r => (r.id, (Result<IRandomAccessStream>.Success)r.Item2))
                 .Select(async r => new PixivReplyStickerViewModel(r.id, await r.Item2.Value.GetBitmapImageAsync(true, 83)));
             Stickers.AddRange(await Task.WhenAll(tasks));
         }

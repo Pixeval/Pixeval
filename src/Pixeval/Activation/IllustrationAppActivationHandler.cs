@@ -21,7 +21,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Messages;
 using Pixeval.Pages.IllustrationViewer;

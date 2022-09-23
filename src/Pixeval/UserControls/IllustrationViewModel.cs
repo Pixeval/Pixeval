@@ -25,7 +25,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using CommunityToolkit.WinUI.UI.Controls;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Attributes;
 using Pixeval.CoreApi.Global.Enum;
@@ -97,7 +97,7 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
 
     public event EventHandler<IllustrationViewModel> IsSelectedChanged
     {
-        add => _isSelectedChanged += value; 
+        add => _isSelectedChanged += value;
         remove => _isSelectedChanged -= value;
     }
 
@@ -179,9 +179,9 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
         {
             switch (await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle))
             {
-                case Result<IRandomAccessStream>.Success (var stream):
+                case Result<IRandomAccessStream>.Success(var stream):
                     return stream;
-                case Result<IRandomAccessStream>.Failure (OperationCanceledException):
+                case Result<IRandomAccessStream>.Failure(OperationCanceledException):
                     LoadingThumbnailCancellationHandle.Reset();
                     return null;
             }

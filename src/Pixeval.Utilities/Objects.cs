@@ -30,9 +30,9 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using CommunityToolkit.HighPerformance;
+using CommunityToolkit.HighPerformance.Buffers;
 using JetBrains.Annotations;
-using Microsoft.Toolkit.HighPerformance;
-using Microsoft.Toolkit.HighPerformance.Buffers;
 
 namespace Pixeval.Utilities;
 
@@ -202,7 +202,7 @@ public static class Objects
     public static T CastOrThrow<T>(this object? obj)
     {
         // Debugger compliant: NullReferenceException will cause debugger to break, meanwhile the NRE is not supposed to be thrown by developer
-        return (T) (obj ?? throw new InvalidCastException());
+        return (T)(obj ?? throw new InvalidCastException());
     }
 
     public static string Format(this string str, params object?[] args)
