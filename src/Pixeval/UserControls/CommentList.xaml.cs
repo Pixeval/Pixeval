@@ -41,7 +41,7 @@ public sealed partial class CommentList : IDisposable
 
     private static void OnItemsSourceChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
-        ((CommentList) o).CommentsList.ItemsSource = args.NewValue;
+        ((CommentList)o).CommentsList.ItemsSource = args.NewValue;
     }
 
 

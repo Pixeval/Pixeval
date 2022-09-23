@@ -23,7 +23,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -141,7 +141,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
     {
         LoadingText = phase.GetLocalizedResource() switch
         {
-            { FormatKey: LoadingPhase } attr => attr.GetLocalizedResourceContent()?.Format((int) LoadingProgress),
+            { FormatKey: LoadingPhase } attr => attr.GetLocalizedResourceContent()?.Format((int)LoadingProgress),
             var attr => attr?.GetLocalizedResourceContent()
         };
     }

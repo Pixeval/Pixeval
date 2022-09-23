@@ -30,9 +30,9 @@ public class RefreshTokenSessionUpdate : ISessionUpdate
     {
         return (await makoClient.Resolve<IAuthEndPoint>().RefreshAsync(new RefreshSessionRequest(makoClient.Session.RefreshToken)).ConfigureAwait(false))
             .ToSession() with
-            {
-                Cookie = makoClient.Session.Cookie,
-                CookieCreation = makoClient.Session.CookieCreation
-            };
+        {
+            Cookie = makoClient.Session.Cookie,
+            CookieCreation = makoClient.Session.CookieCreation
+        };
     }
 }

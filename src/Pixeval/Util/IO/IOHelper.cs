@@ -99,8 +99,8 @@ public static partial class IOHelper
 
     public static async Task<string> ToBase64StringAsync(this IRandomAccessStream randomAccessStream)
     {
-        var array = ArrayPool<byte>.Shared.Rent((int) randomAccessStream.Size);
-        var buffer = await randomAccessStream.ReadAsync(array.AsBuffer(), (uint) randomAccessStream.Size, InputStreamOptions.None);
+        var array = ArrayPool<byte>.Shared.Rent((int)randomAccessStream.Size);
+        var buffer = await randomAccessStream.ReadAsync(array.AsBuffer(), (uint)randomAccessStream.Size, InputStreamOptions.None);
         ArrayPool<byte>.Shared.Return(array);
         return Convert.ToBase64String(buffer.ToArray());
     }
@@ -157,7 +157,7 @@ public static partial class IOHelper
 
         using IRandomAccessStream stream = await file.OpenReadAsync();
         using var reader = new DataReader(stream.GetInputStreamAt(0));
-        await reader.LoadAsync((uint) stream.Size);
+        await reader.LoadAsync((uint)stream.Size);
         var bytes = new byte[stream.Size];
         reader.ReadBytes(bytes);
         return bytes;
@@ -192,7 +192,7 @@ public static partial class IOHelper
             var ms = new MemoryStream();
             await stream.CopyToAsync(ms);
             ms.Seek(0, SeekOrigin.Begin);
-            return (entry.Name, (Stream) ms);
+            return (entry.Name, (Stream)ms);
         }));
     }
 
@@ -200,8 +200,8 @@ public static partial class IOHelper
     {
         stream.Seek(0);
         using var dataReader = new DataReader(stream);
-        await dataReader.LoadAsync((uint) stream.Size);
-        await FileIO.WriteBufferAsync(file, dataReader.ReadBuffer((uint) stream.Size));
+        await dataReader.LoadAsync((uint)stream.Size);
+        await FileIO.WriteBufferAsync(file, dataReader.ReadBuffer((uint)stream.Size));
         dataReader.DetachStream();
     }
 

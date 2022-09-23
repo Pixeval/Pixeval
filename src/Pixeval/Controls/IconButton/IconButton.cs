@@ -53,18 +53,18 @@ public partial class IconButton : Button
 
     private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var textBlock = ((StackPanel) ((Button) d).Content).FindDescendant<TextBlock>();
+        var textBlock = ((StackPanel)((Button)d).Content).FindDescendant<TextBlock>();
         if (e.NewValue is null)
         {
             textBlock!.Visibility = Visibility.Collapsed;
             return;
         }
 
-        textBlock!.Text = (string) e.NewValue;
+        textBlock!.Text = (string)e.NewValue;
     }
 
     private static void OnIconChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        ((StackPanel) ((Button) d).Content).FindDescendant<ContentPresenter>()!.Content = e.NewValue;
+        ((StackPanel)((Button)d).Content).FindDescendant<ContentPresenter>()!.Content = e.NewValue;
     }
 }

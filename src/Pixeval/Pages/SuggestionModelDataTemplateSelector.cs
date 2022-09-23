@@ -33,7 +33,7 @@ public class SuggestionModelDataTemplateSelector : DataTemplateSelector
 
     protected override DataTemplate SelectTemplateCore(object item)
     {
-        return (SuggestionModel) item switch
+        return (SuggestionModel)item switch
         {
             { SuggestionType: SuggestionType.IllustrationTrendingTagHeader } => IllustrationHeader!,
             { SuggestionType: SuggestionType.NovelTrendingTagHeader } => NovelHeader!,

@@ -22,7 +22,7 @@ using System;
 using System.Linq;
 using Windows.System;
 using Windows.UI.Core;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
@@ -113,7 +113,7 @@ public sealed partial class IllustrationGrid
             .GetMangaIllustrationViewModels()
             .ToArray();
 
-        ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement) sender);
+        ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement)sender);
         App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo());
     }
 
@@ -131,7 +131,7 @@ public sealed partial class IllustrationGrid
         {
             if (await context.LoadThumbnailIfRequired())
             {
-                var transform = (ScaleTransform) sender.RenderTransform;
+                var transform = (ScaleTransform)sender.RenderTransform;
                 if (sender.IsFullyOrPartiallyVisible(this))
                 {
                     var scaleXAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleX), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));

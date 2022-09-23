@@ -21,7 +21,7 @@
 using System.Threading.Tasks;
 using Windows.Foundation;
 using CommunityToolkit.WinUI.UI;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -48,13 +48,13 @@ public sealed partial class ReverseSearchApiKeyNotPresentDialog
     private async void SetApiKeyHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         Owner?.Hide();
-        var mainPageRootNavigationView = (NavigationView) App.AppViewModel.AppWindowRootFrame.FindDescendant("MainPageRootNavigationView")!;
+        var mainPageRootNavigationView = (NavigationView)App.AppViewModel.AppWindowRootFrame.FindDescendant("MainPageRootNavigationView")!;
         mainPageRootNavigationView.SelectedItem = mainPageRootNavigationView.FindDescendant("SettingsTab")!;
         WeakReferenceMessenger.Default.Send(new OpenSearchSettingMessage());
         await Task.Delay(500);
         var settingsPage = App.AppViewModel.AppWindowRootFrame.FindDescendant("MainPageRootFrame")!.FindDescendant<SettingsPage>()!;
         var position = settingsPage.SearchSettingsGroup
-            .TransformToVisual((UIElement) settingsPage.SettingsPageScrollViewer.Content)
+            .TransformToVisual((UIElement)settingsPage.SettingsPageScrollViewer.Content)
             .TransformPoint(new Point(0, 0));
         settingsPage.SettingsPageScrollViewer.ChangeView(null, position.Y, null, false);
     }

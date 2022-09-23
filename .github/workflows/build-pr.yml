@@ -3,6 +3,9 @@ name: Build-PR
 on:
   pull_request:
   
+defaults:
+  run:
+    shell: pwsh
 
 jobs:
     build:
@@ -10,15 +13,18 @@ jobs:
             matrix:
                 platform: ['x64','x86','arm64']
 
-        runs-on: windows-2022
+        runs-on: windows-latest
 
         steps:
             - name: Checkout
               uses: actions/checkout@v2
               with:
                 fetch-depth: 0
-            - name: setup-msbuild
-              uses: microsoft/setup-msbuild@v1
+
+            - uses: actions/setup-dotnet@v2
+              with:
+                global-json-file: global.json
+                include-prerelease: true
 
             - uses: actions/cache@v2
               with:
@@ -28,11 +34,10 @@ jobs:
                     ${{ runner.os }}-nuget-
 
             - name: Restore the application
-              run: msbuild -t:restore -p:Platform=${{ matrix.platform }} -p:RestoreLockedMode=true -m
+              run: dotnet msbuild -t:restore -p:Platform=${{ matrix.platform }} -p:RestoreLockedMode=true -m
 
             - name: Publish the application
-              run:  msbuild -t:publish -p:Configuration=Debug -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:OutDir="$PWD\build" -m
-              shell: pwsh
+              run: dotnet msbuild -t:publish -p:Configuration=Debug -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:OutDir="$PWD\build" -m
 
             - name: Copy files
               run: |

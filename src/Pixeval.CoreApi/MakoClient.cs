@@ -211,7 +211,7 @@ public partial class MakoClient : ICancellable
     // Resolves a dependency of type 'type'
     internal TResult Resolve<TResult>(Type type) where TResult : notnull
     {
-        return (TResult) MakoServices.Resolve(type);
+        return (TResult)MakoServices.Resolve(type);
     }
 
     internal HttpMessageInvoker GetHttpMessageInvoker(Type key)

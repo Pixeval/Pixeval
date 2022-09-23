@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 using Windows.System;
 using CommunityToolkit.WinUI.UI;
 using CommunityToolkit.WinUI.UI.Controls;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -51,14 +51,14 @@ public sealed partial class IllustrationInfoPage
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        _viewModel = (IllustrationViewerPageViewModel) e.Parameter;
+        _viewModel = (IllustrationViewerPageViewModel)e.Parameter;
         SetIllustrationCaptionText();
     }
 
     private void IllustrationTagButton_OnClick(object sender, RoutedEventArgs e)
     {
         this.FindAscendant<IllustrationViewerPage>()?.GoBack();
-        WeakReferenceMessenger.Default.Send(new IllustrationTagClickedMessage((string) ((Button) sender).Content));
+        WeakReferenceMessenger.Default.Send(new IllustrationTagClickedMessage((string)((Button)sender).Content));
     }
 
     private async void IllustrationCaptionMarkdownTextBlock_OnLinkClicked(object? sender, LinkClickedEventArgs e)

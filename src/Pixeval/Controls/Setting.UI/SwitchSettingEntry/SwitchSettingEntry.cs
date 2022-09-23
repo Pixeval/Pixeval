@@ -62,7 +62,7 @@ public partial class SwitchSettingEntry : SettingEntryBase
     {
         if (d is SwitchSettingEntry { _switch: { } sh })
         {
-            sh.IsOn = (bool) newValue;
+            sh.IsOn = (bool)newValue;
         }
     }
 

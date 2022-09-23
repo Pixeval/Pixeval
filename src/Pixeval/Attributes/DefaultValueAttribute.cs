@@ -55,7 +55,7 @@ public static class DefaultValueAttributeHelper
             if (attribute.ValueFactoryType is { } type)
             {
                 return type.IsAssignableTo(typeof(IDefaultValueProvider))
-                    ? ((IDefaultValueProvider) Activator.CreateInstance(type)!).ProvideValue()
+                    ? ((IDefaultValueProvider)Activator.CreateInstance(type)!).ProvideValue()
                     : Activator.CreateInstance(type);
             }
 

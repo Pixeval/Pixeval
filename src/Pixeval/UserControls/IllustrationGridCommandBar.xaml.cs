@@ -84,19 +84,19 @@ public sealed partial class IllustrationGridCommandBar
 
     private static void OnPrimaryCommandsSupplementsChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
-        AddCommandCallback(args, ((IllustrationGridCommandBar) o).CommandBar.PrimaryCommands);
+        AddCommandCallback(args, ((IllustrationGridCommandBar)o).CommandBar.PrimaryCommands);
     }
 
     private static void OnSecondaryCommandsSupplementsChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
-        AddCommandCallback(args, ((IllustrationGridCommandBar) o).CommandBar.SecondaryCommands);
+        AddCommandCallback(args, ((IllustrationGridCommandBar)o).CommandBar.SecondaryCommands);
     }
 
     private static void OnIsDefaultCommandsEnabledChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
-        ((IllustrationGridCommandBar) o)._defaultCommands
-            .Where(c => c != ((IllustrationGridCommandBar) o).SelectAllButton)
-            .ForEach(c => c.IsEnabled = (bool) args.NewValue);
+        ((IllustrationGridCommandBar)o)._defaultCommands
+            .Where(c => c != ((IllustrationGridCommandBar)o).SelectAllButton)
+            .ForEach(c => c.IsEnabled = (bool)args.NewValue);
     }
 
     private static void AddCommandCallback(DependencyPropertyChangedEventArgs e, ICollection<ICommandBarElement> commands)
@@ -110,7 +110,7 @@ public sealed partial class IllustrationGridCommandBar
                     case { Action: NotifyCollectionChangedAction.Add }:
                         foreach (var argsNewItem in args.NewItems ?? Array.Empty<ICommandBarElement>())
                         {
-                            commands.Add((ICommandBarElement) argsNewItem);
+                            commands.Add((ICommandBarElement)argsNewItem);
                         }
 
                         break;

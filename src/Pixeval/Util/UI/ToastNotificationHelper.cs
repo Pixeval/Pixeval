@@ -53,7 +53,7 @@ public static class ToastNotificationHelper
                 {
                     SequenceNumber = _updateCounter,
                     Values =
-                    { 
+                    {
                         ["progressValue"] = "0.0"
                     }
                 }

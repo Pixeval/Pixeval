@@ -401,51 +401,51 @@ public class JustifiedLayoutRow
             // If specified, ensure items fill row and distribute error
             // caused by rounding width and height across all items.
             case WidowLayoutStyle.Justify:
-            {
-                itemWidthSum -= Spacing + Left;
-
-                var errorWidthPerItem = (itemWidthSum - Width) / Items.Count;
-                var roundedCumulativeErrors = Items.Select((_, i) => Math.Round((i + 1) * errorWidthPerItem)).ToList();
-
-
-                if (Items.Count == 1)
                 {
-                    // For rows with only one item, adjust item width to fill row.
-                    var singleItemGeometry = Items[0];
-                    singleItemGeometry.Width -= Math.Round(errorWidthPerItem);
-                }
-                else
-                {
-                    // For rows with multiple items, adjust item width and shift items to fill the row,
-                    // while maintaining equal spacing between items in the row.
-                    for (var i = 0; i < Items.Count; i++)
+                    itemWidthSum -= Spacing + Left;
+
+                    var errorWidthPerItem = (itemWidthSum - Width) / Items.Count;
+                    var roundedCumulativeErrors = Items.Select((_, i) => Math.Round((i + 1) * errorWidthPerItem)).ToList();
+
+
+                    if (Items.Count == 1)
                     {
-                        var item = Items[i];
-                        if (i > 0)
+                        // For rows with only one item, adjust item width to fill row.
+                        var singleItemGeometry = Items[0];
+                        singleItemGeometry.Width -= Math.Round(errorWidthPerItem);
+                    }
+                    else
+                    {
+                        // For rows with multiple items, adjust item width and shift items to fill the row,
+                        // while maintaining equal spacing between items in the row.
+                        for (var i = 0; i < Items.Count; i++)
                         {
-                            item.Left -= roundedCumulativeErrors[i - 1];
-                            item.Width -= roundedCumulativeErrors[i] - roundedCumulativeErrors[i - 1];
-                        }
-                        else
-                        {
-                            item.Width -= roundedCumulativeErrors[i];
+                            var item = Items[i];
+                            if (i > 0)
+                            {
+                                item.Left -= roundedCumulativeErrors[i - 1];
+                                item.Width -= roundedCumulativeErrors[i] - roundedCumulativeErrors[i - 1];
+                            }
+                            else
+                            {
+                                item.Width -= roundedCumulativeErrors[i];
+                            }
                         }
                     }
-                }
 
-                break;
-            }
+                    break;
+                }
             case WidowLayoutStyle.Center:
-            {
-                // Center widows
-                var centerOffset = (Width - itemWidthSum) / 2;
-                foreach (var item in Items)
                 {
-                    item.Left += centerOffset + Spacing;
-                }
+                    // Center widows
+                    var centerOffset = (Width - itemWidthSum) / 2;
+                    foreach (var item in Items)
+                    {
+                        item.Left += centerOffset + Spacing;
+                    }
 
-                break;
-            }
+                    break;
+                }
         }
     }
 

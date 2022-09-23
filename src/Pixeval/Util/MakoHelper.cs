@@ -130,7 +130,7 @@ public static class MakoHelper
 
     public static XRestrictLevel RestrictLevel(this Illustration illustration)
     {
-        return (XRestrictLevel) illustration.XRestrict;
+        return (XRestrictLevel)illustration.XRestrict;
     }
 
     public static string GenerateStickerDownloadUrl(int id)

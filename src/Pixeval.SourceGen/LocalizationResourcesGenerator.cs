@@ -18,8 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;

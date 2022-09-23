@@ -20,7 +20,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Database;
 using Pixeval.Util.Threading;
 
@@ -88,7 +88,7 @@ public partial class ObservableDownloadTask : ObservableObject, IDownloadTask
 
     public override bool Equals(object? obj)
     {
-        return obj is not null && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((ObservableDownloadTask) obj));
+        return obj is not null && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((ObservableDownloadTask)obj));
     }
 
     public override int GetHashCode()

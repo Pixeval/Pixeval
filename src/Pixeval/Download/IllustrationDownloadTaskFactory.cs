@@ -72,7 +72,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
                 return new IllustrationDownloadTask(downloadHistoryEntry, context);
             })
         };
-        
+
         manager.Insert(task.DatabaseEntry);
         return task;
     }

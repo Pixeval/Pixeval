@@ -28,7 +28,7 @@ using CommunityToolkit.WinUI;
 using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
@@ -251,14 +251,14 @@ public class AppViewModel : AutoActivateObservableRecipient,
     {
         var dpi = User32.GetDpiForWindow(GetMainWindowHandle());
         var size = GetAppWindowSize();
-        var scalingFactor = (float) dpi / 96;
+        var scalingFactor = (float)dpi / 96;
         return new Size(size.Width / scalingFactor, size.Height / scalingFactor);
     }
 
     public (int, int) GetDpiAwareAppWindowSizeTuple()
     {
         var size = GetDpiAwareAppWindowSize();
-        return ((int, int)) (size.Width, size.Height);
+        return ((int, int))(size.Width, size.Height);
     }
 
     public void PrepareForActivation()

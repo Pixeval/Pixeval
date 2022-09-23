@@ -47,7 +47,7 @@ public static class NavigationHelper
 
     public static VirtualKey GetBackHotKey(DependencyObject element)
     {
-        return (VirtualKey) element.GetValue(BackHotKeyProperty);
+        return (VirtualKey)element.GetValue(BackHotKeyProperty);
     }
 
     private static void BackHotKeyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -56,18 +56,18 @@ public static class NavigationHelper
         {
             if (e.NewValue is VirtualKey)
             {
-                ((Page) d).KeyDown += OnKeyDown;
+                ((Page)d).KeyDown += OnKeyDown;
             }
             else
             {
-                ((Page) d).KeyDown -= OnKeyDown;
+                ((Page)d).KeyDown -= OnKeyDown;
             }
 
             void OnKeyDown(object _, KeyRoutedEventArgs args)
             {
-                if (args.Key == (VirtualKey) e.NewValue)
+                if (args.Key == (VirtualKey)e.NewValue)
                 {
-                    ((IGoBack) d).GoBack();
+                    ((IGoBack)d).GoBack();
                 }
             }
         }
@@ -80,7 +80,7 @@ public static class NavigationHelper
 
     public static VirtualKey GetClosePopupHotKey(DependencyObject element)
     {
-        return (VirtualKey) element.GetValue(ClosePopupHotKeyProperty);
+        return (VirtualKey)element.GetValue(ClosePopupHotKeyProperty);
     }
 
     private static void ClosePopupHotKey(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -98,7 +98,7 @@ public static class NavigationHelper
 
             void UIContentOnKeyDown(object sender, KeyRoutedEventArgs args)
             {
-                if (args.Key == (VirtualKey) e.NewValue)
+                if (args.Key == (VirtualKey)e.NewValue)
                 {
                     PopupManager.ClosePopup(content.UniqueId);
                 }

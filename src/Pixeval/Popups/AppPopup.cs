@@ -131,15 +131,15 @@ public class AppPopup
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
-            Background = (Brush) Application.Current.Resources["ApplicationPageBackgroundThemeBrush"],
+            Background = (Brush)Application.Current.Resources["ApplicationPageBackgroundThemeBrush"],
             Opacity = 0.4
         };
         var popupContentPresenter = new ContentPresenter
         {
             Shadow = themeShadow,
             Translation = new Vector3(0, 0, 40),
-            BorderBrush = (Brush) Application.Current.Resources["PixevalBorderBrush"],
-            Background = (Brush) Application.Current.Resources["PixevalPanelBackgroundThemeBrush"],
+            BorderBrush = (Brush)Application.Current.Resources["PixevalBorderBrush"],
+            Background = (Brush)Application.Current.Resources["PixevalPanelBackgroundThemeBrush"],
             BorderThickness = new Thickness(0.3),
             CornerRadius = new CornerRadius(10),
             HorizontalAlignment = HorizontalAlignment.Center,
@@ -196,8 +196,8 @@ public class AppPopup
     private void RearrangePopup(Size desiredSize)
     {
         var (windowWidth, windowHeight) = (desiredSize.Width, desiredSize.Height);
-        var child = (Grid) Popup.Child;
-        var container = (ContentPresenter) ((Grid) Popup.Child).Children[1];
+        var child = (Grid)Popup.Child;
+        var container = (ContentPresenter)((Grid)Popup.Child).Children[1];
         Popup.Width = windowWidth;
         Popup.Height = windowHeight;
         child.Width = windowWidth;

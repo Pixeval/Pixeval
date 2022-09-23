@@ -25,7 +25,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Model;
@@ -56,7 +56,7 @@ public sealed partial class CommentsPage
             WeakReferenceMessenger.Default.UnregisterAll(this);
         });
 
-        var (engine, illustId) = ((IAsyncEnumerable<Comment>, string)) e.Parameter;
+        var (engine, illustId) = ((IAsyncEnumerable<Comment>, string))e.Parameter;
         _illustId = illustId;
         if (CommentList.ItemsSource is not ICollection<CommentBlockViewModel>)
         {

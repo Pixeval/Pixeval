@@ -44,7 +44,7 @@ public class MacroParser<TContext>
             return token;
         }
 
-        throw new MacroParseException(MacroParserResources.UnexpectedTokenFormatted.Format((object?) _currentToken?.Position.Start ?? "EOF"));
+        throw new MacroParseException(MacroParserResources.UnexpectedTokenFormatted.Format((object?)_currentToken?.Position.Start ?? "EOF"));
     }
 
     // ReSharper disable once OutParameterValueIsAlwaysDiscarded.Local

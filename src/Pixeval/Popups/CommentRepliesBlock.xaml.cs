@@ -64,8 +64,8 @@ public sealed partial class CommentRepliesBlock : IAppPopupContent
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var block = (CommentRepliesBlock) d;
-        var viewModel = (CommentRepliesBlockViewModel) e.NewValue;
+        var block = (CommentRepliesBlock)d;
+        var viewModel = (CommentRepliesBlockViewModel)e.NewValue;
         block.RepliesAreEmptyPanel.Visibility = (!viewModel.HasReplies).ToVisibility();
         block.CommentList.Visibility = viewModel.HasReplies.ToVisibility();
         if (viewModel.HasReplies && viewModel.Comment.Replies is { } rs)

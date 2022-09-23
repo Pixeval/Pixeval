@@ -63,10 +63,10 @@ internal abstract class RecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetc
             var first = InitialUrl();
             switch (await GetJsonResponseAsync(first).ConfigureAwait(false))
             {
-                case Result<TRawEntity>.Success (var raw):
+                case Result<TRawEntity>.Success(var raw):
                     Update(raw);
                     break;
-                case Result<TRawEntity>.Failure (var exception):
+                case Result<TRawEntity>.Failure(var exception):
                     if (exception is { } e)
                     {
                         throw e;
@@ -88,7 +88,7 @@ internal abstract class RecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetc
             return false;
         }
 
-        if (await GetJsonResponseAsync(NextUrl(RawEntity)!).ConfigureAwait(false) is Result<TRawEntity>.Success (var value)) // Else request a new page
+        if (await GetJsonResponseAsync(NextUrl(RawEntity)!).ConfigureAwait(false) is Result<TRawEntity>.Success(var value)) // Else request a new page
         {
             if (IsCancellationRequested)
             {

@@ -38,7 +38,7 @@ public sealed partial class SortOptionComboBox
         InitializeComponent();
     }
 
-    public IllustrationSortOption SelectedOption => ((IllustrationSortOptionWrapper) SelectedItem).Value;
+    public IllustrationSortOption SelectedOption => ((IllustrationSortOptionWrapper)SelectedItem).Value;
 
     public event SelectionChangedEventHandler SelectionChangedWhenLoaded
     {

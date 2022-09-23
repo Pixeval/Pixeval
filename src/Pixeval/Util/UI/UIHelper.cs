@@ -29,7 +29,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.UI;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -49,12 +49,12 @@ public static partial class UIHelper
 {
     public static T GetDataContext<T>(this FrameworkElement element)
     {
-        return (T) element.DataContext;
+        return (T)element.DataContext;
     }
 
     public static T GetDataContext<T>(this object element)
     {
-        return ((FrameworkElement) element).GetDataContext<T>(); // direct cast will throw exception if the type check fails, and that's exactly what we want
+        return ((FrameworkElement)element).GetDataContext<T>(); // direct cast will throw exception if the type check fails, and that's exactly what we want
     }
 
     public static ImageSource GetImageSourceFromUriRelativeToAssetsImageFolder(string relativeToAssetsImageFolder)
@@ -64,7 +64,7 @@ public static partial class UIHelper
 
     public static void ScrollToElement(this ScrollViewer scrollViewer, UIElement element)
     {
-        var transform = element.TransformToVisual((UIElement) scrollViewer.Content);
+        var transform = element.TransformToVisual((UIElement)scrollViewer.Content);
         var position = transform.TransformPoint(new Point(0, 0));
         scrollViewer.ChangeView(null, position.Y, null, false);
     }

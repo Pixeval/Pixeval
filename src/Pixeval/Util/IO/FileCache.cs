@@ -31,7 +31,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using Pixeval.Utilities;
 
 namespace Pixeval.Util.IO;
@@ -394,8 +394,8 @@ public class FileCache
                 HitCount++;
                 return typeof(T) switch
                 {
-                    var type when type == typeof(IRandomAccessStream) || type.IsSubclassOf(typeof(IRandomAccessStream)) => (T) await file.OpenAsync(FileAccessMode.Read),
-                    var type when type == typeof(byte[]) || type.IsSubclassOf(typeof(IEnumerable<byte>)) => (T) (object) (await file.ReadBytesAsync())!,
+                    var type when type == typeof(IRandomAccessStream) || type.IsSubclassOf(typeof(IRandomAccessStream)) => (T)await file.OpenAsync(FileAccessMode.Read),
+                    var type when type == typeof(byte[]) || type.IsSubclassOf(typeof(IEnumerable<byte>)) => (T)(object)(await file.ReadBytesAsync())!,
                     _ => await Functions.Block(async () =>
                     {
                         await using var stream = await file.OpenStreamForReadAsync();

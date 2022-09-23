@@ -65,7 +65,7 @@ internal class MakoRetryHttpClientHandler : HttpMessageHandler, IMakoClientSuppo
     {
         return await Functions.RetryAsync(() => _delegatedHandler.SendAsync(request, cancellationToken), 2, MakoClient!.Configuration.ConnectionTimeout).ConfigureAwait(false) switch
         {
-            Result<HttpResponseMessage>.Success (var response) => response,
+            Result<HttpResponseMessage>.Success(var response) => response,
             Result<HttpResponseMessage>.Failure failure => throw failure.Cause ?? new HttpRequestException(),
             _ => throw new InvalidOperationException("Unexpected case")
         };

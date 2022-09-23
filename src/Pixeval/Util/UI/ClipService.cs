@@ -30,7 +30,7 @@ public class ClipService
 
     public static bool GetClipToBounds(DependencyObject obj)
     {
-        return (bool) obj.GetValue(ClipToBoundsProperty);
+        return (bool)obj.GetValue(ClipToBoundsProperty);
     }
 
     public static void SetClipToBounds(DependencyObject obj, bool value)
@@ -50,12 +50,12 @@ public class ClipService
 
     private static void FrameworkElementOnSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        ClipToBounds((FrameworkElement) sender);
+        ClipToBounds((FrameworkElement)sender);
     }
 
     private static void FrameworkElementOnLoaded(object sender, RoutedEventArgs _)
     {
-        ClipToBounds((FrameworkElement) sender);
+        ClipToBounds((FrameworkElement)sender);
     }
 
     private static void ClipToBounds(FrameworkElement ele)

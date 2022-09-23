@@ -67,18 +67,18 @@ public partial class IllustratorView : Control
         }
 
         if ((Avatar = GetTemplateChild(PartAvatar) as PersonPicture) is not null)
-        {}
+        { }
 
         base.OnApplyTemplate();
     }
 
     private void ContentContainerOnPointerExited(object sender, PointerRoutedEventArgs e)
     {
-        _contentContainer!.Background = (Brush) Application.Current.Resources["CardBackground"];
+        _contentContainer!.Background = (Brush)Application.Current.Resources["CardBackground"];
     }
 
     private void ContentContainerOnPointerEntered(object sender, PointerRoutedEventArgs e)
     {
-        _contentContainer!.Background = (Brush) Application.Current.Resources["ActionableCardPointerOverBackground"];
+        _contentContainer!.Background = (Brush)Application.Current.Resources["ActionableCardPointerOverBackground"];
     }
 }

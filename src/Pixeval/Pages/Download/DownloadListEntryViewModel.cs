@@ -19,7 +19,7 @@
 #endregion
 
 using System;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -67,7 +67,7 @@ public partial class DownloadListEntryViewModel : ObservableObject, IDisposable
         return currentState switch
         {
             DownloadState.Created => string.Empty,
-            DownloadState.Running => DownloadListEntryResources.DownloadRunningFormatted.Format((int) progress),
+            DownloadState.Running => DownloadListEntryResources.DownloadRunningFormatted.Format((int)progress),
             DownloadState.Queued => DownloadListEntryResources.DownloadQueued,
             DownloadState.Error => DownloadListEntryResources.DownloadErrorMessageFormatted.Format(errorCause!.Message),
             DownloadState.Completed => DownloadListEntryResources.DownloadCompleted,
@@ -113,7 +113,7 @@ public partial class DownloadListEntryViewModel : ObservableObject, IDisposable
     public static Brush GetSelectedBackground(bool selected)
     {
         return selected
-            ? (Brush) Application.Current.Resources["AccentFillColorDefaultBrush"]
-            : (Brush) Application.Current.Resources["CardBackground"];
+            ? (Brush)Application.Current.Resources["AccentFillColorDefaultBrush"]
+            : (Brush)Application.Current.Resources["CardBackground"];
     }
 }
