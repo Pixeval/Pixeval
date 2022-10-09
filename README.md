@@ -38,7 +38,7 @@
 ## 准备
 1. 带有WinUI 3工作负载的Visual Studio
    2022，你可以在 [创建你的第一个WinUI 3 app](https://docs.microsoft.com/zh-cn/windows/apps/winui/winui3/create-your-first-winui3-app?tabs=desktop-csharp) 的"先决条件"部分查看更多信息
-2. 安装VS插件[Single-project MSIX Packaging Tools for VS 20200](https://aka.ms/windowsappsdk/stable-vsix-2022-cs)
+2. 安装VS插件[Single-project MSIX Packaging Tools for VS 2020](https://aka.ms/windowsappsdk/stable-vsix-2022-cs)
 3. 安装.NET 6，你可以在 [这里](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) 下载并安装.NET 6
 
 ## 如果你想要参与开发，则需要如下几点额外需求
