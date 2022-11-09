@@ -50,7 +50,7 @@ public class PixivAuthenticationProxyServer : IDisposable
         _tcpListener?.Stop();
     }
 
-    private static Task<IPAddress[]> GetTargetIp(string host)
+    private static Task<IPAddress[]> GetTargetIpAsync(string host)
     {
         return !host.Contains("pixiv")
             ? Dns.GetHostAddressesAsync(host)
@@ -96,7 +96,7 @@ public class PixivAuthenticationProxyServer : IDisposable
                     await clientSsl.AuthenticateAsServerAsync(_certificate!, false, SslProtocols.Tls | SslProtocols.Tls13 | SslProtocols.Tls12 | SslProtocols.Tls11, false);
                     // create an HTTP connection to the target IP
                     var host = Regex.Match(content, "CONNECT (?<host>.+)\\:\\d+").Groups["host"].Value;
-                    var serverSsl = await CreateConnection(await GetTargetIp(host));
+                    var serverSsl = await CreateConnectionAsync(await GetTargetIpAsync(host));
                     var request = Functions.IgnoreExceptionAsync(async () => await clientSsl.CopyToAsync(serverSsl));
                     var response = Functions.IgnoreExceptionAsync(async () => await serverSsl.CopyToAsync(clientSsl));
                     await Task.WhenAny(request, response);
@@ -111,7 +111,7 @@ public class PixivAuthenticationProxyServer : IDisposable
     }
 
 
-    private static async Task<SslStream> CreateConnection(IPAddress[] ipAddresses)
+    private static async Task<SslStream> CreateConnectionAsync(IPAddress[] ipAddresses)
     {
         var client = new TcpClient();
         await client.ConnectAsync(ipAddresses, 443);

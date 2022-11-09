@@ -31,7 +31,9 @@ public class PixivImageNameResolver : INameResolver
         {
             return Task.FromResult(new[]
             {
-                IPAddress.Parse("210.140.92.138"), IPAddress.Parse("210.140.92.139"), IPAddress.Parse("210.140.92.140")
+                IPAddress.Parse("210.140.92.138"),
+                IPAddress.Parse("210.140.92.139"),
+                IPAddress.Parse("210.140.92.140")
             });
         }
 

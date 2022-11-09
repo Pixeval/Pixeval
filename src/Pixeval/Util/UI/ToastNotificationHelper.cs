@@ -21,7 +21,7 @@
 using System;
 using System.Reflection;
 using Windows.UI.Notifications;
-using Microsoft.Toolkit.Uwp.Notifications;
+using CommunityToolkit.WinUI.Notifications;
 using Pixeval.Utilities;
 
 namespace Pixeval.Util.UI;

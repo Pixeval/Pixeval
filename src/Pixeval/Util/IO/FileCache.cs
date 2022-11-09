@@ -460,7 +460,7 @@ public class FileCache
     /// </summary>
     /// <param name="key">Unique identifier for entry to get</param>
     /// <returns>The ETag if the key is found, else null</returns>
-    public Task<string?> GetETag(object key)
+    public Task<string?> GetETagAsync(object key)
     {
         Guard.IsNotNull(key, nameof(key));
 

@@ -22,28 +22,33 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using Pixeval.CoreApi.Services;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Net;
 
-internal class PixivImageHttpMessageHandler : MakoClientSupportedHttpMessageHandler
+internal class PixivImageHttpMessageHandler : HttpClientHandler
 {
-    public PixivImageHttpMessageHandler(MakoClient makoClient)
+    private readonly IOptionsMonitor<PixivClientOptions> _clientOptions;
+    private IOptionsMonitor<PixivHttpOptions> _httpOptions;
+
+    public PixivImageHttpMessageHandler(IOptionsMonitor<PixivClientOptions> clientOptions, IOptionsMonitor<PixivHttpOptions> httpOptions)
     {
-        MakoClient = makoClient;
+        _clientOptions = clientOptions;
+        _httpOptions = httpOptions;
     }
 
-    public sealed override MakoClient MakoClient { get; set; }
 
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        if (MakoClient.Configuration.Bypass)
+        if (_clientOptions.CurrentValue.Bypass)
         {
-            MakoHttpOptions.UseHttpScheme(request);
+            PixivHttpOptions.UseHttpScheme(request);
         }
 
         var requestUri = request.RequestUri!;
-        if (requestUri.Host == MakoHttpOptions.ImageHost && MakoClient.Configuration.MirrorHost is { } mirror && mirror.IsNotNullOrBlank())
+        if (requestUri.Host == _httpOptions.CurrentValue.ImageHost && _clientOptions.CurrentValue.MirrorHost is { } mirror && mirror.IsNotNullOrBlank())
         {
             request.RequestUri = mirror switch
             {
@@ -53,8 +58,6 @@ internal class PixivImageHttpMessageHandler : MakoClientSupportedHttpMessageHand
             };
         }
 
-        return MakoClient.GetHttpMessageInvoker(
-            MakoClient.Configuration.Bypass ? typeof(PixivImageNameResolver) : typeof(LocalMachineNameResolver)
-        ).SendAsync(request, cancellationToken);
+        return base.SendAsync(request, cancellationToken);
     }
 }

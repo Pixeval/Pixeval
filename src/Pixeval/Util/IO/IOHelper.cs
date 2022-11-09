@@ -45,8 +45,7 @@ public static partial class IOHelper
 {
     public static async Task<string> Sha1Async(this IRandomAccessStream randomAccessStream)
     {
-        using var sha1 = SHA1.Create();
-        var result = await sha1.ComputeHashAsync(randomAccessStream.AsStreamForRead());
+        var result = await SHA1.HashDataAsync(randomAccessStream.AsStreamForRead());
         randomAccessStream.Seek(0); // reset the stream
         return result.Select(b => b.ToString("x2")).Aggregate((acc, str) => acc + str);
     }
@@ -90,7 +89,7 @@ public static partial class IOHelper
         return stream;
     }
 
-    public static async Task<ImageFormat> DetectImageFormat(this IRandomAccessStream randomAccessStream)
+    public static async Task<ImageFormat> DetectImageFormatAsync(this IRandomAccessStream randomAccessStream)
     {
         await using var stream = randomAccessStream.AsStream();
         using var image = Image.FromStream(stream);
@@ -108,7 +107,7 @@ public static partial class IOHelper
     public static async Task<string> GenerateBase64UrlForImageAsync(this IRandomAccessStream randomAccessStream)
     {
         var base64Str = await randomAccessStream.ToBase64StringAsync();
-        var format = await randomAccessStream.DetectImageFormat();
+        var format = await randomAccessStream.DetectImageFormatAsync();
         return $"data:image/{format.ToString().ToLower()},{base64Str}";
     }
 
@@ -178,7 +177,7 @@ public static partial class IOHelper
         return httpClient.SendAsync(httpRequestMessage);
     }
 
-    public static async Task<(string filename, Stream content)[]> ReadZipArchiveEntries(Stream zipStream)
+    public static async Task<(string filename, Stream content)[]> ReadZipArchiveEntriesAsync(Stream zipStream)
     {
         using var archive = new ZipArchive(zipStream, ZipArchiveMode.Read);
         // return the result of Select directly will cause the enumeration to be delayed

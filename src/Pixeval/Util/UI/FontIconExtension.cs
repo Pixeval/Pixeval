@@ -40,7 +40,7 @@ public class FontIconExtension : TextIconExtension
         var fontIcon = new FontIcon
         {
             Glyph = Glyph.GetMetadataOnEnumMember(),
-            FontFamily = FontFamily ?? (App.IsWindows11() ? new FontFamily("Segoe Fluent Icons") : new FontFamily("Segoe MDL2 Assets")),
+            FontFamily = FontFamily ?? new FontFamily("/Assets/Fonts/Segoe Fluent Icons.ttf#Segoe Fluent Icons"),
             FontWeight = FontWeight,
             FontStyle = FontStyle,
             IsTextScaleFactorEnabled = IsTextScaleFactorEnabled,

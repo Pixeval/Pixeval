@@ -27,7 +27,7 @@ using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.CoreApi.Net.Response;
+using Pixeval.CoreApi.Net.Responses;
 using Pixeval.Utilities;
 
 namespace Pixeval.Util.IO;
@@ -165,7 +165,7 @@ public static partial class IOHelper
 
     public static async Task<IRandomAccessStream> GetGifStreamFromZipStreamAsync(Stream zipStream, UgoiraMetadataResponse ugoiraMetadataResponse)
     {
-        var entryStreams = await ReadZipArchiveEntries(zipStream);
+        var entryStreams = await ReadZipArchiveEntriesAsync(zipStream);
         var inMemoryRandomAccessStream = new InMemoryRandomAccessStream();
         await WriteGifBitmapAsync(inMemoryRandomAccessStream, entryStreams.Select(s => s.content.AsRandomAccessStream()), (int)(ugoiraMetadataResponse.UgoiraMetadataInfo?.Frames?.FirstOrDefault()?.Delay ?? 0));
         return inMemoryRandomAccessStream;

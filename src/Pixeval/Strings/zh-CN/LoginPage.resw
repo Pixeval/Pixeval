@@ -125,6 +125,9 @@
 {0}</value>
     <comment>{0}: error message</comment>
   </data>
+  <data name="Login" xml:space="preserve">
+    <value>登录</value>
+  </data>
   <data name="LoginPhaseCheckingCertificateInstallation" xml:space="preserve">
     <value>正在检查证书安装情况...</value>
   </data>
@@ -146,6 +149,9 @@
   <data name="LoginPhaseRefreshing" xml:space="preserve">
     <value>正在刷新现有会话...</value>
   </data>
+  <data name="LoginPreparation" xml:space="preserve">
+    <value>正在准备登录</value>
+  </data>
   <data name="LoginProxyCannotFindCertificate" xml:space="preserve">
     <value>找不到对应的证书文件，请重新启动应用程序
 如果该问题反复出现，请联系开发者寻求解决</value>
@@ -159,6 +165,9 @@
   </data>
   <data name="RefreshingSessionIsNotPresentTitle" xml:space="preserve">
     <value>必要的配置文件不存在</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>注册</value>
   </data>
   <data name="RootCertificateInstallationRequiredContent" xml:space="preserve">
     <value>如不安装证书则无法正常登录，本证书的私钥不会被分发，选择确认即代表您将会安装该证书，请在接下来弹出的对话框中选择确认/OK，如果您拒绝安装则无法继续使用本应用</value>

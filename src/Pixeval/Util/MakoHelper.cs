@@ -18,21 +18,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using CommunityToolkit.WinUI.UI;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.CoreApi.Engine;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Model;
-using Pixeval.Misc;
+using Pixeval.CoreApi.Enums;
+using Pixeval.CoreApi.Models;
 using Pixeval.Options;
 using Pixeval.Util.Generic;
 using Pixeval.Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Pixeval.Util;
 
@@ -44,11 +40,6 @@ public static class MakoHelper
             Enumerable.Range(201, 10),
             Enumerable.Range(101, 10))
         .SelectMany(Functions.Identity<IEnumerable<int>>()).ToList();
-
-    public static IllustrationSortOptionWrapper GetAppSettingDefaultSortOptionWrapper()
-    {
-        return LocalizedBoxHelper.Of<IllustrationSortOption, IllustrationSortOptionWrapper>(App.AppViewModel.AppSetting.DefaultSortOption);
-    }
 
     public static string? GetThumbnailUrl(this Illustration illustration, ThumbnailUrlOption option)
     {
@@ -73,7 +64,7 @@ public static class MakoHelper
 
     public static Uri GenerateIllustrationAppUri(string id)
     {
-        return new Uri($"{AppContext.AppProtocol}://illust/{id}");
+        return new Uri($"{AppConstants.AppProtocol}://illust/{id}");
     }
 
     public static string? GetOriginalUrl(this Illustration illustration)
@@ -96,18 +87,6 @@ public static class MakoHelper
         return $"original-{illustration.GetOriginalUrl() ?? illustration.Id.ToString()}";
     }
 
-    public static SortDescription? GetSortDescriptionForIllustration(IllustrationSortOption sortOption)
-    {
-        return sortOption switch
-        {
-            IllustrationSortOption.PopularityDescending => new SortDescription(SortDirection.Descending, IllustrationBookmarkComparer.Instance),
-            IllustrationSortOption.PublishDateAscending => new SortDescription(SortDirection.Ascending, IllustrationViewModelPublishDateComparer.Instance),
-            IllustrationSortOption.PublishDateDescending => new SortDescription(SortDirection.Descending, IllustrationViewModelPublishDateComparer.Instance),
-            IllustrationSortOption.DoNotSort => null,
-            _ => throw new ArgumentOutOfRangeException(nameof(sortOption), sortOption, null)
-        };
-    }
-
     public static bool IsUgoira(this Illustration illustration)
     {
         return illustration.Type!.Equals("ugoira", StringComparison.OrdinalIgnoreCase);
@@ -116,11 +95,6 @@ public static class MakoHelper
     public static bool IsManga(this Illustration illustration)
     {
         return illustration.PageCount > 1;
-    }
-
-    public static void Cancel<T>(this IFetchEngine<T> engine)
-    {
-        engine.EngineHandle.Cancel();
     }
 
     public static bool IsRestricted(this Illustration illustration)

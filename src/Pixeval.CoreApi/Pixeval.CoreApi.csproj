@@ -1,29 +1,21 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<Nullable>enable</Nullable>
+		<IsPackable>true</IsPackable>
+		<EnablePreviewFeatures>true</EnablePreviewFeatures>
+	</PropertyGroup>
 
-  <ItemGroup>
-      <PackageReference Include="Autofac" Version="6.4.0" PrivateAssets="True" />
-      <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" PrivateAssets="True" />
-      <PackageReference Include="Refit" Version="6.3.2" PrivateAssets="True" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="DotNext.Threading" Version="4.7.4" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0-rc.2.22472.3" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0-rc.2.22472.3" />
+		<PackageReference Include="Microsoft.Extensions.Http.Polly" Version="7.0.0-rc.2.22476.2" />
+		<PackageReference Include="Refit.HttpClientFactory" Version="6.3.2" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-      <Compile Update="MakoClient.Engines.cs">
-        <DependentUpon>MakoClient.cs</DependentUpon>
-      </Compile>
-      <Compile Update="MakoClient.Extensions.cs">
-        <DependentUpon>MakoClient.cs</DependentUpon>
-      </Compile>
-      <Compile Update="MakoClient.Properties.cs">
-        <DependentUpon>MakoClient.cs</DependentUpon>
-      </Compile>
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
+	</ItemGroup>
 </Project>

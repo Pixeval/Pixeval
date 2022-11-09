@@ -20,7 +20,6 @@
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Dialogs;
 
 namespace Pixeval.Util.UI;
 
@@ -104,12 +103,6 @@ public class MessageDialogBuilder
     public MessageDialogBuilder WithContent(object content)
     {
         _contentDialog.Content = content;
-        return this;
-    }
-
-    public MessageDialogBuilder WithContent(string message)
-    {
-        _contentDialog.Content = new MessageDialogContent(message);
         return this;
     }
 

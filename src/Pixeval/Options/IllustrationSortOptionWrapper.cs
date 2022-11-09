@@ -19,7 +19,7 @@
 #endregion
 
 using System.Collections.Generic;
-using Pixeval.CoreApi.Global.Enum;
+using Pixeval.CoreApi.Enums;
 using Pixeval.Util.Generic;
 
 namespace Pixeval.Options;

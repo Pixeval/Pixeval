@@ -123,7 +123,7 @@
   <data name="DownloadAndHistoriesTab.Content" xml:space="preserve">
     <value>下载与历史</value>
   </data>
-  <data name="DownloadListTab.Content" xml:space="preserve">
+  <data name="DownloadsTab.Content" xml:space="preserve">
     <value>下载列表</value>
   </data>
   <data name="FeedsTab.Content" xml:space="preserve">

@@ -18,67 +18,40 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
+using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.AppManagement;
 using Pixeval.Misc;
 using Pixeval.Pages.Login;
 
 namespace Pixeval;
 
-public sealed partial class MainWindow : INavigationModeInfo
+internal sealed partial class MainWindow
 {
-    public MainWindow()
+    private readonly LoginPageViewModel _loginPageViewModel;
+    private readonly IHostApplicationLifetime _hostApplicationLifetime;
+    public MainWindow(LoginPageViewModel loginPageViewModel, 
+        IHostApplicationLifetime hostApplicationLifetime)
     {
+        _loginPageViewModel = loginPageViewModel;
         InitializeComponent();
+        ExtendsContentIntoTitleBar = true;
+        SetTitleBar(AppTitleBar);
+        AppTitleBarText.Text = AppConstants.AppIdentifier;
+        Activated += MainWindow_Activated;
+        _hostApplicationLifetime = hostApplicationLifetime;
     }
 
-    public NavigationTransitionInfo? DefaultNavigationTransitionInfo { get; internal set; } = new SuppressNavigationTransitionInfo();
-
-    // The parameter of OnNavigatedTo is always NavigationMode.New
-    public static NavigationMode? NavigationMode { get; private set; }
-
-    public static NavigationMode? GetNavigationModeAndReset()
+    private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
     {
-        var mode = NavigationMode;
-        NavigationMode = null;
-        return mode;
-    }
-
-    private void PixevalAppRootFrame_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        PixevalAppRootFrame.Navigate(typeof(LoginPage));
+        MainWindowFrame.Content = _loginPageViewModel.LoginPage;
     }
 
     private void MainWindow_OnClosed(object sender, WindowEventArgs args)
     {
-        AppContext.SaveContext();
-    }
-
-    private void PixevalAppRootFrame_OnNavigationFailed(object sender, NavigationFailedEventArgs e)
-    {
-        e.Handled = true;
-        throw e.Exception;
-    }
-
-    private void PixevalAppRootFrame_OnNavigating(object sender, NavigatingCancelEventArgs e)
-    {
-        NavigationMode = e.NavigationMode;
-    }
-
-    public void ShowProgressRing()
-    {
-        Processing.Visibility = Visibility.Visible;
-    }
-
-    public void HideProgressRing()
-    {
-        Processing.Visibility = Visibility.Collapsed;
-    }
-
-    private void PixevalAppSnackBar_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        SnackBarShadow.Receivers.Add(PixevalAppRootFrame);
+        _hostApplicationLifetime.StopApplication();
+        Environment.Exit(0);
     }
 }

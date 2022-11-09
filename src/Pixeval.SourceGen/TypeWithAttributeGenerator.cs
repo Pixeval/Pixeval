@@ -50,10 +50,7 @@ public class TypeWithAttributeGenerator : IIncrementalGenerator
     /// </summary>
     private static readonly Dictionary<string, TypeWithAttribute> Attributes = new()
     {
-        { "Pixeval.Attributes.GenerateConstructorAttribute", TypeWithAttributeDelegates.GenerateConstructor },
-        { "Pixeval.Attributes.LoadSaveConfigurationAttribute", TypeWithAttributeDelegates.LoadSaveConfiguration },
-        { "Pixeval.Attributes.DependencyPropertyAttribute", TypeWithAttributeDelegates.DependencyProperty },
-        { "Pixeval.Attributes.SettingsViewModelAttribute", TypeWithAttributeDelegates.SettingsViewModel }
+        { "Pixeval.Attributes.DependencyPropertyAttribute", TypeWithAttributeDelegates.DependencyProperty }
     };
 
     public void Initialize(IncrementalGeneratorInitializationContext context)

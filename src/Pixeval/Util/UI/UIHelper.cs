@@ -18,6 +18,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.UI;
+using Microsoft.UI.Text;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.Attributes;
+using Pixeval.Misc;
+using Pixeval.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,21 +39,8 @@ using Windows.Foundation;
 using Windows.Graphics;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using CommunityToolkit.WinUI;
-using CommunityToolkit.WinUI.UI;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Text;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.Attributes;
-using Pixeval.Misc;
-using Pixeval.Util.IO;
-using Pixeval.Utilities;
-using QRCoder;
 using WinRT.Interop;
+using WinUIEx;
 
 namespace Pixeval.Util.UI;
 
@@ -121,14 +120,6 @@ public static partial class UIHelper
         var package = new DataPackage();
         await contentAction(package);
         Clipboard.SetContent(package);
-    }
-
-    public static void NavigateByNavigationViewTag(this Frame frame, NavigationView sender, NavigationTransitionInfo? transitionInfo = null)
-    {
-        if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag })
-        {
-            frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo ?? new SuppressNavigationTransitionInfo());
-        }
     }
 
     public static Visibility Inverse(this Visibility visibility)
@@ -217,37 +208,18 @@ public static partial class UIHelper
         return new Size(size.Width, size.Height);
     }
 
-    public static async Task<SoftwareBitmapSource> GenerateQrCodeForUrlAsync(string url)
-    {
-        var qrCodeGen = new QRCodeGenerator();
-        var urlPayload = new PayloadGenerator.Url(url);
-        var qrCodeData = qrCodeGen.CreateQrCode(urlPayload, QRCodeGenerator.ECCLevel.Q);
-        var qrCode = new BitmapByteQRCode(qrCodeData);
-        var bytes = qrCode.GetGraphic(20);
-        return await (await IOHelper.GetRandomAccessStreamFromByteArrayAsync(bytes)).GetSoftwareBitmapSourceAsync(true);
-    }
-
-    public static async Task<SoftwareBitmapSource> GenerateQrCodeAsync(string content)
-    {
-        var qrCodeGen = new QRCodeGenerator();
-        var qrCodeData = qrCodeGen.CreateQrCode(content, QRCodeGenerator.ECCLevel.Q);
-        var qrCode = new BitmapByteQRCode(qrCodeData);
-        var bytes = qrCode.GetGraphic(20);
-        return await (await IOHelper.GetRandomAccessStreamFromByteArrayAsync(bytes)).GetSoftwareBitmapSourceAsync(true);
-    }
-
-    public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(PickerLocationId suggestedStartLocation)
+    public static IAsyncOperation<StorageFolder?> OpenFolderPicker(Window window, PickerLocationId suggestedStartLocation)
     {
         var folderPicker = new FolderPicker
         {
             SuggestedStartLocation = suggestedStartLocation,
             FileTypeFilter = { "*" }
         };
-        InitializeWithWindow.Initialize(folderPicker, App.AppViewModel.GetMainWindowHandle());
+        InitializeWithWindow.Initialize(folderPicker, window.GetWindowHandle());
         return folderPicker.PickSingleFolderAsync();
     }
 
-    public static IAsyncOperation<StorageFile?> OpenFileSavePickerAsync(string suggestedFileName, string fileTypeName, string fileTypeId)
+    public static IAsyncOperation<StorageFile?> OpenFileSavePicker(Window window, string suggestedFileName, string fileTypeName, string fileTypeId)
     {
         var savePicker = new FileSavePicker
         {
@@ -258,11 +230,11 @@ public static partial class UIHelper
             },
             SuggestedFileName = suggestedFileName
         };
-        InitializeWithWindow.Initialize(savePicker, App.AppViewModel.GetMainWindowHandle());
+        InitializeWithWindow.Initialize(savePicker, window.GetWindowHandle());
         return savePicker.PickSaveFileAsync();
     }
 
-    public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync()
+    public static IAsyncOperation<StorageFile?> OpenFileOpenPicker(Window window)
     {
         var openPicker = new FileOpenPicker
         {
@@ -270,7 +242,7 @@ public static partial class UIHelper
             ViewMode = PickerViewMode.Thumbnail,
             FileTypeFilter = { "*" }
         };
-        InitializeWithWindow.Initialize(openPicker, App.AppViewModel.GetMainWindowHandle());
+        InitializeWithWindow.Initialize(openPicker, window.GetWindowHandle());
         return openPicker.PickSingleFileAsync();
     }
 }

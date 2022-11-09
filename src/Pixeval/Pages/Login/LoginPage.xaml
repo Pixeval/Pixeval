@@ -1,27 +1,69 @@
-﻿<controls:EnhancedPage x:Class="Pixeval.Pages.Login.LoginPage"
-                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                       xmlns:controls="using:Pixeval.Controls"
-                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                       xmlns:login="using:Pixeval.Pages.Login"
-                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                       xmlns:misc="using:Pixeval.Misc"
-                       xmlns:misc1="using:Pixeval.Pages.Misc"
-                       xmlns:attributes="using:Pixeval.Attributes"
-                       d:DataContext="{d:DesignInstance login:LoginPageViewModel}"
-                       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                       Loaded="LoginPage_OnLoaded"
-                       mc:Ignorable="d">
+﻿<Page x:Class="Pixeval.Pages.Login.LoginPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:toolkitControls="using:CommunityToolkit.WinUI.UI.Controls"
+      xmlns:ie="using:Microsoft.Xaml.Interactions.Core"
+      xmlns:i="using:Microsoft.Xaml.Interactivity"
+      xmlns:login="using:Pixeval.Pages.Login"
+      xmlns:local="using:Pixeval"
+      d:DataContext="{d:DesignInstance login:LoginPageViewModel}"
+      mc:Ignorable="d">
+    <i:Interaction.Behaviors>
+        <ie:EventTriggerBehavior EventName="Loaded">
+            <ie:InvokeCommandAction Command="{x:Bind ViewModel.StartLoginCommand}">
+            </ie:InvokeCommandAction>
+        </ie:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
     <Grid>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Image Width="150"
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Image Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Width="150"
                    Height="150"
-                   Source="../../Assets/Images/logo.png" />
-            <ProgressRing Width="30" Height="30" />
-            <TextBlock Margin="0,15,0,0"
-                       HorizontalAlignment="Center"
-                       FontSize="10"
-                       Text="{x:Bind attributes:LocalizedResourceAttributeHelper.GetLocalizedResourceContent(_viewModel.LoginPhase), Mode=OneWay}" />
-        </StackPanel>
+                   Source="/Assets/Images/logo.png">
+            </Image>
+            <Button Grid.Row="1" Grid.Column="0" Content="{x:Bind local:LoginPageResources.Login}" HorizontalAlignment="Stretch" Margin="0 0 4 0" Click="ButtonLogin_Click" ></Button>
+            <Button Grid.Row="1" Grid.Column="1" Content="{x:Bind local:LoginPageResources.Register}" HorizontalAlignment="Stretch" Margin="4 0 0 0" Click="ButtonRegister_Click"></Button>
+        </Grid>
+        <Popup x:Name="LoginPopup"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               HorizontalOffset="-200"
+               VerticalOffset="-240">
+            <WebView2 x:Name="LoginWebView"
+                      x:FieldModifier="public"
+                      Width="400"
+                      Height="480">
+                <i:Interaction.Behaviors>
+                    <ie:EventTriggerBehavior EventName="NavigationStarting">
+                        <ie:InvokeCommandAction Command="{x:Bind ViewModel.NavigationStartingCommand}"></ie:InvokeCommandAction>
+                    </ie:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+            </WebView2>
+        </Popup>
+        <Popup x:Name="RegisterPopup"
+               HorizontalAlignment="Center" 
+               VerticalAlignment="Center" 
+               HorizontalOffset="-200" 
+               VerticalOffset="-240">
+            <WebView2 x:Name="RegisterWebView"
+                      x:FieldModifier="public"  
+                      Width="400"
+                      Height="480">
+                <i:Interaction.Behaviors>
+                    <ie:EventTriggerBehavior EventName="NavigationStarting">
+                        <ie:InvokeCommandAction Command="{x:Bind ViewModel.NavigationStartingCommand}"></ie:InvokeCommandAction>
+                    </ie:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+            </WebView2>
+        </Popup>
     </Grid>
-</controls:EnhancedPage>
+</Page>

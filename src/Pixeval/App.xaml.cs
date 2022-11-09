@@ -18,79 +18,92 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using System.Linq;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Windows.AppLifecycle;
-using Pixeval.Activation;
-using Pixeval.AppManagement;
+using Pixeval.Messages;
 using Pixeval.Util.UI;
-using AppContext = Pixeval.AppManagement.AppContext;
-using ApplicationTheme = Pixeval.Options.ApplicationTheme;
+using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using WinUIEx;
 
 namespace Pixeval;
 
 public partial class App
 {
-    private const string ApplicationWideFontKey = "ContentControlThemeFontFamily";
 
-    public App()
+    private readonly MainWindow _mainWindow;
+
+    public App(IServiceProvider serviceProvider)
     {
+        _mainWindow = serviceProvider.GetRequiredService<MainWindow>();
         // The theme can only be changed in ctor
-        AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadConfiguration() ?? AppSetting.CreateDefault() };
-        RequestedTheme = AppViewModel.AppSetting.Theme switch
-        {
-            ApplicationTheme.Dark => Microsoft.UI.Xaml.ApplicationTheme.Dark,
-            ApplicationTheme.Light => Microsoft.UI.Xaml.ApplicationTheme.Light,
-            _ => RequestedTheme
-        };
-        AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);
+        
         InitializeComponent();
+        RegisterUnhandledExceptionHandler();
+
+        var appWindow = _mainWindow.GetAppWindow();
+        appWindow.Title = AppConstants.AppIdentifier;
+        appWindow.Show();
+        appWindow.SetIcon("");
     }
 
-    public static AppViewModel AppViewModel { get; private set; } = null!;
-
-    protected override async void OnLaunched(LaunchActivatedEventArgs args)
+    protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        if (AppInstance.GetCurrent().GetActivatedEventArgs().Kind == ExtendedActivationKind.ToastNotification)
-        {
-            return;
-        }
-
-        var isProtocolActivated = AppInstance.GetCurrent().GetActivatedEventArgs() is { Kind: ExtendedActivationKind.Protocol };
-        if (isProtocolActivated && AppInstance.GetInstances().Count > 1)
-        {
-            var notCurrent = AppInstance.GetInstances().First(ins => !ins.IsCurrent);
-            await notCurrent.RedirectActivationToAsync(AppInstance.GetCurrent().GetActivatedEventArgs());
-            return;
-        }
-
-        Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSetting.AppFontFamilyName);
-        await AppKnownFolders.InitializeAsync();
-        await AppViewModel.InitializeAsync(isProtocolActivated);
+        
     }
 
-    /// <summary>
-    ///     Are we Windows 11 or not?
-    /// </summary>
-    public static bool IsWindows11()
-    {
-        // Windows 11 starts with 10.0.22000
-        return Environment.OSVersion.Version.Build >= 22000;
-    }
 
-    /// <summary>
-    ///     Calculate the window size by current resolution
-    /// </summary>
-    public static (int, int) PredetermineEstimatedWindowSize()
+
+    private void RegisterUnhandledExceptionHandler()
     {
-        return UIHelper.GetScreenSize() switch
+        UnhandledException +=  (_, args) =>
         {
-            // 这 就 是 C #
-            ( >= 2560, >= 1440) => (1600, 900),
-            ( > 1600, > 900) => (1280, 720),
-            _ => (800, 600)
+            args.Handled = true;
+            _mainWindow.DispatcherQueue.TryEnqueue(() => UncaughtExceptionHandler(args.Exception));
         };
+
+        TaskScheduler.UnobservedTaskException +=  (_, args) =>
+        {
+            args.SetObserved();
+             _mainWindow.DispatcherQueue.TryEnqueue( () => UncaughtExceptionHandler(args.Exception));
+        };
+
+        AppDomain.CurrentDomain.UnhandledException +=  (_, args) =>
+        {
+            if (args.ExceptionObject is Exception e)
+            {
+                _mainWindow.DispatcherQueue.TryEnqueue(() => UncaughtExceptionHandler(e));
+            }
+            else
+            {
+                ExitWithPushedNotification();
+            }
+        };
+
+#if DEBUG
+        // ReSharper disable once UnusedParameter.Local
+        static void UncaughtExceptionHandler(Exception e)
+        {
+            Debugger.Break();
+        }
+#elif RELEASE
+            Task UncaughtExceptionHandler(Exception e)
+            {
+                return ShowExceptionDialogAsync(e);
+            }
+#endif
+    }
+
+
+    public static void ExitWithPushedNotification()
+    {
+        WeakReferenceMessenger.Default.Send(new ApplicationExitingMessage());
+        Current.Exit();
     }
 }
