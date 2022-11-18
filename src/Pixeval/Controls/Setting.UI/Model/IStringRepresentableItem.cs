@@ -28,5 +28,6 @@ public interface IStringRepresentableItem
 
     string StringRepresentation { get; }
 
-    static abstract IEnumerable<IStringRepresentableItem> AvailableItems { get; }
+    // TODO
+    static IEnumerable<IStringRepresentableItem> AvailableItems { get; }
 }

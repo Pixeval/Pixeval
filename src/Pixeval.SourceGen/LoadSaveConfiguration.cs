@@ -21,9 +21,9 @@
 #endregion
 
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -32,9 +32,16 @@ using static Pixeval.SourceGen.Utils;
 namespace Pixeval.SourceGen;
 internal static partial class TypeWithAttributeDelegates
 {
-    public static string? LoadSaveConfiguration(TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol typeSymbol, List<AttributeData> attributeList)
+    public static string? LoadSaveConfiguration(INamedTypeSymbol typeSymbol, ImmutableArray<AttributeData> attributeList)
     {
         var attribute = attributeList[0];
+
+        // Generic Attribute code
+        // if (attribute.AttributeClass is not ({ IsGenericType: true } and { TypeArguments.IsDefaultOrEmpty: false }))
+        //     return null;
+        // var type = attribute.AttributeClass.TypeArguments[0];
+        // if (attribute.ConstructorArguments[0].Value is not string containerName)
+        //     return null;
         if (attribute.ConstructorArguments[0].Value is not INamedTypeSymbol type)
             return null;
         if (attribute.ConstructorArguments[1].Value is not string containerName)

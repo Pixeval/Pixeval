@@ -23,6 +23,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Text;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Pixeval.SourceGen.Utils;
@@ -31,7 +32,7 @@ namespace Pixeval.SourceGen;
 
 internal static partial class TypeWithAttributeDelegates
 {
-    public static string? DependencyProperty(TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol typeSymbol, List<AttributeData> attributeList)
+    public static string? DependencyProperty(INamedTypeSymbol typeSymbol, ImmutableArray<AttributeData> attributeList)
     {
         var members = new List<MemberDeclarationSyntax>();
         var namespaces = new HashSet<string> { "Microsoft.UI.Xaml" };
@@ -39,6 +40,14 @@ internal static partial class TypeWithAttributeDelegates
 
         foreach (var attribute in attributeList)
         {
+            // Generic Attribute code
+            // if (attribute.AttributeClass is not ({ IsGenericType: true } and { TypeArguments.IsDefaultOrEmpty: false }))
+            //     return null;
+            // var type = attribute.AttributeClass.TypeArguments[0];
+            // if (attribute.ConstructorArguments[0].Value is not string propertyName)
+            //      continue;
+            // if (attribute.ConstructorArguments.Length < 2 || attribute.ConstructorArguments[1].Value is not string propertyChanged)
+            //     continue;
             if (attribute.ConstructorArguments[0].Value is not string propertyName || attribute.ConstructorArguments[1].Value is not INamedTypeSymbol type)
                 continue;
 

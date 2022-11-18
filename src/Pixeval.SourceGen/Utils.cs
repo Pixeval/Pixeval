@@ -61,21 +61,21 @@ internal static class Utils
     /// <summary>
     /// Generate the following code
     /// <code>
-    /// partial <paramref name="typeDeclaration" /> <paramref name="name" />
+    /// partial <paramref name="symbol" /> <paramref name="name" />
     /// {
     ///     <paramref name="member" />
     /// }
     /// </code>
     /// </summary>
     /// <returns>TypeDeclaration</returns>
-    internal static TypeDeclarationSyntax GetDeclaration(string name, TypeDeclarationSyntax typeDeclaration, MemberDeclarationSyntax member)
+    internal static TypeDeclarationSyntax GetDeclaration(string name, INamedTypeSymbol symbol, MemberDeclarationSyntax member)
     {
-        TypeDeclarationSyntax typeDeclarationTemp = typeDeclaration switch
+        TypeDeclarationSyntax typeDeclarationTemp = symbol.TypeKind switch
         {
-            ClassDeclarationSyntax => ClassDeclaration(name),
-            StructDeclarationSyntax => StructDeclaration(name),
-            RecordDeclarationSyntax => RecordDeclaration(Token(SyntaxKind.RecordKeyword), name),
-            _ => throw new ArgumentOutOfRangeException(nameof(typeDeclaration))
+            TypeKind.Class when !symbol.IsRecord => ClassDeclaration(name),
+            TypeKind.Struct when !symbol.IsRecord => StructDeclaration(name),
+            TypeKind.Class or TypeKind.Struct when symbol.IsRecord => RecordDeclaration(Token(SyntaxKind.RecordKeyword), name),
+            _ => throw new ArgumentOutOfRangeException(nameof(symbol.TypeKind))
         };
         return typeDeclarationTemp.AddModifiers(Token(SyntaxKind.PartialKeyword))
             .WithOpenBraceToken(Token(SyntaxKind.OpenBraceToken))

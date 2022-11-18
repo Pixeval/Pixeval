@@ -22,8 +22,8 @@
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -33,7 +33,7 @@ namespace Pixeval.SourceGen;
 
 internal static partial class TypeWithAttributeDelegates
 {
-    public static string GenerateConstructor(TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol typeSymbol, List<AttributeData> attributeList)
+    public static string GenerateConstructor(INamedTypeSymbol typeSymbol, ImmutableArray<AttributeData> attributeList)
     {
         var name = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
         var namespaces = new HashSet<string>();
@@ -48,7 +48,7 @@ internal static partial class TypeWithAttributeDelegates
             namespaces.UseNamespace(usedTypes, typeSymbol, member.Type);
         }
 
-        var generatedType = GetDeclaration(name, typeDeclaration, ctor);
+        var generatedType = GetDeclaration(name, typeSymbol, ctor);
         var generatedNamespace = GetNamespaceDeclaration(typeSymbol, generatedType);
         var compilationUnit = GetCompilationUnit(generatedNamespace, namespaces);
         return SyntaxTree(compilationUnit, encoding: Encoding.UTF8).GetText().ToString();
