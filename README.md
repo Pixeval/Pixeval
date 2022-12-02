@@ -1,7 +1,7 @@
 <div align="center">
     <img align="center" src="https://s1.ax1x.com/2020/04/03/GUMZjS.png" alt="logo" width="200">
     <h1 align="center">Pixeval</h1>
-    <p align="center">基于.NET 6 和 Windows UI 3的强大、快速、漂亮的Pixiv桌面程序</p>
+    <p align="center">基于.NET 7 和 Windows UI 3的强大、快速、漂亮的Pixiv桌面程序</p>
     <p align="center">
         <img src="https://img.shields.io/github/stars/Pixeval/Pixeval?color=red&style=flat-square">
         <a href="mailto:decem0730@hotmail.com">
@@ -58,26 +58,6 @@
 1. 克隆本项目
 2. 打开位于项目根目录下的解决方案文件(.sln)
 3. 生成解决方案
-
-
-## 项目版本控制须知
-本项目采用一个简单的Git分支模型：当您在进行开发的时候，请基于`dev/main`创建新的分支，**切勿**直接基于`master`或者`dev/main`分支进行开发，新的分支格式**必须**遵循`dev/{user}/{qualifier}-{name}`，`{user}`**必须**是您的用户名。
-
-1. 如果新的代码包含的是*BUG修复*，则`{qualifier}`**必须**为`fix`，`{name}`**应当**为BUG的简要叙述
-2. 如果新的代码包含的是*新功能*，则`{qualifier}`**必须**为`feat`或者`feature`，`{name}`**应当**为新特性的简要叙述
-3. 如果新的代码是*重构或者代码质量提升*，则`{qualifier}`**必须**为`refactor`，`{name}`**应当**为重构部分的简要叙述
-4. 如果您的贡献包含不止一种上面提到的类型，则应当遵循和您的贡献最为相关的一项，并在commit信息中提及其他类型上的贡献
-5. `master`分支**必须**当且仅当在新版本将要被发布的时候更新
-
-在开发完成后，请在[这里](https://github.com/Pixeval/Pixeval/pulls)发布Pull Request请求合并到`dev/main`分支
-
-## 项目结构
-
-1. Pixeval 项目包含了项目本身的逻辑，布局代码，以及打包相关的文件
-2. Pixeval.CoreApi 包含了项目需要的Pixiv API
-3. Pixeval.LoginProxy 包含了Pixiv登录以及IPC相关的代码
-4. Pixeval.SourceGen 包含了从本地化文件自动生成对应C#类的代码
-5. Pixeval.Utilities 包含了通用的工具代码
 
 ## 如果遇到任何问题(按照推荐程度优先级排序)
 
