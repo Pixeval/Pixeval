@@ -179,18 +179,6 @@
           "Microsoft.WindowsAppSDK": "1.0.0"
         }
       },
-      "PInvoke.User32": {
-        "type": "Direct",
-        "requested": "[0.7.124, )",
-        "resolved": "0.7.124",
-        "contentHash": "Xgrt/IFJWZhLT0S0MdP4ZU48gqgKVs+O+WmXb9Qge1T+me3oR5fhOl812qvLm2+D6DoHPxbUWTIc8MrH5i78Vw==",
-        "dependencies": {
-          "PInvoke.Kernel32": "0.7.124",
-          "PInvoke.Windows.Core": "0.7.124",
-          "PInvoke.Windows.ShellScalingApi": "0.7.124",
-          "Validation": "2.4.15"
-        }
-      },
       "ReverseMarkdown": {
         "type": "Direct",
         "requested": "[3.24.0, )",
@@ -749,31 +737,6 @@
           "System.Xml.XDocument": "4.3.0"
         }
       },
-      "PInvoke.Kernel32": {
-        "type": "Transitive",
-        "resolved": "0.7.124",
-        "contentHash": "3yQudp7J20HH8oW2WsGdNlcRCJAG6Slens3n4P7c6m53m0SkXLyD5ry/bXYAFXYeIym9b0LIOvrmKjmzptmkWw==",
-        "dependencies": {
-          "PInvoke.Windows.Core": "0.7.124",
-          "System.Threading.Tasks.Extensions": "4.5.4"
-        }
-      },
-      "PInvoke.Windows.Core": {
-        "type": "Transitive",
-        "resolved": "0.7.124",
-        "contentHash": "er/PkwUBie3nXlwiKOfOxmdAj6ae8eFCLUgI5g6+9RAbyMoXMQnwAPx1atq0ZxU2LeozBdWtMQjogqcMNJhg1w==",
-        "dependencies": {
-          "System.Memory": "4.5.4"
-        }
-      },
-      "PInvoke.Windows.ShellScalingApi": {
-        "type": "Transitive",
-        "resolved": "0.7.124",
-        "contentHash": "mVKSSuvBcJUwWvfGAfJK05AXH0QEbiDdxYqN4wjCZBeXv4ewM2/N6U2wt5uCac8RFIvsd9MAsIdTnjMLqdkNZg==",
-        "dependencies": {
-          "PInvoke.Windows.Core": "0.7.124"
-        }
-      },
       "Polly": {
         "type": "Transitive",
         "resolved": "7.2.3",
@@ -1192,11 +1155,6 @@
           "System.Runtime.Extensions": "4.3.0",
           "System.Threading": "4.3.0"
         }
-      },
-      "System.Memory": {
-        "type": "Transitive",
-        "resolved": "4.5.4",
-        "contentHash": "1MbJTHS1lZ4bS4FmsJjnuGJOu88ZzTT2rLvrhW7Ygic+pC0NWA+3hgAen0HRdsocuQXCkUTdFn9yHJJhsijDXw=="
       },
       "System.Net.Http": {
         "type": "Transitive",
@@ -1710,11 +1668,6 @@
           "System.Threading": "4.3.0",
           "System.Xml.ReaderWriter": "4.3.0"
         }
-      },
-      "Validation": {
-        "type": "Transitive",
-        "resolved": "2.4.15",
-        "contentHash": "KQFOtJKKhaXzuSiZhkFaFzQEdYsA+EN/XqKZDYwsGDOrS0Nxu6qzCvNTsDF4xtkiZbBA6u7I59QnsuP2O2fZgg=="
       },
       "pixeval.coreapi": {
         "type": "Project",

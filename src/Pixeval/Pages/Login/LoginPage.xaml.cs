@@ -50,3 +50,4 @@ internal sealed partial class LoginPage
         RegisterPopup.IsOpen = true;
     }
 }
+
