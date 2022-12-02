@@ -18,14 +18,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using JetBrains.Annotations;
-
 namespace Pixeval.CoreApi.Net;
 
 /// <summary>
 ///     The several kinds of APIs that Mako will use
 /// </summary>
-[PublicAPI]
 public enum PixivApiKind
 {
     AppApi,

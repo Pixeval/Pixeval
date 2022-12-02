@@ -22,11 +22,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 namespace Pixeval.Utilities;
 
-[PublicAPI]
 public class AdaptedAsyncEnumerator<T> : IAsyncEnumerator<T>
 {
     private readonly CancellationToken _cancellationToken;
@@ -53,7 +51,6 @@ public class AdaptedAsyncEnumerator<T> : IAsyncEnumerator<T>
     public T Current => _outerEnumerator.Current;
 }
 
-[PublicAPI]
 public class AdaptedAsyncEnumerable<T> : IAsyncEnumerable<T>
 {
     private readonly IEnumerable<T> _sync;

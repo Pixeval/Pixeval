@@ -10,7 +10,6 @@
 		<UseWinUI>true</UseWinUI>
 		<Nullable>enable</Nullable>
 		<DefaultLanguage>zh-CN</DefaultLanguage>
-		<EnableNETAnalyzers>false</EnableNETAnalyzers>
 		<EnablePreviewFeatures>true</EnablePreviewFeatures>
 		<ApplicationIcon />
 		<StartupObject>Pixeval.Program</StartupObject>
@@ -28,6 +27,13 @@
 	<Import Project="..\Pixeval.Startup.WinUI.Hosting\Pixeval.Startup.WinUI.Hosting.props"></Import>
 
 	<ItemGroup>
+	  <Compile Remove="AppManagement\**" />
+	  <EmbeddedResource Remove="AppManagement\**" />
+	  <None Remove="AppManagement\**" />
+	  <Page Remove="AppManagement\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
 		<ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 		<ProjectReference Include="..\Pixeval.Startup.WinUI.Hosting\Pixeval.Startup.WinUI.Hosting.csproj" />
@@ -41,23 +47,23 @@
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Behaviors" Version="7.1.2" />
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.2" />
-		<PackageReference Include="GitVersion.MsBuild" Version="5.10.3">
+		<PackageReference Include="GitVersion.MsBuild" Version="5.11.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="LiteDB.Async" Version="0.1.1" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0-rc.2.22472.3" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
 		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.1" />
 		<PackageReference Include="CommunityToolkit.Diagnostics" Version="8.1.0-preview1" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0-preview1" />
-		<PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.3.48" />
-		<PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.3.48">
+		<PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.4.27" />
+		<PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.4.27">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Win32.Registry" Version="6.0.0-preview.5.21301.5" />
-		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.25231-preview" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.220930.4-preview2" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.25247-preview" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221116.1" />
 		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
 		<PackageReference Include="PInvoke.User32" Version="0.7.124" />
 		<PackageReference Include="ReverseMarkdown" Version="3.24.0" />
@@ -66,7 +72,7 @@
 		<PackageReference Include="SkiaSharp.QrCode" Version="0.6.0" />
 		<PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.3" />
 		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
-		<PackageReference Include="System.Net.Http.Json" Version="7.0.0-rc.2.22472.3" />
+		<PackageReference Include="System.Net.Http.Json" Version="7.0.0" />
 		<PackageReference Include="WinUIEx" Version="1.8.0" />
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
@@ -234,7 +240,6 @@
 	</Target>
 
 	<ItemGroup>
-		<Folder Include="AppManagement\" />
 		<Folder Include="Assets\Images\Supporters\" />
 	</ItemGroup>
 	<ItemGroup>

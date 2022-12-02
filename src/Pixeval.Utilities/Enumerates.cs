@@ -24,18 +24,15 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 namespace Pixeval.Utilities;
 
-[PublicAPI]
 public enum SequenceComparison
 {
     Sequential,
     Unordered
 }
 
-[PublicAPI]
 public static class Enumerates
 {
     public static bool SequenceEquals<T>(this IEnumerable<T> @this,
@@ -223,7 +220,6 @@ public static class Enumerates
     }
 }
 
-[PublicAPI]
 public static class EmptyEnumerators<T>
 {
     public static readonly IEnumerator<T> Sync = new List<T>().GetEnumerator();

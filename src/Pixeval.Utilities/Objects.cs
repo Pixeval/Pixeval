@@ -32,11 +32,10 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CommunityToolkit.HighPerformance;
 using CommunityToolkit.HighPerformance.Buffers;
-using JetBrains.Annotations;
+
 
 namespace Pixeval.Utilities;
 
-[PublicAPI]
 public static class Objects
 {
     public static readonly IEqualityComparer<string> CaseIgnoredComparer = new CaseIgnoredStringComparer();
@@ -70,7 +69,6 @@ public static class Objects
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [ContractAnnotation("str:notnull => true")]
     public static bool IsNullOrEmpty(this string? str)
     {
         return string.IsNullOrEmpty(str);
@@ -126,7 +124,6 @@ public static class Objects
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [ContractAnnotation("obj:notnull => notnull; obj:null => null")]
     public static string? ToJson(this object? obj, Action<JsonSerializerOptions>? serializerOptionConfigure = null)
     {
         return obj?.Let(o => JsonSerializer.Serialize(o, new JsonSerializerOptions().Apply(option => serializerOptionConfigure?.Invoke(option))));
@@ -235,7 +232,6 @@ public static class Objects
         return b = !b;
     }
 
-    [ContractAnnotation("orElse:null => null;orElse:notnull => notnull")]
     public static async Task<R?> GetOrElseAsync<R>(this Task<Result<R>> task, R? orElse)
     {
         return (await task).GetOrElse(orElse);

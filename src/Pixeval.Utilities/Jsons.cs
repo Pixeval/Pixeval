@@ -22,11 +22,9 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
-using JetBrains.Annotations;
 
 namespace Pixeval.Utilities;
 
-[PublicAPI]
 public static class Jsons
 {
     public static IEnumerable<JsonProperty> EnumerateObjectOrEmpty(this JsonElement? element)

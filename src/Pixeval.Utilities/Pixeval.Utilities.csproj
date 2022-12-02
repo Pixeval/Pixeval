@@ -6,7 +6,6 @@
   </PropertyGroup>
 	<ItemGroup>
     <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.1.0-preview1" />
-    <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" PrivateAssets="True" />
   </ItemGroup>
 
 </Project>

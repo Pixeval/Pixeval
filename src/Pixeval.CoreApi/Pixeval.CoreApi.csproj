@@ -9,9 +9,9 @@
 
 	<ItemGroup>
 		<PackageReference Include="DotNext.Threading" Version="4.7.4" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0-rc.2.22472.3" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0-rc.2.22472.3" />
-		<PackageReference Include="Microsoft.Extensions.Http.Polly" Version="7.0.0-rc.2.22476.2" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Http.Polly" Version="7.0.0" />
 		<PackageReference Include="Refit.HttpClientFactory" Version="6.3.2" />
 	</ItemGroup>
 

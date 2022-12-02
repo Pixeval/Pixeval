@@ -18,12 +18,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using JetBrains.Annotations;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Enums;
 
-[PublicAPI]
 public enum RankOption
 {
     [Description("day")]

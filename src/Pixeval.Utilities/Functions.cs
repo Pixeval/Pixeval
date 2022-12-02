@@ -22,11 +22,9 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 namespace Pixeval.Utilities;
 
-[PublicAPI]
 public static class Functions
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

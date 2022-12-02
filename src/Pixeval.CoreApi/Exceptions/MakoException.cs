@@ -19,11 +19,9 @@
 #endregion
 
 using System.Runtime.Serialization;
-using JetBrains.Annotations;
 
 namespace Pixeval.CoreApi.Exceptions;
 
-[PublicAPI]
 public class MakoException : System.Exception
 {
     public MakoException()

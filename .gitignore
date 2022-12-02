@@ -358,11 +358,12 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
-# Fody - auto-generated XML schema
-FodyWeavers.xsd
-src/Pixeval/Assets/Binary/Pixeval.LoginProxy.zip
-
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# test secrets
 tests/Pixeval.CoreApi.Tests/secrets.json
+
+# Auto generated manifest
+/src/Pixeval/Package.appxmanifest

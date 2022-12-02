@@ -18,12 +18,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using JetBrains.Annotations;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Enums;
 
-[PublicAPI]
 public enum IllustrationSortOption
 {
     [Description("popular_desc")]
@@ -38,7 +36,6 @@ public enum IllustrationSortOption
     DoNotSort
 }
 
-[PublicAPI]
 public enum UserSortOption
 {
     [Description("date_asc")]

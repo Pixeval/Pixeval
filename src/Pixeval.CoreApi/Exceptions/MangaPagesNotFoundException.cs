@@ -19,12 +19,10 @@
 #endregion
 
 using System.Runtime.Serialization;
-using JetBrains.Annotations;
 using Pixeval.CoreApi.Models;
 
 namespace Pixeval.CoreApi.Exceptions;
 
-[PublicAPI]
 public class MangaPagesNotFoundException : MakoException
 {
     public MangaPagesNotFoundException(Illustration illustration)

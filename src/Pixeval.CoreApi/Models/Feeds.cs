@@ -19,11 +19,9 @@
 #endregion
 
 using System;
-using JetBrains.Annotations;
 
 namespace Pixeval.CoreApi.Models;
 
-[PublicAPI]
 public record Feed
 {
     /// <summary>

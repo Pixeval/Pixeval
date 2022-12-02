@@ -19,14 +19,12 @@
 #endregion
 
 using System.Runtime.Serialization;
-using JetBrains.Annotations;
 
 namespace Pixeval.CoreApi.Exceptions;
 
 /// <summary>
 ///     Raised if you're trying to set the sort option to popular_desc without a premium access
 /// </summary>
-[PublicAPI]
 public class IllegalSortOptionException : MakoException
 {
     public IllegalSortOptionException()

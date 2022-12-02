@@ -20,12 +20,10 @@
 
 using System;
 using System.Reflection;
-using JetBrains.Annotations;
 
 namespace Pixeval.Utilities;
 
 [AttributeUsage(AttributeTargets.Field)]
-[PublicAPI]
 public class Description : Attribute
 {
     public Description(string name)
@@ -36,7 +34,6 @@ public class Description : Attribute
     public string Name { get; }
 }
 
-[PublicAPI]
 public static class DescriptionHelper
 {
     public static string GetDescription<TEnum>(this TEnum @enum) where TEnum : Enum

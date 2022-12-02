@@ -19,9 +19,7 @@
 #endregion
 
 using System.Collections.Generic;
-using JetBrains.Annotations;
 
 namespace Pixeval.CoreApi.Models;
 
-[PublicAPI]
 public record SpotlightDetail(SpotlightArticle SpotlightArticle, string Introduction, IEnumerable<Illustration> Illustrations);
