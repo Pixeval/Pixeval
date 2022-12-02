@@ -35,11 +35,12 @@
 更多详细信息请前往 [项目主页](https://sora.ink/pixeval) 查看
 
 **WinUI3版本提供了更好的UI，更好的项目结构以及更好的开发体验，如果你想要了解目前的开发进度，可以通过以下方法来下载并编译该项目**
-## 准备
+## 预先准备
 1. 带有WinUI 3工作负载的Visual Studio
    2022，你可以在 [创建你的第一个WinUI 3 app](https://docs.microsoft.com/zh-cn/windows/apps/winui/winui3/create-your-first-winui3-app?tabs=desktop-csharp) 的"先决条件"部分查看更多信息
-2. 安装VS插件[Single-project MSIX Packaging Tools for VS 20200](https://aka.ms/windowsappsdk/stable-vsix-2022-cs)
-3. 安装.NET 6，你可以在 [这里](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) 下载并安装.NET 6
+2. 安装VS插件 [Single-project MSIX Packaging Tools for VS 2022](https://aka.ms/windowsappsdk/stable-vsix-2022-cs)（如果你仅需构建一个Debug版本则可以跳过以上两个步骤）
+3. 安装.NET 7 SDK，你可以在 [这里](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) 下载并安装.NET 7
+4. 安装 [Windows 10 SDK 版本 2004 (10.0.19041.0)](https://go.microsoft.com/fwlink/?linkid=2120843)
 
 ## 如果你想要参与开发，则需要如下几点额外需求
 
@@ -48,11 +49,16 @@
 5. 对C# .NET开发的一定了解以及开发经验
 6. 具有不依赖文档阅读代码的能力
 
-## 开发 
+## 开发
+### 命令行 
 1. 克隆本项目
-2. 将 Pixeval 设置为启动项目
-3. 打开`Build` | `ConfigurationManager`，勾选Pixeval一项后面的`Deploy`单选框
-4. 构建并运行
+2. `dotnet build`
+
+### Visual Studio
+1. 克隆本项目
+2. 打开位于项目根目录下的解决方案文件(.sln)
+3. 生成解决方案
+
 
 ## 项目版本控制须知
 本项目采用一个简单的Git分支模型：当您在进行开发的时候，请基于`dev/main`创建新的分支，**切勿**直接基于`master`或者`dev/main`分支进行开发，新的分支格式**必须**遵循`dev/{user}/{qualifier}-{name}`，`{user}`**必须**是您的用户名。
