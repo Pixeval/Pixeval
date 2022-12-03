@@ -71,8 +71,6 @@ namespace Pixeval
                 services.AddSingleton<SettingStorage>();
 
                 services.AddSingleton<MainWindow>();
-                
-                services.AddSingleton<LoginPageViewModel>();
 
                 services.AddSingleton<MainPage>();
                 services.AddSingleton<MainPageViewModel>();

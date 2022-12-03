@@ -19,23 +19,31 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.CoreApi;
+using Pixeval.CoreApi.Models;
 using Pixeval.Misc;
 using Pixeval.Pages.Login;
+using Pixeval.Storage;
 
 namespace Pixeval;
 
 internal sealed partial class MainWindow
 {
-    private readonly LoginPageViewModel _loginPageViewModel;
+    private readonly ISessionRefresher _sessionRefresher;
+    private readonly AbstractSessionStorage _sessionStorage;
     private readonly IHostApplicationLifetime _hostApplicationLifetime;
-    public MainWindow(LoginPageViewModel loginPageViewModel, 
+    public MainWindow(ISessionRefresher sessionRefresher,
+        AbstractSessionStorage sessionStorage,
         IHostApplicationLifetime hostApplicationLifetime)
     {
-        _loginPageViewModel = loginPageViewModel;
+        _sessionRefresher = sessionRefresher;
+        _sessionStorage = sessionStorage;
         InitializeComponent();
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
@@ -43,11 +51,26 @@ internal sealed partial class MainWindow
         _hostApplicationLifetime = hostApplicationLifetime;
     }
 
-    
-
     private void MainWindow_OnClosed(object sender, WindowEventArgs args)
     {
         _hostApplicationLifetime.StopApplication();
         Environment.Exit(0);
+    }
+
+    [RelayCommand]
+    private async Task LoginAsync()
+    {
+        var session = await _sessionStorage.GetSessionAsync();
+        TokenResponse? tokenResponse;
+        if (session is null)
+        {
+            tokenResponse = await _sessionRefresher.ExchangeTokenAsync();
+        }
+        else
+        {
+            tokenResponse = await _sessionRefresher.RefreshTokenAsync(session.RefreshToken);
+        }
+        await _sessionStorage.SetSessionAsync(tokenResponse.User!.Id!, tokenResponse.RefreshToken!,
+            tokenResponse.AccessToken!);
     }
 }

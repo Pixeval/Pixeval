@@ -175,10 +175,4 @@
   <data name="RootCertificateInstallationRequiredTitle" xml:space="preserve">
     <value>检测到本用户尚未安装证书</value>
   </data>
-  <data name="WebView2InstallationRequiredContent" xml:space="preserve">
-    <value>如不安装WebView2则无法正常登录，选择确认将会自动打开浏览器为您下载WebView2 Runtime，请您双击exe文件安装后重启应用。如果选择取消则无法继续使用本应用</value>
-  </data>
-  <data name="WebView2InstallationRequiredTitle" xml:space="preserve">
-    <value>检测到本机尚未安装WebView2 Runtime</value>
-  </data>
 </root>

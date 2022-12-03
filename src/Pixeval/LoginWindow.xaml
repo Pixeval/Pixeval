@@ -1,7 +1,4 @@
-<!-- Copyright (c) Microsoft Corporation. All rights reserved. -->
-<!-- Licensed under the MIT License. See LICENSE in the project root for license information. -->
-
-<Window
+<winUiEx:WindowEx
     x:Class="Pixeval.LoginWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,45 +7,34 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ie="using:Microsoft.Xaml.Interactions.Core"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
-    mc:Ignorable="d">
+    xmlns:winUiEx="using:WinUIEx"
+    mc:Ignorable="d"
+    Height="600"
+    Width="400">
+    <winUiEx:WindowEx.Backdrop>
+        <winUiEx:MicaSystemBackdrop/>
+    </winUiEx:WindowEx.Backdrop>
     <Grid>
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Image Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Width="150"
-                   Height="150"
-                   Source="/Assets/Images/logo.png">
-            </Image>
-            <Button Grid.Row="1" Grid.Column="0" Content="{x:Bind SR.Login}" HorizontalAlignment="Stretch" Margin="0 0 4 0" Command="{x:Bind ViewModel.LoginCommand}" ></Button>
-            <Button Grid.Row="1" Grid.Column="1" Content="{x:Bind SR.Register}" HorizontalAlignment="Stretch" Margin="4 0 0 0" Command="{x:Bind ViewModel.RegisterCommand}"></Button>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="28" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" x:Name="LoginWindowTitleBar">
+            <Image Source="/Assets/Images/logo44x44.ico" HorizontalAlignment="Left" Width="16" Height="16" Margin="8,0"/>
+            <TextBlock x:Name="LoginWindowTitleBarText" VerticalAlignment="Center" TextWrapping="NoWrap" Style="{StaticResource CaptionTextBlockStyle}" Margin="32, 0, 0, 0"/>
         </Grid>
-        <Popup x:Name="LoginPopup"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"
-               HorizontalOffset="-200"
-               VerticalOffset="-240">
+        <Grid Grid.Row="1">
+            <i:Interaction.Behaviors>
+                <ie:EventTriggerBehavior EventName="Loaded">
+                    <ie:InvokeCommandAction Command="{x:Bind LoginCommand}"></ie:InvokeCommandAction>
+                </ie:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
             <WebView2 x:Name="LoginWebView"
                       x:FieldModifier="public"
-                      Width="400"
-                      Height="480">
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch">
+
             </WebView2>
-        </Popup>
-        <Popup x:Name="RegisterPopup"
-               HorizontalAlignment="Center" 
-               VerticalAlignment="Center" 
-               HorizontalOffset="-200" 
-               VerticalOffset="-240">
-            <WebView2 x:Name="RegisterWebView"
-                      x:FieldModifier="public"  
-                      Width="400"
-                      Height="480">
-            </WebView2>
-        </Popup>
+        </Grid>
     </Grid>
-</Window>
+</winUiEx:WindowEx>

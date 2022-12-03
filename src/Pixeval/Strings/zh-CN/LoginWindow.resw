@@ -45,4 +45,10 @@
   <data name="Register" xml:space="preserve">
     <value>注册</value>
   </data>
+  <data name="WebView2InstallationRequiredContent" xml:space="preserve">
+    <value>检测到本机并未安装WebView2 Runtime，选择确认将会自动打开浏览器为您下载WebView2 Runtime，选择取消则无法继续使用本应用。</value>
+  </data>
+  <data name="WebView2InstallationRequiredTitle" xml:space="preserve">
+    <value>警告</value>
+  </data>
 </root>

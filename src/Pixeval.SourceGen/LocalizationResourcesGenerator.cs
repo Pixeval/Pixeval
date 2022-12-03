@@ -112,7 +112,7 @@ public class LocalizationResourcesGenerator : IIncrementalGenerator
                 {   
                     public StringResources SR { get; } = new StringResources();
 
-                    internal sealed class StringResources
+                    public sealed class StringResources
                     {
                         private static readonly global::Microsoft.Windows.ApplicationModel.Resources.ResourceLoader s_resourceLoader = new(global::Microsoft.Windows.ApplicationModel.Resources.ResourceLoader.GetDefaultResourceFilePath(),"{{Path.GetFileNameWithoutExtension(additionalText.Path)}}");
 

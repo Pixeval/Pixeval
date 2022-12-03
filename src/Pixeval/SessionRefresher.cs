@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Models;
 using Pixeval.CoreApi.Services;
+using WinUIEx;
 
 namespace Pixeval
 {
@@ -18,9 +19,13 @@ namespace Pixeval
             _authService = authService;
         }
 
-        public Task<TokenResponse> ExchangeTokenAsync()
+        public async Task<TokenResponse> ExchangeTokenAsync()
         {
-            throw new NotImplementedException();
+            var loginWindow = new LoginWindow();
+            loginWindow.Show();
+            var response = await loginWindow.LoginTask;
+            loginWindow.Close();
+            return response;
         }
 
         public Task<TokenResponse> RefreshTokenAsync(string refreshToken)
