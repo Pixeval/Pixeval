@@ -113,6 +113,7 @@
 		<None Remove="Strings\zh-CN\IllustrationViewerPage.resw" />
 		<None Remove="Strings\zh-CN\IllustratorPage.resw" />
 		<None Remove="Strings\zh-CN\ImageViewerPage.resw" />
+		<None Remove="Strings\zh-CN\LoginWindow.resw" />
 		<None Remove="Strings\zh-CN\MacroParser.resw" />
 		<None Remove="Strings\zh-CN\PixivReplyBar.resw" />
 		<None Remove="Strings\zh-CN\RankingsPage.resw" />
@@ -149,6 +150,7 @@
 		<CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
 	</ItemGroup>
 	<!-- #endregion Exposes PRI resources to the source generator -->
+
 
 	<Target Name="PrepareForGenerateGitVersionInformation" BeforeTargets="GenerateGitVersionInformation">
 		<MakeDir Directories="$(OutDir);$(IntermediateOutputPath);@(DocFileItem->'%(RelativeDir)');@(CreateDirectory)" ContinueOnError="True" />
@@ -252,6 +254,7 @@
 		<PRIResource Include="Strings\zh-CN\IllustratorPage.resw" />
 		<PRIResource Include="Strings\zh-CN\ImageViewerPage.resw" />
 		<PRIResource Include="Strings\zh-CN\LoginPage.resw" />
+		<PRIResource Include="Strings\zh-CN\LoginWindow.resw" />
 		<PRIResource Include="Strings\zh-CN\MacroParser.resw" />
 		<PRIResource Include="Strings\zh-CN\MainPage.resw" />
 		<PRIResource Include="Strings\zh-CN\MessageContentDialog.resw" />
@@ -277,9 +280,6 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Update="Pages\MainPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\Login\LoginPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Update="Pages\Capabilities\RecommendationPage.xaml">

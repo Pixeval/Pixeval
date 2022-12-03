@@ -40,14 +40,10 @@ internal sealed partial class MainWindow
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
         AppTitleBarText.Text = AppConstants.AppIdentifier;
-        Activated += MainWindow_Activated;
         _hostApplicationLifetime = hostApplicationLifetime;
     }
 
-    private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
-    {
-        MainWindowFrame.Content = _loginPageViewModel.LoginPage;
-    }
+    
 
     private void MainWindow_OnClosed(object sender, WindowEventArgs args)
     {

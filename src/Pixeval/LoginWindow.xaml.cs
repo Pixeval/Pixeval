@@ -17,14 +17,17 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using CommunityToolkit.Mvvm.Input;
+using Pixeval.Attributes;
 
 namespace Pixeval;
 
-internal sealed partial class LoginWindow : Window
+[LocalizedStringResources]
+internal partial class LoginWindow : Window
 {
     public LoginWindow()
     {
         ViewModel = new LoginWindowViewModel(this);
+        var login = SR.Login;
     }
 
     public LoginWindowViewModel ViewModel { get; set; }
@@ -43,12 +46,12 @@ internal sealed partial class LoginWindowViewModel
     [RelayCommand]
     private Task LoginAsync()
     {
-
+        throw new NotImplementedException();
     }
 
     [RelayCommand]
     private Task RegisterAsync()
     {
-
+        throw new NotImplementedException();
     }
 }

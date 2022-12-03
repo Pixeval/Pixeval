@@ -11,13 +11,6 @@
     xmlns:ie="using:Microsoft.Xaml.Interactions.Core"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d">
-
-    <i:Interaction.Behaviors>
-        <ie:EventTriggerBehavior EventName="Loaded">
-            <ie:InvokeCommandAction Command="{x:Bind ViewModel.StartLoginCommand}">
-            </ie:InvokeCommandAction>
-        </ie:EventTriggerBehavior>
-    </i:Interaction.Behaviors>
     <Grid>
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.RowDefinitions>
@@ -32,8 +25,8 @@
                    Height="150"
                    Source="/Assets/Images/logo.png">
             </Image>
-            <Button Grid.Row="1" Grid.Column="0" Content="{x:Bind local:LoginPageResources.Login}" HorizontalAlignment="Stretch" Margin="0 0 4 0" Click="ButtonLogin_Click" ></Button>
-            <Button Grid.Row="1" Grid.Column="1" Content="{x:Bind local:LoginPageResources.Register}" HorizontalAlignment="Stretch" Margin="4 0 0 0" Click="ButtonRegister_Click"></Button>
+            <Button Grid.Row="1" Grid.Column="0" Content="{x:Bind SR.Login}" HorizontalAlignment="Stretch" Margin="0 0 4 0" Command="{x:Bind ViewModel.LoginCommand}" ></Button>
+            <Button Grid.Row="1" Grid.Column="1" Content="{x:Bind SR.Register}" HorizontalAlignment="Stretch" Margin="4 0 0 0" Command="{x:Bind ViewModel.RegisterCommand}"></Button>
         </Grid>
         <Popup x:Name="LoginPopup"
                HorizontalAlignment="Center"
@@ -44,11 +37,6 @@
                       x:FieldModifier="public"
                       Width="400"
                       Height="480">
-                <i:Interaction.Behaviors>
-                    <ie:EventTriggerBehavior EventName="NavigationStarting">
-                        <ie:InvokeCommandAction Command="{x:Bind ViewModel.NavigationStartingCommand}"></ie:InvokeCommandAction>
-                    </ie:EventTriggerBehavior>
-                </i:Interaction.Behaviors>
             </WebView2>
         </Popup>
         <Popup x:Name="RegisterPopup"
@@ -60,11 +48,6 @@
                       x:FieldModifier="public"  
                       Width="400"
                       Height="480">
-                <i:Interaction.Behaviors>
-                    <ie:EventTriggerBehavior EventName="NavigationStarting">
-                        <ie:InvokeCommandAction Command="{x:Bind ViewModel.NavigationStartingCommand}"></ie:InvokeCommandAction>
-                    </ie:EventTriggerBehavior>
-                </i:Interaction.Behaviors>
             </WebView2>
         </Popup>
     </Grid>

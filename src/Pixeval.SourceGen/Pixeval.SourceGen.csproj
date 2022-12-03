@@ -6,6 +6,7 @@
 		<RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
 		<Nullable>enable</Nullable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
 	</PropertyGroup>
 
 	<ItemGroup>

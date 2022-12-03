@@ -18,63 +18,112 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
-using Pixeval.SourceGen.Utilities;
 
 namespace Pixeval.SourceGen;
 
-// see https://platform.uno/blog/using-msbuild-items-and-properties-in-c-9-source-generators/
 [Generator]
-public class LocalizationResourcesGenerator : ISourceGenerator
+public class LocalizationResourcesGenerator : IIncrementalGenerator
 {
-    private const string SourceItemGroupMetadata = "build_metadata.AdditionalFiles.SourceItemGroup";
+    private const string Namespace = "Pixeval";
+    private const string LocalizedStringResourcesAttributeName = "LocalizedStringResourcesAttribute";
+    private const string LocalizedStringResourcesAttributeText = $$"""
+        using System;
 
-    public void Initialize(GeneratorInitializationContext context)
+        #nullable enable
+
+        namespace {{Namespace}};
+
+        [AttributeUsage(AttributeTargets.Class)]
+        public sealed class {{LocalizedStringResourcesAttributeName}} : global::System.Attribute
+        { 
+            public {{LocalizedStringResourcesAttributeName}}(string? fileName = null)
+            {
+                FileName = fileName;
+            }
+
+            public string? FileName { get; set; }
+        }
+        """;
+
+    private const string SourceItemGroupMetadata = "build_metadata.AdditionalFiles.SourceItemGroup";
+    public void Initialize(IncrementalGeneratorInitializationContext context)
     {
+        context.RegisterPostInitializationOutput(output =>
+        {
+            output.AddSource("LocalizedStringResourcesAttribute.g.cs", LocalizedStringResourcesAttributeText);
+        });
+
+
+        var attributes = context.SyntaxProvider.ForAttributeWithMetadataName(
+            $"{Namespace}.{LocalizedStringResourcesAttributeName}",
+            (_, _) => true,
+            (syntaxContext, _) => syntaxContext);
+
+        var additionalTexts = context.AdditionalTextsProvider
+            .Combine(context.AnalyzerConfigOptionsProvider)
+            .Where(_ => _.Right.GetOptions(_.Left).TryGetValue(SourceItemGroupMetadata, out var sourceItemGroup) &&
+                        sourceItemGroup == "PRIResource" && _.Left.Path.EndsWith(".resw"))
+            .Select((tuple, _) => tuple.Left);
+
+        context.RegisterSourceOutput(attributes.Combine(additionalTexts.Collect()), (spc, source) => Execute(spc, source.Left, source.Right));
+
     }
 
-    public void Execute(GeneratorExecutionContext context)
+    public void Execute(SourceProductionContext spc, GeneratorAttributeSyntaxContext asc, ImmutableArray<AdditionalText> additionalTexts)
     {
-        if (context.AdditionalFiles.Where(f => context.AnalyzerConfigOptions.GetOptions(f).TryGetValue(SourceItemGroupMetadata, out var sourceItemGroup)
-                                               && sourceItemGroup == "PRIResource"
-                                               && f.Path.EndsWith(".resw")).Distinct(new AdditionalTextEqualityComparer()).ToImmutableArray()
-                is var resources && resources.Any())
+        for (var i = 0; i < asc.Attributes.Length; i++)
         {
-            const char open = '{';
-            const char close = '}';
-            var stringBuilder = new IndentedStringBuilder(4);
-            using (var namespaceBuilder = stringBuilder.Block("namespace Pixeval", open, close))
+            var attribute = asc.Attributes[i];
+            var fileName = Path.GetFileNameWithoutExtension(attribute.ConstructorArguments[0].Value as string) ??
+                           asc.TargetSymbol.Name;
+            var extension = Path.GetExtension(attribute.ConstructorArguments[0].Value as string) ?? string.Empty;
+            var additionalText = additionalTexts.Single(_ =>
+                Path.GetFileNameWithoutExtension(_.Path) == fileName ||
+                Path.GetFileName(_.Path) == $"{fileName}.{extension}");
+            var doc = new XmlDocument();
+            doc.Load(additionalText.Path);
+            var names = new List<string>();
+            if (doc.SelectNodes("//data") is { } nodes)
             {
-                foreach (var additionalText in resources)
+                var elements = nodes.Cast<XmlElement>();
+                foreach (var node in elements)
                 {
-                    var className = $"{Path.GetFileNameWithoutExtension(additionalText.Path)}Resources";
-                    using var classBuilder = namespaceBuilder.Block($"public class {className}", open, close);
-                    classBuilder.AppendLine(@$"public static readonly Microsoft.Windows.ApplicationModel.Resources.ResourceLoader ResourceLoader = new(Microsoft.Windows.ApplicationModel.Resources.ResourceLoader.GetDefaultResourceFilePath(), ""{Path.GetFileNameWithoutExtension(additionalText.Path)}"");");
-                    var doc = new XmlDocument();
-                    doc.Load(additionalText.Path);
-                    if (doc.SelectNodes("//data") is { } nodes)
+                    var name = node.GetAttribute("name");
+                    if (name.Contains("["))
                     {
-                        var elements = nodes.Cast<XmlElement>();
-                        foreach (var node in elements)
-                        {
-                            var name = node.GetAttribute("name");
-                            if (name.Contains("["))
-                            {
-                                continue;
-                            }
-
-                            classBuilder.AppendLine(@$"public static readonly string {Regex.Replace(name, "\\.|\\:|\\[|\\]", string.Empty)} = ResourceLoader.GetString(""{name.Replace('.', '/')}"");");
-                        }
+                        continue;
                     }
+
+                    names.Add(name);
                 }
             }
 
-            context.AddSource("LocalizationResources.g", stringBuilder.ToString());
+            var source = $$"""
+                namespace {{(asc.TargetSymbol.ContainingNamespace is { } @namespace ? @namespace.ToDisplayString() : "Pixeval")}};
+    
+                {{asc.TargetSymbol.DeclaredAccessibility.ToString().ToLower()}} partial class {{asc.TargetSymbol.Name}} 
+                {   
+                    public StringResources SR { get; } = new StringResources();
+
+                    internal sealed class StringResources
+                    {
+                        private static readonly global::Microsoft.Windows.ApplicationModel.Resources.ResourceLoader s_resourceLoader = new(global::Microsoft.Windows.ApplicationModel.Resources.ResourceLoader.GetDefaultResourceFilePath(),"{{Path.GetFileNameWithoutExtension(additionalText.Path)}}");
+
+                        {{string.Join("\r\n        ", names.Select(_ => @$"public readonly string {Regex.Replace(_, "\\.|\\:|\\[|\\]", string.Empty)} = s_resourceLoader.GetString(""{_.Replace('.', '/')}"");"))}} 
+                    }
+                }
+            
+                """;
+            spc.AddSource($"{asc.TargetSymbol.Name}{i}.SR.g", source);
         }
     }
+
+
 }
