@@ -22,7 +22,7 @@ namespace Pixeval.CoreApi.Tests
             throw new NotImplementedException();
         }
 
-        public Task<TokenResponse> RefreshTokenAsync(string refreshToken)
+        public Task<TokenResponse> GetRefreshTokenAsync(string refreshToken)
         {
             return _authService.RefreshAsync(refreshToken);
         }

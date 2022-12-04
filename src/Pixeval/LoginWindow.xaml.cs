@@ -1,30 +1,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using System.Web;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
-using Pixeval.Attributes;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Models;
 using Pixeval.CoreApi.Net;
@@ -32,9 +11,16 @@ using Pixeval.Misc;
 using Pixeval.Pages.Login;
 using Pixeval.Util;
 using Pixeval.Util.IO;
-using WinUIEx;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
+using System.Web;
 using Windows.System;
-using Windows.UI.Popups;
+using WinUIEx;
 
 namespace Pixeval;
 

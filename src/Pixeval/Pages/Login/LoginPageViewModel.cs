@@ -141,7 +141,7 @@ internal partial class LoginPageViewModel : ObservableObject
     //    //{
     //    //    _appViewModel.MakoClient = new PixivApiService(session, _configurationManager.Setting.ToMakoClientConfiguration(),
     //    //        new RefreshTokenSessionUpdater());
-    //    //    await _appViewModel.MakoClient.RefreshTokenAsync();
+    //    //    await _appViewModel.MakoClient.GetAccessTokenAsync();
     //    //}
     //    //else
     //    //{

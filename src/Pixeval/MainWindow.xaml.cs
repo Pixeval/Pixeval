@@ -36,14 +36,11 @@ namespace Pixeval;
 internal sealed partial class MainWindow
 {
     private readonly ISessionRefresher _sessionRefresher;
-    private readonly AbstractSessionStorage _sessionStorage;
     private readonly IHostApplicationLifetime _hostApplicationLifetime;
     public MainWindow(ISessionRefresher sessionRefresher,
-        AbstractSessionStorage sessionStorage,
         IHostApplicationLifetime hostApplicationLifetime)
     {
         _sessionRefresher = sessionRefresher;
-        _sessionStorage = sessionStorage;
         InitializeComponent();
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
@@ -60,17 +57,6 @@ internal sealed partial class MainWindow
     [RelayCommand]
     private async Task LoginAsync()
     {
-        var session = await _sessionStorage.GetSessionAsync();
-        TokenResponse? tokenResponse;
-        if (session is null)
-        {
-            tokenResponse = await _sessionRefresher.ExchangeTokenAsync();
-        }
-        else
-        {
-            tokenResponse = await _sessionRefresher.RefreshTokenAsync(session.RefreshToken);
-        }
-        await _sessionStorage.SetSessionAsync(tokenResponse.User!.Id!, tokenResponse.RefreshToken!,
-            tokenResponse.AccessToken!);
+        await _sessionRefresher.GetAccessTokenAsync();
     }
 }

@@ -11,10 +11,10 @@ namespace Pixeval.Storage
 {
     internal class SettingStorage
     {
-        private readonly AbstractSessionStorage _sessionStorage;
+        private readonly SessionStorage _sessionStorage;
         private readonly IBaseRepository<UserSetting> _userSettingRepository;
 
-        public SettingStorage(AbstractSessionStorage sessionStorage, IBaseRepository<UserSetting> userSettingRepository)
+        public SettingStorage(SessionStorage sessionStorage, IBaseRepository<UserSetting> userSettingRepository)
         {
             _sessionStorage = sessionStorage;
             _userSettingRepository = userSettingRepository;

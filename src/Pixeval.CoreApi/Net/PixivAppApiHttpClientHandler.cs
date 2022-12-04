@@ -34,31 +34,14 @@ public class PixivAppApiHttpClientHandler : HttpClientHandler
     private readonly IOptions<PixivClientOptions> _clientOptions;
     private readonly IOptions<PixivHttpOptions> _httpOptions;
     private readonly ISessionRefresher _sessionRefresher;
-    private readonly AbstractSessionStorage _sessionStorage;
     private AsyncLazy<string> _accessTokenLazy;
 
-    public PixivAppApiHttpClientHandler(IOptions<PixivClientOptions> clientOptions, IOptions<PixivHttpOptions> httpOptions, ISessionRefresher sessionRefresher, AbstractSessionStorage sessionStorage)
+    public PixivAppApiHttpClientHandler(IOptions<PixivClientOptions> clientOptions, IOptions<PixivHttpOptions> httpOptions, ISessionRefresher sessionRefresher)
     {
         _clientOptions = clientOptions;
         _httpOptions = httpOptions;
         _sessionRefresher = sessionRefresher;
-        _sessionStorage = sessionStorage;
-        _accessTokenLazy = new(async () =>
-        {
-            var session = await _sessionStorage.GetSessionAsync();
-            TokenResponse? tokenResponse;
-            if (session is null)
-            {
-                tokenResponse = await _sessionRefresher.ExchangeTokenAsync();
-            }
-            else
-            {
-                tokenResponse = await _sessionRefresher.RefreshTokenAsync(session.RefreshToken);
-            }
-            await _sessionStorage.SetSessionAsync(tokenResponse.User!.Id!, tokenResponse.RefreshToken!,
-                tokenResponse.AccessToken!);
-            return tokenResponse.AccessToken!;
-        });
+        _accessTokenLazy = new(async () => await _sessionRefresher.GetAccessTokenAsync());
     }
 
 

@@ -25,6 +25,8 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace Pixeval.SourceGen;
 
@@ -84,24 +86,26 @@ public class LocalizationResourcesGenerator : IIncrementalGenerator
             var fileName = Path.GetFileNameWithoutExtension(attribute.ConstructorArguments[0].Value as string) ??
                            asc.TargetSymbol.Name;
             var extension = Path.GetExtension(attribute.ConstructorArguments[0].Value as string) ?? string.Empty;
-            var additionalText = additionalTexts.Single(_ =>
+            var additionalText = additionalTexts.SingleOrDefault(_ =>
                 Path.GetFileNameWithoutExtension(_.Path) == fileName ||
                 Path.GetFileName(_.Path) == $"{fileName}.{extension}");
-            var doc = new XmlDocument();
-            doc.Load(additionalText.Path);
-            var names = new List<string>();
-            if (doc.SelectNodes("//data") is { } nodes)
+            if (additionalText is null)
             {
-                var elements = nodes.Cast<XmlElement>();
+                continue;
+            }
+            var doc = XDocument.Parse(additionalText.GetText()?.ToString()!);
+            var names = new List<string>();
+            if (doc.XPathSelectElements("//data") is { } elements)
+            {
                 foreach (var node in elements)
                 {
-                    var name = node.GetAttribute("name");
-                    if (name.Contains("["))
+                    var name = node.Attribute("name");
+                    if (name.Value.Contains("["))
                     {
                         continue;
                     }
 
-                    names.Add(name);
+                    names.Add(name.Value);
                 }
             }
 

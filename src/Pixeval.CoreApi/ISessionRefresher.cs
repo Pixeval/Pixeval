@@ -9,8 +9,6 @@ namespace Pixeval.CoreApi
 {
     public interface ISessionRefresher
     {
-        Task<TokenResponse> ExchangeTokenAsync();
-
-        Task<TokenResponse> RefreshTokenAsync(string refreshToken);
+        Task<string> GetAccessTokenAsync(string? refreshToken = null);
     }
 }

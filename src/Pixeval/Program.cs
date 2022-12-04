@@ -66,7 +66,9 @@ namespace Pixeval
 
                 });
 
-                services.AddPixivApiSession<SessionRefresher, SessionStorage>();
+                services.AddPixivApiSession<SessionRefresher>();
+
+                services.AddSingleton<SessionStorage>();
 
                 services.AddSingleton<SettingStorage>();
 

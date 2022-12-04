@@ -35,14 +35,13 @@ namespace Pixeval.CoreApi
             services.TryAddTransient<PixivAppApiHttpClientHandler>();
         }
 
-        public static IServiceCollection AddPixivApiSession<TSessionRefresher, TSessionStorage>(this IServiceCollection services) where TSessionRefresher : class, ISessionRefresher where TSessionStorage : AbstractSessionStorage
+        public static IServiceCollection AddPixivApiSession<TSessionRefresher>(this IServiceCollection services) where TSessionRefresher : class, ISessionRefresher
         {
             services.AddSingleton<ISessionRefresher, TSessionRefresher>();
-            services.AddSingleton<AbstractSessionStorage, TSessionStorage>();
             return services;
         }
 
-        public static IServiceCollection AddPixivApiService(this IServiceCollection services, Action<HttpClient> configuration) 
+        public static IServiceCollection AddPixivApiService(this IServiceCollection services, Action<HttpClient> configuration)
         {
             AddNameResolvers(services);
             AddMessageHandlers(services);
@@ -78,25 +77,13 @@ namespace Pixeval.CoreApi
             services.AddPolicyRegistry((provider, registry) =>
             {
                 var sessionRefresher = provider.GetService<ISessionRefresher>()!;
-                var sessionStorage = provider.GetService<AbstractSessionStorage>()!;
                 registry.Add("RetryRefreshToken",
                     Policy
                         .HandleResult<HttpResponseMessage>(r => r.StatusCode == HttpStatusCode.BadRequest)
                         .RetryAsync(1, onRetryAsync:
                         async (exception, retryCount, context) =>
                         {
-                            var session = await sessionStorage.GetSessionAsync();
-                            TokenResponse? tokenResponse;
-                            if (session is null)
-                            {
-                                tokenResponse = await sessionRefresher.ExchangeTokenAsync();
-                            }
-                            else
-                            {
-                                tokenResponse = await sessionRefresher.RefreshTokenAsync(session.RefreshToken);
-                            }
-                            await sessionStorage.SetSessionAsync(tokenResponse.User!.Id!, tokenResponse.RefreshToken!,
-                                tokenResponse.AccessToken!);
+                            await sessionRefresher.GetAccessTokenAsync();
                         }));
             });
             return services;

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Pixeval.Storage
 {
-    internal class SessionStorage : AbstractSessionStorage
+    internal class SessionStorage
     {
         private string? _userId;
         private readonly IBaseRepository<UserSession> _sessionRepository;
@@ -15,7 +15,7 @@ namespace Pixeval.Storage
             _sessionRepository = sessionRepository;
         }
 
-        public override async Task<UserSession?> GetSessionAsync(string? userId = null)
+        public async Task<UserSession?> GetSessionAsync(string? userId = null)
         {
 #nullable disable
             if (userId is not null)
@@ -26,7 +26,7 @@ namespace Pixeval.Storage
 #nullable restore
         }
 
-        public override async Task SetSessionAsync(string userId, string refreshToken, string accessToken)
+        public async Task SetSessionAsync(string userId, string refreshToken, string accessToken)
         {
             UserSession session;
             if (_userId is not null)
@@ -42,7 +42,7 @@ namespace Pixeval.Storage
             await _sessionRepository.CreateAsync(session);
         }
 
-        public override Task ClearSessionAsync(string userId)
+        public Task ClearSessionAsync(string userId)
         {
             return _sessionRepository.Collection.DeleteManyAsync(_ => _.UserId == userId);
         }
