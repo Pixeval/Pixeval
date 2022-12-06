@@ -26,5 +26,15 @@ namespace Pixeval.CoreApi.Tests
         {
             return _authService.RefreshAsync(refreshToken);
         }
+
+        public async Task<string> GetAccessTokenAsync(string? refreshToken = null)
+        {
+            if (refreshToken is null)
+            {
+                throw new ArgumentNullException(nameof(refreshToken));
+            }
+            var response = await _authService.RefreshAsync(refreshToken);
+            return response.AccessToken;
+        }
     }
 }

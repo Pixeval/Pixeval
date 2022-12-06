@@ -77,11 +77,11 @@ namespace Pixeval
                 services.AddSingleton<MainPage>();
                 services.AddSingleton<MainPageViewModel>();
 
-                services.AddSingleton<IBaseRepository<DownloadHistory>, DownloadHistoryRepository>();
-                services.AddSingleton<IBaseRepository<SearchHistory>, SearchHistoryRepository>();
-                services.AddSingleton<IBaseRepository<BrowseHistory>, BrowseHistoryRepository>();
-                services.AddSingleton<IBaseRepository<UserSession>, UserSessionRepository>();
-                services.AddSingleton<IBaseRepository<UserSetting>, UserSettingRepository>();
+                services.AddScoped<IBaseRepository<DownloadHistory>, DownloadHistoryRepository>();
+                services.AddScoped<IBaseRepository<SearchHistory>, SearchHistoryRepository>();
+                services.AddScoped<IBaseRepository<BrowseHistory>, BrowseHistoryRepository>();
+                services.AddScoped<IBaseRepository<UserSession>, UserSessionRepository>();
+                services.AddScoped<IBaseRepository<UserSetting>, UserSettingRepository>();
 
                 services.AddSingleton<ILiteDatabaseAsync>(new LiteDatabaseAsync(Path.Combine(ApplicationData.Current.LocalFolder.Path, "data.db")));
 

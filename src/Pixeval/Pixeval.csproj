@@ -43,6 +43,11 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="LiteDB.Async" Version="0.1.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
 		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.1" />
 		<PackageReference Include="CommunityToolkit.Diagnostics" Version="8.1.0-preview1" />
@@ -75,19 +80,6 @@
 
 	<ItemGroup>
 		<Content Remove="Assets\Images\logo-no-caption.png" />
-		<Content Remove="Strings\zh-CN\BookmarksPage.resw" />
-		<Content Remove="Strings\zh-CN\IllustrationGridCommandBar.resw" />
-		<Content Remove="Strings\zh-CN\IllustrationInfoPage.resw" />
-		<Content Remove="Strings\zh-CN\IllustrationViewerPage.resw" />
-		<Content Remove="Strings\zh-CN\ImageViewerPage.resw" />
-		<Content Remove="Strings\zh-CN\LoginPage.resw" />
-		<Content Remove="Strings\zh-CN\MainPage.resw" />
-		<Content Remove="Strings\zh-CN\MessageContentDialog.resw" />
-		<Content Remove="Strings\zh-CN\Misc.resw" />
-		<Content Remove="Strings\zh-CN\RecommendationsPage.resw" />
-		<Content Remove="Strings\zh-CN\RankingsPage.resw" />
-	</ItemGroup>
-	<ItemGroup>
 		<None Remove="Assets\Certs\pixeval_server_cert.pfx" />
 		<None Remove="Assets\Fonts\Segoe Fluent Icons.ttf" />
 		<None Remove="Assets\GPLv3.md" />
@@ -96,49 +88,18 @@
 		<None Remove="Assets\Images\logo44x44.ico" />
 		<None Remove="Assets\Images\pixeval-mock.png" />
 		<None Remove="LoginWindow.xaml" />
-		<None Remove="Strings\zh-CN\AboutPage.resw" />
-		<None Remove="Strings\zh-CN\Activations.resw" />
-		<None Remove="Strings\zh-CN\BookmarksPage.resw" />
-		<None Remove="Strings\zh-CN\CommentBlock.resw" />
-		<None Remove="Strings\zh-CN\CommentRepliesBlock.resw" />
-		<None Remove="Strings\zh-CN\DownloadListEntry.resw" />
-		<None Remove="Strings\zh-CN\DownloadListPage.resw" />
-		<None Remove="Strings\zh-CN\DownloadListPageDeleteTasksDialog.resw" />
-		<None Remove="Strings\zh-CN\DownloadTask.resw" />
-		<None Remove="Strings\zh-CN\FollowingsPage.resw" />
-		<None Remove="Strings\zh-CN\IllustrationGrid.resw" />
-		<None Remove="Strings\zh-CN\IllustrationGridCommandBar.resw" />
-		<None Remove="Strings\zh-CN\IllustrationInfoPage.resw" />
-		<None Remove="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
-		<None Remove="Strings\zh-CN\IllustrationViewerPage.resw" />
-		<None Remove="Strings\zh-CN\IllustratorPage.resw" />
-		<None Remove="Strings\zh-CN\ImageViewerPage.resw" />
-		<None Remove="Strings\zh-CN\LoginWindow.resw" />
-		<None Remove="Strings\zh-CN\MacroParser.resw" />
-		<None Remove="Strings\zh-CN\PixivReplyBar.resw" />
-		<None Remove="Strings\zh-CN\RankingsPage.resw" />
-		<None Remove="Strings\zh-CN\RecentPostsPage.resw" />
-		<None Remove="Strings\zh-CN\RecommendationsPage.resw" />
 		<None Remove="Pages\BookMarksPage.xaml" />
 		<None Remove="Pages\IllustrationGridPage.xaml" />
 		<None Remove="Pages\IllustrationViewerPage.xaml" />
 		<None Remove="Pages\ImageViewerPage.xaml" />
 		<None Remove="Pages\RecommendationPage.xaml" />
 		<None Remove="Pages\SettingsPage.xaml" />
-		<None Remove="Strings\zh-CN\ReverseSearchApiKeyNotPresentDialog.resw" />
-		<None Remove="Strings\zh-CN\SettingsPage.resw" />
-		<None Remove="Strings\zh-CN\SortOptionComboBox.resw" />
-		<None Remove="Strings\zh-CN\TokenInputTextBox.resw" />
 		<None Remove="Themes\Card.xaml" />
 		<None Remove="Themes\Controls.xaml" />
 		<None Remove="Templates.xaml" />
 		<None Remove="Themes.xaml" />
 		<None Remove="Themes\Generic.xaml" />
 	</ItemGroup>
-
-
-
-
 
 	<!-- #region Exposes PRI resources to the source generator -->
 	<Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
@@ -235,43 +196,14 @@
 	<ItemGroup>
 		<Folder Include="Assets\Images\Supporters\" />
 	</ItemGroup>
+
 	<ItemGroup>
-		<PRIResource Include="Strings\zh-CN\AboutPage.resw" />
-		<PRIResource Include="Strings\zh-CN\Activations.resw" />
-		<PRIResource Include="Strings\zh-CN\BookmarksPage.resw" />
-		<PRIResource Include="Strings\zh-CN\CommentBlock.resw" />
-		<PRIResource Include="Strings\zh-CN\CommentRepliesBlock.resw" />
-		<PRIResource Include="Strings\zh-CN\DownloadListEntry.resw" />
-		<PRIResource Include="Strings\zh-CN\DownloadListPage.resw" />
-		<PRIResource Include="Strings\zh-CN\DownloadListPageDeleteTasksDialog.resw" />
-		<PRIResource Include="Strings\zh-CN\DownloadTask.resw" />
-		<PRIResource Include="Strings\zh-CN\FollowingsPage.resw" />
-		<PRIResource Include="Strings\zh-CN\IllustrationGrid.resw" />
-		<PRIResource Include="Strings\zh-CN\IllustrationGridCommandBar.resw" />
-		<PRIResource Include="Strings\zh-CN\IllustrationInfoPage.resw" />
-		<PRIResource Include="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
-		<PRIResource Include="Strings\zh-CN\IllustrationViewerPage.resw" />
-		<PRIResource Include="Strings\zh-CN\IllustratorPage.resw" />
-		<PRIResource Include="Strings\zh-CN\ImageViewerPage.resw" />
-		<PRIResource Include="Strings\zh-CN\LoginPage.resw" />
-		<PRIResource Include="Strings\zh-CN\LoginWindow.resw" />
-		<PRIResource Include="Strings\zh-CN\MacroParser.resw" />
-		<PRIResource Include="Strings\zh-CN\MainPage.resw" />
-		<PRIResource Include="Strings\zh-CN\MessageContentDialog.resw" />
-		<PRIResource Include="Strings\zh-CN\Misc.resw" />
-		<PRIResource Include="Strings\zh-CN\RankingsPage.resw" />
-		<PRIResource Include="Strings\zh-CN\RecentPostsPage.resw" />
-		<PRIResource Include="Strings\zh-CN\RecommendationsPage.resw" />
-		<PRIResource Include="Strings\zh-CN\PixivReplyBar.resw" />
-		<PRIResource Include="Strings\zh-CN\ReverseSearchApiKeyNotPresentDialog.resw" />
-		<PRIResource Include="Strings\zh-CN\SettingsPage.resw" />
-		<PRIResource Include="Strings\zh-CN\SortOptionComboBox.resw" />
-		<PRIResource Include="Strings\zh-CN\TokenInputTextBox.resw" />
+		<PRIResource Include="Strings\**\*.resw" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Page Update="LoginWindow.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
+		<Page Update="LoginWindow.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
 	</ItemGroup>
 
 	<!--  XAML  -->

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Pixeval.CoreApi.Tests
 {
-    internal class SessionStorage : AbstractSessionStorage
+    internal class SessionStorage
     {
         private string _userId;
         private string _refreshToken;
@@ -18,12 +18,12 @@ namespace Pixeval.CoreApi.Tests
             _refreshToken = refreshToken;
         }
 
-        public override Task<UserSession?> GetSessionAsync(string? userId = null)
+        public Task<UserSession?> GetSessionAsync(string? userId = null)
         {
             return Task.FromResult(new UserSession(_userId, _refreshToken, _accessToken, DateTimeOffset.Now))!;
         }
 
-        public override Task SetSessionAsync(string userId, string refreshToken, string accessToken)
+        public Task SetSessionAsync(string userId, string refreshToken, string accessToken)
         {
             _userId = userId;
             _refreshToken = refreshToken;
@@ -31,7 +31,7 @@ namespace Pixeval.CoreApi.Tests
             return Task.CompletedTask;
         }
 
-        public override Task ClearSessionAsync(string userId)
+        public Task ClearSessionAsync(string userId)
         {
             throw new NotImplementedException();
         }

@@ -30,7 +30,7 @@ namespace Pixeval.CoreApi.Tests
 
             services.Configure<PixivHttpOptions>(configuration.GetSection("PixivHttpOptions"));
             services.AddSingleton<ISessionRefresher, SessionRefresher>();
-            services.AddSingleton<AbstractSessionStorage>(new SessionStorage(configuration["RefreshToken"]!));
+            services.AddSingleton(new SessionStorage(configuration["RefreshToken"]!));
             services.AddPixivApiService(httpClient =>
             {
 

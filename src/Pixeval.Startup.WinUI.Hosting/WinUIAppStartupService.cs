@@ -10,7 +10,7 @@ namespace Pixeval.Startup.WinUI.Hosting
 
         private readonly IServiceProvider _serviceProvider;
         private readonly IHostApplicationLifetime _applicationLifetime;
-        private Application _app;
+        private Application? _app;
         public WinUIAppStartupService(IServiceProvider serviceProvider, IHostApplicationLifetime applicationLifetime)
         {
             _serviceProvider = serviceProvider;
@@ -22,27 +22,17 @@ namespace Pixeval.Startup.WinUI.Hosting
         {
             Application.Start(p =>
             {
-                try
-                {
-                    var context = new Microsoft.UI.Dispatching.DispatcherQueueSynchronizationContext(Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread());
-                    SynchronizationContext.SetSynchronizationContext(context);
-                    _app = _serviceProvider.GetRequiredService<Application>();
-                }
-                catch (Exception e)
-                {
-                    if (Debugger.IsAttached)
-                    {
-                        Debugger.Break();
-                    }
-                }
-                
+                var context = new Microsoft.UI.Dispatching.DispatcherQueueSynchronizationContext(Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread());
+                SynchronizationContext.SetSynchronizationContext(context);
+                _app = _serviceProvider.GetRequiredService<Application>();
+
             });
             return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            _app.Exit();
+            _app?.Exit();
             return Task.CompletedTask;
         }
     }
