@@ -19,62 +19,58 @@
 #endregion
 
 using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.WinUI;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.Windows.AppLifecycle;
+using Pixeval.CoreApi;
 using Pixeval.Messages;
-using Pixeval.Util.UI;
+using Pixeval.Pages;
+using Pixeval.Services.Navigation;
+using Pixeval.Storage;
+using Pixeval.ViewModels;
 using System;
 using System.Diagnostics;
-using System.Linq;
+using System.Globalization;
+using System.IO;
 using System.Threading.Tasks;
+using Pixeval.Data;
+using Pixeval.Navigation;
 using WinUIEx;
+using LiteDB.Async;
+using Windows.Storage;
+using Microsoft.VisualStudio.Threading;
 
 namespace Pixeval;
 
+[LocalizedStringResources()]
 public partial class App
 {
-
-    private readonly MainWindow _mainWindow;
+    private MainWindow _mainWindow;
 
     public App(IServiceProvider serviceProvider)
     {
         _mainWindow = serviceProvider.GetRequiredService<MainWindow>();
-        // The theme can only be changed in ctor
-        
         InitializeComponent();
-        RegisterUnhandledExceptionHandler();
-
         var appWindow = _mainWindow.GetAppWindow();
-        appWindow.Title = AppConstants.AppIdentifier;
+        appWindow.Title = SR.AppName;
         appWindow.Show();
         appWindow.SetIcon("");
+
     }
-
-    protected override void OnLaunched(LaunchActivatedEventArgs args)
-    {
-        
-    }
-
-
 
     private void RegisterUnhandledExceptionHandler()
     {
-        UnhandledException +=  (_, args) =>
+        UnhandledException += (_, args) =>
         {
             args.Handled = true;
             _mainWindow.DispatcherQueue.TryEnqueue(() => UncaughtExceptionHandler(args.Exception));
         };
 
-        TaskScheduler.UnobservedTaskException +=  (_, args) =>
+        TaskScheduler.UnobservedTaskException += (_, args) =>
         {
             args.SetObserved();
-             _mainWindow.DispatcherQueue.TryEnqueue( () => UncaughtExceptionHandler(args.Exception));
+            _mainWindow.DispatcherQueue.TryEnqueue(() => UncaughtExceptionHandler(args.Exception));
         };
 
-        AppDomain.CurrentDomain.UnhandledException +=  (_, args) =>
+        AppDomain.CurrentDomain.UnhandledException += (_, args) =>
         {
             if (args.ExceptionObject is Exception e)
             {

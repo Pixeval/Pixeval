@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Enums;
 
@@ -28,9 +27,6 @@ namespace Pixeval.CoreApi.Enums;
 /// </summary>
 public enum PrivacyPolicy
 {
-    [Description("public")]
     Public,
-
-    [Description("private")]
     Private
 }

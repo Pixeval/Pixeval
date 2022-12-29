@@ -19,21 +19,8 @@
 #endregion
 
 using System;
-using LiteDB;
+
 
 namespace Pixeval.Models;
 
-public class SearchHistory
-{
-    [BsonId(true)]
-    public ObjectId? Id { get; set; }
-
-    /// <summary>
-    ///     Search value
-    /// </summary>
-    public string? Value { get; set; }
-
-    public string? TranslatedName { get; set; }
-
-    public DateTime Time { get; set; }
-}
+public record SearchHistory(string? Value, string? TranslatedName, DateTime Time);

@@ -2,19 +2,19 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Pixeval.CoreApi;
-using Pixeval.Data;
 using Pixeval.Models;
 using Pixeval.Pages;
-using Pixeval.Pages.Login;
-using Pixeval.Startup.WinUI.Hosting;
-using Pixeval.Startup.WinUI.Navigation;
+using Pixeval.Services.Navigation;
+using Pixeval.Storage;
 using Pixeval.ViewModels;
 using System;
 using System.Globalization;
 using System.IO;
 using Windows.Storage;
-using Pixeval.Services.Navigation;
-using Pixeval.Storage;
+using Pixeval.Navigation;
+using Pixeval.Startup.WinUI.Hosting;
+using Microsoft.VisualStudio.Threading;
+using Pixeval.Data;
 
 namespace Pixeval
 {
@@ -77,13 +77,12 @@ namespace Pixeval
                 services.AddSingleton<MainPage>();
                 services.AddSingleton<MainPageViewModel>();
 
-                services.AddScoped<IBaseRepository<DownloadHistory>, DownloadHistoryRepository>();
-                services.AddScoped<IBaseRepository<SearchHistory>, SearchHistoryRepository>();
-                services.AddScoped<IBaseRepository<BrowseHistory>, BrowseHistoryRepository>();
-                services.AddScoped<IBaseRepository<UserSession>, UserSessionRepository>();
-                services.AddScoped<IBaseRepository<UserSetting>, UserSettingRepository>();
+                services.AddSingleton(typeof(IRepository<>), typeof(Repository<>));
 
-                services.AddSingleton<ILiteDatabaseAsync>(new LiteDatabaseAsync(Path.Combine(ApplicationData.Current.LocalFolder.Path, "data.db")));
+                services.AddSingleton<JoinableTaskFactory>();
+
+                services.AddSingleton<ILiteDatabaseAsync>(
+                    new LiteDatabaseAsync(Path.Combine(ApplicationData.Current.LocalCacheFolder.Path, "data.db")));
 
                 services.AddWinUIApp<App>();
             });

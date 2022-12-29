@@ -18,19 +18,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Utilities;
-
 namespace Pixeval.CoreApi.Enums;
 
 public enum IllustrationSortOption
 {
-    [Description("popular_desc")]
     PopularityDescending,
 
-    [Description("date_asc")]
     PublishDateAscending,
 
-    [Description("date_desc")]
     PublishDateDescending,
 
     DoNotSort
@@ -38,10 +33,8 @@ public enum IllustrationSortOption
 
 public enum UserSortOption
 {
-    [Description("date_asc")]
     DateAscending,
 
-    [Description("date_desc")]
     DateDescending,
 
     DoNotSort

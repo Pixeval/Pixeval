@@ -7,8 +7,9 @@
       xmlns:ie="using:Microsoft.Xaml.Interactions.Core"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
       xmlns:pages="using:Pixeval.Pages"
-      xmlns:ui="using:Pixeval.Util.UI"
       xmlns:viewModels="using:Pixeval.ViewModels"
+      xmlns:utils="using:Pixeval.Utils"
+      xmlns:ui="using:CommunityToolkit.WinUI.UI"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                        NavigationCacheMode="Required"
                        mc:Ignorable="d">
@@ -29,16 +30,15 @@
                     d:DataContext="{d:DesignInstance viewModels:MainPageViewModel}"
                     IsBackButtonVisible="Collapsed"
                     IsSettingsVisible="False"
-                    OpenPaneLength="{x:Bind ViewModel.MainPageRootNavigationViewOpenPanelLength}"
                     PaneTitle="Pixeval"
                     SelectedItem="{x:Bind ViewModel.SelectedItem}">
         <i:Interaction.Behaviors>
             <ie:EventTriggerBehavior EventName="SelectionChanged">
-                <ie:InvokeCommandAction Command="{x:Bind ViewModel.NavigationViewSelectionChangedCommand}"></ie:InvokeCommandAction>
+                <ie:InvokeCommandAction></ie:InvokeCommandAction>
             </ie:EventTriggerBehavior>
         </i:Interaction.Behaviors>
         <NavigationView.PaneCustomContent>
-            <Grid Margin="15,5,15,10" Visibility="{x:Bind MainPageNavigationView.IsPaneOpen, Mode=OneWay}">
+            <Grid Margin="15,5,15,10" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="38" />
@@ -54,19 +54,19 @@
                                 IsSuggestionListOpen="{x:Bind ViewModel.IsSuggestionListOpen}"
                                 QueryIcon="Find">
                     <ie:EventTriggerBehavior EventName="GotFocus">
-                        <ie:InvokeCommandAction Command="{x:Bind ViewModel.AutoSuggestBoxGotFocusCommand}"></ie:InvokeCommandAction>
+                        <ie:InvokeCommandAction></ie:InvokeCommandAction>
                     </ie:EventTriggerBehavior>
                     <ie:EventTriggerBehavior EventName="QuerySubmitted">
-                        <ie:InvokeCommandAction Command="{x:Bind ViewModel.AutoSuggestBoxQuerySubmittedCommand}"></ie:InvokeCommandAction>
+                        <ie:InvokeCommandAction></ie:InvokeCommandAction>
                     </ie:EventTriggerBehavior>
                     <ie:EventTriggerBehavior EventName="SuggestionChosen">
-                        <ie:InvokeCommandAction Command="{x:Bind ViewModel.AutoSuggestBoxSuggestionChosenCommand}"></ie:InvokeCommandAction>
+                        <ie:InvokeCommandAction></ie:InvokeCommandAction>
                     </ie:EventTriggerBehavior>
                     <ie:EventTriggerBehavior EventName="TextChanged">
-                        <ie:InvokeCommandAction Command="{x:Bind ViewModel.AutoSuggestBoxTextChangedCommand}"></ie:InvokeCommandAction>
+                        <ie:InvokeCommandAction></ie:InvokeCommandAction>
                     </ie:EventTriggerBehavior>
                     <ie:EventTriggerBehavior EventName="KeyDown">
-                        <ie:InvokeCommandAction Command="{x:Bind ViewModel.AutoSuggestBoxPasteCommand}"></ie:InvokeCommandAction>
+                        <ie:InvokeCommandAction></ie:InvokeCommandAction>
                     </ie:EventTriggerBehavior>
                     <AutoSuggestBox.ItemContainerTransitions>
                         <TransitionCollection>
@@ -82,16 +82,14 @@
                         Padding="0"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        Content="{ui:FontIcon Glyph=SettingE713, FontSize=13}"
-                        Command="{x:Bind ViewModel.OpenSearchSettingCommand}"/>
+                        Content="{ui:FontIcon Glyph=SettingE713, FontSize=13}"/>
                 <Button x:Uid="/MainPage/ReverseSearchButton"
                         Grid.Column="2"
                         Width="33"
                         Height="33"
                         Padding="0"
                         HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Command="{x:Bind ViewModel.ReverseSearchCommand}">
+                        VerticalAlignment="Center">
                     <AnimatedIcon Width="18" Height="18">
                         <AnimatedIcon.Source>
                             <animatedVisuals:AnimatedFindVisualSource />
@@ -152,6 +150,6 @@
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
         </NavigationView.FooterMenuItems>
-        <Frame x:Name="MainPageFrame" />
+        <Frame x:Name="MainFrame" />
     </NavigationView>
 </Page>

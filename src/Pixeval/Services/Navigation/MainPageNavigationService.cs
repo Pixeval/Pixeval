@@ -1,6 +1,6 @@
 ﻿using System;
+using Pixeval.Navigation;
 using Pixeval.Pages;
-using Pixeval.Startup.WinUI.Navigation;
 
 namespace Pixeval.Services.Navigation
 {

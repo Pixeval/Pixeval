@@ -20,52 +20,28 @@
 
 #endregion
 
+using System;
 using CommunityToolkit.Mvvm.ComponentModel;
-using LiteDB;
-using Pixeval.Data;
 
 namespace Pixeval.Models;
 
-public partial class DownloadHistory : ObservableObject
+public record DownloadHistory
 {
-    [ObservableProperty] private string? _errorCause;
+    public Guid? Id { get; init; }
 
+    public string? Destination { get; init; }
 
-    //[ObservableProperty] private DownloadState _state;
+    public DownloadItemType Type { get; init; }
 
-    public DownloadHistory( string? errorCause, string? destination, DownloadItemType type,
-        string? id, string? title, string? description, string? url, string? thumbnail)
-    {
-        _errorCause = errorCause;
-        Destination = destination;
-        Type = type;
-        Id = id;
-        Title = title;
-        Description = description;
-        Url = url;
-        Thumbnail = thumbnail;
-    }
+    public string? IllustrationId { get; init; }
 
-    // ReSharper disable once UnusedMember.Global
-    public DownloadHistory()
-    {
-    }
+    public string? Title { get; init; }
 
-    [BsonId(true)] public ObjectId? DownloadHistoryEntryId { get; set; }
+    public string? Description { get; init; }
 
-    public string? Destination { get; set; }
+    public string? Url { get; init; }
 
-    public DownloadItemType Type { get; set; }
-
-    public string? Id { get; set; }
-
-    public string? Title { get; set; }
-
-    public string? Description { get; set; }
-
-    public string? Url { get; set; }
-
-    public string? Thumbnail { get; set; }
+    public string? Thumbnail { get; init; }
 }
 
 public enum DownloadItemType

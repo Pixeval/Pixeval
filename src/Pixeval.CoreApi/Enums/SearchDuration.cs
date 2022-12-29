@@ -18,20 +18,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Utilities;
-
 namespace Pixeval.CoreApi.Enums;
 
 public enum SearchDuration
 {
     Undecided,
 
-    [Description("within_last_day")]
     WithinLastDay,
 
-    [Description("within_last_week")]
     WithinLastWeek,
 
-    [Description("within_last_month")]
     WithinLastMonth
 }

@@ -27,7 +27,7 @@ namespace Pixeval
             TokenResponse response;
             if (refreshToken is not null)
             {
-                response =  await _authService.RefreshAsync(refreshToken);
+                response = await _authService.RefreshAsync(refreshToken);
             }
             else
             {
@@ -52,15 +52,20 @@ namespace Pixeval
                 }
                 catch
                 {
-                    var loginWindow = new LoginWindow();
-                    loginWindow.Show();
-                    response = await loginWindow.LoginTask;
-                    loginWindow.Close();
+                    response = await OpenLoginWindowAsync();
                 }
-                
+
             }
-            await _storage.SetSessionAsync(response.User.Id, response.RefreshToken, response.AccessToken);
+            await _storage.SetSessionAsync(response.User.Id, response.RefreshToken, response.AccessToken).ConfigureAwait(false);
             return response.AccessToken;
+        }
+
+        private async Task<TokenResponse> OpenLoginWindowAsync()
+        {
+            var loginWindow = new LoginWindow();
+            loginWindow.Show();
+            var response = await loginWindow.LoginTask;
+            return response;
         }
     }
 }

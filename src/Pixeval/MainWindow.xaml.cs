@@ -18,40 +18,30 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
-using LiteDB.Async;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi;
-using Pixeval.CoreApi.Models;
-using Pixeval.Misc;
-using Pixeval.Pages.Login;
-using Pixeval.Storage;
+using System;
+using System.Threading.Tasks;
 
 namespace Pixeval;
 
+[LocalizedStringResources()]
 internal sealed partial class MainWindow
 {
     private readonly ISessionRefresher _sessionRefresher;
-    private readonly IHostApplicationLifetime _hostApplicationLifetime;
-    public MainWindow(ISessionRefresher sessionRefresher,
-        IHostApplicationLifetime hostApplicationLifetime)
+    public MainWindow(ISessionRefresher sessionRefresher)
     {
         _sessionRefresher = sessionRefresher;
         InitializeComponent();
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
-        AppTitleBarText.Text = AppConstants.AppIdentifier;
-        _hostApplicationLifetime = hostApplicationLifetime;
+        AppTitleBarText.Text = SR.AppName;
     }
 
     private void MainWindow_OnClosed(object sender, WindowEventArgs args)
     {
-        _hostApplicationLifetime.StopApplication();
         Environment.Exit(0);
     }
 

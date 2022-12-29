@@ -2,7 +2,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 
-namespace Pixeval.Startup.WinUI.Navigation
+namespace Pixeval.Navigation
 {
     public class NavigationService<TNavigationRoot> : INavigationService<TNavigationRoot> where TNavigationRoot : class, INavigationRoot
     {

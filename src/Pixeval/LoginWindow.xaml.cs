@@ -7,16 +7,12 @@ using Microsoft.Web.WebView2.Core;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Models;
 using Pixeval.CoreApi.Net;
-using Pixeval.Misc;
 using Pixeval.Pages.Login;
-using Pixeval.Util;
-using Pixeval.Util.IO;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Web;
 using Windows.System;
@@ -60,7 +56,8 @@ internal partial class LoginWindow
         LoginWebView.CoreWebView2.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All);
         LoginWebView.CoreWebView2.WebResourceRequested += (_, args) =>
         {
-            args.Request.Headers.SetHeader("Accept-Language", args.Request.Uri.Contains("recaptcha") ? "zh-cn" : CultureInfo.CurrentUICulture.Name);
+            args.Request.Headers.SetHeader("Accept-Language",
+                args.Request.Uri.Contains("recaptcha") ? "zh-cn" : CultureInfo.CurrentUICulture.Name);
         };
 
         var verifier = PixivAuthSignature.GetCodeVerify();
@@ -75,6 +72,7 @@ internal partial class LoginWindow
 
         var tokenResponse = await AuthCodeToTokenAsync(code, verifier, cookies);
         _loginTaskCompletionSource.SetResult(tokenResponse);
+
     }
 
     private async Task EnsureWebView2IsInstalledAsync()
@@ -124,36 +122,26 @@ internal partial class LoginWindow
     }
 
 
-    public async Task<bool> CheckFakeRootCertificateInstallationAsync()
-    {
-        using var cert = await ResourcesHelpers.GetFakeCaRootCertificateAsync();
-        var fakeCertMgr = new CertificateManager(cert);
-        return fakeCertMgr.Query(StoreName.Root, StoreLocation.CurrentUser);
-    }
-
-    public async Task InstallFakeRootCertificateAsync()
-    {
-        using var cert = await ResourcesHelpers.GetFakeCaRootCertificateAsync();
-        var fakeCertMgr = new CertificateManager(cert);
-        fakeCertMgr.Install(StoreName.Root, StoreLocation.CurrentUser);
-    }
-
     public static async Task<TokenResponse?> AuthCodeToTokenAsync(string code, string verifier, IEnumerable<CoreWebView2Cookie> cookies)
     {
         // HttpClient is designed to be used through whole application lifetime, create and
         // dispose it in a function is a commonly misused anti-pattern, but this function
         // is intended to be called only once (at the start time) during the entire application's
         // lifetime, so the overhead is acceptable
-        using var httpClient = new HttpClient(new DelegatedHttpMessageHandler(PixivHttpOptions.CreateHttpMessageInvoker(new PixivApiNameResolver())));
+        using var httpClient = new HttpClient();
         httpClient.DefaultRequestHeaders.Add("User-Agent", "PixivAndroidApp/5.0.64 (Android 6.0)");
-        var result = await httpClient.PostFormAsync("http://oauth.secure.pixiv.net/auth/token",
-            ("code", code),
-            ("code_verifier", verifier),
-            ("client_id", "MOBrBDS8blbauoSck0ZfDbtuzpyT"),
-            ("client_secret", "lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj"),
-            ("grant_type", "authorization_code"),
-            ("include_policy", "true"),
-            ("redirect_uri", "https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback"));
+        var result = await httpClient.PostAsync("https://oauth.secure.pixiv.net/auth/token",
+            new FormUrlEncodedContent(new Dictionary<string, string>()
+            {
+                {"code", code},
+                {"code_verifier", verifier},
+                {"client_id", "MOBrBDS8blbauoSck0ZfDbtuzpyT"},
+                {"client_secret", "lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj"},
+                {"grant_type", "authorization_code"},
+                {"include_policy", "true"},
+                { "redirect_uri", "https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback"}
+            })
+        );
         result.EnsureSuccessStatusCode();
         return await result.Content.ReadFromJsonAsync<TokenResponse>();
     }

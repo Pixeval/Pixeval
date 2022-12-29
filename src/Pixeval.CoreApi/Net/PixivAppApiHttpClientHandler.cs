@@ -18,14 +18,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Microsoft.Extensions.Options;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using DotNext.Threading;
-using Microsoft.Extensions.Options;
-using Pixeval.CoreApi.Models;
-using Pixeval.CoreApi.Services;
 
 namespace Pixeval.CoreApi.Net;
 
@@ -33,15 +30,13 @@ public class PixivAppApiHttpClientHandler : HttpClientHandler
 {
     private readonly IOptions<PixivClientOptions> _clientOptions;
     private readonly IOptions<PixivHttpOptions> _httpOptions;
-    private readonly ISessionRefresher _sessionRefresher;
-    private AsyncLazy<string> _accessTokenLazy;
+    private readonly Task<string> _accessToken;
 
     public PixivAppApiHttpClientHandler(IOptions<PixivClientOptions> clientOptions, IOptions<PixivHttpOptions> httpOptions, ISessionRefresher sessionRefresher)
     {
         _clientOptions = clientOptions;
         _httpOptions = httpOptions;
-        _sessionRefresher = sessionRefresher;
-        _accessTokenLazy = new(async () => await _sessionRefresher.GetAccessTokenAsync());
+        _accessToken =  sessionRefresher.GetAccessTokenAsync();
     }
 
 
@@ -54,7 +49,7 @@ public class PixivAppApiHttpClientHandler : HttpClientHandler
 
         if (host == _httpOptions.Value.AppApiHost)
         {
-            headers.Authorization = new AuthenticationHeaderValue("Bearer", await _accessTokenLazy.Task);
+            headers.Authorization = new AuthenticationHeaderValue("Bearer", await _accessToken);
         }
 
         return await base.SendAsync(request, cancellationToken);

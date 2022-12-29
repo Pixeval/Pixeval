@@ -18,18 +18,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Utilities;
-
 namespace Pixeval.CoreApi.Enums;
 
 public enum SearchTagMatchOption
 {
-    [Description("partial_match_for_tags")]
     PartialMatchForTags,
-
-    [Description("exact_match_for_tags")]
+    
     ExactMatchForTags,
-
-    [Description("title_and_caption")]
+    
     TitleAndCaption
 }

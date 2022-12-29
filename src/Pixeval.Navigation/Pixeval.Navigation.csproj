@@ -8,7 +8,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Pixeval.Startup.WinUI.Hosting\Pixeval.Startup.WinUI.Hosting.csproj" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
 	</ItemGroup>
 
 </Project>

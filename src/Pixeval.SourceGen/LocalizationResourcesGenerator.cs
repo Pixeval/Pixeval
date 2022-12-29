@@ -114,7 +114,7 @@ public class LocalizationResourcesGenerator : IIncrementalGenerator
     
                 {{asc.TargetSymbol.DeclaredAccessibility.ToString().ToLower()}} partial class {{asc.TargetSymbol.Name}} 
                 {   
-                    public StringResources SR { get; } = new StringResources();
+                    public StringResources SR { get; } = new ();
 
                     public sealed class StringResources
                     {

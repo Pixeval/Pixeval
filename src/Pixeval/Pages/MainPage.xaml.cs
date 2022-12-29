@@ -21,21 +21,16 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Data;
-using Pixeval.Startup.WinUI.Navigation;
+using Pixeval.Navigation;
 using Pixeval.ViewModels;
 
 namespace Pixeval.Pages;
 
 internal sealed partial class MainPage : INavigationRoot
 {
-    private static UIElement? _connectedAnimationTarget;
-
-    private readonly SearchHistoryRepository _searchHistoryRepository;
-
     public MainPageViewModel ViewModel { get; set; }
 
-    public Frame NavigationFrame => MainPageFrame;
+    public Frame NavigationFrame => MainFrame;
 
     public void OnPageActivated(NavigationEventArgs e)
     {

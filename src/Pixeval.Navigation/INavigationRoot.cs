@@ -1,6 +1,6 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 
-namespace Pixeval.Startup.WinUI.Navigation
+namespace Pixeval.Navigation
 {
     public interface INavigationRoot
     {

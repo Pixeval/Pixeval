@@ -18,14 +18,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using LiteDB;
+using ABI.System;
 
 namespace Pixeval.Models;
 
 public class BrowseHistory
 {
-    [BsonId(true)]
-    public ObjectId? BrowseHistoryEntryId { get; set; }
-
     public string? Id { get; set; }
+
+    public DateTimeOffset Browsed { get; init; }
 }

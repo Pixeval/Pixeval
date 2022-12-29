@@ -20,7 +20,6 @@
 
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Net.Responses;
 
@@ -38,7 +37,6 @@ internal class WebApiBookmarksWithTagResponse
     public class Work
     {
         [JsonPropertyName("id")]
-        [JsonConverter(typeof(NumberOrStringToStringConverter))]
         public string? Id { get; set; }
     }
 }

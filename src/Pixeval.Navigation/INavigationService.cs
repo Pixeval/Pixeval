@@ -1,7 +1,6 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media.Animation;
+﻿using Microsoft.UI.Xaml.Media.Animation;
 
-namespace Pixeval.Startup.WinUI.Navigation
+namespace Pixeval.Navigation
 {
     public interface INavigationService<TRoot> where TRoot : class, INavigationRoot
     {

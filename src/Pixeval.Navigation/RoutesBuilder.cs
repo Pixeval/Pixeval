@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
 
-namespace Pixeval.Startup.WinUI.Navigation
+namespace Pixeval.Navigation
 {
     public class RoutesBuilder<TNavigationRoot> where TNavigationRoot : class, INavigationRoot
     {

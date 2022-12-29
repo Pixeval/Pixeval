@@ -20,16 +20,13 @@
 		<AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Debug'">false</AppxPackageSigningEnabled>
 		<LangVersion>preview</LangVersion>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
 	</PropertyGroup>
-
-	<Import Project="..\Pixeval.Startup.WinUI.Hosting\Pixeval.Startup.WinUI.Hosting.props"></Import>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
+		<ProjectReference Include="..\Pixeval.Navigation\Pixeval.Navigation.csproj" />
 		<ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-		<ProjectReference Include="..\Pixeval.Startup.WinUI.Hosting\Pixeval.Startup.WinUI.Hosting.csproj" />
-		<ProjectReference Include="..\Pixeval.Startup.WinUI.Navigation\Pixeval.Startup.WinUI.Navigation.csproj" />
-		<ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -42,24 +39,19 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="LiteDB.Async" Version="0.1.1" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
+		<PackageReference Include="LiteDB.Async" Version="0.1.2" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
 		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.1" />
-		<PackageReference Include="CommunityToolkit.Diagnostics" Version="8.1.0-preview1" />
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0-preview1" />
+		<PackageReference Include="CommunityToolkit.Diagnostics" Version="8.1.0-preview3" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0-preview3" />
 		<PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.4.27" />
 		<PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.4.27">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Win32.Registry" Version="6.0.0-preview.5.21301.5" />
-		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.25247-preview" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221116.1" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.25267-preview" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
 		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
 		<PackageReference Include="ReverseMarkdown" Version="3.24.0" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
@@ -68,7 +60,7 @@
 		<PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.3" />
 		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
 		<PackageReference Include="System.Net.Http.Json" Version="7.0.0" />
-		<PackageReference Include="WinUIEx" Version="1.8.0" />
+		<PackageReference Include="WinUIEx" Version="2.0.0" />
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
 
@@ -79,7 +71,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Content Remove="Assets\Images\logo-no-caption.png" />
+		<None Remove="Assets\Images\logo-no-caption.png" />
 		<None Remove="Assets\Certs\pixeval_server_cert.pfx" />
 		<None Remove="Assets\Fonts\Segoe Fluent Icons.ttf" />
 		<None Remove="Assets\GPLv3.md" />
@@ -94,6 +86,8 @@
 		<None Remove="Pages\ImageViewerPage.xaml" />
 		<None Remove="Pages\RecommendationPage.xaml" />
 		<None Remove="Pages\SettingsPage.xaml" />
+		<None Remove="Strings\zh-CN\App.resw" />
+		<None Remove="Strings\zh-CN\MainWindow.resw" />
 		<None Remove="Themes\Card.xaml" />
 		<None Remove="Themes\Controls.xaml" />
 		<None Remove="Templates.xaml" />

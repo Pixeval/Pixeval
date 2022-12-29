@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Pixeval.Startup.WinUI.Navigation
+namespace Pixeval.Navigation
 {
     public static class ServiceCollectionExtensions
     {
