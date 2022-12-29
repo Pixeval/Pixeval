@@ -7,7 +7,7 @@
 				<Identity
 				Name="9a360099-e513-45d0-b3f1-3e599691ea06"
 				Publisher="CN=Pixeval"
-				Version="3.1.4.0" />
+				Version="0.1.0.0" />
 				<Properties>
 				<DisplayName>Pixeval</DisplayName>
 				<PublisherDisplayName>Pixeval</PublisherDisplayName>
