@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -42,25 +42,25 @@ public interface ITaskBarList3
     void HrInit();
 
     [PreserveSig]
-    void AddTab(IntPtr hWnd);
+    void AddTab(nint hWnd);
 
     [PreserveSig]
-    void DeleteTab(IntPtr hWnd);
+    void DeleteTab(nint hWnd);
 
     [PreserveSig]
-    void ActivateTab(IntPtr hWnd);
+    void ActivateTab(nint hWnd);
 
     [PreserveSig]
-    void SetActiveAlt(IntPtr hWnd);
+    void SetActiveAlt(nint hWnd);
 
     [PreserveSig]
-    void MarkFullscreenWindow(IntPtr hWnd, [MarshalAs(UnmanagedType.Bool)] bool fFullscreen);
+    void MarkFullscreenWindow(nint hWnd, [MarshalAs(UnmanagedType.Bool)] bool fFullscreen);
 
     [PreserveSig]
-    void SetProgressValue(IntPtr hWnd, ulong ullCompleted, ulong ullTotal);
+    void SetProgressValue(nint hWnd, ulong ullCompleted, ulong ullTotal);
 
     [PreserveSig]
-    void SetProgressState(IntPtr hWnd, TaskBarState state);
+    void SetProgressState(nint hWnd, TaskBarState state);
 }
 
 [ComImport]

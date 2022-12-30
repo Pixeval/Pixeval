@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -28,5 +28,5 @@ namespace Pixeval.Interop;
 [Guid("EECDBF0E-BAE9-4CB6-A68E-9598E1CB57BB")]
 internal interface IWindowNative
 {
-    IntPtr WindowHandle { get; }
+    nint WindowHandle { get; }
 }

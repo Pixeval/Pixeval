@@ -114,7 +114,7 @@ public class AppViewModel : AutoActivateObservableRecipient,
                     .AddSingleton(provider => new BrowseHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSetting.MaximumBrowseHistoryRecords)));
     }
 
-    public IntPtr GetMainWindowHandle()
+    public nint GetMainWindowHandle()
     {
         return Window.GetWindowHandle();
     }

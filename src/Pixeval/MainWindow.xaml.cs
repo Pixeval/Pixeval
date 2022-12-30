@@ -52,8 +52,6 @@ using Pixeval.Attributes;
 using Pixeval.Database.Managers;
 using Pixeval.Database;
 using Pixeval.Messages;
-using Pixeval.Pages.Capability;
-using Pixeval.Pages.Misc;
 
 namespace Pixeval;
 
@@ -120,7 +118,7 @@ public sealed partial class MainWindow : INavigationModeInfo
     }
 
     [DllImport("Shcore.dll", SetLastError = true)]
-    internal static extern int GetDpiForMonitor(IntPtr hMonitor, MonitorDpiType dpiType, out uint dpiX, out uint dpiY);
+    internal static extern int GetDpiForMonitor(nint hMonitor, MonitorDpiType dpiType, out uint dpiX, out uint dpiY);
 
     internal enum MonitorDpiType
     {
@@ -144,7 +142,7 @@ public sealed partial class MainWindow : INavigationModeInfo
             throw new Exception("Could not get DPI for monitor.");
         }
 
-        var scaleFactorPercent = (uint) (((long) dpiX * 100 + (96 >> 1)) / 96);
+        var scaleFactorPercent = (uint)(((long)dpiX * 100 + (96 >> 1)) / 96);
         return scaleFactorPercent / 100.0;
     }
 
@@ -160,12 +158,12 @@ public sealed partial class MainWindow : INavigationModeInfo
             dragRectL.X = 0;
             dragRectL.Y = 0;
             dragRectL.Width = (int)((LeftDragRegion.ActualWidth + LeftMarginRegion.ActualWidth) * scaleAdjustment);
-            dragRectL.Height = (int) (AppTitleBar.ActualHeight * scaleAdjustment);
+            dragRectL.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
             RectInt32 dragRectR;
-            dragRectR.X = (int) ((LeftDragRegion.ActualWidth + LeftMarginRegion.ActualWidth + SearchBarRegion.ActualWidth + MarginRegion.ActualWidth + ReverseSearchButtonRegion.ActualWidth + SearchSettingButtonRegion.ActualWidth) * scaleAdjustment);
+            dragRectR.X = (int)((LeftDragRegion.ActualWidth + LeftMarginRegion.ActualWidth + SearchBarRegion.ActualWidth + MarginRegion.ActualWidth + ReverseSearchButtonRegion.ActualWidth + SearchSettingButtonRegion.ActualWidth) * scaleAdjustment);
             dragRectR.Y = 0;
-            dragRectR.Width = (int) (RightDragRegion.ActualWidth * scaleAdjustment);
-            dragRectR.Height = (int) (AppTitleBar.ActualHeight * scaleAdjustment);
+            dragRectR.Width = (int)(RightDragRegion.ActualWidth * scaleAdjustment);
+            dragRectR.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
 
             appWindow.TitleBar.SetDragRectangles(new[] { dragRectL, dragRectR });
         }
@@ -189,7 +187,7 @@ public sealed partial class MainWindow : INavigationModeInfo
 
     private async void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
     {
-        var suggestBox = (AutoSuggestBox) sender;
+        var suggestBox = (AutoSuggestBox)sender;
         suggestBox.IsSuggestionListOpen = true;
         await _viewModel.SuggestionProvider.UpdateAsync(suggestBox.Text);
     }
@@ -340,7 +338,7 @@ public sealed partial class MainWindow : INavigationModeInfo
         {
             stack.RemoveAt(stack.Count - 1);
         }
-        App.AppViewModel.AppWindowRootFrame.GoBack(); 
+        App.AppViewModel.AppWindowRootFrame.GoBack();
         return App.AppViewModel.AppWindowRootFrame.AwaitPageTransitionAsync<MainPage>();
     }
 }
