@@ -238,7 +238,7 @@ public class AppViewModel : AutoActivateObservableRecipient,
             var titleBar = App.AppViewModel.AppWindow.TitleBar;
             titleBar.ExtendsContentIntoTitleBar = true;
             titleBar.ButtonBackgroundColor = Colors.Transparent;
-            titleBar.ButtonHoverBackgroundColor = ((SolidColorBrush) App.Resources["SystemControlBackgroundBaseLowBrush"]).Color;
+            titleBar.ButtonHoverBackgroundColor = ((SolidColorBrush)App.Resources["SystemControlBackgroundBaseLowBrush"]).Color;
             titleBar.ButtonForegroundColor = ((SolidColorBrush)App.Resources["SystemControlForegroundBaseHighBrush"]).Color;
         }
 
@@ -299,8 +299,12 @@ public class AppViewModel : AutoActivateObservableRecipient,
         return original;
     }
 
-    public void ShowSnack(string text, int duration)
+    public async void ShowSnack(string text, int duration)
     {
-        Window.PixevalAppSnackBar.Show(text, duration);
+        Window.PixevalAppSnackBar.Title = text;
+
+        Window.PixevalAppSnackBar.IsOpen = true;
+        await Task.Delay(duration);
+        Window.PixevalAppSnackBar.IsOpen = false;
     }
 }

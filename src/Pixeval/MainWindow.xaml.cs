@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -112,11 +112,6 @@ public sealed partial class MainWindow : INavigationModeInfo
     public void HideProgressRing()
     {
         Processing.Visibility = Visibility.Collapsed;
-    }
-
-    private void PixevalAppSnackBar_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        SnackBarShadow.Receivers.Add(PixevalAppRootFrame);
     }
 
     private void MainWindow_OnSizeChanged(object sender, WindowSizeChangedEventArgs args)

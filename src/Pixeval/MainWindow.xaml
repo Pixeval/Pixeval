@@ -198,13 +198,7 @@
                     VerticalAlignment="Center"
                     IsIndeterminate="True" />
             </Grid>
-            <userControls:SnackBar
-                x:Name="PixevalAppSnackBar"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom"
-                x:FieldModifier="public"
-                Loaded="PixevalAppSnackBar_OnLoaded"
-                ShadowReceiver="{x:Bind PixevalAppRootFrame}" />
+            <TeachingTip x:Name="PixevalAppSnackBar" x:FieldModifier="public" />
         </Grid>
     </Grid>
 </Window>
