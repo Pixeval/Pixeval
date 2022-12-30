@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IllustrationSourceNotFoundException.cs
+// Copyright (c) 2022 Pixeval/GlobalSearchQuerySubmittedMessage.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,26 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using System.Runtime.Serialization;
+using Pixeval.CoreApi.Engine;
+using Pixeval.CoreApi.Model;
 
-namespace Pixeval;
+namespace Pixeval.Messages;
 
-public class IllustrationSourceNotFoundException : Exception
-{
-    public IllustrationSourceNotFoundException()
-    {
-    }
-
-    protected IllustrationSourceNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
-    {
-    }
-
-    public IllustrationSourceNotFoundException(string? message) : base(message)
-    {
-    }
-
-    public IllustrationSourceNotFoundException(string? message, Exception? innerException) : base(message, innerException)
-    {
-    }
-}
+public record GlobalSearchQuerySubmittedMessage(IFetchEngine<Illustration> Parameter);

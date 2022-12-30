@@ -93,7 +93,7 @@ public class PixivAuthenticationProxyServer : IDisposable
                     await writer.FlushAsync();
                     var clientSsl = new SslStream(clientStream, false);
                     // use specify certificate to establish the HTTPS connection
-                    await clientSsl.AuthenticateAsServerAsync(_certificate!, false, SslProtocols.Tls | SslProtocols.Tls13 | SslProtocols.Tls12 | SslProtocols.Tls11, false);
+                    await clientSsl.AuthenticateAsServerAsync(_certificate!, false, SslProtocols.None, false);
                     // create an HTTP connection to the target IP
                     var host = Regex.Match(content, "CONNECT (?<host>.+)\\:\\d+").Groups["host"].Value;
                     var serverSsl = await CreateConnection(await GetTargetIp(host));

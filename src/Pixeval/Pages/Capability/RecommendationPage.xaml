@@ -7,7 +7,6 @@
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:notifyOnLoadedComboBox="using:Pixeval.Controls.NotifyOnLoadedComboBox"
                        xmlns:userControls="using:Pixeval.UserControls"
-                       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                        ClearCacheAfterNavigation="True"
                        Loaded="RecommendationsPage_OnLoaded"
                        mc:Ignorable="d">

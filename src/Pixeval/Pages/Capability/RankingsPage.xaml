@@ -9,7 +9,6 @@
                        xmlns:options="using:Pixeval.Options"
                        xmlns:system="using:System"
                        xmlns:userControls="using:Pixeval.UserControls"
-                       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                        ClearCacheAfterNavigation="True"
                        Loaded="RankingsPage_OnLoaded"
                        mc:Ignorable="d">

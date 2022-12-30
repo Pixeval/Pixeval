@@ -20,12 +20,16 @@
 
 using System;
 using System.Linq;
+using Microsoft.UI.Composition;
+using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
 using Pixeval.AppManagement;
+using Pixeval.Interop;
 using Pixeval.Util.UI;
+using WinRT;
 using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
 
@@ -34,6 +38,12 @@ namespace Pixeval;
 public partial class App
 {
     private const string ApplicationWideFontKey = "ContentControlThemeFontFamily";
+
+    private static MicaController? _backdropController;
+
+    private static WindowsSystemDispatcherQueueHelper? _dispatcherQueueHelper;
+
+    private static SystemBackdropConfiguration? _systemBackdropConfiguration;
 
     public App()
     {
@@ -92,5 +102,63 @@ public partial class App
             ( > 1600, > 900) => (1280, 720),
             _ => (800, 600)
         };
+    }
+
+    public static void TryApplyMica()
+    {
+        if (MicaController.IsSupported())
+        {
+            _dispatcherQueueHelper = new WindowsSystemDispatcherQueueHelper();
+            _dispatcherQueueHelper.EnsureWindowsSystemDispatcherQueueController();
+
+            _systemBackdropConfiguration = new SystemBackdropConfiguration();
+            AppViewModel.Window.Activated += WindowOnActivated;
+            AppViewModel.Window.Closed += WindowOnClosed;
+            ((FrameworkElement) AppViewModel.Window.Content).ActualThemeChanged += OnActualThemeChanged;
+
+            _systemBackdropConfiguration.IsInputActive = true;
+            SetConfigurationSourceTheme();
+
+            _backdropController = new MicaController();
+
+            _backdropController.AddSystemBackdropTarget(AppViewModel.Window.As<ICompositionSupportsSystemBackdrop>());
+            _backdropController.SetSystemBackdropConfiguration(_systemBackdropConfiguration);
+        }
+    }
+
+    private static void OnActualThemeChanged(FrameworkElement sender, object args)
+    {
+        if (_systemBackdropConfiguration != null)
+        {
+            SetConfigurationSourceTheme();
+        }
+    }
+
+    private static void SetConfigurationSourceTheme()
+    {
+        _systemBackdropConfiguration!.Theme = AppViewModel.Window.Content switch
+        {
+            FrameworkElement { ActualTheme: ElementTheme.Dark } => SystemBackdropTheme.Dark,
+            FrameworkElement { ActualTheme: ElementTheme.Light } => SystemBackdropTheme.Light,
+            FrameworkElement { ActualTheme: ElementTheme.Default } => SystemBackdropTheme.Default,
+            _ => _systemBackdropConfiguration!.Theme
+        };
+    }
+
+    private static void WindowOnClosed(object sender, WindowEventArgs args)
+    {
+        if (_backdropController != null)
+        {
+            _backdropController.Dispose();
+            _backdropController = null;
+        }
+
+        AppViewModel.Window.Activated -= WindowOnActivated;
+        _systemBackdropConfiguration = null;
+    }
+
+    private static void WindowOnActivated(object sender, WindowActivatedEventArgs args)
+    {
+        _systemBackdropConfiguration!.IsInputActive = args.WindowActivationState is not WindowActivationState.Deactivated;
     }
 }

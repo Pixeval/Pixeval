@@ -7,13 +7,11 @@
                        xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:ui="using:Pixeval.Util.UI"
-                       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                        Loaded="ImageViewerPage_OnLoaded"
                        mc:Ignorable="d">
     <controls:EnhancedPage.Resources>
         <ResourceDictionary>
-            <Storyboard x:Name="ResetImageScaleStoryboard"
-                        Completed="ResetImageScaleStoryboard_OnCompleted">
+            <Storyboard x:Name="ResetImageScaleStoryboard" Completed="ResetImageScaleStoryboard_OnCompleted">
                 <DoubleAnimation EasingFunction="{x:Bind _easingFunction}"
                                  Storyboard.TargetName="IllustrationOriginalImageRenderTransform"
                                  Storyboard.TargetProperty="ScaleX"
@@ -25,8 +23,7 @@
                                  To="1"
                                  Duration="0:0:1" />
             </Storyboard>
-            <Storyboard x:Name="ImageScaledIn200PercentStoryboard"
-                        Completed="ImageScaledIn200PercentStoryboard_OnCompleted">
+            <Storyboard x:Name="ImageScaledIn200PercentStoryboard" Completed="ImageScaledIn200PercentStoryboard_OnCompleted">
                 <DoubleAnimation EasingFunction="{x:Bind _easingFunction}"
                                  Storyboard.TargetName="IllustrationOriginalImageRenderTransform"
                                  Storyboard.TargetProperty="ScaleX"
@@ -38,8 +35,7 @@
                                  To="2"
                                  Duration="0:0:1" />
             </Storyboard>
-            <Storyboard x:Name="ResetImageTranslationStoryboard"
-                        Completed="ResetImageTranslationStoryboard_OnCompleted">
+            <Storyboard x:Name="ResetImageTranslationStoryboard" Completed="ResetImageTranslationStoryboard_OnCompleted">
                 <DoubleAnimation EasingFunction="{x:Bind _easingFunction}"
                                  Storyboard.TargetName="IllustrationOriginalImageRenderTransform"
                                  Storyboard.TargetProperty="TranslateX"
@@ -78,8 +74,7 @@
                                 <KeyboardAccelerator Key="F12" />
                             </MenuFlyoutItem.KeyboardAccelerators>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.PlayGifCommand}"
-                                        Visibility="{x:Bind _viewModel.IllustrationViewerPageViewModel.IsUgoira}" />
+                        <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.PlayGifCommand}" Visibility="{x:Bind _viewModel.IllustrationViewerPageViewModel.IsUgoira}" />
                         <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ZoomInCommand}" />
                         <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ZoomOutCommand}" />
                         <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.BookmarkCommand}" />
@@ -87,20 +82,14 @@
                         <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.CopyCommand}" />
                         <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SaveCommand}" />
                         <MenuFlyoutSeparator />
-                        <MenuFlyoutSubItem x:Uid="/ImageViewerPage/SetAsSubItem"
-                                           Icon="{ui:FontIcon Glyph=PersonalizeE771}">
-                            <MenuFlyoutItem
-                                Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SetAsBackgroundCommand}" />
-                            <MenuFlyoutItem
-                                Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SetAsLockScreenCommand}" />
+                        <MenuFlyoutSubItem x:Uid="/ImageViewerPage/SetAsSubItem" Icon="{ui:FontIcon Glyph=PersonalizeE771}">
+                            <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SetAsBackgroundCommand}" />
+                            <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SetAsLockScreenCommand}" />
                         </MenuFlyoutSubItem>
                         <MenuFlyoutSeparator />
-                        <MenuFlyoutItem
-                            Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.GenerateLinkCommand}" />
-                        <MenuFlyoutItem
-                            Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.GenerateWebLinkCommand}" />
-                        <MenuFlyoutItem
-                            Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.OpenInWebBrowserCommand}" />
+                        <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.GenerateLinkCommand}" />
+                        <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.GenerateWebLinkCommand}" />
+                        <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.OpenInWebBrowserCommand}" />
                         <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ShowQrCodeCommand}" />
                         <MenuFlyoutItem Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ShareCommand}" />
                     </MenuFlyout>
@@ -116,8 +105,7 @@
               VerticalAlignment="Stretch"
               Visibility="{x:Bind _viewModel.GetLoadingMaskVisibility(_viewModel.LoadingOriginalSourceTask), Mode=OneWay}">
             <Rectangle Fill="{ThemeResource PixevalAppAcrylicBrush}" />
-            <StackPanel HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ProgressRing Width="50"
                               Height="50"
                               IsIndeterminate="False"
@@ -160,8 +148,7 @@
             </Border.Shadow>
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="PointerEntered">
-                    <core:ChangePropertyAction PropertyName="Opacity"
-                                               Value="1" />
+                    <core:ChangePropertyAction PropertyName="Opacity" Value="1" />
                 </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="PointerExited">
                     <core:ChangePropertyAction PropertyName="Opacity"
@@ -172,7 +159,7 @@
             <Border.OpacityTransition>
                 <ScalarTransition />
             </Border.OpacityTransition>
-            <CommandBar Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+            <CommandBar Background="{StaticResource ApplicationPageBackgroundThemeBrush}"
                         CornerRadius="10"
                         DefaultLabelPosition="Collapsed"
                         OverflowButtonVisibility="Collapsed">

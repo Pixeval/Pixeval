@@ -100,6 +100,7 @@
 		<None Remove="Strings\zh-CN\IllustratorPage.resw" />
 		<None Remove="Strings\zh-CN\ImageViewerPage.resw" />
 		<None Remove="Strings\zh-CN\MacroParser.resw" />
+		<None Remove="Strings\zh-CN\MainWindow.resw" />
 		<None Remove="Strings\zh-CN\PixivReplyBar.resw" />
 		<None Remove="Strings\zh-CN\RankingsPage.resw" />
 		<None Remove="Strings\zh-CN\RecentPostsPage.resw" />
@@ -150,8 +151,9 @@
 		<PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
 		<PackageReference Include="Microsoft.Win32.Registry" Version="6.0.0-preview.5.21301.5" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.25206-preview" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.220909.2-experimental2" />
 		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
+		<PackageReference Include="PininSharp" Version="1.2.0" />
 		<PackageReference Include="PInvoke.User32" Version="0.7.124" />
 		<PackageReference Include="Pixeval.QRCoder" Version="1.4.5" />
 		<PackageReference Include="ReverseMarkdown" Version="3.24.0" />
@@ -283,6 +285,7 @@
 		<PRIResource Include="Strings\zh-CN\LoginPage.resw" />
 		<PRIResource Include="Strings\zh-CN\MacroParser.resw" />
 		<PRIResource Include="Strings\zh-CN\MainPage.resw" />
+		<PRIResource Include="Strings\zh-CN\MainWindow.resw" />
 		<PRIResource Include="Strings\zh-CN\MessageContentDialog.resw" />
 		<PRIResource Include="Strings\zh-CN\Misc.resw" />
 		<PRIResource Include="Strings\zh-CN\RankingsPage.resw" />
