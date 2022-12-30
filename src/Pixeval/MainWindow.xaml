@@ -3,43 +3,184 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:pages="using:Pixeval.Pages"
+        xmlns:ui="using:Pixeval.Util.UI"
         xmlns:userControls="using:Pixeval.UserControls"
         Closed="MainWindow_OnClosed"
+        SizeChanged="MainWindow_OnSizeChanged"
         mc:Ignorable="d">
     <Grid>
-        <Grid.Resources>
-            <ThemeShadow x:Name="SnackBarShadow" />
-        </Grid.Resources>
-        <Frame x:Name="PixevalAppRootFrame"
-               x:FieldModifier="public"
-               Loaded="PixevalAppRootFrame_OnLoaded"
-               Navigating="PixevalAppRootFrame_OnNavigating"
-               NavigationFailed="PixevalAppRootFrame_OnNavigationFailed">
-            <Frame.ContentTransitions>
-                <TransitionCollection>
-                    <NavigationThemeTransition DefaultNavigationTransitionInfo="{x:Bind DefaultNavigationTransitionInfo}" />
-                </TransitionCollection>
-            </Frame.ContentTransitions>
-        </Frame>
-        <Grid x:Name="Processing"
-              Width="100"
-              Height="100"
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center"
-              CornerRadius="15"
-              Visibility="Collapsed">
-            <Rectangle Fill="{ThemeResource PixevalAppAcrylicBrush}" />
-            <ProgressRing Width="40"
-                          Height="40"
-                          HorizontalAlignment="Center"
-                          VerticalAlignment="Center"
-                          IsIndeterminate="True" />
+        <Grid x:Name="AppTitleBar"
+              Height="48"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Top"
+              Loaded="AppTitleBar_OnLoaded"
+              SizeChanged="AppTitleBar_OnSizeChanged"
+              Visibility="{x:Bind _viewModel.ShowTitleBar, Mode=OneWay}">
+            <Grid.Resources>
+                <DataTemplate x:Name="IllustrationHeaderSuggestionTemplate">
+                    <TextBlock x:Uid="/MainWindow/IllustrationHeaderSuggestionTextBlock"
+                               FontSize="{StaticResource PixevalContentFontSize}"
+                               FontWeight="Bold" />
+                </DataTemplate>
+
+                <DataTemplate x:Name="NovelHeaderSuggestionTemplate">
+                    <TextBlock x:Uid="/MainWindow/NovelHeaderSuggestionTextBlock"
+                               FontSize="{StaticResource PixevalContentFontSize}"
+                               FontWeight="Bold" />
+                </DataTemplate>
+
+                <DataTemplate x:Name="SettingsEntryHeaderSuggestionTemplate">
+                    <TextBlock x:Uid="/MainWindow/SettingsEntryHeaderSuggestionTextBlock"
+                               FontSize="{StaticResource PixevalContentFontSize}"
+                               FontWeight="Bold" />
+                </DataTemplate>
+
+                <DataTemplate x:Name="TagAutoCompletionSuggestionTemplate">
+                    <TextBlock x:Uid="/MainWindow/TagAutoCompletionSuggestionTextBlock"
+                               FontSize="{StaticResource PixevalContentFontSize}"
+                               FontWeight="Bold" />
+                </DataTemplate>
+
+                <DataTemplate x:Name="CommonSuggestionModelTemplate" x:DataType="pages:SuggestionModel">
+                    <Grid Height="50">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="22" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <ContentPresenter x:Name="IconContentPresenter"
+                                          Grid.Column="0"
+                                          Width="13"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Center"
+                                          Content="{x:Bind Icon}" />
+                        <StackPanel Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    Spacing="1">
+                            <TextBlock MaxHeight="35"
+                                       FontSize="{StaticResource PixevalBaseFontSize}"
+                                       Text="{x:Bind Name}"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextWrapping="WrapWholeWords" />
+                            <TextBlock MaxHeight="15"
+                                       FontSize="{StaticResource PixevalCaptionFontSize}"
+                                       Foreground="{ThemeResource PixevalTipTextForeground}"
+                                       Text="{x:Bind TranslatedName}"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextWrapping="WrapWholeWords"
+                                       Visibility="{x:Bind TranslatedNameVisibility}" />
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+
+                <pages:SuggestionModelDataTemplateSelector x:Name="SuggestionModelDataTemplateSelector"
+                                                           AutoCompletionHeader="{StaticResource TagAutoCompletionSuggestionTemplate}"
+                                                           CommonSuggestion="{StaticResource CommonSuggestionModelTemplate}"
+                                                           IllustrationHeader="{StaticResource IllustrationHeaderSuggestionTemplate}"
+                                                           NovelHeader="{StaticResource NovelHeaderSuggestionTemplate}"
+                                                           SettingEntryHeader="{StaticResource SettingsEntryHeaderSuggestionTemplate}" />
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="LeftDragRegion" />
+                <ColumnDefinition x:Name="LeftMarginRegion" Width="100" />
+                <ColumnDefinition x:Name="SearchBarRegion" />
+                <ColumnDefinition x:Name="MarginRegion" Width="10" />
+                <ColumnDefinition x:Name="ReverseSearchButtonRegion" Width="38" />
+                <ColumnDefinition x:Name="SearchSettingButtonRegion" Width="38" />
+                <ColumnDefinition x:Name="RightDragRegion" Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Image Width="25"
+                       Height="25"
+                       Margin="12,0,0,0"
+                       HorizontalAlignment="Left"
+                       Source="Assets/Images/logo44x44.ico" />
+                <TextBlock x:Name="AppTitleTextBlock"
+                           Margin="48,14,0,0"
+                           VerticalAlignment="Top"
+                           FontWeight="Semibold"
+                           Style="{StaticResource ContentTextBlockStyle}"
+                           Text="Pixeval"
+                           TextWrapping="NoWrap" />
+            </Grid>
+            <AutoSuggestBox x:Uid="/MainWindow/SearchAutoSuggestBox"
+                            Grid.Column="2"
+                            VerticalAlignment="Center"
+                            AllowDrop="True"
+                            GotFocus="KeywordAutoSuggestBox_GotFocus"
+                            IsEnabled="{x:Bind _viewModel.TitleBarSearchBarEnabled, Mode=OneWay}"
+                            IsFocusEngaged="False"
+                            ItemTemplateSelector="{StaticResource SuggestionModelDataTemplateSelector}"
+                            ItemsSource="{x:Bind _viewModel.SuggestionProvider.Suggestions, Mode=OneWay}"
+                            KeyDown="KeywordAutoSuggestionBox_OnKeyDown"
+                            QueryIcon="Find"
+                            QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
+                            SuggestionChosen="KeywordAutoSuggestBox_OnSuggestionChosen"
+                            TextChanged="KeywordAutoSuggestBox_OnTextChanged">
+                <AutoSuggestBox.ItemContainerTransitions>
+                    <TransitionCollection>
+                        <AddDeleteThemeTransition />
+                    </TransitionCollection>
+                </AutoSuggestBox.ItemContainerTransitions>
+            </AutoSuggestBox>
+
+            <Button Grid.Column="4"
+                    Width="33"
+                    Height="33"
+                    Padding="0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Content="{ui:FontIcon Glyph=CameraE722, FontSize=13}"
+                    Tapped="ReverseSearchButton_OnTapped" />
+
+            <Button Grid.Column="5"
+                    Width="33"
+                    Height="33"
+                    Padding="0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Content="{ui:FontIcon Glyph=SettingE713, FontSize=13}"
+                    Tapped="OpenSearchSettingPopupButton_OnTapped" />
         </Grid>
-        <userControls:SnackBar x:Name="PixevalAppSnackBar"
-                               HorizontalAlignment="Stretch"
-                               VerticalAlignment="Bottom"
-                               x:FieldModifier="public"
-                               Loaded="PixevalAppSnackBar_OnLoaded"
-                               ShadowReceiver="{x:Bind PixevalAppRootFrame}" />
+        <Grid Margin="0,48,0,0">
+            <Grid.Resources>
+                <ThemeShadow x:Name="SnackBarShadow" />
+            </Grid.Resources>
+            <Frame x:Name="PixevalAppRootFrame"
+                   x:FieldModifier="public"
+                   Loaded="PixevalAppRootFrame_OnLoaded"
+                   Navigating="PixevalAppRootFrame_OnNavigating"
+                   NavigationFailed="PixevalAppRootFrame_OnNavigationFailed">
+                <Frame.ContentTransitions>
+                    <TransitionCollection>
+                        <NavigationThemeTransition DefaultNavigationTransitionInfo="{x:Bind DefaultNavigationTransitionInfo}" />
+                    </TransitionCollection>
+                </Frame.ContentTransitions>
+            </Frame>
+            <Grid x:Name="Processing"
+                  Width="100"
+                  Height="100"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  CornerRadius="15"
+                  Visibility="Collapsed">
+                <Rectangle Fill="{ThemeResource PixevalAppAcrylicBrush}" />
+                <ProgressRing Width="40"
+                              Height="40"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              IsIndeterminate="True" />
+            </Grid>
+            <userControls:SnackBar x:Name="PixevalAppSnackBar"
+                                   HorizontalAlignment="Stretch"
+                                   VerticalAlignment="Bottom"
+                                   x:FieldModifier="public"
+                                   Loaded="PixevalAppSnackBar_OnLoaded"
+                                   ShadowReceiver="{x:Bind PixevalAppRootFrame}" />
+        </Grid>
     </Grid>
 </Window>

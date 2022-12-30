@@ -42,6 +42,9 @@ using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using QRCoder;
 using WinRT.Interop;
+using Pixeval.Pages.Misc;
+using System.Threading;
+using Pixeval.Util.Threading;
 
 namespace Pixeval.Util.UI;
 
@@ -272,5 +275,20 @@ public static partial class UIHelper
         };
         InitializeWithWindow.Initialize(openPicker, App.AppViewModel.GetMainWindowHandle());
         return openPicker.PickSingleFileAsync();
+    }
+
+    public static Task AwaitPageTransitionAsync<T>(this FrameworkElement root) where T : Page
+    {
+        var tcs = new TaskCompletionSource();
+        Task.Run(async () =>
+        {
+            var spinWait = new SpinWait();
+            while (await App.AppViewModel.DispatchTaskAsync(() => Task.FromResult(root.FindDescendant<T>() is null)))
+            {
+                spinWait.SpinOnce(20);
+            }
+            tcs.SetResult();
+        }).Discard();
+        return tcs.Task;
     }
 }

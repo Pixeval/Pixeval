@@ -18,20 +18,57 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Graphics;
+using Windows.Storage;
+using Windows.System;
+using Windows.UI.Core;
+using Microsoft.UI;
+using Microsoft.UI.Input;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.AppManagement;
 using Pixeval.Misc;
 using Pixeval.Pages.Login;
+using WinRT.Interop;
+using AppContext = Pixeval.AppManagement.AppContext;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Image = SixLabors.ImageSharp.Image;
+using WindowSizeChangedEventArgs = Microsoft.UI.Xaml.WindowSizeChangedEventArgs;
+using Pixeval.Dialogs;
+using Pixeval.Util.UI;
+using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Messaging;
+using Pixeval.Pages;
+using Pixeval.Utilities;
+using Microsoft.Extensions.DependencyInjection;
+using Pixeval.Attributes;
+using Pixeval.Database.Managers;
+using Pixeval.Database;
+using Pixeval.Messages;
+using Pixeval.Pages.Capability;
+using Pixeval.Pages.Misc;
 
 namespace Pixeval;
 
 public sealed partial class MainWindow : INavigationModeInfo
 {
+    private readonly MainWindowViewModel _viewModel = new();
+
     public MainWindow()
     {
         InitializeComponent();
+
+        if (!AppWindowTitleBar.IsCustomizationSupported())
+        {
+            SetTitleBar(AppTitleBar);
+        }
     }
 
     public NavigationTransitionInfo? DefaultNavigationTransitionInfo { get; internal set; } = new SuppressNavigationTransitionInfo();
@@ -80,5 +117,235 @@ public sealed partial class MainWindow : INavigationModeInfo
     private void PixevalAppSnackBar_OnLoaded(object sender, RoutedEventArgs e)
     {
         SnackBarShadow.Receivers.Add(PixevalAppRootFrame);
+    }
+
+    private void MainWindow_OnSizeChanged(object sender, WindowSizeChangedEventArgs args)
+    {
+
+    }
+
+    [DllImport("Shcore.dll", SetLastError = true)]
+    internal static extern int GetDpiForMonitor(IntPtr hMonitor, MonitorDpiType dpiType, out uint dpiX, out uint dpiY);
+
+    internal enum MonitorDpiType
+    {
+        MdtEffectiveDpi = 0,
+        MdtAngularDpi = 1,
+        MdtRawDpi = 2,
+        MdtDefault = MdtEffectiveDpi
+    }
+
+    private double GetScaleAdjustment()
+    {
+        var hWnd = WindowNative.GetWindowHandle(this);
+        var wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
+        var displayArea = DisplayArea.GetFromWindowId(wndId, DisplayAreaFallback.Primary);
+        var hMonitor = Win32Interop.GetMonitorFromDisplayId(displayArea.DisplayId);
+
+        // Get DPI.
+        var result = GetDpiForMonitor(hMonitor, MonitorDpiType.MdtDefault, out var dpiX, out var _);
+        if (result != 0)
+        {
+            throw new Exception("Could not get DPI for monitor.");
+        }
+
+        var scaleFactorPercent = (uint) (((long) dpiX * 100 + (96 >> 1)) / 96);
+        return scaleFactorPercent / 100.0;
+    }
+
+    private void SetDragRegionForCustomTitleBar(AppWindow appWindow)
+    {
+        // Check to see if customization is supported.
+        // Currently only supported on Windows 11.
+        if (AppWindowTitleBar.IsCustomizationSupported()
+            && appWindow.TitleBar.ExtendsContentIntoTitleBar)
+        {
+            var scaleAdjustment = GetScaleAdjustment();
+            RectInt32 dragRectL;
+            dragRectL.X = 0;
+            dragRectL.Y = 0;
+            dragRectL.Width = (int)((LeftDragRegion.ActualWidth + LeftMarginRegion.ActualWidth) * scaleAdjustment);
+            dragRectL.Height = (int) (AppTitleBar.ActualHeight * scaleAdjustment);
+            RectInt32 dragRectR;
+            dragRectR.X = (int) ((LeftDragRegion.ActualWidth + LeftMarginRegion.ActualWidth + SearchBarRegion.ActualWidth + MarginRegion.ActualWidth + ReverseSearchButtonRegion.ActualWidth + SearchSettingButtonRegion.ActualWidth) * scaleAdjustment);
+            dragRectR.Y = 0;
+            dragRectR.Width = (int) (RightDragRegion.ActualWidth * scaleAdjustment);
+            dragRectR.Height = (int) (AppTitleBar.ActualHeight * scaleAdjustment);
+
+            appWindow.TitleBar.SetDragRectangles(new[] { dragRectL, dragRectR });
+        }
+    }
+
+    private void AppTitleBar_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        if (AppWindowTitleBar.IsCustomizationSupported())
+        {
+            SetDragRegionForCustomTitleBar(App.AppViewModel.AppWindow);
+        }
+    }
+
+    private void AppTitleBar_OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (AppWindowTitleBar.IsCustomizationSupported())
+        {
+            SetDragRegionForCustomTitleBar(App.AppViewModel.AppWindow);
+        }
+    }
+
+    private async void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
+    {
+        var suggestBox = (AutoSuggestBox) sender;
+        suggestBox.IsSuggestionListOpen = true;
+        await _viewModel.SuggestionProvider.UpdateAsync(suggestBox.Text);
+    }
+
+    private async void KeywordAutoSuggestionBox_OnKeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        if (InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.LeftControl).HasFlag(CoreVirtualKeyStates.Down) && e.Key == VirtualKey.V)
+        {
+            var content = Clipboard.GetContent();
+            if (content.AvailableFormats.Contains(StandardDataFormats.StorageItems) &&
+                (await content.GetStorageItemsAsync()).FirstOrDefault(i => i.IsOfType(StorageItemTypes.File)) is StorageFile file)
+            {
+                e.Handled = true; // prevent the event from bubbling if it contains an image, since it means that we want to do reverse search.
+                await using var stream = await file.OpenStreamForReadAsync();
+                if (await Image.DetectFormatAsync(stream) is not null)
+                {
+                    if (App.AppViewModel.AppSetting.ReverseSearchApiKey is not { Length: > 0 })
+                    {
+                        await ShowReverseSearchApiKeyNotPresentDialog();
+                        return;
+                    }
+
+                    await _viewModel.ReverseSearchAsync(stream);
+                }
+            }
+        }
+    }
+
+    private static async Task ShowReverseSearchApiKeyNotPresentDialog()
+    {
+        var content = new ReverseSearchApiKeyNotPresentDialog();
+        var dialog = MessageDialogBuilder.Create().WithTitle(MainPageResources.ReverseSearchApiKeyNotPresentTitle)
+            .WithContent(content)
+            .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
+            .WithDefaultButton(ContentDialogButton.Primary)
+            .Build(App.AppViewModel.Window);
+        content.Owner = dialog;
+        await dialog.ShowAsync();
+    }
+
+    private async void KeywordAutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+    {
+        await GoBackToMainPageAsync();
+        if (args.QueryText.IsNullOrBlank())
+        {
+            MessageDialogBuilder.CreateAcknowledgement(this,
+                MainPageResources.SearchKeywordCannotBeBlankTitle,
+                MainPageResources.SearchKeywordCannotBeBlankContent);
+            return;
+        }
+
+        switch (args.ChosenSuggestion)
+        {
+            case SuggestionModel { SuggestionType: SuggestionType.Settings }:
+                return;
+            case SuggestionModel({ } name, var translatedName, _):
+                PerformSearch(name, translatedName);
+                break;
+            default:
+                PerformSearch(args.QueryText);
+                break;
+        }
+    }
+
+    private static void PerformSearch(string text, string? optTranslatedName = null)
+    {
+        using (var scope = App.AppViewModel.AppServicesScope)
+        {
+            var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
+            // TODO distinguish search illustrations, manga, novels, and users.
+            if (manager.Count == 0 || manager.Select(count: 1).AsList() is [{ Value: var last }, ..] && last != text)
+            {
+                manager.Insert(new SearchHistoryEntry
+                {
+                    Value = text,
+                    TranslatedName = optTranslatedName,
+                    Time = DateTime.Now
+                });
+            }
+        }
+
+        var setting = App.AppViewModel.AppSetting;
+        WeakReferenceMessenger.Default.Send(new GlobalSearchQuerySubmittedMessage(App.AppViewModel.MakoClient.Search(
+            text,
+            setting.SearchStartingFromPageNumber,
+            setting.PageLimitForKeywordSearch,
+            setting.TagMatchOption,
+            setting.DefaultSortOption,
+            setting.SearchDuration,
+            setting.TargetFilter,
+            setting.UsePreciseRangeForSearch ? setting.SearchStartDate : null,
+            setting.UsePreciseRangeForSearch ? setting.SearchEndDate : null)));
+    }
+
+    private async void KeywordAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+    {
+        if (args.SelectedItem is SuggestionModel { Name: { Length: > 0 } name, SuggestionType: var type })
+        {
+            await GoBackToMainPageAsync();
+            switch (type)
+            {
+                case SuggestionType.Settings:
+                    sender.Text = "";
+                    Enum.GetValues<SettingsEntry>().FirstOrNull(se => se.GetLocalizedResourceContent() == name)
+                        ?.Let(se => WeakReferenceMessenger.Default.Send(new NavigateToSettingEntryMessage(se)));
+                    break;
+                default:
+                    sender.Text = name;
+                    break;
+            }
+        }
+    }
+
+    private async void KeywordAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+    {
+        await _viewModel.SuggestionProvider.UpdateAsync(sender.Text);
+    }
+
+    private void OpenSearchSettingPopupButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        WeakReferenceMessenger.Default.Send(new NavigateToSettingEntryMessage(SettingsEntry.ReverseSearchThreshold));
+    }
+
+    private async void ReverseSearchButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (App.AppViewModel.AppSetting.ReverseSearchApiKey is { Length: > 0 })
+        {
+            if (await UIHelper.OpenFileOpenPickerAsync() is { } file)
+            {
+                await using var stream = await file.OpenStreamForReadAsync();
+                await _viewModel.ReverseSearchAsync(stream);
+            }
+        }
+        else
+        {
+            await ShowReverseSearchApiKeyNotPresentDialog();
+        }
+    }
+
+    private static Task GoBackToMainPageAsync()
+    {
+        if (App.AppViewModel.AppWindowRootFrame.Content is MainPage)
+        {
+            return Task.CompletedTask;
+        }
+        var stack = App.AppViewModel.AppWindowRootFrame.BackStack;
+        while (stack.Count >= 1 && stack.Last().SourcePageType != typeof(MainPage))
+        {
+            stack.RemoveAt(stack.Count - 1);
+        }
+        App.AppViewModel.AppWindowRootFrame.GoBack(); 
+        return App.AppViewModel.AppWindowRootFrame.AwaitPageTransitionAsync<MainPage>();
     }
 }

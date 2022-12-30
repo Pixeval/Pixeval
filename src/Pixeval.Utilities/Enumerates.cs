@@ -38,6 +38,11 @@ public enum SequenceComparison
 [PublicAPI]
 public static class Enumerates
 {
+    public static IList<T> AsList<T>(this IEnumerable<T> enumerable)
+    {
+        return enumerable is IList<T> list ? list : enumerable.ToList();
+    }
+
     public static bool SequenceEquals<T>(this IEnumerable<T> @this,
         IEnumerable<T> another,
         SequenceComparison comparison = SequenceComparison.Sequential,

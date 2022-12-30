@@ -34,6 +34,7 @@ using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using PInvoke;
 using Pixeval.AppManagement;
@@ -200,6 +201,11 @@ public class AppViewModel : AutoActivateObservableRecipient,
         return Window.DispatcherQueue.EnqueueAsync(action);
     }
 
+    public Task<T> DispatchTaskAsync<T>(Func<Task<T>> action)
+    {
+        return Window.DispatcherQueue.EnqueueAsync(action);
+    }
+
     /// <summary>
     ///     Exit the notification after pushing an <see cref="ApplicationExitingMessage" />
     ///     to the <see cref="EventChannel" />
@@ -226,6 +232,17 @@ public class AppViewModel : AutoActivateObservableRecipient,
         AppWindow.Resize(new SizeInt32(AppSetting.WindowWidth, AppSetting.WindowHeight));
         AppWindow.Show();
         AppWindow.SetIcon(await AppContext.GetIconAbsolutePath());
+
+        if (AppWindowTitleBar.IsCustomizationSupported())
+        {
+            var titleBar = App.AppViewModel.AppWindow.TitleBar;
+            titleBar.ExtendsContentIntoTitleBar = true;
+            titleBar.ButtonBackgroundColor = Colors.Transparent;
+            titleBar.ButtonHoverBackgroundColor = ((SolidColorBrush) App.Resources["SystemControlBackgroundBaseLowBrush"]).Color;
+            titleBar.ButtonForegroundColor = ((SolidColorBrush)App.Resources["SystemControlForegroundBaseHighBrush"]).Color;
+        }
+
+        App.TryApplyMica();
 
         // Window.ExtendsContentIntoTitleBar = true;
         // Window.SetTitleBar(Window.CustomTitleBar);

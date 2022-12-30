@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/OpenSearchSettingMessage.cs
+// Copyright (c) 2022 Pixeval/NavigateToSettingEntryMessage.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,4 +20,4 @@
 
 namespace Pixeval.Messages;
 
-public record OpenSearchSettingMessage;
+public record NavigateToSettingEntryMessage(SettingsEntry Entry);

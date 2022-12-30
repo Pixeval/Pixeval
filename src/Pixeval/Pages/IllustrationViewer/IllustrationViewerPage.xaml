@@ -7,7 +7,6 @@
                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                         xmlns:ui="using:Pixeval.Util.UI"
                         ui:NavigationHelper.BackHotKey="Escape"
-                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                         Loaded="IllustrationViewerPage_OnLoaded"
                         mc:Ignorable="d">
     <controls1:EnhancedPage.Resources>
@@ -18,11 +17,10 @@
                DisplayMode="Overlay"
                IsPaneOpen="{x:Bind _viewModel.IsInfoPaneOpen, Mode=TwoWay}"
                OpenPaneLength="330"
-               PaneBackground="Transparent">
+               PaneBackground="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
         <SplitView.Pane>
             <Grid Width="320"
                   HorizontalAlignment="Left"
-                  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                   Shadow="{x:Bind SidePanelShadow}"
                   Translation="0,0,40">
                 <NavigationView Width="320"
@@ -45,9 +43,7 @@
         <controls:DockPanel x:Name="IllustrationPresenterDockPanel"
                             HorizontalAlignment="Stretch"
                             LastChildFill="True">
-            <CommandBar controls:DockPanel.Dock="Top"
-                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                        DefaultLabelPosition="Right">
+            <CommandBar controls:DockPanel.Dock="Top" DefaultLabelPosition="Right">
                 <CommandBar.Content>
                     <AppBarButton Width="48"
                                   Icon="Back"

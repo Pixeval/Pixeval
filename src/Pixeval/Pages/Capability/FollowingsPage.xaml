@@ -6,7 +6,6 @@
                        xmlns:illustratorView="using:Pixeval.Controls.IllustratorView"
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:userControls="using:Pixeval.UserControls"
-                       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                        ClearCacheAfterNavigation="True"
                        Loaded="FollowingsPage_OnLoaded"
                        mc:Ignorable="d">

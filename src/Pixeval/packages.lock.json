@@ -145,6 +145,12 @@
           "Microsoft.WindowsAppSDK": "1.0.0"
         }
       },
+      "PininSharp": {
+        "type": "Direct",
+        "requested": "[1.2.0, )",
+        "resolved": "1.2.0",
+        "contentHash": "ydbxAOLd4oXWiWDBS7kVDlMf6JaKNcy7nbaQv7+1HSVqCW44TDFY/aeTolVzOSLddk0BEbCljXZjXDecYXHExg=="
+      },
       "PInvoke.User32": {
         "type": "Direct",
         "requested": "[0.7.124, )",

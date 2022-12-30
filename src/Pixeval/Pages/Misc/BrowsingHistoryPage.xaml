@@ -7,8 +7,7 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:userControls="using:Pixeval.UserControls"
     xmlns:ui="using:Pixeval.Util.UI"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    mc:Ignorable="d">
     <userControls:IllustrationContainer x:Name="IllustrationContainer">
         <userControls:IllustrationContainer.SecondaryCommandsSupplements>
             <AppBarButton Icon="{ui:FontIcon Glyph=DeleteE74D}" Label="Delete" />
