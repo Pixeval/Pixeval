@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -59,6 +59,7 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Image = SixLabors.ImageSharp.Image;
 using Pixeval.Attributes;
+using Windows.Foundation.Metadata;
 
 namespace Pixeval.Pages;
 
@@ -89,7 +90,7 @@ public sealed partial class MainPage
     {
         // dirty trick, the order of the menu items is the same as the order of the fields in MainPageTabItem
         // since enums are basically integers, we just need a cast to transform it to the correct offset.
-        ((NavigationViewItem) MainPageRootNavigationView.MenuItems[(int)App.AppViewModel.AppSetting.DefaultSelectedTabItem]).IsSelected = true;
+        ((NavigationViewItem)MainPageRootNavigationView.MenuItems[(int)App.AppViewModel.AppSetting.DefaultSelectedTabItem]).IsSelected = true;
 
         // The application is invoked by a protocol, call the corresponding protocol handler.
         if (App.AppViewModel.ConsumeProtocolActivation())
@@ -207,7 +208,7 @@ public sealed partial class MainPage
         {
             var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
             // TODO distinguish search illustrations, manga, novels, and users.
-            if (manager.Count == 0 || manager.Select(count: 1).AsList() is [{Value: var last}, ..] && last != text)
+            if (manager.Count == 0 || manager.Select(count: 1).AsList() is [{ Value: var last }, ..] && last != text)
             {
                 manager.Insert(new SearchHistoryEntry
                 {
@@ -242,8 +243,8 @@ public sealed partial class MainPage
         MainPageRootNavigationView.SelectedItem = SettingsTab;
         await MainPageRootFrame.AwaitPageTransitionAsync<SettingsPage>();
         var settingsPage = MainPageRootFrame.FindDescendant<SettingsPage>()!;
-        var position = settingsPage.FindChild<FrameworkElement>(element => element.Tag is int e && e == (int) entry)
-            ?.TransformToVisual((UIElement) settingsPage.SettingsPageScrollViewer.Content)
+        var position = settingsPage.FindChild<FrameworkElement>(element => element.Tag is int e && e == (int)entry)
+            ?.TransformToVisual((UIElement)settingsPage.SettingsPageScrollViewer.Content)
             .TransformPoint(new Point(0, 0));
         settingsPage.SettingsPageScrollViewer.ChangeView(null, position?.Y, null, false);
     }
@@ -299,5 +300,43 @@ public sealed partial class MainPage
             .Build(App.AppViewModel.Window);
         content.Owner = dialog;
         await dialog.ShowAsync();
+    }
+
+    private void PaneClosing(NavigationView sender, NavigationViewPaneClosingEventArgs e) => UpdateAppTitleMargin(sender);
+
+    private void PaneOpening(NavigationView sender, object e) => UpdateAppTitleMargin(sender);
+
+    private void DisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs e)
+    {
+        var currentMargin = App.AppViewModel.Window.AppTitleBar.Margin;
+        App.AppViewModel.Window.AppTitleBar.Margin = sender.DisplayMode is NavigationViewDisplayMode.Minimal
+            ? new() { Left = sender.CompactPaneLength * 2, Top = currentMargin.Top, Right = currentMargin.Right, Bottom = currentMargin.Bottom }
+            : new Thickness { Left = sender.CompactPaneLength, Top = currentMargin.Top, Right = currentMargin.Right, Bottom = currentMargin.Bottom };
+
+        UpdateAppTitleMargin(sender);
+    }
+
+    private void UpdateAppTitleMargin(NavigationView sender)
+    {
+        const int smallLeftIndent = 4, largeLeftIndent = 24;
+
+        if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7))
+        {
+            App.AppViewModel.Window.AppTitleTextBlock.TranslationTransition = new Vector3Transition();
+
+            App.AppViewModel.Window.AppTitleTextBlock.Translation = (sender.DisplayMode is NavigationViewDisplayMode.Expanded && sender.IsPaneOpen) ||
+                                                                    sender.DisplayMode is NavigationViewDisplayMode.Minimal
+                ? new(smallLeftIndent, 0, 0)
+                : new System.Numerics.Vector3(largeLeftIndent, 0, 0);
+        }
+        else
+        {
+            var currentMargin = App.AppViewModel.Window.AppTitleTextBlock.Margin;
+
+            App.AppViewModel.Window.AppTitleTextBlock.Margin = (sender.DisplayMode is NavigationViewDisplayMode.Expanded && sender.IsPaneOpen) ||
+                                                               sender.DisplayMode is NavigationViewDisplayMode.Minimal
+                ? new() { Left = smallLeftIndent, Top = currentMargin.Top, Right = currentMargin.Right, Bottom = currentMargin.Bottom }
+                : new Thickness { Left = largeLeftIndent, Top = currentMargin.Top, Right = currentMargin.Right, Bottom = currentMargin.Bottom };
+        }
     }
 }
