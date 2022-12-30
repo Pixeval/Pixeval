@@ -1,140 +1,50 @@
-﻿#region Copyright (c) Pixeval/Pixeval.SourceGen
-
-// GPL v3 License
-// 
-// Pixeval/Pixeval.SourceGen
-// Copyright (c) 2021 Pixeval.SourceGen/LoadSaveConfigurationGenerator.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-#endregion
-
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using static Pixeval.SourceGen.Utils;
 
 namespace Pixeval.SourceGen;
 
-/// <summary>
-/// References:
-/// <br/> <a href="https://andrewlock.net/series/creating-a-source-generator/"/>
-/// <br/> <a href="https://github.com/dotnet/roslyn/blob/main/docs/features/incremental-generators.md/"/>
-/// </summary>
 [Generator]
 public class TypeWithAttributeGenerator : IIncrementalGenerator
 {
     /// <summary>
     /// 对拥有某attribute的type生成代码
     /// </summary>
-    /// <param name="typeDeclarationSyntax"></param>
     /// <param name="typeSymbol"></param>
     /// <param name="attributeList">该类的某种Attribute</param>
     /// <returns>生成的代码</returns>
-    private delegate string? TypeWithAttribute(TypeDeclarationSyntax typeDeclarationSyntax, INamedTypeSymbol typeSymbol, List<AttributeData> attributeList);
+    private delegate string? TypeWithAttribute(INamedTypeSymbol typeSymbol, ImmutableArray<AttributeData> attributeList);
 
     /// <summary>
     /// 需要生成的Attribute
     /// </summary>
-    private static readonly Dictionary<string, TypeWithAttribute> Attributes = new()
+    private static readonly Dictionary<string, TypeWithAttribute> _attributes = new()
     {
         { "Pixeval.Attributes.GenerateConstructorAttribute", TypeWithAttributeDelegates.GenerateConstructor },
-        { "Pixeval.Attributes.LoadSaveConfigurationAttribute", TypeWithAttributeDelegates.LoadSaveConfiguration },
-        { "Pixeval.Attributes.DependencyPropertyAttribute", TypeWithAttributeDelegates.DependencyProperty },
-        { "Pixeval.Attributes.SettingsViewModelAttribute", TypeWithAttributeDelegates.SettingsViewModel }
+        { "Pixeval.Attributes.LoadSaveConfigurationAttribute`1", TypeWithAttributeDelegates.LoadSaveConfiguration },
+        { "Pixeval.Attributes.DependencyPropertyAttribute`1", TypeWithAttributeDelegates.DependencyProperty },
+        { "Pixeval.Attributes.SettingsViewModelAttribute`1", TypeWithAttributeDelegates.SettingsViewModel }
     };
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        IncrementalValuesProvider<TypeDeclarationSyntax> typeDeclarations = context.SyntaxProvider
-            .CreateSyntaxProvider(
-                static (s, _) => IsSyntaxTargetForGeneration(s),
-                static (ctx, _) => GetSemanticTargetForGeneration(ctx))
-            .Where(static m => m is not null)!;
-
-        IncrementalValueProvider<(Compilation Compilation, ImmutableArray<TypeDeclarationSyntax> TypeDeclarationSyntaxes)> compilationAndTypes =
-            context.CompilationProvider.Combine(typeDeclarations.Collect());
-
-        context.RegisterSourceOutput(compilationAndTypes, static (spc, source) =>
-            Execute(source.Compilation, source.TypeDeclarationSyntaxes, spc));
-    }
-
-    /// <summary>
-    /// 初次快速筛选（对拥有Attribute的class和record）
-    /// </summary>
-    private static bool IsSyntaxTargetForGeneration(SyntaxNode node) =>
-        node is TypeDeclarationSyntax { AttributeLists.Count: > 0 }
-            and (ClassDeclarationSyntax or RecordDeclarationSyntax);
-
-    /// <summary>
-    /// 获取TypeDeclarationSyntax
-    /// </summary>
-    private static TypeDeclarationSyntax? GetSemanticTargetForGeneration(GeneratorSyntaxContext context)
-    {
-        var typeDeclarationSyntax = (TypeDeclarationSyntax)context.Node;
-        // 不用Linq，用foreach保证速度
-        foreach (var attributeListSyntax in typeDeclarationSyntax.AttributeLists)
-            foreach (var attributeSyntax in attributeListSyntax.Attributes)
-            {
-                if (context.SemanticModel.GetSymbolInfo(attributeSyntax).Symbol is not IMethodSymbol attributeSymbol)
-                    continue;
-
-                if (Attributes.ContainsKey(attributeSymbol.ContainingType.ToDisplayString()))
-                    return typeDeclarationSyntax;
-            }
-
-        return null;
-    }
-
-    /// <summary>
-    /// 对获取的每个type和Attribute进行生成
-    /// </summary>
-    private static void Execute(Compilation compilation, ImmutableArray<TypeDeclarationSyntax> types, SourceProductionContext context)
-    {
-        ObjectSymbol ??= compilation.GetSpecialType(SpecialType.System_Object);
-
-        if (types.IsDefaultOrEmpty)
-            return;
-
-        // 遍历每个class
-        foreach (var typeDeclarationSyntax in types)
+        foreach (var attribute in _attributes)
         {
-            var semanticModel = compilation.GetSemanticModel(typeDeclarationSyntax.SyntaxTree);
-            if (semanticModel.GetDeclaredSymbol(typeDeclarationSyntax) is not INamedTypeSymbol typeSymbol)
-                continue;
-
-            // 同种attribute只判断一遍
-            var usedAttributes = new Dictionary<string, List<AttributeData>>();
-
-            // 遍历class上每个Attribute
-            foreach (var attribute in typeSymbol.GetAttributes())
+            var generatorAttributes = context.SyntaxProvider.ForAttributeWithMetadataName(
+                attribute.Key,
+                (_, _) => true,
+                (syntaxContext, _) => syntaxContext
+            );
+            context.RegisterSourceOutput(generatorAttributes, (spc, ga) =>
             {
-                var attributeName = attribute.AttributeClass!.ToDisplayString();
-                if (!Attributes.ContainsKey(attributeName))
-                    continue;
-                if (usedAttributes.ContainsKey(attributeName))
-                    usedAttributes[attributeName].Add(attribute);
-                else usedAttributes[attributeName] = new List<AttributeData> { attribute };
-            }
-
-            foreach (var usedAttribute in usedAttributes)
-                if (Attributes[usedAttribute.Key](typeDeclarationSyntax, typeSymbol, usedAttribute.Value) is { } source)
-                    context.AddSource(
+                if (ga.TargetSymbol is not INamedTypeSymbol symbol)
+                    return;
+                if (attribute.Value(symbol, ga.Attributes) is { } source)
+                    spc.AddSource(
                         // 不能重名
-                        $"{typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat.WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted))}_{usedAttribute.Key}.g.cs",
+                        $"{symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat.WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted))}_{attribute.Key}.g.cs",
                         source);
+            });
         }
     }
 }

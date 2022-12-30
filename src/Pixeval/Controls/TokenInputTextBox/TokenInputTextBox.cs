@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -33,9 +33,9 @@ namespace Pixeval.Controls.TokenInputTextBox;
 /// and a <see cref="TokenSubmitted"/> event to help user hook logic when a token is submitted, a token can be marked as case-sensitive
 /// or regex
 /// </summary>
-[DependencyProperty("PlaceholderText", typeof(string))]
-[DependencyProperty("SubmitEnable", typeof(bool))]
-[DependencyProperty("Token", typeof(Token))]
+[DependencyProperty<string>("PlaceholderText")]
+[DependencyProperty<bool>("SubmitEnable")]
+[DependencyProperty<Token>("Token")]
 public partial class TokenInputTextBox : Control
 {
     private const string PartTokenTextBox = "TokenTextBox";

@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.SourceGen
+#region Copyright (c) Pixeval/Pixeval.SourceGen
 
 // GPL v3 License
 // 
@@ -23,6 +23,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
 using static Pixeval.SourceGen.Utils;
@@ -31,13 +32,14 @@ namespace Pixeval.SourceGen;
 
 internal static partial class TypeWithAttributeDelegates
 {
-    public static string? SettingsViewModel(TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol typeSymbol,
-        List<AttributeData> attributeList)
+    public static string? SettingsViewModel(INamedTypeSymbol typeSymbol, ImmutableArray<AttributeData> attributeList)
     {
         var attribute = attributeList[0];
-        if (attribute.ConstructorArguments[0].Value is not INamedTypeSymbol type)
+
+        if (attribute.AttributeClass is not ({ IsGenericType: true } and { TypeArguments.IsDefaultOrEmpty: false }))
             return null;
-        if (attribute.ConstructorArguments[1].Value is not string settingName)
+        var type = attribute.AttributeClass.TypeArguments[0];
+        if (attribute.ConstructorArguments[0].Value is not string settingName)
             return null;
 
         var name = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);

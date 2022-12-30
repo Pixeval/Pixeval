@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -33,10 +33,10 @@ namespace Pixeval.Controls.Expander;
 [TemplatePart(Name = PartRootPanel, Type = typeof(Grid))]
 [TemplateVisualState(GroupName = "CommonStates", Name = "Normal")]
 [TemplateVisualState(GroupName = "CommonStates", Name = "Expanded")]
-[DependencyProperty("HeaderHeight", typeof(double), nameof(OnHeaderHeightChanged))]
-[DependencyProperty("NegativeHeaderHeight", typeof(double))]
-[DependencyProperty("IsExpanded", typeof(bool), nameof(OnIsExpandedChanged), DefaultValue = "false")]
-[DependencyProperty("Header", typeof(object))]
+[DependencyProperty<double>("HeaderHeight", nameof(OnHeaderHeightChanged))]
+[DependencyProperty<double>("NegativeHeaderHeight")]
+[DependencyProperty<bool>("IsExpanded", nameof(OnIsExpandedChanged), DefaultValue = "false")]
+[DependencyProperty<object>("Header")]
 public sealed partial class Expander : ContentControl
 {
     private const string PartContentCardContainer = "ContentCardContainer";

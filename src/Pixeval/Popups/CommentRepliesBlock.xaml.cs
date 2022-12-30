@@ -40,7 +40,7 @@ using Pixeval.Util.UI;
 
 namespace Pixeval.Popups;
 
-[DependencyProperty("ViewModel", typeof(CommentRepliesBlockViewModel), nameof(OnViewModelChanged))]
+[DependencyProperty<CommentRepliesBlockViewModel>("ViewModel", nameof(OnViewModelChanged))]
 public sealed partial class CommentRepliesBlock : IAppPopupContent
 {
     private EventHandler<TappedRoutedEventArgs>? _closeButtonTapped;

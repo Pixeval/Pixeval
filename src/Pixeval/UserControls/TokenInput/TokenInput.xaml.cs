@@ -29,10 +29,10 @@ using Pixeval.Util.UI;
 
 namespace Pixeval.UserControls.TokenInput;
 
-[DependencyProperty("PlaceholderText", typeof(string))]
-[DependencyProperty("TokenSource", typeof(ICollection<Token>))]
-[DependencyProperty("TokenInputTextBoxVisibility", typeof(Visibility), DefaultValue = "Visibility.Visible")]
-[DependencyProperty("IsTokenTappedDefaultBehaviorEnabled", typeof(bool), DefaultValue = "true")]
+[DependencyProperty<string>("PlaceholderText")]
+[DependencyProperty<ICollection<Token>>("TokenSource")]
+[DependencyProperty<Visibility>("TokenInputTextBoxVisibility", DefaultValue = "Visibility.Visible")]
+[DependencyProperty<bool>("IsTokenTappedDefaultBehaviorEnabled", DefaultValue = "true")]
 public sealed partial class TokenInput
 {
     private EventHandler<Token>? _tokenAdded;

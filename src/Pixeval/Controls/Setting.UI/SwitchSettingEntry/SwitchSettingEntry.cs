@@ -33,7 +33,7 @@ namespace Pixeval.Controls.Setting.UI.SwitchSettingEntry;
 /// </summary>
 [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
 [TemplatePart(Name = PartSwitch, Type = typeof(ToggleSwitch))]
-[DependencyProperty("IsOn", typeof(bool), nameof(OnIsOnChanged))]
+[DependencyProperty<bool>("IsOn", nameof(OnIsOnChanged))]
 public partial class SwitchSettingEntry : SettingEntryBase
 {
     private const string PartSwitch = "Switch";

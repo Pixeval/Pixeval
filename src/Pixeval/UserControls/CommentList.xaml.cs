@@ -29,7 +29,7 @@ using Pixeval.Util.UI;
 
 namespace Pixeval.UserControls;
 
-[DependencyProperty("ItemsSource", typeof(object), nameof(OnItemsSourceChanged), DefaultValue = "System.Linq.Enumerable.Empty<Pixeval.Pages.IllustrationViewer.CommentBlockViewModel>()", IsNullable = true)]
+[DependencyProperty<object>("ItemsSource", nameof(OnItemsSourceChanged), DefaultValue = "System.Linq.Enumerable.Empty<Pixeval.Pages.IllustrationViewer.CommentBlockViewModel>()", IsNullable = true)]
 public sealed partial class CommentList : IDisposable
 {
     private EventHandler<TappedRoutedEventArgs>? _repliesHyperlinkButtonTapped;

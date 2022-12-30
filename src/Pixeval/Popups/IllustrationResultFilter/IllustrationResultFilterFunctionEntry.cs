@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -24,7 +24,7 @@ using Pixeval.Attributes;
 
 namespace Pixeval.Popups.IllustrationResultFilter;
 
-[DependencyProperty("Header", typeof(string))]
+[DependencyProperty<string>("Header")]
 public partial class IllustrationResultFilterFunctionEntry : ContentControl
 {
     public IllustrationResultFilterFunctionEntry()

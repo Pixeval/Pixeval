@@ -42,10 +42,10 @@ using Pixeval.Utilities;
 
 namespace Pixeval.UserControls;
 
-[DependencyProperty("PrimaryCommandsSupplements", typeof(ObservableCollection<ICommandBarElement>), nameof(OnPrimaryCommandsSupplementsChanged), DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
-[DependencyProperty("SecondaryCommandsSupplements", typeof(ObservableCollection<ICommandBarElement>), nameof(OnSecondaryCommandsSupplementsChanged), DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
-[DependencyProperty("IsDefaultCommandsEnabled", typeof(bool), nameof(OnIsDefaultCommandsEnabledChanged), DefaultValue = "true")]
-[DependencyProperty("ViewModel", typeof(IllustrationGridViewModel), DefaultValue = "new IllustrationGridViewModel()")]
+[DependencyProperty<ObservableCollection<ICommandBarElement>>("PrimaryCommandsSupplements", nameof(OnPrimaryCommandsSupplementsChanged), DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
+[DependencyProperty<ObservableCollection<ICommandBarElement>>("SecondaryCommandsSupplements", nameof(OnSecondaryCommandsSupplementsChanged), DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
+[DependencyProperty<bool>("IsDefaultCommandsEnabled", nameof(OnIsDefaultCommandsEnabledChanged), DefaultValue = "true")]
+[DependencyProperty<IllustrationGridViewModel>("ViewModel", DefaultValue = "new IllustrationGridViewModel()")]
 public sealed partial class IllustrationGridCommandBar
 {
     private readonly IEnumerable<Control> _defaultCommands;
