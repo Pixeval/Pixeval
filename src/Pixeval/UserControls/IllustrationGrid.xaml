@@ -12,7 +12,6 @@
              xmlns:ui="using:Pixeval.Util.UI"
              xmlns:userControls="using:Pixeval.UserControls"
              xmlns:util="using:Pixeval.Util"
-             Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
              Loaded="IllustrationGrid_OnLoaded"
              mc:Ignorable="d">
     <Grid>

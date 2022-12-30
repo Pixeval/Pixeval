@@ -45,17 +45,9 @@ public sealed partial class ReverseSearchApiKeyNotPresentDialog
         InitializeComponent();
     }
 
-    private async void SetApiKeyHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void SetApiKeyHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         Owner?.Hide();
-        var mainPageRootNavigationView = (NavigationView)App.AppViewModel.AppWindowRootFrame.FindDescendant("MainPageRootNavigationView")!;
-        mainPageRootNavigationView.SelectedItem = mainPageRootNavigationView.FindDescendant("SettingsTab")!;
-        WeakReferenceMessenger.Default.Send(new OpenSearchSettingMessage());
-        await Task.Delay(500);
-        var settingsPage = App.AppViewModel.AppWindowRootFrame.FindDescendant("MainPageRootFrame")!.FindDescendant<SettingsPage>()!;
-        var position = settingsPage.SearchSettingsGroup
-            .TransformToVisual((UIElement)settingsPage.SettingsPageScrollViewer.Content)
-            .TransformPoint(new Point(0, 0));
-        settingsPage.SettingsPageScrollViewer.ChangeView(null, position.Y, null, false);
+        WeakReferenceMessenger.Default.Send(new NavigateToSettingEntryMessage(SettingsEntry.ReverseSearchApiKey));
     }
 }

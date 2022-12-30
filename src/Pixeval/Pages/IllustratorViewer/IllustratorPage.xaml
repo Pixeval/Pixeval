@@ -9,7 +9,6 @@
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:notifyOnLoadedComboBox="using:Pixeval.Controls.NotifyOnLoadedComboBox"
                        xmlns:userControls="using:Pixeval.UserControls" 
-                       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                        Loaded="IllustratorPage_OnLoaded"
                        SizeChanged="IllustratorPage_OnSizeChanged"
                        mc:Ignorable="d">

@@ -8,7 +8,6 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:misc="using:Pixeval.Pages.Misc"
       xmlns:personView="using:Pixeval.Controls.PersonView"
-      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
       Loaded="AboutPage_OnLoaded"
       mc:Ignorable="d">
 

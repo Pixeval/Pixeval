@@ -9,7 +9,6 @@
                        xmlns:misc1="using:Pixeval.Pages.Misc"
                        xmlns:attributes="using:Pixeval.Attributes"
                        d:DataContext="{d:DesignInstance login:LoginPageViewModel}"
-                       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                        Loaded="LoginPage_OnLoaded"
                        mc:Ignorable="d">
     <Grid>

@@ -7,7 +7,6 @@
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:pages="using:Pixeval.Pages"
                        xmlns:ui="using:Pixeval.Util.UI"
-                       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                        NavigationCacheMode="Required"
                        mc:Ignorable="d">
     <controls:EnhancedPage.Resources>
@@ -19,6 +18,18 @@
 
         <DataTemplate x:Name="NovelHeaderSuggestionTemplate">
             <TextBlock x:Uid="/MainPage/NovelHeaderSuggestionTextBlock"
+                       FontSize="{StaticResource PixevalContentFontSize}"
+                       FontWeight="Bold" />
+        </DataTemplate>
+
+        <DataTemplate x:Name="SettingsEntryHeaderSuggestionTemplate">
+            <TextBlock x:Uid="/MainPage/SettingsEntryHeaderSuggestionTextBlock"
+                       FontSize="{StaticResource PixevalContentFontSize}"
+                       FontWeight="Bold" />
+        </DataTemplate>
+
+        <DataTemplate x:Name="TagAutoCompletionSuggestionTemplate">
+            <TextBlock x:Uid="/MainPage/TagAutoCompletionSuggestionTextBlock"
                        FontSize="{StaticResource PixevalContentFontSize}"
                        FontWeight="Bold" />
         </DataTemplate>
@@ -55,21 +66,23 @@
         </DataTemplate>
 
         <pages:SuggestionModelDataTemplateSelector x:Name="SuggestionModelDataTemplateSelector"
+                                                   AutoCompletionHeader="{StaticResource TagAutoCompletionSuggestionTemplate}"
                                                    CommonSuggestion="{StaticResource CommonSuggestionModelTemplate}"
                                                    IllustrationHeader="{StaticResource IllustrationHeaderSuggestionTemplate}"
-                                                   NovelHeader="{StaticResource NovelHeaderSuggestionTemplate}" />
+                                                   NovelHeader="{StaticResource NovelHeaderSuggestionTemplate}"
+                                                   SettingEntryHeader="{StaticResource SettingsEntryHeaderSuggestionTemplate}" />
     </controls:EnhancedPage.Resources>
     <NavigationView x:Name="MainPageRootNavigationView"
                     d:DataContext="{d:DesignInstance pages:MainPageViewModel}"
                     IsBackButtonVisible="Collapsed"
                     IsSettingsVisible="False"
                     OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}"
-                    PaneTitle="Pixeval"
                     SelectionChanged="MainPageRootNavigationView_OnSelectionChanged">
         <NavigationView.PaneCustomContent>
             <Grid Margin="15,5,15,10" Visibility="{x:Bind MainPageRootNavigationView.IsPaneOpen, Mode=OneWay}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
+
                     <ColumnDefinition Width="38" />
                     <ColumnDefinition Width="38" />
                 </Grid.ColumnDefinitions>
@@ -80,7 +93,7 @@
                                 GotFocus="KeywordAutoSuggestBox_GotFocus"
                                 ItemTemplateSelector="{StaticResource SuggestionModelDataTemplateSelector}"
                                 ItemsSource="{x:Bind _viewModel.SuggestionProvider.Suggestions, Mode=OneWay}"
-                                KeyDown="MainPageAutoSuggestionBox_OnKeyDown"
+                                KeyDown="KeywordAutoSuggestionBox_OnKeyDown"
                                 QueryIcon="Find"
                                 QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
                                 SuggestionChosen="KeywordAutoSuggestBox_OnSuggestionChosen"
@@ -107,16 +120,8 @@
                         Padding="0"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        Tapped="ReverseSearchButton_OnTapped">
-                    <AnimatedIcon Width="18" Height="18">
-                        <AnimatedIcon.Source>
-                            <animatedVisuals:AnimatedFindVisualSource />
-                        </AnimatedIcon.Source>
-                        <AnimatedIcon.FallbackIconSource>
-                            <SymbolIconSource Symbol="Find" />
-                        </AnimatedIcon.FallbackIconSource>
-                    </AnimatedIcon>
-                </Button>
+                        Content="{ui:FontIcon Glyph=CameraE722, FontSize=13}"
+                        Tapped="ReverseSearchButton_OnTapped" />
             </Grid>
         </NavigationView.PaneCustomContent>
         <NavigationView.MenuItems>

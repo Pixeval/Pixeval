@@ -25,8 +25,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using PininSharp;
+using PininSharp.Searchers;
+using Pixeval.Attributes;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database.Managers;
+using Pixeval.Util;
 using Pixeval.Utilities;
 
 namespace Pixeval.Pages;
@@ -45,11 +49,21 @@ public class SuggestionStateMachine
             .SelectAsync(t => new Tag(t.Tag!, t.Translation))
             .SelectAsync(SuggestionModel.FromTag), LazyThreadSafetyMode.ExecutionAndPublication);
 
+    private static readonly TreeSearcher<SettingsEntry> SettingEntriesTreeSearcher = new(SearcherLogic.Contain, PinIn.CreateDefault());
+
     public ObservableCollection<SuggestionModel> Suggestions { get; }
 
     public SuggestionStateMachine()
     {
         Suggestions = new ObservableCollection<SuggestionModel>();
+    }
+
+    static SuggestionStateMachine()
+    {
+        foreach (var settingsEntry in Enum.GetValues<SettingsEntry>())
+        {
+            SettingEntriesTreeSearcher.Put(settingsEntry.GetLocalizedResourceContent()!, settingsEntry);
+        }
     }
 
     public Task UpdateAsync(string keyword)
@@ -64,7 +78,20 @@ public class SuggestionStateMachine
 
     private async Task FillSuggestions(string keyword)
     {
-        var suggestions = (await App.AppViewModel.MakoClient.GetAutoCompletionForKeyword(keyword)).Select(SuggestionModel.FromTag);
+        var tagSuggestions = (await App.AppViewModel.MakoClient.GetAutoCompletionForKeyword(keyword)).Select(SuggestionModel.FromTag).ToList();
+        var settingSuggestions = MatchSettings(keyword);
+        var suggestions = new List<SuggestionModel>();
+        if (settingSuggestions.IsNotNullOrEmpty())
+        {
+            suggestions.Add(SuggestionModel.SettingEntryHeader);
+            suggestions.AddRange(settingSuggestions.Select(settingSuggestion => new SuggestionModel(settingSuggestion.GetLocalizedResourceContent()!, settingSuggestion.GetCustomAttribute<SettingsCategory>()!.Name(), SuggestionType.Settings)));
+        }
+
+        if (settingSuggestions.IsNotNullOrEmpty() && tagSuggestions.IsNotNullOrEmpty())
+        {
+            suggestions.Add(SuggestionModel.IllustrationAutoCompleteTagHeader);
+            suggestions.AddRange(tagSuggestions);
+        }
         Suggestions.ReplaceByUpdate(suggestions);
     }
 
@@ -80,5 +107,13 @@ public class SuggestionStateMachine
         newItems.Add(SuggestionModel.NovelTrendingTagHeader);
         newItems.AddRange(await _novelTrendingTagCache.Value);
         Suggestions.AddRange(newItems);
+    }
+
+    private static IReadOnlySet<SettingsEntry> MatchSettings(string keyword)
+    {
+        var pinInResult = SettingEntriesTreeSearcher.Search(keyword).ToHashSet();
+        var nonPinInResult = Enum.GetValues<SettingsEntry>().Where(it => it.GetLocalizedResourceContent()!.Contains(keyword));
+        pinInResult.AddRange(nonPinInResult);
+        return pinInResult;
     }
 }

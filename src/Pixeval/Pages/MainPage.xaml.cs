@@ -19,9 +19,11 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
@@ -33,6 +35,7 @@ using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Input;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -51,9 +54,11 @@ using Pixeval.Pages.Download;
 using Pixeval.Pages.Misc;
 using Pixeval.UserControls;
 using Pixeval.Util;
+using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Image = SixLabors.ImageSharp.Image;
+using Pixeval.Attributes;
 
 namespace Pixeval.Pages;
 
@@ -74,13 +79,17 @@ public sealed partial class MainPage
     {
         InitializeComponent();
         DataContext = _viewModel;
+        if (AppWindowTitleBar.IsCustomizationSupported())
+        {
+            MainPageRootNavigationView.PaneCustomContent = null;
+        }
     }
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
         // dirty trick, the order of the menu items is the same as the order of the fields in MainPageTabItem
         // since enums are basically integers, we just need a cast to transform it to the correct offset.
-        ((NavigationViewItem)MainPageRootNavigationView.MenuItems[(int)App.AppViewModel.AppSetting.DefaultSelectedTabItem]).IsSelected = true;
+        ((NavigationViewItem) MainPageRootNavigationView.MenuItems[(int)App.AppViewModel.AppSetting.DefaultSelectedTabItem]).IsSelected = true;
 
         // The application is invoked by a protocol, call the corresponding protocol handler.
         if (App.AppViewModel.ConsumeProtocolActivation())
@@ -91,6 +100,12 @@ public sealed partial class MainPage
         WeakReferenceMessenger.Default.TryRegister<MainPage, MainPageFrameSetConnectedAnimationTargetMessage>(this, (_, message) => _connectedAnimationTarget = message.Sender);
         WeakReferenceMessenger.Default.TryRegister<MainPage, NavigatingBackToMainPageMessage>(this, (_, message) => _illustrationViewerContent = message.IllustrationViewModel);
         WeakReferenceMessenger.Default.TryRegister<MainPage, IllustrationTagClickedMessage>(this, (_, message) => PerformSearch(message.Tag));
+        WeakReferenceMessenger.Default.TryRegister<MainPage, GlobalSearchQuerySubmittedMessage>(this, (_, message) =>
+        {
+            MainPageRootNavigationView.SelectedItem = null;
+            MainPageRootFrame.Navigate(typeof(SearchResultsPage), message.Parameter);
+        });
+        WeakReferenceMessenger.Default.TryRegister<MainPage, NavigateToSettingEntryMessage>(this, (_, message) => NavigateToSettingEntryAsync(message.Entry).Discard());
 
         // Connected animation to the element located in MainPage
         if (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation") is { } animation)
@@ -150,21 +165,34 @@ public sealed partial class MainPage
             return;
         }
 
-        if (args.ChosenSuggestion is SuggestionModel({ } name, var translatedName, _))
+        switch (args.ChosenSuggestion)
         {
-            PerformSearch(name, translatedName);
-        }
-        else
-        {
-            PerformSearch(args.QueryText);
+            case SuggestionModel { SuggestionType: SuggestionType.Settings }:
+                return;
+            case SuggestionModel({ } name, var translatedName, _):
+                PerformSearch(name, translatedName);
+                break;
+            default:
+                PerformSearch(args.QueryText);
+                break;
         }
     }
 
     private void KeywordAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
     {
-        if (args.SelectedItem is SuggestionModel { Name: { Length: > 0 } name })
+        if (args.SelectedItem is SuggestionModel { Name: { Length: > 0 } name, SuggestionType: var type })
         {
-            sender.Text = name;
+            switch (type)
+            {
+                case SuggestionType.Settings:
+                    sender.Text = "";
+                    Enum.GetValues<SettingsEntry>().FirstOrNull(se => se.GetLocalizedResourceContent() == name)
+                        ?.Let(se => WeakReferenceMessenger.Default.Send(new NavigateToSettingEntryMessage(se)));
+                    break;
+                default:
+                    sender.Text = name;
+                    break;
+            }
         }
     }
 
@@ -179,7 +207,7 @@ public sealed partial class MainPage
         {
             var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
             // TODO distinguish search illustrations, manga, novels, and users.
-            if (manager.Count == 0 || manager.Select(count: 1).FirstOrDefault() is { Value: var last } && last != text)
+            if (manager.Count == 0 || manager.Select(count: 1).AsList() is [{Value: var last}, ..] && last != text)
             {
                 manager.Insert(new SearchHistoryEntry
                 {
@@ -204,22 +232,24 @@ public sealed partial class MainPage
             setting.UsePreciseRangeForSearch ? setting.SearchEndDate : null));
     }
 
-    private async void OpenSearchSettingPopupButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void OpenSearchSettingPopupButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        NavigateToSettingEntryAsync(SettingsEntry.ReverseSearchThreshold).Discard();
+    }
+
+    private async Task NavigateToSettingEntryAsync(SettingsEntry entry)
     {
         MainPageRootNavigationView.SelectedItem = SettingsTab;
-        WeakReferenceMessenger.Default.Send(new OpenSearchSettingMessage());
-        // The stupid delay here does merely nothing but wait the navigation to complete, apparently
-        // the navigation is asynchronous and there's no way to wait for it
-        await Task.Delay(500);
+        await MainPageRootFrame.AwaitPageTransitionAsync<SettingsPage>();
         var settingsPage = MainPageRootFrame.FindDescendant<SettingsPage>()!;
-        var position = settingsPage.SearchSettingsGroup
-            .TransformToVisual((UIElement)settingsPage.SettingsPageScrollViewer.Content)
+        var position = settingsPage.FindChild<FrameworkElement>(element => element.Tag is int e && e == (int) entry)
+            ?.TransformToVisual((UIElement) settingsPage.SettingsPageScrollViewer.Content)
             .TransformPoint(new Point(0, 0));
-        settingsPage.SettingsPageScrollViewer.ChangeView(null, position.Y, null, false);
+        settingsPage.SettingsPageScrollViewer.ChangeView(null, position?.Y, null, false);
     }
 
     // The AutoSuggestBox does not have a 'Paste' event, so we check the keyboard event accordingly
-    private async void MainPageAutoSuggestionBox_OnKeyDown(object sender, KeyRoutedEventArgs e)
+    private async void KeywordAutoSuggestionBox_OnKeyDown(object sender, KeyRoutedEventArgs e)
     {
         if (InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.LeftControl).HasFlag(CoreVirtualKeyStates.Down) && e.Key == VirtualKey.V)
         {

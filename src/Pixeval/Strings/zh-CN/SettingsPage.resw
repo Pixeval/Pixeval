@@ -306,7 +306,7 @@
     <value>输入数量限制[10,50]</value>
   </data>
   <data name="MaximumSearchPageLimit.Description" xml:space="preserve">
-    <value>在使用侧边栏关键字搜索插画时，最多会搜索多少页（每页包含30张）</value>
+    <value>在使用关键字搜索插画时，最多会搜索多少页（每页包含30张）</value>
   </data>
   <data name="MaximumSearchPageLimit.Header" xml:space="preserve">
     <value>最大搜索页数限制</value>
@@ -414,7 +414,7 @@
     <value>设置搜索的起始日期</value>
   </data>
   <data name="SearchStartsFromEntry.Description" xml:space="preserve">
-    <value>在使用侧边栏关键字搜索插画时，会从该设置项所指定的页数开始搜索，对于插画作品每页包含30张</value>
+    <value>在使用关键字搜索插画时，会从该设置项所指定的页数开始搜索，对于插画作品每页包含30张</value>
   </data>
   <data name="SearchStartsFromEntry.Header" xml:space="preserve">
     <value>从第几页开始搜索</value>

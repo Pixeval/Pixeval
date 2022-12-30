@@ -28,5 +28,5 @@ public interface IStringRepresentableItem
 
     string StringRepresentation { get; }
 
-    static IEnumerable<IStringRepresentableItem> AvailableItems { get; }
+    static IEnumerable<IStringRepresentableItem>? AvailableItems { get; }
 }

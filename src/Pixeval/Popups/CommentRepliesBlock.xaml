@@ -6,7 +6,6 @@
              xmlns:ui="using:Pixeval.Util.UI"
              xmlns:userControls="using:Pixeval.UserControls"
              ui:NavigationHelper.ClosePopupHotKey="Escape"
-             Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
              Loaded="CommentRepliesBlock_OnLoaded"
              mc:Ignorable="d">
     <Grid>

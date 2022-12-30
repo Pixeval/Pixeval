@@ -29,14 +29,20 @@ public class SuggestionModelDataTemplateSelector : DataTemplateSelector
 
     public DataTemplate? NovelHeader { get; set; }
 
+    public DataTemplate? AutoCompletionHeader { get; set; }
+
+    public DataTemplate? SettingEntryHeader { get; set; }
+
     public DataTemplate? CommonSuggestion { get; set; }
 
     protected override DataTemplate SelectTemplateCore(object item)
     {
-        return (SuggestionModel)item switch
+        return item switch
         {
-            { SuggestionType: SuggestionType.IllustrationTrendingTagHeader } => IllustrationHeader!,
-            { SuggestionType: SuggestionType.NovelTrendingTagHeader } => NovelHeader!,
+            SuggestionModel { SuggestionType: SuggestionType.IllustrationTrendingTagHeader } => IllustrationHeader!,
+            SuggestionModel { SuggestionType: SuggestionType.NovelTrendingTagHeader } => NovelHeader!,
+            SuggestionModel { SuggestionType: SuggestionType.SettingEntryHeader } => SettingEntryHeader!,
+            SuggestionModel { SuggestionType: SuggestionType.IllustrationAutoCompleteTagHeader } => AutoCompletionHeader!,
             _ => CommonSuggestion!
         };
     }
