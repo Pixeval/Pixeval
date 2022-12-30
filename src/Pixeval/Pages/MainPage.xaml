@@ -153,7 +153,7 @@
         <NavigationView.FooterMenuItems>
             <NavigationViewItem x:Uid="/MainPage/HelpTab" Icon="{ui:FontIcon Glyph=HelpE897}" />
             <NavigationViewItem x:Uid="/MainPage/AboutTab"
-                                Icon="{ui:FontIcon Glyph=RingerBadge12EDAC}"
+                                Icon="{ui:FontIcon Glyph=RingerEA8F}"
                                 Tag="{x:Bind _viewModel.AboutTag}" />
             <NavigationViewItem x:Name="SettingsTab"
                                 x:Uid="/MainPage/SettingsTab"
