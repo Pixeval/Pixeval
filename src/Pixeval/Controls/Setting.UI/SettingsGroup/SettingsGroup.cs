@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -28,7 +28,7 @@ namespace Pixeval.Controls.Setting.UI.SettingsGroup;
 /// The <see cref="SettingsGroup"/> manages a set of setting entries, with a <see cref="Header"/> property to specify the
 /// usage of the content of this group
 /// </summary>
-[DependencyProperty("Header", typeof(string))]
+[DependencyProperty<string>("Header")]
 public partial class SettingsGroup : ItemsControl
 {
     public SettingsGroup()

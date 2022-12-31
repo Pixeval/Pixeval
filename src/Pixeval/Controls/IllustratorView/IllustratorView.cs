@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -32,12 +32,12 @@ namespace Pixeval.Controls.IllustratorView;
 
 [TemplatePart(Name = PartContentContainer, Type = typeof(CardControl))]
 [TemplatePart(Name = PartAvatar, Type = typeof(PersonPicture))]
-[DependencyProperty("IllustratorName", typeof(string))]
-[DependencyProperty("IllustratorId", typeof(string))]
-[DependencyProperty("ThumbnailSources", typeof(object))]
-[DependencyProperty("ThumbnailItemTemplate", typeof(object))]
-[DependencyProperty("IllustratorPicture", typeof(ImageSource))]
-[DependencyProperty("ViewModel", typeof(IllustratorViewModel))]
+[DependencyProperty<string>("IllustratorName")]
+[DependencyProperty<string>("IllustratorId")]
+[DependencyProperty<object>("ThumbnailSources")]
+[DependencyProperty<object>("ThumbnailItemTemplate")]
+[DependencyProperty<ImageSource>("IllustratorPicture")]
+[DependencyProperty<IllustratorViewModel>("ViewModel")]
 public partial class IllustratorView : Control
 {
     private const string PartContentContainer = "ContentContainer";

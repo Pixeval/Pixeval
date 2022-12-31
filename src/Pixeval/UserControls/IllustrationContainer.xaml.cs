@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -29,9 +29,9 @@ using Pixeval.Attributes;
 
 namespace Pixeval.UserControls;
 
-[DependencyProperty("PrimaryCommandsSupplements", typeof(ObservableCollection<ICommandBarElement>), DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
-[DependencyProperty("SecondaryCommandsSupplements", typeof(ObservableCollection<ICommandBarElement>), DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
-[DependencyProperty("Header", typeof(object))]
+[DependencyProperty<ObservableCollection<ICommandBarElement>>("PrimaryCommandsSupplements", DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
+[DependencyProperty<ObservableCollection<ICommandBarElement>>("SecondaryCommandsSupplements", DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
+[DependencyProperty<object>("Header")]
 public sealed partial class IllustrationContainer
 {
     public IllustrationContainer()

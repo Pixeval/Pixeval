@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -23,14 +23,11 @@ using System;
 namespace Pixeval.Attributes;
 
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-public class LoadSaveConfigurationAttribute : Attribute
+public class LoadSaveConfigurationAttribute<T> : Attribute
 {
-    public LoadSaveConfigurationAttribute(Type settingType, string containerName)
-    {
-        SettingType = settingType;
-        ContainerName = containerName;
-    }
-    public Type SettingType { get; }
+    public LoadSaveConfigurationAttribute(string containerName) => ContainerName = containerName;
+
     public string ContainerName { get; }
+
     public string CastMethod { get; set; } = "null!";
 }

@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -28,7 +28,7 @@ using Pixeval.Util;
 
 namespace Pixeval.UserControls;
 
-[DependencyProperty("SelectedItem", typeof(object))]
+[DependencyProperty<object>("SelectedItem")]
 public sealed partial class SortOptionComboBox
 {
     private SelectionChangedEventHandler? _selectionChangedWhenLoadedInternal;

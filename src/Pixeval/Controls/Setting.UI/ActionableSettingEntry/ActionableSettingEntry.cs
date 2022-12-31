@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -30,7 +30,7 @@ namespace Pixeval.Controls.Setting.UI.ActionableSettingEntry;
 /// but without the <see cref="Expander"/>
 /// </summary>
 [ContentProperty(Name = "ActionContent")] // The content of the custom action
-[DependencyProperty("ActionContent", typeof(object))]
+[DependencyProperty<object>("ActionContent")]
 public partial class ActionableSettingEntry : SettingEntryBase
 {
     public ActionableSettingEntry()

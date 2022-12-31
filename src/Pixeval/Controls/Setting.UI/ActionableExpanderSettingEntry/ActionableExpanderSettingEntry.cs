@@ -33,12 +33,12 @@ namespace Pixeval.Controls.Setting.UI.ActionableExpanderSettingEntry;
 /// </summary>
 [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
 [TemplatePart(Name = PartEntryContentPresenter, Type = typeof(ContentPresenter))]
-[DependencyProperty("Icon", typeof(IconElement), nameof(OnIconChanged))] // The icon appears at the leftmost of the entry
-[DependencyProperty("Header", typeof(string))] // The header of the SettingsEntryHeader
-[DependencyProperty("Description", typeof(object), nameof(OnDescriptionChanged))] // The description of the SettingsEntryHeader
-[DependencyProperty("HeaderHeight", typeof(double))] // height of the SettingsEntryHeader
-[DependencyProperty("ActionContent", typeof(object))] // The content of the expander
-[DependencyProperty("ActionContentMargin", typeof(Thickness))] // the margin of the ActionContent
+[DependencyProperty<IconElement>("Icon", nameof(OnIconChanged))] // The icon appears at the leftmost of the entry
+[DependencyProperty<string>("Header")] // The header of the SettingsEntryHeader
+[DependencyProperty<object>("Description", nameof(OnDescriptionChanged))] // The description of the SettingsEntryHeader
+[DependencyProperty<double>("HeaderHeight")] // height of the SettingsEntryHeader
+[DependencyProperty<object>("ActionContent")] // The content of the expander
+[DependencyProperty<Thickness>("ActionContentMargin")] // the margin of the ActionContent
 public partial class ActionableExpanderSettingEntry : ContentControl
 {
     private const string PartEntryHeader = "EntryHeader";

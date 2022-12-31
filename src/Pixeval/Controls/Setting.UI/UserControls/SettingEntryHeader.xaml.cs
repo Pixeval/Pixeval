@@ -32,9 +32,9 @@ namespace Pixeval.Controls.Setting.UI.UserControls;
 /// is the name of the entry, and <see cref="Description"/>, which is a brief introduction of the entry, apart from these, it
 /// also includes an <see cref="Icon"/> to give user a hint that can be immediately understand
 /// </summary>
-[DependencyProperty("Header", typeof(string), nameof(OnHeaderChanged))]
-[DependencyProperty("Description", typeof(object), nameof(OnDescriptionChanged))]
-[DependencyProperty("Icon", typeof(IconElement), nameof(OnIconChanged))]
+[DependencyProperty<string>("Header", nameof(OnHeaderChanged))]
+[DependencyProperty<object>("Description", nameof(OnDescriptionChanged))]
+[DependencyProperty<IconElement>("Icon", nameof(OnIconChanged))]
 public sealed partial class SettingEntryHeader
 {
     public SettingEntryHeader()

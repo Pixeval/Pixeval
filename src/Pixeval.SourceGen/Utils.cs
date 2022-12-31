@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.SourceGen
+#region Copyright (c) Pixeval/Pixeval.SourceGen
 
 // GPL v3 License
 // 
@@ -26,6 +26,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Pixeval.SourceGen;
@@ -61,21 +62,21 @@ internal static class Utils
     /// <summary>
     /// Generate the following code
     /// <code>
-    /// partial <paramref name="typeDeclaration" /> <paramref name="name" />
+    /// partial <paramref name="symbol" /> <paramref name="name" />
     /// {
     ///     <paramref name="member" />
     /// }
     /// </code>
     /// </summary>
     /// <returns>TypeDeclaration</returns>
-    internal static TypeDeclarationSyntax GetDeclaration(string name, TypeDeclarationSyntax typeDeclaration, MemberDeclarationSyntax member)
+    internal static TypeDeclarationSyntax GetDeclaration(string name, INamedTypeSymbol symbol, params MemberDeclarationSyntax[] member)
     {
-        TypeDeclarationSyntax typeDeclarationTemp = typeDeclaration switch
+        TypeDeclarationSyntax typeDeclarationTemp = symbol.TypeKind switch
         {
-            ClassDeclarationSyntax => ClassDeclaration(name),
-            StructDeclarationSyntax => StructDeclaration(name),
-            RecordDeclarationSyntax => RecordDeclaration(Token(SyntaxKind.RecordKeyword), name),
-            _ => throw new ArgumentOutOfRangeException(nameof(typeDeclaration))
+            TypeKind.Class when !symbol.IsRecord => ClassDeclaration(name),
+            TypeKind.Struct when !symbol.IsRecord => StructDeclaration(name),
+            TypeKind.Class or TypeKind.Struct when symbol.IsRecord => RecordDeclaration(Token(SyntaxKind.RecordKeyword), name),
+            _ => throw new ArgumentOutOfRangeException(nameof(symbol.TypeKind))
         };
         return typeDeclarationTemp.AddModifiers(Token(SyntaxKind.PartialKeyword))
             .WithOpenBraceToken(Token(SyntaxKind.OpenBraceToken))
@@ -90,11 +91,8 @@ internal static class Utils
     /// </code>
     /// </summary>
     /// <returns>ObjectCreationExpression</returns>
-    internal static ObjectCreationExpressionSyntax GetObjectCreationExpression(ExpressionSyntax defaultValueExpression)
-    {
-        return ObjectCreationExpression(IdentifierName("PropertyMetadata"))
+    internal static ObjectCreationExpressionSyntax GetObjectCreationExpression(ExpressionSyntax defaultValueExpression) => ObjectCreationExpression(IdentifierName("PropertyMetadata"))
             .AddArgumentListArguments(Argument(defaultValueExpression));
-    }
 
     /// <summary>
     /// Generate the following code
@@ -103,10 +101,7 @@ internal static class Utils
     /// </code>
     /// </summary>
     /// <returns>MetadataCreation</returns>
-    internal static ObjectCreationExpressionSyntax GetMetadataCreation(ObjectCreationExpressionSyntax metadataCreation, string partialMethodName)
-    {
-        return metadataCreation.AddArgumentListArguments(Argument(IdentifierName(partialMethodName)));
-    }
+    internal static ObjectCreationExpressionSyntax GetMetadataCreation(ObjectCreationExpressionSyntax metadataCreation, string partialMethodName) => metadataCreation.AddArgumentListArguments(Argument(IdentifierName(partialMethodName)));
 
     /// <summary>
     /// Generate the following code
@@ -115,12 +110,9 @@ internal static class Utils
     /// </code>
     /// </summary>
     /// <returns>Registration</returns>
-    internal static InvocationExpressionSyntax GetRegistration(string propertyName, ITypeSymbol type, ITypeSymbol specificClass, ExpressionSyntax metadataCreation)
-    {
-        return InvocationExpression(MemberAccessExpression(
+    internal static InvocationExpressionSyntax GetRegistration(string propertyName, ITypeSymbol type, ITypeSymbol specificClass, ExpressionSyntax metadataCreation) => InvocationExpression(MemberAccessExpression(
                 SyntaxKind.SimpleMemberAccessExpression, IdentifierName("DependencyProperty"), IdentifierName("Register")))
             .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(propertyName))), Argument(TypeOfExpression(type.GetTypeSyntax(false))), Argument(TypeOfExpression(specificClass.GetTypeSyntax(false))), Argument(metadataCreation));
-    }
 
     /// <summary>
     /// Generate the following code
@@ -129,12 +121,9 @@ internal static class Utils
     /// </code>
     /// </summary>
     /// <returns>StaticFieldDeclaration</returns>
-    internal static FieldDeclarationSyntax GetStaticFieldDeclaration(string fieldName, ExpressionSyntax registration)
-    {
-        return FieldDeclaration(VariableDeclaration(IdentifierName("DependencyProperty")))
+    internal static FieldDeclarationSyntax GetStaticFieldDeclaration(string fieldName, ExpressionSyntax registration) => FieldDeclaration(VariableDeclaration(IdentifierName("DependencyProperty")))
             .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword), Token(SyntaxKind.ReadOnlyKeyword))
             .AddDeclarationVariables(VariableDeclarator(fieldName).WithInitializer(EqualsValueClause(registration)));
-    }
 
     /// <summary>
     /// Generate the following code
@@ -182,11 +171,9 @@ internal static class Utils
     /// </summary>
     /// <returns>PropertyDeclaration</returns>
     internal static PropertyDeclarationSyntax GetPropertyDeclaration(string propertyName, bool isNullable, ITypeSymbol type, AccessorDeclarationSyntax getter, AccessorDeclarationSyntax setter)
-    {
-        return PropertyDeclaration(type.GetTypeSyntax(isNullable), propertyName)
+        => PropertyDeclaration(type.GetTypeSyntax(isNullable), propertyName)
             .AddModifiers(Token(SyntaxKind.PublicKeyword))
             .AddAccessorListAccessors(getter, setter);
-    }
 
     /// <summary>
     /// Generate the following code
@@ -199,29 +186,24 @@ internal static class Utils
     /// </summary>
     /// <returns>ClassDeclaration</returns>
     internal static ClassDeclarationSyntax GetClassDeclaration(ISymbol specificClass, IEnumerable<MemberDeclarationSyntax> members)
-    {
-        return ClassDeclaration(specificClass.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat))
+        => ClassDeclaration(specificClass.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat))
             .AddModifiers(Token(SyntaxKind.PartialKeyword))
             .AddMembers(members.ToArray());
-    }
 
     /// <summary>
     /// Generate the following code
     /// <code>
-    /// namespace <paramref name="specificClass" />.ContainingNamespace
-    /// {
-    ///     <paramref name="generatedClass" /><br/>
-    /// }
+    /// #nullable enable
+    /// namespace <paramref name="specificClass" />.ContainingNamespace;<br/>
+    /// <paramref name="generatedClass" />
     /// </code>
     /// </summary>
-    /// <returns>NamespaceDeclaration</returns>
-    internal static NamespaceDeclarationSyntax GetNamespaceDeclaration(ISymbol specificClass, MemberDeclarationSyntax generatedClass)
-    {
-        return NamespaceDeclaration(ParseName(specificClass.ContainingNamespace.ToDisplayString()))
+    /// <returns>FileScopedNamespaceDeclaration</returns>
+    internal static FileScopedNamespaceDeclarationSyntax GetFileScopedNamespaceDeclaration(ISymbol specificClass, MemberDeclarationSyntax generatedClass)
+        => FileScopedNamespaceDeclaration(ParseName(specificClass.ContainingNamespace.ToDisplayString()))
             .AddMembers(generatedClass)
             .WithNamespaceKeyword(Token(SyntaxKind.NamespaceKeyword)
                 .WithLeadingTrivia(Trivia(NullableDirectiveTrivia(Token(SyntaxKind.EnableKeyword), true))));
-    }
 
     /// <summary>
     /// Generate the following code
@@ -233,12 +215,10 @@ internal static class Utils
     /// </summary>
     /// <returns>CompilationUnit</returns>
     internal static CompilationUnitSyntax GetCompilationUnit(MemberDeclarationSyntax generatedNamespace, IEnumerable<string> namespaces)
-    {
-        return CompilationUnit()
+        => CompilationUnit()
             .AddMembers(generatedNamespace)
             .AddUsings(namespaces.Select(ns => UsingDirective(ParseName(ns))).ToArray())
             .NormalizeWhitespace();
-    }
 
     /// <summary>
     /// Generate the following code
@@ -269,33 +249,41 @@ internal static class Utils
     }
 
     /// <summary>
-    /// 获取某type的namespace并加入namespaces集合
+    /// 获取某<paramref name="symbol"/>的namespace并加入<paramref name="namespaces"/>集合
     /// </summary>
     /// <param name="namespaces">namespaces集合</param>
     /// <param name="usedTypes">已判断过的types</param>
-    /// <param name="baseClass">type的基类</param>
+    /// <param name="contextType">上下文所在的类</param>
     /// <param name="symbol">type的symbol</param>
-    internal static void UseNamespace(this HashSet<string> namespaces, HashSet<ITypeSymbol> usedTypes, INamedTypeSymbol baseClass, ITypeSymbol symbol)
+    internal static void UseNamespace(this HashSet<string> namespaces, HashSet<ITypeSymbol> usedTypes, INamedTypeSymbol contextType, ITypeSymbol symbol)
     {
         if (usedTypes.Contains(symbol))
-        {
             return;
-        }
 
-        usedTypes.Add(symbol);
+        _ = usedTypes.Add(symbol);
 
         var ns = symbol.ContainingNamespace;
-        if (!SymbolEqualityComparer.Default.Equals(ns, baseClass.ContainingNamespace))
-        {
-            namespaces.Add(ns.ToDisplayString());
-        }
+        if (!SymbolEqualityComparer.Default.Equals(ns, contextType.ContainingNamespace))
+            _ = namespaces.Add(ns.ToDisplayString());
 
         if (symbol is INamedTypeSymbol { IsGenericType: true } genericSymbol)
-        {
             foreach (var a in genericSymbol.TypeArguments)
-            {
-                UseNamespace(namespaces, usedTypes, baseClass, a);
-            }
-        }
+                UseNamespace(namespaces, usedTypes, contextType, a);
+    }
+
+    /// <summary>
+    /// 生成nullable预处理语句和引用命名空间
+    /// <br/>#nullable enable
+    /// <br/><see langword="using"/> ...;
+    /// <br/><see langword="using"/> ...;
+    /// <br/>...
+    /// </summary>
+    /// <param name="namespaces">namespaces集合</param>
+    internal static StringBuilder GenerateFileHeader(this HashSet<string> namespaces)
+    {
+        var stringBuilder = new StringBuilder().AppendLine("#nullable enable\n");
+        foreach (var s in namespaces)
+            _ = stringBuilder.AppendLine($"using {s};");
+        return stringBuilder;
     }
 }

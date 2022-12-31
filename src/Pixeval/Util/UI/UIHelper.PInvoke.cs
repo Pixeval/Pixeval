@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -79,7 +79,7 @@ public static partial class UIHelper
     public static unsafe DataTransferManager GetDataTransferManager()
     {
         var interop = DataTransferManager.As<IDataTransferManagerInterop>();
-        var manager = IntPtr.Zero;
+        var manager = nint.Zero;
         fixed (Guid* id = &RiId)
         {
             interop.GetForWindow(App.AppViewModel.GetMainWindowHandle(), id, (void**)&manager);
@@ -102,7 +102,7 @@ public static partial class UIHelper
         return (User32.GetSystemMetrics(User32.SystemMetric.SM_CXSCREEN), User32.GetSystemMetrics(User32.SystemMetric.SM_CYSCREEN));
     }
 
-    public static IntPtr GetWindowHandle(this Window window)
+    public static nint GetWindowHandle(this Window window)
     {
         return window.As<IWindowNative>().WindowHandle;
     }

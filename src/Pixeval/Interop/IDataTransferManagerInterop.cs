@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -28,7 +28,7 @@ namespace Pixeval.Interop;
 [Guid("3A3DCD6C-3EAB-43DC-BCDE-45671CE800C8")]
 public interface IDataTransferManagerInterop
 {
-    unsafe void GetForWindow(IntPtr appWindow, Guid* riId, [Optional] void** dataTransferManager);
+    unsafe void GetForWindow(nint appWindow, Guid* riId, [Optional] void** dataTransferManager);
 
-    void ShowShareUIForWindow(IntPtr appWindow);
+    void ShowShareUIForWindow(nint appWindow);
 }

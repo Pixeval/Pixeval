@@ -32,9 +32,9 @@ namespace Pixeval.Controls.Setting.UI.ExpanderSettingEntry;
 /// </summary>
 [ContentProperty(Name = "Content")]
 [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
-[DependencyProperty("HeaderHeight", typeof(double))]
-[DependencyProperty("Content", typeof(object))] // The content of the Expander
-[DependencyProperty("ContentMargin", typeof(Thickness))]
+[DependencyProperty<double>("HeaderHeight")]
+[DependencyProperty<object>("Content")] // The content of the Expander
+[DependencyProperty<Thickness>("ContentMargin")]
 public partial class ExpanderSettingEntry : SettingEntryBase
 {
     public ExpanderSettingEntry()

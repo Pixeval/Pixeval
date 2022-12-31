@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Microsoft.UI.Xaml;
 using System;
 
 namespace Pixeval.Attributes;
@@ -25,23 +26,21 @@ namespace Pixeval.Attributes;
 /// <summary>
 ///     生成如下代码
 ///     <code>
-/// public static readonly DependencyProperty Property = DependencyProperty.Register("Field", typeof(Type), typeof(TClass), new PropertyMetadata(DefaultValue, OnPropertyChanged));
-/// public Type Field { get => (Type)GetValue(Property); set => SetValue(Property, value); }
-/// </code>
+/// <see langword="public static readonly"/> <see cref="DependencyProperty"/> Property = <see cref="DependencyProperty"/>.Register("Field", <see langword="typeof"/>(Type), <see langword="typeof"/>(TClass), <see langword="new"/> <see cref="PropertyMetadata"/>(DefaultValue, OnPropertyChanged));
+/// <br/>
+/// <see langword="public"/> <see cref="T:Pixeval.Attributes.DependencyPropertyAttribute`1"/> Field { <see langword="get"/> => (<see cref="T:Pixeval.Attributes.DependencyPropertyAttribute`1"/>)GetValue(Property); <see langword="set"/> => SetValue(Property, <see langword="value"/>); }
+///     </code>
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-public sealed class DependencyPropertyAttribute : Attribute
+public sealed class DependencyPropertyAttribute<T> : Attribute
 {
-    public DependencyPropertyAttribute(string name, Type type, string propertyChanged = "")
+    public DependencyPropertyAttribute(string name, string propertyChanged = "")
     {
         Name = name;
-        Type = type;
         PropertyChanged = propertyChanged;
     }
 
     public string Name { get; }
-
-    public Type Type { get; }
 
     public string PropertyChanged { get; }
 

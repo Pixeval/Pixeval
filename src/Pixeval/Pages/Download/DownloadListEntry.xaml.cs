@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -36,17 +36,17 @@ using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.Download;
 
-[DependencyProperty("ViewModel", typeof(ObservableDownloadTask), nameof(OnViewModelChanged))]
-[DependencyProperty("Thumbnail", typeof(ImageSource))]
-[DependencyProperty("Title", typeof(string))]
-[DependencyProperty("Description", typeof(string))]
-[DependencyProperty("Progress", typeof(double))]
-[DependencyProperty("ProgressMessage", typeof(string))]
-[DependencyProperty("ActionButtonContent", typeof(string))]
-[DependencyProperty("IsRedownloadItemEnabled", typeof(bool))]
-[DependencyProperty("IsCancelItemEnabled", typeof(bool))]
-[DependencyProperty("ActionButtonBackground", typeof(Brush))]
-[DependencyProperty("IsShowErrorDetailDialogItemEnabled", typeof(bool))]
+[DependencyProperty<ObservableDownloadTask>("ViewModel", nameof(OnViewModelChanged))]
+[DependencyProperty<ImageSource>("Thumbnail")]
+[DependencyProperty<string>("Title")]
+[DependencyProperty<string>("Description")]
+[DependencyProperty<double>("Progress")]
+[DependencyProperty<string>("ProgressMessage")]
+[DependencyProperty<string>("ActionButtonContent")]
+[DependencyProperty<bool>("IsRedownloadItemEnabled")]
+[DependencyProperty<bool>("IsCancelItemEnabled")]
+[DependencyProperty<Brush>("ActionButtonBackground")]
+[DependencyProperty<bool>("IsShowErrorDetailDialogItemEnabled")]
 public sealed partial class DownloadListEntry
 {
     private EventHandler<bool>? _selected;

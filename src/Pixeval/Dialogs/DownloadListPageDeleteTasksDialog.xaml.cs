@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -23,7 +23,7 @@ using Pixeval.Attributes;
 
 namespace Pixeval.Dialogs;
 
-[DependencyProperty("DeleteLocalFiles", typeof(bool), DefaultValue = "false")]
+[DependencyProperty<bool>("DeleteLocalFiles", DefaultValue = "false")]
 public sealed partial class DownloadListPageDeleteTasksDialog
 {
     public DownloadListPageDeleteTasksDialog()

@@ -31,10 +31,10 @@ using Pixeval.Controls.Card;
 namespace Pixeval.Controls.PersonView;
 
 [TemplatePart(Name = PartContentContainer, Type = typeof(CardControl))]
-[DependencyProperty("PersonNickname", typeof(string))]
-[DependencyProperty("PersonName", typeof(string))]
-[DependencyProperty("PersonProfileNavigateUri", typeof(Uri))]
-[DependencyProperty("PersonPicture", typeof(ImageSource))]
+[DependencyProperty<string>("PersonNickname")]
+[DependencyProperty<string>("PersonName")]
+[DependencyProperty<Uri>("PersonProfileNavigateUri")]
+[DependencyProperty<ImageSource>("PersonPicture")]
 public partial class PersonView : Control
 {
     private const string PartContentContainer = "ContentContainer";
