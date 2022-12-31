@@ -18,53 +18,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Navigation;
 using Pixeval.ViewModels;
+
 
 namespace Pixeval.Pages;
 
 internal sealed partial class MainPage : INavigationRoot
 {
-    public MainPageViewModel ViewModel { get; set; }
+    public MainPageViewModel? ViewModel { get; set; }
 
     public Frame NavigationFrame => MainFrame;
 
-    public void OnPageActivated(NavigationEventArgs e)
-    {
-        //// dirty trick, the order of the menu items is the same as the order of the fields in MainPageTabItem
-        //// since enums are basically integers, we just need a cast to transform it to the correct offset.
-        //((NavigationViewItem)MainPageNavigationView.MenuItems[(int)_configurationManager.DefaultSelectedTabItem])
-        //    .IsSelected = true;
-
-        //// The application is invoked by a protocol, call the corresponding protocol handler.
-        //if (_appViewModel.ConsumeProtocolActivation())
-        //{
-        //    ActivationRegistrar.Dispatch(AppInstance.GetCurrent().GetActivatedEventArgs());
-        //}
-
-        //WeakReferenceMessenger.Default.TryRegister<MainPage, MainPageFrameSetConnectedAnimationTargetMessage>(this,
-        //    (_, message) => _connectedAnimationTarget = message.Sender);
-        //WeakReferenceMessenger.Default.TryRegister<MainPage, NavigatingBackToMainPageMessage>(this,
-        //    (_, message) => _illustrationViewerContent = message.IllustrationViewModel);
-        //WeakReferenceMessenger.Default.TryRegister<MainPage, IllustrationTagClickedMessage>(this,
-        //    async (_, message) => await PerformSearchAsync(message.Tag));
-
-        //// Connected animation to the element located in MainPage
-        //if (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation") is { } animation)
-        //{
-        //    animation.Options = new DirectConnectedAnimationConfiguration();
-        //    animation.TryStart(_connectedAnimationTarget ?? this);
-        //    _connectedAnimationTarget = null;
-        //}
-
-        //// Scroll the content to the item that were being browsed just now
-        //if (_illustrationViewerContent is not null && MainPageFrame.FindDescendant<AdaptiveGridView>() is { } gridView)
-        //{
-        //    gridView.ScrollIntoView(_illustrationViewerContent);
-        //    _illustrationViewerContent = null;
-        //}
-    }
 }

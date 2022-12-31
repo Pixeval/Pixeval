@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Pixeval.CoreApi.Models;
 
 namespace Pixeval.CoreApi.Tests
@@ -12,28 +14,16 @@ namespace Pixeval.CoreApi.Tests
     internal class SessionRefresher : ISessionRefresher
     {
         private readonly IPixivAuthService _authService;
-        public SessionRefresher(IPixivAuthService authService)
+        private readonly IOptions<ApiOptions> _options;
+        public SessionRefresher(IPixivAuthService authService, IOptions<ApiOptions> options)
         {
             _authService = authService;
-        }
-
-        public Task<TokenResponse> ExchangeTokenAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<TokenResponse> GetRefreshTokenAsync(string refreshToken)
-        {
-            return _authService.RefreshAsync(refreshToken);
+            _options = options;
         }
 
         public async Task<string> GetAccessTokenAsync(string? refreshToken = null)
         {
-            if (refreshToken is null)
-            {
-                throw new ArgumentNullException(nameof(refreshToken));
-            }
-            var response = await _authService.RefreshAsync(refreshToken);
+            var response = await _authService.RefreshAsync(_options.Value.RefreshToken);
             return response.AccessToken;
         }
     }

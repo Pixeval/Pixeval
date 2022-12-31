@@ -20,23 +20,11 @@
 
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
-using Pixeval.CoreApi;
 using Pixeval.Messages;
-using Pixeval.Pages;
-using Pixeval.Services.Navigation;
-using Pixeval.Storage;
-using Pixeval.ViewModels;
 using System;
 using System.Diagnostics;
-using System.Globalization;
-using System.IO;
 using System.Threading.Tasks;
-using Pixeval.Data;
-using Pixeval.Navigation;
 using WinUIEx;
-using LiteDB.Async;
-using Windows.Storage;
-using Microsoft.VisualStudio.Threading;
 
 namespace Pixeval;
 

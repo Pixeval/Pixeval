@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.VisualStudio.Threading;
 
 namespace Pixeval.Navigation
 {
@@ -25,29 +26,23 @@ namespace Pixeval.Navigation
 
         public Frame? Frame { get; set; }
 
-        public INavigablePage Current => _currentNode.Value;
-        public bool CanGoForward { get; }
-        public bool CanGoBack { get; }
-        public void GoForward()
+        public INavigablePage? Current => _currentNode?.Value;
+        public bool CanGoForward => _currentNode?.Next is not null;
+        public bool CanGoBack => _currentNode?.Previous is not null;
+        public async Task GoForwardAsync()
         {
-            throw new NotImplementedException();
+            if (CanGoForward)
+            {
+                await NavigateToAsync(_currentNode!.Next!.Value);
+            }
         }
 
-        public void GoBack()
+        public async Task GoBackAsync()
         {
-            throw new NotImplementedException();
-        }
-
-        public void NavigateTo(string route, object? parameter = null, NavigationTransitionInfo? infoOverride = null)
-        {
-            NavigateTo(_navigationRoutes[route], parameter, infoOverride);
-        }
-
-        public void NavigateTo(INavigablePage page, object? parameter = null, NavigationTransitionInfo? infoOverride = null)
-        {
-            var previousPage = _currentNode?.Value;
-            _navigationRoot.NavigationFrame.Content = page;
-            page.OnNavigatedFrom(_navigationRoot, previousPage, parameter);
+            if (CanGoBack)
+            {
+                await NavigateToAsync(_currentNode!.Previous!.Value);
+            }
         }
 
         public Task NavigateToAsync(string route, object? parameter = null, NavigationTransitionInfo? infoOverride = null)
@@ -55,12 +50,20 @@ namespace Pixeval.Navigation
             return NavigateToAsync(_navigationRoutes[route], parameter, infoOverride);
         }
 
-        public Task NavigateToAsync(INavigablePage page, object? parameter = null, NavigationTransitionInfo? infoOverride = null)
+        public async Task NavigateToAsync(INavigablePage page, object? parameter = null, NavigationTransitionInfo? infoOverride = null)
         {
             var previousPage = _currentNode?.Value;
+            previousPage?.OnNavigatingToAsync(_navigationRoot, page, parameter);
+            await Navigating?.InvokeAsync(this, new NavigationEventArgs(previousPage, page));
+            page.OnNavigatingFromAsync(_navigationRoot, previousPage, parameter);
             _navigationRoot.NavigationFrame.Content = page;
-            page.OnNavigatedFrom(_navigationRoot, previousPage, parameter);
-            return Task.CompletedTask;
+            _currentNode = _currentNode is null ? _navigationHistory.AddLast(page) : _navigationHistory.AddAfter(_currentNode, page);
+            page.OnNavigatedFromAsync(_navigationRoot, previousPage, parameter);
+            await Navigated?.InvokeAsync(this, new NavigationEventArgs(previousPage, page));
+            previousPage?.OnNavigatedToAsync(_navigationRoot, page, parameter);
         }
+
+        public event AsyncEventHandler<NavigationEventArgs>? Navigated;
+        public event AsyncEventHandler<NavigationEventArgs>? Navigating;
     }
 }

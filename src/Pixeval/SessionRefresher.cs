@@ -64,7 +64,14 @@ namespace Pixeval
         {
             var loginWindow = new LoginWindow();
             loginWindow.Show();
-            var response = await loginWindow.LoginTask;
+            var response = await loginWindow.LoginTask.ContinueWith(task =>
+            {
+                if (task.IsCompletedSuccessfully)
+                {
+                    loginWindow.Close();
+                }
+                return task.Result;
+            });
             return response;
         }
     }

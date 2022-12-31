@@ -1656,6 +1656,7 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[7.0.0, )",
+          "Microsoft.VisualStudio.Threading": "[17.4.27, )",
           "Microsoft.WindowsAppSDK": "[1.2.221209.1, )"
         }
       }

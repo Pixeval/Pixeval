@@ -30,11 +30,11 @@ namespace Pixeval.CoreApi.Tests
 
             services.Configure<PixivHttpOptions>(configuration.GetSection("PixivHttpOptions"));
             services.AddSingleton<ISessionRefresher, SessionRefresher>();
-            services.AddSingleton(new SessionStorage(configuration["RefreshToken"]!));
             services.AddPixivApiService(httpClient =>
             {
 
             });
+            services.Configure<ApiOptions>(configuration);
         }
 
         protected override IEnumerable<TestAppSettings> GetTestAppSettings()

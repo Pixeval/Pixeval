@@ -1,20 +1,17 @@
 ﻿using LiteDB.Async;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.VisualStudio.Threading;
 using Pixeval.CoreApi;
-using Pixeval.Models;
+using Pixeval.Data;
+using Pixeval.Navigation;
 using Pixeval.Pages;
-using Pixeval.Services.Navigation;
 using Pixeval.Storage;
 using Pixeval.ViewModels;
 using System;
 using System.Globalization;
 using System.IO;
 using Windows.Storage;
-using Pixeval.Navigation;
-using Pixeval.Startup.WinUI.Hosting;
-using Microsoft.VisualStudio.Threading;
-using Pixeval.Data;
 
 namespace Pixeval
 {
@@ -27,7 +24,7 @@ namespace Pixeval
             builder.ConfigureServices(services =>
             {
 
-                services.ConfigureRoutes<MainPage, MainPageNavigationService>(routesBuilder =>
+                services.ConfigureRoutes<MainPage>(routesBuilder =>
                 {
                     //routesBuilder.AddPageWithRoute<RankingsPage>("/Rankings");
                     //routesBuilder.AddPageWithRoute<BookmarksPage>("/Bookmarks");

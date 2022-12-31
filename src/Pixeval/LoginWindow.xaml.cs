@@ -71,7 +71,7 @@ internal partial class LoginWindow
         var code = HttpUtility.ParseQueryString(new Uri(url).Query)["code"]!;
 
         var tokenResponse = await AuthCodeToTokenAsync(code, verifier, cookies);
-        _loginTaskCompletionSource.SetResult(tokenResponse);
+        _loginTaskCompletionSource.SetResult(tokenResponse!);
 
     }
 

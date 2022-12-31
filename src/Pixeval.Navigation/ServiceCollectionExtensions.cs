@@ -4,6 +4,9 @@ namespace Pixeval.Navigation
 {
     public static class ServiceCollectionExtensions
     {
+        public static IServiceCollection ConfigureRoutes<TNavigationRoot>(this IServiceCollection services,
+            Action<RoutesBuilder<TNavigationRoot>> builderAction) where TNavigationRoot : class, INavigationRoot =>
+            ConfigureRoutes<TNavigationRoot, NavigationService<TNavigationRoot>>(services, builderAction);
         public static IServiceCollection ConfigureRoutes<TNavigationRoot, TNavigationService>(this IServiceCollection services, Action<RoutesBuilder<TNavigationRoot>> builderAction) where TNavigationRoot : class, INavigationRoot where TNavigationService : class, INavigationService<TNavigationRoot>
         {
             var builder = new RoutesBuilder<TNavigationRoot>(services);
@@ -17,7 +20,7 @@ namespace Pixeval.Navigation
             {
                 services.AddSingleton(viewModel);
             }
-            services.AddSingleton<RoutesBuilder<TNavigationRoot>>();
+            services.AddSingleton(builder);
             services.AddSingleton<INavigationService<TNavigationRoot>, TNavigationService>();
             return services;
         }

@@ -30,7 +30,7 @@
             <Grid.Resources>
                 <ThemeShadow x:Name="SnackBarShadow" />
             </Grid.Resources>
-            <Frame x:Name="MainWindowFrame"
+            <Frame x:Name="MainFrame"
                x:FieldModifier="public"
                HorizontalAlignment="Stretch"
                VerticalAlignment="Stretch">

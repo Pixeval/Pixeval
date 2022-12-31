@@ -112,15 +112,13 @@ public class LocalizationResourcesGenerator : IIncrementalGenerator
             var source = $$"""
                 namespace {{(asc.TargetSymbol.ContainingNamespace is { } @namespace ? @namespace.ToDisplayString() : "Pixeval")}};
     
-                {{asc.TargetSymbol.DeclaredAccessibility.ToString().ToLower()}} partial class {{asc.TargetSymbol.Name}} 
+                partial class {{asc.TargetSymbol.Name}}
                 {   
-                    public StringResources SR { get; } = new ();
-
-                    public sealed class StringResources
+                    public static class SR
                     {
                         private static readonly global::Microsoft.Windows.ApplicationModel.Resources.ResourceLoader s_resourceLoader = new(global::Microsoft.Windows.ApplicationModel.Resources.ResourceLoader.GetDefaultResourceFilePath(),"{{Path.GetFileNameWithoutExtension(additionalText.Path)}}");
 
-                        {{string.Join("\r\n        ", names.Select(_ => @$"public readonly string {Regex.Replace(_, "\\.|\\:|\\[|\\]", string.Empty)} = s_resourceLoader.GetString(""{_.Replace('.', '/')}"");"))}} 
+                        {{string.Join("\r\n        ", names.Select(_ => @$"public static readonly string {Regex.Replace(_, "\\.|\\:|\\[|\\]", string.Empty)} = s_resourceLoader.GetString(""{_.Replace('.', '/')}"");"))}} 
                     }
                 }
             

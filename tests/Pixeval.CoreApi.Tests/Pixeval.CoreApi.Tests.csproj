@@ -7,6 +7,7 @@
 		<Nullable>enable</Nullable>
 		<EnablePreviewFeatures>true</EnablePreviewFeatures>
 		<IsPackable>false</IsPackable>
+		<UserSecretsId>a6eb9ff4-3ff8-4d3c-822e-50cf9427d344</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -21,7 +22,6 @@
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0-preview-20221221-03" />
-		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1549-prerelease" />
 		<PackageReference Include="xunit" Version="2.4.2" />
 		<PackageReference Include="xunit.abstractions" Version="2.0.3" />
 		<PackageReference Include="Xunit.Microsoft.DependencyInjection" Version="7.0.3" />

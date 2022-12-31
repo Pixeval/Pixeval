@@ -24,6 +24,8 @@ using Microsoft.UI.Xaml;
 using Pixeval.CoreApi;
 using System;
 using System.Threading.Tasks;
+using Pixeval.Pages;
+using Pixeval.ViewModels;
 
 namespace Pixeval;
 
@@ -31,9 +33,11 @@ namespace Pixeval;
 internal sealed partial class MainWindow
 {
     private readonly ISessionRefresher _sessionRefresher;
-    public MainWindow(ISessionRefresher sessionRefresher)
+    private readonly MainPageViewModel _mainPageViewModel;
+    public MainWindow(ISessionRefresher sessionRefresher,MainPageViewModel mainPageViewModel)
     {
         _sessionRefresher = sessionRefresher;
+        _mainPageViewModel = mainPageViewModel;
         InitializeComponent();
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
@@ -49,5 +53,6 @@ internal sealed partial class MainWindow
     private async Task LoginAsync()
     {
         await _sessionRefresher.GetAccessTokenAsync();
+        MainFrame.Content = _mainPageViewModel.MainPage;
     }
 }

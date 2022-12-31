@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 
-namespace Pixeval.Startup.WinUI.Hosting
+namespace Pixeval
 {
     public static class ServiceCollectionExtensions
     {
