@@ -77,9 +77,9 @@ public partial class App
             Debugger.Break();
         }
 #elif RELEASE
-            Task UncaughtExceptionHandler(Exception e)
+            void UncaughtExceptionHandler(Exception e)
             {
-                return ShowExceptionDialogAsync(e);
+                //return ShowExceptionDialogAsync(e);
             }
 #endif
     }

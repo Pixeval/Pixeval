@@ -16,8 +16,6 @@
 		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 		<EnableDefaultPriItems>false</EnableDefaultPriItems>
 		<NeutralLanguage>zh-CN</NeutralLanguage>
-		<AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Release'">true</AppxPackageSigningEnabled>
-		<AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Debug'">false</AppxPackageSigningEnabled>
 		<LangVersion>preview</LangVersion>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
