@@ -7,7 +7,6 @@
                        xmlns:notifyOnLoadedCalendarDatePicker="using:Pixeval.Controls.NotifyOnLoadedCalendarDatePicker"
                        xmlns:notifyOnLoadedComboBox="using:Pixeval.Controls.NotifyOnLoadedComboBox"
                        xmlns:options="using:Pixeval.Options"
-                       xmlns:system="using:System"
                        xmlns:userControls="using:Pixeval.UserControls"
                        ClearCacheAfterNavigation="True"
                        Loaded="RankingsPage_OnLoaded"
@@ -27,8 +26,7 @@
             <notifyOnLoadedCalendarDatePicker:NotifyOnLoadedCalendarDatePicker x:Name="RankDateTimeCalendarDatePicker"
                                                                                Margin="10,0,0,0"
                                                                                DateChangedWhenLoaded="RankDateTimeCalendarDatePicker_OnDateChangedWhenLoaded"
-                                                                                />
-            <!--TODO MaxDate="{x:Bind system:DateTime.Now.AddDays(-2)}"-->
+                                                                               MaxDate="{x:Bind MaxDate}" />
             <userControls:SortOptionComboBox x:Name="SortOptionComboBox"
                                              Margin="10,0,0,0"
                                              SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />

@@ -44,6 +44,8 @@ public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelpe
 
     public SortOptionComboBox SortOptionProvider => SortOptionComboBox;
 
+    public DateTime MaxDate => DateTime.Now.AddDays(-2);
+
     public override void OnPageDeactivated(NavigatingCancelEventArgs navigatingCancelEventArgs)
     {
         IllustrationContainer.ViewModel.Dispose();

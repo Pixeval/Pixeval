@@ -20,31 +20,20 @@
 
 using System;
 using System.Linq;
-using Microsoft.UI.Composition;
-using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
 using Pixeval.AppManagement;
-using Pixeval.Interop;
-using WinRT;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
-using UIHelper = Pixeval.Util.UI.UIHelper;
 
 namespace Pixeval;
 
 public partial class App
 {
     private const string ApplicationWideFontKey = "ContentControlThemeFontFamily";
-
-    private static MicaController? _backdropController;
-
-    private static WindowsSystemDispatcherQueueHelper? _dispatcherQueueHelper;
-
-    private static SystemBackdropConfiguration? _systemBackdropConfiguration;
 
     public App()
     {
