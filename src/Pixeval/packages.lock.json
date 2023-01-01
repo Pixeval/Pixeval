@@ -210,6 +210,19 @@
           "Microsoft.Bcl.AsyncInterfaces": "6.0.0"
         }
       },
+      "WinUI3Utilities": {
+        "type": "Direct",
+        "requested": "[1.0.4, )",
+        "resolved": "1.0.4",
+        "contentHash": "tdUSVGY8YpPKjACHAbs5wfOOrpGyHwWqldMpaczyyJfCdpINt3GqJf+8730vT/CiDaTfLzGcRAkBTKCCCFqZYw==",
+        "dependencies": {
+          "CommunityToolkit.Mvvm": "8.0.0",
+          "CommunityToolkit.WinUI.UI.Controls": "7.1.2",
+          "Microsoft.Windows.SDK.BuildTools": "10.0.22621.755",
+          "Microsoft.WindowsAppSDK": "1.2.221209.1",
+          "PInvoke.User32": "0.7.124"
+        }
+      },
       "Autofac": {
         "type": "Transitive",
         "resolved": "6.5.0",

@@ -16,7 +16,6 @@
             Height="48"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
-            x:FieldModifier="public"
             Loaded="AppTitleBar_OnLoaded"
             SizeChanged="AppTitleBar_OnSizeChanged"
             Visibility="{x:Bind _viewModel.ShowTitleBar, Mode=OneWay}">
@@ -167,9 +166,6 @@
                 Tapped="OpenSearchSettingPopupButton_OnTapped" />
         </Grid>
         <Grid Margin="0,48,0,0">
-            <Grid.Resources>
-                <ThemeShadow x:Name="SnackBarShadow" />
-            </Grid.Resources>
             <Frame
                 x:Name="PixevalAppRootFrame"
                 x:FieldModifier="public"

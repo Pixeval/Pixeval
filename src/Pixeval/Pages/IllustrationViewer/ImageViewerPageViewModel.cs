@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -31,7 +31,7 @@ using Pixeval.Attributes;
 using Pixeval.CoreApi.Net;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
-
+using Pixeval;
 using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.IO;
