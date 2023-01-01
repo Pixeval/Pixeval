@@ -18,13 +18,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.Attributes;
+using WinUI3Utilities.Attributes;
 using Pixeval.Controls.Card;
 
 

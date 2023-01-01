@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -29,10 +29,9 @@ using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.Attributes;
+using WinUI3Utilities.Attributes;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
-
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.UserControls;
 using Pixeval.Util.IO;

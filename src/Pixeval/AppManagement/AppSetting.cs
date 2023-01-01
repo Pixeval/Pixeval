@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -27,6 +27,7 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Misc;
 using Pixeval.Options;
+using WinUI3Utilities.Attributes;
 
 namespace Pixeval.AppManagement;
 

@@ -31,13 +31,14 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using WinUI3Utilities.Attributes;
 
 namespace Pixeval.AppManagement;
 
 /// <summary>
 ///     Provide miscellaneous information about the app
 /// </summary>
-[LoadSaveConfiguration<AppSetting>(nameof(ConfigurationContainer), CastMethod = "Pixeval.Utilities.Objects.CastOrThrow")]
+[AppContext<AppSetting>(ConfigKey = "Config")]
 public static partial class AppContext
 {
     public const string AppIdentifier = "Pixeval";
@@ -45,8 +46,6 @@ public static partial class AppContext
     public const string AppProtocol = "pixeval";
 
     private const string SessionContainerKey = "Session";
-
-    private const string ConfigurationContainerKey = "Config";
 
     public const string AppLogoNoCaptionUri = "ms-appx:///Assets/Images/logo-no-caption.png";
 
@@ -75,13 +74,9 @@ public static partial class AppContext
 
         // Keys in the RoamingSettings will be synced through the devices of the same user
         // For more detailed information see https://docs.microsoft.com/en-us/windows/apps/design/app-settings/store-and-retrieve-app-data
-        if (!ApplicationData.Current.RoamingSettings.Containers.ContainsKey(ConfigurationContainerKey))
-        {
-            ApplicationData.Current.RoamingSettings.CreateContainer(ConfigurationContainerKey, ApplicationDataCreateDisposition.Always);
-        }
+        InitializeConfigurationContainer();
 
         SessionContainer = ApplicationData.Current.LocalSettings.Containers[SessionContainerKey];
-        ConfigurationContainer = ApplicationData.Current.RoamingSettings.Containers[ConfigurationContainerKey];
     }
 
     public static async Task<SoftwareBitmapSource> GetNotAvailableImageAsync()

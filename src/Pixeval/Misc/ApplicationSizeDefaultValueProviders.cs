@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -24,7 +24,7 @@ public class AppWidthDefaultValueProvider : IDefaultValueProvider
 {
     public object ProvideValue()
     {
-        return App.PredetermineEstimatedWindowSize().Item1;
+        return WinUI3Utilities.AppHelper.PredetermineEstimatedWindowSize().Width;
     }
 }
 
@@ -32,6 +32,6 @@ public class AppHeightDefaultValueProvider : IDefaultValueProvider
 {
     public object ProvideValue()
     {
-        return App.PredetermineEstimatedWindowSize().Item2;
+        return WinUI3Utilities.AppHelper.PredetermineEstimatedWindowSize().Height;
     }
 }

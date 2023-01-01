@@ -1,4 +1,4 @@
-﻿<controls:EnhancedPage x:Class="Pixeval.Pages.Capability.RankingsPage"
+<controls:EnhancedPage x:Class="Pixeval.Pages.Capability.RankingsPage"
                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                        xmlns:controls="using:Pixeval.Controls"
@@ -27,7 +27,8 @@
             <notifyOnLoadedCalendarDatePicker:NotifyOnLoadedCalendarDatePicker x:Name="RankDateTimeCalendarDatePicker"
                                                                                Margin="10,0,0,0"
                                                                                DateChangedWhenLoaded="RankDateTimeCalendarDatePicker_OnDateChangedWhenLoaded"
-                                                                               MaxDate="{x:Bind system:DateTime.Now.AddDays(-2)}" />
+                                                                                />
+            <!--TODO MaxDate="{x:Bind system:DateTime.Now.AddDays(-2)}"-->
             <userControls:SortOptionComboBox x:Name="SortOptionComboBox"
                                              Margin="10,0,0,0"
                                              SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />

@@ -24,7 +24,7 @@ using System.Collections.Specialized;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Attributes;
+using WinUI3Utilities.Attributes;
 
 
 namespace Pixeval.UserControls;

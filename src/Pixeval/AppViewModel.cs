@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.Diagnostics.Tracing;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -29,12 +28,10 @@ using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using PInvoke;
 using Pixeval.AppManagement;
@@ -47,6 +44,7 @@ using Pixeval.UserControls;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
+using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
 
@@ -145,47 +143,6 @@ public class AppViewModel : AutoActivateObservableRecipient,
         AppWindowRootFrame.Navigate(type);
     }
 
-    private void RegisterUnhandledExceptionHandler()
-    {
-        App.UnhandledException += async (_, args) =>
-        {
-            args.Handled = true;
-            await Window.DispatcherQueue.EnqueueAsync(async () => await UncaughtExceptionHandler(args.Exception));
-        };
-
-        TaskScheduler.UnobservedTaskException += async (_, args) =>
-        {
-            args.SetObserved();
-            await Window.DispatcherQueue.EnqueueAsync(async () => await UncaughtExceptionHandler(args.Exception));
-        };
-
-        AppDomain.CurrentDomain.UnhandledException += async (_, args) =>
-        {
-            if (args.ExceptionObject is Exception e)
-            {
-                await Window.DispatcherQueue.EnqueueAsync(async () => await UncaughtExceptionHandler(e));
-            }
-            else
-            {
-                ExitWithPushedNotification();
-            }
-        };
-
-#if DEBUG
-        // ReSharper disable once UnusedParameter.Local
-        static Task UncaughtExceptionHandler(Exception e)
-        {
-            Debugger.Break();
-            return Task.CompletedTask;
-        }
-#elif RELEASE
-            Task UncaughtExceptionHandler(Exception e)
-            {
-                return ShowExceptionDialogAsync(e);
-            }
-#endif
-    }
-
     public async Task ShowExceptionDialogAsync(Exception e)
     {
         await MessageDialogBuilder.CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
@@ -206,43 +163,19 @@ public class AppViewModel : AutoActivateObservableRecipient,
         return Window.DispatcherQueue.EnqueueAsync(action);
     }
 
-    /// <summary>
-    ///     Exit the notification after pushing an <see cref="ApplicationExitingMessage" />
-    ///     to the <see cref="EventChannel" />
-    /// </summary>
-    /// <returns></returns>
-    public void ExitWithPushedNotification()
-    {
-        WeakReferenceMessenger.Default.Send(new ApplicationExitingMessage());
-        Application.Current.Exit();
-    }
-
     public async Task InitializeAsync(bool activatedByProtocol)
     {
         _activatedByProtocol = activatedByProtocol;
 
         AppHost = CreateHostBuilder().Build();
 
-        RegisterUnhandledExceptionHandler();
         await AppContext.WriteLogoIcoIfNotExist();
+        CurrentContext.IconPath = await AppContext.GetIconAbsolutePath();
+        CurrentContext.Window = new MainWindow();
+        CurrentContext.Title = AppContext.AppIdentifier;
+        AppWindow = CurrentContext.AppWindow;
 
-        Window = new MainWindow();
-        AppWindow = AppWindow.GetFromWindowId(Win32Interop.GetWindowIdFromWindow(GetMainWindowHandle()));
-        AppWindow.Title = AppContext.AppIdentifier;
-        AppWindow.Resize(new SizeInt32(AppSetting.WindowWidth, AppSetting.WindowHeight));
-        AppWindow.Show();
-        AppWindow.SetIcon(await AppContext.GetIconAbsolutePath());
-
-        if (AppWindowTitleBar.IsCustomizationSupported())
-        {
-            var titleBar = App.AppViewModel.AppWindow.TitleBar;
-            titleBar.ExtendsContentIntoTitleBar = true;
-            titleBar.ButtonBackgroundColor = Colors.Transparent;
-            titleBar.ButtonHoverBackgroundColor = ((SolidColorBrush)App.Resources["SystemControlBackgroundBaseLowBrush"]).Color;
-            titleBar.ButtonForegroundColor = ((SolidColorBrush)App.Resources["SystemControlForegroundBaseHighBrush"]).Color;
-        }
-
-        App.TryApplyMica();
+        AppHelper.Initialize(new(AppSetting.WindowWidth, AppSetting.WindowHeight));
 
         // Window.ExtendsContentIntoTitleBar = true;
         // Window.SetTitleBar(Window.CustomTitleBar);
@@ -270,12 +203,6 @@ public class AppViewModel : AutoActivateObservableRecipient,
         var size = GetAppWindowSize();
         var scalingFactor = (float)dpi / 96;
         return new Size(size.Width / scalingFactor, size.Height / scalingFactor);
-    }
-
-    public (int, int) GetDpiAwareAppWindowSizeTuple()
-    {
-        var size = GetDpiAwareAppWindowSize();
-        return ((int, int))(size.Width, size.Height);
     }
 
     public void PrepareForActivation()

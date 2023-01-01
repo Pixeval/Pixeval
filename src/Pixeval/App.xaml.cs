@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -28,10 +28,11 @@ using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
 using Pixeval.AppManagement;
 using Pixeval.Interop;
-using Pixeval.Util.UI;
 using WinRT;
+using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
+using UIHelper = Pixeval.Util.UI.UIHelper;
 
 namespace Pixeval;
 
@@ -47,6 +48,7 @@ public partial class App
 
     public App()
     {
+        CurrentContext.App = this;
         // The theme can only be changed in ctor
         AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadConfiguration() ?? AppSetting.CreateDefault() };
         RequestedTheme = AppViewModel.AppSetting.Theme switch
@@ -79,86 +81,5 @@ public partial class App
         Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSetting.AppFontFamilyName);
         await AppKnownFolders.InitializeAsync();
         await AppViewModel.InitializeAsync(isProtocolActivated);
-    }
-
-    /// <summary>
-    ///     Are we Windows 11 or not?
-    /// </summary>
-    public static bool IsWindows11()
-    {
-        // Windows 11 starts with 10.0.22000
-        return Environment.OSVersion.Version.Build >= 22000;
-    }
-
-    /// <summary>
-    ///     Calculate the window size by current resolution
-    /// </summary>
-    public static (int, int) PredetermineEstimatedWindowSize()
-    {
-        return UIHelper.GetScreenSize() switch
-        {
-            // 这 就 是 C #
-            ( >= 2560, >= 1440) => (1600, 900),
-            ( > 1600, > 900) => (1280, 720),
-            _ => (800, 600)
-        };
-    }
-
-    public static void TryApplyMica()
-    {
-        if (MicaController.IsSupported())
-        {
-            _dispatcherQueueHelper = new WindowsSystemDispatcherQueueHelper();
-            _dispatcherQueueHelper.EnsureWindowsSystemDispatcherQueueController();
-
-            _systemBackdropConfiguration = new SystemBackdropConfiguration();
-            AppViewModel.Window.Activated += WindowOnActivated;
-            AppViewModel.Window.Closed += WindowOnClosed;
-            ((FrameworkElement) AppViewModel.Window.Content).ActualThemeChanged += OnActualThemeChanged;
-
-            _systemBackdropConfiguration.IsInputActive = true;
-            SetConfigurationSourceTheme();
-
-            _backdropController = new MicaController();
-
-            _backdropController.AddSystemBackdropTarget(AppViewModel.Window.As<ICompositionSupportsSystemBackdrop>());
-            _backdropController.SetSystemBackdropConfiguration(_systemBackdropConfiguration);
-        }
-    }
-
-    private static void OnActualThemeChanged(FrameworkElement sender, object args)
-    {
-        if (_systemBackdropConfiguration != null)
-        {
-            SetConfigurationSourceTheme();
-        }
-    }
-
-    private static void SetConfigurationSourceTheme()
-    {
-        _systemBackdropConfiguration!.Theme = AppViewModel.Window.Content switch
-        {
-            FrameworkElement { ActualTheme: ElementTheme.Dark } => SystemBackdropTheme.Dark,
-            FrameworkElement { ActualTheme: ElementTheme.Light } => SystemBackdropTheme.Light,
-            FrameworkElement { ActualTheme: ElementTheme.Default } => SystemBackdropTheme.Default,
-            _ => _systemBackdropConfiguration!.Theme
-        };
-    }
-
-    private static void WindowOnClosed(object sender, WindowEventArgs args)
-    {
-        if (_backdropController != null)
-        {
-            _backdropController.Dispose();
-            _backdropController = null;
-        }
-
-        AppViewModel.Window.Activated -= WindowOnActivated;
-        _systemBackdropConfiguration = null;
-    }
-
-    private static void WindowOnActivated(object sender, WindowActivatedEventArgs args)
-    {
-        _systemBackdropConfiguration!.IsInputActive = args.WindowActivationState is not WindowActivationState.Deactivated;
     }
 }

@@ -28,9 +28,8 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Attributes;
+using WinUI3Utilities.Attributes;
 using Pixeval.Download;
-
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.UI;
 

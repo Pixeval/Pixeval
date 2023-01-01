@@ -59,7 +59,6 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Image = SixLabors.ImageSharp.Image;
 using Pixeval.Attributes;
-using Windows.Foundation.Metadata;
 
 namespace Pixeval.Pages;
 
@@ -300,43 +299,5 @@ public sealed partial class MainPage
             .Build(App.AppViewModel.Window);
         content.Owner = dialog;
         await dialog.ShowAsync();
-    }
-
-    private void PaneClosing(NavigationView sender, NavigationViewPaneClosingEventArgs e) => UpdateAppTitleMargin(sender);
-
-    private void PaneOpening(NavigationView sender, object e) => UpdateAppTitleMargin(sender);
-
-    private void DisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs e)
-    {
-        var currentMargin = App.AppViewModel.Window.AppTitleBar.Margin;
-        App.AppViewModel.Window.AppTitleBar.Margin = sender.DisplayMode is NavigationViewDisplayMode.Minimal
-            ? new() { Left = sender.CompactPaneLength * 2, Top = currentMargin.Top, Right = currentMargin.Right, Bottom = currentMargin.Bottom }
-            : new Thickness { Left = sender.CompactPaneLength, Top = currentMargin.Top, Right = currentMargin.Right, Bottom = currentMargin.Bottom };
-
-        UpdateAppTitleMargin(sender);
-    }
-
-    private void UpdateAppTitleMargin(NavigationView sender)
-    {
-        const int smallLeftIndent = 4, largeLeftIndent = 24;
-
-        if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7))
-        {
-            App.AppViewModel.Window.AppTitleTextBlock.TranslationTransition = new Vector3Transition();
-
-            App.AppViewModel.Window.AppTitleTextBlock.Translation = (sender.DisplayMode is NavigationViewDisplayMode.Expanded && sender.IsPaneOpen) ||
-                                                                    sender.DisplayMode is NavigationViewDisplayMode.Minimal
-                ? new(smallLeftIndent, 0, 0)
-                : new System.Numerics.Vector3(largeLeftIndent, 0, 0);
-        }
-        else
-        {
-            var currentMargin = App.AppViewModel.Window.AppTitleTextBlock.Margin;
-
-            App.AppViewModel.Window.AppTitleTextBlock.Margin = (sender.DisplayMode is NavigationViewDisplayMode.Expanded && sender.IsPaneOpen) ||
-                                                               sender.DisplayMode is NavigationViewDisplayMode.Minimal
-                ? new() { Left = smallLeftIndent, Top = currentMargin.Top, Right = currentMargin.Right, Bottom = currentMargin.Bottom }
-                : new Thickness { Left = largeLeftIndent, Top = currentMargin.Top, Right = currentMargin.Right, Bottom = currentMargin.Bottom };
-        }
     }
 }

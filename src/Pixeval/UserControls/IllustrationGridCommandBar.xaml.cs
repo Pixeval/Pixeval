@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -30,9 +30,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.Attributes;
+using WinUI3Utilities.Attributes;
 using Pixeval.Download;
-
 using Pixeval.Popups;
 using Pixeval.Popups.IllustrationResultFilter;
 using Pixeval.UserControls.TokenInput;

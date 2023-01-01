@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -40,7 +40,7 @@ public class FontIconExtension : TextIconExtension
         var fontIcon = new FontIcon
         {
             Glyph = Glyph.GetMetadataOnEnumMember(),
-            FontFamily = FontFamily ?? (App.IsWindows11() ? new FontFamily("Segoe Fluent Icons") : new FontFamily("Segoe MDL2 Assets")),
+            FontFamily = FontFamily ?? (WinUI3Utilities.AppHelper.IsWindows11() ? new FontFamily("Segoe Fluent Icons") : new FontFamily("Segoe MDL2 Assets")),
             FontWeight = FontWeight,
             FontStyle = FontStyle,
             IsTextScaleFactorEnabled = IsTextScaleFactorEnabled,

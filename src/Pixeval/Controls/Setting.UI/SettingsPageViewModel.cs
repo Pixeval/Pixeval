@@ -34,6 +34,7 @@ using Pixeval.Download.MacroParser;
 using Pixeval.Misc;
 using Pixeval.UserControls;
 using Pixeval.UserControls.TokenInput;
+using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls.Setting.UI;
 

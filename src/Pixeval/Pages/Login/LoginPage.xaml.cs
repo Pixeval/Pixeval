@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -87,7 +87,7 @@ public sealed partial class LoginPage
             }
             else
             {
-                App.AppViewModel.ExitWithPushedNotification();
+                WinUI3Utilities.AppHelper.ExitWithPushedNotification();
             }
         }
     }
@@ -104,7 +104,7 @@ public sealed partial class LoginPage
                 await Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/p/?LinkId=2124703"));
             }
 
-            App.AppViewModel.ExitWithPushedNotification();
+            WinUI3Utilities.AppHelper.ExitWithPushedNotification();
         }
     }
 

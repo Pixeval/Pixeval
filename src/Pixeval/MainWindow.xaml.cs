@@ -62,6 +62,8 @@ public sealed partial class MainWindow : INavigationModeInfo
     public MainWindow()
     {
         InitializeComponent();
+        WinUI3Utilities.CurrentContext.TitleBar = AppTitleBar;
+        WinUI3Utilities.CurrentContext.TitleTextBlock = AppTitleTextBlock;
 
         if (!AppWindowTitleBar.IsCustomizationSupported())
         {

@@ -7,6 +7,7 @@
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:pages="using:Pixeval.Pages"
                        xmlns:ui="using:Pixeval.Util.UI"
+                       xmlns:utilities="using:WinUI3Utilities"
                        NavigationCacheMode="Required"
                        mc:Ignorable="d">
     <controls:EnhancedPage.Resources>
@@ -76,8 +77,9 @@
                     d:DataContext="{d:DesignInstance pages:MainPageViewModel}"
                     IsBackButtonVisible="Collapsed"
                     IsSettingsVisible="False"
-                    PaneOpening="PaneOpening"
-                    PaneClosing="PaneClosing"
+                    PaneOpening="{x:Bind utilities:TitleBarHelper.PaneOpening}"
+                    PaneClosing="{x:Bind utilities:TitleBarHelper.PaneClosing}"
+                    DisplayModeChanged="{x:Bind utilities:TitleBarHelper.DisplayModeChanged}"
                     OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}"
                     SelectionChanged="MainPageRootNavigationView_OnSelectionChanged">
         <NavigationView.PaneCustomContent>
