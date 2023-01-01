@@ -28,11 +28,9 @@ using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
 using Pixeval.AppManagement;
 using Pixeval.Interop;
-using WinRT;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
-using UIHelper = Pixeval.Util.UI.UIHelper;
 
 namespace Pixeval;
 

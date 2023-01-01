@@ -175,7 +175,7 @@ public class AppViewModel : AutoActivateObservableRecipient,
         CurrentContext.Title = AppContext.AppIdentifier;
         AppWindow = CurrentContext.AppWindow;
 
-        AppHelper.Initialize(new(AppSetting.WindowWidth, AppSetting.WindowHeight));
+        AppHelper.Initialize(new SizeInt32(AppSetting.WindowWidth, AppSetting.WindowHeight));
 
         // Window.ExtendsContentIntoTitleBar = true;
         // Window.SetTitleBar(Window.CustomTitleBar);
