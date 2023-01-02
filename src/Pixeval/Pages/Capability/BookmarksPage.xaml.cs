@@ -52,7 +52,7 @@ public sealed partial class BookmarksPage : ISortedIllustrationContainerPageHelp
     {
         PrivacyPolicyComboBox.SelectedItem = PrivacyPolicyComboBoxPublicItem;
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
-        WeakReferenceMessenger.Default.Register<BookmarksPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustrationContainer.ViewModel.FetchEngine?.Cancel());
+        WeakReferenceMessenger.Default.Register<BookmarksPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
     }
 
     private void BookmarksPage_OnLoaded(object sender, RoutedEventArgs e)

@@ -83,19 +83,19 @@ public sealed partial class IllustrationGridCommandBar
 
     private static void OnPrimaryCommandsSupplementsChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
-        AddCommandCallback(args, ((IllustrationGridCommandBar)o).CommandBar.PrimaryCommands);
+        AddCommandCallback(args, ((IllustrationGridCommandBar) o).CommandBar.PrimaryCommands);
     }
 
     private static void OnSecondaryCommandsSupplementsChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
-        AddCommandCallback(args, ((IllustrationGridCommandBar)o).CommandBar.SecondaryCommands);
+        AddCommandCallback(args, ((IllustrationGridCommandBar) o).CommandBar.SecondaryCommands);
     }
 
     private static void OnIsDefaultCommandsEnabledChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
-        ((IllustrationGridCommandBar)o)._defaultCommands
-            .Where(c => c != ((IllustrationGridCommandBar)o).SelectAllButton)
-            .ForEach(c => c.IsEnabled = (bool)args.NewValue);
+        ((IllustrationGridCommandBar) o)._defaultCommands
+            .Where(c => c != ((IllustrationGridCommandBar) o).SelectAllButton)
+            .ForEach(c => c.IsEnabled = (bool) args.NewValue);
     }
 
     private static void AddCommandCallback(DependencyPropertyChangedEventArgs e, ICollection<ICommandBarElement> commands)
@@ -109,7 +109,7 @@ public sealed partial class IllustrationGridCommandBar
                     case { Action: NotifyCollectionChangedAction.Add }:
                         foreach (var argsNewItem in args.NewItems ?? Array.Empty<ICommandBarElement>())
                         {
-                            commands.Add((ICommandBarElement)argsNewItem);
+                            commands.Add((ICommandBarElement) argsNewItem);
                         }
 
                         break;
@@ -122,13 +122,13 @@ public sealed partial class IllustrationGridCommandBar
 
     private void SelectAllToggleButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        ViewModel.Illustrations.WhereNotNull().ForEach(i => i.IsSelected = true);
+        ViewModel.DataProvider.IllustrationsSource.WhereNotNull().ForEach(i => i.IsSelected = true);
     }
 
     private async void AddAllToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         // TODO custom bookmark tag
-        var notBookmarked = ViewModel.SelectedIllustrations.Where(i => !i.IsBookmarked);
+        var notBookmarked = ViewModel.DataProvider.SelectedIllustrations.Where(i => !i.IsBookmarked);
         var viewModelSelectedIllustrations = notBookmarked as IllustrationViewModel[] ?? notBookmarked.ToArray();
         if (viewModelSelectedIllustrations.Length > 5 && await MessageDialogBuilder.CreateOkCancel(
                     this,
@@ -154,7 +154,7 @@ public sealed partial class IllustrationGridCommandBar
 
     private async void SaveAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (ViewModel.SelectedIllustrations.Count >= 20 && await MessageDialogBuilder.CreateOkCancel(
+        if (ViewModel.DataProvider.SelectedIllustrations.Count >= 20 && await MessageDialogBuilder.CreateOkCancel(
                 this,
                 IllustrationGridCommandBarResources.SelectedTooManyItemsTitle,
                 IllustrationGridCommandBarResources.SelectedTooManyItemsForSaveContent).ShowAsync()
@@ -171,7 +171,7 @@ public sealed partial class IllustrationGridCommandBar
         {
             var tasks = await App.AppViewModel.Window.DispatcherQueue.EnqueueAsync(
                 async () => await Task.WhenAll(
-                    ViewModel.SelectedIllustrations
+                    ViewModel.DataProvider.SelectedIllustrations
                         .SelectMany(i => i.GetMangaIllustrationViewModels())
                         .Select(i => factory.CreateAsync(i, App.AppViewModel.AppSetting.DefaultDownloadPathMacro))));
             foreach (var viewModelSelectedIllustration in tasks)
@@ -183,7 +183,7 @@ public sealed partial class IllustrationGridCommandBar
 
     private async void OpenAllInBrowserButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (ViewModel.SelectedIllustrations is { Count: var count } selected)
+        if (ViewModel.DataProvider.SelectedIllustrations is { Count: var count } selected)
         {
             if (count > 15 && await MessageDialogBuilder.CreateOkCancel(
                         this,
@@ -209,13 +209,13 @@ public sealed partial class IllustrationGridCommandBar
 
     private void CancelSelectionButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        ViewModel.Illustrations.WhereNotNull().ForEach(i => i.IsSelected = false);
+        ViewModel.DataProvider.IllustrationsSource.WhereNotNull().ForEach(i => i.IsSelected = false);
     }
 
     private void OpenConditionDialogButton_OnChecked(object sender, RoutedEventArgs e)
     {
         var content = new IllustrationResultFilterPopupContent(_filterPopupViewModel);
-        content.ResetButtonTapped += (_, _) => ViewModel.IllustrationsView.Filter = null;
+        content.ResetButtonTapped += (_, _) => ViewModel.DataProvider.IllustrationsView.Filter = null;
         var popup = PopupManager.CreatePopup(content, 550, heightMargin: 100, lightDismiss: false, closing: ConditionPopupClosing);
         content.CloseButtonTapped += (_, _) =>
         {
@@ -243,8 +243,8 @@ public sealed partial class IllustrationGridCommandBar
                 var publishDateEnd)
             && popup is IllustrationResultFilterPopupContent { IsReset: false })
         {
-            ViewModel.IllustrationsView.Filter = null;
-            ViewModel.IllustrationsView.Filter += o =>
+            ViewModel.DataProvider.IllustrationsView.Filter = null;
+            ViewModel.DataProvider.IllustrationsView.Filter += o =>
             {
                 if (o is IllustrationViewModel vm)
                 {
@@ -267,7 +267,7 @@ public sealed partial class IllustrationGridCommandBar
         }
         else if (popup is IllustrationResultFilterPopupContent { IsReset: true })
         {
-            ViewModel.IllustrationsView.Refresh();
+            ViewModel.DataProvider.IllustrationsView.Refresh();
         }
 
         static bool ExamineExcludeTags(IEnumerable<string> tags, IEnumerable<Token> predicates)

@@ -72,7 +72,7 @@ public class AppViewModel : AutoActivateObservableRecipient,
 
     public App App { get; }
 
-    public MainWindow Window { get; private set; } = null!;
+    public MainWindow Window { get; private set;  } = null!;
 
     public AppWindow AppWindow { get; private set; } = null!;
 
@@ -174,8 +174,10 @@ public class AppViewModel : AutoActivateObservableRecipient,
         CurrentContext.Window = new MainWindow();
         CurrentContext.Title = AppContext.AppIdentifier;
         AppWindow = CurrentContext.AppWindow;
+        Window = (MainWindow) CurrentContext.Window;
 
         AppHelper.Initialize(new SizeInt32(AppSetting.WindowWidth, AppSetting.WindowHeight));
+
 
         // Window.ExtendsContentIntoTitleBar = true;
         // Window.SetTitleBar(Window.CustomTitleBar);

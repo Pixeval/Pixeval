@@ -52,7 +52,7 @@ public sealed partial class RecentPostsPage : ISortedIllustrationContainerPageHe
     {
         PrivacyPolicyComboBox.SelectedItem = PrivacyPolicyComboBoxPublicItem;
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
-        WeakReferenceMessenger.Default.Register<RecentPostsPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustrationContainer.ViewModel.FetchEngine?.Cancel());
+        WeakReferenceMessenger.Default.Register<RecentPostsPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
     }
 
     private void RecentPostsPage_OnLoaded(object sender, RoutedEventArgs e)

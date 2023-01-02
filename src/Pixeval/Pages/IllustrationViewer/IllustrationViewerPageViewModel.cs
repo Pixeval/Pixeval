@@ -85,7 +85,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         IllustrationGrid = gridView;
         ContainerGridViewModel = gridView.ViewModel;
-        IllustrationViewModelInTheGridView = ContainerGridViewModel.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
+        IllustrationViewModelInTheGridView = ContainerGridViewModel.DataProvider.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
     }
 
     public IllustrationViewerPageViewModel(params IllustrationViewModel[] illustrations)
@@ -126,7 +126,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     /// <summary>
     ///     The index of current illustration in <see cref="IllustrationGrid" />
     /// </summary>
-    public int? IllustrationIndex => ContainerGridViewModel?.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
+    public int? IllustrationIndex => ContainerGridViewModel?.DataProvider.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
 
     public ImageViewerPageViewModel[]? ImageViewerPageViewModels { get; }
 
@@ -559,7 +559,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
             return Visibility.Collapsed;
         }
 
-        return ContainerGridViewModel.IllustrationsView.Count > IllustrationIndex + 1
+        return ContainerGridViewModel.DataProvider.IllustrationsView.Count > IllustrationIndex + 1
             ? CalculateNextImageButtonVisibility(index).Inverse()
             : Visibility.Collapsed;
     }

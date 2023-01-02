@@ -31,6 +31,14 @@ namespace Pixeval.Util.UI;
 /// </summary>
 public class JustifiedLayout
 {
+    public static ComputedLayout Compute(double[] boxes, Action<JustifiedLayoutConfig>? configuration = null)
+    {
+        var conf = new JustifiedLayoutConfig();
+        configuration?.Invoke(conf);
+        var justifiedLayout = new JustifiedLayout(conf);
+        return justifiedLayout.ComputeLayout(boxes);
+    }
+
     public double ContainerHeight;
 
     public List<LayoutItem> LayoutItems = new();

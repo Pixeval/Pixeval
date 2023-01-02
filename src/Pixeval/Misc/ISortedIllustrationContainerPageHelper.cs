@@ -49,7 +49,7 @@ public interface ISortedIllustrationContainerPageHelper
             default:
                 // reset the view so that it can resort its item to the initial order
                 ViewModelProvider.ViewModel.ClearSortDescription();
-                ViewModelProvider.ViewModel.IllustrationsView.Refresh();
+                ViewModelProvider.ViewModel.DataProvider.IllustrationsView.Refresh();
                 ViewModelProvider.ScrollToTop();
                 break;
         }

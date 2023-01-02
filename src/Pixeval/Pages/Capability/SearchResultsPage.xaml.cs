@@ -51,7 +51,7 @@ public sealed partial class SearchResultsPage : ISortedIllustrationContainerPage
     {
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
         ChangeSource((IFetchEngine<Illustration>)navigationEventArgs.Parameter);
-        WeakReferenceMessenger.Default.Register<SearchResultsPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustrationContainer.ViewModel.FetchEngine?.Cancel());
+        WeakReferenceMessenger.Default.Register<SearchResultsPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
     }
 
     private void ChangeSource(IFetchEngine<Illustration> engine)

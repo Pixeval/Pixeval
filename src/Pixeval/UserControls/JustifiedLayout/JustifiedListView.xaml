@@ -1,0 +1,23 @@
+<!--  Copyright (c) Microsoft Corporation and Contributors.  -->
+<!--  Licensed under the MIT License.  -->
+
+<UserControl x:Class="Pixeval.UserControls.JustifiedLayout.JustifiedListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:justifiedLayout="using:Pixeval.UserControls.JustifiedLayout"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d">
+    <ListView HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              ItemsSource="{x:Bind Items, Mode=OneWay}"
+              ScrollViewer.HorizontalScrollBarVisibility="Auto"
+              ScrollViewer.HorizontalScrollMode="Auto"
+              ScrollViewer.IsHorizontalRailEnabled="True">
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <justifiedLayout:JustifiedListViewRow ItemsSource="{Binding}" />
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+</UserControl>

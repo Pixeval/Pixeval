@@ -21,7 +21,7 @@
                                    Header="{x:Bind Header, Mode=OneWay}"
                                    IsItemClickEnabled="True"
                                    IsMultiSelectCheckBoxEnabled="False"
-                                   ItemsSource="{x:Bind ViewModel.IllustrationsView}"
+                                   ItemsSource="{x:Bind ViewModel.DataProvider.IllustrationsView}"
                                    SelectionMode="Extended"
                                    StretchContentForSingleRow="True">
             <controls:AdaptiveGridView.ItemContainerTransitions>

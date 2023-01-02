@@ -218,7 +218,7 @@ public sealed partial class IllustrationViewerPage : IGoBack
 
     private void NextIllustration()
     {
-        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel!.IllustrationsView[_viewModel.IllustrationIndex!.Value + 1];
+        var illustrationViewModel = (IllustrationViewModel) _viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value + 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
         App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationGrid!, viewModel), new SlideNavigationTransitionInfo
@@ -229,7 +229,7 @@ public sealed partial class IllustrationViewerPage : IGoBack
 
     private void PrevIllustration()
     {
-        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel!.IllustrationsView[_viewModel.IllustrationIndex!.Value - 1];
+        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value - 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
         App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationGrid!, viewModel), new SlideNavigationTransitionInfo

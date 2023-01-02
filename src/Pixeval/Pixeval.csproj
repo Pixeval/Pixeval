@@ -127,6 +127,8 @@
 		<None Remove="UserControls\CommentList.xaml" />
 		<None Remove="UserControls\IllustrationContainer.xaml" />
 		<None Remove="UserControls\IllustrationGridCommandBar.xaml" />
+		<None Remove="UserControls\JustifiedLayout\JustifiedListView.xaml" />
+		<None Remove="UserControls\JustifiedLayout\JustifiedListViewRow.xaml" />
 		<None Remove="UserControls\OverlayPopupContent.xaml" />
 		<None Remove="UserControls\PixivReplyBar.xaml" />
 		<None Remove="UserControls\QrCodePresenter%27.xaml" />
@@ -296,6 +298,16 @@
 		<PRIResource Include="Strings\zh-CN\SettingsPage.resw" />
 		<PRIResource Include="Strings\zh-CN\SortOptionComboBox.resw" />
 		<PRIResource Include="Strings\zh-CN\TokenInputTextBox.resw" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="UserControls\JustifiedLayout\JustifiedListView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="UserControls\JustifiedLayout\JustifiedListViewRow.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 	<ItemGroup>
 	  <Page Update="Pages\Capability\SpotlightsPage.xaml">

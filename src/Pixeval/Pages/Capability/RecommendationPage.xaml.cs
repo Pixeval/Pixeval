@@ -54,7 +54,7 @@ public sealed partial class RecommendationPage : ISortedIllustrationContainerPag
     {
         ModeSelectionComboBox.SelectedItem = ModeSelectionComboBoxIllustComboBoxItem;
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
-        WeakReferenceMessenger.Default.Register<RecommendationPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustrationContainer.ViewModel.FetchEngine?.Cancel());
+        WeakReferenceMessenger.Default.Register<RecommendationPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
     }
 
     private void RecommendationsPage_OnLoaded(object sender, RoutedEventArgs e)
