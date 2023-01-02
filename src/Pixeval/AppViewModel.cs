@@ -171,7 +171,7 @@ public class AppViewModel : AutoActivateObservableRecipient,
 
         await AppContext.WriteLogoIcoIfNotExist();
         CurrentContext.IconPath = await AppContext.GetIconAbsolutePath();
-        CurrentContext.Window = new MainWindow();
+        CurrentContext.Window = Window = new MainWindow();
         CurrentContext.Title = AppContext.AppIdentifier;
         AppWindow = CurrentContext.AppWindow;
 
