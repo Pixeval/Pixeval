@@ -3,32 +3,31 @@ using Pixeval.Models;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Pixeval.Storage
+namespace Pixeval.Storage;
+
+internal class SettingStorage
 {
-    internal class SettingStorage
+    private readonly SessionStorage _sessionStorage;
+    private readonly IRepository<UserSetting> _repository;
+
+    public SettingStorage(SessionStorage sessionStorage, IRepository<UserSetting> dataStore)
     {
-        private readonly SessionStorage _sessionStorage;
-        private readonly IRepository<UserSetting> _repository;
+        _sessionStorage = sessionStorage;
+        _repository = dataStore;
+    }
 
-        public SettingStorage(SessionStorage sessionStorage, IRepository<UserSetting> dataStore)
+    public async Task<UserSetting?> GetSettingAsync()
+    {
+        var session = await _sessionStorage.GetSessionAsync();
+        if (session is not null)
         {
-            _sessionStorage = sessionStorage;
-            _repository = dataStore;
+            return await _repository.SingleOrDefaultAsync(_ => _.UserId == session.UserId);
         }
+        return null;
+    }
 
-        public async Task<UserSetting?> GetSettingAsync()
-        {
-            var session = await _sessionStorage.GetSessionAsync();
-            if (session is not null)
-            {
-                return await _repository.SingleOrDefaultAsync(_ => _.UserId == session.UserId);
-            }
-            return null;
-        }
-
-        public Task UpdateSettingAsync(UserSetting setting)
-        {
-            return _repository.UpdateAsync(setting);
-        }
+    public Task UpdateSettingAsync(UserSetting setting)
+    {
+        return _repository.UpdateAsync(setting);
     }
 }

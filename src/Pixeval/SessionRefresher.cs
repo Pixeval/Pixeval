@@ -9,70 +9,69 @@ using Pixeval.CoreApi.Services;
 using Pixeval.Storage;
 using WinUIEx;
 
-namespace Pixeval
+namespace Pixeval;
+
+internal class SessionRefresher : ISessionRefresher
 {
-    internal class SessionRefresher : ISessionRefresher
+    private readonly SessionStorage _storage;
+    private readonly IPixivAuthService _authService;
+
+    public SessionRefresher(SessionStorage storage, IPixivAuthService authService)
     {
-        private readonly SessionStorage _storage;
-        private readonly IPixivAuthService _authService;
+        _storage = storage;
+        _authService = authService;
+    }
 
-        public SessionRefresher(SessionStorage storage, IPixivAuthService authService)
+    public async Task<string> GetAccessTokenAsync(string? refreshToken = null)
+    {
+        TokenResponse response;
+        if (refreshToken is not null)
         {
-            _storage = storage;
-            _authService = authService;
+            response = await _authService.RefreshAsync(refreshToken);
         }
-
-        public async Task<string> GetAccessTokenAsync(string? refreshToken = null)
+        else
         {
-            TokenResponse response;
-            if (refreshToken is not null)
+            try
             {
-                response = await _authService.RefreshAsync(refreshToken);
-            }
-            else
-            {
-                try
+                var session = await _storage.GetSessionAsync();
+                if (session is not null)
                 {
-                    var session = await _storage.GetSessionAsync();
-                    if (session is not null)
+                    if (session.Updated - DateTimeOffset.Now < TimeSpan.FromSeconds(3600))
                     {
-                        if (session.Updated - DateTimeOffset.Now < TimeSpan.FromSeconds(3600))
-                        {
-                            response = await _authService.RefreshAsync(session.RefreshToken);
-                        }
-                        else
-                        {
-                            throw new Exception();
-                        }
+                        response = await _authService.RefreshAsync(session.RefreshToken);
                     }
                     else
                     {
                         throw new Exception();
                     }
                 }
-                catch
+                else
                 {
-                    response = await OpenLoginWindowAsync();
+                    throw new Exception();
                 }
-
             }
-            await _storage.SetSessionAsync(response.User.Id, response.RefreshToken, response.AccessToken).ConfigureAwait(false);
-            return response.AccessToken;
-        }
-
-        private async Task<TokenResponse> OpenLoginWindowAsync()
-        {
-            var loginWindow = new LoginWindow();
-            loginWindow.Activate();
-            var response = await loginWindow.LoginTask.ContinueWith(task =>
+            catch
             {
-                if (task.IsCompletedSuccessfully)
-                {
-                    loginWindow.Close();
-                }
-                return task.Result;
-            },TaskScheduler.Default);
-            return response;
+                response = await OpenLoginWindowAsync();
+            }
+
         }
+        await _storage.SetSessionAsync(response.User.Id, response.RefreshToken, response.AccessToken).ConfigureAwait(false);
+        return response.AccessToken;
+    }
+
+    private async Task<TokenResponse> OpenLoginWindowAsync()
+    {
+        var loginWindow = new LoginWindow();
+        loginWindow.Activate();
+        var response = await loginWindow.LoginTask.ContinueWith(task =>
+        {
+            if (task.IsCompletedSuccessfully)
+            {
+                loginWindow.Close();
+            }
+            return task.Result;
+        },TaskScheduler.Default);
+        return response;
     }
 }

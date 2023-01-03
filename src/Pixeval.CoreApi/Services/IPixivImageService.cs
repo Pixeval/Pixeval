@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pixeval.CoreApi.Services
+namespace Pixeval.CoreApi.Services;
+
+internal interface IPixivImageService
 {
-    internal interface IPixivImageService
-    {
-    }
 }

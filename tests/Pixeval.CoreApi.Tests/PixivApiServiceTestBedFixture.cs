@@ -10,42 +10,41 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Pixeval.CoreApi.Tests
+namespace Pixeval.CoreApi.Tests;
+
+public class PixivApiServiceTestBedFixture : TestBedFixture
 {
-    public class PixivApiServiceTestBedFixture : TestBedFixture
+    protected override void AddServices(IServiceCollection services, IConfiguration? configuration)
     {
-        protected override void AddServices(IServiceCollection services, IConfiguration? configuration)
+        services.AddLogging(config =>
         {
-            services.AddLogging(config =>
-            {
-                config.AddDebug();
-            });
+            config.AddDebug();
+        });
 
-            services.Configure<PixivClientOptions>(options =>
-            {
-                options.Bypass = true;
-                options.ConnectionTimeout = 5000;
-                options.CultureInfo = CultureInfo.CurrentCulture;
-            });
-
-            services.Configure<PixivHttpOptions>(configuration.GetSection("PixivHttpOptions"));
-            services.AddSingleton<ISessionRefresher, SessionRefresher>();
-            services.AddPixivApiService(httpClient =>
-            {
-
-            });
-            services.Configure<ApiOptions>(configuration);
-        }
-
-        protected override IEnumerable<TestAppSettings> GetTestAppSettings()
+        services.Configure<PixivClientOptions>(options =>
         {
-            yield return new TestAppSettings() { Filename = "appsettings.json", IsOptional = false };
-            yield return new TestAppSettings() { Filename = "secrets.json", IsOptional = false };
-        }
+            options.Bypass = true;
+            options.ConnectionTimeout = 5000;
+            options.CultureInfo = CultureInfo.CurrentCulture;
+        });
 
-        protected override ValueTask DisposeAsyncCore()
+        services.Configure<PixivHttpOptions>(configuration.GetSection("PixivHttpOptions"));
+        services.AddSingleton<ISessionRefresher, SessionRefresher>();
+        services.AddPixivApiService(httpClient =>
         {
-            return new();
-        }
+
+        });
+        services.Configure<ApiOptions>(configuration);
+    }
+
+    protected override IEnumerable<TestAppSettings> GetTestAppSettings()
+    {
+        yield return new TestAppSettings() { Filename = "appsettings.json", IsOptional = false };
+        yield return new TestAppSettings() { Filename = "secrets.json", IsOptional = false };
+    }
+
+    protected override ValueTask DisposeAsyncCore()
+    {
+        return new();
     }
 }

@@ -18,75 +18,74 @@ using Polly.Bulkhead;
 using Polly.Extensions.Http;
 using Refit;
 
-namespace Pixeval.CoreApi
+namespace Pixeval.CoreApi;
+
+public static class ServiceCollectionExtensions
 {
-    public static class ServiceCollectionExtensions
+
+    private static void AddNameResolvers(IServiceCollection services)
     {
+        services.TryAddTransient<LocalMachineNameResolver>();
+        services.TryAddTransient<PixivImageNameResolver>();
+        services.TryAddTransient<PixivApiNameResolver>();
+    }
 
-        private static void AddNameResolvers(IServiceCollection services)
-        {
-            services.TryAddTransient<LocalMachineNameResolver>();
-            services.TryAddTransient<PixivImageNameResolver>();
-            services.TryAddTransient<PixivApiNameResolver>();
-        }
+    private static void AddMessageHandlers(IServiceCollection services)
+    {
+        services.TryAddTransient<PixivAppApiHttpClientHandler>();
+    }
 
-        private static void AddMessageHandlers(IServiceCollection services)
-        {
-            services.TryAddTransient<PixivAppApiHttpClientHandler>();
-        }
+    public static IServiceCollection AddPixivApiSession<TSessionRefresher>(this IServiceCollection services) where TSessionRefresher : class, ISessionRefresher
+    {
+        services.AddSingleton<ISessionRefresher, TSessionRefresher>();
+        return services;
+    }
 
-        public static IServiceCollection AddPixivApiSession<TSessionRefresher>(this IServiceCollection services) where TSessionRefresher : class, ISessionRefresher
-        {
-            services.AddSingleton<ISessionRefresher, TSessionRefresher>();
-            return services;
-        }
+    public static IServiceCollection AddPixivApiService(this IServiceCollection services, Action<HttpClient> configuration)
+    {
+        AddNameResolvers(services);
+        AddMessageHandlers(services);
 
-        public static IServiceCollection AddPixivApiService(this IServiceCollection services, Action<HttpClient> configuration)
-        {
-            AddNameResolvers(services);
-            AddMessageHandlers(services);
-
-            services.AddRefitClient<IPixivAppService>()
-                .ConfigureHttpClient((provider, httpClient) =>
+        services.AddRefitClient<IPixivAppService>()
+            .ConfigureHttpClient((provider, httpClient) =>
             {
                 var options = provider.GetService<IOptions<PixivHttpOptions>>();
                 httpClient.BaseAddress = new(options.Value.AppApiBaseUrl);
                 configuration.Invoke(httpClient);
             })
-                .AddPolicyHandlerFromRegistry("RetryRefreshToken")
-                .ConfigurePrimaryHttpMessageHandler<PixivAppApiHttpClientHandler>();
+            .AddPolicyHandlerFromRegistry("RetryRefreshToken")
+            .ConfigurePrimaryHttpMessageHandler<PixivAppApiHttpClientHandler>();
 
-            services.AddRefitClient<IPixivAuthService>()
-                .ConfigureHttpClient((provider, httpClient) =>
+        services.AddRefitClient<IPixivAuthService>()
+            .ConfigureHttpClient((provider, httpClient) =>
             {
                 var options = provider.GetService<IOptions<PixivHttpOptions>>();
                 httpClient.BaseAddress = new(options.Value.OAuthBaseUrl);
                 configuration.Invoke(httpClient);
             });
-            services.AddRefitClient<IPixivImageService>()
-                .ConfigureHttpClient(httpClient =>
+        services.AddRefitClient<IPixivImageService>()
+            .ConfigureHttpClient(httpClient =>
             {
                 configuration.Invoke(httpClient);
             });
-            services.AddRefitClient<IPixivReverseSearchService>()
-                .ConfigureHttpClient(httpClient =>
+        services.AddRefitClient<IPixivReverseSearchService>()
+            .ConfigureHttpClient(httpClient =>
             {
                 configuration.Invoke(httpClient);
             });
 
-            services.AddPolicyRegistry((provider, registry) =>
-            {
-                var sessionRefresher = provider.GetService<ISessionRefresher>()!;
-                registry.Add("RetryRefreshToken",
-                    Policy
-                        .HandleResult<HttpResponseMessage>(r => r.StatusCode == HttpStatusCode.BadRequest)
-                        .RetryAsync(1, onRetryAsync:
+        services.AddPolicyRegistry((provider, registry) =>
+        {
+            var sessionRefresher = provider.GetService<ISessionRefresher>()!;
+            registry.Add("RetryRefreshToken",
+                Policy
+                    .HandleResult<HttpResponseMessage>(r => r.StatusCode == HttpStatusCode.BadRequest)
+                    .RetryAsync(1, onRetryAsync:
                         async (exception, retryCount, context) =>
                         {
                             await sessionRefresher.GetAccessTokenAsync();
                         }));
-            });
-            return services;
-        }
+        });
+        return services;
     }
 }

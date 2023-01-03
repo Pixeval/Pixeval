@@ -6,13 +6,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 
-namespace Pixeval.Services.Download
+namespace Pixeval.Services.Download;
+
+internal class DownloadService : BackgroundService
 {
-    internal class DownloadService : BackgroundService
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            throw new NotImplementedException();
-        }
+        throw new NotImplementedException();
     }
 }

@@ -6,17 +6,16 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Pixeval.CoreApi.Net
-{
-    public class PixivWebApiHttpClientHandler : HttpClientHandler
-    {
-        public PixivWebApiHttpClientHandler()
-        {
-        }
+namespace Pixeval.CoreApi.Net;
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        {
-            return base.SendAsync(request, cancellationToken);
-        }
+public class PixivWebApiHttpClientHandler : HttpClientHandler
+{
+    public PixivWebApiHttpClientHandler()
+    {
+    }
+
+    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        return base.SendAsync(request, cancellationToken);
     }
 }

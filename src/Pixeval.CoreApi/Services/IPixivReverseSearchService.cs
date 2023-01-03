@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 using Pixeval.CoreApi.Net.Requests;
 using Pixeval.CoreApi.Net.Responses;
 
-namespace Pixeval.CoreApi.Services
+namespace Pixeval.CoreApi.Services;
+
+public interface IPixivReverseSearchService
 {
-    public interface IPixivReverseSearchService
-    {
-        [Multipart]
-        [Post("/search.php")]
-        Task<ReverseSearchResponse> GetSauceAsync([Query] ReverseSearchRequest request, [AliasAs("file")] StreamPart file);
-    }
+    [Multipart]
+    [Post("/search.php")]
+    Task<ReverseSearchResponse> GetSauceAsync([Query] ReverseSearchRequest request, [AliasAs("file")] StreamPart file);
 }

@@ -1,9 +1,8 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 
-namespace Pixeval.Navigation
+namespace Pixeval.Navigation;
+
+public interface INavigationRoot
 {
-    public interface INavigationRoot
-    {
-        Frame NavigationFrame { get; }
-    }
+    Frame NavigationFrame { get; }
 }

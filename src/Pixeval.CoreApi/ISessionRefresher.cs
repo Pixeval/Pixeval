@@ -5,10 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Pixeval.CoreApi.Models;
 
-namespace Pixeval.CoreApi
+namespace Pixeval.CoreApi;
+
+public interface ISessionRefresher
 {
-    public interface ISessionRefresher
-    {
-        Task<string> GetAccessTokenAsync(string? refreshToken = null);
-    }
+    Task<string> GetAccessTokenAsync(string? refreshToken = null);
 }
