@@ -22,7 +22,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Pixeval.Pages.Login;
+namespace Pixeval;
 
 public static class PixivAuthSignature
 {

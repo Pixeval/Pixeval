@@ -63,7 +63,7 @@ namespace Pixeval
         private async Task<TokenResponse> OpenLoginWindowAsync()
         {
             var loginWindow = new LoginWindow();
-            loginWindow.Show();
+            loginWindow.Activate();
             var response = await loginWindow.LoginTask.ContinueWith(task =>
             {
                 if (task.IsCompletedSuccessfully)
@@ -71,7 +71,7 @@ namespace Pixeval
                     loginWindow.Close();
                 }
                 return task.Result;
-            });
+            },TaskScheduler.Default);
             return response;
         }
     }

@@ -24,18 +24,18 @@ namespace Pixeval
             builder.ConfigureServices(services =>
             {
 
-                services.ConfigureRoutes<MainPage>(routesBuilder =>
-                {
-                    //routesBuilder.AddPageWithRoute<RankingsPage>("/Rankings");
-                    //routesBuilder.AddPageWithRoute<BookmarksPage>("/Bookmarks");
-                    //routesBuilder.AddPageWithRoute<SpotlightsPage>("/Spotlights");
-                    //routesBuilder.AddPageWithRoute<RecentPostsPage>("/RecentPosts");
-                    //routesBuilder.AddPageWithRoute<SearchResultsPage>("/SearchResults");
-                    //routesBuilder.AddPageWithRoute<RecommendationPage>("/Recommendations");
-                    //routesBuilder.AddPageWithRoute<SettingsPage, SettingsPageViewModel>("/Settings");
-                    //routesBuilder.AddPageWithRoute<FollowingsPage, FollowingsPageViewModel>("/Followings");
-                    //routesBuilder.AddPageWithRoute<DownloadListPage, DownloadListPageViewModel>("/Downloads");
-                });
+                //services.ConfigureRoutes<MainPage>(routesBuilder =>
+                //{
+                //    //routesBuilder.AddPageWithRoute<RankingsPage>("/Rankings");
+                //    //routesBuilder.AddPageWithRoute<BookmarksPage>("/Bookmarks");
+                //    //routesBuilder.AddPageWithRoute<SpotlightsPage>("/Spotlights");
+                //    //routesBuilder.AddPageWithRoute<RecentPostsPage>("/RecentPosts");
+                //    //routesBuilder.AddPageWithRoute<SearchResultsPage>("/SearchResults");
+                //    //routesBuilder.AddPageWithRoute<RecommendationPage>("/Recommendations");
+                //    //routesBuilder.AddPageWithRoute<SettingsPage, SettingsPageViewModel>("/Settings");
+                //    //routesBuilder.AddPageWithRoute<FollowingsPage, FollowingsPageViewModel>("/Followings");
+                //    //routesBuilder.AddPageWithRoute<DownloadListPage, DownloadListPageViewModel>("/Downloads");
+                //});
 
                 //services.ConfigureRoutes<IllustrationViewerPage, IllustrationViewerPageNavigationService>(
                 //    routesBuilder =>
@@ -71,7 +71,7 @@ namespace Pixeval
 
                 services.AddSingleton<MainWindow>();
 
-                services.AddSingleton<MainPage>();
+                services.AddSingleton<Lazy<MainPage>>();
                 services.AddSingleton<MainPageViewModel>();
 
                 services.AddSingleton(typeof(IRepository<>), typeof(Repository<>));

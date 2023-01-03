@@ -1,34 +1,34 @@
-﻿#region Copyright (c) Pixeval/Pixeval
-// GPL v3 License
-// 
-// Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/MainPage.xaml.cs
-// 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
+// Copyright (c) Microsoft Corporation and Contributors.
+// Licensed under the MIT License.
 
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Navigation;
-using Pixeval.ViewModels;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
 
+// To learn more about WinUI, the WinUI project structure,
+// and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace Pixeval.Pages;
-
-internal sealed partial class MainPage : INavigationRoot
+namespace Pixeval.Pages
 {
-    public MainPageViewModel? ViewModel { get; set; }
-
-    public Frame NavigationFrame => MainFrame;
-
+    /// <summary>
+    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// </summary>
+    public sealed partial class MainPage : Page
+    {
+        public MainPage()
+        {
+            InitializeComponent();
+        }
+    }
 }

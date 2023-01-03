@@ -24,6 +24,7 @@ using Pixeval.Messages;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Microsoft.UI;
 using WinUIEx;
 
 namespace Pixeval;
@@ -35,13 +36,14 @@ public partial class App
 
     public App(IServiceProvider serviceProvider)
     {
-        _mainWindow = serviceProvider.GetRequiredService<MainWindow>();
         InitializeComponent();
+        _mainWindow = serviceProvider.GetRequiredService<MainWindow>();
+        _mainWindow.InitializeComponent();
         var appWindow = _mainWindow.GetAppWindow();
         appWindow.Title = SR.AppName;
-        appWindow.Show();
-        appWindow.SetIcon("");
-
+        appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
+        appWindow.TitleBar.ButtonBackgroundColor = Colors.Transparent;
+        appWindow.Show(true);
     }
 
     private void RegisterUnhandledExceptionHandler()

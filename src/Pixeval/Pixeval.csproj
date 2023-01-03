@@ -4,7 +4,7 @@
 		<TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
 		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 		<RootNamespace>Pixeval</RootNamespace>
-		<Platforms>x86;x64;arm64</Platforms>
+		<Platforms>x86;x64;ARM64</Platforms>
 		<RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<UseWinUI>true</UseWinUI>
@@ -18,6 +18,8 @@
 		<NeutralLanguage>zh-CN</NeutralLanguage>
 		<LangVersion>preview</LangVersion>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<WindowsPackageType>MSIX</WindowsPackageType>
+		<PublishProfile>win10-$(Platform).pubxml</PublishProfile>
 		<DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
 	</PropertyGroup>
 
@@ -62,10 +64,12 @@
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
 
-	<PropertyGroup>
-		<UpdateVersionProperties>true</UpdateVersionProperties>
-		<IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
-		<GitVersionTargetsBefore>$(GitVersionTargetsBefore);_ValidateWindowsPackageType</GitVersionTargetsBefore>
+	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+		<ProjectCapability Include="Msix" />
+	</ItemGroup>
+
+	<PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+		<HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -82,15 +86,13 @@
 		<None Remove="Pages\IllustrationGridPage.xaml" />
 		<None Remove="Pages\IllustrationViewerPage.xaml" />
 		<None Remove="Pages\ImageViewerPage.xaml" />
+		<None Remove="Pages\MainPage.xaml" />
 		<None Remove="Pages\RecommendationPage.xaml" />
 		<None Remove="Pages\SettingsPage.xaml" />
 		<None Remove="Strings\zh-CN\App.resw" />
 		<None Remove="Strings\zh-CN\MainWindow.resw" />
-		<None Remove="Themes\Card.xaml" />
-		<None Remove="Themes\Controls.xaml" />
 		<None Remove="Templates.xaml" />
 		<None Remove="Themes.xaml" />
-		<None Remove="Themes\Generic.xaml" />
 	</ItemGroup>
 
 	<!-- #region Exposes PRI resources to the source generator -->
@@ -104,85 +106,8 @@
 	</ItemGroup>
 	<!-- #endregion Exposes PRI resources to the source generator -->
 
+	<Target Name="UpdatePackageAppxManifestVersion" BeforeTargets="_ValidateWindowsPackageType" DependsOnTargets="GetVersion">
 
-	<Target Name="PrepareForGenerateGitVersionInformation" BeforeTargets="GenerateGitVersionInformation">
-		<MakeDir Directories="$(OutDir);$(IntermediateOutputPath);@(DocFileItem->'%(RelativeDir)');@(CreateDirectory)" ContinueOnError="True" />
-		<ItemGroup Condition="'@(AppxManifest)'==''">
-			<AppxManifest Include="Package.appxmanifest"></AppxManifest>
-		</ItemGroup>
-		<PropertyGroup>
-			<WindowsPackageType>MSIX</WindowsPackageType>
-		</PropertyGroup>
-	</Target>
-
-	<Target Name="GeneratePackageAppxManifest" BeforeTargets="_ValidateWindowsPackageType" DependsOnTargets="GetVersion">
-		<PropertyGroup>
-			<ManifestText>
-				&lt;?xml version="1.0" encoding="utf-8"?&gt;
-				&lt;Package
-				xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
-				xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-				xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-				IgnorableNamespaces="uap rescap"&gt;
-				&lt;Identity
-				Name="9a360099-e513-45d0-b3f1-3e599691ea06"
-				Publisher="CN=Pixeval"
-				Version="$(GitVersion_AssemblySemVer)" /&gt;
-				&lt;Properties&gt;
-				&lt;DisplayName&gt;Pixeval&lt;/DisplayName&gt;
-				&lt;PublisherDisplayName&gt;Pixeval&lt;/PublisherDisplayName&gt;
-				&lt;Logo&gt;Assets\Images\Tiles\StoreLogo.png&lt;/Logo&gt;
-				&lt;/Properties&gt;
-				&lt;Dependencies&gt;
-				&lt;TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" /&gt;
-				&lt;TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" /&gt;
-				&lt;/Dependencies&gt;
-				&lt;Resources&gt;
-				&lt;Resource Language="x-generate"/&gt;
-				&lt;/Resources&gt;
-				&lt;Applications&gt;
-				&lt;Application Id="App"
-				Executable="%24targetnametoken%24.exe"
-				EntryPoint="%24targetentrypoint%24"&gt;
-				&lt;uap:VisualElements
-				DisplayName="Pixeval"
-				Description="A fast, powerful and fully-functional third-party Pixiv client"
-				BackgroundColor="transparent"
-				Square150x150Logo="Assets\Images\Tiles\Square150x150Logo.png"
-				Square44x44Logo="Assets\Images\Tiles\Square44x44Logo.png"&gt;
-				&lt;uap:DefaultTile Wide310x150Logo="Assets\Images\Tiles\Wide310x150Logo.png"  Square71x71Logo="Assets\Images\Tiles\SmallTile.png" Square310x310Logo="Assets\Images\Tiles\LargeTile.png"&gt;
-				&lt;uap:ShowNameOnTiles&gt;
-				&lt;uap:ShowOn Tile="square150x150Logo"/&gt;
-				&lt;uap:ShowOn Tile="wide310x150Logo"/&gt;
-				&lt;uap:ShowOn Tile="square310x310Logo"/&gt;
-				&lt;/uap:ShowNameOnTiles&gt;
-				&lt;/uap:DefaultTile &gt;
-				&lt;uap:SplashScreen Image="Assets\Images\Tiles\SplashScreen.png" /&gt;
-				&lt;uap:LockScreen BadgeLogo="Assets\Images\Tiles\BadgeLogo.png" Notification="badgeAndTileText"/&gt;
-				&lt;uap:InitialRotationPreference&gt;
-				&lt;uap:Rotation Preference="landscape"/&gt;
-				&lt;uap:Rotation Preference="portrait"/&gt;&lt;/uap:InitialRotationPreference&gt;
-				&lt;/uap:VisualElements&gt;
-				&lt;Extensions&gt;
-				&lt;uap:Extension Category="windows.protocol"&gt;
-				&lt;uap:Protocol Name="pixeval"&gt;
-				&lt;uap:DisplayName&gt;Pixeval App Protocol&lt;/uap:DisplayName&gt;
-				&lt;/uap:Protocol&gt;
-				&lt;/uap:Extension&gt;
-				&lt;/Extensions&gt;
-				&lt;/Application&gt;
-				&lt;/Applications&gt;
-				&lt;Capabilities&gt;
-				&lt;rescap:Capability Name="runFullTrust" /&gt;
-				&lt;Capability Name="internetClient"/&gt;
-				&lt;uap:Capability Name="picturesLibrary"/&gt;
-				&lt;Capability Name="codeGeneration"/&gt;
-				&lt;uap:Capability Name="removableStorage"/&gt;
-				&lt;/Capabilities&gt;
-				&lt;/Package&gt;
-			</ManifestText>
-		</PropertyGroup>
-		<WriteLinesToFile File="$(MSBuildProjectDirectory)\Package.appxmanifest" Overwrite="true" Lines="$(ManifestText)" />
 	</Target>
 
 	<ItemGroup>
@@ -191,6 +116,12 @@
 
 	<ItemGroup>
 		<PRIResource Include="Strings\**\*.resw" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Update="Pages\MainPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 	<ItemGroup>
 		<Page Update="LoginWindow.xaml">
@@ -203,19 +134,7 @@
 		<Page Update="Pages\Capabilities\RecommendationPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Update="Pages\MainPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
 		<Page Update="Pages\Capabilities\RecommendationPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\MainPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Themes\Generic.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Themes\Card.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Update="Styles\Controls.xaml">

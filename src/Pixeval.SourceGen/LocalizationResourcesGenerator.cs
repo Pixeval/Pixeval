@@ -114,11 +114,13 @@ public class LocalizationResourcesGenerator : IIncrementalGenerator
     
                 partial class {{asc.TargetSymbol.Name}}
                 {   
-                    public static class SR
+                    public StringResources SR { get; } = new();
+
+                    public class StringResources
                     {
                         private static readonly global::Microsoft.Windows.ApplicationModel.Resources.ResourceLoader s_resourceLoader = new(global::Microsoft.Windows.ApplicationModel.Resources.ResourceLoader.GetDefaultResourceFilePath(),"{{Path.GetFileNameWithoutExtension(additionalText.Path)}}");
 
-                        {{string.Join("\r\n        ", names.Select(_ => @$"public static readonly string {Regex.Replace(_, "\\.|\\:|\\[|\\]", string.Empty)} = s_resourceLoader.GetString(""{_.Replace('.', '/')}"");"))}} 
+                        {{string.Join("\r\n        ", names.Select(_ => @$"public readonly string {Regex.Replace(_, "\\.|\\:|\\[|\\]", string.Empty)} = s_resourceLoader.GetString(""{_.Replace('.', '/')}"");"))}} 
                     }
                 }
             

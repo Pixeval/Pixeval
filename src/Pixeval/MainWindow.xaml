@@ -3,14 +3,15 @@
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                xmlns:userControls="using:Pixeval.UserControls"
                 xmlns:ie="using:Microsoft.Xaml.Interactions.Core"
                 xmlns:i="using:Microsoft.Xaml.Interactivity"
                 xmlns:winUiEx="using:WinUIEx"
+                xmlns:pixeval="using:Pixeval"
+                xmlns:pixeval1="using:Pixeval"
                 Closed="MainWindow_OnClosed"
                 mc:Ignorable="d">
     <winUiEx:WindowEx.Backdrop>
-        <winUiEx:MicaSystemBackdrop/>
+        <winUiEx:MicaSystemBackdrop Kind="Base"/>
     </winUiEx:WindowEx.Backdrop>
     <Grid>
         <i:Interaction.Behaviors>
@@ -19,36 +20,22 @@
             </ie:EventTriggerBehavior>
         </i:Interaction.Behaviors>
         <Grid.RowDefinitions>
-            <RowDefinition Height="28" />
+            <RowDefinition Height="48" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" x:Name="AppTitleBar">
             <Image Source="/Assets/Images/logo44x44.ico" HorizontalAlignment="Left" Width="16" Height="16" Margin="8,0"/>
-            <TextBlock x:Name="AppTitleBarText" VerticalAlignment="Center" TextWrapping="NoWrap" Style="{StaticResource CaptionTextBlockStyle}" Margin="32, 0, 0, 0"/>
+            <TextBlock x:Name="AppTitleBarText" Text="{x:Bind SR.AppName}" VerticalAlignment="Center" TextWrapping="NoWrap" Margin="32, 0, 0, 0"/>
         </Grid>
         <Grid Grid.Row="1">
             <Grid.Resources>
                 <ThemeShadow x:Name="SnackBarShadow" />
             </Grid.Resources>
             <Frame x:Name="MainFrame"
-               x:FieldModifier="public"
-               HorizontalAlignment="Stretch"
-               VerticalAlignment="Stretch">
+                   x:FieldModifier="public"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Stretch">
             </Frame>
-            <Grid x:Name="Processing"
-              Width="100"
-              Height="100"
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center"
-              CornerRadius="15"
-              Visibility="Collapsed">
-                <Rectangle Fill="{ThemeResource PixevalAppAcrylicBrush}" />
-                <ProgressRing Width="40"
-                          Height="40"
-                          HorizontalAlignment="Center"
-                          VerticalAlignment="Center"
-                          IsIndeterminate="True" />
-            </Grid>
         </Grid>
     </Grid>
 </winUiEx:WindowEx>

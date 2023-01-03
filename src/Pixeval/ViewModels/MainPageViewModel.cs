@@ -18,6 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
+using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -36,28 +38,22 @@ internal partial class MainPageViewModel : ObservableObject
     [ObservableProperty] private string _suggestBoxText;
     [ObservableProperty] private NavigationViewItem _selectedItem;
     
-    private readonly INavigationService<MainPage> _navigationService;
     private readonly Data.IRepository<SearchHistory> _searchHistoryRepository;
     private readonly SessionStorage _sessionStorage;
     private readonly SettingStorage _settingStorage;
 
-    public MainPageViewModel(MainPage mainPage,
-        INavigationService<MainPage> navigationService,
+    public MainPageViewModel(Lazy<MainPage> mainPage,
         Data.IRepository<SearchHistory> repository,
         SessionStorage sessionStorage,
         SettingStorage settingStorage)
     {
         MainPage = mainPage;
-        _navigationService = navigationService;
         _searchHistoryRepository = repository;
         _settingStorage = settingStorage;
         _sessionStorage = sessionStorage;
-        MainPage.ViewModel = this;
-        MainPage.DataContext = this;
-        MainPage.InitializeComponent();
     }
 
-    public MainPage MainPage { get; }
+    public Lazy<MainPage> MainPage { get; }
 
 
 }
