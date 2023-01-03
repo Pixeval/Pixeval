@@ -33,14 +33,14 @@ namespace Pixeval.SourceGen;
 [Generator]
 public class LocalizationResourcesGenerator : IIncrementalGenerator
 {
-    private const string Namespace = "Pixeval";
+    private const string RootNamespace = "Pixeval";
     private const string LocalizedStringResourcesAttributeName = "LocalizedStringResourcesAttribute";
     private const string LocalizedStringResourcesAttributeText = $$"""
         using System;
 
         #nullable enable
 
-        namespace {{Namespace}};
+        namespace {{RootNamespace}};
 
         [AttributeUsage(AttributeTargets.Class)]
         public sealed class {{LocalizedStringResourcesAttributeName}} : global::System.Attribute
@@ -59,12 +59,12 @@ public class LocalizationResourcesGenerator : IIncrementalGenerator
     {
         context.RegisterPostInitializationOutput(output =>
         {
-            output.AddSource("LocalizedStringResourcesAttribute.g.cs", LocalizedStringResourcesAttributeText);
+            output.AddSource($"{LocalizedStringResourcesAttributeName}.g.cs", LocalizedStringResourcesAttributeText);
         });
 
 
         var attributes = context.SyntaxProvider.ForAttributeWithMetadataName(
-            $"{Namespace}.{LocalizedStringResourcesAttributeName}",
+            $"{RootNamespace}.{LocalizedStringResourcesAttributeName}",
             (_, _) => true,
             (syntaxContext, _) => syntaxContext);
 
@@ -89,6 +89,7 @@ public class LocalizationResourcesGenerator : IIncrementalGenerator
             var additionalText = additionalTexts.SingleOrDefault(_ =>
                 Path.GetFileNameWithoutExtension(_.Path) == fileName ||
                 Path.GetFileName(_.Path) == $"{fileName}.{extension}");
+
             if (additionalText is null)
             {
                 continue;
