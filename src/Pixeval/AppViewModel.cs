@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using System.Diagnostics.Tracing;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Graphics;
@@ -40,7 +39,6 @@ using Pixeval.CoreApi.Net;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Messages;
-using Pixeval.UserControls;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
@@ -122,7 +122,6 @@
 		<None Remove="Templates.xaml" />
 		<None Remove="Themes.xaml" />
 		<None Remove="Themes\Generic.xaml" />
-		<None Remove="UserControls\IllustrationView\Architecture of IllustrationView.md" />
 		<None Remove="UserControl\CommentBlock.xaml" />
 		<None Remove="UserControl\CommentList.xaml" />
 		<None Remove="UserControl\IllustrationContainer.xaml" />
@@ -136,9 +135,6 @@
 		<None Remove="UserControl\SnackBar.xaml" />
 		<None Remove="UserControl\SortOptionComboBox.xaml" />
 		<None Remove="UserControl\TokenInput.xaml" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Compile Include="UserControls\IllustrationView\Architecture of IllustrationView.md" />
 	</ItemGroup>
 
 	<ItemGroup>
