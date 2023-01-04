@@ -59,6 +59,7 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Image = SixLabors.ImageSharp.Image;
 using Pixeval.Attributes;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages;
 
@@ -78,6 +79,8 @@ public sealed partial class MainPage
     public MainPage()
     {
         InitializeComponent();
+        CurrentContext.NavigationView = MainPageRootNavigationView;
+        CurrentContext.Frame = MainPageRootFrame;
         DataContext = _viewModel;
         if (AppWindowTitleBar.IsCustomizationSupported())
         {
@@ -296,7 +299,7 @@ public sealed partial class MainPage
             .WithContent(content)
             .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
             .WithDefaultButton(ContentDialogButton.Primary)
-            .Build(App.AppViewModel.Window);
+            .Build(CurrentContext.Window);
         content.Owner = dialog;
         await dialog.ShowAsync();
     }

@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -43,6 +43,7 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.Login;
@@ -146,7 +147,7 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
         else
         {
             await MessageDialogBuilder.CreateAcknowledgement(
-                    App.AppViewModel.Window,
+                    CurrentContext.Window,
                     LoginPageResources.RefreshingSessionIsNotPresentTitle,
                     LoginPageResources.RefreshingSessionIsNotPresentContent)
                 .ShowAsync();

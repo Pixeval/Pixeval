@@ -74,13 +74,7 @@ public class AppViewModel : AutoActivateObservableRecipient,
 
     public App App { get; }
 
-    public MainWindow Window { get; private set; } = null!;
-
-    public AppWindow AppWindow { get; private set; } = null!;
-
     public DownloadManager<ObservableDownloadTask> DownloadManager { get; private set; } = null!;
-
-    public Frame AppWindowRootFrame => Window.PixevalAppRootFrame;
 
     public MakoClient MakoClient { get; set; } = null!; // The null-state of MakoClient is transient
 
@@ -88,7 +82,7 @@ public class AppViewModel : AutoActivateObservableRecipient,
 
     public FileCache Cache { get; private set; } = null!;
 
-    public ElementTheme AppRootFrameTheme => AppWindowRootFrame.RequestedTheme;
+    public ElementTheme AppRootFrameTheme => CurrentContext.Frame.RequestedTheme;
 
     public string? PixivUid => MakoClient.Session.Id;
 
@@ -114,12 +108,7 @@ public class AppViewModel : AutoActivateObservableRecipient,
                     .AddSingleton(provider => new BrowseHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSetting.MaximumBrowseHistoryRecords)));
     }
 
-    public nint GetMainWindowHandle()
-    {
-        return Window.GetWindowHandle();
-    }
-
-    public async void SwitchTheme(ApplicationTheme theme)
+    public void SwitchTheme(ApplicationTheme theme)
     {
         var selectedTheme = theme switch
         {
@@ -144,37 +133,37 @@ public class AppViewModel : AutoActivateObservableRecipient,
 
     public void RootFrameNavigate(Type type, object parameter, NavigationTransitionInfo infoOverride)
     {
-        AppWindowRootFrame.Navigate(type, parameter, infoOverride);
+        CurrentContext.Frame.Navigate(type, parameter, infoOverride);
     }
 
     public void RootFrameNavigate(Type type, object parameter)
     {
-        AppWindowRootFrame.Navigate(type, parameter);
+        CurrentContext.Frame.Navigate(type, parameter);
     }
 
     public void RootFrameNavigate(Type type)
     {
-        AppWindowRootFrame.Navigate(type);
+        CurrentContext.Frame.Navigate(type);
     }
 
     public async Task ShowExceptionDialogAsync(Exception e)
     {
-        await MessageDialogBuilder.CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
+        await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
     }
 
     public void DispatchTask(DispatcherQueueHandler action)
     {
-        Window.DispatcherQueue.TryEnqueue(action);
+        CurrentContext.Window.DispatcherQueue.TryEnqueue(action);
     }
 
     public Task DispatchTaskAsync(Func<Task> action)
     {
-        return Window.DispatcherQueue.EnqueueAsync(action);
+        return CurrentContext.Window.DispatcherQueue.EnqueueAsync(action);
     }
 
     public Task<T> DispatchTaskAsync<T>(Func<Task<T>> action)
     {
-        return Window.DispatcherQueue.EnqueueAsync(action);
+        return CurrentContext.Window.DispatcherQueue.EnqueueAsync(action);
     }
 
     public async Task InitializeAsync(bool activatedByProtocol)
@@ -185,14 +174,10 @@ public class AppViewModel : AutoActivateObservableRecipient,
 
         await AppContext.WriteLogoIcoIfNotExist();
         CurrentContext.IconPath = await AppContext.GetIconAbsolutePath();
-        CurrentContext.Window = Window = new MainWindow();
+        CurrentContext.Window = new MainWindow();
         CurrentContext.Title = AppContext.AppIdentifier;
-        AppWindow = CurrentContext.AppWindow;
 
         AppHelper.Initialize(new SizeInt32(AppSetting.WindowWidth, AppSetting.WindowHeight));
-
-        // Window.ExtendsContentIntoTitleBar = true;
-        // Window.SetTitleBar(Window.CustomTitleBar);
 
         await AppKnownFolders.Temporary.ClearAsync();
         Cache = await FileCache.CreateDefaultAsync();
@@ -202,18 +187,18 @@ public class AppViewModel : AutoActivateObservableRecipient,
 
     public (int, int) GetAppWindowSizeTuple()
     {
-        var windowSize = AppWindow.Size;
+        var windowSize = CurrentContext.AppWindow.Size;
         return (windowSize.Width, windowSize.Height);
     }
 
     public Size GetAppWindowSize()
     {
-        return AppWindow.Size.ToWinRtSize();
+        return CurrentContext.AppWindow.Size.ToWinRtSize();
     }
 
     public Size GetDpiAwareAppWindowSize()
     {
-        var dpi = User32.GetDpiForWindow(GetMainWindowHandle());
+        var dpi = User32.GetDpiForWindow(CurrentContext.HWnd);
         var size = GetAppWindowSize();
         var scalingFactor = (float)dpi / 96;
         return new Size(size.Width / scalingFactor, size.Height / scalingFactor);
@@ -221,12 +206,12 @@ public class AppViewModel : AutoActivateObservableRecipient,
 
     public void PrepareForActivation()
     {
-        Window.ShowProgressRing();
+        ((MainWindow)CurrentContext.Window).ShowProgressRing();
     }
 
     public void ActivationProcessed()
     {
-        Window.HideProgressRing();
+        ((MainWindow)CurrentContext.Window).HideProgressRing();
     }
 
     /// <summary>
@@ -242,10 +227,12 @@ public class AppViewModel : AutoActivateObservableRecipient,
 
     public async void ShowSnack(string text, int duration)
     {
-        Window.PixevalAppSnackBar.Title = text;
+        var window = (MainWindow)CurrentContext.Window;
 
-        Window.PixevalAppSnackBar.IsOpen = true;
+        window.PixevalAppSnackBar.Title = text;
+
+        window.PixevalAppSnackBar.IsOpen = true;
         await Task.Delay(duration);
-        Window.PixevalAppSnackBar.IsOpen = false;
+        window.PixevalAppSnackBar.IsOpen = false;
     }
 }

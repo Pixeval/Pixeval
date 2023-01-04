@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -39,6 +39,7 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -81,27 +82,27 @@ public sealed partial class IllustrationViewerPage : IGoBack
 
         if (!NavigatingStackEntriesFromRelatedWorksStack.Any())
         {
-            while (App.AppViewModel.AppWindowRootFrame.BackStack.LastOrDefault() is { Parameter: IllustrationViewerPageViewModel })
+            while (CurrentContext.Frame.BackStack.LastOrDefault() is { Parameter: IllustrationViewerPageViewModel })
             {
-                var stack = App.AppViewModel.AppWindowRootFrame.BackStack;
+                var stack = CurrentContext.Frame.BackStack;
                 stack.RemoveAt(stack.Count - 1);
             }
         }
         else
         {
-            while (App.AppViewModel.AppWindowRootFrame.BackStack.LastOrDefault() is { Parameter: IllustrationViewerPageViewModel viewModel } &&
+            while (CurrentContext.Frame.BackStack.LastOrDefault() is { Parameter: IllustrationViewerPageViewModel viewModel } &&
                    NavigatingStackEntriesFromRelatedWorksStack.Peek() is var (vm, idx) &&
                    (viewModel.IllustrationId != vm || idx != null && viewModel.CurrentIndex != idx))
             {
-                var stack = App.AppViewModel.AppWindowRootFrame.BackStack;
+                var stack = CurrentContext.Frame.BackStack;
                 stack.RemoveAt(stack.Count - 1);
             }
         }
 
         NavigatingStackEntriesFromRelatedWorksStack.TryPop(out _);
-        if (App.AppViewModel.AppWindowRootFrame.CanGoBack)
+        if (CurrentContext.Frame.CanGoBack)
         {
-            App.AppViewModel.AppWindowRootFrame.GoBack(new SuppressNavigationTransitionInfo());
+            CurrentContext.Frame.GoBack(new SuppressNavigationTransitionInfo());
         }
     }
 
@@ -142,7 +143,7 @@ public sealed partial class IllustrationViewerPage : IGoBack
 
         IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), _viewModel.Current);
 
-        WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(_viewModel.IllustrationGrid?.GetItemContainer(_viewModel.IllustrationViewModelInTheGridView!) ?? App.AppViewModel.AppWindowRootFrame));
+        WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(_viewModel.IllustrationGrid?.GetItemContainer(_viewModel.IllustrationViewModelInTheGridView!) ?? CurrentContext.Frame));
         WeakReferenceMessenger.Default.Register<IllustrationViewerPage, CommentRepliesHyperlinkButtonTappedMessage>(this, CommentRepliesHyperlinkButtonTapped);
     }
 
@@ -150,7 +151,7 @@ public sealed partial class IllustrationViewerPage : IGoBack
     {
         var commentRepliesBlock = new CommentRepliesBlock
         {
-            ViewModel = new CommentRepliesBlockViewModel(message.Sender!.GetDataContext<CommentBlockViewModel>())
+            ViewModel = new CommentRepliesBlockViewModel(UIHelper.GetDataContext<CommentBlockViewModel>(message.Sender!))
         };
         commentRepliesBlock.CloseButtonTapped += recipient.CommentRepliesBlock_OnCloseButtonTapped;
         recipient._commentRepliesPopup = PopupManager.CreatePopup(commentRepliesBlock, widthMargin: 200, maxWidth: 1500, minWidth: 400, maxHeight: 1200, closing: (_, _) => recipient._commentRepliesPopup = null);

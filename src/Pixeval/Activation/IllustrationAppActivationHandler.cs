@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -28,6 +28,7 @@ using Pixeval.Pages.IllustrationViewer;
 using Pixeval.UserControls;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 
 namespace Pixeval.Activation;
 
@@ -37,7 +38,7 @@ public class IllustrationAppActivationHandler : IAppActivationHandler
 
     public Task Execute(string id)
     {
-        WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(App.AppViewModel.AppWindowRootFrame));
+        WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(CurrentContext.Frame));
 
         return App.AppViewModel.DispatchTaskAsync(async () =>
         {
@@ -49,7 +50,7 @@ public class IllustrationAppActivationHandler : IAppActivationHandler
                     .GetMangaIllustrationViewModels()
                     .ToArray();
 
-                ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
+                ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", CurrentContext.Frame);
                 App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
             }
             catch (Exception e)
