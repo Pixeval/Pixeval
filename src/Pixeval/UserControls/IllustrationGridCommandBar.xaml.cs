@@ -38,7 +38,6 @@ using Pixeval.UserControls.TokenInput;
 using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using WinUI3Utilities;
 
 namespace Pixeval.UserControls;
 
@@ -170,7 +169,7 @@ public sealed partial class IllustrationGridCommandBar
         // This will run for quite a while
         _ = Task.Run(async () =>
         {
-            var tasks = await CurrentContext.Window.DispatcherQueue.EnqueueAsync(
+            var tasks = await App.AppViewModel.Window.DispatcherQueue.EnqueueAsync(
                 async () => await Task.WhenAll(
                     ViewModel.SelectedIllustrations
                         .SelectMany(i => i.GetMangaIllustrationViewModels())

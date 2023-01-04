@@ -52,7 +52,6 @@ using Pixeval.Attributes;
 using Pixeval.Database.Managers;
 using Pixeval.Database;
 using Pixeval.Messages;
-using WinUI3Utilities;
 
 namespace Pixeval;
 
@@ -63,8 +62,13 @@ public sealed partial class MainWindow : INavigationModeInfo
     public MainWindow()
     {
         InitializeComponent();
-        CurrentContext.TitleBar = AppTitleBar;
-        CurrentContext.TitleTextBlock = AppTitleTextBlock;
+        WinUI3Utilities.CurrentContext.TitleBar = AppTitleBar;
+        WinUI3Utilities.CurrentContext.TitleTextBlock = AppTitleTextBlock;
+
+        if (!AppWindowTitleBar.IsCustomizationSupported())
+        {
+            SetTitleBar(AppTitleBar);
+        }
     }
 
     public NavigationTransitionInfo? DefaultNavigationTransitionInfo { get; internal set; } = new SuppressNavigationTransitionInfo();
@@ -128,11 +132,13 @@ public sealed partial class MainWindow : INavigationModeInfo
 
     private double GetScaleAdjustment()
     {
-        var displayArea = DisplayArea.GetFromWindowId(CurrentContext.WindowId, DisplayAreaFallback.Primary);
+        var hWnd = WindowNative.GetWindowHandle(this);
+        var wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
+        var displayArea = DisplayArea.GetFromWindowId(wndId, DisplayAreaFallback.Primary);
         var hMonitor = Win32Interop.GetMonitorFromDisplayId(displayArea.DisplayId);
 
         // Get DPI.
-        var result = GetDpiForMonitor(hMonitor, MonitorDpiType.MdtDefault, out var dpiX, out _);
+        var result = GetDpiForMonitor(hMonitor, MonitorDpiType.MdtDefault, out var dpiX, out var _);
         if (result != 0)
         {
             throw new Exception("Could not get DPI for monitor.");
@@ -169,7 +175,7 @@ public sealed partial class MainWindow : INavigationModeInfo
     {
         if (AppWindowTitleBar.IsCustomizationSupported())
         {
-            SetDragRegionForCustomTitleBar(CurrentContext.AppWindow);
+            SetDragRegionForCustomTitleBar(App.AppViewModel.AppWindow);
         }
     }
 
@@ -177,7 +183,7 @@ public sealed partial class MainWindow : INavigationModeInfo
     {
         if (AppWindowTitleBar.IsCustomizationSupported())
         {
-            SetDragRegionForCustomTitleBar(CurrentContext.AppWindow);
+            SetDragRegionForCustomTitleBar(App.AppViewModel.AppWindow);
         }
     }
 
@@ -219,7 +225,7 @@ public sealed partial class MainWindow : INavigationModeInfo
             .WithContent(content)
             .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
             .WithDefaultButton(ContentDialogButton.Primary)
-            .Build(CurrentContext.Window);
+            .Build(App.AppViewModel.Window);
         content.Owner = dialog;
         await dialog.ShowAsync();
     }
@@ -325,16 +331,16 @@ public sealed partial class MainWindow : INavigationModeInfo
 
     private static Task GoBackToMainPageAsync()
     {
-        if (CurrentContext.Frame.Content is MainPage)
+        if (App.AppViewModel.AppWindowRootFrame.Content is MainPage)
         {
             return Task.CompletedTask;
         }
-        var stack = CurrentContext.Frame.BackStack;
+        var stack = App.AppViewModel.AppWindowRootFrame.BackStack;
         while (stack.Count >= 1 && stack.Last().SourcePageType != typeof(MainPage))
         {
             stack.RemoveAt(stack.Count - 1);
         }
-        CurrentContext.Frame.GoBack();
-        return CurrentContext.Frame.AwaitPageTransitionAsync<MainPage>();
+        App.AppViewModel.AppWindowRootFrame.GoBack();
+        return App.AppViewModel.AppWindowRootFrame.AwaitPageTransitionAsync<MainPage>();
     }
 }

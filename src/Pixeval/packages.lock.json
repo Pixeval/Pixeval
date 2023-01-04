@@ -212,9 +212,9 @@
       },
       "WinUI3Utilities": {
         "type": "Direct",
-        "requested": "[1.0.5.1, )",
-        "resolved": "1.0.5.1",
-        "contentHash": "LGfri99YDBB03yonNDm6qFDKPwedmxswEp2qoIphH5IvRbmQb3tFINLJjsPQuVJUmiBt3JhTK91lgL8SXbhtOg==",
+        "requested": "[1.0.4, )",
+        "resolved": "1.0.4",
+        "contentHash": "tdUSVGY8YpPKjACHAbs5wfOOrpGyHwWqldMpaczyyJfCdpINt3GqJf+8730vT/CiDaTfLzGcRAkBTKCCCFqZYw==",
         "dependencies": {
           "CommunityToolkit.Mvvm": "8.0.0",
           "CommunityToolkit.WinUI.UI.Controls": "7.1.2",

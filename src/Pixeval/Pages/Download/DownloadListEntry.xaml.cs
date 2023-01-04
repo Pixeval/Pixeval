@@ -32,7 +32,6 @@ using WinUI3Utilities.Attributes;
 using Pixeval.Download;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.UI;
-using WinUI3Utilities;
 
 namespace Pixeval.Pages.Download;
 
@@ -192,7 +191,7 @@ public sealed partial class DownloadListEntry
                     .GetMangaIllustrationViewModels()
                     .ToArray();
 
-                ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", CurrentContext.Frame);
+                ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
                 App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
                 break;
         }
@@ -200,7 +199,7 @@ public sealed partial class DownloadListEntry
 
     private async void CheckErrorMessageInDetail_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, DownloadListEntryResources.ErrorMessageDialogTitle, ViewModel.ErrorCause!.ToString())
+        await MessageDialogBuilder.CreateAcknowledgement(App.AppViewModel.Window, DownloadListEntryResources.ErrorMessageDialogTitle, ViewModel.ErrorCause!.ToString())
             .ShowAsync();
     }
 

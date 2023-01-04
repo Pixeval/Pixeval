@@ -55,6 +55,8 @@ public static partial class AppContext
 
     private static readonly ApplicationDataContainer SessionContainer;
 
+    private static readonly ApplicationDataContainer ConfigurationContainer;
+
     private static SoftwareBitmapSource? _imageNotAvailable;
 
     private static IRandomAccessStream? _imageNotAvailableStream;
