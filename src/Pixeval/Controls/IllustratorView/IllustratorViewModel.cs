@@ -31,6 +31,7 @@ using Pixeval.UserControls;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
+using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Controls.IllustratorView;
 

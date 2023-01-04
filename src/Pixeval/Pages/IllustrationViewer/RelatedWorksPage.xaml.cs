@@ -23,6 +23,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Messages;
 using Pixeval.UserControls;
 using Pixeval.Util;
+using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer;
 

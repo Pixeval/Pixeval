@@ -6,6 +6,8 @@
                        xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:notifyOnLoadedComboBox="using:Pixeval.Controls.NotifyOnLoadedComboBox"
+                       xmlns:pixeval="using:Pixeval"
+                       xmlns:ui="using:Pixeval.Util.UI"
                        xmlns:userControls="using:Pixeval.UserControls"
                        ClearCacheAfterNavigation="True"
                        Loaded="RecommendationsPage_OnLoaded"
@@ -22,9 +24,14 @@
                     <ComboBoxItem x:Uid="/RecommendationsPage/ModeSelectionComboBoxMangaComboBoxItem" Tag="{x:Bind enum:RecommendationContentType.Manga}" />
                 </ComboBox.Items>
             </notifyOnLoadedComboBox:NotifyOnLoadedComboBox>
-            <userControls:SortOptionComboBox x:Name="SortOptionComboBox"
-                                             Margin="10,0,0,0"
-                                             SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChangedWhenLoaded" />
+            <Grid x:Name="SortOptionComboBoxContainer"
+                  Margin="10,0,0,0"
+                  Background="Transparent"
+                  Loaded="SortOptionComboBoxContainer_OnLoaded">
+                <userControls:SortOptionComboBox x:Name="SortOptionComboBox"
+                                                 IsEnabled="{x:Bind ui:UIHelper.GetIllustrationViewSortOptionAvailability(pixeval:App.AppViewModel.AppSetting.IllustrationViewOption)}"
+                                                 SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
+            </Grid>
         </userControls:IllustrationContainer.CommandBarElements>
     </userControls:IllustrationContainer>
 </controls:EnhancedPage>

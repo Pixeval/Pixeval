@@ -7,6 +7,8 @@
                        xmlns:notifyOnLoadedCalendarDatePicker="using:Pixeval.Controls.NotifyOnLoadedCalendarDatePicker"
                        xmlns:notifyOnLoadedComboBox="using:Pixeval.Controls.NotifyOnLoadedComboBox"
                        xmlns:options="using:Pixeval.Options"
+                       xmlns:pixeval="using:Pixeval"
+                       xmlns:ui="using:Pixeval.Util.UI"
                        xmlns:userControls="using:Pixeval.UserControls"
                        ClearCacheAfterNavigation="True"
                        Loaded="RankingsPage_OnLoaded"
@@ -27,9 +29,14 @@
                                                                                Margin="10,0,0,0"
                                                                                DateChangedWhenLoaded="RankDateTimeCalendarDatePicker_OnDateChangedWhenLoaded"
                                                                                MaxDate="{x:Bind MaxDate}" />
-            <userControls:SortOptionComboBox x:Name="SortOptionComboBox"
-                                             Margin="10,0,0,0"
-                                             SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
+            <Grid x:Name="SortOptionComboBoxContainer"
+                  Margin="10,0,0,0"
+                  Background="Transparent"
+                  Loaded="SortOptionComboBoxContainer_OnLoaded">
+                <userControls:SortOptionComboBox x:Name="SortOptionComboBox"
+                                                 IsEnabled="{x:Bind ui:UIHelper.GetIllustrationViewSortOptionAvailability(pixeval:App.AppViewModel.AppSetting.IllustrationViewOption)}"
+                                                 SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
+            </Grid>
         </userControls:IllustrationContainer.CommandBarElements>
     </userControls:IllustrationContainer>
 </controls:EnhancedPage>

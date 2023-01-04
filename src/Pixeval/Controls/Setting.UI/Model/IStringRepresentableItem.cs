@@ -28,5 +28,7 @@ public interface IStringRepresentableItem
 
     string StringRepresentation { get; }
 
+    // ReSharper disable once UnusedMember.Global
+    // ReSharper disable once UnassignedGetOnlyAutoProperty
     static IEnumerable<IStringRepresentableItem>? AvailableItems { get; }
 }

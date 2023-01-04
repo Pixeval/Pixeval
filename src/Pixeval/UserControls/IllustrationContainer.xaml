@@ -5,19 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="using:Pixeval.UserControls"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:illustrationView="using:Pixeval.UserControls.IllustrationView"
              Loaded="IllustrationContainer_OnLoaded"
              mc:Ignorable="d">
 
-    <controls:DockPanel>
-        <local:IllustrationGridCommandBar x:Name="TopCommandBar"
+    <controls:DockPanel x:Name="IllustrationContainerDockPanel">
+        <illustrationView:IllustrationViewCommandBar x:Name="TopCommandBar"
                                           HorizontalAlignment="Stretch"
                                           controls:DockPanel.Dock="Top"
                                           IsDefaultCommandsEnabled="{x:Bind TopCommandBar.ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
                                           PrimaryCommandsSupplements="{x:Bind PrimaryCommandsSupplements, Mode=OneWay}"
                                           SecondaryCommandsSupplements="{x:Bind SecondaryCommandsSupplements, Mode=TwoWay}"
-                                          ViewModel="{x:Bind IllustrationGrid.ViewModel}" />
-        <local:IllustrationGrid x:Name="IllustrationGrid"
-                                x:FieldModifier="public"
-                                Header="{x:Bind Header, Mode=OneWay}" />
+                                          ViewModel="{x:Bind IllustrationView.ViewModel}" />
+        <!--<local:IllustrationGrid x:Name="IllustrationGrid" Header="{x:Bind Header, Mode=OneWay}" />-->
     </controls:DockPanel>
 </UserControl>

@@ -23,25 +23,27 @@ using System.Linq;
 using Windows.System;
 using Windows.UI.Core;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
-using WinUI3Utilities.Attributes;
 using Pixeval.Messages;
 using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
+using WinUI3Utilities.Attributes;
 
-namespace Pixeval.UserControls;
+namespace Pixeval.UserControls.IllustrationView;
 
 // use "load failed" image for those thumbnails who failed to load its source due to various reasons
 // note: please ALWAYS add e.Handled = true before every "tapped" event for the buttons
 [DependencyProperty<object>("Header")]
-public sealed partial class IllustrationGrid
+public sealed partial class GridIllustrationView : IIllustrationView
 {
     private static readonly ExponentialEase ImageSourceSetEasingFunction = new()
     {
@@ -49,10 +51,21 @@ public sealed partial class IllustrationGrid
         Exponent = 12
     };
 
-    public IllustrationGrid()
+    public GridIllustrationView()
     {
         InitializeComponent();
-        ViewModel = new IllustrationGridViewModel();
+        ViewModel = new GridIllustrationViewViewModel();
+        ViewModel.DataProvider.FilterChanged += (sender, _) =>
+        {
+            if (sender is Predicate<object> predicate)
+            {
+                ViewModel.DataProvider.IllustrationsView.Filter = predicate;
+            }
+            else
+            {
+                ViewModel.DataProvider.IllustrationsView.Refresh();
+            }
+        };
     }
 
     private EventHandler<IllustrationViewModel>? _itemTapped;
@@ -63,7 +76,14 @@ public sealed partial class IllustrationGrid
         remove => _itemTapped -= value;
     }
 
-    public IllustrationGridViewModel ViewModel { get; }
+    public GridIllustrationViewViewModel ViewModel { get; }
+
+
+    public FrameworkElement SelfIllustrationView => this;
+
+    IllustrationViewViewModel IIllustrationView.ViewModel => ViewModel;
+
+    public ScrollViewer ScrollViewer => IllustrationGridView.FindDescendant<ScrollViewer>()!;
 
     private void IllustrationGrid_OnLoaded(object sender, RoutedEventArgs e)
     {

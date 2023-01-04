@@ -38,9 +38,25 @@ public enum SequenceComparison
 [PublicAPI]
 public static class Enumerates
 {
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> source)
+    {
+        return source.SelectMany(i => i);
+    }
+
+    public static IEnumerable<(int, T)> Indexed<T>(this IEnumerable<T> source)
+    {
+        var counter = 0;
+        foreach (var item in source)
+        {
+            yield return (counter++, item);
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IList<T> AsList<T>(this IEnumerable<T> enumerable)
     {
-        return enumerable is IList<T> list ? list : enumerable.ToList();
+        return enumerable as IList<T> ?? enumerable.ToList();
     }
 
     public static bool SequenceEquals<T>(this IEnumerable<T> @this,

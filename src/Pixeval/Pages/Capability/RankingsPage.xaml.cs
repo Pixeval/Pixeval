@@ -57,7 +57,7 @@ public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelpe
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
         RankOptionComboBox.SelectedItem = LocalizedBoxHelper.Of<RankOption, RankOptionWrapper>(RankOption.Day);
         RankDateTimeCalendarDatePicker.Date = DateTime.Now.AddDays(-2);
-        WeakReferenceMessenger.Default.Register<RankingsPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustrationContainer.ViewModel.FetchEngine?.Cancel());
+        WeakReferenceMessenger.Default.Register<RankingsPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
     }
 
     private void RankingsPage_OnLoaded(object? sender, RoutedEventArgs e)
@@ -80,7 +80,7 @@ public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelpe
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
+        ((ISortedIllustrationContainerPageHelper) this).OnSortOptionChanged();
     }
 
     private void ChangeSource()
@@ -88,5 +88,13 @@ public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelpe
         var rankOption = (RankOptionComboBox.SelectedItem as RankOptionWrapper)?.Value ?? RankOption.Day;
         var dateTime = RankDateTimeCalendarDatePicker.Date?.DateTime ?? DateTime.Now.AddDays(-2);
         _ = IllustrationContainer.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Ranking(rankOption, dateTime));
+    }
+
+    private void SortOptionComboBoxContainer_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        if (App.AppViewModel.AppSetting.IllustrationViewOption is IllustrationViewOption.Justified)
+        {
+            ToolTipService.SetToolTip(SortOptionComboBoxContainer, new ToolTip { Content = MiscResources.SortIsNotAllowedWithJustifiedLayout });
+        }
     }
 }

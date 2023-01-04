@@ -102,7 +102,7 @@ public sealed partial class IllustratorPage
                 break;
         }
 
-        WeakReferenceMessenger.Default.Register<IllustratorPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.ViewModelProvider.ViewModel.FetchEngine?.Cancel());
+        WeakReferenceMessenger.Default.Register<IllustratorPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.ViewModelProvider.ViewModel.DataProvider.FetchEngine?.Cancel());
 
         ChangeSource();
     }
@@ -110,13 +110,11 @@ public sealed partial class IllustratorPage
     private void IllustratorPage_OnLoaded(object sender, RoutedEventArgs e)
     {
         // Retrieve the ScrollViewer that the GridView is using internally
-        var scrollViewer = IllustrationContainer.IllustrationGrid.FindDescendant<ScrollViewer>();
-
         var headerPresenter = (UIElement)VisualTreeHelper.GetParent(Header);
         var headerContainer = (UIElement)VisualTreeHelper.GetParent(headerPresenter);
         Canvas.SetZIndex(headerContainer, 1);
 
-        _scrollerPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(scrollViewer);
+        _scrollerPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(IllustrationContainer.IllustrationView.ScrollViewer);
         _compositor = _scrollerPropertySet.Compositor;
 
         _props = _compositor.CreatePropertySet();

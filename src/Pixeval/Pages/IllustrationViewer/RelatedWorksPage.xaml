@@ -5,9 +5,10 @@
                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:userControls="using:Pixeval.UserControls"
+                       xmlns:illustrationView="using:Pixeval.UserControls.IllustrationView"
                        NavigationCacheMode="Required"
                        mc:Ignorable="d">
-    <userControls:IllustrationGrid x:Name="RelatedWorksIllustrationGrid"
-                                   Margin="10,0,5,0"
-                                   ItemTapped="RelatedWorksIllustrationGrid_OnItemTapped" />
+    <illustrationView:GridIllustrationView x:Name="RelatedWorksIllustrationGrid"
+                                       Margin="10,0,5,0"
+                                       ItemTapped="RelatedWorksIllustrationGrid_OnItemTapped" />
 </controls:EnhancedPage>

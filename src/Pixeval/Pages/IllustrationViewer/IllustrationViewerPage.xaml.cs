@@ -40,6 +40,7 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
+using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -142,7 +143,7 @@ public sealed partial class IllustrationViewerPage : IGoBack
 
         IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), _viewModel.Current);
 
-        WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(_viewModel.IllustrationGrid?.GetItemContainer(_viewModel.IllustrationViewModelInTheGridView!) ?? App.AppViewModel.AppWindowRootFrame));
+        WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(_viewModel.IllustrationView?.GetItemContainer(_viewModel.IllustrationViewModelInTheGridView!) ?? App.AppViewModel.AppWindowRootFrame));
         WeakReferenceMessenger.Default.Register<IllustrationViewerPage, CommentRepliesHyperlinkButtonTappedMessage>(this, CommentRepliesHyperlinkButtonTapped);
     }
 
@@ -218,10 +219,10 @@ public sealed partial class IllustrationViewerPage : IGoBack
 
     private void NextIllustration()
     {
-        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel!.IllustrationsView[_viewModel.IllustrationIndex!.Value + 1];
+        var illustrationViewModel = (IllustrationViewModel) _viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value + 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
-        App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationGrid!, viewModel), new SlideNavigationTransitionInfo
+        App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
         {
             Effect = SlideNavigationTransitionEffect.FromRight
         });
@@ -229,10 +230,10 @@ public sealed partial class IllustrationViewerPage : IGoBack
 
     private void PrevIllustration()
     {
-        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel!.IllustrationsView[_viewModel.IllustrationIndex!.Value - 1];
+        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value - 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
-        App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationGrid!, viewModel), new SlideNavigationTransitionInfo
+        App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
         {
             Effect = SlideNavigationTransitionEffect.FromLeft
         });

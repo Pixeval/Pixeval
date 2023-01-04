@@ -197,6 +197,9 @@ public partial record AppSetting
     [DefaultValue(10)]
     public int MaximumSuggestionBoxSearchHistory { get; set; }
 
+    [DefaultValue(IllustrationViewOption.Justified)]
+    public IllustrationViewOption IllustrationViewOption { get; set; }
+
     public static AppSetting CreateDefault()
     {
         return new AppSetting();

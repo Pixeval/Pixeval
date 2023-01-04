@@ -42,22 +42,34 @@ using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using QRCoder;
 using WinRT.Interop;
-using Pixeval.Pages.Misc;
 using System.Threading;
+using Microsoft.UI.Xaml.Data;
+using Pixeval.Options;
 using Pixeval.Util.Threading;
 
 namespace Pixeval.Util.UI;
 
 public static partial class UIHelper
 {
+    public static bool GetIllustrationViewSortOptionAvailability(IllustrationViewOption option)
+    {
+        return option is IllustrationViewOption.Regular;
+    }
+
+    public static async Task LoadMoreItemsAsync(this AdvancedCollectionView acv, uint count, Action<LoadMoreItemsResult> callback)
+    {
+        var result = await acv.LoadMoreItemsAsync(count);
+        callback(result);
+    }
+
     public static T GetDataContext<T>(this FrameworkElement element)
     {
-        return (T)element.DataContext;
+        return (T) element.DataContext;
     }
 
     public static T GetDataContext<T>(this object element)
     {
-        return ((FrameworkElement)element).GetDataContext<T>(); // direct cast will throw exception if the type check fails, and that's exactly what we want
+        return ((FrameworkElement) element).GetDataContext<T>(); // direct cast will throw exception if the type check fails, and that's exactly what we want
     }
 
     public static ImageSource GetImageSourceFromUriRelativeToAssetsImageFolder(string relativeToAssetsImageFolder)

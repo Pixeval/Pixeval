@@ -28,6 +28,7 @@ using Pixeval.Pages.IllustrationViewer;
 using Pixeval.UserControls;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Activation;
 

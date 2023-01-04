@@ -47,6 +47,7 @@ using Pixeval.Util.UI;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
+using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval;
 
@@ -72,7 +73,7 @@ public class AppViewModel : AutoActivateObservableRecipient,
 
     public App App { get; }
 
-    public MainWindow Window { get; private set; } = null!;
+    public MainWindow Window { get; private set;  } = null!;
 
     public AppWindow AppWindow { get; private set; } = null!;
 
@@ -174,8 +175,10 @@ public class AppViewModel : AutoActivateObservableRecipient,
         CurrentContext.Window = Window = new MainWindow();
         CurrentContext.Title = AppContext.AppIdentifier;
         AppWindow = CurrentContext.AppWindow;
+        Window = (MainWindow) CurrentContext.Window;
 
         AppHelper.Initialize(new SizeInt32(AppSetting.WindowWidth, AppSetting.WindowHeight));
+
 
         // Window.ExtendsContentIntoTitleBar = true;
         // Window.SetTitleBar(Window.CustomTitleBar);
@@ -224,14 +227,5 @@ public class AppViewModel : AutoActivateObservableRecipient,
         var original = _activatedByProtocol;
         _activatedByProtocol = false;
         return original;
-    }
-
-    public async void ShowSnack(string text, int duration)
-    {
-        Window.PixevalAppSnackBar.Title = text;
-
-        Window.PixevalAppSnackBar.IsOpen = true;
-        await Task.Delay(duration);
-        Window.PixevalAppSnackBar.IsOpen = false;
     }
 }
