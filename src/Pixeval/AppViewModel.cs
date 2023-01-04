@@ -23,12 +23,12 @@ using System.Diagnostics.Tracing;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Graphics;
+using ABI.Windows.System;
 using CommunityToolkit.WinUI;
 using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -47,6 +47,8 @@ using Pixeval.Util.UI;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
+using Microsoft.UI;
+using DispatcherQueueHandler = Microsoft.UI.Dispatching.DispatcherQueueHandler;
 
 namespace Pixeval;
 
@@ -117,15 +119,27 @@ public class AppViewModel : AutoActivateObservableRecipient,
         return Window.GetWindowHandle();
     }
 
-    public void SwitchTheme(ApplicationTheme theme)
+    public async void SwitchTheme(ApplicationTheme theme)
     {
-        Window.PixevalAppRootFrame.RequestedTheme = theme switch
+        var selectedTheme = theme switch
         {
             ApplicationTheme.Dark => ElementTheme.Dark,
             ApplicationTheme.Light => ElementTheme.Light,
             ApplicationTheme.SystemDefault => ElementTheme.Default,
             _ => throw new ArgumentOutOfRangeException(nameof(theme), theme, null)
         };
+
+        if (CurrentContext.Window.Content is FrameworkElement rootElement)
+            rootElement.RequestedTheme = selectedTheme;
+
+        // TODO: 没反应
+        Application.Current.Resources["WindowCaptionForeground"] =
+            selectedTheme switch
+            {
+                ElementTheme.Dark => Colors.White,
+                ElementTheme.Light => Colors.Black,
+                _ => Application.Current.RequestedTheme is Microsoft.UI.Xaml.ApplicationTheme.Dark ? Colors.White : Colors.Black
+            };
     }
 
     public void RootFrameNavigate(Type type, object parameter, NavigationTransitionInfo infoOverride)

@@ -165,7 +165,7 @@
                                       FontSize=13}"
                 Tapped="OpenSearchSettingPopupButton_OnTapped" />
         </Grid>
-        <Grid Margin="0,48,0,0">
+        <Grid>
             <Frame
                 x:Name="PixevalAppRootFrame"
                 x:FieldModifier="public"

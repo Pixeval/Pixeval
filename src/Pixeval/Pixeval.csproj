@@ -160,7 +160,7 @@
 		<PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
 		<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
 		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
-		<PackageReference Include="WinUI3Utilities" Version="1.0.4" />
+		<PackageReference Include="WinUI3Utilities" Version="1.0.5.1" />
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
 
