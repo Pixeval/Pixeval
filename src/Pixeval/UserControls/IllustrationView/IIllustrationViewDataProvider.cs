@@ -18,14 +18,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.UI;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
-using Pixeval.UserControls;
 
-namespace Pixeval;
+namespace Pixeval.UserControls.IllustrationView;
 
 public interface IIllustrationViewDataProvider
 {
@@ -35,15 +35,19 @@ public interface IIllustrationViewDataProvider
 
     public IFetchEngine<Illustration?>? FetchEngine { get; }
 
-    void DisposeCurrent();
+    Predicate<object>? Filter { get; set; }
 
-    bool Sortable { get; }
+    public event EventHandler FilterChanged;
+
+    void DisposeCurrent();
 
     public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; }
 
-    Task<bool> FillAsync(int? itemsLimit = null);
+    Task<int> LoadMore();
 
-    Task FillAsync(IFetchEngine<Illustration?>? fetchEngine, int? itemLimit = null);
+    Task<int> FillAsync(int? itemsLimit = null);
 
-    Task<bool> ResetAndFillAsync(IFetchEngine<Illustration?>? fetchEngine, int? itemLimit = null);
+    Task<int> FillAsync(IFetchEngine<Illustration?>? fetchEngine, int? itemLimit = null);
+
+    Task<int> ResetAndFillAsync(IFetchEngine<Illustration?>? fetchEngine, int? itemLimit = null);
 }

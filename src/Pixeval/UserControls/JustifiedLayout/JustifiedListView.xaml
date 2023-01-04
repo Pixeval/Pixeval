@@ -7,16 +7,22 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:justifiedLayout="using:Pixeval.UserControls.JustifiedLayout"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             Loaded="JustifiedListView_OnLoaded"
+             Unloaded="JustifiedListView_OnUnloaded"
              mc:Ignorable="d">
-    <ListView HorizontalAlignment="Stretch"
+    <ListView x:Name="ItemsListView"
+              HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch"
-              ItemsSource="{x:Bind Items, Mode=OneWay}"
               ScrollViewer.HorizontalScrollBarVisibility="Auto"
               ScrollViewer.HorizontalScrollMode="Auto"
-              ScrollViewer.IsHorizontalRailEnabled="True">
+              ScrollViewer.IsHorizontalRailEnabled="True"
+              SelectionMode="None"
+              SizeChanged="ItemsListView_OnSizeChanged">
         <ListView.ItemTemplate>
-            <DataTemplate>
-                <justifiedLayout:JustifiedListViewRow ItemsSource="{Binding}" />
+            <DataTemplate x:DataType="justifiedLayout:JustifiedListViewRowBinding">
+                <justifiedLayout:JustifiedListViewRow EffectiveViewportChanged="JustifiedListViewRow_OnEffectiveViewportChanged"
+                                                      ItemTemplate="{x:Bind Template, Mode=OneWay}"
+                                                      ItemsSource="{x:Bind Wrappers, Mode=OneWay}" />
             </DataTemplate>
         </ListView.ItemTemplate>
     </ListView>

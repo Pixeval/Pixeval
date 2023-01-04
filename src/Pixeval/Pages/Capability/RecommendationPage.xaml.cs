@@ -25,6 +25,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Misc;
+using Pixeval.Options;
 using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.UI;
@@ -45,7 +46,7 @@ public sealed partial class RecommendationPage : ISortedIllustrationContainerPag
     public override void OnPageDeactivated(NavigatingCancelEventArgs navigatingCancelEventArgs)
     {
         ModeSelectionComboBox.SelectionChangedWhenLoaded -= ModeSelectionComboBox_OnSelectionChangedWhenLoaded;
-        SortOptionComboBox.SelectionChangedWhenLoaded -= SortOptionComboBox_OnSelectionChangedWhenLoaded;
+        SortOptionComboBox.SelectionChangedWhenLoaded -= SortOptionComboBox_OnSelectionChanged;
         IllustrationContainer.ViewModel.Dispose();
         WeakReferenceMessenger.Default.UnregisterAll(this);
     }
@@ -70,15 +71,23 @@ public sealed partial class RecommendationPage : ISortedIllustrationContainerPag
         ChangeSource();
     }
 
-    private void SortOptionComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
+    private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         // FUCK C#, the default implementations are not inherited. We have to use this stupid cast here.
         // even a donkey knows "this" is an "ISortedIllustrationContainerPageHelper"
-        ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
+        ((ISortedIllustrationContainerPageHelper) this).OnSortOptionChanged();
     }
 
     private void ChangeSource()
     {
         _ = IllustrationContainer.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Recommendations(ModeSelectionComboBox.GetComboBoxSelectedItemTag(RecommendationContentType.Illust)), App.AppViewModel.AppSetting.ItemsNumberLimitForDailyRecommendations);
+    }
+
+    private void SortOptionComboBoxContainer_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        if (App.AppViewModel.AppSetting.IllustrationViewOption is IllustrationViewOption.Justified)
+        {
+            ToolTipService.SetToolTip(SortOptionComboBoxContainer, new ToolTip { Content = MiscResources.SortIsNotAllowedWithJustifiedLayout });
+        }
     }
 }

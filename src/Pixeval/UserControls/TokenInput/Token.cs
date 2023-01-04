@@ -27,6 +27,8 @@ namespace Pixeval.UserControls.TokenInput;
 
 public sealed partial class Token : ObservableObject, IEquatable<Token>, ICloneable
 {
+    public static readonly Token Empty = new(string.Empty, false, false);
+
     [ObservableProperty]
     private bool _caseSensitive;
 

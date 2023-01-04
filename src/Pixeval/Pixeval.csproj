@@ -33,7 +33,6 @@
 	<ItemGroup>
 		<Content Remove="Assets\Images\logo-no-caption.png" />
 		<Content Remove="Strings\zh-CN\BookmarksPage.resw" />
-		<Content Remove="Strings\zh-CN\IllustrationGridCommandBar.resw" />
 		<Content Remove="Strings\zh-CN\IllustrationInfoPage.resw" />
 		<Content Remove="Strings\zh-CN\IllustrationViewerPage.resw" />
 		<Content Remove="Strings\zh-CN\ImageViewerPage.resw" />
@@ -92,10 +91,10 @@
 		<None Remove="Strings\zh-CN\DownloadListPageDeleteTasksDialog.resw" />
 		<None Remove="Strings\zh-CN\DownloadTask.resw" />
 		<None Remove="Strings\zh-CN\FollowingsPage.resw" />
-		<None Remove="Strings\zh-CN\IllustrationGrid.resw" />
-		<None Remove="Strings\zh-CN\IllustrationGridCommandBar.resw" />
 		<None Remove="Strings\zh-CN\IllustrationInfoPage.resw" />
 		<None Remove="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
+		<None Remove="Strings\zh-CN\IllustrationView.resw" />
+		<None Remove="Strings\zh-CN\IllustrationViewCommandBar.resw" />
 		<None Remove="Strings\zh-CN\IllustrationViewerPage.resw" />
 		<None Remove="Strings\zh-CN\IllustratorPage.resw" />
 		<None Remove="Strings\zh-CN\ImageViewerPage.resw" />
@@ -123,18 +122,23 @@
 		<None Remove="Templates.xaml" />
 		<None Remove="Themes.xaml" />
 		<None Remove="Themes\Generic.xaml" />
-		<None Remove="UserControls\CommentBlock.xaml" />
-		<None Remove="UserControls\CommentList.xaml" />
-		<None Remove="UserControls\IllustrationContainer.xaml" />
-		<None Remove="UserControls\IllustrationGridCommandBar.xaml" />
-		<None Remove="UserControls\JustifiedLayout\JustifiedListView.xaml" />
-		<None Remove="UserControls\JustifiedLayout\JustifiedListViewRow.xaml" />
-		<None Remove="UserControls\OverlayPopupContent.xaml" />
-		<None Remove="UserControls\PixivReplyBar.xaml" />
-		<None Remove="UserControls\QrCodePresenter%27.xaml" />
-		<None Remove="UserControls\SnackBar.xaml" />
-		<None Remove="UserControls\SortOptionComboBox.xaml" />
-		<None Remove="UserControls\TokenInput.xaml" />
+		<None Remove="UserControls\IllustrationView\Architecture of IllustrationView.md" />
+		<None Remove="UserControl\CommentBlock.xaml" />
+		<None Remove="UserControl\CommentList.xaml" />
+		<None Remove="UserControl\IllustrationContainer.xaml" />
+		<None Remove="UserControl\IllustrationViewCommandBar.xaml" />
+		<None Remove="UserControl\JustifiedLayoutIllustrationView.xaml" />
+		<None Remove="UserControl\JustifiedLayout\JustifiedListView.xaml" />
+		<None Remove="UserControl\JustifiedLayout\JustifiedListViewRow.xaml" />
+		<None Remove="UserControl\OverlayPopupContent.xaml" />
+		<None Remove="UserControl\PixivReplyBar.xaml" />
+		<None Remove="UserControl\QrCodePresenter%27.xaml" />
+		<None Remove="UserControl\SnackBar.xaml" />
+		<None Remove="UserControl\SortOptionComboBox.xaml" />
+		<None Remove="UserControl\TokenInput.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Include="UserControls\IllustrationView\Architecture of IllustrationView.md" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -163,6 +167,7 @@
 		<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
 		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
 		<PackageReference Include="WinUI3Utilities" Version="1.0.4" />
+		<PackageReference Include="WinUIEx" Version="2.1.0" />
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
 
@@ -277,8 +282,8 @@
 		<PRIResource Include="Strings\zh-CN\DownloadListPageDeleteTasksDialog.resw" />
 		<PRIResource Include="Strings\zh-CN\DownloadTask.resw" />
 		<PRIResource Include="Strings\zh-CN\FollowingsPage.resw" />
-		<PRIResource Include="Strings\zh-CN\IllustrationGrid.resw" />
-		<PRIResource Include="Strings\zh-CN\IllustrationGridCommandBar.resw" />
+		<PRIResource Include="Strings\zh-CN\IllustrationView.resw" />
+		<PRIResource Include="Strings\zh-CN\IllustrationViewCommandBar.resw" />
 		<PRIResource Include="Strings\zh-CN\IllustrationInfoPage.resw" />
 		<PRIResource Include="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
 		<PRIResource Include="Strings\zh-CN\IllustrationViewerPage.resw" />
@@ -298,6 +303,11 @@
 		<PRIResource Include="Strings\zh-CN\SettingsPage.resw" />
 		<PRIResource Include="Strings\zh-CN\SortOptionComboBox.resw" />
 		<PRIResource Include="Strings\zh-CN\TokenInputTextBox.resw" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="UserControls\JustifiedLayoutIllustrationView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 	<ItemGroup>
 	  <Page Update="UserControls\JustifiedLayout\JustifiedListView.xaml">
@@ -333,13 +343,13 @@
 		<Page Update="Pages\IllustrationViewer\IllustrationViewerPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Update="UserControls\IllustrationGridCommandBar.xaml">
+		<Page Update="UserControls\IllustrationViewCommandBar.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Update="Pages\Capabilities\RecommendationPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Update="UserControls\IllustrationGrid.xaml">
+		<Page Update="UserControls\GridIllustrationView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Update="Dialogs\MessageDialogContent.xaml">
@@ -366,13 +376,13 @@
 		<Page Update="Pages\IllustrationViewer\IllustrationViewerPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Update="UserControls\IllustrationGridCommandBar.xaml">
+		<Page Update="UserControls\IllustrationViewCommandBar.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Update="Pages\Capabilities\RecommendationPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Update="UserControls\IllustrationGrid.xaml">
+		<Page Update="UserControls\GridIllustrationView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Update="Dialogs\MessageDialogContent.xaml">

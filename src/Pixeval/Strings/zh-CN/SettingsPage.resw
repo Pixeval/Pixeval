@@ -251,6 +251,12 @@
   <data name="GitHubRepositoryHyperlinkButton.Content" xml:space="preserve">
     <value>GitHub 仓库</value>
   </data>
+  <data name="IllustrationViewOptionEntry.Description" xml:space="preserve">
+    <value>缩略图视图的对齐规则。选择网格对齐则每张图片大小相当；选择两端对齐则只有每一行的两端会被对齐。注意排序功能只有网格对齐视图可用</value>
+  </data>
+  <data name="IllustrationViewOptionEntry.Header" xml:space="preserve">
+    <value>缩略图视图对齐规则</value>
+  </data>
   <data name="ImageMirrorServerEntry.Description" xml:space="preserve">
     <value>下载图片时所使用的的镜像站的主机名，如果不明白是什么意思请留空</value>
   </data>

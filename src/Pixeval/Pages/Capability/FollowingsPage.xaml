@@ -6,6 +6,7 @@
                        xmlns:illustratorView="using:Pixeval.Controls.IllustratorView"
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:userControls="using:Pixeval.UserControls"
+                       xmlns:illustrationView="using:Pixeval.UserControls.IllustrationView"
                        ClearCacheAfterNavigation="True"
                        Loaded="FollowingsPage_OnLoaded"
                        mc:Ignorable="d">
@@ -33,7 +34,7 @@
                                                              ThumbnailSources="{x:Bind Illustrations, Mode=OneWay}"
                                                              ViewModel="{x:Bind}">
                                 <illustratorView:IllustratorView.ThumbnailItemTemplate>
-                                    <DataTemplate x:DataType="userControls:IllustrationViewModel">
+                                    <DataTemplate x:DataType="illustrationView:IllustrationViewModel">
                                         <Image Width="70"
                                                Height="70"
                                                HorizontalAlignment="Stretch"

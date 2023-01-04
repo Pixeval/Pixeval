@@ -29,12 +29,11 @@ using CommunityToolkit.WinUI.UI;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
-using Pixeval.UserControls;
 using Pixeval.Utilities;
 
-namespace Pixeval;
+namespace Pixeval.UserControls.IllustrationView;
 
-public partial class GridIllustrationViewDataProvider : ObservableObject, IIllustrationViewDataProvider, IDisposable
+public class GridIllustrationViewDataProvider : ObservableObject, IIllustrationViewDataProvider, IDisposable
 {
     public GridIllustrationViewDataProvider()
     {
@@ -53,12 +52,36 @@ public partial class GridIllustrationViewDataProvider : ObservableObject, IIllus
     public ObservableCollection<IllustrationViewModel> IllustrationsSource
     {
         get => _illustrationSource;
-        private set
+        protected set
         {
             SetProperty(ref _illustrationSource, value);
             IllustrationsView.Source = value;
         }
     }
+
+    public bool Sortable => true;
+
+    private Predicate<object>? _filter;
+
+    public Predicate<object>? Filter
+    {
+        get => _filter;
+        set
+        {
+            _filter = value;
+            _filterChanged?.Invoke(_filter, EventArgs.Empty);
+        }
+    }
+
+    private EventHandler? _filterChanged;
+
+    public event EventHandler? FilterChanged
+    {
+        add => _filterChanged += value;
+        remove => _filterChanged -= value;
+    }
+
+    public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; set; }
 
     public void DisposeCurrent()
     {
@@ -72,26 +95,32 @@ public partial class GridIllustrationViewDataProvider : ObservableObject, IIllus
         SelectedIllustrations.Clear();
     }
 
-    public bool Sortable => true;
+    public virtual async Task<int> LoadMore()
+    {
+        if (IllustrationsSource is IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel> coll)
+        {
+            return (int) (await coll.LoadMoreItemsAsync(20)).Count;
+        }
 
-    public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; set; }
+        return 0;
+    }
 
-    public async Task<bool> FillAsync(int? itemsLimit = null)
+    public virtual async Task<int> FillAsync(int? itemsLimit = null)
     {
         var collection = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, itemsLimit));
         IllustrationsSource = collection;
-        await collection.LoadMoreItemsAsync(20);
         IllustrationsSource.CollectionChanged += OnIllustrationsSourceOnCollectionChanged;
-        return IllustrationsSource.Count > 0;
+        var result = await collection.LoadMoreItemsAsync(20);
+        return (int) result.Count;
     }
 
-    public Task FillAsync(IFetchEngine<Illustration?>? fetchEngine, int? itemLimit = null)
+    public Task<int> FillAsync(IFetchEngine<Illustration?>? fetchEngine, int? itemLimit = null)
     {
         FetchEngine = fetchEngine;
         return FillAsync(itemLimit);
     }
 
-    public Task<bool> ResetAndFillAsync(IFetchEngine<Illustration?>? fetchEngine, int? itemLimit = null)
+    public Task<int> ResetAndFillAsync(IFetchEngine<Illustration?>? fetchEngine, int? itemLimit = null)
     {
         FetchEngine?.EngineHandle.Cancel();
         FetchEngine = fetchEngine;
@@ -99,10 +128,15 @@ public partial class GridIllustrationViewDataProvider : ObservableObject, IIllus
         return FillAsync(itemLimit);
     }
 
-    private void OnIllustrationsSourceOnCollectionChanged(object? _, NotifyCollectionChangedEventArgs args)
+    protected virtual void OnIllustrationsSourceOnCollectionChanged(object? _, NotifyCollectionChangedEventArgs args)
     {
         void OnIsSelectionChanged(object? sender, IllustrationViewModel model)
         {
+            // Do not add to collection is the model does not conform to the filter
+            if (!Filter?.Invoke(model) ?? false)
+            {
+                return;
+            }
             if (model.IsSelected)
             {
                 SelectedIllustrations.Add(model);

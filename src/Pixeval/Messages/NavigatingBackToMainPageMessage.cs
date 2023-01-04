@@ -21,6 +21,7 @@
 using Pixeval.Pages;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.UserControls;
+using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Messages;
 

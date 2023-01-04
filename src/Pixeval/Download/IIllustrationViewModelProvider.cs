@@ -20,6 +20,7 @@
 
 using System.Threading.Tasks;
 using Pixeval.UserControls;
+using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Download;
 

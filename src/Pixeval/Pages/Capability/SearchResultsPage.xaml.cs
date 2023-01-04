@@ -19,12 +19,14 @@
 #endregion
 
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
 using Pixeval.Misc;
+using Pixeval.Options;
 using Pixeval.UserControls;
 using Pixeval.Util;
 
@@ -50,7 +52,7 @@ public sealed partial class SearchResultsPage : ISortedIllustrationContainerPage
     public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
     {
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
-        ChangeSource((IFetchEngine<Illustration>)navigationEventArgs.Parameter);
+        ChangeSource((IFetchEngine<Illustration>) navigationEventArgs.Parameter);
         WeakReferenceMessenger.Default.Register<SearchResultsPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
     }
 
@@ -61,6 +63,14 @@ public sealed partial class SearchResultsPage : ISortedIllustrationContainerPage
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
+        ((ISortedIllustrationContainerPageHelper) this).OnSortOptionChanged();
+    }
+
+    private void SortOptionComboBoxContainer_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        if (App.AppViewModel.AppSetting.IllustrationViewOption is IllustrationViewOption.Justified)
+        {
+            ToolTipService.SetToolTip(SortOptionComboBoxContainer, new ToolTip { Content = MiscResources.SortIsNotAllowedWithJustifiedLayout });
+        }
     }
 }

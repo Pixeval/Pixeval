@@ -21,9 +21,10 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Options;
+using Pixeval.UserControls.IllustrationView;
 using WinUI3Utilities.Attributes;
 
 
@@ -56,9 +57,18 @@ public sealed partial class IllustrationContainer
                     throw new ArgumentOutOfRangeException();
             }
         };
+        IllustrationView = App.AppViewModel.AppSetting.IllustrationViewOption switch
+        {
+            IllustrationViewOption.Regular => new GridIllustrationView(),
+            IllustrationViewOption.Justified => new JustifiedLayoutIllustrationView(),
+            _ => throw new ArgumentOutOfRangeException()
+        }; 
+        IllustrationContainerDockPanel.Children.Add(IllustrationView.SelfIllustrationView);
     }
 
-    public IllustrationGridViewModel ViewModel => IllustrationGrid.ViewModel;
+    public IllustrationViewViewModel ViewModel => IllustrationView.ViewModel;
+
+    public IIllustrationView IllustrationView { get; set; }
 
 
     /// <summary>
@@ -68,11 +78,11 @@ public sealed partial class IllustrationContainer
 
     private void IllustrationContainer_OnLoaded(object sender, RoutedEventArgs e)
     {
-        IllustrationGrid.Focus(FocusState.Programmatic);
+        IllustrationView.SelfIllustrationView.Focus(FocusState.Programmatic);
     }
 
     public void ScrollToTop()
     {
-        IllustrationGrid.IllustrationGridView.FindDescendant<ScrollViewer>()?.ChangeView(null, 0, null, false);
+        IllustrationView.ScrollViewer.ChangeView(null, 0, null, false);
     }
 }

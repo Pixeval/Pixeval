@@ -162,4 +162,7 @@
   <data name="CancelSelectionButtonDefaultLabel" xml:space="preserve">
     <value>取消选择</value>
   </data>
+  <data name="DownloadItemsQueuedFormatted" xml:space="preserve">
+    <value>已将{0}个作品添加至下载列表</value>
+  </data>
 </root>

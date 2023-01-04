@@ -31,12 +31,11 @@ public static class JustifiedListViewHelper
 {
     public static IEnumerable<IEnumerable<(int top, int width, int height)>> Normalize(this IEnumerable<LayoutItem> items, int spacing, int containerWidth)
     {
-        var rows = items.GroupBy(i => i.Top)
-            .Select(i => i.ToArray());
+        var rows = items.GroupBy(i => i.Top).Select(i => i.ToArray());
 
         foreach (var row in rows)
         {
-            if (row.Length == 1 && row is [ { Top: var top, Height: var height }])
+            if (row.Length == 1 && row is [ { Top: var top, Height: var height } ])
             {
                 yield return new[] { ((int) top, containerWidth, (int) height) };
                 continue;
@@ -50,7 +49,7 @@ public static class JustifiedListViewHelper
         }
     }
 
-    public static IEnumerable<JustifiedListViewRowItemWrapper[]> ComputeJustifiedListViewLayout(IEnumerable<(object item, double aspectRatio)> enumerable, int containerWidth, int spacing, int desireHeight)
+    public static IEnumerable<JustifiedListViewRowItemWrapper[]> ComputeJustifiedListViewLayout(IEnumerable<(IllustrationView.IllustrationViewModel item, double aspectRatio)> enumerable, int containerWidth, int spacing, int desireHeight)
     {
         var valueTuples = enumerable.ToList();
         var boxes = JustifiedLayoutAlgorithm.Compute(valueTuples.Select(tuple => tuple.aspectRatio).ToArray(), conf => conf.TargetRowHeight = desireHeight).Boxes;

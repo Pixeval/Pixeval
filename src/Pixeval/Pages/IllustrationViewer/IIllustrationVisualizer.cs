@@ -20,6 +20,7 @@
 
 using System.Collections.ObjectModel;
 using Pixeval.UserControls;
+using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer;
 

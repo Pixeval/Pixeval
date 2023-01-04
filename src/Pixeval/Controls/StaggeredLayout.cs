@@ -362,7 +362,7 @@ internal class StaggeredLayoutState
 
 internal class ElementCache
 {
-    public ElementCache(VirtualizingLayoutContext context) => this._context = context;
+    public ElementCache(VirtualizingLayoutContext context) => _context = context;
 
     public bool ContainsCacheFor(int index)
     {

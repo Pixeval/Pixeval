@@ -22,6 +22,7 @@ using System;
 using System.Threading.Tasks;
 using Pixeval.Database;
 using Pixeval.UserControls;
+using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Download;
 

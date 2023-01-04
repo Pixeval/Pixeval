@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Macros;
 using Pixeval.UserControls;
+using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Download;
 

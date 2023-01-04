@@ -47,6 +47,7 @@ using Pixeval.Util.UI;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
+using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval;
 
@@ -226,14 +227,5 @@ public class AppViewModel : AutoActivateObservableRecipient,
         var original = _activatedByProtocol;
         _activatedByProtocol = false;
         return original;
-    }
-
-    public async void ShowSnack(string text, int duration)
-    {
-        Window.PixevalAppSnackBar.Title = text;
-
-        Window.PixevalAppSnackBar.IsOpen = true;
-        await Task.Delay(duration);
-        Window.PixevalAppSnackBar.IsOpen = false;
     }
 }

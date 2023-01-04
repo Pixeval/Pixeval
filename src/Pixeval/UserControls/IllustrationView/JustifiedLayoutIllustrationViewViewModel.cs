@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IllustrationGridViewModel.cs
+// Copyright (c) 2023 Pixeval/JustifiedLayoutIllustrationViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,73 +19,36 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using CommunityToolkit.WinUI.UI;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.CoreApi.Engine;
-using Pixeval.CoreApi.Model;
 using Pixeval.Popups;
 using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 
-namespace Pixeval.UserControls;
+namespace Pixeval.UserControls.IllustrationView;
 
-public partial class IllustrationGridViewModel : ObservableObject, IDisposable
+public sealed class JustifiedLayoutIllustrationViewViewModel : IllustrationViewViewModel
 {
     private SoftwareBitmapSource? _pixEzQrCodeSource;
 
-    [ObservableProperty]
-    private bool _isAnyIllustrationSelected;
-
-    [ObservableProperty]
-    private string _selectionLabel;
-
-    [ObservableProperty]
-    private bool _hasNoItems;
-
     private SoftwareBitmapSource? _webQrCodeSource;
 
-    public IIllustrationViewDataProvider DataProvider { get; set; }
-
-    public IllustrationGridViewModel()
+    public JustifiedLayoutIllustrationViewViewModel()
     {
-        _selectionLabel = IllustrationGridCommandBarResources.CancelSelectionButtonDefaultLabel;
-        DataProvider = new GridIllustrationViewDataProvider();
+        SelectionLabel = IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel;
+        DataProvider = new JustifiedLayoutIllustrationViewDataProvider();
         DataProvider.SelectedIllustrations.CollectionChanged += (_, _) =>
         {
             IsAnyIllustrationSelected = DataProvider.SelectedIllustrations.Count > 0;
             var count = DataProvider.SelectedIllustrations.Count;
             SelectionLabel = count == 0
-                ? IllustrationGridCommandBarResources.CancelSelectionButtonDefaultLabel
-                : IllustrationGridCommandBarResources.CancelSelectionButtonFormatted.Format(count);
+                ? IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel
+                : IllustrationViewCommandBarResources.CancelSelectionButtonFormatted.Format(count);
         };
     }
 
-    public void Dispose()
-    {
-        DataProvider.FetchEngine?.Cancel();
-        DisposeCurrent();
-        GC.SuppressFinalize(this);
-    }
-
-    public void SetSortDescription(SortDescription description)
-    {
-        if (!DataProvider.IllustrationsView.SortDescriptions.Any())
-        {
-            DataProvider.IllustrationsView.SortDescriptions.Add(description);
-            return;
-        }
-
-        DataProvider.IllustrationsView.SortDescriptions[0] = description;
-    }
-
-    public void ClearSortDescription()
-    {
-        DataProvider.IllustrationsView.SortDescriptions.Clear();
-    }
+    public override IIllustrationViewDataProvider DataProvider { get; set; }
 
     public async Task ShowQrCodeForIllustrationAsync(IllustrationViewModel model)
     {
@@ -101,13 +64,10 @@ public partial class IllustrationGridViewModel : ObservableObject, IDisposable
         PopupManager.ShowPopup(PopupManager.CreatePopup(new QrCodePresenter(_pixEzQrCodeSource), lightDismiss: true, closing: (_, _) => _pixEzQrCodeSource.Dispose()));
     }
 
-    public async Task ResetEngineAndFillAsync(IFetchEngine<Illustration?>? newEngine, int? itemLimit = null)
+    public override void Dispose()
     {
-        HasNoItems = !await DataProvider.ResetAndFillAsync(newEngine, itemLimit);
-    }
-
-    public void DisposeCurrent()
-    {
+        DataProvider.FetchEngine?.Cancel();
         DataProvider.DisposeCurrent();
+        GC.SuppressFinalize(this);
     }
 }

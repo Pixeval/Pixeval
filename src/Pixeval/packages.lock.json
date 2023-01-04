@@ -223,6 +223,15 @@
           "PInvoke.User32": "0.7.124"
         }
       },
+      "WinUIEx": {
+        "type": "Direct",
+        "requested": "[2.1.0, )",
+        "resolved": "2.1.0",
+        "contentHash": "4tiyOThWn2J4ps6mvo8tWQlx/oFLM02Sm7Jj7Awt/ODFzJT7fOYMxDfGfMJmqd8F7LyiIy5JnjmOMZdXQFYtHA==",
+        "dependencies": {
+          "Microsoft.WindowsAppSDK": "1.2.221109.1"
+        }
+      },
       "Autofac": {
         "type": "Transitive",
         "resolved": "6.5.0",
