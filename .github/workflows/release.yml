@@ -18,7 +18,7 @@ jobs:
         runs-on: windows-latest
         steps:
           - name: Checkout
-            uses: actions/checkout@v2
+            uses: actions/checkout@v3
 
           - name: Create release
             id: create_release
@@ -47,7 +47,7 @@ jobs:
             private_key_password: ${{ secrets.PRIVATE_KEY_PASSWORD }}
         steps:
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v3
               with:
                 fetch-depth: 0
                 
@@ -55,31 +55,34 @@ jobs:
               with:
                 global-json-file: global.json
                 include-prerelease: true
-              
+            
+            - name: Add msbuild to PATH
+              uses: microsoft/setup-msbuild@v1.1
+              with:
+                vs-prerelease: true
+
             - name: Install pfx
               run: |
                 [io.file]::WriteAllBytes("$PWD/temp.pfx",[convert]::FromBase64String($env:private_key))
                 Import-PfxCertificate -FilePath $PWD/temp.pfx -CertStoreLocation Cert:\CurrentUser\My -Password (ConvertTo-SecureString -AsPlainText "$env:private_key_password")
                 Remove-Item -Path "$PWD/temp.pfx"
             
-            - uses: actions/cache@v2
+            - uses: actions/cache@v3
               with:
                 path: ~/.nuget/packages
                 key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
                 restore-keys: |
                     ${{ runner.os }}-nuget-
-
             - name: Restore the application
-              run: dotnet msbuild -t:restore -p:Platform=${{ matrix.platform }} -p:RestoreLockedMode=true -m
+              run: msbuild -t:restore -p:Platform=${{ matrix.platform }} -p:RestoreLockedMode=true -m
 
             - name: Publish the application
-              run: dotnet msbuild -t:publish -p:Configuration=Release -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:PackageCertificateThumbprint="$env:private_key_thumbprint" -p:OutDir="$PWD\build" -m
+              run: msbuild -t:publish -p:Configuration=Release -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:PackageCertificateThumbprint="$env:private_key_thumbprint" -p:OutDir="$PWD\build" -m
             
             - name: Copy files
               run: |
                 $files = @(Get-ChildItem -Recurse|Where-Object -Property Name -Like Pixeval*.msix)
                 Copy-Item $files -Destination (New-Item -Path ./output -ItemType Directory -ErrorAction SilentlyContinue)
-
             - name: Upload release asset
               id: upload-release-asset1
               uses: shogo82148/actions-upload-release-asset@v1
