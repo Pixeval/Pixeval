@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -39,6 +39,7 @@ using Pixeval.Messages;
 using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.UI;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustratorViewer;
 
@@ -220,9 +221,9 @@ public sealed partial class IllustratorPage
     public void GoBack()
     {
         ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", ProfileImage);
-        if (App.AppViewModel.AppWindowRootFrame.CanGoBack)
+        if (CurrentContext.Frame.CanGoBack)
         {
-            App.AppViewModel.AppWindowRootFrame.GoBack(new SuppressNavigationTransitionInfo());
+            CurrentContext.Frame.GoBack(new SuppressNavigationTransitionInfo());
         }
     }
 
