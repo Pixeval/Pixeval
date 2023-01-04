@@ -1,4 +1,4 @@
-#region Copyright (c) Pixeval/Pixeval
+﻿#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -45,7 +45,6 @@ using WinRT.Interop;
 using Pixeval.Pages.Misc;
 using System.Threading;
 using Pixeval.Util.Threading;
-using WinUI3Utilities;
 
 namespace Pixeval.Util.UI;
 
@@ -247,7 +246,8 @@ public static partial class UIHelper
             SuggestedStartLocation = suggestedStartLocation,
             FileTypeFilter = { "*" }
         };
-        return folderPicker.InitializeWithWindow().PickSingleFolderAsync();
+        InitializeWithWindow.Initialize(folderPicker, App.AppViewModel.GetMainWindowHandle());
+        return folderPicker.PickSingleFolderAsync();
     }
 
     public static IAsyncOperation<StorageFile?> OpenFileSavePickerAsync(string suggestedFileName, string fileTypeName, string fileTypeId)
@@ -261,7 +261,8 @@ public static partial class UIHelper
             },
             SuggestedFileName = suggestedFileName
         };
-        return savePicker.InitializeWithWindow().PickSaveFileAsync();
+        InitializeWithWindow.Initialize(savePicker, App.AppViewModel.GetMainWindowHandle());
+        return savePicker.PickSaveFileAsync();
     }
 
     public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync()
@@ -272,7 +273,8 @@ public static partial class UIHelper
             ViewMode = PickerViewMode.Thumbnail,
             FileTypeFilter = { "*" }
         };
-        return openPicker.InitializeWithWindow().PickSingleFileAsync();
+        InitializeWithWindow.Initialize(openPicker, App.AppViewModel.GetMainWindowHandle());
+        return openPicker.PickSingleFileAsync();
     }
 
     public static Task AwaitPageTransitionAsync<T>(this FrameworkElement root) where T : Page

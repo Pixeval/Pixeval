@@ -24,7 +24,6 @@ using Microsoft.UI.Xaml;
 using PInvoke;
 using Pixeval.Interop;
 using WinRT;
-using WinUI3Utilities;
 
 namespace Pixeval.Util.UI;
 
@@ -64,7 +63,7 @@ public static partial class UIHelper
     {
         if (TaskBarCustomizationSupported)
         {
-            TaskBarList3Instance.SetProgressState(CurrentContext.HWnd, state);
+            TaskBarList3Instance.SetProgressState(App.AppViewModel.GetMainWindowHandle(), state);
         }
     }
 
@@ -72,7 +71,7 @@ public static partial class UIHelper
     {
         if (TaskBarCustomizationSupported)
         {
-            TaskBarList3Instance.SetProgressValue(CurrentContext.HWnd, progressValue, max);
+            TaskBarList3Instance.SetProgressValue(App.AppViewModel.GetMainWindowHandle(), progressValue, max);
         }
     }
 
@@ -83,14 +82,14 @@ public static partial class UIHelper
         var manager = nint.Zero;
         fixed (Guid* id = &RiId)
         {
-            interop.GetForWindow(CurrentContext.HWnd, id, (void**)&manager);
+            interop.GetForWindow(App.AppViewModel.GetMainWindowHandle(), id, (void**)&manager);
             return DataTransferManager.FromAbi(manager);
         }
     }
 
     public static void ShowShareUI()
     {
-        DataTransferManagerInterop.ShowShareUIForWindow(CurrentContext.HWnd);
+        DataTransferManagerInterop.ShowShareUIForWindow(App.AppViewModel.GetMainWindowHandle());
     }
 
     /// <summary>

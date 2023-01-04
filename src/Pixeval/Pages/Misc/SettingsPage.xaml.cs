@@ -34,7 +34,6 @@ using Pixeval.UserControls.TokenInput;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.Misc;
@@ -117,21 +116,21 @@ public sealed partial class SettingsPage
     private async void PerformSignOutButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         var dialog = MessageDialogBuilder.CreateOkCancel(
-            CurrentContext.Window,
+            App.AppViewModel.Window,
             SettingsPageResources.SignOutConfirmationDialogTitle,
             SettingsPageResources.SignOutConfirmationDialogContent);
         if (await dialog.ShowAsync() == ContentDialogResult.Primary)
         {
             await AppContext.ClearDataAsync();
             App.AppViewModel.SignOutExit = true;
-            CurrentContext.Window.Close();
+            App.AppViewModel.Window.Close();
         }
     }
 
     private async void ResetDefaultSettingsButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         var dialog = MessageDialogBuilder.CreateOkCancel(
-            CurrentContext.Window,
+            App.AppViewModel.Window,
             SettingsPageResources.ResetSettingConfirmationDialogTitle,
             SettingsPageResources.ResetSettingConfirmationDialogContent);
         if (await dialog.ShowAsync() == ContentDialogResult.Primary)

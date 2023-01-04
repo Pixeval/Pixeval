@@ -1,4 +1,4 @@
-#region Copyright (c) Pixeval/Pixeval
+﻿#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -31,7 +31,6 @@ using Pixeval.Pages;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.UserControls;
 using Pixeval.Util.UI;
-using WinUI3Utilities;
 
 namespace Pixeval;
 
@@ -53,10 +52,9 @@ public partial class MainWindowViewModel : AutoActivateObservableRecipient, IRec
     // Code Duplication, but not a big thing
     public async Task ReverseSearchAsync(Stream stream)
     {
-        var window = (MainWindow)CurrentContext.Window;
         try
         {
-            window.ShowProgressRing();
+            App.AppViewModel.Window.ShowProgressRing();
             var result = await App.AppViewModel.MakoClient.ReverseSearchAsync(stream, App.AppViewModel.AppSetting.ReverseSearchApiKey!);
             if (result.Header is not null)
             {
@@ -68,8 +66,8 @@ public partial class MainWindowViewModel : AutoActivateObservableRecipient, IRec
                             var viewModels = new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(first.Data!.PixivId.ToString()))
                                 .GetMangaIllustrationViewModels()
                                 .ToArray();
-                            window.HideProgressRing();
-                            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", CurrentContext.Frame);
+                            App.AppViewModel.Window.HideProgressRing();
+                            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
                             App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
                             return;
                         }
@@ -77,20 +75,20 @@ public partial class MainWindowViewModel : AutoActivateObservableRecipient, IRec
                         break;
                     case var s:
                         await MessageDialogBuilder.CreateAcknowledgement(
-                                window,
+                                App.AppViewModel.Window,
                                 MainPageResources.ReverseSearchErrorTitle,
                                 s > 0 ? MainPageResources.ReverseSearchServerSideErrorContent : MainPageResources.ReverseSearchClientSideErrorContent)
                             .ShowAsync();
                         break;
                 }
 
-                window.HideProgressRing();
-                MessageDialogBuilder.CreateAcknowledgement(window, MainPageResources.ReverseSearchNotFoundTitle, MainPageResources.ReverseSearchNotFoundContent);
+                App.AppViewModel.Window.HideProgressRing();
+                MessageDialogBuilder.CreateAcknowledgement(App.AppViewModel.Window, MainPageResources.ReverseSearchNotFoundTitle, MainPageResources.ReverseSearchNotFoundContent);
             }
         }
         catch (Exception e)
         {
-            window.HideProgressRing();
+            App.AppViewModel.Window.HideProgressRing();
             await App.AppViewModel.ShowExceptionDialogAsync(e);
         }
     }

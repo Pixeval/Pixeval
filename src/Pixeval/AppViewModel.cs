@@ -23,12 +23,12 @@ using System.Diagnostics.Tracing;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Graphics;
-using ABI.Windows.System;
 using CommunityToolkit.WinUI;
 using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -47,8 +47,6 @@ using Pixeval.Util.UI;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
-using Microsoft.UI;
-using DispatcherQueueHandler = Microsoft.UI.Dispatching.DispatcherQueueHandler;
 
 namespace Pixeval;
 
@@ -74,7 +72,13 @@ public class AppViewModel : AutoActivateObservableRecipient,
 
     public App App { get; }
 
+    public MainWindow Window { get; private set; } = null!;
+
+    public AppWindow AppWindow { get; private set; } = null!;
+
     public DownloadManager<ObservableDownloadTask> DownloadManager { get; private set; } = null!;
+
+    public Frame AppWindowRootFrame => Window.PixevalAppRootFrame;
 
     public MakoClient MakoClient { get; set; } = null!; // The null-state of MakoClient is transient
 
@@ -82,7 +86,7 @@ public class AppViewModel : AutoActivateObservableRecipient,
 
     public FileCache Cache { get; private set; } = null!;
 
-    public ElementTheme AppRootFrameTheme => CurrentContext.Frame.RequestedTheme;
+    public ElementTheme AppRootFrameTheme => AppWindowRootFrame.RequestedTheme;
 
     public string? PixivUid => MakoClient.Session.Id;
 
@@ -108,62 +112,55 @@ public class AppViewModel : AutoActivateObservableRecipient,
                     .AddSingleton(provider => new BrowseHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSetting.MaximumBrowseHistoryRecords)));
     }
 
+    public nint GetMainWindowHandle()
+    {
+        return Window.GetWindowHandle();
+    }
+
     public void SwitchTheme(ApplicationTheme theme)
     {
-        var selectedTheme = theme switch
+        Window.PixevalAppRootFrame.RequestedTheme = theme switch
         {
             ApplicationTheme.Dark => ElementTheme.Dark,
             ApplicationTheme.Light => ElementTheme.Light,
             ApplicationTheme.SystemDefault => ElementTheme.Default,
             _ => throw new ArgumentOutOfRangeException(nameof(theme), theme, null)
         };
-
-        if (CurrentContext.Window.Content is FrameworkElement rootElement)
-            rootElement.RequestedTheme = selectedTheme;
-
-        // TODO: 没反应
-        Application.Current.Resources["WindowCaptionForeground"] =
-            selectedTheme switch
-            {
-                ElementTheme.Dark => Colors.White,
-                ElementTheme.Light => Colors.Black,
-                _ => Application.Current.RequestedTheme is Microsoft.UI.Xaml.ApplicationTheme.Dark ? Colors.White : Colors.Black
-            };
     }
 
     public void RootFrameNavigate(Type type, object parameter, NavigationTransitionInfo infoOverride)
     {
-        CurrentContext.Frame.Navigate(type, parameter, infoOverride);
+        AppWindowRootFrame.Navigate(type, parameter, infoOverride);
     }
 
     public void RootFrameNavigate(Type type, object parameter)
     {
-        CurrentContext.Frame.Navigate(type, parameter);
+        AppWindowRootFrame.Navigate(type, parameter);
     }
 
     public void RootFrameNavigate(Type type)
     {
-        CurrentContext.Frame.Navigate(type);
+        AppWindowRootFrame.Navigate(type);
     }
 
     public async Task ShowExceptionDialogAsync(Exception e)
     {
-        await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
+        await MessageDialogBuilder.CreateAcknowledgement(Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
     }
 
     public void DispatchTask(DispatcherQueueHandler action)
     {
-        CurrentContext.Window.DispatcherQueue.TryEnqueue(action);
+        Window.DispatcherQueue.TryEnqueue(action);
     }
 
     public Task DispatchTaskAsync(Func<Task> action)
     {
-        return CurrentContext.Window.DispatcherQueue.EnqueueAsync(action);
+        return Window.DispatcherQueue.EnqueueAsync(action);
     }
 
     public Task<T> DispatchTaskAsync<T>(Func<Task<T>> action)
     {
-        return CurrentContext.Window.DispatcherQueue.EnqueueAsync(action);
+        return Window.DispatcherQueue.EnqueueAsync(action);
     }
 
     public async Task InitializeAsync(bool activatedByProtocol)
@@ -174,10 +171,14 @@ public class AppViewModel : AutoActivateObservableRecipient,
 
         await AppContext.WriteLogoIcoIfNotExist();
         CurrentContext.IconPath = await AppContext.GetIconAbsolutePath();
-        CurrentContext.Window = new MainWindow();
+        CurrentContext.Window = Window = new MainWindow();
         CurrentContext.Title = AppContext.AppIdentifier;
+        AppWindow = CurrentContext.AppWindow;
 
         AppHelper.Initialize(new SizeInt32(AppSetting.WindowWidth, AppSetting.WindowHeight));
+
+        // Window.ExtendsContentIntoTitleBar = true;
+        // Window.SetTitleBar(Window.CustomTitleBar);
 
         await AppKnownFolders.Temporary.ClearAsync();
         Cache = await FileCache.CreateDefaultAsync();
@@ -187,18 +188,18 @@ public class AppViewModel : AutoActivateObservableRecipient,
 
     public (int, int) GetAppWindowSizeTuple()
     {
-        var windowSize = CurrentContext.AppWindow.Size;
+        var windowSize = AppWindow.Size;
         return (windowSize.Width, windowSize.Height);
     }
 
     public Size GetAppWindowSize()
     {
-        return CurrentContext.AppWindow.Size.ToWinRtSize();
+        return AppWindow.Size.ToWinRtSize();
     }
 
     public Size GetDpiAwareAppWindowSize()
     {
-        var dpi = User32.GetDpiForWindow(CurrentContext.HWnd);
+        var dpi = User32.GetDpiForWindow(GetMainWindowHandle());
         var size = GetAppWindowSize();
         var scalingFactor = (float)dpi / 96;
         return new Size(size.Width / scalingFactor, size.Height / scalingFactor);
@@ -206,12 +207,12 @@ public class AppViewModel : AutoActivateObservableRecipient,
 
     public void PrepareForActivation()
     {
-        ((MainWindow)CurrentContext.Window).ShowProgressRing();
+        Window.ShowProgressRing();
     }
 
     public void ActivationProcessed()
     {
-        ((MainWindow)CurrentContext.Window).HideProgressRing();
+        Window.HideProgressRing();
     }
 
     /// <summary>
@@ -227,12 +228,10 @@ public class AppViewModel : AutoActivateObservableRecipient,
 
     public async void ShowSnack(string text, int duration)
     {
-        var window = (MainWindow)CurrentContext.Window;
+        Window.PixevalAppSnackBar.Title = text;
 
-        window.PixevalAppSnackBar.Title = text;
-
-        window.PixevalAppSnackBar.IsOpen = true;
+        Window.PixevalAppSnackBar.IsOpen = true;
         await Task.Delay(duration);
-        window.PixevalAppSnackBar.IsOpen = false;
+        Window.PixevalAppSnackBar.IsOpen = false;
     }
 }
