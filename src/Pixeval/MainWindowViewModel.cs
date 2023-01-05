@@ -53,7 +53,7 @@ public partial class MainWindowViewModel : AutoActivateObservableRecipient, IRec
     // Code Duplication, but not a big thing
     public async Task ReverseSearchAsync(Stream stream)
     {
-        var window = (MainWindow)CurrentContext.Window;
+        var window = (MainWindow) CurrentContext.Window;
         try
         {
             window.ShowProgressRing();

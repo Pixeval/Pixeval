@@ -46,6 +46,9 @@ using Pixeval.Pages.Misc;
 using System.Threading;
 using Pixeval.Util.Threading;
 using WinUI3Utilities;
+using Microsoft.UI.Windowing;
+using Microsoft.UI;
+using System.Runtime.InteropServices;
 
 namespace Pixeval.Util.UI;
 
@@ -277,16 +280,48 @@ public static partial class UIHelper
 
     public static Task AwaitPageTransitionAsync<T>(this FrameworkElement root) where T : Page
     {
+        return SpinWaitAsync(() => root.FindDescendant<T>() is null);
+    }
+
+    public static Task SpinWaitAsync(Func<bool> condition)
+    {
         var tcs = new TaskCompletionSource();
         Task.Run(async () =>
         {
             var spinWait = new SpinWait();
-            while (await App.AppViewModel.DispatchTaskAsync(() => Task.FromResult(root.FindDescendant<T>() is null)))
+            while (await App.AppViewModel.DispatchTaskAsync(() => Task.FromResult(condition())))
             {
                 spinWait.SpinOnce(20);
             }
             tcs.SetResult();
         }).Discard();
         return tcs.Task;
+    }
+
+    [DllImport("Shcore.dll", SetLastError = true)]
+    internal static extern int GetDpiForMonitor(nint hMonitor, MonitorDpiType dpiType, out uint dpiX, out uint dpiY);
+
+    internal enum MonitorDpiType
+    {
+        MdtEffectiveDpi = 0,
+        MdtAngularDpi = 1,
+        MdtRawDpi = 2,
+        MdtDefault = MdtEffectiveDpi
+    }
+
+    public static double GetScaleAdjustment()
+    {
+        var displayArea = DisplayArea.GetFromWindowId(CurrentContext.WindowId, DisplayAreaFallback.Primary);
+        var hMonitor = Win32Interop.GetMonitorFromDisplayId(displayArea.DisplayId);
+
+        // Get DPI.
+        var result = GetDpiForMonitor(hMonitor, MonitorDpiType.MdtDefault, out var dpiX, out _);
+        if (result != 0)
+        {
+            throw new Exception("Could not get DPI for monitor.");
+        }
+
+        var scaleFactorPercent = (uint)(((long)dpiX * 100 + (96 >> 1)) / 96);
+        return scaleFactorPercent / 100.0;
     }
 }
