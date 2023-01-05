@@ -56,6 +56,12 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
     {
         return new SuggestionModel(history.Value, null, SuggestionType.History);
     }
+
+    public override string ToString()
+    {
+        // prevent the default behavior when user choose the suggestion
+        return string.Empty;
+    }
 }
 
 public enum SuggestionType

@@ -182,25 +182,18 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
 
     private void KeywordAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
     {
-        switch (args.SelectedItem)
+        if (args.SelectedItem is SuggestionModel { Name: { Length: > 0 } name, SuggestionType: var type })
         {
-            case SuggestionModel { SuggestionType: SuggestionType.IllustrationAutoCompleteTagHeader or SuggestionType.IllustrationTrendingTagHeader or SuggestionType.NovelTrendingTagHeader or SuggestionType.SettingEntryHeader }:
-                sender.Text = "";
-                break;
-            case SuggestionModel { Name: { Length: > 0 } name, SuggestionType: var type }:
-                switch (type)
-                {
-                    case SuggestionType.Settings:
-                        sender.Text = "";
-                        Enum.GetValues<SettingsEntry>().FirstOrNull(se => se.GetLocalizedResourceContent() == name)
-                            ?.Let(se => WeakReferenceMessenger.Default.Send(new NavigateToSettingEntryMessage(se)));
-                        break;
-                    default:
-                        sender.Text = name;
-                        break;
-                }
-
-                break;
+            switch (type)
+            {
+                case SuggestionType.Settings:
+                    Enum.GetValues<SettingsEntry>().FirstOrNull(se => se.GetLocalizedResourceContent() == name)
+                        ?.Let(se => WeakReferenceMessenger.Default.Send(new NavigateToSettingEntryMessage(se)));
+                    break;
+                default:
+                    sender.Text = name;
+                    break;
+            }
         }
     }
 
