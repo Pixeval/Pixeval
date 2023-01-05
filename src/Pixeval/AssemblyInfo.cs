@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/SpotlightTitleMacro.cs
+// Copyright (c) 2023 Pixeval/AssemblyInfo.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,20 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Download.MacroParser;
-using Pixeval.Util.IO;
-using Pixeval.Utilities;
-using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
+using WinUI3Utilities.Attributes;
 
-namespace Pixeval.Download.Macros;
-
-[MetaPathMacro(typeof(IllustrationViewModel))]
-public class SpotlightTitleMacro : IMacro<IllustrationViewModel>.ITransducer
-{
-    public string Name => "spot_title";
-
-    public string Substitute(IllustrationViewModel context)
-    {
-        return context.Illustration.SpotlightTitle?.Let(IOHelper.NormalizePathSegment) ?? MacroParserResources.UnknownSpotlightTitle;
-    }
-}
+[assembly: LocalizedStringResources(nameof(Pixeval))]

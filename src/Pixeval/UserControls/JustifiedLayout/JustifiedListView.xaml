@@ -21,8 +21,8 @@
         <ListView.ItemTemplate>
             <DataTemplate x:DataType="justifiedLayout:JustifiedListViewRowBinding">
                 <justifiedLayout:JustifiedListViewRow EffectiveViewportChanged="JustifiedListViewRow_OnEffectiveViewportChanged"
-                                                      ItemTemplate="{x:Bind Template, Mode=OneWay}"
-                                                      ItemsSource="{x:Bind Wrappers, Mode=OneWay}" />
+                                                      ItemTemplate="{x:Bind Template}"
+                                                      ItemsSource="{x:Bind Wrappers}" />
             </DataTemplate>
         </ListView.ItemTemplate>
     </ListView>

@@ -228,7 +228,7 @@ public sealed partial class MainWindow : INavigationModeInfo
 
         switch (args.ChosenSuggestion)
         {
-            case SuggestionModel { SuggestionType: SuggestionType.Settings }:
+            case SuggestionModel { SuggestionType: SuggestionType.Settings or SuggestionType.IllustrationAutoCompleteTagHeader or SuggestionType.IllustrationTrendingTagHeader or SuggestionType.NovelTrendingTagHeader or SuggestionType.SettingEntryHeader }:
                 return;
             case SuggestionModel({ } name, var translatedName, _):
                 PerformSearch(name, translatedName);
@@ -271,20 +271,25 @@ public sealed partial class MainWindow : INavigationModeInfo
 
     private async void KeywordAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
     {
-        if (args.SelectedItem is SuggestionModel { Name: { Length: > 0 } name, SuggestionType: var type })
+        switch (args.SelectedItem)
         {
-            await GoBackToMainPageAsync();
-            switch (type)
-            {
-                case SuggestionType.Settings:
-                    sender.Text = "";
-                    Enum.GetValues<SettingsEntry>().FirstOrNull(se => se.GetLocalizedResourceContent() == name)
-                        ?.Let(se => WeakReferenceMessenger.Default.Send(new NavigateToSettingEntryMessage(se)));
-                    break;
-                default:
-                    sender.Text = name;
-                    break;
-            }
+            case SuggestionModel { SuggestionType: SuggestionType.IllustrationAutoCompleteTagHeader or SuggestionType.IllustrationTrendingTagHeader or SuggestionType.NovelTrendingTagHeader or SuggestionType.SettingEntryHeader }:
+                sender.Text = "";
+                break;
+            case SuggestionModel { Name: { Length: > 0 } name, SuggestionType: var type  }:
+                await GoBackToMainPageAsync();
+                switch (type)
+                {
+                    case SuggestionType.Settings:
+                        sender.Text = "";
+                        Enum.GetValues<SettingsEntry>().FirstOrNull(se => se.GetLocalizedResourceContent() == name)
+                            ?.Let(se => WeakReferenceMessenger.Default.Send(new NavigateToSettingEntryMessage(se)));
+                        break;
+                    default:
+                        sender.Text = name;
+                        break;
+                }
+                break;
         }
     }
 

@@ -19,6 +19,7 @@
 #endregion
 
 using System.Threading.Tasks;
+using WinUI3Utilities;
 
 namespace Pixeval;
 
@@ -29,10 +30,11 @@ public static class SnackBarController
 
     public static async void ShowSnack(string text, int duration)
     {
-        App.AppViewModel.Window.PixevalAppSnackBar.Title = text;
+        var window = (MainWindow) CurrentContext.Window;
+        window.PixevalAppSnackBar.Title = text;
 
-        App.AppViewModel.Window.PixevalAppSnackBar.IsOpen = true;
+        window.PixevalAppSnackBar.IsOpen = true;
         await Task.Delay(duration);
-        App.AppViewModel.Window.PixevalAppSnackBar.IsOpen = false;
+        window.PixevalAppSnackBar.IsOpen = false;
     }
 }

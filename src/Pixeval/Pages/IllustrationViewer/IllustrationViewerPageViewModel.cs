@@ -36,7 +36,6 @@ using Pixeval.AppManagement;
 using Pixeval.CoreApi.Model;
 using Pixeval.Download;
 using Pixeval.Popups;
-using Pixeval.UserControls;
 using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util;
 using Pixeval.Util.IO;

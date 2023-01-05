@@ -29,7 +29,6 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Messages;
 using Pixeval.Pages;
 using Pixeval.Pages.IllustrationViewer;
-using Pixeval.UserControls;
 using Pixeval.Util.UI;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 using WinUI3Utilities;
