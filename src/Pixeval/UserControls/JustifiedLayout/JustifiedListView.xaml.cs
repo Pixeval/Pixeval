@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util.Threading;
 using Pixeval.Utilities;
 using WinUI3Utilities;
@@ -42,7 +43,7 @@ public sealed partial class JustifiedListView
     // Help finding the corresponding item in outer grid, so that we can perform the connect animation
     public IEnumerable<JustifiedListViewRow> Children => ItemsListView.FindDescendants().OfType<JustifiedListViewRow>();
 
-    private readonly ObservableCollection<IllustrationView.IllustrationViewModel> _itemsSource;
+    private readonly ObservableCollection<IllustrationViewModel> _itemsSource;
 
     private int _loadingMore; // use int instead of bool for CAS operation
 
@@ -79,7 +80,7 @@ public sealed partial class JustifiedListView
     public JustifiedListView()
     {
         InitializeComponent();
-        _itemsSource = new ObservableCollection<IllustrationView.IllustrationViewModel>();
+        _itemsSource = new ObservableCollection<IllustrationViewModel>();
     }
 
     private void JustifiedListView_OnLoaded(object sender, RoutedEventArgs e)
@@ -135,13 +136,21 @@ public sealed partial class JustifiedListView
         }
     }
 
-    public void Append(IEnumerable<IllustrationView.IllustrationViewModel> more)
+    public void Append(IEnumerable<IllustrationViewModel> more)
     {
-        var illustrationViewModels = more as IllustrationView.IllustrationViewModel[] ?? more.ToArray();
+        var illustrationViewModels = more as IllustrationViewModel[] ?? more.ToArray();
+        var source = (ObservableCollection<JustifiedListViewRowBinding>)ItemsListView.ItemsSource;
+        // recompute the last row, the reason is stated as follow: sometimes the layout algorithm will give a result that all the items except the last one
+        // fills the entire view, so the last one has to occupy a single row, but since the last one may be a portrait image instead of a landscape one, the
+        // layout maybe incorrect, so when appending new items, we calculates the last row together with new items, so that the last row can be layout properly
+        var lastRow = (source.LastOrDefault()?.Wrappers.Select(c => c.Item) ?? Enumerable.Empty<IllustrationViewModel>()).ToList();
         var boxes = JustifiedListViewHelper.ComputeJustifiedListViewLayout(
-            illustrationViewModels.Where(i => Filter?.Invoke(i) ?? true).Select(vm => (vm, vm.Illustration.Width / (double) vm.Illustration.Height)),
+            lastRow.Concat(illustrationViewModels).Where(i => Filter?.Invoke(i) ?? true).Select(vm => (vm, vm.Illustration.Width / (double) vm.Illustration.Height)),
             (int) ItemsListView.ActualWidth - ContainerWidthDeviationOffset, Spacing, (int) (ActualHeight / DesireRows));
-        var source = (ObservableCollection<JustifiedListViewRowBinding>) ItemsListView.ItemsSource;
+        if (lastRow.IsNotNullOrEmpty())
+        {
+            source.RemoveAt(source.Count - 1);
+        }
         _itemsSource.AddRange(illustrationViewModels);
         foreach (var justifiedListViewRowItemWrappers in boxes)
         {
@@ -155,7 +164,7 @@ public sealed partial class JustifiedListView
         RecomputeLayout();
     }
 
-    public void Remove(IEnumerable<IllustrationView.IllustrationViewModel> items)
+    public void Remove(IEnumerable<IllustrationViewModel> items)
     {
         foreach (var illustrationViewModel in items)
         {
