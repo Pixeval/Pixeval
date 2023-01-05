@@ -1,535 +1,414 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<OutputType>WinExe</OutputType>
-		<TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
-		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-		<RootNamespace>Pixeval</RootNamespace>
-		<Platforms>x86;x64;arm64</Platforms>
-		<RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
-		<ApplicationManifest>app.manifest</ApplicationManifest>
-		<UseWinUI>true</UseWinUI>
-		<Nullable>enable</Nullable>
-		<DefaultLanguage>zh-CN</DefaultLanguage>
-		<EnableNETAnalyzers>false</EnableNETAnalyzers>
-		<EnablePreviewFeatures>true</EnablePreviewFeatures>
-		<ApplicationIcon />
-		<StartupObject>Pixeval.Program</StartupObject>
-		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
-		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-		<EnableDefaultPriItems>false</EnableDefaultPriItems>
-		<NeutralLanguage>zh-CN</NeutralLanguage>
-		<AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Release'">true</AppxPackageSigningEnabled>
-		<AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Debug'">false</AppxPackageSigningEnabled>
-		<RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
-		<LangVersion>preview</LangVersion>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
-	<PropertyGroup>
-		<UpdateVersionProperties>true</UpdateVersionProperties>
-		<IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
-		<GitVersionTargetsBefore>$(GitVersionTargetsBefore);_ValidateWindowsPackageType</GitVersionTargetsBefore>
-	</PropertyGroup>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
+        <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+        <RootNamespace>Pixeval</RootNamespace>
+        <Platforms>x86;x64;arm64</Platforms>
+        <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <UseWinUI>true</UseWinUI>
+        <Nullable>enable</Nullable>
+        <DefaultLanguage>zh-CN</DefaultLanguage>
+        <EnableNETAnalyzers>false</EnableNETAnalyzers>
+        <EnablePreviewFeatures>true</EnablePreviewFeatures>
+        <ApplicationIcon />
+        <StartupObject>Pixeval.Program</StartupObject>
+        <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+        <EnableDefaultPriItems>false</EnableDefaultPriItems>
+        <NeutralLanguage>zh-CN</NeutralLanguage>
+        <AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Release'">true</AppxPackageSigningEnabled>
+        <AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Debug'">false</AppxPackageSigningEnabled>
+        <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+        <LangVersion>preview</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<Content Remove="Assets\Images\logo-no-caption.png" />
-		<Content Remove="Strings\zh-CN\BookmarksPage.resw" />
-		<Content Remove="Strings\zh-CN\IllustrationInfoPage.resw" />
-		<Content Remove="Strings\zh-CN\IllustrationViewerPage.resw" />
-		<Content Remove="Strings\zh-CN\ImageViewerPage.resw" />
-		<Content Remove="Strings\zh-CN\LoginPage.resw" />
-		<Content Remove="Strings\zh-CN\MainPage.resw" />
-		<Content Remove="Strings\zh-CN\MessageContentDialog.resw" />
-		<Content Remove="Strings\zh-CN\Misc.resw" />
-		<Content Remove="Strings\zh-CN\RecommendationsPage.resw" />
-		<Content Remove="Strings\zh-CN\RankingsPage.resw" />
-	</ItemGroup>
-	<ItemGroup>
-		<None Remove="Assets\Certs\pixeval_server_cert.pfx" />
-		<None Remove="Assets\GPLv3.md" />
-		<None Remove="Assets\Images\empty-box.theme-dark.png" />
-		<None Remove="Assets\Images\empty-box.theme-light.png" />
-		<None Remove="Assets\Images\logo44x44.ico" />
-		<None Remove="Assets\Images\pixeval-mock.png" />
-		<None Remove="Controls\Card\CardControl.xaml" />
-		<None Remove="Controls\Expander\Expander.xaml" />
-		<None Remove="Controls\IconButton\IconButton.xaml" />
-		<None Remove="Controls\IllustratorView\IllustratorView.xaml" />
-		<None Remove="Controls\NotifyOnLoadedCalendarDatePicker\NotifyOnLoadedCalendarDatePicker.xaml" />
-		<None Remove="Controls\NotifyOnLoadedComboBox\NotifyOnLoadedComboBox.xaml" />
-		<None Remove="Controls\PersonView\PersonView.xaml" />
-		<None Remove="Controls\Setting.UI\ActionableExpanderSettingEntry\ActionableExpanderSettingEntry.xaml" />
-		<None Remove="Controls\Setting.UI\ActionableSettingEntry\ActionableSettingEntry.xaml" />
-		<None Remove="Controls\Setting.UI\ExpanderSettingEntry\ExpanderSettingEntry.xaml" />
-		<None Remove="Controls\Setting.UI\SettingsGroup\SettingsGroup.xaml" />
-		<None Remove="Controls\Setting.UI\SingleSelectionSettingEntry\SingleSelectionSettingEntry.xaml" />
-		<None Remove="Controls\Setting.UI\SliderSettingEntry\SliderSettingEntry.xaml" />
-		<None Remove="Controls\Setting.UI\SwitchSettingEntry\SwitchSettingEntry.xaml" />
-		<None Remove="Controls\Setting.UI\UserControls\SettingEntryHeader.xaml" />
-		<None Remove="Controls\TokenInputTextBox\TokenInputTextBox.xaml" />
-		<None Remove="Dialogs\ReverseSearchApiKeyNotPresentDialog.xaml" />
-		<None Remove="Pages\Capability\FollowingsPage.xaml" />
-		<None Remove="Pages\Capability\IllustratorPage.xaml" />
-		<None Remove="Pages\Capability\SpotlightsPage.xaml" />
-		<None Remove="Pages\Download\DownloadListEntry.xaml" />
-		<None Remove="Pages\IllustrationViewer\CommentRepliesPage.xaml" />
-		<None Remove="Pages\IllustrationViewer\PixivReplyEmojiListPage.xaml" />
-		<None Remove="Pages\IllustrationViewer\PixivReplyStickerListPage.xaml" />
-		<None Remove="Pages\IllustrationViewer\RelatedWorksPage.xaml" />
-		<None Remove="Pages\Misc\AboutPage.xaml" />
-		<None Remove="Pages\Misc\BrowsingHistoryPage.xaml" />
-		<None Remove="Popups\DownloadListPageDeleteTasksPopup.xaml" />
-		<None Remove="Popups\IllustrationResultFilterPopup.xaml" />
-		<None Remove="Popups\IllustrationResultFilter\IllustrationResultFilterFunctionEntry.xaml" />
-		<None Remove="Popups\LoginWebViewPopup.xaml" />
-		<None Remove="Strings\zh-CN\AboutPage.resw" />
-		<None Remove="Strings\zh-CN\Activations.resw" />
-		<None Remove="Strings\zh-CN\BookmarksPage.resw" />
-		<None Remove="Strings\zh-CN\CommentBlock.resw" />
-		<None Remove="Strings\zh-CN\CommentRepliesBlock.resw" />
-		<None Remove="Strings\zh-CN\DownloadListEntry.resw" />
-		<None Remove="Strings\zh-CN\DownloadListPage.resw" />
-		<None Remove="Strings\zh-CN\DownloadListPageDeleteTasksDialog.resw" />
-		<None Remove="Strings\zh-CN\DownloadTask.resw" />
-		<None Remove="Strings\zh-CN\FollowingsPage.resw" />
-		<None Remove="Strings\zh-CN\IllustrationInfoPage.resw" />
-		<None Remove="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
-		<None Remove="Strings\zh-CN\IllustrationView.resw" />
-		<None Remove="Strings\zh-CN\IllustrationViewCommandBar.resw" />
-		<None Remove="Strings\zh-CN\IllustrationViewerPage.resw" />
-		<None Remove="Strings\zh-CN\IllustratorPage.resw" />
-		<None Remove="Strings\zh-CN\ImageViewerPage.resw" />
-		<None Remove="Strings\zh-CN\MacroParser.resw" />
-		<None Remove="Strings\zh-CN\MainWindow.resw" />
-		<None Remove="Strings\zh-CN\PixivReplyBar.resw" />
-		<None Remove="Strings\zh-CN\RankingsPage.resw" />
-		<None Remove="Strings\zh-CN\RecentPostsPage.resw" />
-		<None Remove="Strings\zh-CN\RecommendationsPage.resw" />
-		<None Remove="Pages\BookMarksPage.xaml" />
-		<None Remove="Pages\Capability\NavigationPage.xaml" />
-		<None Remove="Pages\IllustrationGridPage.xaml" />
-		<None Remove="Pages\IllustrationViewerPage.xaml" />
-		<None Remove="Pages\IllustrationViewer\CommentsPage.xaml" />
-		<None Remove="Pages\IllustrationViewer\IllustrationInfoPage.xaml" />
-		<None Remove="Pages\ImageViewerPage.xaml" />
-		<None Remove="Pages\RecommendationPage.xaml" />
-		<None Remove="Pages\SettingsPage.xaml" />
-		<None Remove="Strings\zh-CN\ReverseSearchApiKeyNotPresentDialog.resw" />
-		<None Remove="Strings\zh-CN\SettingsPage.resw" />
-		<None Remove="Strings\zh-CN\SortOptionComboBox.resw" />
-		<None Remove="Strings\zh-CN\TokenInputTextBox.resw" />
-		<None Remove="Themes\Card.xaml" />
-		<None Remove="Themes\Controls.xaml" />
-		<None Remove="Templates.xaml" />
-		<None Remove="Themes.xaml" />
-		<None Remove="Themes\Generic.xaml" />
-		<None Remove="UserControl\CommentBlock.xaml" />
-		<None Remove="UserControl\CommentList.xaml" />
-		<None Remove="UserControl\IllustrationContainer.xaml" />
-		<None Remove="UserControl\IllustrationViewCommandBar.xaml" />
-		<None Remove="UserControl\JustifiedLayoutIllustrationView.xaml" />
-		<None Remove="UserControl\JustifiedLayout\JustifiedListView.xaml" />
-		<None Remove="UserControl\JustifiedLayout\JustifiedListViewRow.xaml" />
-		<None Remove="UserControl\OverlayPopupContent.xaml" />
-		<None Remove="UserControl\PixivReplyBar.xaml" />
-		<None Remove="UserControl\QrCodePresenter%27.xaml" />
-		<None Remove="UserControl\SnackBar.xaml" />
-		<None Remove="UserControl\SortOptionComboBox.xaml" />
-		<None Remove="UserControl\TokenInput.xaml" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.1.2" />
+        <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
+        <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.2" />
+        <PackageReference Include="GitVersion.MsBuild" Version="5.11.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="LiteDB" Version="5.0.15" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
+        <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.1" />
+        <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.0.0" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
+        <PackageReference Include="Microsoft.Win32.Registry" Version="6.0.0-preview.5.21301.5" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.25206-preview" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
+        <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
+        <PackageReference Include="PininSharp" Version="1.2.0" />
+        <PackageReference Include="PInvoke.User32" Version="0.7.124" />
+        <PackageReference Include="Pixeval.QRCoder" Version="1.4.5" />
+        <PackageReference Include="ReverseMarkdown" Version="3.24.0" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
+        <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
+        <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+        <PackageReference Include="WinUI3Utilities" Version="1.0.6" />
+        <PackageReference Include="WinUIEx" Version="2.1.0" />
+        <Manifest Include="$(ApplicationManifest)" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.1.2" />
-		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
-		<PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.2" />
-		<PackageReference Include="GitVersion.MsBuild" Version="5.11.1">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="LiteDB" Version="5.0.15" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
-		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.1" />
-		<PackageReference Include="CommunityToolkit.Diagnostics" Version="8.0.0" />
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
-		<PackageReference Include="Microsoft.Win32.Registry" Version="6.0.0-preview.5.21301.5" />
-		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.25206-preview" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
-		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
-		<PackageReference Include="PininSharp" Version="1.2.0" />
-		<PackageReference Include="PInvoke.User32" Version="0.7.124" />
-		<PackageReference Include="Pixeval.QRCoder" Version="1.4.5" />
-		<PackageReference Include="ReverseMarkdown" Version="3.24.0" />
-		<PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
-		<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
-		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
-		<PackageReference Include="WinUI3Utilities" Version="1.0.6" />
-		<PackageReference Include="WinUIEx" Version="2.1.0" />
-		<Manifest Include="$(ApplicationManifest)" />
-	</ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
+        <ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
-		<ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
-	</ItemGroup>
+    <!--Exposes PRI resources-->
+    <Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
+        <ItemGroup>
+            <AdditionalFiles Include="@(PRIResource)" SourceItemGroup="PRIResource" />
+        </ItemGroup>
+    </Target>
+    <ItemGroup>
+        <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
+    </ItemGroup>
 
-	<!-- #region Exposes PRI resources to the source generator -->
-	<Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
-		<ItemGroup>
-			<AdditionalFiles Include="@(PRIResource)" SourceItemGroup="PRIResource" />
-		</ItemGroup>
-	</Target>
-	<ItemGroup>
-		<CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
-	</ItemGroup>
-	<!-- #endregion Exposes PRI resources to the source generator -->
+    <!--PackageManifest-->
+    <PropertyGroup>
+        <UpdateVersionProperties>true</UpdateVersionProperties>
+        <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
+        <GitVersionTargetsBefore>$(GitVersionTargetsBefore);_ValidateWindowsPackageType</GitVersionTargetsBefore>
+    </PropertyGroup>
 
-	<Target Name="PrepareForGenerateGitVersionInformation" BeforeTargets="GenerateGitVersionInformation">
-		<MakeDir Directories="$(OutDir);$(IntermediateOutputPath);@(DocFileItem->'%(RelativeDir)');@(CreateDirectory)" ContinueOnError="True" />
-		<ItemGroup Condition="'@(AppxManifest)'==''">
-			<AppxManifest Include="Package.appxmanifest"></AppxManifest>
-		</ItemGroup>
-		<PropertyGroup>
-			<WindowsPackageType>MSIX</WindowsPackageType>
-		</PropertyGroup>
-	</Target>
+    <Target Name="PrepareForGenerateGitVersionInformation" BeforeTargets="GenerateGitVersionInformation">
+        <MakeDir Directories="$(OutDir);$(IntermediateOutputPath);@(DocFileItem->'%(RelativeDir)');@(CreateDirectory)" ContinueOnError="True" />
+        <ItemGroup Condition="'@(AppxManifest)'==''">
+            <AppxManifest Include="Package.appxmanifest"></AppxManifest>
+        </ItemGroup>
+        <PropertyGroup>
+            <WindowsPackageType>MSIX</WindowsPackageType>
+        </PropertyGroup>
+    </Target>
 
-	<Target Name="GeneratePackageAppxManifest" BeforeTargets="_ValidateWindowsPackageType" DependsOnTargets="GetVersion">
-		<PropertyGroup>
-			<ManifestText>
-				&lt;?xml version="1.0" encoding="utf-8"?&gt;
-				&lt;Package
-				xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
-				xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-				xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-				IgnorableNamespaces="uap rescap"&gt;
-				&lt;Identity
-				Name="9a360099-e513-45d0-b3f1-3e599691ea06"
-				Publisher="CN=Pixeval"
-				Version="$(GitVersion_AssemblySemVer)" /&gt;
-				&lt;Properties&gt;
-				&lt;DisplayName&gt;Pixeval&lt;/DisplayName&gt;
-				&lt;PublisherDisplayName&gt;Pixeval&lt;/PublisherDisplayName&gt;
-				&lt;Logo&gt;Assets\Images\Tiles\StoreLogo.png&lt;/Logo&gt;
-				&lt;/Properties&gt;
-				&lt;Dependencies&gt;
-				&lt;TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" /&gt;
-				&lt;TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" /&gt;
-				&lt;/Dependencies&gt;
-				&lt;Resources&gt;
-				&lt;Resource Language="x-generate"/&gt;
-				&lt;/Resources&gt;
-				&lt;Applications&gt;
-				&lt;Application Id="App"
-				Executable="%24targetnametoken%24.exe"
-				EntryPoint="%24targetentrypoint%24"&gt;
-				&lt;uap:VisualElements
-				DisplayName="Pixeval"
-				Description="A fast, powerful and fully-functional third-party Pixiv client"
-				BackgroundColor="transparent"
-				Square150x150Logo="Assets\Images\Tiles\Square150x150Logo.png"
-				Square44x44Logo="Assets\Images\Tiles\Square44x44Logo.png"&gt;
-				&lt;uap:DefaultTile Wide310x150Logo="Assets\Images\Tiles\Wide310x150Logo.png"  Square71x71Logo="Assets\Images\Tiles\SmallTile.png" Square310x310Logo="Assets\Images\Tiles\LargeTile.png"&gt;
-				&lt;uap:ShowNameOnTiles&gt;
-				&lt;uap:ShowOn Tile="square150x150Logo"/&gt;
-				&lt;uap:ShowOn Tile="wide310x150Logo"/&gt;
-				&lt;uap:ShowOn Tile="square310x310Logo"/&gt;
-				&lt;/uap:ShowNameOnTiles&gt;
-				&lt;/uap:DefaultTile &gt;
-				&lt;uap:SplashScreen Image="Assets\Images\Tiles\SplashScreen.png" /&gt;
-				&lt;uap:LockScreen BadgeLogo="Assets\Images\Tiles\BadgeLogo.png" Notification="badgeAndTileText"/&gt;
-				&lt;uap:InitialRotationPreference&gt;
-				&lt;uap:Rotation Preference="landscape"/&gt;
-				&lt;uap:Rotation Preference="portrait"/&gt;&lt;/uap:InitialRotationPreference&gt;
-				&lt;/uap:VisualElements&gt;
-				&lt;Extensions&gt;
-				&lt;uap:Extension Category="windows.protocol"&gt;
-				&lt;uap:Protocol Name="pixeval"&gt;
-				&lt;uap:DisplayName&gt;Pixeval App Protocol&lt;/uap:DisplayName&gt;
-				&lt;/uap:Protocol&gt;
-				&lt;/uap:Extension&gt;
-				&lt;/Extensions&gt;
-				&lt;/Application&gt;
-				&lt;/Applications&gt;
-				&lt;Capabilities&gt;
-				&lt;rescap:Capability Name="runFullTrust" /&gt;
-				&lt;Capability Name="internetClient"/&gt;
-				&lt;uap:Capability Name="picturesLibrary"/&gt;
-				&lt;Capability Name="codeGeneration"/&gt;
-				&lt;uap:Capability Name="removableStorage"/&gt;
-				&lt;/Capabilities&gt;
-				&lt;/Package&gt;
-			</ManifestText>
-		</PropertyGroup>
-		<WriteLinesToFile File="$(MSBuildProjectDirectory)\Package.appxmanifest" Overwrite="true" Lines="$(ManifestText)" />
-	</Target>
+    <Target Name="GeneratePackageAppxManifest" BeforeTargets="_ValidateWindowsPackageType" DependsOnTargets="GetVersion">
+        <PropertyGroup>
+            <ManifestText>
+                &lt;?xml version="1.0" encoding="utf-8"?&gt;
+                &lt;Package
+                xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+                xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+                xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+                IgnorableNamespaces="uap rescap"&gt;
+                &lt;Identity
+                Name="9a360099-e513-45d0-b3f1-3e599691ea06"
+                Publisher="CN=Pixeval"
+                Version="$(GitVersion_AssemblySemVer)" /&gt;
+                &lt;Properties&gt;
+                &lt;DisplayName&gt;Pixeval&lt;/DisplayName&gt;
+                &lt;PublisherDisplayName&gt;Pixeval&lt;/PublisherDisplayName&gt;
+                &lt;Logo&gt;Assets\Images\Tiles\StoreLogo.png&lt;/Logo&gt;
+                &lt;/Properties&gt;
+                &lt;Dependencies&gt;
+                &lt;TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" /&gt;
+                &lt;TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" /&gt;
+                &lt;/Dependencies&gt;
+                &lt;Resources&gt;
+                &lt;Resource Language="x-generate"/&gt;
+                &lt;/Resources&gt;
+                &lt;Applications&gt;
+                &lt;Application Id="App"
+                Executable="%24targetnametoken%24.exe"
+                EntryPoint="%24targetentrypoint%24"&gt;
+                &lt;uap:VisualElements
+                DisplayName="Pixeval"
+                Description="A fast, powerful and fully-functional third-party Pixiv client"
+                BackgroundColor="transparent"
+                Square150x150Logo="Assets\Images\Tiles\Square150x150Logo.png"
+                Square44x44Logo="Assets\Images\Tiles\Square44x44Logo.png"&gt;
+                &lt;uap:DefaultTile Wide310x150Logo="Assets\Images\Tiles\Wide310x150Logo.png"  Square71x71Logo="Assets\Images\Tiles\SmallTile.png" Square310x310Logo="Assets\Images\Tiles\LargeTile.png"&gt;
+                &lt;uap:ShowNameOnTiles&gt;
+                &lt;uap:ShowOn Tile="square150x150Logo"/&gt;
+                &lt;uap:ShowOn Tile="wide310x150Logo"/&gt;
+                &lt;uap:ShowOn Tile="square310x310Logo"/&gt;
+                &lt;/uap:ShowNameOnTiles&gt;
+                &lt;/uap:DefaultTile &gt;
+                &lt;uap:SplashScreen Image="Assets\Images\Tiles\SplashScreen.png" /&gt;
+                &lt;uap:LockScreen BadgeLogo="Assets\Images\Tiles\BadgeLogo.png" Notification="badgeAndTileText"/&gt;
+                &lt;uap:InitialRotationPreference&gt;
+                &lt;uap:Rotation Preference="landscape"/&gt;
+                &lt;uap:Rotation Preference="portrait"/&gt;&lt;/uap:InitialRotationPreference&gt;
+                &lt;/uap:VisualElements&gt;
+                &lt;Extensions&gt;
+                &lt;uap:Extension Category="windows.protocol"&gt;
+                &lt;uap:Protocol Name="pixeval"&gt;
+                &lt;uap:DisplayName&gt;Pixeval App Protocol&lt;/uap:DisplayName&gt;
+                &lt;/uap:Protocol&gt;
+                &lt;/uap:Extension&gt;
+                &lt;/Extensions&gt;
+                &lt;/Application&gt;
+                &lt;/Applications&gt;
+                &lt;Capabilities&gt;
+                &lt;rescap:Capability Name="runFullTrust" /&gt;
+                &lt;Capability Name="internetClient"/&gt;
+                &lt;uap:Capability Name="picturesLibrary"/&gt;
+                &lt;Capability Name="codeGeneration"/&gt;
+                &lt;uap:Capability Name="removableStorage"/&gt;
+                &lt;/Capabilities&gt;
+                &lt;/Package&gt;
+            </ManifestText>
+        </PropertyGroup>
+        <WriteLinesToFile File="$(MSBuildProjectDirectory)\Package.appxmanifest" Overwrite="true" Lines="$(ManifestText)" />
+    </Target>
 
-	<ItemGroup>
-		<Folder Include="Assets\Images\Supporters\" />
-		<Folder Include="Download\MacroParser\Ast\" />
-	</ItemGroup>
-	<ItemGroup>
-		<PRIResource Include="Strings\zh-CN\AboutPage.resw" />
-		<PRIResource Include="Strings\zh-CN\Activations.resw" />
-		<PRIResource Include="Strings\zh-CN\BookmarksPage.resw" />
-		<PRIResource Include="Strings\zh-CN\CommentBlock.resw" />
-		<PRIResource Include="Strings\zh-CN\CommentRepliesBlock.resw" />
-		<PRIResource Include="Strings\zh-CN\DownloadListEntry.resw" />
-		<PRIResource Include="Strings\zh-CN\DownloadListPage.resw" />
-		<PRIResource Include="Strings\zh-CN\DownloadListPageDeleteTasksDialog.resw" />
-		<PRIResource Include="Strings\zh-CN\DownloadTask.resw" />
-		<PRIResource Include="Strings\zh-CN\FollowingsPage.resw" />
-		<PRIResource Include="Strings\zh-CN\IllustrationView.resw" />
-		<PRIResource Include="Strings\zh-CN\IllustrationViewCommandBar.resw" />
-		<PRIResource Include="Strings\zh-CN\IllustrationInfoPage.resw" />
-		<PRIResource Include="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
-		<PRIResource Include="Strings\zh-CN\IllustrationViewerPage.resw" />
-		<PRIResource Include="Strings\zh-CN\IllustratorPage.resw" />
-		<PRIResource Include="Strings\zh-CN\ImageViewerPage.resw" />
-		<PRIResource Include="Strings\zh-CN\LoginPage.resw" />
-		<PRIResource Include="Strings\zh-CN\MacroParser.resw" />
-		<PRIResource Include="Strings\zh-CN\MainPage.resw" />
-		<PRIResource Include="Strings\zh-CN\MainWindow.resw" />
-		<PRIResource Include="Strings\zh-CN\MessageContentDialog.resw" />
-		<PRIResource Include="Strings\zh-CN\Misc.resw" />
-		<PRIResource Include="Strings\zh-CN\RankingsPage.resw" />
-		<PRIResource Include="Strings\zh-CN\RecentPostsPage.resw" />
-		<PRIResource Include="Strings\zh-CN\RecommendationsPage.resw" />
-		<PRIResource Include="Strings\zh-CN\PixivReplyBar.resw" />
-		<PRIResource Include="Strings\zh-CN\ReverseSearchApiKeyNotPresentDialog.resw" />
-		<PRIResource Include="Strings\zh-CN\SettingsPage.resw" />
-		<PRIResource Include="Strings\zh-CN\SortOptionComboBox.resw" />
-		<PRIResource Include="Strings\zh-CN\TokenInputTextBox.resw" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Update="UserControls\JustifiedLayoutIllustrationView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Update="UserControls\JustifiedLayout\JustifiedListView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Update="UserControls\JustifiedLayout\JustifiedListViewRow.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Update="Pages\Capability\SpotlightsPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Update="Pages\IllustrationViewer\RelatedWorksPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Update="UserControls\SnackBar.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
+    <!--PRIResource-->
+    <ItemGroup>
+        <PRIResource Include="Strings\zh-CN\AboutPage.resw" />
+        <PRIResource Include="Strings\zh-CN\Activations.resw" />
+        <PRIResource Include="Strings\zh-CN\BookmarksPage.resw" />
+        <PRIResource Include="Strings\zh-CN\CommentBlock.resw" />
+        <PRIResource Include="Strings\zh-CN\CommentRepliesBlock.resw" />
+        <PRIResource Include="Strings\zh-CN\DownloadListEntry.resw" />
+        <PRIResource Include="Strings\zh-CN\DownloadListPage.resw" />
+        <PRIResource Include="Strings\zh-CN\DownloadListPageDeleteTasksDialog.resw" />
+        <PRIResource Include="Strings\zh-CN\DownloadTask.resw" />
+        <PRIResource Include="Strings\zh-CN\FollowingsPage.resw" />
+        <PRIResource Include="Strings\zh-CN\IllustrationView.resw" />
+        <PRIResource Include="Strings\zh-CN\IllustrationViewCommandBar.resw" />
+        <PRIResource Include="Strings\zh-CN\IllustrationInfoPage.resw" />
+        <PRIResource Include="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
+        <PRIResource Include="Strings\zh-CN\IllustrationViewerPage.resw" />
+        <PRIResource Include="Strings\zh-CN\IllustratorPage.resw" />
+        <PRIResource Include="Strings\zh-CN\ImageViewerPage.resw" />
+        <PRIResource Include="Strings\zh-CN\LoginPage.resw" />
+        <PRIResource Include="Strings\zh-CN\MacroParser.resw" />
+        <PRIResource Include="Strings\zh-CN\MainPage.resw" />
+        <PRIResource Include="Strings\zh-CN\MainWindow.resw" />
+        <PRIResource Include="Strings\zh-CN\MessageContentDialog.resw" />
+        <PRIResource Include="Strings\zh-CN\Misc.resw" />
+        <PRIResource Include="Strings\zh-CN\RankingsPage.resw" />
+        <PRIResource Include="Strings\zh-CN\RecentPostsPage.resw" />
+        <PRIResource Include="Strings\zh-CN\RecommendationsPage.resw" />
+        <PRIResource Include="Strings\zh-CN\PixivReplyBar.resw" />
+        <PRIResource Include="Strings\zh-CN\ReverseSearchApiKeyNotPresentDialog.resw" />
+        <PRIResource Include="Strings\zh-CN\SettingsPage.resw" />
+        <PRIResource Include="Strings\zh-CN\SortOptionComboBox.resw" />
+        <PRIResource Include="Strings\zh-CN\TokenInputTextBox.resw" />
+    </ItemGroup>
 
-	<!--  XAML  -->
-	<ItemGroup>
-		<Page Update="Pages\Download\DownloadListPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\IllustrationViewer\IllustrationViewerPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="UserControls\IllustrationViewCommandBar.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\Capabilities\RecommendationPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="UserControls\GridIllustrationView.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Dialogs\MessageDialogContent.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\MainPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\Login\LoginPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Controls\IllustratorView\IllustratorView.xaml">
-			<XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-		</Page>
-		<Page Update="Pages\Capability\SearchResultsPage.xaml">
-			<XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-		</Page>
-		<Page Update="Pages\Misc\SettingsPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\Download\DownloadListPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\IllustrationViewer\IllustrationViewerPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="UserControls\IllustrationViewCommandBar.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\Capabilities\RecommendationPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="UserControls\GridIllustrationView.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Dialogs\MessageDialogContent.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\MainPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\Misc\LoginPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Controls\NotifyOnLoadedCalendarDatePicker\NotifyOnLoadedCalendarDatePicker.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Controls\NotifyOnLoadedComboBox\NotifyOnLoadedComboBox.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Controls\IconButton\IconButton.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Controls\TokenInputTextBox\TokenInputTextBox.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Controls\PersonView\PersonView.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Dialogs\ReverseSearchApiKeyNotPresentDialog.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\Capability\FollowingsPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\IllustratorViewer\IllustratorPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\Capability\RecentPostsPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\Capability\SearchResultsPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Popups\LoginWebViewPopup.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\Misc\AboutPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Dialogs\DownloadListPageDeleteTasksDialog.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\Download\DownloadListEntry.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\Misc\BrowsingHistoryPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="UserControls\TokenInput\TokenInput.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Popups\IllustrationResultFilter\IllustrationResultFilterFunctionEntry.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Popups\IllustrationResultFilter\IllustrationResultFilterPopupContent.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Controls\Setting.UI\ActionableExpanderSettingEntry\ActionableExpanderSettingEntry.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Controls\Setting.UI\ExpanderSettingEntry\ExpanderSettingEntry.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Controls\Setting.UI\ActionableSettingEntry\ActionableSettingEntry.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Controls\Setting.UI\SettingsGroup\SettingsGroup.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Controls\Setting.UI\SliderSettingEntry\SliderSettingEntry.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Controls\Setting.UI\SwitchSettingEntry\SwitchSettingEntry.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Controls\Expander\Expander.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Controls\Setting.UI\SingleSelectionSettingEntry\SingleSelectionSettingEntry.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Controls\Setting.UI\UserControls\SettingEntryHeader.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Controls\Card\CardControl.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Themes\Generic.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Themes\Card.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Popups\QrCodePresenter.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="UserControls\PixivReplyBar.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\IllustrationViewer\PixivReplyStickerListPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\IllustrationViewer\PixivReplyEmojiListPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Styles\Controls.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="UserControls\CommentList.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Popups\CommentRepliesBlock.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="UserControls\CommentBlock.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="UserControls\SortOptionComboBox.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\Capability\RecentPostsPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="UserControls\IllustrationContainer.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\Capability\RankingsPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Styles\Colors.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\IllustrationViewer\CommentsPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\IllustrationViewer\IllustrationInfoPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\IllustrationViewer\ImageViewerPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Update="Pages\Capabilities\BookmarksPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-	</ItemGroup>
+    <!--  XAML  -->
+    <ItemGroup>
+        <Page Update="UserControls\JustifiedLayoutIllustrationView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="UserControls\JustifiedLayout\JustifiedListView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="UserControls\JustifiedLayout\JustifiedListViewRow.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Capability\SpotlightsPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\IllustrationViewer\RelatedWorksPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="UserControls\SnackBar.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Download\DownloadListPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\IllustrationViewer\IllustrationViewerPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="UserControls\IllustrationViewCommandBar.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Capabilities\RecommendationPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="UserControls\GridIllustrationView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Dialogs\MessageDialogContent.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\MainPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Login\LoginPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\IllustratorView\IllustratorView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Capability\SearchResultsPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Misc\SettingsPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Download\DownloadListPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\IllustrationViewer\IllustrationViewerPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="UserControls\IllustrationViewCommandBar.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Capabilities\RecommendationPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="UserControls\GridIllustrationView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Dialogs\MessageDialogContent.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\MainPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Misc\LoginPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\NotifyOnLoadedCalendarDatePicker\NotifyOnLoadedCalendarDatePicker.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\NotifyOnLoadedComboBox\NotifyOnLoadedComboBox.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\IconButton\IconButton.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\TokenInputTextBox\TokenInputTextBox.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\PersonView\PersonView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Dialogs\ReverseSearchApiKeyNotPresentDialog.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Capability\FollowingsPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\IllustratorViewer\IllustratorPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Capability\RecentPostsPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Capability\SearchResultsPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Popups\LoginWebViewPopup.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Misc\AboutPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Dialogs\DownloadListPageDeleteTasksDialog.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Download\DownloadListEntry.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Misc\BrowsingHistoryPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="UserControls\TokenInput\TokenInput.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Popups\IllustrationResultFilter\IllustrationResultFilterFunctionEntry.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Popups\IllustrationResultFilter\IllustrationResultFilterPopupContent.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\Setting.UI\ActionableExpanderSettingEntry\ActionableExpanderSettingEntry.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\Setting.UI\ExpanderSettingEntry\ExpanderSettingEntry.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\Setting.UI\ActionableSettingEntry\ActionableSettingEntry.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\Setting.UI\SettingsGroup\SettingsGroup.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\Setting.UI\SliderSettingEntry\SliderSettingEntry.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\Setting.UI\SwitchSettingEntry\SwitchSettingEntry.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\Expander\Expander.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\Setting.UI\SingleSelectionSettingEntry\SingleSelectionSettingEntry.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\Setting.UI\UserControls\SettingEntryHeader.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\Card\CardControl.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Themes\Generic.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Themes\Card.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Popups\QrCodePresenter.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="UserControls\PixivReplyBar.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\IllustrationViewer\PixivReplyStickerListPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\IllustrationViewer\PixivReplyEmojiListPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Styles\Controls.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="UserControls\CommentList.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Popups\CommentRepliesBlock.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="UserControls\CommentBlock.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="UserControls\SortOptionComboBox.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Capability\RecentPostsPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="UserControls\IllustrationContainer.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Capability\RankingsPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Styles\Colors.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\IllustrationViewer\CommentsPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\IllustrationViewer\IllustrationInfoPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\IllustrationViewer\ImageViewerPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Capabilities\BookmarksPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+    </ItemGroup>
 </Project>
