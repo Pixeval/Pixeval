@@ -171,7 +171,7 @@ public class AppPopup
             {
                 new PopupThemeTransition()
             },
-            XamlRoot = CurrentContext.Frame.XamlRoot,
+            XamlRoot = App.AppViewModel.AppWindowRootFrame.XamlRoot,
             Width = windowWidth,
             Height = windowHeight,
             Child = new Grid

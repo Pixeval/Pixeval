@@ -82,7 +82,9 @@ public class AppViewModel : AutoActivateObservableRecipient,
 
     public FileCache Cache { get; private set; } = null!;
 
-    public ElementTheme AppRootFrameTheme => CurrentContext.Frame.RequestedTheme;
+    public ElementTheme AppRootFrameTheme => AppWindowRootFrame.RequestedTheme;
+
+    public Frame AppWindowRootFrame => ((MainWindow)CurrentContext.Window).PixevalAppRootFrame;
 
     public string? PixivUid => MakoClient.Session.Id;
 
@@ -133,17 +135,17 @@ public class AppViewModel : AutoActivateObservableRecipient,
 
     public void RootFrameNavigate(Type type, object parameter, NavigationTransitionInfo infoOverride)
     {
-        CurrentContext.Frame.Navigate(type, parameter, infoOverride);
+        AppWindowRootFrame.Navigate(type, parameter, infoOverride);
     }
 
     public void RootFrameNavigate(Type type, object parameter)
     {
-        CurrentContext.Frame.Navigate(type, parameter);
+        AppWindowRootFrame.Navigate(type, parameter);
     }
 
     public void RootFrameNavigate(Type type)
     {
-        CurrentContext.Frame.Navigate(type);
+        AppWindowRootFrame.Navigate(type);
     }
 
     public async Task ShowExceptionDialogAsync(Exception e)

@@ -325,16 +325,16 @@ public sealed partial class MainWindow : INavigationModeInfo
 
     private static Task GoBackToMainPageAsync()
     {
-        if (CurrentContext.Frame.Content is MainPage)
+        if (App.AppViewModel.AppWindowRootFrame.Content is MainPage)
         {
             return Task.CompletedTask;
         }
-        var stack = CurrentContext.Frame.BackStack;
+        var stack = App.AppViewModel.AppWindowRootFrame.BackStack;
         while (stack.Count >= 1 && stack.Last().SourcePageType != typeof(MainPage))
         {
             stack.RemoveAt(stack.Count - 1);
         }
-        CurrentContext.Frame.GoBack();
-        return CurrentContext.Frame.AwaitPageTransitionAsync<MainPage>();
+        App.AppViewModel.AppWindowRootFrame.GoBack();
+        return App.AppViewModel.AppWindowRootFrame.AwaitPageTransitionAsync<MainPage>();
     }
 }

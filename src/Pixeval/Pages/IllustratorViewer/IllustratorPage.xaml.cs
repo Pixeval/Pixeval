@@ -221,9 +221,9 @@ public sealed partial class IllustratorPage
     public void GoBack()
     {
         ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", ProfileImage);
-        if (CurrentContext.Frame.CanGoBack)
+        if (App.AppViewModel.AppWindowRootFrame.CanGoBack)
         {
-            CurrentContext.Frame.GoBack(new SuppressNavigationTransitionInfo());
+            App.AppViewModel.AppWindowRootFrame.GoBack(new SuppressNavigationTransitionInfo());
         }
     }
 

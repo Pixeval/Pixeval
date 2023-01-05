@@ -82,27 +82,27 @@ public sealed partial class IllustrationViewerPage : IGoBack
 
         if (!NavigatingStackEntriesFromRelatedWorksStack.Any())
         {
-            while (CurrentContext.Frame.BackStack.LastOrDefault() is { Parameter: IllustrationViewerPageViewModel })
+            while (App.AppViewModel.AppWindowRootFrame.BackStack.LastOrDefault() is { Parameter: IllustrationViewerPageViewModel })
             {
-                var stack = CurrentContext.Frame.BackStack;
+                var stack = App.AppViewModel.AppWindowRootFrame.BackStack;
                 stack.RemoveAt(stack.Count - 1);
             }
         }
         else
         {
-            while (CurrentContext.Frame.BackStack.LastOrDefault() is { Parameter: IllustrationViewerPageViewModel viewModel } &&
+            while (App.AppViewModel.AppWindowRootFrame.BackStack.LastOrDefault() is { Parameter: IllustrationViewerPageViewModel viewModel } &&
                    NavigatingStackEntriesFromRelatedWorksStack.Peek() is var (vm, idx) &&
                    (viewModel.IllustrationId != vm || idx != null && viewModel.CurrentIndex != idx))
             {
-                var stack = CurrentContext.Frame.BackStack;
+                var stack = App.AppViewModel.AppWindowRootFrame.BackStack;
                 stack.RemoveAt(stack.Count - 1);
             }
         }
 
         NavigatingStackEntriesFromRelatedWorksStack.TryPop(out _);
-        if (CurrentContext.Frame.CanGoBack)
+        if (App.AppViewModel.AppWindowRootFrame.CanGoBack)
         {
-            CurrentContext.Frame.GoBack(new SuppressNavigationTransitionInfo());
+            App.AppViewModel.AppWindowRootFrame.GoBack(new SuppressNavigationTransitionInfo());
         }
     }
 
@@ -143,7 +143,7 @@ public sealed partial class IllustrationViewerPage : IGoBack
 
         IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), _viewModel.Current);
 
-        WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(_viewModel.IllustrationGrid?.GetItemContainer(_viewModel.IllustrationViewModelInTheGridView!) ?? CurrentContext.Frame));
+        WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(_viewModel.IllustrationGrid?.GetItemContainer(_viewModel.IllustrationViewModelInTheGridView!) ?? App.AppViewModel.AppWindowRootFrame));
         WeakReferenceMessenger.Default.Register<IllustrationViewerPage, CommentRepliesHyperlinkButtonTappedMessage>(this, CommentRepliesHyperlinkButtonTapped);
     }
 
