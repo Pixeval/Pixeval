@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -41,6 +41,7 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -278,7 +279,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         if (Current.LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true })
         {
-            await MessageDialogBuilder.CreateAcknowledgement(App.AppViewModel.Window, IllustrationViewerPageResources.CannotShareImageForNowTitle, IllustrationViewerPageResources.CannotShareImageForNowContent)
+            await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, IllustrationViewerPageResources.CannotShareImageForNowTitle, IllustrationViewerPageResources.CannotShareImageForNowContent)
                 .ShowAsync();
             return;
         }

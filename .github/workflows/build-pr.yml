@@ -17,7 +17,7 @@ jobs:
 
         steps:
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v3
               with:
                 fetch-depth: 0
 
@@ -26,26 +26,29 @@ jobs:
                 global-json-file: global.json
                 include-prerelease: true
 
-            - uses: actions/cache@v2
+            - name: Add msbuild to PATH
+              uses: microsoft/setup-msbuild@v1.1
+              with:
+                vs-prerelease: true
+
+            - uses: actions/cache@v3
               with:
                 path: ~/.nuget/packages
                 key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
                 restore-keys: |
                     ${{ runner.os }}-nuget-
-
             - name: Restore the application
-              run: dotnet msbuild -t:restore -p:Platform=${{ matrix.platform }} -p:RestoreLockedMode=true -m
+              run: msbuild -t:restore -p:Platform=${{ matrix.platform }} -p:RestoreLockedMode=true -m
 
             - name: Publish the application
-              run: dotnet msbuild -t:publish -p:Configuration=Debug -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:OutDir="$PWD\build" -m
+              run: msbuild -t:publish -p:Configuration=Debug -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:OutDir="$PWD\build" -m
 
             - name: Copy files
               run: |
                 $files = @(Get-ChildItem -Recurse|Where-Object -Property Name -Like Pixeval*.msix)
                 Copy-Item $files -Destination ( New-Item -Path ./output -ItemType Directory)
-
             - name: Upload a Build Artifact
-              uses: actions/upload-artifact@v2
+              uses: actions/upload-artifact@v3
               with:
                   name: Pixeval-${{ matrix.platform }}
                   path: "./output/*"
