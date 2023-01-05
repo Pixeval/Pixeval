@@ -30,6 +30,7 @@ using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
+using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Download;
 

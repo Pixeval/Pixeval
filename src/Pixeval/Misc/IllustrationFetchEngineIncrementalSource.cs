@@ -21,6 +21,7 @@
 using System.Collections.Generic;
 using Pixeval.CoreApi.Model;
 using Pixeval.UserControls;
+using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Misc;
 

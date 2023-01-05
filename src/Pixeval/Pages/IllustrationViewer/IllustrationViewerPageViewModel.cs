@@ -37,12 +37,15 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Download;
 using Pixeval.Popups;
 using Pixeval.UserControls;
+using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
+using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
+using IllustrationViewViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -82,11 +85,11 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     // illustrations should contains only one item if the illustration is a single
     // otherwise it contains the entire manga data
-    public IllustrationViewerPageViewModel(IllustrationGrid gridView, params IllustrationViewModel[] illustrations) : this(illustrations)
+    public IllustrationViewerPageViewModel(IIllustrationView illustrationView, params IllustrationViewModel[] illustrations) : this(illustrations)
     {
-        IllustrationGrid = gridView;
-        ContainerGridViewModel = gridView.ViewModel;
-        IllustrationViewModelInTheGridView = ContainerGridViewModel.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
+        IllustrationView = illustrationView;
+        ContainerGridViewModel = illustrationView.ViewModel;
+        IllustrationViewModelInTheGridView = ContainerGridViewModel.DataProvider.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
     }
 
     public IllustrationViewerPageViewModel(params IllustrationViewModel[] illustrations)
@@ -104,18 +107,18 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     /// <returns></returns>
     public IllustrationViewerPageViewModel CreateNew()
     {
-        return IllustrationGrid is not null ? new IllustrationViewerPageViewModel(IllustrationGrid, _illustrations) : new IllustrationViewerPageViewModel(_illustrations);
+        return IllustrationView is not null ? new IllustrationViewerPageViewModel(IllustrationView, _illustrations) : new IllustrationViewerPageViewModel(_illustrations);
     }
 
     /// <summary>
     ///     The view model of the GridView that the <see cref="ImageViewerPageViewModels" /> comes from
     /// </summary>
-    public IllustrationGridViewModel? ContainerGridViewModel { get; }
+    public IllustrationViewViewModel? ContainerGridViewModel { get; }
 
     /// <summary>
     ///     The <see cref="IllustrationGrid" /> that owns <see cref="ContainerGridViewModel" />
     /// </summary>
-    public IllustrationGrid? IllustrationGrid { get; }
+    public IIllustrationView? IllustrationView { get; }
 
     /// <summary>
     ///     The <see cref="IllustrationViewModelInTheGridView" /> in <see cref="IllustrationGrid" /> that corresponds to
@@ -127,7 +130,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     /// <summary>
     ///     The index of current illustration in <see cref="IllustrationGrid" />
     /// </summary>
-    public int? IllustrationIndex => ContainerGridViewModel?.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
+    public int? IllustrationIndex => ContainerGridViewModel?.DataProvider.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
 
     public ImageViewerPageViewModel[]? ImageViewerPageViewModels { get; }
 
@@ -210,7 +213,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         if (Current.OriginalImageStream is null)
         {
-            App.AppViewModel.ShowSnack(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, 5000);
+            SnackBarController.ShowSnack(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, SnackBarController.SnackBarDurationLong);
             return;
         }
 
@@ -236,7 +239,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         if (Current.OriginalImageStream is null)
         {
-            App.AppViewModel.ShowSnack(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, 5000);
+            SnackBarController.ShowSnack(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, SnackBarController.SnackBarDurationLong);
             return;
         }
 
@@ -296,7 +299,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         var link = MakoHelper.GenerateIllustrationWebUri(Current.IllustrationViewModel.Id).ToString();
         UIHelper.SetClipboardContent(package => package.SetText(link));
-        App.AppViewModel.ShowSnack(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle, 5000);
+        SnackBarController.ShowSnack(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle, SnackBarController.SnackBarDurationLong);
     }
 
     private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -535,7 +538,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     public Visibility CalculateNextImageButtonVisibility(int index)
     {
-        if (IllustrationGrid is null)
+        if (IllustrationView is null)
         {
             return Visibility.Collapsed;
         }
@@ -545,7 +548,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     public Visibility CalculatePrevImageButtonVisibility(int index)
     {
-        if (IllustrationGrid is null)
+        if (IllustrationView is null)
         {
             return Visibility.Collapsed;
         }
@@ -560,7 +563,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
             return Visibility.Collapsed;
         }
 
-        return ContainerGridViewModel.IllustrationsView.Count > IllustrationIndex + 1
+        return ContainerGridViewModel.DataProvider.IllustrationsView.Count > IllustrationIndex + 1
             ? CalculateNextImageButtonVisibility(index).Inverse()
             : Visibility.Collapsed;
     }

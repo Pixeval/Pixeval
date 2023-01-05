@@ -19,6 +19,6 @@ public sealed partial class SpotlightsPage
 {
     public SpotlightsPage()
     {
-        this.InitializeComponent();
+        InitializeComponent();
     }
 }

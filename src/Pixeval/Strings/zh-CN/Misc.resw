@@ -147,6 +147,12 @@
   <data name="IllustrationSortOptionPublishDateDescending" xml:space="preserve">
     <value>发布日期降序</value>
   </data>
+  <data name="IllustrationViewJustifiedLayout" xml:space="preserve">
+    <value>两端对齐</value>
+  </data>
+  <data name="IllustrationViewRegularLayout" xml:space="preserve">
+    <value>网格对齐</value>
+  </data>
   <data name="MainPageTabBookmark" xml:space="preserve">
     <value>我的收藏</value>
   </data>
@@ -200,6 +206,9 @@
   </data>
   <data name="SearchTagMatchOptionTitleAndCaption" xml:space="preserve">
     <value>匹配标题与说明文</value>
+  </data>
+  <data name="SortIsNotAllowedWithJustifiedLayout" xml:space="preserve">
+    <value>只有在设置中将”缩略图视图对齐规则“设置为”网格对齐“时才可以使用排序功能</value>
   </data>
   <data name="TargetFilterForAndroid" xml:space="preserve">
     <value>Android</value>

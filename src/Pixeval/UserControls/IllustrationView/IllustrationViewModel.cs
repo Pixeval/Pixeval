@@ -24,8 +24,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
-using CommunityToolkit.WinUI.UI.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Attributes;
 using Pixeval.CoreApi.Global.Enum;
@@ -38,7 +38,7 @@ using Pixeval.Util.Threading;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
-namespace Pixeval.UserControls;
+namespace Pixeval.UserControls.IllustrationView;
 
 /// <summary>
 ///     A view model that communicates between the model <see cref="Illustration" /> and the view
@@ -143,7 +143,7 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
         });
     }
 
-    public async Task<bool> LoadThumbnailIfRequired()
+    public async Task<bool> LoadThumbnailIfRequired(ThumbnailUrlOption thumbnailUrlOption = ThumbnailUrlOption.SquareMedium)
     {
         if (ThumbnailSource is not null || LoadingThumbnail)
         {

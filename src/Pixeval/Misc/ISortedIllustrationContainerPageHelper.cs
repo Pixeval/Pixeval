@@ -19,6 +19,7 @@
 #endregion
 
 using Pixeval.UserControls;
+using Pixeval.UserControls.IllustrationView;
 
 namespace Pixeval.Misc;
 
@@ -40,18 +41,21 @@ public interface ISortedIllustrationContainerPageHelper
 
     public void OnSortOptionChanged()
     {
-        switch (SortOptionProvider.GetSortDescription())
+        if (ViewModelProvider.ViewModel is SortableIllustrationViewViewModel vm)
         {
-            case { } desc:
-                ViewModelProvider.ViewModel.SetSortDescription(desc);
-                ViewModelProvider.ScrollToTop();
-                break;
-            default:
-                // reset the view so that it can resort its item to the initial order
-                ViewModelProvider.ViewModel.ClearSortDescription();
-                ViewModelProvider.ViewModel.IllustrationsView.Refresh();
-                ViewModelProvider.ScrollToTop();
-                break;
+            switch (SortOptionProvider.GetSortDescription())
+            {
+                case { } desc:
+                    vm.SetSortDescription(desc);
+                    ViewModelProvider.ScrollToTop();
+                    break;
+                default:
+                    // reset the view so that it can resort its item to the initial order
+                    vm.ClearSortDescription();
+                    vm.DataProvider.IllustrationsView.Refresh();
+                    ViewModelProvider.ScrollToTop();
+                    break;
+            }
         }
     }
 }

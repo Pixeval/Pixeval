@@ -24,10 +24,11 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
+using Pixeval.Controls.Setting.UI;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Download.MacroParser;
@@ -35,8 +36,9 @@ using Pixeval.Misc;
 using Pixeval.UserControls;
 using Pixeval.UserControls.TokenInput;
 using WinUI3Utilities.Attributes;
+using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
-namespace Pixeval.Controls.Setting.UI;
+namespace Pixeval.Pages.Misc;
 
 [SettingsViewModel<AppSetting>(nameof(_appSetting))]
 public partial class SettingsPageViewModel : ObservableObject
@@ -117,12 +119,12 @@ public partial class SettingsPageViewModel : ObservableObject
     public void ClearData<T, TModel>(ClearDataKind kind, IPersistentManager<T, TModel> manager) where T : new()
     {
         manager.Clear();
-        App.AppViewModel.ShowSnack(kind switch
+        SnackBarController.ShowSnack(kind switch
         {
             ClearDataKind.BrowseHistory => SettingsPageResources.BrowseHistoriesCleared,
             ClearDataKind.SearchHistory => SettingsPageResources.SearchHistoriesCleared,
             ClearDataKind.DownloadHistory => SettingsPageResources.DownloadHistoriesCleared,
             _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null)
-        }, 2000);
+        }, SnackBarController.SnackBarDurationShort);
     }
 }

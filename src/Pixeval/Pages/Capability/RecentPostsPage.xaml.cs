@@ -25,6 +25,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Misc;
+using Pixeval.Options;
 using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.UI;
@@ -52,7 +53,7 @@ public sealed partial class RecentPostsPage : ISortedIllustrationContainerPageHe
     {
         PrivacyPolicyComboBox.SelectedItem = PrivacyPolicyComboBoxPublicItem;
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
-        WeakReferenceMessenger.Default.Register<RecentPostsPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustrationContainer.ViewModel.FetchEngine?.Cancel());
+        WeakReferenceMessenger.Default.Register<RecentPostsPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
     }
 
     private void RecentPostsPage_OnLoaded(object sender, RoutedEventArgs e)
@@ -75,6 +76,14 @@ public sealed partial class RecentPostsPage : ISortedIllustrationContainerPageHe
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
+        ((ISortedIllustrationContainerPageHelper) this).OnSortOptionChanged();
+    }
+
+    private void SortOptionComboBoxContainer_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        if (App.AppViewModel.AppSetting.IllustrationViewOption is IllustrationViewOption.Justified)
+        {
+            ToolTipService.SetToolTip(SortOptionComboBoxContainer, new ToolTip { Content = MiscResources.SortIsNotAllowedWithJustifiedLayout });
+        }
     }
 }

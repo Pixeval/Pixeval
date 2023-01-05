@@ -59,6 +59,7 @@ using Image = SixLabors.ImageSharp.Image;
 using Pixeval.Attributes;
 using WinUI3Utilities;
 using Windows.Graphics;
+using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Pages;
 

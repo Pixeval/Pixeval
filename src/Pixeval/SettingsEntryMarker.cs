@@ -23,6 +23,9 @@ using Pixeval.Attributes;
 
 namespace Pixeval;
 
+// This file contains utilities to be used in the global search system to allow user to search and navigate to setting entries directly in the search bar
+// see Pixeval.Pages.SuggestionStateMachine.MatchSettings()
+
 public class SettingsCategory : Attribute
 {
     public SettingsEntryCategory Category { get; }
@@ -180,5 +183,9 @@ public enum SettingsEntry
 
     [SettingsCategory(SettingsEntryCategory.Misc)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.PreloadRowsEntryHeader))]
-    PreloadRows
+    PreloadRows,
+
+    [SettingsCategory(SettingsEntryCategory.BrowsingExperience)]
+    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.IllustrationViewOptionEntryHeader))]
+    IllustrationViewOption
 }
