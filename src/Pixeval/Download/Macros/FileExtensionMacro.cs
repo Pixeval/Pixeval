@@ -19,7 +19,6 @@
 #endregion
 
 using Pixeval.Download.MacroParser;
-using Pixeval.UserControls;
 using Pixeval.Util;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 

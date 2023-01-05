@@ -33,7 +33,6 @@ using Pixeval.Misc;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.Misc;
-using Pixeval.UserControls;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using WinUI3Utilities;

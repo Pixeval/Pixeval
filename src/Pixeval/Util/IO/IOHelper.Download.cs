@@ -30,7 +30,6 @@ using Windows.Storage.Streams;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IO;
 using Pixeval.Download;
-using Pixeval.UserControls;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;

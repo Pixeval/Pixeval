@@ -41,7 +41,6 @@ using Pixeval.Misc;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using QRCoder;
-using WinRT.Interop;
 using System.Threading;
 using Microsoft.UI.Xaml.Data;
 using Pixeval.Options;

@@ -21,7 +21,6 @@
 using System;
 using System.Numerics;
 using Windows.System;
-using CommunityToolkit.WinUI.UI;
 using CommunityToolkit.WinUI.UI.Animations.Expressions;
 using Microsoft.Graphics.Canvas.Effects;
 using CommunityToolkit.Mvvm.Messaging;
@@ -39,7 +38,6 @@ using Pixeval.Messages;
 using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.UI;
-using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustratorViewer;
 

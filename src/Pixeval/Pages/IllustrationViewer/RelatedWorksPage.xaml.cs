@@ -21,7 +21,6 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Messages;
-using Pixeval.UserControls;
 using Pixeval.Util;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 

@@ -20,7 +20,6 @@
 
 using Windows.Storage.Streams;
 using Pixeval.Database;
-using Pixeval.UserControls;
 using Pixeval.Util.IO;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
