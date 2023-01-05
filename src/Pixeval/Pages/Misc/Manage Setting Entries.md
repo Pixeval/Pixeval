@@ -41,3 +41,5 @@
         ```
 
         **Note that the implementation is a `record`, which defines the by-value comparison semantic automatically, if you are defining an implementation of `IStringRepresentableItem` using a `class`, remember to override the `Equals` and `HashCode` method to perform a by-value comparison, this is vital.**
+
+5. Add a corresponding entry in `Pixeval.SettingsEntry`, this will be used in the global search system.
