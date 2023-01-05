@@ -29,6 +29,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Util.UI;
+using WinUI3Utilities;
 
 namespace Pixeval.Popups;
 
@@ -180,7 +181,7 @@ public class AppPopup
                 }
             }
         };
-        App.AppViewModel.Window.SizeChanged += WindowOnSizeChanged;
+        CurrentContext.Window.SizeChanged += WindowOnSizeChanged;
     }
 
     public Popup Popup { get; }
@@ -258,6 +259,6 @@ public class AppPopup
 
     ~AppPopup()
     {
-        App.AppViewModel.Window.SizeChanged -= WindowOnSizeChanged;
+        CurrentContext.Window.SizeChanged -= WindowOnSizeChanged;
     }
 }

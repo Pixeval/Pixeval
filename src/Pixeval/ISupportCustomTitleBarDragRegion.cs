@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval
+﻿#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/ApplicationSizeDefaultValueProviders.cs
+// Copyright (c) 2023 Pixeval/ISupportCustomTitleBarDragRegion.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,20 +18,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-namespace Pixeval.Misc;
+using System.Threading.Tasks;
+using Windows.Graphics;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
-public class AppWidthDefaultValueProvider : IDefaultValueProvider
-{
-    public object ProvideValue()
-    {
-        return WinUI3Utilities.WindowHelper.PredetermineEstimatedWindowSize().Width;
-    }
-}
+namespace Pixeval;
 
-public class AppHeightDefaultValueProvider : IDefaultValueProvider
+public interface ISupportCustomTitleBarDragRegion
 {
-    public object ProvideValue()
-    {
-        return WinUI3Utilities.WindowHelper.PredetermineEstimatedWindowSize().Height;
-    }
+    Task<RectInt32[]> SetTitleBarDragRegionAsync(
+        FrameworkElement titleBar,
+        ColumnDefinition leftDragRegion, 
+        ColumnDefinition leftMarginRegion,
+        ColumnDefinition searchBarRegion,
+        ColumnDefinition marginRegion,
+        ColumnDefinition reverseSearchButtonRegion, 
+        ColumnDefinition searchSettingButtonRegion,
+        ColumnDefinition rightDragRegion);
 }

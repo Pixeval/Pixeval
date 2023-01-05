@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -39,6 +39,7 @@ using Pixeval.Messages;
 using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.UI;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustratorViewer;
 

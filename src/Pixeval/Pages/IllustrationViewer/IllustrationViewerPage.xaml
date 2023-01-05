@@ -43,42 +43,47 @@
         <controls:DockPanel x:Name="IllustrationPresenterDockPanel"
                             HorizontalAlignment="Stretch"
                             LastChildFill="True">
-            <CommandBar controls:DockPanel.Dock="Top" DefaultLabelPosition="Right">
-                <CommandBar.Content>
-                    <AppBarButton Width="48"
-                                  Icon="Back"
-                                  LabelPosition="Collapsed"
-                                  Tapped="BackButton_OnTapped" />
-                </CommandBar.Content>
-                <AppBarToggleButton x:Uid="/IllustrationViewerPage/IllustrationInfoAndCommentsButton"
-                                    Icon="{ui:FontIcon Glyph=InfoE946}"
-                                    IsChecked="{x:Bind _viewModel.IsInfoPaneOpen, Mode=TwoWay}">
-                    <AppBarToggleButton.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="F12" />
-                    </AppBarToggleButton.KeyboardAccelerators>
-                </AppBarToggleButton>
-                <AppBarButton Command="{x:Bind _viewModel.PlayGifCommand}" Visibility="{x:Bind _viewModel.IsUgoira}" />
-                <AppBarSeparator />
-                <AppBarButton Command="{x:Bind _viewModel.CopyCommand}" />
-                <AppBarButton Command="{x:Bind _viewModel.SaveCommand}" />
-                <AppBarButton Command="{x:Bind _viewModel.SaveAsCommand}" />
-                <AppBarSeparator />
-                <AppBarButton x:Uid="/IllustrationViewerPage/SetAsButton" Icon="{ui:FontIcon Glyph=PersonalizeE771}">
-                    <AppBarButton.Flyout>
-                        <MenuFlyout>
-                            <MenuFlyoutItem Command="{x:Bind _viewModel.SetAsBackgroundCommand}" />
-                            <MenuFlyoutItem Command="{x:Bind _viewModel.SetAsLockScreenCommand}" />
-                        </MenuFlyout>
-                    </AppBarButton.Flyout>
-                </AppBarButton>
-                <AppBarSeparator />
-                <AppBarButton Command="{x:Bind _viewModel.AddToBookmarkCommand}" />
-                <AppBarButton x:Name="GenerateLinkToThisPageButton" Command="{x:Bind _viewModel.GenerateLinkCommand}" />
-                <AppBarButton Command="{x:Bind _viewModel.GenerateWebLinkCommand}" />
-                <AppBarButton Command="{x:Bind _viewModel.OpenInWebBrowserCommand}" />
-                <AppBarButton Command="{x:Bind _viewModel.ShowQrCodeCommand}" />
-                <AppBarButton Command="{x:Bind _viewModel.ShareCommand}" />
-            </CommandBar>
+            <Grid controls:DockPanel.Dock="Top">
+                <AppBarButton Width="48"
+                              HorizontalAlignment="Left"
+                              Icon="Back"
+                              LabelPosition="Collapsed"
+                              Tapped="BackButton_OnTapped" />
+                <CommandBar x:Name="IllustrationViewerCommandBar"
+                            Margin="150,0,150,0"
+                            HorizontalAlignment="Center"
+                            DefaultLabelPosition="Right">
+                    <AppBarToggleButton x:Uid="/IllustrationViewerPage/IllustrationInfoAndCommentsButton"
+                                        Icon="{ui:FontIcon Glyph=InfoE946}"
+                                        IsChecked="{x:Bind _viewModel.IsInfoPaneOpen, Mode=TwoWay}">
+                        <AppBarToggleButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="F12" />
+                        </AppBarToggleButton.KeyboardAccelerators>
+                    </AppBarToggleButton>
+                    <AppBarButton Command="{x:Bind _viewModel.PlayGifCommand}" Visibility="{x:Bind _viewModel.IsUgoira}" />
+                    <AppBarSeparator />
+                    <AppBarButton Command="{x:Bind _viewModel.CopyCommand}" />
+                    <AppBarButton Command="{x:Bind _viewModel.SaveCommand}" />
+                    <AppBarButton Command="{x:Bind _viewModel.SaveAsCommand}" />
+                    <AppBarSeparator />
+                    <AppBarButton x:Uid="/IllustrationViewerPage/SetAsButton" Icon="{ui:FontIcon Glyph=PersonalizeE771}">
+                        <AppBarButton.Flyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Command="{x:Bind _viewModel.SetAsBackgroundCommand}" />
+                                <MenuFlyoutItem Command="{x:Bind _viewModel.SetAsLockScreenCommand}" />
+                            </MenuFlyout>
+                        </AppBarButton.Flyout>
+                    </AppBarButton>
+                    <AppBarSeparator />
+                    <AppBarButton Command="{x:Bind _viewModel.AddToBookmarkCommand}" />
+                    <AppBarButton x:Name="GenerateLinkToThisPageButton" Command="{x:Bind _viewModel.GenerateLinkCommand}" />
+                    <AppBarButton Command="{x:Bind _viewModel.GenerateWebLinkCommand}" />
+                    <AppBarButton Command="{x:Bind _viewModel.OpenInWebBrowserCommand}" />
+                    <AppBarButton Command="{x:Bind _viewModel.ShowQrCodeCommand}" />
+                    <AppBarButton Command="{x:Bind _viewModel.ShareCommand}" />
+                </CommandBar>
+            </Grid>
+
             <TeachingTip x:Uid="/IllustrationViewerPage/GenerateLinkToThisPageButtonTeachingTip"
                          ActionButtonClick="GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick"
                          IsOpen="{x:Bind _viewModel.IsGenerateLinkTeachingTipOpen, Mode=OneWay}"

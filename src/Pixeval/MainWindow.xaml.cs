@@ -21,13 +21,10 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Graphics;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
-using Microsoft.UI;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -35,7 +32,6 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Misc;
 using Pixeval.Pages.Login;
-using WinRT.Interop;
 using AppContext = Pixeval.AppManagement.AppContext;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -52,6 +48,8 @@ using Pixeval.Attributes;
 using Pixeval.Database.Managers;
 using Pixeval.Database;
 using Pixeval.Messages;
+using Pixeval.Util.Threading;
+using WinUI3Utilities;
 
 namespace Pixeval;
 
@@ -62,13 +60,8 @@ public sealed partial class MainWindow : INavigationModeInfo
     public MainWindow()
     {
         InitializeComponent();
-        WinUI3Utilities.CurrentContext.TitleBar = AppTitleBar;
-        WinUI3Utilities.CurrentContext.TitleTextBlock = AppTitleTextBlock;
-
-        if (!AppWindowTitleBar.IsCustomizationSupported())
-        {
-            SetTitleBar(AppTitleBar);
-        }
+        CurrentContext.TitleBar = AppTitleBar;
+        CurrentContext.TitleTextBlock = AppTitleTextBlock;
     }
 
     public NavigationTransitionInfo? DefaultNavigationTransitionInfo { get; internal set; } = new SuppressNavigationTransitionInfo();
@@ -116,80 +109,72 @@ public sealed partial class MainWindow : INavigationModeInfo
 
     private void MainWindow_OnSizeChanged(object sender, WindowSizeChangedEventArgs args)
     {
-
-    }
-
-    [DllImport("Shcore.dll", SetLastError = true)]
-    internal static extern int GetDpiForMonitor(nint hMonitor, MonitorDpiType dpiType, out uint dpiX, out uint dpiY);
-
-    internal enum MonitorDpiType
-    {
-        MdtEffectiveDpi = 0,
-        MdtAngularDpi = 1,
-        MdtRawDpi = 2,
-        MdtDefault = MdtEffectiveDpi
-    }
-
-    private double GetScaleAdjustment()
-    {
-        var hWnd = WindowNative.GetWindowHandle(this);
-        var wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
-        var displayArea = DisplayArea.GetFromWindowId(wndId, DisplayAreaFallback.Primary);
-        var hMonitor = Win32Interop.GetMonitorFromDisplayId(displayArea.DisplayId);
-
-        // Get DPI.
-        var result = GetDpiForMonitor(hMonitor, MonitorDpiType.MdtDefault, out var dpiX, out var _);
-        if (result != 0)
+        if (PixevalAppRootFrame.Content is ISupportCustomTitleBarDragRegion iSupportCustomTitleBarDragRegion)
         {
-            throw new Exception("Could not get DPI for monitor.");
-        }
-
-        var scaleFactorPercent = (uint)(((long)dpiX * 100 + (96 >> 1)) / 96);
-        return scaleFactorPercent / 100.0;
-    }
-
-    private void SetDragRegionForCustomTitleBar(AppWindow appWindow)
-    {
-        // Check to see if customization is supported.
-        // Currently only supported on Windows 11.
-        if (AppWindowTitleBar.IsCustomizationSupported()
-            && appWindow.TitleBar.ExtendsContentIntoTitleBar)
-        {
-            var scaleAdjustment = GetScaleAdjustment();
-            RectInt32 dragRectL;
-            dragRectL.X = 0;
-            dragRectL.Y = 0;
-            dragRectL.Width = (int)((LeftDragRegion.ActualWidth + LeftMarginRegion.ActualWidth) * scaleAdjustment);
-            dragRectL.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
-            RectInt32 dragRectR;
-            dragRectR.X = (int)((LeftDragRegion.ActualWidth + LeftMarginRegion.ActualWidth + SearchBarRegion.ActualWidth + MarginRegion.ActualWidth + ReverseSearchButtonRegion.ActualWidth + SearchSettingButtonRegion.ActualWidth) * scaleAdjustment);
-            dragRectR.Y = 0;
-            dragRectR.Width = (int)(RightDragRegion.ActualWidth * scaleAdjustment);
-            dragRectR.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
-
-            appWindow.TitleBar.SetDragRectangles(new[] { dragRectL, dragRectR });
+            SetDragRegionAsync(iSupportCustomTitleBarDragRegion).Discard();
         }
     }
 
     private void AppTitleBar_OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (AppWindowTitleBar.IsCustomizationSupported())
+        if (AppWindowTitleBar.IsCustomizationSupported() && PixevalAppRootFrame.Content is ISupportCustomTitleBarDragRegion iSupportCustomTitleBarDragRegion)
         {
-            SetDragRegionForCustomTitleBar(App.AppViewModel.AppWindow);
+            SetDragRegionAsync(iSupportCustomTitleBarDragRegion).Discard();
         }
     }
 
     private void AppTitleBar_OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        if (AppWindowTitleBar.IsCustomizationSupported())
+        if (AppWindowTitleBar.IsCustomizationSupported() && PixevalAppRootFrame.Content is ISupportCustomTitleBarDragRegion iSupportCustomTitleBarDragRegion)
         {
-            SetDragRegionForCustomTitleBar(App.AppViewModel.AppWindow);
+            SetDragRegionAsync(iSupportCustomTitleBarDragRegion).Discard();
         }
+    }
+
+    private void PixevalAppRootFrame_OnNavigated(object sender, NavigationEventArgs e)
+    {
+        if (AppWindowTitleBar.IsCustomizationSupported() && PixevalAppRootFrame.Content is ISupportCustomTitleBarDragRegion iSupportCustomTitleBarDragRegion)
+        {
+            SetDragRegionAsync(iSupportCustomTitleBarDragRegion).Discard();
+        }
+
+        switch (sender)
+        {
+            case Frame { SourcePageType: var page }:
+                if (page == typeof(MainPage))
+                {
+                    ReverseSearchButton.Visible();
+                    OpenSearchSettingPopupButton.Visible();
+                    KeywordAutoSuggestBox.Visible();
+                }
+                else
+                {
+                    ReverseSearchButton.Invisible();
+                    OpenSearchSettingPopupButton.Invisible();
+                    KeywordAutoSuggestBox.Invisible();
+                }
+
+                break;
+        }
+    }
+
+    private async Task SetDragRegionAsync(ISupportCustomTitleBarDragRegion iSupportCustomTitleBarDragRegion)
+    {
+        var rects = await iSupportCustomTitleBarDragRegion.SetTitleBarDragRegionAsync(
+            AppTitleBar,
+            LeftDragRegion,
+            LeftMarginRegion,
+            SearchBarRegion,
+            MarginRegion,
+            ReverseSearchButtonRegion,
+            SearchSettingButtonRegion,
+            RightDragRegion);
+        CurrentContext.AppWindow.TitleBar.SetDragRectangles(rects);
     }
 
     private async void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
     {
-        var suggestBox = (AutoSuggestBox)sender;
+        var suggestBox = (AutoSuggestBox) sender;
         suggestBox.IsSuggestionListOpen = true;
         await _viewModel.SuggestionProvider.UpdateAsync(suggestBox.Text);
     }
@@ -225,7 +210,7 @@ public sealed partial class MainWindow : INavigationModeInfo
             .WithContent(content)
             .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
             .WithDefaultButton(ContentDialogButton.Primary)
-            .Build(App.AppViewModel.Window);
+            .Build(CurrentContext.Window);
         content.Owner = dialog;
         await dialog.ShowAsync();
     }

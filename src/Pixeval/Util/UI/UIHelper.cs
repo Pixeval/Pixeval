@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -46,6 +46,10 @@ using System.Threading;
 using Microsoft.UI.Xaml.Data;
 using Pixeval.Options;
 using Pixeval.Util.Threading;
+using WinUI3Utilities;
+using Microsoft.UI.Windowing;
+using Microsoft.UI;
+using System.Runtime.InteropServices;
 
 namespace Pixeval.Util.UI;
 
@@ -258,8 +262,7 @@ public static partial class UIHelper
             SuggestedStartLocation = suggestedStartLocation,
             FileTypeFilter = { "*" }
         };
-        InitializeWithWindow.Initialize(folderPicker, App.AppViewModel.GetMainWindowHandle());
-        return folderPicker.PickSingleFolderAsync();
+        return folderPicker.InitializeWithWindow().PickSingleFolderAsync();
     }
 
     public static IAsyncOperation<StorageFile?> OpenFileSavePickerAsync(string suggestedFileName, string fileTypeName, string fileTypeId)
@@ -273,8 +276,7 @@ public static partial class UIHelper
             },
             SuggestedFileName = suggestedFileName
         };
-        InitializeWithWindow.Initialize(savePicker, App.AppViewModel.GetMainWindowHandle());
-        return savePicker.PickSaveFileAsync();
+        return savePicker.InitializeWithWindow().PickSaveFileAsync();
     }
 
     public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync()
@@ -285,22 +287,53 @@ public static partial class UIHelper
             ViewMode = PickerViewMode.Thumbnail,
             FileTypeFilter = { "*" }
         };
-        InitializeWithWindow.Initialize(openPicker, App.AppViewModel.GetMainWindowHandle());
-        return openPicker.PickSingleFileAsync();
+        return openPicker.InitializeWithWindow().PickSingleFileAsync();
     }
 
     public static Task AwaitPageTransitionAsync<T>(this FrameworkElement root) where T : Page
+    {
+        return SpinWaitAsync(() => root.FindDescendant<T>() is null);
+    }
+
+    public static Task SpinWaitAsync(Func<bool> condition)
     {
         var tcs = new TaskCompletionSource();
         Task.Run(async () =>
         {
             var spinWait = new SpinWait();
-            while (await App.AppViewModel.DispatchTaskAsync(() => Task.FromResult(root.FindDescendant<T>() is null)))
+            while (await App.AppViewModel.DispatchTaskAsync(() => Task.FromResult(condition())))
             {
                 spinWait.SpinOnce(20);
             }
             tcs.SetResult();
         }).Discard();
         return tcs.Task;
+    }
+
+    [DllImport("Shcore.dll", SetLastError = true)]
+    internal static extern int GetDpiForMonitor(nint hMonitor, MonitorDpiType dpiType, out uint dpiX, out uint dpiY);
+
+    internal enum MonitorDpiType
+    {
+        MdtEffectiveDpi = 0,
+        MdtAngularDpi = 1,
+        MdtRawDpi = 2,
+        MdtDefault = MdtEffectiveDpi
+    }
+
+    public static double GetScaleAdjustment()
+    {
+        var displayArea = DisplayArea.GetFromWindowId(CurrentContext.WindowId, DisplayAreaFallback.Primary);
+        var hMonitor = Win32Interop.GetMonitorFromDisplayId(displayArea.DisplayId);
+
+        // Get DPI.
+        var result = GetDpiForMonitor(hMonitor, MonitorDpiType.MdtDefault, out var dpiX, out _);
+        if (result != 0)
+        {
+            throw new Exception("Could not get DPI for monitor.");
+        }
+
+        var scaleFactorPercent = (uint)(((long)dpiX * 100 + (96 >> 1)) / 96);
+        return scaleFactorPercent / 100.0;
     }
 }

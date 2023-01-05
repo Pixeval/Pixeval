@@ -38,6 +38,7 @@ using Pixeval.Util;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.UserControls.IllustrationView;
@@ -172,7 +173,7 @@ public sealed partial class IllustrationViewCommandBar
         // This will run for quite a while
         _ = Task.Run(async () =>
         {
-            var tasks = await App.AppViewModel.Window.DispatcherQueue.EnqueueAsync(
+            var tasks = await CurrentContext.Window.DispatcherQueue.EnqueueAsync(
                 async () => await Task.WhenAll(
                     ViewModel.DataProvider.SelectedIllustrations
                         .SelectMany(i => i.GetMangaIllustrationViewModels())

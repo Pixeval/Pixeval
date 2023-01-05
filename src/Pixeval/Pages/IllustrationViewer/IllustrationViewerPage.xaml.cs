@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -20,10 +20,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 using Windows.Storage.Streams;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -39,12 +43,14 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
+using Windows.Graphics;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public sealed partial class IllustrationViewerPage : IGoBack
+public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitleBarDragRegion
 {
     // The navigation between ImageViewerPages contain two difference kinds: 
     // 1. The navigation happens at the same level, for example, navigating forth and back in the same IllustrationGrid
@@ -151,7 +157,7 @@ public sealed partial class IllustrationViewerPage : IGoBack
     {
         var commentRepliesBlock = new CommentRepliesBlock
         {
-            ViewModel = new CommentRepliesBlockViewModel(message.Sender!.GetDataContext<CommentBlockViewModel>())
+            ViewModel = new CommentRepliesBlockViewModel(UIHelper.GetDataContext<CommentBlockViewModel>(message.Sender!))
         };
         commentRepliesBlock.CloseButtonTapped += recipient.CommentRepliesBlock_OnCloseButtonTapped;
         recipient._commentRepliesPopup = PopupManager.CreatePopup(commentRepliesBlock, widthMargin: 200, maxWidth: 1500, minWidth: 400, maxHeight: 1200, closing: (_, _) => recipient._commentRepliesPopup = null);
@@ -281,5 +287,38 @@ public sealed partial class IllustrationViewerPage : IGoBack
         {
             IllustrationInfoAndCommentsFrame.Navigate(tag.NavigateTo, tag.Parameter, args.RecommendedNavigationTransitionInfo);
         }
+    }
+
+    public async Task<RectInt32[]> SetTitleBarDragRegionAsync(
+        FrameworkElement titleBar, 
+        ColumnDefinition leftDragRegion, 
+        ColumnDefinition leftMarginRegion, 
+        ColumnDefinition searchBarRegion, 
+        ColumnDefinition marginRegion, 
+        ColumnDefinition reverseSearchButtonRegion, 
+        ColumnDefinition searchSettingButtonRegion, 
+        ColumnDefinition rightDragRegion)
+    {
+        await UIHelper.SpinWaitAsync(() => IllustrationViewerCommandBar.ActualHeight == 0);
+        const int leftButtonWidth = 50;
+        var scaleFactor = UIHelper.GetScaleAdjustment();
+        var point = IllustrationViewerCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
+        var leftDragRegionStart = leftButtonWidth * scaleFactor;
+        var leftDragRegionWidth = point.X * scaleFactor - leftDragRegionStart;
+        var height = IllustrationViewerCommandBar.ActualHeight * scaleFactor;
+        var rightDragRegionStart = leftDragRegionStart + leftDragRegionWidth + IllustrationViewerCommandBar.ActualWidth * scaleFactor;
+        var rightDragRegionWidth = CurrentContext.AppWindow.ClientSize.Width * scaleFactor - rightDragRegionStart;
+        RectInt32 dragRegionL;
+        dragRegionL.X = (int) leftDragRegionStart;
+        dragRegionL.Y = 0;
+        dragRegionL.Width = (int) leftDragRegionWidth;
+        dragRegionL.Height = (int) height;
+        RectInt32 dragRegionR;
+        dragRegionR.X = (int) rightDragRegionStart;
+        dragRegionR.Y = 0;
+        dragRegionR.Width = (int) rightDragRegionWidth;
+        dragRegionR.Height = (int) height;
+
+        return new[] { dragRegionL, dragRegionR };
     }
 }

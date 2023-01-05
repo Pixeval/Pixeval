@@ -19,11 +19,9 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime;
-using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
@@ -59,11 +57,13 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Image = SixLabors.ImageSharp.Image;
 using Pixeval.Attributes;
+using WinUI3Utilities;
+using Windows.Graphics;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Pages;
 
-public sealed partial class MainPage
+public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
 {
     private static UIElement? _connectedAnimationTarget;
 
@@ -79,6 +79,8 @@ public sealed partial class MainPage
     public MainPage()
     {
         InitializeComponent();
+        CurrentContext.NavigationView = MainPageRootNavigationView;
+        CurrentContext.Frame = MainPageRootFrame;
         DataContext = _viewModel;
         if (AppWindowTitleBar.IsCustomizationSupported())
         {
@@ -90,7 +92,7 @@ public sealed partial class MainPage
     {
         // dirty trick, the order of the menu items is the same as the order of the fields in MainPageTabItem
         // since enums are basically integers, we just need a cast to transform it to the correct offset.
-        ((NavigationViewItem)MainPageRootNavigationView.MenuItems[(int)App.AppViewModel.AppSetting.DefaultSelectedTabItem]).IsSelected = true;
+        ((NavigationViewItem) MainPageRootNavigationView.MenuItems[(int) App.AppViewModel.AppSetting.DefaultSelectedTabItem]).IsSelected = true;
 
         // The application is invoked by a protocol, call the corresponding protocol handler.
         if (App.AppViewModel.ConsumeProtocolActivation())
@@ -150,7 +152,7 @@ public sealed partial class MainPage
 
     private async void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
     {
-        var suggestBox = (AutoSuggestBox)sender;
+        var suggestBox = (AutoSuggestBox) sender;
         suggestBox.IsSuggestionListOpen = true;
         await _viewModel.SuggestionProvider.UpdateAsync(suggestBox.Text);
     }
@@ -208,7 +210,7 @@ public sealed partial class MainPage
         {
             var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
             // TODO distinguish search illustrations, manga, novels, and users.
-            if (manager.Count == 0 || manager.Select(count: 1).AsList() is [{ Value: var last }, ..] && last != text)
+            if (manager.Count == 0 || manager.Select(count: 1).AsList() is [ { Value: var last }, ..] && last != text)
             {
                 manager.Insert(new SearchHistoryEntry
                 {
@@ -243,8 +245,8 @@ public sealed partial class MainPage
         MainPageRootNavigationView.SelectedItem = SettingsTab;
         await MainPageRootFrame.AwaitPageTransitionAsync<SettingsPage>();
         var settingsPage = MainPageRootFrame.FindDescendant<SettingsPage>()!;
-        var position = settingsPage.FindChild<FrameworkElement>(element => element.Tag is int e && e == (int)entry)
-            ?.TransformToVisual((UIElement)settingsPage.SettingsPageScrollViewer.Content)
+        var position = settingsPage.FindChild<FrameworkElement>(element => element.Tag is int e && e == (int) entry)
+            ?.TransformToVisual((UIElement) settingsPage.SettingsPageScrollViewer.Content)
             .TransformPoint(new Point(0, 0));
         settingsPage.SettingsPageScrollViewer.ChangeView(null, position?.Y, null, false);
     }
@@ -297,8 +299,35 @@ public sealed partial class MainPage
             .WithContent(content)
             .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
             .WithDefaultButton(ContentDialogButton.Primary)
-            .Build(App.AppViewModel.Window);
+            .Build(CurrentContext.Window);
         content.Owner = dialog;
         await dialog.ShowAsync();
+    }
+
+
+    public Task<RectInt32[]> SetTitleBarDragRegionAsync(
+        FrameworkElement titleBar,
+        ColumnDefinition leftDragRegion,
+        ColumnDefinition leftMarginRegion,
+        ColumnDefinition searchBarRegion,
+        ColumnDefinition marginRegion,
+        ColumnDefinition reverseSearchButtonRegion,
+        ColumnDefinition searchSettingButtonRegion,
+        ColumnDefinition rightDragRegion)
+    {
+        const int leftButtonWidth = 50;
+        var scaleAdjustment = UIHelper.GetScaleAdjustment();
+        RectInt32 dragRectL;
+        dragRectL.X = (int) (leftButtonWidth * scaleAdjustment);
+        dragRectL.Y = 0;
+        dragRectL.Width = (int) ((leftDragRegion.ActualWidth + leftMarginRegion.ActualWidth - leftButtonWidth) * scaleAdjustment);
+        dragRectL.Height = (int) (titleBar.ActualHeight * scaleAdjustment);
+        RectInt32 dragRectR;
+        dragRectR.X = (int) (leftButtonWidth + (leftDragRegion.ActualWidth + leftMarginRegion.ActualWidth + searchBarRegion.ActualWidth + marginRegion.ActualWidth + reverseSearchButtonRegion.ActualWidth + searchSettingButtonRegion.ActualWidth) * scaleAdjustment);
+        dragRectR.Y = 0;
+        dragRectR.Width = (int) (rightDragRegion.ActualWidth * scaleAdjustment);
+        dragRectR.Height = (int) (titleBar.ActualHeight * scaleAdjustment);
+
+        return Task.FromResult(new[] { dragRectL, dragRectR });
     }
 }
