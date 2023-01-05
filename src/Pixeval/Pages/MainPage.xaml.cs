@@ -335,4 +335,24 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
 
         return Task.FromResult(new[] { dragRectL, dragRectR });
     }
+
+    private void KeywordAutoSuggestBox_OnDragOver(object sender, DragEventArgs e)
+    {
+        e.AcceptedOperation = DataPackageOperation.Copy;
+    }
+
+    private async void KeywordAutoSuggestBox_OnDrop(object sender, DragEventArgs e)
+    {
+        if (App.AppViewModel.AppSetting.ReverseSearchApiKey is { Length: > 0 })
+        {
+            if (e.DataView.Contains(StandardDataFormats.StorageItems) && (await e.DataView.GetStorageItemsAsync()).ToArray() is [StorageFile item, ..])
+            {
+                await _viewModel.ReverseSearchAsync(await item.OpenStreamForReadAsync());
+            }
+        }
+        else
+        {
+            await ShowReverseSearchApiKeyNotPresentDialog();
+        }
+    }
 }

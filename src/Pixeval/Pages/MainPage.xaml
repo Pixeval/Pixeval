@@ -75,12 +75,12 @@
     </controls:EnhancedPage.Resources>
     <NavigationView x:Name="MainPageRootNavigationView"
                     d:DataContext="{d:DesignInstance pages:MainPageViewModel}"
+                    DisplayModeChanged="{x:Bind utilities:TitleBarHelper.DisplayModeChanged}"
                     IsBackButtonVisible="Collapsed"
                     IsSettingsVisible="False"
-                    PaneOpening="{x:Bind utilities:TitleBarHelper.PaneOpening}"
-                    PaneClosing="{x:Bind utilities:TitleBarHelper.PaneClosing}"
-                    DisplayModeChanged="{x:Bind utilities:TitleBarHelper.DisplayModeChanged}"
                     OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}"
+                    PaneClosing="{x:Bind utilities:TitleBarHelper.PaneClosing}"
+                    PaneOpening="{x:Bind utilities:TitleBarHelper.PaneOpening}"
                     SelectionChanged="MainPageRootNavigationView_OnSelectionChanged">
         <NavigationView.PaneCustomContent>
             <Grid Margin="15,5,15,10" Visibility="{x:Bind MainPageRootNavigationView.IsPaneOpen, Mode=OneWay}">
@@ -94,6 +94,8 @@
                                 Grid.Column="0"
                                 VerticalAlignment="Center"
                                 AllowDrop="True"
+                                DragOver="KeywordAutoSuggestBox_OnDragOver"
+                                Drop="KeywordAutoSuggestBox_OnDrop"
                                 GotFocus="KeywordAutoSuggestBox_GotFocus"
                                 ItemTemplateSelector="{StaticResource SuggestionModelDataTemplateSelector}"
                                 ItemsSource="{x:Bind _viewModel.SuggestionProvider.Suggestions, Mode=OneWay}"

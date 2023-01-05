@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using JustifiedLayoutAlgorithm = Pixeval.Util.UI.JustifiedLayout;
@@ -49,7 +50,7 @@ public static class JustifiedListViewHelper
         }
     }
 
-    public static IEnumerable<JustifiedListViewRowItemWrapper[]> ComputeJustifiedListViewLayout(IEnumerable<(IllustrationView.IllustrationViewModel item, double aspectRatio)> enumerable, int containerWidth, int spacing, int desireHeight)
+    public static IEnumerable<JustifiedListViewRowItemWrapper[]> ComputeJustifiedListViewLayout(IEnumerable<(IllustrationViewModel item, double aspectRatio)> enumerable, int containerWidth, int spacing, int desireHeight)
     {
         var valueTuples = enumerable.ToList();
         var boxes = JustifiedLayoutAlgorithm.Compute(valueTuples.Select(tuple => tuple.aspectRatio).ToArray(), conf => conf.TargetRowHeight = desireHeight).Boxes;
