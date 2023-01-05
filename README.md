@@ -26,15 +26,15 @@
     </br>
 </div>
 
-🌏: [**简体中文**](https://github.com/Pixeval/Pixeval/blob/master/README.md)
-, [English](https://github.com/Pixeval/Pixeval/blob/master/README.en.md)
+🌏: [**简体中文**](https://github.com/Pixeval/Pixeval/blob/master/README.md),
+[English](https://github.com/Pixeval/Pixeval/blob/master/README.en.md)
 
 ---
 
 **基于WinUI3的Pixeval已经正在开发中，而作为旧的WPF版本除严重问题以外不再进行大量维护，请适时切换到新版Pixeval。**
 
 > 仅支持 Windows 10（版本 1809 - 内部版本 17763）及更高版本。
-> 可以通过以下步骤查看。选择“开始”按钮 ，然后选择“设置”。在“设置”中，依次选择“系统”>“关于” Windows规格。
+> 可以通过以下步骤查看。右键点击“开始”按钮，选择然后选择系统；或者在“设置”中，依次选择“系统”>“系统信息”，此时页面中的Windows规格下可以看到相关信息。
 
 更多详细信息请前往 [项目主页](https://sora.ink/pixeval) 查看
 
@@ -42,8 +42,7 @@
 
 ## 环境要求
 
-1. 安装[Visual Studio
-   2022](https://visualstudio.microsoft.com/vs)
+1. 安装[Visual Studio 2022](https://visualstudio.microsoft.com/vs)
 2. 在**工具-获取工具与功能**的**工作负载**中选择 **.NET 桌面开发**（建议在安装对话框的“安装详细信息”窗格中，选择位于列表底部的“Windows 应用 SDK C# 模板”，但不是必需的。可以参考[安装适用于 Windows 应用 SDK 的工具](https://learn.microsoft.com/windows/apps/windows-app-sdk/set-up-your-development-environment)）
 3. 在**工具-获取工具与功能**的**单个组件**中选择 **.NET 7**，也可以在VS外部下载[.NET 7 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)最新版本，但不推荐这么做
 
@@ -55,8 +54,7 @@
 
 ## 参与开发的要求
 
-1. 对Windows XAML
-   Framework的基本了解，要了解更多相关信息请看 [XAML概述](https://docs.microsoft.com/windows/uwp/xaml-platform/xaml-overview)
+1. 对Windows XAML Framework的基本了解，要了解更多相关信息请看 [XAML概述](https://docs.microsoft.com/windows/uwp/xaml-platform/xaml-overview)
 2. 对C#和.NET开发的一定了解以及开发经验
 3. 具有不依赖文档阅读代码的能力
 
@@ -80,7 +78,7 @@
 2. Pixeval.CoreApi 包含了项目需要的Pixiv API
 3. Pixeval.Utilities 包含了通用的工具代码
 
-## 如果遇到任何问题（按照推荐程度优先级排序）
+## 反馈问题（按照推荐程度优先级排序）
 
 1. 在 [github](https://github.com/Pixeval/Pixeval/issues/new) 提交新的Issue
 2. 给 [decem0730@hotmail.com](mailto:decem0730@hotmail.com) 发送邮件
