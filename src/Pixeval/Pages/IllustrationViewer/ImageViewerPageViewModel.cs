@@ -103,7 +103,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
 
     public IllustrationViewModel IllustrationViewModel { get; }
 
-    public CancellationHandle ImageLoadingCancellationHandle { get; private set; }
+    public CancellationHandle ImageLoadingCancellationHandle { get; }
 
     /// <summary>
     ///     The view model of the <see cref="IllustrationViewerPage" /> that hosts the owner <see cref="ImageViewerPage" />

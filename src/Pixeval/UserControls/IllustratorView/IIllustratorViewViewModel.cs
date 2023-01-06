@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IIllustrationViewViewModel.cs
+// Copyright (c) 2023 Pixeval/IIllustratorViewViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,39 +18,28 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using System.Threading.Tasks;
+using ABI.System;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.WinUI.UI;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
+using System.Threading.Tasks;
+using Microsoft.UI.Xaml.Media;
 
-namespace Pixeval.UserControls.IllustrationView;
+namespace Pixeval.UserControls.IllustratorView;
 
-public abstract partial class IllustrationViewViewModel : ObservableObject, IDisposable
+public abstract partial class IllustratorViewViewModel : ObservableObject, IDisposable
 {
     [ObservableProperty]
     private bool _hasNoItems;
 
-    [ObservableProperty]
-    private string? _selectionLabel;
+    public abstract IIllustratorViewDataProvider DataProvider { get; }
 
-    [ObservableProperty]
-    private bool _isAnyIllustrationSelected;
+    public abstract Task<ImageSource[]> GetIllustratorDisplayImagesAsync(string userId);
 
-    public abstract IIllustrationViewDataProvider DataProvider { get; }
+    public abstract void Dispose();
 
-    public async Task ResetEngineAndFillAsync(IFetchEngine<Illustration?>? newEngine, int? itemLimit = null)
+    public async Task ResetEngineAndFillAsync(IFetchEngine<User?>? newEngine, int? itemLimit = null)
     {
         HasNoItems = await DataProvider.ResetAndFillAsync(newEngine, itemLimit) == 0;
     }
-
-    public abstract void Dispose();
-}
-
-public abstract class SortableIllustrationViewViewModel : IllustrationViewViewModel
-{
-    public abstract void SetSortDescription(SortDescription description);
-
-    public abstract void ClearSortDescription();
 }

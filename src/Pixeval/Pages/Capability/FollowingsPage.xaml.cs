@@ -18,38 +18,53 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls.IllustratorView;
+using Pixeval.CoreApi.Global.Enum;
+using Pixeval.Messages;
 using Pixeval.Pages.IllustratorViewer;
+using Pixeval.Util;
+using Pixeval.Util.UI;
+using IllustratorViewModel = Pixeval.UserControls.IllustratorView.IllustratorViewModel;
 
 namespace Pixeval.Pages.Capability;
 
 public sealed partial class FollowingsPage
 {
-    private readonly FollowingsPageViewModel _viewModel = new();
-
     public FollowingsPage()
     {
         InitializeComponent();
     }
 
 
-    private async void FollowingsPage_OnLoaded(object sender, RoutedEventArgs e)
+    private void FollowingsPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        await _viewModel.LoadFollowings();
+        _ = IllustratorView.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public));
     }
 
-    private void IllustratorView_OnTapped(object sender, TappedRoutedEventArgs e)
+    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
     {
-        if (sender is IllustratorView view)
-        {
-            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", view.Avatar);
-            App.AppViewModel.RootFrameNavigate(typeof(IllustratorPage), (view.Avatar!, view.ViewModel), new SlideNavigationTransitionInfo
-            {
-                Effect = SlideNavigationTransitionEffect.FromRight
-            });
-        }
+        IllustratorView.ViewModel.Dispose();
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+    }
+
+    public override void OnPageActivated(NavigationEventArgs e)
+    {
+        WeakReferenceMessenger.Default.Register<FollowingsPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustratorView.ViewModel.DataProvider.FetchEngine?.Cancel());
+    }
+
+    private void IllustratorView_OnUserTapped(object sender, TappedRoutedEventArgs e)
+    {
+        // var context = sender.GetDataContext<IllustratorViewModel>();
+        // var item = IllustratorView.GetItemContainer(context);
+        // ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", item);
+        // App.AppViewModel.RootFrameNavigate(typeof(IllustratorPage), null, new SlideNavigationTransitionInfo
+        // {
+        //     Effect = SlideNavigationTransitionEffect.FromRight
+        // });
     }
 }

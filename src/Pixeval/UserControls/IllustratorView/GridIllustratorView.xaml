@@ -1,0 +1,56 @@
+<!--  Copyright (c) Microsoft Corporation and Contributors.  -->
+<!--  Licensed under the MIT License.  -->
+
+<UserControl x:Class="Pixeval.UserControls.IllustratorView.GridIllustratorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="using:Pixeval.UserControls.IllustratorView"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d">
+
+    <Grid>
+        <TeachingTip x:Name="IllustratorInformationTeachingTip"
+                     Width="0"
+                     IsLightDismissEnabled="False"
+                     PreferredPlacement="Auto">
+            <TeachingTip.HeroContent>
+                <StackPanel x:Name="IllustratorInformationImagesContainer"
+                            Orientation="Horizontal"
+                            Spacing="5" />
+            </TeachingTip.HeroContent>
+        </TeachingTip>
+        <controls:AdaptiveGridView x:Name="IllustratorGridView"
+                                   DesiredWidth="320"
+                                   IsItemClickEnabled="True"
+                                   IsMultiSelectCheckBoxEnabled="False"
+                                   ItemsSource="{x:Bind ViewModel.DataProvider.IllustratorsView}"
+                                   SelectionMode="None"
+                                   StretchContentForSingleRow="False">
+            <controls:AdaptiveGridView.ItemContainerTransitions>
+                <AddDeleteThemeTransition />
+            </controls:AdaptiveGridView.ItemContainerTransitions>
+            <controls:AdaptiveGridView.ItemTemplate>
+                <DataTemplate x:DataType="local:IllustratorViewModel">
+                    <GridViewItem PointerEntered="IllustratorProfile_OnPointerEntered"
+                                  PointerExited="IllustratorProfile_OnPointerExited"
+                                  Tapped="IllustratorProfile_OnTapped">
+                        <local:IllustratorProfile Margin="10" ViewModel="{x:Bind}" />
+                    </GridViewItem>
+                </DataTemplate>
+            </controls:AdaptiveGridView.ItemTemplate>
+        </controls:AdaptiveGridView>
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Spacing="20"
+                    Visibility="{x:Bind ViewModel.HasNoItems, Mode=OneWay}">
+            <Image Width="200"
+                   Height="200"
+                   Source="/Assets/Images/empty-box.png" />
+            <TextBlock x:Uid="/IllustrationView/ResultIsEmptyTextBlock"
+                       HorizontalAlignment="Center"
+                       FontSize="{StaticResource PixevalTitleFontSize}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

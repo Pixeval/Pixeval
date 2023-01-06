@@ -117,7 +117,7 @@
                         Padding="0"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        Content="{ui:FontIcon Glyph=SettingE713, FontSize=13}"
+                        Content="{ui:FontIcon Glyph=SettingsE713, FontSize=13}"
                         Tapped="OpenSearchSettingPopupButton_OnTapped" />
                 <Button x:Uid="/MainPage/ReverseSearchButton"
                         Grid.Column="2"
@@ -143,7 +143,9 @@
             <NavigationViewItem x:Uid="/MainPage/FollowingsTab"
                                 Icon="{ui:FontIcon Glyph=PeopleE716}"
                                 Tag="{x:Bind _viewModel.FollowingsTag}" />
-            <NavigationViewItem x:Uid="/MainPage/SpotlightsTab" Icon="{ui:FontIcon Glyph=MapLayersE81E}" />
+            <NavigationViewItem x:Uid="/MainPage/SpotlightsTab"
+                                Icon="{ui:FontIcon Glyph=MapLayersE81E}"
+                                Tag="{x:Bind _viewModel.SpotlightsTag}" />
             <NavigationViewItem x:Uid="/MainPage/FeedsTab" Icon="{ui:FontIcon Glyph=MobLocationEC43}" />
             <NavigationViewItem x:Uid="/MainPage/RecentPostsTab"
                                 Icon="{ui:FontIcon Glyph=DevUpdateECC5}"

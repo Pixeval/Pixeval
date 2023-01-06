@@ -30,6 +30,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Pixeval.Util.UI;
+using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.AppManagement;
@@ -47,6 +49,8 @@ public static partial class AppContext
     private const string SessionContainerKey = "Session";
 
     public const string AppLogoNoCaptionUri = "ms-appx:///Assets/Images/logo-no-caption.png";
+
+    public static readonly string AppIconFontFamilyName = AppHelper.IsWindows11 ? "Segoe Fluent Icons" : "Segoe MDL2 Assets";
 
     public static readonly string DatabaseFilePath = AppKnownFolders.Local.Resolve("PixevalData.litedb");
 

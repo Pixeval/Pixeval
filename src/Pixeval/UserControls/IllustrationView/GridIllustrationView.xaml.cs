@@ -78,7 +78,6 @@ public sealed partial class GridIllustrationView : IIllustrationView
 
     public GridIllustrationViewViewModel ViewModel { get; }
 
-
     public FrameworkElement SelfIllustrationView => this;
 
     IllustrationViewViewModel IIllustrationView.ViewModel => ViewModel;

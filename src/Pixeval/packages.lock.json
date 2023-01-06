@@ -24,6 +24,18 @@
           "Microsoft.WindowsAppSDK": "1.0.0"
         }
       },
+      "CommunityToolkit.WinUI.UI.Behaviors": {
+        "type": "Direct",
+        "requested": "[7.1.2, )",
+        "resolved": "7.1.2",
+        "contentHash": "Aex55Fh9G7gq0o/3rhg6YExiZRth2dLbAif2IBP+oBFSn/+0u838K1BtGScm7Jzasm6JAH+f347159xMubCJTg==",
+        "dependencies": {
+          "CommunityToolkit.WinUI.UI": "7.1.2",
+          "CommunityToolkit.WinUI.UI.Animations": "7.1.2",
+          "Microsoft.WindowsAppSDK": "1.0.0",
+          "Microsoft.Xaml.Behaviors.WinUI.Managed": "2.0.8"
+        }
+      },
       "CommunityToolkit.WinUI.UI.Controls": {
         "type": "Direct",
         "requested": "[7.1.2, )",

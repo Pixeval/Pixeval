@@ -59,8 +59,6 @@ public class GridIllustrationViewDataProvider : ObservableObject, IIllustrationV
         }
     }
 
-    public bool Sortable => true;
-
     private Predicate<object>? _filter;
 
     public Predicate<object>? Filter
@@ -112,12 +110,6 @@ public class GridIllustrationViewDataProvider : ObservableObject, IIllustrationV
         IllustrationsSource.CollectionChanged += OnIllustrationsSourceOnCollectionChanged;
         var result = await collection.LoadMoreItemsAsync(20);
         return (int) result.Count;
-    }
-
-    public Task<int> FillAsync(IFetchEngine<Illustration?>? fetchEngine, int? itemLimit = null)
-    {
-        FetchEngine = fetchEngine;
-        return FillAsync(itemLimit);
     }
 
     public Task<int> ResetAndFillAsync(IFetchEngine<Illustration?>? fetchEngine, int? itemLimit = null)

@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustrationViewDataProvider.cs
+// Copyright (c) 2023 Pixeval/IIllustratorViewDataProvider.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -25,27 +25,25 @@ using CommunityToolkit.WinUI.UI;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 
-namespace Pixeval.UserControls.IllustrationView;
+namespace Pixeval.UserControls.IllustratorView;
 
-public interface IIllustrationViewDataProvider
+public interface IIllustratorViewDataProvider
 {
-    AdvancedCollectionView IllustrationsView { get; }
-    
-    ObservableCollection<IllustrationViewModel> IllustrationsSource { get; }
-    
-    IFetchEngine<Illustration?>? FetchEngine { get; }
+    AdvancedCollectionView IllustratorsView { get; }
 
-    Predicate<object>? Filter { get; set; }
+    ObservableCollection<IllustratorViewModel> IllustratorsSource { get; }
+
+    IFetchEngine<User?>? FetchEngine { get; }
+
+    Predicate<object>? Filter { get; }
 
     event EventHandler FilterChanged;
 
     void DisposeCurrent();
 
-    ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; }
-
     Task<int> LoadMore();
 
     Task<int> FillAsync(int? itemsLimit = null);
 
-    Task<int> ResetAndFillAsync(IFetchEngine<Illustration?>? fetchEngine, int? itemLimit = null);
+    Task<int> ResetAndFillAsync(IFetchEngine<User?>? fetchEngine, int? itemLimit = null);
 }

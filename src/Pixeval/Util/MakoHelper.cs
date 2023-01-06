@@ -76,6 +76,21 @@ public static class MakoHelper
         return new Uri($"{AppContext.AppProtocol}://illust/{id}");
     }
 
+    public static Uri GenerateIllustratorWebUri(string id)
+    {
+        return new Uri($"https://www.pixiv.net/users/{id}");
+    }
+
+    public static Uri GenerateIllustratorPixEzUri(string id)
+    {
+        return new Uri($"pixez://www.pixiv.net/users/{id}");
+    }
+
+    public static Uri GenerateIllustratorAppUri(string id)
+    {
+        return new Uri($"{AppContext.AppProtocol}://user/{id}");
+    }
+
     public static string? GetOriginalUrl(this Illustration illustration)
     {
         return illustration.ImageUrls?.Original ?? illustration.MetaSinglePage?.OriginalImageUrl;
@@ -140,7 +155,7 @@ public static class MakoHelper
 
     public static IconSource GetBookmarkButtonIconSource(bool isBookmarked)
     {
-        var systemThemeFontFamily = new FontFamily("Segoe MDL2 Assets");
+        var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         return isBookmarked
             ? new FontIconSource
             {
@@ -157,7 +172,7 @@ public static class MakoHelper
 
     public static IconElement GetBookmarkButtonIcon(bool isBookmarked)
     {
-        var systemThemeFontFamily = new FontFamily("Segoe MDL2 Assets");
+        var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         return isBookmarked
             ? new FontIcon
             {
@@ -168,6 +183,23 @@ public static class MakoHelper
             : new FontIcon
             {
                 Glyph = "\xEB51", // Heart
+                FontFamily = systemThemeFontFamily
+            };
+    }
+
+    public static IconSource GetFollowButtonIcon(bool isFollowed)
+    {
+        var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
+        return isFollowed
+            ? new FontIconSource
+            {
+                Glyph = "\xEA8C", // ContactSolid
+                Foreground = new SolidColorBrush(Colors.Crimson),
+                FontFamily = systemThemeFontFamily
+            }
+            : new FontIconSource
+            {
+                Glyph = "\xE77B", // Contact
                 FontFamily = systemThemeFontFamily
             };
     }

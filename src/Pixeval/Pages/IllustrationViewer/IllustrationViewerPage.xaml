@@ -96,14 +96,14 @@
                 <AppBarButton Width="40"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"
-                              Icon="{ui:FontIcon Glyph=CheveronLeft20F743}"
+                              Icon="{ui:FontIcon Glyph=ChevronLeft20F743}"
                               LabelPosition="Collapsed"
                               Tapped="PrevImageAppBarButton_OnTapped"
                               Visibility="{x:Bind _viewModel.CalculatePrevImageButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
                 <AppBarButton Width="40"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"
-                              Icon="{ui:FontIcon Glyph=CheveronLeft20F743}"
+                              Icon="{ui:FontIcon Glyph=ChevronLeft20F743}"
                               LabelPosition="Collapsed"
                               Tapped="PrevIllustrationAppBarButton_OnTapped"
                               Visibility="{x:Bind _viewModel.CalculatePrevIllustrationButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
@@ -112,14 +112,14 @@
                 <AppBarButton Width="40"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"
-                              Icon="{ui:FontIcon Glyph=CheveronRight20F745}"
+                              Icon="{ui:FontIcon Glyph=ChevronRight20F745}"
                               LabelPosition="Collapsed"
                               Tapped="NextImageAppBarButton_OnTapped"
                               Visibility="{x:Bind _viewModel.CalculateNextImageButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
                 <AppBarButton Width="40"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"
-                              Icon="{ui:FontIcon Glyph=CheveronRight20F745}"
+                              Icon="{ui:FontIcon Glyph=ChevronRight20F745}"
                               LabelPosition="Collapsed"
                               Tapped="NextIllustrationAppBarButton_OnTapped"
                               Visibility="{x:Bind _viewModel.CalculateNextIllustrationButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />

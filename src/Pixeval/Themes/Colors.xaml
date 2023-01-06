@@ -8,25 +8,18 @@
                           TintColor="#E6E6E6"
                           TintLuminosityOpacity="0.4"
                           TintOpacity="0.3" />
-            <SolidColorBrush x:Key="PixevalPanelBackgroundThemeBrush"
-                             Color="#F2F2F2" />
-            <SolidColorBrush x:Key="PixevalBorderBrush"
-                             Color="#7C7B7B" />
-            <SolidColorBrush x:Key="PixevalTipTextForeground"
-                             Color="#999AA1" />
-            <SolidColorBrush x:Key="CardBackground"
-                             Color="#FAFCFD" />
-            <SolidColorBrush x:Key="CardStrokeBrush"
-                             Color="#0F000000" />
+            <SolidColorBrush x:Key="PixevalPanelBackgroundThemeBrush" Color="#F2F2F2" />
+            <SolidColorBrush x:Key="PixevalBorderBrush" Color="#7C7B7B" />
+            <SolidColorBrush x:Key="PixevalTipTextForeground" Color="#999AA1" />
+            <SolidColorBrush x:Key="CardBackground" Color="#FAFCFD" />
+            <SolidColorBrush x:Key="CardStrokeBrush" Color="#0F000000" />
+            <SolidColorBrush x:Key="TextSecondaryAccentColor" Color="#404252" />
             <ui:Color x:Key="ExpanderHeaderCardPointerOverBackgroundColor">#F6F6F6</ui:Color>
             <ui:Color x:Key="ActionableCardPointerOverBackgroundColor">#F6F6F6</ui:Color>
             <ui:Color x:Key="ExpanderContentBackgroundColor">#FAFCFD</ui:Color>
-            <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground"
-                             Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
-            <SolidColorBrush x:Key="ActionableCardPointerOverBackground"
-                             Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
-            <SolidColorBrush x:Key="ExpanderContentBackground"
-                             Color="{ThemeResource ExpanderContentBackgroundColor}" />
+            <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground" Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
+            <SolidColorBrush x:Key="ActionableCardPointerOverBackground" Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
+            <SolidColorBrush x:Key="ExpanderContentBackground" Color="{ThemeResource ExpanderContentBackgroundColor}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
             <AcrylicBrush x:Key="PixevalAppAcrylicBrush"
@@ -34,25 +27,18 @@
                           TintColor="#E6E6E6"
                           TintLuminosityOpacity="0.4"
                           TintOpacity="0.3" />
-            <SolidColorBrush x:Key="PixevalPanelBackgroundThemeBrush"
-                             Color="#F2F2F2" />
-            <SolidColorBrush x:Key="PixevalBorderBrush"
-                             Color="#7C7B7B" />
-            <SolidColorBrush x:Key="PixevalTipTextForeground"
-                             Color="#999AA1" />
-            <SolidColorBrush x:Key="CardBackground"
-                             Color="#FAFCFD" />
-            <SolidColorBrush x:Key="CardStrokeBrush"
-                             Color="#0F000000" />
+            <SolidColorBrush x:Key="PixevalPanelBackgroundThemeBrush" Color="#F2F2F2" />
+            <SolidColorBrush x:Key="PixevalBorderBrush" Color="#7C7B7B" />
+            <SolidColorBrush x:Key="PixevalTipTextForeground" Color="#999AA1" />
+            <SolidColorBrush x:Key="CardBackground" Color="#FAFCFD" />
+            <SolidColorBrush x:Key="CardStrokeBrush" Color="#0F000000" />
+            <SolidColorBrush x:Key="TextSecondaryAccentColor" Color="#404252" />
             <ui:Color x:Key="ExpanderHeaderCardPointerOverBackgroundColor">#F6F6F6</ui:Color>
             <ui:Color x:Key="ActionableCardPointerOverBackgroundColor">#F6F6F6</ui:Color>
             <ui:Color x:Key="ExpanderContentBackgroundColor">#FAFCFD</ui:Color>
-            <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground"
-                             Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
-            <SolidColorBrush x:Key="ActionableCardPointerOverBackground"
-                             Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
-            <SolidColorBrush x:Key="ExpanderContentBackground"
-                             Color="{ThemeResource ExpanderContentBackgroundColor}" />
+            <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground" Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
+            <SolidColorBrush x:Key="ActionableCardPointerOverBackground" Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
+            <SolidColorBrush x:Key="ExpanderContentBackground" Color="{ThemeResource ExpanderContentBackgroundColor}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
             <AcrylicBrush x:Key="PixevalAppAcrylicBrush"
@@ -60,48 +46,33 @@
                           TintColor="#515151"
                           TintLuminosityOpacity="0.4"
                           TintOpacity="0.3" />
-            <SolidColorBrush x:Key="PixevalPanelBackgroundThemeBrush"
-                             Color="#232323" />
-            <SolidColorBrush x:Key="PixevalBorderBrush"
-                             Color="#ACADAD" />
-            <SolidColorBrush x:Key="PixevalTipTextForeground"
-                             Color="#828492" />
-            <SolidColorBrush x:Key="CardBackground"
-                             Color="#2B2A2F" />
-            <SolidColorBrush x:Key="CardStrokeBrush"
-                             Color="#19000000" />
+            <SolidColorBrush x:Key="PixevalPanelBackgroundThemeBrush" Color="#232323" />
+            <SolidColorBrush x:Key="PixevalBorderBrush" Color="#ACADAD" />
+            <SolidColorBrush x:Key="PixevalTipTextForeground" Color="#828492" />
+            <SolidColorBrush x:Key="CardBackground" Color="#2B2A2F" />
+            <SolidColorBrush x:Key="CardStrokeBrush" Color="#19000000" />
+            <SolidColorBrush x:Key="TextSecondaryAccentColor" Color="#B3B5BD" />
             <ui:Color x:Key="ExpanderHeaderCardPointerOverBackgroundColor">#323232</ui:Color>
             <ui:Color x:Key="ActionableCardPointerOverBackgroundColor">#323232</ui:Color>
             <ui:Color x:Key="ExpanderContentBackgroundColor">#2B2A2F</ui:Color>
-            <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground"
-                             Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
-            <SolidColorBrush x:Key="ActionableCardPointerOverBackground"
-                             Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
-            <SolidColorBrush x:Key="ExpanderContentBackground"
-                             Color="{ThemeResource ExpanderContentBackgroundColor}" />
+            <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground" Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
+            <SolidColorBrush x:Key="ActionableCardPointerOverBackground" Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
+            <SolidColorBrush x:Key="ExpanderContentBackground" Color="{ThemeResource ExpanderContentBackgroundColor}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast">
-            <SolidColorBrush x:Key="PixevalAppAcrylicBrush"
-                             Color="{ThemeResource SystemColorWindowColor}" />
-            <SolidColorBrush x:Key="PixevalPanelBackgroundThemeBrush"
-                             Color="#323232" />
-            <SolidColorBrush x:Key="PixevalBorderBrush"
-                             Color="#ACADAD" />
-            <SolidColorBrush x:Key="PixevalTipTextForeground"
-                             Color="#828492" />
-            <SolidColorBrush x:Key="CardBackground"
-                             Color="{StaticResource SystemColorWindowColor}" />
-            <SolidColorBrush x:Key="CardStrokeBrush"
-                             Color="#FF0000" />
+            <SolidColorBrush x:Key="PixevalAppAcrylicBrush" Color="{ThemeResource SystemColorWindowColor}" />
+            <SolidColorBrush x:Key="PixevalPanelBackgroundThemeBrush" Color="#323232" />
+            <SolidColorBrush x:Key="PixevalBorderBrush" Color="#ACADAD" />
+            <SolidColorBrush x:Key="PixevalTipTextForeground" Color="#828492" />
+            <SolidColorBrush x:Key="CardBackground" Color="{StaticResource SystemColorWindowColor}" />
+            <SolidColorBrush x:Key="CardStrokeBrush" Color="#FF0000" />
+            <SolidColorBrush x:Key="TextSecondaryAccentColor" Color="#B3B5BD" />
             <ui:Color x:Key="ExpanderHeaderCardPointerOverBackgroundColor">#323232</ui:Color>
             <ui:Color x:Key="ActionableCardPointerOverBackgroundColor">#323232</ui:Color>
             <ui:Color x:Key="ExpanderContentBackgroundColor">#2B2A2F</ui:Color>
-            <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground"
-                             Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
-            <SolidColorBrush x:Key="ActionableCardPointerOverBackground"
-                             Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
-            <SolidColorBrush x:Key="ExpanderContentBackground"
-                             Color="{ThemeResource ExpanderContentBackgroundColor}" />
+            <SolidColorBrush x:Key="ExpanderHeaderCardPointerOverBackground" Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
+            <SolidColorBrush x:Key="ActionableCardPointerOverBackground" Color="{ThemeResource ExpanderHeaderCardPointerOverBackgroundColor}" />
+            <SolidColorBrush x:Key="ExpanderContentBackground" Color="{ThemeResource ExpanderContentBackgroundColor}" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -49,11 +50,30 @@ using WinUI3Utilities;
 using Microsoft.UI.Windowing;
 using Microsoft.UI;
 using System.Runtime.InteropServices;
+using Windows.UI;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Processing.Processors.Quantization;
+using Image = SixLabors.ImageSharp.Image;
 
 namespace Pixeval.Util.UI;
 
 public static partial class UIHelper
 {
+    public static async Task<Color> GetDominantColorAsync(Stream stream, bool disposeOfStream = true)
+    {
+        using var image = await Image.LoadAsync<Rgb24>(stream);
+        image.Mutate(x => x
+            .Resize(new ResizeOptions { Sampler = KnownResamplers.NearestNeighbor, Size = new SixLabors.ImageSharp.Size(100, 0) })
+            .Quantize(new OctreeQuantizer(new QuantizerOptions { Dither = null, MaxColors = 1 })));
+        var pixel = image[0, 0];
+        if (disposeOfStream)
+        {
+            await stream.DisposeAsync();
+        }
+        return Color.FromArgb(0xFF, pixel.R, pixel.G, pixel.B);
+    }
+
     public static bool GetIllustrationViewSortOptionAvailability(IllustrationViewOption option)
     {
         return option is IllustrationViewOption.Regular;

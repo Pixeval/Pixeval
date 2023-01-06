@@ -38,6 +38,18 @@ public enum SequenceComparison
 [PublicAPI]
 public static class Enumerates
 {
+    public static TValue GetOrCreate<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TValue> valueFactory)
+    {
+        if (dictionary.TryGetValue(key, out var value))
+        {
+            return value;
+        }
+
+        var v = valueFactory();
+        dictionary.Add(key, v);
+        return v;
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> source)
     {

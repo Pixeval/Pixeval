@@ -53,11 +53,11 @@ public partial class MakoClient
         return (await Resolve<IAppApiEndPoint>().GetAutoCompletionAsync(new AutoCompletionRequest(word))).Tags!;
     }
 
-    public async Task<UserInfo> GetUserFromIdAsync(string id, TargetFilter targetFilter)
+    public async Task<PixivSingleUserResponse> GetUserFromIdAsync(string id, TargetFilter targetFilter)
     {
         EnsureNotCancelled();
         var result = await Resolve<IAppApiEndPoint>().GetSingleUserAsync(new SingleUserRequest(id, targetFilter.GetDescription())).ConfigureAwait(false);
-        return result.UserEntity!;
+        return result;
     }
 
     /// <summary>

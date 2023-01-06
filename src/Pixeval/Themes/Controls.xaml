@@ -31,6 +31,10 @@
     <Style x:Key="CaptionTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="{StaticResource PixevalCaptionFontSize}" />
     </Style>
+    <Style x:Key="SubscriptTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{StaticResource PixevalSubscriptFontSize}" />
+    </Style>
     <Style x:Key="SettingsNumberBoxStyle" TargetType="NumberBox">
         <Setter Property="Width" Value="200" />
         <Setter Property="IsWrapEnabled" Value="True" />

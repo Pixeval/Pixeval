@@ -203,7 +203,7 @@ public sealed partial class IllustratorPage
 
     private void ChangeSource()
     {
-        _ = ViewModelProvider.ViewModel.ResetEngineAndFillAsync(_viewModel!.FetchEngine, 100);
+        // _ = ViewModelProvider.ViewModel.ResetEngineAndFillAsync(_viewModel!.FetchEngine, 100);
     }
 
     private void IllustratorPage_OnSizeChanged(object sender, SizeChangedEventArgs e)

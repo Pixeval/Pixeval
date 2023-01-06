@@ -155,7 +155,7 @@ public partial record AppSetting
     [DefaultValue(false)]
     public bool DownloadUpdateAutomatically { get; set; }
 
-    [DefaultValue("Segoe UI")]
+    [DefaultValue("Microsoft YaHei")]
     public string AppFontFamilyName { get; set; }
 
     [DefaultValue(MainPageTabItem.DailyRecommendation)]
