@@ -26,7 +26,7 @@
                     Grid.Row="0"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
-                    CornerRadius="5,0,0,5">
+                    CornerRadius="5,5,0,0">
                 <Border.Background>
                     <ImageBrush ImageSource="{x:Bind ViewModel.BannerSource, Mode=OneWay}" Stretch="UniformToFill" />
                 </Border.Background>
