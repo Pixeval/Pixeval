@@ -131,7 +131,8 @@
             </Button>
             <Grid Grid.Row="1">
                 <StackPanel Margin="110,5,0,0" Spacing="5">
-                    <TextBlock Style="{StaticResource SubtitleTextBlockStyle}"
+                    <TextBlock Margin="0,15,0,0"
+                               Style="{StaticResource SubtitleTextBlockStyle}"
                                Text="{x:Bind ViewModel.Username}"
                                TextTrimming="CharacterEllipsis"
                                TextWrapping="NoWrap" />
@@ -139,15 +140,26 @@
                         <ContentControl VerticalAlignment="Center"
                                         Content="{ui:FontIcon Glyph=IDBadgeF427, FontSize=11}"
                                         Foreground="{StaticResource TextSecondaryAccentColor}" />
-                        <TextBlock VerticalAlignment="Center"
-                                   Foreground="{StaticResource TextSecondaryAccentColor}"
-                                   Style="{StaticResource SubscriptTextBlockStyle}"
-                                   Text="{x:Bind ViewModel.UserId}" />
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <TextBlock VerticalAlignment="Center"
+                                       Foreground="{StaticResource TextSecondaryAccentColor}"
+                                       Style="{StaticResource SubscriptTextBlockStyle}"
+                                       Text="{x:Bind ViewModel.UserId}" />
+                            <Grid VerticalAlignment="Center"
+                                  Background="Crimson"
+                                  CornerRadius="5"
+                                  Visibility="{x:Bind ViewModel.IsFollowed, Mode=OneWay}">
+                                <TextBlock x:Uid="/IllustratorProfile/FollowingTextBlock"
+                                           Margin="2"
+                                           FontSize="7"
+                                           Foreground="White" />
+                            </Grid>
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
             </Grid>
             <!--  ReSharper disable Xaml.PossibleNullReferenceException  -->
-            <Grid Grid.Row="1" Margin="5,45,5,0">
+            <Grid Grid.Row="1" Margin="5,55,5,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />

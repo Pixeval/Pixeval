@@ -120,6 +120,9 @@
   <data name="Follow" xml:space="preserve">
     <value>关注用户</value>
   </data>
+  <data name="FollowingTextBlock.Text" xml:space="preserve">
+    <value>关注中</value>
+  </data>
   <data name="GenerateLink" xml:space="preserve">
     <value>复制应用链接</value>
   </data>
