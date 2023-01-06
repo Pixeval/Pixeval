@@ -17,6 +17,7 @@
 
     <Grid>
         <justifiedLayout:JustifiedListView x:Name="IllustrationJustifiedListView"
+                                           Header="{x:Bind Header, Mode=OneWay}"
                                            DesireRows="{x:Bind CalculateDesiresRows(ActualHeight), Mode=OneWay}"
                                            LoadMoreRequested="IllustrationJustifiedListView_OnLoadMoreRequested"
                                            RowBringingIntoView="IllustrationJustifiedListView_OnRowBringingIntoView">

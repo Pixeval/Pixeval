@@ -66,7 +66,7 @@ public static class Functions
             return Result<TResult>.OfSuccess(task.Result);
         }
 
-        return Result<TResult>.OfFailure();
+        return Result<TResult>.OfFailure(new TimeoutException($"Task exceed {timeoutMills}ms timeout"));
     }
 
     public static async Task<Result<TResult>> RetryAsync<TResult>(Func<Task<TResult>> body, int attempts = 3, int timeoutMills = 0)

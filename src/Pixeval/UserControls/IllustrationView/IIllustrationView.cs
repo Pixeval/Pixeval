@@ -25,6 +25,8 @@ namespace Pixeval.UserControls.IllustrationView;
 
 public interface IIllustrationView
 { 
+    object Header { get; set; }
+
     FrameworkElement SelfIllustrationView { get; }
 
     IllustrationViewViewModel ViewModel { get; }

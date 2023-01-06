@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Pixeval.CoreApi.Global.Exception;
 using Pixeval.CoreApi.Net;
@@ -107,12 +108,12 @@ public abstract class AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEn
             var result = (await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false)).FromJson<TRawEntity>();
             if (result is null)
             {
-                return Result<TRawEntity>.OfFailure();
+                return Result<TRawEntity>.OfFailure(new MakoNetworkException(url, MakoClient.Configuration.Bypass, "null or empty response", (int)responseMessage.StatusCode));
             }
 
             return ValidateResponse(result)
                 ? Result<TRawEntity>.OfSuccess(result)
-                : Result<TRawEntity>.OfFailure();
+                : Result<TRawEntity>.OfFailure(new MakoNetworkException(url, MakoClient.Configuration.Bypass, "invalid response", (int)responseMessage.StatusCode));
         }
         catch (HttpRequestException e)
         {

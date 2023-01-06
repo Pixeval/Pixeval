@@ -36,6 +36,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls.IllustratorView;
 using Pixeval.Messages;
+using Pixeval.Misc;
 using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.UI;
@@ -43,7 +44,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustratorViewer;
 
-public sealed partial class IllustratorPage
+public sealed partial class IllustratorPage : ISortedIllustrationContainerPageHelper
 {
     private IllustratorViewModel? _viewModel;
 
@@ -53,6 +54,7 @@ public sealed partial class IllustratorPage
     private SpriteVisual? _blurredBackgroundImageVisual;
 
     public IllustrationContainer ViewModelProvider => IllustrationContainer;
+    public SortOptionComboBox SortOptionProvider => null!; // TODO Illustrator's sort option could be different
 
     public IllustratorPage()
     {
@@ -105,7 +107,7 @@ public sealed partial class IllustratorPage
 
         WeakReferenceMessenger.Default.Register<IllustratorPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.ViewModelProvider.ViewModel.DataProvider.FetchEngine?.Cancel());
 
-        ChangeSource();
+        //ChangeSource();
     }
 
     private void IllustratorPage_OnLoaded(object sender, RoutedEventArgs e)
@@ -201,11 +203,14 @@ public sealed partial class IllustratorPage
 
         ExpressionNode buttonOffsetAnimation = progressNode * -100;
         buttonVisual.StartAnimation("Offset.Y", buttonOffsetAnimation);
+
+
+        ChangeSource();
     }
 
     private void ChangeSource()
     {
-        _ = ViewModelProvider.ViewModel.ResetEngineAndFillAsync(_viewModel!.FetchEngine, 100);
+        _ = IllustrationContainer.ViewModel.ResetEngineAndFillAsync(_viewModel!.FetchEngine, 100);
     }
 
     private void IllustratorPage_OnSizeChanged(object sender, SizeChangedEventArgs e)

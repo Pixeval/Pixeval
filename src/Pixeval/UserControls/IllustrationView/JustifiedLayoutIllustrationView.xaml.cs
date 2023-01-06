@@ -21,9 +21,11 @@ using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using WinUI3Utilities.Attributes;
 
 namespace Pixeval.UserControls.IllustrationView;
 
+[DependencyProperty<object>("Header")]
 public sealed partial class JustifiedLayoutIllustrationView : IIllustrationView
 {
     private static readonly ExponentialEase ImageSourceSetEasingFunction = new()

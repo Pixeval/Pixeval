@@ -33,7 +33,7 @@ public record Result<T>
     return this switch
     {
         Success(var content) => content,
-        Failure(var cause) => throw cause ?? new Exception("This is an exception thrown by Result.Failure"),
+        Failure(var cause) => throw cause,
         _ => throw new Exception("Invalid derived type of Result<T>")
     };
 }
@@ -56,7 +56,7 @@ public static Result<T> OfSuccess(T value)
 }
 
 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-public static Result<T> OfFailure(Exception? cause = null)
+public static Result<T> OfFailure(Exception cause)
 {
     return new Failure(cause);
 }
@@ -96,9 +96,9 @@ public record Success(T Value) : Result<T>
 }
 
 [PublicAPI]
-public record Failure(Exception? Cause) : Result<T>
+public record Failure(Exception Cause) : Result<T>
     {
-    public void Deconstruct(out Exception? cause)
+    public void Deconstruct(out Exception cause)
     {
         cause = Cause;
     }
