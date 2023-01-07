@@ -1,5 +1,10 @@
+using System.Linq;
 using System.Numerics;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Pixeval.Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.UserControls.IllustratorView;
@@ -22,5 +27,27 @@ public sealed partial class IllustratorProfile
     private void AvatarButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         e.Handled = true;
+    }
+
+    private async void IllustratorToolTip_OnOpened(object sender, RoutedEventArgs e)
+    {
+        if (await ViewModel.GetIllustratorDisplayImagesAsync() is { Length: > 0 and var length } sources)
+        {
+            IllustratorToolTipContainer.Width = 100 * length + (length - 1) * 5;
+            var images = sources.Select(s => new Border
+            {
+                Width = (double) 300 / length,
+                Height = (double) 300 / length,
+                CornerRadius = new CornerRadius(5),
+                Child = new Image
+                {
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch,
+                    Source = s,
+                    Stretch = Stretch.UniformToFill
+                }
+            });
+            IllustratorDisplayImagesContainer.Children.AddRange(images);
+        }
     }
 }

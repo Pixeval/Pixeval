@@ -17,6 +17,26 @@
              mc:Ignorable="d">
 
     <card:CardControl Height="320" CornerRadius="5">
+        <ToolTipService.ToolTip>
+            <ToolTip Padding="0" Opened="IllustratorToolTip_OnOpened">
+                <StackPanel x:Name="IllustratorToolTipContainer" Width="310">
+                    <StackPanel x:Name="IllustratorDisplayImagesContainer"
+                                Orientation="Horizontal"
+                                Spacing="5" />
+                    <TextBlock Margin="10,5"
+                               Style="{StaticResource SubtitleTextBlockStyle}"
+                               Text="{x:Bind ViewModel.Username, Mode=OneWay}"
+                               TextTrimming="CharacterEllipsis"
+                               TextWrapping="NoWrap" />
+                    <TextBlock Margin="10,0,10,10"
+                               HorizontalAlignment="Stretch"
+                               Style="{StaticResource ContentTextBlockStyle}"
+                               Text="{x:Bind ViewModel.GetIllustrationToolTipSubtitleText(ViewModel.UserDetail), Mode=OneWay}"
+                               TextTrimming="CharacterEllipsis"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+            </ToolTip>
+        </ToolTipService.ToolTip>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="200" />
@@ -131,8 +151,7 @@
             </Button>
             <Grid Grid.Row="1">
                 <StackPanel Margin="110,5,0,0" Spacing="5">
-                    <TextBlock Margin="0,15,0,0"
-                               Style="{StaticResource SubtitleTextBlockStyle}"
+                    <TextBlock Style="{StaticResource SubtitleTextBlockStyle}"
                                Text="{x:Bind ViewModel.Username}"
                                TextTrimming="CharacterEllipsis"
                                TextWrapping="NoWrap" />
@@ -159,7 +178,7 @@
                 </StackPanel>
             </Grid>
             <!--  ReSharper disable Xaml.PossibleNullReferenceException  -->
-            <Grid Grid.Row="1" Margin="5,55,5,0">
+            <Grid Grid.Row="1" Margin="5,40,5,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />

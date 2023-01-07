@@ -23,7 +23,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using System.Threading.Tasks;
-using Microsoft.UI.Xaml.Media;
 
 namespace Pixeval.UserControls.IllustratorView;
 
@@ -33,8 +32,6 @@ public abstract partial class IllustratorViewViewModel : ObservableObject, IDisp
     private bool _hasNoItems;
 
     public abstract IIllustratorViewDataProvider DataProvider { get; }
-
-    public abstract Task<ImageSource[]> GetIllustratorDisplayImagesAsync(string userId);
 
     public abstract void Dispose();
 

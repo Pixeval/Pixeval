@@ -11,16 +11,6 @@
              mc:Ignorable="d">
 
     <Grid>
-        <TeachingTip x:Name="IllustratorInformationTeachingTip"
-                     Width="0"
-                     IsLightDismissEnabled="False"
-                     PreferredPlacement="Auto">
-            <TeachingTip.HeroContent>
-                <StackPanel x:Name="IllustratorInformationImagesContainer"
-                            Orientation="Horizontal"
-                            Spacing="5" />
-            </TeachingTip.HeroContent>
-        </TeachingTip>
         <controls:AdaptiveGridView x:Name="IllustratorGridView"
                                    DesiredWidth="320"
                                    IsItemClickEnabled="True"
@@ -33,10 +23,8 @@
             </controls:AdaptiveGridView.ItemContainerTransitions>
             <controls:AdaptiveGridView.ItemTemplate>
                 <DataTemplate x:DataType="local:IllustratorViewModel">
-                    <GridViewItem PointerEntered="IllustratorProfile_OnPointerEntered"
-                                  PointerExited="IllustratorProfile_OnPointerExited"
-                                  Tapped="IllustratorProfile_OnTapped">
-                        <local:IllustratorProfile Margin="10" ViewModel="{x:Bind}" />
+                    <GridViewItem Tapped="IllustratorProfile_OnTapped">
+                        <local:IllustratorProfile Margin="5" ViewModel="{x:Bind}" />
                     </GridViewItem>
                 </DataTemplate>
             </controls:AdaptiveGridView.ItemTemplate>
