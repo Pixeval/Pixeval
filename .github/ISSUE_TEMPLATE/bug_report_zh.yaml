@@ -1,5 +1,5 @@
 name: 漏洞反馈
-description: File a bug report
+description: 报告一个漏洞
 title: "漏洞的简要叙述"
 labels: [bug]
 body:
