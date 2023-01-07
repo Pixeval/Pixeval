@@ -44,7 +44,7 @@
 
 1. 安装[Visual Studio 2022](https://visualstudio.microsoft.com/vs)
 2. 在**工具-获取工具与功能**的**工作负载**中选择 **.NET 桌面开发**（建议在安装对话框的“安装详细信息”窗格中，选择位于列表底部的“Windows 应用 SDK C# 模板”，但不是必需的。可以参考[安装适用于 Windows 应用 SDK 的工具](https://learn.microsoft.com/windows/apps/windows-app-sdk/set-up-your-development-environment)）
-3. 在**工具-获取工具与功能**的**单个组件**中选择 **.NET 7**，也可以在VS外部下载[.NET 7 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)最新版本，但不推荐这么做
+3. 在**工具-获取工具与功能**的**单个组件**中选择 **.NET 7**；也可以在VS外部下载[.NET 7 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)最新版本，但不推荐这么做
 
 ## 运行项目
 
@@ -64,7 +64,7 @@
 
 | 代码内容 | qualifier | desc |
 | - | - | - |
-| BUG修复 | fix | BUG的简要叙述 |
+| 漏洞修复 | fix | 漏洞的简要叙述 |
 | 新功能 | feature | 新特性的简要叙述 |
 | 重构或者代码质量提升 | refactor | 重构部分的简要叙述 |
 
@@ -80,7 +80,7 @@
 
 ## 反馈问题（按照推荐程度优先级排序）
 
-1. 在 [github](https://github.com/Pixeval/Pixeval/issues/new) 提交新的Issue
+1. 在 [github](https://github.com/Pixeval/Pixeval/issues/new/choose) 提交新的Issue
 2. 给 [decem0730@hotmail.com](mailto:decem0730@hotmail.com) 发送邮件
 3. 加入QQ群815791942来面对面的和开发者反馈问题
 

@@ -1,0 +1,60 @@
+name: 漏洞反馈
+description: File a bug report
+title: "漏洞的简要叙述"
+labels: [bug]
+body:
+  - type: dropdown
+    validations:
+      required: true
+    attributes:
+      label: Pixeval的版本
+      options:
+        - "WinUI3"
+        - "WPF"
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: 问题描述
+      description: 请简练、完整地描述这个漏洞，如果可以也可以附上出错部分代码
+  - type: textarea
+    attributes:
+      label: 屏幕截图
+      description: 如果有，请附上屏幕截图
+  - type: textarea
+    attributes:
+      label: 错误代码
+      description: 如果有，请附上软件显示的完整错误代码和堆栈信息
+  - type: dropdown
+    validations:
+      required: true
+    attributes:
+      label: Windows主要版本
+      description: Which Windows versions did you see the issue on?
+      multiple: true
+      options:
+        - Windows 11
+        - Windows 10
+        - 比Windows 10更早的版本（WinUI3版不支持）
+  - type: dropdown
+    attributes:
+      label: 具体Windows版本
+      description: 如果了解，请提供更具体的版本
+      multiple: true
+      options:
+        - Insider Build
+        - Windows 11 22H2 (22621)
+        - Windows 11 21H2 (22000)
+        - November 2021 Update/21H2 (19044)
+        - May 2021 Update/21H1 (19043)
+        - October 2020 Update/20H2 (19042)
+        - October 2018 Update/RS5 (17763)
+        - Windows 8.1
+        - Windows 8
+        - Windows 7
+        - Windows Vista
+        - Windows XP及更早
+  - type: textarea
+    attributes:
+      label: 其他信息
+      description: 任何你想说的其他信息
