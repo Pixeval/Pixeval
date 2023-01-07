@@ -46,6 +46,9 @@ public partial class IllustratorViewModel : ObservableObject, IDisposable
 {
     public record UserMetrics(long FollowingCount, long MyPixivUsers /* 好P友 */, long IllustrationCount);
 
+    // Dominant color of the "No Image" image
+    public static readonly SolidColorBrush DefaultAvatarBorderColorBrush = new(UIHelper.ParseHexColor("#D6DEE5"));
+
     private readonly User _user;
 
     private SoftwareBitmapSource[]? _illustratorDisplayImageSources;
@@ -131,7 +134,11 @@ public partial class IllustratorViewModel : ObservableObject, IDisposable
                 AvatarBorderBrush = new SolidColorBrush(dominantColor);
                 return await ras.GetSoftwareBitmapSourceAsync(true);
             }),
-            Result<IRandomAccessStream>.Failure => await AppContext.GetPixivNoProfileImageAsync(),
+            Result<IRandomAccessStream>.Failure => await Functions.Block(async () =>
+            {
+                AvatarBorderBrush = DefaultAvatarBorderColorBrush;
+                return await AppContext.GetPixivNoProfileImageAsync();
+            }),
             _ => throw new ArgumentOutOfRangeException()
         };
     }

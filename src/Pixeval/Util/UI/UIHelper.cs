@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -50,11 +51,14 @@ using WinUI3Utilities;
 using Microsoft.UI.Windowing;
 using Microsoft.UI;
 using System.Runtime.InteropServices;
-using Windows.UI;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors.Quantization;
+using Brush = Microsoft.UI.Xaml.Media.Brush;
+using Color = Windows.UI.Color;
 using Image = SixLabors.ImageSharp.Image;
+using Point = Windows.Foundation.Point;
+using Size = Windows.Foundation.Size;
 
 namespace Pixeval.Util.UI;
 
@@ -352,7 +356,14 @@ public static partial class UIHelper
             throw new Exception("Could not get DPI for monitor.");
         }
 
-        var scaleFactorPercent = (uint)(((long)dpiX * 100 + (96 >> 1)) / 96);
+        var scaleFactorPercent = (uint) (((long) dpiX * 100 + (96 >> 1)) / 96);
         return scaleFactorPercent / 100.0;
+    }
+
+    public static Color ParseHexColor(string hex)
+    {
+        var trimmed = !hex.StartsWith('#') ? $"#{hex}" : hex;
+        var color = ColorTranslator.FromHtml(trimmed);
+        return Color.FromArgb(color.A, color.R, color.G, color.B);
     }
 }
