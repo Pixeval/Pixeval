@@ -31,13 +31,16 @@ public sealed partial class IllustratorProfile
 
     private async void IllustratorToolTip_OnOpened(object sender, RoutedEventArgs e)
     {
+        const int singleImageSize = 100;
+        const int imageSpacing = 5;
+        const int containerWidth = 300;
         if (await ViewModel.GetIllustratorDisplayImagesAsync() is { Length: > 0 and var length } sources)
         {
-            IllustratorToolTipContainer.Width = 100 * length + (length - 1) * 5;
+            IllustratorToolTipContainer.Width = singleImageSize * length + (length - 1) * imageSpacing;
             var images = sources.Select(s => new Border
             {
-                Width = (double) 300 / length,
-                Height = (double) 300 / length,
+                Width = (double)containerWidth / length,
+                Height = (double)containerWidth / length,
                 CornerRadius = new CornerRadius(5),
                 Child = new Image
                 {
@@ -48,6 +51,27 @@ public sealed partial class IllustratorProfile
                 }
             });
             IllustratorDisplayImagesContainer.Children.AddRange(images);
+        }
+    }
+
+    private void AvatarButton_OnPointerExited(object sender, PointerRoutedEventArgs e)
+    {
+        RestoreAvatarButton();
+    }
+
+    private void AvatarButtonMenuFlyout_OnClosed(object? sender, object e)
+    {
+        RestoreAvatarButton();
+    }
+
+    private void RestoreAvatarButton()
+    {
+        if (!AvatarButton.Flyout.IsOpen)
+        {
+            AvatarButton.Scale = CommonScale;
+            AvatarButton.Translation = CommonTranslation;
+            AvatarButton.Rotation = CommonRotation;
+            BlurOutAnimation.Start(Banner);
         }
     }
 }
