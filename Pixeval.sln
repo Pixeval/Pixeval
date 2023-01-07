@@ -10,20 +10,32 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
-		.github\workflows\build-pr.yml = .github\workflows\build-pr.yml
-		.github\workflows\build.yml = .github\workflows\build.yml
 		global.json = global.json
 		LICENSE = LICENSE
 		Pixeval.sln.DotSettings = Pixeval.sln.DotSettings
 		Pixeval_PublicKey.cer = Pixeval_PublicKey.cer
 		README.en.md = README.en.md
 		README.md = README.md
-		.github\workflows\release.yml = .github\workflows\release.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pixeval.CoreApi", "src\Pixeval.CoreApi\Pixeval.CoreApi.csproj", "{8DDC779F-33E3-43CF-BEAC-3A9355F13C55}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pixeval.Utilities", "src\Pixeval.Utilities\Pixeval.Utilities.csproj", "{AC5EAFCE-09A5-4BF1-91B4-B23D0110FCFF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{BE94830A-603A-4C95-9FAC-1B69CE8ABA47}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{F041EE9B-A618-438D-A16D-1265421E22FC}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build-pr.yml = .github\workflows\build-pr.yml
+		.github\workflows\build.yml = .github\workflows\build.yml
+		.github\workflows\release.yml = .github\workflows\release.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISSUE_TEMPLATE", "ISSUE_TEMPLATE", "{CF6471C8-02F1-4B25-9207-43312C206A45}"
+	ProjectSection(SolutionItems) = preProject
+		.github\ISSUE_TEMPLATE\bug_report_zh.yaml = .github\ISSUE_TEMPLATE\bug_report_zh.yaml
+		.github\ISSUE_TEMPLATE\feature_request_zh.yaml = .github\ISSUE_TEMPLATE\feature_request_zh.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -96,6 +108,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BE94830A-603A-4C95-9FAC-1B69CE8ABA47} = {1663D266-BE8A-4035-BE44-AB6D2BAFE62A}
+		{F041EE9B-A618-438D-A16D-1265421E22FC} = {BE94830A-603A-4C95-9FAC-1B69CE8ABA47}
+		{CF6471C8-02F1-4B25-9207-43312C206A45} = {BE94830A-603A-4C95-9FAC-1B69CE8ABA47}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C5C0040E-8F07-4F3A-A4D8-AE760A819615}
