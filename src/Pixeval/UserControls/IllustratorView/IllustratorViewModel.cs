@@ -136,6 +136,15 @@ public partial class IllustratorViewModel : ObservableObject, IDisposable
             }),
             Result<IRandomAccessStream>.Failure => await Functions.Block(async () =>
             {
+                if (await App.AppViewModel.MakoClient.Posts(UserId).Take(1).ToListAsync() is [var first] && first.GetThumbnailUrl(ThumbnailUrlOption.Medium) is { } url)
+                {
+                    if (await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url) is Result<IRandomAccessStream>.Success(var ras))
+                    {
+                        AvatarBorderBrush = new SolidColorBrush(await UIHelper.GetDominantColorAsync(ras.AsStreamForRead(), false));
+                        return await ras.GetSoftwareBitmapSourceAsync(true);
+                    }
+                }
+
                 AvatarBorderBrush = DefaultAvatarBorderColorBrush;
                 return await AppContext.GetPixivNoProfileImageAsync();
             }),

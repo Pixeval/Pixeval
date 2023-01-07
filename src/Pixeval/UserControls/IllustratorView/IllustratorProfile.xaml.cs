@@ -39,8 +39,8 @@ public sealed partial class IllustratorProfile
             IllustratorToolTipContainer.Width = singleImageSize * length + (length - 1) * imageSpacing;
             var images = sources.Select(s => new Border
             {
-                Width = (double)containerWidth / length,
-                Height = (double)containerWidth / length,
+                Width = (double) containerWidth / length,
+                Height = (double) containerWidth / length,
                 CornerRadius = new CornerRadius(5),
                 Child = new Image
                 {
