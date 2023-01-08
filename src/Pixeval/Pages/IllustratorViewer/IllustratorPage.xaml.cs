@@ -21,6 +21,8 @@
 using System;
 using System.Numerics;
 using Windows.System;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.WinUI.UI;
 using CommunityToolkit.WinUI.UI.Animations.Expressions;
 using Microsoft.Graphics.Canvas.Effects;
 using CommunityToolkit.Mvvm.Messaging;
@@ -35,15 +37,18 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls.IllustratorView;
 using Pixeval.Messages;
+using Pixeval.Misc;
 using Pixeval.UserControls;
+using Pixeval.UserControls.IllustratorView;
 using Pixeval.Util;
 using Pixeval.Util.UI;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustratorViewer;
 
-public sealed partial class IllustratorPage
+public sealed partial class IllustratorPage : ISortedIllustrationContainerPageHelper
 {
-    private IllustratorViewModel? _viewModel;
+    public IllustratorPageViewModel ViewModel { get; }
 
     private CompositionPropertySet? _props;
     private CompositionPropertySet? _scrollerPropertySet;
@@ -51,10 +56,13 @@ public sealed partial class IllustratorPage
     private SpriteVisual? _blurredBackgroundImageVisual;
 
     public IllustrationContainer ViewModelProvider => IllustrationContainer;
+    public SortOptionComboBox SortOptionProvider => null!; // TODO Illustrator's sort option could be different
 
     public IllustratorPage()
     {
         InitializeComponent();
+
+        ViewModel = new IllustratorPageViewModel();
     }
 
     public XamlUICommand OpenLinkCommand { get; } = new()
@@ -91,13 +99,14 @@ public sealed partial class IllustratorPage
     {
         switch (navigationEventArgs.Parameter)
         {
-            case (UIElement sender, IllustratorViewModel viewModel):
+            case (UIElement sender, IllustratorPageIllustratorModel viewModel):
                 WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(sender));
-                ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation")?.TryStart(ProfileImage);
-                _viewModel = viewModel;
+                ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation")
+                    ?.TryStart(ProfileImage);
+                ViewModel.IllustratorViewModel = viewModel;
                 break;
             case IllustratorViewModel viewModel1:
-                _viewModel = viewModel1;
+                ViewModel.IllustratorViewModel = new IllustratorPageIllustratorModel(viewModel1.UserDetail!.UserEntity!, viewModel1.AvatarSource);
                 break;
         }
 
@@ -203,7 +212,7 @@ public sealed partial class IllustratorPage
 
     private void ChangeSource()
     {
-        // _ = ViewModelProvider.ViewModel.ResetEngineAndFillAsync(_viewModel!.FetchEngine, 100);
+        _ = IllustrationContainer.ViewModel.ResetEngineAndFillAsync(ViewModel.IllustratorViewModel!.FetchEngine, 100);
     }
 
     private void IllustratorPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -230,21 +239,21 @@ public sealed partial class IllustratorPage
 
     private async void OpenLinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await Launcher.LaunchUriAsync(new Uri($"https://www.pixiv.net/users/{_viewModel!.Id}"));
+        await Launcher.LaunchUriAsync(new Uri($"https://www.pixiv.net/users/{ViewModel.IllustratorViewModel!.Id}"));
     }
 
     private async void FollowButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await _viewModel!.Follow();
+        await ViewModel.IllustratorViewModel!.Follow();
     }
 
     private async void PrivateFollowButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await _viewModel!.PrivateFollow();
+        await ViewModel.IllustratorViewModel!.PrivateFollow();
     }
 
     private async void UnfollowButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await _viewModel!.Unfollow();
+        await ViewModel.IllustratorViewModel!.Unfollow();
     }
 }

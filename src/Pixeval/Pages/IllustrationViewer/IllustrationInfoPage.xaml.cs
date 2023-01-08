@@ -71,7 +71,7 @@ public sealed partial class IllustrationInfoPage
         if (_viewModel.UserInfo is { } userInfo)
         {
             ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement)sender);
-            App.AppViewModel.RootFrameNavigate(typeof(IllustratorPage), Tuple.Create((UIElement)sender, new IllustratorViewModel(userInfo)), new SlideNavigationTransitionInfo
+            App.AppViewModel.RootFrameNavigate(typeof(IllustratorPage), Tuple.Create((UIElement)sender, new IllustratorPageIllustratorModel(userInfo, _viewModel.UserProfileImageSource)), new SlideNavigationTransitionInfo
             {
                 Effect = SlideNavigationTransitionEffect.FromRight
             });

@@ -13,6 +13,7 @@
     <ListView x:Name="ItemsListView"
               HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch"
+              Header="{x:Bind Header, Mode=OneWay}"
               ScrollViewer.HorizontalScrollBarVisibility="Auto"
               ScrollViewer.HorizontalScrollMode="Auto"
               ScrollViewer.IsHorizontalRailEnabled="True"

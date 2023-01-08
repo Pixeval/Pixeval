@@ -34,7 +34,7 @@ using IllustrationViewModel = Pixeval.UserControls.IllustrationView.Illustration
 
 namespace Pixeval.Controls.IllustratorView;
 
-public partial class IllustratorViewModel : ObservableObject, IIllustrationVisualizer
+public partial class IllustratorPageIllustratorModel : ObservableObject, IIllustrationVisualizer
 {
     public string Name { get; set; }
 
@@ -64,7 +64,7 @@ public partial class IllustratorViewModel : ObservableObject, IIllustrationVisua
 
     public IllustrationVisualizationController VisualizationController { get; internal set; }
 
-    public IllustratorViewModel(UserInfo info)
+    public IllustratorPageIllustratorModel(UserInfo info, ImageSource? avatarSource)
     {
         Name = info.Name!;
         AvatarUrl = info.ProfileImageUrls?.Medium!;
@@ -75,6 +75,7 @@ public partial class IllustratorViewModel : ObservableObject, IIllustrationVisua
         Illustrations = new ObservableCollection<IllustrationViewModel>();
         VisualizationController = new IllustrationVisualizationController(this);
         IsFollowButtonEnabled = true;
+        AvatarSource = avatarSource;
         _ = LoadAvatar();
     }
 

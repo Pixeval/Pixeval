@@ -32,9 +32,16 @@ namespace Pixeval.UserControls;
 
 [DependencyProperty<ObservableCollection<ICommandBarElement>>("PrimaryCommandsSupplements", DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
 [DependencyProperty<ObservableCollection<ICommandBarElement>>("SecondaryCommandsSupplements", DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
-[DependencyProperty<object>("Header")]
+[DependencyProperty<object>("Header", "HeaderPropertyChangedCallback")]
 public sealed partial class IllustrationContainer
-{
+{ 
+    private static void HeaderPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var container = (IllustrationContainer)d;
+        container.IllustrationView.Header = e.NewValue;
+    }
+    
+
     public IllustrationContainer()
     {
         InitializeComponent();
@@ -57,12 +64,13 @@ public sealed partial class IllustrationContainer
                     throw new ArgumentOutOfRangeException();
             }
         };
+        
         IllustrationView = App.AppViewModel.AppSetting.IllustrationViewOption switch
         {
             IllustrationViewOption.Regular => new GridIllustrationView(),
             IllustrationViewOption.Justified => new JustifiedLayoutIllustrationView(),
             _ => throw new ArgumentOutOfRangeException()
-        }; 
+        };
         IllustrationContainerDockPanel.Children.Add(IllustrationView.SelfIllustrationView);
     }
 

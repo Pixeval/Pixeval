@@ -59,12 +59,12 @@ public sealed partial class FollowingsPage
 
     private void IllustratorView_OnUserTapped(object sender, TappedRoutedEventArgs e)
     {
-        // var context = sender.GetDataContext<IllustratorViewModel>();
-        // var item = IllustratorView.GetItemContainer(context);
-        // ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", item);
-        // App.AppViewModel.RootFrameNavigate(typeof(IllustratorPage), null, new SlideNavigationTransitionInfo
-        // {
-        //     Effect = SlideNavigationTransitionEffect.FromRight
-        // });
+        var context = sender.GetDataContext<IllustratorViewModel>();
+        var item = IllustratorView.GetItemContainer(context);
+        ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", item);
+        App.AppViewModel.RootFrameNavigate(typeof(IllustratorPage), context, new SlideNavigationTransitionInfo
+        {
+            Effect = SlideNavigationTransitionEffect.FromRight
+        });
     }
 }

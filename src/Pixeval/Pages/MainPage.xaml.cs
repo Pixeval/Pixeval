@@ -71,7 +71,7 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
     private static IllustrationViewModel? _illustrationViewerContent;
 
     // Similar to the previous field, this field contains a illustrator model
-    private static IllustratorViewModel? _illustratorViewerContent;
+    private static IllustratorPageIllustratorModel? _illustratorViewerContent;
 
     private readonly MainPageViewModel _viewModel = new();
 

@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Input;
@@ -118,13 +119,15 @@ public partial class IllustratorViewModel : ObservableObject, IDisposable
 
     private async Task SetAvatarAsync()
     {
-        var avatar = UserDetail!.UserEntity?.ProfileImageUrls?.Medium?.Let(url => App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(url, 100)) ?? Task.FromResult(Result<ImageSource>.OfFailure());
+        var avatar = UserDetail!.UserEntity?.ProfileImageUrls?.Medium?.Let(url => App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(url, 100)) 
+                     ?? Task.FromResult(Result<ImageSource>.OfFailure(new HttpRequestException("UserDetail contains no medium profile image")));
         AvatarSource = await avatar.GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync());
     }
 
     private async Task SetBannerSourceAsync()
     {
-        var stream = await (UserDetail!.UserProfile?.BackgroundImageUrl?.Let(url => App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url)) ?? Task.FromResult(Result<IRandomAccessStream>.OfFailure()));
+        var stream = await (UserDetail!.UserProfile?.BackgroundImageUrl?.Let(url => App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url)) 
+                            ?? Task.FromResult(Result<IRandomAccessStream>.OfFailure(new HttpRequestException("UserDetail contains no background image"))));
 
         BannerSource = stream switch
         {

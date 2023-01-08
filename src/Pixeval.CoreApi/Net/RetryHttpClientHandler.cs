@@ -43,7 +43,7 @@ internal class RetryHttpClientHandler : HttpMessageHandler
         return await Functions.RetryAsync(() => _delegatedHandler.SendAsync(request, cancellationToken), 2, _timeout).ConfigureAwait(false) switch
         {
             Result<HttpResponseMessage>.Success(var response) => response,
-            Result<HttpResponseMessage>.Failure failure => throw failure.Cause ?? new HttpRequestException(),
+            Result<HttpResponseMessage>.Failure failure => throw failure.Cause,
             _ => throw new InvalidOperationException("Unexpected case")
         };
     }
@@ -66,7 +66,7 @@ internal class MakoRetryHttpClientHandler : HttpMessageHandler, IMakoClientSuppo
         return await Functions.RetryAsync(() => _delegatedHandler.SendAsync(request, cancellationToken), 2, MakoClient!.Configuration.ConnectionTimeout).ConfigureAwait(false) switch
         {
             Result<HttpResponseMessage>.Success(var response) => response,
-            Result<HttpResponseMessage>.Failure failure => throw failure.Cause ?? new HttpRequestException(),
+            Result<HttpResponseMessage>.Failure failure => throw failure.Cause,
             _ => throw new InvalidOperationException("Unexpected case")
         };
     }

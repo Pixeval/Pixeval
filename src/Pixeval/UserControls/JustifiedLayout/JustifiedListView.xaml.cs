@@ -37,7 +37,8 @@ public record JustifiedListViewRowBinding(DataTemplate Template, ICollection<Jus
 // The computed layout may be wider than the actual container's width, use this property to tune the width, the actual computed layout width will be the [ContainerWidth - this property]
 [DependencyProperty<int>("ContainerWidthDeviationOffset", DefaultValue = "55")]
 [DependencyProperty<int>("DesireRows", DefaultValue = "4")] 
-[DependencyProperty<int>("Spacing", DefaultValue = "2")] 
+[DependencyProperty<int>("Spacing", DefaultValue = "2")]
+[DependencyProperty<object>("Header")]
 public sealed partial class JustifiedListView
 {
     // Help finding the corresponding item in outer grid, so that we can perform the connect animation
