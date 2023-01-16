@@ -21,7 +21,7 @@
 using System;
 using System.Threading;
 
-namespace Pixeval.Util.Threading;
+namespace Pixeval.Utilities.Threading;
 
 /// <summary>
 ///     A re-entrant cancellation helper that prevents the default behaviors of <see cref="CancellationToken" />, which is,

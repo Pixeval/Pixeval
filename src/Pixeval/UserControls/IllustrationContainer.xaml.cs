@@ -25,6 +25,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Options;
 using Pixeval.UserControls.IllustrationView;
+using Pixeval.Util.UI;
 using WinUI3Utilities.Attributes;
 
 
@@ -32,6 +33,7 @@ namespace Pixeval.UserControls;
 
 [DependencyProperty<ObservableCollection<ICommandBarElement>>("PrimaryCommandsSupplements", DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
 [DependencyProperty<ObservableCollection<ICommandBarElement>>("SecondaryCommandsSupplements", DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
+[DependencyProperty<bool>("ShowCommandBar", nameof(OnShowCommandBarChanged), DefaultValue = "true")]
 [DependencyProperty<object>("Header")]
 public sealed partial class IllustrationContainer
 {
@@ -64,6 +66,23 @@ public sealed partial class IllustrationContainer
             _ => throw new ArgumentOutOfRangeException()
         }; 
         IllustrationContainerDockPanel.Children.Add(IllustrationView.SelfIllustrationView);
+    }
+
+    private static void OnShowCommandBarChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+    {
+        if (obj is IllustrationContainer { TopCommandBar: { } commandBar } && args.NewValue is bool v)
+        {
+            if (v)
+            {
+                commandBar.Show();
+                commandBar.IsEnabled = true;
+            }
+            else
+            {
+                commandBar.Collapse();
+                commandBar.IsEnabled = false;
+            }
+        }
     }
 
     public IllustrationViewViewModel ViewModel => IllustrationView.ViewModel;

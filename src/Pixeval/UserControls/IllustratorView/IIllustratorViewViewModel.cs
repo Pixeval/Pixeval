@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 
 namespace Pixeval.UserControls.IllustratorView;
 
-public abstract partial class IllustratorViewViewModel : ObservableObject, IDisposable
+public abstract partial class AbstractIllustratorViewViewModel : ObservableObject, IDisposable
 {
     [ObservableProperty]
     private bool _hasNoItems;

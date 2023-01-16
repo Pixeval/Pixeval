@@ -122,7 +122,7 @@ public class AppPopup
         _minHeight = minHeight;
         _maxHeight = maxHeight;
         _useAnimation = useAnimation;
-        var (windowWidth, windowHeight) = App.AppViewModel.GetAppWindowSizeTuple();
+        var (windowWidth, windowHeight) = UIHelper.GetAppWindowSizeTuple();
         UniqueId = content.UniqueId;
         content.UIContent.HorizontalAlignment = HorizontalAlignment.Stretch;
         content.UIContent.VerticalAlignment = VerticalAlignment.Stretch;
@@ -233,7 +233,7 @@ public class AppPopup
 
         Popup.IsOpen = true;
         _opening?.Invoke(_content);
-        RearrangePopup(App.AppViewModel.GetDpiAwareAppWindowSize());
+        RearrangePopup(UIHelper.GetDpiAwareAppWindowSize());
     }
 
     public void Close()

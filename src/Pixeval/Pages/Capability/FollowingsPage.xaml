@@ -8,14 +8,39 @@
                        ClearCacheAfterNavigation="True"
                        Loaded="FollowingsPage_OnLoaded"
                        mc:Ignorable="d">
-    <Grid Margin="20,40,10,20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <TextBlock x:Uid="/FollowingsPage/TitleTextBlock"
-                   Grid.Row="0"
-                   Style="{StaticResource TitleTextBlockStyle}" />
-        <illustratorView:GridIllustratorView UserTapped="IllustratorView_OnUserTapped" x:Name="IllustratorView" Grid.Row="1" />
+    <Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="350" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <ListView x:Name="IllustratorListView"
+                      Grid.Column="0"
+                      HorizontalAlignment="Stretch"
+                      ItemsSource="{x:Bind ViewModel.DataProvider.IllustratorsView}"
+                      Loaded="IllustratorListView_OnLoaded"
+                      ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                      SelectionChanged="IllustratorListView_OnSelectionChanged">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="illustratorView:IllustratorViewModel">
+                        <illustratorView:IllustratorProfile Margin="0,5" ViewModel="{x:Bind}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <AppBarSeparator Grid.Column="1" HorizontalAlignment="Center" />
+            <Frame x:Name="IllustratorContentViewerFrame" Grid.Column="2" />
+        </Grid>
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Spacing="20"
+                    Visibility="{x:Bind ViewModel.HasNoItems, Mode=OneWay}">
+            <Image Width="200"
+                   Height="200"
+                   Source="/Assets/Images/empty-box.png" />
+            <TextBlock x:Uid="/FollowingPage/ResultIsEmptyTextBlock"
+                       HorizontalAlignment="Center"
+                       FontSize="{StaticResource PixevalTitleFontSize}" />
+        </StackPanel>
     </Grid>
 </controls:EnhancedPage>

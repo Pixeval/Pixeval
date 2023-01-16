@@ -25,9 +25,19 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     <ItemGroup>
+      <None Remove="Controls\FollowingUserBadge\FollowingUserBadge.xaml" />
+      <None Remove="Controls\PremiumUserBadge\PremiumUserBadge.xaml" />
+      <None Remove="Pages\Misc\IllustratorContentViewerPage.xaml" />
       <None Remove="Strings\IllustratorProfile.resw" />
-      <None Remove="UserControls\IllustratorView\GridIllustratorView.xaml" />
+      <None Remove="Strings\zh-CN\FollowingPage.resw" />
+      <None Remove="Strings\zh-CN\FollowingUserBadge.resw" />
+      <None Remove="Strings\zh-CN\IllustratorContentViewer.resw" />
+      <None Remove="Strings\zh-CN\RecommendIllustratorProfile.resw" />
+      <None Remove="UserControls\IllustratorContentViewer\IllustratorContentViewer.xaml" />
+      <None Remove="UserControls\IllustratorContentViewer\IllustratorIllustrationPage.xaml" />
+      <None Remove="UserControls\IllustratorContentViewer\IllustratorMangaPage.xaml" />
       <None Remove="UserControls\IllustratorView\IllustratorProfile.xaml" />
+      <None Remove="UserControls\RecommendIllustratorProfile.xaml" />
     </ItemGroup>
 
     <ItemGroup>
@@ -165,6 +175,9 @@
 
     <!--PRIResource-->
     <ItemGroup>
+        <PRIResource Include="Strings\zh-CN\FollowingPage.resw" />
+        <PRIResource Include="Strings\zh-CN\FollowingUserBadge.resw" />
+        <PRIResource Include="Strings\zh-CN\IllustratorContentViewer.resw" />
         <PRIResource Include="Strings\zh-CN\IllustratorProfile.resw" />
         <PRIResource Include="Strings\zh-CN\AboutPage.resw" />
         <PRIResource Include="Strings\zh-CN\Activations.resw" />
@@ -175,7 +188,6 @@
         <PRIResource Include="Strings\zh-CN\DownloadListPage.resw" />
         <PRIResource Include="Strings\zh-CN\DownloadListPageDeleteTasksDialog.resw" />
         <PRIResource Include="Strings\zh-CN\DownloadTask.resw" />
-        <PRIResource Include="Strings\zh-CN\FollowingsPage.resw" />
         <PRIResource Include="Strings\zh-CN\IllustrationView.resw" />
         <PRIResource Include="Strings\zh-CN\IllustrationViewCommandBar.resw" />
         <PRIResource Include="Strings\zh-CN\IllustrationInfoPage.resw" />
@@ -193,15 +205,11 @@
         <PRIResource Include="Strings\zh-CN\RecentPostsPage.resw" />
         <PRIResource Include="Strings\zh-CN\RecommendationsPage.resw" />
         <PRIResource Include="Strings\zh-CN\PixivReplyBar.resw" />
+        <PRIResource Include="Strings\zh-CN\RecommendIllustratorProfile.resw" />
         <PRIResource Include="Strings\zh-CN\ReverseSearchApiKeyNotPresentDialog.resw" />
         <PRIResource Include="Strings\zh-CN\SettingsPage.resw" />
         <PRIResource Include="Strings\zh-CN\SortOptionComboBox.resw" />
         <PRIResource Include="Strings\zh-CN\TokenInputTextBox.resw" />
-    </ItemGroup>
-    <ItemGroup>
-      <Page Update="UserControls\IllustratorView\GridIllustratorView.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
     </ItemGroup>
 
     <!--  XAML  -->
@@ -425,6 +433,44 @@
     </ItemGroup>
     <ItemGroup>
       <Page Update="UserControls\IllustratorView\IllustratorProfile.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="UserControls\RecommendIllustratorProfile\" />
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="UserControls\IllustratorContentViewer\IllustratorMangaPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="UserControls\IllustratorContentViewer\IllustratorIllustrationPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="Controls\FollowingUserBadge\FollowingUserBadge.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="Controls\PremiumUserBadge\PremiumUserBadge.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="UserControls\RecommendIllustratorProfile.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="Pages\Misc\IllustratorContentViewerPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="UserControls\IllustratorContentViewer\IllustratorContentViewer.xaml">
         <Generator>MSBuild:Compile</Generator>
       </Page>
     </ItemGroup>

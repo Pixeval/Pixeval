@@ -34,15 +34,15 @@ using Pixeval.CoreApi.Net;
 using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
-using Pixeval.Util.Threading;
 using Pixeval.Utilities;
+using Pixeval.Utilities.Threading;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.UserControls.IllustrationView;
 
 /// <summary>
 ///     A view model that communicates between the model <see cref="Illustration" /> and the view
-///     <see cref="IllustrationGrid" />.
+///     <see cref="IIllustrationView" />.
 ///     It is responsible for being the elements of the <see cref="AdaptiveGridView" /> to present the thumbnail of an
 ///     illustration
 /// </summary>

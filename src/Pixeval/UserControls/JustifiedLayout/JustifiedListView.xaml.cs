@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Controls;
 using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util.Threading;
 using Pixeval.Utilities;
+using Pixeval.Utilities.Threading;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 using WinUIEx.Messaging;
@@ -208,8 +209,7 @@ public sealed partial class JustifiedListView
             var e = new JustifiedListViewLoadMoreRequestEventArgs();
             _loadMoreRequested?.Invoke(this, e);
             var result = await e.Deferral.Task;
-            do { } while (Interlocked.CompareExchange(ref _loadingMore, 0, 1) != 1);
-
+            ThreadingHelper.CompareExchange(ref _loadingMore, 0, 1);
             return result;
         }
 

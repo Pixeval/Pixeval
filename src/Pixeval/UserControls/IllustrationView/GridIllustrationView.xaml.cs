@@ -133,7 +133,7 @@ public sealed partial class GridIllustrationView : IIllustrationView
             .ToArray();
 
         ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement)sender);
-        App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo());
+        UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo());
     }
 
     private void IllustrationThumbnailContainerItem_OnTapped(object sender, TappedRoutedEventArgs e)

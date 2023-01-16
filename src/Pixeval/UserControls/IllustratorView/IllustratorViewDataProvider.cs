@@ -30,9 +30,9 @@ using Pixeval.Misc;
 
 namespace Pixeval.UserControls.IllustratorView;
 
-public class GridIllustratorViewDataProvider : ObservableObject, IIllustratorViewDataProvider
+public class IllustratorViewDataProvider : ObservableObject, IIllustratorViewDataProvider
 {
-    public GridIllustratorViewDataProvider()
+    public IllustratorViewDataProvider()
     {
         _illustratorsSource = new ObservableCollection<IllustratorViewModel>();
         IllustratorsView = new AdvancedCollectionView(IllustratorsSource);

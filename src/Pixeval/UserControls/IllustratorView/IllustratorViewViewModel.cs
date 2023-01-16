@@ -22,13 +22,12 @@ using Pixeval.Util;
 
 namespace Pixeval.UserControls.IllustratorView;
 
-public sealed class GridIllustratorViewViewModel : IllustratorViewViewModel
+public sealed class IllustratorViewViewModel : AbstractIllustratorViewViewModel
 {
-    public GridIllustratorViewViewModel()
+    public IllustratorViewViewModel()
     {
-        DataProvider = new GridIllustratorViewDataProvider();
+        DataProvider = new IllustratorViewDataProvider();
     }
-
 
     public override IIllustratorViewDataProvider DataProvider { get; }
 

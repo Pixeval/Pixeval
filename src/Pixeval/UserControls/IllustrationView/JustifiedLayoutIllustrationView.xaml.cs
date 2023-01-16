@@ -90,7 +90,7 @@ public sealed partial class JustifiedLayoutIllustrationView : IIllustrationView
             .ToArray();
 
         ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement) sender);
-        App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo());
+        UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo());
     }
 
     public UIElement? GetItemContainer(IllustrationViewModel viewModel)

@@ -117,7 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="TitleTextBlock.Text" xml:space="preserve">
-    <value>我的关注</value>
+  <data name="FollowButtonFollow" xml:space="preserve">
+    <value>关注</value>
+  </data>
+  <data name="FollowButtonUnfollow" xml:space="preserve">
+    <value>已关注</value>
   </data>
 </root>

@@ -97,15 +97,15 @@ public static class Enumerates
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<TResult> SelectNotNull<T, TResult>(this IEnumerable<T> src, Func<T, TResult> selector)
+    public static IEnumerable<TResult> SelectNotNull<T, TResult>(this IEnumerable<T> src, Func<T, TResult?> selector) where TResult : notnull
     {
-        return src.WhereNotNull().Select(selector);
+        return src.WhereNotNull().Select(selector).WhereNotNull();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<TResult> SelectNotNull<T, TResult>(this IEnumerable<T> src, Func<T, object?> keySelector, Func<T, TResult> selector)
+    public static IEnumerable<TResult> SelectNotNull<T, TResult>(this IEnumerable<T> src, Func<T, object?> keySelector, Func<T, TResult> selector) where TResult : notnull
     {
-        return src.WhereNotNull(keySelector).Select(selector);
+        return src.WhereNotNull(keySelector).Select(selector).WhereNotNull();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

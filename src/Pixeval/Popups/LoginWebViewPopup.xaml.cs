@@ -21,6 +21,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Web.WebView2.Core;
 
@@ -44,7 +45,9 @@ namespace Pixeval.Popups
         {
             if (args.Uri.StartsWith("pixiv://"))
             {
-                CookieCompletion.SetResult((args.Uri, await LoginWebView.CoreWebView2.ExecuteScriptAsync("document.cookie")));
+                var cookies = await LoginWebView.CoreWebView2.CookieManager.GetCookiesAsync("https://pixiv.net");
+                var cookieString = string.Join(';', cookies.Select(c => $"{c.Name}={c.Value}"));
+                CookieCompletion.SetResult((args.Uri, cookieString));
             }
         }
 

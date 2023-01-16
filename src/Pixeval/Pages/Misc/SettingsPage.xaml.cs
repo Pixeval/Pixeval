@@ -96,12 +96,12 @@ public sealed partial class SettingsPage
     private async void CheckForUpdateButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         _viewModel.LastCheckedUpdate = DateTimeOffset.Now;
-        CheckForUpdateButton.Invisible();
-        CheckingForUpdatePanel.Visible();
+        CheckForUpdateButton.Collapse();
+        CheckingForUpdatePanel.Show();
         // TODO add update check
         await Task.Delay(2000);
-        CheckForUpdateButton.Visible();
-        CheckingForUpdatePanel.Invisible();
+        CheckForUpdateButton.Show();
+        CheckingForUpdatePanel.Collapse();
     }
 
     private void FeedbackByEmailHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)

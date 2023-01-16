@@ -27,7 +27,7 @@ public interface IIllustratorView
 {
     FrameworkElement SelfIllustratorView { get; }
 
-    IllustratorViewViewModel ViewModel { get; }
+    AbstractIllustratorViewViewModel ViewModel { get; }
 
     ScrollViewer ScrollViewer { get; }
 

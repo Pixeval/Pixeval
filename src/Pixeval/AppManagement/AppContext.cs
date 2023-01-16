@@ -184,7 +184,7 @@ public static partial class AppContext
     public static void SaveContext()
     {
         // Save the current resolution
-        (App.AppViewModel.AppSetting.WindowWidth, App.AppViewModel.AppSetting.WindowHeight) = App.AppViewModel.GetAppWindowSizeTuple();
+        (App.AppViewModel.AppSetting.WindowWidth, App.AppViewModel.AppSetting.WindowHeight) = UIHelper.GetAppWindowSizeTuple();
         if (!App.AppViewModel.SignOutExit)
         {
             SaveSession();

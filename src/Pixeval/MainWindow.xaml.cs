@@ -143,15 +143,15 @@ public sealed partial class MainWindow : INavigationModeInfo
             case Frame { SourcePageType: var page }:
                 if (page == typeof(MainPage))
                 {
-                    ReverseSearchButton.Visible();
-                    OpenSearchSettingPopupButton.Visible();
-                    KeywordAutoSuggestBox.Visible();
+                    ReverseSearchButton.Show();
+                    OpenSearchSettingPopupButton.Show();
+                    KeywordAutoSuggestBox.Show();
                 }
                 else
                 {
-                    ReverseSearchButton.Invisible();
-                    OpenSearchSettingPopupButton.Invisible();
-                    KeywordAutoSuggestBox.Invisible();
+                    ReverseSearchButton.Collapse();
+                    OpenSearchSettingPopupButton.Collapse();
+                    KeywordAutoSuggestBox.Collapse();
                 }
 
                 break;

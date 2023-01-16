@@ -43,6 +43,7 @@ using Pixeval.Utilities;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using Windows.Graphics;
+using Pixeval.Util.Threading;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -225,7 +226,7 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         var illustrationViewModel = (IllustrationViewModel) _viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value + 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
-        App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
+        UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
         {
             Effect = SlideNavigationTransitionEffect.FromRight
         });
@@ -236,7 +237,7 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value - 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
-        App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
+        UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
         {
             Effect = SlideNavigationTransitionEffect.FromLeft
         });
@@ -296,7 +297,7 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         ColumnDefinition searchSettingButtonRegion, 
         ColumnDefinition rightDragRegion)
     {
-        await UIHelper.SpinWaitAsync(() => IllustrationViewerCommandBar.ActualHeight == 0);
+        await ThreadingHelper.SpinWaitAsync(() => IllustrationViewerCommandBar.ActualHeight == 0);
         const int leftButtonWidth = 50;
         var scaleFactor = UIHelper.GetScaleAdjustment();
         var point = IllustrationViewerCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));

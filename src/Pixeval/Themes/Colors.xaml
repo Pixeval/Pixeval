@@ -51,7 +51,7 @@
             <SolidColorBrush x:Key="PixevalTipTextForeground" Color="#828492" />
             <SolidColorBrush x:Key="CardBackground" Color="#2B2A2F" />
             <SolidColorBrush x:Key="CardStrokeBrush" Color="#19000000" />
-            <SolidColorBrush x:Key="TextSecondaryAccentColor" Color="#B3B5BD" />
+            <SolidColorBrush x:Key="TextSecondaryAccentColor" Color="#D2D4DA" />
             <ui:Color x:Key="ExpanderHeaderCardPointerOverBackgroundColor">#323232</ui:Color>
             <ui:Color x:Key="ActionableCardPointerOverBackgroundColor">#323232</ui:Color>
             <ui:Color x:Key="ExpanderContentBackgroundColor">#2B2A2F</ui:Color>
@@ -66,7 +66,7 @@
             <SolidColorBrush x:Key="PixevalTipTextForeground" Color="#828492" />
             <SolidColorBrush x:Key="CardBackground" Color="{StaticResource SystemColorWindowColor}" />
             <SolidColorBrush x:Key="CardStrokeBrush" Color="#FF0000" />
-            <SolidColorBrush x:Key="TextSecondaryAccentColor" Color="#B3B5BD" />
+            <SolidColorBrush x:Key="TextSecondaryAccentColor" Color="#D2D4DA" />
             <ui:Color x:Key="ExpanderHeaderCardPointerOverBackgroundColor">#323232</ui:Color>
             <ui:Color x:Key="ActionableCardPointerOverBackgroundColor">#323232</ui:Color>
             <ui:Color x:Key="ExpanderContentBackgroundColor">#2B2A2F</ui:Color>

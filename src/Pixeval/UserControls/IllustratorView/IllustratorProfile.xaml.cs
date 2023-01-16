@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Numerics;
+using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -29,29 +30,18 @@ public sealed partial class IllustratorProfile
         e.Handled = true;
     }
 
-    private async void IllustratorToolTip_OnOpened(object sender, RoutedEventArgs e)
+    private async void IllustratorProfile_OnLoaded(object sender, RoutedEventArgs e)
     {
-        const int singleImageSize = 100;
-        const int imageSpacing = 5;
-        const int containerWidth = 300;
-        if (await ViewModel.GetIllustratorDisplayImagesAsync() is { Length: > 0 and var length } sources)
+        var result = await ViewModel.BannerImageTask;
+        var averageLength = 300 / result.Length;
+        var images = result.Select(source => new Image
         {
-            IllustratorToolTipContainer.Width = singleImageSize * length + (length - 1) * imageSpacing;
-            var images = sources.Select(s => new Border
-            {
-                Width = (double) containerWidth / length,
-                Height = (double) containerWidth / length,
-                CornerRadius = new CornerRadius(5),
-                Child = new Image
-                {
-                    HorizontalAlignment = HorizontalAlignment.Stretch,
-                    VerticalAlignment = VerticalAlignment.Stretch,
-                    Source = s,
-                    Stretch = Stretch.UniformToFill
-                }
-            });
-            IllustratorDisplayImagesContainer.Children.AddRange(images);
-        }
+            Source = source,
+            Stretch = Stretch.UniformToFill,
+            Width = averageLength,
+            Height = 100
+        }.Apply(i => UIElementExtensions.SetClipToBounds(i, true)));
+        BannerContainer.Children.AddRange(images);
     }
 
     private void AvatarButton_OnPointerExited(object sender, PointerRoutedEventArgs e)

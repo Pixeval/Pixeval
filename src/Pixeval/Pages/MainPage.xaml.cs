@@ -70,9 +70,6 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
     // currently holding if we're navigating back to the MainPage
     private static IllustrationViewModel? _illustrationViewerContent;
 
-    // Similar to the previous field, this field contains a illustrator model
-    private static IllustratorViewModel? _illustratorViewerContent;
-
     private readonly MainPageViewModel _viewModel = new();
 
     public MainPage()

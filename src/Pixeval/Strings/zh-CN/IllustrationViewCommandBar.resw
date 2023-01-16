@@ -165,4 +165,7 @@
   <data name="DownloadItemsQueuedFormatted" xml:space="preserve">
     <value>已将{0}个作品添加至下载列表</value>
   </data>
+  <data name="FastFilterAutoSuggestBox.PlaceholderText" xml:space="preserve">
+    <value>输入ID/标签/作品名进行快速过滤</value>
+  </data>
 </root>

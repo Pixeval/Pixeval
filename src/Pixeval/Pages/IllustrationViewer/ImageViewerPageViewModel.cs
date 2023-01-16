@@ -33,8 +33,8 @@ using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Util;
 using Pixeval.Util.IO;
-using Pixeval.Util.Threading;
 using Pixeval.Utilities;
+using Pixeval.Utilities.Threading;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer;

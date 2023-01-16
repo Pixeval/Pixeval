@@ -25,6 +25,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Messages;
 using Pixeval.Pages.IllustrationViewer;
+using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
@@ -39,7 +40,7 @@ public class IllustrationAppActivationHandler : IAppActivationHandler
     {
         WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(App.AppViewModel.AppWindowRootFrame));
 
-        return App.AppViewModel.DispatchTaskAsync(async () =>
+        return ThreadingHelper.DispatchTaskAsync(async () =>
         {
             App.AppViewModel.PrepareForActivation();
 
@@ -50,7 +51,7 @@ public class IllustrationAppActivationHandler : IAppActivationHandler
                     .ToArray();
 
                 ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
-                App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
+                UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
             }
             catch (Exception e)
             {

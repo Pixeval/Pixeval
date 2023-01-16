@@ -18,53 +18,84 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Linq;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Controls.IllustratorView;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
-using Pixeval.Pages.IllustratorViewer;
+using Pixeval.UserControls.IllustratorView;
+using CommunityToolkit.WinUI.UI;
+using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.Pages.Misc;
+using Pixeval.UserControls.IllustratorContentViewer;
 using Pixeval.Util;
-using Pixeval.Util.UI;
-using IllustratorViewModel = Pixeval.UserControls.IllustratorView.IllustratorViewModel;
+using Pixeval.Util.Threading;
+using Pixeval.CoreApi.Net.Response;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class FollowingsPage
+public sealed partial class FollowingsPage : IIllustratorView
 {
+    private int _lastSelectionIndex;
+
     public FollowingsPage()
     {
         InitializeComponent();
+        ViewModel = new IllustratorViewViewModel();
     }
 
+    public IllustratorViewViewModel ViewModel { get; }
+
+    public FrameworkElement SelfIllustratorView => this;
+
+    AbstractIllustratorViewViewModel IIllustratorView.ViewModel => ViewModel;
+
+    public ScrollViewer ScrollViewer => IllustratorListView.FindDescendant<ScrollViewer>()!;
+
+    public UIElement? GetItemContainer(IllustratorViewModel viewModel)
+    {
+        return IllustratorListView.ContainerFromItem(viewModel) as UIElement;
+    }
 
     private void FollowingsPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        _ = IllustratorView.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public));
+        if (MainWindow.GetNavigationModeAndReset() is not NavigationMode.Back)
+        {
+            _ = ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public));
+        }
     }
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
     {
-        IllustratorView.ViewModel.Dispose();
+        ViewModel.Dispose();
         WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        WeakReferenceMessenger.Default.Register<FollowingsPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustratorView.ViewModel.DataProvider.FetchEngine?.Cancel());
+        WeakReferenceMessenger.Default.Register<FollowingsPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.ViewModel.DataProvider.FetchEngine?.Cancel());
     }
 
-    private void IllustratorView_OnUserTapped(object sender, TappedRoutedEventArgs e)
+    private void IllustratorListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        // var context = sender.GetDataContext<IllustratorViewModel>();
-        // var item = IllustratorView.GetItemContainer(context);
-        // ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", item);
-        // App.AppViewModel.RootFrameNavigate(typeof(IllustratorPage), null, new SlideNavigationTransitionInfo
-        // {
-        //     Effect = SlideNavigationTransitionEffect.FromRight
-        // });
+        if (!IllustratorListView.IsLoaded)
+        {
+            return;
+        }
+
+        if (IllustratorListView.SelectedIndex is > 0 and var i && i < ViewModel.DataProvider.IllustratorsSource.Count && IllustratorContentViewerFrame is { } frame)
+        {
+            frame.Navigate(typeof(IllustratorContentViewerPage), ViewModel.DataProvider.IllustratorsSource[i]);
+            _lastSelectionIndex = i;
+        }
+    }
+
+    private async void IllustratorListView_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        await ThreadingHelper.SpinWaitAsync(() => !ViewModel.DataProvider.IllustratorsSource.Any() && !ViewModel.HasNoItems);
+        IllustratorListView.SelectedIndex = 0;
+        IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), ViewModel.DataProvider.IllustratorsSource[0]);
     }
 }

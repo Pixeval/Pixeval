@@ -66,7 +66,7 @@ namespace Pixeval.UserControls
             {
                 if (!t.IsCanceled)
                 {
-                    App.AppViewModel.DispatchTask(async () =>
+                    ThreadingHelper.DispatchTask(async () =>
                     {
                         SnackBarContentContainer.Opacity = 0;
                         await Task.Delay(200);
