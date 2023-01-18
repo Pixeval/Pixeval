@@ -117,76 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BookmarkedIllustrationAndMangaNavigationViewItem.Content" xml:space="preserve">
-    <value>插画·漫画收藏</value>
+  <data name="EmptyCountedTagName" xml:space="preserve">
+    <value>所有标签</value>
   </data>
-  <data name="BookmarkedNovelNavigationViewItem.Content" xml:space="preserve">
-    <value>小说收藏</value>
-  </data>
-  <data name="CannotSortWhileJustifiedAligned" xml:space="preserve">
-    <value>只有在 设置 | 浏览体验设置 | 缩略图视图对齐规则 中选择“网格对齐”时才可以使用排序功能</value>
-  </data>
-  <data name="DoNotSort" xml:space="preserve">
-    <value>不进行排序</value>
-  </data>
-  <data name="Follow" xml:space="preserve">
-    <value>关注</value>
-  </data>
-  <data name="FollowingUserNavigationViewItem.Content" xml:space="preserve">
-    <value>关注的人</value>
-  </data>
-  <data name="FollowPrivately" xml:space="preserve">
-    <value>悄悄关注</value>
-  </data>
-  <data name="IllustrationNavigationViewItem.Content" xml:space="preserve">
-    <value>插画</value>
-  </data>
-  <data name="MangaNavigationViewItem.Content" xml:space="preserve">
-    <value>漫画</value>
-  </data>
-  <data name="MyPixivUserNavigationViewItem.Content" xml:space="preserve">
-    <value>好P友</value>
-  </data>
-  <data name="NavigationViewAutoSuggestBox.PlaceholderText" xml:space="preserve">
-    <value>输入ID/标签/作品名/用户名进行快速过滤</value>
-  </data>
-  <data name="NovelNavigationViewItem.Content" xml:space="preserve">
-    <value>小说</value>
-  </data>
-  <data name="RecommendIllustratorsTitle.Text" xml:space="preserve">
-    <value>推荐作者</value>
-  </data>
-  <data name="SortByBookmarkAscending" xml:space="preserve">
-    <value>收藏升序</value>
-  </data>
-  <data name="SortByBookmarkDescending" xml:space="preserve">
-    <value>收藏降序</value>
-  </data>
-  <data name="SortByDateAscending" xml:space="preserve">
-    <value>日期升序</value>
-  </data>
-  <data name="SortByDateDescending" xml:space="preserve">
-    <value>日期降序</value>
-  </data>
-  <data name="SortMethod" xml:space="preserve">
-    <value>排序方式</value>
-  </data>
-  <data name="ToggleShowExternalCommandBarItem.Text" xml:space="preserve">
-    <value>展示辅助命令栏</value>
-  </data>
-  <data name="ToggleShowRecommendIllustratorItem.Text" xml:space="preserve">
-    <value>展示推荐作者</value>
-  </data>
-  <data name="Unfollow" xml:space="preserve">
-    <value>取消关注</value>
-  </data>
-  <data name="UserMetricsFollowingUserTextBlock.Text" xml:space="preserve">
-    <value>关注中</value>
-  </data>
-  <data name="UserMetricsIllustrationCountTextBlock.Text" xml:space="preserve">
-    <value>作品数</value>
-  </data>
-  <data name="UserMetricsMyPixivUserTextBlock.Text" xml:space="preserve">
-    <value>好P友</value>
+  <data name="TagComboBox.PlaceholderText" xml:space="preserve">
+    <value>收藏标签</value>
   </data>
 </root>

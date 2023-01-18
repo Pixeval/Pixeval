@@ -25,6 +25,8 @@ namespace Pixeval.Controls;
 
 public class EnhancedPage : Page
 {
+    public int ActivationCount { get; private set; }
+
     public EnhancedPage()
     {
         Loaded += (_, _) =>
@@ -43,6 +45,7 @@ public class EnhancedPage : Page
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);
+        ActivationCount++;
         OnPageActivated(e);
     }
 

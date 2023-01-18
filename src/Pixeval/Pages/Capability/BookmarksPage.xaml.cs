@@ -76,7 +76,7 @@ public sealed partial class BookmarksPage : ISortedIllustrationContainerPageHelp
 
     private void ChangeSource()
     {
-        _ = IllustrationContainer.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid!, PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public)));
+        _ = IllustrationContainer.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid!, PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public), App.AppViewModel.AppSetting.TargetFilter));
     }
 
     private void SortOptionComboBoxContainer_OnLoaded(object sender, RoutedEventArgs e)

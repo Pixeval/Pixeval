@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval
+﻿#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/ApplicationSizeDefaultValueProviders.cs
+// Copyright (c) 2023 Pixeval/IIllustrationContentViewerSubPage.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,20 +18,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-namespace Pixeval.Misc;
+namespace Pixeval.UserControls.IllustratorContentViewer;
 
-public class AppWidthDefaultValueProvider : IDefaultValueProvider
+public interface IIllustratorContentViewerSubPage
 {
-    public object ProvideValue()
-    {
-        return WinUI3Utilities.WindowHelper.EstimatedWindowSize().Width;
-    }
+    void PerformSearch(string keyword);
 }
 
-public class AppHeightDefaultValueProvider : IDefaultValueProvider
+public interface IIllustratorContentViewerCommandBarHostSubPage : IIllustratorContentViewerSubPage
 {
-    public object ProvideValue()
-    {
-        return WinUI3Utilities.WindowHelper.EstimatedWindowSize().Height;
-    }
+    void ChangeCommandBarVisibility(bool isVisible);
 }

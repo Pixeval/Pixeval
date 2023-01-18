@@ -78,7 +78,7 @@ internal class TaggedBookmarksIdEngine : AbstractPixivFetchEngine<string>
 
         private string GetUrl()
         {
-            return $"/ajax/user/{PixivFetchEngine._uid}/illusts/bookmarks?tag={HttpUtility.UrlEncode(PixivFetchEngine._tag)}&offset={_currentIndex * 100}&limit=100&rest=show&lang=";
+            return $"/ajax/user/{PixivFetchEngine._uid}/illusts/bookmarks?tag={HttpUtility.UrlEncode(PixivFetchEngine._tag)}&offset={_currentIndex * 100}&limit=100&rest=show&lang={MakoClient.Configuration.CultureInfo.TwoLetterISOLanguageName}";
         }
     }
 }

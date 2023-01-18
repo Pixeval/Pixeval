@@ -10,5 +10,5 @@
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        mc:Ignorable="d">
 
-    <illustratorContentViewer:IllustratorContentViewer x:Name="IllustratorContentViewer" Margin="20,20,20,0" />
+    <illustratorContentViewer:IllustratorContentViewer x:Name="IllustratorContentViewer" Margin="20,0" />
 </controls:EnhancedPage>

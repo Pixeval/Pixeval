@@ -20,17 +20,13 @@
 
 using System;
 using System.Threading.Tasks;
-using Windows.Foundation;
 using Windows.Graphics;
-using CommunityToolkit.WinUI;
 using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media.Animation;
-using PInvoke;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Net;
@@ -45,7 +41,6 @@ using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 using Microsoft.UI;
-using DispatcherQueueHandler = Microsoft.UI.Dispatching.DispatcherQueueHandler;
 
 namespace Pixeval;
 

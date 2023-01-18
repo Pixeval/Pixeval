@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -30,6 +31,12 @@ public interface IIllustrationView
     IllustrationViewViewModel ViewModel { get; }
 
     ScrollViewer ScrollViewer { get; }
+
+    /// <summary>
+    /// Loads items continuously until the elements fill the <see cref="IIllustrationView"/>,
+    /// i.e., more elements than those in the viewport of the <see cref="IIllustrationView"/>
+    /// </summary>
+    Task TryFillClientAreaAsync();
 
     UIElement? GetItemContainer(IllustrationViewModel viewModel);
 }

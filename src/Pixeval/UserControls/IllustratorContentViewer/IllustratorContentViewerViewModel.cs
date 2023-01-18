@@ -18,12 +18,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
@@ -51,8 +53,19 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
         FollowingUser,
         MyPixivUser
     }
-    
+
     public record UserMetrics(long FollowingCount, long MyPixivUsers /* 好P友 */, long IllustrationCount);
+
+    public IllustratorContentViewerViewModel(PixivSingleUserResponse userDetail)
+    {
+        RecommendIllustrators = new ObservableCollection<RecommendIllustratorProfileViewModel>();
+        UserDetail = userDetail;
+
+        InitializeTags();
+        InitializeTrivia();
+        InitializeCommands();
+        SetAvatarAsync().Discard();
+    }
 
     [ObservableProperty]
     private NavigationViewTag? _illustrationTag;
@@ -105,24 +118,51 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
     [ObservableProperty]
     private IllustratorContentViewerTab _currentTab;
 
-    public ObservableCollection<RecommendIllustratorProfileViewModel> RecommendIllustrators { get; init; }
-
-    public IllustratorContentViewerViewModel(PixivSingleUserResponse userDetail)
+    public bool ShowRecommendIllustrators
     {
-        RecommendIllustrators = new ObservableCollection<RecommendIllustratorProfileViewModel>();
-        UserDetail = userDetail;
-        
-        InitializeTags();
-        InitializeCommands();
-        InitializeTriviaAsync().Discard();
-
-        LoadRecommendIllustratorsAsync().Discard();
+        get => App.AppViewModel.AppSetting.ShowRecommendIllustratorsInIllustratorContentViewer;
+        set => SetProperty(App.AppViewModel.AppSetting.ShowRecommendIllustratorsInIllustratorContentViewer, value, App.AppViewModel.AppSetting,
+            (setting, value) =>
+            {
+                setting.ShowRecommendIllustratorsInIllustratorContentViewer = value;
+                _showRecommendIllustratorsChanged?.Invoke(this, value);
+            });
     }
+
+    public bool ShowExternalCommandBar
+    {
+        get => App.AppViewModel.AppSetting.ShowExternalCommandBarInIllustratorContentViewer;
+        set => SetProperty(App.AppViewModel.AppSetting.ShowExternalCommandBarInIllustratorContentViewer, value, App.AppViewModel.AppSetting,
+            (setting, value) =>
+            {
+                setting.ShowExternalCommandBarInIllustratorContentViewer = value;
+                _showExternalCommandBarChanged?.Invoke(this, value);
+            });
+    }
+
+    private EventHandler<bool>? _showRecommendIllustratorsChanged;
+
+    public event EventHandler<bool> ShowRecommendIllustratorsChanged
+    {
+        add => _showRecommendIllustratorsChanged += value;
+        remove => _showRecommendIllustratorsChanged -= value;
+    }
+
+    private EventHandler<bool>? _showExternalCommandBarChanged;
+
+    public event EventHandler<bool> ShowExternalCommandBarChanged
+    {
+        add => _showExternalCommandBarChanged += value;
+        remove => _showExternalCommandBarChanged -= value;
+    }
+
+    public ObservableCollection<RecommendIllustratorProfileViewModel> RecommendIllustrators { get; init; }
 
     private void InitializeTags()
     {
         IllustrationTag = new NavigationViewTag(typeof(IllustratorIllustrationPage), UserDetail.UserEntity!.Id.ToString());
         MangaTag = new NavigationViewTag(typeof(IllustratorMangaPage), UserDetail.UserEntity!.Id.ToString());
+        BookmarkedIllustrationAndMangaTag = new NavigationViewTag(typeof(IllustratorIllustrationAndMangaBookmarkPage), UserDetail.UserEntity!.Id.ToString());
     }
 
     private void InitializeCommands()
@@ -139,18 +179,21 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
         FollowPrivatelyCommand.ExecuteRequested += FollowPrivatelyCommandOnExecuteRequested;
     }
 
-    private async Task InitializeTriviaAsync()
+    private void InitializeTrivia()
     {
         var profile = UserDetail.UserProfile;
 
         CurrentTab = IllustratorContentViewerTab.Illustration;
         Username = UserDetail.UserEntity?.Name;
-        Metrics = new UserMetrics(_userDetail.UserProfile?.TotalFollowUsers ?? 0, _userDetail.UserProfile?.TotalMyPixivUsers ?? 0, _userDetail.UserProfile?.TotalIllusts ?? 0);
+        Metrics = new UserMetrics(profile?.TotalFollowUsers ?? 0, profile?.TotalMyPixivUsers ?? 0, profile?.TotalIllusts ?? 0);
         Premium = profile?.IsPremium ?? false;
         Following = UserDetail.UserEntity?.IsFollowed ?? false;
-        Avatar = (await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(UserDetail.UserEntity?.ProfileImageUrls?.Medium ?? string.Empty, 40)).GetOrElse(await AppContext.GetPixivNoProfileImageAsync());
-
         ActionMenuFlyoutItems = new ObservableCollection<MenuFlyoutItemBase>();
+    }
+
+    private async Task SetAvatarAsync()
+    {
+        Avatar = (await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(UserDetail.UserEntity?.ProfileImageUrls?.Medium ?? string.Empty, 40)).GetOrElse(await AppContext.GetPixivNoProfileImageAsync());
     }
 
     private void FollowPrivatelyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -185,7 +228,7 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
         };
     }
 
-    private async Task LoadRecommendIllustratorsAsync()
+    public async Task LoadRecommendIllustratorsAsync()
     {
         static RecommendIllustratorProfileViewModel ToRecommendIllustratorProfileViewModel(PixivRelatedRecommendUsersResponse context, PixivRelatedRecommendUsersResponse.RecommendUser recommendUser)
         {
@@ -217,5 +260,10 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
     {
         Following = false;
         App.AppViewModel.MakoClient.RemoveFollowUserAsync(UserDetail.UserEntity!.Id.ToString());
+    }
+
+    public Visibility GetNavigationViewAutoSuggestBoxVisibility(bool showExternalCommandBar)
+    {
+        return (!showExternalCommandBar || CurrentTab is not (IllustratorContentViewerTab.Illustration or IllustratorContentViewerTab.Manga or IllustratorContentViewerTab.BookmarkedIllustrationAndManga)).ToVisibility();
     }
 }

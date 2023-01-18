@@ -224,15 +224,12 @@
       },
       "WinUI3Utilities": {
         "type": "Direct",
-        "requested": "[1.0.6, )",
-        "resolved": "1.0.6",
-        "contentHash": "c/DHrtQB9hr6ks+ODzFyfu/afNsMHAz/v7VmFrKxp+Xr45r55J0D/EQzJTaGMivvHVTGUKxcLoxAB2Zq/Psq+A==",
+        "requested": "[1.0.8, )",
+        "resolved": "1.0.8",
+        "contentHash": "C0TLpYHNJH6mJ2pNgOlY1yx60Kj7414YBwlkIQmkv3CLLDwlCNObu5d0RAeMlDd0xL/beiGoJTHVvnpFRIRwkw==",
         "dependencies": {
-          "CommunityToolkit.Mvvm": "8.0.0",
-          "CommunityToolkit.WinUI.UI.Controls": "7.1.2",
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.755",
-          "Microsoft.WindowsAppSDK": "1.2.221209.1",
-          "PInvoke.User32": "0.7.124"
+          "Microsoft.WindowsAppSDK": "1.2.221209.1"
         }
       },
       "WinUIEx": {

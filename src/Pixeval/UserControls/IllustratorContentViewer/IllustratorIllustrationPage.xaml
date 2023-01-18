@@ -15,6 +15,7 @@
     <userControls:IllustrationContainer x:Name="IllustrationContainer">
         <userControls:IllustrationContainer.CommandBarElements>
             <Grid x:Name="SortOptionComboBoxContainer"
+                  VerticalAlignment="Center"
                   Background="Transparent"
                   Loaded="SortOptionComboBoxContainer_OnLoaded">
                 <userControls:SortOptionComboBox x:Name="SortOptionComboBox"

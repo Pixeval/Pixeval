@@ -10,11 +10,9 @@ using Microsoft.UI.Xaml.Controls;
 using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util.Threading;
 using Pixeval.Utilities;
-using Pixeval.Utilities.Threading;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 using WinUIEx.Messaging;
-using UIHelper = Pixeval.Util.UI.UIHelper;
 
 namespace Pixeval.UserControls.JustifiedLayout;
 
@@ -187,15 +185,6 @@ public sealed partial class JustifiedListView
                 RequestLoadMoreAsync().Discard();;
             } 
         }
-    }
-
-    /// <summary>
-    /// Calls to <see cref="RequestLoadMoreAsync"/> continuously until the elements fill the <see cref="ListView"/>,
-    /// i.e., more elements than those in the viewport of the <see cref="ListView"/>
-    /// </summary>
-    public async Task FillListViewAsync()
-    {
-        while (Children.All(c => UIHelper.IsFullyOrPartiallyVisible(c, this)) && await RequestLoadMoreAsync() > 0) { }
     }
 
     /// <summary>

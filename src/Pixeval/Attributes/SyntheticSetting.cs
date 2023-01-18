@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval
+﻿#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/ApplicationSizeDefaultValueProviders.cs
+// Copyright (c) 2023 Pixeval/SyntheticSetting.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,20 +18,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-namespace Pixeval.Misc;
+using System;
 
-public class AppWidthDefaultValueProvider : IDefaultValueProvider
-{
-    public object ProvideValue()
-    {
-        return WinUI3Utilities.WindowHelper.EstimatedWindowSize().Width;
-    }
-}
+namespace Pixeval.Attributes;
 
-public class AppHeightDefaultValueProvider : IDefaultValueProvider
-{
-    public object ProvideValue()
-    {
-        return WinUI3Utilities.WindowHelper.EstimatedWindowSize().Height;
-    }
-}
+/// <summary>
+/// This attribute is used to mark a setting entry as synthetic. that the entry won't appear in the SettingsPage, but rather provided
+/// in other places among the app
+/// </summary>
+[AttributeUsage(AttributeTargets.Property)]
+public class SyntheticSetting : Attribute { }

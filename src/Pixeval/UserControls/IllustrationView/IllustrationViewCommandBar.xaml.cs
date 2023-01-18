@@ -301,7 +301,12 @@ public sealed partial class IllustrationViewCommandBar
 
     private void FastFilterAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
     {
-        if (sender.Text.IsNullOrBlank())
+        PerformSearch(sender.Text);
+    }
+
+    public void PerformSearch(string text)
+    {
+        if (text.IsNullOrBlank())
         {
             ViewModel.DataProvider.Filter = null;
         }
@@ -309,7 +314,6 @@ public sealed partial class IllustrationViewCommandBar
         {
             ViewModel.DataProvider.Filter = o =>
             {
-                var text = sender.Text;
                 if (o is IllustrationViewModel viewModel)
                 {
                     return viewModel.Id.Contains(text)

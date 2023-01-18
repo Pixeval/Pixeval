@@ -1,9 +1,8 @@
-using System;
+using System.Linq;
 using CommunityToolkit.Diagnostics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Misc;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
@@ -11,7 +10,7 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.UserControls.IllustratorContentViewer;
 
-[DependencyProperty<IllustratorContentViewerViewModel>("ViewModel", nameof(OnViewModelChanged), IsSetterPublic = true)]
+[DependencyProperty<IllustratorContentViewerViewModel>("ViewModel", nameof(OnViewModelChanged))]
 public sealed partial class IllustratorContentViewer
 {
     private NavigationViewTag? _lastNavigationViewTag;
@@ -32,6 +31,21 @@ public sealed partial class IllustratorContentViewer
 
     private void IllustrationContentViewerNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
+        if (App.AppViewModel.AppSetting.ShowRecommendIllustratorsInIllustratorContentViewer)
+        {
+            ViewModel.LoadRecommendIllustratorsAsync().Discard();
+        }
+
+        ViewModel.ShowExternalCommandBarChanged += (_, b) =>
+        {
+            if (IllustratorContentViewerFrame.Content is IIllustratorContentViewerCommandBarHostSubPage subPage) subPage.ChangeCommandBarVisibility(b);
+        };
+
+        ViewModel.ShowRecommendIllustratorsChanged += (_, b) =>
+        {
+            if (b && !ViewModel.RecommendIllustrators.Any()) ViewModel.LoadRecommendIllustratorsAsync().Discard();
+        };
+
         ViewModel.CurrentTab = args.SelectedItemContainer.Tag switch
         {
             var tag when ReferenceEquals(tag, ViewModel.IllustrationTag) => IllustratorContentViewerViewModel.IllustratorContentViewerTab.Illustration,
@@ -47,5 +61,13 @@ public sealed partial class IllustratorContentViewer
             ? index > currentIndex ? new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft } : new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight }
             : new EntranceNavigationTransitionInfo());
         _lastNavigationViewTag = args.SelectedItemContainer.Tag as NavigationViewTag;
+    }
+
+    private void NavigationViewAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+    {
+        if (IllustratorContentViewerFrame.Content is IIllustratorContentViewerSubPage subPage)
+        {
+            subPage.PerformSearch(sender.Text);
+        }
     }
 }

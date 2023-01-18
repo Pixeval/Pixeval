@@ -29,6 +29,9 @@ namespace Pixeval.UserControls.IllustrationView;
 
 public interface IIllustrationViewDataProvider
 {
+    /// <summary>
+    /// Avoid using <see cref="AdvancedCollectionView.Filter"/>, if you want to set the filter, use <see cref="Filter"/>
+    /// </summary>
     AdvancedCollectionView IllustrationsView { get; }
     
     ObservableCollection<IllustrationViewModel> IllustrationsSource { get; }

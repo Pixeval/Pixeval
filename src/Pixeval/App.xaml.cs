@@ -20,11 +20,13 @@
 
 using System;
 using System.Linq;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
 using Pixeval.AppManagement;
+using Pixeval.Messages;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
@@ -70,5 +72,11 @@ public partial class App
         Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSetting.AppFontFamilyName);
         await AppKnownFolders.InitializeAsync();
         await AppViewModel.InitializeAsync(isProtocolActivated);
+    }
+
+    public static void ExitWithPushNotification()
+    {
+        WeakReferenceMessenger.Default.Send(new ApplicationExitingMessage());
+        CurrentContext.App.Exit();
     }
 }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
@@ -32,8 +32,10 @@
       <None Remove="Strings\zh-CN\FollowingPage.resw" />
       <None Remove="Strings\zh-CN\FollowingUserBadge.resw" />
       <None Remove="Strings\zh-CN\IllustratorContentViewer.resw" />
+      <None Remove="Strings\zh-CN\IllustratorIllustrationAndMangaBookmarkPage.resw" />
       <None Remove="Strings\zh-CN\RecommendIllustratorProfile.resw" />
       <None Remove="UserControls\IllustratorContentViewer\IllustratorContentViewer.xaml" />
+      <None Remove="UserControls\IllustratorContentViewer\IllustratorIllustrationAndMangaBookmarkPage.xaml" />
       <None Remove="UserControls\IllustratorContentViewer\IllustratorIllustrationPage.xaml" />
       <None Remove="UserControls\IllustratorContentViewer\IllustratorMangaPage.xaml" />
       <None Remove="UserControls\IllustratorView\IllustratorProfile.xaml" />
@@ -66,7 +68,7 @@
         <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-        <PackageReference Include="WinUI3Utilities" Version="1.0.6" />
+        <PackageReference Include="WinUI3Utilities" Version="1.0.8" />
         <PackageReference Include="WinUIEx" Version="2.1.0" />
         <Manifest Include="$(ApplicationManifest)" />
     </ItemGroup>
@@ -178,6 +180,7 @@
         <PRIResource Include="Strings\zh-CN\FollowingPage.resw" />
         <PRIResource Include="Strings\zh-CN\FollowingUserBadge.resw" />
         <PRIResource Include="Strings\zh-CN\IllustratorContentViewer.resw" />
+        <PRIResource Include="Strings\zh-CN\IllustratorIllustrationAndMangaBookmarkPage.resw" />
         <PRIResource Include="Strings\zh-CN\IllustratorProfile.resw" />
         <PRIResource Include="Strings\zh-CN\AboutPage.resw" />
         <PRIResource Include="Strings\zh-CN\Activations.resw" />
@@ -438,6 +441,11 @@
     </ItemGroup>
     <ItemGroup>
       <Folder Include="UserControls\RecommendIllustratorProfile\" />
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="UserControls\IllustratorContentViewer\IllustratorIllustrationAndMangaBookmarkPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
     </ItemGroup>
     <ItemGroup>
       <Page Update="UserControls\IllustratorContentViewer\IllustratorMangaPage.xaml">

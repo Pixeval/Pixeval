@@ -27,18 +27,15 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.UserControls.IllustratorView;
 using CommunityToolkit.WinUI.UI;
-using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Pages.Misc;
-using Pixeval.UserControls.IllustratorContentViewer;
 using Pixeval.Util;
 using Pixeval.Util.Threading;
-using Pixeval.CoreApi.Net.Response;
 
 namespace Pixeval.Pages.Capability;
 
 public sealed partial class FollowingsPage : IIllustratorView
 {
-    private int _lastSelectionIndex;
+    private bool _listViewLoaded;
 
     public FollowingsPage()
     {
@@ -88,12 +85,17 @@ public sealed partial class FollowingsPage : IIllustratorView
         if (IllustratorListView.SelectedIndex is > 0 and var i && i < ViewModel.DataProvider.IllustratorsSource.Count && IllustratorContentViewerFrame is { } frame)
         {
             frame.Navigate(typeof(IllustratorContentViewerPage), ViewModel.DataProvider.IllustratorsSource[i]);
-            _lastSelectionIndex = i;
         }
     }
 
     private async void IllustratorListView_OnLoaded(object sender, RoutedEventArgs e)
     {
+        if (_listViewLoaded)
+        {
+            return;
+        }
+
+        _listViewLoaded = true;
         await ThreadingHelper.SpinWaitAsync(() => !ViewModel.DataProvider.IllustratorsSource.Any() && !ViewModel.HasNoItems);
         IllustratorListView.SelectedIndex = 0;
         IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), ViewModel.DataProvider.IllustratorsSource[0]);

@@ -16,12 +16,14 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="200" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <TextBlock x:Uid="/IllustratorContentViewer/RecommendIllustratorsTitle"
                    Grid.Row="0"
-                   Style="{StaticResource TitleTextBlockStyle}" />
+                   Margin="0,20,0,0"
+                   Style="{StaticResource TitleTextBlockStyle}"
+                   Visibility="{x:Bind ViewModel.ShowRecommendIllustrators, Mode=OneWay}" />
         <ListView Grid.Row="1"
                   Height="200"
                   Padding="0"
@@ -31,7 +33,8 @@
                   ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                   ScrollViewer.HorizontalScrollMode="Enabled"
                   ScrollViewer.IsHorizontalRailEnabled="True"
-                  SelectionMode="None">
+                  SelectionMode="None"
+                  Visibility="{x:Bind ViewModel.ShowRecommendIllustrators, Mode=OneWay}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -186,12 +189,22 @@
                                 <MenuFlyout>
                                     <MenuFlyoutItem Command="{x:Bind ViewModel.FollowCommand, Mode=OneWay}" />
                                     <MenuFlyoutItem Command="{x:Bind ViewModel.FollowPrivatelyCommand, Mode=OneWay}" />
+                                    <MenuFlyoutSeparator />
+                                    <ToggleMenuFlyoutItem x:Uid="/IllustratorContentViewer/ToggleShowRecommendIllustratorItem"
+                                                          Icon="{util:FontIcon Glyph=WebcamE8B8}"
+                                                          IsChecked="{x:Bind ViewModel.ShowRecommendIllustrators, Mode=TwoWay}" />
+                                    <ToggleMenuFlyoutItem x:Uid="/IllustratorContentViewer/ToggleShowExternalCommandBarItem"
+                                                          Icon="{util:FontIcon Glyph=CommandPromptE756}"
+                                                          IsChecked="{x:Bind ViewModel.ShowExternalCommandBar, Mode=TwoWay}" />
                                 </MenuFlyout>
                             </AppBarButton.Flyout>
                         </AppBarButton>
                     </CommandBar>
                 </StackPanel>
             </NavigationView.PaneFooter>
+            <NavigationView.AutoSuggestBox>
+                <AutoSuggestBox x:Uid="/IllustratorContentViewer/NavigationViewAutoSuggestBox" TextChanged="NavigationViewAutoSuggestBox_OnTextChanged" Visibility="{x:Bind ViewModel.GetNavigationViewAutoSuggestBoxVisibility(ViewModel.ShowExternalCommandBar), Mode=OneWay}" />
+            </NavigationView.AutoSuggestBox>
             <Frame x:Name="IllustratorContentViewerFrame" />
         </NavigationView>
     </Grid>

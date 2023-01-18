@@ -109,9 +109,8 @@ public partial class IllustratorViewModel : ObservableObject, IDisposable
 
     private async Task SetBannerSourceAsync()
     {
-        // Try to get user display illustrations 
         var client = App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi);
-        if (User!.Illusts?.Take(3).ToArray() is { Length: > 0 } illustrations && illustrations.SelectNotNull(c => c.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium)).ToArray() is [.. var urls])
+        if (User!.Illusts?.Take(3).ToArray() is { Length: > 0 } illustrations && illustrations.SelectNotNull(c => c.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium)).ToArray() is { Length: > 0 } urls)
         {
             var tasks = await Task.WhenAll(urls.Select(u => client.DownloadAsIRandomAccessStreamAsync(u)));
             if (tasks is [Result<IRandomAccessStream>.Success(var first), ..])
@@ -119,6 +118,7 @@ public partial class IllustratorViewModel : ObservableObject, IDisposable
                 var dominantColor = await UIHelper.GetDominantColorAsync(first.AsStreamForRead(), false);
                 AvatarBorderBrush = new SolidColorBrush(dominantColor);
             }
+
             var result = (await Task.WhenAll(tasks.SelectNotNull(r => r.BindAsync(s => s.GetSoftwareBitmapSourceAsync(true)))))
                 .SelectNotNull(res => res is Result<SoftwareBitmapSource>.Success(var sbs) ? sbs : null).ToArray();
             _bannerImageTaskCompletionSource.TrySetResult(result);
@@ -126,7 +126,6 @@ public partial class IllustratorViewModel : ObservableObject, IDisposable
         }
 
         UserDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(User!.UserInfo?.Id.ToString() ?? string.Empty, App.AppViewModel.AppSetting.TargetFilter);
-        // otherwise use banner image
         if (UserDetail.UserProfile?.BackgroundImageUrl is { } url && await client.DownloadAsIRandomAccessStreamAsync(url) is Result<IRandomAccessStream>.Success(var stream))
         {
             var managedStream = stream.AsStreamForRead();
@@ -137,7 +136,6 @@ public partial class IllustratorViewModel : ObservableObject, IDisposable
             return;
         }
 
-        // if user has no illustrations and no banner image, use default "no profile" image.
         AvatarBorderBrush = DefaultAvatarBorderColorBrush;
         _bannerImageTaskCompletionSource.TrySetResult(Enumerates.ArrayOf(await AppContext.GetPixivNoProfileImageAsync()));
     }

@@ -37,7 +37,10 @@ public abstract partial class IllustrationViewViewModel : ObservableObject, IDis
 
     [ObservableProperty]
     private bool _isAnyIllustrationSelected;
-
+    
+    /// <summary>
+    /// Avoid calls to <see cref="IIllustrationViewDataProvider.ResetAndFillAsync"/>, calls to <see cref="ResetEngineAndFillAsync"/> instead.
+    /// </summary>
     public abstract IIllustrationViewDataProvider DataProvider { get; }
 
     public async Task ResetEngineAndFillAsync(IFetchEngine<Illustration?>? newEngine, int? itemLimit = null)

@@ -200,6 +200,14 @@ public partial record AppSetting
     [DefaultValue(IllustrationViewOption.Justified)]
     public IllustrationViewOption IllustrationViewOption { get; set; }
 
+    [DefaultValue(true)]
+    [SyntheticSetting]
+    public bool ShowRecommendIllustratorsInIllustratorContentViewer { get; set; }
+
+    [DefaultValue(true)]
+    [SyntheticSetting]
+    public bool ShowExternalCommandBarInIllustratorContentViewer { get; set; }
+
     public static AppSetting CreateDefault()
     {
         return new AppSetting();

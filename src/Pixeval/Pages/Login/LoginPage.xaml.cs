@@ -87,7 +87,7 @@ public sealed partial class LoginPage
             }
             else
             {
-                WinUI3Utilities.AppHelper.ExitWithPushedNotification();
+                App.ExitWithPushNotification();
             }
         }
     }
@@ -104,7 +104,7 @@ public sealed partial class LoginPage
                 await Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/p/?LinkId=2124703"));
             }
 
-            WinUI3Utilities.AppHelper.ExitWithPushedNotification();
+            App.ExitWithPushNotification();
         }
     }
 
