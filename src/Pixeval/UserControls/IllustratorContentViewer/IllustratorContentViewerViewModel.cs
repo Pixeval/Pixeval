@@ -121,23 +121,21 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
     public bool ShowRecommendIllustrators
     {
         get => App.AppViewModel.AppSetting.ShowRecommendIllustratorsInIllustratorContentViewer;
-        set => SetProperty(App.AppViewModel.AppSetting.ShowRecommendIllustratorsInIllustratorContentViewer, value, App.AppViewModel.AppSetting,
-            (setting, value) =>
-            {
-                setting.ShowRecommendIllustratorsInIllustratorContentViewer = value;
-                _showRecommendIllustratorsChanged?.Invoke(this, value);
-            });
+        set => SetProperty(App.AppViewModel.AppSetting.ShowRecommendIllustratorsInIllustratorContentViewer, value, App.AppViewModel.AppSetting, (setting, value) =>
+        {
+            setting.ShowRecommendIllustratorsInIllustratorContentViewer = value;
+            _showRecommendIllustratorsChanged?.Invoke(this, value);
+        });
     }
 
     public bool ShowExternalCommandBar
     {
         get => App.AppViewModel.AppSetting.ShowExternalCommandBarInIllustratorContentViewer;
-        set => SetProperty(App.AppViewModel.AppSetting.ShowExternalCommandBarInIllustratorContentViewer, value, App.AppViewModel.AppSetting,
-            (setting, value) =>
-            {
-                setting.ShowExternalCommandBarInIllustratorContentViewer = value;
-                _showExternalCommandBarChanged?.Invoke(this, value);
-            });
+        set => SetProperty(App.AppViewModel.AppSetting.ShowExternalCommandBarInIllustratorContentViewer, value, App.AppViewModel.AppSetting, (setting, value) =>
+        {
+            setting.ShowExternalCommandBarInIllustratorContentViewer = value;
+            _showExternalCommandBarChanged?.Invoke(this, value);
+        });
     }
 
     private EventHandler<bool>? _showRecommendIllustratorsChanged;
