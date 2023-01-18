@@ -36,7 +36,7 @@ namespace Pixeval.Pages.Capability;
 
 public sealed partial class FollowingsPage : IIllustratorView
 {
-    private bool _listViewLoaded;
+    private bool _illustratorListViewLoaded;
 
     public FollowingsPage()
     {
@@ -95,12 +95,12 @@ public sealed partial class FollowingsPage : IIllustratorView
 
     private async void IllustratorListView_OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (_listViewLoaded)
+        if (_illustratorListViewLoaded)
         {
             return;
         }
 
-        _listViewLoaded = true;
+        _illustratorListViewLoaded = true;
         await ThreadingHelper.SpinWaitAsync(() => !ViewModel.DataProvider.IllustratorsSource.Any() && !ViewModel.HasNoItems);
         IllustratorListView.SelectedIndex = 0;
         IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), ViewModel.DataProvider.IllustratorsSource[0]);
