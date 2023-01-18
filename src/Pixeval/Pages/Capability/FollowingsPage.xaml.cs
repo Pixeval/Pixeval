@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.Linq;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
@@ -67,6 +68,10 @@ public sealed partial class FollowingsPage : IIllustratorView
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
     {
         ViewModel.Dispose();
+        if (IllustratorContentViewerFrame.Content is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
         WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 

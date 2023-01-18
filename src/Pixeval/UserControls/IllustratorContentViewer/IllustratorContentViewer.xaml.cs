@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Diagnostics;
 using Microsoft.UI.Xaml;
@@ -6,18 +8,22 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Misc;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
+using Pixeval.Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.UserControls.IllustratorContentViewer;
 
 [DependencyProperty<IllustratorContentViewerViewModel>("ViewModel", nameof(OnViewModelChanged))]
-public sealed partial class IllustratorContentViewer
+public sealed partial class IllustratorContentViewer : IDisposable
 {
     private NavigationViewTag? _lastNavigationViewTag;
+
+    private readonly ISet<Page> _pageCache;
 
     public IllustratorContentViewer()
     {
         InitializeComponent();
+        _pageCache = new HashSet<Page>();
     }
 
     private static async void OnViewModelChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
@@ -29,7 +35,7 @@ public sealed partial class IllustratorContentViewer
         }
     }
 
-    private void IllustrationContentViewerNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+    private async void IllustrationContentViewerNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
         if (App.AppViewModel.AppSetting.ShowRecommendIllustratorsInIllustratorContentViewer)
         {
@@ -61,6 +67,9 @@ public sealed partial class IllustratorContentViewer
             ? index > currentIndex ? new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft } : new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight }
             : new EntranceNavigationTransitionInfo());
         _lastNavigationViewTag = args.SelectedItemContainer.Tag as NavigationViewTag;
+
+        await ThreadingHelper.SpinWaitAsync(() => IllustratorContentViewerFrame.Content.GetType() != _lastNavigationViewTag!.NavigateTo);
+        _pageCache.Add((Page) IllustratorContentViewerFrame.Content);
     }
 
     private void NavigationViewAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -69,5 +78,11 @@ public sealed partial class IllustratorContentViewer
         {
             subPage.PerformSearch(sender.Text);
         }
+    }
+
+    public void Dispose()
+    {
+        _pageCache.OfType<IDisposable>().ForEach(p => p.Dispose());
+        _pageCache.Clear();
     }
 }

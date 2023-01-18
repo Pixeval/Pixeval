@@ -18,9 +18,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
+
 namespace Pixeval.UserControls.IllustratorContentViewer;
 
-public interface IIllustratorContentViewerSubPage
+public interface IIllustratorContentViewerSubPage : IDisposable
 {
     void PerformSearch(string keyword);
 }

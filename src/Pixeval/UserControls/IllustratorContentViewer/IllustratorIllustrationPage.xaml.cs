@@ -95,4 +95,6 @@ public sealed partial class IllustratorIllustrationPage : ISortedIllustrationCon
     {
         IllustrationContainer.ShowCommandBar = isVisible;
     }
+
+
 }
