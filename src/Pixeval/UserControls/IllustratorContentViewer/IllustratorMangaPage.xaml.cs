@@ -29,7 +29,7 @@ public sealed partial class IllustratorMangaPage : ISortedIllustrationContainerP
     {
         if (ActivationCount > 1) return;
 
-        WeakReferenceMessenger.Default.Register<IllustratorMangaPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
+        WeakReferenceMessenger.Default.Register<IllustratorMangaPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
         if (e.Parameter is string id)
         {
             IllustrationContainer.IllustrationView.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.MangaPosts(id, App.AppViewModel.AppSetting.TargetFilter)).Discard();

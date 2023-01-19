@@ -29,19 +29,13 @@
                   Padding="0"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Top"
+                  ItemContainerStyle="{StaticResource ListViewItemStretchStyle}"
                   ItemsSource="{x:Bind ViewModel.RecommendIllustrators, Mode=OneWay}"
                   ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                   ScrollViewer.HorizontalScrollMode="Enabled"
                   ScrollViewer.IsHorizontalRailEnabled="True"
                   SelectionMode="None"
                   Visibility="{x:Bind ViewModel.ShowRecommendIllustrators, Mode=OneWay}">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                    <Setter Property="Margin" Value="0" />
-                    <Setter Property="Padding" Value="0" />
-                </Style>
-            </ListView.ItemContainerStyle>
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VirtualizingStackPanel Orientation="Horizontal" />
@@ -203,7 +197,9 @@
                 </StackPanel>
             </NavigationView.PaneFooter>
             <NavigationView.AutoSuggestBox>
-                <AutoSuggestBox x:Uid="/IllustratorContentViewer/NavigationViewAutoSuggestBox" TextChanged="NavigationViewAutoSuggestBox_OnTextChanged" Visibility="{x:Bind ViewModel.GetNavigationViewAutoSuggestBoxVisibility(ViewModel.ShowExternalCommandBar), Mode=OneWay}" />
+                <AutoSuggestBox x:Uid="/IllustratorContentViewer/NavigationViewAutoSuggestBox"
+                                TextChanged="NavigationViewAutoSuggestBox_OnTextChanged"
+                                Visibility="{x:Bind ViewModel.GetNavigationViewAutoSuggestBoxVisibility(ViewModel.ShowExternalCommandBar), Mode=OneWay}" />
             </NavigationView.AutoSuggestBox>
             <Frame x:Name="IllustratorContentViewerFrame" />
         </NavigationView>

@@ -77,7 +77,7 @@ public sealed partial class FollowingsPage : IIllustratorView
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        WeakReferenceMessenger.Default.Register<FollowingsPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.ViewModel.DataProvider.FetchEngine?.Cancel());
+        WeakReferenceMessenger.Default.Register<FollowingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.ViewModel.DataProvider.FetchEngine?.Cancel());
     }
 
     private void IllustratorListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

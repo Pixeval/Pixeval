@@ -78,11 +78,19 @@ public sealed partial class MainWindow : INavigationModeInfo
 
     private void PixevalAppRootFrame_OnLoaded(object sender, RoutedEventArgs e)
     {
+        WeakReferenceMessenger.Default.Register<MainWindow, RefreshDragRegionMessage>(this, static (recipient, _) =>
+        {
+            if (AppWindowTitleBar.IsCustomizationSupported() && recipient.PixevalAppRootFrame.Content is ISupportCustomTitleBarDragRegion iSupportCustomTitleBarDragRegion)
+            {
+                recipient.SetDragRegionAsync(iSupportCustomTitleBarDragRegion).Discard();
+            }
+        });
         PixevalAppRootFrame.Navigate(typeof(LoginPage));
     }
 
     private void MainWindow_OnClosed(object sender, WindowEventArgs args)
     {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
         AppContext.SaveContext();
     }
 

@@ -14,12 +14,14 @@
              xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:media="using:CommunityToolkit.WinUI.UI.Media"
-             xmlns:premiumUserBadge="using:Pixeval.Controls.PremiumUserBadge"
              xmlns:ui="using:Pixeval.Util.UI"
              Loaded="IllustratorProfile_OnLoaded"
              mc:Ignorable="d">
 
-    <card:CardControl Width="302" CornerRadius="5">
+    <Grid Width="302"
+          Background="Transparent"
+          BorderThickness="0"
+          CornerRadius="5">
         <Grid>
             <ToolTipService.ToolTip>
                 <ToolTip Padding="0">
@@ -163,5 +165,5 @@
                 </Button.Flyout>
             </Button>
         </Grid>
-    </card:CardControl>
+    </Grid>
 </UserControl>

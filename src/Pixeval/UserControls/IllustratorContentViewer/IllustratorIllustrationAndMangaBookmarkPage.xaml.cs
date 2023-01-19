@@ -39,7 +39,7 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
     {
         if (ActivationCount > 1) return;
 
-        WeakReferenceMessenger.Default.Register<IllustratorIllustrationAndMangaBookmarkPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
+        WeakReferenceMessenger.Default.Register<IllustratorIllustrationAndMangaBookmarkPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
         if (e.Parameter is string id)
         {
             _uid = id;
@@ -66,8 +66,10 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
     {
         if (TagComboBox.SelectedItem is CountedTag(var (name, _), _) tag && _uid is { Length: > 0 } id && !ReferenceEquals(tag, IllustratorIllustrationAndMangaBookmarkPageViewModel.EmptyCountedTag))
         {
+            // fetch the bookmark IDs for tag, but do not wait for it.
             _viewModel.LoadBookmarksForTagAsync(id, tag.Tag.Name).Discard();
 
+            // refresh the filter when there are newly fetched IDs.
             IllustrationContainer.IllustrationView.ViewModel.DataProvider.Filter = o => BookmarkTagFilter(name, o);
             IllustrationContainer.IllustrationView.TryFillClientAreaAsync().Discard();
             return;

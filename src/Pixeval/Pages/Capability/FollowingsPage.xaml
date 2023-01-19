@@ -11,7 +11,7 @@
     <Grid>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="350" />
+                <ColumnDefinition Width="330" />
                 <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
@@ -24,7 +24,9 @@
                       SelectionChanged="IllustratorListView_OnSelectionChanged">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="illustratorView:IllustratorViewModel">
-                        <illustratorView:IllustratorProfile Margin="0,5" ViewModel="{x:Bind}" />
+                        <illustratorView:IllustratorProfile Margin="0,5"
+                                                            BorderThickness="1"
+                                                            ViewModel="{x:Bind}" />
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

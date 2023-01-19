@@ -101,7 +101,7 @@ public sealed partial class IllustratorPage
                 break;
         }
 
-        WeakReferenceMessenger.Default.Register<IllustratorPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.ViewModelProvider.ViewModel.DataProvider.FetchEngine?.Cancel());
+        WeakReferenceMessenger.Default.Register<IllustratorPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.ViewModelProvider.ViewModel.DataProvider.FetchEngine?.Cancel());
 
         ChangeSource();
     }

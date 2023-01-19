@@ -120,7 +120,7 @@ public partial class IllustratorViewModel : ObservableObject, IDisposable
             }
 
             var result = (await Task.WhenAll(tasks.SelectNotNull(r => r.BindAsync(s => s.GetSoftwareBitmapSourceAsync(true)))))
-                .SelectNotNull(res => res is Result<SoftwareBitmapSource>.Success(var sbs) ? sbs : null).ToArray();
+                .SelectNotNull(res => res.GetOrElse(null)).ToArray();
             _bannerImageTaskCompletionSource.TrySetResult(result);
             return;
         }

@@ -274,10 +274,7 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         App.AppViewModel.AppSetting.DisplayTeachingTipWhenGeneratingAppLink = false;
     }
 
-    private void IllustrationInfoAndCommentsNavigationView_OnBackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
-    {
-        IllustrationInfoAndCommentsSplitView.IsPaneOpen = false;
-    }
+
 
     private void IllustrationInfoAndCommentsNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
@@ -285,6 +282,16 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         {
             IllustrationInfoAndCommentsFrame.Navigate(tag.NavigateTo, tag.Parameter, args.RecommendedNavigationTransitionInfo);
         }
+    }
+
+    private void IllustrationInfoAndCommentsSplitView_OnPaneOpened(SplitView sender, object args)
+    {
+        WeakReferenceMessenger.Default.Send(new RefreshDragRegionMessage());
+    }
+
+    private void IllustrationInfoAndCommentsSplitView_OnPaneClosed(SplitView sender, object args)
+    {
+        WeakReferenceMessenger.Default.Send(new RefreshDragRegionMessage());
     }
 
     public async Task<RectInt32[]> SetTitleBarDragRegionAsync(
@@ -317,6 +324,12 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         dragRegionR.Width = (int) rightDragRegionWidth;
         dragRegionR.Height = (int) height;
 
-        return new[] { dragRegionL, dragRegionR };
+        var list = new List<RectInt32>();
+        if (!_viewModel.IsInfoPaneOpen)
+        {
+            list.Add(dragRegionL);
+        }
+        list.Add(dragRegionR);
+        return list.ToArray();
     }
 }

@@ -44,6 +44,11 @@
         <Setter Property="SpinButtonPlacementMode" Value="Compact" />
         <Setter Property="ValidationMode" Value="InvalidInputOverwritten" />
     </Style>
+    <Style x:Key="ListViewItemStretchStyle" TargetType="ListViewItem">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
     <numberFormatting:DecimalFormatter x:Key="IntegerRoundedDecimalFormatter" FractionDigits="0">
         <numberFormatting:DecimalFormatter.NumberRounder>
             <numberFormatting:IncrementNumberRounder Increment="1" RoundingAlgorithm="RoundHalfUp" />
