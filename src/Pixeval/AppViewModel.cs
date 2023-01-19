@@ -137,11 +137,6 @@ public class AppViewModel : AutoActivateObservableRecipient,
         AppHost = CreateHostBuilder().Build();
 
         await AppContext.WriteLogoIcoIfNotExist();
-        CurrentContext.IconPath = await AppContext.GetIconAbsolutePath();
-        CurrentContext.Window = new MainWindow();
-        CurrentContext.Title = AppContext.AppIdentifier;
-
-        AppHelper.Initialize(new SizeInt32(AppSetting.WindowWidth, AppSetting.WindowHeight));
 
         await AppKnownFolders.Temporary.ClearAsync();
         Cache = await FileCache.CreateDefaultAsync();

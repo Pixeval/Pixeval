@@ -27,6 +27,7 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Misc;
 using Pixeval.Options;
+using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.AppManagement;
@@ -207,6 +208,9 @@ public partial record AppSetting
     [DefaultValue(true)]
     [SyntheticSetting]
     public bool ShowExternalCommandBarInIllustratorContentViewer { get; set; }
+
+    [DefaultValue(ApplicationBackdropType.Mica)]
+    public ApplicationBackdropType AppBackdrop { get; set; }
 
     public static AppSetting CreateDefault()
     {

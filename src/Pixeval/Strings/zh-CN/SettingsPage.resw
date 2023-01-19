@@ -137,6 +137,12 @@
   <data name="ApplicationSettingsGroup.Header" xml:space="preserve">
     <value>应用程序相关设置</value>
   </data>
+  <data name="BackdropEntry.Description" xml:space="preserve">
+    <value>该选项将在应用重启后生效</value>
+  </data>
+  <data name="BackdropEntry.Header" xml:space="preserve">
+    <value>应用的背景材质</value>
+  </data>
   <data name="BrowseHistoriesCleared" xml:space="preserve">
     <value>已删除所有的浏览记录</value>
   </data>
