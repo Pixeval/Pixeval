@@ -35,7 +35,7 @@ public sealed class GridIllustrationViewViewModel : SortableIllustrationViewView
 
     private SoftwareBitmapSource? _webQrCodeSource;
 
-    public override IIllustrationViewDataProvider DataProvider { get; set; }
+    public override IIllustrationViewDataProvider DataProvider { get; }
 
     public GridIllustrationViewViewModel()
     {

@@ -35,6 +35,7 @@ using Pixeval.Controls.IllustratorView;
 using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
 using Pixeval.Pages.IllustratorViewer;
+using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using ReverseMarkdown;
 
@@ -71,7 +72,7 @@ public sealed partial class IllustrationInfoPage
         if (_viewModel.UserInfo is { } userInfo)
         {
             ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement)sender);
-            App.AppViewModel.RootFrameNavigate(typeof(IllustratorPage), Tuple.Create((UIElement)sender, new IllustratorViewModel(userInfo)), new SlideNavigationTransitionInfo
+            UIHelper.RootFrameNavigate(typeof(IllustratorPage), Tuple.Create((UIElement)sender, new IllustratorViewModel(userInfo)), new SlideNavigationTransitionInfo
             {
                 Effect = SlideNavigationTransitionEffect.FromRight
             });

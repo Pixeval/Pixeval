@@ -1,0 +1,207 @@
+﻿<!--  Copyright (c) Microsoft Corporation and Contributors.  -->
+<!--  Licensed under the MIT License.  -->
+
+<UserControl x:Class="Pixeval.UserControls.IllustratorContentViewer.IllustratorContentViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:followingUserBadge="using:Pixeval.Controls.FollowingUserBadge"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:premiumUserBadge="using:Pixeval.Controls.PremiumUserBadge"
+             xmlns:recommendIllustratorProfile="using:Pixeval.UserControls.RecommendIllustratorProfile"
+             xmlns:ui="using:CommunityToolkit.WinUI.UI"
+             xmlns:util="using:Pixeval.Util.UI"
+             mc:Ignorable="d">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock x:Uid="/IllustratorContentViewer/RecommendIllustratorsTitle"
+                   Grid.Row="0"
+                   Margin="0,20,0,0"
+                   Style="{StaticResource TitleTextBlockStyle}"
+                   Visibility="{x:Bind ViewModel.ShowRecommendIllustrators, Mode=OneWay}" />
+        <ListView Grid.Row="1"
+                  Height="200"
+                  Padding="0"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Top"
+                  ItemContainerStyle="{StaticResource ListViewItemStretchStyle}"
+                  ItemsSource="{x:Bind ViewModel.RecommendIllustrators, Mode=OneWay}"
+                  ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                  ScrollViewer.HorizontalScrollMode="Enabled"
+                  ScrollViewer.IsHorizontalRailEnabled="True"
+                  SelectionMode="None"
+                  Visibility="{x:Bind ViewModel.ShowRecommendIllustrators, Mode=OneWay}">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="recommendIllustratorProfile:RecommendIllustratorProfileViewModel">
+                    <recommendIllustratorProfile:RecommendIllustratorProfile Margin="5,0"
+                                                                             ui:FrameworkElementExtensions.Cursor="Hand"
+                                                                             ViewModel="{x:Bind Mode=OneWay}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <NavigationView x:Name="IllustratorContentViewerNavigationView"
+                        Grid.Row="2"
+                        IsBackButtonVisible="Collapsed"
+                        IsBackEnabled="False"
+                        IsSettingsVisible="False"
+                        PaneDisplayMode="Top"
+                        SelectionChanged="IllustrationContentViewerNavigationView_OnSelectionChanged">
+            <NavigationView.MenuItems>
+                <NavigationViewItem x:Name="IllustrationTab"
+                                    x:Uid="/IllustratorContentViewer/IllustrationNavigationViewItem"
+                                    Icon="{util:FontIcon Glyph=PictureE8B9}"
+                                    Tag="{x:Bind ViewModel.IllustrationTag, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="/IllustratorContentViewer/MangaNavigationViewItem"
+                                    Icon="{util:FontIcon Glyph=FavoriteListE728}"
+                                    Tag="{x:Bind ViewModel.MangaTag, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="/IllustratorContentViewer/NovelNavigationViewItem"
+                                    Icon="{util:FontIcon Glyph=ReadingModeE736}"
+                                    Tag="{x:Bind ViewModel.NovelTag, Mode=OneWay}" />
+                <NavigationViewItemSeparator />
+                <NavigationViewItem x:Uid="/IllustratorContentViewer/BookmarkedIllustrationAndMangaNavigationViewItem"
+                                    Icon="{util:FontIcon Glyph=LibraryE8F1}"
+                                    Tag="{x:Bind ViewModel.BookmarkedIllustrationAndMangaTag, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="/IllustratorContentViewer/BookmarkedNovelNavigationViewItem"
+                                    Icon="{util:FontIcon Glyph=ReadingListE7BC}"
+                                    Tag="{x:Bind ViewModel.BookmarkedNovelTag, Mode=OneWay}" />
+                <NavigationViewItemSeparator />
+                <NavigationViewItem x:Uid="/IllustratorContentViewer/FollowingUserNavigationViewItem"
+                                    Icon="{util:FontIcon Glyph=PeopleE716}"
+                                    Tag="{x:Bind ViewModel.FollowingUserTag, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="/IllustratorContentViewer/MyPixivUserNavigationViewItem"
+                                    Icon="{util:FontIcon Glyph=PeopleE716}"
+                                    Tag="{x:Bind ViewModel.MyPixivUserTag, Mode=OneWay}" />
+            </NavigationView.MenuItems>
+            <NavigationView.PaneFooter>
+                <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                    <PersonPicture Width="35"
+                                   Height="35"
+                                   ProfilePicture="{x:Bind ViewModel.Avatar, Mode=OneWay}" />
+                    <StackPanel Margin="20,0,0,5"
+                                VerticalAlignment="Center"
+                                Spacing="2">
+                        <TextBlock MaxWidth="80"
+                                   Style="{StaticResource ContentStrongTextBlockStyle}"
+                                   Text="{x:Bind ViewModel.Username, Mode=OneWay}"
+                                   TextTrimming="CharacterEllipsis"
+                                   TextWrapping="NoWrap" />
+                        <StackPanel HorizontalAlignment="Left"
+                                    Orientation="Horizontal"
+                                    Spacing="5">
+                            <premiumUserBadge:PremiumUserBadge Visibility="{x:Bind ViewModel.Premium, Mode=OneWay}" />
+                            <followingUserBadge:FollowingUserBadge Visibility="{x:Bind ViewModel.Following, Mode=OneWay}" />
+                        </StackPanel>
+                    </StackPanel>
+                    <Grid Margin="20,0,0,0" VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <TextBlock x:Uid="/IllustratorContentViewer/UserMetricsFollowingUserTextBlock"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextSecondaryAccentColor}"
+                                       Style="{StaticResource BaseTextBlockStyle}" />
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <ContentControl VerticalAlignment="Center"
+                                                Content="{util:FontIcon Glyph=AddFriendE8FA, FontSize=15}"
+                                                FlowDirection="RightToLeft"
+                                                Foreground="{StaticResource TextSecondaryAccentColor}" />
+                                <TextBlock VerticalAlignment="Top"
+                                           Style="{StaticResource SubtitleTextBlockStyle}"
+                                           Text="{x:Bind ViewModel.Metrics.FollowingCount, Mode=OneWay, FallbackValue=0}" />
+                            </StackPanel>
+                        </StackPanel>
+                        <Rectangle Grid.Column="1"
+                                   Width="1"
+                                   Height="35"
+                                   HorizontalAlignment="Center"
+                                   Fill="#80808080" />
+                        <StackPanel Grid.Column="2"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <TextBlock x:Uid="/IllustratorContentViewer/UserMetricsMyPixivUserTextBlock"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextSecondaryAccentColor}"
+                                       Style="{StaticResource BaseTextBlockStyle}" />
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <ContentControl VerticalAlignment="Center"
+                                                Content="{util:FontIcon Glyph=PeopleE716, MirroredWhenRightToLeft=True, FontSize=15}"
+                                                FlowDirection="RightToLeft"
+                                                Foreground="{StaticResource TextSecondaryAccentColor}" />
+                                <TextBlock VerticalAlignment="Top"
+                                           Style="{StaticResource SubtitleTextBlockStyle}"
+                                           Text="{x:Bind ViewModel.Metrics.MyPixivUsers, Mode=OneWay, FallbackValue=0}" />
+                            </StackPanel>
+                        </StackPanel>
+                        <Rectangle Grid.Column="3"
+                                   Width="1"
+                                   Height="35"
+                                   HorizontalAlignment="Center"
+                                   Fill="#80808080" />
+                        <StackPanel Grid.Column="4"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <TextBlock x:Uid="/IllustratorContentViewer/UserMetricsIllustrationCountTextBlock"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextSecondaryAccentColor}"
+                                       Style="{StaticResource BaseTextBlockStyle}" />
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <ContentControl VerticalAlignment="Center"
+                                                Content="{util:FontIcon Glyph=PictureE8B9, MirroredWhenRightToLeft=True, FontSize=15}"
+                                                FlowDirection="RightToLeft"
+                                                Foreground="{StaticResource TextSecondaryAccentColor}" />
+                                <TextBlock VerticalAlignment="Top"
+                                           Style="{StaticResource SubtitleTextBlockStyle}"
+                                           Text="{x:Bind ViewModel.Metrics.IllustrationCount, Mode=OneWay, FallbackValue=0}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                    <CommandBar Margin="10,0,0,0" OverflowButtonVisibility="Collapsed">
+                        <AppBarButton Width="40"
+                                      Icon="{util:FontIcon Glyph=MoreE712}"
+                                      LabelPosition="Collapsed">
+                            <AppBarButton.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Command="{x:Bind ViewModel.FollowCommand, Mode=OneWay}" />
+                                    <MenuFlyoutItem Command="{x:Bind ViewModel.FollowPrivatelyCommand, Mode=OneWay}" />
+                                    <MenuFlyoutSeparator />
+                                    <ToggleMenuFlyoutItem x:Uid="/IllustratorContentViewer/ToggleShowRecommendIllustratorItem"
+                                                          Icon="{util:FontIcon Glyph=WebcamE8B8}"
+                                                          IsChecked="{x:Bind ViewModel.ShowRecommendIllustrators, Mode=TwoWay}" />
+                                    <ToggleMenuFlyoutItem x:Uid="/IllustratorContentViewer/ToggleShowExternalCommandBarItem"
+                                                          Icon="{util:FontIcon Glyph=CommandPromptE756}"
+                                                          IsChecked="{x:Bind ViewModel.ShowExternalCommandBar, Mode=TwoWay}" />
+                                </MenuFlyout>
+                            </AppBarButton.Flyout>
+                        </AppBarButton>
+                    </CommandBar>
+                </StackPanel>
+            </NavigationView.PaneFooter>
+            <NavigationView.AutoSuggestBox>
+                <AutoSuggestBox x:Uid="/IllustratorContentViewer/NavigationViewAutoSuggestBox"
+                                TextChanged="NavigationViewAutoSuggestBox_OnTextChanged"
+                                Visibility="{x:Bind ViewModel.GetNavigationViewAutoSuggestBoxVisibility(ViewModel.ShowExternalCommandBar), Mode=OneWay}" />
+            </NavigationView.AutoSuggestBox>
+            <Frame x:Name="IllustratorContentViewerFrame" />
+        </NavigationView>
+    </Grid>
+</UserControl>

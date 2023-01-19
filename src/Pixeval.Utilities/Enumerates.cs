@@ -38,6 +38,18 @@ public enum SequenceComparison
 [PublicAPI]
 public static class Enumerates
 {
+    public static TValue GetOrCreate<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TValue> valueFactory)
+    {
+        if (dictionary.TryGetValue(key, out var value))
+        {
+            return value;
+        }
+
+        var v = valueFactory();
+        dictionary.Add(key, v);
+        return v;
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> source)
     {
@@ -85,15 +97,15 @@ public static class Enumerates
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<TResult> SelectNotNull<T, TResult>(this IEnumerable<T> src, Func<T, TResult> selector)
+    public static IEnumerable<TResult> SelectNotNull<T, TResult>(this IEnumerable<T> src, Func<T, TResult?> selector) where TResult : notnull
     {
-        return src.WhereNotNull().Select(selector);
+        return src.WhereNotNull().Select(selector).WhereNotNull();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<TResult> SelectNotNull<T, TResult>(this IEnumerable<T> src, Func<T, object?> keySelector, Func<T, TResult> selector)
+    public static IEnumerable<TResult> SelectNotNull<T, TResult>(this IEnumerable<T> src, Func<T, object?> keySelector, Func<T, TResult> selector) where TResult : notnull
     {
-        return src.WhereNotNull(keySelector).Select(selector);
+        return src.WhereNotNull(keySelector).Select(selector).WhereNotNull();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -41,7 +41,6 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
-using Pixeval.Controls.IllustratorView;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Dialogs;
@@ -69,9 +68,6 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
     // This field contains the view model that the illustration viewer is
     // currently holding if we're navigating back to the MainPage
     private static IllustrationViewModel? _illustrationViewerContent;
-
-    // Similar to the previous field, this field contains a illustrator model
-    private static IllustratorViewModel? _illustratorViewerContent;
 
     private readonly MainPageViewModel _viewModel = new();
 
@@ -207,7 +203,6 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
         using (var scope = App.AppViewModel.AppServicesScope)
         {
             var manager = scope.ServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
-            // TODO distinguish search illustrations, manga, novels, and users.
             if (manager.Count == 0 || manager.Select(count: 1).AsList() is [ { Value: var last }, ..] && last != text)
             {
                 manager.Insert(new SearchHistoryEntry

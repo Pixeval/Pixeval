@@ -9,16 +9,16 @@
                        xmlns:expanderSettingEntry="using:Pixeval.Controls.Setting.UI.ExpanderSettingEntry"
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:misc="using:Pixeval.Pages.Misc"
+                       xmlns:model="using:Pixeval.Controls.Setting.UI.Model"
                        xmlns:pixeval="using:Pixeval"
                        xmlns:setting="using:Pixeval.Controls.Setting.UI"
                        xmlns:settingsGroup="using:Pixeval.Controls.Setting.UI.SettingsGroup"
                        xmlns:singleSelectionSettingEntry="using:Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry"
                        xmlns:sliderSettingEntry="using:Pixeval.Controls.Setting.UI.SliderSettingEntry"
                        xmlns:switchSettingEntry="using:Pixeval.Controls.Setting.UI.SwitchSettingEntry"
+                       xmlns:system="using:System"
                        xmlns:tokenInput="using:Pixeval.UserControls.TokenInput"
                        xmlns:ui="using:Pixeval.Util.UI"
-                       xmlns:model="using:Pixeval.Controls.Setting.UI.Model"
-                       xmlns:system="using:System"
                        Loaded="SettingsPage_OnLoaded"
                        mc:Ignorable="d">
     <Page.Resources>
@@ -165,6 +165,12 @@
                                 <HyperlinkButton x:Uid="/SettingsPage/ThemeEntryDescriptionHyperlinkButton" Tapped="ThemeEntryDescriptionHyperlinkButton_OnTapped" />
                             </singleSelectionSettingEntry:SingleSelectionSettingEntry.Description>
                         </singleSelectionSettingEntry:SingleSelectionSettingEntry>
+
+                        <singleSelectionSettingEntry:SingleSelectionSettingEntry x:Uid="/SettingsPage/BackdropEntry"
+                                                                                 Icon="{ui:FontIcon Glyph=TiltDownE80A}"
+                                                                                 ItemsSource="{x:Bind model:ApplicationBackdropSettingEntryItem.AvailableItems}"
+                                                                                 SelectedItem="{x:Bind _viewModel.AppBackdrop, Mode=TwoWay}"
+                                                                                 Tag="{x:Bind pixeval:SettingsEntry.AppBackdrop}" />
 
                         <expanderSettingEntry:ExpanderSettingEntry x:Uid="/SettingsPage/AppFontFamilyEntry"
                                                                    ContentMargin="35,0"

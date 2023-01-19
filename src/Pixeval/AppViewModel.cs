@@ -20,17 +20,13 @@
 
 using System;
 using System.Threading.Tasks;
-using Windows.Foundation;
 using Windows.Graphics;
-using CommunityToolkit.WinUI;
 using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media.Animation;
-using PInvoke;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Net;
@@ -45,7 +41,6 @@ using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 using Microsoft.UI;
-using DispatcherQueueHandler = Microsoft.UI.Dispatching.DispatcherQueueHandler;
 
 namespace Pixeval;
 
@@ -130,39 +125,9 @@ public class AppViewModel : AutoActivateObservableRecipient,
             };
     }
 
-    public void RootFrameNavigate(Type type, object parameter, NavigationTransitionInfo infoOverride)
-    {
-        AppWindowRootFrame.Navigate(type, parameter, infoOverride);
-    }
-
-    public void RootFrameNavigate(Type type, object parameter)
-    {
-        AppWindowRootFrame.Navigate(type, parameter);
-    }
-
-    public void RootFrameNavigate(Type type)
-    {
-        AppWindowRootFrame.Navigate(type);
-    }
-
     public async Task ShowExceptionDialogAsync(Exception e)
     {
         await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
-    }
-
-    public void DispatchTask(DispatcherQueueHandler action)
-    {
-        CurrentContext.Window.DispatcherQueue.TryEnqueue(action);
-    }
-
-    public Task DispatchTaskAsync(Func<Task> action)
-    {
-        return CurrentContext.Window.DispatcherQueue.EnqueueAsync(action);
-    }
-
-    public Task<T> DispatchTaskAsync<T>(Func<Task<T>> action)
-    {
-        return CurrentContext.Window.DispatcherQueue.EnqueueAsync(action);
     }
 
     public async Task InitializeAsync(bool activatedByProtocol)
@@ -172,11 +137,6 @@ public class AppViewModel : AutoActivateObservableRecipient,
         AppHost = CreateHostBuilder().Build();
 
         await AppContext.WriteLogoIcoIfNotExist();
-        CurrentContext.IconPath = await AppContext.GetIconAbsolutePath();
-        CurrentContext.Window = new MainWindow();
-        CurrentContext.Title = AppContext.AppIdentifier;
-
-        AppHelper.Initialize(new SizeInt32(AppSetting.WindowWidth, AppSetting.WindowHeight));
 
         await AppKnownFolders.Temporary.ClearAsync();
         Cache = await FileCache.CreateDefaultAsync();
@@ -184,33 +144,14 @@ public class AppViewModel : AutoActivateObservableRecipient,
         AppHost.RunAsync().Discard();
     }
 
-    public (int, int) GetAppWindowSizeTuple()
-    {
-        var windowSize = CurrentContext.AppWindow.Size;
-        return (windowSize.Width, windowSize.Height);
-    }
-
-    public Size GetAppWindowSize()
-    {
-        return CurrentContext.AppWindow.Size.ToWinRtSize();
-    }
-
-    public Size GetDpiAwareAppWindowSize()
-    {
-        var dpi = User32.GetDpiForWindow(CurrentContext.HWnd);
-        var size = GetAppWindowSize();
-        var scalingFactor = (float)dpi / 96;
-        return new Size(size.Width / scalingFactor, size.Height / scalingFactor);
-    }
-
     public void PrepareForActivation()
     {
-        ((MainWindow)CurrentContext.Window).ShowProgressRing();
+        ((MainWindow) CurrentContext.Window).ShowProgressRing();
     }
 
     public void ActivationProcessed()
     {
-        ((MainWindow)CurrentContext.Window).HideProgressRing();
+        ((MainWindow) CurrentContext.Window).HideProgressRing();
     }
 
     /// <summary>

@@ -48,7 +48,7 @@ public sealed class JustifiedLayoutIllustrationViewViewModel : IllustrationViewV
         };
     }
 
-    public override IIllustrationViewDataProvider DataProvider { get; set; }
+    public override IIllustrationViewDataProvider DataProvider { get; }
 
     public async Task ShowQrCodeForIllustrationAsync(IllustrationViewModel model)
     {

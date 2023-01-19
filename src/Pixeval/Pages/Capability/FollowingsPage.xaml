@@ -3,51 +3,46 @@
                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                        xmlns:controls="using:Pixeval.Controls"
                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                       xmlns:illustratorView="using:Pixeval.Controls.IllustratorView"
+                       xmlns:illustratorView="using:Pixeval.UserControls.IllustratorView"
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                       xmlns:userControls="using:Pixeval.UserControls"
-                       xmlns:illustrationView="using:Pixeval.UserControls.IllustrationView"
                        ClearCacheAfterNavigation="True"
                        Loaded="FollowingsPage_OnLoaded"
                        mc:Ignorable="d">
-    <Grid Margin="20,40,10,20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <TextBlock x:Uid="/FollowingsPage/TitleTextBlock"
-                   Grid.Row="0"
-                   Style="{StaticResource TitleTextBlockStyle}" />
-        <ScrollViewer Grid.Row="1">
-            <StackPanel Spacing="10">
-                <ItemsRepeater ItemsSource="{x:Bind _viewModel.Illustrators, Mode=OneWay}">
-                    <ItemsRepeater.Layout>
-                        <StackLayout Spacing="10" />
-                    </ItemsRepeater.Layout>
-                    <ItemsRepeater.ItemTemplate>
-                        <DataTemplate x:DataType="illustratorView:IllustratorViewModel">
-                            <illustratorView:IllustratorView HorizontalAlignment="Stretch"
-                                                             IllustratorId="{x:Bind Id}"
-                                                             IllustratorName="{x:Bind Name}"
-                                                             IllustratorPicture="{x:Bind AvatarSource, Mode=OneWay}"
-                                                             Tapped="IllustratorView_OnTapped"
-                                                             ThumbnailSources="{x:Bind Illustrations, Mode=OneWay}"
-                                                             ViewModel="{x:Bind}">
-                                <illustratorView:IllustratorView.ThumbnailItemTemplate>
-                                    <DataTemplate x:DataType="illustrationView:IllustrationViewModel">
-                                        <Image Width="70"
-                                               Height="70"
-                                               HorizontalAlignment="Stretch"
-                                               VerticalAlignment="Stretch"
-                                               Source="{x:Bind ThumbnailSource, Mode=OneWay}"
-                                               Stretch="UniformToFill" />
-                                    </DataTemplate>
-                                </illustratorView:IllustratorView.ThumbnailItemTemplate>
-                            </illustratorView:IllustratorView>
-                        </DataTemplate>
-                    </ItemsRepeater.ItemTemplate>
-                </ItemsRepeater>
-            </StackPanel>
-        </ScrollViewer>
+    <Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="330" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <ListView x:Name="IllustratorListView"
+                      Grid.Column="0"
+                      HorizontalAlignment="Stretch"
+                      ItemsSource="{x:Bind ViewModel.DataProvider.IllustratorsView}"
+                      Loaded="IllustratorListView_OnLoaded"
+                      ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                      SelectionChanged="IllustratorListView_OnSelectionChanged">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="illustratorView:IllustratorViewModel">
+                        <illustratorView:IllustratorProfile Margin="0,5"
+                                                            BorderThickness="1"
+                                                            ViewModel="{x:Bind}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <AppBarSeparator Grid.Column="1" HorizontalAlignment="Center" />
+            <Frame x:Name="IllustratorContentViewerFrame" Grid.Column="2" />
+        </Grid>
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Spacing="20"
+                    Visibility="{x:Bind ViewModel.HasNoItems, Mode=OneWay}">
+            <Image Width="200"
+                   Height="200"
+                   Source="/Assets/Images/empty-box.png" />
+            <TextBlock x:Uid="/FollowingPage/ResultIsEmptyTextBlock"
+                       HorizontalAlignment="Center"
+                       FontSize="{StaticResource PixevalTitleFontSize}" />
+        </StackPanel>
     </Grid>
 </controls:EnhancedPage>

@@ -27,6 +27,7 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Misc;
 using Pixeval.Options;
+using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.AppManagement;
@@ -155,7 +156,7 @@ public partial record AppSetting
     [DefaultValue(false)]
     public bool DownloadUpdateAutomatically { get; set; }
 
-    [DefaultValue("Segoe UI")]
+    [DefaultValue("Microsoft YaHei")]
     public string AppFontFamilyName { get; set; }
 
     [DefaultValue(MainPageTabItem.DailyRecommendation)]
@@ -199,6 +200,17 @@ public partial record AppSetting
 
     [DefaultValue(IllustrationViewOption.Justified)]
     public IllustrationViewOption IllustrationViewOption { get; set; }
+
+    [DefaultValue(true)]
+    [SyntheticSetting]
+    public bool ShowRecommendIllustratorsInIllustratorContentViewer { get; set; }
+
+    [DefaultValue(true)]
+    [SyntheticSetting]
+    public bool ShowExternalCommandBarInIllustratorContentViewer { get; set; }
+
+    [DefaultValue(ApplicationBackdropType.Mica)]
+    public ApplicationBackdropType AppBackdrop { get; set; }
 
     public static AppSetting CreateDefault()
     {

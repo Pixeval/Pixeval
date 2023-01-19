@@ -18,7 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Util.Threading;
+using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download;
 

@@ -30,9 +30,9 @@ using Windows.Storage.Streams;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IO;
 using Pixeval.Download;
-using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using Pixeval.Utilities.Threading;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Util.IO;
@@ -76,7 +76,7 @@ public static partial class IOHelper
     /// progress support
     /// </para>
     /// <remarks>
-    /// A <see cref="CancellationHandle" /> is used instead of <see cref="CancellationToken" />, since this function
+    /// A <see cref="Pixeval.Utilities.Threading.CancellationHandle" /> is used instead of <see cref="CancellationToken" />, since this function
     /// will be called in
     /// such a frequent manner that the default behavior of <see cref="CancellationToken" /> will brings a huge impact
     /// on performance

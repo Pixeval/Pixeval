@@ -22,7 +22,7 @@ using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Database;
-using Pixeval.Util.Threading;
+using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download;
 

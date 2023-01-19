@@ -24,7 +24,7 @@ public class AppWidthDefaultValueProvider : IDefaultValueProvider
 {
     public object ProvideValue()
     {
-        return WinUI3Utilities.WindowHelper.PredetermineEstimatedWindowSize().Width;
+        return WinUI3Utilities.WindowHelper.EstimatedWindowSize().Width;
     }
 }
 
@@ -32,6 +32,6 @@ public class AppHeightDefaultValueProvider : IDefaultValueProvider
 {
     public object ProvideValue()
     {
-        return WinUI3Utilities.WindowHelper.PredetermineEstimatedWindowSize().Height;
+        return WinUI3Utilities.WindowHelper.EstimatedWindowSize().Height;
     }
 }

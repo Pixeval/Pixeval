@@ -43,6 +43,7 @@ using Pixeval.Utilities;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using Windows.Graphics;
+using Pixeval.Util.Threading;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -225,7 +226,7 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         var illustrationViewModel = (IllustrationViewModel) _viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value + 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
-        App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
+        UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
         {
             Effect = SlideNavigationTransitionEffect.FromRight
         });
@@ -236,7 +237,7 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value - 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
-        App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
+        UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
         {
             Effect = SlideNavigationTransitionEffect.FromLeft
         });
@@ -273,10 +274,7 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         App.AppViewModel.AppSetting.DisplayTeachingTipWhenGeneratingAppLink = false;
     }
 
-    private void IllustrationInfoAndCommentsNavigationView_OnBackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
-    {
-        IllustrationInfoAndCommentsSplitView.IsPaneOpen = false;
-    }
+
 
     private void IllustrationInfoAndCommentsNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
@@ -284,6 +282,16 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         {
             IllustrationInfoAndCommentsFrame.Navigate(tag.NavigateTo, tag.Parameter, args.RecommendedNavigationTransitionInfo);
         }
+    }
+
+    private void IllustrationInfoAndCommentsSplitView_OnPaneOpened(SplitView sender, object args)
+    {
+        WeakReferenceMessenger.Default.Send(new RefreshDragRegionMessage());
+    }
+
+    private void IllustrationInfoAndCommentsSplitView_OnPaneClosed(SplitView sender, object args)
+    {
+        WeakReferenceMessenger.Default.Send(new RefreshDragRegionMessage());
     }
 
     public async Task<RectInt32[]> SetTitleBarDragRegionAsync(
@@ -296,7 +304,7 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         ColumnDefinition searchSettingButtonRegion, 
         ColumnDefinition rightDragRegion)
     {
-        await UIHelper.SpinWaitAsync(() => IllustrationViewerCommandBar.ActualHeight == 0);
+        await ThreadingHelper.SpinWaitAsync(() => IllustrationViewerCommandBar.ActualHeight == 0);
         const int leftButtonWidth = 50;
         var scaleFactor = UIHelper.GetScaleAdjustment();
         var point = IllustrationViewerCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
@@ -316,6 +324,12 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         dragRegionR.Width = (int) rightDragRegionWidth;
         dragRegionR.Height = (int) height;
 
-        return new[] { dragRegionL, dragRegionR };
+        var list = new List<RectInt32>();
+        if (!_viewModel.IsInfoPaneOpen)
+        {
+            list.Add(dragRegionL);
+        }
+        list.Add(dragRegionR);
+        return list.ToArray();
     }
 }

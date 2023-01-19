@@ -29,25 +29,26 @@ namespace Pixeval.UserControls.IllustrationView;
 
 public interface IIllustrationViewDataProvider
 {
-    public AdvancedCollectionView IllustrationsView { get; }
-
-    public ObservableCollection<IllustrationViewModel> IllustrationsSource { get; }
-
-    public IFetchEngine<Illustration?>? FetchEngine { get; }
+    /// <summary>
+    /// Avoid using <see cref="AdvancedCollectionView.Filter"/>, if you want to set the filter, use <see cref="Filter"/>
+    /// </summary>
+    AdvancedCollectionView IllustrationsView { get; }
+    
+    ObservableCollection<IllustrationViewModel> IllustrationsSource { get; }
+    
+    IFetchEngine<Illustration?>? FetchEngine { get; }
 
     Predicate<object>? Filter { get; set; }
 
-    public event EventHandler FilterChanged;
+    event EventHandler FilterChanged;
 
     void DisposeCurrent();
 
-    public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; }
+    ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; }
 
     Task<int> LoadMore();
 
     Task<int> FillAsync(int? itemsLimit = null);
-
-    Task<int> FillAsync(IFetchEngine<Illustration?>? fetchEngine, int? itemLimit = null);
 
     Task<int> ResetAndFillAsync(IFetchEngine<Illustration?>? fetchEngine, int? itemLimit = null);
 }

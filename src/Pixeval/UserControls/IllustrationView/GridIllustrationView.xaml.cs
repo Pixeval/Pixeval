@@ -20,6 +20,7 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Core;
 using CommunityToolkit.Mvvm.Messaging;
@@ -35,6 +36,7 @@ using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
 using Pixeval.Util.IO;
+using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using WinUI3Utilities.Attributes;
 
@@ -45,6 +47,8 @@ namespace Pixeval.UserControls.IllustrationView;
 [DependencyProperty<object>("Header")]
 public sealed partial class GridIllustrationView : IIllustrationView
 {
+    private bool _fillClientRequest;
+
     private static readonly ExponentialEase ImageSourceSetEasingFunction = new()
     {
         EasingMode = EasingMode.EaseOut,
@@ -65,6 +69,7 @@ public sealed partial class GridIllustrationView : IIllustrationView
             {
                 ViewModel.DataProvider.IllustrationsView.Refresh();
             }
+            TryFillClientAreaAsync().Discard();
         };
     }
 
@@ -77,7 +82,6 @@ public sealed partial class GridIllustrationView : IIllustrationView
     }
 
     public GridIllustrationViewViewModel ViewModel { get; }
-
 
     public FrameworkElement SelfIllustrationView => this;
 
@@ -134,7 +138,7 @@ public sealed partial class GridIllustrationView : IIllustrationView
             .ToArray();
 
         ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement)sender);
-        App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo());
+        UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo());
     }
 
     private void IllustrationThumbnailContainerItem_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -181,6 +185,33 @@ public sealed partial class GridIllustrationView : IIllustrationView
                 context.ThumbnailSource = null;
                 source.Dispose();
                 break;
+        }
+    }
+
+    public async Task TryFillClientAreaAsync()
+    {
+        if (_fillClientRequest)
+        {
+            return;
+        }
+        _fillClientRequest = true;
+        for (var i = ViewModel.DataProvider.IllustrationsView.Count - 1; i > 0; i--)
+        {
+            var container = IllustrationGridView.ContainerFromIndex(i) as FrameworkElement;
+            if (!(container?.IsFullyOrPartiallyVisible(this) ?? true)) return;
+        }
+
+        var index = ViewModel.DataProvider.IllustrationsView.Count - 1;
+        var acv = ViewModel.DataProvider.IllustrationsView;
+        while (await acv.LoadMoreItemsAsync(20) is { Count: > 0 and var count })
+        {
+            for (var i = index + (int) count; i > index + 1; i--)
+            {
+                var container = IllustrationGridView.ContainerFromIndex(i) as FrameworkElement;
+                if (!(container?.IsFullyOrPartiallyVisible(this) ?? true)) return;
+            }
+
+            index = (int) (index + count);
         }
     }
 

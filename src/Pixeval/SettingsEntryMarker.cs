@@ -187,5 +187,9 @@ public enum SettingsEntry
 
     [SettingsCategory(SettingsEntryCategory.BrowsingExperience)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.IllustrationViewOptionEntryHeader))]
-    IllustrationViewOption
+    IllustrationViewOption,
+
+    [SettingsCategory(SettingsEntryCategory.Application)]
+    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.BackdropEntryHeader))]
+    AppBackdrop,
 }

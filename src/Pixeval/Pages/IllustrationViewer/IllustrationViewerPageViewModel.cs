@@ -115,19 +115,19 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     public IllustrationViewViewModel? ContainerGridViewModel { get; }
 
     /// <summary>
-    ///     The <see cref="IllustrationGrid" /> that owns <see cref="ContainerGridViewModel" />
+    ///     The <see cref="IIllustrationView" /> that owns <see cref="ContainerGridViewModel" />
     /// </summary>
     public IIllustrationView? IllustrationView { get; }
 
     /// <summary>
-    ///     The <see cref="IllustrationViewModelInTheGridView" /> in <see cref="IllustrationGrid" /> that corresponds to
+    ///     The <see cref="IllustrationViewModelInTheGridView" /> in <see cref="IIllustrationView" /> that corresponds to
     ///     current
     ///     <see cref="IllustrationViewerPageViewModel" />
     /// </summary>
     public IllustrationViewModel? IllustrationViewModelInTheGridView { get; }
 
     /// <summary>
-    ///     The index of current illustration in <see cref="IllustrationGrid" />
+    ///     The index of current illustration in <see cref="IIllustrationView" />
     /// </summary>
     public int? IllustrationIndex => ContainerGridViewModel?.DataProvider.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
 

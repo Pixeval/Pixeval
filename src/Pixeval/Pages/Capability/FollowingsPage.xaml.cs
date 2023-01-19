@@ -18,38 +18,91 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
+using System.Linq;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Controls.IllustratorView;
-using Pixeval.Pages.IllustratorViewer;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+using Pixeval.CoreApi.Global.Enum;
+using Pixeval.Messages;
+using Pixeval.UserControls.IllustratorView;
+using CommunityToolkit.WinUI.UI;
+using Pixeval.Pages.Misc;
+using Pixeval.Util;
+using Pixeval.Util.Threading;
 
 namespace Pixeval.Pages.Capability;
 
-public sealed partial class FollowingsPage
+public sealed partial class FollowingsPage : IIllustratorView
 {
-    private readonly FollowingsPageViewModel _viewModel = new();
+    private bool _illustratorListViewLoaded;
 
     public FollowingsPage()
     {
         InitializeComponent();
+        ViewModel = new IllustratorViewViewModel();
     }
 
+    public IllustratorViewViewModel ViewModel { get; }
 
-    private async void FollowingsPage_OnLoaded(object sender, RoutedEventArgs e)
+    public FrameworkElement SelfIllustratorView => this;
+
+    AbstractIllustratorViewViewModel IIllustratorView.ViewModel => ViewModel;
+
+    public ScrollViewer ScrollViewer => IllustratorListView.FindDescendant<ScrollViewer>()!;
+
+    public UIElement? GetItemContainer(IllustratorViewModel viewModel)
     {
-        await _viewModel.LoadFollowings();
+        return IllustratorListView.ContainerFromItem(viewModel) as UIElement;
     }
 
-    private void IllustratorView_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void FollowingsPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (sender is IllustratorView view)
+        if (MainWindow.GetNavigationModeAndReset() is not NavigationMode.Back)
         {
-            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", view.Avatar);
-            App.AppViewModel.RootFrameNavigate(typeof(IllustratorPage), (view.Avatar!, view.ViewModel), new SlideNavigationTransitionInfo
-            {
-                Effect = SlideNavigationTransitionEffect.FromRight
-            });
+            _ = ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public));
         }
+    }
+
+    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
+    {
+        ViewModel.Dispose();
+        if (IllustratorContentViewerFrame.Content is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+    }
+
+    public override void OnPageActivated(NavigationEventArgs e)
+    {
+        WeakReferenceMessenger.Default.Register<FollowingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.ViewModel.DataProvider.FetchEngine?.Cancel());
+    }
+
+    private void IllustratorListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!IllustratorListView.IsLoaded)
+        {
+            return;
+        }
+
+        if (IllustratorListView.SelectedIndex is > 0 and var i && i < ViewModel.DataProvider.IllustratorsSource.Count && IllustratorContentViewerFrame is { } frame)
+        {
+            frame.Navigate(typeof(IllustratorContentViewerPage), ViewModel.DataProvider.IllustratorsSource[i]);
+        }
+    }
+
+    private async void IllustratorListView_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        if (_illustratorListViewLoaded)
+        {
+            return;
+        }
+
+        _illustratorListViewLoaded = true;
+        await ThreadingHelper.SpinWaitAsync(() => !ViewModel.DataProvider.IllustratorsSource.Any() && !ViewModel.HasNoItems);
+        IllustratorListView.SelectedIndex = 0;
+        IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), ViewModel.DataProvider.IllustratorsSource[0]);
     }
 }

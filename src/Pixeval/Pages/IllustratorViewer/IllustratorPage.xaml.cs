@@ -101,7 +101,7 @@ public sealed partial class IllustratorPage
                 break;
         }
 
-        WeakReferenceMessenger.Default.Register<IllustratorPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.ViewModelProvider.ViewModel.DataProvider.FetchEngine?.Cancel());
+        WeakReferenceMessenger.Default.Register<IllustratorPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.ViewModelProvider.ViewModel.DataProvider.FetchEngine?.Cancel());
 
         ChangeSource();
     }
@@ -203,7 +203,7 @@ public sealed partial class IllustratorPage
 
     private void ChangeSource()
     {
-        _ = ViewModelProvider.ViewModel.ResetEngineAndFillAsync(_viewModel!.FetchEngine, 100);
+        // _ = ViewModelProvider.ViewModel.ResetEngineAndFillAsync(_viewModel!.FetchEngine, 100);
     }
 
     private void IllustratorPage_OnSizeChanged(object sender, SizeChangedEventArgs e)

@@ -10,10 +10,6 @@
     </Style>
     <x:Double x:Key="PixevalButtonIconSize">12</x:Double>
     <x:Double x:Key="PixevalButtonIconSmallSize">10</x:Double>
-    <Style x:Key="BodyStrongTextBlockStyle" TargetType="TextBlock">
-        <Setter Property="FontWeight" Value="SemiBold" />
-        <Setter Property="FontSize" Value="14" />
-    </Style>
     <Style x:Key="TitleTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="FontSize" Value="{StaticResource PixevalTitleFontSize}" />
@@ -22,14 +18,22 @@
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="FontSize" Value="{StaticResource PixevalSubtitleFontSize}" />
     </Style>
-    <Style x:Key="BaseTextBlockStyle" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="{StaticResource PixevalBaseFontSize}" />
-    </Style>
     <Style x:Key="ContentTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="{StaticResource PixevalContentFontSize}" />
     </Style>
+    <Style x:Key="ContentStrongTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{StaticResource PixevalContentFontSize}" />
+    </Style>
+    <Style x:Key="BaseTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource PixevalBaseFontSize}" />
+    </Style>
     <Style x:Key="CaptionTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="{StaticResource PixevalCaptionFontSize}" />
+    </Style>
+    <Style x:Key="SubscriptTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{StaticResource PixevalSubscriptFontSize}" />
     </Style>
     <Style x:Key="SettingsNumberBoxStyle" TargetType="NumberBox">
         <Setter Property="Width" Value="200" />
@@ -39,6 +43,11 @@
         <Setter Property="SmallChange" Value="1" />
         <Setter Property="SpinButtonPlacementMode" Value="Compact" />
         <Setter Property="ValidationMode" Value="InvalidInputOverwritten" />
+    </Style>
+    <Style x:Key="ListViewItemStretchStyle" TargetType="ListViewItem">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Padding" Value="0" />
     </Style>
     <numberFormatting:DecimalFormatter x:Key="IntegerRoundedDecimalFormatter" FractionDigits="0">
         <numberFormatting:DecimalFormatter.NumberRounder>

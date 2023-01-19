@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,6 +38,17 @@ namespace Pixeval.CoreApi;
 
 public partial class MakoClient
 {
+    public async Task<PixivRelatedRecommendUsersResponse> GetRelatedRecommendUsersAsync(string uid, int num = 20, int workNum = 3, bool isR18 = true, CultureInfo? lang = null)
+    {
+        var culture = lang ?? CultureInfo.CurrentCulture;
+        EnsureNotCancelled();
+        return (await GetMakoHttpClient(MakoApiKind.WebApi)
+                .GetStringResultAsync($"/ajax/user/{uid}/recommends?userNum={num}&workNum={workNum}&isR18={isR18.ToString().ToLower()}&lang={culture.TwoLetterISOLanguageName}",
+                    message => MakoNetworkException.FromHttpResponseMessageAsync(message, Configuration.Bypass))
+                .ConfigureAwait(false))
+            .GetOrThrow().FromJson<PixivRelatedRecommendUsersResponse>()!;
+    }
+
     /// <summary>
     ///     Gets the detail of an illustration from the illust id
     /// </summary>
@@ -53,11 +65,11 @@ public partial class MakoClient
         return (await Resolve<IAppApiEndPoint>().GetAutoCompletionAsync(new AutoCompletionRequest(word))).Tags!;
     }
 
-    public async Task<UserInfo> GetUserFromIdAsync(string id, TargetFilter targetFilter)
+    public async Task<PixivSingleUserResponse> GetUserFromIdAsync(string id, TargetFilter targetFilter)
     {
         EnsureNotCancelled();
         var result = await Resolve<IAppApiEndPoint>().GetSingleUserAsync(new SingleUserRequest(id, targetFilter.GetDescription())).ConfigureAwait(false);
-        return result.UserEntity!;
+        return result;
     }
 
     /// <summary>

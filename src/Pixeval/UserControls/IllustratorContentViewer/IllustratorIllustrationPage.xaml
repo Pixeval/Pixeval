@@ -1,0 +1,27 @@
+﻿<!--  Copyright (c) Microsoft Corporation and Contributors.  -->
+<!--  Licensed under the MIT License.  -->
+
+<controls:EnhancedPage x:Class="Pixeval.UserControls.IllustratorContentViewer.IllustratorIllustrationPage"
+                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                       xmlns:controls="using:Pixeval.Controls"
+                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                       xmlns:pixeval="using:Pixeval"
+                       xmlns:ui="using:Pixeval.Util.UI"
+                       xmlns:userControls="using:Pixeval.UserControls"
+                       mc:Ignorable="d">
+
+    <userControls:IllustrationContainer x:Name="IllustrationContainer">
+        <userControls:IllustrationContainer.CommandBarElements>
+            <Grid x:Name="SortOptionComboBoxContainer"
+                  VerticalAlignment="Center"
+                  Background="Transparent"
+                  Loaded="SortOptionComboBoxContainer_OnLoaded">
+                <userControls:SortOptionComboBox x:Name="SortOptionComboBox"
+                                                 IsEnabled="{x:Bind ui:UIHelper.GetIllustrationViewSortOptionAvailability(pixeval:App.AppViewModel.AppSetting.IllustrationViewOption)}"
+                                                 SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
+            </Grid>
+        </userControls:IllustrationContainer.CommandBarElements>
+    </userControls:IllustrationContainer>
+</controls:EnhancedPage>

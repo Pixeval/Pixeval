@@ -30,6 +30,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.CoreApi.Model;
 using Pixeval.Download;
 using Pixeval.Popups;
 using Pixeval.Popups.IllustrationResultFilter;
@@ -47,6 +48,7 @@ namespace Pixeval.UserControls.IllustrationView;
 [DependencyProperty<ObservableCollection<ICommandBarElement>>("SecondaryCommandsSupplements", nameof(OnSecondaryCommandsSupplementsChanged), DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
 [DependencyProperty<bool>("IsDefaultCommandsEnabled", nameof(OnIsDefaultCommandsEnabledChanged), DefaultValue = "true")]
 [DependencyProperty<IllustrationViewViewModel>("ViewModel")]
+[DependencyProperty<bool>("ShowDefaultSuggestBox", DefaultValue = "true")]
 public sealed partial class IllustrationViewCommandBar
 {
     private readonly IEnumerable<Control> _defaultCommands;
@@ -71,7 +73,7 @@ public sealed partial class IllustrationViewCommandBar
                     {
                         foreach (UIElement argsNewItem in args.NewItems)
                         {
-                            ExtraCommandsBar.Children.Add(argsNewItem);
+                            ExtraCommandsBar.Children.Insert(ExtraCommandsBar.Children.Count - 1, argsNewItem);
                         }
                     }
 
@@ -294,6 +296,33 @@ public sealed partial class IllustrationViewCommandBar
         {
             var tArr = tags.ToArray();
             return !tArr.Any() || predicates.Aggregate(true, (acc, token) => acc && tArr.Any(token.Match));
+        }
+    }
+
+    private void FastFilterAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+    {
+        PerformSearch(sender.Text);
+    }
+
+    public void PerformSearch(string text)
+    {
+        if (text.IsNullOrBlank())
+        {
+            ViewModel.DataProvider.Filter = null;
+        }
+        else
+        {
+            ViewModel.DataProvider.Filter = o =>
+            {
+                if (o is IllustrationViewModel viewModel)
+                {
+                    return viewModel.Id.Contains(text)
+                           || (viewModel.Illustration.Tags ?? Enumerable.Empty<Tag>()).Any(x => x.Name.Contains(text) || (x.TranslatedName?.Contains(text) ?? false))
+                           || (viewModel.Illustration.Title?.Contains(text) ?? false);
+                }
+
+                return false;
+            };
         }
     }
 }

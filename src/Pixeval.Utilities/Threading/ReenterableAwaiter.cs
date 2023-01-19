@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/ReenterableAwaiter{T}.cs
+// Copyright (c) 2022 Pixeval/ReenterableAwaiter.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,19 +23,17 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Pixeval.Util.Threading;
+namespace Pixeval.Utilities.Threading;
 
-public class ReenterableAwaiter<TResult> : INotifyCompletion
+public class ReenterableAwaiter : INotifyCompletion
 {
     private Action? _continuation;
     private bool _continueOnCapturedContext; // whether the continuation should be posted to the captured SynchronizationContext
     private Exception? _exception;
-    private TResult? _result;
 
-    public ReenterableAwaiter(bool initialSignal, TResult resultInitialSignalIsTrue)
+    public ReenterableAwaiter(bool initialSignal)
     {
         IsCompleted = initialSignal;
-        _result = resultInitialSignalIsTrue;
         _continueOnCapturedContext = true;
     }
 
@@ -57,23 +55,20 @@ public class ReenterableAwaiter<TResult> : INotifyCompletion
         _exception = null;
     }
 
-    public TResult GetResult()
+    public void GetResult()
     {
         if (_exception is not null)
         {
             throw _exception;
         }
-
-        return _result!;
     }
 
     // Signals the awaiter to complete successfully
-    public void SetResult(TResult result)
+    public void SetResult()
     {
         if (!IsCompleted)
         {
             IsCompleted = true;
-            _result = result;
             _continuation?.Invoke();
         }
     }
@@ -108,13 +103,13 @@ public class ReenterableAwaiter<TResult> : INotifyCompletion
         }
     }
 
-    public ReenterableAwaiter<TResult> ConfigureAwait(bool continueOnCapturedContext)
+    public ReenterableAwaiter ConfigureAwait(bool continueOnCapturedContext)
     {
         _continueOnCapturedContext = continueOnCapturedContext;
         return this;
     }
 
-    public ReenterableAwaiter<TResult> GetAwaiter()
+    public ReenterableAwaiter GetAwaiter()
     {
         return this;
     }

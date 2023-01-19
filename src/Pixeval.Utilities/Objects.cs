@@ -202,7 +202,7 @@ public static class Objects
     public static T CastOrThrow<T>(this object? obj)
     {
         // Debugger compliant: NullReferenceException will cause debugger to break, meanwhile the NRE is not supposed to be thrown by developer
-        return (T)(obj ?? throw new InvalidCastException());
+        return (T) (obj ?? throw new InvalidCastException());
     }
 
     public static string Format(this string str, params object?[] args)
@@ -219,7 +219,13 @@ public static class Objects
         return i >= startInclusive && i <= endInclusive;
     }
 
-    public static double CoerceIn(double i, (double, double) range)
+    public static double CoerceIn(this double i, (double, double) range)
+    {
+        var (startInclusive, endInclusive) = range;
+        return Math.Max(startInclusive, Math.Min(i, endInclusive));
+    }
+
+    public static int CoerceIn(this int i, (int, int) range)
     {
         var (startInclusive, endInclusive) = range;
         return Math.Max(startInclusive, Math.Min(i, endInclusive));

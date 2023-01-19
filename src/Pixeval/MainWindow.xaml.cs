@@ -78,11 +78,19 @@ public sealed partial class MainWindow : INavigationModeInfo
 
     private void PixevalAppRootFrame_OnLoaded(object sender, RoutedEventArgs e)
     {
+        WeakReferenceMessenger.Default.Register<MainWindow, RefreshDragRegionMessage>(this, static (recipient, _) =>
+        {
+            if (AppWindowTitleBar.IsCustomizationSupported() && recipient.PixevalAppRootFrame.Content is ISupportCustomTitleBarDragRegion iSupportCustomTitleBarDragRegion)
+            {
+                recipient.SetDragRegionAsync(iSupportCustomTitleBarDragRegion).Discard();
+            }
+        });
         PixevalAppRootFrame.Navigate(typeof(LoginPage));
     }
 
     private void MainWindow_OnClosed(object sender, WindowEventArgs args)
     {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
         AppContext.SaveContext();
     }
 
@@ -143,15 +151,15 @@ public sealed partial class MainWindow : INavigationModeInfo
             case Frame { SourcePageType: var page }:
                 if (page == typeof(MainPage))
                 {
-                    ReverseSearchButton.Visible();
-                    OpenSearchSettingPopupButton.Visible();
-                    KeywordAutoSuggestBox.Visible();
+                    ReverseSearchButton.Show();
+                    OpenSearchSettingPopupButton.Show();
+                    KeywordAutoSuggestBox.Show();
                 }
                 else
                 {
-                    ReverseSearchButton.Invisible();
-                    OpenSearchSettingPopupButton.Invisible();
-                    KeywordAutoSuggestBox.Invisible();
+                    ReverseSearchButton.Collapse();
+                    OpenSearchSettingPopupButton.Collapse();
+                    KeywordAutoSuggestBox.Collapse();
                 }
 
                 break;

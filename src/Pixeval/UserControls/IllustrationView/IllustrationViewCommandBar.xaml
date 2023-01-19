@@ -13,7 +13,14 @@
                     controls:DockPanel.Dock="Left"
                     Background="Transparent"
                     FlowDirection="LeftToRight"
-                    Orientation="Horizontal" />
+                    Orientation="Horizontal">
+            <Grid Margin="10,0,0,0" Visibility="{x:Bind ShowDefaultSuggestBox, Mode=OneWay}">
+                <AutoSuggestBox x:Uid="/IllustrationViewCommandBar/FastFilterAutoSuggestBox"
+                                Width="250"
+                                VerticalAlignment="Center"
+                                TextChanged="FastFilterAutoSuggestBox_OnTextChanged" />
+            </Grid>
+        </StackPanel>
         <CommandBar x:Name="CommandBar"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"

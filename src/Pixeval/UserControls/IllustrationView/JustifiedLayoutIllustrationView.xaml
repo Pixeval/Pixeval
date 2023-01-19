@@ -294,8 +294,8 @@
                     Visibility="{x:Bind ViewModel.HasNoItems, Mode=OneWay}">
             <Image Width="200"
                    Height="200"
-                   Source="../Assets/Images/empty-box.png" />
-            <TextBlock x:Uid="/IllustrationGrid/ResultIsEmptyTextBlock"
+                   Source="/Assets/Images/empty-box.png" />
+            <TextBlock x:Uid="/IllustrationView/ResultIsEmptyTextBlock"
                        HorizontalAlignment="Center"
                        FontSize="{StaticResource PixevalTitleFontSize}" />
         </StackPanel>

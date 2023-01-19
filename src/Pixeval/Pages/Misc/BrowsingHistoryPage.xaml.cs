@@ -59,7 +59,7 @@ public sealed partial class BrowsingHistoryPage : ISortedIllustrationContainerPa
     {
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
         await FetchAndFill();
-        WeakReferenceMessenger.Default.Register<BrowsingHistoryPage, MainPageFrameNavigatingEvent>(this, (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
+        WeakReferenceMessenger.Default.Register<BrowsingHistoryPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
     }
 
     private async Task FetchAndFill()

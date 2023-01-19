@@ -20,7 +20,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Pixeval.Util.Threading;
+using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download;
 

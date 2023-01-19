@@ -22,15 +22,7 @@ using System;
 
 namespace Pixeval.Misc;
 
-public sealed class NavigationViewTag
+public sealed record NavigationViewTag(Type NavigateTo, object? Parameter, int? Index = null)
 {
-    public NavigationViewTag(Type navigateTo, object? parameter)
-    {
-        NavigateTo = navigateTo;
-        Parameter = parameter;
-    }
-
-    public Type NavigateTo { get; }
-
-    public object? Parameter { get; set; }
+    public object? Parameter { get; set; } = Parameter;
 }

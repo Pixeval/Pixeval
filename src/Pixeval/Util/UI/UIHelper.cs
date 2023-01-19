@@ -20,6 +20,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -49,11 +51,79 @@ using WinUI3Utilities;
 using Microsoft.UI.Windowing;
 using Microsoft.UI;
 using System.Runtime.InteropServices;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Processing.Processors.Quantization;
+using Brush = Microsoft.UI.Xaml.Media.Brush;
+using Color = Windows.UI.Color;
+using Image = SixLabors.ImageSharp.Image;
+using Point = Windows.Foundation.Point;
+using Size = Windows.Foundation.Size;
+using PInvoke;
 
 namespace Pixeval.Util.UI;
 
 public static partial class UIHelper
 {
+    /// <summary>
+    /// With higher <paramref name="magnitude"/> you will get brighter color and vice-versa.
+    /// </summary>
+    /// <param name="color"></param>
+    /// <param name="magnitude"></param>
+    /// <returns></returns>
+    public static Color Brighten(this Color color, int magnitude)
+    {
+        const int maxByte = 255;
+
+        magnitude = magnitude.CoerceIn((-255, 255));
+        int red = color.R;
+        int green = color.G;
+        int blue = color.B;
+
+        switch (magnitude)
+        {
+            case < 0:
+            {
+                (red, green, blue) = (red + magnitude, green + magnitude, blue + magnitude);
+                break;
+            }
+            case > 0:
+            {
+                var limit = maxByte - magnitude;
+                (red, green, blue) = ((red + magnitude).CoerceIn((0, limit)), (green + magnitude).CoerceIn((0, limit)), (blue + magnitude).CoerceIn((0, limit)));
+                break;
+            }
+        }
+
+        return Color.FromArgb(color.A, (byte) red, (byte) green, (byte) blue);
+    }
+
+    public static async Task<double> GetImageAspectRatioAsync(Stream stream, bool disposeOfStream = true)
+    {
+        using var image = await Image.LoadAsync(stream);
+        var result = image.Width / (double) image.Height;
+        if (disposeOfStream)
+        {
+            await stream.DisposeAsync();
+        }
+
+        return result;
+    }
+
+    public static async Task<Color> GetDominantColorAsync(Stream stream, bool disposeOfStream = true)
+    {
+        using var image = await Image.LoadAsync<Rgb24>(stream);
+        image.Mutate(x => x
+            .Resize(new ResizeOptions { Sampler = KnownResamplers.NearestNeighbor, Size = new SixLabors.ImageSharp.Size(100, 0) })
+            .Quantize(new OctreeQuantizer(new QuantizerOptions { Dither = null, MaxColors = 1 })));
+        var pixel = image[0, 0];
+        if (disposeOfStream)
+        {
+            await stream.DisposeAsync();
+        }
+        return Color.FromArgb(0xFF, pixel.R, pixel.G, pixel.B);
+    }
+
     public static bool GetIllustrationViewSortOptionAvailability(IllustrationViewOption option)
     {
         return option is IllustrationViewOption.Regular;
@@ -220,12 +290,12 @@ public static partial class UIHelper
         recipient.IsActive = false;
     }
 
-    public static void Invisible(this UIElement element)
+    public static void Collapse(this UIElement element)
     {
         element.Visibility = Visibility.Collapsed;
     }
 
-    public static void Visible(this UIElement element)
+    public static void Show(this UIElement element)
     {
         element.Visibility = Visibility.Visible;
     }
@@ -291,22 +361,7 @@ public static partial class UIHelper
 
     public static Task AwaitPageTransitionAsync<T>(this FrameworkElement root) where T : Page
     {
-        return SpinWaitAsync(() => root.FindDescendant<T>() is null);
-    }
-
-    public static Task SpinWaitAsync(Func<bool> condition)
-    {
-        var tcs = new TaskCompletionSource();
-        Task.Run(async () =>
-        {
-            var spinWait = new SpinWait();
-            while (await App.AppViewModel.DispatchTaskAsync(() => Task.FromResult(condition())))
-            {
-                spinWait.SpinOnce(20);
-            }
-            tcs.SetResult();
-        }).Discard();
-        return tcs.Task;
+        return ThreadingHelper.SpinWaitAsync(() => root.FindDescendant<T>() is null);
     }
 
     [DllImport("Shcore.dll", SetLastError = true)]
@@ -332,7 +387,13 @@ public static partial class UIHelper
             throw new Exception("Could not get DPI for monitor.");
         }
 
-        var scaleFactorPercent = (uint)(((long)dpiX * 100 + (96 >> 1)) / 96);
+        var scaleFactorPercent = (uint) (((long) dpiX * 100 + (96 >> 1)) / 96);
         return scaleFactorPercent / 100.0;
+    }
+    public static Color ParseHexColor(string hex)
+    {
+        var trimmed = !hex.StartsWith('#') ? $"#{hex}" : hex;
+        var color = ColorTranslator.FromHtml(trimmed);
+        return Color.FromArgb(color.A, color.R, color.G, color.B);
     }
 }

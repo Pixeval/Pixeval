@@ -108,6 +108,8 @@
                             Grid.Column="2"
                             VerticalAlignment="Center"
                             AllowDrop="True"
+                            DragOver="KeywordAutoSuggestBox_OnDragOver"
+                            Drop="KeywordAutoSuggestBox_OnDrop"
                             GotFocus="KeywordAutoSuggestBox_GotFocus"
                             IsEnabled="{x:Bind _viewModel.TitleBarSearchBarEnabled, Mode=OneWay}"
                             IsFocusEngaged="False"
@@ -115,8 +117,6 @@
                             ItemsSource="{x:Bind _viewModel.SuggestionProvider.Suggestions, Mode=OneWay}"
                             KeyDown="KeywordAutoSuggestionBox_OnKeyDown"
                             QueryIcon="Find"
-                            DragOver="KeywordAutoSuggestBox_OnDragOver"
-                            Drop="KeywordAutoSuggestBox_OnDrop"
                             QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
                             SuggestionChosen="KeywordAutoSuggestBox_OnSuggestionChosen"
                             TextChanged="KeywordAutoSuggestBox_OnTextChanged">
@@ -146,7 +146,7 @@
                     VerticalAlignment="Center"
                     Background="Transparent"
                     BorderThickness="0"
-                    Content="{ui:FontIcon Glyph=SettingE713, FontSize=13}"
+                    Content="{ui:FontIcon Glyph=SettingsE713, FontSize=13}"
                     Tapped="OpenSearchSettingPopupButton_OnTapped" />
         </Grid>
         <Grid>

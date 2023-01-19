@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/AsyncHelper.cs
+// Copyright (c) 2023 Pixeval/RefreshDragRegionMessage.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,25 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Threading.Tasks;
-using Windows.Foundation;
+namespace Pixeval.Messages;
 
-namespace Pixeval.Util.Threading;
-
-public static class AsyncHelper
-{
-    public static void Discard<T>(this IAsyncOperation<T> _)
-    {
-        // nop
-    }
-
-    public static void Discard(this IAsyncAction _)
-    {
-        // nop
-    }
-
-    public static void Discard(this Task _)
-    {
-        // nop
-    }
-}
+public record RefreshDragRegionMessage;

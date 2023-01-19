@@ -20,11 +20,15 @@
 
 using System;
 using System.Linq;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
 using Pixeval.AppManagement;
+using Pixeval.Messages;
+using Windows.Graphics;
+using Pixeval.Options;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
@@ -69,6 +73,26 @@ public partial class App
 
         Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSetting.AppFontFamilyName);
         await AppKnownFolders.InitializeAsync();
+
+        CurrentContext.IconPath = await AppContext.GetIconAbsolutePath();
+        CurrentContext.Window = new MainWindow();
+        CurrentContext.Title = AppContext.AppIdentifier;
+
+        AppHelper.Initialize(new SizeInt32(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight), AppViewModel.AppSetting.AppBackdrop switch
+        {
+            ApplicationBackdropType.None => BackdropHelper.BackdropType.None,
+            ApplicationBackdropType.Acrylic => BackdropHelper.BackdropType.Acrylic,
+            ApplicationBackdropType.Mica => BackdropHelper.BackdropType.Mica,
+            ApplicationBackdropType.MicaAlt => BackdropHelper.BackdropType.MicaAlt,
+            _ => throw new ArgumentOutOfRangeException()
+        });
+
         await AppViewModel.InitializeAsync(isProtocolActivated);
+    }
+
+    public static void ExitWithPushNotification()
+    {
+        WeakReferenceMessenger.Default.Send(new ApplicationExitingMessage());
+        CurrentContext.App.Exit();
     }
 }

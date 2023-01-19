@@ -31,6 +31,7 @@ using Windows.Storage.Streams;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Utilities;
+using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download;
 
@@ -193,7 +194,7 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
                 catch (Exception e)
                 {
                     Functions.IgnoreException(() => File.Delete(task.Destination));
-                    App.AppViewModel.DispatchTask(() => task.ErrorCause = e);
+                    ThreadingHelper.DispatchTask(() => task.ErrorCause = e);
                     SetState(task, DownloadState.Error);
                     task.Completion.SetException(e);
                 }
@@ -205,7 +206,7 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
                 Functions.IgnoreException(() => File.Delete(task.Destination));
                 if (exception is not OperationCanceledException && exception is not null)
                 {
-                    App.AppViewModel.DispatchTask(() => task.ErrorCause = exception);
+                    ThreadingHelper.DispatchTask(() => task.ErrorCause = exception);
                     SetState(task, DownloadState.Error);
                     task.Completion.SetException(exception);
                 }
@@ -216,6 +217,6 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
 
     private static void SetState(TDownloadTask task, DownloadState state)
     {
-        App.AppViewModel.DispatchTask(() => task.CurrentState = state);
+        ThreadingHelper.DispatchTask(() => task.CurrentState = state);
     }
 }

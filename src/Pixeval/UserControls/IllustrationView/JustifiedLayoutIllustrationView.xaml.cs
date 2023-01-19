@@ -26,6 +26,8 @@ namespace Pixeval.UserControls.IllustrationView;
 
 public sealed partial class JustifiedLayoutIllustrationView : IIllustrationView
 {
+    private bool _fillClientRequest;
+
     private static readonly ExponentialEase ImageSourceSetEasingFunction = new()
     {
         EasingMode = EasingMode.EaseOut,
@@ -57,7 +59,7 @@ public sealed partial class JustifiedLayoutIllustrationView : IIllustrationView
         {
             IllustrationJustifiedListView.Filter = sender as Predicate<object>;
             IllustrationJustifiedListView.RecomputeLayout();
-            IllustrationJustifiedListView.FillListViewAsync().Discard();
+            TryFillClientAreaAsync().Discard();
         };
     }
     
@@ -90,7 +92,17 @@ public sealed partial class JustifiedLayoutIllustrationView : IIllustrationView
             .ToArray();
 
         ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement) sender);
-        App.AppViewModel.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo());
+        UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo());
+    }
+
+    public async Task TryFillClientAreaAsync()
+    {
+        if (_fillClientRequest)
+        {
+            return;
+        }
+        _fillClientRequest = true;
+        while (IllustrationJustifiedListView.Children.All(c => c.IsFullyOrPartiallyVisible(this)) && await IllustrationJustifiedListView.RequestLoadMoreAsync() > 0) { }
     }
 
     public UIElement? GetItemContainer(IllustrationViewModel viewModel)

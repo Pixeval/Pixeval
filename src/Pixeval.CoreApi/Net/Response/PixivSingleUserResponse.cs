@@ -24,7 +24,7 @@ using Pixeval.CoreApi.Model;
 namespace Pixeval.CoreApi.Net.Response;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
-internal class PixivSingleUserResponse
+public class PixivSingleUserResponse
 {
     [JsonPropertyName("user")]
     public UserInfo? UserEntity { get; set; }
