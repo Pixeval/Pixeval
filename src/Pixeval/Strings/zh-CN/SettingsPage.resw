@@ -165,7 +165,7 @@
     <value>下载路径宏</value>
   </data>
   <data name="DefaultSearchSortOptionEntry.Description" xml:space="preserve">
-    <value>在使用侧边栏关键字搜索插画时的默认排序策略</value>
+    <value>在搜索插画时的默认排序策略</value>
   </data>
   <data name="DefaultSearchSortOptionEntry.Header" xml:space="preserve">
     <value>默认排序方式</value>

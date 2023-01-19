@@ -23,14 +23,30 @@ using Pixeval.Attributes;
 
 namespace Pixeval;
 
+public class SettingsMetadata : Attribute
+{
+    public SettingEntryCategory Category { get; }
+
+    public Type ResourceLoaderType { get; }
+
+    public string LocalizedResourceKey { get; }
+
+    public SettingsMetadata(SettingEntryCategory category, Type resourceLoaderType, string localizedResourceKey)
+    {
+        Category = category;
+        ResourceLoaderType = resourceLoaderType;
+        LocalizedResourceKey = localizedResourceKey;
+    }
+}
+
 // This file contains utilities to be used in the global search system to allow user to search and navigate to setting entries directly in the search bar
 // see Pixeval.Pages.SuggestionStateMachine.MatchSettings()
 
 public class SettingsCategory : Attribute
 {
-    public SettingsEntryCategory Category { get; }
+    public SettingEntryCategory Category { get; }
 
-    public SettingsCategory(SettingsEntryCategory category)
+    public SettingsCategory(SettingEntryCategory category)
     {
         Category = category;
     }
@@ -42,154 +58,163 @@ public class SettingsCategory : Attribute
     {
         return Category switch
         {
-            SettingsEntryCategory.Version => SettingsPageResources.VersionSettingsGroupHeader,
-            SettingsEntryCategory.Session => SettingsPageResources.SessionSettingsGroupHeader,
-            SettingsEntryCategory.Application => SettingsPageResources.ApplicationSettingsGroupHeader,
-            SettingsEntryCategory.BrowsingExperience => SettingsPageResources.BrowsingExperienceSettingsGroupHeader,
-            SettingsEntryCategory.Search => SettingsPageResources.SearchSettingsGroupHeader,
-            SettingsEntryCategory.Download => SettingsPageResources.DownloadSettingsGroupHeader,
-            SettingsEntryCategory.Misc => SettingsPageResources.MiscSettingsGroupHeader,
+            SettingEntryCategory.Version => SettingsPageResources.VersionSettingsGroupHeader,
+            SettingEntryCategory.Session => SettingsPageResources.SessionSettingsGroupHeader,
+            SettingEntryCategory.Application => SettingsPageResources.ApplicationSettingsGroupHeader,
+            SettingEntryCategory.BrowsingExperience => SettingsPageResources.BrowsingExperienceSettingsGroupHeader,
+            SettingEntryCategory.Search => SettingsPageResources.SearchSettingsGroupHeader,
+            SettingEntryCategory.Download => SettingsPageResources.DownloadSettingsGroupHeader,
+            SettingEntryCategory.Misc => SettingsPageResources.MiscSettingsGroupHeader,
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 }
 
-public enum SettingsEntryCategory
+public enum SettingEntryCategory
 {
     Version, Session, Application, BrowsingExperience, Search, Download, Misc
 }
 
+public partial record SettingEntry(SettingEntryCategory Category, string DisplayString)
+{
+    public static readonly SettingEntry AutoUpdate = new(SettingEntryCategory.Version, SettingsPageResources.DownloadUpdateAutomaticallyEntryHeader);
+
+    public static readonly SettingEntry SignOut = new(SettingEntryCategory.Session, SettingsPageResources.SignOutEntryHeader);
+
+    public static readonly SettingEntry ResetSettings = new(SettingEntryCategory.Session, SettingsPageResources.ResetDefaultSettingsEntryHeader);
+}
+
 public enum SettingsEntry
 {
-    [SettingsCategory(SettingsEntryCategory.Version)]
+    [SettingsCategory(SettingEntryCategory.Version)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.DownloadUpdateAutomaticallyEntryHeader))]
     AutoUpdate,
 
-    [SettingsCategory(SettingsEntryCategory.Session)]
+    [SettingsCategory(SettingEntryCategory.Session)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.SignOutEntryHeader))]
     SignOut,
 
-    [SettingsCategory(SettingsEntryCategory.Session)]
+    [SettingsCategory(SettingEntryCategory.Session)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.ResetDefaultSettingsEntryHeader))]
     ResetSettings,
 
-    [SettingsCategory(SettingsEntryCategory.Application)]
+    [SettingsCategory(SettingEntryCategory.Application)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.ThemeEntryHeader))]
     AppTheme,
 
-    [SettingsCategory(SettingsEntryCategory.Application)]
+    [SettingsCategory(SettingEntryCategory.Application)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.AppFontFamilyEntryHeader))]
     Font,
 
-    [SettingsCategory(SettingsEntryCategory.Application)]
+    [SettingsCategory(SettingEntryCategory.Application)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.DisableDomainFrontingEntryHeader))]
     DomainFronting,
 
-    [SettingsCategory(SettingsEntryCategory.Application)]
+    [SettingsCategory(SettingEntryCategory.Application)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.UseFileCacheEntryHeader))]
     FileCache,
 
-    [SettingsCategory(SettingsEntryCategory.Application)]
+    [SettingsCategory(SettingEntryCategory.Application)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.GenerateHelpLinkEntryHeader))]
     GenerateHelpLink,
 
-    [SettingsCategory(SettingsEntryCategory.Application)]
+    [SettingsCategory(SettingEntryCategory.Application)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSelectedTabEntryHeader))]
     DefaultTab,
 
-    [SettingsCategory(SettingsEntryCategory.BrowsingExperience)]
+    [SettingsCategory(SettingEntryCategory.BrowsingExperience)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.ThumbnailDirectionEntryHeader))]
     ThumbnailDirection,
 
-    [SettingsCategory(SettingsEntryCategory.BrowsingExperience)]
+    [SettingsCategory(SettingEntryCategory.BrowsingExperience)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.FiltrateRestrictedContentEntryHeader))]
     FilterSensContent,
 
-    [SettingsCategory(SettingsEntryCategory.BrowsingExperience)]
+    [SettingsCategory(SettingEntryCategory.BrowsingExperience)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.TargetAPIPlatformEntryHeader))]
     ApiPlatform,
 
-    [SettingsCategory(SettingsEntryCategory.Search)]
+    [SettingsCategory(SettingEntryCategory.Search)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.ReverseSearchResultSimilarityThresholdEntryHeader))]
     ReverseSearchThreshold,
 
-    [SettingsCategory(SettingsEntryCategory.Search)]
+    [SettingsCategory(SettingEntryCategory.Search)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.ReverseSearchApiKeyEntryHeader))]
     ReverseSearchApiKey,
 
-    [SettingsCategory(SettingsEntryCategory.Search)]
+    [SettingsCategory(SettingEntryCategory.Search)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumSearchHistoryRecordsEntryHeader))]
     SearchHistoryLimit,
 
-    [SettingsCategory(SettingsEntryCategory.Search)]
+    [SettingsCategory(SettingEntryCategory.Search)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumSuggestionBoxSearchHistoryEntryHeader))]
     SearchBoxHistoryLimit,
 
-    [SettingsCategory(SettingsEntryCategory.Search)]
+    [SettingsCategory(SettingEntryCategory.Search)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchSortOptionEntryHeader))]
     DefaultSortOption,
 
-    [SettingsCategory(SettingsEntryCategory.Search)]
+    [SettingsCategory(SettingEntryCategory.Search)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader))]
     DefaultTagMatchPolicy,
 
-    [SettingsCategory(SettingsEntryCategory.Search)]
+    [SettingsCategory(SettingEntryCategory.Search)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumSearchPageLimitHeader))]
     MaxSearchPages,
 
-    [SettingsCategory(SettingsEntryCategory.Search)]
+    [SettingsCategory(SettingEntryCategory.Search)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.SearchStartsFromEntryHeader))]
     SearchStartsFrom,
 
-    [SettingsCategory(SettingsEntryCategory.Search)]
+    [SettingsCategory(SettingEntryCategory.Search)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.SearchDurationEntryHeader))]
     SearchRange,
 
-    [SettingsCategory(SettingsEntryCategory.Search)]
+    [SettingsCategory(SettingEntryCategory.Search)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.UsePreciseRangeForSearchEntryHeader))]
     UsePreciseSearchRange,
 
-    [SettingsCategory(SettingsEntryCategory.Download)]
+    [SettingsCategory(SettingEntryCategory.Download)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumDownloadHistoryRecordsEntryHeader))]
     DownloadHistoryLimit,
 
-    [SettingsCategory(SettingsEntryCategory.Download)]
+    [SettingsCategory(SettingEntryCategory.Download)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.OverwriteDownloadedFileEntryHeader))]
     OverwriteDownloadedFile,
 
-    [SettingsCategory(SettingsEntryCategory.Download)]
+    [SettingsCategory(SettingEntryCategory.Download)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.MaxDownloadConcurrencyLevelEntryHeader))]
     MaximumParallelism,
 
-    [SettingsCategory(SettingsEntryCategory.Download)]
+    [SettingsCategory(SettingEntryCategory.Download)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultDownloadPathMacroEntryHeader))]
     DefaultDownloadPath,
 
-    [SettingsCategory(SettingsEntryCategory.Misc)]
+    [SettingsCategory(SettingEntryCategory.Misc)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.SpotlightSearchPageLimitEntryHeader))]
     SpotlightSearchPageLimit,
 
-    [SettingsCategory(SettingsEntryCategory.Misc)]
+    [SettingsCategory(SettingEntryCategory.Misc)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.RecommendationItemLimitEntryHeader))]
     RecommendationResultLimit,
 
-    [SettingsCategory(SettingsEntryCategory.Misc)]
+    [SettingsCategory(SettingEntryCategory.Misc)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumBrowseHistoryRecordsEntryHeader))]
     BrowseHistoryLimit,
 
-    [SettingsCategory(SettingsEntryCategory.Misc)]
+    [SettingsCategory(SettingEntryCategory.Misc)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.ImageMirrorServerEntryHeader))]
     ImageMirrorServer,
 
-    [SettingsCategory(SettingsEntryCategory.Misc)]
+    [SettingsCategory(SettingEntryCategory.Misc)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.PreloadRowsEntryHeader))]
     PreloadRows,
 
-    [SettingsCategory(SettingsEntryCategory.BrowsingExperience)]
+    [SettingsCategory(SettingEntryCategory.BrowsingExperience)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.IllustrationViewOptionEntryHeader))]
     IllustrationViewOption,
 
-    [SettingsCategory(SettingsEntryCategory.Application)]
+    [SettingsCategory(SettingEntryCategory.Application)]
     [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.BackdropEntryHeader))]
     AppBackdrop,
 }
