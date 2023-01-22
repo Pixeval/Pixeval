@@ -38,11 +38,16 @@ public static class SyntaxHelper
 
     public static string FullQualifiedName(this SemanticModel semModel, INamedTypeSymbol sym)
     {
-        return sym.ContainingType is null ? $"{sym.ContainingNamespace}.{sym.Name}" : $"{semModel.FullQualifiedName(sym.ContainingType)}.{sym.Name}";
+        return sym.ContainingType is null ? $"global::{sym.ContainingNamespace}.{sym.Name}" : $"{semModel.FullQualifiedName(sym.ContainingType)}.{sym.Name}";
     }
 
     public static bool HasAttribute(this MemberDeclarationSyntax mds, SemanticModel semanticModel, string attributeFqName)
     {
         return mds.AttributeLists.Any(als => als.Attributes.Any(attr => semanticModel.FullQualifiedName(attr) == attributeFqName));
+    }
+
+    public static AttributeSyntax? GetAttribute(this MemberDeclarationSyntax mds, SemanticModel semanticModel, string attributeFqName)
+    {
+        return mds.AttributeLists.SelectMany(t => t.Attributes).FirstOrDefault(attr => semanticModel.FullQualifiedName(attr) == attributeFqName);
     }
 }

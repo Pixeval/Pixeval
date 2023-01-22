@@ -18,10 +18,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxKind;
 
 namespace Pixeval.SourceGen
 {
@@ -31,41 +37,73 @@ namespace Pixeval.SourceGen
         private const string SettingPOCOAttributeFqName = "Pixeval.Attributes.SettingPOCO";
         private const string SyntheticSettingAttributeFqName = "Pixeval.Attributes.SyntheticSetting";
         private const string SettingMetadataAttributeFqName = "Pixeval.Attributes.SettingMetadata";
+        private const string SettingEntryFqName = "global::Pixeval.SettingEntry";
+
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
             var classDeclaration = context.SyntaxProvider.CreateSyntaxProvider(
                 predicate: static (node, _) => node is (ClassDeclarationSyntax { AttributeLists.Count: > 0 } or RecordDeclarationSyntax { AttributeLists.Count: > 0 }),
                 transform: static (ctx, _) =>
                 {
-                    var rds = (TypeDeclarationSyntax) ctx.Node;
-                    return rds.TakeIf(r => r.HasAttribute(ctx.SemanticModel, SettingPOCOAttributeFqName));
-                }).Where(s => s is not null).Collect();
+                    var tds = (TypeDeclarationSyntax) ctx.Node;
+                    (TypeDeclarationSyntax, IEnumerable<(PropertyDeclarationSyntax, AttributeSyntax?)>)? tuple = tds.HasAttribute(ctx.SemanticModel, SettingPOCOAttributeFqName)
+                        ? (tds, tds.Members.OfType<PropertyDeclarationSyntax>().Where(pds => !pds.HasAttribute(ctx.SemanticModel, SyntheticSettingAttributeFqName) && pds.HasAttribute(ctx.SemanticModel, SettingMetadataAttributeFqName))
+                            .Select(property => (property, property.GetAttribute(ctx.SemanticModel, SettingMetadataAttributeFqName)))
+                            .Where(tuple => tuple.Item2 is not null))!
+                        : null;
+                    return tuple;
+                }).Where(s => s.HasValue).Select((n, _) => n!.Value).Collect();
             context.RegisterSourceOutput(classDeclaration, (ctx, array) =>
             {
-                if (array is [{ } tds])
+                switch (array)
                 {
-                    const string classBegin = """
-                    public partial record SettingEntry  
-                    {
-                    """;
-                    const string classEnd = "}";
+                    case [var (_, attributeDeclarationSyntaxList)]:
+                        const string classBegin = """
+                            using Pixeval;
 
-                    var members = tds.Members.OfType<PropertyDeclarationSyntax>().Where(pds => !pds.HasAttribute());
-                    Debugger.Break();
-                } 
-                else if (array.Where(c => c is not null).ToArray() is [ { } _, ..] arr)
-                {
-                    foreach (var typeDeclarationSyntax in arr)
-                    {
-                        ctx.ReportDiagnostic(
-                            Diagnostic.Create(new DiagnosticDescriptor(
-                                "PSG0001",
-                                "There should be only one [SettingPOCO] in an assembly",
-                                "There should be only one [SettingPOCO] in an assembly",
-                                "SourceGen",
-                                DiagnosticSeverity.Error,
-                                true), typeDeclarationSyntax!.GetLocation()));
-                    }
+                            public partial record SettingEntry  
+                            {   
+
+                            """;
+
+                        const string classEnd = """
+
+                            }
+                            """;
+                        var whitespaceTrivia = SyntaxTriviaList.Create(SyntaxTrivia(WhitespaceTrivia, " "));
+                        var entries = attributeDeclarationSyntaxList.Select(tuple =>
+                        {
+                            var (property, attribute) = tuple;
+                            var ctor = ImplicitObjectCreationExpression(ArgumentList(
+                                SeparatedList(attribute!.ArgumentList!.Arguments.Indexed().Select(t => t is (var arg, 0) ? Argument(arg.Expression) : Argument(t.Item1.Expression).WithLeadingTrivia(whitespaceTrivia)))), null);
+                            return FieldDeclaration(
+                                new SyntaxList<AttributeListSyntax>(),
+                                new SyntaxTokenList(
+                                    Token(PublicKeyword),
+                                    Token(whitespaceTrivia, StaticKeyword, SyntaxTriviaList.Empty),
+                                    Token(whitespaceTrivia, ReadOnlyKeyword, whitespaceTrivia)),
+                                VariableDeclaration(
+                                    ParseTypeName(SettingEntryFqName),
+                                    SeparatedList(new[] { VariableDeclarator(property.Identifier, null, EqualsValueClause(Token(SyntaxTriviaList.Empty, EqualsToken, whitespaceTrivia), ctor))
+                                        .WithLeadingTrivia(whitespaceTrivia) })));
+                        });
+                        var str = classBegin + string.Join("\n\n", entries.Select(entry => $"    {entry.GetText()}")) + classEnd;
+                        ctx.AddSource("SettingEntry.g.cs", str);
+                        break;
+                    case [ { } _, ..] arr:
+                        foreach (var (typeDeclarationSyntax, _) in arr)
+                        {
+                            ctx.ReportDiagnostic(
+                                Diagnostic.Create(new DiagnosticDescriptor(
+                                    "PSG0001",
+                                    "There should be only one [SettingPOCO] in an assembly",
+                                    "There should be only one [SettingPOCO] in an assembly",
+                                    "SourceGen",
+                                    DiagnosticSeverity.Error,
+                                    true), typeDeclarationSyntax.GetLocation()));
+                        }
+
+                        break;
                 }
             });
         }

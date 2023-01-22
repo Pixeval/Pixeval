@@ -23,22 +23,6 @@ using Pixeval.Attributes;
 
 namespace Pixeval;
 
-public class SettingsMetadata : Attribute
-{
-    public SettingEntryCategory Category { get; }
-
-    public Type ResourceLoaderType { get; }
-
-    public string LocalizedResourceKey { get; }
-
-    public SettingsMetadata(SettingEntryCategory category, Type resourceLoaderType, string localizedResourceKey)
-    {
-        Category = category;
-        ResourceLoaderType = resourceLoaderType;
-        LocalizedResourceKey = localizedResourceKey;
-    }
-}
-
 // This file contains utilities to be used in the global search system to allow user to search and navigate to setting entries directly in the search bar
 // see Pixeval.Pages.SuggestionStateMachine.MatchSettings()
 
@@ -75,13 +59,13 @@ public enum SettingEntryCategory
     Version, Session, Application, BrowsingExperience, Search, Download, Misc
 }
 
-public partial record SettingEntry(SettingEntryCategory Category, string DisplayString)
+public partial record SettingEntry(SettingEntryCategory Category, Type ResourceType, string ResourceKey)
 {
-    public static readonly SettingEntry AutoUpdate = new(SettingEntryCategory.Version, SettingsPageResources.DownloadUpdateAutomaticallyEntryHeader);
+    public static readonly SettingEntry AutoUpdate = new(SettingEntryCategory.Version, typeof(SettingsPageResources), nameof(SettingsPageResources.DownloadUpdateAutomaticallyEntryHeader));
 
-    public static readonly SettingEntry SignOut = new(SettingEntryCategory.Session, SettingsPageResources.SignOutEntryHeader);
+    public static readonly SettingEntry SignOut = new(SettingEntryCategory.Session, typeof(SettingsPageResources), nameof(SettingsPageResources.SignOutEntryHeader));
 
-    public static readonly SettingEntry ResetSettings = new(SettingEntryCategory.Session, SettingsPageResources.ResetDefaultSettingsEntryHeader);
+    public static readonly SettingEntry ResetSettings = new(SettingEntryCategory.Session, typeof(SettingsPageResources), nameof(SettingsPageResources.ResetDefaultSettingsEntryHeader));
 }
 
 public enum SettingsEntry

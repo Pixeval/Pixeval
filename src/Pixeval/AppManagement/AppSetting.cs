@@ -45,7 +45,7 @@ public partial record AppSetting
     ///     The Application Theme
     /// </summary>
     [DefaultValue(ApplicationTheme.SystemDefault)]
-    [SettingsMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.ThemeEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.ThemeEntryHeader))]
     public ApplicationTheme Theme { get; set; }
 
     /// <summary>
@@ -53,7 +53,7 @@ public partial record AppSetting
     ///     in the searching results, including R-18 and R-18G
     /// </summary>
     [DefaultValue(false)]
-    [SettingsMetadata(SettingEntryCategory.BrowsingExperience, typeof(SettingsPageResources), nameof(SettingsPageResources.FiltrateRestrictedContentEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.BrowsingExperience, typeof(SettingsPageResources), nameof(SettingsPageResources.FiltrateRestrictedContentEntryHeader))]
     public bool FiltrateRestrictedContent { get; set; }
 
     /// <summary>
@@ -63,7 +63,7 @@ public partial record AppSetting
     /// </summary>
     [DefaultValue(false)]
     [SettingsViewModelExclusion]
-    [SettingsMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.DisableDomainFrontingEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.DisableDomainFrontingEntryHeader))]
     public bool DisableDomainFronting { get; set; }
 
     /// <summary>
@@ -71,28 +71,28 @@ public partial record AppSetting
     ///     different orders will use this as its default value
     /// </summary>
     [DefaultValue(IllustrationSortOption.DoNotSort)]
-    [SettingsMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchSortOptionEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchSortOptionEntryHeader))]
     public IllustrationSortOption DefaultSortOption { get; set; }
 
     /// <summary>
     ///     The tag match option for keyword search
     /// </summary>
     [DefaultValue(SearchTagMatchOption.PartialMatchForTags)]
-    [SettingsMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSearchTagMatchOptionEntryHeader))]
     public SearchTagMatchOption TagMatchOption { get; set; }
 
     /// <summary>
     ///     The target filter that indicates the type of the client
     /// </summary>
     [DefaultValue(TargetFilter.ForAndroid)]
-    [SettingsMetadata(SettingEntryCategory.BrowsingExperience, typeof(SettingsPageResources), nameof(SettingsPageResources.TargetAPIPlatformEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.BrowsingExperience, typeof(SettingsPageResources), nameof(SettingsPageResources.TargetAPIPlatformEntryHeader))]
     public TargetFilter TargetFilter { get; set; }
 
     /// <summary>
     ///     How many rows to be preloaded in illustration grid
     /// </summary>
     [DefaultValue(2)]
-    [SettingsMetadata(SettingEntryCategory.Misc, typeof(SettingsPageResources), nameof(SettingsPageResources.PreloadRowsEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Misc, typeof(SettingsPageResources), nameof(SettingsPageResources.PreloadRowsEntryHeader))]
     public int PreLoadRows { get; set; }
 
     /// <summary>
@@ -100,14 +100,14 @@ public partial record AppSetting
     ///     keyword search(30 entries per page)
     /// </summary>
     [DefaultValue(100)]
-    [SettingsMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumSearchPageLimitHeader))]
+    [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumSearchPageLimitHeader))]
     public int PageLimitForKeywordSearch { get; set; }
 
     /// <summary>
     ///     Indicates the starting page's number of keyword search
     /// </summary>
     [DefaultValue(1)]
-    [SettingsMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.SearchStartsFromEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.SearchStartsFromEntryHeader))]
     public int SearchStartingFromPageNumber { get; set; }
 
     /// <summary>
@@ -115,7 +115,7 @@ public partial record AppSetting
     ///     spotlight retrieval(10 entries per page)
     /// </summary>
     [DefaultValue(50)]
-    [SettingsMetadata(SettingEntryCategory.Misc, typeof(SettingsPageResources), nameof(SettingsPageResources.SpotlightSearchPageLimitEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Misc, typeof(SettingsPageResources), nameof(SettingsPageResources.SpotlightSearchPageLimitEntryHeader))]
     public int PageLimitForSpotlight { get; set; }
 
     /// <summary>
@@ -124,7 +124,7 @@ public partial record AppSetting
     /// </summary>
     [DefaultValue(null)]
     [SettingsViewModelExclusion]
-    [SettingsMetadata(SettingEntryCategory.Misc, typeof(SettingsPageResources), nameof(SettingsPageResources.ImageMirrorServerEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Misc, typeof(SettingsPageResources), nameof(SettingsPageResources.ImageMirrorServerEntryHeader))]
     public string? MirrorHost { get; set; }
 
     /// <summary>
@@ -132,7 +132,7 @@ public partial record AppSetting
     /// </summary>
     [DefaultValue(typeof(DownloadConcurrencyDefaultValueProvider))]
     [SettingsViewModelExclusion]
-    [SettingsMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.MaxDownloadConcurrencyLevelEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.MaxDownloadConcurrencyLevelEntryHeader))]
     public int MaxDownloadTaskConcurrencyLevel { get; set; }
 
     /// <summary>
@@ -140,7 +140,7 @@ public partial record AppSetting
     ///     when user clicks "Generate Link"
     /// </summary>
     [DefaultValue(true)]
-    [SettingsMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.GenerateHelpLinkEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.GenerateHelpLinkEntryHeader))]
     public bool DisplayTeachingTipWhenGeneratingAppLink { get; set; }
 
     /// <summary>
@@ -148,11 +148,11 @@ public partial record AppSetting
     ///     the enumeration of the <see cref="MakoClient.Recommendations" />
     /// </summary>
     [DefaultValue(500)]
-    [SettingsMetadata(SettingEntryCategory.Misc, typeof(SettingsPageResources), nameof(SettingsPageResources.RecommendationItemLimitEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Misc, typeof(SettingsPageResources), nameof(SettingsPageResources.RecommendationItemLimitEntryHeader))]
     public int ItemsNumberLimitForDailyRecommendations { get; set; }
 
     [DefaultValue(false)]
-    [SettingsMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.UseFileCacheEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.UseFileCacheEntryHeader))]
     public bool UseFileCache { get; set; }
 
     [DefaultValue(typeof(AppWidthDefaultValueProvider))]
@@ -164,7 +164,7 @@ public partial record AppSetting
     public int WindowHeight { get; set; }
 
     [DefaultValue(ThumbnailDirection.Portrait)]
-    [SettingsMetadata(SettingEntryCategory.BrowsingExperience, typeof(SettingsPageResources), nameof(SettingsPageResources.ThumbnailDirectionEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.BrowsingExperience, typeof(SettingsPageResources), nameof(SettingsPageResources.ThumbnailDirectionEntryHeader))]
     public ThumbnailDirection ThumbnailDirection { get; set; }
 
     [DefaultValue(typeof(MinDateTimeOffSetDefaultValueProvider))]
@@ -172,23 +172,23 @@ public partial record AppSetting
     public DateTimeOffset LastCheckedUpdate { get; set; }
 
     [DefaultValue(false)]
-    [SettingsMetadata(SettingEntryCategory.Version, typeof(SettingsPageResources), nameof(SettingsPageResources.DownloadUpdateAutomaticallyEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Version, typeof(SettingsPageResources), nameof(SettingsPageResources.DownloadUpdateAutomaticallyEntryHeader))]
     public bool DownloadUpdateAutomatically { get; set; }
 
     [DefaultValue("Microsoft YaHei")]
-    [SettingsMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.AppFontFamilyEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.AppFontFamilyEntryHeader))]
     public string AppFontFamilyName { get; set; }
 
     [DefaultValue(MainPageTabItem.DailyRecommendation)]
-    [SettingsMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSelectedTabEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultSelectedTabEntryHeader))]
     public MainPageTabItem DefaultSelectedTabItem { get; set; }
 
     [DefaultValue(SearchDuration.Undecided)]
-    [SettingsMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.SearchDurationEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.SearchDurationEntryHeader))]
     public SearchDuration SearchDuration { get; set; }
 
     [DefaultValue(false)]
-    [SettingsMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.UsePreciseRangeForSearchEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.UsePreciseRangeForSearchEntryHeader))]
     public bool UsePreciseRangeForSearch { get; set; }
 
     [DefaultValue(typeof(DecrementedDateTimeOffSetDefaultValueProvider))]
@@ -200,39 +200,39 @@ public partial record AppSetting
     public DateTimeOffset SearchEndDate { get; set; }
 
     [DefaultValue(typeof(DownloadPathMacroDefaultValueProvider))]
-    [SettingsMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultDownloadPathMacroEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultDownloadPathMacroEntryHeader))]
     public string DefaultDownloadPathMacro { get; set; }
 
     [DefaultValue(false)]
-    [SettingsMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.OverwriteDownloadedFileEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.OverwriteDownloadedFileEntryHeader))]
     public bool OverwriteDownloadedFile { get; set; }
 
     [DefaultValue(100)]
-    [SettingsMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumDownloadHistoryRecordsEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumDownloadHistoryRecordsEntryHeader))]
     public int MaximumDownloadHistoryRecords { get; set; }
 
     [DefaultValue(50)]
-    [SettingsMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumSearchHistoryRecordsEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumSearchHistoryRecordsEntryHeader))]
     public int MaximumSearchHistoryRecords { get; set; }
 
     [DefaultValue(100)]
-    [SettingsMetadata(SettingEntryCategory.Misc, typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumBrowseHistoryRecordsEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Misc, typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumBrowseHistoryRecordsEntryHeader))]
     public int MaximumBrowseHistoryRecords { get; set; }
 
     [DefaultValue(null)]
-    [SettingsMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.ReverseSearchApiKeyEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.ReverseSearchApiKeyEntryHeader))]
     public string? ReverseSearchApiKey { get; set; }
 
     [DefaultValue(80)]
-    [SettingsMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.ReverseSearchResultSimilarityThresholdEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.ReverseSearchResultSimilarityThresholdEntryHeader))]
     public int ReverseSearchResultSimilarityThreshold { get; set; }
 
     [DefaultValue(10)]
-    [SettingsMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumSuggestionBoxSearchHistoryEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumSuggestionBoxSearchHistoryEntryHeader))]
     public int MaximumSuggestionBoxSearchHistory { get; set; }
 
     [DefaultValue(IllustrationViewOption.Justified)]
-    [SettingsMetadata(SettingEntryCategory.BrowsingExperience, typeof(SettingsPageResources), nameof(SettingsPageResources.IllustrationViewOptionEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.BrowsingExperience, typeof(SettingsPageResources), nameof(SettingsPageResources.IllustrationViewOptionEntryHeader))]
     public IllustrationViewOption IllustrationViewOption { get; set; }
 
     [DefaultValue(true)]
@@ -244,7 +244,7 @@ public partial record AppSetting
     public bool ShowExternalCommandBarInIllustratorContentViewer { get; set; }
 
     [DefaultValue(ApplicationBackdropType.Mica)]
-    [SettingsMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.BackdropEntryHeader))]
+    [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.BackdropEntryHeader))]
     public ApplicationBackdropType AppBackdrop { get; set; }
 
     public static AppSetting CreateDefault()
