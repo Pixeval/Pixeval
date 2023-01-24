@@ -61,6 +61,8 @@ namespace Pixeval.SourceGen
                         const string classBegin = """
                             using Pixeval;
 
+                            namespace Pixeval;
+
                             public partial record SettingEntry  
                             {   
 

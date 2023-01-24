@@ -20,4 +20,4 @@
 
 namespace Pixeval.Messages;
 
-public record NavigateToSettingEntryMessage(SettingsEntry Entry);
+public record NavigateToSettingEntryMessage(SettingEntry Entry);

@@ -21,3 +21,5 @@
 using WinUI3Utilities.Attributes;
 
 [assembly: LocalizedStringResources(nameof(Pixeval))]
+// temporary solution before the source generator become stable
+[assembly: DisableSourceGenerator]

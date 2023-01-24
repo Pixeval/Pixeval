@@ -49,7 +49,7 @@ public class SuggestionStateMachine
             .SelectAsync(t => new Tag(t.Tag!, t.Translation))
             .SelectAsync(SuggestionModel.FromTag), LazyThreadSafetyMode.ExecutionAndPublication);
 
-    private static readonly TreeSearcher<SettingsEntry> SettingEntriesTreeSearcher = new(SearcherLogic.Contain, PinIn.CreateDefault());
+    private static readonly TreeSearcher<SettingEntry> SettingEntriesTreeSearcher = new(SearcherLogic.Contain, PinIn.CreateDefault());
 
     public ObservableCollection<SuggestionModel> Suggestions { get; }
 
@@ -60,7 +60,7 @@ public class SuggestionStateMachine
 
     static SuggestionStateMachine()
     {
-        foreach (var settingsEntry in Enum.GetValues<SettingsEntry>())
+        foreach (var settingsEntry in SettingEntry.LazyValues.Value)
         {
             SettingEntriesTreeSearcher.Put(settingsEntry.GetLocalizedResourceContent()!, settingsEntry);
         }
@@ -84,7 +84,7 @@ public class SuggestionStateMachine
         if (settingSuggestions.IsNotNullOrEmpty())
         {
             suggestions.Add(SuggestionModel.SettingEntryHeader);
-            suggestions.AddRange(settingSuggestions.Select(settingSuggestion => new SuggestionModel(settingSuggestion.GetLocalizedResourceContent()!, settingSuggestion.GetCustomAttribute<SettingsCategory>()!.Name(), SuggestionType.Settings)));
+            suggestions.AddRange(settingSuggestions.Select(settingSuggestion => new SuggestionModel(settingSuggestion.GetLocalizedResourceContent()!, settingSuggestion.Category.GetLocalizedResourceContent(), SuggestionType.Settings)));
         }
 
         if (settingSuggestions.IsNotNullOrEmpty() && tagSuggestions.IsNotNullOrEmpty())
@@ -109,10 +109,10 @@ public class SuggestionStateMachine
         Suggestions.AddRange(newItems);
     }
 
-    private static IReadOnlySet<SettingsEntry> MatchSettings(string keyword)
+    private static IReadOnlySet<SettingEntry> MatchSettings(string keyword)
     {
         var pinInResult = SettingEntriesTreeSearcher.Search(keyword).ToHashSet();
-        var nonPinInResult = Enum.GetValues<SettingsEntry>().Where(it => it.GetLocalizedResourceContent()!.Contains(keyword));
+        var nonPinInResult = SettingEntry.LazyValues.Value.Where(it => it.GetLocalizedResourceContent()!.Contains(keyword));
         pinInResult.AddRange(nonPinInResult);
         return pinInResult;
     }

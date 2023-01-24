@@ -183,7 +183,7 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
             switch (type)
             {
                 case SuggestionType.Settings:
-                    Enum.GetValues<SettingsEntry>().FirstOrNull(se => se.GetLocalizedResourceContent() == name)
+                    SettingEntry.LazyValues.Value.FirstOrDefault(se => se.GetLocalizedResourceContent() == name)
                         ?.Let(se => WeakReferenceMessenger.Default.Send(new NavigateToSettingEntryMessage(se)));
                     break;
                 default:
@@ -230,15 +230,15 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
 
     private void OpenSearchSettingPopupButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        NavigateToSettingEntryAsync(SettingsEntry.ReverseSearchThreshold).Discard();
+        NavigateToSettingEntryAsync(SettingEntry.ReverseSearchResultSimilarityThreshold).Discard();
     }
 
-    private async Task NavigateToSettingEntryAsync(SettingsEntry entry)
+    private async Task NavigateToSettingEntryAsync(SettingEntry entry)
     {
         MainPageRootNavigationView.SelectedItem = SettingsTab;
         await MainPageRootFrame.AwaitPageTransitionAsync<SettingsPage>();
         var settingsPage = MainPageRootFrame.FindDescendant<SettingsPage>()!;
-        var position = settingsPage.FindChild<FrameworkElement>(element => element.Tag is int e && e == (int) entry)
+        var position = settingsPage.FindChild<FrameworkElement>(element => element.Tag is SettingEntry e && e == entry)
             ?.TransformToVisual((UIElement) settingsPage.SettingsPageScrollViewer.Content)
             .TransformPoint(new Point(0, 0));
         settingsPage.SettingsPageScrollViewer.ChangeView(null, position?.Y, null, false);
