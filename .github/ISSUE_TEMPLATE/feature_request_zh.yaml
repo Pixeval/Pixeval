@@ -1,7 +1,7 @@
 name: 功能建议
 description: 提出你希望软件实现的新功能或优化
 title: "功能的简要叙述"
-labels: [enhancement]
+labels: [feature ✨]
 body:
   - type: dropdown
     validations:
@@ -27,7 +27,7 @@ body:
   - type: textarea
     attributes:
       label: 图片
-      description: 如果有，请图文并茂地描述你的建议
+      description: 如果有，请图文并茂地叙述你的建议
   - type: textarea
     attributes:
       label: 其他信息
