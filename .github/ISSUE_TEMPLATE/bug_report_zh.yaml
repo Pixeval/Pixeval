@@ -1,7 +1,7 @@
 name: 漏洞反馈
 description: 报告一个漏洞
 title: "漏洞的简要叙述"
-labels: [bug]
+labels: [bug 🐛]
 body:
   - type: dropdown
     validations:
@@ -16,30 +16,30 @@ body:
       required: true
     attributes:
       label: 问题描述
-      description: 请简练、完整地描述这个漏洞，如果可以也可以附上出错部分代码
+      description: 请简练、完整地描述这个漏洞，如果了解也可以附上出错部分代码
   - type: textarea
     attributes:
       label: 屏幕截图
-      description: 如果有，请附上屏幕截图
+      description: 如果有，请附上发生错误时的屏幕截图
   - type: textarea
     attributes:
       label: 错误代码
-      description: 如果有，请附上软件显示的完整错误代码和堆栈信息
+      description: 如果有，请附上软件显示的完整错误代码和异常堆栈信息
   - type: dropdown
     validations:
       required: true
     attributes:
       label: Windows主要版本
-      description: Which Windows versions did you see the issue on?
+      description: Windows的大版本
       multiple: true
       options:
         - Windows 11
         - Windows 10
-        - 比Windows 10更早的版本（WinUI3版不支持）
+        - 比 Windows 10 更早的版本（WinUI3 版不支持此项）
   - type: dropdown
     attributes:
       label: 具体Windows版本
-      description: 如果了解，请提供更具体的版本
+      description: 如果你对此项了解，请提供更具体的版本
       multiple: true
       options:
         - Insider Build
