@@ -144,7 +144,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="LiteDB" Version="5.0.12" />
+		<PackageReference Include="LiteDB" Version="5.0.13" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
 		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.1" />
 		<PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
