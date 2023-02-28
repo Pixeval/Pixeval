@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+﻿#region Copyright (c) Pixeval/Pixeval.SourceGen
 // GPL v3 License
 // 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/AssemblyInfo.cs
+// Pixeval/Pixeval.SourceGen
+// Copyright (c) 2023 Pixeval.SourceGen/EnumerateHelper.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,8 +18,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using WinUI3Utilities.Attributes;
+using System.Collections.Generic;
 
-[assembly: LocalizedStringResources(nameof(Pixeval))]
-// temporary solution before the source generator become stable
-[assembly: DisableSourceGenerator]
+namespace Pixeval.SourceGen;
+
+public static class EnumerateHelper
+{
+    public static IEnumerable<(T, int)> Indexed<T>(this IEnumerable<T> enumerable)
+    {
+        var counter = 0;
+        foreach (var t in enumerable)
+        {
+            yield return (t, counter++);
+        }
+    }
+}

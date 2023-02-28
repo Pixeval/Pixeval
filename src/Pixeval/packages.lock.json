@@ -224,9 +224,9 @@
       },
       "WinUI3Utilities": {
         "type": "Direct",
-        "requested": "[1.0.8, )",
-        "resolved": "1.0.8",
-        "contentHash": "C0TLpYHNJH6mJ2pNgOlY1yx60Kj7414YBwlkIQmkv3CLLDwlCNObu5d0RAeMlDd0xL/beiGoJTHVvnpFRIRwkw==",
+        "requested": "[1.0.9, )",
+        "resolved": "1.0.9",
+        "contentHash": "An3fBoW/LVSe6odqaLe5JhK7IvMZ43tblmcDwwRkXDKuazZstk2aPbLmGXbODyuVyvb54pPAvQyK2xJFubqYog==",
         "dependencies": {
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.755",
           "Microsoft.WindowsAppSDK": "1.2.221209.1"

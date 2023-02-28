@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/AssemblyInfo.cs
+// Copyright (c) 2023 Pixeval/SettingPOCO.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,8 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using WinUI3Utilities.Attributes;
+using System;
 
-[assembly: LocalizedStringResources(nameof(Pixeval))]
-// temporary solution before the source generator become stable
-[assembly: DisableSourceGenerator]
+namespace Pixeval.Attributes;
+
+public class SettingPOCO : Attribute { }

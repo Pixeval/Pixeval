@@ -112,7 +112,7 @@
                         <switchSettingEntry:SwitchSettingEntry x:Uid="/SettingsPage/DownloadUpdateAutomaticallyEntry"
                                                                Icon="{ui:FontIcon Glyph=CommunicationsE95A}"
                                                                IsOn="{x:Bind _viewModel.DownloadUpdateAutomatically, Mode=TwoWay}"
-                                                               Tag="{x:Bind pixeval:SettingsEntry.AutoUpdate}" />
+                                                               Tag="{x:Bind pixeval:SettingEntry.AutoUpdate}" />
 
                     </settingsGroup:SettingsGroup>
 
@@ -120,7 +120,7 @@
 
                         <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/SignOutEntry"
                                                                        Icon="{ui:FontIcon Glyph=SignOutF3B1}"
-                                                                       Tag="{x:Bind pixeval:SettingsEntry.SignOut}">
+                                                                       Tag="{x:Bind pixeval:SettingEntry.SignOut}">
                             <actionableSettingEntry:ActionableSettingEntry.ActionContent>
                                 <Button x:Uid="/SettingsPage/PerformSignOutButton" Tapped="PerformSignOutButton_OnTapped" />
                             </actionableSettingEntry:ActionableSettingEntry.ActionContent>
@@ -128,7 +128,7 @@
 
                         <actionableExpanderSettingEntry:ActionableExpanderSettingEntry x:Uid="/SettingsPage/ResetDefaultSettingsEntry"
                                                                                        Icon="{ui:FontIcon Glyph=AppIconDefaultECAA}"
-                                                                                       Tag="{x:Bind pixeval:SettingsEntry.ResetSettings}">
+                                                                                       Tag="{x:Bind pixeval:SettingEntry.ResetSettings}">
                             <actionableExpanderSettingEntry:ActionableExpanderSettingEntry.ActionContent>
                                 <Button x:Uid="/SettingsPage/ResetDefaultSettingsButton" Tapped="ResetDefaultSettingsButton_OnTapped" />
                             </actionableExpanderSettingEntry:ActionableExpanderSettingEntry.ActionContent>
@@ -160,7 +160,7 @@
                                                                                  ItemsSource="{x:Bind model:ApplicationThemeSettingEntryItem.AvailableItems}"
                                                                                  SelectedItem="{x:Bind _viewModel.Theme, Mode=TwoWay}"
                                                                                  SelectionChanged="SingleSelectionSettingEntry_OnSelectionChanged"
-                                                                                 Tag="{x:Bind pixeval:SettingsEntry.AppTheme}">
+                                                                                 Tag="{x:Bind pixeval:SettingEntry.Theme}">
                             <singleSelectionSettingEntry:SingleSelectionSettingEntry.Description>
                                 <HyperlinkButton x:Uid="/SettingsPage/ThemeEntryDescriptionHyperlinkButton" Tapped="ThemeEntryDescriptionHyperlinkButton_OnTapped" />
                             </singleSelectionSettingEntry:SingleSelectionSettingEntry.Description>
@@ -170,12 +170,12 @@
                                                                                  Icon="{ui:FontIcon Glyph=TiltDownE80A}"
                                                                                  ItemsSource="{x:Bind model:ApplicationBackdropSettingEntryItem.AvailableItems}"
                                                                                  SelectedItem="{x:Bind _viewModel.AppBackdrop, Mode=TwoWay}"
-                                                                                 Tag="{x:Bind pixeval:SettingsEntry.AppBackdrop}" />
+                                                                                 Tag="{x:Bind pixeval:SettingEntry.AppBackdrop}" />
 
                         <expanderSettingEntry:ExpanderSettingEntry x:Uid="/SettingsPage/AppFontFamilyEntry"
                                                                    ContentMargin="35,0"
                                                                    Icon="{ui:FontIcon Glyph=FontE8D2}"
-                                                                   Tag="{x:Bind pixeval:SettingsEntry.Font}">
+                                                                   Tag="{x:Bind pixeval:SettingEntry.AppFontFamilyName}">
                             <expanderSettingEntry:ExpanderSettingEntry.Description>
                                 <HyperlinkButton x:Uid="/SettingsPage/OpenFontSettingsHyperlinkButton" Tapped="OpenFontSettingsHyperlinkButton_OnTapped" />
                             </expanderSettingEntry:ExpanderSettingEntry.Description>
@@ -194,23 +194,23 @@
                         <switchSettingEntry:SwitchSettingEntry x:Uid="/SettingsPage/DisableDomainFrontingEntry"
                                                                Icon="{ui:FontIcon Glyph=DisableUpdatesE8D8}"
                                                                IsOn="{x:Bind _viewModel.DisableDomainFronting, Mode=TwoWay}"
-                                                               Tag="{x:Bind pixeval:SettingsEntry.DomainFronting}" />
+                                                               Tag="{x:Bind pixeval:SettingEntry.DisableDomainFronting}" />
 
                         <switchSettingEntry:SwitchSettingEntry x:Uid="/SettingsPage/UseFileCacheEntry"
                                                                Icon="{ui:FontIcon Glyph=FileExplorerEC50}"
                                                                IsOn="{x:Bind _viewModel.UseFileCache, Mode=TwoWay}"
-                                                               Tag="{x:Bind pixeval:SettingsEntry.FileCache}" />
+                                                               Tag="{x:Bind pixeval:SettingEntry.UseFileCache}" />
 
                         <switchSettingEntry:SwitchSettingEntry x:Uid="/SettingsPage/GenerateHelpLinkEntry"
                                                                Icon="{ui:FontIcon Glyph=LinkE71B}"
                                                                IsOn="{x:Bind _viewModel.DisplayTeachingTipWhenGeneratingAppLink, Mode=TwoWay}"
-                                                               Tag="{x:Bind pixeval:SettingsEntry.GenerateHelpLink}" />
+                                                               Tag="{x:Bind pixeval:SettingEntry.DisplayTeachingTipWhenGeneratingAppLink}" />
 
                         <singleSelectionSettingEntry:SingleSelectionSettingEntry x:Uid="/SettingsPage/DefaultSelectedTabEntry"
                                                                                  Icon="{ui:FontIcon Glyph=CheckMarkE73E}"
                                                                                  ItemsSource="{x:Bind model:MainPageTabItemSettingEntryItem.AvailableItems}"
                                                                                  SelectedItem="{x:Bind _viewModel.DefaultSelectedTabItem, Mode=TwoWay}"
-                                                                                 Tag="{x:Bind pixeval:SettingsEntry.DefaultTab}" />
+                                                                                 Tag="{x:Bind pixeval:SettingEntry.DefaultSelectedTabItem}" />
                     </settingsGroup:SettingsGroup>
 
                     <settingsGroup:SettingsGroup x:Uid="/SettingsPage/BrowsingExperienceSettingsGroup">
@@ -218,24 +218,24 @@
                                                                                  Icon="{ui:FontIcon Glyph=LandscapeOrientationEF6B}"
                                                                                  ItemsSource="{x:Bind model:ThumbnailDirectionSettingEntryItem.AvailableItems}"
                                                                                  SelectedItem="{x:Bind _viewModel.ThumbnailDirection, Mode=TwoWay}"
-                                                                                 Tag="{x:Bind pixeval:SettingsEntry.ThumbnailDirection}" />
+                                                                                 Tag="{x:Bind pixeval:SettingEntry.ThumbnailDirection}" />
 
                         <singleSelectionSettingEntry:SingleSelectionSettingEntry x:Uid="/SettingsPage/IllustrationViewOptionEntry"
                                                                                  Icon="{ui:FontIcon Glyph=TaskViewE7C4}"
                                                                                  ItemsSource="{x:Bind model:IllustrationViewOptionSettingEntryItem.AvailableItems}"
                                                                                  SelectedItem="{x:Bind _viewModel.IllustrationViewOption, Mode=TwoWay}"
-                                                                                 Tag="{x:Bind pixeval:SettingsEntry.IllustrationViewOption}" />
+                                                                                 Tag="{x:Bind pixeval:SettingEntry.IllustrationViewOption}" />
 
                         <switchSettingEntry:SwitchSettingEntry x:Uid="/SettingsPage/FiltrateRestrictedContentEntry"
                                                                Icon="{ui:FontIcon Glyph=BlockContactE8F8}"
                                                                IsOn="{x:Bind _viewModel.FiltrateRestrictedContent, Mode=TwoWay}"
-                                                               Tag="{x:Bind pixeval:SettingsEntry.FilterSensContent}" />
+                                                               Tag="{x:Bind pixeval:SettingEntry.FiltrateRestrictedContent}" />
 
                         <singleSelectionSettingEntry:SingleSelectionSettingEntry x:Uid="/SettingsPage/TargetAPIPlatformEntry"
                                                                                  Icon="{ui:FontIcon Glyph=CommandPromptE756}"
                                                                                  ItemsSource="{x:Bind model:TargetPlatformSettingEntryItem.AvailableItems}"
                                                                                  SelectedItem="{x:Bind _viewModel.TargetFilter, Mode=TwoWay}"
-                                                                                 Tag="{x:Bind pixeval:SettingsEntry.ApiPlatform}" />
+                                                                                 Tag="{x:Bind pixeval:SettingEntry.TargetFilter}" />
                     </settingsGroup:SettingsGroup>
 
                     <settingsGroup:SettingsGroup x:Uid="/SettingsPage/SearchSettingsGroup">
@@ -244,12 +244,12 @@
                                                                Icon="{ui:FontIcon Glyph=FilterE71C}"
                                                                Maximum="100"
                                                                Minimum="1"
-                                                               Tag="{x:Bind pixeval:SettingsEntry.ReverseSearchThreshold}"
+                                                               Tag="{x:Bind pixeval:SettingEntry.ReverseSearchResultSimilarityThreshold}"
                                                                Value="{x:Bind _viewModel.ReverseSearchResultSimilarityThreshold}" />
 
                         <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/ReverseSearchApiKeyEntry"
                                                                        Icon="{ui:FontIcon Glyph=SearchAndAppsE773}"
-                                                                       Tag="{x:Bind pixeval:SettingsEntry.ReverseSearchApiKey}">
+                                                                       Tag="{x:Bind pixeval:SettingEntry.ReverseSearchApiKey}">
                             <actionableSettingEntry:ActionableSettingEntry.Description>
                                 <HyperlinkButton x:Uid="/SettingsPage/ReverseSearchApiKeyEntryDescriptionHyperlinkButton" />
                             </actionableSettingEntry:ActionableSettingEntry.Description>
@@ -260,7 +260,7 @@
 
                         <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/MaximumSearchHistoryRecordsEntry"
                                                                        Icon="{ui:FontIcon Glyph=HistoryE81C}"
-                                                                       Tag="{x:Bind pixeval:SettingsEntry.SearchHistoryLimit}">
+                                                                       Tag="{x:Bind pixeval:SettingEntry.MaximumSearchHistoryRecords}">
                             <actionableSettingEntry:ActionableSettingEntry.ActionContent>
                                 <NumberBox x:Uid="/SettingsPage/MaximumSearchHistoryRecordsNumberBox"
                                            Maximum="200"
@@ -272,7 +272,7 @@
 
                         <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/MaximumSuggestionBoxSearchHistoryEntry"
                                                                        Icon="{ui:FontIcon Glyph=SetHistoryStatus2F739}"
-                                                                       Tag="{x:Bind pixeval:SettingsEntry.SearchBoxHistoryLimit}">
+                                                                       Tag="{x:Bind pixeval:SettingEntry.MaximumSuggestionBoxSearchHistory}">
                             <actionableSettingEntry:ActionableSettingEntry.ActionContent>
                                 <NumberBox x:Uid="/SettingsPage/MaximumSuggestionBoxSearchHistoryEntryNumberBox"
                                            Maximum="{x:Bind _viewModel.MaximumSearchHistoryRecords}"
@@ -286,17 +286,17 @@
                                                                                  Icon="{ui:FontIcon Glyph=SortE8CB}"
                                                                                  ItemsSource="{x:Bind model:IllustrationSortOptionSettingEntryItem.AvailableItems}"
                                                                                  SelectedItem="{x:Bind _viewModel.DefaultSortOption, Mode=TwoWay}"
-                                                                                 Tag="{x:Bind pixeval:SettingsEntry.DefaultSortOption}" />
+                                                                                 Tag="{x:Bind pixeval:SettingEntry.DefaultSortOption}" />
 
                         <singleSelectionSettingEntry:SingleSelectionSettingEntry x:Uid="/SettingsPage/DefaultSearchTagMatchOptionEntry"
                                                                                  Icon="{ui:FontIcon Glyph=PassiveAuthenticationF32A}"
                                                                                  ItemsSource="{x:Bind model:SearchTagMatchOptionSettingEntryItem.AvailableItems}"
                                                                                  SelectedItem="{x:Bind _viewModel.TagMatchOption, Mode=TwoWay}"
-                                                                                 Tag="{x:Bind pixeval:SettingsEntry.DefaultTagMatchPolicy}" />
+                                                                                 Tag="{x:Bind pixeval:SettingEntry.TagMatchOption}" />
 
                         <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/MaximumSearchPageLimit"
                                                                        Icon="{ui:FontIcon Glyph=RulerED5E}"
-                                                                       Tag="{x:Bind pixeval:SettingsEntry.MaxSearchPages}">
+                                                                       Tag="{x:Bind pixeval:SettingEntry.PageLimitForKeywordSearch}">
                             <actionableSettingEntry:ActionableSettingEntry.ActionContent>
                                 <NumberBox x:Uid="/SettingsPage/MaximumSearchPageLimitNumberBox"
                                            Maximum="100"
@@ -308,7 +308,7 @@
 
                         <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/SearchStartsFromEntry"
                                                                        Icon="{ui:FontIcon Glyph=StartPointE819}"
-                                                                       Tag="{x:Bind pixeval:SettingsEntry.SearchStartsFrom}">
+                                                                       Tag="{x:Bind pixeval:SettingEntry.SearchStartingFromPageNumber}">
                             <actionableSettingEntry:ActionableSettingEntry.ActionContent>
                                 <NumberBox x:Uid="/SettingsPage/SearchStartsFromNumberBox"
                                            Maximum="150"
@@ -322,11 +322,11 @@
                                                                                  Icon="{ui:FontIcon Glyph=EaseOfAccessE776}"
                                                                                  ItemsSource="{x:Bind model:SearchDurationSettingEntryItem.AvailableItems}"
                                                                                  SelectedItem="{x:Bind _viewModel.SearchDuration, Mode=TwoWay}"
-                                                                                 Tag="{x:Bind pixeval:SettingsEntry.SearchRange}" />
+                                                                                 Tag="{x:Bind pixeval:SettingEntry.SearchDuration}" />
 
                         <actionableExpanderSettingEntry:ActionableExpanderSettingEntry x:Uid="/SettingsPage/UsePreciseRangeForSearchEntry"
                                                                                        Icon="{ui:FontIcon Glyph=StopwatchE916}"
-                                                                                       Tag="{x:Bind pixeval:SettingsEntry.UsePreciseSearchRange}">
+                                                                                       Tag="{x:Bind pixeval:SettingEntry.UsePreciseRangeForSearch}">
                             <actionableExpanderSettingEntry:ActionableExpanderSettingEntry.ActionContent>
                                 <ToggleSwitch IsOn="{x:Bind _viewModel.UsePreciseRangeForSearch, Mode=TwoWay}" />
                             </actionableExpanderSettingEntry:ActionableExpanderSettingEntry.ActionContent>
@@ -353,7 +353,7 @@
 
                         <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/MaximumDownloadHistoryRecordsEntry"
                                                                        Icon="{ui:FontIcon Glyph=HistoryE81C}"
-                                                                       Tag="{x:Bind pixeval:SettingsEntry.DownloadHistoryLimit}">
+                                                                       Tag="{x:Bind pixeval:SettingEntry.MaximumDownloadHistoryRecords}">
                             <actionableSettingEntry:ActionableSettingEntry.ActionContent>
                                 <NumberBox x:Uid="/SettingsPage/MaximumDownloadHistoryRecordsNumberBox"
                                            Maximum="200"
@@ -366,19 +366,19 @@
                         <switchSettingEntry:SwitchSettingEntry x:Uid="/SettingsPage/OverwriteDownloadedFileEntry"
                                                                Icon="{ui:FontIcon Glyph=ScanE8FE}"
                                                                IsOn="{x:Bind _viewModel.OverwriteDownloadedFile, Mode=TwoWay}"
-                                                               Tag="{x:Bind pixeval:SettingsEntry.OverwriteDownloadedFile}" />
+                                                               Tag="{x:Bind pixeval:SettingEntry.OverwriteDownloadedFile}" />
 
                         <sliderSettingEntry:SliderSettingEntry x:Uid="/SettingsPage/MaxDownloadConcurrencyLevelEntry"
                                                                Icon="{ui:FontIcon Glyph=LightningBoltE945}"
                                                                Maximum="{x:Bind system:Environment.ProcessorCount}"
                                                                Minimum="1"
-                                                               Tag="{x:Bind pixeval:SettingsEntry.MaximumParallelism}"
+                                                               Tag="{x:Bind pixeval:SettingEntry.MaxDownloadTaskConcurrencyLevel}"
                                                                Value="{x:Bind _viewModel.MaxDownloadTaskConcurrencyLevel, Mode=TwoWay}" />
 
                         <expanderSettingEntry:ExpanderSettingEntry x:Uid="/SettingsPage/DefaultDownloadPathMacroEntry"
                                                                    ContentMargin="50,5"
                                                                    Icon="{ui:FontIcon Glyph=CaptionE8BA}"
-                                                                   Tag="{x:Bind pixeval:SettingsEntry.DefaultDownloadPath}">
+                                                                   Tag="{x:Bind pixeval:SettingEntry.DefaultDownloadPathMacro}">
                             <StackPanel Spacing="3">
                                 <tokenInput:TokenInput IsTokenTappedDefaultBehaviorEnabled="False"
                                                        TokenInputTextBoxVisibility="Collapsed"
@@ -398,7 +398,7 @@
 
                         <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/SpotlightSearchPageLimitEntry"
                                                                        Icon="{ui:FontIcon Glyph=PictureE8B9}"
-                                                                       Tag="{x:Bind pixeval:SettingsEntry.SpotlightSearchPageLimit}">
+                                                                       Tag="{x:Bind pixeval:SettingEntry.PageLimitForSpotlight}">
                             <actionableSettingEntry:ActionableSettingEntry.ActionContent>
                                 <NumberBox x:Uid="/SettingsPage/SpotlightSearchPageLimitNumberBox"
                                            Maximum="100"
@@ -410,7 +410,7 @@
 
                         <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/RecommendationItemLimitEntry"
                                                                        Icon="{ui:FontIcon Glyph=DialShape1F156}"
-                                                                       Tag="{x:Bind pixeval:SettingsEntry.RecommendationResultLimit}">
+                                                                       Tag="{x:Bind pixeval:SettingEntry.ItemsNumberLimitForDailyRecommendations}">
                             <actionableSettingEntry:ActionableSettingEntry.ActionContent>
                                 <NumberBox x:Uid="/SettingsPage/RecommendationItemLimitNumberBox"
                                            Maximum="2500"
@@ -422,7 +422,7 @@
 
                         <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/MaximumBrowseHistoryRecordsEntry"
                                                                        Icon="{ui:FontIcon Glyph=HistoryE81C}"
-                                                                       Tag="{x:Bind pixeval:SettingsEntry.BrowseHistoryLimit}">
+                                                                       Tag="{x:Bind pixeval:SettingEntry.MaximumBrowseHistoryRecords}">
                             <actionableSettingEntry:ActionableSettingEntry.ActionContent>
                                 <NumberBox x:Uid="/SettingsPage/MaximumBrowseHistoryRecordsNumberBox"
                                            Maximum="200"
@@ -434,7 +434,7 @@
 
                         <actionableSettingEntry:ActionableSettingEntry x:Uid="/SettingsPage/ImageMirrorServerEntry"
                                                                        Icon="{ui:FontIcon Glyph=HardDriveEDA2}"
-                                                                       Tag="{x:Bind pixeval:SettingsEntry.ImageMirrorServer}">
+                                                                       Tag="{x:Bind pixeval:SettingEntry.MirrorHost}">
                             <TextBox x:Name="ImageMirrorServerTextBox"
                                      x:Uid="/SettingsPage/ImageMirrorServerTextBox"
                                      Width="200"
@@ -447,7 +447,7 @@
                                                                Icon="{ui:FontIcon Glyph=ShowResultsE8BC}"
                                                                Maximum="15"
                                                                Minimum="0"
-                                                               Tag="{x:Bind pixeval:SettingsEntry.PreloadRows}"
+                                                               Tag="{x:Bind pixeval:SettingEntry.PreLoadRows}"
                                                                Value="{x:Bind _viewModel.PreLoadRows, Mode=TwoWay}" />
                     </settingsGroup:SettingsGroup>
                     <!--  endregion  -->

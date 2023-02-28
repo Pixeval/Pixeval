@@ -31,8 +31,6 @@ public class AppKnownFolders
 {
     public static AppKnownFolders Local = new(ApplicationData.Current.LocalFolder, _ => ApplicationData.Current.ClearAsync(ApplicationDataLocality.Local).AsTask());
 
-    public static AppKnownFolders LoginProxy = null!;
-
     public static AppKnownFolders SavedWallPaper = null!;
 
     public static AppKnownFolders Temporary = new(ApplicationData.Current.TemporaryFolder, _ => ApplicationData.Current.ClearAsync(ApplicationDataLocality.Temporary).AsTask());
@@ -58,7 +56,6 @@ public class AppKnownFolders
 
     public static async Task InitializeAsync()
     {
-        LoginProxy = await GetOrCreate(Local, "LoginProxy");
         SavedWallPaper = await GetOrCreate(Local, "Wallpapers");
     }
 

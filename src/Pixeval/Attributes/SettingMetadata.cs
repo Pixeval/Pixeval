@@ -1,8 +1,9 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/AssemblyInfo.cs
+// Copyright (c) 2023 Pixeval/SettingMetadata.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,10 +17,25 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using WinUI3Utilities.Attributes;
+using System;
 
-[assembly: LocalizedStringResources(nameof(Pixeval))]
-// temporary solution before the source generator become stable
-[assembly: DisableSourceGenerator]
+namespace Pixeval.Attributes;
+
+public class SettingMetadata : Attribute
+{
+    public SettingEntryCategory Category { get; }
+
+    public Type ResourceLoaderType { get; }
+
+    public string LocalizedResourceKey { get; }
+
+    public SettingMetadata(SettingEntryCategory category, Type resourceLoaderType, string localizedResourceKey)
+    {
+        Category = category;
+        ResourceLoaderType = resourceLoaderType;
+        LocalizedResourceKey = localizedResourceKey;
+    }
+}

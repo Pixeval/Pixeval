@@ -285,7 +285,7 @@ public sealed partial class MainWindow : INavigationModeInfo
             switch (type)
             {
                 case SuggestionType.Settings:
-                    Enum.GetValues<SettingsEntry>().FirstOrNull(se => se.GetLocalizedResourceContent() == name)
+                    SettingEntry.LazyValues.Value.FirstOrDefault(se => se.GetLocalizedResourceContent() == name)
                         ?.Let(se => WeakReferenceMessenger.Default.Send(new NavigateToSettingEntryMessage(se)));
                     break;
                 default:
@@ -302,7 +302,7 @@ public sealed partial class MainWindow : INavigationModeInfo
 
     private void OpenSearchSettingPopupButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        WeakReferenceMessenger.Default.Send(new NavigateToSettingEntryMessage(SettingsEntry.ReverseSearchThreshold));
+        WeakReferenceMessenger.Default.Send(new NavigateToSettingEntryMessage(SettingEntry.ReverseSearchResultSimilarityThreshold));
     }
 
     private async void ReverseSearchButton_OnTapped(object sender, TappedRoutedEventArgs e)

@@ -68,7 +68,7 @@
         <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-        <PackageReference Include="WinUI3Utilities" Version="1.0.8" />
+        <PackageReference Include="WinUI3Utilities" Version="1.0.9" />
         <PackageReference Include="WinUIEx" Version="2.1.0" />
         <Manifest Include="$(ApplicationManifest)" />
     </ItemGroup>
@@ -76,6 +76,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
         <ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
+        <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
     </ItemGroup>
 
     <!--Exposes PRI resources-->
