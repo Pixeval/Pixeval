@@ -18,13 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxKind;
@@ -42,14 +38,14 @@ namespace Pixeval.SourceGen
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
             var classDeclaration = context.SyntaxProvider.CreateSyntaxProvider(
-                predicate: static (node, _) => node is (ClassDeclarationSyntax { AttributeLists.Count: > 0 } or RecordDeclarationSyntax { AttributeLists.Count: > 0 }),
+                predicate: static (node, _) => node is ClassDeclarationSyntax { AttributeLists.Count: > 0 } or RecordDeclarationSyntax { AttributeLists.Count: > 0 },
                 transform: static (ctx, _) =>
                 {
                     var tds = (TypeDeclarationSyntax) ctx.Node;
                     (TypeDeclarationSyntax, IEnumerable<(PropertyDeclarationSyntax, AttributeSyntax?)>)? tuple = tds.HasAttribute(ctx.SemanticModel, SettingPOCOAttributeFqName)
                         ? (tds, tds.Members.OfType<PropertyDeclarationSyntax>().Where(pds => !pds.HasAttribute(ctx.SemanticModel, SyntheticSettingAttributeFqName) && pds.HasAttribute(ctx.SemanticModel, SettingMetadataAttributeFqName))
                             .Select(property => (property, property.GetAttribute(ctx.SemanticModel, SettingMetadataAttributeFqName)))
-                            .Where(tuple => tuple.Item2 is not null))!
+                            .Where(tuple => tuple.Item2 is not null))
                         : null;
                     return tuple;
                 }).Where(s => s.HasValue).Select((n, _) => n!.Value).Collect();
@@ -77,7 +73,9 @@ namespace Pixeval.SourceGen
                         {
                             var (property, attribute) = tuple;
                             var ctor = ImplicitObjectCreationExpression(ArgumentList(
-                                SeparatedList(attribute!.ArgumentList!.Arguments.Indexed().Select(t => t is (var arg, 0) ? Argument(arg.Expression) : Argument(t.Item1.Expression).WithLeadingTrivia(whitespaceTrivia)))), null);
+                                SeparatedList(attribute!.ArgumentList!.Arguments.Indexed().Select(t => t is (var arg, 0) 
+                                    ? Argument(arg.Expression) 
+                                    : Argument(t.Item1.Expression).WithLeadingTrivia(whitespaceTrivia)))), null);
                             return FieldDeclaration(
                                 new SyntaxList<AttributeListSyntax>(),
                                 new SyntaxTokenList(
@@ -92,7 +90,7 @@ namespace Pixeval.SourceGen
                         var str = classBegin + string.Join("\n\n", entries.Select(entry => $"    {entry.GetText()}")) + classEnd;
                         ctx.AddSource("SettingEntry.g.cs", str);
                         break;
-                    case [ { } _, ..] arr:
+                    case [ { }, ..] arr:
                         foreach (var (typeDeclarationSyntax, _) in arr)
                         {
                             ctx.ReportDiagnostic(

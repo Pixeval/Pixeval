@@ -30,7 +30,6 @@ using PininSharp.Searchers;
 using Pixeval.Attributes;
 using Pixeval.CoreApi.Model;
 using Pixeval.Database.Managers;
-using Pixeval.Util;
 using Pixeval.Utilities;
 
 namespace Pixeval.Pages;
