@@ -1,0 +1,34 @@
+name: feature request
+description: Propose new features or optimizations that you want Pixeval to implement
+title: A brief description of the feature
+labels: [feature ✨]
+body:
+  - type: dropdown
+    validations:
+      required: true
+    attributes:
+      label: The type of your suggestion
+      options:
+        - New feature
+        - Feature optimization
+  - type: dropdown
+    validations:
+      required: true
+    attributes:
+      label: Pixeval's version
+      options:
+        - WinUI3
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: Description
+      description: Please describe your suggestion concisely and completely
+  - type: textarea
+    attributes:
+      label: Pictures
+      description: If possible, please illustrate your suggestion
+  - type: textarea
+    attributes:
+      label: Additional Information
+      description: Any additional information you would like to provide
