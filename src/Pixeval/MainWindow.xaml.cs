@@ -170,13 +170,16 @@ public sealed partial class MainWindow : INavigationModeInfo
     {
         var rects = await iSupportCustomTitleBarDragRegion.SetTitleBarDragRegionAsync(
             AppTitleBar,
-            LeftDragRegion,
-            LeftMarginRegion,
-            SearchBarRegion,
-            MarginRegion,
-            ReverseSearchButtonRegion,
-            SearchSettingButtonRegion,
-            RightDragRegion);
+            new[]
+            {
+                LeftDragRegion,
+                LeftMarginRegion,
+                SearchBarRegion,
+                MarginRegion,
+                ReverseSearchButtonRegion,
+                SearchSettingButtonRegion,
+                RightDragRegion
+            });
         CurrentContext.AppWindow.TitleBar.SetDragRectangles(rects);
     }
 

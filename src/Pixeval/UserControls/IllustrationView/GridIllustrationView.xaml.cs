@@ -31,6 +31,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Messages;
 using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
@@ -136,6 +137,18 @@ public sealed partial class GridIllustrationView : IIllustrationView
         var viewModels = sender.GetDataContext<IllustrationViewModel>()
             .GetMangaIllustrationViewModels()
             .ToArray();
+
+        var window = new Window();
+        var frame = new Frame();
+        window.Content = frame;
+        frame.Loaded += (o, args) =>
+        {
+            frame.NavigateToType(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModels), new FrameNavigationOptions
+            {
+                TransitionInfoOverride = new SuppressNavigationTransitionInfo()
+            });
+        };
+        window.Activate();
 
         ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement)sender);
         UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo());

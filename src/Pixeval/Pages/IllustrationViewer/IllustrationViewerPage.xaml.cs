@@ -294,15 +294,7 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         WeakReferenceMessenger.Default.Send(new RefreshDragRegionMessage());
     }
 
-    public async Task<RectInt32[]> SetTitleBarDragRegionAsync(
-        FrameworkElement titleBar, 
-        ColumnDefinition leftDragRegion, 
-        ColumnDefinition leftMarginRegion, 
-        ColumnDefinition searchBarRegion, 
-        ColumnDefinition marginRegion, 
-        ColumnDefinition reverseSearchButtonRegion, 
-        ColumnDefinition searchSettingButtonRegion, 
-        ColumnDefinition rightDragRegion)
+    public async Task<RectInt32[]> SetTitleBarDragRegionAsync(FrameworkElement? titleBar, ColumnDefinition[] dragRegion)
     {
         await ThreadingHelper.SpinWaitAsync(() => IllustrationViewerCommandBar.ActualHeight == 0);
         const int leftButtonWidth = 50;

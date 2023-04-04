@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/ISupportCustomTitleBarDragRegion.cs
+// Copyright (c) 2023 Pixeval/WindowManager.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,14 +18,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Threading.Tasks;
-using Windows.Graphics;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using WinUI3Utilities;
 
-namespace Pixeval;
+namespace Pixeval.Util.UI;
 
-public interface ISupportCustomTitleBarDragRegion
+public static class WindowFactory
 {
-    Task<RectInt32[]> SetTitleBarDragRegionAsync(FrameworkElement? titleBar, ColumnDefinition[] dragRegions);
+    public static Window Create(object content, BackdropHelper.BackdropType backdropType, )
+    {
+        var 
+    }
 }

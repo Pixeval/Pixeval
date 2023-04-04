@@ -41,7 +41,6 @@ public partial class App
 
     public App()
     {
-        CurrentContext.App = this;
         // The theme can only be changed in ctor
         AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadConfiguration() ?? AppSetting.CreateDefault() };
         RequestedTheme = AppViewModel.AppSetting.Theme switch
@@ -73,11 +72,9 @@ public partial class App
 
         Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSetting.AppFontFamilyName);
         await AppKnownFolders.InitializeAsync();
-
-        CurrentContext.IconPath = await AppContext.GetIconAbsolutePath();
+        
         CurrentContext.Window = new MainWindow();
         CurrentContext.Title = AppContext.AppIdentifier;
-
         AppHelper.Initialize(new SizeInt32(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight), AppViewModel.AppSetting.AppBackdrop switch
         {
             ApplicationBackdropType.None => BackdropHelper.BackdropType.None,
@@ -86,7 +83,7 @@ public partial class App
             ApplicationBackdropType.MicaAlt => BackdropHelper.BackdropType.MicaAlt,
             _ => throw new ArgumentOutOfRangeException()
         });
-
+        
         await AppViewModel.InitializeAsync(isProtocolActivated);
     }
 
