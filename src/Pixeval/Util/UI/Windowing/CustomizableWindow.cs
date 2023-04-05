@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -27,6 +27,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Messages;
 using WinUI3Utilities;
+using WinUI3Utilities.Models;
 
 namespace Pixeval.Util.UI.Windowing;
 
@@ -117,4 +118,38 @@ public sealed class CustomizableWindow<W> : Window where W : IWindowProvider
         }
     }
 
+}
+
+public sealed class CustomizableWindow2 : Window
+{
+    private readonly AppHelper.InitializeInfo _provider;
+    private readonly WindowInfo _info;
+    private readonly Grid _presenter;
+    private readonly FrameworkElement _contentElement;
+    private readonly DragZoneHelper.DragZoneInfo _dragZoneInfo;
+    private readonly FrameworkElement? _titleBar;
+
+    public CustomizableWindow2(AppHelper.InitializeInfo provider, FrameworkElement content, FrameworkElement? titleBar, DragZoneHelper.DragZoneInfo dragZoneInfo)
+    {
+        _info = new WindowInfo(this);
+        _provider = provider;
+        _contentElement = content;
+        _dragZoneInfo = dragZoneInfo;
+        _titleBar = titleBar;
+        AppHelper.Initialize(provider, _info, _titleBar);
+        Content = _presenter = new Grid
+        {
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            Children =
+            {
+                _titleBar,
+                _contentElement
+            }
+        };
+        _contentElement.SizeChanged += OnSizeChanged;
+        DragZoneHelper.SetDragZones(_dragZoneInfo, _info);
+    }
+
+    private void OnSizeChanged(object sender, SizeChangedEventArgs e) => DragZoneHelper.SetDragZones(_dragZoneInfo);
 }
