@@ -66,7 +66,9 @@ public sealed partial class MainWindow : INavigationModeInfo
 
     public NavigationTransitionInfo? DefaultNavigationTransitionInfo { get; internal set; } = new SuppressNavigationTransitionInfo();
 
-    // The parameter of OnNavigatedTo is always NavigationMode.New
+    /// <summary>
+    /// The parameter of OnNavigatedTo is always <see cref="Microsoft.UI.Xaml.Navigation.NavigationMode.New"/>
+    /// </summary>
     public static NavigationMode? NavigationMode { get; private set; }
 
     public static NavigationMode? GetNavigationModeAndReset()

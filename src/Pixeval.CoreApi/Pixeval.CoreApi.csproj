@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="6.5.0" PrivateAssets="True" />
+        <PackageReference Include="Autofac" Version="7.0.0" PrivateAssets="True" />
         <PackageReference Include="JetBrains.Annotations" Version="2022.3.1" PrivateAssets="True" />
         <PackageReference Include="Refit" Version="6.3.2" PrivateAssets="True" />
     </ItemGroup>

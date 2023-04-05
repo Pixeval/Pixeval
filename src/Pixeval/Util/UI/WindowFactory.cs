@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -25,8 +25,8 @@ namespace Pixeval.Util.UI;
 
 public static class WindowFactory
 {
-    public static Window Create(object content, BackdropHelper.BackdropType backdropType, )
+    public static Window Create(object content, BackdropHelper.BackdropType backdropType )
     {
-        var 
+        return null!;
     }
 }

@@ -30,6 +30,7 @@ using Pixeval.Messages;
 using Windows.Graphics;
 using Pixeval.Options;
 using WinUI3Utilities;
+using WinUI3Utilities.Models;
 using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
 
@@ -72,18 +73,23 @@ public partial class App
 
         Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSetting.AppFontFamilyName);
         await AppKnownFolders.InitializeAsync();
-        
-        CurrentContext.Window = new MainWindow();
+
+        CurrentContext.WindowInfo = new WindowInfo(new MainWindow());
         CurrentContext.Title = AppContext.AppIdentifier;
-        AppHelper.Initialize(new SizeInt32(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight), AppViewModel.AppSetting.AppBackdrop switch
+        AppHelper.Initialize(new AppHelper.InitializeInfo
         {
-            ApplicationBackdropType.None => BackdropHelper.BackdropType.None,
-            ApplicationBackdropType.Acrylic => BackdropHelper.BackdropType.Acrylic,
-            ApplicationBackdropType.Mica => BackdropHelper.BackdropType.Mica,
-            ApplicationBackdropType.MicaAlt => BackdropHelper.BackdropType.MicaAlt,
-            _ => throw new ArgumentOutOfRangeException()
+            Size = new SizeInt32(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight),
+            BackdropType = AppViewModel.AppSetting.AppBackdrop switch
+            {
+                ApplicationBackdropType.None => BackdropHelper.BackdropType.None,
+                ApplicationBackdropType.Acrylic => BackdropHelper.BackdropType.Acrylic,
+                ApplicationBackdropType.Mica => BackdropHelper.BackdropType.Mica,
+                ApplicationBackdropType.MicaAlt => BackdropHelper.BackdropType.MicaAlt,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            TitleBarType = TitleBarHelper.TitleBarType.AppWindow
         });
-        
+
         await AppViewModel.InitializeAsync(isProtocolActivated);
     }
 
