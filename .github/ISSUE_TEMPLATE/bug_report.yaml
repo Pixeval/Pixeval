@@ -1,13 +1,13 @@
-name: 漏洞反馈
-description: 报告一个漏洞
-title: 漏洞的简要叙述
+name: Bug report
+description: Report a bug
+title: A brief description of the bug
 labels: [bug 🐛]
 body:
   - type: dropdown
     validations:
       required: true
     attributes:
-      label: Pixeval的版本
+      label: Pixeval's version
       options:
         - WinUI3
         - WPF
@@ -15,31 +15,31 @@ body:
     validations:
       required: true
     attributes:
-      label: 问题描述
-      description: 请简练、完整地描述这个漏洞，如果了解也可以附上出错部分代码
+      label: Description of the problem
+      description: Please describe the bug concisely and completely. You can attach the code that went wrong if you know
   - type: textarea
     attributes:
-      label: 屏幕截图
-      description: 如果可以，请附上发生错误时的屏幕截图
+      label: Screenshot
+      description: If possible, attach a screenshot when the error occurred
   - type: textarea
     attributes:
-      label: 错误代码
-      description: 如果可以，请附上软件显示的完整错误代码和异常堆栈信息
+      label: Error code
+      description: If possible, attach the full error code and exception stack trace
   - type: dropdown
     validations:
       required: true
     attributes:
-      label: Windows主要版本
-      description: Windows的大版本
+      label: Windows major version
+      description: Major version of Windows
       multiple: true
       options:
         - Windows 11
         - Windows 10
-        - 比 Windows 10 更早的版本（WinUI3 版不支持此项）
+        - Earlier than Windows 10 (not supported in WinUI3)
   - type: dropdown
     attributes:
-      label: 具体Windows版本
-      description: 如果你对此项了解，请提供更具体的版本
+      label: Specific Windows version
+      description: If you know about this, please provide a more specific version
       multiple: true
       options:
         - Insider Build
@@ -53,8 +53,8 @@ body:
         - Windows 8
         - Windows 7
         - Windows Vista
-        - Windows XP及更早
+        - Windows XP and earlier
   - type: textarea
     attributes:
-      label: 其他信息
-      description: 任何你想说的其他信息
+      label: Additional Information
+      description: Any additional information you would like to provide
