@@ -14,13 +14,15 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Messages;
 using Pixeval.Options;
-using Pixeval.Pages.IllustrationViewer;
 using Pixeval.UserControls.JustifiedLayout;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
+using Pixeval.Util.UI.Windowing;
 using Pixeval.Utilities;
+using WinUI3Utilities;
+using Pixeval.Pages.Login;
 
 namespace Pixeval.UserControls.IllustrationView;
 
@@ -38,11 +40,11 @@ public sealed partial class JustifiedLayoutIllustrationView : IIllustrationView
     {
         InitializeComponent();
         ViewModel = new JustifiedLayoutIllustrationViewViewModel();
-        ((JustifiedLayoutIllustrationViewDataProvider) ViewModel.DataProvider).OnDeferLoadingCompleted += (_, loaded) =>
+        ((JustifiedLayoutIllustrationViewDataProvider)ViewModel.DataProvider).OnDeferLoadingCompleted += (_, loaded) =>
         {
             IllustrationJustifiedListView.Append(loaded);
         };
-        ((JustifiedLayoutIllustrationViewDataProvider) ViewModel.DataProvider).OnIllustrationsSourceCollectionChanged += (_, args) =>
+        ((JustifiedLayoutIllustrationViewDataProvider)ViewModel.DataProvider).OnIllustrationsSourceCollectionChanged += (_, args) =>
         {
             switch (args)
             {
@@ -62,7 +64,7 @@ public sealed partial class JustifiedLayoutIllustrationView : IIllustrationView
             TryFillClientAreaAsync().Discard();
         };
     }
-    
+
     public JustifiedLayoutIllustrationViewViewModel ViewModel { get; }
 
     public FrameworkElement SelfIllustrationView => this;
@@ -73,7 +75,7 @@ public sealed partial class JustifiedLayoutIllustrationView : IIllustrationView
 
     public int CalculateDesiresRows(double actualHeight)
     {
-        return (int) (actualHeight / 250) is var rows and not 0 ? rows : 4;
+        return (int)(actualHeight / 250) is var rows and not 0 ? rows : 4;
     }
 
     private void Thumbnail_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -87,12 +89,15 @@ public sealed partial class JustifiedLayoutIllustrationView : IIllustrationView
         e.Handled = true;
         WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(sender as UIElement));
 
-        var viewModels = sender.GetDataContext<JustifiedListViewRowItemWrapper>().Item
+        var viewModels = UIHelper.GetDataContext<JustifiedListViewRowItemWrapper>(sender).Item
             .GetMangaIllustrationViewModels()
             .ToArray();
 
-        ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement) sender);
-        UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo());
+        ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement)sender);
+
+        // TODO: Test Use the new windowing API
+        _ = CustomizableWindow.Create(new() { TitleBarType = TitleBarHelper.TitleBarType.AppWindow }, new(), null,
+            (o, _) => o.To<Frame>().Navigate(typeof(LoginPage)));
     }
 
     public async Task TryFillClientAreaAsync()
@@ -113,35 +118,35 @@ public sealed partial class JustifiedLayoutIllustrationView : IIllustrationView
     private async void PostBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         e.Handled = true;
-        var viewModel = sender.GetDataContext<JustifiedListViewRowItemWrapper>().Item;
+        var viewModel = UIHelper.GetDataContext<JustifiedListViewRowItemWrapper>(sender).Item;
         await viewModel.PostPublicBookmarkAsync();
     }
 
     private async void RemoveBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         e.Handled = true;
-        var viewModel = sender.GetDataContext<JustifiedListViewRowItemWrapper>().Item;
+        var viewModel = UIHelper.GetDataContext<JustifiedListViewRowItemWrapper>(sender).Item;
         await viewModel.RemoveBookmarkAsync();
     }
 
     private void BookmarkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        sender.GetDataContext<JustifiedListViewRowItemWrapper>().Item.SwitchBookmarkStateAsync();
+        UIHelper.GetDataContext<JustifiedListViewRowItemWrapper>(sender).Item.SwitchBookmarkStateAsync();
     }
 
     private async void SaveContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await sender.GetDataContext<JustifiedListViewRowItemWrapper>().Item.SaveAsync();
+        await UIHelper.GetDataContext<JustifiedListViewRowItemWrapper>(sender).Item.SaveAsync();
     }
 
     private async void SaveAsContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await sender.GetDataContext<JustifiedListViewRowItemWrapper>().Item.SaveAsAsync();
+        await UIHelper.GetDataContext<JustifiedListViewRowItemWrapper>(sender).Item.SaveAsAsync();
     }
 
     private async void OpenInBrowserContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<JustifiedListViewRowItemWrapper>().Item.Id));
+        await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(UIHelper.GetDataContext<JustifiedListViewRowItemWrapper>(sender).Item.Id));
     }
 
     private void AddToBookmarkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -151,32 +156,32 @@ public sealed partial class JustifiedLayoutIllustrationView : IIllustrationView
 
     private void CopyWebLinkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<JustifiedListViewRowItemWrapper>().Item.Id).ToString()));
+        UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationWebUri(UIHelper.GetDataContext<JustifiedListViewRowItemWrapper>(sender).Item.Id).ToString()));
     }
 
     private void CopyAppLinkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationAppUri(sender.GetDataContext<JustifiedListViewRowItemWrapper>().Item.Id).ToString()));
+        UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationAppUri(UIHelper.GetDataContext<JustifiedListViewRowItemWrapper>(sender).Item.Id).ToString()));
     }
 
     private async void ShowQrCodeContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await ViewModel.ShowQrCodeForIllustrationAsync(sender.GetDataContext<JustifiedListViewRowItemWrapper>().Item);
+        await ViewModel.ShowQrCodeForIllustrationAsync(UIHelper.GetDataContext<JustifiedListViewRowItemWrapper>(sender).Item);
     }
 
     private async void ShowPixEzQrCodeContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await ViewModel.ShowPixEzQrCodeForIllustrationAsync(sender.GetDataContext<JustifiedListViewRowItemWrapper>().Item);
+        await ViewModel.ShowPixEzQrCodeForIllustrationAsync(UIHelper.GetDataContext<JustifiedListViewRowItemWrapper>(sender).Item);
     }
 
     private async void IllustrationThumbnailContainerItem_OnLoaded(object sender, RoutedEventArgs e)
     {
-        var (context, layoutWidth, _) = sender.GetDataContext<JustifiedListViewRowItemWrapper>();
-        var element = (FrameworkElement) sender;
+        var (context, layoutWidth, _) = UIHelper.GetDataContext<JustifiedListViewRowItemWrapper>(sender);
+        var element = (FrameworkElement)sender;
 
         if (await context.LoadThumbnailIfRequired(layoutWidth > 350 ? ThumbnailUrlOption.Large : ThumbnailUrlOption.SquareMedium))
         {
-            var transform = (ScaleTransform) element.RenderTransform;
+            var transform = (ScaleTransform)element.RenderTransform;
             if (element.IsFullyOrPartiallyVisible(this))
             {
                 var scaleXAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleX), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
@@ -201,9 +206,9 @@ public sealed partial class JustifiedLayoutIllustrationView : IIllustrationView
 
     private void IllustrationJustifiedListView_OnRowBringingIntoView(object sender, EffectiveViewportChangedEventArgs args)
     {
-        var wrapper = sender.GetDataContext<JustifiedListViewRowBinding?>();
+        var wrapper = UIHelper.GetDataContext<JustifiedListViewRowBinding?>(sender);
         var preLoadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
-        var gridViewItems = ((FrameworkElement) sender).FindDescendants().OfType<Grid>().Where(i => i.Name == "IllustrationThumbnailContainerItem").ToList();
+        var gridViewItems = ((FrameworkElement)sender).FindDescendants().OfType<Grid>().Where(i => i.Name == "IllustrationThumbnailContainerItem").ToList();
 
         if (wrapper == null || !gridViewItems.Any())
         {
@@ -216,7 +221,7 @@ public sealed partial class JustifiedLayoutIllustrationView : IIllustrationView
             {
                 if (await context.LoadThumbnailIfRequired()!)
                 {
-                    var transform = (ScaleTransform) container.RenderTransform;
+                    var transform = (ScaleTransform)container.RenderTransform;
                     if (container.IsFullyOrPartiallyVisible(this))
                     {
                         var scaleXAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleX), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));

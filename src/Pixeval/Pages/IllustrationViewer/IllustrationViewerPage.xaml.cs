@@ -223,10 +223,10 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
 
     private void NextIllustration()
     {
-        var illustrationViewModel = (IllustrationViewModel) _viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value + 1];
+        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value + 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
-        UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
+        ParentFrame.Navigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
         {
             Effect = SlideNavigationTransitionEffect.FromRight
         });
@@ -237,7 +237,7 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value - 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
-        UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
+        ParentFrame.Navigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
         {
             Effect = SlideNavigationTransitionEffect.FromLeft
         });
@@ -306,15 +306,15 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         var rightDragRegionStart = leftDragRegionStart + leftDragRegionWidth + IllustrationViewerCommandBar.ActualWidth * scaleFactor;
         var rightDragRegionWidth = CurrentContext.AppWindow.ClientSize.Width * scaleFactor - rightDragRegionStart;
         RectInt32 dragRegionL;
-        dragRegionL.X = (int) leftDragRegionStart;
+        dragRegionL.X = (int)leftDragRegionStart;
         dragRegionL.Y = 0;
-        dragRegionL.Width = (int) leftDragRegionWidth;
-        dragRegionL.Height = (int) height;
+        dragRegionL.Width = (int)leftDragRegionWidth;
+        dragRegionL.Height = (int)height;
         RectInt32 dragRegionR;
-        dragRegionR.X = (int) rightDragRegionStart;
+        dragRegionR.X = (int)rightDragRegionStart;
         dragRegionR.Y = 0;
-        dragRegionR.Width = (int) rightDragRegionWidth;
-        dragRegionR.Height = (int) height;
+        dragRegionR.Width = (int)rightDragRegionWidth;
+        dragRegionR.Height = (int)height;
 
         var list = new List<RectInt32>();
         if (!_viewModel.IsInfoPaneOpen)

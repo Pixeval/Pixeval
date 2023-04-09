@@ -25,19 +25,20 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Messages;
 using WinUI3Utilities;
 using WinUI3Utilities.Models;
 
 namespace Pixeval.Util.UI.Windowing;
 
-public sealed class CustomizableWindow<W> : Window where W : IWindowProvider
+public sealed class CustomizableWindowTest<W> : Window where W : IWindowProvider
 {
     private readonly W _provider;
     private readonly AppWindow _appWindow;
     private readonly Grid _presenter;
 
-    private CustomizableWindow(W provider)
+    private CustomizableWindowTest(W provider)
     {
         _provider = provider;
         var hWnd = Win32Interop.GetWindowIdFromWindow(CurrentContext.HWnd);
@@ -61,7 +62,7 @@ public sealed class CustomizableWindow<W> : Window where W : IWindowProvider
 
     private void OnActivated(object sender, WindowActivatedEventArgs args)
     {
-        WeakReferenceMessenger.Default.Register<CustomizableWindow<W>, RefreshDragRegionMessage>(this, static (recipient, _) =>
+        WeakReferenceMessenger.Default.Register<CustomizableWindowTest<W>, RefreshDragRegionMessage>(this, static (recipient, _) =>
         {
             if (AppWindowTitleBar.IsCustomizationSupported() && recipient._provider.Content is ISupportCustomTitleBarDragRegion iSupportCustomTitleBarDragRegion)
             {
@@ -120,36 +121,47 @@ public sealed class CustomizableWindow<W> : Window where W : IWindowProvider
 
 }
 
-public sealed class CustomizableWindow2 : Window
+public sealed class CustomizableWindow : Window
 {
     private readonly AppHelper.InitializeInfo _provider;
     private readonly WindowInfo _info;
     private readonly Grid _presenter;
-    private readonly FrameworkElement _contentElement;
+    public Frame Frame { get; }
     private readonly DragZoneHelper.DragZoneInfo _dragZoneInfo;
     private readonly FrameworkElement? _titleBar;
 
-    public CustomizableWindow2(AppHelper.InitializeInfo provider, FrameworkElement content, FrameworkElement? titleBar, DragZoneHelper.DragZoneInfo dragZoneInfo)
+    public static CustomizableWindow Create(AppHelper.InitializeInfo provider, DragZoneHelper.DragZoneInfo dragZoneInfo, FrameworkElement? titleBar, RoutedEventHandler onloaded)
+    {
+        var w = new CustomizableWindow(provider, dragZoneInfo, titleBar);
+        w.Frame.Loaded += onloaded;
+        AppHelper.Initialize(w._provider, w._info, null, w._titleBar);
+        return w;
+    }
+
+    private CustomizableWindow(AppHelper.InitializeInfo provider, DragZoneHelper.DragZoneInfo dragZoneInfo, FrameworkElement? titleBar)
     {
         _info = new WindowInfo(this);
         _provider = provider;
-        _contentElement = content;
+        Frame = new Frame();
         _dragZoneInfo = dragZoneInfo;
         _titleBar = titleBar;
-        AppHelper.Initialize(provider, _info, _titleBar);
         Content = _presenter = new Grid
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
             Children =
             {
-                _titleBar,
-                _contentElement
+                //  _titleBar,
+                Frame
             }
         };
-        _contentElement.SizeChanged += OnSizeChanged;
-        DragZoneHelper.SetDragZones(_dragZoneInfo, _info);
+        _presenter.SizeChanged += OnSizeChanged;
     }
 
     private void OnSizeChanged(object sender, SizeChangedEventArgs e) => DragZoneHelper.SetDragZones(_dragZoneInfo);
+
+    public void Navigate<T>(object parameter, NavigationTransitionInfo infoOverride) where T : Page
+    {
+        _ = Frame.Navigate(typeof(T), parameter, infoOverride);
+    }
 }

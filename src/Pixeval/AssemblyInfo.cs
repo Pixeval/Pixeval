@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -22,4 +22,4 @@ using WinUI3Utilities.Attributes;
 
 [assembly: LocalizedStringResources(nameof(Pixeval))]
 // temporary solution before the source generator become stable
-[assembly: DisableSourceGenerator]
+// [assembly: DisableSourceGenerator]

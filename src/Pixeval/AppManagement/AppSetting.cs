@@ -62,7 +62,7 @@ public partial record AppSetting
     ///     GFW
     /// </summary>
     [DefaultValue(false)]
-    [SettingsViewModelExclusion]
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.DisableDomainFrontingEntryHeader))]
     public bool DisableDomainFronting { get; set; }
 
@@ -123,7 +123,7 @@ public partial record AppSetting
     ///     changes the host of the original url(i.pximg.net) to this one.
     /// </summary>
     [DefaultValue(null)]
-    [SettingsViewModelExclusion]
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SettingMetadata(SettingEntryCategory.Misc, typeof(SettingsPageResources), nameof(SettingsPageResources.ImageMirrorServerEntryHeader))]
     public string? MirrorHost { get; set; }
 
@@ -131,7 +131,7 @@ public partial record AppSetting
     ///     The max download tasks that are allowed to run concurrently
     /// </summary>
     [DefaultValue(typeof(DownloadConcurrencyDefaultValueProvider))]
-    [SettingsViewModelExclusion]
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.MaxDownloadConcurrencyLevelEntryHeader))]
     public int MaxDownloadTaskConcurrencyLevel { get; set; }
 

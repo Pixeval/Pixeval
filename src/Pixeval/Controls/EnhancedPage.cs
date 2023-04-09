@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -20,11 +20,14 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
 public class EnhancedPage : Page
 {
+    protected Frame ParentFrame => Parent.To<Frame>();
+
     public int ActivationCount { get; private set; }
 
     public EnhancedPage()
