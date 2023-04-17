@@ -59,6 +59,7 @@ public sealed partial class MainWindow : INavigationModeInfo
 
     public MainWindow()
     {
+        CurrentContext.Window = this;
         InitializeComponent();
         CurrentContext.TitleBar = AppTitleBar;
         CurrentContext.TitleTextBlock = AppTitleTextBlock;

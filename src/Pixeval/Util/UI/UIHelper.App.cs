@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -56,7 +56,7 @@ public partial class UIHelper
 
     public static Size GetDpiAwareAppWindowSize()
     {
-        var dpi = User32.GetDpiForWindow(CurrentContext.HWnd);
+        var dpi = User32.GetDpiForWindow((nint)CurrentContext.HWnd);
         var size = GetAppWindowSize();
         var scalingFactor = (float) dpi / 96;
         return new Size(size.Width / scalingFactor, size.Height / scalingFactor);

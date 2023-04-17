@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -26,7 +26,7 @@ namespace Pixeval.Util.UI.Windowing;
 
 public interface IWindowProvider : ISupportCustomTitleBarDragRegion
 {
-    BackdropHelper.BackdropType BackdropType { get; }
+    BackdropType BackdropType { get; }
 
     FrameworkElement? TitleBar { get; }
 

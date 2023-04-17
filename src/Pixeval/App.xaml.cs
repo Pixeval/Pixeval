@@ -30,7 +30,6 @@ using Pixeval.Messages;
 using Windows.Graphics;
 using Pixeval.Options;
 using WinUI3Utilities;
-using WinUI3Utilities.Models;
 using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
 
@@ -74,17 +73,17 @@ public partial class App
         Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSetting.AppFontFamilyName);
         await AppKnownFolders.InitializeAsync();
 
-        CurrentContext.WindowInfo = new WindowInfo(new MainWindow());
+        _ = new MainWindow();
         CurrentContext.Title = AppContext.AppIdentifier;
         AppHelper.Initialize(new AppHelper.InitializeInfo
         {
             Size = new SizeInt32(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight),
             BackdropType = AppViewModel.AppSetting.AppBackdrop switch
             {
-                ApplicationBackdropType.None => BackdropHelper.BackdropType.None,
-                ApplicationBackdropType.Acrylic => BackdropHelper.BackdropType.Acrylic,
-                ApplicationBackdropType.Mica => BackdropHelper.BackdropType.Mica,
-                ApplicationBackdropType.MicaAlt => BackdropHelper.BackdropType.MicaAlt,
+                ApplicationBackdropType.None => BackdropType.None,
+                ApplicationBackdropType.Acrylic => BackdropType.Acrylic,
+                ApplicationBackdropType.Mica => BackdropType.Mica,
+                ApplicationBackdropType.MicaAlt => BackdropType.MicaAlt,
                 _ => throw new ArgumentOutOfRangeException()
             },
             TitleBarType = TitleBarHelper.TitleBarType.AppWindow

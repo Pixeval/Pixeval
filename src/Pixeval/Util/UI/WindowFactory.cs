@@ -25,7 +25,7 @@ namespace Pixeval.Util.UI;
 
 public static class WindowFactory
 {
-    public static Window Create(object content, BackdropHelper.BackdropType backdropType )
+    public static Window Create(object content, BackdropType backdropType )
     {
         return null!;
     }
