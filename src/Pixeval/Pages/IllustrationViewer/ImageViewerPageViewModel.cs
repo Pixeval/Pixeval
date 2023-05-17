@@ -82,6 +82,14 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private double _scale = 1;
 
+    private EventHandler<double>? _zoomChanged;
+
+    public event EventHandler<double> ZoomChanged
+    {
+        add => _zoomChanged += value;
+        remove => _zoomChanged -= value;
+    }
+
     public ImageViewerPageViewModel(IllustrationViewerPageViewModel illustrationViewerPageViewModel, IllustrationViewModel illustrationViewModel)
     {
         IllustrationViewerPageViewModel = illustrationViewerPageViewModel;
@@ -132,6 +140,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
                     _ => delta
                 };
                 Scale += delta;
+                _zoomChanged?.Invoke(this, Scale);
                 break;
         }
     }

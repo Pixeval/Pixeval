@@ -42,6 +42,7 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using Windows.Graphics;
+using CommunityToolkit.WinUI.UI;
 using Pixeval.Util.Threading;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
@@ -83,6 +84,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
             imageViewerPageViewModel.ImageLoadingCancellationHandle.Cancel();
         }
 
+        _viewModel.ZoomChanged -= OnZoomChanged;
         _viewModel.Dispose();
         WeakReferenceMessenger.Default.UnregisterAll(this);
     }
@@ -98,6 +100,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         if (e.Parameter is IllustrationViewerPageViewModel viewModel)
         {
             _viewModel = viewModel.IsDisposed ? viewModel.CreateNew() : viewModel;
+            _viewModel.ZoomChanged += OnZoomChanged;
         }
 
         _relatedWorksTag = new NavigationViewTag(typeof(RelatedWorksPage), _viewModel);
@@ -108,6 +111,15 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
         WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(_viewModel.IllustrationView?.GetItemContainer(_viewModel.IllustrationViewModelInTheGridView!) ?? App.AppViewModel.AppWindowRootFrame));
         WeakReferenceMessenger.Default.TryRegister<IllustrationViewerPage, CommentRepliesHyperlinkButtonTappedMessage>(this, CommentRepliesHyperlinkButtonTapped);
+    }
+
+    private void OnZoomChanged(object? sender, double e)
+    {
+        var isLandscape = _viewModel.Current.IllustrationViewModel.Illustration.Width >
+                          _viewModel.Current.IllustrationViewModel.Illustration.Height;
+        var imageControlSize = IllustrationImageShowcaseFrame.FindDescendant<Image>();
+        Console.WriteLine();
+        // TODO
     }
 
     private static void CommentRepliesHyperlinkButtonTapped(IllustrationViewerPage recipient, CommentRepliesHyperlinkButtonTappedMessage message)
@@ -250,20 +262,39 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     public async Task<RectInt32[]> SetTitleBarDragRegionAsync(FrameworkElement? titleBar, ColumnDefinition[]? dragRegion)
     {
+        // ---------------------------------------------------------------------------------------
+        // |                           ||||||||||||||||||||||||||       |||||||||||||            |
+        // left drag region       left drag region            middle drag             left drag
+        // start                       end                       region                  region
         await ThreadingHelper.SpinWaitAsync(() => IllustrationViewerCommandBar.ActualHeight == 0);
         const int leftButtonWidth = 50;
         var scaleFactor = UIHelper.GetScaleAdjustment();
-        var point = IllustrationViewerCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
+        var pointCommandBar = IllustrationViewerCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
+        var pointSubCommandBar = IllustrationViewerSubCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
+
         var leftDragRegionStart = leftButtonWidth * scaleFactor;
-        var leftDragRegionWidth = point.X * scaleFactor - leftDragRegionStart;
+        var leftDragRegionWidth = pointCommandBar.X * scaleFactor - leftDragRegionStart;
+
         var height = IllustrationViewerCommandBar.ActualHeight * scaleFactor;
-        var rightDragRegionStart = leftDragRegionStart + leftDragRegionWidth + IllustrationViewerCommandBar.ActualWidth * scaleFactor;
+
+        var middleDragRegionStart = leftDragRegionStart + leftDragRegionWidth + IllustrationViewerCommandBar.ActualWidth * scaleFactor;
+        var middleDragRegionWidth = pointSubCommandBar.X * scaleFactor - middleDragRegionStart;
+
+        var rightDragRegionStart = middleDragRegionStart + middleDragRegionWidth + IllustrationViewerSubCommandBar.ActualWidth * scaleFactor;
         var rightDragRegionWidth = ActualWidth * scaleFactor - rightDragRegionStart;
+
         RectInt32 dragRegionL;
         dragRegionL.X = (int) leftDragRegionStart;
         dragRegionL.Y = 0;
         dragRegionL.Width = (int) leftDragRegionWidth;
         dragRegionL.Height = (int) height;
+
+        RectInt32 dragRegionM;
+        dragRegionM.X = (int) middleDragRegionStart;
+        dragRegionM.Y = 0;
+        dragRegionM.Width = (int) middleDragRegionWidth;
+        dragRegionM.Height = (int) height;
+
         RectInt32 dragRegionR;
         dragRegionR.X = (int) rightDragRegionStart;
         dragRegionR.Y = 0;
@@ -276,6 +307,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
             list.Add(dragRegionL);
         }
 
+        list.Add(dragRegionM);
         list.Add(dragRegionR);
         return list.ToArray();
     }

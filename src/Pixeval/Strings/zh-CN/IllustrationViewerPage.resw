@@ -138,6 +138,9 @@
   <data name="CopyButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>复制</value>
   </data>
+  <data name="FullScreen" xml:space="preserve">
+    <value>全屏</value>
+  </data>
   <data name="GenerateLink" xml:space="preserve">
     <value>复制应用链接</value>
   </data>
@@ -186,6 +189,9 @@
   <data name="RelatedWorksTab.Content" xml:space="preserve">
     <value>推荐作品</value>
   </data>
+  <data name="RestoreOriginalResolution" xml:space="preserve">
+    <value>缩放到实际大小</value>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>保存</value>
   </data>
@@ -230,6 +236,9 @@
   </data>
   <data name="ShowQrCodeButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>生成二维码</value>
+  </data>
+  <data name="UniformToFillResolution" xml:space="preserve">
+    <value>缩放以适应</value>
   </data>
   <data name="WebLinkCopiedToClipboardToastTitle" xml:space="preserve">
     <value>链接已经复制到剪切板</value>

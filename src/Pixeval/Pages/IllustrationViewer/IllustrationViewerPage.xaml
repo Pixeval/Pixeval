@@ -54,10 +54,11 @@
                        Margin="15,0,0,0"
                        HorizontalAlignment="Left"
                        Source="/Assets/Images/logo44x44.ico" />
+                <!--  ReSharper disable once Xaml.PossibleNullReferenceException  -->
                 <TextBlock Margin="50,-1,0,0"
                            VerticalAlignment="Center"
                            FontSize="{StaticResource PixevalContentFontSize}"
-                           Text="{x:Bind _viewModel.IllustratorName, Mode=OneWay}" />
+                           Text="{x:Bind _viewModel.IllustrationViewModelInTheGridView.Illustration.Title, Mode=OneWay}" />
                 <CommandBar x:Name="IllustrationViewerCommandBar"
                             Width="300"
                             Margin="0,0,20,0"
@@ -97,12 +98,41 @@
                     </AppBarButton>
                     <AppBarSeparator />
                     <AppBarButton x:Uid="/IllustrationViewerPage/AddToBookmarkButton" Command="{x:Bind _viewModel.AddToBookmarkCommand}" />
-                    <AppBarButton x:Name="GenerateLinkToThisPageButton" Command="{x:Bind _viewModel.GenerateLinkCommand}" />
+                    <AppBarButton x:Name="GenerateLinkToThisPageButton"
+                                  x:Uid="/IllustrationViewerPage/GenerateLinkToThisPageButton"
+                                  Command="{x:Bind _viewModel.GenerateLinkCommand}" />
                     <AppBarButton x:Uid="/IllustrationViewerPage/GenerateWebLinkButton" Command="{x:Bind _viewModel.GenerateWebLinkCommand}" />
                     <AppBarButton x:Uid="/IllustrationViewerPage/OpenInWebBrowserButton" Command="{x:Bind _viewModel.OpenInWebBrowserCommand}" />
                     <AppBarButton x:Uid="/IllustrationViewerPage/ShowQrCodeButton" Command="{x:Bind _viewModel.ShowQrCodeCommand}" />
                     <AppBarButton x:Uid="/IllustrationViewerPage/ShareButton" Command="{x:Bind _viewModel.ShareCommand}" />
                 </CommandBar>
+                <StackPanel Margin="0,0,150,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                    <CommandBar x:Name="IllustrationViewerSubCommandBar"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                DefaultLabelPosition="Collapsed">
+                        <AppBarButton x:Uid="/IllustrationViewerPage/FullScreenButton"
+                                      Width="40"
+                                      Command="{x:Bind _viewModel.FullScreenCommand}" />
+                        <AppBarButton x:Name="RestoreResolutionButton"
+                                      Width="40"
+                                      Command="{x:Bind _viewModel.RestoreResolutionCommand}" />
+                        <AppBarButton x:Uid="/IllustrationViewerPage/ZoomOutButton"
+                                      Width="40"
+                                      Command="{x:Bind _viewModel.ZoomOutCommand}" />
+                        <AppBarButton x:Uid="/IllustrationViewerPage/ZoomInButton"
+                                      Width="40"
+                                      Command="{x:Bind _viewModel.ZoomInCommand}" />
+                    </CommandBar>
+                    <TextBlock x:Name="CurrentScalePercentage"
+                               Margin="-5,-3,0,0"
+                               VerticalAlignment="Center"
+                               FontSize="{StaticResource PixevalContentFontSize}"
+                               FontWeight="SemiBold" />
+                </StackPanel>
             </Grid>
 
             <TeachingTip x:Uid="/IllustrationViewerPage/GenerateLinkToThisPageButtonTeachingTip"

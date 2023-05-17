@@ -80,7 +80,15 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     private readonly IllustrationViewModel[] _illustrations;
 
-    public bool IsDisposed;
+    public bool IsDisposed { get; set; }
+
+    private EventHandler<double>? _zoomChanged;
+
+    public event EventHandler<double> ZoomChanged
+    {
+        add => _zoomChanged += value;
+        remove => _zoomChanged -= value;
+    }
 
     // illustrations should contains only one item if the illustration is a single
     // otherwise it contains the entire manga data
@@ -95,7 +103,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         _illustrations = illustrations;
         ImageViewerPageViewModels = illustrations.Select(i => new ImageViewerPageViewModel(this, i)).ToArray();
-        Current = ImageViewerPageViewModels[CurrentIndex];
+        ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModels[CurrentIndex]);
         InitializeCommands();
         _ = LoadUserProfile();
     }
@@ -154,8 +162,8 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         // disposing of it will also empty the corresponding image in GridView.
         ImageViewerPageViewModels?.Skip(1).ForEach(i => i.IllustrationViewModel.Dispose());
 
-        (_userProfileImageSource as SoftwareBitmapSource)?.Dispose();
-        _userProfileImageSource = null;
+        (UserProfileImageSource as SoftwareBitmapSource)?.Dispose();
+        UserProfileImageSource = null;
         IsDisposed = true;
     }
 
@@ -380,20 +388,39 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     public ImageViewerPageViewModel Next()
     {
-        Current = ImageViewerPageViewModels![++CurrentIndex];
+        ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModels![CurrentIndex++]);
         return Current;
     }
 
     public ImageViewerPageViewModel Prev()
     {
-        Current = ImageViewerPageViewModels![--CurrentIndex];
+        ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModels![CurrentIndex--]);
         return Current;
     }
+
+    private void ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModel newViewModel)
+    {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        if (Current is not null)
+        {
+            Current.ZoomChanged -= CurrentOnZoomChanged;
+        }
+        Current = newViewModel;
+        Current.ZoomChanged += CurrentOnZoomChanged;
+        CurrentOnZoomChanged(null, Current.Scale); // trigger as new viewmodel attached
+    }
+
+    // what a trash code...
+    private void CurrentOnZoomChanged(object? sender, double e)
+    {
+        _zoomChanged?.Invoke(this, e);
+    }
+
 
     public Task PostPublicBookmarkAsync()
     {
         // changes the IsBookmarked property of the item that of in the thumbnail list
-        // so the thumbnail item will also receives state update 
+        // so the thumbnail item will also receive state update 
         if (IllustrationViewModelInTheGridView is not null)
         {
             IllustrationViewModelInTheGridView.IsBookmarked = true;
@@ -529,6 +556,17 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     public XamlUICommand SetAsBackgroundCommand { get; } = new()
     {
         Label = IllustrationViewerPageResources.Background
+    };
+
+    public XamlUICommand FullScreenCommand { get; } = new()
+    {
+        Label = IllustrationViewerPageResources.FullScreen,
+        IconSource = FontIconSymbols.FullScreenE740.GetFontIconSource()
+    };
+
+    public XamlUICommand RestoreResolutionCommand { get; } = new()
+    {
+        Label = IllustrationViewerPageResources.RestoreOriginalResolution
     };
 
     #endregion

@@ -19,6 +19,8 @@
 #endregion
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
@@ -44,6 +46,7 @@ public sealed partial class ImageViewerPage
         if (e.Parameter is ImageViewerPageViewModel viewModel)
         {
             _viewModel = viewModel;
+            _viewModel.ZoomChanged += ViewModelOnZoomChanged;
         }
     }
 
@@ -79,6 +82,10 @@ public sealed partial class ImageViewerPage
                 }
             }
         }
+    }
+
+    private void ViewModelOnZoomChanged(object? sender, double e)
+    {
     }
 
     private void IllustrationOriginalImage_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
@@ -121,7 +128,7 @@ public sealed partial class ImageViewerPage
     }
 
     private void IllustrationOriginalImageContainer_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
-    {
+    { 
         Zoom(e.GetCurrentPoint(null).Properties.MouseWheelDelta / 1000d);
     }
 
@@ -152,23 +159,19 @@ public sealed partial class ImageViewerPage
 
     private void ResetImagePosition()
     {
-        if (IllustrationOriginalImageRenderTransform.TranslateX != 0)
-        {
-            IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(
-                nameof(CompositeTransform.TranslateX),
-                to: 0,
-                duration: TimeSpan.FromMilliseconds(100),
-                easingFunction: _easingFunction).BeginStoryboard();
-        }
-
-        if (IllustrationOriginalImageRenderTransform.TranslateY != 0)
-        {
-            IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(
-                nameof(CompositeTransform.TranslateY),
-                to: 0,
-                duration: TimeSpan.FromMilliseconds(100),
-                easingFunction: _easingFunction).BeginStoryboard();
-        }
+        var translateXAnimation = IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(
+            nameof(CompositeTransform.TranslateX),
+            from: IllustrationOriginalImageRenderTransform.TranslateX,
+            to: 0,
+            duration: TimeSpan.FromSeconds(1),
+            easingFunction: _easingFunction);
+        var translateYAnimation = IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(
+            nameof(CompositeTransform.TranslateY),
+            from: IllustrationOriginalImageRenderTransform.TranslateY,
+            to: 0,
+            duration: TimeSpan.FromSeconds(1),
+            easingFunction: _easingFunction);
+        UIHelper.CreateStoryboard(translateXAnimation, translateYAnimation).Begin();
     }
 
     private void Zoom(double delta)
