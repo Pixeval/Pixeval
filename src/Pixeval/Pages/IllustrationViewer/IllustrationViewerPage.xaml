@@ -17,9 +17,9 @@
                DisplayMode="Overlay"
                IsPaneOpen="{x:Bind _viewModel.IsInfoPaneOpen, Mode=TwoWay}"
                OpenPaneLength="330"
-               PaneOpened="IllustrationInfoAndCommentsSplitView_OnPaneOpened"
+               PaneBackground="Transparent"
                PaneClosed="IllustrationInfoAndCommentsSplitView_OnPaneClosed"
-               PaneBackground="Transparent">
+               PaneOpened="IllustrationInfoAndCommentsSplitView_OnPaneOpened">
         <SplitView.Pane>
             <Grid Width="330"
                   HorizontalAlignment="Left"
@@ -49,29 +49,45 @@
                             HorizontalAlignment="Stretch"
                             LastChildFill="True">
             <Grid controls:DockPanel.Dock="Top">
-                <AppBarButton Width="48"
-                              HorizontalAlignment="Left"
-                              Icon="Back"
-                              LabelPosition="Collapsed"
-                              Tapped="BackButton_OnTapped" />
+                <Image Width="25"
+                       Height="25"
+                       Margin="15,0,0,0"
+                       HorizontalAlignment="Left"
+                       Source="/Assets/Images/logo44x44.ico" />
+                <TextBlock Margin="50,-1,0,0"
+                           VerticalAlignment="Center"
+                           FontSize="{StaticResource PixevalContentFontSize}"
+                           Text="{x:Bind _viewModel.IllustratorName, Mode=OneWay}" />
                 <CommandBar x:Name="IllustrationViewerCommandBar"
-                            Margin="150,0,150,0"
+                            Width="300"
+                            Margin="0,0,20,0"
                             HorizontalAlignment="Center"
-                            DefaultLabelPosition="Right">
+                            DefaultLabelPosition="Collapsed">
                     <AppBarToggleButton x:Uid="/IllustrationViewerPage/IllustrationInfoAndCommentsButton"
+                                        Width="40"
                                         Icon="{ui:FontIcon Glyph=InfoE946}"
                                         IsChecked="{x:Bind _viewModel.IsInfoPaneOpen, Mode=TwoWay}">
                         <AppBarToggleButton.KeyboardAccelerators>
                             <KeyboardAccelerator Key="F12" />
                         </AppBarToggleButton.KeyboardAccelerators>
                     </AppBarToggleButton>
-                    <AppBarButton Command="{x:Bind _viewModel.PlayGifCommand}" Visibility="{x:Bind _viewModel.IsUgoira}" />
+                    <AppBarButton Width="40"
+                                  Command="{x:Bind _viewModel.PlayGifCommand}"
+                                  Visibility="{x:Bind _viewModel.IsUgoira}" />
                     <AppBarSeparator />
-                    <AppBarButton Command="{x:Bind _viewModel.CopyCommand}" />
-                    <AppBarButton Command="{x:Bind _viewModel.SaveCommand}" />
-                    <AppBarButton Command="{x:Bind _viewModel.SaveAsCommand}" />
+                    <AppBarButton x:Uid="/IllustrationViewerPage/CopyButton"
+                                  Width="40"
+                                  Command="{x:Bind _viewModel.CopyCommand}" />
+                    <AppBarButton x:Uid="/IllustrationViewerPage/SaveButton"
+                                  Width="40"
+                                  Command="{x:Bind _viewModel.SaveCommand}" />
+                    <AppBarButton x:Uid="/IllustrationViewerPage/SaveAsButton"
+                                  Width="40"
+                                  Command="{x:Bind _viewModel.SaveAsCommand}" />
                     <AppBarSeparator />
-                    <AppBarButton x:Uid="/IllustrationViewerPage/SetAsButton" Icon="{ui:FontIcon Glyph=PersonalizeE771}">
+                    <AppBarButton x:Uid="/IllustrationViewerPage/SetAsButton"
+                                  Width="40"
+                                  Icon="{ui:FontIcon Glyph=PersonalizeE771}">
                         <AppBarButton.Flyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem Command="{x:Bind _viewModel.SetAsBackgroundCommand}" />
@@ -80,12 +96,12 @@
                         </AppBarButton.Flyout>
                     </AppBarButton>
                     <AppBarSeparator />
-                    <AppBarButton Command="{x:Bind _viewModel.AddToBookmarkCommand}" />
+                    <AppBarButton x:Uid="/IllustrationViewerPage/AddToBookmarkButton" Command="{x:Bind _viewModel.AddToBookmarkCommand}" />
                     <AppBarButton x:Name="GenerateLinkToThisPageButton" Command="{x:Bind _viewModel.GenerateLinkCommand}" />
-                    <AppBarButton Command="{x:Bind _viewModel.GenerateWebLinkCommand}" />
-                    <AppBarButton Command="{x:Bind _viewModel.OpenInWebBrowserCommand}" />
-                    <AppBarButton Command="{x:Bind _viewModel.ShowQrCodeCommand}" />
-                    <AppBarButton Command="{x:Bind _viewModel.ShareCommand}" />
+                    <AppBarButton x:Uid="/IllustrationViewerPage/GenerateWebLinkButton" Command="{x:Bind _viewModel.GenerateWebLinkCommand}" />
+                    <AppBarButton x:Uid="/IllustrationViewerPage/OpenInWebBrowserButton" Command="{x:Bind _viewModel.OpenInWebBrowserCommand}" />
+                    <AppBarButton x:Uid="/IllustrationViewerPage/ShowQrCodeButton" Command="{x:Bind _viewModel.ShowQrCodeCommand}" />
+                    <AppBarButton x:Uid="/IllustrationViewerPage/ShareButton" Command="{x:Bind _viewModel.ShareCommand}" />
                 </CommandBar>
             </Grid>
 

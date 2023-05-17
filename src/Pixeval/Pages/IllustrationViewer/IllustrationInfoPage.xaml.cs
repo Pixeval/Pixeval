@@ -58,7 +58,6 @@ public sealed partial class IllustrationInfoPage
 
     private void IllustrationTagButton_OnClick(object sender, RoutedEventArgs e)
     {
-        this.FindAscendant<IllustrationViewerPage>()?.GoBack();
         WeakReferenceMessenger.Default.Send(new IllustrationTagClickedMessage((string)((Button)sender).Content));
     }
 

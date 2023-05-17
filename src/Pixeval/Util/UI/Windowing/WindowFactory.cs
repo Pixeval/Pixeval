@@ -21,11 +21,11 @@
 using Microsoft.UI.Xaml;
 using WinUI3Utilities;
 
-namespace Pixeval.Util.UI;
+namespace Pixeval.Util.UI.Windowing;
 
 public static class WindowFactory
 {
-    public static Window Create(object content, BackdropType backdropType )
+    public static Window Create(object content, BackdropType backdropType)
     {
         return null!;
     }

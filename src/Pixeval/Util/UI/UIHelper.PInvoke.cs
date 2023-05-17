@@ -83,14 +83,14 @@ public static partial class UIHelper
         var manager = nint.Zero;
         fixed (Guid* id = &RiId)
         {
-            interop.GetForWindow((nint)CurrentContext.HWnd, id, (void**)&manager);
+            interop.GetForWindow((nint) CurrentContext.HWnd, id, (void**) &manager);
             return DataTransferManager.FromAbi(manager);
         }
     }
 
     public static void ShowShareUI()
     {
-        DataTransferManagerInterop.ShowShareUIForWindow((nint)CurrentContext.HWnd);
+        DataTransferManagerInterop.ShowShareUIForWindow((nint) CurrentContext.HWnd);
     }
 
     /// <summary>

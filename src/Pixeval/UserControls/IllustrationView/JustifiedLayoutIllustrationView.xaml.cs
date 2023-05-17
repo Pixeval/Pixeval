@@ -2,6 +2,7 @@ using System;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Graphics;
 using Windows.System;
 using Windows.UI.Core;
 using CommunityToolkit.Mvvm.Messaging;
@@ -14,6 +15,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Messages;
 using Pixeval.Options;
+using Pixeval.Pages.IllustrationViewer;
 using Pixeval.UserControls.JustifiedLayout;
 using Pixeval.Util;
 using Pixeval.Util.IO;
@@ -23,6 +25,7 @@ using Pixeval.Util.UI.Windowing;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 using Pixeval.Pages.Login;
+using WinUIEx;
 
 namespace Pixeval.UserControls.IllustrationView;
 
@@ -93,11 +96,19 @@ public sealed partial class JustifiedLayoutIllustrationView : IIllustrationView
             .GetMangaIllustrationViewModels()
             .ToArray();
 
-        ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement)sender);
+        // This is commented because the connected animation used to be used when IllustrationViewerPage does not create a new window.
+        // ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement) sender);
 
         // TODO: Test Use the new windowing API
-        _ = CustomizableWindow.Create(new() { TitleBarType = TitleBarHelper.TitleBarType.AppWindow }, new(), null,
-            (o, _) => o.To<Frame>().Navigate(typeof(LoginPage)));
+        var forkedWindowSize = CurrentContext.AppWindow.Size.Height > CurrentContext.AppWindow.Size.Width
+            ? CurrentContext.AppWindow.Size.Width
+            : CurrentContext.AppWindow.Size.Height;
+        var window = CustomizableWindow.Create(
+            new AppHelper.InitializeInfo { TitleBarType = TitleBarHelper.TitleBarType.AppWindow, Size = new SizeInt32((int) (forkedWindowSize * 1.2), forkedWindowSize) },
+            CurrentContext.Window,
+            onLoaded: (o, _) => o.To<Frame>().Navigate(typeof(IllustrationViewerPage),
+                new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo()));
+        window.Show();
     }
 
     public async Task TryFillClientAreaAsync()

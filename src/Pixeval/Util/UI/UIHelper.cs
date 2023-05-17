@@ -43,7 +43,6 @@ using Pixeval.Misc;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using QRCoder;
-using System.Threading;
 using Microsoft.UI.Xaml.Data;
 using Pixeval.Options;
 using Pixeval.Util.Threading;
@@ -59,7 +58,6 @@ using Color = Windows.UI.Color;
 using Image = SixLabors.ImageSharp.Image;
 using Point = Windows.Foundation.Point;
 using Size = Windows.Foundation.Size;
-using PInvoke;
 
 namespace Pixeval.Util.UI;
 

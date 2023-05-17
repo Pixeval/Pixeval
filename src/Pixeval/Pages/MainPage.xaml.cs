@@ -254,6 +254,7 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
             {
                 e.Handled = true; // prevent the event from bubbling if it contains an image, since it means that we want to do reverse search.
                 await using var stream = await file.OpenStreamForReadAsync();
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 if (await Image.DetectFormatAsync(stream) is not null)
                 {
                     if (App.AppViewModel.AppSetting.ReverseSearchApiKey is not { Length: > 0 })
@@ -297,7 +298,7 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
     }
 
 
-    public Task<RectInt32[]> SetTitleBarDragRegionAsync(FrameworkElement? titleBar, ColumnDefinition[] dragRegions)
+    public Task<RectInt32[]> SetTitleBarDragRegionAsync(FrameworkElement? titleBar, ColumnDefinition[]? dragRegions)
     {
         var (leftDragRegion, leftMarginRegion, searchBarRegion, marginRegion, reverseSearchButtonRegion, searchSettingButtonRegion, rightDragRegion) = (dragRegions[0], dragRegions[1], dragRegions[2], dragRegions[3], dragRegions[4], dragRegions[5], dragRegions[6]);
         const int leftButtonWidth = 50;

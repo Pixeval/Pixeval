@@ -22,7 +22,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Messages;
 using Pixeval.Util;
-using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -48,10 +47,5 @@ public sealed partial class RelatedWorksPage
             _illustrationViewerPageViewModel = e.Parameter as IllustrationViewerPageViewModel;
             await RelatedWorksIllustrationGrid.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.RelatedWorks(_illustrationViewerPageViewModel!.IllustrationId));
         }
-    }
-
-    private void RelatedWorksIllustrationGrid_OnItemTapped(object? sender, IllustrationViewModel e)
-    {
-        IllustrationViewerPage.NavigatingStackEntriesFromRelatedWorksStack.Push((_illustrationViewerPageViewModel!.IllustrationId, _illustrationViewerPageViewModel.IsManga ? _illustrationViewerPageViewModel.CurrentIndex : null));
     }
 }

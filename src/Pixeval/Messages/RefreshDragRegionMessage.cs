@@ -20,4 +20,7 @@
 
 namespace Pixeval.Messages;
 
-public record RefreshDragRegionMessage;
+public record RefreshDragRegionMessage
+{
+    public static readonly RefreshDragRegionMessage Shared = new();
+}

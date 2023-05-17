@@ -40,7 +40,6 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using Windows.Graphics;
 using Pixeval.Util.Threading;
@@ -48,17 +47,8 @@ using IllustrationViewModel = Pixeval.UserControls.IllustrationView.Illustration
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitleBarDragRegion
+public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragRegion
 {
-    // The navigation between ImageViewerPages contain two difference kinds: 
-    // 1. The navigation happens at the same level, for example, navigating forth and back in the same IllustrationGrid
-    // 2. The navigation navigates into another IllustrationGrid, i.e. , navigates between difference level, for example,
-    //    navigated by clicking items in RelatedWorksPage
-    // When we click the go back button, we only want to go back to the last page that performs navigation between different
-    // levels, so we need to record which page takes such navigation, and remove all the other pages (which are those who
-    // navigates at the same level) from the navigation stack.
-    internal static readonly Stack<(string, int?)> NavigatingStackEntriesFromRelatedWorksStack = new();
-
     private AppPopup? _commentRepliesPopup;
 
     // Tags for IllustrationInfoAndCommentsNavigationView
@@ -78,40 +68,9 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
     }
 
-    public void GoBack()
-    {
-        ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", IllustrationImageShowcaseFrame);
-        WeakReferenceMessenger.Default.Send(new NavigatingBackToMainPageMessage(_viewModel.IllustrationViewModelInTheGridView));
-        WeakReferenceMessenger.Default.Send(new NavigatingFromIllustrationViewerMessage());
-
-        if (!NavigatingStackEntriesFromRelatedWorksStack.Any())
-        {
-            while (App.AppViewModel.AppWindowRootFrame.BackStack.LastOrDefault() is { Parameter: IllustrationViewerPageViewModel })
-            {
-                var stack = App.AppViewModel.AppWindowRootFrame.BackStack;
-                stack.RemoveAt(stack.Count - 1);
-            }
-        }
-        else
-        {
-            while (App.AppViewModel.AppWindowRootFrame.BackStack.LastOrDefault() is { Parameter: IllustrationViewerPageViewModel viewModel } &&
-                   NavigatingStackEntriesFromRelatedWorksStack.Peek() is var (vm, idx) &&
-                   (viewModel.IllustrationId != vm || idx != null && viewModel.CurrentIndex != idx))
-            {
-                var stack = App.AppViewModel.AppWindowRootFrame.BackStack;
-                stack.RemoveAt(stack.Count - 1);
-            }
-        }
-
-        NavigatingStackEntriesFromRelatedWorksStack.TryPop(out _);
-        if (App.AppViewModel.AppWindowRootFrame.CanGoBack)
-        {
-            App.AppViewModel.AppWindowRootFrame.GoBack(new SuppressNavigationTransitionInfo());
-        }
-    }
-
     private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
     {
+        WeakReferenceMessenger.Default.Send(RefreshDragRegionMessage.Shared);
         SidePanelShadow.Receivers.Add(IllustrationPresenterDockPanel);
         PopupShadow.Receivers.Add(IllustrationInfoAndCommentsSplitView);
     }
@@ -148,14 +107,14 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), _viewModel.Current);
 
         WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(_viewModel.IllustrationView?.GetItemContainer(_viewModel.IllustrationViewModelInTheGridView!) ?? App.AppViewModel.AppWindowRootFrame));
-        WeakReferenceMessenger.Default.Register<IllustrationViewerPage, CommentRepliesHyperlinkButtonTappedMessage>(this, CommentRepliesHyperlinkButtonTapped);
+        WeakReferenceMessenger.Default.TryRegister<IllustrationViewerPage, CommentRepliesHyperlinkButtonTappedMessage>(this, CommentRepliesHyperlinkButtonTapped);
     }
 
     private static void CommentRepliesHyperlinkButtonTapped(IllustrationViewerPage recipient, CommentRepliesHyperlinkButtonTappedMessage message)
     {
         var commentRepliesBlock = new CommentRepliesBlock
         {
-            ViewModel = new CommentRepliesBlockViewModel(UIHelper.GetDataContext<CommentBlockViewModel>(message.Sender!))
+            ViewModel = new CommentRepliesBlockViewModel(message.Sender!.GetDataContext<CommentBlockViewModel>())
         };
         commentRepliesBlock.CloseButtonTapped += recipient.CommentRepliesBlock_OnCloseButtonTapped;
         recipient._commentRepliesPopup = PopupManager.CreatePopup(commentRepliesBlock, widthMargin: 200, maxWidth: 1500, minWidth: 400, maxHeight: 1200, closing: (_, _) => recipient._commentRepliesPopup = null);
@@ -223,7 +182,7 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
 
     private void NextIllustration()
     {
-        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value + 1];
+        var illustrationViewModel = (IllustrationViewModel) _viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value + 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
         ParentFrame.Navigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
@@ -234,7 +193,7 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
 
     private void PrevIllustration()
     {
-        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value - 1];
+        var illustrationViewModel = (IllustrationViewModel) _viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value - 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
         ParentFrame.Navigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
@@ -263,11 +222,6 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         PrevIllustration();
     }
 
-    private void BackButton_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        GoBack();
-    }
-
     private void GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick(TeachingTip sender, object args)
     {
         _viewModel.IsGenerateLinkTeachingTipOpen = false;
@@ -286,15 +240,15 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
 
     private void IllustrationInfoAndCommentsSplitView_OnPaneOpened(SplitView sender, object args)
     {
-        WeakReferenceMessenger.Default.Send(new RefreshDragRegionMessage());
+        WeakReferenceMessenger.Default.Send(RefreshDragRegionMessage.Shared);
     }
 
     private void IllustrationInfoAndCommentsSplitView_OnPaneClosed(SplitView sender, object args)
     {
-        WeakReferenceMessenger.Default.Send(new RefreshDragRegionMessage());
+        WeakReferenceMessenger.Default.Send(RefreshDragRegionMessage.Shared);
     }
 
-    public async Task<RectInt32[]> SetTitleBarDragRegionAsync(FrameworkElement? titleBar, ColumnDefinition[] dragRegion)
+    public async Task<RectInt32[]> SetTitleBarDragRegionAsync(FrameworkElement? titleBar, ColumnDefinition[]? dragRegion)
     {
         await ThreadingHelper.SpinWaitAsync(() => IllustrationViewerCommandBar.ActualHeight == 0);
         const int leftButtonWidth = 50;
@@ -304,23 +258,24 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         var leftDragRegionWidth = point.X * scaleFactor - leftDragRegionStart;
         var height = IllustrationViewerCommandBar.ActualHeight * scaleFactor;
         var rightDragRegionStart = leftDragRegionStart + leftDragRegionWidth + IllustrationViewerCommandBar.ActualWidth * scaleFactor;
-        var rightDragRegionWidth = CurrentContext.AppWindow.ClientSize.Width * scaleFactor - rightDragRegionStart;
+        var rightDragRegionWidth = ActualWidth * scaleFactor - rightDragRegionStart;
         RectInt32 dragRegionL;
-        dragRegionL.X = (int)leftDragRegionStart;
+        dragRegionL.X = (int) leftDragRegionStart;
         dragRegionL.Y = 0;
-        dragRegionL.Width = (int)leftDragRegionWidth;
-        dragRegionL.Height = (int)height;
+        dragRegionL.Width = (int) leftDragRegionWidth;
+        dragRegionL.Height = (int) height;
         RectInt32 dragRegionR;
-        dragRegionR.X = (int)rightDragRegionStart;
+        dragRegionR.X = (int) rightDragRegionStart;
         dragRegionR.Y = 0;
-        dragRegionR.Width = (int)rightDragRegionWidth;
-        dragRegionR.Height = (int)height;
+        dragRegionR.Width = (int) rightDragRegionWidth;
+        dragRegionR.Height = (int) height;
 
         var list = new List<RectInt32>();
         if (!_viewModel.IsInfoPaneOpen)
         {
             list.Add(dragRegionL);
         }
+
         list.Add(dragRegionR);
         return list.ToArray();
     }

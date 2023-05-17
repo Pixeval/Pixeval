@@ -120,6 +120,9 @@
   <data name="AddToBookmark" xml:space="preserve">
     <value>添加到收藏夹</value>
   </data>
+  <data name="AddToBookmarkButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>添加到收藏夹</value>
+  </data>
   <data name="Background" xml:space="preserve">
     <value>壁纸</value>
   </data>
@@ -131,6 +134,9 @@
   </data>
   <data name="CommentsTab.Content" xml:space="preserve">
     <value>评论</value>
+  </data>
+  <data name="CopyButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>复制</value>
   </data>
   <data name="GenerateLink" xml:space="preserve">
     <value>复制应用链接</value>
@@ -153,6 +159,9 @@
   <data name="IllustrationInfoAndCommentsButton.Label" xml:space="preserve">
     <value>详情</value>
   </data>
+  <data name="IllustrationInfoAndCommentsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>详情</value>
+  </data>
   <data name="IllustrationInfoTab.Content" xml:space="preserve">
     <value>详情</value>
   </data>
@@ -160,6 +169,9 @@
     <value>锁屏</value>
   </data>
   <data name="OpenInWebBrowser" xml:space="preserve">
+    <value>打开网页</value>
+  </data>
+  <data name="OpenInWebBrowserButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>打开网页</value>
   </data>
   <data name="OriginalmageStreamIsEmptyContent" xml:space="preserve">
@@ -180,6 +192,12 @@
   <data name="SaveAs" xml:space="preserve">
     <value>另存为</value>
   </data>
+  <data name="SaveAsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>另存为</value>
+  </data>
+  <data name="SaveButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>保存</value>
+  </data>
   <data name="SaveManga" xml:space="preserve">
     <value>保存图集</value>
   </data>
@@ -192,16 +210,25 @@
   <data name="SetAsButton.Label" xml:space="preserve">
     <value>设置为</value>
   </data>
+  <data name="SetAsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>设置为</value>
+  </data>
   <data name="SetAsLockScreenSucceededTitle" xml:space="preserve">
     <value>已设置锁屏</value>
   </data>
   <data name="SetAsSucceededTitle" xml:space="preserve">
     <value>设置成功</value>
   </data>
+  <data name="ShareButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>分享</value>
+  </data>
   <data name="ShareTitleFormatted" xml:space="preserve">
     <value>分享{0}</value>
   </data>
   <data name="ShowQRCode" xml:space="preserve">
+    <value>生成二维码</value>
+  </data>
+  <data name="ShowQrCodeButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>生成二维码</value>
   </data>
   <data name="WebLinkCopiedToClipboardToastTitle" xml:space="preserve">

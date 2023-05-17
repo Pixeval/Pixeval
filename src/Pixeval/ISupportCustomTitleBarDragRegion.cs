@@ -27,5 +27,12 @@ namespace Pixeval;
 
 public interface ISupportCustomTitleBarDragRegion
 {
-    Task<RectInt32[]> SetTitleBarDragRegionAsync(FrameworkElement? titleBar, ColumnDefinition[] dragRegions);
+    /// <summary>
+    /// Informs the bearer to refresh the drag region, notice that both <param name="titleBar"></param> and <param name="dragRegions"></param>
+    /// are nullable, the are optional to be used in the implementation of this function. BUT THIS IS A IMPLEMENTATION DETAIL.
+    /// </summary>
+    /// <param name="titleBar"></param>
+    /// <param name="dragRegions"></param>
+    /// <returns></returns>
+    Task<RectInt32[]> SetTitleBarDragRegionAsync(FrameworkElement? titleBar, ColumnDefinition[]? dragRegions);
 }

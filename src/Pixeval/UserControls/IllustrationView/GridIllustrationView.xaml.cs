@@ -138,19 +138,7 @@ public sealed partial class GridIllustrationView : IIllustrationView
             .GetMangaIllustrationViewModels()
             .ToArray();
 
-        var window = new Window();
-        var frame = new Frame();
-        window.Content = frame;
-        frame.Loaded += (o, args) =>
-        {
-            frame.NavigateToType(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModels), new FrameNavigationOptions
-            {
-                TransitionInfoOverride = new SuppressNavigationTransitionInfo()
-            });
-        };
-        window.Activate();
-
-        ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement)sender);
+        ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement) sender);
         UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo());
     }
 
