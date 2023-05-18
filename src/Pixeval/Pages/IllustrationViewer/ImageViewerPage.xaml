@@ -95,9 +95,7 @@
                     </MenuFlyout>
                 </Image.ContextFlyout>
                 <Image.RenderTransform>
-                    <CompositeTransform x:Name="IllustrationOriginalImageRenderTransform"
-                                        ScaleX="{x:Bind _viewModel.Scale, Mode=OneWay}"
-                                        ScaleY="{x:Bind _viewModel.Scale, Mode=OneWay}" />
+                    <CompositeTransform x:Name="IllustrationOriginalImageRenderTransform" />
                 </Image.RenderTransform>
             </Image>
         </Grid>

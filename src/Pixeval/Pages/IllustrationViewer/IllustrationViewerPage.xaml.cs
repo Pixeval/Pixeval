@@ -43,6 +43,7 @@ using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using Windows.Graphics;
 using CommunityToolkit.WinUI.UI;
+using Microsoft.UI.Xaml.Media;
 using Pixeval.Util.Threading;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
@@ -62,11 +63,38 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private IllustrationViewerPageViewModel _viewModel = null!;
 
+    private readonly AsyncLatch<(CompositeTransform, double scale)> _zoomingAnimation;
+
+    private static readonly EasingFunctionBase ZoomEasingFunction = new ExponentialEase
+    {
+        EasingMode = EasingMode.EaseOut,
+        Exponent = 12
+    };
+
     public IllustrationViewerPage()
     {
         InitializeComponent();
         var dataTransferManager = UIHelper.GetDataTransferManager();
         dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
+        _zoomingAnimation = new AsyncLatch<(CompositeTransform, double scale)>(tuple =>
+        {
+            var (transform, scale) = tuple;
+            var translateXAnimation = transform.CreateDoubleAnimation(
+                nameof(CompositeTransform.ScaleX),
+                new Duration(TimeSpan.FromMilliseconds(100)),
+                ZoomEasingFunction,
+                from: transform.ScaleX,
+                to: scale);
+
+            var translateYAnimation = transform.CreateDoubleAnimation(
+                nameof(CompositeTransform.ScaleY),
+                new Duration(TimeSpan.FromMilliseconds(100)),
+                ZoomEasingFunction,
+                from: transform.ScaleY,
+                to: scale);
+            UIHelper.CreateStoryboard(translateXAnimation, translateYAnimation).Begin();
+            return Task.CompletedTask;
+        });
     }
 
     private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
@@ -117,8 +145,12 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
     {
         var isLandscape = _viewModel.Current.IllustrationViewModel.Illustration.Width >
                           _viewModel.Current.IllustrationViewModel.Illustration.Height;
-        var imageControlSize = IllustrationImageShowcaseFrame.FindDescendant<Image>();
-        Console.WriteLine();
+        var imageControl = IllustrationImageShowcaseFrame.FindDescendant<Image>();
+
+        if (imageControl?.RenderTransform is CompositeTransform transform)
+        {
+            _zoomingAnimation.RunAsync((transform, e)).Discard();
+        }
         // TODO
     }
 

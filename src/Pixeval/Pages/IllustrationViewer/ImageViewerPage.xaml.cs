@@ -27,6 +27,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 
@@ -36,9 +37,28 @@ public sealed partial class ImageViewerPage
 {
     private ImageViewerPageViewModel _viewModel = null!;
 
+    private readonly AsyncLatch _resetImagePositionAnimation;
+
     public ImageViewerPage()
     {
         InitializeComponent();
+        _resetImagePositionAnimation = new AsyncLatch(() =>
+        {
+            var translateXAnimation = IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(
+                nameof(CompositeTransform.TranslateX),
+                from: IllustrationOriginalImageRenderTransform.TranslateX,
+                to: 0,
+                duration: TimeSpan.FromSeconds(1),
+                easingFunction: _easingFunction);
+            var translateYAnimation = IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(
+                nameof(CompositeTransform.TranslateY),
+                from: IllustrationOriginalImageRenderTransform.TranslateY,
+                to: 0,
+                duration: TimeSpan.FromSeconds(1),
+                easingFunction: _easingFunction);
+            UIHelper.CreateStoryboard(translateXAnimation, translateYAnimation).Begin();
+            return Task.CompletedTask;
+        });
     }
 
     public override void OnPageActivated(NavigationEventArgs e)
@@ -46,7 +66,6 @@ public sealed partial class ImageViewerPage
         if (e.Parameter is ImageViewerPageViewModel viewModel)
         {
             _viewModel = viewModel;
-            _viewModel.ZoomChanged += ViewModelOnZoomChanged;
         }
     }
 
@@ -82,10 +101,6 @@ public sealed partial class ImageViewerPage
                 }
             }
         }
-    }
-
-    private void ViewModelOnZoomChanged(object? sender, double e)
-    {
     }
 
     private void IllustrationOriginalImage_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
@@ -157,26 +172,9 @@ public sealed partial class ImageViewerPage
         return IllustrationOriginalImageRenderTransform.ScaleX;
     }
 
-    private void ResetImagePosition()
-    {
-        var translateXAnimation = IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(
-            nameof(CompositeTransform.TranslateX),
-            from: IllustrationOriginalImageRenderTransform.TranslateX,
-            to: 0,
-            duration: TimeSpan.FromSeconds(1),
-            easingFunction: _easingFunction);
-        var translateYAnimation = IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(
-            nameof(CompositeTransform.TranslateY),
-            from: IllustrationOriginalImageRenderTransform.TranslateY,
-            to: 0,
-            duration: TimeSpan.FromSeconds(1),
-            easingFunction: _easingFunction);
-        UIHelper.CreateStoryboard(translateXAnimation, translateYAnimation).Begin();
-    }
-
     private void Zoom(double delta)
     {
-        ResetImagePosition();
+        _resetImagePositionAnimation.RunAsync().Discard();
         _viewModel.Zoom(delta);
     }
 

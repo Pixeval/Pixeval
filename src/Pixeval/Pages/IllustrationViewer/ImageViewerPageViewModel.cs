@@ -219,11 +219,12 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         else if (IllustrationViewModel.OriginalSourceUrl is { } src)
         {
             AdvancePhase(LoadingPhase.DownloadingImage);
-            switch (await imageClient.DownloadAsIRandomAccessStreamAsync(src, new Progress<int>(d =>
-                    {
-                        LoadingProgress = d;
-                        AdvancePhase(LoadingPhase.DownloadingImage);
-                    }), ImageLoadingCancellationHandle))
+            var ras = await imageClient.DownloadAsIRandomAccessStreamAsync(src, new Progress<int>(d =>
+            {
+                LoadingProgress = d;
+                AdvancePhase(LoadingPhase.DownloadingImage);
+            }), ImageLoadingCancellationHandle);
+            switch (ras)
             {
                 case Result<IRandomAccessStream>.Success(var s):
                     OriginalImageStream = s;
