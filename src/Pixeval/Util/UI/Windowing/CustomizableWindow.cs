@@ -31,33 +31,24 @@ public sealed class CustomizableWindow : Window
 {
     private readonly AppHelper.InitializeInfo _provider;
 
-    public Frame Frame { get; }
+    private readonly Frame _frame;
 
     private readonly FrameworkElement? _titleBar;
 
     private readonly Window _owner;
 
-    public static CustomizableWindow Create(
-        AppHelper.InitializeInfo provider,
-        Window owner,
-        FrameworkElement? titleBar = null,
-        RoutedEventHandler? onLoaded = null)
-    {
-        var w = new CustomizableWindow(provider, titleBar, owner);
-        if (onLoaded is not null)
-        {
-            w.Frame.Loaded += onLoaded;
-        }
-
-        AppHelper.Initialize(w._provider, w, null, w._titleBar);
-        return w;
-    }
-
-    private CustomizableWindow(AppHelper.InitializeInfo provider, FrameworkElement? titleBar, Window owner)
+    /// <summary>
+    /// IT IS FORBIDDEN TO USE THIS CONSTRUCTOR DIRECTLY, USE <see cref="WindowFactory.Fork"/> INSTEAD
+    /// </summary>
+    /// <param name="provider"></param>
+    /// <param name="titleBar"></param>
+    /// <param name="owner"></param>
+    /// <param name="onLoaded"></param>
+    internal CustomizableWindow(AppHelper.InitializeInfo provider, FrameworkElement? titleBar, Window owner, RoutedEventHandler? onLoaded)
     {
         Grid presenter;
         _provider = provider;
-        Frame = new Frame();
+        _frame = new Frame();
         _titleBar = titleBar;
         _owner = owner;
         Content = presenter = new Grid
@@ -67,13 +58,18 @@ public sealed class CustomizableWindow : Window
             Children =
             {
                 //  _titleBar,
-                Frame
+                _frame
             }
         };
         presenter.SizeChanged += OnSizeChanged;
         Activated += OnActivated;
         Closed += OnClosed;
         _owner.Closed += OnOwnerOnClosed;
+
+        if (onLoaded is not null)
+        {
+            _frame.Loaded += onLoaded;
+        }
     }
 
     private void OnClosed(object sender, WindowEventArgs args)
@@ -92,7 +88,7 @@ public sealed class CustomizableWindow : Window
 
         WeakReferenceMessenger.Default.TryRegister<CustomizableWindow, RefreshDragRegionMessage>(this, async (recipient, _) =>
             {
-                if (recipient.Frame.Content is ISupportCustomTitleBarDragRegion supportCustomTitleBarDragRegion)
+                if (recipient._frame.Content is ISupportCustomTitleBarDragRegion supportCustomTitleBarDragRegion)
                 {
                     // Here I admit that it is a bit confusing that I call "ISupportCustomTitleBarDragRegion::SetTitleBarDragRegionAsync"
                     // rather than DragZoneHelper::SetDragZones, the reason for this is a API design difference between two authors of
@@ -106,7 +102,7 @@ public sealed class CustomizableWindow : Window
 
     private async void OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        if (Frame.Content is ISupportCustomTitleBarDragRegion supportCustomTitleBarDragRegion)
+        if (_frame.Content is ISupportCustomTitleBarDragRegion supportCustomTitleBarDragRegion)
         {
             var rects = await supportCustomTitleBarDragRegion.SetTitleBarDragRegionAsync(null, null);
             AppWindow.TitleBar.SetDragRectangles(rects);
@@ -115,6 +111,6 @@ public sealed class CustomizableWindow : Window
 
     public void Navigate<T>(object parameter, NavigationTransitionInfo infoOverride) where T : Page
     {
-        _ = Frame.Navigate(typeof(T), parameter, infoOverride);
+        _ = _frame.Navigate(typeof(T), parameter, infoOverride);
     }
 }

@@ -103,7 +103,7 @@ public sealed partial class JustifiedLayoutIllustrationView : IIllustrationView
         var forkedWindowSize = CurrentContext.AppWindow.Size.Height > CurrentContext.AppWindow.Size.Width
             ? CurrentContext.AppWindow.Size.Width
             : CurrentContext.AppWindow.Size.Height;
-        var window = CustomizableWindow.Create(
+        var window = WindowFactory.Fork(
             new AppHelper.InitializeInfo { TitleBarType = TitleBarHelper.TitleBarType.AppWindow, Size = new SizeInt32((int) (forkedWindowSize * 1.2), forkedWindowSize) },
             CurrentContext.Window,
             onLoaded: (o, _) => o.To<Frame>().Navigate(typeof(IllustrationViewerPage),

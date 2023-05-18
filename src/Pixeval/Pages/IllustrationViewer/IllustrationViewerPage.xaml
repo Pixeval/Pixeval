@@ -8,8 +8,12 @@
                         xmlns:ui="using:Pixeval.Util.UI"
                         SizeChanged="IllustrationViewerPage_OnSizeChanged"
                         ui:NavigationHelper.BackHotKey="Escape"
+                        PointerMoved="IllustrationViewerPage_OnPointerMoved"
                         Loaded="IllustrationViewerPage_OnLoaded"
                         mc:Ignorable="d">
+    <Page.KeyboardAccelerators>
+        <KeyboardAccelerator Key="Escape" Modifiers="None" Invoked="ExitFullScreenKeyboardAccelerator_OnInvoked" />
+    </Page.KeyboardAccelerators>
     <controls1:EnhancedPage.Resources>
         <ThemeShadow x:Name="PopupShadow" />
         <ThemeShadow x:Name="SidePanelShadow" />
@@ -49,7 +53,7 @@
         <controls:DockPanel x:Name="IllustrationPresenterDockPanel"
                             HorizontalAlignment="Stretch"
                             LastChildFill="True">
-            <Grid controls:DockPanel.Dock="Top">
+            <Grid controls:DockPanel.Dock="Top" x:Name="TopCommandBar">
                 <Image Width="25"
                        Height="25"
                        Margin="15,0,0,0"
@@ -115,9 +119,10 @@
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
                                 DefaultLabelPosition="Collapsed">
-                        <AppBarButton x:Uid="/IllustrationViewerPage/FullScreenButton"
-                                      Width="40"
-                                      Command="{x:Bind _viewModel.FullScreenCommand}" />
+                        <AppBarToggleButton x:Uid="/IllustrationViewerPage/FullScreenButton"
+                                            Width="40"
+                                            Tapped="FullScreenButton_OnTapped"
+                                            Command="{x:Bind _viewModel.FullScreenCommand}" />
                         <AppBarToggleButton x:Name="RestoreResolutionToggleButton"
                                       Width="40"
                                       Tapped="RestoreResolutionToggleButton_OnTapped"

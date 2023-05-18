@@ -174,6 +174,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         RestoreResolutionCommand.NotifyCanExecuteChanged();
         ZoomInCommand.NotifyCanExecuteChanged();
         ZoomOutCommand.NotifyCanExecuteChanged();
+        FullScreenCommand.NotifyCanExecuteChanged();
     }
 
     public void FlipRestoreResolutionCommand(bool scaled)
@@ -198,6 +199,8 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
             IconSource = MakoHelper.GetBookmarkButtonIconSource(FirstIllustrationViewModel.IsBookmarked)
         };
 
+        FullScreenCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        
         RestoreResolutionCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         
         BookmarkCommand.ExecuteRequested += BookmarkCommandOnExecuteRequested;

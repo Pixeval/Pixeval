@@ -43,8 +43,10 @@ using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using Windows.Graphics;
 using CommunityToolkit.WinUI.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Util.Threading;
+using Pixeval.Util.UI.Windowing;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -59,13 +61,17 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private NavigationViewTag? _commentsTag;
 
+    private AppWindow? _appWindow;
+
     private NavigationViewTag? _illustrationInfoTag;
 
     private IllustrationViewerPageViewModel _viewModel = null!;
 
+    private const double TitleBarHeight = 48;
+    
     private readonly AsyncLatch<(CompositeTransform, double scale)> _zoomingAnimation;
 
-    private static readonly EasingFunctionBase ZoomEasingFunction = new ExponentialEase
+    private static readonly EasingFunctionBase ExponentialEasingFunction = new ExponentialEase
     {
         EasingMode = EasingMode.EaseOut,
         Exponent = 12
@@ -82,14 +88,14 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
             var translateXAnimation = transform.CreateDoubleAnimation(
                 nameof(CompositeTransform.ScaleX),
                 new Duration(TimeSpan.FromMilliseconds(500)),
-                ZoomEasingFunction,
+                ExponentialEasingFunction,
                 from: transform.ScaleX,
                 to: scale);
 
             var translateYAnimation = transform.CreateDoubleAnimation(
                 nameof(CompositeTransform.ScaleY),
                 new Duration(TimeSpan.FromMilliseconds(500)),
-                ZoomEasingFunction,
+                ExponentialEasingFunction,
                 from: transform.ScaleY,
                 to: scale);
             UIHelper.CreateStoryboard(translateXAnimation, translateYAnimation).Begin();
@@ -99,6 +105,11 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
     {
+        if (WindowFactory.ForkedWindows.FirstOrDefault(w => w.Content == XamlRoot.Content) is { AppWindow: { } appWindow })
+        {
+            _appWindow = appWindow;
+        }
+
         WeakReferenceMessenger.Default.Send(RefreshDragRegionMessage.Shared);
         SidePanelShadow.Receivers.Add(IllustrationPresenterDockPanel);
         PopupShadow.Receivers.Add(IllustrationInfoAndCommentsSplitView);
@@ -141,11 +152,51 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         WeakReferenceMessenger.Default.TryRegister<IllustrationViewerPage, CommentRepliesHyperlinkButtonTappedMessage>(this, CommentRepliesHyperlinkButtonTapped);
     }
     
+    private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        if (_appWindow is { Presenter.Kind: AppWindowPresenterKind.FullScreen })
+        {
+            _appWindow.SetPresenter(AppWindowPresenterKind.Default);
+            TopCommandBar.Height = double.NaN;
+        }
+    }
+    
     private void CurrentScalePercentage_OnLoaded(object sender, RoutedEventArgs e)
     {
         OnZoomChanged(null, 1); // trigger the first calculation of the percentage of the zooming, does not imply that there is a zooming happened.
     }
+    
+    private void IllustrationViewerPage_OnPointerMoved(object sender, PointerRoutedEventArgs e)
+    {
+        if (_appWindow is { Presenter.Kind: AppWindowPresenterKind.FullScreen })
+        {
+            if (e.GetCurrentPoint(this).Position.Y < 100 && TopCommandBar.Height == 0)
+            {
+                // TODO USE ANIMATION
+                TopCommandBar.Height = TitleBarHeight;
+            }
+            else if (e.GetCurrentPoint(this).Position.Y > 100)
+            {
+                TopCommandBar.Height = 0;
+            }
+        }
+    }
 
+    private void FullScreenButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        switch (_appWindow)
+        {
+            case { Presenter.Kind: not AppWindowPresenterKind.FullScreen }:
+                _appWindow.SetPresenter(AppWindowPresenterKind.FullScreen);
+                TopCommandBar.Height = 0;
+                break;
+            case { Presenter.Kind: AppWindowPresenterKind.FullScreen }:
+                _appWindow.SetPresenter(AppWindowPresenterKind.Default);
+                TopCommandBar.Height = TitleBarHeight;
+                break;
+        }
+    }
+    
     private void IllustrationViewerPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
         CurrentScalePercentage.Text = $"{ScaledPercentage()}%";

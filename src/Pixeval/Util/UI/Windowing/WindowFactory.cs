@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Collections.Generic;
 using Microsoft.UI.Xaml;
 using WinUI3Utilities;
 
@@ -25,8 +26,20 @@ namespace Pixeval.Util.UI.Windowing;
 
 public static class WindowFactory
 {
-    public static Window Create(object content, BackdropType backdropType)
+    private static readonly List<Window> ForkedWindowsInternal = new();
+
+    public static IReadOnlyList<Window> ForkedWindows => ForkedWindowsInternal;
+
+    public static CustomizableWindow Fork(
+        AppHelper.InitializeInfo provider,
+        Window owner,
+        FrameworkElement? titleBar = null,
+        RoutedEventHandler? onLoaded = null)
     {
-        return null!;
+        var w = new CustomizableWindow(provider, titleBar, owner, onLoaded);
+        w.Closed += (_, _) => ForkedWindowsInternal.Remove(w);
+        AppHelper.Initialize(provider, w, null, titleBar);
+        ForkedWindowsInternal.Add(w);
+        return w;
     }
 }
