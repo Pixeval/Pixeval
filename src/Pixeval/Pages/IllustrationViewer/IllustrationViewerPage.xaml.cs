@@ -81,14 +81,14 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
             var (transform, scale) = tuple;
             var translateXAnimation = transform.CreateDoubleAnimation(
                 nameof(CompositeTransform.ScaleX),
-                new Duration(TimeSpan.FromMilliseconds(100)),
+                new Duration(TimeSpan.FromMilliseconds(500)),
                 ZoomEasingFunction,
                 from: transform.ScaleX,
                 to: scale);
 
             var translateYAnimation = transform.CreateDoubleAnimation(
                 nameof(CompositeTransform.ScaleY),
-                new Duration(TimeSpan.FromMilliseconds(100)),
+                new Duration(TimeSpan.FromMilliseconds(500)),
                 ZoomEasingFunction,
                 from: transform.ScaleY,
                 to: scale);
@@ -140,18 +140,67 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(_viewModel.IllustrationView?.GetItemContainer(_viewModel.IllustrationViewModelInTheGridView!) ?? App.AppViewModel.AppWindowRootFrame));
         WeakReferenceMessenger.Default.TryRegister<IllustrationViewerPage, CommentRepliesHyperlinkButtonTappedMessage>(this, CommentRepliesHyperlinkButtonTapped);
     }
+    
+    private void CurrentScalePercentage_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        OnZoomChanged(null, 1); // trigger the first calculation of the percentage of the zooming, does not imply that there is a zooming happened.
+    }
+
+    private void IllustrationViewerPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        CurrentScalePercentage.Text = $"{ScaledPercentage()}%";
+    }
+
+    private void RestoreResolutionToggleButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (_viewModel.Current.Scale > 1)
+        {
+            _viewModel.Current.Zoom(1 - _viewModel.Current.Scale);
+        }
+        else if (IllustrationImageShowcaseFrame.FindDescendant<Image>() is { } imageControl)
+        {
+            var illustWidth = _viewModel.Current.IllustrationViewModel.Illustration.Width;
+            var illustHeight = _viewModel.Current.IllustrationViewModel.Illustration.Height;
+            var displayImageResolution = UIHelper.GetImageScaledFactor(
+                illustWidth,
+                illustHeight,
+                imageControl.ActualWidth,
+                imageControl.ActualHeight,
+                _viewModel.Current.Scale);
+            _viewModel.Current.Zoom(displayImageResolution >= 1 ? displayImageResolution * 2 : 1 / displayImageResolution - _viewModel.Current.Scale);
+        }
+    }
 
     private void OnZoomChanged(object? sender, double e)
     {
-        var isLandscape = _viewModel.Current.IllustrationViewModel.Illustration.Width >
-                          _viewModel.Current.IllustrationViewModel.Illustration.Height;
-        var imageControl = IllustrationImageShowcaseFrame.FindDescendant<Image>();
-
-        if (imageControl?.RenderTransform is CompositeTransform transform)
+        if (IllustrationImageShowcaseFrame.FindDescendant<Image>() is { } imageControl)
         {
-            _zoomingAnimation.RunAsync((transform, e)).Discard();
+            if (imageControl.RenderTransform is CompositeTransform transform)
+            {
+                _zoomingAnimation.RunAsync((transform, e)).Discard();
+            }
+
+            CurrentScalePercentage.Text = $"{ScaledPercentage()}%";
+
+            var scaled = Math.Abs(_viewModel.Current.Scale - 1) > double.Epsilon;
+            RestoreResolutionToggleButton.IsChecked = scaled;
+            _viewModel.FlipRestoreResolutionCommand(scaled);
         }
-        // TODO
+    }
+
+    private int ScaledPercentage()
+    {
+        var illustWidth = _viewModel.Current.IllustrationViewModel.Illustration.Width;
+        var illustHeight = _viewModel.Current.IllustrationViewModel.Illustration.Height;
+        var imageControl = IllustrationImageShowcaseFrame.FindDescendant<Image>()!;
+        var displayImageResolution = UIHelper.GetImageScaledFactor(
+            illustWidth,
+            illustHeight,
+            imageControl.ActualWidth,
+            imageControl.ActualHeight, 
+            _viewModel.Current.Scale);
+            
+        return (int) (displayImageResolution * 100);
     }
 
     private static void CommentRepliesHyperlinkButtonTapped(IllustrationViewerPage recipient, CommentRepliesHyperlinkButtonTappedMessage message)
@@ -271,9 +320,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         _viewModel.IsGenerateLinkTeachingTipOpen = false;
         App.AppViewModel.AppSetting.DisplayTeachingTipWhenGeneratingAppLink = false;
     }
-
-
-
+    
     private void IllustrationInfoAndCommentsNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
         if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag })

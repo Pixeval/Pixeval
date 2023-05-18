@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Microsoft.UI.Xaml;
@@ -29,7 +28,6 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
-using Pixeval.Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -107,39 +105,20 @@ public sealed partial class ImageViewerPage
     {
         if (GetZoomFactor() > 1)
         {
-            ResetImageScaleStoryboard.Begin();
-            ResetImageTranslationStoryboard.Begin();
-            if (_tappedScaled)
-            {
-                _tappedScaled.Inverse();
-            }
+            Zoom(1 - GetZoomFactor());
         }
         else
         {
-            ImageScaledIn200PercentStoryboard.Begin();
-            _tappedScaled.Inverse();
+            var illustWidth = _viewModel.IllustrationViewModel.Illustration.Width;
+            var illustHeight = _viewModel.IllustrationViewModel.Illustration.Height;
+            var displayImageResolution = UIHelper.GetImageScaledFactor(
+                illustWidth,
+                illustHeight,
+                IllustrationOriginalImage.ActualWidth,
+                IllustrationOriginalImage.ActualHeight, 
+                GetZoomFactor());
+            Zoom(displayImageResolution >= 1 ? displayImageResolution * 2 : 1 / displayImageResolution - GetZoomFactor());
         }
-    }
-
-    private void ResetImageScaleStoryboard_OnCompleted(object? sender, object e)
-    {
-        ResetImageScaleStoryboard.Stop();
-        IllustrationOriginalImageRenderTransform.ScaleX = 1;
-        IllustrationOriginalImageRenderTransform.ScaleY = 1;
-    }
-
-    private void ImageScaledIn200PercentStoryboard_OnCompleted(object? sender, object e)
-    {
-        ImageScaledIn200PercentStoryboard.Stop();
-        IllustrationOriginalImageRenderTransform.ScaleX = 2;
-        IllustrationOriginalImageRenderTransform.ScaleY = 2;
-    }
-
-    private void ResetImageTranslationStoryboard_OnCompleted(object? sender, object e)
-    {
-        ResetImageTranslationStoryboard.Stop();
-        IllustrationOriginalImageRenderTransform.TranslateX = 0;
-        IllustrationOriginalImageRenderTransform.TranslateY = 0;
     }
 
     private void IllustrationOriginalImageContainer_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
@@ -164,9 +143,7 @@ public sealed partial class ImageViewerPage
         EasingMode = EasingMode.EaseOut,
         Exponent = 12
     };
-
-    private bool _tappedScaled;
-
+    
     private double GetZoomFactor()
     {
         return IllustrationOriginalImageRenderTransform.ScaleX;

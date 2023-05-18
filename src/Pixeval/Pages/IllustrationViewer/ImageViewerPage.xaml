@@ -9,46 +9,6 @@
                        xmlns:ui="using:Pixeval.Util.UI"
                        Loaded="ImageViewerPage_OnLoaded"
                        mc:Ignorable="d">
-    <controls:EnhancedPage.Resources>
-        <ResourceDictionary>
-            <Storyboard x:Name="ResetImageScaleStoryboard" Completed="ResetImageScaleStoryboard_OnCompleted">
-                <DoubleAnimation EasingFunction="{x:Bind _easingFunction}"
-                                 Storyboard.TargetName="IllustrationOriginalImageRenderTransform"
-                                 Storyboard.TargetProperty="ScaleX"
-                                 To="1"
-                                 Duration="0:0:1" />
-                <DoubleAnimation EasingFunction="{x:Bind _easingFunction}"
-                                 Storyboard.TargetName="IllustrationOriginalImageRenderTransform"
-                                 Storyboard.TargetProperty="ScaleY"
-                                 To="1"
-                                 Duration="0:0:1" />
-            </Storyboard>
-            <Storyboard x:Name="ImageScaledIn200PercentStoryboard" Completed="ImageScaledIn200PercentStoryboard_OnCompleted">
-                <DoubleAnimation EasingFunction="{x:Bind _easingFunction}"
-                                 Storyboard.TargetName="IllustrationOriginalImageRenderTransform"
-                                 Storyboard.TargetProperty="ScaleX"
-                                 To="2"
-                                 Duration="0:0:1" />
-                <DoubleAnimation EasingFunction="{x:Bind _easingFunction}"
-                                 Storyboard.TargetName="IllustrationOriginalImageRenderTransform"
-                                 Storyboard.TargetProperty="ScaleY"
-                                 To="2"
-                                 Duration="0:0:1" />
-            </Storyboard>
-            <Storyboard x:Name="ResetImageTranslationStoryboard" Completed="ResetImageTranslationStoryboard_OnCompleted">
-                <DoubleAnimation EasingFunction="{x:Bind _easingFunction}"
-                                 Storyboard.TargetName="IllustrationOriginalImageRenderTransform"
-                                 Storyboard.TargetProperty="TranslateX"
-                                 To="0"
-                                 Duration="0:0:1" />
-                <DoubleAnimation EasingFunction="{x:Bind _easingFunction}"
-                                 Storyboard.TargetName="IllustrationOriginalImageRenderTransform"
-                                 Storyboard.TargetProperty="TranslateY"
-                                 To="0"
-                                 Duration="0:0:1" />
-            </Storyboard>
-        </ResourceDictionary>
-    </controls:EnhancedPage.Resources>
     <Grid>
         <Grid x:Name="IllustrationOriginalImageContainer"
               HorizontalAlignment="Stretch"

@@ -6,6 +6,7 @@
                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                         xmlns:ui="using:Pixeval.Util.UI"
+                        SizeChanged="IllustrationViewerPage_OnSizeChanged"
                         ui:NavigationHelper.BackHotKey="Escape"
                         Loaded="IllustrationViewerPage_OnLoaded"
                         mc:Ignorable="d">
@@ -117,8 +118,9 @@
                         <AppBarButton x:Uid="/IllustrationViewerPage/FullScreenButton"
                                       Width="40"
                                       Command="{x:Bind _viewModel.FullScreenCommand}" />
-                        <AppBarButton x:Name="RestoreResolutionButton"
+                        <AppBarToggleButton x:Name="RestoreResolutionToggleButton"
                                       Width="40"
+                                      Tapped="RestoreResolutionToggleButton_OnTapped"
                                       Command="{x:Bind _viewModel.RestoreResolutionCommand}" />
                         <AppBarButton x:Uid="/IllustrationViewerPage/ZoomOutButton"
                                       Width="40"
@@ -129,7 +131,11 @@
                     </CommandBar>
                     <TextBlock x:Name="CurrentScalePercentage"
                                Margin="-5,-3,0,0"
+                               Width="50"
+                               HorizontalTextAlignment="Center"
+                               TextAlignment="Center"
                                VerticalAlignment="Center"
+                               Loaded="CurrentScalePercentage_OnLoaded"
                                FontSize="{StaticResource PixevalContentFontSize}"
                                FontWeight="SemiBold" />
                 </StackPanel>

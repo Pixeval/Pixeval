@@ -394,4 +394,21 @@ public static partial class UIHelper
         var color = ColorTranslator.FromHtml(trimmed);
         return Color.FromArgb(color.A, color.R, color.G, color.B);
     }
+
+    /// <summary>
+    /// Get the scale factor of the original image when it is contained inside an <see cref="Microsoft.UI.Xaml.Controls.Image"/> control, and the <see cref="Microsoft.UI.Xaml.Controls.Image.Stretch"/>
+    /// property is set to <see cref="Stretch.UniformToFill"/> or <see cref="Stretch.Uniform"/>
+    /// </summary>
+    public static double GetImageScaledFactor(double originalImageWidth, double originalImageHeight, double imageWidth, double imageHeight, double imageZoomFactor)
+    {
+        var illustResolution = originalImageWidth / originalImageHeight;
+        var imageResolution = imageWidth / imageHeight;
+
+        var displayImageResolution = (imageResolution - illustResolution) switch
+        {
+            > 0 => imageHeight * imageZoomFactor / originalImageHeight, // imageResolution - illustResolution > 0: the height is filled
+            _ => imageWidth * imageZoomFactor / originalImageWidth, // imageResolution - illustResolution < 0: the width is filled; or = 0, then the choose is arbitrary
+        };
+        return displayImageResolution;
+    }
 }

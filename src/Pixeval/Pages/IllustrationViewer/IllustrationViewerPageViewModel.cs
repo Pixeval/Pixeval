@@ -171,8 +171,17 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         PlayGifCommand.NotifyCanExecuteChanged();
         CopyCommand.NotifyCanExecuteChanged();
+        RestoreResolutionCommand.NotifyCanExecuteChanged();
+        ZoomInCommand.NotifyCanExecuteChanged();
+        ZoomOutCommand.NotifyCanExecuteChanged();
     }
 
+    public void FlipRestoreResolutionCommand(bool scaled)
+    {
+        RestoreResolutionCommand.Label = scaled ? IllustrationViewerPageResources.UniformToFillResolution : IllustrationViewerPageResources.RestoreOriginalResolution;
+        RestoreResolutionCommand.IconSource = scaled ? FontIconSymbols.Webcam2E960.GetFontIconSource() : FontIconSymbols.WebcamE8B8.GetFontIconSource();
+    }
+    
     private void InitializeCommands()
     {
         BookmarkCommand = new XamlUICommand
@@ -189,15 +198,20 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
             IconSource = MakoHelper.GetBookmarkButtonIconSource(FirstIllustrationViewModel.IsBookmarked)
         };
 
+        RestoreResolutionCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        
         BookmarkCommand.ExecuteRequested += BookmarkCommandOnExecuteRequested;
 
-        CopyCommand.CanExecuteRequested += CopyCommandOnCanExecuteRequested;
+        CopyCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         CopyCommand.ExecuteRequested += CopyCommandOnExecuteRequested;
 
         PlayGifCommand.CanExecuteRequested += PlayGifCommandOnCanExecuteRequested;
         PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
 
+        ZoomOutCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         ZoomOutCommand.ExecuteRequested += (_, _) => Current.Zoom(-0.5f);
+
+        ZoomInCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         ZoomInCommand.ExecuteRequested += (_, _) => Current.Zoom(0.5f);
 
         SaveCommand.ExecuteRequested += SaveCommandOnExecuteRequested;
@@ -214,6 +228,11 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
         SetAsBackgroundCommand.CanExecuteRequested += SetAsBackgroundCommandOnCanExecuteRequested;
         SetAsBackgroundCommand.ExecuteRequested += SetAsBackgroundCommandOnExecuteRequested;
+    }
+
+    private void LoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
+    {
+        args.CanExecute = Current.LoadingCompletedSuccessfully;
     }
 
     private async void SetAsBackgroundCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -363,11 +382,6 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
                 Symbol = Symbol.Stop
             };
         }
-    }
-
-    private void CopyCommandOnCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
-    {
-        args.CanExecute = Current.LoadingCompletedSuccessfully;
     }
 
     private async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -566,7 +580,8 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     public XamlUICommand RestoreResolutionCommand { get; } = new()
     {
-        Label = IllustrationViewerPageResources.RestoreOriginalResolution
+        Label = IllustrationViewerPageResources.RestoreOriginalResolution,
+        IconSource = FontIconSymbols.WebcamE8B8.GetFontIconSource()
     };
 
     #endregion

@@ -62,7 +62,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         LoadingImage
     }
 
-    private const int MaxZoomFactor = 8;
+    private const int MaxZoomFactor = 50;
 
     private const int MinZoomFactor = 1;
 
@@ -162,7 +162,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         manager.Insert(new BrowseHistoryEntry { Id = IllustrationViewModel.Id });
     }
 
-    public async Task LoadImage()
+    private async Task LoadImage()
     {
         if (LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true } || _disposed)
         {
@@ -176,7 +176,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         }
     }
 
-    public async Task LoadOriginalImage()
+    private async Task LoadOriginalImage()
     {
         var imageClient = App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi);
         var cacheKey = IllustrationViewModel.Illustration.GetIllustrationOriginalImageCacheKey();
