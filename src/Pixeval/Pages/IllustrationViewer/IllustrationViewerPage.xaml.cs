@@ -441,4 +441,24 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         list.Add(dragRegionR);
         return list.ToArray();
     }
+
+    private void LeftPageButtonArea_OnPointerEntered(object sender, PointerRoutedEventArgs e)
+    {
+        PrevButtonDetector.Opacity = 1;
+    }
+
+    private void LeftPageButtonArea_OnPointerExited(object sender, PointerRoutedEventArgs e)
+    {
+        PrevButtonDetector.Opacity = 0;
+    }
+
+    private void RightPageButtonArea_OnPointerEntered(object sender, PointerRoutedEventArgs e)
+    {
+        NextButtonDetector.Opacity = 1;
+    }
+
+    private void RightPageButtonArea_OnPointerExited(object sender, PointerRoutedEventArgs e)
+    {
+        NextButtonDetector.Opacity = 0;
+    }
 }
