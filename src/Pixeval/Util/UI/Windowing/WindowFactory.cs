@@ -36,7 +36,7 @@ public static class WindowFactory
         FrameworkElement? titleBar = null,
         RoutedEventHandler? onLoaded = null)
     {
-        var w = new CustomizableWindow(provider, titleBar, owner, onLoaded);
+        var w = new CustomizableWindow(owner, onLoaded);
         w.Closed += (_, _) => ForkedWindowsInternal.Remove(w);
         AppHelper.Initialize(provider, w, null, titleBar);
         ForkedWindowsInternal.Add(w);

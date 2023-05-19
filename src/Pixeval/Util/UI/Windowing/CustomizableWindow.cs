@@ -23,33 +23,24 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Messages;
-using WinUI3Utilities;
 
 namespace Pixeval.Util.UI.Windowing;
 
 public sealed class CustomizableWindow : Window
 {
-    private readonly AppHelper.InitializeInfo _provider;
-
     private readonly Frame _frame;
-
-    private readonly FrameworkElement? _titleBar;
 
     private readonly Window _owner;
 
     /// <summary>
     /// IT IS FORBIDDEN TO USE THIS CONSTRUCTOR DIRECTLY, USE <see cref="WindowFactory.Fork"/> INSTEAD
     /// </summary>
-    /// <param name="provider"></param>
-    /// <param name="titleBar"></param>
     /// <param name="owner"></param>
     /// <param name="onLoaded"></param>
-    internal CustomizableWindow(AppHelper.InitializeInfo provider, FrameworkElement? titleBar, Window owner, RoutedEventHandler? onLoaded)
+    internal CustomizableWindow(Window owner, RoutedEventHandler? onLoaded)
     {
         Grid presenter;
-        _provider = provider;
         _frame = new Frame();
-        _titleBar = titleBar;
         _owner = owner;
         Content = presenter = new Grid
         {

@@ -13,6 +13,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using PInvoke;
 using Pixeval.Messages;
 using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
@@ -24,8 +25,8 @@ using Pixeval.Util.UI;
 using Pixeval.Util.UI.Windowing;
 using Pixeval.Utilities;
 using WinUI3Utilities;
-using Pixeval.Pages.Login;
-using WinUIEx;
+using static PInvoke.User32;
+using VirtualKey = Windows.System.VirtualKey;
 
 namespace Pixeval.UserControls.IllustrationView;
 
@@ -100,15 +101,41 @@ public sealed partial class JustifiedLayoutIllustrationView : IIllustrationView
         // ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement) sender);
 
         // TODO: Test Use the new windowing API
-        var forkedWindowSize = CurrentContext.AppWindow.Size.Height > CurrentContext.AppWindow.Size.Width
-            ? CurrentContext.AppWindow.Size.Width
-            : CurrentContext.AppWindow.Size.Height;
+        var (width, height) = DetermineWindowSize(viewModels[0].Illustration.Width, viewModels[0].Illustration.Width / (double) viewModels[0].Illustration.Height);
         var window = WindowFactory.Fork(
-            new AppHelper.InitializeInfo { TitleBarType = TitleBarHelper.TitleBarType.AppWindow, Size = new SizeInt32((int) (forkedWindowSize * 1.2), forkedWindowSize) },
+            new AppHelper.InitializeInfo { TitleBarType = TitleBarHelper.TitleBarType.AppWindow, Size = new SizeInt32(width, height) },
             CurrentContext.Window,
             onLoaded: (o, _) => o.To<Frame>().Navigate(typeof(IllustrationViewerPage),
                 new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo()));
-        window.Show();
+        window.Activate();
+    }
+
+    private static unsafe (int windowWidth, int windowHeight) DetermineWindowSize(int illustWidth, double illustRatio)
+    {
+        var windowPlacement = WINDOWPLACEMENT.Create();
+        GetWindowPlacement(CurrentContext.Window.GetWindowHandle(), &windowPlacement);
+        var windowHandle = MonitorFromWindow(CurrentContext.Window.GetWindowHandle(), MonitorOptions.MONITOR_DEFAULTTONEAREST);
+        GetMonitorInfo(windowHandle, out var monitorInfoEx);
+        var devMode = DEVMODE.Create();
+        while (!EnumDisplaySettings(
+                   monitorInfoEx.DeviceName,
+                   ENUM_CURRENT_SETTINGS, 
+                   &devMode)) { }
+
+        var monitorWidth = devMode.dmPelsWidth;
+        var monitorHeight = devMode.dmPelsHeight;
+
+        var determinedWidth = illustWidth switch
+        {
+            not 1500 => 1500 + Random.Shared.Next(0, 200),
+            _ => 1500
+        };
+        var windowWidth = determinedWidth > monitorWidth ? (int) monitorWidth - 100 : determinedWidth;
+        // 51 is determined through calculation, it is the height of the title bar
+        var windowHeight = windowWidth / illustRatio + 51 is var height && height > monitorHeight - 80 // 80: estimated working area height
+            ? monitorHeight - 100
+            : height;
+        return ((int windowWidth, int windowHeight)) (windowWidth, windowHeight);
     }
 
     public async Task TryFillClientAreaAsync()
