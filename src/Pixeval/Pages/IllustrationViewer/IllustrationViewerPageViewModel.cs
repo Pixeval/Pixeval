@@ -27,6 +27,7 @@ using Windows.System;
 using Windows.System.UserProfile;
 using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -62,6 +63,9 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     [ObservableProperty]
     private bool _isInfoPaneOpen;
 
+    [ObservableProperty]
+    private IllustrationViewModel? _selectedIllustrationViewModel;
+
     private ImageSource? _qrCodeSource;
 
     // The reason why we don't put UserProfileImageSource into IllustrationViewModel
@@ -77,6 +81,11 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     // Preserved for illustrator view use
     [ObservableProperty]
     private UserInfo? _userInfo;
+
+    [ObservableProperty]
+#pragma warning disable CS0169
+    private AdvancedCollectionView? _snapshot;
+#pragma warning restore CS0169
 
     private readonly IllustrationViewModel[] _illustrations;
 

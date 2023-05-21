@@ -156,7 +156,7 @@ public sealed partial class GridIllustrationView : IIllustrationView
         {
             if (await context.LoadThumbnailIfRequired())
             {
-                var transform = (ScaleTransform)sender.RenderTransform;
+                var transform = (ScaleTransform) sender.RenderTransform;
                 if (sender.IsFullyOrPartiallyVisible(this))
                 {
                     var scaleXAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleX), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));

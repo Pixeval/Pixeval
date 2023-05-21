@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BookmarkButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>收藏/取消收藏</value>
-  </data>
   <data name="CannotFindImageSourceContent" xml:space="preserve">
     <value>找不到图片源</value>
   </data>
@@ -147,16 +144,7 @@
   <data name="MergingGifFrames" xml:space="preserve">
     <value>正在合成GIF...</value>
   </data>
-  <data name="SaveCurrentImageButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>保存</value>
-  </data>
   <data name="SetAsSubItem.Text" xml:space="preserve">
     <value>设置为</value>
-  </data>
-  <data name="ZoomInButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>放大</value>
-  </data>
-  <data name="ZoomOutButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>缩小</value>
   </data>
 </root>

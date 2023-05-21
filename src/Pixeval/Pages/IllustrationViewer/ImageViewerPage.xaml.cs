@@ -126,11 +126,6 @@ public sealed partial class ImageViewerPage
         Zoom(e.GetCurrentPoint(null).Properties.MouseWheelDelta / 1000d);
     }
 
-    private void ImageViewerPage_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        CommandBorderDropShadow.Receivers.Add(IllustrationOriginalImageContainer);
-    }
-
     private void IllustrationInfoAndCommentsMenuFlyoutItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         _viewModel.IllustrationViewerPageViewModel.IsInfoPaneOpen = true;

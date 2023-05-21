@@ -19,6 +19,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.UI.Xaml;
 using WinUI3Utilities;
 
@@ -41,5 +42,10 @@ public static class WindowFactory
         AppHelper.Initialize(provider, w, null, titleBar);
         ForkedWindowsInternal.Add(w);
         return w;
+    }
+
+    public static Window? CurrentWindow(this UIElement element)
+    {
+        return ForkedWindows.FirstOrDefault(w => w.Content == element.XamlRoot.Content);
     }
 }

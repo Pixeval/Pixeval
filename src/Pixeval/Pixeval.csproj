@@ -34,7 +34,6 @@
       <None Remove="Strings\zh-CN\IllustratorContentViewer.resw" />
       <None Remove="Strings\zh-CN\IllustratorIllustrationAndMangaBookmarkPage.resw" />
       <None Remove="Strings\zh-CN\RecommendIllustratorProfile.resw" />
-      <None Remove="UserControls\HorizontalShowcase.xaml" />
       <None Remove="UserControls\IllustratorContentViewer\IllustratorContentViewer.xaml" />
       <None Remove="UserControls\IllustratorContentViewer\IllustratorIllustrationAndMangaBookmarkPage.xaml" />
       <None Remove="UserControls\IllustratorContentViewer\IllustratorIllustrationPage.xaml" />
@@ -443,11 +442,6 @@
     </ItemGroup>
     <ItemGroup>
       <Folder Include="UserControls\RecommendIllustratorProfile\" />
-    </ItemGroup>
-    <ItemGroup>
-      <Page Update="UserControls\HorizontalShowcase.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
     </ItemGroup>
     <ItemGroup>
       <Page Update="UserControls\IllustratorContentViewer\IllustratorIllustrationAndMangaBookmarkPage.xaml">

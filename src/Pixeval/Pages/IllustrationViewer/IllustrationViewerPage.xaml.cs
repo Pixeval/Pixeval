@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
@@ -61,8 +62,6 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private NavigationViewTag? _commentsTag;
 
-    private AppWindow? _appWindow;
-
     private NavigationViewTag? _illustrationInfoTag;
 
     private IllustrationViewerPageViewModel _viewModel = null!;
@@ -70,6 +69,8 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
     private const double TitleBarHeight = 48;
     
     private readonly AsyncLatch<(CompositeTransform, double scale)> _zoomingAnimation;
+
+    private readonly AsyncLatch _collapseThumbnailList;
 
     private static readonly EasingFunctionBase ExponentialEasingFunction = new ExponentialEase
     {
@@ -101,18 +102,26 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
             UIHelper.CreateStoryboard(translateXAnimation, translateYAnimation).Begin();
             return Task.CompletedTask;
         });
+
+        _collapseThumbnailList = new AsyncLatch(async () =>
+        {
+            await Task.Delay(3000);
+            BottomCommandSection.Translation = new Vector3(0, 120, 0);
+        });
     }
 
     private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (WindowFactory.ForkedWindows.FirstOrDefault(w => w.Content == XamlRoot.Content) is { AppWindow: { } appWindow })
-        {
-            _appWindow = appWindow;
-        }
-
         WeakReferenceMessenger.Default.Send(RefreshDragRegionMessage.Shared);
         SidePanelShadow.Receivers.Add(IllustrationPresenterDockPanel);
         PopupShadow.Receivers.Add(IllustrationInfoAndCommentsSplitView);
+        CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
+        ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
+
+
+        _viewModel.Snapshot = _viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView; // performance critical?
+
+        _collapseThumbnailList.RunAsync().Discard();
     }
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
@@ -154,9 +163,9 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
     
     private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
-        if (_appWindow is { Presenter.Kind: AppWindowPresenterKind.FullScreen })
+        if (this.CurrentWindow()?.AppWindow is { Presenter.Kind: AppWindowPresenterKind.FullScreen } appWindow)
         {
-            _appWindow.SetPresenter(AppWindowPresenterKind.Default);
+            appWindow.SetPresenter(AppWindowPresenterKind.Default);
             TopCommandBar.Height = double.NaN;
         }
     }
@@ -168,7 +177,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
     
     private void IllustrationViewerPage_OnPointerMoved(object sender, PointerRoutedEventArgs e)
     {
-        if (_appWindow is { Presenter.Kind: AppWindowPresenterKind.FullScreen })
+        if (this.CurrentWindow()?.AppWindow is { Presenter.Kind: AppWindowPresenterKind.FullScreen })
         {
             if (e.GetCurrentPoint(this).Position.Y < 100 && TopCommandBar.Height == 0)
             {
@@ -184,14 +193,14 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void FullScreenButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        switch (_appWindow)
+        switch (this.CurrentWindow()?.AppWindow)
         {
-            case { Presenter.Kind: not AppWindowPresenterKind.FullScreen }:
-                _appWindow.SetPresenter(AppWindowPresenterKind.FullScreen);
+            case { Presenter.Kind: not AppWindowPresenterKind.FullScreen } defaultAppWindow:
+                defaultAppWindow.SetPresenter(AppWindowPresenterKind.FullScreen);
                 TopCommandBar.Height = 0;
                 break;
-            case { Presenter.Kind: AppWindowPresenterKind.FullScreen }:
-                _appWindow.SetPresenter(AppWindowPresenterKind.Default);
+            case { Presenter.Kind: AppWindowPresenterKind.FullScreen } appWindow:
+                appWindow.SetPresenter(AppWindowPresenterKind.Default);
                 TopCommandBar.Height = TitleBarHeight;
                 break;
         }
@@ -460,5 +469,66 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
     private void RightPageButtonArea_OnPointerExited(object sender, PointerRoutedEventArgs e)
     {
         NextButtonDetector.Opacity = 0;
+    }
+
+    private void ThumbnailList_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
+    {
+        var context = sender.GetDataContext<IllustrationViewModel>();
+        if (args.BringIntoViewDistanceX <= sender.ActualWidth)
+        { 
+            _ = context.LoadThumbnailIfRequired();
+        }
+
+        if (sender is Border b && ThumbnailList.SelectedItem is not null)
+        {
+            b.BorderThickness = ThumbnailList.SelectedItem == context ? new Thickness(2) : new Thickness(0);
+        }
+    }
+
+    private void ThumbnailList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (sender is ListView lv)
+        {
+            const string borderControlName = "ThumbnailBorder";
+            var item = lv.ContainerFromItem(lv.SelectedItem);
+            if (item.FindDescendant(borderControlName) is Border border)
+            {
+                border.BorderThickness = new Thickness(2);
+            }
+
+            if (e.RemovedItems is [IllustrationViewModel removedItem] 
+                && lv.ContainerFromItem(removedItem) is { } container
+                && container.FindDescendant(borderControlName) is Border b)
+            {
+                b.BorderThickness = new Thickness(0);
+            }
+        }
+
+        if (e.AddedItems is [IllustrationViewModel viewModel] && viewModel != _viewModel.Current.IllustrationViewModel)
+        {
+            var viewModels = viewModel.GetMangaIllustrationViewModels().ToArray();
+
+            ParentFrame.Navigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModels), 
+                new EntranceNavigationTransitionInfo());
+        }
+    }
+
+    private void ThumbnailBorder_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        var context = sender.GetDataContext<IllustrationViewModel>();
+        if (context.Illustration.Id.ToString() == _viewModel.Current.IllustrationViewModel.Id && _viewModel.Snapshot is [..])
+        {
+            ThumbnailList.ScrollIntoView(context);
+            if (_viewModel.Snapshot.IndexOf(context) is var index and not -1)
+            {
+                ThumbnailList.SelectedIndex = index;
+            }
+        }
+    }
+
+    private void IllustrationImageShowcaseFrame_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        BottomCommandSection.Translation = new Vector3(0, 0, 0);
+        _collapseThumbnailList.RunAsync().Discard();
     }
 }
