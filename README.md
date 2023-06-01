@@ -1,16 +1,16 @@
 <div align="center">
     <img align="center" src="https://s1.ax1x.com/2020/04/03/GUMZjS.png" alt="logo" width="200">
     <h1 align="center">Pixeval</h1>
-    <p align="center">基于.NET 5 和 Windows UI 3的强大、快速、漂亮的Pixiv桌面程序</p>
+    <p align="center">A Strong, Fast and Flexible Pixiv Client based on .NET Core and WPF</p>
     <p align="center">
         <img src="https://img.shields.io/github/stars/Rinacm/Pixeval?color=red&style=flat-square">
         <a href="mailto:decem0730@hotmail.com">
             <img src="https://img.shields.io/static/v1?label=contact%20me&message=hotmail&color=green&style=flat-square">
         </a>
         <a href="https://jq.qq.com/?_wv=1027&k=5hGmJbQ" target="_blank">
-            <img src="https://img.shields.io/static/v1?label=chatting&message=qq&color=blue&style=flat-square">
+            <img src="https://img.shields.io/static/v1?label=chatting&message=qq&color=blue&style=flat-square"
         </a>
-        <a href="http://47.95.218.243/index.html" target="_blank">
+        <a href="http://dylech30th.moe:2082/index.html" target="_blank">
             <img src="https://img.shields.io/static/v1?label=homepage&message=pixeval&color=blueviolet&style=flat-square">
         </a>
         <a href="https://github.com/Rinacm/Pixeval/blob/master/LICENSE" target="_blank">
@@ -19,75 +19,145 @@
         <a href="https://github.com/Rinacm/Pixeval/issues/new/choose" target="_blank">
             <img src="https://img.shields.io/static/v1?label=feedback&message=issues&color=pink&style=flat-square">
         </a>
-        <a href="https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-5.0.9-windows-x64-installer" target="_blank">
-            <img src="https://img.shields.io/static/v1?label=runtime&message=.NET%205.0&color=yellow&style=flat-square">
+        <a href="https://dotnet.microsoft.com/download/dotnet-core/thank-you/runtime-desktop-3.1.3-windows-x64-installer" target="_blank">
+            <img src="https://img.shields.io/static/v1?label=runtime&message=.NET%20Core%203.1&color=yellow&style=flat-square">
         </a>
     </p>
-    </br>
 </div>
 
-🌏: [**简体中文**](https://github.com/Pixeval/Pixeval/blob/master/README.md)
-, [English](https://github.com/Pixeval/Pixeval/blob/master/README.en.md)
+**更新：**
+* 2020/1/9
+    - 将用户浏览器和作品浏览器集成到主窗口中
+    - 修改了图片列表的UI
+    - 压缩包内包含了完整的.NET Core运行环境，避免有些非常非常可爱的萌新不看说明不知道要装.net，缺点是体积大大增加
+* 2020/2/14
+    - 优化了代码，删除了部分无用函数和工具类
+* 2020/3/13
+    - 现在下载时可以查看进度了
+    - 你可以即时预览GIF了
+    - 新增了使用SauceNAO作为源的搜图功能
+    - 改进了核心API，优化了异常处理
+    - 优化了图片浏览弹窗的开启速度
+    - 现在可以在设置里选择不使用直连了</br>
+* 2020/3/14
+    - 标签趋势
+    - 密码不再使用明文管理，而是通过Windows Credential Manager保存
+* 2020/3/15
+    - 添加了自动更新功能(尚处于测试)
+    - 添加了一个导航到介绍网址的超链接
+* 2020/3/29
+    - 添加了缓存系统
+    - 搜图功能可以拖拽文件了
+    - 添加了自动下载Runtime的C++脚本
+* 2020/4/13
+    - 新增"下载中"与"下载完成"选项卡，可以查看自己的下载历史，同时点击右侧文件夹图标可以导航到对应目录
+    - 新增二次过滤功能，在图片搜索结果页面(可以是关键字搜索也可以是用户上传/收藏)，在该页面点击/ 键即可打开过滤文本框(不能开启输入法)，按照以下规则       输入即可进行对应的过滤:
+        * #tag:<要搜索的tag>
+        * #tag:!<要排除的tag>
+        * #name:<要搜索的作品名>
+        * #id:<要搜索的id>
+* 2020/4/14
+    - 现在可以直接复制图片了
+    - 改进了二次过滤的语法，现在不需要输入诸如#tag:的前缀了
+* 2020/4/17
+    - 私人收藏夹与私人关注功能
+* 2020/5/7
+    - 实现webapi
+    - 实现webapi登录
+    - 作品榜单
+    - 用户动态
+* 2020/5/23
+    - 现在除了可以再应用内查看浏览记录外，还可以在Windows时间线里查看了（仅支持Windows 10 1803+）用户（感谢来自@tobiichiamane的灵感）
+    - Pixeval现在会自动注册自定义协议到注册表，可以使用如下方法使用:
+        - 当浏览作品时，替换url的协议部分(http/https)为自定义协议(pixeval)
+（例: https://www.pixiv.net/artworks/81470442 => pixeval://www.pixiv.net/artworks/81470442）
+        - 当浏览作者时，替换url的协议部分(http/https)为自定义协议(pixeval)
+（例: https://www.pixiv.net/users/28603589 => pixeval://www.pixiv.net/users/28603589）
+        - 当浏览特辑时，替换url的协议部分(http/https)为自定义协议(pixeval)
+（例: https://www.pixivision.net/en/a/5423 => pixeval://www.pixivision.net/en/a/5423）
+    - 可以直接在图片浏览页设置图片为当前的桌面了，如果你的windows版本 >= 8 （build number: 6.2.9200)，则当图片长宽比超过1.7时会自动设置为Span样式）
+* 2020/6/10
+    - 可以在右键菜单中选择"下载到"来手动指定下载位置了
+    - 可以在设置中选择将作者的作品下载到一个单独文件夹了
 
----
+**优化：**
+* 2020/5/23
+    - 修改了缩略图加载的动画
+    - 优化了加载特辑封面的速度
+    - 优化了文件校验失败时的提示信息
+    - 使用了更加完整能够提供更多信息的错误快照，可以点击[这里](http://119.188.246.6/dc/dump_file.txt)查看示例
+* 2020/5/28
+    - 打开下载位置时会自动选中下载的文件
+* 2020/6/10
+    - 优化了动画
 
-**基于WinUI3的Pixeval已经正在开发中，而作为旧的WPF版本除严重问题以外不再进行大量维护，请适时切换到新版Pixeval。**
-> 仅支持 Windows 10（版本 1809 - 内部版本 17763）及更高版本。
-> 可以通过以下步骤查看。选择“开始”按钮 ，然后选择“设置”。在“设置”中，依次选择“系统”>“关于” Windows规格。
+**BUG修复：**
+* 2020/1/8
+    - 修复了作者名包含不合法字符时导致的下载失败问题
+* 2020/1/10
+    - 修复了特辑下载时无法下载图集的问题
+    - 修复了刚刚启动时无法下载图片/将图片添加到下载列表的问题
+    - 优化了作者名包含不合法字符时的解决方案
+* 2020/2/14
+    - 修复了查看特辑时作品信息显示不正确的bug
+    - 修复了查看某些作品时上传日期显示0001/01/01的bug
+    - 修复了点击缩略图时可能无法打开大图的bug
+    - 都0202年了，我依然没有女朋友，这也是个bug
+* 2020/3/13
+    - 修复了有时图片浏览底端按钮显示不全的问题
+    - 修复了屏幕分辨率较低时无法显示完整侧边栏的问题
+    - 修复了下载时容易出现空文件夹的问题</br>
+* 2020/3/15
+    - 修复了点击tag没有反应的bug
+* 2020/3/21
+    - 修复了排序选项和搜索起始页不起作用的BUG
+* 2020/4/3
+    - 优化了适配
+* 2020/4/17
+    - 修复了浏览多图作品时无法复制的bug
+* 2020/5/23
+    - 修复了WebAPI因为recatpcha造成登录超时的问题
+    - 修复了WebAPI登录时抛出NullReferenceException的问题
+    - 修复了更新时某些情况下文件校验失败的问题
+* 2020/5/28
+    - 修复了1234和4321两个端口被占用时无法登陆的BUG
+* 2020/6/10
+    - 修复了有时候记录错误日志会导致应用崩溃的BUG
+    - 修复了历史记录没法看大图的bug
+    - 修复了无法下载所有作品的bug
+  
+**推荐：**
+* 如果你希望找到一个Android上的免代理客户端，那么我推荐[@Notsfsssf](https://github.com/Notsfsssf)的作品[Pix-EzViewer](https://github.com/Notsfsssf/Pix-EzViewer) (本项目的免代理实现也源于此)
+* 如果你更习惯于使用UWP，那么我建议你尝试由[@tobiichiamane](https://github.com/tobiichiamane)开发的[pixivuwp](https://github.com/tobiichiamane/pixivfs-uwp)
 
-更多详细信息请前往 [项目主页](https://sora.ink/pixeval) 查看
+**注意：**
+* 自版本1.4.0开始取消了自带的.NET Core 3.0 Runtime，因为有部分用户反馈体积太大，所以在使用之前请确保自己安装了.NET Core 3.0 Runtime（如果你选择下载[.NET Core Runtime 3.0.0](https://dotnet.microsoft.com/download/dotnet-core/3.0)则需要注意同时下载Desktop Runtime和.NET Core Runtime,如果你下载的是3.1+的版本，则可以选择只下载Desktop Runtime）
+* 自版本1.4.0开始不再使用单文件方式发布，由于单文件发布会导致一些奇怪的问题
+* 自版本1.4.0开始可以选择是否开启直连了，默认关闭，如果自己需要直连请在设置中手动开启
+* 自版本1.7.1起添加了runtime-installation.exe作为下载.NET Core Runtime的脚本，可以直接双击下载并安装
+* 如果你的版本在2.1.1以前，更新时请手动下载安装包，不要使用自动更新，否则可能会导致更新失败
+* WebAPI的直连方案很大程度上得益于[@tobiichiamane](https://github.com/tobiichiamane)的帮助
+* 下载服务器由[@duiweiya](https://github.com/duiweiya)提供
 
-**WinUI3版本提供了更好的UI，更好的项目结构以及更好的开发体验，如果你想要了解目前的开发进度，可以通过以下方法来下载并编译该项目**
-### 准备...
-1. 带有WinUI 3工作负载的Visual Studio
-   2019，你可以在 [创建你的第一个WinUI 3 app](https://docs.microsoft.com/zh-cn/windows/apps/winui/winui3/create-your-first-winui3-app?tabs=desktop-csharp) 的"先决条件"部分查看更多信息
-2. 安装VS插件[Single-project MSIX Packaging Tools for VS 2019](https://marketplace.visualstudio.com/items?itemName=ProjectReunion.MicrosoftSingleProjectMSIXPackagingTools)(如果你使用的是VS 2022则需要下载对应插件的VS 2022版本)
-3. 安装.NET 5，你可以在 [这里](https://dotnet.microsoft.com/download/dotnet/5.0) 下载并安装.NET 5
-4. 对Windows XAML
-   Framework的基本了解，要了解更多相关信息请看 [XAML概述](https://docs.microsoft.com/zh-cn/windows/uwp/xaml-platform/xaml-overview)
-5. 对C# .NET开发的一定了解以及开发经验
-6. 具有不依赖文档阅读代码的能力
+**下载：**
+</br>
+前往[Release页面](https://github.com/Rinacm/Pixeval/releases)下载最新版本的Release或者在项目[主页](http://dylech30th.moe:2082/index.html)下载，为统一考虑，将不再开放Google Drive, Onedrive与百度网盘的下载渠道
 
-#### 开发 
-1. 克隆本项目
-2. 将 Pixeval 设置为启动项目
-3. 打开`Build` | `ConfigurationManager`，勾选Pixeval一项后面的`Deploy`单选框
-3. 构建并运行
+**如有遇到任何问题/有任何建议请通过以下方式联系作者：**
+* 提交[issue](https://github.com/Rinacm/Pixeval/issues/new)
+* 向decem0730@hotmail.com发送邮件
+* 添加qq群815791942进行反馈
 
-#### 项目结构
-
-1. Pixeval 项目包含了项目本身的逻辑，布局代码，以及打包相关的文件
-2. Pixeval.CoreApi 包含了项目需要的Pixiv API
-3. Pixeval.LoginProxy 包含了Pixiv登录以及IPC相关的代码
-4. Pixeval.SourceGen 包含了从本地化文件自动生成对应C#类的代码
-
-#### 如果遇到任何问题(按照推荐程度优先级排序)
-
-1. 在 [github](https://github.com/Pixeval/Pixeval/issues/new) 提交新的Issue
-2. 给 [decem0730@hotmail.com](mailto:decem0730@hotmail.com) 发送邮件
-3. 加入QQ群815791942来面对面的和开发者反馈问题
-
-### 鸣谢：(排名不分先后)
-
+**鸣谢：(排名不分先后)**
 * [@tobiichiamane](https://github.com/tobiichiamane)
 * [@Notsfsssf](https://github.com/Notsfsssf)
 * [@ControlNet](https://github.com/ControlNet)
 * [@wulunshijian](https://github.com/wulunshijian)
 * [@duiweiya](https://github.com/duiweiya)
-* [@Lasm_Gratel](https://github.com/LasmGratel)
+* [@Lasm_Gratel](https://github.com/NanamiArihara)
 * [@TheRealKamisama](https://github.com/TheRealKamisama)
 * [@Summpot](https://github.com/Summpot)
 * 使用并给予积极意见的各位
 
-## 支持作者:
-
+**支持作者：**
 如果你感觉该项目帮助到了你，欢迎前往[爱发电](https://afdian.net/@dylech30th)赞助我，你的支持是我维护项目的动力，谢谢！
-
-## JetBrains开源许可
-本项目重度依赖于JetBrains™ ReSharper，感谢JetBrains s.r.o为本项目提供[开源许可证](https://www.jetbrains.com/community/opensource/#support)，如果你同样对开发充满热情并且经常使用JetBrains s.r.o的产品，你也可以尝试通过JetBrains官方渠道[申请](https://www.jetbrains.com/shop/eform/opensource)开源许可证以供核心开发者使用
-
-
-<figure style="width: min-content">
-    <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/ReSharper_icon.png" width="200" height="200">
-    <figcaption>Copyright © 2021 JetBrains s.r.o. </br>ReSharper and the ReSharper logo are registered trademarks of JetBrains s.r.o.</figcaption>
-</figure>
