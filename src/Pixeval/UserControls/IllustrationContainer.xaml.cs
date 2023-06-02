@@ -59,12 +59,10 @@ public sealed partial class IllustrationContainer
                     throw new ArgumentOutOfRangeException();
             }
         };
-        IllustrationView = App.AppViewModel.AppSetting.IllustrationViewOption switch
+        IllustrationView = new RiverFlowIllustrationView
         {
-            IllustrationViewOption.Regular => new GridIllustrationView(),
-            IllustrationViewOption.RiverFlow => new RiverFlowIllustrationView(),
-            _ => throw new ArgumentOutOfRangeException()
-        }; 
+            IllustrationViewOption = App.AppViewModel.AppSetting.IllustrationViewOption
+        };
         IllustrationContainerDockPanel.Children.Add(IllustrationView.SelfIllustrationView);
     }
 

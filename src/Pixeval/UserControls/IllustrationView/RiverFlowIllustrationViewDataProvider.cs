@@ -20,66 +20,138 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI;
-using Microsoft.UI.Xaml.Data;
+using CommunityToolkit.WinUI.UI;
+using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
+using Pixeval.Utilities;
 
 namespace Pixeval.UserControls.IllustrationView;
 
-public class RiverFlowIllustrationViewDataProvider : GridIllustrationViewDataProvider
+public class RiverFlowIllustrationViewDataProvider : ObservableObject, IIllustrationViewDataProvider, IDisposable
 {
-    private EventHandler<NotifyCollectionChangedEventArgs>? _onIllustrationsSourceCollectionChanged;
-
-    public event EventHandler<NotifyCollectionChangedEventArgs> OnIllustrationsSourceCollectionChanged
+    public RiverFlowIllustrationViewDataProvider()
     {
-        add => _onIllustrationsSourceCollectionChanged += value;
-        remove => _onIllustrationsSourceCollectionChanged -= value;
-    }
-
-    private EventHandler<IEnumerable<IllustrationViewModel>>? _onDeferLoadingCompleted;
-
-    public event EventHandler<IEnumerable<IllustrationViewModel>> OnDeferLoadingCompleted
-    {
-        add => _onDeferLoadingCompleted += value;
-        remove => _onDeferLoadingCompleted -= value;
-    }
-
-    public override async Task<int> FillAsync(int? itemsLimit = null)
-    {
-        var collection = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, itemsLimit));
-        IllustrationsSource = collection;
+        IllustrationsView = new AdvancedCollectionView(IllustrationsSource);
         IllustrationsSource.CollectionChanged += OnIllustrationsSourceOnCollectionChanged;
-        var result = await collection.LoadMoreItemsAsync(20);
-        if (result.Count > 0)
-        {
-            _onDeferLoadingCompleted?.Invoke(IllustrationsView, IllustrationsView.TakeLast((int) result.Count).OfType<IllustrationViewModel>());
-        }
-        return (int) result.Count;
     }
 
-    public override async Task<int> LoadMore()
-    {
-        if (IllustrationsSource is ISupportIncrementalLoading coll)
-        {
-            var count = (int) (await coll.LoadMoreItemsAsync(20)).Count;
-            if (count > 0)
-            {
-                _onDeferLoadingCompleted?.Invoke(IllustrationsView, IllustrationsView.TakeLast(count).OfType<IllustrationViewModel>());
-            }
+    public IFetchEngine<Illustration?>? FetchEngine { get; set; }
 
-            return count;
+    public AdvancedCollectionView IllustrationsView { get; }
+
+    private ObservableCollection<IllustrationViewModel> _illustrationSource = new();
+
+    public ObservableCollection<IllustrationViewModel> IllustrationsSource
+    {
+        get => _illustrationSource;
+        protected set
+        {
+            SetProperty(ref _illustrationSource, value);
+            IllustrationsView.Source = value;
+        }
+    }
+
+    private Predicate<object>? _filter;
+
+    public Predicate<object>? Filter
+    {
+        get => _filter;
+        set
+        {
+            _filter = value;
+            _filterChanged?.Invoke(_filter, EventArgs.Empty);
+        }
+    }
+
+    private EventHandler? _filterChanged;
+
+    public event EventHandler? FilterChanged
+    {
+        add => _filterChanged += value;
+        remove => _filterChanged -= value;
+    }
+
+    public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; set; } = new();
+
+    public void DisposeCurrent()
+    {
+        foreach (var illustrationViewModel in IllustrationsSource)
+        {
+            illustrationViewModel.Dispose();
+        }
+
+        SelectedIllustrations.Clear();
+        IllustrationsView.Clear();
+        SelectedIllustrations.Clear();
+    }
+
+    public virtual async Task<int> LoadMore()
+    {
+        if (IllustrationsSource is IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel> coll)
+        {
+            return (int)(await coll.LoadMoreItemsAsync(20)).Count;
         }
 
         return 0;
     }
 
-    protected override void OnIllustrationsSourceOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs args)
+    public virtual async Task<int> FillAsync(int? itemsLimit = null)
     {
-        base.OnIllustrationsSourceOnCollectionChanged(sender, args);
-        _onIllustrationsSourceCollectionChanged?.Invoke(sender, args);
+        var collection = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, itemsLimit));
+        IllustrationsSource = collection;
+        IllustrationsSource.CollectionChanged += OnIllustrationsSourceOnCollectionChanged;
+        var result = await collection.LoadMoreItemsAsync(20);
+        return (int)result.Count;
+    }
+
+    public Task<int> ResetAndFillAsync(IFetchEngine<Illustration?>? fetchEngine, int? itemLimit = null)
+    {
+        FetchEngine?.EngineHandle.Cancel();
+        FetchEngine = fetchEngine;
+        DisposeCurrent();
+        return FillAsync(itemLimit);
+    }
+
+    protected virtual void OnIllustrationsSourceOnCollectionChanged(object? _, NotifyCollectionChangedEventArgs args)
+    {
+        void OnIsSelectionChanged(object? sender, IllustrationViewModel model)
+        {
+            // Do not add to collection is the model does not conform to the filter
+            if (!Filter?.Invoke(model) ?? false)
+            {
+                return;
+            }
+            if (model.IsSelected)
+            {
+                SelectedIllustrations.Add(model);
+            }
+            else
+            {
+                SelectedIllustrations.Remove(model);
+            }
+        }
+
+        switch (args)
+        {
+            case { Action: NotifyCollectionChangedAction.Add }:
+                args.NewItems?.OfType<IllustrationViewModel>().ForEach(i => i.IsSelectedChanged += OnIsSelectionChanged);
+                break;
+            case { Action: NotifyCollectionChangedAction.Remove }:
+                args.NewItems?.OfType<IllustrationViewModel>().ForEach(i => i.IsSelectedChanged -= OnIsSelectionChanged);
+                break;
+        }
+    }
+
+    public void Dispose()
+    {
+        DisposeCurrent();
+        FetchEngine = null;
     }
 }

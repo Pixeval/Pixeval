@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IllustrationGrid.xaml.cs
+// Copyright (c) 2023 Pixeval/RiverFlowIllustrationView.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -51,6 +51,8 @@ namespace Pixeval.UserControls.IllustrationView;
 public sealed partial class RiverFlowIllustrationView : IIllustrationView
 {
     private bool _fillClientRequest;
+
+    public /*required*/ IllustrationViewOption IllustrationViewOption { get; set; }
 
     private static readonly ExponentialEase ImageSourceSetEasingFunction = new()
     {
@@ -191,7 +193,13 @@ public sealed partial class RiverFlowIllustrationView : IIllustrationView
 
         if (args.BringIntoViewDistanceY <= sender.ActualHeight * preLoadRows)
         {
-            if (await context.LoadThumbnailIfRequired(ThumbnailUrlOption.Large))
+            var option = IllustrationViewOption switch
+            {
+                IllustrationViewOption.RiverFlow => ThumbnailUrlOption.Medium,
+                IllustrationViewOption.Grid => ThumbnailUrlOption.SquareMedium,
+                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<IllustrationViewOption, ThumbnailUrlOption>(IllustrationViewOption)
+            };
+            if (await context.LoadThumbnailIfRequired(option))
             {
                 var transform = (ScaleTransform)sender.RenderTransform;
                 if (sender.IsFullyOrPartiallyVisible(this))
@@ -211,7 +219,7 @@ public sealed partial class RiverFlowIllustrationView : IIllustrationView
 
             return;
         }
-
+        
         // small tricks to reduce memory consumption
         switch (context)
         {
@@ -219,6 +227,7 @@ public sealed partial class RiverFlowIllustrationView : IIllustrationView
                 context.LoadingThumbnailCancellationHandle.Cancel();
                 break;
             case { ThumbnailSource: not null }:
+                context.RequiredWidth = sender.ActualWidth;
                 var source = context.ThumbnailSource;
                 context.ThumbnailSource = null;
                 source.Dispose();
@@ -228,6 +237,7 @@ public sealed partial class RiverFlowIllustrationView : IIllustrationView
 
     public async Task TryFillClientAreaAsync()
     {
+        return;
         if (_fillClientRequest)
         {
             return;
@@ -304,5 +314,11 @@ public sealed partial class RiverFlowIllustrationView : IIllustrationView
     private async void ShowPixEzQrCodeContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         await ViewModel.ShowPixEzQrCodeForIllustrationAsync(UIHelper.GetDataContext<IllustrationViewModel>(sender));
+    }
+
+    private async void ScrollViewer_ViewChanged(object? sender, ScrollViewerViewChangedEventArgs e)
+    {
+        if (ScrollViewer.ScrollableHeight - LoadingArea.ActualHeight < ScrollViewer.VerticalOffset)
+            await ViewModel.DataProvider.IllustrationsView.LoadMoreItemsAsync(20);
     }
 }

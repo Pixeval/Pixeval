@@ -32,7 +32,7 @@ public record IllustrationViewOptionSettingEntryItem : IStringRepresentableItem
         Item = item;
         StringRepresentation = item switch
         {
-            IllustrationViewOption.Regular => MiscResources.IllustrationViewRegularLayout,
+            IllustrationViewOption.Grid => MiscResources.IllustrationViewRegularLayout,
             IllustrationViewOption.RiverFlow => MiscResources.IllustrationViewJustifiedLayout,
             _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
         };
