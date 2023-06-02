@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -31,7 +31,9 @@ public class PixivImageNameResolver : INameResolver
         {
             return Task.FromResult(new[]
             {
-                IPAddress.Parse("210.140.92.138"), IPAddress.Parse("210.140.92.139"), IPAddress.Parse("210.140.92.140")
+                IPAddress.Parse("210.140.92.141"),
+                IPAddress.Parse("210.140.92.142"),
+                IPAddress.Parse("210.140.92.143")
             });
         }
 
