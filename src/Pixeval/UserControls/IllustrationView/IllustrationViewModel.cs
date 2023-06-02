@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -158,7 +158,7 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
             return true;
         }
 
-        if (await GetThumbnail(ThumbnailUrlOption.SquareMedium) is { } ras)
+        if (await GetThumbnail(thumbnailUrlOption) is { } ras)
         {
             if (App.AppViewModel.AppSetting.UseFileCache)
             {

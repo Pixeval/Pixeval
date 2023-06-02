@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -33,7 +33,7 @@ public record IllustrationViewOptionSettingEntryItem : IStringRepresentableItem
         StringRepresentation = item switch
         {
             IllustrationViewOption.Regular => MiscResources.IllustrationViewRegularLayout,
-            IllustrationViewOption.Justified => MiscResources.IllustrationViewJustifiedLayout,
+            IllustrationViewOption.RiverFlow => MiscResources.IllustrationViewJustifiedLayout,
             _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
         };
     }

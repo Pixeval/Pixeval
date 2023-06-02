@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -23,5 +23,5 @@ namespace Pixeval.Options;
 public enum IllustrationViewOption
 {
     Regular,
-    Justified
+    RiverFlow
 }

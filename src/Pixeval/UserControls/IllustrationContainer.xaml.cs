@@ -62,7 +62,7 @@ public sealed partial class IllustrationContainer
         IllustrationView = App.AppViewModel.AppSetting.IllustrationViewOption switch
         {
             IllustrationViewOption.Regular => new GridIllustrationView(),
-            IllustrationViewOption.Justified => new JustifiedLayoutIllustrationView(),
+            IllustrationViewOption.RiverFlow => new RiverFlowIllustrationView(),
             _ => throw new ArgumentOutOfRangeException()
         }; 
         IllustrationContainerDockPanel.Children.Add(IllustrationView.SelfIllustrationView);
