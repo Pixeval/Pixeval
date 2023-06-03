@@ -20,6 +20,7 @@
 
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Popups;
@@ -29,11 +30,27 @@ using Pixeval.Utilities;
 
 namespace Pixeval.UserControls.IllustrationView;
 
-public sealed class RiverFlowIllustrationViewViewModel : SortableIllustrationViewViewModel
+public sealed partial class RiverFlowIllustrationViewViewModel : SortableIllustrationViewViewModel
 {
     private SoftwareBitmapSource? _pixEzQrCodeSource;
 
     private SoftwareBitmapSource? _webQrCodeSource;
+
+    public static double RowHeight;
+
+    public double LineSize
+    {
+        get => RowHeight;
+        set
+        {
+            if (!Equals(RowHeight, value))
+            {
+                OnPropertyChanging();
+                RowHeight = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
     public override IIllustrationViewDataProvider DataProvider { get; }
 

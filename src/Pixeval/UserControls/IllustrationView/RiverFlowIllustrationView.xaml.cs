@@ -99,10 +99,10 @@ public sealed partial class RiverFlowIllustrationView : IIllustrationView
         switch (App.AppViewModel.AppSetting.ThumbnailDirection)
         {
             case ThumbnailDirection.Landscape:
-                RiverFlowLayout.LineSize = 180;
+                ViewModel.LineSize = 180;
                 break;
             case ThumbnailDirection.Portrait:
-                RiverFlowLayout.LineSize = 250;
+                ViewModel.LineSize = 250;
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -219,7 +219,7 @@ public sealed partial class RiverFlowIllustrationView : IIllustrationView
 
             return;
         }
-        
+
         // small tricks to reduce memory consumption
         switch (context)
         {

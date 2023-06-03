@@ -115,6 +115,11 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
         GC.SuppressFinalize(this);
     }
 
+    public double GetDesiredWidth(double rowHeight)
+    {
+        return rowHeight * Illustration.Width / Illustration.Height;
+    }
+
     /// <summary>
     ///     An illustration may contains multiple works and such illustrations are named "manga".
     ///     This method attempts to get the works and wrap into <see cref="IllustrationViewModel" />
