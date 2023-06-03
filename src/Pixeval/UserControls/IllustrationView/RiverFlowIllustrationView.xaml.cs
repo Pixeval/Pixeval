@@ -52,8 +52,6 @@ public sealed partial class RiverFlowIllustrationView : IIllustrationView
 {
     private bool _fillClientRequest;
 
-    public /*required*/ IllustrationViewOption IllustrationViewOption { get; set; }
-
     private static readonly ExponentialEase ImageSourceSetEasingFunction = new()
     {
         EasingMode = EasingMode.EaseOut,
@@ -99,10 +97,12 @@ public sealed partial class RiverFlowIllustrationView : IIllustrationView
         switch (App.AppViewModel.AppSetting.ThumbnailDirection)
         {
             case ThumbnailDirection.Landscape:
-                ViewModel.LineSize = 180;
+                ViewModel.ItemHeight = 180;
+                ViewModel.ItemWidth = 250;
                 break;
             case ThumbnailDirection.Portrait:
-                ViewModel.LineSize = 250;
+                ViewModel.ItemHeight = 250;
+                ViewModel.ItemWidth = 180;
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -193,11 +193,11 @@ public sealed partial class RiverFlowIllustrationView : IIllustrationView
 
         if (args.BringIntoViewDistanceY <= sender.ActualHeight * preLoadRows)
         {
-            var option = IllustrationViewOption switch
+            var option = ViewModel.IllustrationViewOption switch
             {
                 IllustrationViewOption.RiverFlow => ThumbnailUrlOption.Medium,
                 IllustrationViewOption.Grid => ThumbnailUrlOption.SquareMedium,
-                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<IllustrationViewOption, ThumbnailUrlOption>(IllustrationViewOption)
+                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<IllustrationViewOption, ThumbnailUrlOption>(ViewModel.IllustrationViewOption)
             };
             if (await context.LoadThumbnailIfRequired(option))
             {

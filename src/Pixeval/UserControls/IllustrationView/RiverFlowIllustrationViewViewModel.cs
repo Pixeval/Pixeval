@@ -20,9 +20,10 @@
 
 using System.Linq;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.CoreApi.Model;
+using Pixeval.Options;
 using Pixeval.Popups;
 using Pixeval.Util;
 using Pixeval.Util.UI;
@@ -30,27 +31,58 @@ using Pixeval.Utilities;
 
 namespace Pixeval.UserControls.IllustrationView;
 
-public sealed partial class RiverFlowIllustrationViewViewModel : SortableIllustrationViewViewModel
+public sealed class RiverFlowIllustrationViewViewModel : SortableIllustrationViewViewModel
 {
     private SoftwareBitmapSource? _pixEzQrCodeSource;
 
     private SoftwareBitmapSource? _webQrCodeSource;
 
-    public static double RowHeight;
+    #region RiverFlowLayout
 
-    public double LineSize
+    public static double GetDesiredWidth(Illustration illustration)
     {
-        get => RowHeight;
+        return _illustrationViewOption switch
+        {
+            IllustrationViewOption.Grid => _itemWidth,
+            IllustrationViewOption.RiverFlow => StaticItemHeight * illustration.Width / illustration.Height,
+            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<IllustrationViewOption, double>(_illustrationViewOption)
+        };
+    }
+
+    private static IllustrationViewOption _illustrationViewOption;
+
+    private static double _itemWidth;
+
+    public static double StaticItemHeight;
+
+    public IllustrationViewOption IllustrationViewOption
+    {
+        get => _illustrationViewOption;
+        set => _illustrationViewOption = value;
+    }
+
+    public double ItemWidth
+    {
+        get => _itemWidth;
+        set => _itemWidth = value;
+    }
+
+    public double ItemHeight
+    {
+        get => StaticItemHeight;
         set
         {
-            if (!Equals(RowHeight, value))
+            // 需要通过绑定更新
+            if (!Equals(StaticItemHeight, value))
             {
                 OnPropertyChanging();
-                RowHeight = value;
+                StaticItemHeight = value;
                 OnPropertyChanged();
             }
         }
     }
+
+    #endregion
 
     public override IIllustrationViewDataProvider DataProvider { get; }
 

@@ -3,31 +3,34 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:card="using:Pixeval.Controls.Card"
-    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:illustrationView="using:Pixeval.UserControls.IllustrationView"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
-    xmlns:options="using:Pixeval.Options"
-    xmlns:triggers="using:CommunityToolkit.WinUI.UI.Triggers"
     xmlns:ui="using:Pixeval.Util.UI"
     xmlns:util="using:Pixeval.Util"
-    xmlns:xaml="using: Microsoft.UI.Xaml.Controls"
     Loaded="IllustrationGrid_OnLoaded"
     mc:Ignorable="d">
     <Grid>
         <ScrollViewer x:Name="Sv" ViewChanged="ScrollViewer_ViewChanged">
             <StackPanel>
                 <ItemsRepeater x:Name="IllustrationItemsRepeater" ItemsSource="{x:Bind ViewModel.DataProvider.IllustrationsView}">
+                    <ItemsRepeater.Layout>
+                        <RiverFlowLayout
+                            ItemsStretch="Fill"
+                            LineSize="{x:Bind ViewModel.ItemHeight, Mode=OneWay}"
+                            LineSpacing="5"
+                            MinItemSpacing="5" />
+                    </ItemsRepeater.Layout>
                     <ItemsRepeater.ItemTemplate>
                         <DataTemplate x:DataType="illustrationView:IllustrationViewModel">
                             <GridViewItem
                                 x:Name="IllustrationThumbnailContainerItem"
                                 DataContext="{x:Bind}"
                                 EffectiveViewportChanged="IllustrationThumbnailContainerItem_OnEffectiveViewportChanged"
-                                IsSelected="{x:Bind IsSelected}"
+                                IsSelected="{x:Bind IsSelected, Mode=OneWay}"
                                 RenderTransformOrigin="0.5,0.5"
                                 Tapped="IllustrationThumbnailContainerItem_OnTapped">
                                 <GridViewItem.RenderTransform>
@@ -78,11 +81,11 @@
                                         <MenuFlyoutSeparator />
                                     </MenuFlyout>
                                 </GridViewItem.ContextFlyout>
-                                <card:CardControl
-                                    MinWidth="{x:Bind GetDesiredWidth(illustrationView:RiverFlowIllustrationViewViewModel.RowHeight)}"
-                                    MinHeight="{x:Bind illustrationView:RiverFlowIllustrationViewViewModel.RowHeight}"
-                                    CornerRadius="5">
-                                    <card:CardControl.Resources>
+                                <card:ContentFiller
+                                    CornerRadius="5"
+                                    DesiredHeight="{x:Bind illustrationView:RiverFlowIllustrationViewViewModel.StaticItemHeight}"
+                                    DesiredWidth="{x:Bind illustrationView:RiverFlowIllustrationViewViewModel.GetDesiredWidth(Illustration)}">
+                                    <card:ContentFiller.Resources>
                                         <ExponentialEase
                                             x:Key="EasingFunction"
                                             EasingMode="EaseOut"
@@ -199,7 +202,7 @@
                                                 To="0"
                                                 Duration="0:0:2" />
                                         </Storyboard>
-                                    </card:CardControl.Resources>
+                                    </card:ContentFiller.Resources>
                                     <interactivity:Interaction.Behaviors>
                                         <core:EventTriggerBehavior EventName="PointerEntered">
                                             <media:ControlStoryboardAction Storyboard="{StaticResource ThumbnailScaleOutStoryboard}" />
@@ -316,7 +319,7 @@
                                             </Grid>
                                         </Grid>
                                     </Grid>
-                                </card:CardControl>
+                                </card:ContentFiller>
                             </GridViewItem>
                         </DataTemplate>
                     </ItemsRepeater.ItemTemplate>
@@ -351,6 +354,7 @@
                 HorizontalAlignment="Center"
                 FontSize="{StaticResource PixevalTitleFontSize}" />
         </StackPanel>
+        <!-- TODO 有时Grid模式会对不齐，将来可以使用别的Layout代替（如实现AdaptiveGridLayout）
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="Group">
                 <VisualState x:Name="VisualStateGrid">
@@ -383,5 +387,6 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
+        -->
     </Grid>
 </UserControl>

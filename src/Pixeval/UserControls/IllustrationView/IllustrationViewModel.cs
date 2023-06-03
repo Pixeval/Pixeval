@@ -59,8 +59,6 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
         LoadingThumbnailCancellationHandle = new CancellationHandle();
     }
 
-    [ObservableProperty] private double _requiredWidth = double.NaN;
-
     public Illustration Illustration { get; }
 
     public int MangaIndex { get; set; }
@@ -113,11 +111,6 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
     {
         DisposeInternal();
         GC.SuppressFinalize(this);
-    }
-
-    public double GetDesiredWidth(double rowHeight)
-    {
-        return rowHeight * Illustration.Width / Illustration.Height;
     }
 
     /// <summary>
