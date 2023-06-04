@@ -11,12 +11,11 @@
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:ui="using:Pixeval.Util.UI"
     xmlns:util="using:Pixeval.Util"
-    Loaded="IllustrationGrid_OnLoaded"
     mc:Ignorable="d">
     <Grid>
         <ScrollViewer x:Name="Sv" ViewChanged="ScrollViewer_ViewChanged">
             <StackPanel>
-                <ItemsRepeater x:Name="IllustrationItemsRepeater" ItemsSource="{x:Bind ViewModel.DataProvider.IllustrationsView}">
+                <ItemsRepeater ItemsSource="{x:Bind ViewModel.DataProvider.IllustrationsView}">
                     <ItemsRepeater.Layout>
                         <RiverFlowLayout
                             ItemsStretch="Fill"
@@ -27,7 +26,6 @@
                     <ItemsRepeater.ItemTemplate>
                         <DataTemplate x:DataType="illustrationView:IllustrationViewModel">
                             <GridViewItem
-                                x:Name="IllustrationThumbnailContainerItem"
                                 DataContext="{x:Bind}"
                                 EffectiveViewportChanged="IllustrationThumbnailContainerItem_OnEffectiveViewportChanged"
                                 IsSelected="{x:Bind IsSelected, Mode=OneWay}"

@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.UI;
@@ -51,6 +52,8 @@ public sealed class RiverFlowIllustrationViewViewModel : SortableIllustrationVie
 
     private static IllustrationViewOption _illustrationViewOption;
 
+    private ThumbnailDirection _thumbnailDirection;
+
     private static double _itemWidth;
 
     public static double StaticItemHeight;
@@ -59,6 +62,31 @@ public sealed class RiverFlowIllustrationViewViewModel : SortableIllustrationVie
     {
         get => _illustrationViewOption;
         set => _illustrationViewOption = value;
+    }
+
+    public ThumbnailDirection ThumbnailDirection
+    {
+        get => _thumbnailDirection;
+        set
+        {
+            if (_thumbnailDirection == value) 
+                return;
+            _thumbnailDirection = value;
+            switch (_thumbnailDirection)
+            {
+                case ThumbnailDirection.Landscape:
+                    ItemHeight = 180;
+                    ItemWidth = 250;
+                    break;
+                case ThumbnailDirection.Portrait:
+                    ItemHeight = 250;
+                    ItemWidth = 180;
+                    break;
+                default:
+                    WinUI3Utilities.ThrowHelper.ArgumentOutOfRange(_thumbnailDirection);
+                    break;
+            }
+        }
     }
 
     public double ItemWidth
@@ -73,12 +101,11 @@ public sealed class RiverFlowIllustrationViewViewModel : SortableIllustrationVie
         set
         {
             // 需要通过绑定更新
-            if (!Equals(StaticItemHeight, value))
-            {
-                OnPropertyChanging();
-                StaticItemHeight = value;
-                OnPropertyChanged();
-            }
+            if (StaticItemHeight == value)
+                return;
+            OnPropertyChanging();
+            StaticItemHeight = value;
+            OnPropertyChanged();
         }
     }
 

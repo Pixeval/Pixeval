@@ -61,6 +61,7 @@ public sealed partial class IllustrationContainer
         };
         IllustrationView = new RiverFlowIllustrationView();
         ((RiverFlowIllustrationView)IllustrationView).ViewModel.IllustrationViewOption = App.AppViewModel.AppSetting.IllustrationViewOption;
+        ((RiverFlowIllustrationView)IllustrationView).ViewModel.ThumbnailDirection = App.AppViewModel.AppSetting.ThumbnailDirection;
 
         IllustrationContainerDockPanel.Children.Add(IllustrationView.SelfIllustrationView);
     }

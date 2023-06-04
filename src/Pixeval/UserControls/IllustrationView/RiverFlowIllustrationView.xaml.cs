@@ -50,9 +50,7 @@ namespace Pixeval.UserControls.IllustrationView;
 [DependencyProperty<object>("Header")]
 public sealed partial class RiverFlowIllustrationView : IIllustrationView
 {
-    private bool _fillClientRequest;
-
-    private static readonly ExponentialEase ImageSourceSetEasingFunction = new()
+    private static readonly ExponentialEase _imageSourceSetEasingFunction = new()
     {
         EasingMode = EasingMode.EaseOut,
         Exponent = 12
@@ -86,28 +84,11 @@ public sealed partial class RiverFlowIllustrationView : IIllustrationView
 
     public RiverFlowIllustrationViewViewModel ViewModel { get; }
 
-    public FrameworkElement SelfIllustrationView => this;
-
     IllustrationViewViewModel IIllustrationView.ViewModel => ViewModel;
 
-    public ScrollViewer ScrollViewer => Sv;
+    public FrameworkElement SelfIllustrationView => this;
 
-    private void IllustrationGrid_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        switch (App.AppViewModel.AppSetting.ThumbnailDirection)
-        {
-            case ThumbnailDirection.Landscape:
-                ViewModel.ItemHeight = 180;
-                ViewModel.ItemWidth = 250;
-                break;
-            case ThumbnailDirection.Portrait:
-                ViewModel.ItemHeight = 250;
-                ViewModel.ItemWidth = 180;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-    }
+    public ScrollViewer ScrollViewer => Sv;
 
     private async void RemoveBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
@@ -181,6 +162,9 @@ public sealed partial class RiverFlowIllustrationView : IIllustrationView
         return (windowWidth, (int)windowHeight);
     }
 
+    /// <summary>
+    /// For Bookmark Button
+    /// </summary>
     private void IllustrationThumbnailContainerItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         e.Handled = true;
@@ -204,9 +188,9 @@ public sealed partial class RiverFlowIllustrationView : IIllustrationView
                 var transform = (ScaleTransform)sender.RenderTransform;
                 if (sender.IsFullyOrPartiallyVisible(this))
                 {
-                    var scaleXAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleX), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
-                    var scaleYAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleY), from: 1.1, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
-                    var opacityAnimation = sender.CreateDoubleAnimation(nameof(sender.Opacity), from: 0, to: 1, easingFunction: ImageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
+                    var scaleXAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleX), from: 1.1, to: 1, easingFunction: _imageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
+                    var scaleYAnimation = transform.CreateDoubleAnimation(nameof(transform.ScaleY), from: 1.1, to: 1, easingFunction: _imageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
+                    var opacityAnimation = sender.CreateDoubleAnimation(nameof(sender.Opacity), from: 0, to: 1, easingFunction: _imageSourceSetEasingFunction, duration: TimeSpan.FromSeconds(2));
                     UIHelper.CreateStoryboard(scaleXAnimation, scaleYAnimation, opacityAnimation).Begin();
                 }
                 else
@@ -227,7 +211,6 @@ public sealed partial class RiverFlowIllustrationView : IIllustrationView
                 context.LoadingThumbnailCancellationHandle.Cancel();
                 break;
             case { ThumbnailSource: not null }:
-                context.RequiredWidth = sender.ActualWidth;
                 var source = context.ThumbnailSource;
                 context.ThumbnailSource = null;
                 source.Dispose();
@@ -235,39 +218,15 @@ public sealed partial class RiverFlowIllustrationView : IIllustrationView
         }
     }
 
-    public async Task TryFillClientAreaAsync()
+    public Task TryFillClientAreaAsync()
     {
-        return;
-        if (_fillClientRequest)
-        {
-            return;
-        }
-        _fillClientRequest = true;
-        for (var i = ViewModel.DataProvider.IllustrationsView.Count - 1; i > 0; i--)
-        {
-            //TODO
-            var container = IllustrationItemsRepeater.ItemsSourceView.GetAt(i) as FrameworkElement;
-            if (!(container?.IsFullyOrPartiallyVisible(this) ?? true)) return;
-        }
-
-        var index = ViewModel.DataProvider.IllustrationsView.Count - 1;
-        var acv = ViewModel.DataProvider.IllustrationsView;
-        while (await acv.LoadMoreItemsAsync(20) is { Count: > 0 and var count })
-        {
-            for (var i = index + (int)count; i > index + 1; i--)
-            {
-                //TODO
-                var container = IllustrationItemsRepeater.ItemsSourceView.GetAt(i) as FrameworkElement;
-                if (!(container?.IsFullyOrPartiallyVisible(this) ?? true)) return;
-            }
-
-            index = (int)(index + count);
-        }
+        //TODO: delete
+        return Task.CompletedTask;
     }
 
     public UIElement? GetItemContainer(IllustrationViewModel viewModel)
     {
-        //TODO
+        //TODO: delete
         return null;// IllustrationItemsRepeater.ItemsSourceView.f as UIElement;
     }
 

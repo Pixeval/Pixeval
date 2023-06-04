@@ -92,14 +92,10 @@ public class RiverFlowIllustrationViewDataProvider : ObservableObject, IIllustra
         SelectedIllustrations.Clear();
     }
 
-    public virtual async Task<int> LoadMore()
+    public virtual Task<int> LoadMore()
     {
-        if (IllustrationsSource is IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel> coll)
-        {
-            return (int)(await coll.LoadMoreItemsAsync(20)).Count;
-        }
-
-        return 0;
+        //TODO: delete
+        return Task.FromResult(0);
     }
 
     public virtual async Task<int> FillAsync(int? itemsLimit = null)

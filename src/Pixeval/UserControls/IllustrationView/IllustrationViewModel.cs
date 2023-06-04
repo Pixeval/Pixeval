@@ -168,7 +168,6 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
             LoadingThumbnail = false;
             return true;
         }
-        RequiredWidth = double.NaN;
 
         LoadingThumbnail = false;
         return false;
