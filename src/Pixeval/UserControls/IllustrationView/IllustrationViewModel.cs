@@ -93,6 +93,11 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
         });
     }
 
+    public double GetDesiredWidth(double itemHeight)
+    {
+        return itemHeight * Illustration.Width / Illustration.Height;
+    }
+
     private EventHandler<IllustrationViewModel>? _isSelectedChanged;
 
     public event EventHandler<IllustrationViewModel> IsSelectedChanged

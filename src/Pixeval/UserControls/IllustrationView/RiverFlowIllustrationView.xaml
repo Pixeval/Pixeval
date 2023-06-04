@@ -9,20 +9,15 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
+    xmlns:options="using:Pixeval.Options"
+    xmlns:triggers="using:CommunityToolkit.WinUI.UI.Triggers"
     xmlns:ui="using:Pixeval.Util.UI"
     xmlns:util="using:Pixeval.Util"
     mc:Ignorable="d">
     <Grid>
         <ScrollViewer x:Name="Sv" ViewChanged="ScrollViewer_ViewChanged">
             <StackPanel>
-                <ItemsRepeater ItemsSource="{x:Bind ViewModel.DataProvider.IllustrationsView}">
-                    <ItemsRepeater.Layout>
-                        <RiverFlowLayout
-                            ItemsStretch="Fill"
-                            LineSize="{x:Bind ViewModel.ItemHeight, Mode=OneWay}"
-                            LineSpacing="5"
-                            MinItemSpacing="5" />
-                    </ItemsRepeater.Layout>
+                <ItemsRepeater x:Name="IllustrationItemsRepeater" ItemsSource="{x:Bind ViewModel.DataProvider.IllustrationsView}">
                     <ItemsRepeater.ItemTemplate>
                         <DataTemplate x:DataType="illustrationView:IllustrationViewModel">
                             <GridViewItem
@@ -82,7 +77,7 @@
                                 <card:ContentFiller
                                     CornerRadius="5"
                                     DesiredHeight="{x:Bind illustrationView:RiverFlowIllustrationViewViewModel.StaticItemHeight}"
-                                    DesiredWidth="{x:Bind illustrationView:RiverFlowIllustrationViewViewModel.GetDesiredWidth(Illustration)}">
+                                    DesiredWidth="{x:Bind GetDesiredWidth(illustrationView:RiverFlowIllustrationViewViewModel.StaticItemHeight)}">
                                     <card:ContentFiller.Resources>
                                         <ExponentialEase
                                             x:Key="EasingFunction"
@@ -352,19 +347,18 @@
                 HorizontalAlignment="Center"
                 FontSize="{StaticResource PixevalTitleFontSize}" />
         </StackPanel>
-        <!-- TODO 有时Grid模式会对不齐，将来可以使用别的Layout代替（如实现AdaptiveGridLayout）
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="Group">
                 <VisualState x:Name="VisualStateGrid">
                     <VisualState.StateTriggers>
-                        <triggers:IsEqualStateTrigger Value="{x:Bind IllustrationViewOption}" To="{x:Bind options:IllustrationViewOption.RiverFlow}" />
+                        <triggers:IsEqualStateTrigger Value="{x:Bind ViewModel.IllustrationViewOption}" To="{x:Bind options:IllustrationViewOption.RiverFlow}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="IllustrationItemsRepeater.Layout">
                             <Setter.Value>
                                 <RiverFlowLayout
                                     ItemsStretch="Fill"
-                                    LineSize="{x:Bind ViewModel.LineSize, Mode=OneWay}"
+                                    LineSize="{x:Bind ViewModel.ItemHeight, Mode=OneWay}"
                                     LineSpacing="5"
                                     MinItemSpacing="5" />
                             </Setter.Value>
@@ -373,18 +367,22 @@
                 </VisualState>
                 <VisualState x:Name="VisualStateRiverFlow">
                     <VisualState.StateTriggers>
-                        <triggers:IsEqualStateTrigger Value="{x:Bind IllustrationViewOption}" To="{x:Bind options:IllustrationViewOption.Grid}" />
+                        <triggers:IsEqualStateTrigger Value="{x:Bind ViewModel.IllustrationViewOption}" To="{x:Bind options:IllustrationViewOption.Grid}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="IllustrationItemsRepeater.Layout">
                             <Setter.Value>
-                                <controls:WrapLayout HorizontalSpacing="5" VerticalSpacing="5" />
+                                <UniformGridLayout
+                                    ItemsStretch="Fill"
+                                    MinColumnSpacing="5"
+                                    MinItemHeight="{x:Bind ViewModel.ItemHeight, Mode=OneWay}"
+                                    MinItemWidth="{x:Bind ViewModel.ItemWidth}"
+                                    MinRowSpacing="5" />
                             </Setter.Value>
                         </Setter>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        -->
     </Grid>
 </UserControl>

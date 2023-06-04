@@ -40,16 +40,6 @@ public sealed class RiverFlowIllustrationViewViewModel : SortableIllustrationVie
 
     #region RiverFlowLayout
 
-    public static double GetDesiredWidth(Illustration illustration)
-    {
-        return _illustrationViewOption switch
-        {
-            IllustrationViewOption.Grid => _itemWidth,
-            IllustrationViewOption.RiverFlow => StaticItemHeight * illustration.Width / illustration.Height,
-            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<IllustrationViewOption, double>(_illustrationViewOption)
-        };
-    }
-
     private static IllustrationViewOption _illustrationViewOption;
 
     private ThumbnailDirection _thumbnailDirection;
