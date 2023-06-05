@@ -71,7 +71,7 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
 
             // refresh the filter when there are newly fetched IDs.
             IllustrationContainer.IllustrationView.ViewModel.DataProvider.Filter = o => BookmarkTagFilter(name, o);
-            IllustrationContainer.IllustrationView.TryFillClientAreaAsync().Discard();
+            IllustrationContainer.IllustrationView.LoadMoreIfNeeded().Discard();
             return;
         }
 
@@ -87,7 +87,7 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        ((ISortedIllustrationContainerPageHelper) this).OnSortOptionChanged();
+        ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
     }
 
     private void SortOptionComboBoxContainer_OnLoaded(object sender, RoutedEventArgs e)

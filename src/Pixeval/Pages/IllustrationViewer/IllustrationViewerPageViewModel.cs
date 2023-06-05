@@ -101,7 +101,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     // illustrations should contains only one item if the illustration is a single
     // otherwise it contains the entire manga data
-    public IllustrationViewerPageViewModel(IIllustrationView illustrationView, params IllustrationViewModel[] illustrations) : this(illustrations)
+    public IllustrationViewerPageViewModel(RiverFlowIllustrationView illustrationView, params IllustrationViewModel[] illustrations) : this(illustrations)
     {
         IllustrationView = illustrationView;
         ContainerGridViewModel = illustrationView.ViewModel;
@@ -132,19 +132,19 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     public IllustrationViewViewModel? ContainerGridViewModel { get; }
 
     /// <summary>
-    ///     The <see cref="IIllustrationView" /> that owns <see cref="ContainerGridViewModel" />
+    ///     The <see cref="RiverFlowIllustrationView" /> that owns <see cref="ContainerGridViewModel" />
     /// </summary>
-    public IIllustrationView? IllustrationView { get; }
+    public RiverFlowIllustrationView? IllustrationView { get; }
 
     /// <summary>
-    ///     The <see cref="IllustrationViewModelInTheGridView" /> in <see cref="IIllustrationView" /> that corresponds to
+    ///     The <see cref="IllustrationViewModelInTheGridView" /> in <see cref="RiverFlowIllustrationView" /> that corresponds to
     ///     current
     ///     <see cref="IllustrationViewerPageViewModel" />
     /// </summary>
     public IllustrationViewModel? IllustrationViewModelInTheGridView { get; }
 
     /// <summary>
-    ///     The index of current illustration in <see cref="IIllustrationView" />
+    ///     The index of current illustration in <see cref="RiverFlowIllustrationView" />
     /// </summary>
     public int? IllustrationIndex => ContainerGridViewModel?.DataProvider.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
 

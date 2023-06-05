@@ -40,19 +40,11 @@ public sealed class RiverFlowIllustrationViewViewModel : SortableIllustrationVie
 
     #region RiverFlowLayout
 
-    private static IllustrationViewOption _illustrationViewOption;
-
     private ThumbnailDirection _thumbnailDirection;
 
     private static double _itemWidth;
 
     public static double StaticItemHeight;
-
-    public IllustrationViewOption IllustrationViewOption
-    {
-        get => _illustrationViewOption;
-        set => _illustrationViewOption = value;
-    }
 
     public ThumbnailDirection ThumbnailDirection
     {

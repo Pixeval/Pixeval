@@ -15,7 +15,10 @@
     xmlns:util="using:Pixeval.Util"
     mc:Ignorable="d">
     <Grid>
-        <ScrollViewer x:Name="Sv" ViewChanged="ScrollViewer_ViewChanged">
+        <ScrollViewer
+            x:Name="ScrollViewer"
+            x:FieldModifier="public"
+            ViewChanged="ScrollViewer_ViewChanged">
             <StackPanel>
                 <ItemsRepeater x:Name="IllustrationItemsRepeater" ItemsSource="{x:Bind ViewModel.DataProvider.IllustrationsView}">
                     <ItemsRepeater.ItemTemplate>
@@ -351,7 +354,7 @@
             <VisualStateGroup x:Name="Group">
                 <VisualState x:Name="VisualStateGrid">
                     <VisualState.StateTriggers>
-                        <triggers:IsEqualStateTrigger Value="{x:Bind ViewModel.IllustrationViewOption}" To="{x:Bind options:IllustrationViewOption.RiverFlow}" />
+                        <triggers:IsEqualStateTrigger Value="{x:Bind IllustrationViewOption}" To="{x:Bind options:IllustrationViewOption.RiverFlow}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="IllustrationItemsRepeater.Layout">
@@ -367,7 +370,7 @@
                 </VisualState>
                 <VisualState x:Name="VisualStateRiverFlow">
                     <VisualState.StateTriggers>
-                        <triggers:IsEqualStateTrigger Value="{x:Bind ViewModel.IllustrationViewOption}" To="{x:Bind options:IllustrationViewOption.Grid}" />
+                        <triggers:IsEqualStateTrigger Value="{x:Bind IllustrationViewOption}" To="{x:Bind options:IllustrationViewOption.Grid}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="IllustrationItemsRepeater.Layout">

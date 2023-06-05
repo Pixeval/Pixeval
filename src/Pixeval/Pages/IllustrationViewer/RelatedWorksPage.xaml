@@ -1,11 +1,15 @@
-﻿<controls:EnhancedPage x:Class="Pixeval.Pages.IllustrationViewer.RelatedWorksPage"
-                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                       xmlns:controls="using:Pixeval.Controls"
-                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                       xmlns:illustrationView="using:Pixeval.UserControls.IllustrationView"
-                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                       NavigationCacheMode="Required"
-                       mc:Ignorable="d">
-    <illustrationView:GridIllustrationView x:Name="RelatedWorksIllustrationGrid" Margin="10,0,5,0" />
+<controls:EnhancedPage
+    x:Class="Pixeval.Pages.IllustrationViewer.RelatedWorksPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:illustrationView="using:Pixeval.UserControls.IllustrationView"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    NavigationCacheMode="Required"
+    mc:Ignorable="d">
+    <illustrationView:RiverFlowIllustrationView
+        x:Name="RelatedWorksIllustrationGrid"
+        Margin="10,0,5,0"
+        IllustrationViewOption="Grid" />
 </controls:EnhancedPage>

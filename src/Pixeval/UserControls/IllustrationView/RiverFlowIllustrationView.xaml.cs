@@ -35,12 +35,12 @@ using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
 using Pixeval.Util.IO;
-using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using WinUI3Utilities.Attributes;
 using PInvoke;
 using Pixeval.Util.UI.Windowing;
 using Windows.Graphics;
+using Pixeval.Util.Threading;
 using WinUI3Utilities;
 
 namespace Pixeval.UserControls.IllustrationView;
@@ -48,7 +48,8 @@ namespace Pixeval.UserControls.IllustrationView;
 // use "load failed" image for those thumbnails who failed to load its source due to various reasons
 // note: please ALWAYS add e.Handled = true before every "tapped" event for the buttons
 [DependencyProperty<object>("Header")]
-public sealed partial class RiverFlowIllustrationView : IIllustrationView
+[DependencyProperty<IllustrationViewOption>("IllustrationViewOption")]
+public sealed partial class RiverFlowIllustrationView
 {
     private static readonly ExponentialEase _imageSourceSetEasingFunction = new()
     {
@@ -70,7 +71,7 @@ public sealed partial class RiverFlowIllustrationView : IIllustrationView
             {
                 ViewModel.DataProvider.IllustrationsView.Refresh();
             }
-            TryFillClientAreaAsync().Discard();
+            LoadMoreIfNeeded().Discard();
         };
     }
 
@@ -83,12 +84,6 @@ public sealed partial class RiverFlowIllustrationView : IIllustrationView
     }
 
     public RiverFlowIllustrationViewViewModel ViewModel { get; }
-
-    IllustrationViewViewModel IIllustrationView.ViewModel => ViewModel;
-
-    public FrameworkElement SelfIllustrationView => this;
-
-    public ScrollViewer ScrollViewer => Sv;
 
     private async void RemoveBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
@@ -177,11 +172,11 @@ public sealed partial class RiverFlowIllustrationView : IIllustrationView
 
         if (args.BringIntoViewDistanceY <= sender.ActualHeight * preLoadRows)
         {
-            var option = ViewModel.IllustrationViewOption switch
+            var option = IllustrationViewOption switch
             {
                 IllustrationViewOption.RiverFlow => ThumbnailUrlOption.Medium,
                 IllustrationViewOption.Grid => ThumbnailUrlOption.SquareMedium,
-                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<IllustrationViewOption, ThumbnailUrlOption>(ViewModel.IllustrationViewOption)
+                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<IllustrationViewOption, ThumbnailUrlOption>(IllustrationViewOption)
             };
             if (await context.LoadThumbnailIfRequired(option))
             {
@@ -218,10 +213,11 @@ public sealed partial class RiverFlowIllustrationView : IIllustrationView
         }
     }
 
-    public Task TryFillClientAreaAsync()
+    public async Task LoadMoreIfNeeded(uint number = 20)
     {
-        //TODO: delete
-        return Task.CompletedTask;
+        // TODO load after being Filtrated
+        if (ScrollViewer.ScrollableHeight - LoadingArea.ActualHeight < ScrollViewer.VerticalOffset)
+            await ViewModel.DataProvider.IllustrationsView.LoadMoreItemsAsync(number);
     }
 
     public UIElement? GetItemContainer(IllustrationViewModel viewModel)
@@ -275,9 +271,8 @@ public sealed partial class RiverFlowIllustrationView : IIllustrationView
         await ViewModel.ShowPixEzQrCodeForIllustrationAsync(UIHelper.GetDataContext<IllustrationViewModel>(sender));
     }
 
-    private async void ScrollViewer_ViewChanged(object? sender, ScrollViewerViewChangedEventArgs e)
+    private void ScrollViewer_ViewChanged(object? sender, ScrollViewerViewChangedEventArgs e)
     {
-        if (ScrollViewer.ScrollableHeight - LoadingArea.ActualHeight < ScrollViewer.VerticalOffset)
-            await ViewModel.DataProvider.IllustrationsView.LoadMoreItemsAsync(20);
+        LoadMoreIfNeeded().Discard();
     }
 }

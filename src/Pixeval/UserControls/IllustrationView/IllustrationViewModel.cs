@@ -42,7 +42,7 @@ namespace Pixeval.UserControls.IllustrationView;
 
 /// <summary>
 ///     A view model that communicates between the model <see cref="Illustration" /> and the view
-///     <see cref="IIllustrationView" />.
+///     <see cref="RiverFlowIllustrationView" />.
 ///     It is responsible for being the elements of the <see cref="AdaptiveGridView" /> to present the thumbnail of an
 ///     illustration
 /// </summary>

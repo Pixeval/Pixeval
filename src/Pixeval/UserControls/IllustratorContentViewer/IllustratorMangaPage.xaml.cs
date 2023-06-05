@@ -77,7 +77,7 @@ public sealed partial class IllustratorMangaPage : ISortedIllustrationContainerP
         }
         else
         {
-            IllustrationContainer.IllustrationView.ViewModel.DataProvider.Filter = o =>
+            IllustrationContainer.ViewModel.DataProvider.Filter = o =>
             {
                 if (o is IllustrationViewModel viewModel)
                 {
