@@ -37,6 +37,8 @@ namespace Pixeval.UserControls;
 [DependencyProperty<object>("Header")]
 public sealed partial class IllustrationContainer
 {
+    public IllustrationViewOption IllustrationViewOption => App.AppViewModel.AppSetting.IllustrationViewOption;
+
     public IllustrationContainer()
     {
         InitializeComponent();
@@ -59,13 +61,7 @@ public sealed partial class IllustrationContainer
                     throw new ArgumentOutOfRangeException();
             }
         };
-        IllustrationView = App.AppViewModel.AppSetting.IllustrationViewOption switch
-        {
-            IllustrationViewOption.Regular => new GridIllustrationView(),
-            IllustrationViewOption.Justified => new JustifiedLayoutIllustrationView(),
-            _ => throw new ArgumentOutOfRangeException()
-        }; 
-        IllustrationContainerDockPanel.Children.Add(IllustrationView.SelfIllustrationView);
+        ViewModel.ThumbnailDirection = App.AppViewModel.AppSetting.ThumbnailDirection;
     }
 
     private static void OnShowCommandBarChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
@@ -85,10 +81,7 @@ public sealed partial class IllustrationContainer
         }
     }
 
-    public IllustrationViewViewModel ViewModel => IllustrationView.ViewModel;
-
-    public IIllustrationView IllustrationView { get; set; }
-
+    public RiverFlowIllustrationViewViewModel ViewModel => IllustrationView.ViewModel;
 
     /// <summary>
     ///     The command elements that will appear at the left of the <see cref="TopCommandBar" />
@@ -97,7 +90,7 @@ public sealed partial class IllustrationContainer
 
     private void IllustrationContainer_OnLoaded(object sender, RoutedEventArgs e)
     {
-        IllustrationView.SelfIllustrationView.Focus(FocusState.Programmatic);
+        IllustrationView.Focus(FocusState.Programmatic);
     }
 
     public void ScrollToTop()

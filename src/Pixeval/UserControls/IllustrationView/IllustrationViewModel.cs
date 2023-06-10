@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -42,7 +42,7 @@ namespace Pixeval.UserControls.IllustrationView;
 
 /// <summary>
 ///     A view model that communicates between the model <see cref="Illustration" /> and the view
-///     <see cref="IIllustrationView" />.
+///     <see cref="RiverFlowIllustrationView" />.
 ///     It is responsible for being the elements of the <see cref="AdaptiveGridView" /> to present the thumbnail of an
 ///     illustration
 /// </summary>
@@ -91,6 +91,11 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
             _isSelected = b;
             _isSelectedChanged?.Invoke(this, this);
         });
+    }
+
+    public double GetDesiredWidth(double itemHeight)
+    {
+        return itemHeight * Illustration.Width / Illustration.Height;
     }
 
     private EventHandler<IllustrationViewModel>? _isSelectedChanged;
@@ -158,7 +163,7 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
             return true;
         }
 
-        if (await GetThumbnail(ThumbnailUrlOption.SquareMedium) is { } ras)
+        if (await GetThumbnail(thumbnailUrlOption) is { } ras)
         {
             if (App.AppViewModel.AppSetting.UseFileCache)
             {

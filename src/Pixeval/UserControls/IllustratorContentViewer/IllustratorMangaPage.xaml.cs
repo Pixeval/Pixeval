@@ -53,7 +53,7 @@ public sealed partial class IllustratorMangaPage : ISortedIllustrationContainerP
 
     private void SortOptionComboBoxContainer_OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (App.AppViewModel.AppSetting.IllustrationViewOption is IllustrationViewOption.Justified)
+        if (App.AppViewModel.AppSetting.IllustrationViewOption is IllustrationViewOption.RiverFlow)
         {
             ToolTipService.SetToolTip(SortOptionComboBoxContainer, new ToolTip { Content = MiscResources.SortIsNotAllowedWithJustifiedLayout });
         }
@@ -77,7 +77,7 @@ public sealed partial class IllustratorMangaPage : ISortedIllustrationContainerP
         }
         else
         {
-            IllustrationContainer.IllustrationView.ViewModel.DataProvider.Filter = o =>
+            IllustrationContainer.ViewModel.DataProvider.Filter = o =>
             {
                 if (o is IllustrationViewModel viewModel)
                 {

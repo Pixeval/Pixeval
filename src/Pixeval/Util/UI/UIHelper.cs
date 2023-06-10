@@ -124,7 +124,7 @@ public static partial class UIHelper
 
     public static bool GetIllustrationViewSortOptionAvailability(IllustrationViewOption option)
     {
-        return option is IllustrationViewOption.Regular;
+        return option is IllustrationViewOption.Grid;
     }
 
     public static async Task LoadMoreItemsAsync(this AdvancedCollectionView acv, uint count, Action<LoadMoreItemsResult> callback)
