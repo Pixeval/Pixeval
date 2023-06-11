@@ -42,15 +42,17 @@
 
 ## 环境要求
 
-1. 安装[Visual Studio 2022](https://visualstudio.microsoft.com/vs)
+1. 安装[Visual Studio 2022](https://visualstudio.microsoft.com/vs)（Roslyn 4.x要求必须是VS17.x，即VS2022）
 2. 在**工具-获取工具与功能**的**工作负载**中选择 **.NET 桌面开发**（建议在安装对话框的“安装详细信息”窗格中，选择位于列表底部的“Windows 应用 SDK C# 模板”，但不是必需的。可以参考[安装适用于 Windows 应用 SDK 的工具](https://learn.microsoft.com/windows/apps/windows-app-sdk/set-up-your-development-environment)）
 3. 在**工具-获取工具与功能**的**单个组件**中选择 **.NET 7**；也可以在VS外部下载[.NET 7 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)最新版本，但不推荐这么做
+4. 在**扩展-管理扩展**中搜索[Single-project MSIX Packaging Tools for VS 2022](https://marketplace.visualstudio.com/items?itemName=ProjectReunion.MicrosoftSingleProjectMSIXPackagingToolsDev17)并安装
 
 ## 运行项目
 
 1. 用Git克隆本项目
 2. 如果 Pixeval 不是启动项目，请将其设置为启动项目
-3. 构建并运行（如果失败可以尝试重新生成解决方案）
+3. 构建并运行
+* 如果失败可以尝试重新生成解决方案或者重启Visual Studio 2022
 
 ## 参与开发的要求
 
