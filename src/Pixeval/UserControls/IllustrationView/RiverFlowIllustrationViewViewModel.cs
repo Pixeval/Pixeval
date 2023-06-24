@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -18,10 +18,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.CoreApi.Model;
+using Pixeval.Options;
 using Pixeval.Popups;
 using Pixeval.Util;
 using Pixeval.Util.UI;
@@ -29,18 +32,73 @@ using Pixeval.Utilities;
 
 namespace Pixeval.UserControls.IllustrationView;
 
-public sealed class GridIllustrationViewViewModel : SortableIllustrationViewViewModel
+public sealed class RiverFlowIllustrationViewViewModel : SortableIllustrationViewViewModel
 {
     private SoftwareBitmapSource? _pixEzQrCodeSource;
 
     private SoftwareBitmapSource? _webQrCodeSource;
 
+    #region RiverFlowLayout
+
+    private ThumbnailDirection _thumbnailDirection;
+
+    private static double _itemWidth;
+
+    public static double StaticItemHeight;
+
+    public ThumbnailDirection ThumbnailDirection
+    {
+        get => _thumbnailDirection;
+        set
+        {
+            if (_thumbnailDirection == value) 
+                return;
+            _thumbnailDirection = value;
+            switch (_thumbnailDirection)
+            {
+                case ThumbnailDirection.Landscape:
+                    ItemHeight = 180;
+                    ItemWidth = 250;
+                    break;
+                case ThumbnailDirection.Portrait:
+                    ItemHeight = 250;
+                    ItemWidth = 180;
+                    break;
+                default:
+                    WinUI3Utilities.ThrowHelper.ArgumentOutOfRange(_thumbnailDirection);
+                    break;
+            }
+        }
+    }
+
+    public double ItemWidth
+    {
+        get => _itemWidth;
+        set => _itemWidth = value;
+    }
+
+    public double ItemHeight
+    {
+        get => StaticItemHeight;
+        set
+        {
+            // 需要通过绑定更新
+            if (StaticItemHeight == value)
+                return;
+            OnPropertyChanging();
+            StaticItemHeight = value;
+            OnPropertyChanged();
+        }
+    }
+
+    #endregion
+
     public override IIllustrationViewDataProvider DataProvider { get; }
 
-    public GridIllustrationViewViewModel()
+    public RiverFlowIllustrationViewViewModel()
     {
         SelectionLabel = IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel;
-        DataProvider = new GridIllustrationViewDataProvider();
+        DataProvider = new RiverFlowIllustrationViewDataProvider();
         DataProvider.SelectedIllustrations.CollectionChanged += (_, _) =>
         {
             IsAnyIllustrationSelected = DataProvider.SelectedIllustrations.Count > 0;

@@ -17,6 +17,7 @@
             <x:Double x:Key="PixevalBaseFontSize">12</x:Double>
             <x:Double x:Key="PixevalSubscriptFontSize">11</x:Double>
             <x:Double x:Key="PixevalCaptionFontSize">10</x:Double>
+            <x:Double x:Key="CollapsedAppBarButtonWidth">45</x:Double>
             <!--  Gap between different entries  -->
             <Thickness x:Key="StackLayoutEntriesMargin">0,20,0,0</Thickness>
             <!--  Gap between the same entry's different component  -->

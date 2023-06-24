@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/GridIllustrationViewDataProvider.cs
+// Copyright (c) 2023 Pixeval/JustifiedLayoutIllustrationViewDataProvider.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -33,12 +34,10 @@ using Pixeval.Utilities;
 
 namespace Pixeval.UserControls.IllustrationView;
 
-public class GridIllustrationViewDataProvider : ObservableObject, IIllustrationViewDataProvider, IDisposable
+public class RiverFlowIllustrationViewDataProvider : ObservableObject, IIllustrationViewDataProvider, IDisposable
 {
-    public GridIllustrationViewDataProvider()
+    public RiverFlowIllustrationViewDataProvider()
     {
-        _illustrationSource = new ObservableCollection<IllustrationViewModel>();
-        SelectedIllustrations = new ObservableCollection<IllustrationViewModel>();
         IllustrationsView = new AdvancedCollectionView(IllustrationsSource);
         IllustrationsSource.CollectionChanged += OnIllustrationsSourceOnCollectionChanged;
     }
@@ -47,7 +46,7 @@ public class GridIllustrationViewDataProvider : ObservableObject, IIllustrationV
 
     public AdvancedCollectionView IllustrationsView { get; }
 
-    private ObservableCollection<IllustrationViewModel> _illustrationSource;
+    private ObservableCollection<IllustrationViewModel> _illustrationSource = new();
 
     public ObservableCollection<IllustrationViewModel> IllustrationsSource
     {
@@ -79,7 +78,7 @@ public class GridIllustrationViewDataProvider : ObservableObject, IIllustrationV
         remove => _filterChanged -= value;
     }
 
-    public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; set; }
+    public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; set; } = new();
 
     public void DisposeCurrent()
     {
@@ -93,14 +92,10 @@ public class GridIllustrationViewDataProvider : ObservableObject, IIllustrationV
         SelectedIllustrations.Clear();
     }
 
-    public virtual async Task<int> LoadMore()
+    public virtual Task<int> LoadMore()
     {
-        if (IllustrationsSource is IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel> coll)
-        {
-            return (int) (await coll.LoadMoreItemsAsync(20)).Count;
-        }
-
-        return 0;
+        //TODO: delete
+        return Task.FromResult(0);
     }
 
     public virtual async Task<int> FillAsync(int? itemsLimit = null)
@@ -109,7 +104,7 @@ public class GridIllustrationViewDataProvider : ObservableObject, IIllustrationV
         IllustrationsSource = collection;
         IllustrationsSource.CollectionChanged += OnIllustrationsSourceOnCollectionChanged;
         var result = await collection.LoadMoreItemsAsync(20);
-        return (int) result.Count;
+        return (int)result.Count;
     }
 
     public Task<int> ResetAndFillAsync(IFetchEngine<Illustration?>? fetchEngine, int? itemLimit = null)

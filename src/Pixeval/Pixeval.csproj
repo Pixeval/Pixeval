@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
@@ -24,59 +24,40 @@
         <LangVersion>preview</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
-    <ItemGroup>
-      <None Remove="Controls\FollowingUserBadge\FollowingUserBadge.xaml" />
-      <None Remove="Controls\PremiumUserBadge\PremiumUserBadge.xaml" />
-      <None Remove="Pages\Misc\IllustratorContentViewerPage.xaml" />
-      <None Remove="Strings\IllustratorProfile.resw" />
-      <None Remove="Strings\zh-CN\FollowingPage.resw" />
-      <None Remove="Strings\zh-CN\FollowingUserBadge.resw" />
-      <None Remove="Strings\zh-CN\IllustratorContentViewer.resw" />
-      <None Remove="Strings\zh-CN\IllustratorIllustrationAndMangaBookmarkPage.resw" />
-      <None Remove="Strings\zh-CN\RecommendIllustratorProfile.resw" />
-      <None Remove="UserControls\IllustratorContentViewer\IllustratorContentViewer.xaml" />
-      <None Remove="UserControls\IllustratorContentViewer\IllustratorIllustrationAndMangaBookmarkPage.xaml" />
-      <None Remove="UserControls\IllustratorContentViewer\IllustratorIllustrationPage.xaml" />
-      <None Remove="UserControls\IllustratorContentViewer\IllustratorMangaPage.xaml" />
-      <None Remove="UserControls\IllustratorView\IllustratorProfile.xaml" />
-      <None Remove="UserControls\RecommendIllustratorProfile.xaml" />
-    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.1.2" />
         <PackageReference Include="CommunityToolkit.WinUI.UI.Behaviors" Version="7.1.2" />
         <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
         <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.2" />
-        <PackageReference Include="GitVersion.MsBuild" Version="5.11.1">
+        <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="LiteDB" Version="5.0.15" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
-        <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.1" />
-        <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.0.0" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
+        <PackageReference Include="LiteDB" Version="5.0.16" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+        <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.3.2" />
+        <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.0" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
         <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
         <PackageReference Include="Microsoft.Win32.Registry" Version="6.0.0-preview.5.21301.5" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.25206-preview" />
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230518007-experimental1" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
         <PackageReference Include="PininSharp" Version="1.2.0" />
         <PackageReference Include="PInvoke.User32" Version="0.7.124" />
         <PackageReference Include="Pixeval.QRCoder" Version="1.4.5" />
-        <PackageReference Include="ReverseMarkdown" Version="3.24.0" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
+        <PackageReference Include="ReverseMarkdown" Version="3.25.0" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-        <PackageReference Include="WinUI3Utilities" Version="1.0.9" />
-        <PackageReference Include="WinUIEx" Version="2.1.0" />
-        <Manifest Include="$(ApplicationManifest)" />
-    </ItemGroup>
+        <PackageReference Include="WinUI3Utilities" Version="1.1.3.2" />
+        <PackageReference Include="WinUIEx" Version="2.2.0" />
 
-    <ItemGroup>
         <ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
         <ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
         <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
+        <Manifest Include="$(ApplicationManifest)" />
     </ItemGroup>
 
     <!--Exposes PRI resources-->
@@ -218,15 +199,6 @@
 
     <!--  XAML  -->
     <ItemGroup>
-        <Page Update="UserControls\JustifiedLayoutIllustrationView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="UserControls\JustifiedLayout\JustifiedListView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="UserControls\JustifiedLayout\JustifiedListViewRow.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
         <Page Update="Pages\Capability\SpotlightsPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
@@ -246,9 +218,6 @@
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\Capabilities\RecommendationPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="UserControls\GridIllustrationView.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Dialogs\MessageDialogContent.xaml">
@@ -279,9 +248,6 @@
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\Capabilities\RecommendationPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="UserControls\GridIllustrationView.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Dialogs\MessageDialogContent.xaml">
@@ -434,53 +400,33 @@
         <Page Update="Pages\Capabilities\BookmarksPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-    </ItemGroup>
-    <ItemGroup>
-      <Page Update="UserControls\IllustratorView\IllustratorProfile.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="UserControls\RecommendIllustratorProfile\" />
-    </ItemGroup>
-    <ItemGroup>
-      <Page Update="UserControls\IllustratorContentViewer\IllustratorIllustrationAndMangaBookmarkPage.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-    </ItemGroup>
-    <ItemGroup>
-      <Page Update="UserControls\IllustratorContentViewer\IllustratorMangaPage.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-    </ItemGroup>
-    <ItemGroup>
-      <Page Update="UserControls\IllustratorContentViewer\IllustratorIllustrationPage.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-    </ItemGroup>
-    <ItemGroup>
-      <Page Update="Controls\FollowingUserBadge\FollowingUserBadge.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-    </ItemGroup>
-    <ItemGroup>
-      <Page Update="Controls\PremiumUserBadge\PremiumUserBadge.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-    </ItemGroup>
-    <ItemGroup>
-      <Page Update="UserControls\RecommendIllustratorProfile.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-    </ItemGroup>
-    <ItemGroup>
-      <Page Update="Pages\Misc\IllustratorContentViewerPage.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-    </ItemGroup>
-    <ItemGroup>
-      <Page Update="UserControls\IllustratorContentViewer\IllustratorContentViewer.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
+        <Page Update="UserControls\IllustratorView\IllustratorProfile.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Folder Include="UserControls\RecommendIllustratorProfile\" />
+        <Page Update="UserControls\IllustratorContentViewer\IllustratorIllustrationAndMangaBookmarkPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="UserControls\IllustratorContentViewer\IllustratorMangaPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="UserControls\IllustratorContentViewer\IllustratorIllustrationPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\FollowingUserBadge\FollowingUserBadge.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Controls\PremiumUserBadge\PremiumUserBadge.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="UserControls\RecommendIllustratorProfile.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="Pages\Misc\IllustratorContentViewerPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+        <Page Update="UserControls\IllustratorContentViewer\IllustratorContentViewer.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
     </ItemGroup>
 </Project>

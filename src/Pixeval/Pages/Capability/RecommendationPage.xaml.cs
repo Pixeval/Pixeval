@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -55,7 +55,7 @@ public sealed partial class RecommendationPage : ISortedIllustrationContainerPag
     {
         ModeSelectionComboBox.SelectedItem = ModeSelectionComboBoxIllustComboBoxItem;
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
-        WeakReferenceMessenger.Default.Register<RecommendationPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
+        WeakReferenceMessenger.Default.TryRegister<RecommendationPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
     }
 
     private void RecommendationsPage_OnLoaded(object sender, RoutedEventArgs e)
@@ -85,7 +85,7 @@ public sealed partial class RecommendationPage : ISortedIllustrationContainerPag
 
     private void SortOptionComboBoxContainer_OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (App.AppViewModel.AppSetting.IllustrationViewOption is IllustrationViewOption.Justified)
+        if (App.AppViewModel.AppSetting.IllustrationViewOption is IllustrationViewOption.RiverFlow)
         {
             ToolTipService.SetToolTip(SortOptionComboBoxContainer, new ToolTip { Content = MiscResources.SortIsNotAllowedWithJustifiedLayout });
         }

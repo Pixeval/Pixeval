@@ -39,7 +39,7 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
     {
         if (ActivationCount > 1) return;
 
-        WeakReferenceMessenger.Default.Register<IllustratorIllustrationAndMangaBookmarkPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
+        WeakReferenceMessenger.Default.TryRegister<IllustratorIllustrationAndMangaBookmarkPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
         if (e.Parameter is string id)
         {
             _uid = id;
@@ -71,7 +71,7 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
 
             // refresh the filter when there are newly fetched IDs.
             IllustrationContainer.IllustrationView.ViewModel.DataProvider.Filter = o => BookmarkTagFilter(name, o);
-            IllustrationContainer.IllustrationView.TryFillClientAreaAsync().Discard();
+            IllustrationContainer.IllustrationView.LoadMoreIfNeeded().Discard();
             return;
         }
 
@@ -87,12 +87,12 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        ((ISortedIllustrationContainerPageHelper) this).OnSortOptionChanged();
+        ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
     }
 
     private void SortOptionComboBoxContainer_OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (App.AppViewModel.AppSetting.IllustrationViewOption is IllustrationViewOption.Justified)
+        if (App.AppViewModel.AppSetting.IllustrationViewOption is IllustrationViewOption.RiverFlow)
         {
             ToolTipService.SetToolTip(SortOptionComboBoxContainer, new ToolTip { Content = MiscResources.SortIsNotAllowedWithJustifiedLayout });
         }

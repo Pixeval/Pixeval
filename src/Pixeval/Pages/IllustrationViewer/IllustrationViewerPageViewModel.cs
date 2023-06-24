@@ -23,10 +23,13 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.System;
 using Windows.System.UserProfile;
 using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -57,12 +60,10 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     private int _currentIndex;
 
     [ObservableProperty]
-    private bool _isGenerateLinkTeachingTipOpen;
-
-    [ObservableProperty]
     private bool _isInfoPaneOpen;
 
-    private ImageSource? _qrCodeSource;
+    [ObservableProperty]
+    private IllustrationViewModel? _selectedIllustrationViewModel;
 
     // The reason why we don't put UserProfileImageSource into IllustrationViewModel
     // is because the whole array of Illustrations is just representing the same 
@@ -78,13 +79,26 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     [ObservableProperty]
     private UserInfo? _userInfo;
 
+    [ObservableProperty]
+#pragma warning disable CS0169
+    private AdvancedCollectionView? _snapshot;
+#pragma warning restore CS0169
+
     private readonly IllustrationViewModel[] _illustrations;
 
-    public bool IsDisposed;
+    public bool IsDisposed { get; set; }
+
+    private EventHandler<double>? _zoomChanged;
+
+    public event EventHandler<double> ZoomChanged
+    {
+        add => _zoomChanged += value;
+        remove => _zoomChanged -= value;
+    }
 
     // illustrations should contains only one item if the illustration is a single
     // otherwise it contains the entire manga data
-    public IllustrationViewerPageViewModel(IIllustrationView illustrationView, params IllustrationViewModel[] illustrations) : this(illustrations)
+    public IllustrationViewerPageViewModel(RiverFlowIllustrationView illustrationView, params IllustrationViewModel[] illustrations) : this(illustrations)
     {
         IllustrationView = illustrationView;
         ContainerGridViewModel = illustrationView.ViewModel;
@@ -95,7 +109,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         _illustrations = illustrations;
         ImageViewerPageViewModels = illustrations.Select(i => new ImageViewerPageViewModel(this, i)).ToArray();
-        Current = ImageViewerPageViewModels[CurrentIndex];
+        ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModels[CurrentIndex]);
         InitializeCommands();
         _ = LoadUserProfile();
     }
@@ -115,19 +129,19 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     public IllustrationViewViewModel? ContainerGridViewModel { get; }
 
     /// <summary>
-    ///     The <see cref="IIllustrationView" /> that owns <see cref="ContainerGridViewModel" />
+    ///     The <see cref="RiverFlowIllustrationView" /> that owns <see cref="ContainerGridViewModel" />
     /// </summary>
-    public IIllustrationView? IllustrationView { get; }
+    public RiverFlowIllustrationView? IllustrationView { get; }
 
     /// <summary>
-    ///     The <see cref="IllustrationViewModelInTheGridView" /> in <see cref="IIllustrationView" /> that corresponds to
+    ///     The <see cref="IllustrationViewModelInTheGridView" /> in <see cref="RiverFlowIllustrationView" /> that corresponds to
     ///     current
     ///     <see cref="IllustrationViewerPageViewModel" />
     /// </summary>
     public IllustrationViewModel? IllustrationViewModelInTheGridView { get; }
 
     /// <summary>
-    ///     The index of current illustration in <see cref="IIllustrationView" />
+    ///     The index of current illustration in <see cref="RiverFlowIllustrationView" />
     /// </summary>
     public int? IllustrationIndex => ContainerGridViewModel?.DataProvider.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
 
@@ -154,8 +168,8 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         // disposing of it will also empty the corresponding image in GridView.
         ImageViewerPageViewModels?.Skip(1).ForEach(i => i.IllustrationViewModel.Dispose());
 
-        (_userProfileImageSource as SoftwareBitmapSource)?.Dispose();
-        _userProfileImageSource = null;
+        (UserProfileImageSource as SoftwareBitmapSource)?.Dispose();
+        UserProfileImageSource = null;
         IsDisposed = true;
     }
 
@@ -163,49 +177,61 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         PlayGifCommand.NotifyCanExecuteChanged();
         CopyCommand.NotifyCanExecuteChanged();
+        RestoreResolutionCommand.NotifyCanExecuteChanged();
+        ZoomInCommand.NotifyCanExecuteChanged();
+        ZoomOutCommand.NotifyCanExecuteChanged();
+        FullScreenCommand.NotifyCanExecuteChanged();
+    }
+
+    public void FlipRestoreResolutionCommand(bool scaled)
+    {
+        RestoreResolutionCommand.Label = scaled ? IllustrationViewerPageResources.UniformToFillResolution : IllustrationViewerPageResources.RestoreOriginalResolution;
+        RestoreResolutionCommand.IconSource = scaled ? FontIconSymbols.Webcam2E960.GetFontIconSource() : FontIconSymbols.WebcamE8B8.GetFontIconSource();
     }
 
     private void InitializeCommands()
     {
-        BookmarkCommand = new XamlUICommand
-        {
-            KeyboardAccelerators =
-            {
-                new KeyboardAccelerator
-                {
-                    Modifiers = VirtualKeyModifiers.Control,
-                    Key = VirtualKey.D
-                }
-            },
-            Label = FirstIllustrationViewModel!.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark,
-            IconSource = MakoHelper.GetBookmarkButtonIconSource(FirstIllustrationViewModel.IsBookmarked)
-        };
+        BookmarkCommand =
+            (FirstIllustrationViewModel!.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark)
+            .GetCommand(
+                MakoHelper.GetBookmarkButtonIconSource(FirstIllustrationViewModel.IsBookmarked),
+                VirtualKeyModifiers.Control, VirtualKey.D);
+
+        FullScreenCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+
+        RestoreResolutionCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
 
         BookmarkCommand.ExecuteRequested += BookmarkCommandOnExecuteRequested;
 
-        CopyCommand.CanExecuteRequested += CopyCommandOnCanExecuteRequested;
+        CopyCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         CopyCommand.ExecuteRequested += CopyCommandOnExecuteRequested;
 
         PlayGifCommand.CanExecuteRequested += PlayGifCommandOnCanExecuteRequested;
         PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
 
+        ZoomOutCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         ZoomOutCommand.ExecuteRequested += (_, _) => Current.Zoom(-0.5f);
+
+        ZoomInCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         ZoomInCommand.ExecuteRequested += (_, _) => Current.Zoom(0.5f);
 
         SaveCommand.ExecuteRequested += SaveCommandOnExecuteRequested;
         SaveAsCommand.ExecuteRequested += SaveAsCommandOnExecuteRequested;
 
-        GenerateLinkCommand.ExecuteRequested += GenerateLinkCommandOnExecuteRequested;
         GenerateWebLinkCommand.ExecuteRequested += GenerateWebLinkCommandOnExecuteRequested;
         OpenInWebBrowserCommand.ExecuteRequested += OpenInWebBrowserCommandOnExecuteRequested;
         ShareCommand.ExecuteRequested += ShareCommandOnExecuteRequested;
-        ShowQrCodeCommand.ExecuteRequested += ShowQrCodeCommandOnExecuteRequested;
 
         SetAsLockScreenCommand.CanExecuteRequested += SetAsLockScreenCommandOnCanExecuteRequested;
         SetAsLockScreenCommand.ExecuteRequested += SetAsLockScreenCommandOnExecuteRequested;
 
         SetAsBackgroundCommand.CanExecuteRequested += SetAsBackgroundCommandOnCanExecuteRequested;
         SetAsBackgroundCommand.ExecuteRequested += SetAsBackgroundCommandOnExecuteRequested;
+    }
+
+    private void LoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
+    {
+        args.CanExecute = Current.LoadingCompletedSuccessfully;
     }
 
     private async void SetAsBackgroundCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -270,13 +296,6 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         args.CanExecute = !IsUgoira && Current.LoadingCompletedSuccessfully;
     }
 
-    private async void ShowQrCodeCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        _qrCodeSource ??= await UIHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustrationWebUri(Current.IllustrationViewModel.Id).ToString());
-
-        PopupManager.ShowPopup(PopupManager.CreatePopup(new QrCodePresenter(_qrCodeSource), lightDismiss: true));
-    }
-
     private async void ShareCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         if (Current.LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true })
@@ -299,16 +318,6 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         var link = MakoHelper.GenerateIllustrationWebUri(Current.IllustrationViewModel.Id).ToString();
         UIHelper.SetClipboardContent(package => package.SetText(link));
         SnackBarController.ShowSnack(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle, SnackBarController.SnackBarDurationLong);
-    }
-
-    private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        if (App.AppViewModel.AppSetting.DisplayTeachingTipWhenGeneratingAppLink)
-        {
-            IsGenerateLinkTeachingTipOpen = true;
-        }
-
-        UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationAppUri(Current.IllustrationViewModel.Id).ToString()));
     }
 
     private async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -340,36 +349,34 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         if (bitmap.IsPlaying)
         {
             bitmap.Stop();
-            PlayGifCommand.Label = IllustrationViewerPageResources.PlayGif;
-            PlayGifCommand.IconSource = new SymbolIconSource
-            {
-                Symbol = Symbol.Play
-            };
+            PlayGifCommand.Description = PlayGifCommand.Label = IllustrationViewerPageResources.PlayGif;
+            PlayGifCommand.IconSource = new SymbolIconSource { Symbol = Symbol.Play };
         }
         else
         {
             bitmap.Play();
-            PlayGifCommand.Label = IllustrationViewerPageResources.PauseGif;
-            PlayGifCommand.IconSource = new SymbolIconSource
-            {
-                Symbol = Symbol.Stop
-            };
+            PlayGifCommand.Description = PlayGifCommand.Label = IllustrationViewerPageResources.PauseGif;
+            PlayGifCommand.IconSource = new SymbolIconSource { Symbol = Symbol.Stop };
         }
     }
 
-    private void CopyCommandOnCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
+    private async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs e)
     {
-        args.CanExecute = Current.LoadingCompletedSuccessfully;
-    }
-
-    private async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
+        //UIHelper.SetClipboardContent(package =>
+        //{
+        //    //todo package.RequestedOperation = DataPackageOperation.Copy;
+        //    Current.OriginalImageStream!.Seek(0);
+        //    var stream = Current.OriginalImageStream.EncodeBitmapStreamAsync(false).GetAwaiter().GetResult(); 
+        //    var streamRef = RandomAccessStreamReference.CreateFromStream(stream);
+        //    package.SetBitmap(streamRef);
+        //});
         await UIHelper.SetClipboardContentAsync(async package =>
         {
             package.RequestedOperation = DataPackageOperation.Copy;
             var file = await AppKnownFolders.CreateTemporaryFileWithNameAsync(GetCopyContentFileName(), IsUgoira ? "gif" : "png");
             await Current.OriginalImageStream!.SaveToFileAsync(file);
-            package.SetStorageItems(Enumerates.ArrayOf(file), true);
+            var streamRef = RandomAccessStreamReference.CreateFromFile(file);
+            package.SetBitmap(streamRef);
         });
 
         string GetCopyContentFileName()
@@ -380,20 +387,39 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     public ImageViewerPageViewModel Next()
     {
-        Current = ImageViewerPageViewModels![++CurrentIndex];
+        ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModels![CurrentIndex++]);
         return Current;
     }
 
     public ImageViewerPageViewModel Prev()
     {
-        Current = ImageViewerPageViewModels![--CurrentIndex];
+        ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModels![CurrentIndex--]);
         return Current;
     }
+
+    private void ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModel newViewModel)
+    {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        if (Current is not null)
+        {
+            Current.ZoomChanged -= CurrentOnZoomChanged;
+        }
+        Current = newViewModel;
+        Current.ZoomChanged += CurrentOnZoomChanged;
+        CurrentOnZoomChanged(null, Current.Scale); // trigger as new viewmodel attached
+    }
+
+    // what a trash code...
+    private void CurrentOnZoomChanged(object? sender, double e)
+    {
+        _zoomChanged?.Invoke(this, e);
+    }
+
 
     public Task PostPublicBookmarkAsync()
     {
         // changes the IsBookmarked property of the item that of in the thumbnail list
-        // so the thumbnail item will also receives state update 
+        // so the thumbnail item will also receive state update 
         if (IllustrationViewModelInTheGridView is not null)
         {
             IllustrationViewModelInTheGridView.IsBookmarked = true;
@@ -427,109 +453,50 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     #region Commands
 
-    public StandardUICommand CopyCommand { get; } = new(StandardUICommandKind.Copy);
+    public XamlUICommand IllustrationInfoAndCommentsCommand { get; } =
+        IllustrationViewerPageResources.IllustrationInfoAndComments.GetCommand(FontIconSymbols.InfoE946, VirtualKey.F12);
 
-    public StandardUICommand PlayGifCommand { get; } = new(StandardUICommandKind.Play)
-    {
-        // The gif will be played as soon as its loaded, so the default state is playing and thus we need the button to be pause
-        Label = IllustrationViewerPageResources.PauseGif,
-        IconSource = new SymbolIconSource
-        {
-            Symbol = Symbol.Stop
-        }
-    };
+    public XamlUICommand CopyCommand { get; } = IllustrationViewerPageResources.Copy.GetCommand(
+            FontIconSymbols.CopyE8C8, VirtualKeyModifiers.Control, VirtualKey.C);
 
-    public XamlUICommand ZoomOutCommand { get; } = new()
-    {
-        Label = IllustrationViewerPageResources.ZoomOut,
-        IconSource = new SymbolIconSource
-        {
-            Symbol = Symbol.ZoomOut
-        },
-        KeyboardAccelerators =
-        {
-            new KeyboardAccelerator
-            {
-                Key = VirtualKey.Subtract
-            }
-        }
-    };
+    // The gif will be played as soon as its loaded, so the default state is playing and thus we need the button to be pause
+    public XamlUICommand PlayGifCommand { get; } = IllustrationViewerPageResources.PauseGif.GetCommand(FontIconSymbols.StopE71A);
 
-    public XamlUICommand ZoomInCommand { get; } = new()
-    {
-        Label = IllustrationViewerPageResources.ZoomIn,
-        IconSource = new SymbolIconSource
-        {
-            Symbol = Symbol.ZoomIn
-        },
-        KeyboardAccelerators =
-        {
-            new KeyboardAccelerator
-            {
-                Key = VirtualKey.Add
-            }
-        }
-    };
+    public XamlUICommand ZoomOutCommand { get; } = IllustrationViewerPageResources.ZoomOut.GetCommand(
+        FontIconSymbols.ZoomOutE71F, VirtualKey.Subtract);
+
+    public XamlUICommand ZoomInCommand { get; } = IllustrationViewerPageResources.ZoomIn.GetCommand(
+        FontIconSymbols.ZoomInE8A3, VirtualKey.Add);
 
     public XamlUICommand BookmarkCommand { get; private set; } = null!; // the null-state is transient
 
-    public StandardUICommand SaveCommand { get; } = new(StandardUICommandKind.Save) { Description = MiscResources.Save };
+    public XamlUICommand SaveCommand { get; } = IllustrationViewerPageResources.Save.GetCommand(
+        FontIconSymbols.SaveE74E, VirtualKeyModifiers.Control, VirtualKey.S);
 
-    public XamlUICommand SaveAsCommand { get; } = new()
-    {
-        Label = IllustrationViewerPageResources.SaveAs,
-        KeyboardAccelerators =
-        {
-            new KeyboardAccelerator
-            {
-                Modifiers = VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift,
-                Key = VirtualKey.S
-            }
-        },
-        IconSource = FontIconSymbols.SaveAsE792.GetFontIconSource()
-    };
+    public XamlUICommand SaveAsCommand { get; } = IllustrationViewerPageResources.SaveAs.GetCommand(
+        FontIconSymbols.SaveAsE792, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
 
-    public XamlUICommand AddToBookmarkCommand { get; } = new()
-    {
-        Label = IllustrationViewerPageResources.AddToBookmark,
-        IconSource = FontIconSymbols.BookmarksE8A4.GetFontIconSource()
-    };
+    public XamlUICommand SetAsCommand { get; } = IllustrationViewerPageResources.SetAs.GetCommand(FontIconSymbols.PersonalizeE771);
 
-    public XamlUICommand GenerateLinkCommand { get; } = new()
-    {
-        Label = IllustrationViewerPageResources.GenerateLink,
-        IconSource = FontIconSymbols.LinkE71B.GetFontIconSource()
-    };
+    public XamlUICommand AddToBookmarkCommand { get; } = IllustrationViewerPageResources.AddToBookmark.GetCommand(FontIconSymbols.BookmarksE8A4);
 
-    public XamlUICommand GenerateWebLinkCommand { get; } = new()
-    {
-        Label = IllustrationViewerPageResources.GenerateWebLink,
-        IconSource = FontIconSymbols.PreviewLinkE8A1.GetFontIconSource()
-    };
+    public XamlUICommand GenerateLinkCommand { get; } = IllustrationViewerPageResources.GenerateLink.GetCommand(FontIconSymbols.LinkE71B);
 
-    public XamlUICommand OpenInWebBrowserCommand { get; } = new()
-    {
-        Label = IllustrationViewerPageResources.OpenInWebBrowser,
-        IconSource = FontIconSymbols.WebSearchF6FA.GetFontIconSource()
-    };
+    public XamlUICommand GenerateWebLinkCommand { get; } = IllustrationViewerPageResources.GenerateWebLink.GetCommand(FontIconSymbols.PreviewLinkE8A1);
+
+    public XamlUICommand OpenInWebBrowserCommand { get; } = IllustrationViewerPageResources.OpenInWebBrowser.GetCommand(FontIconSymbols.WebSearchF6FA);
 
     public StandardUICommand ShareCommand { get; } = new(StandardUICommandKind.Share);
 
-    public XamlUICommand ShowQrCodeCommand { get; } = new()
-    {
-        Label = IllustrationViewerPageResources.ShowQRCode,
-        IconSource = FontIconSymbols.QRCodeED14.GetFontIconSource()
-    };
+    public XamlUICommand ShowQrCodeCommand { get; } = IllustrationViewerPageResources.ShowQRCode.GetCommand(FontIconSymbols.QRCodeED14);
 
-    public XamlUICommand SetAsLockScreenCommand { get; } = new()
-    {
-        Label = IllustrationViewerPageResources.LockScreen
-    };
+    public XamlUICommand SetAsLockScreenCommand { get; } = new() { Label = IllustrationViewerPageResources.LockScreen };
 
-    public XamlUICommand SetAsBackgroundCommand { get; } = new()
-    {
-        Label = IllustrationViewerPageResources.Background
-    };
+    public XamlUICommand SetAsBackgroundCommand { get; } = new() { Label = IllustrationViewerPageResources.Background };
+
+    public XamlUICommand FullScreenCommand { get; } = IllustrationViewerPageResources.FullScreen.GetCommand(FontIconSymbols.FullScreenE740);
+
+    public XamlUICommand RestoreResolutionCommand { get; } = IllustrationViewerPageResources.RestoreOriginalResolution.GetCommand(FontIconSymbols.WebcamE8B8);
 
     #endregion
 

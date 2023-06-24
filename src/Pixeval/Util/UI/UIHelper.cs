@@ -43,7 +43,6 @@ using Pixeval.Misc;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using QRCoder;
-using System.Threading;
 using Microsoft.UI.Xaml.Data;
 using Pixeval.Options;
 using Pixeval.Util.Threading;
@@ -59,7 +58,6 @@ using Color = Windows.UI.Color;
 using Image = SixLabors.ImageSharp.Image;
 using Point = Windows.Foundation.Point;
 using Size = Windows.Foundation.Size;
-using PInvoke;
 
 namespace Pixeval.Util.UI;
 
@@ -126,7 +124,7 @@ public static partial class UIHelper
 
     public static bool GetIllustrationViewSortOptionAvailability(IllustrationViewOption option)
     {
-        return option is IllustrationViewOption.Regular;
+        return option is IllustrationViewOption.Grid;
     }
 
     public static async Task LoadMoreItemsAsync(this AdvancedCollectionView acv, uint count, Action<LoadMoreItemsResult> callback)
@@ -395,5 +393,22 @@ public static partial class UIHelper
         var trimmed = !hex.StartsWith('#') ? $"#{hex}" : hex;
         var color = ColorTranslator.FromHtml(trimmed);
         return Color.FromArgb(color.A, color.R, color.G, color.B);
+    }
+
+    /// <summary>
+    /// Get the scale factor of the original image when it is contained inside an <see cref="Microsoft.UI.Xaml.Controls.Image"/> control, and the <see cref="Microsoft.UI.Xaml.Controls.Image.Stretch"/>
+    /// property is set to <see cref="Stretch.UniformToFill"/> or <see cref="Stretch.Uniform"/>
+    /// </summary>
+    public static double GetImageScaledFactor(double originalImageWidth, double originalImageHeight, double imageWidth, double imageHeight, double imageZoomFactor)
+    {
+        var illustResolution = originalImageWidth / originalImageHeight;
+        var imageResolution = imageWidth / imageHeight;
+
+        var displayImageResolution = (imageResolution - illustResolution) switch
+        {
+            > 0 => imageHeight * imageZoomFactor / originalImageHeight, // imageResolution - illustResolution > 0: the height is filled
+            _ => imageWidth * imageZoomFactor / originalImageWidth, // imageResolution - illustResolution < 0: the width is filled; or = 0, then the choose is arbitrary
+        };
+        return displayImageResolution;
     }
 }

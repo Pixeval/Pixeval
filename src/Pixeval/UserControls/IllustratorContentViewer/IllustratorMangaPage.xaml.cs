@@ -29,7 +29,7 @@ public sealed partial class IllustratorMangaPage : ISortedIllustrationContainerP
     {
         if (ActivationCount > 1) return;
 
-        WeakReferenceMessenger.Default.Register<IllustratorMangaPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
+        WeakReferenceMessenger.Default.TryRegister<IllustratorMangaPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
         if (e.Parameter is string id)
         {
             IllustrationContainer.IllustrationView.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.MangaPosts(id, App.AppViewModel.AppSetting.TargetFilter)).Discard();
@@ -53,7 +53,7 @@ public sealed partial class IllustratorMangaPage : ISortedIllustrationContainerP
 
     private void SortOptionComboBoxContainer_OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (App.AppViewModel.AppSetting.IllustrationViewOption is IllustrationViewOption.Justified)
+        if (App.AppViewModel.AppSetting.IllustrationViewOption is IllustrationViewOption.RiverFlow)
         {
             ToolTipService.SetToolTip(SortOptionComboBoxContainer, new ToolTip { Content = MiscResources.SortIsNotAllowedWithJustifiedLayout });
         }
@@ -77,7 +77,7 @@ public sealed partial class IllustratorMangaPage : ISortedIllustrationContainerP
         }
         else
         {
-            IllustrationContainer.IllustrationView.ViewModel.DataProvider.Filter = o =>
+            IllustrationContainer.ViewModel.DataProvider.Filter = o =>
             {
                 if (o is IllustrationViewModel viewModel)
                 {

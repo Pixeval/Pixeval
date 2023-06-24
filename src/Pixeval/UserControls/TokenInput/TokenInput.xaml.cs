@@ -31,7 +31,7 @@ namespace Pixeval.UserControls.TokenInput;
 
 [DependencyProperty<string>("PlaceholderText")]
 [DependencyProperty<ICollection<Token>>("TokenSource")]
-[DependencyProperty<Visibility>("TokenInputTextBoxVisibility", DefaultValue = "Visibility.Visible")]
+[DependencyProperty<Visibility>("TokenInputTextBoxVisibility", DefaultValue = "Microsoft.UI.Xaml.Visibility.Visible")]
 [DependencyProperty<bool>("IsTokenTappedDefaultBehaviorEnabled", DefaultValue = "true")]
 public sealed partial class TokenInput
 {

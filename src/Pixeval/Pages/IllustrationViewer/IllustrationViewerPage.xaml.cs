@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
@@ -40,25 +41,20 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using Windows.Graphics;
+using CommunityToolkit.WinUI.UI;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml.Media;
+using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util.Threading;
-using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
+using Pixeval.Util.UI.Windowing;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitleBarDragRegion
+public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragRegionTest
 {
-    // The navigation between ImageViewerPages contain two difference kinds: 
-    // 1. The navigation happens at the same level, for example, navigating forth and back in the same IllustrationGrid
-    // 2. The navigation navigates into another IllustrationGrid, i.e. , navigates between difference level, for example,
-    //    navigated by clicking items in RelatedWorksPage
-    // When we click the go back button, we only want to go back to the last page that performs navigation between different
-    // levels, so we need to record which page takes such navigation, and remove all the other pages (which are those who
-    // navigates at the same level) from the navigation stack.
-    internal static readonly Stack<(string, int?)> NavigatingStackEntriesFromRelatedWorksStack = new();
-
     private AppPopup? _commentRepliesPopup;
 
     // Tags for IllustrationInfoAndCommentsNavigationView
@@ -71,49 +67,61 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
 
     private IllustrationViewerPageViewModel _viewModel = null!;
 
+    private const double TitleBarHeight = 48;
+
+    private readonly AsyncLatch<(CompositeTransform, double scale)> _zoomingAnimation;
+
+    private readonly AsyncLatch _collapseThumbnailList;
+
+    private static readonly EasingFunctionBase ExponentialEasingFunction = new ExponentialEase
+    {
+        EasingMode = EasingMode.EaseOut,
+        Exponent = 12
+    };
+
     public IllustrationViewerPage()
     {
         InitializeComponent();
         var dataTransferManager = UIHelper.GetDataTransferManager();
         dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
-    }
-
-    public void GoBack()
-    {
-        ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", IllustrationImageShowcaseFrame);
-        WeakReferenceMessenger.Default.Send(new NavigatingBackToMainPageMessage(_viewModel.IllustrationViewModelInTheGridView));
-        WeakReferenceMessenger.Default.Send(new NavigatingFromIllustrationViewerMessage());
-
-        if (!NavigatingStackEntriesFromRelatedWorksStack.Any())
+        _zoomingAnimation = new(tuple =>
         {
-            while (App.AppViewModel.AppWindowRootFrame.BackStack.LastOrDefault() is { Parameter: IllustrationViewerPageViewModel })
-            {
-                var stack = App.AppViewModel.AppWindowRootFrame.BackStack;
-                stack.RemoveAt(stack.Count - 1);
-            }
-        }
-        else
-        {
-            while (App.AppViewModel.AppWindowRootFrame.BackStack.LastOrDefault() is { Parameter: IllustrationViewerPageViewModel viewModel } &&
-                   NavigatingStackEntriesFromRelatedWorksStack.Peek() is var (vm, idx) &&
-                   (viewModel.IllustrationId != vm || idx != null && viewModel.CurrentIndex != idx))
-            {
-                var stack = App.AppViewModel.AppWindowRootFrame.BackStack;
-                stack.RemoveAt(stack.Count - 1);
-            }
-        }
+            var (transform, scale) = tuple;
+            var translateXAnimation = transform.CreateDoubleAnimation(
+                nameof(CompositeTransform.ScaleX),
+                new Duration(TimeSpan.FromMilliseconds(500)),
+                ExponentialEasingFunction,
+                from: transform.ScaleX,
+                to: scale);
 
-        NavigatingStackEntriesFromRelatedWorksStack.TryPop(out _);
-        if (App.AppViewModel.AppWindowRootFrame.CanGoBack)
+            var translateYAnimation = transform.CreateDoubleAnimation(
+                nameof(CompositeTransform.ScaleY),
+                new Duration(TimeSpan.FromMilliseconds(500)),
+                ExponentialEasingFunction,
+                from: transform.ScaleY,
+                to: scale);
+            UIHelper.CreateStoryboard(translateXAnimation, translateYAnimation).Begin();
+            return Task.CompletedTask;
+        });
+
+        _collapseThumbnailList = new AsyncLatch(async () =>
         {
-            App.AppViewModel.AppWindowRootFrame.GoBack(new SuppressNavigationTransitionInfo());
-        }
+            await Task.Delay(3000);
+            BottomCommandSection.Translation = new Vector3(0, 120, 0);
+        });
     }
 
     private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
     {
+        WeakReferenceMessenger.Default.Send(RefreshDragRegionMessage.Shared);
         SidePanelShadow.Receivers.Add(IllustrationPresenterDockPanel);
         PopupShadow.Receivers.Add(IllustrationInfoAndCommentsSplitView);
+        CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
+        ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
+
+        _viewModel.Snapshot = _viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView; // performance critical?
+
+        _collapseThumbnailList.RunAsync().Discard();
     }
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
@@ -124,6 +132,7 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
             imageViewerPageViewModel.ImageLoadingCancellationHandle.Cancel();
         }
 
+        _viewModel.ZoomChanged -= OnZoomChanged;
         _viewModel.Dispose();
         WeakReferenceMessenger.Default.UnregisterAll(this);
     }
@@ -139,6 +148,7 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         if (e.Parameter is IllustrationViewerPageViewModel viewModel)
         {
             _viewModel = viewModel.IsDisposed ? viewModel.CreateNew() : viewModel;
+            _viewModel.ZoomChanged += OnZoomChanged;
         }
 
         _relatedWorksTag = new NavigationViewTag(typeof(RelatedWorksPage), _viewModel);
@@ -148,10 +158,112 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         IllustrationImageShowcaseFrame.Navigate(typeof(ImageViewerPage), _viewModel.Current);
 
         WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(_viewModel.IllustrationView?.GetItemContainer(_viewModel.IllustrationViewModelInTheGridView!) ?? App.AppViewModel.AppWindowRootFrame));
-        WeakReferenceMessenger.Default.Register<IllustrationViewerPage, CommentRepliesHyperlinkButtonTappedMessage>(this, CommentRepliesHyperlinkButtonTapped);
+        WeakReferenceMessenger.Default.TryRegister<IllustrationViewerPage, CommentRepliesHyperlinkButtonTappedMessage>(this, CommentRepliesHyperlinkButtonTapped);
     }
 
-    private static void CommentRepliesHyperlinkButtonTapped(IllustrationViewerPage recipient, CommentRepliesHyperlinkButtonTappedMessage message)
+    private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        if (this.CurrentWindow()?.AppWindow is { Presenter.Kind: AppWindowPresenterKind.FullScreen } appWindow)
+        {
+            appWindow.SetPresenter(AppWindowPresenterKind.Default);
+            TopCommandBar.Height = double.NaN;
+        }
+    }
+
+    private void CurrentScalePercentage_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        OnZoomChanged(null, 1); // trigger the first calculation of the percentage of the zooming, does not imply that there is a zooming happened.
+    }
+
+    private void IllustrationViewerPage_OnPointerMoved(object sender, PointerRoutedEventArgs e)
+    {
+        if (this.CurrentWindow()?.AppWindow is { Presenter.Kind: AppWindowPresenterKind.FullScreen })
+        {
+            if (e.GetCurrentPoint(this).Position.Y < 100 && TopCommandBar.Height == 0)
+            {
+                // TODO USE ANIMATION
+                TopCommandBar.Height = TitleBarHeight;
+            }
+            else if (e.GetCurrentPoint(this).Position.Y > 100)
+            {
+                TopCommandBar.Height = 0;
+            }
+        }
+    }
+
+    private void FullScreenButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        switch (this.CurrentWindow()?.AppWindow)
+        {
+            case { Presenter.Kind: not AppWindowPresenterKind.FullScreen } defaultAppWindow:
+                defaultAppWindow.SetPresenter(AppWindowPresenterKind.FullScreen);
+                TopCommandBar.Height = 0;
+                break;
+            case { Presenter.Kind: AppWindowPresenterKind.FullScreen } appWindow:
+                appWindow.SetPresenter(AppWindowPresenterKind.Default);
+                TopCommandBar.Height = TitleBarHeight;
+                break;
+        }
+    }
+
+    private void IllustrationViewerPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        CurrentScalePercentage.Text = $"{ScaledPercentage()}%";
+    }
+
+    private void RestoreResolutionToggleButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (_viewModel.Current.Scale > 1)
+        {
+            _viewModel.Current.Zoom(1 - _viewModel.Current.Scale);
+        }
+        else if (IllustrationImageShowcaseFrame.FindDescendant<Image>() is { } imageControl)
+        {
+            var illustWidth = _viewModel.Current.IllustrationViewModel.Illustration.Width;
+            var illustHeight = _viewModel.Current.IllustrationViewModel.Illustration.Height;
+            var displayImageResolution = UIHelper.GetImageScaledFactor(
+                illustWidth,
+                illustHeight,
+                imageControl.ActualWidth,
+                imageControl.ActualHeight,
+                _viewModel.Current.Scale);
+            _viewModel.Current.Zoom(displayImageResolution >= 1 ? displayImageResolution * 2 : 1 / displayImageResolution - _viewModel.Current.Scale);
+        }
+    }
+
+    private void OnZoomChanged(object? sender, double e)
+    {
+        if (IllustrationImageShowcaseFrame.FindDescendant<Image>() is { } imageControl)
+        {
+            if (imageControl.RenderTransform is CompositeTransform transform)
+            {
+                _zoomingAnimation.RunAsync((transform, e)).Discard();
+            }
+
+            CurrentScalePercentage.Text = $"{ScaledPercentage()}%";
+
+            var scaled = Math.Abs(_viewModel.Current.Scale - 1) > double.Epsilon;
+            RestoreResolutionToggleButton.IsChecked = scaled;
+            _viewModel.FlipRestoreResolutionCommand(scaled);
+        }
+    }
+
+    private int ScaledPercentage()
+    {
+        var illustWidth = _viewModel.Current.IllustrationViewModel.Illustration.Width;
+        var illustHeight = _viewModel.Current.IllustrationViewModel.Illustration.Height;
+        var imageControl = IllustrationImageShowcaseFrame.FindDescendant<Image>()!;
+        var displayImageResolution = UIHelper.GetImageScaledFactor(
+            illustWidth,
+            illustHeight,
+            imageControl.ActualWidth,
+            imageControl.ActualHeight,
+            _viewModel.Current.Scale);
+
+        return (int)(displayImageResolution * 100);
+    }
+
+    private void CommentRepliesHyperlinkButtonTapped(IllustrationViewerPage recipient, CommentRepliesHyperlinkButtonTappedMessage message)
     {
         var commentRepliesBlock = new CommentRepliesBlock
         {
@@ -223,10 +335,10 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
 
     private void NextIllustration()
     {
-        var illustrationViewModel = (IllustrationViewModel) _viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value + 1];
+        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value + 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
-        UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
+        ParentFrame.Navigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
         {
             Effect = SlideNavigationTransitionEffect.FromRight
         });
@@ -237,7 +349,7 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value - 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
-        UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
+        ParentFrame.Navigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
         {
             Effect = SlideNavigationTransitionEffect.FromLeft
         });
@@ -263,18 +375,11 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
         PrevIllustration();
     }
 
-    private void BackButton_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        GoBack();
-    }
-
     private void GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick(TeachingTip sender, object args)
     {
-        _viewModel.IsGenerateLinkTeachingTipOpen = false;
+        GenerateLinkToThisPageButtonTeachingTip.IsOpen = false;
         App.AppViewModel.AppSetting.DisplayTeachingTipWhenGeneratingAppLink = false;
     }
-
-
 
     private void IllustrationInfoAndCommentsNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
@@ -286,50 +391,144 @@ public sealed partial class IllustrationViewerPage : IGoBack, ISupportCustomTitl
 
     private void IllustrationInfoAndCommentsSplitView_OnPaneOpened(SplitView sender, object args)
     {
-        WeakReferenceMessenger.Default.Send(new RefreshDragRegionMessage());
+        WeakReferenceMessenger.Default.Send(RefreshDragRegionMessage.Shared);
     }
 
     private void IllustrationInfoAndCommentsSplitView_OnPaneClosed(SplitView sender, object args)
     {
-        WeakReferenceMessenger.Default.Send(new RefreshDragRegionMessage());
+        WeakReferenceMessenger.Default.Send(RefreshDragRegionMessage.Shared);
     }
 
-    public async Task<RectInt32[]> SetTitleBarDragRegionAsync(
-        FrameworkElement titleBar, 
-        ColumnDefinition leftDragRegion, 
-        ColumnDefinition leftMarginRegion, 
-        ColumnDefinition searchBarRegion, 
-        ColumnDefinition marginRegion, 
-        ColumnDefinition reverseSearchButtonRegion, 
-        ColumnDefinition searchSettingButtonRegion, 
-        ColumnDefinition rightDragRegion)
+    public DragZoneHelper.DragZoneInfo SetTitleBarDragRegion()
     {
-        await ThreadingHelper.SpinWaitAsync(() => IllustrationViewerCommandBar.ActualHeight == 0);
-        const int leftButtonWidth = 50;
-        var scaleFactor = UIHelper.GetScaleAdjustment();
-        var point = IllustrationViewerCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
-        var leftDragRegionStart = leftButtonWidth * scaleFactor;
-        var leftDragRegionWidth = point.X * scaleFactor - leftDragRegionStart;
-        var height = IllustrationViewerCommandBar.ActualHeight * scaleFactor;
-        var rightDragRegionStart = leftDragRegionStart + leftDragRegionWidth + IllustrationViewerCommandBar.ActualWidth * scaleFactor;
-        var rightDragRegionWidth = CurrentContext.AppWindow.ClientSize.Width * scaleFactor - rightDragRegionStart;
-        RectInt32 dragRegionL;
-        dragRegionL.X = (int) leftDragRegionStart;
-        dragRegionL.Y = 0;
-        dragRegionL.Width = (int) leftDragRegionWidth;
-        dragRegionL.Height = (int) height;
-        RectInt32 dragRegionR;
-        dragRegionR.X = (int) rightDragRegionStart;
-        dragRegionR.Y = 0;
-        dragRegionR.Width = (int) rightDragRegionWidth;
-        dragRegionR.Height = (int) height;
+        var pointCommandBar = IllustrationViewerCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
+        var pointSubCommandBar = IllustrationViewerSubCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
+        var commandBarRect = new RectInt32((int)pointCommandBar.X, (int)pointCommandBar.Y, (int)IllustrationViewerCommandBar.ActualWidth, (int)IllustrationViewerCommandBar.ActualHeight);
+        var subCommandBarRect = new RectInt32((int)pointSubCommandBar.X, (int)pointSubCommandBar.Y, (int)IllustrationViewerSubCommandBar.ActualWidth, (int)IllustrationViewerSubCommandBar.ActualHeight);
 
-        var list = new List<RectInt32>();
-        if (!_viewModel.IsInfoPaneOpen)
+        return new(commandBarRect, subCommandBarRect)
         {
-            list.Add(dragRegionL);
+            DragZoneLeftIndent = _viewModel.IsInfoPaneOpen ? (int)IllustrationInfoAndCommentsSplitView.OpenPaneLength : 0
+        };
+    }
+
+    private void LeftPageButtonArea_OnPointerEntered(object sender, PointerRoutedEventArgs e)
+    {
+        PrevButtonDetector.Opacity = 1;
+    }
+
+    private void LeftPageButtonArea_OnPointerExited(object sender, PointerRoutedEventArgs e)
+    {
+        PrevButtonDetector.Opacity = 0;
+    }
+
+    private void RightPageButtonArea_OnPointerEntered(object sender, PointerRoutedEventArgs e)
+    {
+        NextButtonDetector.Opacity = 1;
+    }
+
+    private void RightPageButtonArea_OnPointerExited(object sender, PointerRoutedEventArgs e)
+    {
+        NextButtonDetector.Opacity = 0;
+    }
+
+    private void ThumbnailList_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
+    {
+        var context = UIHelper.GetDataContext<IllustrationViewModel>(sender);
+        if (args.BringIntoViewDistanceX <= sender.ActualWidth)
+        {
+            _ = context.LoadThumbnailIfRequired();
         }
-        list.Add(dragRegionR);
-        return list.ToArray();
+
+        if (sender is Border b && ThumbnailList.SelectedItem is not null)
+        {
+            b.BorderThickness = ThumbnailList.SelectedItem == context ? new Thickness(2) : new Thickness(0);
+        }
+    }
+
+    private void ThumbnailList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (sender is ListView lv)
+        {
+            const string borderControlName = "ThumbnailBorder";
+            var item = lv.ContainerFromItem(lv.SelectedItem);
+            if (item.FindDescendant(borderControlName) is Border border)
+            {
+                border.BorderThickness = new Thickness(2);
+            }
+
+            if (e.RemovedItems is [IllustrationViewModel removedItem]
+                && lv.ContainerFromItem(removedItem) is { } container
+                && container.FindDescendant(borderControlName) is Border b)
+            {
+                b.BorderThickness = new Thickness(0);
+            }
+        }
+
+        if (e.AddedItems is [IllustrationViewModel viewModel] && viewModel != _viewModel.Current.IllustrationViewModel)
+        {
+            var viewModels = viewModel.GetMangaIllustrationViewModels().ToArray();
+
+            ParentFrame.Navigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModels),
+                new EntranceNavigationTransitionInfo());
+        }
+    }
+
+    private void ThumbnailBorder_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        var context = UIHelper.GetDataContext<IllustrationViewModel>(sender);
+        if (context.Illustration.Id.ToString() == _viewModel.Current.IllustrationViewModel.Id && _viewModel.Snapshot is [..])
+        {
+            ThumbnailList.ScrollIntoView(context);
+            if (_viewModel.Snapshot.IndexOf(context) is var index and not -1)
+            {
+                ThumbnailList.SelectedIndex = index;
+            }
+        }
+    }
+
+    private void IllustrationImageShowcaseFrame_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        BottomCommandSection.Translation = new Vector3();
+        _collapseThumbnailList.RunAsync().Discard();
+    }
+
+    private void CommandBarElementOnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        var button = (ICommandBarElement)sender;
+        ((FrameworkElement)sender).Width = button.IsInOverflow ? double.NaN : (double)Application.Current.Resources["CollapsedAppBarButtonWidth"];
+    }
+
+    private async void ShowQrCodeOnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        var button = (AppBarButton)sender;
+        var qrCodeSource = await UIHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustrationWebUri(_viewModel.Current.IllustrationViewModel.Id).ToString());
+        QrCodeTeachingTip.HeroContent = new Image
+        {
+            Source = qrCodeSource,
+        };
+        QrCodeTeachingTip.Target = button.IsInOverflow ? null : button;
+        QrCodeTeachingTip.IsOpen = true;
+
+        void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
+        {
+            qrCodeSource.Dispose();
+            QrCodeTeachingTip.Closed -= Closed;
+            QrCodeTeachingTip.HeroContent = null;
+        }
+
+        QrCodeTeachingTip.Closed += Closed;
+    }
+
+    private void GenerateLinkCommandOnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (App.AppViewModel.AppSetting.DisplayTeachingTipWhenGeneratingAppLink)
+        {
+            var button = (AppBarButton)sender;
+            GenerateLinkToThisPageButtonTeachingTip.IsOpen = true;
+            GenerateLinkToThisPageButtonTeachingTip.Target = button.IsInOverflow ? null : button;
+        }
+
+        UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationAppUri(_viewModel.Current.IllustrationViewModel.Id).ToString()));
     }
 }

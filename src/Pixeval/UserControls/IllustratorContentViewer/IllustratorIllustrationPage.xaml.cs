@@ -29,7 +29,7 @@ public sealed partial class IllustratorIllustrationPage : ISortedIllustrationCon
     {
         if (ActivationCount > 1) return;
 
-        WeakReferenceMessenger.Default.Register<IllustratorIllustrationPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
+        WeakReferenceMessenger.Default.TryRegister<IllustratorIllustrationPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
         if (e.Parameter is string id)
         {
             IllustrationContainer.IllustrationView.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Posts(id)).Discard();
@@ -53,7 +53,7 @@ public sealed partial class IllustratorIllustrationPage : ISortedIllustrationCon
 
     private void SortOptionComboBoxContainer_OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (App.AppViewModel.AppSetting.IllustrationViewOption is IllustrationViewOption.Justified)
+        if (App.AppViewModel.AppSetting.IllustrationViewOption is IllustrationViewOption.RiverFlow)
         {
             ToolTipService.SetToolTip(SortOptionComboBoxContainer, new ToolTip { Content = MiscResources.SortIsNotAllowedWithJustifiedLayout });
         }
@@ -95,6 +95,4 @@ public sealed partial class IllustratorIllustrationPage : ISortedIllustrationCon
     {
         IllustrationContainer.ShowCommandBar = isVisible;
     }
-
-
 }

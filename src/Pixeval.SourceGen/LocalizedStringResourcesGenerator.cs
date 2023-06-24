@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.SourceGen
+#region Copyright (c) Pixeval/Pixeval.SourceGen
 // GPL v3 License
 // 
 // Pixeval/Pixeval.SourceGen
@@ -28,7 +28,8 @@ using Microsoft.CodeAnalysis;
 
 namespace Pixeval.SourceGen;
 
-[Generator]
+// [Generator]
+// TODO: 源生成器有破坏式更新
 public class LocalizedStringResourcesGenerator : IIncrementalGenerator
 {
     private const string AttributeName = "WinUI3Utilities.Attributes.LocalizedStringResourcesAttribute";

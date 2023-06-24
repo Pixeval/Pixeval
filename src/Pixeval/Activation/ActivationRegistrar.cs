@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -36,8 +36,7 @@ public static class ActivationRegistrar
 
     public static void Dispatch(AppActivationArguments args)
     {
-        if (args.Kind == ExtendedActivationKind.Protocol &&
-            args.Data is IProtocolActivatedEventArgs { Uri: var activationUri } &&
+        if (args is { Kind: ExtendedActivationKind.Protocol, Data: IProtocolActivatedEventArgs { Uri: var activationUri } } &&
             FeatureHandlers.FirstOrDefault(f => f.ActivationFragment == activationUri.Host) is { } handler)
         {
             handler.Execute(activationUri.PathAndQuery[1..]);

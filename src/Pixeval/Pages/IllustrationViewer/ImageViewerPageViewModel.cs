@@ -62,7 +62,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         LoadingImage
     }
 
-    private const int MaxZoomFactor = 8;
+    private const int MaxZoomFactor = 50;
 
     private const int MinZoomFactor = 1;
 
@@ -81,6 +81,14 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
 
     [ObservableProperty]
     private double _scale = 1;
+
+    private EventHandler<double>? _zoomChanged;
+
+    public event EventHandler<double> ZoomChanged
+    {
+        add => _zoomChanged += value;
+        remove => _zoomChanged -= value;
+    }
 
     public ImageViewerPageViewModel(IllustrationViewerPageViewModel illustrationViewerPageViewModel, IllustrationViewModel illustrationViewModel)
     {
@@ -132,6 +140,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
                     _ => delta
                 };
                 Scale += delta;
+                _zoomChanged?.Invoke(this, Scale);
                 break;
         }
     }
@@ -153,7 +162,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         manager.Insert(new BrowseHistoryEntry { Id = IllustrationViewModel.Id });
     }
 
-    public async Task LoadImage()
+    private async Task LoadImage()
     {
         if (LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true } || _disposed)
         {
@@ -167,7 +176,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         }
     }
 
-    public async Task LoadOriginalImage()
+    private async Task LoadOriginalImage()
     {
         var imageClient = App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi);
         var cacheKey = IllustrationViewModel.Illustration.GetIllustrationOriginalImageCacheKey();
@@ -210,11 +219,12 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         else if (IllustrationViewModel.OriginalSourceUrl is { } src)
         {
             AdvancePhase(LoadingPhase.DownloadingImage);
-            switch (await imageClient.DownloadAsIRandomAccessStreamAsync(src, new Progress<int>(d =>
-                    {
-                        LoadingProgress = d;
-                        AdvancePhase(LoadingPhase.DownloadingImage);
-                    }), ImageLoadingCancellationHandle))
+            var ras = await imageClient.DownloadAsIRandomAccessStreamAsync(src, new Progress<int>(d =>
+            {
+                LoadingProgress = d;
+                AdvancePhase(LoadingPhase.DownloadingImage);
+            }), ImageLoadingCancellationHandle);
+            switch (ras)
             {
                 case Result<IRandomAccessStream>.Success(var s):
                     OriginalImageStream = s;

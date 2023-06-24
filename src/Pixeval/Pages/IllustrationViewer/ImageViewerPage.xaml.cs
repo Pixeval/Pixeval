@@ -19,14 +19,14 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 using Windows.Foundation;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
-using Pixeval.Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -34,9 +34,28 @@ public sealed partial class ImageViewerPage
 {
     private ImageViewerPageViewModel _viewModel = null!;
 
+    private readonly AsyncLatch _resetImagePositionAnimation;
+
     public ImageViewerPage()
     {
         InitializeComponent();
+        _resetImagePositionAnimation = new AsyncLatch(() =>
+        {
+            var translateXAnimation = IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(
+                nameof(CompositeTransform.TranslateX),
+                from: IllustrationOriginalImageRenderTransform.TranslateX,
+                to: 0,
+                duration: TimeSpan.FromSeconds(1),
+                easingFunction: _easingFunction);
+            var translateYAnimation = IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(
+                nameof(CompositeTransform.TranslateY),
+                from: IllustrationOriginalImageRenderTransform.TranslateY,
+                to: 0,
+                duration: TimeSpan.FromSeconds(1),
+                easingFunction: _easingFunction);
+            UIHelper.CreateStoryboard(translateXAnimation, translateYAnimation).Begin();
+            return Task.CompletedTask;
+        });
     }
 
     public override void OnPageActivated(NavigationEventArgs e)
@@ -85,54 +104,25 @@ public sealed partial class ImageViewerPage
     {
         if (GetZoomFactor() > 1)
         {
-            ResetImageScaleStoryboard.Begin();
-            ResetImageTranslationStoryboard.Begin();
-            if (_tappedScaled)
-            {
-                _tappedScaled.Inverse();
-            }
+            Zoom(1 - GetZoomFactor());
         }
         else
         {
-            ImageScaledIn200PercentStoryboard.Begin();
-            _tappedScaled.Inverse();
+            var illustWidth = _viewModel.IllustrationViewModel.Illustration.Width;
+            var illustHeight = _viewModel.IllustrationViewModel.Illustration.Height;
+            var displayImageResolution = UIHelper.GetImageScaledFactor(
+                illustWidth,
+                illustHeight,
+                IllustrationOriginalImage.ActualWidth,
+                IllustrationOriginalImage.ActualHeight,
+                GetZoomFactor());
+            Zoom(displayImageResolution >= 1 ? displayImageResolution * 2 : 1 / displayImageResolution - GetZoomFactor());
         }
-    }
-
-    private void ResetImageScaleStoryboard_OnCompleted(object? sender, object e)
-    {
-        ResetImageScaleStoryboard.Stop();
-        IllustrationOriginalImageRenderTransform.ScaleX = 1;
-        IllustrationOriginalImageRenderTransform.ScaleY = 1;
-    }
-
-    private void ImageScaledIn200PercentStoryboard_OnCompleted(object? sender, object e)
-    {
-        ImageScaledIn200PercentStoryboard.Stop();
-        IllustrationOriginalImageRenderTransform.ScaleX = 2;
-        IllustrationOriginalImageRenderTransform.ScaleY = 2;
-    }
-
-    private void ResetImageTranslationStoryboard_OnCompleted(object? sender, object e)
-    {
-        ResetImageTranslationStoryboard.Stop();
-        IllustrationOriginalImageRenderTransform.TranslateX = 0;
-        IllustrationOriginalImageRenderTransform.TranslateY = 0;
     }
 
     private void IllustrationOriginalImageContainer_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
     {
         Zoom(e.GetCurrentPoint(null).Properties.MouseWheelDelta / 1000d);
-    }
-
-    private void ImageViewerPage_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        CommandBorderDropShadow.Receivers.Add(IllustrationOriginalImageContainer);
-    }
-
-    private void IllustrationInfoAndCommentsMenuFlyoutItem_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        _viewModel.IllustrationViewerPageViewModel.IsInfoPaneOpen = true;
     }
 
     #region Helper Functions
@@ -143,37 +133,14 @@ public sealed partial class ImageViewerPage
         Exponent = 12
     };
 
-    private bool _tappedScaled;
-
     private double GetZoomFactor()
     {
         return IllustrationOriginalImageRenderTransform.ScaleX;
     }
 
-    private void ResetImagePosition()
-    {
-        if (IllustrationOriginalImageRenderTransform.TranslateX != 0)
-        {
-            IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(
-                nameof(CompositeTransform.TranslateX),
-                to: 0,
-                duration: TimeSpan.FromMilliseconds(100),
-                easingFunction: _easingFunction).BeginStoryboard();
-        }
-
-        if (IllustrationOriginalImageRenderTransform.TranslateY != 0)
-        {
-            IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(
-                nameof(CompositeTransform.TranslateY),
-                to: 0,
-                duration: TimeSpan.FromMilliseconds(100),
-                easingFunction: _easingFunction).BeginStoryboard();
-        }
-    }
-
     private void Zoom(double delta)
     {
-        ResetImagePosition();
+        _resetImagePositionAnimation.RunAsync().Discard();
         _viewModel.Zoom(delta);
     }
 

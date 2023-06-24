@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
+﻿#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
-// Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/PixivImageNameResolver.cs
+// Pixeval/Pixeval
+// Copyright (c) 2023 Pixeval/ExponentialEase.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,25 +18,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Net;
-using System.Threading.Tasks;
+using System;
 
-namespace Pixeval.CoreApi.Net;
+namespace Pixeval.Util.UI.Animating;
 
-public class PixivImageNameResolver : INameResolver
+public record DoubleExponentialEaseOut(int Exponent = 2) : IEasingFunction<double>
 {
-    public Task<IPAddress[]> Lookup(string hostname)
-    {
-        if (hostname == "i.pximg.net")
-        {
-            return Task.FromResult(new[]
-            {
-                IPAddress.Parse("210.140.92.141"),
-                IPAddress.Parse("210.140.92.142"),
-                IPAddress.Parse("210.140.92.143")
-            });
-        }
+    public static readonly IEasingFunction<double> Shared = new DoubleExponentialEaseOut();
 
-        return Dns.GetHostAddressesAsync(hostname);
+    public double GetValue(double percentage)
+    {
+        ThrowHelper.ThrowIf<ArgumentOutOfRangeException>(percentage is > 1 or < 0, "The percentage must between 0 and 1.");
+        return Math.Abs(percentage - 1) < double.Epsilon ? 1 : 1 - Math.Pow(Exponent, -10 * percentage);
     }
 }

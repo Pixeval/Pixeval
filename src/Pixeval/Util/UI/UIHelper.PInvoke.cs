@@ -64,7 +64,7 @@ public static partial class UIHelper
     {
         if (TaskBarCustomizationSupported)
         {
-            TaskBarList3Instance.SetProgressState(CurrentContext.HWnd, state);
+            TaskBarList3Instance.SetProgressState((nint)CurrentContext.HWnd, state);
         }
     }
 
@@ -72,7 +72,7 @@ public static partial class UIHelper
     {
         if (TaskBarCustomizationSupported)
         {
-            TaskBarList3Instance.SetProgressValue(CurrentContext.HWnd, progressValue, max);
+            TaskBarList3Instance.SetProgressValue((nint)CurrentContext.HWnd, progressValue, max);
         }
     }
 
@@ -83,14 +83,14 @@ public static partial class UIHelper
         var manager = nint.Zero;
         fixed (Guid* id = &RiId)
         {
-            interop.GetForWindow(CurrentContext.HWnd, id, (void**)&manager);
+            interop.GetForWindow((nint) CurrentContext.HWnd, id, (void**) &manager);
             return DataTransferManager.FromAbi(manager);
         }
     }
 
     public static void ShowShareUI()
     {
-        DataTransferManagerInterop.ShowShareUIForWindow(CurrentContext.HWnd);
+        DataTransferManagerInterop.ShowShareUIForWindow((nint) CurrentContext.HWnd);
     }
 
     /// <summary>

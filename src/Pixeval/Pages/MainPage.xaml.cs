@@ -54,7 +54,6 @@ using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Image = SixLabors.ImageSharp.Image;
-using Pixeval.Attributes;
 using WinUI3Utilities;
 using Windows.Graphics;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
@@ -255,6 +254,7 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
             {
                 e.Handled = true; // prevent the event from bubbling if it contains an image, since it means that we want to do reverse search.
                 await using var stream = await file.OpenStreamForReadAsync();
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 if (await Image.DetectFormatAsync(stream) is not null)
                 {
                     if (App.AppViewModel.AppSetting.ReverseSearchApiKey is not { Length: > 0 })
@@ -298,28 +298,21 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
     }
 
 
-    public Task<RectInt32[]> SetTitleBarDragRegionAsync(
-        FrameworkElement titleBar,
-        ColumnDefinition leftDragRegion,
-        ColumnDefinition leftMarginRegion,
-        ColumnDefinition searchBarRegion,
-        ColumnDefinition marginRegion,
-        ColumnDefinition reverseSearchButtonRegion,
-        ColumnDefinition searchSettingButtonRegion,
-        ColumnDefinition rightDragRegion)
+    public Task<RectInt32[]> SetTitleBarDragRegionAsync(FrameworkElement? titleBar, ColumnDefinition[]? dragRegions)
     {
+        var (leftDragRegion, leftMarginRegion, searchBarRegion, marginRegion, reverseSearchButtonRegion, searchSettingButtonRegion, rightDragRegion) = (dragRegions[0], dragRegions[1], dragRegions[2], dragRegions[3], dragRegions[4], dragRegions[5], dragRegions[6]);
         const int leftButtonWidth = 50;
         var scaleAdjustment = UIHelper.GetScaleAdjustment();
         RectInt32 dragRectL;
         dragRectL.X = (int) (leftButtonWidth * scaleAdjustment);
         dragRectL.Y = 0;
         dragRectL.Width = (int) ((leftDragRegion.ActualWidth + leftMarginRegion.ActualWidth - leftButtonWidth) * scaleAdjustment);
-        dragRectL.Height = (int) (titleBar.ActualHeight * scaleAdjustment);
+        dragRectL.Height = (int) ((titleBar?.ActualHeight ?? 45) * scaleAdjustment);
         RectInt32 dragRectR;
         dragRectR.X = (int) (leftButtonWidth + (leftDragRegion.ActualWidth + leftMarginRegion.ActualWidth + searchBarRegion.ActualWidth + marginRegion.ActualWidth + reverseSearchButtonRegion.ActualWidth + searchSettingButtonRegion.ActualWidth) * scaleAdjustment);
         dragRectR.Y = 0;
         dragRectR.Width = (int) (rightDragRegion.ActualWidth * scaleAdjustment);
-        dragRectR.Height = (int) (titleBar.ActualHeight * scaleAdjustment);
+        dragRectR.Height = (int) ((titleBar?.ActualHeight ?? 45) * scaleAdjustment);
 
         return Task.FromResult(new[] { dragRectL, dragRectR });
     }

@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IIllustrationView.cs
+// Copyright (c) 2023 Pixeval/ISupportCustomTitleBarDragRegion.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,25 +18,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Threading.Tasks;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using WinUI3Utilities;
 
-namespace Pixeval.UserControls.IllustrationView;
+namespace Pixeval;
 
-public interface IIllustrationView
-{ 
-    FrameworkElement SelfIllustrationView { get; }
-
-    IllustrationViewViewModel ViewModel { get; }
-
-    ScrollViewer ScrollViewer { get; }
-
+public interface ISupportCustomTitleBarDragRegionTest
+{
     /// <summary>
-    /// Loads items continuously until the elements fill the <see cref="IIllustrationView"/>,
-    /// i.e., more elements than those in the viewport of the <see cref="IIllustrationView"/>
+    /// Informs the bearer to refresh the drag region.
     /// </summary>
-    Task TryFillClientAreaAsync();
-
-    UIElement? GetItemContainer(IllustrationViewModel viewModel);
+    /// <returns></returns>
+    DragZoneHelper.DragZoneInfo SetTitleBarDragRegion();
 }

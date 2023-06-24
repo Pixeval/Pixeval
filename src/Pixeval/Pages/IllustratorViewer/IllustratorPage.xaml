@@ -4,11 +4,10 @@
                        xmlns:controls="using:Pixeval.Controls"
                        xmlns:controls1="using:CommunityToolkit.WinUI.UI.Controls"
                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                       xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
                        xmlns:local="using:Pixeval.Pages.Capability"
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:notifyOnLoadedComboBox="using:Pixeval.Controls.NotifyOnLoadedComboBox"
-                       xmlns:userControls="using:Pixeval.UserControls" 
+                       xmlns:userControls="using:Pixeval.UserControls"
                        Loaded="IllustratorPage_OnLoaded"
                        SizeChanged="IllustratorPage_OnSizeChanged"
                        mc:Ignorable="d">
@@ -53,8 +52,7 @@
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Top"
                                     Orientation="Vertical">
-                            <TextBlock x:Name="TitleBlock"
-                                       FontSize="20"
+                            <TextBlock FontSize="20"
                                        Foreground="White"
                                        Text="{x:Bind _viewModel.Name, Mode=OneWay}" />
                             <TextBlock x:Name="SubtitleBlock"
@@ -70,14 +68,25 @@
                                        TextWrapping="Wrap">
                                 <Run Text="{x:Bind _viewModel.Comment}" />
                             </TextBlock>
-                            <StackPanel Margin="-15,50,0,20" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+                            <StackPanel Margin="-15,50,0,20"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Bottom">
                                 <CommandBar x:Name="CommandBar"
                                             Background="Transparent"
                                             DefaultLabelPosition="Right">
-                                    <AppBarButton Tapped="OpenLinkButton_OnTapped" Command="{x:Bind OpenLinkCommand}"></AppBarButton>
-                                    <AppBarButton Tapped="FollowButton_OnTapped" IsEnabled="{x:Bind _viewModel.IsFollowButtonEnabled, Mode=OneWay}"  Visibility="{x:Bind _viewModel.IsNotFollowed(_viewModel.IsFollowed), Mode=OneWay}" Command="{x:Bind FollowCommand}"></AppBarButton>
-                                    <AppBarButton Tapped="PrivateFollowButton_OnTapped" IsEnabled="{x:Bind _viewModel.IsFollowButtonEnabled, Mode=OneWay}"  Visibility="{x:Bind _viewModel.IsNotFollowed(_viewModel.IsFollowed), Mode=OneWay}" Command="{x:Bind PrivateFollowCommand}"></AppBarButton>
-                                    <AppBarButton Tapped="UnfollowButton_OnTapped" IsEnabled="{x:Bind _viewModel.IsFollowButtonEnabled, Mode=OneWay}" Visibility="{x:Bind _viewModel.IsFollowed, Mode=OneWay}" Command="{x:Bind UnfollowCommand}"></AppBarButton>
+                                    <AppBarButton Command="{x:Bind OpenLinkCommand}" Tapped="OpenLinkButton_OnTapped" />
+                                    <AppBarButton Command="{x:Bind FollowCommand}"
+                                                  IsEnabled="{x:Bind _viewModel.IsFollowButtonEnabled, Mode=OneWay}"
+                                                  Tapped="FollowButton_OnTapped"
+                                                  Visibility="{x:Bind _viewModel.IsNotFollowed(_viewModel.IsFollowed), Mode=OneWay}" />
+                                    <AppBarButton Command="{x:Bind PrivateFollowCommand}"
+                                                  IsEnabled="{x:Bind _viewModel.IsFollowButtonEnabled, Mode=OneWay}"
+                                                  Tapped="PrivateFollowButton_OnTapped"
+                                                  Visibility="{x:Bind _viewModel.IsNotFollowed(_viewModel.IsFollowed), Mode=OneWay}" />
+                                    <AppBarButton Command="{x:Bind UnfollowCommand}"
+                                                  IsEnabled="{x:Bind _viewModel.IsFollowButtonEnabled, Mode=OneWay}"
+                                                  Tapped="UnfollowButton_OnTapped"
+                                                  Visibility="{x:Bind _viewModel.IsFollowed, Mode=OneWay}" />
 
                                 </CommandBar>
                             </StackPanel>

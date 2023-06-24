@@ -41,7 +41,6 @@ public partial class App
 
     public App()
     {
-        CurrentContext.App = this;
         // The theme can only be changed in ctor
         AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadConfiguration() ?? AppSetting.CreateDefault() };
         RequestedTheme = AppViewModel.AppSetting.Theme switch
@@ -74,17 +73,20 @@ public partial class App
         Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSetting.AppFontFamilyName);
         await AppKnownFolders.InitializeAsync();
 
-        CurrentContext.IconPath = await AppContext.GetIconAbsolutePath();
-        CurrentContext.Window = new MainWindow();
+        _ = new MainWindow();
         CurrentContext.Title = AppContext.AppIdentifier;
-
-        AppHelper.Initialize(new SizeInt32(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight), AppViewModel.AppSetting.AppBackdrop switch
+        AppHelper.Initialize(new AppHelper.InitializeInfo
         {
-            ApplicationBackdropType.None => BackdropHelper.BackdropType.None,
-            ApplicationBackdropType.Acrylic => BackdropHelper.BackdropType.Acrylic,
-            ApplicationBackdropType.Mica => BackdropHelper.BackdropType.Mica,
-            ApplicationBackdropType.MicaAlt => BackdropHelper.BackdropType.MicaAlt,
-            _ => throw new ArgumentOutOfRangeException()
+            Size = new SizeInt32(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight),
+            BackdropType = AppViewModel.AppSetting.AppBackdrop switch
+            {
+                ApplicationBackdropType.None => BackdropType.None,
+                ApplicationBackdropType.Acrylic => BackdropType.Acrylic,
+                ApplicationBackdropType.Mica => BackdropType.Mica,
+                ApplicationBackdropType.MicaAlt => BackdropType.MicaAlt,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            TitleBarType = TitleBarHelper.TitleBarType.AppWindow
         });
 
         await AppViewModel.InitializeAsync(isProtocolActivated);

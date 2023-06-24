@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.SourceGen
+#region Copyright (c) Pixeval/Pixeval.SourceGen
 // GPL v3 License
 // 
 // Pixeval/Pixeval.SourceGen
@@ -24,7 +24,8 @@ using System.Collections.Immutable;
 
 namespace Pixeval.SourceGen;
 
-[Generator]
+// [Generator]
+// TODO: 源生成器有破坏式更新
 public class TypeWithAttributeGenerator : IIncrementalGenerator
 {
     /// <summary>

@@ -44,12 +44,12 @@ using CommunityToolkit.Mvvm.Messaging;
 using Pixeval.Pages;
 using Pixeval.Utilities;
 using Microsoft.Extensions.DependencyInjection;
-using Pixeval.Attributes;
 using Pixeval.Database.Managers;
 using Pixeval.Database;
 using Pixeval.Messages;
 using Pixeval.Util.Threading;
 using WinUI3Utilities;
+using Pixeval.Util;
 
 namespace Pixeval;
 
@@ -59,6 +59,7 @@ public sealed partial class MainWindow : INavigationModeInfo
 
     public MainWindow()
     {
+        CurrentContext.Window = this;
         InitializeComponent();
         CurrentContext.TitleBar = AppTitleBar;
         CurrentContext.TitleTextBlock = AppTitleTextBlock;
@@ -66,7 +67,9 @@ public sealed partial class MainWindow : INavigationModeInfo
 
     public NavigationTransitionInfo? DefaultNavigationTransitionInfo { get; internal set; } = new SuppressNavigationTransitionInfo();
 
-    // The parameter of OnNavigatedTo is always NavigationMode.New
+    /// <summary>
+    /// The parameter of OnNavigatedTo is always <see cref="Microsoft.UI.Xaml.Navigation.NavigationMode.New"/>
+    /// </summary>
     public static NavigationMode? NavigationMode { get; private set; }
 
     public static NavigationMode? GetNavigationModeAndReset()
@@ -78,7 +81,7 @@ public sealed partial class MainWindow : INavigationModeInfo
 
     private void PixevalAppRootFrame_OnLoaded(object sender, RoutedEventArgs e)
     {
-        WeakReferenceMessenger.Default.Register<MainWindow, RefreshDragRegionMessage>(this, static (recipient, _) =>
+        WeakReferenceMessenger.Default.TryRegister<MainWindow, RefreshDragRegionMessage>(this, static (recipient, _) =>
         {
             if (AppWindowTitleBar.IsCustomizationSupported() && recipient.PixevalAppRootFrame.Content is ISupportCustomTitleBarDragRegion iSupportCustomTitleBarDragRegion)
             {
@@ -170,13 +173,16 @@ public sealed partial class MainWindow : INavigationModeInfo
     {
         var rects = await iSupportCustomTitleBarDragRegion.SetTitleBarDragRegionAsync(
             AppTitleBar,
-            LeftDragRegion,
-            LeftMarginRegion,
-            SearchBarRegion,
-            MarginRegion,
-            ReverseSearchButtonRegion,
-            SearchSettingButtonRegion,
-            RightDragRegion);
+            new[]
+            {
+                LeftDragRegion,
+                LeftMarginRegion,
+                SearchBarRegion,
+                MarginRegion,
+                ReverseSearchButtonRegion,
+                SearchSettingButtonRegion,
+                RightDragRegion
+            });
         CurrentContext.AppWindow.TitleBar.SetDragRectangles(rects);
     }
 
@@ -197,6 +203,7 @@ public sealed partial class MainWindow : INavigationModeInfo
             {
                 e.Handled = true; // prevent the event from bubbling if it contains an image, since it means that we want to do reverse search.
                 await using var stream = await file.OpenStreamForReadAsync();
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 if (await Image.DetectFormatAsync(stream) is not null)
                 {
                     if (App.AppViewModel.AppSetting.ReverseSearchApiKey is not { Length: > 0 })

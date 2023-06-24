@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -53,7 +53,7 @@ public sealed partial class RecentPostsPage : ISortedIllustrationContainerPageHe
     {
         PrivacyPolicyComboBox.SelectedItem = PrivacyPolicyComboBoxPublicItem;
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
-        WeakReferenceMessenger.Default.Register<RecentPostsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
+        WeakReferenceMessenger.Default.TryRegister<RecentPostsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
     }
 
     private void RecentPostsPage_OnLoaded(object sender, RoutedEventArgs e)
@@ -81,7 +81,7 @@ public sealed partial class RecentPostsPage : ISortedIllustrationContainerPageHe
 
     private void SortOptionComboBoxContainer_OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (App.AppViewModel.AppSetting.IllustrationViewOption is IllustrationViewOption.Justified)
+        if (App.AppViewModel.AppSetting.IllustrationViewOption is IllustrationViewOption.RiverFlow)
         {
             ToolTipService.SetToolTip(SortOptionComboBoxContainer, new ToolTip { Content = MiscResources.SortIsNotAllowedWithJustifiedLayout });
         }

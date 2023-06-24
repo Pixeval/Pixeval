@@ -44,8 +44,8 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.UserControls.IllustrationView;
 
-[DependencyProperty<ObservableCollection<ICommandBarElement>>("PrimaryCommandsSupplements", nameof(OnPrimaryCommandsSupplementsChanged), DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
-[DependencyProperty<ObservableCollection<ICommandBarElement>>("SecondaryCommandsSupplements", nameof(OnSecondaryCommandsSupplementsChanged), DefaultValue = "new ObservableCollection<ICommandBarElement>()")]
+[DependencyProperty<ObservableCollection<ICommandBarElement>>("PrimaryCommandsSupplements", nameof(OnPrimaryCommandsSupplementsChanged), DefaultValue = "new System.Collections.ObjectModel.ObservableCollection<Microsoft.UI.Xaml.Controls.ICommandBarElement>()")]
+[DependencyProperty<ObservableCollection<ICommandBarElement>>("SecondaryCommandsSupplements", nameof(OnSecondaryCommandsSupplementsChanged), DefaultValue = "new System.Collections.ObjectModel.ObservableCollection<Microsoft.UI.Xaml.Controls.ICommandBarElement>()")]
 [DependencyProperty<bool>("IsDefaultCommandsEnabled", nameof(OnIsDefaultCommandsEnabledChanged), DefaultValue = "true")]
 [DependencyProperty<IllustrationViewViewModel>("ViewModel")]
 [DependencyProperty<bool>("ShowDefaultSuggestBox", DefaultValue = "true")]

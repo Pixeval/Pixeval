@@ -132,15 +132,15 @@ public class AppPopup
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
-            Background = (Brush) Application.Current.Resources["ApplicationPageBackgroundThemeBrush"],
+            Background = (Brush)Application.Current.Resources["ApplicationPageBackgroundThemeBrush"],
             Opacity = 0.4
         };
         var popupContentPresenter = new ContentPresenter
         {
             Shadow = themeShadow,
             Translation = new Vector3(0, 0, 40),
-            BorderBrush = (Brush) Application.Current.Resources["PixevalBorderBrush"],
-            Background = (Brush) Application.Current.Resources["PixevalPanelBackgroundThemeBrush"],
+            BorderBrush = (Brush)Application.Current.Resources["PixevalBorderBrush"],
+            Background = (Brush)Application.Current.Resources["PixevalPanelBackgroundThemeBrush"],
             CornerRadius = new CornerRadius(10),
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,

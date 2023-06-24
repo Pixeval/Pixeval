@@ -17,8 +17,8 @@ public sealed partial class IllustratorProfile
     public static readonly Vector3 CommonScale = new(1, 1, 1);
     public static readonly Vector3 ElevatedTranslation = new(0, 0, 60);
     public static readonly Vector3 CommonTranslation = new(0, 0, 30);
-    public static readonly float RotatedRotation = 10f;
-    public static readonly float CommonRotation = 0f;
+    public const float RotatedRotation = 10f;
+    public const float CommonRotation = 0f;
 
     public IllustratorProfile()
     {

@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval.CoreApi
+﻿#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
-// Pixeval/Pixeval.CoreApi
-// Copyright (c) 2021 Pixeval.CoreApi/PixivImageNameResolver.cs
+// Pixeval/Pixeval
+// Copyright (c) 2023 Pixeval/IValueAnimation.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,25 +18,27 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Net;
+using System;
+using System.Numerics;
 using System.Threading.Tasks;
 
-namespace Pixeval.CoreApi.Net;
+namespace Pixeval.Util.UI.Animating;
 
-public class PixivImageNameResolver : INameResolver
+public interface IValueAnimation<out V> where V : INumber<V>
 {
-    public Task<IPAddress[]> Lookup(string hostname)
-    {
-        if (hostname == "i.pximg.net")
-        {
-            return Task.FromResult(new[]
-            {
-                IPAddress.Parse("210.140.92.141"),
-                IPAddress.Parse("210.140.92.142"),
-                IPAddress.Parse("210.140.92.143")
-            });
-        }
+    TimeSpan Duration { get; }
 
-        return Dns.GetHostAddressesAsync(hostname);
-    }
+    TimeSpan SampleRate { get; }
+
+    V From { get; }
+    
+    V To { get; }
+
+    IEasingFunction<V>? EasingFunction { get; }
+
+    event Action<V> OnValueChanged;
+
+    event EventHandler OnCompleted;
+
+    Task StartAsync();
 }
