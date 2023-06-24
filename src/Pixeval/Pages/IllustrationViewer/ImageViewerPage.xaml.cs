@@ -21,7 +21,6 @@
 using System;
 using System.Threading.Tasks;
 using Windows.Foundation;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -115,20 +114,15 @@ public sealed partial class ImageViewerPage
                 illustWidth,
                 illustHeight,
                 IllustrationOriginalImage.ActualWidth,
-                IllustrationOriginalImage.ActualHeight, 
+                IllustrationOriginalImage.ActualHeight,
                 GetZoomFactor());
             Zoom(displayImageResolution >= 1 ? displayImageResolution * 2 : 1 / displayImageResolution - GetZoomFactor());
         }
     }
 
     private void IllustrationOriginalImageContainer_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
-    { 
-        Zoom(e.GetCurrentPoint(null).Properties.MouseWheelDelta / 1000d);
-    }
-
-    private void IllustrationInfoAndCommentsMenuFlyoutItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _viewModel.IllustrationViewerPageViewModel.IsInfoPaneOpen = true;
+        Zoom(e.GetCurrentPoint(null).Properties.MouseWheelDelta / 1000d);
     }
 
     #region Helper Functions
@@ -138,7 +132,7 @@ public sealed partial class ImageViewerPage
         EasingMode = EasingMode.EaseOut,
         Exponent = 12
     };
-    
+
     private double GetZoomFactor()
     {
         return IllustrationOriginalImageRenderTransform.ScaleX;

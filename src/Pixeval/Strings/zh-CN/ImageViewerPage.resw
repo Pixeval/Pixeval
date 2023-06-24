@@ -144,7 +144,4 @@
   <data name="MergingGifFrames" xml:space="preserve">
     <value>正在合成GIF...</value>
   </data>
-  <data name="SetAsSubItem.Label" xml:space="preserve">
-    <value>设置为</value>
-  </data>
 </root>

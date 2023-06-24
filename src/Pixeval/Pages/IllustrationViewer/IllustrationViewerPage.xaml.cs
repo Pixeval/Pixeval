@@ -46,13 +46,14 @@ using Windows.Graphics;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Media;
+using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI.Windowing;
-using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragRegion
+public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragRegionTest
 {
     private AppPopup? _commentRepliesPopup;
 
@@ -67,7 +68,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
     private IllustrationViewerPageViewModel _viewModel = null!;
 
     private const double TitleBarHeight = 48;
-    
+
     private readonly AsyncLatch<(CompositeTransform, double scale)> _zoomingAnimation;
 
     private readonly AsyncLatch _collapseThumbnailList;
@@ -83,7 +84,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         InitializeComponent();
         var dataTransferManager = UIHelper.GetDataTransferManager();
         dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
-        _zoomingAnimation = new AsyncLatch<(CompositeTransform, double scale)>(tuple =>
+        _zoomingAnimation = new(tuple =>
         {
             var (transform, scale) = tuple;
             var translateXAnimation = transform.CreateDoubleAnimation(
@@ -117,7 +118,6 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         PopupShadow.Receivers.Add(IllustrationInfoAndCommentsSplitView);
         CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
         ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
-
 
         _viewModel.Snapshot = _viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView; // performance critical?
 
@@ -160,7 +160,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(_viewModel.IllustrationView?.GetItemContainer(_viewModel.IllustrationViewModelInTheGridView!) ?? App.AppViewModel.AppWindowRootFrame));
         WeakReferenceMessenger.Default.TryRegister<IllustrationViewerPage, CommentRepliesHyperlinkButtonTappedMessage>(this, CommentRepliesHyperlinkButtonTapped);
     }
-    
+
     private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
         if (this.CurrentWindow()?.AppWindow is { Presenter.Kind: AppWindowPresenterKind.FullScreen } appWindow)
@@ -169,12 +169,12 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
             TopCommandBar.Height = double.NaN;
         }
     }
-    
+
     private void CurrentScalePercentage_OnLoaded(object sender, RoutedEventArgs e)
     {
         OnZoomChanged(null, 1); // trigger the first calculation of the percentage of the zooming, does not imply that there is a zooming happened.
     }
-    
+
     private void IllustrationViewerPage_OnPointerMoved(object sender, PointerRoutedEventArgs e)
     {
         if (this.CurrentWindow()?.AppWindow is { Presenter.Kind: AppWindowPresenterKind.FullScreen })
@@ -205,7 +205,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
                 break;
         }
     }
-    
+
     private void IllustrationViewerPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
         CurrentScalePercentage.Text = $"{ScaledPercentage()}%";
@@ -257,17 +257,17 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
             illustWidth,
             illustHeight,
             imageControl.ActualWidth,
-            imageControl.ActualHeight, 
+            imageControl.ActualHeight,
             _viewModel.Current.Scale);
-            
-        return (int) (displayImageResolution * 100);
+
+        return (int)(displayImageResolution * 100);
     }
 
-    private static void CommentRepliesHyperlinkButtonTapped(IllustrationViewerPage recipient, CommentRepliesHyperlinkButtonTappedMessage message)
+    private void CommentRepliesHyperlinkButtonTapped(IllustrationViewerPage recipient, CommentRepliesHyperlinkButtonTappedMessage message)
     {
         var commentRepliesBlock = new CommentRepliesBlock
         {
-            ViewModel = new CommentRepliesBlockViewModel(message.Sender!.GetDataContext<CommentBlockViewModel>())
+            ViewModel = new CommentRepliesBlockViewModel(UIHelper.GetDataContext<CommentBlockViewModel>(message.Sender!))
         };
         commentRepliesBlock.CloseButtonTapped += recipient.CommentRepliesBlock_OnCloseButtonTapped;
         recipient._commentRepliesPopup = PopupManager.CreatePopup(commentRepliesBlock, widthMargin: 200, maxWidth: 1500, minWidth: 400, maxHeight: 1200, closing: (_, _) => recipient._commentRepliesPopup = null);
@@ -335,7 +335,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void NextIllustration()
     {
-        var illustrationViewModel = (IllustrationViewModel) _viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value + 1];
+        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value + 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
         ParentFrame.Navigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
@@ -346,7 +346,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void PrevIllustration()
     {
-        var illustrationViewModel = (IllustrationViewModel) _viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value - 1];
+        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value - 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
         ParentFrame.Navigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel), new SlideNavigationTransitionInfo
@@ -377,10 +377,10 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick(TeachingTip sender, object args)
     {
-        _viewModel.IsGenerateLinkTeachingTipOpen = false;
+        GenerateLinkToThisPageButtonTeachingTip.IsOpen = false;
         App.AppViewModel.AppSetting.DisplayTeachingTipWhenGeneratingAppLink = false;
     }
-    
+
     private void IllustrationInfoAndCommentsNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
         if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag })
@@ -399,56 +399,17 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         WeakReferenceMessenger.Default.Send(RefreshDragRegionMessage.Shared);
     }
 
-    public async Task<RectInt32[]> SetTitleBarDragRegionAsync(FrameworkElement? titleBar, ColumnDefinition[]? dragRegion)
+    public DragZoneHelper.DragZoneInfo SetTitleBarDragRegion()
     {
-        // ---------------------------------------------------------------------------------------
-        // |                           ||||||||||||||||||||||||||       |||||||||||||            |
-        // left drag region       left drag region            middle drag             left drag
-        // start                       end                       region                  region
-        await ThreadingHelper.SpinWaitAsync(() => IllustrationViewerCommandBar.ActualHeight == 0);
-        const int leftButtonWidth = 50;
-        var scaleFactor = UIHelper.GetScaleAdjustment();
         var pointCommandBar = IllustrationViewerCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
         var pointSubCommandBar = IllustrationViewerSubCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
+        var commandBarRect = new RectInt32((int)pointCommandBar.X, (int)pointCommandBar.Y, (int)IllustrationViewerCommandBar.ActualWidth, (int)IllustrationViewerCommandBar.ActualHeight);
+        var subCommandBarRect = new RectInt32((int)pointSubCommandBar.X, (int)pointSubCommandBar.Y, (int)IllustrationViewerSubCommandBar.ActualWidth, (int)IllustrationViewerSubCommandBar.ActualHeight);
 
-        var leftDragRegionStart = leftButtonWidth * scaleFactor;
-        var leftDragRegionWidth = pointCommandBar.X * scaleFactor - leftDragRegionStart;
-
-        var height = IllustrationViewerCommandBar.ActualHeight * scaleFactor;
-
-        var middleDragRegionStart = leftDragRegionStart + leftDragRegionWidth + IllustrationViewerCommandBar.ActualWidth * scaleFactor;
-        var middleDragRegionWidth = pointSubCommandBar.X * scaleFactor - middleDragRegionStart;
-
-        var rightDragRegionStart = middleDragRegionStart + middleDragRegionWidth + IllustrationViewerSubCommandBar.ActualWidth * scaleFactor;
-        var rightDragRegionWidth = ActualWidth * scaleFactor - rightDragRegionStart;
-
-        RectInt32 dragRegionL;
-        dragRegionL.X = (int) leftDragRegionStart;
-        dragRegionL.Y = 0;
-        dragRegionL.Width = (int) leftDragRegionWidth;
-        dragRegionL.Height = (int) height;
-
-        RectInt32 dragRegionM;
-        dragRegionM.X = (int) middleDragRegionStart;
-        dragRegionM.Y = 0;
-        dragRegionM.Width = (int) middleDragRegionWidth;
-        dragRegionM.Height = (int) height;
-
-        RectInt32 dragRegionR;
-        dragRegionR.X = (int) rightDragRegionStart;
-        dragRegionR.Y = 0;
-        dragRegionR.Width = (int) rightDragRegionWidth;
-        dragRegionR.Height = (int) height;
-
-        var list = new List<RectInt32>();
-        if (!_viewModel.IsInfoPaneOpen)
+        return new(commandBarRect, subCommandBarRect)
         {
-            list.Add(dragRegionL);
-        }
-
-        list.Add(dragRegionM);
-        list.Add(dragRegionR);
-        return list.ToArray();
+            DragZoneLeftIndent = _viewModel.IsInfoPaneOpen ? (int)IllustrationInfoAndCommentsSplitView.OpenPaneLength : 0
+        };
     }
 
     private void LeftPageButtonArea_OnPointerEntered(object sender, PointerRoutedEventArgs e)
@@ -473,9 +434,9 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void ThumbnailList_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
     {
-        var context = sender.GetDataContext<IllustrationViewModel>();
+        var context = UIHelper.GetDataContext<IllustrationViewModel>(sender);
         if (args.BringIntoViewDistanceX <= sender.ActualWidth)
-        { 
+        {
             _ = context.LoadThumbnailIfRequired();
         }
 
@@ -496,7 +457,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
                 border.BorderThickness = new Thickness(2);
             }
 
-            if (e.RemovedItems is [IllustrationViewModel removedItem] 
+            if (e.RemovedItems is [IllustrationViewModel removedItem]
                 && lv.ContainerFromItem(removedItem) is { } container
                 && container.FindDescendant(borderControlName) is Border b)
             {
@@ -508,14 +469,14 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         {
             var viewModels = viewModel.GetMangaIllustrationViewModels().ToArray();
 
-            ParentFrame.Navigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModels), 
+            ParentFrame.Navigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModels),
                 new EntranceNavigationTransitionInfo());
         }
     }
 
     private void ThumbnailBorder_OnLoaded(object sender, RoutedEventArgs e)
     {
-        var context = sender.GetDataContext<IllustrationViewModel>();
+        var context = UIHelper.GetDataContext<IllustrationViewModel>(sender);
         if (context.Illustration.Id.ToString() == _viewModel.Current.IllustrationViewModel.Id && _viewModel.Snapshot is [..])
         {
             ThumbnailList.ScrollIntoView(context);
@@ -528,7 +489,46 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void IllustrationImageShowcaseFrame_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        BottomCommandSection.Translation = new Vector3(0, 0, 0);
+        BottomCommandSection.Translation = new Vector3();
         _collapseThumbnailList.RunAsync().Discard();
+    }
+
+    private void CommandBarElementOnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        var button = (ICommandBarElement)sender;
+        ((FrameworkElement)sender).Width = button.IsInOverflow ? double.NaN : (double)Application.Current.Resources["CollapsedAppBarButtonWidth"];
+    }
+
+    private async void ShowQrCodeOnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        var button = (AppBarButton)sender;
+        var qrCodeSource = await UIHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustrationWebUri(_viewModel.Current.IllustrationViewModel.Id).ToString());
+        QrCodeTeachingTip.HeroContent = new Image
+        {
+            Source = qrCodeSource,
+        };
+        QrCodeTeachingTip.Target = button.IsInOverflow ? null : button;
+        QrCodeTeachingTip.IsOpen = true;
+
+        void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
+        {
+            qrCodeSource.Dispose();
+            QrCodeTeachingTip.Closed -= Closed;
+            QrCodeTeachingTip.HeroContent = null;
+        }
+
+        QrCodeTeachingTip.Closed += Closed;
+    }
+
+    private void GenerateLinkCommandOnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (App.AppViewModel.AppSetting.DisplayTeachingTipWhenGeneratingAppLink)
+        {
+            var button = (AppBarButton)sender;
+            GenerateLinkToThisPageButtonTeachingTip.IsOpen = true;
+            GenerateLinkToThisPageButtonTeachingTip.Target = button.IsInOverflow ? null : button;
+        }
+
+        UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationAppUri(_viewModel.Current.IllustrationViewModel.Id).ToString()));
     }
 }
