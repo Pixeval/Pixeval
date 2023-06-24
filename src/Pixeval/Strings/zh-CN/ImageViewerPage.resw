@@ -132,7 +132,7 @@
   <data name="DownloadingImageFormatted" xml:space="preserve">
     <value>正在下载图片: {0}%</value>
   </data>
-  <data name="IllustrationInfoAndCommentsMenuFlyoutItem.Text" xml:space="preserve">
+  <data name="IllustrationInfoAndCommentsMenuFlyoutItem.Label" xml:space="preserve">
     <value>作品信息</value>
   </data>
   <data name="LoadingFromCache" xml:space="preserve">
@@ -143,8 +143,5 @@
   </data>
   <data name="MergingGifFrames" xml:space="preserve">
     <value>正在合成GIF...</value>
-  </data>
-  <data name="SetAsSubItem.Text" xml:space="preserve">
-    <value>设置为</value>
   </data>
 </root>

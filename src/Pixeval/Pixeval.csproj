@@ -51,7 +51,7 @@
         <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-        <PackageReference Include="WinUI3Utilities" Version="1.1.3.1" />
+        <PackageReference Include="WinUI3Utilities" Version="1.1.3.2" />
         <PackageReference Include="WinUIEx" Version="2.2.0" />
 
         <ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />

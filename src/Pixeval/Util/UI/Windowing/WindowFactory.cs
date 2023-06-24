@@ -34,12 +34,11 @@ public static class WindowFactory
     public static CustomizableWindow Fork(
         AppHelper.InitializeInfo provider,
         Window owner,
-        FrameworkElement? titleBar = null,
         RoutedEventHandler? onLoaded = null)
     {
         var w = new CustomizableWindow(owner, onLoaded);
         w.Closed += (_, _) => ForkedWindowsInternal.Remove(w);
-        AppHelper.Initialize(provider, w, null, titleBar);
+        AppHelper.Initialize(provider, w);
         ForkedWindowsInternal.Add(w);
         return w;
     }

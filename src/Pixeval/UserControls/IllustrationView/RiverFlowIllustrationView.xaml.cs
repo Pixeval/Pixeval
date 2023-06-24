@@ -124,7 +124,7 @@ public sealed partial class RiverFlowIllustrationView
         var window = WindowFactory.Fork(
             new AppHelper.InitializeInfo { TitleBarType = TitleBarHelper.TitleBarType.AppWindow, Size = new SizeInt32(width, height) },
             CurrentContext.Window,
-            onLoaded: (o, _) => o.To<Frame>().Navigate(typeof(IllustrationViewerPage),
+            (o, _) => o.To<Frame>().Navigate(typeof(IllustrationViewerPage),
                 new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo()));
         window.Activate();
     }

@@ -23,6 +23,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Messages;
+using WinUI3Utilities;
 
 namespace Pixeval.Util.UI.Windowing;
 
@@ -39,20 +40,14 @@ public sealed class CustomizableWindow : Window
     /// <param name="onLoaded"></param>
     internal CustomizableWindow(Window owner, RoutedEventHandler? onLoaded)
     {
-        Grid presenter;
-        _frame = new Frame();
         _owner = owner;
-        Content = presenter = new Grid
+        Content = _frame = new Frame()
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
-            Children =
-            {
-                //  _titleBar,
-                _frame
-            }
         };
-        presenter.SizeChanged += OnSizeChanged;
+        _frame.Loaded += (_, _) => SetDragRegion();
+        _frame.SizeChanged += (_, _) => SetDragRegion();
         Activated += OnActivated;
         Closed += OnClosed;
         _owner.Closed += OnOwnerOnClosed;
@@ -74,29 +69,17 @@ public sealed class CustomizableWindow : Window
         Close();
     }
 
-    private void OnActivated(object sender, WindowActivatedEventArgs args)
+    private void OnActivated(object sender, WindowActivatedEventArgs e)
     {
-
-        WeakReferenceMessenger.Default.TryRegister<CustomizableWindow, RefreshDragRegionMessage>(this, async (recipient, _) =>
-            {
-                if (recipient._frame.Content is ISupportCustomTitleBarDragRegion supportCustomTitleBarDragRegion)
-                {
-                    // Here I admit that it is a bit confusing that I call "ISupportCustomTitleBarDragRegion::SetTitleBarDragRegionAsync"
-                    // rather than DragZoneHelper::SetDragZones, the reason for this is a API design difference between two authors of
-                    // this code, The DragZoneHelper::SetDragZones requires *a known list of draggable zone info in detail*, which we 
-                    // cannot obtain at here, en revanche, ISupportCustomTitleBarDragRegion delivers this task to its implementations
-                    var rects = await supportCustomTitleBarDragRegion.SetTitleBarDragRegionAsync(null, null);
-                    AppWindow.TitleBar.SetDragRectangles(rects);
-                }
-            });
+        WeakReferenceMessenger.Default.TryRegister<CustomizableWindow, RefreshDragRegionMessage>(this, (_, _) => SetDragRegion());
     }
 
-    private async void OnSizeChanged(object sender, SizeChangedEventArgs e)
+    private void SetDragRegion()
     {
-        if (_frame.Content is ISupportCustomTitleBarDragRegion supportCustomTitleBarDragRegion)
+        if (_frame.Content is ISupportCustomTitleBarDragRegionTest supportCustomTitleBarDragRegion)
         {
-            var rects = await supportCustomTitleBarDragRegion.SetTitleBarDragRegionAsync(null, null);
-            AppWindow.TitleBar.SetDragRectangles(rects);
+            var info = supportCustomTitleBarDragRegion.SetTitleBarDragRegion();
+            DragZoneHelper.SetDragZones(info, this);
         }
     }
 
