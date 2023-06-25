@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -18,26 +18,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Pixeval.Attributes;
-using WinUI3Utilities;
+using Pixeval.Options;
 
 namespace Pixeval.Controls.Setting.UI.Model;
 
-public record ApplicationBackdropSettingEntryItem : IStringRepresentableItem
+public record ApplicationBackdropSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public object Item { get; }
-
-    public string StringRepresentation { get; }
-
-    public ApplicationBackdropSettingEntryItem(ApplicationBackdropType item)
+    public ApplicationBackdropSettingEntryItem(ApplicationBackdropType item) : base(item)
     {
-        Item = item;
-        StringRepresentation = item.GetLocalizedResourceContent()!;
     }
 
-    public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ApplicationBackdropType>().Select(i => new ApplicationBackdropSettingEntryItem(i));
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ApplicationBackdropType>().Select(i => new ApplicationBackdropSettingEntryItem(i));
 }

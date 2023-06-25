@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -25,22 +25,16 @@ using Pixeval.CoreApi.Global.Enum;
 
 namespace Pixeval.Controls.Setting.UI.Model;
 
-public record TargetPlatformSettingEntryItem : IStringRepresentableItem
+public record TargetPlatformSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public TargetPlatformSettingEntryItem(TargetFilter item)
+    public TargetPlatformSettingEntryItem(TargetFilter item) : base(item, item switch
     {
-        Item = item;
-        StringRepresentation = item switch
-        {
-            TargetFilter.ForAndroid => MiscResources.TargetFilterForAndroid,
-            TargetFilter.ForIos => MiscResources.TargetFilterForIOS,
-            _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
-        };
+        TargetFilter.ForAndroid => MiscResources.TargetFilterForAndroid,
+        TargetFilter.ForIos => MiscResources.TargetFilterForIOS,
+        _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
+    })
+    {
     }
 
-    public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<TargetFilter>().Select(t => new TargetPlatformSettingEntryItem(t));
-
-    public object Item { get; }
-
-    public string StringRepresentation { get; }
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<TargetFilter>().Select(t => new TargetPlatformSettingEntryItem(t));
 }

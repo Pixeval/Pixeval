@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -18,17 +18,24 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.Collections.Generic;
+using Pixeval.Attributes;
 
 namespace Pixeval.Controls.Setting.UI.Model;
 
-public interface IStringRepresentableItem
+public record StringRepresentableItem(Enum Item, string StringRepresentation)
 {
-    object Item { get; }
+    public StringRepresentableItem(Enum item) : this(item, item.GetLocalizedResourceContent()!)
+    {
+    }
 
-    string StringRepresentation { get; }
+    public override string ToString() => StringRepresentation;
+}
 
+public interface IAvailableItems
+{
     // ReSharper disable once UnusedMember.Global
     // ReSharper disable once UnassignedGetOnlyAutoProperty
-    static IEnumerable<IStringRepresentableItem>? AvailableItems { get; }
+    static IEnumerable<StringRepresentableItem>? AvailableItems { get; }
 }

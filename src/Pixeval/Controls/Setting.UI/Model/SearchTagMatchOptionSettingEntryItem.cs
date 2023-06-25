@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -25,23 +25,17 @@ using Pixeval.CoreApi.Global.Enum;
 
 namespace Pixeval.Controls.Setting.UI.Model;
 
-public record SearchTagMatchOptionSettingEntryItem : IStringRepresentableItem
+public record SearchTagMatchOptionSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public SearchTagMatchOptionSettingEntryItem(SearchTagMatchOption item)
+    public SearchTagMatchOptionSettingEntryItem(SearchTagMatchOption item) : base(item, item switch
     {
-        Item = item;
-        StringRepresentation = item switch
-        {
-            SearchTagMatchOption.PartialMatchForTags => MiscResources.SearchTagMatchOptionPartialMatchForTags,
-            SearchTagMatchOption.ExactMatchForTags => MiscResources.SearchTagMatchOptionExactMatchForTags,
-            SearchTagMatchOption.TitleAndCaption => MiscResources.SearchTagMatchOptionTitleAndCaption,
-            _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
-        };
+        SearchTagMatchOption.PartialMatchForTags => MiscResources.SearchTagMatchOptionPartialMatchForTags,
+        SearchTagMatchOption.ExactMatchForTags => MiscResources.SearchTagMatchOptionExactMatchForTags,
+        SearchTagMatchOption.TitleAndCaption => MiscResources.SearchTagMatchOptionTitleAndCaption,
+        _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
+    })
+    {
     }
 
-    public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<SearchTagMatchOption>().Select(i => new SearchTagMatchOptionSettingEntryItem(i));
-
-    public object Item { get; }
-
-    public string StringRepresentation { get; }
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<SearchTagMatchOption>().Select(i => new SearchTagMatchOptionSettingEntryItem(i));
 }

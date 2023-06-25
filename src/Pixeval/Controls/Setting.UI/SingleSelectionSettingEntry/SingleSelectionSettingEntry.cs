@@ -18,17 +18,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Windows.Foundation;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using WinUI3Utilities.Attributes;
 using Pixeval.Controls.Setting.UI.Model;
 using Pixeval.Controls.Setting.UI.UserControls;
+using Windows.Foundation;
+using WinUI3Utilities.Attributes;
 
 
 namespace Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry;
@@ -40,7 +39,7 @@ namespace Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry;
 [TemplatePart(Name = PartSelectorRadioButtons, Type = typeof(RadioButtons))]
 [TemplatePart(Name = PartEntryHeader, Type = typeof(SettingEntryHeader))]
 [DependencyProperty<double>("HeaderHeight")] // The height of SettingsEntryHeader
-[DependencyProperty<IEnumerable<IStringRepresentableItem>>("ItemsSource")] // The list of selectable items
+[DependencyProperty<IEnumerable<StringRepresentableItem>>("ItemsSource")] // The list of selectable items
 [DependencyProperty<object>("SelectedItem", nameof(OnSelectedItemChanged))] // The selected item, two-way binding is supported
 public sealed partial class SingleSelectionSettingEntry : SettingEntryBase
 {
@@ -92,7 +91,7 @@ public sealed partial class SingleSelectionSettingEntry : SettingEntryBase
     [MethodImpl(MethodImplOptions.Synchronized)]
     private void SelectorRadioButtonsOnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (_selectorRadioButtons is { SelectedItem: IStringRepresentableItem item })
+        if (_selectorRadioButtons is { SelectedItem: StringRepresentableItem item })
         {
             SelectedItem = item.Item;
         }

@@ -150,11 +150,11 @@
   <data name="IllustrationSortOptionPublishDateDescending" xml:space="preserve">
     <value>发布日期降序</value>
   </data>
-  <data name="IllustrationViewJustifiedLayout" xml:space="preserve">
-    <value>两端对齐</value>
-  </data>
-  <data name="IllustrationViewRegularLayout" xml:space="preserve">
+  <data name="IllustrationViewGridLayout" xml:space="preserve">
     <value>网格对齐</value>
+  </data>
+  <data name="IllustrationViewRiverFlowLayout" xml:space="preserve">
+    <value>两端对齐</value>
   </data>
   <data name="MainPageTabBookmark" xml:space="preserve">
     <value>我的收藏</value>

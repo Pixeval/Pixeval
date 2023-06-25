@@ -18,29 +18,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Options;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Pixeval.Options;
 
 namespace Pixeval.Controls.Setting.UI.Model;
 
-public record IllustrationViewOptionSettingEntryItem : IStringRepresentableItem
+public record IllustrationViewOptionSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public IllustrationViewOptionSettingEntryItem(IllustrationViewOption item)
+    public IllustrationViewOptionSettingEntryItem(IllustrationViewOption item) : base(item)
     {
-        Item = item;
-        StringRepresentation = item switch
-        {
-            IllustrationViewOption.Grid => MiscResources.IllustrationViewRegularLayout,
-            IllustrationViewOption.RiverFlow => MiscResources.IllustrationViewJustifiedLayout,
-            _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
-        };
     }
 
-    public object Item { get; }
-
-    public string StringRepresentation { get; }
-
-    public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<IllustrationViewOption>().Select(i => new IllustrationViewOptionSettingEntryItem(i));
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<IllustrationViewOption>().Select(i => new IllustrationViewOptionSettingEntryItem(i));
 }
