@@ -317,31 +317,7 @@
         <Page Update="Popups\IllustrationResultFilter\IllustrationResultFilterPopupContent.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Controls\Setting.UI\ActionableExpanderSettingEntry\ActionableExpanderSettingEntry.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\Setting.UI\ExpanderSettingEntry\ExpanderSettingEntry.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\Setting.UI\ActionableSettingEntry\ActionableSettingEntry.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\Setting.UI\SettingsGroup\SettingsGroup.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\Setting.UI\SliderSettingEntry\SliderSettingEntry.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\Setting.UI\SwitchSettingEntry\SwitchSettingEntry.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
         <Page Update="Controls\Expander\Expander.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\Setting.UI\SingleSelectionSettingEntry\SingleSelectionSettingEntry.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\Setting.UI\UserControls\SettingEntryHeader.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Controls\Card\CardControl.xaml">
