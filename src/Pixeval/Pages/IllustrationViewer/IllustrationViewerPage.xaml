@@ -426,6 +426,12 @@
                     </ListView>
                 </Grid>
             </StackPanel>
+            <TeachingTip
+                Title="{x:Bind _viewModel.SnackBarTitle, Mode=OneWay}"
+                IconSource="{x:Bind _viewModel.SnackBarIconSource, Mode=OneWay}"
+                IsLightDismissEnabled="True"
+                IsOpen="{x:Bind _viewModel.IsSnackBarOpen, Mode=OneWay}"
+                Subtitle="{x:Bind _viewModel.SnackBarSubtitle, Mode=OneWay}" />
         </Grid>
     </SplitView>
 </controls1:EnhancedPage>

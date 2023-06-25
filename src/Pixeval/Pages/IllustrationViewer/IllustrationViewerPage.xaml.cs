@@ -525,8 +525,8 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         if (App.AppViewModel.AppSetting.DisplayTeachingTipWhenGeneratingAppLink)
         {
             var button = (AppBarButton)sender;
-            GenerateLinkToThisPageButtonTeachingTip.IsOpen = true;
             GenerateLinkToThisPageButtonTeachingTip.Target = button.IsInOverflow ? null : button;
+            GenerateLinkToThisPageButtonTeachingTip.IsOpen = true;
         }
 
         UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationAppUri(_viewModel.Current.IllustrationViewModel.Id).ToString()));
