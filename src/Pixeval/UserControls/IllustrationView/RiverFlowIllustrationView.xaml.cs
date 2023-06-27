@@ -125,7 +125,7 @@ public sealed partial class RiverFlowIllustrationView
 
         CurrentContext.Window.Fork(out var w)
             .WithLoaded((o, _) => o.To<Frame>().Navigate<IllustrationViewerPage>(w,
-                new IllustrationViewerPageViewModel(w, this, viewModels), new SuppressNavigationTransitionInfo()))
+                new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo()))
             .Initialize(new()
             {
                 TitleBarType = TitleBarHelper.TitleBarType.AppWindow,
@@ -143,7 +143,8 @@ public sealed partial class RiverFlowIllustrationView
         while (!User32.EnumDisplaySettings(
                    monitorInfoEx.DeviceName,
                    User32.ENUM_CURRENT_SETTINGS,
-                   &devMode)) { }
+                   &devMode))
+        { }
 
         var monitorWidth = devMode.dmPelsWidth;
         var monitorHeight = devMode.dmPelsHeight;

@@ -123,6 +123,9 @@
   <data name="Background" xml:space="preserve">
     <value>壁纸</value>
   </data>
+  <data name="BackToWindow" xml:space="preserve">
+    <value>恢复窗口化</value>
+  </data>
   <data name="CannotShareImageForNowContent" xml:space="preserve">
     <value>您必须等待图片加载完毕才能分享，如果仅仅是为了分享链接，可以点击上方的“生成网页链接”或者“生成本页链接”按钮将图片链接复制到剪切板</value>
   </data>

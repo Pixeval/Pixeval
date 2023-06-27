@@ -46,6 +46,7 @@ using Microsoft.UI.Xaml.Media;
 using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util.Threading;
 using WinUI3Utilities;
+using Microsoft.UI.Windowing;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -107,9 +108,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        WeakReferenceMessenger.Default.Send(RefreshDragRegionMessage.Shared);
         SidePanelShadow.Receivers.Add(IllustrationPresenterDockPanel);
-        PopupShadow.Receivers.Add(IllustrationInfoAndCommentsSplitView);
         CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
         ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
 
@@ -165,7 +164,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
     {
         if (_viewModel.IsFullScreen)
         {
-            TopCommandBarAnimation.From = -48;
+            TopCommandBarAnimation.From = -TitleBarHeight;
             TopCommandBarAnimation.To = 0;
             TopCommandBarStoryboard.Begin();
         }
@@ -176,7 +175,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         if (_viewModel.IsFullScreen)
         {
             TopCommandBarAnimation.From = 0;
-            TopCommandBarAnimation.To = -48;
+            TopCommandBarAnimation.To = -TitleBarHeight;
             TopCommandBarStoryboard.Begin();
         }
     }
@@ -290,7 +289,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value + 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
-        NavigateSelf(new IllustrationViewerPageViewModel(_viewModel.Window, _viewModel.IllustrationView!, viewModel),
+        NavigateSelf(new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel),
             new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight });
     }
 
@@ -299,7 +298,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value - 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
-        NavigateSelf(new IllustrationViewerPageViewModel(_viewModel.Window, _viewModel.IllustrationView!, viewModel),
+        NavigateSelf(new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel),
             new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft });
     }
 
@@ -339,20 +338,22 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void IllustrationInfoAndCommentsSplitView_OnPaneOpenedOrClosed(SplitView sender, object args)
     {
-        Window.SetDragRegion(GetTitleBarDragRegion());
+        SetTitleBarDragRegion();
     }
 
-    public DragZoneHelper.DragZoneInfo GetTitleBarDragRegion()
+    public void SetTitleBarDragRegion()
     {
         var pointCommandBar = IllustrationViewerCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
         var pointSubCommandBar = IllustrationViewerSubCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
         var commandBarRect = new RectInt32((int)pointCommandBar.X, (int)pointCommandBar.Y, (int)IllustrationViewerCommandBar.ActualWidth, (int)IllustrationViewerCommandBar.ActualHeight);
         var subCommandBarRect = new RectInt32((int)pointSubCommandBar.X, (int)pointSubCommandBar.Y, (int)IllustrationViewerSubCommandBar.ActualWidth, (int)IllustrationViewerSubCommandBar.ActualHeight);
 
-        return new(commandBarRect, subCommandBarRect)
+        Window.SetDragRegion(new(commandBarRect, subCommandBarRect)
         {
-            DragZoneLeftIndent = _viewModel.IsInfoPaneOpen ? (int)IllustrationInfoAndCommentsSplitView.OpenPaneLength : 0
-        };
+            DragZoneLeftIndent = _viewModel.IsInfoPaneOpen
+                ? (int)IllustrationInfoAndCommentsSplitView.OpenPaneLength
+                : 0
+        });
     }
 
     private void LeftPageButtonArea_OnPointerEntered(object sender, PointerRoutedEventArgs e)
@@ -412,7 +413,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         {
             var viewModels = viewModel.GetMangaIllustrationViewModels().ToArray();
 
-            NavigateSelf(new IllustrationViewerPageViewModel(_viewModel.Window, _viewModel.IllustrationView!, viewModels), new EntranceNavigationTransitionInfo());
+            NavigateSelf(new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModels), new EntranceNavigationTransitionInfo());
         }
     }
 
@@ -472,5 +473,11 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         }
 
         UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationAppUri(_viewModel.Current.IllustrationViewModel.Id).ToString()));
+    }
+
+    private void FullScreenTapped(object sender, TappedRoutedEventArgs e)
+    {
+        Window.AppWindow.SetPresenter(_viewModel.IsFullScreen ? AppWindowPresenterKind.Default : AppWindowPresenterKind.FullScreen);
+        _viewModel.IsFullScreen = !_viewModel.IsFullScreen;
     }
 }

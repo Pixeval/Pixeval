@@ -45,14 +45,15 @@ public class EnhancedWindowPage : Page
 
     public int ActivationCount { get; private set; }
 
-    public EnhancedWindowPage() => Loaded += (_, _) =>
+    public EnhancedWindowPage()
     {
-        Initialized = true;
-        if (this as ISupportCustomTitleBarDragRegionTest is { } page)
+        Loaded += (_, _) =>
         {
-            Window.SetDragRegion(page.GetTitleBarDragRegion());
-        }
-    };
+            Initialized = true;
+            (this as ISupportCustomTitleBarDragRegionTest)?.SetTitleBarDragRegion();
+        };
+        SizeChanged += (_, _) => (this as ISupportCustomTitleBarDragRegionTest)?.SetTitleBarDragRegion();
+    }
 
     public bool ClearCacheAfterNavigation { get; set; }
 

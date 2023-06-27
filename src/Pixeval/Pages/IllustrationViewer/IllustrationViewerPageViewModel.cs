@@ -19,12 +19,10 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System;
 using Windows.System.UserProfile;
@@ -47,6 +45,7 @@ using Pixeval.Util.UI.Windowing;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using Microsoft.UI.Windowing;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -88,7 +87,16 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
             if (value == _isFullScreen)
                 return;
             _isFullScreen = value;
-            Window.AppWindow.SetPresenter(value ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
+            if (value)
+            {
+                FullScreenCommand.Description = IllustrationViewerPageResources.BackToWindow;
+                FullScreenCommand.IconSource = new SymbolIconSource { Symbol = Symbol.BackToWindow };
+            }
+            else
+            {
+                FullScreenCommand.Description = IllustrationViewerPageResources.FullScreen;
+                FullScreenCommand.IconSource = new SymbolIconSource { Symbol = Symbol.FullScreen };
+            }
             OnPropertyChanged();
         }
     }
@@ -98,24 +106,21 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     private readonly IllustrationViewModel[] _illustrations;
 
-    public CustomizableWindow Window { get; }
-
     public bool IsDisposed { get; set; }
 
     public event EventHandler<double>? ZoomChanged;
 
     // illustrations should contains only one item if the illustration is a single
     // otherwise it contains the entire manga data
-    public IllustrationViewerPageViewModel(CustomizableWindow window, RiverFlowIllustrationView illustrationView, params IllustrationViewModel[] illustrations) : this(window, illustrations)
+    public IllustrationViewerPageViewModel(RiverFlowIllustrationView illustrationView, params IllustrationViewModel[] illustrations) : this(illustrations)
     {
         IllustrationView = illustrationView;
         ContainerGridViewModel = illustrationView.ViewModel;
         IllustrationViewModelInTheGridView = ContainerGridViewModel.DataProvider.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
     }
 
-    public IllustrationViewerPageViewModel(CustomizableWindow window, params IllustrationViewModel[] illustrations)
+    public IllustrationViewerPageViewModel(params IllustrationViewModel[] illustrations)
     {
-        Window = window;
         _illustrations = illustrations;
         ImageViewerPageViewModels = illustrations.Select(i => new ImageViewerPageViewModel(this, i)).ToArray();
         ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModels[CurrentIndex]);
@@ -129,7 +134,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     /// <returns></returns>
     public IllustrationViewerPageViewModel CreateNew()
     {
-        return IllustrationView is not null ? new IllustrationViewerPageViewModel(Window, IllustrationView, _illustrations) : new IllustrationViewerPageViewModel(Window, _illustrations);
+        return IllustrationView is not null ? new IllustrationViewerPageViewModel(IllustrationView, _illustrations) : new IllustrationViewerPageViewModel(_illustrations);
     }
 
     /// <summary>
@@ -352,7 +357,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     private void PlayGifCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        var bitmap = (BitmapImage)Current.OriginalImageSource!;
+        var bitmap = Current.OriginalImageSource.To<BitmapImage>();
         if (bitmap.IsPlaying)
         {
             bitmap.Stop();

@@ -300,7 +300,7 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
 
     public Task<RectInt32[]> SetTitleBarDragRegionAsync(FrameworkElement? titleBar, ColumnDefinition[]? dragRegions)
     {
-        var (leftDragRegion, leftMarginRegion, searchBarRegion, marginRegion, reverseSearchButtonRegion, searchSettingButtonRegion, rightDragRegion) = (dragRegions[0], dragRegions[1], dragRegions[2], dragRegions[3], dragRegions[4], dragRegions[5], dragRegions[6]);
+        var (leftDragRegion, leftMarginRegion, searchBarRegion, marginRegion, reverseSearchButtonRegion, searchSettingButtonRegion, rightDragRegion) = (dragRegions![0], dragRegions[1], dragRegions[2], dragRegions[3], dragRegions[4], dragRegions[5], dragRegions[6]);
         const int leftButtonWidth = 50;
         var scaleAdjustment = UIHelper.GetScaleAdjustment();
         RectInt32 dragRectL;

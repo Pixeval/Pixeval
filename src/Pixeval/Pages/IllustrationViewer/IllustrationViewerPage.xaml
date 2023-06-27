@@ -8,6 +8,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:illustrationView="using:Pixeval.UserControls.IllustrationView"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:Pixeval.Pages.IllustrationViewer"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:Pixeval.Util.UI"
     KeyboardAcceleratorPlacementMode="Hidden"
@@ -15,11 +16,10 @@
     SizeChanged="IllustrationViewerPage_OnSizeChanged"
     mc:Ignorable="d">
     <controls:EnhancedWindowPage.Resources>
-        <ThemeShadow x:Name="PopupShadow" />
         <ThemeShadow x:Name="SidePanelShadow" />
-        <converters:BoolNegationConverter x:Name="BoolNegationConverter" />
+        <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
         <AcrylicBrush
-            x:Name="BottomCommandSectionBackground"
+            x:Key="BottomCommandSectionBackground"
             FallbackColor="{StaticResource SecondaryAccentColor}"
             TintColor="{StaticResource SecondaryAccentColor}"
             TintLuminosityOpacity="0.8"
@@ -343,7 +343,7 @@
                 PointerExited="TopCommandBarPointerExited">
                 <Grid
                     x:Name="TitleBarArea"
-                    Height="48"
+                    Height="{x:Bind local:IllustrationViewerPage.TitleBarHeight}"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Top">
                     <Grid.RenderTransform>
@@ -353,6 +353,7 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition x:Name="TitleControlButtonsColumn" Width="150" />
                     </Grid.ColumnDefinitions>
@@ -411,39 +412,35 @@
                             Tapped="ShowQrCodeOnTapped" />
                         <AppBarButton Command="{x:Bind _viewModel.ShareCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
                     </CommandBar>
-                    <StackPanel
+                    <CommandBar
+                        x:Name="IllustrationViewerSubCommandBar"
                         Grid.Column="3"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        Orientation="Horizontal">
-                        <CommandBar
-                            x:Name="IllustrationViewerSubCommandBar"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            DefaultLabelPosition="Collapsed">
-                            <AppBarToggleButton
-                                Width="{StaticResource CollapsedAppBarButtonWidth}"
-                                Command="{x:Bind _viewModel.FullScreenCommand}"
-                                IsChecked="{x:Bind _viewModel.IsFullScreen, Mode=TwoWay}" />
-                            <AppBarToggleButton
-                                x:Name="RestoreResolutionToggleButton"
-                                Width="{StaticResource CollapsedAppBarButtonWidth}"
-                                Command="{x:Bind _viewModel.RestoreResolutionCommand}"
-                                Tapped="RestoreResolutionToggleButton_OnTapped" />
-                            <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.ZoomOutCommand}" />
-                            <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.ZoomInCommand}" />
-                        </CommandBar>
-                        <TextBlock
-                            x:Name="CurrentScalePercentage"
-                            Width="50"
-                            Margin="-5,-3,0,0"
-                            VerticalAlignment="Center"
-                            FontSize="{StaticResource PixevalContentFontSize}"
-                            FontWeight="SemiBold"
-                            HorizontalTextAlignment="Center"
-                            Loaded="CurrentScalePercentage_OnLoaded"
-                            TextAlignment="Center" />
-                    </StackPanel>
+                        DefaultLabelPosition="Collapsed">
+                        <AppBarButton
+                            Width="{StaticResource CollapsedAppBarButtonWidth}"
+                            Command="{x:Bind _viewModel.FullScreenCommand}"
+                            Tapped="FullScreenTapped" />
+                        <AppBarToggleButton
+                            x:Name="RestoreResolutionToggleButton"
+                            Width="{StaticResource CollapsedAppBarButtonWidth}"
+                            Command="{x:Bind _viewModel.RestoreResolutionCommand}"
+                            Tapped="RestoreResolutionToggleButton_OnTapped" />
+                        <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.ZoomOutCommand}" />
+                        <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.ZoomInCommand}" />
+                    </CommandBar>
+                    <TextBlock
+                        x:Name="CurrentScalePercentage"
+                        Grid.Column="4"
+                        Width="50"
+                        Margin="-5,-3,0,0"
+                        VerticalAlignment="Center"
+                        FontSize="{StaticResource PixevalContentFontSize}"
+                        FontWeight="SemiBold"
+                        HorizontalTextAlignment="Center"
+                        Loaded="CurrentScalePercentage_OnLoaded"
+                        TextAlignment="Center" />
                     <TeachingTip
                         x:Name="QrCodeTeachingTip"
                         x:Uid="/IllustrationViewerPage/QrCodeTeachingTip"
