@@ -19,8 +19,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -37,7 +35,6 @@ using Pixeval.AppManagement;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Options;
-using Pixeval.Popups;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
@@ -54,8 +51,6 @@ namespace Pixeval.Pages.IllustrationViewer;
 
 public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragRegionTest
 {
-    private AppPopup? _commentRepliesPopup;
-
     // Tags for IllustrationInfoAndCommentsNavigationView
 
     private NavigationViewTag? _relatedWorksTag;
@@ -157,7 +152,6 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.Current);
 
         WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(_viewModel.IllustrationView?.GetItemContainer(_viewModel.IllustrationViewModelInTheGridView!) ?? App.AppViewModel.AppWindowRootFrame));
-        WeakReferenceMessenger.Default.TryRegister<IllustrationViewerPage, CommentRepliesHyperlinkButtonTappedMessage>(this, CommentRepliesHyperlinkButtonTapped);
     }
 
     private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;
@@ -242,25 +236,6 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
             _viewModel.Current.Scale);
 
         return (int)(displayImageResolution * 100);
-    }
-
-    private void CommentRepliesHyperlinkButtonTapped(IllustrationViewerPage recipient, CommentRepliesHyperlinkButtonTappedMessage message)
-    {
-        var commentRepliesBlock = new CommentRepliesBlock
-        {
-            ViewModel = new CommentRepliesBlockViewModel(UIHelper.GetDataContext<CommentBlockViewModel>(message.Sender!))
-        };
-        commentRepliesBlock.CloseButtonTapped += recipient.CommentRepliesBlock_OnCloseButtonTapped;
-        recipient._commentRepliesPopup = PopupManager.CreatePopup(commentRepliesBlock, widthMargin: 200, maxWidth: 1500, minWidth: 400, maxHeight: 1200, closing: (_, _) => recipient._commentRepliesPopup = null);
-        PopupManager.ShowPopup(recipient._commentRepliesPopup);
-    }
-
-    private void CommentRepliesBlock_OnCloseButtonTapped(object? sender, TappedRoutedEventArgs e)
-    {
-        if (_commentRepliesPopup is not null)
-        {
-            PopupManager.ClosePopup(_commentRepliesPopup);
-        }
     }
 
     private async void OnDataTransferManagerOnDataRequested(DataTransferManager _, DataRequestedEventArgs args)

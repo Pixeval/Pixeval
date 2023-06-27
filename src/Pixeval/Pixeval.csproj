@@ -159,6 +159,7 @@
 
     <!--PRIResource-->
     <ItemGroup>
+        <PRIResource Include="Strings\zh-CN\CommentsPage.resw" />
         <PRIResource Include="Strings\zh-CN\FollowingPage.resw" />
         <PRIResource Include="Strings\zh-CN\FollowingUserBadge.resw" />
         <PRIResource Include="Strings\zh-CN\IllustratorContentViewer.resw" />

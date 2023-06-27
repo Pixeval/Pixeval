@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -35,6 +35,9 @@ using Pixeval.Messages;
 using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.IO;
+using Pixeval.Popups;
+using Pixeval.Util.UI;
+using WinUIEx.Messaging;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -67,7 +70,8 @@ public sealed partial class CommentsPage
 
     private void CommentList_OnRepliesHyperlinkButtonTapped(object? sender, TappedRoutedEventArgs e)
     {
-        WeakReferenceMessenger.Default.Send(new CommentRepliesHyperlinkButtonTappedMessage(sender));
+        CommentRepliesBlock.ViewModel = new CommentRepliesBlockViewModel(sender!.GetDataContext<CommentBlockViewModel>());
+        CommentRepliesTeachingTip.IsOpen = true;
     }
 
     private async void ReplyBar_OnSendButtonTapped(object? sender, SendButtonTappedEventArgs e)
