@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -50,7 +49,7 @@ using Microsoft.UI.Windowing;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragRegionTest
+public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragRegion
 {
     // Tags for IllustrationInfoAndCommentsNavigationView
 

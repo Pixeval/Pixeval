@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -18,21 +18,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Threading.Tasks;
-using Windows.Graphics;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using WinUI3Utilities;
 
 namespace Pixeval;
 
 public interface ISupportCustomTitleBarDragRegion
 {
     /// <summary>
-    /// Informs the bearer to refresh the drag region, notice that both <param name="titleBar"></param> and <param name="dragRegions"></param>
-    /// are nullable, the are optional to be used in the implementation of this function. BUT THIS IS A IMPLEMENTATION DETAIL.
+    /// Informs the bearer to refresh the drag region.
     /// </summary>
-    /// <param name="titleBar"></param>
-    /// <param name="dragRegions"></param>
     /// <returns></returns>
-    Task<RectInt32[]> SetTitleBarDragRegionAsync(FrameworkElement? titleBar, ColumnDefinition[]? dragRegions);
+    void SetTitleBarDragRegion();
 }
