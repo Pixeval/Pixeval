@@ -41,11 +41,9 @@ using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
-using Pixeval.Util.UI.Windowing;
 using Pixeval.Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
-using Microsoft.UI.Windowing;
 using WinUI3Utilities;
+using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.IllustrationViewer;
 

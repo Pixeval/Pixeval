@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Diagnostics;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -43,6 +44,19 @@ public sealed class CustomizableWindow : Window
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
+        };
+        _frame.Navigated += (_, _) =>
+        {
+            string info = null;
+            //设置为true，这样才能捕获到文件路径名和当前行数，当前行数为GetFrames代码的函数，也可以设置其他参数
+            var st = new StackTrace(true);
+            //得到当前的所以堆栈
+            var sf = st.GetFrames();
+            foreach (var t in sf)
+            {
+                info = info + "\r\n" + " FileName=" + t.GetFileName() + " fullname=" + t.GetMethod().DeclaringType.FullName + " function=" + t.GetMethod().Name + " FileLineNumber=" + t.GetFileLineNumber();
+            }
+            ;
         };
         Closed += OnClosed;
         _owner.Closed += OnOwnerOnClosed;

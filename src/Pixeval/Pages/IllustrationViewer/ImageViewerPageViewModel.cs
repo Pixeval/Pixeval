@@ -229,7 +229,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
                 case Result<IRandomAccessStream>.Success(var s):
                     OriginalImageStream = s;
                     break;
-                case Result<IRandomAccessStream>.Failure(OperationCanceledException):
+                default:
                     return;
             }
 

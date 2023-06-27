@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -45,7 +46,6 @@ using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util.Threading;
-using WinUI3Utilities;
 using Microsoft.UI.Windowing;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -112,7 +112,8 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
         ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
 
-        _viewModel.Snapshot = _viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView; // performance critical?
+        // IMPORTANT
+        _viewModel.Snapshot = new(_viewModel.ContainerGridViewModel!.DataProvider.IllustrationsSource);
 
         _collapseThumbnailList.RunAsync().Discard();
     }
@@ -378,7 +379,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void ThumbnailList_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
     {
-        var context = UIHelper.GetDataContext<IllustrationViewModel>(sender);
+        var context = sender.GetDataContext<IllustrationViewModel>();
         if (args.BringIntoViewDistanceX <= sender.ActualWidth)
         {
             _ = context.LoadThumbnailIfRequired();
@@ -392,34 +393,34 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void ThumbnailList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (sender is ListView lv)
-        {
-            const string borderControlName = "ThumbnailBorder";
-            var item = lv.ContainerFromItem(lv.SelectedItem);
-            if (item.FindDescendant(borderControlName) is Border border)
-            {
-                border.BorderThickness = new Thickness(2);
-            }
+        if (sender is not ListView listView)
+            return;
 
-            if (e.RemovedItems is [IllustrationViewModel removedItem]
-                && lv.ContainerFromItem(removedItem) is { } container
-                && container.FindDescendant(borderControlName) is Border b)
-            {
-                b.BorderThickness = new Thickness(0);
-            }
+        const string borderControlName = "ThumbnailBorder";
+
+        var item = listView.ContainerFromItem(listView.SelectedItem);
+        if (item.FindDescendant(borderControlName) is Border border)
+        {
+            border.BorderThickness = new Thickness(2);
         }
 
-        if (e.AddedItems is [IllustrationViewModel viewModel] && viewModel != _viewModel.Current.IllustrationViewModel)
+        if (e.RemovedItems is [IllustrationViewModel removedItem]
+            && listView.ContainerFromItem(removedItem) is { } container
+            && container.FindDescendant(borderControlName) is Border removedBorder)
+        {
+            removedBorder.BorderThickness = new Thickness(0);
+        }
+
+        if (listView.SelectedItem is IllustrationViewModel viewModel && viewModel.Id != _viewModel.Current.IllustrationViewModel.Id)
         {
             var viewModels = viewModel.GetMangaIllustrationViewModels().ToArray();
-
             NavigateSelf(new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModels), new EntranceNavigationTransitionInfo());
         }
     }
 
     private void ThumbnailBorder_OnLoaded(object sender, RoutedEventArgs e)
     {
-        var context = UIHelper.GetDataContext<IllustrationViewModel>(sender);
+        var context = sender.GetDataContext<IllustrationViewModel>();
         if (context.Illustration.Id.ToString() == _viewModel.Current.IllustrationViewModel.Id && _viewModel.Snapshot is [..])
         {
             ThumbnailList.ScrollIntoView(context);
@@ -427,6 +428,24 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
             {
                 ThumbnailList.SelectedIndex = index;
             }
+        }
+    }
+
+    private void SelectItemInListView(ListView listView, IllustrationViewModel newItem, IllustrationViewModel oldItem)
+    {
+
+        const string borderControlName = "ThumbnailBorder";
+        listView.UpdateLayout();
+        var item = listView.ContainerFromItem(listView.SelectedItem);
+        if (item.FindDescendant(borderControlName) is Border border)
+        {
+            border.BorderThickness = new Thickness(2);
+        }
+
+        if (listView.ContainerFromItem(oldItem) is { } container
+            && container.FindDescendant(borderControlName) is Border b)
+        {
+            b.BorderThickness = new Thickness(0);
         }
     }
 
