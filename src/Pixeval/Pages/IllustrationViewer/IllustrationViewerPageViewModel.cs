@@ -43,8 +43,10 @@ using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
+using Pixeval.Util.UI.Windowing;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
+using Microsoft.UI.Windowing;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -76,34 +78,44 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     [ObservableProperty]
     private UserInfo? _userInfo;
 
+    private bool _isFullScreen;
+
+    public bool IsFullScreen
+    {
+        get => _isFullScreen;
+        set
+        {
+            if (value == _isFullScreen)
+                return;
+            _isFullScreen = value;
+            Window.AppWindow.SetPresenter(value ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
+            OnPropertyChanged();
+        }
+    }
+
     [ObservableProperty]
-#pragma warning disable CS0169
     private AdvancedCollectionView? _snapshot;
-#pragma warning restore CS0169
 
     private readonly IllustrationViewModel[] _illustrations;
 
+    public CustomizableWindow Window { get; }
+
     public bool IsDisposed { get; set; }
 
-    private EventHandler<double>? _zoomChanged;
-
-    public event EventHandler<double> ZoomChanged
-    {
-        add => _zoomChanged += value;
-        remove => _zoomChanged -= value;
-    }
+    public event EventHandler<double>? ZoomChanged;
 
     // illustrations should contains only one item if the illustration is a single
     // otherwise it contains the entire manga data
-    public IllustrationViewerPageViewModel(RiverFlowIllustrationView illustrationView, params IllustrationViewModel[] illustrations) : this(illustrations)
+    public IllustrationViewerPageViewModel(CustomizableWindow window, RiverFlowIllustrationView illustrationView, params IllustrationViewModel[] illustrations) : this(window, illustrations)
     {
         IllustrationView = illustrationView;
         ContainerGridViewModel = illustrationView.ViewModel;
         IllustrationViewModelInTheGridView = ContainerGridViewModel.DataProvider.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
     }
 
-    public IllustrationViewerPageViewModel(params IllustrationViewModel[] illustrations)
+    public IllustrationViewerPageViewModel(CustomizableWindow window, params IllustrationViewModel[] illustrations)
     {
+        Window = window;
         _illustrations = illustrations;
         ImageViewerPageViewModels = illustrations.Select(i => new ImageViewerPageViewModel(this, i)).ToArray();
         ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModels[CurrentIndex]);
@@ -117,7 +129,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     /// <returns></returns>
     public IllustrationViewerPageViewModel CreateNew()
     {
-        return IllustrationView is not null ? new IllustrationViewerPageViewModel(IllustrationView, _illustrations) : new IllustrationViewerPageViewModel(_illustrations);
+        return IllustrationView is not null ? new IllustrationViewerPageViewModel(Window, IllustrationView, _illustrations) : new IllustrationViewerPageViewModel(Window, _illustrations);
     }
 
     /// <summary>
@@ -193,8 +205,6 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
             .GetCommand(
                 MakoHelper.GetBookmarkButtonIconSource(FirstIllustrationViewModel.IsBookmarked),
                 VirtualKeyModifiers.Control, VirtualKey.D);
-
-        FullScreenCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
 
         RestoreResolutionCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
 
@@ -406,7 +416,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     // what a trash code...
     private void CurrentOnZoomChanged(object? sender, double e)
     {
-        _zoomChanged?.Invoke(this, e);
+        ZoomChanged?.Invoke(this, e);
     }
 
 

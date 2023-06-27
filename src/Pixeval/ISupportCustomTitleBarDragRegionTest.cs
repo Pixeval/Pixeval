@@ -28,5 +28,5 @@ public interface ISupportCustomTitleBarDragRegionTest
     /// Informs the bearer to refresh the drag region.
     /// </summary>
     /// <returns></returns>
-    DragZoneHelper.DragZoneInfo SetTitleBarDragRegion();
+    DragZoneHelper.DragZoneInfo GetTitleBarDragRegion();
 }

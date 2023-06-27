@@ -27,6 +27,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -58,12 +59,9 @@ public sealed partial class ImageViewerPage
         });
     }
 
-    public override void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e, object viewModel)
     {
-        if (e.Parameter is ImageViewerPageViewModel viewModel)
-        {
-            _viewModel = viewModel;
-        }
+        _viewModel = viewModel.To<ImageViewerPageViewModel>();
     }
 
     private void IllustrationOriginalImage_OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)

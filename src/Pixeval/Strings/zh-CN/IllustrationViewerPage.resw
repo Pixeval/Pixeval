@@ -159,6 +159,9 @@
   <data name="IllustrationInfoAndComments" xml:space="preserve">
     <value>详情</value>
   </data>
+  <data name="IllustrationInfoTab.Content" xml:space="preserve">
+    <value>详情</value>
+  </data>
   <data name="LockScreen" xml:space="preserve">
     <value>锁屏</value>
   </data>
