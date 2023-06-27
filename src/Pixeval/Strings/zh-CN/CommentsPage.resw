@@ -117,13 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="EmojiButtonFlyoutEmojiSectionNavigationViewItem.Content" xml:space="preserve">
-    <value>绘文字</value>
-  </data>
-  <data name="EmojiButtonFlyoutStickersSectionNavigationViewItem.Content" xml:space="preserve">
-    <value>表情贴图</value>
-  </data>
-  <data name="RepliesAreEmptyTextBlock.Text" xml:space="preserve">
-    <value>本评论暂时没有任何回复</value>
+  <data name="CommentRepliesTeachingTip.Title" xml:space="preserve">
+    <value>评论详情</value>
   </data>
 </root>

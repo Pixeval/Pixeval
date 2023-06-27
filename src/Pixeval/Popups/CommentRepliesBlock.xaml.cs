@@ -40,25 +40,11 @@ using Pixeval.Util.UI;
 namespace Pixeval.Popups;
 
 [DependencyProperty<CommentRepliesBlockViewModel>("ViewModel", nameof(OnViewModelChanged))]
-public sealed partial class CommentRepliesBlock : IAppPopupContent
+public sealed partial class CommentRepliesBlock
 {
-    private EventHandler<TappedRoutedEventArgs>? _closeButtonTapped;
-
     public CommentRepliesBlock()
     {
-        UniqueId = Guid.NewGuid();
         InitializeComponent();
-    }
-
-
-    public Guid UniqueId { get; }
-
-    public FrameworkElement UIContent => this;
-
-    public event EventHandler<TappedRoutedEventArgs> CloseButtonTapped
-    {
-        add => _closeButtonTapped += value;
-        remove => _closeButtonTapped -= value;
     }
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -71,17 +57,6 @@ public sealed partial class CommentRepliesBlock : IAppPopupContent
         {
             block.CommentList.ItemsSource = rs;
         }
-    }
-
-    private void CommentRepliesBlock_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        // Focus the popup content so that the hot key for closing can work properly
-        CloseButton.Focus(FocusState.Programmatic);
-    }
-
-    private void CloseButton_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        _closeButtonTapped?.Invoke(sender, e);
     }
 
     private void CommentList_OnRepliesHyperlinkButtonTapped(object? sender, TappedRoutedEventArgs e)

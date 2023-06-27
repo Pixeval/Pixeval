@@ -18,11 +18,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Diagnostics;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Messages;
 using WinUI3Utilities;
 
 namespace Pixeval.Util.UI.Windowing;
@@ -37,25 +37,35 @@ public sealed class CustomizableWindow : Window
     /// IT IS FORBIDDEN TO USE THIS CONSTRUCTOR DIRECTLY, USE <see cref="WindowFactory.Fork"/> INSTEAD
     /// </summary>
     /// <param name="owner"></param>
-    /// <param name="onLoaded"></param>
-    internal CustomizableWindow(Window owner, RoutedEventHandler? onLoaded)
+    internal CustomizableWindow(Window owner)
     {
         _owner = owner;
-        Content = _frame = new Frame()
+        Content = _frame = new()
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
         };
-        _frame.Loaded += (_, _) => SetDragRegion();
-        _frame.SizeChanged += (_, _) => SetDragRegion();
-        Activated += OnActivated;
+        _frame.Navigated += (_, _) =>
+        {
+            string info = null;
+            //设置为true，这样才能捕获到文件路径名和当前行数，当前行数为GetFrames代码的函数，也可以设置其他参数
+            var st = new StackTrace(true);
+            //得到当前的所以堆栈
+            var sf = st.GetFrames();
+            foreach (var t in sf)
+            {
+                info = info + "\r\n" + " FileName=" + t.GetFileName() + " fullname=" + t.GetMethod().DeclaringType.FullName + " function=" + t.GetMethod().Name + " FileLineNumber=" + t.GetFileLineNumber();
+            }
+            ;
+        };
         Closed += OnClosed;
         _owner.Closed += OnOwnerOnClosed;
+    }
 
-        if (onLoaded is not null)
-        {
-            _frame.Loaded += onLoaded;
-        }
+    public event RoutedEventHandler FrameLoaded
+    {
+        add => _frame.Loaded += value;
+        remove => _frame.Loaded -= value;
     }
 
     private void OnClosed(object sender, WindowEventArgs args)
@@ -69,18 +79,9 @@ public sealed class CustomizableWindow : Window
         Close();
     }
 
-    private void OnActivated(object sender, WindowActivatedEventArgs e)
+    public void SetDragRegion(DragZoneHelper.DragZoneInfo info)
     {
-        WeakReferenceMessenger.Default.TryRegister<CustomizableWindow, RefreshDragRegionMessage>(this, (_, _) => SetDragRegion());
-    }
-
-    private void SetDragRegion()
-    {
-        if (_frame.Content is ISupportCustomTitleBarDragRegionTest supportCustomTitleBarDragRegion)
-        {
-            var info = supportCustomTitleBarDragRegion.SetTitleBarDragRegion();
-            DragZoneHelper.SetDragZones(info, this);
-        }
+        DragZoneHelper.SetDragZones(info, this);
     }
 
     public void Navigate<T>(object parameter, NavigationTransitionInfo infoOverride) where T : Page

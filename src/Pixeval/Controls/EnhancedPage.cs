@@ -20,26 +20,14 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public class EnhancedPage : Page
+public class EnhancedPage : Page, IEnhancedPage
 {
-    protected Frame ParentFrame => Parent.To<Frame>();
-
     public int ActivationCount { get; private set; }
 
-    public EnhancedPage()
-    {
-        Loaded += (_, _) =>
-        {
-            if (!Initialized)
-            {
-                Initialized = true;
-            }
-        };
-    }
+    public EnhancedPage() => Loaded += (_, _) => Initialized = true;
 
     public bool ClearCacheAfterNavigation { get; set; }
 
@@ -48,7 +36,7 @@ public class EnhancedPage : Page
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);
-        ActivationCount++;
+        ++ActivationCount;
         OnPageActivated(e);
     }
 

@@ -23,7 +23,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System;
 using Windows.System.UserProfile;
@@ -38,7 +37,6 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi.Model;
 using Pixeval.Download;
-using Pixeval.Popups;
 using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util;
 using Pixeval.Util.IO;
@@ -46,8 +44,6 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
-using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
-using IllustrationViewViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewViewModel;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -79,22 +75,38 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     [ObservableProperty]
     private UserInfo? _userInfo;
 
+    private bool _isFullScreen;
+
+    public bool IsFullScreen
+    {
+        get => _isFullScreen;
+        set
+        {
+            if (value == _isFullScreen)
+                return;
+            _isFullScreen = value;
+            if (value)
+            {
+                FullScreenCommand.Description = IllustrationViewerPageResources.BackToWindow;
+                FullScreenCommand.IconSource = new SymbolIconSource { Symbol = Symbol.BackToWindow };
+            }
+            else
+            {
+                FullScreenCommand.Description = IllustrationViewerPageResources.FullScreen;
+                FullScreenCommand.IconSource = new SymbolIconSource { Symbol = Symbol.FullScreen };
+            }
+            OnPropertyChanged();
+        }
+    }
+
     [ObservableProperty]
-#pragma warning disable CS0169
     private AdvancedCollectionView? _snapshot;
-#pragma warning restore CS0169
 
     private readonly IllustrationViewModel[] _illustrations;
 
     public bool IsDisposed { get; set; }
 
-    private EventHandler<double>? _zoomChanged;
-
-    public event EventHandler<double> ZoomChanged
-    {
-        add => _zoomChanged += value;
-        remove => _zoomChanged -= value;
-    }
+    public event EventHandler<double>? ZoomChanged;
 
     // illustrations should contains only one item if the illustration is a single
     // otherwise it contains the entire manga data
@@ -197,8 +209,6 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
                 MakoHelper.GetBookmarkButtonIconSource(FirstIllustrationViewModel.IsBookmarked),
                 VirtualKeyModifiers.Control, VirtualKey.D);
 
-        FullScreenCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-
         RestoreResolutionCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
 
         BookmarkCommand.ExecuteRequested += BookmarkCommandOnExecuteRequested;
@@ -238,7 +248,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         if (Current.OriginalImageStream is null)
         {
-            SnackBarController.ShowSnack(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, SnackBarController.SnackBarDurationLong);
+            ShowAndHide(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, Severity.Error);
             return;
         }
 
@@ -264,7 +274,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         if (Current.OriginalImageStream is null)
         {
-            SnackBarController.ShowSnack(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, SnackBarController.SnackBarDurationLong);
+            ShowAndHide(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, Severity.Error);
             return;
         }
 
@@ -296,12 +306,12 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         args.CanExecute = !IsUgoira && Current.LoadingCompletedSuccessfully;
     }
 
-    private async void ShareCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    private void ShareCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         if (Current.LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true })
         {
-            await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, IllustrationViewerPageResources.CannotShareImageForNowTitle, IllustrationViewerPageResources.CannotShareImageForNowContent)
-                .ShowAsync();
+            ShowAndHide(IllustrationViewerPageResources.CannotShareImageForNowTitle, Severity.Warning,
+                IllustrationViewerPageResources.CannotShareImageForNowContent);
             return;
         }
 
@@ -317,7 +327,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         var link = MakoHelper.GenerateIllustrationWebUri(Current.IllustrationViewModel.Id).ToString();
         UIHelper.SetClipboardContent(package => package.SetText(link));
-        SnackBarController.ShowSnack(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle, SnackBarController.SnackBarDurationLong);
+        ShowAndHide(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle);
     }
 
     private async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -345,7 +355,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     private void PlayGifCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        var bitmap = (BitmapImage)Current.OriginalImageSource!;
+        var bitmap = Current.OriginalImageSource.To<BitmapImage>();
         if (bitmap.IsPlaying)
         {
             bitmap.Stop();
@@ -379,10 +389,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
             package.SetBitmap(streamRef);
         });
 
-        string GetCopyContentFileName()
-        {
-            return $"{IllustrationId}{(IsUgoira ? string.Empty : IsManga ? $"_p{CurrentIndex}" : string.Empty)}";
-        }
+        string GetCopyContentFileName() => $"{IllustrationId}{(IsUgoira ? "" : IsManga ? $"_p{CurrentIndex}" : "")}";
     }
 
     public ImageViewerPageViewModel Next()
@@ -412,7 +419,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     // what a trash code...
     private void CurrentOnZoomChanged(object? sender, double e)
     {
-        _zoomChanged?.Invoke(this, e);
+        ZoomChanged?.Invoke(this, e);
     }
 
 
@@ -544,6 +551,95 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         return IllustrationIndex > 0
             ? CalculatePrevImageButtonVisibility(index).Inverse()
             : Visibility.Collapsed;
+    }
+
+    #endregion
+
+    #region SnackBar
+
+    [ObservableProperty] private string _snackBarTitle = "";
+
+    [ObservableProperty] private string _snackBarSubtitle = "";
+
+    [ObservableProperty] private FontIconSource _snackBarIconSource = null!;
+
+    [ObservableProperty] private bool _isSnackBarOpen;
+
+    /// <remarks>
+    /// Value type members require property to enable thread sharing
+    /// </remarks>
+    private static DateTime HideSnakeBarTime { get; set; }
+
+    /// <summary>
+    /// Show SnackBar
+    /// </summary>
+    /// <param name="message"><see cref="TeachingTip.Title"/></param>
+    /// <param name="severity"><see cref="TeachingTip.IconSource"/></param>
+    /// <param name="hint"><see cref="TeachingTip.Subtitle"/></param>
+    public void Show(string message, Severity severity = Severity.Ok, string hint = "")
+    {
+        SnackBarTitle = message;
+        SnackBarSubtitle = hint;
+        SnackBarIconSource = new()
+        {
+            Glyph = severity switch
+            {
+                Severity.Ok => "\xE10B", // Accept
+                Severity.Information => "\xE946", // Info
+                Severity.Important => "\xE171", // Important
+                Severity.Warning => "\xE7BA", // Warning
+                Severity.Error => "\xEA39", // ErrorBadge
+                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<Severity, string>(severity)
+            }
+        };
+
+        IsSnackBarOpen = true;
+    }
+
+    /// <summary>
+    /// Show SnackBar and hide after <paramref name="mSec"/> microseconds
+    /// </summary>
+    /// <param name="message"><see cref="TeachingTip.Title"/></param>
+    /// <param name="severity"><see cref="TeachingTip.IconSource"/></param>
+    /// <param name="hint"><see cref="TeachingTip.Subtitle"/></param>
+    /// <param name="mSec">Automatically hide after <paramref name="mSec"/> milliseconds</param>
+    public async void ShowAndHide(string message, Severity severity = Severity.Ok, string hint = "", int mSec = 3000)
+    {
+        HideSnakeBarTime = DateTime.Now + TimeSpan.FromMilliseconds(mSec - 100);
+
+        Show(message, severity, hint);
+
+        await Task.Delay(mSec);
+
+        if (DateTime.Now > HideSnakeBarTime)
+            IsSnackBarOpen = false;
+    }
+
+    /// <summary>
+    /// Snack bar severity on <see cref="TeachingTip.IconSource"/> (Segoe Fluent Icons font)
+    /// </summary>
+    public enum Severity
+    {
+        /// <summary>
+        /// Accept (E10B)
+        /// </summary>
+        Ok,
+        /// <summary>
+        /// Info (E946)
+        /// </summary>
+        Information,
+        /// <summary>
+        /// Important (E171)
+        /// </summary>
+        Important,
+        /// <summary>
+        /// Warning (E7BA)
+        /// </summary>
+        Warning,
+        /// <summary>
+        /// ErrorBadge (EA39)
+        /// </summary>
+        Error
     }
 
     #endregion

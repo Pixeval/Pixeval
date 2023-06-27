@@ -44,23 +44,17 @@ using Pixeval.Messages;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Download;
 using Pixeval.Pages.Misc;
+using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
-using Windows.Graphics;
-using Windows.Storage;
-using Windows.System;
-using Windows.UI.Core;
-using WinUI3Utilities;
-using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 using Image = SixLabors.ImageSharp.Image;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages;
 
-public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
+public sealed partial class MainPage
 {
     private static UIElement? _connectedAnimationTarget;
 
@@ -296,27 +290,7 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
         content.Owner = dialog;
         await dialog.ShowAsync();
     }
-
-
-    public Task<RectInt32[]> SetTitleBarDragRegionAsync(FrameworkElement? titleBar, ColumnDefinition[]? dragRegions)
-    {
-        var (leftDragRegion, leftMarginRegion, searchBarRegion, marginRegion, reverseSearchButtonRegion, searchSettingButtonRegion, rightDragRegion) = (dragRegions[0], dragRegions[1], dragRegions[2], dragRegions[3], dragRegions[4], dragRegions[5], dragRegions[6]);
-        const int leftButtonWidth = 50;
-        var scaleAdjustment = UIHelper.GetScaleAdjustment();
-        RectInt32 dragRectL;
-        dragRectL.X = (int)(leftButtonWidth * scaleAdjustment);
-        dragRectL.Y = 0;
-        dragRectL.Width = (int)((leftDragRegion.ActualWidth + leftMarginRegion.ActualWidth - leftButtonWidth) * scaleAdjustment);
-        dragRectL.Height = (int)((titleBar?.ActualHeight ?? 45) * scaleAdjustment);
-        RectInt32 dragRectR;
-        dragRectR.X = (int)(leftButtonWidth + (leftDragRegion.ActualWidth + leftMarginRegion.ActualWidth + searchBarRegion.ActualWidth + marginRegion.ActualWidth + reverseSearchButtonRegion.ActualWidth + searchSettingButtonRegion.ActualWidth) * scaleAdjustment);
-        dragRectR.Y = 0;
-        dragRectR.Width = (int)(rightDragRegion.ActualWidth * scaleAdjustment);
-        dragRectR.Height = (int)((titleBar?.ActualHeight ?? 45) * scaleAdjustment);
-
-        return Task.FromResult(new[] { dragRectL, dragRectR });
-    }
-
+  
     private void KeywordAutoSuggestBox_OnDragOver(object sender, DragEventArgs e)
     {
         e.AcceptedOperation = DataPackageOperation.Copy;
