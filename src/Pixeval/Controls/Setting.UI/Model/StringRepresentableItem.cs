@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/SettingsGroup.cs
+// Copyright (c) 2022 Pixeval/IStringRepresentableItem.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,21 +18,24 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Microsoft.UI.Xaml.Controls;
-using WinUI3Utilities.Attributes;
+using System;
+using System.Collections.Generic;
+using Pixeval.Attributes;
 
+namespace Pixeval.Controls.Setting.UI.Model;
 
-namespace Pixeval.Controls.Setting.UI.SettingsGroup;
-
-/// <summary>
-/// The <see cref="SettingsGroup"/> manages a set of setting entries, with a <see cref="Header"/> property to specify the
-/// usage of the content of this group
-/// </summary>
-[DependencyProperty<string>("Header")]
-public partial class SettingsGroup : ItemsControl
+public record StringRepresentableItem(Enum Item, string StringRepresentation)
 {
-    public SettingsGroup()
+    public StringRepresentableItem(Enum item) : this(item, item.GetLocalizedResourceContent()!)
     {
-        DefaultStyleKey = typeof(SettingsGroup);
     }
+
+    public override string ToString() => StringRepresentation;
+}
+
+public interface IAvailableItems
+{
+    // ReSharper disable once UnusedMember.Global
+    // ReSharper disable once UnassignedGetOnlyAutoProperty
+    static IEnumerable<StringRepresentableItem>? AvailableItems { get; }
 }

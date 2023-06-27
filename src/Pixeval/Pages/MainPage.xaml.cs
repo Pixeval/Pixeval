@@ -28,10 +28,10 @@ using Windows.Foundation;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
+using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI.UI;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.Extensions.DependencyInjection;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -295,7 +295,7 @@ public sealed partial class MainPage
         content.Owner = dialog;
         await dialog.ShowAsync();
     }
-
+  
     private void KeywordAutoSuggestBox_OnDragOver(object sender, DragEventArgs e)
     {
         e.AcceptedOperation = DataPackageOperation.Copy;

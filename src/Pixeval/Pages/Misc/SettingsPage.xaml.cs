@@ -20,20 +20,19 @@
 
 using System;
 using System.Threading.Tasks;
-using Windows.System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls.Setting.UI;
-using Pixeval.Controls.Setting.UI.SingleSelectionSettingEntry;
 using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
 using Pixeval.UserControls.TokenInput;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using Windows.System;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
@@ -69,7 +68,7 @@ public sealed partial class SettingsPage
         CheckForUpdatesEntry.Header = GitVersionInformation.SemVer;
     }
 
-    private void SingleSelectionSettingEntry_OnSelectionChanged(SingleSelectionSettingEntry sender, SelectionChangedEventArgs args)
+    private void SingleSelectionSettingEntry_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         App.AppViewModel.SwitchTheme(_viewModel.Theme);
     }
@@ -96,11 +95,9 @@ public sealed partial class SettingsPage
     private async void CheckForUpdateButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         _viewModel.LastCheckedUpdate = DateTimeOffset.Now;
-        CheckForUpdateButton.Collapse();
         CheckingForUpdatePanel.Show();
         // TODO add update check
         await Task.Delay(2000);
-        CheckForUpdateButton.Show();
         CheckingForUpdatePanel.Collapse();
     }
 

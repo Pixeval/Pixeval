@@ -8,6 +8,16 @@
         "resolved": "8.2.0",
         "contentHash": "kF2qZTYvuS+uTAWmZm4UB1rdd2/F4JidWbIiySzdCwf5UfueUBuSMWFSnTptafWRkG0F9auAp/eL5wUAvH51mg=="
       },
+      "CommunityToolkit.Labs.WinUI.SettingsControls": {
+        "type": "Direct",
+        "requested": "[0.0.18, )",
+        "resolved": "0.0.18",
+        "contentHash": "VKGUWwNpkDAz4dX+Telk7fT834hqBCGZ9/JVsECvbS+3Iwva3LZJMEsqsZfVyU5b9o2w7y+8qkvPPN0ZYcyUpQ==",
+        "dependencies": {
+          "CommunityToolkit.WinUI.UI": "7.1.2",
+          "Microsoft.WindowsAppSDK": "1.2.230118.102"
+        }
+      },
       "CommunityToolkit.Mvvm": {
         "type": "Direct",
         "requested": "[8.2.0, )",

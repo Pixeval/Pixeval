@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -21,23 +21,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Pixeval.Attributes;
-
 using Pixeval.Options;
 
 namespace Pixeval.Controls.Setting.UI.Model;
 
-public record ApplicationThemeSettingEntryItem : IStringRepresentableItem
+public record ApplicationThemeSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public ApplicationThemeSettingEntryItem(ApplicationTheme item)
+    public ApplicationThemeSettingEntryItem(ApplicationTheme item) : base(item)
     {
-        Item = item;
-        StringRepresentation = item.GetLocalizedResourceContent()!;
     }
 
-    public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ApplicationTheme>().Select(a => new ApplicationThemeSettingEntryItem(a));
-
-    public object Item { get; }
-
-    public string StringRepresentation { get; }
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ApplicationTheme>().Select(a => new ApplicationThemeSettingEntryItem(a));
 }
