@@ -24,8 +24,12 @@
         <LangVersion>preview</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
+    <ItemGroup>
+      <None Remove="Controls\Setting.UI\SettingRadioButtons.xaml" />
+    </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="CommunityToolkit.Labs.WinUI.SettingsControls" Version="0.0.18" />
         <PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.1.2" />
         <PackageReference Include="CommunityToolkit.WinUI.UI.Behaviors" Version="7.1.2" />
         <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
@@ -159,6 +163,7 @@
 
     <!--PRIResource-->
     <ItemGroup>
+        <PRIResource Include="Strings\zh-CN\CommentsPage.resw" />
         <PRIResource Include="Strings\zh-CN\FollowingPage.resw" />
         <PRIResource Include="Strings\zh-CN\FollowingUserBadge.resw" />
         <PRIResource Include="Strings\zh-CN\IllustratorContentViewer.resw" />
@@ -313,31 +318,7 @@
         <Page Update="Popups\IllustrationResultFilter\IllustrationResultFilterPopupContent.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Controls\Setting.UI\ActionableExpanderSettingEntry\ActionableExpanderSettingEntry.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\Setting.UI\ExpanderSettingEntry\ExpanderSettingEntry.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\Setting.UI\ActionableSettingEntry\ActionableSettingEntry.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\Setting.UI\SettingsGroup\SettingsGroup.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\Setting.UI\SliderSettingEntry\SliderSettingEntry.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\Setting.UI\SwitchSettingEntry\SwitchSettingEntry.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
         <Page Update="Controls\Expander\Expander.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\Setting.UI\SingleSelectionSettingEntry\SingleSelectionSettingEntry.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\Setting.UI\UserControls\SettingEntryHeader.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Controls\Card\CardControl.xaml">
@@ -404,6 +385,9 @@
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Folder Include="UserControls\RecommendIllustratorProfile\" />
+        <Page Update="Controls\Setting.UI\SettingRadioButtons.xaml">
+          <Generator>MSBuild:Compile</Generator>
+        </Page>
         <Page Update="UserControls\IllustratorContentViewer\IllustratorIllustrationAndMangaBookmarkPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>

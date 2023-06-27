@@ -26,7 +26,6 @@ using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
 using Microsoft.UI.Input;
-using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
@@ -36,10 +35,11 @@ using AppContext = Pixeval.AppManagement.AppContext;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Image = SixLabors.ImageSharp.Image;
-using WindowSizeChangedEventArgs = Microsoft.UI.Xaml.WindowSizeChangedEventArgs;
 using Pixeval.Dialogs;
 using Pixeval.Util.UI;
 using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.Graphics;
 using CommunityToolkit.Mvvm.Messaging;
 using Pixeval.Pages;
 using Pixeval.Utilities;
@@ -47,13 +47,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Database.Managers;
 using Pixeval.Database;
 using Pixeval.Messages;
-using Pixeval.Util.Threading;
 using WinUI3Utilities;
-using Pixeval.Util;
 
 namespace Pixeval;
 
-public sealed partial class MainWindow : INavigationModeInfo
+public sealed partial class MainWindow : INavigationModeInfo, ISupportCustomTitleBarDragRegion
 {
     private readonly MainWindowViewModel _viewModel = new();
 
@@ -61,14 +59,14 @@ public sealed partial class MainWindow : INavigationModeInfo
     {
         CurrentContext.Window = this;
         InitializeComponent();
-        CurrentContext.TitleBar = AppTitleBar;
+        CurrentContext.TitleBar = TitleBarGrid;
         CurrentContext.TitleTextBlock = AppTitleTextBlock;
     }
 
     public NavigationTransitionInfo? DefaultNavigationTransitionInfo { get; internal set; } = new SuppressNavigationTransitionInfo();
 
     /// <summary>
-    /// The parameter of OnNavigatedTo is always <see cref="Microsoft.UI.Xaml.Navigation.NavigationMode.New"/>
+    /// The parameter of OnNavigatedTo is always <see cref="NavigationMode.New"/>
     /// </summary>
     public static NavigationMode? NavigationMode { get; private set; }
 
@@ -81,13 +79,6 @@ public sealed partial class MainWindow : INavigationModeInfo
 
     private void PixevalAppRootFrame_OnLoaded(object sender, RoutedEventArgs e)
     {
-        WeakReferenceMessenger.Default.TryRegister<MainWindow, RefreshDragRegionMessage>(this, static (recipient, _) =>
-        {
-            if (AppWindowTitleBar.IsCustomizationSupported() && recipient.PixevalAppRootFrame.Content is ISupportCustomTitleBarDragRegion iSupportCustomTitleBarDragRegion)
-            {
-                recipient.SetDragRegionAsync(iSupportCustomTitleBarDragRegion).Discard();
-            }
-        });
         PixevalAppRootFrame.Navigate(typeof(LoginPage));
     }
 
@@ -118,77 +109,27 @@ public sealed partial class MainWindow : INavigationModeInfo
         Processing.Visibility = Visibility.Collapsed;
     }
 
-    private void MainWindow_OnSizeChanged(object sender, WindowSizeChangedEventArgs args)
+    private void AppTitleBarOnSizeChanged(object sender, object e)
     {
-        if (PixevalAppRootFrame.Content is ISupportCustomTitleBarDragRegion iSupportCustomTitleBarDragRegion)
-        {
-            SetDragRegionAsync(iSupportCustomTitleBarDragRegion).Discard();
-        }
-    }
-
-    private void AppTitleBar_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        if (AppWindowTitleBar.IsCustomizationSupported() && PixevalAppRootFrame.Content is ISupportCustomTitleBarDragRegion iSupportCustomTitleBarDragRegion)
-        {
-            SetDragRegionAsync(iSupportCustomTitleBarDragRegion).Discard();
-        }
-    }
-
-    private void AppTitleBar_OnSizeChanged(object sender, SizeChangedEventArgs e)
-    {
-        if (AppWindowTitleBar.IsCustomizationSupported() && PixevalAppRootFrame.Content is ISupportCustomTitleBarDragRegion iSupportCustomTitleBarDragRegion)
-        {
-            SetDragRegionAsync(iSupportCustomTitleBarDragRegion).Discard();
-        }
+        SetTitleBarDragRegion();
     }
 
     private void PixevalAppRootFrame_OnNavigated(object sender, NavigationEventArgs e)
     {
-        if (AppWindowTitleBar.IsCustomizationSupported() && PixevalAppRootFrame.Content is ISupportCustomTitleBarDragRegion iSupportCustomTitleBarDragRegion)
-        {
-            SetDragRegionAsync(iSupportCustomTitleBarDragRegion).Discard();
-        }
+        SetTitleBarDragRegion();
 
         switch (sender)
         {
             case Frame { SourcePageType: var page }:
-                if (page == typeof(MainPage))
-                {
-                    ReverseSearchButton.Show();
-                    OpenSearchSettingPopupButton.Show();
-                    KeywordAutoSuggestBox.Show();
-                }
-                else
-                {
-                    ReverseSearchButton.Collapse();
-                    OpenSearchSettingPopupButton.Collapse();
-                    KeywordAutoSuggestBox.Collapse();
-                }
+                TitleBar.Visibility = page == typeof(MainPage) ? Visibility.Visible : Visibility.Collapsed;
 
                 break;
         }
     }
 
-    private async Task SetDragRegionAsync(ISupportCustomTitleBarDragRegion iSupportCustomTitleBarDragRegion)
-    {
-        var rects = await iSupportCustomTitleBarDragRegion.SetTitleBarDragRegionAsync(
-            AppTitleBar,
-            new[]
-            {
-                LeftDragRegion,
-                LeftMarginRegion,
-                SearchBarRegion,
-                MarginRegion,
-                ReverseSearchButtonRegion,
-                SearchSettingButtonRegion,
-                RightDragRegion
-            });
-        CurrentContext.AppWindow.TitleBar.SetDragRectangles(rects);
-    }
-
     private async void KeywordAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
     {
-        var suggestBox = (AutoSuggestBox) sender;
+        var suggestBox = (AutoSuggestBox)sender;
         suggestBox.IsSuggestionListOpen = true;
         await _viewModel.SuggestionProvider.UpdateAsync(suggestBox.Text);
     }
@@ -361,5 +302,16 @@ public sealed partial class MainWindow : INavigationModeInfo
         {
             await ShowReverseSearchApiKeyNotPresentDialog();
         }
+    }
+
+    public void SetTitleBarDragRegion()
+    {
+        var titleBar = TitleBar.TransformToVisual(Content).TransformPoint(new Point(0, 0));
+        var titleBarRect = new RectInt32((int)titleBar.X, (int)titleBar.Y, (int)TitleBar.ActualWidth, (int)TitleBar.ActualHeight);
+
+        DragZoneHelper.SetDragZones(new(titleBarRect)
+        {
+            DragZoneLeftIndent = 48
+        });
     }
 }

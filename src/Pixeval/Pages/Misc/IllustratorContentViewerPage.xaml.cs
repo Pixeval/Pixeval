@@ -1,6 +1,5 @@
 using System;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.CoreApi.Global.Enum;
 using Pixeval.UserControls.IllustratorContentViewer;
 using Pixeval.UserControls.IllustratorView;
 

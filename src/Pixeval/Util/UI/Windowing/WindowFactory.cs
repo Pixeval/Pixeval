@@ -19,7 +19,6 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.UI.Xaml;
 using WinUI3Utilities;
 
@@ -27,24 +26,26 @@ namespace Pixeval.Util.UI.Windowing;
 
 public static class WindowFactory
 {
-    private static readonly List<Window> ForkedWindowsInternal = new();
+    private static readonly List<CustomizableWindow> ForkedWindowsInternal = new();
 
-    public static IReadOnlyList<Window> ForkedWindows => ForkedWindowsInternal;
+    public static IReadOnlyList<CustomizableWindow> ForkedWindows => ForkedWindowsInternal;
 
-    public static CustomizableWindow Fork(
-        AppHelper.InitializeInfo provider,
-        Window owner,
-        RoutedEventHandler? onLoaded = null)
+    public static CustomizableWindow Fork(this Window owner, out CustomizableWindow window)
     {
-        var w = new CustomizableWindow(owner, onLoaded);
-        w.Closed += (_, _) => ForkedWindowsInternal.Remove(w);
-        AppHelper.Initialize(provider, w);
-        ForkedWindowsInternal.Add(w);
-        return w;
+        var w = window = new(owner);
+        window.Closed += (_, _) => ForkedWindowsInternal.Remove(w);
+        ForkedWindowsInternal.Add(window);
+        return window;
     }
 
-    public static Window? CurrentWindow(this UIElement element)
+    public static CustomizableWindow WithLoaded(this CustomizableWindow window, RoutedEventHandler onLoaded)
     {
-        return ForkedWindows.FirstOrDefault(w => w.Content == element.XamlRoot.Content);
+        window.FrameLoaded += onLoaded;
+        return window;
+    }
+
+    public static void Initialize(this CustomizableWindow window, AppHelper.InitializeInfo provider)
+    {
+        AppHelper.Initialize(provider, window);
     }
 }

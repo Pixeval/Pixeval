@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -25,23 +25,18 @@ using Pixeval.CoreApi.Global.Enum;
 
 namespace Pixeval.Controls.Setting.UI.Model;
 
-public record SearchDurationSettingEntryItem : IStringRepresentableItem
+public record SearchDurationSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public SearchDurationSettingEntryItem(SearchDuration item)
+    public SearchDurationSettingEntryItem(SearchDuration item) : base(item, item switch
     {
-        Item = item;
-        StringRepresentation = item switch
-        {
-            SearchDuration.Undecided => MiscResources.SearchDurationUndecided,
-            SearchDuration.WithinLastDay => MiscResources.SearchDurationWithinLastDay,
-            SearchDuration.WithinLastWeek => MiscResources.SearchDurationWithinLastWeek,
-            SearchDuration.WithinLastMonth => MiscResources.SearchDurationWithinLastMonth,
-            _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
-        };
+        SearchDuration.Undecided => MiscResources.SearchDurationUndecided,
+        SearchDuration.WithinLastDay => MiscResources.SearchDurationWithinLastDay,
+        SearchDuration.WithinLastWeek => MiscResources.SearchDurationWithinLastWeek,
+        SearchDuration.WithinLastMonth => MiscResources.SearchDurationWithinLastMonth,
+        _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
+    })
+    {
     }
 
-    public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<SearchDuration>().Select(s => new SearchDurationSettingEntryItem(s));
-
-    public object Item { get; }
-    public string StringRepresentation { get; }
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<SearchDuration>().Select(s => new SearchDurationSettingEntryItem(s));
 }

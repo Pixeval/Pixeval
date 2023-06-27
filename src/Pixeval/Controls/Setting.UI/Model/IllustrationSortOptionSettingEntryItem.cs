@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -25,24 +25,18 @@ using Pixeval.CoreApi.Global.Enum;
 
 namespace Pixeval.Controls.Setting.UI.Model;
 
-public record IllustrationSortOptionSettingEntryItem : IStringRepresentableItem
+public record IllustrationSortOptionSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public IllustrationSortOptionSettingEntryItem(IllustrationSortOption item)
+    public IllustrationSortOptionSettingEntryItem(IllustrationSortOption item) : base(item, item switch
     {
-        Item = item;
-        StringRepresentation = item switch
-        {
-            IllustrationSortOption.PopularityDescending => MiscResources.IllustrationSortOptionPopularityDescending,
-            IllustrationSortOption.PublishDateAscending => MiscResources.IllustrationSortOptionPublishDateAscending,
-            IllustrationSortOption.PublishDateDescending => MiscResources.IllustrationSortOptionPublishDateDescending,
-            IllustrationSortOption.DoNotSort => MiscResources.IllustrationSortOptionDoNotSort,
-            _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
-        };
+        IllustrationSortOption.PopularityDescending => MiscResources.IllustrationSortOptionPopularityDescending,
+        IllustrationSortOption.PublishDateAscending => MiscResources.IllustrationSortOptionPublishDateAscending,
+        IllustrationSortOption.PublishDateDescending => MiscResources.IllustrationSortOptionPublishDateDescending,
+        IllustrationSortOption.DoNotSort => MiscResources.IllustrationSortOptionDoNotSort,
+        _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
+    })
+    {
     }
 
-    public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<IllustrationSortOption>().Select(i => new IllustrationSortOptionSettingEntryItem(i));
-
-    public object Item { get; }
-
-    public string StringRepresentation { get; }
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<IllustrationSortOption>().Select(i => new IllustrationSortOptionSettingEntryItem(i));
 }

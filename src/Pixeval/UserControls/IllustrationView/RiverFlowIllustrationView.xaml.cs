@@ -40,6 +40,7 @@ using WinUI3Utilities.Attributes;
 using PInvoke;
 using Pixeval.Util.UI.Windowing;
 using Windows.Graphics;
+using Pixeval.Controls;
 using Pixeval.Util.Threading;
 using WinUI3Utilities;
 
@@ -121,12 +122,15 @@ public sealed partial class RiverFlowIllustrationView
 
         // TODO: Test Use the new windowing API
         var (width, height) = DetermineWindowSize(viewModels[0].Illustration.Width, viewModels[0].Illustration.Width / (double)viewModels[0].Illustration.Height);
-        var window = WindowFactory.Fork(
-            new AppHelper.InitializeInfo { TitleBarType = TitleBarHelper.TitleBarType.AppWindow, Size = new SizeInt32(width, height) },
-            CurrentContext.Window,
-            (o, _) => o.To<Frame>().Navigate(typeof(IllustrationViewerPage),
-                new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo()));
-        window.Activate();
+
+        CurrentContext.Window.Fork(out var w)
+            .WithLoaded((o, _) => o.To<Frame>().Navigate<IllustrationViewerPage>(w,
+                new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo()))
+            .Initialize(new()
+            {
+                TitleBarType = TitleBarHelper.TitleBarType.AppWindow,
+                Size = new SizeInt32(width, height)
+            });
     }
 
     private static unsafe (int windowWidth, int windowHeight) DetermineWindowSize(int illustWidth, double illustRatio)
@@ -139,7 +143,8 @@ public sealed partial class RiverFlowIllustrationView
         while (!User32.EnumDisplaySettings(
                    monitorInfoEx.DeviceName,
                    User32.ENUM_CURRENT_SETTINGS,
-                   &devMode)) { }
+                   &devMode))
+        { }
 
         var monitorWidth = devMode.dmPelsWidth;
         var monitorHeight = devMode.dmPelsHeight;

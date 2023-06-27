@@ -53,7 +53,7 @@ public partial class MainWindowViewModel : AutoActivateObservableRecipient, IRec
     // Code Duplication, but not a big thing
     public async Task ReverseSearchAsync(Stream stream)
     {
-        var window = (MainWindow) CurrentContext.Window;
+        var window = (MainWindow)CurrentContext.Window;
         try
         {
             window.ShowProgressRing();
@@ -70,7 +70,7 @@ public partial class MainWindowViewModel : AutoActivateObservableRecipient, IRec
                                 .ToArray();
                             window.HideProgressRing();
                             ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
-                            UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
+                            // todo UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
                             return;
                         }
 

@@ -134,7 +134,7 @@
   <data name="AppFontFamilyEntry.Header" xml:space="preserve">
     <value>字体设置</value>
   </data>
-  <data name="ApplicationSettingsGroup.Header" xml:space="preserve">
+  <data name="ApplicationSettingsGroup.Text" xml:space="preserve">
     <value>应用程序相关设置</value>
   </data>
   <data name="BackdropEntry.Description" xml:space="preserve">
@@ -146,7 +146,7 @@
   <data name="BrowseHistoriesCleared" xml:space="preserve">
     <value>已删除所有的浏览记录</value>
   </data>
-  <data name="BrowsingExperienceSettingsGroup.Header" xml:space="preserve">
+  <data name="BrowsingExperienceSettingsGroup.Text" xml:space="preserve">
     <value>浏览体验设置</value>
   </data>
   <data name="CheckForUpdateButton.Content" xml:space="preserve">
@@ -230,7 +230,7 @@
   <data name="DownloadPathMacroInvalidTeachingTipMacroInvalidFormatted" xml:space="preserve">
     <value>{0}, 请更正后重新填写</value>
   </data>
-  <data name="DownloadSettingsGroup.Header" xml:space="preserve">
+  <data name="DownloadSettingsGroup.Text" xml:space="preserve">
     <value>下载设置</value>
   </data>
   <data name="DownloadUpdateAutomaticallyEntry.Description" xml:space="preserve">
@@ -332,7 +332,7 @@
   <data name="MaximumSuggestionBoxSearchHistoryEntry.Header" xml:space="preserve">
     <value>搜索框搜索历史数量限制</value>
   </data>
-  <data name="MiscSettingsGroup.Header" xml:space="preserve">
+  <data name="MiscSettingsGroup.Text" xml:space="preserve">
     <value>杂项</value>
   </data>
   <data name="OpenFontSettingsHyperlinkButton.Content" xml:space="preserve">
@@ -362,7 +362,7 @@
   <data name="RecommendationItemLimitNumberBox.PlaceholderText" xml:space="preserve">
     <value>每日推荐数量限制[500,2500]</value>
   </data>
-  <data name="ReleaseNotesHyperlinkButton.Content" xml:space="preserve">
+  <data name="ReleaseNotesHyperlinkButton.Text" xml:space="preserve">
     <value>更新日志</value>
   </data>
   <data name="ReportBugHyperlinkButton.Content" xml:space="preserve">
@@ -413,7 +413,7 @@
   <data name="SearchHistoriesCleared" xml:space="preserve">
     <value>已删除所有的搜索记录</value>
   </data>
-  <data name="SearchSettingsGroup.Header" xml:space="preserve">
+  <data name="SearchSettingsGroup.Text" xml:space="preserve">
     <value>搜索设置</value>
   </data>
   <data name="SearchStartCalendarDatePicker.PlaceholderText" xml:space="preserve">
@@ -434,7 +434,7 @@
   <data name="SearchStartsFromNumberBox.PlaceholderText" xml:space="preserve">
     <value>从第几页开始搜索[1,150]</value>
   </data>
-  <data name="SessionSettingsGroup.Header" xml:space="preserve">
+  <data name="SessionSettingsGroup.Text" xml:space="preserve">
     <value>会话设置</value>
   </data>
   <data name="SignOutConfirmationDialogContent" xml:space="preserve">
@@ -491,7 +491,7 @@
   <data name="UsePreciseRangeForSearchEntry.Header" xml:space="preserve">
     <value>使用更精确的搜索范围限制</value>
   </data>
-  <data name="VersionSettingsGroup.Header" xml:space="preserve">
+  <data name="VersionSettingsGroup.Text" xml:space="preserve">
     <value>版本</value>
   </data>
   <data name="ViewPixevalWebsiteHyperlinkButton.Content" xml:space="preserve">
