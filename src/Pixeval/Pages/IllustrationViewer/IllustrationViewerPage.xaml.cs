@@ -37,7 +37,7 @@ using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
-using Pixeval.Util.UI;
+using WinUI3Utilities;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using Windows.Graphics;
@@ -46,6 +46,7 @@ using Microsoft.UI.Xaml.Media;
 using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util.Threading;
 using Microsoft.UI.Windowing;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -112,7 +113,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
 
         // IMPORTANT
-        _viewModel.Snapshot = new(_viewModel.ContainerGridViewModel!.DataProvider.IllustrationsSource);
+        _viewModel.Snapshot = new(_viewModel.ContainerRiverFlowIllustrationViewViewModel!.DataProvider.IllustrationsSource);
 
         _collapseThumbnailList.RunAsync().Discard();
     }
@@ -286,7 +287,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void NextIllustration()
     {
-        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value + 1];
+        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerRiverFlowIllustrationViewViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value + 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
         NavigateSelf(new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel),
@@ -295,7 +296,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void PrevIllustration()
     {
-        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerGridViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value - 1];
+        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerRiverFlowIllustrationViewViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value - 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
         NavigateSelf(new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel),
@@ -462,20 +463,16 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private async void ShowQrCodeOnTapped(object sender, TappedRoutedEventArgs e)
     {
-        var button = (AppBarButton)sender;
+        var button = sender.To<AppBarButton>();
         var qrCodeSource = await UIHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustrationWebUri(_viewModel.Current.IllustrationViewModel.Id).ToString());
-        QrCodeTeachingTip.HeroContent = new Image
-        {
-            Source = qrCodeSource,
-        };
+        QrCodeTeachingTip.HeroContent.To<Image>().Source = qrCodeSource;
         QrCodeTeachingTip.Target = button.IsInOverflow ? null : button;
         QrCodeTeachingTip.IsOpen = true;
 
         void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
         {
             qrCodeSource.Dispose();
-            QrCodeTeachingTip.Closed -= Closed;
-            QrCodeTeachingTip.HeroContent = null;
+            s.Closed -= Closed;
         }
 
         QrCodeTeachingTip.Closed += Closed;

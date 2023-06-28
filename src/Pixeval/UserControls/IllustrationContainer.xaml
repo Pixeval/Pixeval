@@ -19,7 +19,7 @@
             SecondaryCommandsSupplements="{x:Bind SecondaryCommandsSupplements, Mode=TwoWay}"
             ViewModel="{x:Bind IllustrationView.ViewModel}"
             Visibility="{x:Bind ShowCommandBar, Mode=OneWay}" />
-        <illustrationView:RiverFlowIllustrationView
+        <illustrationView:IllustrationView
             x:Name="IllustrationView"
             x:FieldModifier="public"
             IllustrationViewOption="{x:Bind IllustrationViewOption}" />

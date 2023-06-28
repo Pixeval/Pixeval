@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
-    <illustrationView:RiverFlowIllustrationView
+    <illustrationView:IllustrationView
         x:Name="RelatedWorksIllustrationGrid"
         Margin="10,0,5,0"
         IllustrationViewOption="Grid" />

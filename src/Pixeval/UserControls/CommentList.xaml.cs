@@ -24,7 +24,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using WinUI3Utilities.Attributes;
 using Pixeval.Pages.IllustrationViewer;
-using Pixeval.Util.UI;
+using WinUI3Utilities;
 
 namespace Pixeval.UserControls;
 

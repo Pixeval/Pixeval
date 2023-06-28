@@ -35,22 +35,21 @@ using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
 using Pixeval.Util.IO;
-using Pixeval.Util.UI;
 using WinUI3Utilities.Attributes;
 using PInvoke;
 using Pixeval.Util.UI.Windowing;
 using Windows.Graphics;
 using Pixeval.Controls;
 using Pixeval.Util.Threading;
+using Pixeval.Util.UI;
 using WinUI3Utilities;
 
 namespace Pixeval.UserControls.IllustrationView;
 
 // use "load failed" image for those thumbnails who failed to load its source due to various reasons
 // note: please ALWAYS add e.Handled = true before every "tapped" event for the buttons
-[DependencyProperty<object>("Header")]
 [DependencyProperty<IllustrationViewOption>("IllustrationViewOption")]
-public sealed partial class RiverFlowIllustrationView
+public sealed partial class IllustrationView
 {
     private static readonly ExponentialEase _imageSourceSetEasingFunction = new()
     {
@@ -58,10 +57,10 @@ public sealed partial class RiverFlowIllustrationView
         Exponent = 12
     };
 
-    public RiverFlowIllustrationView()
+    public IllustrationView()
     {
         InitializeComponent();
-        ViewModel = new RiverFlowIllustrationViewViewModel();
+        ViewModel = new IllustrationViewViewModel();
         ViewModel.DataProvider.FilterChanged += (sender, _) =>
         {
             if (sender is Predicate<object> predicate)
@@ -76,27 +75,21 @@ public sealed partial class RiverFlowIllustrationView
         };
     }
 
-    private EventHandler<IllustrationViewModel>? _itemTapped;
+    public event EventHandler<IllustrationViewModel>? ItemTapped;
 
-    public event EventHandler<IllustrationViewModel> ItemTapped
-    {
-        add => _itemTapped += value;
-        remove => _itemTapped -= value;
-    }
-
-    public RiverFlowIllustrationViewViewModel ViewModel { get; }
+    public IllustrationViewViewModel ViewModel { get; }
 
     private async void RemoveBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         e.Handled = true;
-        var viewModel = UIHelper.GetDataContext<IllustrationViewModel>(sender);
+        var viewModel = sender.GetDataContext<IllustrationViewModel>();
         await viewModel.RemoveBookmarkAsync();
     }
 
     private async void PostBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         e.Handled = true;
-        var viewModel = UIHelper.GetDataContext<IllustrationViewModel>(sender);
+        var viewModel = sender.GetDataContext<IllustrationViewModel>();
         await viewModel.PostPublicBookmarkAsync();
     }
 
@@ -111,9 +104,9 @@ public sealed partial class RiverFlowIllustrationView
         e.Handled = true;
         WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(sender as UIElement));
 
-        _itemTapped?.Invoke(this, UIHelper.GetDataContext<IllustrationViewModel>(sender));
+        ItemTapped?.Invoke(this, sender.GetDataContext<IllustrationViewModel>());
 
-        var viewModels = UIHelper.GetDataContext<IllustrationViewModel>(sender)
+        var viewModels = sender.GetDataContext<IllustrationViewModel>()
             .GetMangaIllustrationViewModels()
             .ToArray();
 
@@ -136,8 +129,8 @@ public sealed partial class RiverFlowIllustrationView
     private static unsafe (int windowWidth, int windowHeight) DetermineWindowSize(int illustWidth, double illustRatio)
     {
         var windowPlacement = User32.WINDOWPLACEMENT.Create();
-        User32.GetWindowPlacement(CurrentContext.Window.GetWindowHandle(), &windowPlacement);
-        var windowHandle = User32.MonitorFromWindow(CurrentContext.Window.GetWindowHandle(), User32.MonitorOptions.MONITOR_DEFAULTTONEAREST);
+        User32.GetWindowPlacement((nint)CurrentContext.HWnd, &windowPlacement);
+        var windowHandle = User32.MonitorFromWindow((nint)CurrentContext.HWnd, User32.MonitorOptions.MONITOR_DEFAULTTONEAREST);
         User32.GetMonitorInfo(windowHandle, out var monitorInfoEx);
         var devMode = DEVMODE.Create();
         while (!User32.EnumDisplaySettings(
@@ -172,7 +165,7 @@ public sealed partial class RiverFlowIllustrationView
 
     private async void IllustrationThumbnailContainerItem_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
     {
-        var context = UIHelper.GetDataContext<IllustrationViewModel>(sender);
+        var context = sender.GetDataContext<IllustrationViewModel>();
         var preLoadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
 
         if (args.BringIntoViewDistanceY <= sender.ActualHeight * preLoadRows)
@@ -233,22 +226,22 @@ public sealed partial class RiverFlowIllustrationView
 
     private void BookmarkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        UIHelper.GetDataContext<IllustrationViewModel>(sender).SwitchBookmarkStateAsync();
+        sender.GetDataContext<IllustrationViewModel>().SwitchBookmarkStateAsync();
     }
 
     private async void SaveContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await UIHelper.GetDataContext<IllustrationViewModel>(sender).SaveAsync();
+        await sender.GetDataContext<IllustrationViewModel>().SaveAsync();
     }
 
     private async void SaveAsContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await UIHelper.GetDataContext<IllustrationViewModel>(sender).SaveAsAsync();
+        await sender.GetDataContext<IllustrationViewModel>().SaveAsAsync();
     }
 
     private async void OpenInBrowserContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(UIHelper.GetDataContext<IllustrationViewModel>(sender).Id));
+        await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<IllustrationViewModel>().Id));
     }
 
     private void AddToBookmarkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -258,22 +251,42 @@ public sealed partial class RiverFlowIllustrationView
 
     private void CopyWebLinkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationWebUri(UIHelper.GetDataContext<IllustrationViewModel>(sender).Id).ToString()));
+        UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString()));
     }
 
     private void CopyAppLinkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationAppUri(UIHelper.GetDataContext<IllustrationViewModel>(sender).Id).ToString()));
+        UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationAppUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString()));
     }
 
     private async void ShowQrCodeContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await ViewModel.ShowQrCodeForIllustrationAsync(UIHelper.GetDataContext<IllustrationViewModel>(sender));
+        var webQrCodeSource = await UIHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString());
+        QrCodeTeachingTip.HeroContent.To<Image>().Source = webQrCodeSource;
+        QrCodeTeachingTip.IsOpen = true;
+
+        void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
+        {
+            webQrCodeSource.Dispose();
+            s.Closed -= Closed;
+        }
+
+        QrCodeTeachingTip.Closed += Closed;
     }
 
     private async void ShowPixEzQrCodeContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await ViewModel.ShowPixEzQrCodeForIllustrationAsync(UIHelper.GetDataContext<IllustrationViewModel>(sender));
+        var pixEzQrCodeSource = await UIHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustrationPixEzUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString());
+        QrCodeTeachingTip.HeroContent.To<Image>().Source = pixEzQrCodeSource;
+        QrCodeTeachingTip.IsOpen = true;
+
+        void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
+        {
+            pixEzQrCodeSource.Dispose();
+            s.Closed -= Closed;
+        }
+
+        QrCodeTeachingTip.Closed += Closed;
     }
 
     private void ScrollViewer_ViewChanged(object? sender, ScrollViewerViewChangedEventArgs e)

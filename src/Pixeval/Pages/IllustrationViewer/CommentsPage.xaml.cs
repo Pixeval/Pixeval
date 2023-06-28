@@ -37,6 +37,7 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Popups;
 using Pixeval.Util.UI;
+using WinUI3Utilities;
 using WinUIEx.Messaging;
 
 namespace Pixeval.Pages.IllustrationViewer;

@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -53,7 +52,7 @@ public sealed partial class CommentRepliesBlock
         var viewModel = (CommentRepliesBlockViewModel)e.NewValue;
         block.RepliesAreEmptyPanel.Visibility = (!viewModel.HasReplies).ToVisibility();
         block.CommentList.Visibility = viewModel.HasReplies.ToVisibility();
-        if (viewModel.HasReplies && viewModel.Comment.Replies is { } rs)
+        if (viewModel is { HasReplies: true, Comment.Replies: { } rs })
         {
             block.CommentList.ItemsSource = rs;
         }

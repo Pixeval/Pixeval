@@ -110,11 +110,11 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     // illustrations should contains only one item if the illustration is a single
     // otherwise it contains the entire manga data
-    public IllustrationViewerPageViewModel(RiverFlowIllustrationView illustrationView, params IllustrationViewModel[] illustrations) : this(illustrations)
+    public IllustrationViewerPageViewModel(IllustrationView illustrationView, params IllustrationViewModel[] illustrations) : this(illustrations)
     {
         IllustrationView = illustrationView;
-        ContainerGridViewModel = illustrationView.ViewModel;
-        IllustrationViewModelInTheGridView = ContainerGridViewModel.DataProvider.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
+        ContainerRiverFlowIllustrationViewViewModel = illustrationView.ViewModel;
+        IllustrationViewModelInTheGridView = ContainerRiverFlowIllustrationViewViewModel.DataProvider.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
     }
 
     public IllustrationViewerPageViewModel(params IllustrationViewModel[] illustrations)
@@ -138,24 +138,24 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     /// <summary>
     ///     The view model of the GridView that the <see cref="ImageViewerPageViewModels" /> comes from
     /// </summary>
-    public IllustrationViewViewModel? ContainerGridViewModel { get; }
+    public IllustrationViewViewModel? ContainerRiverFlowIllustrationViewViewModel { get; }
 
     /// <summary>
-    ///     The <see cref="RiverFlowIllustrationView" /> that owns <see cref="ContainerGridViewModel" />
+    ///     The <see cref="UserControls.IllustrationView.IllustrationView" /> that owns <see cref="ContainerRiverFlowIllustrationViewViewModel" />
     /// </summary>
-    public RiverFlowIllustrationView? IllustrationView { get; }
+    public IllustrationView? IllustrationView { get; }
 
     /// <summary>
-    ///     The <see cref="IllustrationViewModelInTheGridView" /> in <see cref="RiverFlowIllustrationView" /> that corresponds to
+    ///     The <see cref="IllustrationViewModelInTheGridView" /> in <see cref="UserControls.IllustrationView.IllustrationView" /> that corresponds to
     ///     current
     ///     <see cref="IllustrationViewerPageViewModel" />
     /// </summary>
     public IllustrationViewModel? IllustrationViewModelInTheGridView { get; }
 
     /// <summary>
-    ///     The index of current illustration in <see cref="RiverFlowIllustrationView" />
+    ///     The index of current illustration in <see cref="UserControls.IllustrationView.IllustrationView" />
     /// </summary>
-    public int? IllustrationIndex => ContainerGridViewModel?.DataProvider.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
+    public int? IllustrationIndex => ContainerRiverFlowIllustrationViewViewModel?.DataProvider.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
 
     public ImageViewerPageViewModel[]? ImageViewerPageViewModels { get; }
 
@@ -531,19 +531,19 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     public Visibility CalculateNextIllustrationButtonVisibility(int index)
     {
-        if (ContainerGridViewModel is null)
+        if (ContainerRiverFlowIllustrationViewViewModel is null)
         {
             return Visibility.Collapsed;
         }
 
-        return ContainerGridViewModel.DataProvider.IllustrationsView.Count > IllustrationIndex + 1
+        return ContainerRiverFlowIllustrationViewViewModel.DataProvider.IllustrationsView.Count > IllustrationIndex + 1
             ? CalculateNextImageButtonVisibility(index).Inverse()
             : Visibility.Collapsed;
     }
 
     public Visibility CalculatePrevIllustrationButtonVisibility(int index)
     {
-        if (ContainerGridViewModel is null)
+        if (ContainerRiverFlowIllustrationViewViewModel is null)
         {
             return Visibility.Collapsed;
         }

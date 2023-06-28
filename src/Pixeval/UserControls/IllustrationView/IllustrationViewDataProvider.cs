@@ -34,9 +34,9 @@ using Pixeval.Utilities;
 
 namespace Pixeval.UserControls.IllustrationView;
 
-public class RiverFlowIllustrationViewDataProvider : ObservableObject, IIllustrationViewDataProvider, IDisposable
+public class IllustrationViewDataProvider : ObservableObject, IIllustrationViewDataProvider, IDisposable
 {
-    public RiverFlowIllustrationViewDataProvider()
+    public IllustrationViewDataProvider()
     {
         IllustrationsView = new AdvancedCollectionView(IllustrationsSource);
         IllustrationsSource.CollectionChanged += OnIllustrationsSourceOnCollectionChanged;

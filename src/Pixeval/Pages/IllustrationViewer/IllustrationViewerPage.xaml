@@ -444,9 +444,12 @@
                     <TeachingTip
                         x:Name="QrCodeTeachingTip"
                         x:Uid="/IllustrationViewerPage/QrCodeTeachingTip"
-                        Title="保存二维码"
                         Grid.Column="0"
-                        IsLightDismissEnabled="True" />
+                        IsLightDismissEnabled="True">
+                        <TeachingTip.HeroContent>
+                            <Image />
+                        </TeachingTip.HeroContent>
+                    </TeachingTip>
                     <TeachingTip
                         x:Name="GenerateLinkToThisPageButtonTeachingTip"
                         x:Uid="/IllustrationViewerPage/GenerateLinkToThisPageButtonTeachingTip"

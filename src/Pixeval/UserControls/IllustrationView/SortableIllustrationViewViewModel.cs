@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -27,8 +27,10 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.UserControls.IllustrationView;
 
-public abstract partial class IllustrationViewViewModel : ObservableObject, IDisposable
+public abstract partial class SortableIllustrationViewViewModel : ObservableObject, IDisposable
 {
+    #region MyRegion
+
     [ObservableProperty]
     private bool _hasNoItems;
 
@@ -37,7 +39,7 @@ public abstract partial class IllustrationViewViewModel : ObservableObject, IDis
 
     [ObservableProperty]
     private bool _isAnyIllustrationSelected;
-    
+
     /// <summary>
     /// Avoid calls to <see cref="IIllustrationViewDataProvider.ResetAndFillAsync"/>, calls to <see cref="ResetEngineAndFillAsync"/> instead.
     /// </summary>
@@ -49,10 +51,9 @@ public abstract partial class IllustrationViewViewModel : ObservableObject, IDis
     }
 
     public abstract void Dispose();
-}
 
-public abstract class SortableIllustrationViewViewModel : IllustrationViewViewModel
-{
+    #endregion
+
     public abstract void SetSortDescription(SortDescription description);
 
     public abstract void ClearSortDescription();

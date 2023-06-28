@@ -330,9 +330,6 @@
         <Page Update="Themes\Card.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Popups\QrCodePresenter.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
         <Page Update="UserControls\PixivReplyBar.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>

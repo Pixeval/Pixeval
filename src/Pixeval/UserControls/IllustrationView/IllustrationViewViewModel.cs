@@ -18,26 +18,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Linq;
-using System.Threading.Tasks;
 using CommunityToolkit.WinUI.UI;
-using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.CoreApi.Model;
 using Pixeval.Options;
-using Pixeval.Popups;
 using Pixeval.Util;
-using Pixeval.Util.UI;
 using Pixeval.Utilities;
 
 namespace Pixeval.UserControls.IllustrationView;
 
-public sealed class RiverFlowIllustrationViewViewModel : SortableIllustrationViewViewModel
+public sealed class IllustrationViewViewModel : SortableIllustrationViewViewModel
 {
-    private SoftwareBitmapSource? _pixEzQrCodeSource;
-
-    private SoftwareBitmapSource? _webQrCodeSource;
-
     #region RiverFlowLayout
 
     private ThumbnailDirection _thumbnailDirection;
@@ -95,10 +85,10 @@ public sealed class RiverFlowIllustrationViewViewModel : SortableIllustrationVie
 
     public override IIllustrationViewDataProvider DataProvider { get; }
 
-    public RiverFlowIllustrationViewViewModel()
+    public IllustrationViewViewModel()
     {
         SelectionLabel = IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel;
-        DataProvider = new RiverFlowIllustrationViewDataProvider();
+        DataProvider = new IllustrationViewDataProvider();
         DataProvider.SelectedIllustrations.CollectionChanged += (_, _) =>
         {
             IsAnyIllustrationSelected = DataProvider.SelectedIllustrations.Count > 0;
@@ -129,19 +119,5 @@ public sealed class RiverFlowIllustrationViewViewModel : SortableIllustrationVie
     public override void ClearSortDescription()
     {
         DataProvider.IllustrationsView.SortDescriptions.Clear();
-    }
-
-    public async Task ShowQrCodeForIllustrationAsync(IllustrationViewModel model)
-    {
-        _webQrCodeSource = await UIHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustrationWebUri(model.Id).ToString());
-
-        PopupManager.ShowPopup(PopupManager.CreatePopup(new QrCodePresenter(_webQrCodeSource), lightDismiss: true, closing: (_, _) => _webQrCodeSource.Dispose()));
-    }
-
-    public async Task ShowPixEzQrCodeForIllustrationAsync(IllustrationViewModel model)
-    {
-        _pixEzQrCodeSource = await UIHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustrationPixEzUri(model.Id).ToString());
-
-        PopupManager.ShowPopup(PopupManager.CreatePopup(new QrCodePresenter(_pixEzQrCodeSource), lightDismiss: true, closing: (_, _) => _pixEzQrCodeSource.Dispose()));
     }
 }

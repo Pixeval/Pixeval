@@ -81,7 +81,7 @@ public sealed partial class IllustrationContainer
         }
     }
 
-    public RiverFlowIllustrationViewViewModel ViewModel => IllustrationView.ViewModel;
+    public IllustrationViewViewModel ViewModel => IllustrationView.ViewModel;
 
     /// <summary>
     ///     The command elements that will appear at the left of the <see cref="TopCommandBar" />

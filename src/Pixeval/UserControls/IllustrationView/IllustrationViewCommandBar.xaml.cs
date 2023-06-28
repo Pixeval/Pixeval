@@ -84,7 +84,6 @@ public sealed partial class IllustrationViewCommandBar
         };
     }
 
-
     public ObservableCollection<UIElement> CommandBarElements { get; }
 
     private static void OnPrimaryCommandsSupplementsChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
