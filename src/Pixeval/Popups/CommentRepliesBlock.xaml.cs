@@ -38,7 +38,7 @@ using Pixeval.Util.UI;
 
 namespace Pixeval.Popups;
 
-[DependencyProperty<CommentRepliesBlockViewModel>("ViewModel", nameof(OnViewModelChanged))]
+[DependencyProperty<CommentRepliesBlockViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 public sealed partial class CommentRepliesBlock
 {
     public CommentRepliesBlock()

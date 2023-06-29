@@ -49,49 +49,4 @@ public partial class MainWindowViewModel : AutoActivateObservableRecipient, IRec
     {
         ShowTitleBar = true;
     }
-
-    // Code Duplication, but not a big thing
-    public async Task ReverseSearchAsync(Stream stream)
-    {
-        var window = (MainWindow)CurrentContext.Window;
-        try
-        {
-            window.ShowProgressRing();
-            var result = await App.AppViewModel.MakoClient.ReverseSearchAsync(stream, App.AppViewModel.AppSetting.ReverseSearchApiKey!);
-            if (result.Header is not null)
-            {
-                switch (result.Header!.Status)
-                {
-                    case 0:
-                        if (result.Results?.FirstOrDefault() is { Header.IndexId: 5 or 6 } first)
-                        {
-                            var viewModels = new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(first.Data!.PixivId.ToString()))
-                                .GetMangaIllustrationViewModels()
-                                .ToArray();
-                            window.HideProgressRing();
-                            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
-                            // todo UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
-                            return;
-                        }
-
-                        break;
-                    case var s:
-                        await MessageDialogBuilder.CreateAcknowledgement(
-                                window,
-                                MainPageResources.ReverseSearchErrorTitle,
-                                s > 0 ? MainPageResources.ReverseSearchServerSideErrorContent : MainPageResources.ReverseSearchClientSideErrorContent)
-                            .ShowAsync();
-                        break;
-                }
-
-                window.HideProgressRing();
-                MessageDialogBuilder.CreateAcknowledgement(window, MainPageResources.ReverseSearchNotFoundTitle, MainPageResources.ReverseSearchNotFoundContent);
-            }
-        }
-        catch (Exception e)
-        {
-            window.HideProgressRing();
-            await App.AppViewModel.ShowExceptionDialogAsync(e);
-        }
-    }
 }

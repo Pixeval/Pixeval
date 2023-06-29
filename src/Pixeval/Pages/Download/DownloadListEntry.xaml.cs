@@ -36,7 +36,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Pages.Download;
 
-[DependencyProperty<ObservableDownloadTask>("ViewModel", nameof(OnViewModelChanged))]
+[DependencyProperty<ObservableDownloadTask>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 [DependencyProperty<ImageSource>("Thumbnail")]
 [DependencyProperty<string>("Title")]
 [DependencyProperty<string>("Description")]

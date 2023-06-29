@@ -31,9 +31,9 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.UserControls;
 
-[DependencyProperty<ObservableCollection<ICommandBarElement>>("PrimaryCommandsSupplements", DefaultValue = "new System.Collections.ObjectModel.ObservableCollection<Microsoft.UI.Xaml.Controls.ICommandBarElement>()")]
-[DependencyProperty<ObservableCollection<ICommandBarElement>>("SecondaryCommandsSupplements", DefaultValue = "new System.Collections.ObjectModel.ObservableCollection<Microsoft.UI.Xaml.Controls.ICommandBarElement>()")]
-[DependencyProperty<bool>("ShowCommandBar", nameof(OnShowCommandBarChanged), DefaultValue = "true")]
+[DependencyProperty<ObservableCollection<ICommandBarElement>>("PrimaryCommandsSupplements", DependencyPropertyDefaultValue.New)]
+[DependencyProperty<ObservableCollection<ICommandBarElement>>("SecondaryCommandsSupplements", DependencyPropertyDefaultValue.New)]
+[DependencyProperty<bool>("ShowCommandBar", "true", nameof(OnShowCommandBarChanged))]
 [DependencyProperty<object>("Header")]
 public sealed partial class IllustrationContainer
 {

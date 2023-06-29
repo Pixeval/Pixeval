@@ -12,28 +12,28 @@
     NavigationCacheMode="Required"
     mc:Ignorable="d">
     <controls:EnhancedPage.Resources>
-        <DataTemplate x:Name="IllustrationHeaderSuggestionTemplate">
+        <DataTemplate x:Key="IllustrationHeaderSuggestionTemplate">
             <TextBlock
                 x:Uid="/MainPage/IllustrationHeaderSuggestionTextBlock"
                 FontSize="{StaticResource PixevalContentFontSize}"
                 FontWeight="Bold" />
         </DataTemplate>
 
-        <DataTemplate x:Name="NovelHeaderSuggestionTemplate">
+        <DataTemplate x:Key="NovelHeaderSuggestionTemplate">
             <TextBlock
                 x:Uid="/MainPage/NovelHeaderSuggestionTextBlock"
                 FontSize="{StaticResource PixevalContentFontSize}"
                 FontWeight="Bold" />
         </DataTemplate>
 
-        <DataTemplate x:Name="SettingsEntryHeaderSuggestionTemplate">
+        <DataTemplate x:Key="SettingsEntryHeaderSuggestionTemplate">
             <TextBlock
                 x:Uid="/MainPage/SettingsEntryHeaderSuggestionTextBlock"
                 FontSize="{StaticResource PixevalContentFontSize}"
                 FontWeight="Bold" />
         </DataTemplate>
 
-        <DataTemplate x:Name="TagAutoCompletionSuggestionTemplate">
+        <DataTemplate x:Key="TagAutoCompletionSuggestionTemplate">
             <TextBlock
                 x:Uid="/MainPage/TagAutoCompletionSuggestionTextBlock"
                 FontSize="{StaticResource PixevalContentFontSize}"
@@ -76,39 +76,56 @@
         </DataTemplate>
 
         <pages:SuggestionModelDataTemplateSelector
-            x:Name="SuggestionModelDataTemplateSelector"
+            x:Key="SuggestionModelDataTemplateSelector"
             AutoCompletionHeader="{StaticResource TagAutoCompletionSuggestionTemplate}"
             CommonSuggestion="{StaticResource CommonSuggestionModelTemplate}"
             IllustrationHeader="{StaticResource IllustrationHeaderSuggestionTemplate}"
             NovelHeader="{StaticResource NovelHeaderSuggestionTemplate}"
             SettingEntryHeader="{StaticResource SettingsEntryHeaderSuggestionTemplate}" />
     </controls:EnhancedPage.Resources>
-    <NavigationView
-        x:Name="MainPageRootNavigationView"
-        d:DataContext="{d:DesignInstance pages:MainPageViewModel}"
-        DisplayModeChanged="{x:Bind utilities:TitleBarHelper.DisplayModeChanged}"
-        IsBackButtonVisible="Collapsed"
-        IsSettingsVisible="False"
-        OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}"
-        PaneClosing="{x:Bind utilities:TitleBarHelper.PaneClosing}"
-        PaneOpening="{x:Bind utilities:TitleBarHelper.PaneOpening}"
-        SelectionChanged="MainPageRootNavigationView_OnSelectionChanged">
-        <NavigationView.PaneCustomContent>
-            <Grid Margin="15,5,15,10" Visibility="{x:Bind MainPageRootNavigationView.IsPaneOpen, Mode=OneWay}">
+    <Grid>
+        <Grid
+            x:Name="TitleBarGrid"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            Loaded="AppTitleBarOnSizeChanged"
+            SizeChanged="AppTitleBarOnSizeChanged">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Image
+                    Width="25"
+                    Height="25"
+                    Margin="12,0,0,0"
+                    HorizontalAlignment="Left"
+                    Source="/Assets/Images/logo44x44.ico" />
+                <TextBlock
+                    x:Name="AppTitleTextBlock"
+                    Margin="48,14,0,0"
+                    VerticalAlignment="Top"
+                    x:FieldModifier="public"
+                    FontWeight="Semibold"
+                    Style="{StaticResource ContentTextBlockStyle}"
+                    Text="Pixeval"
+                    TextWrapping="NoWrap" />
+            </Grid>
+            <Grid x:Name="TitleBar" Column="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-
-                    <ColumnDefinition Width="38" />
-                    <ColumnDefinition Width="38" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <AutoSuggestBox
-                    x:Uid="/MainPage/MainPageAutoSuggestionBox"
+                    x:Uid="/MainWindow/SearchAutoSuggestBox"
                     Grid.Column="0"
                     VerticalAlignment="Center"
                     AllowDrop="True"
                     DragOver="KeywordAutoSuggestBox_OnDragOver"
                     Drop="KeywordAutoSuggestBox_OnDrop"
                     GotFocus="KeywordAutoSuggestBox_GotFocus"
+                    IsFocusEngaged="False"
                     ItemTemplateSelector="{StaticResource SuggestionModelDataTemplateSelector}"
                     ItemsSource="{x:Bind _viewModel.SuggestionProvider.Suggestions, Mode=OneWay}"
                     KeyDown="KeywordAutoSuggestionBox_OnKeyDown"
@@ -122,88 +139,145 @@
                         </TransitionCollection>
                     </AutoSuggestBox.ItemContainerTransitions>
                 </AutoSuggestBox>
-                <Button
-                    x:Uid="/MainPage/OpenSearchSettingPopupButton"
+                <CommandBar
                     Grid.Column="1"
-                    Width="33"
-                    Height="33"
-                    Padding="0"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Content="{ui:FontIcon Glyph=SettingsE713,
-                                          FontSize=13}"
-                    Tapped="OpenSearchSettingPopupButton_OnTapped" />
-                <Button
-                    x:Uid="/MainPage/ReverseSearchButton"
-                    Grid.Column="2"
-                    Width="33"
-                    Height="33"
-                    Padding="0"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Content="{ui:FontIcon Glyph=CameraE722,
-                                          FontSize=13}"
-                    Tapped="ReverseSearchButton_OnTapped" />
+                    DefaultLabelPosition="Collapsed"
+                    OverflowButtonVisibility="Collapsed">
+                    <AppBarButton
+                        Width="{StaticResource CollapsedAppBarButtonWidth}"
+                        Content="{ui:FontIcon Glyph=CameraE722,
+                                              FontSize=13}"
+                        Tapped="ReverseSearchButton_OnTapped" />
+                    <AppBarButton
+                        Width="{StaticResource CollapsedAppBarButtonWidth}"
+                        Content="{ui:FontIcon Glyph=SettingsE713,
+                                              FontSize=13}"
+                        Tapped="OpenSearchSettingPopupButton_OnTapped" />
+                </CommandBar>
             </Grid>
-        </NavigationView.PaneCustomContent>
-        <NavigationView.MenuItems>
-            <NavigationViewItem
-                x:Uid="/MainPage/RecommendationsTab"
-                Icon="{ui:FontIcon Glyph=CalendarE787}"
-                Tag="{x:Bind _viewModel.RecommendsTag}" />
-            <NavigationViewItem
-                x:Uid="/MainPage/RankingsTab"
-                Icon="{ui:FontIcon Glyph=MarketEAFC}"
-                Tag="{x:Bind _viewModel.RankingsTag}" />
-            <NavigationViewItem
-                x:Uid="/MainPage/BookmarksTab"
-                Icon="{ui:FontIcon Glyph=LibraryE8F1}"
-                Tag="{x:Bind _viewModel.BookmarksTag}" />
-            <NavigationViewItem
-                x:Uid="/MainPage/FollowingsTab"
-                Icon="{ui:FontIcon Glyph=PeopleE716}"
-                Tag="{x:Bind _viewModel.FollowingsTag}" />
-            <NavigationViewItem
-                x:Uid="/MainPage/SpotlightsTab"
-                Icon="{ui:FontIcon Glyph=MapLayersE81E}"
-                Tag="{x:Bind _viewModel.SpotlightsTag}" />
-            <NavigationViewItem x:Uid="/MainPage/FeedsTab" Icon="{ui:FontIcon Glyph=MobLocationEC43}" />
-            <NavigationViewItem
-                x:Uid="/MainPage/RecentPostsTab"
-                Icon="{ui:FontIcon Glyph=DevUpdateECC5}"
-                Tag="{x:Bind _viewModel.RecentPostsTag}" />
-            <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />
-            <NavigationViewItem
-                x:Uid="/MainPage/HistoriesTab"
-                Icon="{ui:FontIcon Glyph=HistoryE81C}"
-                Tag="{x:Bind _viewModel.HistoriesTag}" />
-            <NavigationViewItem
-                x:Name="DownloadListTab"
-                x:Uid="/MainPage/DownloadListTab"
-                Icon="{ui:FontIcon Glyph=CheckListE9D5}" />
-        </NavigationView.MenuItems>
-        <NavigationView.FooterMenuItems>
-            <NavigationViewItem x:Uid="/MainPage/HelpTab" Icon="{ui:FontIcon Glyph=HelpE897}" />
-            <NavigationViewItem
-                x:Uid="/MainPage/AboutTab"
-                Icon="{ui:FontIcon Glyph=RingerEA8F}"
-                Tag="{x:Bind _viewModel.AboutTag}" />
-            <NavigationViewItem
-                x:Name="SettingsTab"
-                x:Uid="/MainPage/SettingsTab"
-                Tag="{x:Bind _viewModel.SettingsTag}">
-                <NavigationViewItem.Icon>
-                    <AnimatedIcon>
-                        <AnimatedIcon.Source>
-                            <animatedVisuals:AnimatedSettingsVisualSource />
-                        </AnimatedIcon.Source>
-                        <AnimatedIcon.FallbackIconSource>
-                            <SymbolIconSource Symbol="Setting" />
-                        </AnimatedIcon.FallbackIconSource>
-                    </AnimatedIcon>
-                </NavigationViewItem.Icon>
-            </NavigationViewItem>
-        </NavigationView.FooterMenuItems>
-        <Frame x:Name="MainPageRootFrame" Navigated="MainPageRootFrame_OnNavigated" />
-    </NavigationView>
+        </Grid>
+        <NavigationView
+            x:Name="MainPageRootNavigationView"
+            d:DataContext="{d:DesignInstance pages:MainPageViewModel}"
+            DisplayModeChanged="{x:Bind utilities:TitleBarHelper.DisplayModeChanged}"
+            IsBackButtonVisible="Collapsed"
+            IsSettingsVisible="False"
+            OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}"
+            PaneClosing="{x:Bind utilities:TitleBarHelper.PaneClosing}"
+            PaneOpening="{x:Bind utilities:TitleBarHelper.PaneOpening}"
+            SelectionChanged="MainPageRootNavigationView_OnSelectionChanged">
+            <NavigationView.PaneCustomContent>
+                <Grid Margin="15,5,15,10" Visibility="{x:Bind MainPageRootNavigationView.IsPaneOpen, Mode=OneWay}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+
+                        <ColumnDefinition Width="38" />
+                        <ColumnDefinition Width="38" />
+                    </Grid.ColumnDefinitions>
+                    <AutoSuggestBox
+                        x:Uid="/MainPage/MainPageAutoSuggestionBox"
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        AllowDrop="True"
+                        DragOver="KeywordAutoSuggestBox_OnDragOver"
+                        Drop="KeywordAutoSuggestBox_OnDrop"
+                        GotFocus="KeywordAutoSuggestBox_GotFocus"
+                        ItemTemplateSelector="{StaticResource SuggestionModelDataTemplateSelector}"
+                        ItemsSource="{x:Bind _viewModel.SuggestionProvider.Suggestions, Mode=OneWay}"
+                        KeyDown="KeywordAutoSuggestionBox_OnKeyDown"
+                        QueryIcon="Find"
+                        QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
+                        SuggestionChosen="KeywordAutoSuggestBox_OnSuggestionChosen"
+                        TextChanged="KeywordAutoSuggestBox_OnTextChanged">
+                        <AutoSuggestBox.ItemContainerTransitions>
+                            <TransitionCollection>
+                                <AddDeleteThemeTransition />
+                            </TransitionCollection>
+                        </AutoSuggestBox.ItemContainerTransitions>
+                    </AutoSuggestBox>
+                    <Button
+                        x:Uid="/MainPage/OpenSearchSettingPopupButton"
+                        Grid.Column="1"
+                        Width="33"
+                        Height="33"
+                        Padding="0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Content="{ui:FontIcon Glyph=SettingsE713,
+                                              FontSize=13}"
+                        Tapped="OpenSearchSettingPopupButton_OnTapped" />
+                    <Button
+                        x:Uid="/MainPage/ReverseSearchButton"
+                        Grid.Column="2"
+                        Width="33"
+                        Height="33"
+                        Padding="0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Content="{ui:FontIcon Glyph=CameraE722,
+                                              FontSize=13}"
+                        Tapped="ReverseSearchButton_OnTapped" />
+                </Grid>
+            </NavigationView.PaneCustomContent>
+            <NavigationView.MenuItems>
+                <NavigationViewItem
+                    x:Uid="/MainPage/RecommendationsTab"
+                    Icon="{ui:FontIcon Glyph=CalendarE787}"
+                    Tag="{x:Bind _viewModel.RecommendsTag}" />
+                <NavigationViewItem
+                    x:Uid="/MainPage/RankingsTab"
+                    Icon="{ui:FontIcon Glyph=MarketEAFC}"
+                    Tag="{x:Bind _viewModel.RankingsTag}" />
+                <NavigationViewItem
+                    x:Uid="/MainPage/BookmarksTab"
+                    Icon="{ui:FontIcon Glyph=LibraryE8F1}"
+                    Tag="{x:Bind _viewModel.BookmarksTag}" />
+                <NavigationViewItem
+                    x:Uid="/MainPage/FollowingsTab"
+                    Icon="{ui:FontIcon Glyph=PeopleE716}"
+                    Tag="{x:Bind _viewModel.FollowingsTag}" />
+                <NavigationViewItem
+                    x:Uid="/MainPage/SpotlightsTab"
+                    Icon="{ui:FontIcon Glyph=MapLayersE81E}"
+                    Tag="{x:Bind _viewModel.SpotlightsTag}" />
+                <NavigationViewItem x:Uid="/MainPage/FeedsTab" Icon="{ui:FontIcon Glyph=MobLocationEC43}" />
+                <NavigationViewItem
+                    x:Uid="/MainPage/RecentPostsTab"
+                    Icon="{ui:FontIcon Glyph=DevUpdateECC5}"
+                    Tag="{x:Bind _viewModel.RecentPostsTag}" />
+                <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />
+                <NavigationViewItem
+                    x:Uid="/MainPage/HistoriesTab"
+                    Icon="{ui:FontIcon Glyph=HistoryE81C}"
+                    Tag="{x:Bind _viewModel.HistoriesTag}" />
+                <NavigationViewItem
+                    x:Name="DownloadListTab"
+                    x:Uid="/MainPage/DownloadListTab"
+                    Icon="{ui:FontIcon Glyph=CheckListE9D5}" />
+            </NavigationView.MenuItems>
+            <NavigationView.FooterMenuItems>
+                <NavigationViewItem x:Uid="/MainPage/HelpTab" Icon="{ui:FontIcon Glyph=HelpE897}" />
+                <NavigationViewItem
+                    x:Uid="/MainPage/AboutTab"
+                    Icon="{ui:FontIcon Glyph=RingerEA8F}"
+                    Tag="{x:Bind _viewModel.AboutTag}" />
+                <NavigationViewItem
+                    x:Name="SettingsTab"
+                    x:Uid="/MainPage/SettingsTab"
+                    Tag="{x:Bind _viewModel.SettingsTag}">
+                    <NavigationViewItem.Icon>
+                        <AnimatedIcon>
+                            <AnimatedIcon.Source>
+                                <animatedVisuals:AnimatedSettingsVisualSource />
+                            </AnimatedIcon.Source>
+                            <AnimatedIcon.FallbackIconSource>
+                                <SymbolIconSource Symbol="Setting" />
+                            </AnimatedIcon.FallbackIconSource>
+                        </AnimatedIcon>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.FooterMenuItems>
+            <Frame x:Name="MainPageRootFrame" Navigated="MainPageRootFrame_OnNavigated" />
+        </NavigationView>
+    </Grid>
 </controls:EnhancedPage>

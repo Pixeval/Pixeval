@@ -44,11 +44,11 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.UserControls.IllustrationView;
 
-[DependencyProperty<ObservableCollection<ICommandBarElement>>("PrimaryCommandsSupplements", nameof(OnPrimaryCommandsSupplementsChanged), DefaultValue = "new System.Collections.ObjectModel.ObservableCollection<Microsoft.UI.Xaml.Controls.ICommandBarElement>()")]
-[DependencyProperty<ObservableCollection<ICommandBarElement>>("SecondaryCommandsSupplements", nameof(OnSecondaryCommandsSupplementsChanged), DefaultValue = "new System.Collections.ObjectModel.ObservableCollection<Microsoft.UI.Xaml.Controls.ICommandBarElement>()")]
-[DependencyProperty<bool>("IsDefaultCommandsEnabled", nameof(OnIsDefaultCommandsEnabledChanged), DefaultValue = "true")]
+[DependencyProperty<ObservableCollection<ICommandBarElement>>("PrimaryCommandsSupplements", DependencyPropertyDefaultValue.New, nameof(OnPrimaryCommandsSupplementsChanged))]
+[DependencyProperty<ObservableCollection<ICommandBarElement>>("SecondaryCommandsSupplements", DependencyPropertyDefaultValue.New, nameof(OnSecondaryCommandsSupplementsChanged))]
+[DependencyProperty<bool>("IsDefaultCommandsEnabled", "true", nameof(OnIsDefaultCommandsEnabledChanged))]
 [DependencyProperty<IllustrationViewViewModel>("ViewModel")]
-[DependencyProperty<bool>("ShowDefaultSuggestBox", DefaultValue = "true")]
+[DependencyProperty<bool>("ShowDefaultSuggestBox", "true")]
 public sealed partial class IllustrationViewCommandBar
 {
     private readonly IEnumerable<Control> _defaultCommands;
@@ -88,19 +88,19 @@ public sealed partial class IllustrationViewCommandBar
 
     private static void OnPrimaryCommandsSupplementsChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
-        AddCommandCallback(args, ((IllustrationViewCommandBar) o).CommandBar.PrimaryCommands);
+        AddCommandCallback(args, ((IllustrationViewCommandBar)o).CommandBar.PrimaryCommands);
     }
 
     private static void OnSecondaryCommandsSupplementsChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
-        AddCommandCallback(args, ((IllustrationViewCommandBar) o).CommandBar.SecondaryCommands);
+        AddCommandCallback(args, ((IllustrationViewCommandBar)o).CommandBar.SecondaryCommands);
     }
 
     private static void OnIsDefaultCommandsEnabledChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
-        ((IllustrationViewCommandBar) o)._defaultCommands
-            .Where(c => c != ((IllustrationViewCommandBar) o).SelectAllButton)
-            .ForEach(c => c.IsEnabled = (bool) args.NewValue);
+        ((IllustrationViewCommandBar)o)._defaultCommands
+            .Where(c => c != ((IllustrationViewCommandBar)o).SelectAllButton)
+            .ForEach(c => c.IsEnabled = (bool)args.NewValue);
     }
 
     private static void AddCommandCallback(DependencyPropertyChangedEventArgs e, ICollection<ICommandBarElement> commands)
@@ -114,7 +114,7 @@ public sealed partial class IllustrationViewCommandBar
                     case { Action: NotifyCollectionChangedAction.Add }:
                         foreach (var argsNewItem in args.NewItems ?? Array.Empty<ICommandBarElement>())
                         {
-                            commands.Add((ICommandBarElement) argsNewItem);
+                            commands.Add((ICommandBarElement)argsNewItem);
                         }
 
                         break;
@@ -184,7 +184,8 @@ public sealed partial class IllustrationViewCommandBar
                 App.AppViewModel.DownloadManager.QueueTask(viewModelSelectedIllustration);
             }
         });
-        SnackBarController.ShowSnack(IllustrationViewCommandBarResources.DownloadItemsQueuedFormatted.Format(ViewModel.DataProvider.SelectedIllustrations.Count), SnackBarController.SnackBarDurationShort);
+
+        CommandBarTeachingTip.ShowAndHide(IllustrationViewCommandBarResources.DownloadItemsQueuedFormatted.Format(ViewModel.DataProvider.SelectedIllustrations.Count), mSec: 1500);
     }
 
     private async void OpenAllInBrowserButton_OnTapped(object sender, TappedRoutedEventArgs e)

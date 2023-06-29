@@ -28,7 +28,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.UserControls;
 
-[DependencyProperty<object>("ItemsSource", nameof(OnItemsSourceChanged), DefaultValue = "System.Linq.Enumerable.Empty<Pixeval.Pages.IllustrationViewer.CommentBlockViewModel>()", IsNullable = true)]
+[DependencyProperty<object>("ItemsSource", "System.Linq.Enumerable.Empty<Pixeval.Pages.IllustrationViewer.CommentBlockViewModel>()", nameof(OnItemsSourceChanged), IsNullable = true)]
 public sealed partial class CommentList : IDisposable
 {
     private EventHandler<TappedRoutedEventArgs>? _repliesHyperlinkButtonTapped;

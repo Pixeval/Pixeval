@@ -31,7 +31,7 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.UserControls;
 
-[DependencyProperty<CommentBlockViewModel>("ViewModel", nameof(OnViewModelChanged))]
+[DependencyProperty<CommentBlockViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 public sealed partial class CommentBlock
 {
     private EventHandler<TappedRoutedEventArgs>? _deleteHyperlinkButtonTapped;

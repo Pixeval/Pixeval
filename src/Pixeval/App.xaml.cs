@@ -32,6 +32,8 @@ using Pixeval.Options;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using ApplicationTheme = Pixeval.Options.ApplicationTheme;
+using Microsoft.UI.Composition.SystemBackdrops;
+using static WinUI3Utilities.AppHelper;
 
 namespace Pixeval;
 
@@ -75,7 +77,7 @@ public partial class App
 
         _ = new MainWindow();
         CurrentContext.Title = AppContext.AppIdentifier;
-        AppHelper.Initialize(new AppHelper.InitializeInfo
+        Initialize(new InitializeInfo
         {
             Size = new SizeInt32(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight),
             BackdropType = AppViewModel.AppSetting.AppBackdrop switch
@@ -87,7 +89,7 @@ public partial class App
                 _ => throw new ArgumentOutOfRangeException()
             },
             TitleBarType = TitleBarHelper.TitleBarType.AppWindow
-        });
+        }); 
 
         await AppViewModel.InitializeAsync(isProtocolActivated);
     }

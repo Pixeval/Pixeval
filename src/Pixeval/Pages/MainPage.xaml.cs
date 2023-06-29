@@ -56,10 +56,11 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Image = SixLabors.ImageSharp.Image;
 using WinUI3Utilities;
+using Windows.Graphics;
 
 namespace Pixeval.Pages;
 
-public sealed partial class MainPage
+public sealed partial class MainPage: ISupportCustomTitleBarDragRegion
 {
     private static UIElement? _connectedAnimationTarget;
 
@@ -72,6 +73,8 @@ public sealed partial class MainPage
     public MainPage()
     {
         InitializeComponent();
+        CurrentContext.TitleBar = TitleBarGrid;
+        CurrentContext.TitleTextBlock = AppTitleTextBlock;
         CurrentContext.NavigationView = MainPageRootNavigationView;
         CurrentContext.Frame = MainPageRootFrame;
         DataContext = _viewModel;
@@ -125,7 +128,7 @@ public sealed partial class MainPage
         // so we cannot put a navigation tag inside MainPage and treat it as a field, since it will be initialized immediately after
         // the creation of the object while the App.AppViewModel.IllustrationDownloadManager is still null which
         // will lead the program into NullReferenceException on the access of QueuedTasks.
-
+        
         // args.SelectedItem may be null here
         if (Equals(args.SelectedItem, DownloadListTab))
         {
@@ -314,5 +317,21 @@ public sealed partial class MainPage
         {
             await ShowReverseSearchApiKeyNotPresentDialog();
         }
+    }
+
+    private void AppTitleBarOnSizeChanged(object sender, object e)
+    {
+        SetTitleBarDragRegion();
+    }
+
+    public void SetTitleBarDragRegion()
+    {
+        var titleBar = TitleBar.TransformToVisual(Content).TransformPoint(new Point(0, 0));
+        var titleBarRect = new RectInt32((int)titleBar.X, (int)titleBar.Y, (int)TitleBar.ActualWidth, (int)TitleBar.ActualHeight);
+
+        DragZoneHelper.SetDragZones(new(titleBarRect)
+        {
+            DragZoneLeftIndent = 48
+        });
     }
 }

@@ -13,7 +13,7 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.Controls.Setting.UI;
 
 [DependencyProperty<IEnumerable<StringRepresentableItem>>("ItemsSource")]
-[DependencyProperty<object>("SelectedItem", nameof(OnSelectedItemChanged))]
+[DependencyProperty<object>("SelectedItem", propertyChanged: nameof(OnSelectedItemChanged))]
 public sealed partial class SettingRadioButtons : UserControl
 {
     private RadioButtons Buttons => Content.To<RadioButtons>();
