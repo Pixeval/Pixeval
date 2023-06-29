@@ -33,7 +33,11 @@ public static class WindowFactory
     public static CustomizableWindow Fork(this Window owner, out CustomizableWindow window)
     {
         var w = window = new(owner);
-        window.Closed += (_, _) => ForkedWindowsInternal.Remove(w);
+        window.Closed += (_, _) =>
+        {
+            w.Close();
+            ForkedWindowsInternal.Remove(w);
+        };
         ForkedWindowsInternal.Add(window);
         return window;
     }
@@ -44,8 +48,9 @@ public static class WindowFactory
         return window;
     }
 
-    public static void Initialize(this CustomizableWindow window, AppHelper.InitializeInfo provider)
+    public static CustomizableWindow Initialize(this CustomizableWindow window, WindowHelper.InitializeInfo provider)
     {
-        AppHelper.Initialize(provider, window);
+        WindowHelper.Initialize(window, provider);
+        return window;
     }
 }

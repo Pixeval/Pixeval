@@ -168,4 +168,13 @@
   <data name="FastFilterAutoSuggestBox.PlaceholderText" xml:space="preserve">
     <value>输入ID/标签/作品名进行快速过滤</value>
   </data>
+  <data name="FilterTeachingTip.ActionButtonContent" xml:space="preserve">
+    <value>清空过滤器</value>
+  </data>
+  <data name="FilterTeachingTip.CloseButtonContent" xml:space="preserve">
+    <value>应用</value>
+  </data>
+  <data name="FilterTeachingTip.Title" xml:space="preserve">
+    <value>过滤器设置</value>
+  </data>
 </root>

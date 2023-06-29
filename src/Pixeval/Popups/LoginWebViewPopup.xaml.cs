@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -25,35 +25,26 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Web.WebView2.Core;
 
-namespace Pixeval.Popups
+namespace Pixeval.Popups;
+
+public sealed partial class LoginWebViewPopup
 {
-    public sealed partial class LoginWebViewPopup : IAppPopupContent
+    public LoginWebViewPopup() => InitializeComponent();
+
+    public readonly TaskCompletionSource<(string, string)> CookieCompletion = new();
+
+    private async void LoginWebView_OnNavigationStarting(WebView2 sender, CoreWebView2NavigationStartingEventArgs args)
     {
-        public LoginWebViewPopup()
+        if (args.Uri.StartsWith("pixiv://"))
         {
-            InitializeComponent();
-            UniqueId = Guid.NewGuid();
+            var cookies = await LoginWebView.CoreWebView2.CookieManager.GetCookiesAsync("https://pixiv.net");
+            var cookieString = string.Join(';', cookies.Select(c => $"{c.Name}={c.Value}"));
+            CookieCompletion.SetResult((args.Uri, cookieString));
         }
+    }
 
-        public readonly TaskCompletionSource<(string, string)> CookieCompletion = new();
-
-        public Guid UniqueId { get; }
-
-        public FrameworkElement UIContent => this;
-
-        private async void LoginWebView_OnNavigationStarting(WebView2 sender, CoreWebView2NavigationStartingEventArgs args)
-        {
-            if (args.Uri.StartsWith("pixiv://"))
-            {
-                var cookies = await LoginWebView.CoreWebView2.CookieManager.GetCookiesAsync("https://pixiv.net");
-                var cookieString = string.Join(';', cookies.Select(c => $"{c.Name}={c.Value}"));
-                CookieCompletion.SetResult((args.Uri, cookieString));
-            }
-        }
-
-        private async void LoginWebView_OnCoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
-        {
-            await LoginWebView.CoreWebView2.CallDevToolsProtocolMethodAsync("Security.setIgnoreCertificateErrors", "{ \"ignore\": true }");
-        }
+    private async void LoginWebView_OnCoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
+    {
+        await LoginWebView.CoreWebView2.CallDevToolsProtocolMethodAsync("Security.setIgnoreCertificateErrors", "{ \"ignore\": true }");
     }
 }

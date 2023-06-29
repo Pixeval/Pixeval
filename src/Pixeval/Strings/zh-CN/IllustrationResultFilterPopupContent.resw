@@ -177,12 +177,6 @@
   <data name="PublishDateStartPicker.PlaceholderText" xml:space="preserve">
     <value>只会包含该日期后发布的作品</value>
   </data>
-  <data name="ResetButton.Content" xml:space="preserve">
-    <value>清空过滤器</value>
-  </data>
-  <data name="TitleTextBlock.Text" xml:space="preserve">
-    <value>过滤器设置</value>
-  </data>
   <data name="UserGroupNameEntry.Header" xml:space="preserve">
     <value>自定义收藏夹的名称</value>
   </data>

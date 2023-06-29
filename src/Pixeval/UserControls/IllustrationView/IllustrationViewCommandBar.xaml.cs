@@ -55,8 +55,6 @@ public sealed partial class IllustrationViewCommandBar
 
     private FilterSettings _lastFilterSettings = FilterSettings.Default;
 
-    private readonly IllustrationResultFilterPopupViewModel _filterPopupViewModel = new();
-
     public IllustrationViewCommandBar()
     {
         InitializeComponent();
@@ -219,27 +217,19 @@ public sealed partial class IllustrationViewCommandBar
         ViewModel.DataProvider.IllustrationsSource.WhereNotNull().ForEach(i => i.IsSelected = false);
     }
 
-    private void OpenConditionDialogButton_OnChecked(object sender, RoutedEventArgs e)
+    private void OpenConditionDialogButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        var content = new IllustrationResultFilterPopupContent(_filterPopupViewModel);
-        var popup = PopupManager.CreatePopup(content, 550, heightMargin: 100, lightDismiss: false, closing: ConditionPopupClosing);
-        content.ResetButtonTapped += (_, _) =>
-        {
-            content.Cleanup();
-            PopupManager.ClosePopup(popup);
-        };
-        content.CloseButtonTapped += (_, _) =>
-        {
-            content.Cleanup();
-            PopupManager.ClosePopup(popup);
-        };
-        PopupManager.ShowPopup(popup);
+        FilterTeachingTip.IsOpen = true;
     }
 
-    private void ConditionPopupClosing(IAppPopupContent popup, object? arg)
+    private void FilterTeachingTip_OnActionButtonClick(TeachingTip sender, object args)
     {
-        OpenConditionDialogButton.IsChecked = false;
-        if (arg is FilterSettings(
+        FilterContent.Reset();
+    }
+
+    private void FilterTeachingTip_OnCloseButtonClick(TeachingTip sender, object args)
+    {
+        if (FilterContent.GetFilterSettings is (
                 var includeTags,
                 var excludeTags,
                 var leastBookmark,
@@ -258,11 +248,6 @@ public sealed partial class IllustrationViewCommandBar
             }
 
             _lastFilterSettings = filterSettings;
-            if (popup is IllustrationResultFilterPopupContent { IsReset: true })
-            {
-                ViewModel.DataProvider.Filter = null;
-                return;
-            }
 
             ViewModel.DataProvider.Filter = null;
             ViewModel.DataProvider.Filter = o =>

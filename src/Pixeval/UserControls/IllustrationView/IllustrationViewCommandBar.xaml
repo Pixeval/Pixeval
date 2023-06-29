@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:illustrationResultFilter="using:Pixeval.Popups.IllustrationResultFilter"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:Pixeval.Util.UI"
     mc:Ignorable="d">
@@ -38,11 +39,11 @@
                 Icon="{ui:FontIcon Glyph=CancelE711}"
                 Label="{x:Bind ViewModel.SelectionLabel, Mode=OneWay}"
                 Tapped="CancelSelectionButton_OnTapped" />
-            <AppBarToggleButton
+            <AppBarButton
                 x:Name="OpenConditionDialogButton"
                 x:Uid="/IllustrationViewCommandBar/OpenConditionDialogButton"
-                Checked="OpenConditionDialogButton_OnChecked"
-                Icon="{ui:FontIcon Glyph=FilterE71C}" />
+                Icon="{ui:FontIcon Glyph=FilterE71C}"
+                Tapped="OpenConditionDialogButton_OnTapped" />
             <AppBarButton
                 x:Name="SelectAllButton"
                 x:Uid="/IllustrationViewCommandBar/SelectAllButton"
@@ -66,6 +67,16 @@
                 Icon="{ui:FontIcon Glyph=ShareE72D}"
                 Tapped="ShareButton_OnTapped" />
         </CommandBar>
+        <TeachingTip
+            x:Name="FilterTeachingTip"
+            x:Uid="/IllustrationViewCommandBar/FilterTeachingTip"
+            Grid.Column="0"
+            ActionButtonClick="FilterTeachingTip_OnActionButtonClick"
+            CloseButtonClick="FilterTeachingTip_OnCloseButtonClick"
+            IsLightDismissEnabled="True"
+            Target="{x:Bind OpenConditionDialogButton}">
+            <illustrationResultFilter:IllustrationResultFilterPopupContent x:Name="FilterContent" />
+        </TeachingTip>
         <TeachingTip
             x:Name="CommandBarTeachingTip"
             Grid.Column="0"

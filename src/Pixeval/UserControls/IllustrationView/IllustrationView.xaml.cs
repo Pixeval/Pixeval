@@ -123,7 +123,8 @@ public sealed partial class IllustrationView
             {
                 TitleBarType = TitleBarHelper.TitleBarType.AppWindow,
                 Size = new SizeInt32(width, height)
-            });
+            })
+            .Activate();
     }
 
     private static unsafe (int windowWidth, int windowHeight) DetermineWindowSize(int illustWidth, double illustRatio)

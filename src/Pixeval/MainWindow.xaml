@@ -7,37 +7,34 @@
     Closed="MainWindow_OnClosed"
     mc:Ignorable="d">
     <Grid>
-        <Grid>
-            <Frame
-                x:Name="PixevalAppRootFrame"
-                x:FieldModifier="public"
-                Loaded="PixevalAppRootFrame_OnLoaded"
-                Navigated="PixevalAppRootFrame_OnNavigated"
-                Navigating="PixevalAppRootFrame_OnNavigating"
-                NavigationFailed="PixevalAppRootFrame_OnNavigationFailed">
-                <Frame.ContentTransitions>
-                    <TransitionCollection>
-                        <NavigationThemeTransition DefaultNavigationTransitionInfo="{x:Bind DefaultNavigationTransitionInfo}" />
-                    </TransitionCollection>
-                </Frame.ContentTransitions>
-            </Frame>
-            <Grid
-                x:Name="Processing"
-                Width="100"
-                Height="100"
+        <Frame
+            x:Name="PixevalAppRootFrame"
+            x:FieldModifier="public"
+            Loaded="PixevalAppRootFrame_OnLoaded"
+            Navigated="PixevalAppRootFrame_OnNavigated"
+            Navigating="PixevalAppRootFrame_OnNavigating"
+            NavigationFailed="PixevalAppRootFrame_OnNavigationFailed">
+            <Frame.ContentTransitions>
+                <TransitionCollection>
+                    <NavigationThemeTransition DefaultNavigationTransitionInfo="{x:Bind DefaultNavigationTransitionInfo}" />
+                </TransitionCollection>
+            </Frame.ContentTransitions>
+        </Frame>
+        <Grid
+            x:Name="Processing"
+            Width="100"
+            Height="100"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            CornerRadius="15"
+            Visibility="Collapsed">
+            <Rectangle Fill="{ThemeResource PixevalAppAcrylicBrush}" />
+            <ProgressRing
+                Width="40"
+                Height="40"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                CornerRadius="15"
-                Visibility="Collapsed">
-                <Rectangle Fill="{ThemeResource PixevalAppAcrylicBrush}" />
-                <ProgressRing
-                    Width="40"
-                    Height="40"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    IsIndeterminate="True" />
-            </Grid>
-            <TeachingTip x:Name="PixevalAppSnackBar" x:FieldModifier="public" />
+                IsIndeterminate="True" />
         </Grid>
     </Grid>
 </Window>
