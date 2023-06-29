@@ -60,14 +60,6 @@ public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelpe
         WeakReferenceMessenger.Default.TryRegister<RankingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
     }
 
-    private void RankingsPage_OnLoaded(object? sender, RoutedEventArgs e)
-    {
-        if (MainWindow.GetNavigationModeAndReset() is not NavigationMode.Back)
-        {
-            ChangeSource();
-        }
-    }
-
     private void RankOptionComboBox_OnSelectionChangedWhenPrepared(object sender, SelectionChangedEventArgs e)
     {
         ChangeSource();

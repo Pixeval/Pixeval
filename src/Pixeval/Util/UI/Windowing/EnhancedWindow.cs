@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/CustomizableWindow.cs
+// Copyright (c) 2023 Pixeval/EnhancedWindow.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Diagnostics;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -27,26 +26,32 @@ using WinUI3Utilities;
 
 namespace Pixeval.Util.UI.Windowing;
 
-public sealed class CustomizableWindow : Window
+public sealed class EnhancedWindow : Window
 {
     private readonly Frame _frame;
 
-    private readonly Window _owner;
+    private readonly EnhancedWindow? _owner;
 
     /// <summary>
     /// IT IS FORBIDDEN TO USE THIS CONSTRUCTOR DIRECTLY, USE <see cref="WindowFactory.Fork"/> INSTEAD
     /// </summary>
-    /// <param name="owner"></param>
-    internal CustomizableWindow(Window owner)
+    internal EnhancedWindow()
     {
-        _owner = owner;
         Content = _frame = new()
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
         };
         Closed += OnClosed;
-        _owner.Closed += OnOwnerOnClosed;
+    }
+
+    /// <summary>
+    /// IT IS FORBIDDEN TO USE THIS CONSTRUCTOR DIRECTLY, USE <see cref="WindowFactory.Fork"/> INSTEAD
+    /// </summary>
+    /// <param name="owner"></param>
+    internal EnhancedWindow(EnhancedWindow owner) : this()
+    {
+        _owner = owner;
     }
 
     public event RoutedEventHandler FrameLoaded
@@ -57,7 +62,6 @@ public sealed class CustomizableWindow : Window
 
     private void OnClosed(object sender, WindowEventArgs args)
     {
-        _owner.Closed -= OnOwnerOnClosed;
         WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 

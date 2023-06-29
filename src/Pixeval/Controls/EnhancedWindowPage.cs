@@ -30,17 +30,17 @@ namespace Pixeval.Controls;
 
 public static class EnhancedWindowPageExtension
 {
-    public static void Navigate<T>(this Frame frame, CustomizableWindow window, object parameter, NavigationTransitionInfo? info) where T : EnhancedWindowPage
+    public static void Navigate<T>(this Frame frame, EnhancedWindow window, object parameter, NavigationTransitionInfo? info) where T : EnhancedWindowPage
     {
         _ = frame.Navigate(typeof(T), new NavigateParameter(parameter, window, frame), info);
     }
 }
 
-public record NavigateParameter(object Parameter, CustomizableWindow Window, Frame Frame);
+public record NavigateParameter(object Parameter, EnhancedWindow Window, Frame Frame);
 
 public class EnhancedWindowPage : Page, IEnhancedPage
 {
-    protected CustomizableWindow Window { get; private set; } = null!;
+    protected EnhancedWindow Window { get; private set; } = null!;
 
     protected Frame ParentFrame { get; private set; } = null!;
 

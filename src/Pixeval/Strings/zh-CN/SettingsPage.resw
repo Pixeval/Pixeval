@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -136,9 +136,6 @@
   </data>
   <data name="ApplicationSettingsGroup.Text" xml:space="preserve">
     <value>应用程序相关设置</value>
-  </data>
-  <data name="BackdropEntry.Description" xml:space="preserve">
-    <value>该选项将在应用重启后生效</value>
   </data>
   <data name="BackdropEntry.Header" xml:space="preserve">
     <value>应用的背景材质</value>
@@ -465,7 +462,7 @@
     <value>使用的 API 平台</value>
   </data>
   <data name="ThemeEntry.Header" xml:space="preserve">
-    <value>应用程序主题（重启应用后完全生效）</value>
+    <value>应用程序主题</value>
   </data>
   <data name="ThemeEntryDescriptionHyperlinkButton.Content" xml:space="preserve">
     <value>打开 Windows 系统主题设置</value>

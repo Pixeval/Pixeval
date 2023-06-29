@@ -24,8 +24,12 @@ public sealed partial class SettingRadioButtons : UserControl
     private void RadioButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         var select = sender.To<RadioButton>().GetDataContext<StringRepresentableItem>();
-        SelectedItem = select.Item;
-        SelectionChanged?.Invoke(this, new SelectionChangedEventArgs(new List<object>(), new List<object> { select }));
+        if(!Equals(SelectedItem, select.Item))
+        {
+            SelectedItem = select.Item;
+            SelectionChanged?.Invoke(this,
+                new(new List<object>(), new List<object> { select }));
+        }
     }
 
     private void SettingRadioButtons_OnLoaded(object sender, RoutedEventArgs e)

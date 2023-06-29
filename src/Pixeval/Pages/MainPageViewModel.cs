@@ -31,12 +31,11 @@ using Pixeval.CoreApi.Net;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Pages.Capability;
-using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.Misc;
+using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
-using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Pages;
 
@@ -88,10 +87,10 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
 
     public async Task ReverseSearchAsync(Stream stream)
     {
-        var window = (MainWindow)CurrentContext.Window;
+        var window = CurrentContext.Window;
         try
         {
-            window.ShowProgressRing();
+            //todo window.ShowProgressRing();
             var result = await App.AppViewModel.MakoClient.ReverseSearchAsync(stream, App.AppViewModel.AppSetting.ReverseSearchApiKey!);
             if (result.Header is not null)
             {
@@ -103,8 +102,8 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
                             var viewModels = new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(first.Data!.PixivId.ToString()))
                                 .GetMangaIllustrationViewModels()
                                 .ToArray();
-                            window.HideProgressRing();
-                            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
+                            // window.HideProgressRing();
+                            // ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
                             // todo UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
                             return;
                         }
@@ -119,13 +118,13 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
                         break;
                 }
 
-                window.HideProgressRing();
+                // window.HideProgressRing();
                 MessageDialogBuilder.CreateAcknowledgement(window, MainPageResources.ReverseSearchNotFoundTitle, MainPageResources.ReverseSearchNotFoundContent);
             }
         }
         catch (Exception e)
         {
-            window.HideProgressRing();
+            // window.HideProgressRing();
             await App.AppViewModel.ShowExceptionDialogAsync(e);
         }
     }

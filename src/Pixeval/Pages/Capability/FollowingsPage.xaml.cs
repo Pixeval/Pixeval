@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -55,14 +55,6 @@ public sealed partial class FollowingsPage : IIllustratorView
     public UIElement? GetItemContainer(IllustratorViewModel viewModel)
     {
         return IllustratorListView.ContainerFromItem(viewModel) as UIElement;
-    }
-
-    private void FollowingsPage_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        if (MainWindow.GetNavigationModeAndReset() is not NavigationMode.Back)
-        {
-            _ = ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public));
-        }
     }
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)

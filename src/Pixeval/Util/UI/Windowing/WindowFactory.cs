@@ -20,37 +20,185 @@
 
 using System.Collections.Generic;
 using Microsoft.UI.Xaml;
+using Pixeval.Options;
+using Windows.Foundation;
+using Windows.Graphics;
+using Windows.UI;
+using Microsoft.UI;
+using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.UI.Xaml.Media;
+using PInvoke;
 using WinUI3Utilities;
+using AppTheme = Pixeval.Options.ApplicationTheme;
+using ApplicationTheme = Microsoft.UI.Xaml.ApplicationTheme;
 
 namespace Pixeval.Util.UI.Windowing;
 
 public static class WindowFactory
 {
-    private static readonly List<CustomizableWindow> ForkedWindowsInternal = new();
+    public static EnhancedWindow RootWindow => ForkedWindowsInternal[0];
 
-    public static IReadOnlyList<CustomizableWindow> ForkedWindows => ForkedWindowsInternal;
+    private static readonly List<EnhancedWindow> ForkedWindowsInternal = new();
 
-    public static CustomizableWindow Fork(this Window owner, out CustomizableWindow window)
+    public static IReadOnlyList<EnhancedWindow> ForkedWindows => ForkedWindowsInternal;
+
+    public static EnhancedWindow Create(out EnhancedWindow window)
     {
-        var w = window = new(owner);
-        window.Closed += (_, _) =>
-        {
-            w.Close();
-            ForkedWindowsInternal.Remove(w);
-        };
+        var w = window = new();
+        if (ForkedWindowsInternal.Count is 0)
+            CurrentContext.Window = window;
+        window.Closed += (_, _) => ForkedWindowsInternal.Remove(w);
         ForkedWindowsInternal.Add(window);
         return window;
     }
 
-    public static CustomizableWindow WithLoaded(this CustomizableWindow window, RoutedEventHandler onLoaded)
+    public static EnhancedWindow Fork(this EnhancedWindow owner, out EnhancedWindow window)
+    {
+        var w = window = new(owner);
+        window.Closed += (_, _) => ForkedWindowsInternal.Remove(w);
+        ForkedWindowsInternal.Add(window);
+        return window;
+    }
+
+    public static EnhancedWindow WithLoaded(this EnhancedWindow window, RoutedEventHandler onLoaded)
     {
         window.FrameLoaded += onLoaded;
         return window;
     }
 
-    public static CustomizableWindow Initialize(this CustomizableWindow window, WindowHelper.InitializeInfo provider)
+    public static EnhancedWindow WithClosed(this EnhancedWindow window, TypedEventHandler<object, WindowEventArgs> onClosed)
     {
-        WindowHelper.Initialize(window, provider);
+        window.Closed += onClosed;
         return window;
     }
+
+    public static EnhancedWindow Init(this EnhancedWindow window, SizeInt32 size = default)
+    {
+        window.Initialize(new()
+        {
+            BackdropType = App.AppViewModel.AppSetting.AppBackdrop switch
+            {
+                ApplicationBackdropType.None => BackdropType.None,
+                ApplicationBackdropType.Acrylic => BackdropType.Acrylic,
+                ApplicationBackdropType.Mica => BackdropType.Mica,
+                ApplicationBackdropType.MicaAlt => BackdropType.MicaAlt,
+                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ApplicationBackdropType, BackdropType>(App.AppViewModel.AppSetting.AppBackdrop)
+            },
+            TitleBarType = TitleBarHelper.TitleBarType.AppWindow,
+            Size = size
+        });
+        var theme = GetElementTheme(App.AppViewModel.AppSetting.Theme);
+        SetAppWindowTitleBarButtonColor(window, theme);
+        window.FrameLoaded += (s, _) =>
+        {
+            s.To<FrameworkElement>().RequestedTheme = theme;
+        };
+        return window;
+    }
+
+    public static void SetBackdrop(ApplicationBackdropType backdropType)
+    {
+        foreach (var window in ForkedWindowsInternal)
+        {
+            window.SystemBackdrop = backdropType switch
+            {
+                ApplicationBackdropType.None => null,
+                ApplicationBackdropType.Acrylic => new DesktopAcrylicBackdrop(),
+                ApplicationBackdropType.Mica => new MicaBackdrop(),
+                ApplicationBackdropType.MicaAlt => new MicaBackdrop { Kind = MicaKind.BaseAlt },
+                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ApplicationBackdropType, SystemBackdrop>(backdropType)
+            };
+        }
+    }
+
+    public static void SetTheme(AppTheme theme)
+    {
+        var t = GetElementTheme(theme);
+
+        foreach (var window in ForkedWindowsInternal)
+        {
+            window.Content.To<FrameworkElement>().RequestedTheme = t;
+            SetAppWindowTitleBarButtonColor(window, t);
+        }
+    }
+
+    private static ElementTheme GetElementTheme(AppTheme theme)
+    {
+        return theme switch
+        {
+            AppTheme.Dark => ElementTheme.Dark,
+            AppTheme.Light => ElementTheme.Light,
+            AppTheme.SystemDefault => Application.Current.RequestedTheme switch
+            {
+                ApplicationTheme.Light => ElementTheme.Light,
+                ApplicationTheme.Dark => ElementTheme.Dark,
+                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ApplicationTheme, ElementTheme>(Application.Current.RequestedTheme)
+            },
+            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<AppTheme, ElementTheme>(theme)
+        };
+    }
+
+    /// <summary>
+    /// Work when in <see cref="TitleBarHelper.TitleBarType.AppWindow"/>
+    /// </summary>
+    /// <param name="window"></param>
+    /// <param name="theme"></param>
+    private static void SetAppWindowTitleBarButtonColor(Window window, ElementTheme theme)
+    {
+        window.AppWindow.TitleBar.ButtonForegroundColor = theme switch
+        {
+            ElementTheme.Light => Colors.Black,
+            ElementTheme.Dark => Colors.White,
+            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ElementTheme, Color>(theme)
+        };
+        window.AppWindow.TitleBar.ButtonHoverBackgroundColor = theme switch
+        {
+            ElementTheme.Light => new() { A = 0x33, R = 0, G = 0, B = 0 },
+            ElementTheme.Dark => new() { A = 0x33, R = 0xFF, G = 0xFF, B = 0xFF },
+            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ElementTheme, Color>(theme)
+        };
+    }
+
+    #region Window
+
+    /// <summary>
+    /// Work when in <see cref="TitleBarHelper.TitleBarType.Window"/>
+    /// </summary>
+    /// <param name="window"></param>
+    /// <param name="theme"></param>
+    private static void SetWindowTitleBarButtonColor(Window window, ElementTheme theme)
+    {
+        Application.Current.Resources["WindowCaptionForeground"] = theme switch
+        {
+            ElementTheme.Light => Colors.Black,
+            ElementTheme.Dark => Colors.White,
+            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ElementTheme, Color>(theme)
+        };
+
+        TriggerTitleBarRepaint(window);
+    }
+
+    private static void TriggerTitleBarRepaint(Window window)
+    {
+        const int WM_ACTIVATE = 0x0006;
+        const int WA_ACTIVE = 0x01;
+        const int WA_CLICKACTIVE = 0x02;
+        const int WA_INACTIVE = 0x00;
+
+        // to trigger repaint tracking task id 38044406
+        var hWnd = (nint)window.AppWindow.Id.Value;
+        var activeWindow = User32.GetActiveWindow();
+        if (hWnd == activeWindow)
+        {
+            _ = User32.SendMessage(hWnd, User32.WindowMessage.WM_ACTIVATE, WA_INACTIVE, 0);
+            _ = User32.SendMessage(hWnd, User32.WindowMessage.WM_ACTIVATE, WA_ACTIVE, 0);
+        }
+        else
+        {
+            _ = User32.SendMessage(hWnd, User32.WindowMessage.WM_ACTIVATE, WA_ACTIVE, 0);
+            _ = User32.SendMessage(hWnd, User32.WindowMessage.WM_ACTIVATE, WA_INACTIVE, 0);
+        }
+    }
+
+    #endregion
 }

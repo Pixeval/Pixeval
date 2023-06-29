@@ -56,14 +56,6 @@ public sealed partial class BookmarksPage : ISortedIllustrationContainerPageHelp
         WeakReferenceMessenger.Default.TryRegister<BookmarksPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
     }
 
-    private void BookmarksPage_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        if (MainWindow.GetNavigationModeAndReset() is not NavigationMode.Back)
-        {
-            ChangeSource();
-        }
-    }
-
     private void PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
     {
         ChangeSource();

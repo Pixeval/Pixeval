@@ -116,14 +116,10 @@ public sealed partial class IllustrationView
         // TODO: Test Use the new windowing API
         var (width, height) = DetermineWindowSize(viewModels[0].Illustration.Width, viewModels[0].Illustration.Width / (double)viewModels[0].Illustration.Height);
 
-        CurrentContext.Window.Fork(out var w)
+        WindowFactory.RootWindow.Fork(out var w)
             .WithLoaded((o, _) => o.To<Frame>().Navigate<IllustrationViewerPage>(w,
                 new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo()))
-            .Initialize(new()
-            {
-                TitleBarType = TitleBarHelper.TitleBarType.AppWindow,
-                Size = new SizeInt32(width, height)
-            })
+            .Init(new SizeInt32(width, height))
             .Activate();
     }
 

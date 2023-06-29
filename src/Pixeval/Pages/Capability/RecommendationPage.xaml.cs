@@ -58,14 +58,6 @@ public sealed partial class RecommendationPage : ISortedIllustrationContainerPag
         WeakReferenceMessenger.Default.TryRegister<RecommendationPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
     }
 
-    private void RecommendationsPage_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        if (MainWindow.GetNavigationModeAndReset() is not NavigationMode.Back)
-        {
-            ChangeSource();
-        }
-    }
-
     private void ModeSelectionComboBox_OnSelectionChangedWhenLoaded(object? sender, SelectionChangedEventArgs e)
     {
         ChangeSource();

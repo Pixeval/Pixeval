@@ -49,19 +49,11 @@ public sealed partial class RecentPostsPage : ISortedIllustrationContainerPageHe
         WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 
-    public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
+    public override void OnPageActivated(NavigationEventArgs e)
     {
         PrivacyPolicyComboBox.SelectedItem = PrivacyPolicyComboBoxPublicItem;
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
         WeakReferenceMessenger.Default.TryRegister<RecentPostsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
-    }
-
-    private void RecentPostsPage_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        if (MainWindow.GetNavigationModeAndReset() is not NavigationMode.Back)
-        {
-            ChangeSource();
-        }
     }
 
     private void PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
