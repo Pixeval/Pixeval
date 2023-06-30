@@ -53,6 +53,8 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     private ImageViewerPageViewModel _current = null!;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(NextButtonEnable))]
+    [NotifyPropertyChangedFor(nameof(PrevButtonEnable))]
     private int _currentIndex;
 
     [ObservableProperty]
@@ -394,13 +396,15 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     public ImageViewerPageViewModel Next()
     {
-        ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModels![CurrentIndex++]);
+        ++CurrentIndex;
+        ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModels![CurrentIndex]);
         return Current;
     }
 
     public ImageViewerPageViewModel Prev()
     {
-        ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModels![CurrentIndex--]);
+        --CurrentIndex;
+        ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModels![CurrentIndex]);
         return Current;
     }
 
@@ -509,48 +513,58 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     #region Helper Functions
 
-    public Visibility CalculateNextImageButtonVisibility(int index)
-    {
-        if (IllustrationView is null)
-        {
-            return Visibility.Collapsed;
-        }
+    public Visibility NextButtonEnable => NextButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
 
-        return index < ImageViewerPageViewModels!.Length - 1 ? Visibility.Visible : Visibility.Collapsed;
+    public bool NextIllustrationEnable => ContainerRiverFlowIllustrationViewViewModel is not null && ContainerRiverFlowIllustrationViewViewModel.DataProvider.IllustrationsView.Count > IllustrationIndex + 1;
+
+    /// <summary>
+    /// <see langword="true"/>: next image<br/>
+    /// <see langword="false"/>: next illustration<br/>
+    /// <see langword="null"/>: none
+    /// </summary>
+    public bool? NextButtonAction
+    {
+        get
+        {
+            if (IllustrationView is not null && CurrentIndex < ImageViewerPageViewModels!.Length - 1)
+            {
+                return true;
+            }
+
+            if (NextIllustrationEnable)
+            {
+                return false;
+            }
+
+            return null;
+        }
     }
 
-    public Visibility CalculatePrevImageButtonVisibility(int index)
+    public Visibility PrevButtonEnable => PrevButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
+
+    public bool PrevIllustrationEnable => ContainerRiverFlowIllustrationViewViewModel is not null && IllustrationIndex > 0;
+
+    /// <summary>
+    /// <see langword="true"/>: prev image<br/>
+    /// <see langword="false"/>: prev illustration<br/>
+    /// <see langword="null"/>: none
+    /// </summary>
+    public bool? PrevButtonAction
     {
-        if (IllustrationView is null)
+        get
         {
-            return Visibility.Collapsed;
+            if (IllustrationView is not null && CurrentIndex > 0)
+            {
+                return true;
+            }
+
+            if (PrevIllustrationEnable)
+            {
+                return false;
+            }
+
+            return null;
         }
-
-        return index > 0 ? Visibility.Visible : Visibility.Collapsed;
-    }
-
-    public Visibility CalculateNextIllustrationButtonVisibility(int index)
-    {
-        if (ContainerRiverFlowIllustrationViewViewModel is null)
-        {
-            return Visibility.Collapsed;
-        }
-
-        return ContainerRiverFlowIllustrationViewViewModel.DataProvider.IllustrationsView.Count > IllustrationIndex + 1
-            ? CalculateNextImageButtonVisibility(index).Inverse()
-            : Visibility.Collapsed;
-    }
-
-    public Visibility CalculatePrevIllustrationButtonVisibility(int index)
-    {
-        if (ContainerRiverFlowIllustrationViewViewModel is null)
-        {
-            return Visibility.Collapsed;
-        }
-
-        return IllustrationIndex > 0
-            ? CalculatePrevImageButtonVisibility(index).Inverse()
-            : Visibility.Collapsed;
     }
 
     #endregion

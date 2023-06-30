@@ -96,7 +96,7 @@ public class EnhancedWindowPage : Page, IEnhancedPage
 
     protected void NavigateSelf(object? parameter, NavigationTransitionInfo? info = null)
     {
-        _ = Frame.Navigate(typeof(EnhancedWindowPage), new NavigateParameter(parameter, Window), info);
+        _ = Frame.Navigate(GetType(), new NavigateParameter(parameter, Window), info);
     }
 
     public virtual void OnPageDeactivated(NavigatingCancelEventArgs e)

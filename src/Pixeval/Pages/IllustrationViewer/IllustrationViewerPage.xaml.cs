@@ -303,24 +303,36 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
             new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft });
     }
 
-    private void NextImageAppBarButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void NextButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        NextImage();
+        switch (_viewModel.NextButtonAction)
+        {
+            case true: NextImage(); break;
+            case false: NextIllustration(); break;
+            case null: break;
+        }
     }
 
-    private void PrevImageAppBarButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void NextButton_OnRightTapped(object sender, RightTappedRoutedEventArgs e)
     {
-        PrevImage();
+        if (_viewModel.NextIllustrationEnable)
+            NextIllustration();
     }
 
-    private void NextIllustrationAppBarButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void PrevButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        NextIllustration();
+        switch (_viewModel.PrevButtonAction)
+        {
+            case true: PrevImage(); break;
+            case false: PrevIllustration(); break;
+            case null: break;
+        }
     }
 
-    private void PrevIllustrationAppBarButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void PrevButton_OnRightTapped(object sender, RightTappedRoutedEventArgs e)
     {
-        PrevIllustration();
+        if (_viewModel.PrevIllustrationEnable)
+            PrevIllustration();
     }
 
     private void GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick(TeachingTip sender, object args)
@@ -357,24 +369,14 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         });
     }
 
-    private void LeftPageButtonArea_OnPointerEntered(object sender, PointerRoutedEventArgs e)
+    private void ButtonArea_OnPointerEntered(object sender, PointerRoutedEventArgs e)
     {
-        PrevButtonDetector.Opacity = 1;
+        sender.To<Border>().Child.Opacity = 1;
     }
 
-    private void LeftPageButtonArea_OnPointerExited(object sender, PointerRoutedEventArgs e)
+    private void ButtonArea_OnPointerExited(object sender, PointerRoutedEventArgs e)
     {
-        PrevButtonDetector.Opacity = 0;
-    }
-
-    private void RightPageButtonArea_OnPointerEntered(object sender, PointerRoutedEventArgs e)
-    {
-        NextButtonDetector.Opacity = 1;
-    }
-
-    private void RightPageButtonArea_OnPointerExited(object sender, PointerRoutedEventArgs e)
-    {
-        NextButtonDetector.Opacity = 0;
+        sender.To<Border>().Child.Opacity = 0;
     }
 
     private void ThumbnailList_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
@@ -433,7 +435,6 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void SelectItemInListView(ListView listView, IllustrationViewModel newItem, IllustrationViewModel oldItem)
     {
-
         const string borderControlName = "ThumbnailBorder";
         listView.UpdateLayout();
         var item = listView.ContainerFromItem(listView.SelectedItem);

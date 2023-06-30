@@ -9,7 +9,6 @@
     xmlns:pages="using:Pixeval.Pages"
     xmlns:ui="using:Pixeval.Util.UI"
     xmlns:utilities="using:WinUI3Utilities"
-    NavigationCacheMode="Required"
     mc:Ignorable="d">
     <controls:EnhancedWindowPage.Resources>
         <DataTemplate x:Key="IllustrationHeaderSuggestionTemplate">
