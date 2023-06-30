@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -18,9 +18,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.Text;
+using Windows.System;
 using Microsoft.UI.Xaml;
-using Pixeval.AppManagement;
+using Microsoft.UI.Xaml.Input;
+using WinUI3Utilities;
+using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.Misc;
 
@@ -39,5 +43,10 @@ public sealed partial class AboutPage
     {
         var licenseText = Encoding.UTF8.GetString(await AppContext.GetAssetBytesAsync("GPLv3.md"));
         OpenSourceLicenseMarkdownTextBlock.Text = licenseText;
+    }
+
+    private async void LaunchUri(object sender, TappedRoutedEventArgs e)
+    {
+        await Launcher.LaunchUriAsync(new Uri(sender.GetTag<string>()));
     }
 }
