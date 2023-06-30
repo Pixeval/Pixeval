@@ -122,11 +122,6 @@ public static partial class UIHelper
         return Color.FromArgb(0xFF, pixel.R, pixel.G, pixel.B);
     }
 
-    public static bool GetIllustrationViewSortOptionAvailability(IllustrationViewOption option)
-    {
-        return option is IllustrationViewOption.Grid;
-    }
-
     public static async Task LoadMoreItemsAsync(this AdvancedCollectionView acv, uint count, Action<LoadMoreItemsResult> callback)
     {
         var result = await acv.LoadMoreItemsAsync(count);

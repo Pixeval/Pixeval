@@ -71,12 +71,4 @@ public sealed partial class BookmarksPage : ISortedIllustrationContainerPageHelp
     {
         _ = IllustrationContainer.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Bookmarks(App.AppViewModel.PixivUid!, PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public), App.AppViewModel.AppSetting.TargetFilter));
     }
-
-    private void SortOptionComboBoxContainer_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        if (App.AppViewModel.AppSetting.IllustrationViewOption is IllustrationViewOption.RiverFlow)
-        {
-            ToolTipService.SetToolTip(SortOptionComboBoxContainer, new ToolTip { Content = MiscResources.SortIsNotAllowedWithJustifiedLayout });
-        }
-    }
 }

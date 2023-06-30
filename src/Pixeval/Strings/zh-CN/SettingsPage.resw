@@ -255,7 +255,7 @@
     <value>GitHub 仓库</value>
   </data>
   <data name="IllustrationViewOptionEntry.Description" xml:space="preserve">
-    <value>缩略图视图的对齐规则。选择网格对齐则每张图片大小相当；选择两端对齐则只有每一行的两端会被对齐。注意排序功能只有网格对齐视图可用</value>
+    <value>选择网格布局则每张图片大小相同；选择流式布局则只有每一行的两端会被对齐</value>
   </data>
   <data name="IllustrationViewOptionEntry.Header" xml:space="preserve">
     <value>缩略图视图对齐规则</value>

@@ -103,7 +103,6 @@
                                         IsEnabled="{x:Bind _viewModel.IsFollowButtonEnabled, Mode=OneWay}"
                                         Tapped="UnfollowButton_OnTapped"
                                         Visibility="{x:Bind _viewModel.IsFollowed, Mode=OneWay}" />
-
                                 </CommandBar>
                             </StackPanel>
                         </StackPanel>
