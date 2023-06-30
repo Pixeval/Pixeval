@@ -106,7 +106,6 @@ public class IllustrationResultFilterContentViewModel : ObservableObject
         set => SetProperty(ref _illustratorId, value);
     }
 
-
     [DefaultValue(typeof(Token))]
     public Token IllustrationName
     {

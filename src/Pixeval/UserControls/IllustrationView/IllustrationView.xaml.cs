@@ -117,7 +117,7 @@ public sealed partial class IllustrationView
         var (width, height) = DetermineWindowSize(viewModels[0].Illustration.Width, viewModels[0].Illustration.Width / (double)viewModels[0].Illustration.Height);
 
         WindowFactory.RootWindow.Fork(out var w)
-            .WithLoaded((o, _) => o.To<Frame>().Navigate<IllustrationViewerPage>(w,
+            .WithLoaded((o, _) => o.To<Frame>().NavigateTo<IllustrationViewerPage>(w,
                 new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo()))
             .Init(new SizeInt32(width, height))
             .Activate();

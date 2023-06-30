@@ -188,7 +188,6 @@
         <PRIResource Include="Strings\zh-CN\LoginPage.resw" />
         <PRIResource Include="Strings\zh-CN\MacroParser.resw" />
         <PRIResource Include="Strings\zh-CN\MainPage.resw" />
-        <PRIResource Include="Strings\zh-CN\MainWindow.resw" />
         <PRIResource Include="Strings\zh-CN\MessageContentDialog.resw" />
         <PRIResource Include="Strings\zh-CN\Misc.resw" />
         <PRIResource Include="Strings\zh-CN\RankingsPage.resw" />

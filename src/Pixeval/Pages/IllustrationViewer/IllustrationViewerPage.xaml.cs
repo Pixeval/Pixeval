@@ -131,7 +131,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 
-    public override void OnPageActivated(NavigationEventArgs e, object parameter)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         if (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation") is { } animation)
         {

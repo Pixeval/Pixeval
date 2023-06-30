@@ -32,6 +32,7 @@ using Pixeval.Options;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Controls;
 using Pixeval.Pages.Login;
 using Pixeval.Util.UI.Windowing;
 
@@ -72,8 +73,8 @@ public partial class App
         CurrentContext.Title = AppContext.AppIdentifier;
         WindowFactory.SetTheme(AppViewModel.AppSetting.Theme);
 
-        WindowFactory.Create(out _)
-            .WithLoaded((s, _) => s.To<Frame>().Navigate(typeof(LoginPage)))
+        WindowFactory.Create(out var w)
+            .WithLoaded((s, _) => s.To<Frame>().NavigateTo<LoginPage>(w))
             .WithClosed((_, _) => AppContext.SaveContext())
             .Init(new(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight))
             .Activate();

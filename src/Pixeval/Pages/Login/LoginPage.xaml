@@ -1,4 +1,4 @@
-<controls:EnhancedPage
+<controls:EnhancedWindowPage
     x:Class="Pixeval.Pages.Login.LoginPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -28,4 +28,4 @@
             Child="{x:Bind _viewModel.WebView, Mode=OneWay}"
             CornerRadius="4" />
     </Grid>
-</controls:EnhancedPage>
+</controls:EnhancedWindowPage>

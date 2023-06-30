@@ -84,7 +84,7 @@ public sealed partial class MainPage: ISupportCustomTitleBarDragRegion
         }
     }
 
-    public override void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         // dirty trick, the order of the menu items is the same as the order of the fields in MainPageTabItem
         // since enums are basically integers, we just need a cast to transform it to the correct offset.
