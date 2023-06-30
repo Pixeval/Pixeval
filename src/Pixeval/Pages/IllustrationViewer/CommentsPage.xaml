@@ -4,8 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:flyouts="using:Pixeval.Flyouts"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:popups="using:Pixeval.Popups"
     xmlns:userControls="using:Pixeval.UserControls"
     Background="{ThemeResource PixevalPanelBackgroundThemeBrush}"
     NavigationCacheMode="Required"
@@ -30,7 +30,7 @@
             x:Uid="/CommentsPage/CommentRepliesTeachingTip"
             Grid.Row="0"
             IsLightDismissEnabled="False">
-            <popups:CommentRepliesBlock x:Name="CommentRepliesBlock" />
+            <flyouts:CommentRepliesBlock x:Name="CommentRepliesBlock" />
         </TeachingTip>
     </Grid>
 </controls:EnhancedPage>

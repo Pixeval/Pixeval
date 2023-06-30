@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/LoginWebViewPopup.xaml.cs
+// Copyright (c) 2022 Pixeval/LoginWebView.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,18 +18,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 
-namespace Pixeval.Popups;
+namespace Pixeval.Flyouts;
 
-public sealed partial class LoginWebViewPopup
+public sealed partial class LoginWebView
 {
-    public LoginWebViewPopup() => InitializeComponent();
+    public LoginWebView() => InitializeComponent();
 
     public readonly TaskCompletionSource<(string, string)> CookieCompletion = new();
 
@@ -37,7 +36,7 @@ public sealed partial class LoginWebViewPopup
     {
         if (args.Uri.StartsWith("pixiv://"))
         {
-            var cookies = await LoginWebView.CoreWebView2.CookieManager.GetCookiesAsync("https://pixiv.net");
+            var cookies = await LoginWebView2.CoreWebView2.CookieManager.GetCookiesAsync("https://pixiv.net");
             var cookieString = string.Join(';', cookies.Select(c => $"{c.Name}={c.Value}"));
             CookieCompletion.SetResult((args.Uri, cookieString));
         }
@@ -45,6 +44,6 @@ public sealed partial class LoginWebViewPopup
 
     private async void LoginWebView_OnCoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
     {
-        await LoginWebView.CoreWebView2.CallDevToolsProtocolMethodAsync("Security.setIgnoreCertificateErrors", "{ \"ignore\": true }");
+        await LoginWebView2.CoreWebView2.CallDevToolsProtocolMethodAsync("Security.setIgnoreCertificateErrors", "{ \"ignore\": true }");
     }
 }

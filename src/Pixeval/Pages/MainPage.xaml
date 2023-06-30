@@ -152,7 +152,7 @@
                         Width="{StaticResource CollapsedAppBarButtonWidth}"
                         Content="{ui:FontIcon Glyph=SettingsE713,
                                               FontSize=13}"
-                        Tapped="OpenSearchSettingPopupButton_OnTapped" />
+                        Tapped="OpenSearchSettingButton_OnTapped" />
                 </CommandBar>
             </Grid>
         </Grid>
@@ -196,7 +196,7 @@
                         </AutoSuggestBox.ItemContainerTransitions>
                     </AutoSuggestBox>
                     <Button
-                        x:Uid="/MainPage/OpenSearchSettingPopupButton"
+                        x:Uid="/MainPage/OpenSearchSettingButton"
                         Grid.Column="1"
                         Width="33"
                         Height="33"
@@ -205,7 +205,7 @@
                         VerticalAlignment="Center"
                         Content="{ui:FontIcon Glyph=SettingsE713,
                                               FontSize=13}"
-                        Tapped="OpenSearchSettingPopupButton_OnTapped" />
+                        Tapped="OpenSearchSettingButton_OnTapped" />
                     <Button
                         x:Uid="/MainPage/ReverseSearchButton"
                         Grid.Column="2"

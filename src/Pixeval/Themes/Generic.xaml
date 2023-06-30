@@ -10,6 +10,6 @@
         <ResourceDictionary Source="ms-appx:///Controls/TokenInputTextBox/TokenInputTextBox.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/PremiumUserBadge/PremiumUserBadge.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/FollowingUserBadge/FollowingUserBadge.xaml" />
-        <ResourceDictionary Source="ms-appx:///Popups/IllustrationResultFilter/IllustrationResultFilterFunctionEntry.xaml" />
+        <ResourceDictionary Source="ms-appx:///Flyouts/IllustrationResultFilter/IllustrationResultFilterFunctionEntry.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

@@ -28,15 +28,15 @@ using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using WinUI3Utilities.Attributes;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.UserControls;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
+using WinUI3Utilities.Attributes;
 
-namespace Pixeval.Popups;
+namespace Pixeval.Flyouts;
 
 [DependencyProperty<CommentRepliesBlockViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 public sealed partial class CommentRepliesBlock

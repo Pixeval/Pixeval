@@ -180,23 +180,18 @@ public static class WindowFactory
 
     private static void TriggerTitleBarRepaint(Window window)
     {
-        const int WM_ACTIVATE = 0x0006;
-        const int WA_ACTIVE = 0x01;
-        const int WA_CLICKACTIVE = 0x02;
-        const int WA_INACTIVE = 0x00;
-
         // to trigger repaint tracking task id 38044406
         var hWnd = (nint)window.AppWindow.Id.Value;
         var activeWindow = User32.GetActiveWindow();
         if (hWnd == activeWindow)
         {
-            _ = User32.SendMessage(hWnd, User32.WindowMessage.WM_ACTIVATE, WA_INACTIVE, 0);
-            _ = User32.SendMessage(hWnd, User32.WindowMessage.WM_ACTIVATE, WA_ACTIVE, 0);
+            _ = User32.SendMessage(hWnd, User32.WindowMessage.WM_ACTIVATE, 0, 0);
+            _ = User32.SendMessage(hWnd, User32.WindowMessage.WM_ACTIVATE, 1, 0);
         }
         else
         {
-            _ = User32.SendMessage(hWnd, User32.WindowMessage.WM_ACTIVATE, WA_ACTIVE, 0);
-            _ = User32.SendMessage(hWnd, User32.WindowMessage.WM_ACTIVATE, WA_INACTIVE, 0);
+            _ = User32.SendMessage(hWnd, User32.WindowMessage.WM_ACTIVATE, 1, 0);
+            _ = User32.SendMessage(hWnd, User32.WindowMessage.WM_ACTIVATE, 0, 0);
         }
     }
 

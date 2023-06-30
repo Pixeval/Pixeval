@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IllustrationResultFilterPopupContent.xaml.cs
+// Copyright (c) 2022 Pixeval/IllustrationResultFilterContent.xaml.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,16 +19,15 @@
 #endregion
 
 using System.Reflection;
-using Microsoft.UI.Xaml.Input;
 using Pixeval.Attributes;
 
-namespace Pixeval.Popups.IllustrationResultFilter;
+namespace Pixeval.Flyouts.IllustrationResultFilter;
 
-public sealed partial class IllustrationResultFilterPopupContent
+public sealed partial class IllustrationResultFilterContent
 {
-    public IllustrationResultFilterPopupViewModel ViewModel { get; set; } = new();
+    public IllustrationResultFilterContentViewModel ViewModel { get; set; } = new();
 
-    public IllustrationResultFilterPopupContent()
+    public IllustrationResultFilterContent()
     {
         InitializeComponent();
     }
@@ -48,7 +47,7 @@ public sealed partial class IllustrationResultFilterPopupContent
 
     public void Reset()
     {
-        foreach (var propertyInfo in typeof(IllustrationResultFilterPopupViewModel).GetProperties(BindingFlags.Public | BindingFlags.Instance))
+        foreach (var propertyInfo in typeof(IllustrationResultFilterContentViewModel).GetProperties(BindingFlags.Public | BindingFlags.Instance))
         {
             propertyInfo.SetValue(ViewModel, propertyInfo.GetDefaultValue());
         }

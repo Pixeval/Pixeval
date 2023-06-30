@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:illustrationResultFilter="using:Pixeval.Popups.IllustrationResultFilter"
+    xmlns:illustrationResultFilter1="using:Pixeval.Flyouts.IllustrationResultFilter"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:Pixeval.Util.UI"
     mc:Ignorable="d">
@@ -75,7 +75,7 @@
             CloseButtonClick="FilterTeachingTip_OnCloseButtonClick"
             IsLightDismissEnabled="True"
             Target="{x:Bind OpenConditionDialogButton}">
-            <illustrationResultFilter:IllustrationResultFilterPopupContent x:Name="FilterContent" />
+            <illustrationResultFilter1:IllustrationResultFilterContent x:Name="FilterContent" />
         </TeachingTip>
         <TeachingTip
             x:Name="CommandBarTeachingTip"

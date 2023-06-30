@@ -21,8 +21,7 @@
 using Microsoft.UI.Xaml.Controls;
 using WinUI3Utilities.Attributes;
 
-
-namespace Pixeval.Popups.IllustrationResultFilter;
+namespace Pixeval.Flyouts.IllustrationResultFilter;
 
 [DependencyProperty<string>("Header")]
 public partial class IllustrationResultFilterFunctionEntry : ContentControl

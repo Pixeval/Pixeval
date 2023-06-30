@@ -37,8 +37,8 @@ using Pixeval.CoreApi;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Preference;
+using Pixeval.Flyouts;
 using Pixeval.Misc;
-using Pixeval.Popups;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
@@ -79,7 +79,7 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsWebViewVisible))]
-    private LoginWebViewPopup? _webView;
+    private LoginWebView? _webView;
 
     public Visibility IsWebViewVisible => WebView is null ? Visibility.Collapsed : Visibility.Visible;
 
@@ -186,15 +186,15 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
 
         AdvancePhase(LoginPhaseEnum.ExecutingWebView2);
 
-        await WebView.LoginWebView.EnsureCoreWebView2Async();
-        WebView.LoginWebView.CoreWebView2.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All);
-        WebView.LoginWebView.CoreWebView2.WebResourceRequested += (_, args) =>
+        await WebView.LoginWebView2.EnsureCoreWebView2Async();
+        WebView.LoginWebView2.CoreWebView2.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All);
+        WebView.LoginWebView2.CoreWebView2.WebResourceRequested += (_, args) =>
         {
             args.Request.Headers.SetHeader("Accept-Language", args.Request.Uri.Contains("recaptcha") ? "zh-cn" : CultureInfo.CurrentUICulture.Name);
         };
 
         var verifier = PixivAuthSignature.GetCodeVerify();
-        WebView.LoginWebView.Source = new Uri(PixivAuthSignature.GenerateWebPageUrl(verifier));
+        WebView.LoginWebView2.Source = new Uri(PixivAuthSignature.GenerateWebPageUrl(verifier));
 
         var (url, cookie) = await WebView.CookieCompletion.Task;
         WebView = null;

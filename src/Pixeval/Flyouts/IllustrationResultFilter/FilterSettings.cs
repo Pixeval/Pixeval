@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -24,7 +24,7 @@ using System.Linq;
 using Pixeval.UserControls.TokenInput;
 using Pixeval.Utilities;
 
-namespace Pixeval.Popups.IllustrationResultFilter;
+namespace Pixeval.Flyouts.IllustrationResultFilter;
 
 public record FilterSettings(
     IEnumerable<Token> IncludeTags,

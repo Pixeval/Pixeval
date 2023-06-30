@@ -181,7 +181,7 @@
         <PRIResource Include="Strings\zh-CN\IllustrationView.resw" />
         <PRIResource Include="Strings\zh-CN\IllustrationViewCommandBar.resw" />
         <PRIResource Include="Strings\zh-CN\IllustrationInfoPage.resw" />
-        <PRIResource Include="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
+        <PRIResource Include="Strings\zh-CN\IllustrationResultFilterContent.resw" />
         <PRIResource Include="Strings\zh-CN\IllustrationViewerPage.resw" />
         <PRIResource Include="Strings\zh-CN\IllustratorPage.resw" />
         <PRIResource Include="Strings\zh-CN\ImageViewerPage.resw" />
@@ -294,7 +294,7 @@
         <Page Update="Pages\Capability\SearchResultsPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Popups\LoginWebViewPopup.xaml">
+        <Page Update="Flyouts\LoginWebView.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\Misc\AboutPage.xaml">
@@ -312,10 +312,10 @@
         <Page Update="UserControls\TokenInput\TokenInput.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Popups\IllustrationResultFilter\IllustrationResultFilterFunctionEntry.xaml">
+        <Page Update="Flyouts\IllustrationResultFilter\IllustrationResultFilterFunctionEntry.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Popups\IllustrationResultFilter\IllustrationResultFilterPopupContent.xaml">
+        <Page Update="Flyouts\IllustrationResultFilter\IllustrationResultFilterContent.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Controls\Expander\Expander.xaml">
@@ -345,7 +345,7 @@
         <Page Update="UserControls\CommentList.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Popups\CommentRepliesBlock.xaml">
+        <Page Update="Flyouts\CommentRepliesBlock.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="UserControls\CommentBlock.xaml">

@@ -229,7 +229,7 @@ public sealed partial class MainPage: ISupportCustomTitleBarDragRegion
             setting.UsePreciseRangeForSearch ? setting.SearchEndDate : null));
     }
 
-    private void OpenSearchSettingPopupButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void OpenSearchSettingButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         NavigateToSettingEntryAsync(SettingEntry.ReverseSearchResultSimilarityThreshold).Discard();
     }
