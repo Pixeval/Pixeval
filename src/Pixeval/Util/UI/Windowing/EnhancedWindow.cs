@@ -23,10 +23,12 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using WinUI3Utilities;
+using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Util.UI.Windowing;
 
-public sealed class EnhancedWindow : Window
+[WindowSizeHelper]
+public sealed partial class EnhancedWindow : Window
 {
     private readonly Frame _frame;
 
@@ -52,6 +54,7 @@ public sealed class EnhancedWindow : Window
     internal EnhancedWindow(EnhancedWindow owner) : this()
     {
         _owner = owner;
+        _owner.Closed += OnOwnerOnClosed;
     }
 
     public event RoutedEventHandler FrameLoaded
@@ -60,17 +63,17 @@ public sealed class EnhancedWindow : Window
         remove => _frame.Loaded -= value;
     }
 
-    private void OnClosed(object sender, WindowEventArgs args)
-    {
+    private void OnClosed(object sender, WindowEventArgs e)
+    {   
         WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 
-    private void OnOwnerOnClosed(object o, WindowEventArgs windowEventArgs)
+    private void OnOwnerOnClosed(object sender, WindowEventArgs e)
     {
         Close();
     }
 
-    public void SetDragRegion(DragZoneHelper.DragZoneInfo info)
+    public void SetDragRegion(DragZoneInfo info)
     {
         DragZoneHelper.SetDragZones(info, this);
     }

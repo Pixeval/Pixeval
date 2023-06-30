@@ -240,7 +240,7 @@
                 <AutoSuggestBox
                     x:Uid="/MainPage/MainPageAutoSuggestionBox"
                     Grid.Column="0"
-                    Width="400"
+                    Width="350"
                     VerticalAlignment="Center"
                     AllowDrop="True"
                     DragOver="KeywordAutoSuggestBox_OnDragOver"

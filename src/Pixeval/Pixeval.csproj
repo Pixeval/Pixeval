@@ -25,7 +25,7 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     <ItemGroup>
-      <None Remove="Controls\Setting.UI\SettingRadioButtons.xaml" />
+        <None Remove="Controls\Setting.UI\SettingRadioButtons.xaml" />
     </ItemGroup>
 
     <ItemGroup>
@@ -55,7 +55,7 @@
         <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-        <PackageReference Include="WinUI3Utilities" Version="1.1.4" />
+        <PackageReference Include="WinUI3Utilities" Version="1.1.4.2" />
         <PackageReference Include="WinUIEx" Version="2.2.0" />
 
         <ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
@@ -207,9 +207,6 @@
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\IllustrationViewer\RelatedWorksPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="UserControls\SnackBar.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\Download\DownloadListPage.xaml">
@@ -382,7 +379,7 @@
         </Page>
         <Folder Include="UserControls\RecommendIllustratorProfile\" />
         <Page Update="Controls\Setting.UI\SettingRadioButtons.xaml">
-          <Generator>MSBuild:Compile</Generator>
+            <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="UserControls\IllustratorContentViewer\IllustratorIllustrationAndMangaBookmarkPage.xaml">
             <Generator>MSBuild:Compile</Generator>

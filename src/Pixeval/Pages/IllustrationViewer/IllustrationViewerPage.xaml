@@ -405,11 +405,11 @@
             </Border>
 
             <TeachingTip
-                Title="{x:Bind _viewModel.SnackBarTitle, Mode=OneWay}"
-                IconSource="{x:Bind _viewModel.SnackBarIconSource, Mode=OneWay}"
+                Title="{x:Bind _viewModel.TeachingTipProperties.Title, Mode=OneWay}"
+                IconSource="{x:Bind _viewModel.TeachingTipProperties.IconSource, Mode=OneWay}"
                 IsLightDismissEnabled="True"
-                IsOpen="{x:Bind _viewModel.IsSnackBarOpen, Mode=OneWay}"
-                Subtitle="{x:Bind _viewModel.SnackBarSubtitle, Mode=OneWay}" />
+                IsOpen="{x:Bind _viewModel.TeachingTipProperties.IsOpen, Mode=OneWay}"
+                Subtitle="{x:Bind _viewModel.TeachingTipProperties.Subtitle, Mode=OneWay}" />
 
         </Grid>
         <VisualStateManager.VisualStateGroups>

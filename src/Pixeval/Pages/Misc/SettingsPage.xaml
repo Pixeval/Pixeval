@@ -553,11 +553,11 @@
             </Grid>
         </ScrollViewer>
         <TeachingTip
-            Title="{x:Bind _viewModel.SnackBarTitle, Mode=OneWay}"
+            Title="{x:Bind _viewModel.TeachingTipProperties.Title, Mode=OneWay}"
             Grid.Row="0"
-            IconSource="{x:Bind _viewModel.SnackBarIconSource, Mode=OneWay}"
+            IconSource="{x:Bind _viewModel.TeachingTipProperties.IconSource, Mode=OneWay}"
             IsLightDismissEnabled="True"
-            IsOpen="{x:Bind _viewModel.IsSnackBarOpen, Mode=OneWay}"
-            Subtitle="{x:Bind _viewModel.SnackBarSubtitle, Mode=OneWay}" />
+            IsOpen="{x:Bind _viewModel.TeachingTipProperties.IsOpen, Mode=OneWay}"
+            Subtitle="{x:Bind _viewModel.TeachingTipProperties.Subtitle, Mode=OneWay}" />
     </Grid>
 </controls:EnhancedPage>

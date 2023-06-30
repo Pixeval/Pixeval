@@ -27,8 +27,6 @@ using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
 using Pixeval.AppManagement;
 using Pixeval.Messages;
-using Windows.Graphics;
-using Pixeval.Options;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 using Microsoft.UI.Xaml.Controls;
@@ -76,6 +74,7 @@ public partial class App
         WindowFactory.Create(out var w)
             .WithLoaded((s, _) => s.To<Frame>().NavigateTo<LoginPage>(w))
             .WithClosed((_, _) => AppContext.SaveContext())
+            .WithSizeLimit(800, 360)
             .Init(new(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight))
             .Activate();
 

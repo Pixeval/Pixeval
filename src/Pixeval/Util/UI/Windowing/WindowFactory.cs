@@ -23,11 +23,8 @@ using Microsoft.UI.Xaml;
 using Pixeval.Options;
 using Windows.Foundation;
 using Windows.Graphics;
-using Windows.UI;
-using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml.Media;
-using PInvoke;
 using WinUI3Utilities;
 using AppTheme = Pixeval.Options.ApplicationTheme;
 using ApplicationTheme = Microsoft.UI.Xaml.ApplicationTheme;
@@ -60,6 +57,19 @@ public static class WindowFactory
         return window;
     }
 
+    public static EnhancedWindow WithSizeLimit(this EnhancedWindow window, int minWidth = 0, int minHeight = 0, int maxWidth = 0, int maxHeight = 0)
+    {
+        if (minWidth is not 0)
+            window.MinWidth = minWidth;
+        if (minHeight is not 0)
+            window.MinHeight = minHeight;
+        if (maxWidth is not 0)
+            window.MaxWidth = maxWidth;
+        if (maxHeight is not 0)
+            window.MaxHeight = maxHeight;
+        return window;
+    }
+
     public static EnhancedWindow WithLoaded(this EnhancedWindow window, RoutedEventHandler onLoaded)
     {
         window.FrameLoaded += onLoaded;
@@ -84,11 +94,11 @@ public static class WindowFactory
                 ApplicationBackdropType.MicaAlt => BackdropType.MicaAlt,
                 _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ApplicationBackdropType, BackdropType>(App.AppViewModel.AppSetting.AppBackdrop)
             },
-            TitleBarType = TitleBarHelper.TitleBarType.AppWindow,
+            TitleBarType = TitleBarType.AppWindow,
             Size = size
         });
         var theme = GetElementTheme(App.AppViewModel.AppSetting.Theme);
-        SetAppWindowTitleBarButtonColor(window, theme);
+        TitleBarHelper.SetAppWindowTitleBarButtonColor(window, theme is ElementTheme.Dark);
         window.FrameLoaded += (s, _) =>
         {
             s.To<FrameworkElement>().RequestedTheme = theme;
@@ -118,7 +128,7 @@ public static class WindowFactory
         foreach (var window in ForkedWindowsInternal)
         {
             window.Content.To<FrameworkElement>().RequestedTheme = t;
-            SetAppWindowTitleBarButtonColor(window, t);
+            TitleBarHelper.SetAppWindowTitleBarButtonColor(window, t is ElementTheme.Dark);
         }
     }
 
@@ -137,63 +147,4 @@ public static class WindowFactory
             _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<AppTheme, ElementTheme>(theme)
         };
     }
-
-    /// <summary>
-    /// Work when in <see cref="TitleBarHelper.TitleBarType.AppWindow"/>
-    /// </summary>
-    /// <param name="window"></param>
-    /// <param name="theme"></param>
-    private static void SetAppWindowTitleBarButtonColor(Window window, ElementTheme theme)
-    {
-        window.AppWindow.TitleBar.ButtonForegroundColor = theme switch
-        {
-            ElementTheme.Light => Colors.Black,
-            ElementTheme.Dark => Colors.White,
-            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ElementTheme, Color>(theme)
-        };
-        window.AppWindow.TitleBar.ButtonHoverBackgroundColor = theme switch
-        {
-            ElementTheme.Light => new() { A = 0x33, R = 0, G = 0, B = 0 },
-            ElementTheme.Dark => new() { A = 0x33, R = 0xFF, G = 0xFF, B = 0xFF },
-            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ElementTheme, Color>(theme)
-        };
-    }
-
-    #region Window
-
-    /// <summary>
-    /// Work when in <see cref="TitleBarHelper.TitleBarType.Window"/>
-    /// </summary>
-    /// <param name="window"></param>
-    /// <param name="theme"></param>
-    private static void SetWindowTitleBarButtonColor(Window window, ElementTheme theme)
-    {
-        Application.Current.Resources["WindowCaptionForeground"] = theme switch
-        {
-            ElementTheme.Light => Colors.Black,
-            ElementTheme.Dark => Colors.White,
-            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ElementTheme, Color>(theme)
-        };
-
-        TriggerTitleBarRepaint(window);
-    }
-
-    private static void TriggerTitleBarRepaint(Window window)
-    {
-        // to trigger repaint tracking task id 38044406
-        var hWnd = (nint)window.AppWindow.Id.Value;
-        var activeWindow = User32.GetActiveWindow();
-        if (hWnd == activeWindow)
-        {
-            _ = User32.SendMessage(hWnd, User32.WindowMessage.WM_ACTIVATE, 0, 0);
-            _ = User32.SendMessage(hWnd, User32.WindowMessage.WM_ACTIVATE, 1, 0);
-        }
-        else
-        {
-            _ = User32.SendMessage(hWnd, User32.WindowMessage.WM_ACTIVATE, 1, 0);
-            _ = User32.SendMessage(hWnd, User32.WindowMessage.WM_ACTIVATE, 0, 0);
-        }
-    }
-
-    #endregion
 }

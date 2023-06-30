@@ -119,6 +119,7 @@ public sealed partial class IllustrationView
         WindowFactory.RootWindow.Fork(out var w)
             .WithLoaded((o, _) => o.To<Frame>().NavigateTo<IllustrationViewerPage>(w,
                 new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo()))
+            .WithSizeLimit(640, 360)
             .Init(new SizeInt32(width, height))
             .Activate();
     }

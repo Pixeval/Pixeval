@@ -77,6 +77,8 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     [ObservableProperty]
     private UserInfo? _userInfo;
 
+    public ObservableTeachingTipProperties TeachingTipProperties { get; } = new();
+
     private bool _isFullScreen;
 
     public bool IsFullScreen
@@ -250,7 +252,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         if (Current.OriginalImageStream is null)
         {
-            ShowAndHide(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, Severity.Error);
+            TeachingTipProperties.ShowAndHide(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, TeachingTipSeverity.Error);
             return;
         }
 
@@ -276,7 +278,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         if (Current.OriginalImageStream is null)
         {
-            ShowAndHide(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, Severity.Error);
+            TeachingTipProperties.ShowAndHide(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, TeachingTipSeverity.Error);
             return;
         }
 
@@ -312,7 +314,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         if (Current.LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true })
         {
-            ShowAndHide(IllustrationViewerPageResources.CannotShareImageForNowTitle, Severity.Warning,
+            TeachingTipProperties.ShowAndHide(IllustrationViewerPageResources.CannotShareImageForNowTitle, TeachingTipSeverity.Warning,
                 IllustrationViewerPageResources.CannotShareImageForNowContent);
             return;
         }
@@ -329,7 +331,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         var link = MakoHelper.GenerateIllustrationWebUri(Current.IllustrationViewModel.Id).ToString();
         UIHelper.SetClipboardContent(package => package.SetText(link));
-        ShowAndHide(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle);
+        TeachingTipProperties.ShowAndHide(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle);
     }
 
     private async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -565,95 +567,6 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
             return null;
         }
-    }
-
-    #endregion
-
-    #region SnackBar
-
-    [ObservableProperty] private string _snackBarTitle = "";
-
-    [ObservableProperty] private string _snackBarSubtitle = "";
-
-    [ObservableProperty] private FontIconSource _snackBarIconSource = null!;
-
-    [ObservableProperty] private bool _isSnackBarOpen;
-
-    /// <remarks>
-    /// Value type members require property to enable thread sharing
-    /// </remarks>
-    private static DateTime HideSnakeBarTime { get; set; }
-
-    /// <summary>
-    /// Show SnackBar
-    /// </summary>
-    /// <param name="message"><see cref="TeachingTip.Title"/></param>
-    /// <param name="severity"><see cref="TeachingTip.IconSource"/></param>
-    /// <param name="hint"><see cref="TeachingTip.Subtitle"/></param>
-    public void Show(string message, Severity severity = Severity.Ok, string hint = "")
-    {
-        SnackBarTitle = message;
-        SnackBarSubtitle = hint;
-        SnackBarIconSource = new()
-        {
-            Glyph = severity switch
-            {
-                Severity.Ok => "\xE10B", // Accept
-                Severity.Information => "\xE946", // Info
-                Severity.Important => "\xE171", // Important
-                Severity.Warning => "\xE7BA", // Warning
-                Severity.Error => "\xEA39", // ErrorBadge
-                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<Severity, string>(severity)
-            }
-        };
-
-        IsSnackBarOpen = true;
-    }
-
-    /// <summary>
-    /// Show SnackBar and hide after <paramref name="mSec"/> microseconds
-    /// </summary>
-    /// <param name="message"><see cref="TeachingTip.Title"/></param>
-    /// <param name="severity"><see cref="TeachingTip.IconSource"/></param>
-    /// <param name="hint"><see cref="TeachingTip.Subtitle"/></param>
-    /// <param name="mSec">Automatically hide after <paramref name="mSec"/> milliseconds</param>
-    public async void ShowAndHide(string message, Severity severity = Severity.Ok, string hint = "", int mSec = 3000)
-    {
-        HideSnakeBarTime = DateTime.Now + TimeSpan.FromMilliseconds(mSec - 100);
-
-        Show(message, severity, hint);
-
-        await Task.Delay(mSec);
-
-        if (DateTime.Now > HideSnakeBarTime)
-            IsSnackBarOpen = false;
-    }
-
-    /// <summary>
-    /// Snack bar severity on <see cref="TeachingTip.IconSource"/> (Segoe Fluent Icons font)
-    /// </summary>
-    public enum Severity
-    {
-        /// <summary>
-        /// Accept (E10B)
-        /// </summary>
-        Ok,
-        /// <summary>
-        /// Info (E946)
-        /// </summary>
-        Information,
-        /// <summary>
-        /// Important (E171)
-        /// </summary>
-        Important,
-        /// <summary>
-        /// Warning (E7BA)
-        /// </summary>
-        Warning,
-        /// <summary>
-        /// ErrorBadge (EA39)
-        /// </summary>
-        Error
     }
 
     #endregion

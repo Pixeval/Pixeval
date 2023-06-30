@@ -185,10 +185,10 @@
             </Button>
         </Grid>
         <TeachingTip
-            Title="{x:Bind ViewModel.SnackBarTitle, Mode=OneWay}"
-            IconSource="{x:Bind ViewModel.SnackBarIconSource, Mode=OneWay}"
+            Title="{x:Bind ViewModel.TeachingTipProperties.Title, Mode=OneWay}"
+            IconSource="{x:Bind ViewModel.TeachingTipProperties.IconSource, Mode=OneWay}"
             IsLightDismissEnabled="True"
-            IsOpen="{x:Bind ViewModel.IsSnackBarOpen, Mode=OneWay}"
-            Subtitle="{x:Bind ViewModel.SnackBarSubtitle, Mode=OneWay}" />
+            IsOpen="{x:Bind ViewModel.TeachingTipProperties.IsOpen, Mode=OneWay}"
+            Subtitle="{x:Bind ViewModel.TeachingTipProperties.Subtitle, Mode=OneWay}" />
     </Grid>
 </UserControl>
