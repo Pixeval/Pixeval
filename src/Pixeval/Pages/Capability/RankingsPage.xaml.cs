@@ -58,6 +58,7 @@ public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelpe
         RankOptionComboBox.SelectedItem = LocalizedBoxHelper.Of<RankOption, RankOptionWrapper>(RankOption.Day);
         RankDateTimeCalendarDatePicker.Date = DateTime.Now.AddDays(-2);
         WeakReferenceMessenger.Default.TryRegister<RankingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
+        ChangeSource();
     }
 
     private void RankOptionComboBox_OnSelectionChangedWhenPrepared(object sender, SelectionChangedEventArgs e)
