@@ -1,13 +1,15 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:ui="using:Windows.UI">
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="using:Windows.UI">
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Default">
-            <AcrylicBrush x:Key="PixevalAppAcrylicBrush"
-                          FallbackColor="#E6E6E6"
-                          TintColor="#E6E6E6"
-                          TintLuminosityOpacity="0.4"
-                          TintOpacity="0.3" />
+            <AcrylicBrush
+                x:Key="PixevalAppAcrylicBrush"
+                FallbackColor="#E6E6E6"
+                TintColor="#E6E6E6"
+                TintLuminosityOpacity="0.4"
+                TintOpacity="0.3" />
             <SolidColorBrush x:Key="PixevalPanelBackgroundThemeBrush" Color="#F2F2F2" />
             <SolidColorBrush x:Key="PixevalBorderBrush" Color="#7C7B7B" />
             <SolidColorBrush x:Key="PixevalTipTextForeground" Color="#999AA1" />
@@ -25,11 +27,12 @@
             <SolidColorBrush x:Key="ExpanderContentBackground" Color="{ThemeResource ExpanderContentBackgroundColor}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
-            <AcrylicBrush x:Key="PixevalAppAcrylicBrush"
-                          FallbackColor="#E6E6E6"
-                          TintColor="#E6E6E6"
-                          TintLuminosityOpacity="0.4"
-                          TintOpacity="0.3" />
+            <AcrylicBrush
+                x:Key="PixevalAppAcrylicBrush"
+                FallbackColor="#E6E6E6"
+                TintColor="#E6E6E6"
+                TintLuminosityOpacity="0.4"
+                TintOpacity="0.3" />
             <SolidColorBrush x:Key="PixevalPanelBackgroundThemeBrush" Color="#F2F2F2" />
             <SolidColorBrush x:Key="PixevalBorderBrush" Color="#7C7B7B" />
             <SolidColorBrush x:Key="PixevalTipTextForeground" Color="#999AA1" />
@@ -47,11 +50,12 @@
             <SolidColorBrush x:Key="ExpanderContentBackground" Color="{ThemeResource ExpanderContentBackgroundColor}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
-            <AcrylicBrush x:Key="PixevalAppAcrylicBrush"
-                          FallbackColor="#515151"
-                          TintColor="#515151"
-                          TintLuminosityOpacity="0.4"
-                          TintOpacity="0.3" />
+            <AcrylicBrush
+                x:Key="PixevalAppAcrylicBrush"
+                FallbackColor="#515151"
+                TintColor="#515151"
+                TintLuminosityOpacity="0.4"
+                TintOpacity="0.3" />
             <SolidColorBrush x:Key="PixevalPanelBackgroundThemeBrush" Color="#232323" />
             <SolidColorBrush x:Key="PixevalBorderBrush" Color="#ACADAD" />
             <SolidColorBrush x:Key="PixevalTipTextForeground" Color="#828492" />

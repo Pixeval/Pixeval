@@ -8,7 +8,6 @@
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <ResourceDictionary Source="Themes/Colors.xaml" />
                 <ResourceDictionary Source="Themes/Controls.xaml" />
-                <ResourceDictionary Source="Themes/Card.xaml" />
                 <!--  Other merged dictionaries here  -->
             </ResourceDictionary.MergedDictionaries>
             <x:Double x:Key="PixevalTitleFontSize">28</x:Double>
