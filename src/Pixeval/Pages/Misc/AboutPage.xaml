@@ -32,27 +32,25 @@
                         x:Uid="/AboutPage/SpecialThanksContentTextBlock"
                         FontSize="{StaticResource PixevalContentFontSize}"
                         TextWrapping="Wrap" />
-                    <controls:AdaptiveGridView
-                        animations:ItemsReorderAnimation.Duration="0:0:0.2"
-                        DesiredWidth="160"
-                        IsItemClickEnabled="True"
-                        ItemHeight="160"
-                        ItemsSource="{x:Bind misc:Supporter.Supporters, Mode=OneWay}"
-                        SelectionMode="None">
-                        <controls:AdaptiveGridView.ItemTemplate>
+                    <ItemsRepeater ItemsSource="{x:Bind misc:Supporter.Supporters, Mode=OneWay}">
+                        <ItemsRepeater.Layout>
+                            <UniformGridLayout
+                                ItemsStretch="Fill"
+                                MinColumnSpacing="5"
+                                MinItemHeight="160"
+                                MinItemWidth="140"
+                                MinRowSpacing="5" />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
                             <DataTemplate x:DataType="misc:Supporter">
-                                <GridViewItem Margin="2.5">
-                                    <personView:PersonView
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Stretch"
-                                        PersonName="{x:Bind Name}"
-                                        PersonNickname="{x:Bind Nickname}"
-                                        PersonPicture="{x:Bind ProfilePicture}"
-                                        PersonProfileNavigateUri="{x:Bind ProfileUri}" />
-                                </GridViewItem>
+                                <personView:PersonView
+                                    PersonName="{x:Bind Name}"
+                                    PersonNickname="{x:Bind Nickname}"
+                                    PersonPicture="{x:Bind ProfilePicture}"
+                                    PersonProfileNavigateUri="{x:Bind ProfileUri}" />
                             </DataTemplate>
-                        </controls:AdaptiveGridView.ItemTemplate>
-                    </controls:AdaptiveGridView>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
                 </StackPanel>
                 <StackPanel>
                     <TextBlock x:Uid="/AboutPage/DependenciesSubtitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />

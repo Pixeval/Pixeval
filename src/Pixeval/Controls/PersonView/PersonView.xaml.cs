@@ -27,56 +27,21 @@ using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities.Attributes;
 using Pixeval.Controls.Card;
 
-
 namespace Pixeval.Controls.PersonView;
 
-[TemplatePart(Name = PartContentContainer, Type = typeof(CardControl))]
 [DependencyProperty<string>("PersonNickname")]
 [DependencyProperty<string>("PersonName")]
 [DependencyProperty<Uri>("PersonProfileNavigateUri")]
 [DependencyProperty<ImageSource>("PersonPicture")]
-public partial class PersonView : Control
+public partial class PersonView : UserControl
 {
-    private const string PartContentContainer = "ContentContainer";
-
-    private CardControl? _contentContainer;
-
     public PersonView()
     {
-        DefaultStyleKey = typeof(PersonView);
-    }
-
-    protected override void OnApplyTemplate()
-    {
-        if (_contentContainer is not null)
-        {
-            _contentContainer.PointerEntered -= ContentContainerOnPointerEntered;
-            _contentContainer.PointerExited -= ContentContainerOnPointerExited;
-            _contentContainer.Tapped -= ContentContainerOnTapped;
-        }
-
-        if ((_contentContainer = GetTemplateChild(PartContentContainer) as CardControl) is not null)
-        {
-            _contentContainer.PointerEntered += ContentContainerOnPointerEntered;
-            _contentContainer.PointerExited += ContentContainerOnPointerExited;
-            _contentContainer.Tapped += ContentContainerOnTapped;
-        }
-
-        base.OnApplyTemplate();
+        InitializeComponent();
     }
 
     private async void ContentContainerOnTapped(object sender, TappedRoutedEventArgs e)
     {
         await Launcher.LaunchUriAsync(PersonProfileNavigateUri);
-    }
-
-    private void ContentContainerOnPointerExited(object sender, PointerRoutedEventArgs e)
-    {
-        _contentContainer!.Background = (Brush)Application.Current.Resources["CardBackground"];
-    }
-
-    private void ContentContainerOnPointerEntered(object sender, PointerRoutedEventArgs e)
-    {
-        _contentContainer!.Background = (Brush)Application.Current.Resources["ActionableCardPointerOverBackground"];
     }
 }
