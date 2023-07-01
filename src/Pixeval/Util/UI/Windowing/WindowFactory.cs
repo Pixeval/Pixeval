@@ -24,6 +24,7 @@ using Pixeval.Options;
 using Windows.Foundation;
 using Windows.Graphics;
 using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities;
 using AppTheme = Pixeval.Options.ApplicationTheme;
@@ -97,6 +98,7 @@ public static class WindowFactory
             TitleBarType = TitleBarType.AppWindow,
             Size = size
         });
+        window.AppWindow.TitleBar.IconShowOptions = IconShowOptions.HideIconAndSystemMenu;// TODO: Remove this line when utilities implemented
         var theme = GetElementTheme(App.AppViewModel.AppSetting.Theme);
         TitleBarHelper.SetAppWindowTitleBarButtonColor(window, theme is ElementTheme.Dark);
         window.FrameLoaded += (s, _) =>

@@ -70,6 +70,7 @@ public sealed partial class FollowingsPage : IIllustratorView
     public override void OnPageActivated(NavigationEventArgs e)
     {
         WeakReferenceMessenger.Default.TryRegister<FollowingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.ViewModel.DataProvider.FetchEngine?.Cancel());
+        _ = ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public));
     }
 
     private void IllustratorListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
