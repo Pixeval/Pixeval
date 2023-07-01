@@ -54,6 +54,10 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 {
     // Tags for IllustrationInfoAndCommentsNavigationView
 
+    private bool _false;
+
+    private bool _true = true;
+
     private NavigationViewTag? _relatedWorksTag;
 
     private NavigationViewTag? _commentsTag;
@@ -101,8 +105,9 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
         _collapseThumbnailList = new AsyncLatch(async () =>
         {
+            _viewModel.TimeUp = false;
             await Task.Delay(3000);
-            BottomCommandSection.Translation = new Vector3(0, 120, 0);
+            _viewModel.TimeUp = true;
         });
     }
 
@@ -115,6 +120,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         // IMPORTANT
         _viewModel.Snapshot = new(_viewModel.ContainerRiverFlowIllustrationViewViewModel!.DataProvider.IllustrationsSource);
 
+        _viewModel.CollapseThumbnailList = () => BottomCommandSection.Translation = new Vector3(0, 120, 0);
         _collapseThumbnailList.RunAsync().Discard();
     }
 
@@ -433,23 +439,6 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         }
     }
 
-    private void SelectItemInListView(ListView listView, IllustrationViewModel newItem, IllustrationViewModel oldItem)
-    {
-        const string borderControlName = "ThumbnailBorder";
-        listView.UpdateLayout();
-        var item = listView.ContainerFromItem(listView.SelectedItem);
-        if (item.FindDescendant(borderControlName) is Border border)
-        {
-            border.BorderThickness = new Thickness(2);
-        }
-
-        if (listView.ContainerFromItem(oldItem) is { } container
-            && container.FindDescendant(borderControlName) is Border b)
-        {
-            b.BorderThickness = new Thickness(0);
-        }
-    }
-
     private void IllustrationImageShowcaseFrame_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         BottomCommandSection.Translation = new Vector3();
@@ -495,5 +484,15 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
     {
         Window.AppWindow.SetPresenter(_viewModel.IsFullScreen ? AppWindowPresenterKind.Default : AppWindowPresenterKind.FullScreen);
         _viewModel.IsFullScreen = !_viewModel.IsFullScreen;
+    }
+
+    private void ThumbnailListGrid_OnPointerEntered(object sender, PointerRoutedEventArgs e)
+    {
+        _viewModel.PointerNotInArea = false;
+    }
+
+    private void ThumbnailListGrid_OnPointerExited(object sender, PointerRoutedEventArgs e)
+    {
+        _viewModel.PointerNotInArea = true;
     }
 }

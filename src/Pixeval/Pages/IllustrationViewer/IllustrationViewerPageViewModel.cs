@@ -63,6 +63,33 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     [ObservableProperty]
     private IllustrationViewModel? _selectedIllustrationViewModel;
 
+    /// <summary>
+    /// Todo: May need refactor
+    /// </summary>
+    public Action CollapseThumbnailList { get; set; }
+
+    public bool PointerNotInArea
+    {
+        get => _pointerNotInArea;
+        set
+        {
+            _pointerNotInArea = value;
+            if (_pointerNotInArea && TimeUp)
+                CollapseThumbnailList();
+        }
+    }
+
+    public bool TimeUp
+    {
+        get => _timeUp;
+        set
+        {
+            _timeUp = value;
+            if (_timeUp && PointerNotInArea)
+                CollapseThumbnailList();
+        }
+    }
+
     // The reason why we don't put UserProfileImageSource into IllustrationViewModel
     // is because the whole array of Illustrations is just representing the same 
     // illustration's different manga pages, so all of them have the same illustrator
@@ -107,6 +134,8 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     private AdvancedCollectionView? _snapshot;
 
     private readonly IllustrationViewModel[] _illustrations;
+    private bool _timeUp;
+    private bool _pointerNotInArea;
 
     public bool IsDisposed { get; set; }
 

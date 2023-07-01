@@ -223,6 +223,8 @@
                         BorderBrush="{StaticResource SecondaryAccentBorderBrush}"
                         BorderThickness="0.5"
                         CornerRadius="15"
+                        PointerEntered="ThumbnailListGrid_OnPointerEntered"
+                        PointerExited="ThumbnailListGrid_OnPointerExited"
                         Translation="0,0,30">
                         <Grid.Shadow>
                             <ThemeShadow x:Name="ThumbnailListDropShadow" />
