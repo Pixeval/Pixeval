@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -38,6 +38,7 @@ using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using ReverseMarkdown;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -71,10 +72,11 @@ public sealed partial class IllustrationInfoPage
         if (_viewModel.UserInfo is { } userInfo)
         {
             ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement)sender);
-            UIHelper.RootFrameNavigate(typeof(IllustratorPage), Tuple.Create((UIElement)sender, new IllustratorViewModel(userInfo)), new SlideNavigationTransitionInfo
-            {
-                Effect = SlideNavigationTransitionEffect.FromRight
-            });
+            // todo IllustratorPage use Navigate
+            // CurrentContext.Window.Content.To<Frame>().Navigate(typeof(IllustratorPage), Tuple.Create((UIElement)sender, new IllustratorViewModel(userInfo)), new SlideNavigationTransitionInfo
+            // {
+            //     Effect = SlideNavigationTransitionEffect.FromRight
+            // });
         }
     }
 

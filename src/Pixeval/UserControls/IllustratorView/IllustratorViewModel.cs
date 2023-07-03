@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -38,6 +38,7 @@ using Pixeval.CoreApi.Net.Response;
 using Pixeval.Options;
 using Pixeval.Util.Threading;
 using AppContext = Pixeval.AppManagement.AppContext;
+using WinUI3Utilities;
 
 namespace Pixeval.UserControls.IllustratorView;
 
@@ -47,6 +48,8 @@ public partial class IllustratorViewModel : ObservableObject, IDisposable
     public static readonly SolidColorBrush DefaultAvatarBorderColorBrush = new(UIHelper.ParseHexColor("#D6DEE5"));
 
     private readonly TaskCompletionSource<SoftwareBitmapSource[]> _bannerImageTaskCompletionSource;
+
+    public ObservableTeachingTipProperties TeachingTipProperties { get; } = new();
 
     public IllustratorViewModel(User user)
     {
@@ -182,13 +185,13 @@ public partial class IllustratorViewModel : ObservableObject, IDisposable
     private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustratorAppUri(UserId!).ToString()));
-        SnackBarController.ShowSnack(IllustratorProfileResources.LinkCopiedToClipboard, SnackBarController.SnackBarDurationShort);
+        TeachingTipProperties.ShowAndHide(IllustratorProfileResources.LinkCopiedToClipboard);
     }
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustratorWebUri(UserId!).ToString()));
-        SnackBarController.ShowSnack(IllustratorProfileResources.LinkCopiedToClipboard, SnackBarController.SnackBarDurationShort);
+        TeachingTipProperties.ShowAndHide(IllustratorProfileResources.LinkCopiedToClipboard);
     }
 
     private void FollowCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

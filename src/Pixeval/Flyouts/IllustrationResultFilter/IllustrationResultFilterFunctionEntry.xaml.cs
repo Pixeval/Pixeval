@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/SnackBarController.cs
+// Copyright (c) 2022 Pixeval/IllustrationResultFilterFunctionEntry.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,23 +18,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Threading.Tasks;
-using WinUI3Utilities;
+using Microsoft.UI.Xaml.Controls;
+using WinUI3Utilities.Attributes;
 
-namespace Pixeval;
+namespace Pixeval.Flyouts.IllustrationResultFilter;
 
-public static class SnackBarController
+[DependencyProperty<string>("Header")]
+public partial class IllustrationResultFilterFunctionEntry : ContentControl
 {
-    public const int SnackBarDurationShort = 1750;
-    public const int SnackBarDurationLong = 2500;
-
-    public static async void ShowSnack(string text, int duration)
+    public IllustrationResultFilterFunctionEntry()
     {
-        var window = (MainWindow) CurrentContext.Window;
-        window.PixevalAppSnackBar.Title = text;
-
-        window.PixevalAppSnackBar.IsOpen = true;
-        await Task.Delay(duration);
-        window.PixevalAppSnackBar.IsOpen = false;
+        DefaultStyleKey = typeof(IllustrationResultFilterFunctionEntry);
     }
 }

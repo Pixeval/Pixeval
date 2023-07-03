@@ -13,7 +13,7 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.UserControls.IllustratorContentViewer;
 
-[DependencyProperty<IllustratorContentViewerViewModel>("ViewModel", nameof(OnViewModelChanged))]
+[DependencyProperty<IllustratorContentViewerViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 public sealed partial class IllustratorContentViewer : IDisposable
 {
     private NavigationViewTag? _lastNavigationViewTag;
@@ -69,7 +69,7 @@ public sealed partial class IllustratorContentViewer : IDisposable
         _lastNavigationViewTag = args.SelectedItemContainer.Tag as NavigationViewTag;
 
         await ThreadingHelper.SpinWaitAsync(() => IllustratorContentViewerFrame.Content.GetType() != _lastNavigationViewTag!.NavigateTo);
-        _pageCache.Add((Page) IllustratorContentViewerFrame.Content);
+        _pageCache.Add((Page)IllustratorContentViewerFrame.Content);
     }
 
     private void NavigationViewAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

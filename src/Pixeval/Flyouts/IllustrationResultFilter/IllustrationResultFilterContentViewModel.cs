@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IllustrationResultFilterPopupViewModel.cs
+// Copyright (c) 2022 Pixeval/IllustrationResultFilterContentViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -25,9 +25,9 @@ using Pixeval.Attributes;
 using Pixeval.Misc;
 using Pixeval.UserControls.TokenInput;
 
-namespace Pixeval.Popups.IllustrationResultFilter;
+namespace Pixeval.Flyouts.IllustrationResultFilter;
 
-public class IllustrationResultFilterPopupViewModel : ObservableObject
+public class IllustrationResultFilterContentViewModel : ObservableObject
 {
     private ObservableCollection<Token> _excludeTags;
 
@@ -51,7 +51,7 @@ public class IllustrationResultFilterPopupViewModel : ObservableObject
 
     private ObservableCollection<Token> _userGroupName;
 #pragma warning disable CS8618
-    public IllustrationResultFilterPopupViewModel()
+    public IllustrationResultFilterContentViewModel()
 #pragma warning restore CS8618
     {
         DefaultValueAttributeHelper.Initialize(this);
@@ -105,7 +105,6 @@ public class IllustrationResultFilterPopupViewModel : ObservableObject
         get => _illustratorId;
         set => SetProperty(ref _illustratorId, value);
     }
-
 
     [DefaultValue(typeof(Token))]
     public Token IllustrationName

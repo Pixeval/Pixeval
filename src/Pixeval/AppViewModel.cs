@@ -20,7 +20,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Windows.Graphics;
 using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -38,9 +37,7 @@ using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
-using ApplicationTheme = Pixeval.Options.ApplicationTheme;
-using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
-using Microsoft.UI;
+using Pixeval.UserControls.IllustrationView;
 
 namespace Pixeval;
 
@@ -74,10 +71,6 @@ public class AppViewModel : AutoActivateObservableRecipient,
 
     public FileCache Cache { get; private set; } = null!;
 
-    public ElementTheme AppRootFrameTheme => AppWindowRootFrame.RequestedTheme;
-
-    public Frame AppWindowRootFrame => ((MainWindow)CurrentContext.Window).PixevalAppRootFrame;
-
     public string? PixivUid => MakoClient.Session.Id;
 
     public void Receive(ApplicationExitingMessage message)
@@ -102,29 +95,6 @@ public class AppViewModel : AutoActivateObservableRecipient,
                     .AddSingleton(provider => new BrowseHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSetting.MaximumBrowseHistoryRecords)));
     }
 
-    public void SwitchTheme(ApplicationTheme theme)
-    {
-        var selectedTheme = theme switch
-        {
-            ApplicationTheme.Dark => ElementTheme.Dark,
-            ApplicationTheme.Light => ElementTheme.Light,
-            ApplicationTheme.SystemDefault => ElementTheme.Default,
-            _ => throw new ArgumentOutOfRangeException(nameof(theme), theme, null)
-        };
-
-        if (CurrentContext.Window.Content is FrameworkElement rootElement)
-            rootElement.RequestedTheme = selectedTheme;
-
-        // TODO: 没反应
-        Application.Current.Resources["WindowCaptionForeground"] =
-            selectedTheme switch
-            {
-                ElementTheme.Dark => Colors.White,
-                ElementTheme.Light => Colors.Black,
-                _ => Application.Current.RequestedTheme is Microsoft.UI.Xaml.ApplicationTheme.Dark ? Colors.White : Colors.Black
-            };
-    }
-
     public async Task ShowExceptionDialogAsync(Exception e)
     {
         await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
@@ -144,14 +114,15 @@ public class AppViewModel : AutoActivateObservableRecipient,
         AppHost.RunAsync().Discard();
     }
 
+    //todo ShowProgressRing
     public void PrepareForActivation()
     {
-        ((MainWindow) CurrentContext.Window).ShowProgressRing();
+        // ((MainWindow)CurrentContext.Window).ShowProgressRing();
     }
 
     public void ActivationProcessed()
     {
-        ((MainWindow) CurrentContext.Window).HideProgressRing();
+        // ((MainWindow)CurrentContext.Window).HideProgressRing();
     }
 
     /// <summary>

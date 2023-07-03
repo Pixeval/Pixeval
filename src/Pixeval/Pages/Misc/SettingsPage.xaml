@@ -2,20 +2,14 @@
     x:Class="Pixeval.Pages.Misc.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:actionableExpanderSettingEntry="using:Pixeval.Controls.Setting.UI.ActionableExpanderSettingEntry"
-    xmlns:actionableSettingEntry="using:Pixeval.Controls.Setting.UI.ActionableSettingEntry"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:expanderSettingEntry="using:Pixeval.Controls.Setting.UI.ExpanderSettingEntry"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:misc="using:Pixeval.Pages.Misc"
     xmlns:model="using:Pixeval.Controls.Setting.UI.Model"
     xmlns:pixeval="using:Pixeval"
-    xmlns:settingsGroup="using:Pixeval.Controls.Setting.UI.SettingsGroup"
-    xmlns:sliderSettingEntry="using:Pixeval.Controls.Setting.UI.SliderSettingEntry"
-    xmlns:switchSettingEntry="using:Pixeval.Controls.Setting.UI.SwitchSettingEntry"
     xmlns:system="using:System"
     xmlns:tokenInput="using:Pixeval.UserControls.TokenInput"
     xmlns:ui="using:Pixeval.Util.UI"
@@ -183,7 +177,7 @@
                                 <ui1:SettingRadioButtons
                                     ItemsSource="{x:Bind model:ApplicationThemeSettingEntryItem.AvailableItems}"
                                     SelectedItem="{x:Bind _viewModel.Theme, Mode=TwoWay}"
-                                    SelectionChanged="SingleSelectionSettingEntry_OnSelectionChanged" />
+                                    SelectionChanged="Theme_OnSelectionChanged" />
                             </labs:SettingsCard>
                         </labs:SettingsExpander.Items>
                     </labs:SettingsExpander>
@@ -194,7 +188,10 @@
                         Tag="{x:Bind pixeval:SettingEntry.AppBackdrop}">
                         <labs:SettingsExpander.Items>
                             <labs:SettingsCard ContentAlignment="Left">
-                                <ui1:SettingRadioButtons ItemsSource="{x:Bind model:ApplicationBackdropSettingEntryItem.AvailableItems}" SelectedItem="{x:Bind _viewModel.AppBackdrop, Mode=TwoWay}" />
+                                <ui1:SettingRadioButtons
+                                    ItemsSource="{x:Bind model:ApplicationBackdropSettingEntryItem.AvailableItems}"
+                                    SelectedItem="{x:Bind _viewModel.AppBackdrop, Mode=TwoWay}"
+                                    SelectionChanged="Backdrop_OnSelectionChanged" />
                             </labs:SettingsCard>
                         </labs:SettingsExpander.Items>
                     </labs:SettingsExpander>
@@ -555,5 +552,12 @@
                 </StackPanel>
             </Grid>
         </ScrollViewer>
+        <TeachingTip
+            Title="{x:Bind _viewModel.TeachingTipProperties.Title, Mode=OneWay}"
+            Grid.Row="0"
+            IconSource="{x:Bind _viewModel.TeachingTipProperties.IconSource, Mode=OneWay}"
+            IsLightDismissEnabled="True"
+            IsOpen="{x:Bind _viewModel.TeachingTipProperties.IsOpen, Mode=OneWay}"
+            Subtitle="{x:Bind _viewModel.TeachingTipProperties.Subtitle, Mode=OneWay}" />
     </Grid>
 </controls:EnhancedPage>

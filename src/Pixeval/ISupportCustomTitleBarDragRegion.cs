@@ -18,8 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using WinUI3Utilities;
-
 namespace Pixeval;
 
 public interface ISupportCustomTitleBarDragRegion

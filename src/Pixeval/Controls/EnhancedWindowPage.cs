@@ -30,19 +30,17 @@ namespace Pixeval.Controls;
 
 public static class EnhancedWindowPageExtension
 {
-    public static void Navigate<T>(this Frame frame, CustomizableWindow window, object parameter, NavigationTransitionInfo? info) where T : EnhancedWindowPage
+    public static void NavigateTo<T>(this Frame frame, EnhancedWindow window, object? parameter = null, NavigationTransitionInfo? info = null) where T : EnhancedWindowPage
     {
-        _ = frame.Navigate(typeof(T), new NavigateParameter(parameter, window, frame), info);
+        _ = frame.Navigate(typeof(T), new NavigateParameter(parameter, window), info);
     }
 }
 
-public record NavigateParameter(object Parameter, CustomizableWindow Window, Frame Frame);
+public record NavigateParameter(object? Parameter, EnhancedWindow Window);
 
 public class EnhancedWindowPage : Page, IEnhancedPage
 {
-    protected CustomizableWindow Window { get; private set; } = null!;
-
-    protected Frame ParentFrame { get; private set; } = null!;
+    protected EnhancedWindow Window { get; private set; } = null!;
 
     public int ActivationCount { get; private set; }
 
@@ -66,7 +64,6 @@ public class EnhancedWindowPage : Page, IEnhancedPage
         ++ActivationCount;
         var parameter = e.Parameter.To<NavigateParameter>();
         Window = parameter.Window;
-        ParentFrame = parameter.Frame;
         OnPageActivated(e, parameter.Parameter);
     }
 
@@ -87,26 +84,26 @@ public class EnhancedWindowPage : Page, IEnhancedPage
         }
     }
 
-    protected void Navigate<TPage>(Frame frame, object parameter, NavigationTransitionInfo? info = null) where TPage : EnhancedWindowPage
+    protected void Navigate<TPage>(Frame frame, object? parameter, NavigationTransitionInfo? info = null) where TPage : EnhancedWindowPage
     {
-        _ = frame.Navigate(typeof(TPage), new NavigateParameter(parameter, Window, frame), info);
+        _ = frame.Navigate(typeof(TPage), new NavigateParameter(parameter, Window), info);
     }
 
-    protected void NavigateParent<TPage>(object parameter, NavigationTransitionInfo? info = null) where TPage : EnhancedWindowPage
+    protected void NavigateParent<TPage>(object? parameter, NavigationTransitionInfo? info = null) where TPage : EnhancedWindowPage
     {
-        _ = ParentFrame.Navigate(typeof(TPage), new NavigateParameter(parameter, Window, ParentFrame), info);
+        _ = Frame.Navigate(typeof(TPage), new NavigateParameter(parameter, Window), info);
     }
 
-    protected void NavigateSelf(object parameter, NavigationTransitionInfo? info = null)
+    protected void NavigateSelf(object? parameter, NavigationTransitionInfo? info = null)
     {
-        _ = ParentFrame.Navigate(typeof(EnhancedWindowPage), new NavigateParameter(parameter, Window, ParentFrame), info);
+        _ = Frame.Navigate(GetType(), new NavigateParameter(parameter, Window), info);
     }
 
     public virtual void OnPageDeactivated(NavigatingCancelEventArgs e)
     {
     }
 
-    public virtual void OnPageActivated(NavigationEventArgs e, object parameter)
+    public virtual void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
     }
 }

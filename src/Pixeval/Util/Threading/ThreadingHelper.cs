@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -52,7 +52,7 @@ public static class ThreadingHelper
 
     public static void CompareExchange(ref int location1, int value, int comparand)
     {
-        do { } while (Interlocked.CompareExchange(ref location1, value, comparand) != comparand);
+        while (Interlocked.CompareExchange(ref location1, value, comparand) != comparand);
     }
 
     // fork a task from current context.

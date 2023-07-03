@@ -21,14 +21,10 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Messages;
-using Pixeval.Pages.IllustrationViewer;
+using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Activation;
 
@@ -38,7 +34,7 @@ public class IllustrationAppActivationHandler : IAppActivationHandler
 
     public Task Execute(string id)
     {
-        WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(App.AppViewModel.AppWindowRootFrame));
+        // WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(App.AppViewModel.AppWindowRootFrame));
 
         return ThreadingHelper.DispatchTaskAsync(async () =>
         {
@@ -50,7 +46,7 @@ public class IllustrationAppActivationHandler : IAppActivationHandler
                     .GetMangaIllustrationViewModels()
                     .ToArray();
 
-                ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
+                // 见41行 ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
                 // todo UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
             }
             catch (Exception e)

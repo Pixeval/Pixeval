@@ -59,9 +59,12 @@ public sealed partial class ImageViewerPage
         });
     }
 
-    public override void OnPageActivated(NavigationEventArgs e, object viewModel)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        _viewModel = viewModel.To<ImageViewerPageViewModel>();
+        if(parameter is ImageViewerPageViewModel viewModel)
+        {
+            _viewModel = viewModel;
+        }
     }
 
     private void IllustrationOriginalImage_OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)

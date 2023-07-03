@@ -23,7 +23,7 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Dialogs;
 
-[DependencyProperty<bool>("DeleteLocalFiles", DefaultValue = "false")]
+[DependencyProperty<bool>("DeleteLocalFiles", "false")]
 public sealed partial class DownloadListPageDeleteTasksDialog
 {
     public DownloadListPageDeleteTasksDialog()

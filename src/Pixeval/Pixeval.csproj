@@ -25,7 +25,7 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     <ItemGroup>
-      <None Remove="Controls\Setting.UI\SettingRadioButtons.xaml" />
+        <None Remove="Controls\Setting.UI\SettingRadioButtons.xaml" />
     </ItemGroup>
 
     <ItemGroup>
@@ -55,7 +55,7 @@
         <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-        <PackageReference Include="WinUI3Utilities" Version="1.1.3.2" />
+        <PackageReference Include="WinUI3Utilities" Version="1.1.4.2" />
         <PackageReference Include="WinUIEx" Version="2.2.0" />
 
         <ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
@@ -181,14 +181,13 @@
         <PRIResource Include="Strings\zh-CN\IllustrationView.resw" />
         <PRIResource Include="Strings\zh-CN\IllustrationViewCommandBar.resw" />
         <PRIResource Include="Strings\zh-CN\IllustrationInfoPage.resw" />
-        <PRIResource Include="Strings\zh-CN\IllustrationResultFilterPopupContent.resw" />
+        <PRIResource Include="Strings\zh-CN\IllustrationResultFilterContent.resw" />
         <PRIResource Include="Strings\zh-CN\IllustrationViewerPage.resw" />
         <PRIResource Include="Strings\zh-CN\IllustratorPage.resw" />
         <PRIResource Include="Strings\zh-CN\ImageViewerPage.resw" />
         <PRIResource Include="Strings\zh-CN\LoginPage.resw" />
         <PRIResource Include="Strings\zh-CN\MacroParser.resw" />
         <PRIResource Include="Strings\zh-CN\MainPage.resw" />
-        <PRIResource Include="Strings\zh-CN\MainWindow.resw" />
         <PRIResource Include="Strings\zh-CN\MessageContentDialog.resw" />
         <PRIResource Include="Strings\zh-CN\Misc.resw" />
         <PRIResource Include="Strings\zh-CN\RankingsPage.resw" />
@@ -208,9 +207,6 @@
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\IllustrationViewer\RelatedWorksPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="UserControls\SnackBar.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\Download\DownloadListPage.xaml">
@@ -294,7 +290,7 @@
         <Page Update="Pages\Capability\SearchResultsPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Popups\LoginWebViewPopup.xaml">
+        <Page Update="Flyouts\LoginWebView.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\Misc\AboutPage.xaml">
@@ -312,10 +308,10 @@
         <Page Update="UserControls\TokenInput\TokenInput.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Popups\IllustrationResultFilter\IllustrationResultFilterFunctionEntry.xaml">
+        <Page Update="Flyouts\IllustrationResultFilter\IllustrationResultFilterFunctionEntry.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Popups\IllustrationResultFilter\IllustrationResultFilterPopupContent.xaml">
+        <Page Update="Flyouts\IllustrationResultFilter\IllustrationResultFilterContent.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Controls\Expander\Expander.xaml">
@@ -325,12 +321,6 @@
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Themes\Generic.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Themes\Card.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Popups\QrCodePresenter.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="UserControls\PixivReplyBar.xaml">
@@ -348,7 +338,7 @@
         <Page Update="UserControls\CommentList.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Popups\CommentRepliesBlock.xaml">
+        <Page Update="Flyouts\CommentRepliesBlock.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="UserControls\CommentBlock.xaml">
@@ -386,7 +376,7 @@
         </Page>
         <Folder Include="UserControls\RecommendIllustratorProfile\" />
         <Page Update="Controls\Setting.UI\SettingRadioButtons.xaml">
-          <Generator>MSBuild:Compile</Generator>
+            <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="UserControls\IllustratorContentViewer\IllustratorIllustrationAndMangaBookmarkPage.xaml">
             <Generator>MSBuild:Compile</Generator>

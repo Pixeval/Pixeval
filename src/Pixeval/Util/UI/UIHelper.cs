@@ -122,26 +122,21 @@ public static partial class UIHelper
         return Color.FromArgb(0xFF, pixel.R, pixel.G, pixel.B);
     }
 
-    public static bool GetIllustrationViewSortOptionAvailability(IllustrationViewOption option)
-    {
-        return option is IllustrationViewOption.Grid;
-    }
-
     public static async Task LoadMoreItemsAsync(this AdvancedCollectionView acv, uint count, Action<LoadMoreItemsResult> callback)
     {
         var result = await acv.LoadMoreItemsAsync(count);
         callback(result);
     }
 
-    public static T GetDataContext<T>(this FrameworkElement element)
-    {
-        return (T) element.DataContext;
-    }
+    //public static T GetDataContext<T>(this FrameworkElement element)
+    //{
+    //    return (T) element.DataContext;
+    //}
 
-    public static T GetDataContext<T>(this object element)
-    {
-        return ((FrameworkElement) element).GetDataContext<T>(); // direct cast will throw exception if the type check fails, and that's exactly what we want
-    }
+    //public static T GetDataContext<T>(this object element)
+    //{
+    //    return ((FrameworkElement) element).GetDataContext<T>(); // direct cast will throw exception if the type check fails, and that's exactly what we want
+    //}
 
     public static ImageSource GetImageSourceFromUriRelativeToAssetsImageFolder(string relativeToAssetsImageFolder)
     {
@@ -298,11 +293,6 @@ public static partial class UIHelper
         element.Visibility = Visibility.Visible;
     }
 
-    public static Size ToWinRtSize(this SizeInt32 size)
-    {
-        return new Size(size.Width, size.Height);
-    }
-
     public static async Task<SoftwareBitmapSource> GenerateQrCodeForUrlAsync(string url)
     {
         var qrCodeGen = new QRCodeGenerator();
@@ -361,33 +351,7 @@ public static partial class UIHelper
     {
         return ThreadingHelper.SpinWaitAsync(() => root.FindDescendant<T>() is null);
     }
-
-    [DllImport("Shcore.dll", SetLastError = true)]
-    internal static extern int GetDpiForMonitor(nint hMonitor, MonitorDpiType dpiType, out uint dpiX, out uint dpiY);
-
-    internal enum MonitorDpiType
-    {
-        MdtEffectiveDpi = 0,
-        MdtAngularDpi = 1,
-        MdtRawDpi = 2,
-        MdtDefault = MdtEffectiveDpi
-    }
-
-    public static double GetScaleAdjustment()
-    {
-        var displayArea = DisplayArea.GetFromWindowId(CurrentContext.WindowId, DisplayAreaFallback.Primary);
-        var hMonitor = Win32Interop.GetMonitorFromDisplayId(displayArea.DisplayId);
-
-        // Get DPI.
-        var result = GetDpiForMonitor(hMonitor, MonitorDpiType.MdtDefault, out var dpiX, out _);
-        if (result != 0)
-        {
-            throw new Exception("Could not get DPI for monitor.");
-        }
-
-        var scaleFactorPercent = (uint) (((long) dpiX * 100 + (96 >> 1)) / 96);
-        return scaleFactorPercent / 100.0;
-    }
+    
     public static Color ParseHexColor(string hex)
     {
         var trimmed = !hex.StartsWith('#') ? $"#{hex}" : hex;

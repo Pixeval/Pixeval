@@ -123,8 +123,14 @@
   <data name="DependenciesSubtitleTextBlock.Text" xml:space="preserve">
     <value>项目依赖</value>
   </data>
-  <data name="MSHostingIntroductoryTextBlock.Text" xml:space="preserve">
+  <data name="MSHostingIntroductoryTextBlock.Description" xml:space="preserve">
     <value>Microsoft.Extensions.Hosting提供了应用程序生命周期管理，包括IoC容器在内的功能</value>
+  </data>
+  <data name="MSHostingIntroductoryTextBlock.Header" xml:space="preserve">
+    <value>Microsoft.Extensions.Hosting</value>
+  </data>
+  <data name="MSHostingIntroductoryTextBlock.Tag" xml:space="preserve">
+    <value>https://github.com/dotnet/runtime/tree/main/src/libraries/Microsoft.Extensions.Hosting</value>
   </data>
   <data name="OpenSourceLicenseContentPartI.Text" xml:space="preserve">
     <value>Pixeval是一个基于GPL-v3协议的开源软件，该协议的原文本如下，如果您使用了Pixeval中的代码，或者正在基于Pixeval的代码开发，请确保遵循该许可证分发您的软件，您可以在</value>
@@ -138,26 +144,56 @@
   <data name="OpenSourceLicenseSubtitleTextBlock.Text" xml:space="preserve">
     <value>开源许可</value>
   </data>
-  <data name="PInvokeIntroductoryTextBlock.Text" xml:space="preserve">
+  <data name="PInvokeIntroductoryTextBlock.Description" xml:space="preserve">
     <value>PInvoke.User32提供了Win32 API的包装函数</value>
   </data>
-  <data name="QRCoderIntroductoryTextBlock.Text" xml:space="preserve">
+  <data name="PInvokeIntroductoryTextBlock.Header" xml:space="preserve">
+    <value>PInvoke.User32</value>
+  </data>
+  <data name="PInvokeIntroductoryTextBlock.Tag" xml:space="preserve">
+    <value>https://github.com/dotnet/pinvoke</value>
+  </data>
+  <data name="QRCoderIntroductoryTextBlock.Description" xml:space="preserve">
     <value>QRCoder提供了二维码的合成以及渲染实现</value>
   </data>
-  <data name="RCMemoryStreamIntroductoryTextBlock.Text" xml:space="preserve">
+  <data name="QRCoderIntroductoryTextBlock.Header" xml:space="preserve">
+    <value>QRCoder</value>
+  </data>
+  <data name="QRCoderIntroductoryTextBlock.Tag" xml:space="preserve">
+    <value>https://github.com/codebude/QRCoder</value>
+  </data>
+  <data name="RCMemoryStreamIntroductoryTextBlock.Description" xml:space="preserve">
     <value>Microsoft.IO.RecyclableMemoryStream通过池化提供了对GC友好的MemoryStream实现</value>
   </data>
-  <data name="ReverseMDIntroductoryTextBlock.Text" xml:space="preserve">
+  <data name="RCMemoryStreamIntroductoryTextBlock.Header" xml:space="preserve">
+    <value>Microsoft.IO.RecyclableMemoryStream</value>
+  </data>
+  <data name="RCMemoryStreamIntroductoryTextBlock.Tag" xml:space="preserve">
+    <value>https://github.com/microsoft/Microsoft.IO.RecyclableMemoryStream</value>
+  </data>
+  <data name="ReverseMDIntroductoryTextBlock.Description" xml:space="preserve">
     <value>ReverseMarkdown提供了用于将HTML转换为Markdown的函数</value>
+  </data>
+  <data name="ReverseMDIntroductoryTextBlock.Header" xml:space="preserve">
+    <value>ReverseMarkdown</value>
+  </data>
+  <data name="ReverseMDIntroductoryTextBlock.Tag" xml:space="preserve">
+    <value>https://github.com/mysticmind/reversemarkdown-net</value>
   </data>
   <data name="SpecialThanksContentTextBlock.Text" xml:space="preserve">
     <value>我的朋友们在该项目上给予我了极大的支持，才得以使我一直维持当初的热忱</value>
   </data>
   <data name="SpecialThanksSubtitleTextBlock.Text" xml:space="preserve">
-    <value>鸣谢(排名不分先后)</value>
+    <value>鸣谢（排名不分先后）</value>
   </data>
-  <data name="SQLiteIntroductoryTextBlock.Text" xml:space="preserve">
+  <data name="SQLiteIntroductoryTextBlock.Description" xml:space="preserve">
     <value>sqlite-net-pcl是一个用于SQLite数据库的ORM库，提供了基于表达式树的LINQ查询</value>
+  </data>
+  <data name="SQLiteIntroductoryTextBlock.Header" xml:space="preserve">
+    <value>sqlite-net-pcl</value>
+  </data>
+  <data name="SQLiteIntroductoryTextBlock.Tag" xml:space="preserve">
+    <value>https://github.com/praeclarum/sqlite-net</value>
   </data>
   <data name="SupportMeContentPartI.Text" xml:space="preserve">
     <value>作者除了日常的学业任务外，会抽出大量的时间放在维护Pixeval上，如果你觉得Pixeval做的还不错，欢迎前往</value>
@@ -174,7 +210,13 @@
   <data name="TitleTextBlock.Text" xml:space="preserve">
     <value>关于Pixeval</value>
   </data>
-  <data name="WCTKIntroductoryTextBlock.Text" xml:space="preserve">
+  <data name="WCTKIntroductoryTextBlock.Description" xml:space="preserve">
     <value>Windows Community Toolkit集工具类，拓展，以及额外控件于一身，大大提高了UWP/WinUI/.NET的开发体验，该库本身是.NET Foundation的一部分</value>
+  </data>
+  <data name="WCTKIntroductoryTextBlock.Header" xml:space="preserve">
+    <value>Windows Community Toolkit</value>
+  </data>
+  <data name="WCTKIntroductoryTextBlock.Tag" xml:space="preserve">
+    <value>https://github.com/CommunityToolkit/WindowsCommunityToolkit</value>
   </data>
 </root>

@@ -93,102 +93,44 @@
 
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="150" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="150" />
                     </Grid.ColumnDefinitions>
-                    <Grid
+                    <Border
                         Grid.Column="0"
-                        Width="80"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Stretch"
+                        Width="150"
                         Background="Transparent"
-                        CornerRadius="5"
-                        PointerEntered="LeftPageButtonArea_OnPointerEntered"
-                        PointerExited="LeftPageButtonArea_OnPointerExited">
-                        <Grid
-                            x:Name="PrevButtonDetector"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            Background="Transparent"
-                            Opacity="0">
-                            <Grid.OpacityTransition>
-                                <ScalarTransition Duration="0:0:0.300" />
-                            </Grid.OpacityTransition>
-                            <Grid
-                                Width="30"
-                                Height="100"
-                                VerticalAlignment="Center"
-                                Background="{StaticResource SecondaryAccentBrush}"
-                                CornerRadius="5" />
-                            <ContentControl
-                                Width="20"
-                                Height="100"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                HorizontalContentAlignment="Center"
-                                VerticalContentAlignment="Center"
-                                Content="{ui:FontIcon Glyph=ChevronLeft20F743}"
-                                Tapped="PrevImageAppBarButton_OnTapped"
-                                Visibility="{x:Bind _viewModel.CalculatePrevImageButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
-                            <ContentControl
-                                Width="20"
-                                Height="100"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                HorizontalContentAlignment="Center"
-                                VerticalContentAlignment="Center"
-                                Content="{ui:FontIcon Glyph=ChevronLeft20F743}"
-                                Tapped="PrevIllustrationAppBarButton_OnTapped"
-                                Visibility="{x:Bind _viewModel.CalculatePrevIllustrationButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
-                        </Grid>
-                    </Grid>
-                    <Grid
+                        PointerEntered="ButtonArea_OnPointerEntered"
+                        PointerExited="ButtonArea_OnPointerExited">
+                        <Button
+                            Width="50"
+                            Height="100"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Content="{ui:FontIcon Glyph=ChevronLeft20F743}"
+                            Opacity="0"
+                            RightTapped="PrevButton_OnRightTapped"
+                            Tapped="PrevButton_OnTapped"
+                            Visibility="{x:Bind _viewModel.PrevButtonEnable, Mode=OneWay}" />
+                    </Border>
+                    <Border
                         Grid.Column="2"
-                        Width="80"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Stretch"
+                        Width="150"
                         Background="Transparent"
-                        CornerRadius="5"
-                        PointerEntered="RightPageButtonArea_OnPointerEntered"
-                        PointerExited="RightPageButtonArea_OnPointerExited">
-                        <Grid
-                            x:Name="NextButtonDetector"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            Background="Transparent"
-                            Opacity="0">
-                            <Grid.OpacityTransition>
-                                <ScalarTransition Duration="0:0:0.300" />
-                            </Grid.OpacityTransition>
-                            <Grid
-                                Width="30"
-                                Height="100"
-                                VerticalAlignment="Center"
-                                Background="{StaticResource SecondaryAccentBrush}"
-                                CornerRadius="5" />
-                            <ContentControl
-                                Width="20"
-                                Height="100"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                HorizontalContentAlignment="Center"
-                                VerticalContentAlignment="Center"
-                                Content="{ui:FontIcon Glyph=ChevronRight20F745}"
-                                Tapped="NextImageAppBarButton_OnTapped"
-                                Visibility="{x:Bind _viewModel.CalculateNextImageButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
-                            <ContentControl
-                                Width="20"
-                                Height="100"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                HorizontalContentAlignment="Center"
-                                VerticalContentAlignment="Center"
-                                Content="{ui:FontIcon Glyph=ChevronRight20F745}"
-                                Tapped="NextIllustrationAppBarButton_OnTapped"
-                                Visibility="{x:Bind _viewModel.CalculateNextIllustrationButtonVisibility(_viewModel.CurrentIndex), Mode=OneWay}" />
-                        </Grid>
-                    </Grid>
+                        PointerEntered="ButtonArea_OnPointerEntered"
+                        PointerExited="ButtonArea_OnPointerExited">
+                        <Button
+                            Width="50"
+                            Height="100"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Content="{ui:FontIcon Glyph=ChevronRight20F745}"
+                            Opacity="0"
+                            RightTapped="NextButton_OnRightTapped"
+                            Tapped="NextButton_OnTapped"
+                            Visibility="{x:Bind _viewModel.NextButtonEnable, Mode=OneWay}" />
+                    </Border>
                 </Grid>
 
                 <!--  工具栏的识别区  -->
@@ -281,6 +223,8 @@
                         BorderBrush="{StaticResource SecondaryAccentBorderBrush}"
                         BorderThickness="0.5"
                         CornerRadius="15"
+                        PointerEntered="ThumbnailListGrid_OnPointerEntered"
+                        PointerExited="ThumbnailListGrid_OnPointerExited"
                         Translation="0,0,30">
                         <Grid.Shadow>
                             <ThemeShadow x:Name="ThumbnailListDropShadow" />
@@ -444,9 +388,12 @@
                     <TeachingTip
                         x:Name="QrCodeTeachingTip"
                         x:Uid="/IllustrationViewerPage/QrCodeTeachingTip"
-                        Title="保存二维码"
                         Grid.Column="0"
-                        IsLightDismissEnabled="True" />
+                        IsLightDismissEnabled="True">
+                        <TeachingTip.HeroContent>
+                            <Image />
+                        </TeachingTip.HeroContent>
+                    </TeachingTip>
                     <TeachingTip
                         x:Name="GenerateLinkToThisPageButtonTeachingTip"
                         x:Uid="/IllustrationViewerPage/GenerateLinkToThisPageButtonTeachingTip"
@@ -460,11 +407,11 @@
             </Border>
 
             <TeachingTip
-                Title="{x:Bind _viewModel.SnackBarTitle, Mode=OneWay}"
-                IconSource="{x:Bind _viewModel.SnackBarIconSource, Mode=OneWay}"
+                Title="{x:Bind _viewModel.TeachingTipProperties.Title, Mode=OneWay}"
+                IconSource="{x:Bind _viewModel.TeachingTipProperties.IconSource, Mode=OneWay}"
                 IsLightDismissEnabled="True"
-                IsOpen="{x:Bind _viewModel.IsSnackBarOpen, Mode=OneWay}"
-                Subtitle="{x:Bind _viewModel.SnackBarSubtitle, Mode=OneWay}" />
+                IsOpen="{x:Bind _viewModel.TeachingTipProperties.IsOpen, Mode=OneWay}"
+                Subtitle="{x:Bind _viewModel.TeachingTipProperties.Subtitle, Mode=OneWay}" />
 
         </Grid>
         <VisualStateManager.VisualStateGroups>

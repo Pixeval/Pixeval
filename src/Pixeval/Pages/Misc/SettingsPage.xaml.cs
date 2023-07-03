@@ -33,6 +33,7 @@ using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.System;
+using Pixeval.Util.UI.Windowing;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
@@ -68,9 +69,14 @@ public sealed partial class SettingsPage
         CheckForUpdatesEntry.Header = GitVersionInformation.SemVer;
     }
 
-    private void SingleSelectionSettingEntry_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void Theme_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        App.AppViewModel.SwitchTheme(_viewModel.Theme);
+        WindowFactory.SetTheme(_viewModel.Theme);
+    }
+
+    private void Backdrop_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        WindowFactory.SetBackdrop(_viewModel.AppBackdrop);
     }
 
     private async void ThemeEntryDescriptionHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)

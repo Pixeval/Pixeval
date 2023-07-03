@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -29,17 +28,17 @@ using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using WinUI3Utilities.Attributes;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.UserControls;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
+using WinUI3Utilities.Attributes;
 
-namespace Pixeval.Popups;
+namespace Pixeval.Flyouts;
 
-[DependencyProperty<CommentRepliesBlockViewModel>("ViewModel", nameof(OnViewModelChanged))]
+[DependencyProperty<CommentRepliesBlockViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 public sealed partial class CommentRepliesBlock
 {
     public CommentRepliesBlock()
@@ -53,7 +52,7 @@ public sealed partial class CommentRepliesBlock
         var viewModel = (CommentRepliesBlockViewModel)e.NewValue;
         block.RepliesAreEmptyPanel.Visibility = (!viewModel.HasReplies).ToVisibility();
         block.CommentList.Visibility = viewModel.HasReplies.ToVisibility();
-        if (viewModel.HasReplies && viewModel.Comment.Replies is { } rs)
+        if (viewModel is { HasReplies: true, Comment.Replies: { } rs })
         {
             block.CommentList.ItemsSource = rs;
         }

@@ -49,19 +49,12 @@ public sealed partial class RecentPostsPage : ISortedIllustrationContainerPageHe
         WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 
-    public override void OnPageActivated(NavigationEventArgs navigationEventArgs)
+    public override void OnPageActivated(NavigationEventArgs e)
     {
         PrivacyPolicyComboBox.SelectedItem = PrivacyPolicyComboBoxPublicItem;
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
         WeakReferenceMessenger.Default.TryRegister<RecentPostsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
-    }
-
-    private void RecentPostsPage_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        if (MainWindow.GetNavigationModeAndReset() is not NavigationMode.Back)
-        {
-            ChangeSource();
-        }
+        ChangeSource();
     }
 
     private void PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded(object sender, SelectionChangedEventArgs e)
@@ -77,13 +70,5 @@ public sealed partial class RecentPostsPage : ISortedIllustrationContainerPageHe
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         ((ISortedIllustrationContainerPageHelper) this).OnSortOptionChanged();
-    }
-
-    private void SortOptionComboBoxContainer_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        if (App.AppViewModel.AppSetting.IllustrationViewOption is IllustrationViewOption.RiverFlow)
-        {
-            ToolTipService.SetToolTip(SortOptionComboBoxContainer, new ToolTip { Content = MiscResources.SortIsNotAllowedWithJustifiedLayout });
-        }
     }
 }

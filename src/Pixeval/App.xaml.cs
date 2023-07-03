@@ -27,11 +27,12 @@ using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
 using Pixeval.AppManagement;
 using Pixeval.Messages;
-using Windows.Graphics;
-using Pixeval.Options;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
-using ApplicationTheme = Pixeval.Options.ApplicationTheme;
+using Microsoft.UI.Xaml.Controls;
+using Pixeval.Controls;
+using Pixeval.Pages.Login;
+using Pixeval.Util.UI.Windowing;
 
 namespace Pixeval;
 
@@ -42,13 +43,7 @@ public partial class App
     public App()
     {
         // The theme can only be changed in ctor
-        AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadConfiguration() ?? AppSetting.CreateDefault() };
-        RequestedTheme = AppViewModel.AppSetting.Theme switch
-        {
-            ApplicationTheme.Dark => Microsoft.UI.Xaml.ApplicationTheme.Dark,
-            ApplicationTheme.Light => Microsoft.UI.Xaml.ApplicationTheme.Light,
-            _ => RequestedTheme
-        };
+        AppViewModel = new(this) { AppSetting = AppContext.LoadConfiguration() ?? AppSetting.CreateDefault() };
         AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);
         InitializeComponent();
     }
@@ -73,21 +68,15 @@ public partial class App
         Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSetting.AppFontFamilyName);
         await AppKnownFolders.InitializeAsync();
 
-        _ = new MainWindow();
         CurrentContext.Title = AppContext.AppIdentifier;
-        AppHelper.Initialize(new AppHelper.InitializeInfo
-        {
-            Size = new SizeInt32(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight),
-            BackdropType = AppViewModel.AppSetting.AppBackdrop switch
-            {
-                ApplicationBackdropType.None => BackdropType.None,
-                ApplicationBackdropType.Acrylic => BackdropType.Acrylic,
-                ApplicationBackdropType.Mica => BackdropType.Mica,
-                ApplicationBackdropType.MicaAlt => BackdropType.MicaAlt,
-                _ => throw new ArgumentOutOfRangeException()
-            },
-            TitleBarType = TitleBarHelper.TitleBarType.AppWindow
-        });
+        WindowFactory.SetTheme(AppViewModel.AppSetting.Theme);
+
+        WindowFactory.Create(out var w)
+            .WithLoaded((s, _) => s.To<Frame>().NavigateTo<LoginPage>(w))
+            .WithClosed((_, _) => AppContext.SaveContext())
+            .WithSizeLimit(800, 360)
+            .Init(new(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight))
+            .Activate();
 
         await AppViewModel.InitializeAsync(isProtocolActivated);
     }

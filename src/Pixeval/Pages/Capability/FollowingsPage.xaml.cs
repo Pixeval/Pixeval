@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -57,14 +57,6 @@ public sealed partial class FollowingsPage : IIllustratorView
         return IllustratorListView.ContainerFromItem(viewModel) as UIElement;
     }
 
-    private void FollowingsPage_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        if (MainWindow.GetNavigationModeAndReset() is not NavigationMode.Back)
-        {
-            _ = ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public));
-        }
-    }
-
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
     {
         ViewModel.Dispose();
@@ -78,6 +70,7 @@ public sealed partial class FollowingsPage : IIllustratorView
     public override void OnPageActivated(NavigationEventArgs e)
     {
         WeakReferenceMessenger.Default.TryRegister<FollowingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.ViewModel.DataProvider.FetchEngine?.Cancel());
+        _ = ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public));
     }
 
     private void IllustratorListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

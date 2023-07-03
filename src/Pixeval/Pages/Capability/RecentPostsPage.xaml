@@ -1,36 +1,31 @@
-﻿<controls:EnhancedPage x:Class="Pixeval.Pages.Capability.RecentPostsPage"
-                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                       xmlns:controls="using:Pixeval.Controls"
-                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                       xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
-                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                       xmlns:notifyOnLoadedComboBox="using:Pixeval.Controls.NotifyOnLoadedComboBox"
-                       xmlns:userControls="using:Pixeval.UserControls"
-                       xmlns:ui="using:Pixeval.Util.UI"
-                       xmlns:pixeval="using:Pixeval"
-                       ClearCacheAfterNavigation="True"
-                       Loaded="RecentPostsPage_OnLoaded"
-                       mc:Ignorable="d">
+<controls:EnhancedPage
+    x:Class="Pixeval.Pages.Capability.RecentPostsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:notifyOnLoadedComboBox="using:Pixeval.Controls.NotifyOnLoadedComboBox"
+    xmlns:userControls="using:Pixeval.UserControls"
+    ClearCacheAfterNavigation="True"
+    mc:Ignorable="d">
     <userControls:IllustrationContainer x:Name="IllustrationContainer">
         <userControls:IllustrationContainer.CommandBarElements>
-            <notifyOnLoadedComboBox:NotifyOnLoadedComboBox x:Name="PrivacyPolicyComboBox"
-                                                           x:Uid="/RecentPostsPage/PrivacyPolicyComboBox"
-                                                           SelectionChangedWhenLoaded="PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded">
+            <notifyOnLoadedComboBox:NotifyOnLoadedComboBox
+                x:Name="PrivacyPolicyComboBox"
+                x:Uid="/RecentPostsPage/PrivacyPolicyComboBox"
+                SelectionChangedWhenLoaded="PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded">
                 <notifyOnLoadedComboBox:NotifyOnLoadedComboBox.Items>
-                    <ComboBoxItem x:Name="PrivacyPolicyComboBoxPublicItem"
-                                  x:Uid="/RecentPostsPage/PrivacyPolicyComboBoxPublicComboBoxItem"
-                                  Tag="{x:Bind enum:PrivacyPolicy.Public}" />
+                    <ComboBoxItem
+                        x:Name="PrivacyPolicyComboBoxPublicItem"
+                        x:Uid="/RecentPostsPage/PrivacyPolicyComboBoxPublicComboBoxItem"
+                        Tag="{x:Bind enum:PrivacyPolicy.Public}" />
                     <ComboBoxItem x:Uid="/RecentPostsPage/PrivacyPolicyComboBoxPrivateComboBoxItem" Tag="{x:Bind enum:PrivacyPolicy.Private}" />
                 </notifyOnLoadedComboBox:NotifyOnLoadedComboBox.Items>
             </notifyOnLoadedComboBox:NotifyOnLoadedComboBox>
-            <Grid x:Name="SortOptionComboBoxContainer"
-                  Margin="10,0,0,0"
-                  Background="Transparent"
-                  Loaded="SortOptionComboBoxContainer_OnLoaded">
-                <userControls:SortOptionComboBox x:Name="SortOptionComboBox"
-                                                 IsEnabled="{x:Bind ui:UIHelper.GetIllustrationViewSortOptionAvailability(pixeval:App.AppViewModel.AppSetting.IllustrationViewOption)}"
-                                                 SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
+            <Grid Margin="10,0,0,0" Background="Transparent">
+                <userControls:SortOptionComboBox x:Name="SortOptionComboBox" SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
             </Grid>
         </userControls:IllustrationContainer.CommandBarElements>
     </userControls:IllustrationContainer>

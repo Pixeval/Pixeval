@@ -117,22 +117,70 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="IllustrationHeaderSuggestionTextBlock.Text" xml:space="preserve">
-    <value>插画趋势</value>
+  <data name="ExcludeTagsEntry.Header" xml:space="preserve">
+    <value>要排除的Tag</value>
   </data>
-  <data name="NovelHeaderSuggestionTextBlock.Text" xml:space="preserve">
-    <value>小说趋势</value>
+  <data name="ExcludeTagTokenInput.PlaceholderText" xml:space="preserve">
+    <value>输入结果不能包含的Tag</value>
   </data>
-  <data name="ReverseSearchButton.Text" xml:space="preserve">
-    <value>逆向搜索</value>
+  <data name="IllustrationIdEntry.Header" xml:space="preserve">
+    <value>过滤结果的作品ID</value>
   </data>
-  <data name="SearchAutoSuggestBox.PlaceholderText" xml:space="preserve">
-    <value>请输入作品ID/作品名/作者ID/作者名/设置项</value>
+  <data name="IllustrationIdInput.PlaceholderText" xml:space="preserve">
+    <value>输入想要过滤出的作品ID</value>
   </data>
-  <data name="SettingsEntryHeaderSuggestionTextBlock.Text" xml:space="preserve">
-    <value>相关设置项</value>
+  <data name="IllustrationNameEntry.Header" xml:space="preserve">
+    <value>过滤结果的作品名</value>
   </data>
-  <data name="TagAutoCompletionSuggestionTextBlock.Text" xml:space="preserve">
-    <value>相关标签</value>
+  <data name="IllustrationNameInput.PlaceholderText" xml:space="preserve">
+    <value>输入想要过滤出的作品名</value>
+  </data>
+  <data name="IllustratorIdEntry.Header" xml:space="preserve">
+    <value>过滤结果的作者ID</value>
+  </data>
+  <data name="IllustratorIdInput.PlaceholderText" xml:space="preserve">
+    <value>输入想要过滤出的作者ID</value>
+  </data>
+  <data name="IllustratorNameEntry.Header" xml:space="preserve">
+    <value>过滤结果的作者名</value>
+  </data>
+  <data name="IllustratorNameInput.PlaceholderText" xml:space="preserve">
+    <value>输入想要过滤出的作者名</value>
+  </data>
+  <data name="IncludeTagsEntry.Header" xml:space="preserve">
+    <value>必须包含的Tag</value>
+  </data>
+  <data name="IncludeTagTokenInput.PlaceholderText" xml:space="preserve">
+    <value>输入结果必须包含的Tag</value>
+  </data>
+  <data name="LeastBookmarkCountEntry.Header" xml:space="preserve">
+    <value>最低收藏数</value>
+  </data>
+  <data name="LeastBookmarkCountNumberBox.PlaceholderText" xml:space="preserve">
+    <value>输入最低收藏数[0,+∞)</value>
+  </data>
+  <data name="MaximumBookmarkCountEntry.Header" xml:space="preserve">
+    <value>最高收藏数</value>
+  </data>
+  <data name="MaximumBookmarkCountNumberBox.PlaceholderText" xml:space="preserve">
+    <value>输入最高收藏数[0,-∞)</value>
+  </data>
+  <data name="PublishDateEndEntry.Header" xml:space="preserve">
+    <value>过滤结果的结束日期</value>
+  </data>
+  <data name="PublishDateEndPicker.PlaceholderText" xml:space="preserve">
+    <value>只会包含该日期前发布的作品</value>
+  </data>
+  <data name="PublishDateStartEntry.Header" xml:space="preserve">
+    <value>过滤结果的起始日期</value>
+  </data>
+  <data name="PublishDateStartPicker.PlaceholderText" xml:space="preserve">
+    <value>只会包含该日期后发布的作品</value>
+  </data>
+  <data name="UserGroupNameEntry.Header" xml:space="preserve">
+    <value>自定义收藏夹的名称</value>
+  </data>
+  <data name="UserGroupNameInput.PlaceholderText" xml:space="preserve">
+    <value>过滤结果只会包含在指定收藏夹中的作品</value>
   </data>
 </root>

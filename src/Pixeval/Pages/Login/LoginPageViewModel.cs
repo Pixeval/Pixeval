@@ -37,8 +37,8 @@ using Pixeval.CoreApi;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.CoreApi.Preference;
+using Pixeval.Flyouts;
 using Pixeval.Misc;
-using Pixeval.Popups;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
@@ -76,6 +76,12 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
 
     [ObservableProperty]
     private LoginPhaseEnum _loginPhase;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsWebViewVisible))]
+    private LoginWebView? _webView;
+
+    public Visibility IsWebViewVisible => WebView is null ? Visibility.Collapsed : Visibility.Visible;
 
     public void AdvancePhase(LoginPhaseEnum newPhase)
     {
@@ -176,24 +182,22 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
         using var proxyServer = PixivAuthenticationProxyServer.Create(IPAddress.Loopback, port, await AppContext.GetFakeServerCertificateAsync());
         Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", $"--proxy-server=127.0.0.1:{port} --ignore-certificate-errors");
 
-        var content = new LoginWebViewPopup();
-        var webViewPopup = PopupManager.CreatePopup(content, widthMargin: 150, heightMargin: 100, minHeight: 400, minWidth: 600);
+        WebView = new();
 
         AdvancePhase(LoginPhaseEnum.ExecutingWebView2);
-        PopupManager.ShowPopup(webViewPopup);
 
-        await content.LoginWebView.EnsureCoreWebView2Async();
-        content.LoginWebView.CoreWebView2.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All);
-        content.LoginWebView.CoreWebView2.WebResourceRequested += (_, args) =>
+        await WebView.LoginWebView2.EnsureCoreWebView2Async();
+        WebView.LoginWebView2.CoreWebView2.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All);
+        WebView.LoginWebView2.CoreWebView2.WebResourceRequested += (_, args) =>
         {
             args.Request.Headers.SetHeader("Accept-Language", args.Request.Uri.Contains("recaptcha") ? "zh-cn" : CultureInfo.CurrentUICulture.Name);
         };
 
         var verifier = PixivAuthSignature.GetCodeVerify();
-        content.LoginWebView.Source = new Uri(PixivAuthSignature.GenerateWebPageUrl(verifier));
+        WebView.LoginWebView2.Source = new Uri(PixivAuthSignature.GenerateWebPageUrl(verifier));
 
-        var (url, cookie) = await content.CookieCompletion.Task;
-        PopupManager.ClosePopup(webViewPopup);
+        var (url, cookie) = await WebView.CookieCompletion.Task;
+        WebView = null;
 
         var code = HttpUtility.ParseQueryString(new Uri(url).Query)["code"]!;
 

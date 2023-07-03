@@ -38,6 +38,7 @@ using Pixeval.Messages;
 using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.UI;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustratorViewer;
 
@@ -217,10 +218,7 @@ public sealed partial class IllustratorPage
     public void GoBack()
     {
         ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", ProfileImage);
-        if (App.AppViewModel.AppWindowRootFrame.CanGoBack)
-        {
-            App.AppViewModel.AppWindowRootFrame.GoBack(new SuppressNavigationTransitionInfo());
-        }
+        Parent.To<Frame>().GoBack(new SuppressNavigationTransitionInfo());
     }
 
     private void BackButton_OnTapped(object sender, TappedRoutedEventArgs e)

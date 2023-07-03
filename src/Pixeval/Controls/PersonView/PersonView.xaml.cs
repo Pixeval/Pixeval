@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/QrCodePresenter.xaml.cs
+// Copyright (c) 2022 Pixeval/PersonView.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,28 +19,29 @@
 #endregion
 
 using System;
+using Windows.System;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using WinUI3Utilities.Attributes;
+using Pixeval.Controls.Card;
 
-namespace Pixeval.Popups;
+namespace Pixeval.Controls.PersonView;
 
-public sealed partial class QrCodePresenter : IAppPopupContent
+[DependencyProperty<string>("PersonNickname")]
+[DependencyProperty<string>("PersonName")]
+[DependencyProperty<Uri>("PersonProfileNavigateUri")]
+[DependencyProperty<ImageSource>("PersonPicture")]
+public partial class PersonView : UserControl
 {
-    private readonly ImageSource _qrCodeImageSource;
-
-    public QrCodePresenter(ImageSource qrCodeImageSource)
+    public PersonView()
     {
-        _qrCodeImageSource = qrCodeImageSource;
-        UniqueId = Guid.NewGuid();
         InitializeComponent();
     }
 
-    public Guid UniqueId { get; }
-
-    public FrameworkElement UIContent => this;
-
-    private void QrCodeImage_OnLoaded(object sender, RoutedEventArgs e)
+    private async void ContentContainerOnTapped(object sender, TappedRoutedEventArgs e)
     {
-        QrCodeImage.Source = _qrCodeImageSource;
+        await Launcher.LaunchUriAsync(PersonProfileNavigateUri);
     }
 }

@@ -40,26 +40,6 @@ public static partial class UIHelper
 
     public static IDataTransferManagerInterop DataTransferManagerInterop => DataTransferManager.As<IDataTransferManagerInterop>();
 
-    /// <summary>
-    ///     Set the dpi-aware window size, where by "dpi-aware" means that the desired size
-    ///     will be multiplied by the scale factor of the monitor which hosts the app
-    /// </summary>
-    /// <param name="window"></param>
-    /// <param name="width"></param>
-    /// <param name="height"></param>
-    public static void SetWindowSize(this Window window, int width, int height)
-    {
-        var windowNative = window.As<IWindowNative>();
-        var dpi = User32.GetDpiForWindow(windowNative.WindowHandle);
-        var scalingFactor = (float)dpi / 96;
-        var scaledWidth = (int)(width * scalingFactor);
-        var scaledHeight = (int)(height * scalingFactor);
-
-        User32.SetWindowPos(windowNative.WindowHandle, User32.SpecialWindowHandles.HWND_TOP,
-            0, 0, scaledWidth, scaledHeight,
-            User32.SetWindowPosFlags.SWP_NOMOVE);
-    }
-
     public static void SetTaskBarIconProgressState(TaskBarState state)
     {
         if (TaskBarCustomizationSupported)
@@ -83,28 +63,13 @@ public static partial class UIHelper
         var manager = nint.Zero;
         fixed (Guid* id = &RiId)
         {
-            interop.GetForWindow((nint) CurrentContext.HWnd, id, (void**) &manager);
+            interop.GetForWindow((nint)CurrentContext.HWnd, id, (void**)&manager);
             return DataTransferManager.FromAbi(manager);
         }
     }
 
     public static void ShowShareUI()
     {
-        DataTransferManagerInterop.ShowShareUIForWindow((nint) CurrentContext.HWnd);
-    }
-
-    /// <summary>
-    ///     Get the dpi-aware screen size using win32 API, where by "dpi-aware" means that
-    ///     the result will be divided by the scale factor of the monitor that hosts the app
-    /// </summary>
-    /// <returns>Screen size</returns>
-    public static (int, int) GetScreenSize()
-    {
-        return (User32.GetSystemMetrics(User32.SystemMetric.SM_CXSCREEN), User32.GetSystemMetrics(User32.SystemMetric.SM_CYSCREEN));
-    }
-
-    public static nint GetWindowHandle(this Window window)
-    {
-        return window.As<IWindowNative>().WindowHandle;
+        DataTransferManagerInterop.ShowShareUIForWindow((nint)CurrentContext.HWnd);
     }
 }

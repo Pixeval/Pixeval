@@ -1,5 +1,5 @@
 <UserControl
-    x:Class="Pixeval.UserControls.IllustrationView.RiverFlowIllustrationView"
+    x:Class="Pixeval.UserControls.IllustrationView.IllustrationView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:card="using:Pixeval.Controls.Card"
@@ -79,8 +79,8 @@
                                 </GridViewItem.ContextFlyout>
                                 <card:ContentFiller
                                     CornerRadius="5"
-                                    DesiredHeight="{x:Bind illustrationView:RiverFlowIllustrationViewViewModel.StaticItemHeight}"
-                                    DesiredWidth="{x:Bind GetDesiredWidth(illustrationView:RiverFlowIllustrationViewViewModel.StaticItemHeight)}">
+                                    DesiredHeight="{x:Bind illustrationView:IllustrationViewViewModel.StaticItemHeight}"
+                                    DesiredWidth="{x:Bind GetDesiredWidth(illustrationView:IllustrationViewViewModel.StaticItemHeight)}">
                                     <card:ContentFiller.Resources>
                                         <ExponentialEase
                                             x:Key="EasingFunction"
@@ -350,6 +350,14 @@
                 HorizontalAlignment="Center"
                 FontSize="{StaticResource PixevalTitleFontSize}" />
         </StackPanel>
+        <TeachingTip
+            x:Name="QrCodeTeachingTip"
+            x:Uid="/IllustrationView/QrCodeTeachingTip"
+            IsLightDismissEnabled="True">
+            <TeachingTip.HeroContent>
+                <Image />
+            </TeachingTip.HeroContent>
+        </TeachingTip>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="Group">
                 <VisualState x:Name="VisualStateGrid">

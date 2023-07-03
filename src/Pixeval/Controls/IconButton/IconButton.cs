@@ -26,8 +26,8 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls.IconButton;
 
-[DependencyProperty<string>("Text", nameof(OnTextChanged))]
-[DependencyProperty<IconElement>("Icon", nameof(OnIconChanged))]
+[DependencyProperty<string>("Text", propertyChanged: nameof(OnTextChanged))]
+[DependencyProperty<IconElement>("Icon", propertyChanged: nameof(OnIconChanged))]
 public partial class IconButton : Button
 {
     public IconButton()

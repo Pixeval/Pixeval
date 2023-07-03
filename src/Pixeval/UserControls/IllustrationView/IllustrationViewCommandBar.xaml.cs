@@ -32,8 +32,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.CoreApi.Model;
 using Pixeval.Download;
-using Pixeval.Popups;
-using Pixeval.Popups.IllustrationResultFilter;
+using Pixeval.Flyouts.IllustrationResultFilter;
 using Pixeval.UserControls.TokenInput;
 using Pixeval.Util;
 using Pixeval.Util.Threading;
@@ -44,18 +43,16 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.UserControls.IllustrationView;
 
-[DependencyProperty<ObservableCollection<ICommandBarElement>>("PrimaryCommandsSupplements", nameof(OnPrimaryCommandsSupplementsChanged), DefaultValue = "new System.Collections.ObjectModel.ObservableCollection<Microsoft.UI.Xaml.Controls.ICommandBarElement>()")]
-[DependencyProperty<ObservableCollection<ICommandBarElement>>("SecondaryCommandsSupplements", nameof(OnSecondaryCommandsSupplementsChanged), DefaultValue = "new System.Collections.ObjectModel.ObservableCollection<Microsoft.UI.Xaml.Controls.ICommandBarElement>()")]
-[DependencyProperty<bool>("IsDefaultCommandsEnabled", nameof(OnIsDefaultCommandsEnabledChanged), DefaultValue = "true")]
+[DependencyProperty<ObservableCollection<ICommandBarElement>>("PrimaryCommandsSupplements", DependencyPropertyDefaultValue.New, nameof(OnPrimaryCommandsSupplementsChanged))]
+[DependencyProperty<ObservableCollection<ICommandBarElement>>("SecondaryCommandsSupplements", DependencyPropertyDefaultValue.New, nameof(OnSecondaryCommandsSupplementsChanged))]
+[DependencyProperty<bool>("IsDefaultCommandsEnabled", "true", nameof(OnIsDefaultCommandsEnabledChanged))]
 [DependencyProperty<IllustrationViewViewModel>("ViewModel")]
-[DependencyProperty<bool>("ShowDefaultSuggestBox", DefaultValue = "true")]
+[DependencyProperty<bool>("ShowDefaultSuggestBox", "true")]
 public sealed partial class IllustrationViewCommandBar
 {
     private readonly IEnumerable<Control> _defaultCommands;
 
     private FilterSettings _lastFilterSettings = FilterSettings.Default;
-
-    private readonly IllustrationResultFilterPopupViewModel _filterPopupViewModel = new();
 
     public IllustrationViewCommandBar()
     {
@@ -84,24 +81,23 @@ public sealed partial class IllustrationViewCommandBar
         };
     }
 
-
     public ObservableCollection<UIElement> CommandBarElements { get; }
 
     private static void OnPrimaryCommandsSupplementsChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
-        AddCommandCallback(args, ((IllustrationViewCommandBar) o).CommandBar.PrimaryCommands);
+        AddCommandCallback(args, ((IllustrationViewCommandBar)o).CommandBar.PrimaryCommands);
     }
 
     private static void OnSecondaryCommandsSupplementsChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
-        AddCommandCallback(args, ((IllustrationViewCommandBar) o).CommandBar.SecondaryCommands);
+        AddCommandCallback(args, ((IllustrationViewCommandBar)o).CommandBar.SecondaryCommands);
     }
 
     private static void OnIsDefaultCommandsEnabledChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
-        ((IllustrationViewCommandBar) o)._defaultCommands
-            .Where(c => c != ((IllustrationViewCommandBar) o).SelectAllButton)
-            .ForEach(c => c.IsEnabled = (bool) args.NewValue);
+        ((IllustrationViewCommandBar)o)._defaultCommands
+            .Where(c => c != ((IllustrationViewCommandBar)o).SelectAllButton)
+            .ForEach(c => c.IsEnabled = (bool)args.NewValue);
     }
 
     private static void AddCommandCallback(DependencyPropertyChangedEventArgs e, ICollection<ICommandBarElement> commands)
@@ -115,7 +111,7 @@ public sealed partial class IllustrationViewCommandBar
                     case { Action: NotifyCollectionChangedAction.Add }:
                         foreach (var argsNewItem in args.NewItems ?? Array.Empty<ICommandBarElement>())
                         {
-                            commands.Add((ICommandBarElement) argsNewItem);
+                            commands.Add((ICommandBarElement)argsNewItem);
                         }
 
                         break;
@@ -185,7 +181,8 @@ public sealed partial class IllustrationViewCommandBar
                 App.AppViewModel.DownloadManager.QueueTask(viewModelSelectedIllustration);
             }
         });
-        SnackBarController.ShowSnack(IllustrationViewCommandBarResources.DownloadItemsQueuedFormatted.Format(ViewModel.DataProvider.SelectedIllustrations.Count), SnackBarController.SnackBarDurationShort);
+
+        CommandBarTeachingTip.ShowAndHide(IllustrationViewCommandBarResources.DownloadItemsQueuedFormatted.Format(ViewModel.DataProvider.SelectedIllustrations.Count), mSec: 1500);
     }
 
     private async void OpenAllInBrowserButton_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -219,73 +216,61 @@ public sealed partial class IllustrationViewCommandBar
         ViewModel.DataProvider.IllustrationsSource.WhereNotNull().ForEach(i => i.IsSelected = false);
     }
 
-    private void OpenConditionDialogButton_OnChecked(object sender, RoutedEventArgs e)
+    private void OpenConditionDialogButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        var content = new IllustrationResultFilterPopupContent(_filterPopupViewModel);
-        var popup = PopupManager.CreatePopup(content, 550, heightMargin: 100, lightDismiss: false, closing: ConditionPopupClosing);
-        content.ResetButtonTapped += (_, _) =>
-        {
-            content.Cleanup();
-            PopupManager.ClosePopup(popup);
-        };
-        content.CloseButtonTapped += (_, _) =>
-        {
-            content.Cleanup();
-            PopupManager.ClosePopup(popup);
-        };
-        PopupManager.ShowPopup(popup);
+        FilterTeachingTip.IsOpen = true;
     }
 
-    private void ConditionPopupClosing(IAppPopupContent popup, object? arg)
+    private void FilterTeachingTip_OnActionButtonClick(TeachingTip sender, object args)
     {
-        OpenConditionDialogButton.IsChecked = false;
-        if (arg is FilterSettings(
-                var includeTags,
-                var excludeTags,
-                var leastBookmark,
-                var maximumBookmark,
-                _, // TODO user group name
-                var illustratorName,
-                var illustratorId,
-                var illustrationName,
-                var illustrationId,
-                var publishDateStart,
-                var publishDateEnd) filterSettings)
+        FilterContent.Reset();
+    }
+
+    private void FilterTeachingTip_OnCloseButtonClick(TeachingTip sender, object args)
+    {
+        if (FilterContent.GetFilterSettings is not (
+            var includeTags,
+            var excludeTags,
+            var leastBookmark,
+            var maximumBookmark,
+            _, // TODO user group name
+            var illustratorName,
+            var illustratorId,
+            var illustrationName,
+            var illustrationId,
+            var publishDateStart,
+            var publishDateEnd) filterSettings) 
+            return;
+        if (filterSettings == _lastFilterSettings)
         {
-            if (filterSettings == _lastFilterSettings)
-            {
-                return;
-            }
-
-            _lastFilterSettings = filterSettings;
-            if (popup is IllustrationResultFilterPopupContent { IsReset: true })
-            {
-                ViewModel.DataProvider.Filter = null;
-                return;
-            }
-
-            ViewModel.DataProvider.Filter = null;
-            ViewModel.DataProvider.Filter = o =>
-            {
-                if (o is IllustrationViewModel vm)
-                {
-                    var stringTags = vm.Illustration.Tags?.Select(t => t.Name).WhereNotNull().ToArray() ?? Array.Empty<string>();
-                    var result = ExamineExcludeTags(stringTags, excludeTags)
-                                 && ExamineIncludeTags(stringTags, includeTags)
-                                 && vm.Bookmark >= leastBookmark
-                                 && vm.Bookmark <= maximumBookmark
-                                 && illustrationName.Match(vm.Illustration.Title)
-                                 && illustratorName.Match(vm.Illustration.User?.Name)
-                                 && (illustratorId.IsNullOrEmpty() || illustratorId == vm.Illustration.User?.Id.ToString())
-                                 && (illustrationId.IsNullOrEmpty() || illustrationId == vm.Id)
-                                 && vm.PublishDate >= publishDateStart
-                                 && vm.PublishDate <= publishDateEnd;
-                    return result;
-                }
-
-                return false;
-            };
+            return;
         }
+
+        _lastFilterSettings = filterSettings;
+
+        ViewModel.DataProvider.Filter = null;
+        ViewModel.DataProvider.Filter = o =>
+        {
+            if (o is IllustrationViewModel vm)
+            {
+                var stringTags = vm.Illustration.Tags?.Select(t => t.Name).WhereNotNull().ToArray() ??
+                                 Array.Empty<string>();
+                var result = ExamineExcludeTags(stringTags, excludeTags)
+                             && ExamineIncludeTags(stringTags, includeTags)
+                             && vm.Bookmark >= leastBookmark
+                             && vm.Bookmark <= maximumBookmark
+                             && illustrationName.Match(vm.Illustration.Title)
+                             && illustratorName.Match(vm.Illustration.User?.Name)
+                             && (illustratorId.IsNullOrEmpty() ||
+                                 illustratorId == vm.Illustration.User?.Id.ToString())
+                             && (illustrationId.IsNullOrEmpty() || illustrationId == vm.Id)
+                             && vm.PublishDate >= publishDateStart
+                             && vm.PublishDate <= publishDateEnd;
+                return result;
+            }
+
+            return false;
+        };
 
         static bool ExamineExcludeTags(IEnumerable<string> tags, IEnumerable<Token> predicates)
         {

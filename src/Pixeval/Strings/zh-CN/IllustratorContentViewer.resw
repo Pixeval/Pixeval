@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -122,9 +122,6 @@
   </data>
   <data name="BookmarkedNovelNavigationViewItem.Content" xml:space="preserve">
     <value>小说收藏</value>
-  </data>
-  <data name="CannotSortWhileJustifiedAligned" xml:space="preserve">
-    <value>只有在 设置 | 浏览体验设置 | 缩略图视图对齐规则 中选择“网格对齐”时才可以使用排序功能</value>
   </data>
   <data name="DoNotSort" xml:space="preserve">
     <value>不进行排序</value>

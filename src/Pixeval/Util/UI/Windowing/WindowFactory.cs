@@ -20,17 +20,37 @@
 
 using System.Collections.Generic;
 using Microsoft.UI.Xaml;
+using Pixeval.Options;
+using Windows.Foundation;
+using Windows.Graphics;
+using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities;
+using AppTheme = Pixeval.Options.ApplicationTheme;
+using ApplicationTheme = Microsoft.UI.Xaml.ApplicationTheme;
 
 namespace Pixeval.Util.UI.Windowing;
 
 public static class WindowFactory
 {
-    private static readonly List<CustomizableWindow> ForkedWindowsInternal = new();
+    public static EnhancedWindow RootWindow => ForkedWindowsInternal[0];
 
-    public static IReadOnlyList<CustomizableWindow> ForkedWindows => ForkedWindowsInternal;
+    private static readonly List<EnhancedWindow> ForkedWindowsInternal = new();
 
-    public static CustomizableWindow Fork(this Window owner, out CustomizableWindow window)
+    public static IReadOnlyList<EnhancedWindow> ForkedWindows => ForkedWindowsInternal;
+
+    public static EnhancedWindow Create(out EnhancedWindow window)
+    {
+        var w = window = new();
+        if (ForkedWindowsInternal.Count is 0)
+            CurrentContext.Window = window;
+        window.Closed += (_, _) => ForkedWindowsInternal.Remove(w);
+        ForkedWindowsInternal.Add(window);
+        return window;
+    }
+
+    public static EnhancedWindow Fork(this EnhancedWindow owner, out EnhancedWindow window)
     {
         var w = window = new(owner);
         window.Closed += (_, _) => ForkedWindowsInternal.Remove(w);
@@ -38,14 +58,95 @@ public static class WindowFactory
         return window;
     }
 
-    public static CustomizableWindow WithLoaded(this CustomizableWindow window, RoutedEventHandler onLoaded)
+    public static EnhancedWindow WithSizeLimit(this EnhancedWindow window, int minWidth = 0, int minHeight = 0, int maxWidth = 0, int maxHeight = 0)
+    {
+        if (minWidth is not 0)
+            window.MinWidth = minWidth;
+        if (minHeight is not 0)
+            window.MinHeight = minHeight;
+        if (maxWidth is not 0)
+            window.MaxWidth = maxWidth;
+        if (maxHeight is not 0)
+            window.MaxHeight = maxHeight;
+        return window;
+    }
+
+    public static EnhancedWindow WithLoaded(this EnhancedWindow window, RoutedEventHandler onLoaded)
     {
         window.FrameLoaded += onLoaded;
         return window;
     }
 
-    public static void Initialize(this CustomizableWindow window, AppHelper.InitializeInfo provider)
+    public static EnhancedWindow WithClosed(this EnhancedWindow window, TypedEventHandler<object, WindowEventArgs> onClosed)
     {
-        AppHelper.Initialize(provider, window);
+        window.Closed += onClosed;
+        return window;
+    }
+
+    public static EnhancedWindow Init(this EnhancedWindow window, SizeInt32 size = default)
+    {
+        window.Initialize(new()
+        {
+            BackdropType = App.AppViewModel.AppSetting.AppBackdrop switch
+            {
+                ApplicationBackdropType.None => BackdropType.None,
+                ApplicationBackdropType.Acrylic => BackdropType.Acrylic,
+                ApplicationBackdropType.Mica => BackdropType.Mica,
+                ApplicationBackdropType.MicaAlt => BackdropType.MicaAlt,
+                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ApplicationBackdropType, BackdropType>(App.AppViewModel.AppSetting.AppBackdrop)
+            },
+            TitleBarType = TitleBarType.AppWindow,
+            Size = size
+        });
+        window.AppWindow.TitleBar.IconShowOptions = IconShowOptions.HideIconAndSystemMenu;// TODO: Remove this line when utilities implemented
+        var theme = GetElementTheme(App.AppViewModel.AppSetting.Theme);
+        TitleBarHelper.SetAppWindowTitleBarButtonColor(window, theme is ElementTheme.Dark);
+        window.FrameLoaded += (s, _) =>
+        {
+            s.To<FrameworkElement>().RequestedTheme = theme;
+        };
+        return window;
+    }
+
+    public static void SetBackdrop(ApplicationBackdropType backdropType)
+    {
+        foreach (var window in ForkedWindowsInternal)
+        {
+            window.SystemBackdrop = backdropType switch
+            {
+                ApplicationBackdropType.None => null,
+                ApplicationBackdropType.Acrylic => new DesktopAcrylicBackdrop(),
+                ApplicationBackdropType.Mica => new MicaBackdrop(),
+                ApplicationBackdropType.MicaAlt => new MicaBackdrop { Kind = MicaKind.BaseAlt },
+                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ApplicationBackdropType, SystemBackdrop>(backdropType)
+            };
+        }
+    }
+
+    public static void SetTheme(AppTheme theme)
+    {
+        var t = GetElementTheme(theme);
+
+        foreach (var window in ForkedWindowsInternal)
+        {
+            window.Content.To<FrameworkElement>().RequestedTheme = t;
+            TitleBarHelper.SetAppWindowTitleBarButtonColor(window, t is ElementTheme.Dark);
+        }
+    }
+
+    private static ElementTheme GetElementTheme(AppTheme theme)
+    {
+        return theme switch
+        {
+            AppTheme.Dark => ElementTheme.Dark,
+            AppTheme.Light => ElementTheme.Light,
+            AppTheme.SystemDefault => Application.Current.RequestedTheme switch
+            {
+                ApplicationTheme.Light => ElementTheme.Light,
+                ApplicationTheme.Dark => ElementTheme.Dark,
+                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ApplicationTheme, ElementTheme>(Application.Current.RequestedTheme)
+            },
+            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<AppTheme, ElementTheme>(theme)
+        };
     }
 }

@@ -24,8 +24,10 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Controls.Setting.UI;
@@ -34,6 +36,7 @@ using Pixeval.Download;
 using Pixeval.Download.MacroParser;
 using Pixeval.Misc;
 using Pixeval.UserControls.TokenInput;
+using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
@@ -118,12 +121,14 @@ public partial class SettingsPageViewModel : ObservableObject
     public void ClearData<T, TModel>(ClearDataKind kind, IPersistentManager<T, TModel> manager) where T : new()
     {
         manager.Clear();
-        SnackBarController.ShowSnack(kind switch
+        TeachingTipProperties.ShowAndHide(kind switch
         {
             ClearDataKind.BrowseHistory => SettingsPageResources.BrowseHistoriesCleared,
             ClearDataKind.SearchHistory => SettingsPageResources.SearchHistoriesCleared,
             ClearDataKind.DownloadHistory => SettingsPageResources.DownloadHistoriesCleared,
             _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null)
-        }, SnackBarController.SnackBarDurationShort);
+        });
     }
+
+    public ObservableTeachingTipProperties TeachingTipProperties { get; } = new();
 }

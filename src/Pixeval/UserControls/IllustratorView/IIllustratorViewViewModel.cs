@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -37,6 +37,6 @@ public abstract partial class AbstractIllustratorViewViewModel : ObservableObjec
 
     public async Task ResetEngineAndFillAsync(IFetchEngine<User?>? newEngine, int? itemLimit = null)
     {
-        HasNoItems = await DataProvider.ResetAndFillAsync(newEngine, itemLimit) == 0;
+        HasNoItems = await DataProvider.ResetAndFillAsync(newEngine, itemLimit) is 0;
     }
 }

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -162,7 +162,7 @@
   <data name="SearchKeywordCannotBeBlankTitle" xml:space="preserve">
     <value>输入非法</value>
   </data>
-  <data name="OpenSearchSettingPopupButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+  <data name="OpenSearchSettingButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>搜索设置</value>
   </data>
   <data name="AboutTab.Content" xml:space="preserve">

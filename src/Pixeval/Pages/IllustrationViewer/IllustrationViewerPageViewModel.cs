@@ -53,6 +53,8 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     private ImageViewerPageViewModel _current = null!;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(NextButtonEnable))]
+    [NotifyPropertyChangedFor(nameof(PrevButtonEnable))]
     private int _currentIndex;
 
     [ObservableProperty]
@@ -60,6 +62,33 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     [ObservableProperty]
     private IllustrationViewModel? _selectedIllustrationViewModel;
+
+    /// <summary>
+    /// Todo: May need refactor
+    /// </summary>
+    public Action CollapseThumbnailList { get; set; }
+
+    public bool PointerNotInArea
+    {
+        get => _pointerNotInArea;
+        set
+        {
+            _pointerNotInArea = value;
+            if (_pointerNotInArea && TimeUp)
+                CollapseThumbnailList();
+        }
+    }
+
+    public bool TimeUp
+    {
+        get => _timeUp;
+        set
+        {
+            _timeUp = value;
+            if (_timeUp && PointerNotInArea)
+                CollapseThumbnailList();
+        }
+    }
 
     // The reason why we don't put UserProfileImageSource into IllustrationViewModel
     // is because the whole array of Illustrations is just representing the same 
@@ -74,6 +103,8 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     // Preserved for illustrator view use
     [ObservableProperty]
     private UserInfo? _userInfo;
+
+    public ObservableTeachingTipProperties TeachingTipProperties { get; } = new();
 
     private bool _isFullScreen;
 
@@ -103,6 +134,8 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     private AdvancedCollectionView? _snapshot;
 
     private readonly IllustrationViewModel[] _illustrations;
+    private bool _timeUp;
+    private bool _pointerNotInArea;
 
     public bool IsDisposed { get; set; }
 
@@ -110,11 +143,11 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     // illustrations should contains only one item if the illustration is a single
     // otherwise it contains the entire manga data
-    public IllustrationViewerPageViewModel(RiverFlowIllustrationView illustrationView, params IllustrationViewModel[] illustrations) : this(illustrations)
+    public IllustrationViewerPageViewModel(IllustrationView illustrationView, params IllustrationViewModel[] illustrations) : this(illustrations)
     {
         IllustrationView = illustrationView;
-        ContainerGridViewModel = illustrationView.ViewModel;
-        IllustrationViewModelInTheGridView = ContainerGridViewModel.DataProvider.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
+        ContainerRiverFlowIllustrationViewViewModel = illustrationView.ViewModel;
+        IllustrationViewModelInTheGridView = ContainerRiverFlowIllustrationViewViewModel.DataProvider.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
     }
 
     public IllustrationViewerPageViewModel(params IllustrationViewModel[] illustrations)
@@ -138,24 +171,24 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     /// <summary>
     ///     The view model of the GridView that the <see cref="ImageViewerPageViewModels" /> comes from
     /// </summary>
-    public IllustrationViewViewModel? ContainerGridViewModel { get; }
+    public IllustrationViewViewModel? ContainerRiverFlowIllustrationViewViewModel { get; }
 
     /// <summary>
-    ///     The <see cref="RiverFlowIllustrationView" /> that owns <see cref="ContainerGridViewModel" />
+    ///     The <see cref="UserControls.IllustrationView.IllustrationView" /> that owns <see cref="ContainerRiverFlowIllustrationViewViewModel" />
     /// </summary>
-    public RiverFlowIllustrationView? IllustrationView { get; }
+    public IllustrationView? IllustrationView { get; }
 
     /// <summary>
-    ///     The <see cref="IllustrationViewModelInTheGridView" /> in <see cref="RiverFlowIllustrationView" /> that corresponds to
+    ///     The <see cref="IllustrationViewModelInTheGridView" /> in <see cref="UserControls.IllustrationView.IllustrationView" /> that corresponds to
     ///     current
     ///     <see cref="IllustrationViewerPageViewModel" />
     /// </summary>
     public IllustrationViewModel? IllustrationViewModelInTheGridView { get; }
 
     /// <summary>
-    ///     The index of current illustration in <see cref="RiverFlowIllustrationView" />
+    ///     The index of current illustration in <see cref="UserControls.IllustrationView.IllustrationView" />
     /// </summary>
-    public int? IllustrationIndex => ContainerGridViewModel?.DataProvider.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
+    public int? IllustrationIndex => ContainerRiverFlowIllustrationViewViewModel?.DataProvider.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
 
     public ImageViewerPageViewModel[]? ImageViewerPageViewModels { get; }
 
@@ -248,7 +281,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         if (Current.OriginalImageStream is null)
         {
-            ShowAndHide(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, Severity.Error);
+            TeachingTipProperties.ShowAndHide(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, TeachingTipSeverity.Error);
             return;
         }
 
@@ -274,7 +307,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         if (Current.OriginalImageStream is null)
         {
-            ShowAndHide(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, Severity.Error);
+            TeachingTipProperties.ShowAndHide(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, TeachingTipSeverity.Error);
             return;
         }
 
@@ -310,7 +343,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         if (Current.LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true })
         {
-            ShowAndHide(IllustrationViewerPageResources.CannotShareImageForNowTitle, Severity.Warning,
+            TeachingTipProperties.ShowAndHide(IllustrationViewerPageResources.CannotShareImageForNowTitle, TeachingTipSeverity.Warning,
                 IllustrationViewerPageResources.CannotShareImageForNowContent);
             return;
         }
@@ -327,7 +360,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         var link = MakoHelper.GenerateIllustrationWebUri(Current.IllustrationViewModel.Id).ToString();
         UIHelper.SetClipboardContent(package => package.SetText(link));
-        ShowAndHide(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle);
+        TeachingTipProperties.ShowAndHide(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle);
     }
 
     private async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -394,13 +427,15 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     public ImageViewerPageViewModel Next()
     {
-        ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModels![CurrentIndex++]);
+        ++CurrentIndex;
+        ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModels![CurrentIndex]);
         return Current;
     }
 
     public ImageViewerPageViewModel Prev()
     {
-        ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModels![CurrentIndex--]);
+        --CurrentIndex;
+        ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModels![CurrentIndex]);
         return Current;
     }
 
@@ -509,137 +544,58 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     #region Helper Functions
 
-    public Visibility CalculateNextImageButtonVisibility(int index)
-    {
-        if (IllustrationView is null)
-        {
-            return Visibility.Collapsed;
-        }
+    public Visibility NextButtonEnable => NextButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
 
-        return index < ImageViewerPageViewModels!.Length - 1 ? Visibility.Visible : Visibility.Collapsed;
-    }
-
-    public Visibility CalculatePrevImageButtonVisibility(int index)
-    {
-        if (IllustrationView is null)
-        {
-            return Visibility.Collapsed;
-        }
-
-        return index > 0 ? Visibility.Visible : Visibility.Collapsed;
-    }
-
-    public Visibility CalculateNextIllustrationButtonVisibility(int index)
-    {
-        if (ContainerGridViewModel is null)
-        {
-            return Visibility.Collapsed;
-        }
-
-        return ContainerGridViewModel.DataProvider.IllustrationsView.Count > IllustrationIndex + 1
-            ? CalculateNextImageButtonVisibility(index).Inverse()
-            : Visibility.Collapsed;
-    }
-
-    public Visibility CalculatePrevIllustrationButtonVisibility(int index)
-    {
-        if (ContainerGridViewModel is null)
-        {
-            return Visibility.Collapsed;
-        }
-
-        return IllustrationIndex > 0
-            ? CalculatePrevImageButtonVisibility(index).Inverse()
-            : Visibility.Collapsed;
-    }
-
-    #endregion
-
-    #region SnackBar
-
-    [ObservableProperty] private string _snackBarTitle = "";
-
-    [ObservableProperty] private string _snackBarSubtitle = "";
-
-    [ObservableProperty] private FontIconSource _snackBarIconSource = null!;
-
-    [ObservableProperty] private bool _isSnackBarOpen;
-
-    /// <remarks>
-    /// Value type members require property to enable thread sharing
-    /// </remarks>
-    private static DateTime HideSnakeBarTime { get; set; }
+    public bool NextIllustrationEnable => ContainerRiverFlowIllustrationViewViewModel is not null && ContainerRiverFlowIllustrationViewViewModel.DataProvider.IllustrationsView.Count > IllustrationIndex + 1;
 
     /// <summary>
-    /// Show SnackBar
+    /// <see langword="true"/>: next image<br/>
+    /// <see langword="false"/>: next illustration<br/>
+    /// <see langword="null"/>: none
     /// </summary>
-    /// <param name="message"><see cref="TeachingTip.Title"/></param>
-    /// <param name="severity"><see cref="TeachingTip.IconSource"/></param>
-    /// <param name="hint"><see cref="TeachingTip.Subtitle"/></param>
-    public void Show(string message, Severity severity = Severity.Ok, string hint = "")
+    public bool? NextButtonAction
     {
-        SnackBarTitle = message;
-        SnackBarSubtitle = hint;
-        SnackBarIconSource = new()
+        get
         {
-            Glyph = severity switch
+            if (IllustrationView is not null && CurrentIndex < ImageViewerPageViewModels!.Length - 1)
             {
-                Severity.Ok => "\xE10B", // Accept
-                Severity.Information => "\xE946", // Info
-                Severity.Important => "\xE171", // Important
-                Severity.Warning => "\xE7BA", // Warning
-                Severity.Error => "\xEA39", // ErrorBadge
-                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<Severity, string>(severity)
+                return true;
             }
-        };
 
-        IsSnackBarOpen = true;
+            if (NextIllustrationEnable)
+            {
+                return false;
+            }
+
+            return null;
+        }
     }
 
-    /// <summary>
-    /// Show SnackBar and hide after <paramref name="mSec"/> microseconds
-    /// </summary>
-    /// <param name="message"><see cref="TeachingTip.Title"/></param>
-    /// <param name="severity"><see cref="TeachingTip.IconSource"/></param>
-    /// <param name="hint"><see cref="TeachingTip.Subtitle"/></param>
-    /// <param name="mSec">Automatically hide after <paramref name="mSec"/> milliseconds</param>
-    public async void ShowAndHide(string message, Severity severity = Severity.Ok, string hint = "", int mSec = 3000)
-    {
-        HideSnakeBarTime = DateTime.Now + TimeSpan.FromMilliseconds(mSec - 100);
+    public Visibility PrevButtonEnable => PrevButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
 
-        Show(message, severity, hint);
-
-        await Task.Delay(mSec);
-
-        if (DateTime.Now > HideSnakeBarTime)
-            IsSnackBarOpen = false;
-    }
+    public bool PrevIllustrationEnable => ContainerRiverFlowIllustrationViewViewModel is not null && IllustrationIndex > 0;
 
     /// <summary>
-    /// Snack bar severity on <see cref="TeachingTip.IconSource"/> (Segoe Fluent Icons font)
+    /// <see langword="true"/>: prev image<br/>
+    /// <see langword="false"/>: prev illustration<br/>
+    /// <see langword="null"/>: none
     /// </summary>
-    public enum Severity
+    public bool? PrevButtonAction
     {
-        /// <summary>
-        /// Accept (E10B)
-        /// </summary>
-        Ok,
-        /// <summary>
-        /// Info (E946)
-        /// </summary>
-        Information,
-        /// <summary>
-        /// Important (E171)
-        /// </summary>
-        Important,
-        /// <summary>
-        /// Warning (E7BA)
-        /// </summary>
-        Warning,
-        /// <summary>
-        /// ErrorBadge (EA39)
-        /// </summary>
-        Error
+        get
+        {
+            if (IllustrationView is not null && CurrentIndex > 0)
+            {
+                return true;
+            }
+
+            if (PrevIllustrationEnable)
+            {
+                return false;
+            }
+
+            return null;
+        }
     }
 
     #endregion
