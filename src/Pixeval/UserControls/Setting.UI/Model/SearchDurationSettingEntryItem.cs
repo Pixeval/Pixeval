@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IllustrationSortOptionSettingEntryItem.cs
+// Copyright (c) 2022 Pixeval/SearchDurationSettingEntryItem.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,20 +23,20 @@ using System.Collections.Generic;
 using System.Linq;
 using Pixeval.CoreApi.Global.Enum;
 
-namespace Pixeval.Controls.Setting.UI.Model;
+namespace Pixeval.UserControls.Setting.UI.Model;
 
-public record IllustrationSortOptionSettingEntryItem : StringRepresentableItem, IAvailableItems
+public record SearchDurationSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public IllustrationSortOptionSettingEntryItem(IllustrationSortOption item) : base(item, item switch
+    public SearchDurationSettingEntryItem(SearchDuration item) : base(item, item switch
     {
-        IllustrationSortOption.PopularityDescending => MiscResources.IllustrationSortOptionPopularityDescending,
-        IllustrationSortOption.PublishDateAscending => MiscResources.IllustrationSortOptionPublishDateAscending,
-        IllustrationSortOption.PublishDateDescending => MiscResources.IllustrationSortOptionPublishDateDescending,
-        IllustrationSortOption.DoNotSort => MiscResources.IllustrationSortOptionDoNotSort,
+        SearchDuration.Undecided => MiscResources.SearchDurationUndecided,
+        SearchDuration.WithinLastDay => MiscResources.SearchDurationWithinLastDay,
+        SearchDuration.WithinLastWeek => MiscResources.SearchDurationWithinLastWeek,
+        SearchDuration.WithinLastMonth => MiscResources.SearchDurationWithinLastMonth,
         _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
     })
     {
     }
 
-    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<IllustrationSortOption>().Select(i => new IllustrationSortOptionSettingEntryItem(i));
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<SearchDuration>().Select(s => new SearchDurationSettingEntryItem(s));
 }

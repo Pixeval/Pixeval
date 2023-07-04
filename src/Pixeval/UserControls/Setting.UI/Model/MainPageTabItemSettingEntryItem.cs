@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/ApplicationThemeSettingEntryItem.cs
+// Copyright (c) 2022 Pixeval/MainPageTabItemSettingEntryItem.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,13 +23,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Pixeval.Options;
 
-namespace Pixeval.Controls.Setting.UI.Model;
+namespace Pixeval.UserControls.Setting.UI.Model;
 
-public record ApplicationThemeSettingEntryItem : StringRepresentableItem, IAvailableItems
+public record MainPageTabItemSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public ApplicationThemeSettingEntryItem(ApplicationTheme item) : base(item)
+    public MainPageTabItemSettingEntryItem(MainPageTabItem item) : base(item)
     {
     }
 
-    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ApplicationTheme>().Select(a => new ApplicationThemeSettingEntryItem(a));
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<MainPageTabItem>().Select(m => new MainPageTabItemSettingEntryItem(m));
 }

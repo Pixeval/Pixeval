@@ -20,10 +20,10 @@
 
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml.Controls;
-using WinUI3Utilities.Attributes;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Options;
 using Pixeval.Util;
+using WinUI3Utilities.Attributes;
 
 namespace Pixeval.UserControls;
 
@@ -37,7 +37,7 @@ public sealed partial class SortOptionComboBox
         InitializeComponent();
     }
 
-    public IllustrationSortOption SelectedOption => ((IllustrationSortOptionWrapper) SelectedItem).Value;
+    public IllustrationSortOption SelectedOption => ((IllustrationSortOptionWrapper)SelectedItem).Value;
 
     public event SelectionChangedEventHandler SelectionChangedWhenLoaded
     {

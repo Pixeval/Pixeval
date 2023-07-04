@@ -235,7 +235,7 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
 
             var userId = recommendUser.UserId;
             var user = users.First(u => u.UserId == userId);
-            
+
             var displayImageUrls = (recommendUser.IllustIds ?? Enumerable.Empty<string>()).Select(id => thumbnails.First(t => t.Id == id)).SelectNotNull(illust => illust.Urls?.The250X250);
 
             return new RecommendIllustratorProfileViewModel(userId ?? string.Empty, user.Name ?? string.Empty, displayImageUrls, user.Image, user.Premium);

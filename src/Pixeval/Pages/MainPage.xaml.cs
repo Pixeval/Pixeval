@@ -23,11 +23,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
-using Windows.Storage;
-using Windows.System;
-using Windows.UI.Core;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI.UI;
 using CommunityToolkit.WinUI.UI.Controls;
@@ -54,13 +49,18 @@ using Pixeval.Util;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Image = SixLabors.ImageSharp.Image;
-using WinUI3Utilities;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 using Windows.Graphics;
+using Windows.Storage;
+using Windows.System;
+using Windows.UI.Core;
+using WinUI3Utilities;
+using Image = SixLabors.ImageSharp.Image;
 
 namespace Pixeval.Pages;
 
-public sealed partial class MainPage: ISupportCustomTitleBarDragRegion
+public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
 {
     private static UIElement? _connectedAnimationTarget;
 
@@ -128,7 +128,7 @@ public sealed partial class MainPage: ISupportCustomTitleBarDragRegion
         // so we cannot put a navigation tag inside MainPage and treat it as a field, since it will be initialized immediately after
         // the creation of the object while the App.AppViewModel.IllustrationDownloadManager is still null which
         // will lead the program into NullReferenceException on the access of QueuedTasks.
-        
+
         // args.SelectedItem may be null here
         if (Equals(args.SelectedItem, DownloadListTab))
         {
@@ -298,7 +298,7 @@ public sealed partial class MainPage: ISupportCustomTitleBarDragRegion
         content.Owner = dialog;
         await dialog.ShowAsync();
     }
-  
+
     private void KeywordAutoSuggestBox_OnDragOver(object sender, DragEventArgs e)
     {
         e.AcceptedOperation = DataPackageOperation.Copy;

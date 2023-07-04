@@ -103,41 +103,41 @@ public record Illustration
     public bool IsMuted { get; set; }
 
     public override int GetHashCode()
-{
-    // ReSharper disable once NonReadonlyMemberInGetHashCode
-    return Id.GetHashCode();
-}
+    {
+        // ReSharper disable once NonReadonlyMemberInGetHashCode
+        return Id.GetHashCode();
+    }
 
-public virtual bool Equals(Illustration? other)
-{
-    return other?.Id == Id;
-}
+    public virtual bool Equals(Illustration? other)
+    {
+        return other?.Id == Id;
+    }
 
 
-public class IllustrationMetaSinglePage
-{
-    [JsonPropertyName("original_image_url")]
-    public string? OriginalImageUrl { get; set; }
-}
+    public class IllustrationMetaSinglePage
+    {
+        [JsonPropertyName("original_image_url")]
+        public string? OriginalImageUrl { get; set; }
+    }
 
-public class IllustrationImageUrls
-{
-    [JsonPropertyName("square_medium")]
-    public string? SquareMedium { get; set; }
+    public class IllustrationImageUrls
+    {
+        [JsonPropertyName("square_medium")]
+        public string? SquareMedium { get; set; }
 
-    [JsonPropertyName("medium")]
-    public string? Medium { get; set; }
+        [JsonPropertyName("medium")]
+        public string? Medium { get; set; }
 
-    [JsonPropertyName("large")]
-    public string? Large { get; set; }
+        [JsonPropertyName("large")]
+        public string? Large { get; set; }
 
-    [JsonPropertyName("original")]
-    public string? Original { get; set; }
-}
+        [JsonPropertyName("original")]
+        public string? Original { get; set; }
+    }
 
-public class MetaPage
-{
-    [JsonPropertyName("image_urls")]
-    public IllustrationImageUrls? ImageUrls { get; set; }
-}
+    public class MetaPage
+    {
+        [JsonPropertyName("image_urls")]
+        public IllustrationImageUrls? ImageUrls { get; set; }
+    }
 }

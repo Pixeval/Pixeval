@@ -20,7 +20,6 @@
 
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
@@ -29,6 +28,7 @@ using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
+using Windows.Storage.Streams;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Download;

@@ -9,24 +9,23 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <UseWinUI>true</UseWinUI>
         <Nullable>enable</Nullable>
-        <DefaultLanguage>zh-CN</DefaultLanguage>
+        <DefaultLanguage>zh-Hans</DefaultLanguage>
         <EnableNETAnalyzers>false</EnableNETAnalyzers>
         <EnablePreviewFeatures>true</EnablePreviewFeatures>
-        <ApplicationIcon />
+        <ApplicationIcon></ApplicationIcon>
         <StartupObject>Pixeval.Program</StartupObject>
         <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
         <EnableDefaultPriItems>false</EnableDefaultPriItems>
-        <NeutralLanguage>zh-CN</NeutralLanguage>
+        <NeutralLanguage>zh-Hans</NeutralLanguage>
         <AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Release'">true</AppxPackageSigningEnabled>
         <AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Debug'">false</AppxPackageSigningEnabled>
         <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
         <LangVersion>preview</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <!--此处写多个警告就会导致WMC1501失效，所以其他警告写到.editorconfig里面了-->
+        <NoWarn>$(NoWarn);WMC1501</NoWarn>
     </PropertyGroup>
-    <ItemGroup>
-        <None Remove="Controls\Setting.UI\SettingRadioButtons.xaml" />
-    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Labs.WinUI.SettingsControls" Version="0.0.18" />
@@ -55,7 +54,7 @@
         <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-        <PackageReference Include="WinUI3Utilities" Version="1.1.4.2" />
+        <PackageReference Include="WinUI3Utilities" Version="1.1.4.5" />
         <PackageReference Include="WinUIEx" Version="2.2.0" />
 
         <ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
@@ -163,45 +162,45 @@
 
     <!--PRIResource-->
     <ItemGroup>
-        <PRIResource Include="Strings\zh-CN\CommentsPage.resw" />
-        <PRIResource Include="Strings\zh-CN\FollowingPage.resw" />
-        <PRIResource Include="Strings\zh-CN\FollowingUserBadge.resw" />
-        <PRIResource Include="Strings\zh-CN\IllustratorContentViewer.resw" />
-        <PRIResource Include="Strings\zh-CN\IllustratorIllustrationAndMangaBookmarkPage.resw" />
-        <PRIResource Include="Strings\zh-CN\IllustratorProfile.resw" />
-        <PRIResource Include="Strings\zh-CN\AboutPage.resw" />
-        <PRIResource Include="Strings\zh-CN\Activations.resw" />
-        <PRIResource Include="Strings\zh-CN\BookmarksPage.resw" />
-        <PRIResource Include="Strings\zh-CN\CommentBlock.resw" />
-        <PRIResource Include="Strings\zh-CN\CommentRepliesBlock.resw" />
-        <PRIResource Include="Strings\zh-CN\DownloadListEntry.resw" />
-        <PRIResource Include="Strings\zh-CN\DownloadListPage.resw" />
-        <PRIResource Include="Strings\zh-CN\DownloadListPageDeleteTasksDialog.resw" />
-        <PRIResource Include="Strings\zh-CN\DownloadTask.resw" />
-        <PRIResource Include="Strings\zh-CN\IllustrationView.resw" />
-        <PRIResource Include="Strings\zh-CN\IllustrationViewCommandBar.resw" />
-        <PRIResource Include="Strings\zh-CN\IllustrationInfoPage.resw" />
-        <PRIResource Include="Strings\zh-CN\IllustrationResultFilterContent.resw" />
-        <PRIResource Include="Strings\zh-CN\IllustrationViewerPage.resw" />
-        <PRIResource Include="Strings\zh-CN\IllustratorPage.resw" />
-        <PRIResource Include="Strings\zh-CN\ImageViewerPage.resw" />
-        <PRIResource Include="Strings\zh-CN\LoginPage.resw" />
-        <PRIResource Include="Strings\zh-CN\MacroParser.resw" />
-        <PRIResource Include="Strings\zh-CN\MainPage.resw" />
-        <PRIResource Include="Strings\zh-CN\MessageContentDialog.resw" />
-        <PRIResource Include="Strings\zh-CN\Misc.resw" />
-        <PRIResource Include="Strings\zh-CN\RankingsPage.resw" />
-        <PRIResource Include="Strings\zh-CN\RecentPostsPage.resw" />
-        <PRIResource Include="Strings\zh-CN\RecommendationsPage.resw" />
-        <PRIResource Include="Strings\zh-CN\PixivReplyBar.resw" />
-        <PRIResource Include="Strings\zh-CN\RecommendIllustratorProfile.resw" />
-        <PRIResource Include="Strings\zh-CN\ReverseSearchApiKeyNotPresentDialog.resw" />
-        <PRIResource Include="Strings\zh-CN\SettingsPage.resw" />
-        <PRIResource Include="Strings\zh-CN\SortOptionComboBox.resw" />
-        <PRIResource Include="Strings\zh-CN\TokenInputTextBox.resw" />
+        <PRIResource Include="Strings\zh-Hans\CommentsPage.resw" />
+        <PRIResource Include="Strings\zh-Hans\FollowingPage.resw" />
+        <PRIResource Include="Strings\zh-Hans\FollowingUserBadge.resw" />
+        <PRIResource Include="Strings\zh-Hans\IllustratorContentViewer.resw" />
+        <PRIResource Include="Strings\zh-Hans\IllustratorIllustrationAndMangaBookmarkPage.resw" />
+        <PRIResource Include="Strings\zh-Hans\IllustratorProfile.resw" />
+        <PRIResource Include="Strings\zh-Hans\AboutPage.resw" />
+        <PRIResource Include="Strings\zh-Hans\Activations.resw" />
+        <PRIResource Include="Strings\zh-Hans\BookmarksPage.resw" />
+        <PRIResource Include="Strings\zh-Hans\CommentBlock.resw" />
+        <PRIResource Include="Strings\zh-Hans\CommentRepliesBlock.resw" />
+        <PRIResource Include="Strings\zh-Hans\DownloadListEntry.resw" />
+        <PRIResource Include="Strings\zh-Hans\DownloadListPage.resw" />
+        <PRIResource Include="Strings\zh-Hans\DownloadListPageDeleteTasksDialog.resw" />
+        <PRIResource Include="Strings\zh-Hans\DownloadTask.resw" />
+        <PRIResource Include="Strings\zh-Hans\IllustrationView.resw" />
+        <PRIResource Include="Strings\zh-Hans\IllustrationViewCommandBar.resw" />
+        <PRIResource Include="Strings\zh-Hans\IllustrationInfoPage.resw" />
+        <PRIResource Include="Strings\zh-Hans\IllustrationResultFilterContent.resw" />
+        <PRIResource Include="Strings\zh-Hans\IllustrationViewerPage.resw" />
+        <PRIResource Include="Strings\zh-Hans\IllustratorPage.resw" />
+        <PRIResource Include="Strings\zh-Hans\ImageViewerPage.resw" />
+        <PRIResource Include="Strings\zh-Hans\LoginPage.resw" />
+        <PRIResource Include="Strings\zh-Hans\MacroParser.resw" />
+        <PRIResource Include="Strings\zh-Hans\MainPage.resw" />
+        <PRIResource Include="Strings\zh-Hans\MessageContentDialog.resw" />
+        <PRIResource Include="Strings\zh-Hans\Misc.resw" />
+        <PRIResource Include="Strings\zh-Hans\RankingsPage.resw" />
+        <PRIResource Include="Strings\zh-Hans\RecentPostsPage.resw" />
+        <PRIResource Include="Strings\zh-Hans\RecommendationsPage.resw" />
+        <PRIResource Include="Strings\zh-Hans\PixivReplyBar.resw" />
+        <PRIResource Include="Strings\zh-Hans\RecommendIllustratorProfile.resw" />
+        <PRIResource Include="Strings\zh-Hans\ReverseSearchApiKeyNotPresentDialog.resw" />
+        <PRIResource Include="Strings\zh-Hans\SettingsPage.resw" />
+        <PRIResource Include="Strings\zh-Hans\SortOptionComboBox.resw" />
+        <PRIResource Include="Strings\zh-Hans\TokenInputTextBox.resw" />
     </ItemGroup>
 
-    <!--  XAML  -->
+    <!--XAML-->
     <ItemGroup>
         <Page Update="Pages\Capability\SpotlightsPage.xaml">
             <Generator>MSBuild:Compile</Generator>
@@ -272,7 +271,7 @@
         <Page Update="Controls\TokenInputTextBox\TokenInputTextBox.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Controls\PersonView\PersonView.xaml">
+        <Page Update="UserControls\PersonView\PersonView.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Dialogs\ReverseSearchApiKeyNotPresentDialog.xaml">
@@ -375,7 +374,7 @@
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Folder Include="UserControls\RecommendIllustratorProfile\" />
-        <Page Update="Controls\Setting.UI\SettingRadioButtons.xaml">
+        <Page Update="UserControls\Setting.UI\SettingRadioButtons.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="UserControls\IllustratorContentViewer\IllustratorIllustrationAndMangaBookmarkPage.xaml">

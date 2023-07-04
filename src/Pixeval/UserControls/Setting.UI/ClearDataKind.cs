@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/MainPageTabItemSettingEntryItem.cs
+// Copyright (c) 2022 Pixeval/ClearDataKind.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,19 +18,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
+namespace Pixeval.UserControls.Setting.UI;
 
-using Pixeval.Options;
-
-namespace Pixeval.Controls.Setting.UI.Model;
-
-public record MainPageTabItemSettingEntryItem : StringRepresentableItem, IAvailableItems
+public enum ClearDataKind
 {
-    public MainPageTabItemSettingEntryItem(MainPageTabItem item) : base(item)
-    {
-    }
-
-    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<MainPageTabItem>().Select(m => new MainPageTabItemSettingEntryItem(m));
+    BrowseHistory,
+    SearchHistory,
+    DownloadHistory
 }

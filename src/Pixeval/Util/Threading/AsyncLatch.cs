@@ -59,7 +59,7 @@ public sealed class AsyncLatch<T>
     public async Task RunAsync(T param)
     {
         if (_running) return;
-            _running = true;
+        _running = true;
         await _action(param);
         _running = false;
     }

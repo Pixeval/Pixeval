@@ -231,9 +231,9 @@
       },
       "WinUI3Utilities": {
         "type": "Direct",
-        "requested": "[1.1.4.2, )",
-        "resolved": "1.1.4.2",
-        "contentHash": "8VQFf8g3UZFDG29rCL1m3NxTGCAVmAUzzOwG6RCcD63QFqjtJN5iym7Nez5s6lEdTqZ7DLIkRV3mS/nkrCCLlA==",
+        "requested": "[1.1.4.5, )",
+        "resolved": "1.1.4.5",
+        "contentHash": "lLm1NjAxHnG2WioKcGGXwxUXWQrFRiHprvkRdWfTdYZi64nkz0ymTZGveQ9rd/WkWbpFqqypdQ9asCwOX1IR/A==",
         "dependencies": {
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.756",
           "Microsoft.WindowsAppSDK": "1.3.230602002"
@@ -723,10 +723,11 @@
       },
       "Refit": {
         "type": "Transitive",
-        "resolved": "6.3.2",
-        "contentHash": "HxysoLBknW2FdxNXr56NjnfuxbgNh9z2QsUc9y5QtPkXSAWmShpUWDM1G+3Ls2yTyb4sItOii4gZ+GjxKkR7+A==",
+        "resolved": "7.0.0",
+        "contentHash": "MeOXucNjebiLiOM+hM4niN2cWLlwaQWNCGZs0LDUEoCVwOtV/IWOMOqlAbUeb8Y0/iOgMai2g6Gz9M/d6V7gtA==",
         "dependencies": {
-          "System.Net.Http.Json": "6.0.0"
+          "System.Net.Http.Json": "7.0.1",
+          "System.Text.Json": "7.0.3"
         }
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl": {
@@ -1132,10 +1133,10 @@
       },
       "System.Net.Http.Json": {
         "type": "Transitive",
-        "resolved": "6.0.0",
-        "contentHash": "GbIV4y344kGOKjshAKCIDCMUTTW/hyUC42wV0Y5SXEdIbaKBIHBUxZ2MOe4/ZiV2svUAGfQ0c8LGtUExpOI8tg==",
+        "resolved": "7.0.1",
+        "contentHash": "ni8+BJnndbJI9AXme/qCYXg1s4RpdRJx3gKp5WzcWuLt4l3syuscgk5Becis6x4E7HbQk4z6A7FNXFQD75F+wQ==",
         "dependencies": {
-          "System.Text.Json": "6.0.0"
+          "System.Text.Json": "7.0.2"
         }
       },
       "System.Net.Primitives": {
@@ -1506,8 +1507,8 @@
       },
       "System.Text.Json": {
         "type": "Transitive",
-        "resolved": "7.0.0",
-        "contentHash": "DaGSsVqKsn/ia6RG8frjwmJonfos0srquhw09TlT8KRw5I43E+4gs+/bZj4K0vShJ5H9imCuXupb4RmS+dBy3w==",
+        "resolved": "7.0.3",
+        "contentHash": "AyjhwXN1zTFeIibHimfJn6eAsZ7rTBib79JQpzg8WAuR/HKDu9JGNHTuu3nbbXQ/bgI+U4z6HtZmCHNXB1QXrQ==",
         "dependencies": {
           "System.Text.Encodings.Web": "7.0.0"
         }
@@ -1611,7 +1612,7 @@
           "Autofac": "[7.0.1, )",
           "JetBrains.Annotations": "[2022.3.1, )",
           "Pixeval.Utilities": "[1.0.0, )",
-          "Refit": "[6.3.2, )"
+          "Refit": "[7.0.0, )"
         }
       },
       "pixeval.utilities": {

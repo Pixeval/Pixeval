@@ -20,7 +20,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Windows.System;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -29,6 +28,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Messages;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using Windows.System;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.Login;

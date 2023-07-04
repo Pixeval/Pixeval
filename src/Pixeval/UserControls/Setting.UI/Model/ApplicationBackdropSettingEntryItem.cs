@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/IStringRepresentableItem.cs
+// Copyright (c) 2023 Pixeval/ApplicationBackdropSettingEntryItem.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,22 +20,16 @@
 
 using System;
 using System.Collections.Generic;
-using Pixeval.Attributes;
+using System.Linq;
+using Pixeval.Options;
 
-namespace Pixeval.Controls.Setting.UI.Model;
+namespace Pixeval.UserControls.Setting.UI.Model;
 
-public record StringRepresentableItem(Enum Item, string StringRepresentation)
+public record ApplicationBackdropSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public StringRepresentableItem(Enum item) : this(item, item.GetLocalizedResourceContent()!)
+    public ApplicationBackdropSettingEntryItem(ApplicationBackdropType item) : base(item)
     {
     }
 
-    public override string ToString() => StringRepresentation;
-}
-
-public interface IAvailableItems
-{
-    // ReSharper disable once UnusedMember.Global
-    // ReSharper disable once UnassignedGetOnlyAutoProperty
-    static IEnumerable<StringRepresentableItem>? AvailableItems { get; }
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ApplicationBackdropType>().Select(i => new ApplicationBackdropSettingEntryItem(i));
 }

@@ -1,16 +1,14 @@
+using System.Linq;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
 using Pixeval.Misc;
-using Pixeval.Options;
 using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util;
-using Pixeval.Utilities;
-using System.Linq;
-using Pixeval.CoreApi.Model;
 using Pixeval.Util.Threading;
+using Pixeval.Utilities;
 
 namespace Pixeval.UserControls.IllustratorContentViewer;
 
@@ -48,7 +46,7 @@ public sealed partial class IllustratorMangaPage : ISortedIllustrationContainerP
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        ((ISortedIllustrationContainerPageHelper) this).OnSortOptionChanged();
+        ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
     }
 
     public void Dispose()

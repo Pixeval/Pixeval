@@ -43,7 +43,7 @@ public partial class CardControl : ButtonBase
     /// </summary>
     public CardControl()
     {
-        DefaultStyleKey = typeof(CardControl);
+        _ = DefaultStyleKey = typeof(CardControl);
     }
 
     private static void OnIsClickEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -62,7 +62,7 @@ public partial class CardControl : ButtonBase
         base.OnApplyTemplate();
         IsEnabledChanged -= OnIsEnabledChanged;
         OnIsClickEnabledChanged();
-        VisualStateManager.GoToState(this, IsEnabled ? NormalState : DisabledState, true);
+        _ = VisualStateManager.GoToState(this, IsEnabled ? NormalState : DisabledState, true);
         IsEnabledChanged += OnIsEnabledChanged;
     }
 
@@ -92,20 +92,20 @@ public partial class CardControl : ButtonBase
 
     private void Control_PreviewKeyUp(object sender, KeyRoutedEventArgs e)
     {
-        if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Space || e.Key == Windows.System.VirtualKey.GamepadA)
+        if (e.Key is Windows.System.VirtualKey.Enter or Windows.System.VirtualKey.Space or Windows.System.VirtualKey.GamepadA)
         {
-            VisualStateManager.GoToState(this, NormalState, true);
+            _ = VisualStateManager.GoToState(this, NormalState, true);
         }
     }
 
     private void Control_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
     {
-        if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Space || e.Key == Windows.System.VirtualKey.GamepadA)
+        if (e.Key is Windows.System.VirtualKey.Enter or Windows.System.VirtualKey.Space or Windows.System.VirtualKey.GamepadA)
         {
             // Check if the active focus is on the card itself - only then we show the pressed state.
             if (GetFocusedElement() is CardControl)
             {
-                VisualStateManager.GoToState(this, PressedState, true);
+                _ = VisualStateManager.GoToState(this, PressedState, true);
             }
         }
     }
@@ -113,25 +113,25 @@ public partial class CardControl : ButtonBase
     public void Control_PointerEntered(object sender, PointerRoutedEventArgs e)
     {
         base.OnPointerEntered(e);
-        VisualStateManager.GoToState(this, PointerOverState, true);
+        _ = VisualStateManager.GoToState(this, PointerOverState, true);
     }
 
     public void Control_PointerExited(object sender, PointerRoutedEventArgs e)
     {
         base.OnPointerExited(e);
-        VisualStateManager.GoToState(this, NormalState, true);
+        _ = VisualStateManager.GoToState(this, NormalState, true);
     }
 
     private void Control_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
     {
         base.OnPointerCaptureLost(e);
-        VisualStateManager.GoToState(this, NormalState, true);
+        _ = VisualStateManager.GoToState(this, NormalState, true);
     }
 
     private void Control_PointerCanceled(object sender, PointerRoutedEventArgs e)
     {
         base.OnPointerCanceled(e);
-        VisualStateManager.GoToState(this, NormalState, true);
+        _ = VisualStateManager.GoToState(this, NormalState, true);
     }
 
     protected override void OnPointerPressed(PointerRoutedEventArgs e)
@@ -140,7 +140,7 @@ public partial class CardControl : ButtonBase
         if (IsClickEnabled)
         {
             base.OnPointerPressed(e);
-            VisualStateManager.GoToState(this, PressedState, true);
+            _ = VisualStateManager.GoToState(this, PressedState, true);
         }
     }
 
@@ -149,7 +149,7 @@ public partial class CardControl : ButtonBase
         if (IsClickEnabled)
         {
             base.OnPointerReleased(e);
-            VisualStateManager.GoToState(this, NormalState, true);
+            _ = VisualStateManager.GoToState(this, NormalState, true);
         }
     }
 
@@ -176,18 +176,13 @@ public partial class CardControl : ButtonBase
 
     private void OnIsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        VisualStateManager.GoToState(this, IsEnabled ? NormalState : DisabledState, true);
+        _ = VisualStateManager.GoToState(this, IsEnabled ? NormalState : DisabledState, true);
     }
 
     private FrameworkElement? GetFocusedElement()
     {
-        if (XamlRoot != null)
-        {
-            return FocusManager.GetFocusedElement(XamlRoot) as FrameworkElement;
-        }
-        else
-        {
-            return FocusManager.GetFocusedElement() as FrameworkElement;
-        }
+        return XamlRoot != null
+            ? FocusManager.GetFocusedElement(XamlRoot) as FrameworkElement
+            : FocusManager.GetFocusedElement() as FrameworkElement;
     }
 }

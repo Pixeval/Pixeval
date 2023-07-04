@@ -22,23 +22,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.System;
-using CommunityToolkit.WinUI.UI;
-using CommunityToolkit.WinUI.UI.Controls;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Controls.IllustratorView;
 using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
-using Pixeval.Pages.IllustratorViewer;
-using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using ReverseMarkdown;
-using WinUI3Utilities;
+using Windows.System;
 
 namespace Pixeval.Pages.IllustrationViewer;
 

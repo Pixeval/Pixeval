@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/ThumbnailDirectionSettingEntryItem.cs
+// Copyright (c) 2022 Pixeval/PersonView.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,18 +19,27 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Windows.System;
+using WinUI3Utilities.Attributes;
 
-using Pixeval.Options;
+namespace Pixeval.UserControls.PersonView;
 
-namespace Pixeval.Controls.Setting.UI.Model;
-
-public record ThumbnailDirectionSettingEntryItem : StringRepresentableItem, IAvailableItems
+[DependencyProperty<string>("PersonNickname")]
+[DependencyProperty<string>("PersonName")]
+[DependencyProperty<Uri>("PersonProfileNavigateUri")]
+[DependencyProperty<ImageSource>("PersonPicture")]
+public partial class PersonView : UserControl
 {
-    public ThumbnailDirectionSettingEntryItem(ThumbnailDirection item) : base(item)
+    public PersonView()
     {
+        InitializeComponent();
     }
 
-    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ThumbnailDirection>().Select(t => new ThumbnailDirectionSettingEntryItem(t));
+    private async void ContentContainerOnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        await Launcher.LaunchUriAsync(PersonProfileNavigateUri);
+    }
 }

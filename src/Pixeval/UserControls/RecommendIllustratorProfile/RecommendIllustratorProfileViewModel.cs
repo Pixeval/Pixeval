@@ -21,7 +21,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -47,7 +46,7 @@ public partial class RecommendIllustratorProfileViewModel : ObservableObject
 
     [ObservableProperty]
     private string? _username;
-    
+
     public Task<SoftwareBitmapSource[]>? DisplayImagesTask { get; set; }
 
     public Task<ImageSource>? AvatarTask { get; set; }
@@ -73,7 +72,7 @@ public partial class RecommendIllustratorProfileViewModel : ObservableObject
         {
             return await AppContext.GetPixivNoProfileImageAsync();
         }
-             
+
         return await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(avatarUrl!, 45) switch
         {
             Result<ImageSource>.Success(var s) => s,

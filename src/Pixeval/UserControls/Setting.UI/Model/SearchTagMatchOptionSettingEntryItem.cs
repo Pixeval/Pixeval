@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Pixeval.CoreApi.Global.Enum;
 
-namespace Pixeval.Controls.Setting.UI.Model;
+namespace Pixeval.UserControls.Setting.UI.Model;
 
 public record SearchTagMatchOptionSettingEntryItem : StringRepresentableItem, IAvailableItems
 {

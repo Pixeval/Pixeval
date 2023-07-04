@@ -20,9 +20,9 @@
 
 using System;
 using System.Text;
-using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
+using Windows.System;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 

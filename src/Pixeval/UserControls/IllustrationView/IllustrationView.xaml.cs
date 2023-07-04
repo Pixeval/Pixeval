@@ -21,8 +21,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.System;
-using Windows.UI.Core;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
@@ -30,19 +28,21 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using PInvoke;
+using Pixeval.Controls;
 using Pixeval.Messages;
 using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
 using Pixeval.Util.IO;
-using WinUI3Utilities.Attributes;
-using PInvoke;
-using Pixeval.Util.UI.Windowing;
-using Windows.Graphics;
-using Pixeval.Controls;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
+using Pixeval.Util.UI.Windowing;
+using Windows.Graphics;
+using Windows.System;
+using Windows.UI.Core;
 using WinUI3Utilities;
+using WinUI3Utilities.Attributes;
 
 namespace Pixeval.UserControls.IllustrationView;
 

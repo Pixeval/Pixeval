@@ -19,13 +19,11 @@
 #endregion
 
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Misc;
-using Pixeval.Options;
 using Pixeval.UserControls;
 using Pixeval.Util;
 using Pixeval.Util.UI;
@@ -64,7 +62,7 @@ public sealed partial class BookmarksPage : ISortedIllustrationContainerPageHelp
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        ((ISortedIllustrationContainerPageHelper) this).OnSortOptionChanged();
+        ((ISortedIllustrationContainerPageHelper)this).OnSortOptionChanged();
     }
 
     private void ChangeSource()

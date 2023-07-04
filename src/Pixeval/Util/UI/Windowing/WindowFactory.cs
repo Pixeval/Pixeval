@@ -19,16 +19,16 @@
 #endregion
 
 using System.Collections.Generic;
+using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
 using Pixeval.Options;
 using Windows.Foundation;
 using Windows.Graphics;
-using Microsoft.UI.Composition.SystemBackdrops;
-using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities;
-using AppTheme = Pixeval.Options.ApplicationTheme;
 using ApplicationTheme = Microsoft.UI.Xaml.ApplicationTheme;
+using AppTheme = Pixeval.Options.ApplicationTheme;
 
 namespace Pixeval.Util.UI.Windowing;
 
@@ -100,7 +100,7 @@ public static class WindowFactory
         });
         window.AppWindow.TitleBar.IconShowOptions = IconShowOptions.HideIconAndSystemMenu;// TODO: Remove this line when utilities implemented
         var theme = GetElementTheme(App.AppViewModel.AppSetting.Theme);
-        TitleBarHelper.SetAppWindowTitleBarButtonColor(window, theme is ElementTheme.Dark);
+        window.SetAppWindowTitleBarButtonColor(theme is ElementTheme.Dark);
         window.FrameLoaded += (s, _) =>
         {
             s.To<FrameworkElement>().RequestedTheme = theme;
@@ -130,7 +130,7 @@ public static class WindowFactory
         foreach (var window in ForkedWindowsInternal)
         {
             window.Content.To<FrameworkElement>().RequestedTheme = t;
-            TitleBarHelper.SetAppWindowTitleBarButtonColor(window, t is ElementTheme.Dark);
+            window.SetAppWindowTitleBarButtonColor(t is ElementTheme.Dark);
         }
     }
 

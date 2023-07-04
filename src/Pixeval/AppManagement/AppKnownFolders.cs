@@ -21,9 +21,9 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Pixeval.Util.IO;
 using Windows.Foundation;
 using Windows.Storage;
-using Pixeval.Util.IO;
 
 namespace Pixeval.AppManagement;
 

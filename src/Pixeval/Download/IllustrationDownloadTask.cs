@@ -21,10 +21,10 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using Pixeval.Database;
 using Pixeval.Util;
 using Pixeval.Util.IO;
+using Windows.Storage.Streams;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Download;

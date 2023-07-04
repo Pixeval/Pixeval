@@ -32,12 +32,12 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
+using Pixeval.Utilities;
 using Windows.Foundation;
 using Windows.Security.Cryptography;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using JetBrains.Annotations;
-using Pixeval.Utilities;
 
 namespace Pixeval.Util.IO;
 

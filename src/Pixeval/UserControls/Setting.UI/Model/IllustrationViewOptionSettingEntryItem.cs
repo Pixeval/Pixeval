@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/PersonView.cs
+// Copyright (c) 2023 Pixeval/IllustrationViewOptionSettingEntryItem.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,29 +19,17 @@
 #endregion
 
 using System;
-using Windows.System;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using WinUI3Utilities.Attributes;
-using Pixeval.Controls.Card;
+using System.Collections.Generic;
+using System.Linq;
+using Pixeval.Options;
 
-namespace Pixeval.Controls.PersonView;
+namespace Pixeval.UserControls.Setting.UI.Model;
 
-[DependencyProperty<string>("PersonNickname")]
-[DependencyProperty<string>("PersonName")]
-[DependencyProperty<Uri>("PersonProfileNavigateUri")]
-[DependencyProperty<ImageSource>("PersonPicture")]
-public partial class PersonView : UserControl
+public record IllustrationViewOptionSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public PersonView()
+    public IllustrationViewOptionSettingEntryItem(IllustrationViewOption item) : base(item)
     {
-        InitializeComponent();
     }
 
-    private async void ContentContainerOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        await Launcher.LaunchUriAsync(PersonProfileNavigateUri);
-    }
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<IllustrationViewOption>().Select(i => new IllustrationViewOptionSettingEntryItem(i));
 }

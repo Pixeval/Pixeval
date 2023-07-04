@@ -86,7 +86,7 @@ public record Session
     public DateTimeOffset CookieCreation { get; set; }
 
     public override string? ToString()
-{
-    return this.ToJson();
-}
+    {
+        return this.ToJson();
+    }
 }

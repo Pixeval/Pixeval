@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IValueAnimation.cs
+// Copyright (c) 2022 Pixeval/ThumbnailDirectionSettingEntryItem.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,26 +19,17 @@
 #endregion
 
 using System;
-using System.Numerics;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
+using Pixeval.Options;
 
-namespace Pixeval.Util.UI.Animating;
+namespace Pixeval.UserControls.Setting.UI.Model;
 
-public interface IValueAnimation<out V> where V : INumber<V>
+public record ThumbnailDirectionSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    TimeSpan Duration { get; }
+    public ThumbnailDirectionSettingEntryItem(ThumbnailDirection item) : base(item)
+    {
+    }
 
-    TimeSpan SampleRate { get; }
-
-    V From { get; }
-
-    V To { get; }
-
-    IEasingFunction<V>? EasingFunction { get; }
-
-    event Action<V> OnValueChanged;
-
-    event EventHandler OnCompleted;
-
-    Task StartAsync();
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ThumbnailDirection>().Select(t => new ThumbnailDirectionSettingEntryItem(t));
 }

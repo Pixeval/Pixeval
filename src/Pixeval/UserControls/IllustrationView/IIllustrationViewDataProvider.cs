@@ -33,9 +33,9 @@ public interface IIllustrationViewDataProvider
     /// Avoid using <see cref="AdvancedCollectionView.Filter"/>, if you want to set the filter, use <see cref="Filter"/>
     /// </summary>
     AdvancedCollectionView IllustrationsView { get; }
-    
+
     ObservableCollection<IllustrationViewModel> IllustrationsSource { get; }
-    
+
     IFetchEngine<Illustration?>? FetchEngine { get; }
 
     Predicate<object>? Filter { get; set; }

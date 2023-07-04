@@ -88,7 +88,7 @@ public class IllustratorViewDataProvider : ObservableObject, IIllustratorViewDat
     {
         if (IllustratorsSource is IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel> coll)
         {
-            return (int) (await coll.LoadMoreItemsAsync(20)).Count;
+            return (int)(await coll.LoadMoreItemsAsync(20)).Count;
         }
 
         return 0;
@@ -99,7 +99,7 @@ public class IllustratorViewDataProvider : ObservableObject, IIllustratorViewDat
         var collection = new IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel>(new IllustratorFetchEngineIncrementalSource(FetchEngine!, itemsLimit));
         IllustratorsSource = collection;
         var result = await collection.LoadMoreItemsAsync(20);
-        return (int) result.Count;
+        return (int)result.Count;
     }
 
     public Task<int> ResetAndFillAsync(IFetchEngine<User?>? fetchEngine, int? itemLimit = null)

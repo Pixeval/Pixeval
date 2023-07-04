@@ -20,14 +20,13 @@
 
 using System;
 using System.Threading.Tasks;
-using Windows.Foundation;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
-using WinUI3Utilities;
+using Windows.Foundation;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -61,7 +60,7 @@ public sealed partial class ImageViewerPage
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        if(parameter is ImageViewerPageViewModel viewModel)
+        if (parameter is ImageViewerPageViewModel viewModel)
         {
             _viewModel = viewModel;
         }

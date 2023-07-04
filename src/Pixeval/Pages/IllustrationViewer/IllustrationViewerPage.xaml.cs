@@ -22,41 +22,37 @@ using System;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
-using Windows.Storage.Streams;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Options;
+using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util;
 using Pixeval.Util.IO;
-using WinUI3Utilities;
-using Pixeval.Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
-using Windows.Graphics;
-using CommunityToolkit.WinUI.UI;
-using Microsoft.UI.Xaml.Media;
-using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util.Threading;
-using Microsoft.UI.Windowing;
 using Pixeval.Util.UI;
+using Pixeval.Utilities;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
+using Windows.Graphics;
+using Windows.Storage.Streams;
+using WinUI3Utilities;
+using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
 public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragRegion
 {
     // Tags for IllustrationInfoAndCommentsNavigationView
-
-    private bool _false;
-
-    private bool _true = true;
 
     private NavigationViewTag? _relatedWorksTag;
 

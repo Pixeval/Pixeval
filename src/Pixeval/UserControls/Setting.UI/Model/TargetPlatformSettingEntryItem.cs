@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/ApplicationBackdropSettingEntryItem.cs
+// Copyright (c) 2022 Pixeval/TargetPlatformSettingEntryItem.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,15 +21,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Pixeval.Options;
+using Pixeval.CoreApi.Global.Enum;
 
-namespace Pixeval.Controls.Setting.UI.Model;
+namespace Pixeval.UserControls.Setting.UI.Model;
 
-public record ApplicationBackdropSettingEntryItem : StringRepresentableItem, IAvailableItems
+public record TargetPlatformSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public ApplicationBackdropSettingEntryItem(ApplicationBackdropType item) : base(item)
+    public TargetPlatformSettingEntryItem(TargetFilter item) : base(item, item switch
+    {
+        TargetFilter.ForAndroid => MiscResources.TargetFilterForAndroid,
+        TargetFilter.ForIos => MiscResources.TargetFilterForIOS,
+        _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
+    })
     {
     }
 
-    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ApplicationBackdropType>().Select(i => new ApplicationBackdropSettingEntryItem(i));
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<TargetFilter>().Select(t => new TargetPlatformSettingEntryItem(t));
 }

@@ -64,15 +64,15 @@ public record FilterSettings(
             return true;
         }
 
-        return IncludeTags.SequenceEquals(other.IncludeTags, SequenceComparison.Unordered) && 
+        return IncludeTags.SequenceEquals(other.IncludeTags, SequenceComparison.Unordered) &&
                ExcludeTags.SequenceEquals(other.ExcludeTags, SequenceComparison.Unordered) &&
-               LeastBookmark == other.LeastBookmark && 
-               MaximumBookmark == other.MaximumBookmark && 
-               UserGroupName.SequenceEquals(other.UserGroupName, SequenceComparison.Unordered) && 
+               LeastBookmark == other.LeastBookmark &&
+               MaximumBookmark == other.MaximumBookmark &&
+               UserGroupName.SequenceEquals(other.UserGroupName, SequenceComparison.Unordered) &&
                IllustratorName.Equals(other.IllustratorName) &&
-               IllustratorId == other.IllustratorId && 
+               IllustratorId == other.IllustratorId &&
                IllustrationName.Equals(other.IllustrationName) &&
-               IllustrationId == other.IllustrationId && 
+               IllustrationId == other.IllustrationId &&
                PublishDateStart.Equals(other.PublishDateStart) &&
                PublishDateEnd.Equals(other.PublishDateEnd);
     }

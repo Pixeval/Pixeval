@@ -24,7 +24,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.System;
 using CommunityToolkit.WinUI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -38,6 +37,7 @@ using Pixeval.Util;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using Windows.System;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -239,7 +239,7 @@ public sealed partial class IllustrationViewCommandBar
             var illustrationName,
             var illustrationId,
             var publishDateStart,
-            var publishDateEnd) filterSettings) 
+            var publishDateEnd) filterSettings)
             return;
         if (filterSettings == _lastFilterSettings)
         {

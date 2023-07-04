@@ -41,7 +41,7 @@ public sealed class IllustrationViewViewModel : SortableIllustrationViewViewMode
         get => _thumbnailDirection;
         set
         {
-            if (_thumbnailDirection == value) 
+            if (_thumbnailDirection == value)
                 return;
             _thumbnailDirection = value;
             switch (_thumbnailDirection)

@@ -21,18 +21,16 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
-using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Animation;
-using WinUI3Utilities.Attributes;
 using Pixeval.Download;
-using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.UI;
+using Windows.System;
 using WinUI3Utilities;
+using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Pages.Download;
 

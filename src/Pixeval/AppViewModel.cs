@@ -20,24 +20,22 @@
 
 using System;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Messaging;
 using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Net;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Messages;
+using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
-using Pixeval.UserControls.IllustrationView;
 
 namespace Pixeval;
 

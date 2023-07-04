@@ -2,8 +2,6 @@
     x:Class="Pixeval.Pages.Misc.AboutPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
-    xmlns:card="using:Pixeval.Controls.Card"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
@@ -11,6 +9,7 @@
     xmlns:misc="using:Pixeval.Pages.Misc"
     xmlns:personView="using:Pixeval.Controls.PersonView"
     xmlns:ui="using:Pixeval.Util.UI"
+    xmlns:personView1="using:Pixeval.UserControls.PersonView"
     Loaded="AboutPage_OnLoaded"
     mc:Ignorable="d">
 
@@ -32,7 +31,7 @@
                         x:Uid="/AboutPage/SpecialThanksContentTextBlock"
                         FontSize="{StaticResource PixevalContentFontSize}"
                         TextWrapping="Wrap" />
-                    <ItemsRepeater ItemsSource="{x:Bind misc:Supporter.Supporters, Mode=OneWay}">
+                    <ItemsRepeater ItemsSource="{x:Bind misc:Supporter.Supporters}">
                         <ItemsRepeater.Layout>
                             <UniformGridLayout
                                 ItemsStretch="Fill"
@@ -43,7 +42,7 @@
                         </ItemsRepeater.Layout>
                         <ItemsRepeater.ItemTemplate>
                             <DataTemplate x:DataType="misc:Supporter">
-                                <personView:PersonView
+                                <personView1:PersonView
                                     PersonName="{x:Bind Name}"
                                     PersonNickname="{x:Bind Nickname}"
                                     PersonPicture="{x:Bind ProfilePicture}"

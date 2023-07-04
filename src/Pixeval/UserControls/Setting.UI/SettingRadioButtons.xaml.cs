@@ -5,12 +5,12 @@ using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.Controls.Setting.UI.Model;
+using Pixeval.UserControls.Setting.UI.Model;
 using Windows.Foundation;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
-namespace Pixeval.Controls.Setting.UI;
+namespace Pixeval.UserControls.Setting.UI;
 
 [DependencyProperty<IEnumerable<StringRepresentableItem>>("ItemsSource")]
 [DependencyProperty<object>("SelectedItem", propertyChanged: nameof(OnSelectedItemChanged))]
@@ -20,11 +20,10 @@ public sealed partial class SettingRadioButtons : UserControl
 
     public SettingRadioButtons() => InitializeComponent();
 
-
     private void RadioButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         var select = sender.To<RadioButton>().GetDataContext<StringRepresentableItem>();
-        if(!Equals(SelectedItem, select.Item))
+        if (!Equals(SelectedItem, select.Item))
         {
             SelectedItem = select.Item;
             SelectionChanged?.Invoke(this,
@@ -50,7 +49,7 @@ public sealed partial class SettingRadioButtons : UserControl
         if (d is not SettingRadioButtons { Buttons: { } buttons, ItemsSource: { } itemsSource })
             return;
 
-        var correspondingItem = itemsSource.First(r => Equals(r.Item, newValue));
+        var correspondingItem = itemsSource.First<StringRepresentableItem>(r => Equals(r.Item, newValue));
         // set RadioButtons.SelectedItem won't work
         buttons.FindDescendants().OfType<RadioButton>().First(b => b.GetDataContext<StringRepresentableItem>() == correspondingItem).IsChecked = true;
     }

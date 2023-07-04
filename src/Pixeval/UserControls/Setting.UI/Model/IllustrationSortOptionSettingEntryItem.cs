@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/TargetPlatformSettingEntryItem.cs
+// Copyright (c) 2022 Pixeval/IllustrationSortOptionSettingEntryItem.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,18 +23,20 @@ using System.Collections.Generic;
 using System.Linq;
 using Pixeval.CoreApi.Global.Enum;
 
-namespace Pixeval.Controls.Setting.UI.Model;
+namespace Pixeval.UserControls.Setting.UI.Model;
 
-public record TargetPlatformSettingEntryItem : StringRepresentableItem, IAvailableItems
+public record IllustrationSortOptionSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public TargetPlatformSettingEntryItem(TargetFilter item) : base(item, item switch
+    public IllustrationSortOptionSettingEntryItem(IllustrationSortOption item) : base(item, item switch
     {
-        TargetFilter.ForAndroid => MiscResources.TargetFilterForAndroid,
-        TargetFilter.ForIos => MiscResources.TargetFilterForIOS,
+        IllustrationSortOption.PopularityDescending => MiscResources.IllustrationSortOptionPopularityDescending,
+        IllustrationSortOption.PublishDateAscending => MiscResources.IllustrationSortOptionPublishDateAscending,
+        IllustrationSortOption.PublishDateDescending => MiscResources.IllustrationSortOptionPublishDateDescending,
+        IllustrationSortOption.DoNotSort => MiscResources.IllustrationSortOptionDoNotSort,
         _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
     })
     {
     }
 
-    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<TargetFilter>().Select(t => new TargetPlatformSettingEntryItem(t));
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<IllustrationSortOption>().Select(i => new IllustrationSortOptionSettingEntryItem(i));
 }

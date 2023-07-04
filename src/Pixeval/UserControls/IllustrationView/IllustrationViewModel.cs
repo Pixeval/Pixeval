@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -36,6 +35,7 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
+using Windows.Storage.Streams;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.UserControls.IllustrationView;

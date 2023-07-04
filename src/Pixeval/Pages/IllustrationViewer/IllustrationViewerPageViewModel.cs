@@ -22,13 +22,9 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage.Streams;
-using Windows.System;
-using Windows.System.UserProfile;
-using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.UI;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -42,6 +38,10 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage.Streams;
+using Windows.System;
+using Windows.System.UserProfile;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
@@ -66,7 +66,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     /// <summary>
     /// Todo: May need refactor
     /// </summary>
-    public Action CollapseThumbnailList { get; set; }
+    public Action? CollapseThumbnailList { get; set; }
 
     public bool PointerNotInArea
     {
@@ -75,7 +75,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         {
             _pointerNotInArea = value;
             if (_pointerNotInArea && TimeUp)
-                CollapseThumbnailList();
+                CollapseThumbnailList?.Invoke();
         }
     }
 
@@ -86,7 +86,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         {
             _timeUp = value;
             if (_timeUp && PointerNotInArea)
-                CollapseThumbnailList();
+                CollapseThumbnailList?.Invoke();
         }
     }
 
@@ -456,7 +456,6 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         ZoomChanged?.Invoke(this, e);
     }
-
 
     public Task PostPublicBookmarkAsync()
     {
