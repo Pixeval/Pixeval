@@ -144,15 +144,6 @@
   <data name="OpenSourceLicenseSubtitleTextBlock.Text" xml:space="preserve">
     <value>开源许可</value>
   </data>
-  <data name="PInvokeIntroductoryTextBlock.Description" xml:space="preserve">
-    <value>PInvoke.User32提供了Win32 API的包装函数</value>
-  </data>
-  <data name="PInvokeIntroductoryTextBlock.Header" xml:space="preserve">
-    <value>PInvoke.User32</value>
-  </data>
-  <data name="PInvokeIntroductoryTextBlock.Tag" xml:space="preserve">
-    <value>https://github.com/dotnet/pinvoke</value>
-  </data>
   <data name="QRCoderIntroductoryTextBlock.Description" xml:space="preserve">
     <value>QRCoder提供了二维码的合成以及渲染实现</value>
   </data>

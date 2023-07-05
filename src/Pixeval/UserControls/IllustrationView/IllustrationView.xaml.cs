@@ -21,16 +21,13 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
-using PInvoke;
 using Pixeval.Controls;
-using Pixeval.Messages;
 using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
@@ -38,7 +35,6 @@ using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Util.UI.Windowing;
-using Windows.Graphics;
 using Windows.System;
 using Windows.UI.Core;
 using WinUI3Utilities;
@@ -102,32 +98,25 @@ public sealed partial class IllustrationView
         }
 
         e.Handled = true;
-        WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(sender as UIElement));
 
-        ItemTapped?.Invoke(this, sender.GetDataContext<IllustrationViewModel>());
+        var vm = sender.GetDataContext<IllustrationViewModel>();
+        ItemTapped?.Invoke(this, vm);
 
-        var viewModels = sender.GetDataContext<IllustrationViewModel>()
-            .GetMangaIllustrationViewModels()
-            .ToArray();
+        var viewModels = vm.GetMangaIllustrationViewModels().ToArray();
 
-        // This is commented because the connected animation used to be used when IllustrationViewerPage does not create a new window.
-        // ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement) sender);
-
-        // TODO: Test Use the new windowing API
         var (width, height) = DetermineWindowSize(viewModels[0].Illustration.Width, viewModels[0].Illustration.Width / (double)viewModels[0].Illustration.Height);
 
         WindowFactory.RootWindow.Fork(out var w)
             .WithLoaded((o, _) => o.To<Frame>().NavigateTo<IllustrationViewerPage>(w,
                 new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo()))
             .WithSizeLimit(640, 360)
-            .Init(new SizeInt32(width, height))
+            .Init(new(width, height))
             .Activate();
     }
 
-    private static unsafe (int windowWidth, int windowHeight) DetermineWindowSize(int illustWidth, double illustRatio)
+    private static (int windowWidth, int windowHeight) DetermineWindowSize(int illustWidth, double illustRatio)
     {
-        var windowPlacement = User32.WINDOWPLACEMENT.Create();
-        User32.GetWindowPlacement((nint)CurrentContext.HWnd, &windowPlacement);
+        /*
         var windowHandle = User32.MonitorFromWindow((nint)CurrentContext.HWnd, User32.MonitorOptions.MONITOR_DEFAULTTONEAREST);
         User32.GetMonitorInfo(windowHandle, out var monitorInfoEx);
         var devMode = DEVMODE.Create();
@@ -139,6 +128,9 @@ public sealed partial class IllustrationView
 
         var monitorWidth = devMode.dmPelsWidth;
         var monitorHeight = devMode.dmPelsHeight;
+        */
+
+        var (monitorWidth, monitorHeight) = WindowHelper.GetScreenSize();
 
         var determinedWidth = illustWidth switch
         {
@@ -214,12 +206,6 @@ public sealed partial class IllustrationView
         // TODO load after being Filtrated
         if (ScrollViewer.ScrollableHeight - LoadingArea.ActualHeight < ScrollViewer.VerticalOffset)
             await ViewModel.DataProvider.IllustrationsView.LoadMoreItemsAsync(number);
-    }
-
-    public UIElement? GetItemContainer(IllustrationViewModel viewModel)
-    {
-        //TODO: delete
-        return null;// IllustrationItemsRepeater.ItemsSourceView.f as UIElement;
     }
 
     private void BookmarkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)

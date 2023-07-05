@@ -8,8 +8,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:misc="using:Pixeval.Pages.Misc"
     xmlns:personView="using:Pixeval.Controls.PersonView"
-    xmlns:ui="using:Pixeval.Util.UI"
     xmlns:personView1="using:Pixeval.UserControls.PersonView"
+    xmlns:ui="using:Pixeval.Util.UI"
     Loaded="AboutPage_OnLoaded"
     mc:Ignorable="d">
 
@@ -85,11 +85,6 @@
                         Tapped="LaunchUri" />
                     <labs:SettingsCard
                         x:Uid="/AboutPage/QRCoderIntroductoryTextBlock"
-                        ActionIcon="{ui:FontIcon Glyph=OpenInNewWindowE8A7}"
-                        IsClickEnabled="True"
-                        Tapped="LaunchUri" />
-                    <labs:SettingsCard
-                        x:Uid="/AboutPage/PInvokeIntroductoryTextBlock"
                         ActionIcon="{ui:FontIcon Glyph=OpenInNewWindowE8A7}"
                         IsClickEnabled="True"
                         Tapped="LaunchUri" />

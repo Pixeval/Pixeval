@@ -49,7 +49,6 @@
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230518007-experimental1" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
         <PackageReference Include="PininSharp" Version="1.2.0" />
-        <PackageReference Include="PInvoke.User32" Version="0.7.124" />
         <PackageReference Include="Pixeval.QRCoder" Version="1.4.5" />
         <PackageReference Include="ReverseMarkdown" Version="3.25.0" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />

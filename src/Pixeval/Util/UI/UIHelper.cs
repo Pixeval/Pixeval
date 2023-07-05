@@ -50,6 +50,7 @@ using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using WinUI3Utilities;
 using Brush = Microsoft.UI.Xaml.Media.Brush;
+using Color = Windows.UI.Color;
 using Image = SixLabors.ImageSharp.Image;
 using Point = Windows.Foundation.Point;
 
