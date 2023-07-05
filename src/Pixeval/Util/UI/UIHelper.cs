@@ -47,9 +47,9 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
 using WinUI3Utilities;
 using Brush = Microsoft.UI.Xaml.Media.Brush;
-using Color = Windows.UI.Color;
 using Image = SixLabors.ImageSharp.Image;
 using Point = Windows.Foundation.Point;
 
@@ -186,16 +186,21 @@ public static partial class UIHelper
         CreateStoryboard(timeline).Begin();
     }
 
-    public static void SetClipboardContent(Action<DataPackage> contentAction)
+    public static void ClipboardSetText(string text)
     {
-        Clipboard.SetContent(new DataPackage().Apply(contentAction));
+        var content = new DataPackage { RequestedOperation = DataPackageOperation.Copy };
+        content.SetText(text);
+        Clipboard.SetContent(content);
+        Clipboard.Flush();
     }
 
-    public static async Task SetClipboardContentAsync(Func<DataPackage, Task> contentAction)
+    public static void ClipboardSetBitmap(IRandomAccessStream stream)
     {
-        var package = new DataPackage();
-        await contentAction(package);
-        Clipboard.SetContent(package);
+        var reference = RandomAccessStreamReference.CreateFromStream(stream);
+        var content = new DataPackage { RequestedOperation = DataPackageOperation.Copy };
+        content.SetBitmap(reference);
+        Clipboard.SetContent(content);
+        Clipboard.Flush();
     }
 
     public static void NavigateByNavigationViewTag(this Frame frame, NavigationView sender, NavigationTransitionInfo? transitionInfo = null)

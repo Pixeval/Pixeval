@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -155,7 +155,7 @@ public static partial class IOHelper
             return null;
         }
 
-        using IRandomAccessStream stream = await file.OpenReadAsync();
+        using var stream = await file.OpenReadAsync();
         using var reader = new DataReader(stream.GetInputStreamAt(0));
         await reader.LoadAsync((uint)stream.Size);
         var bytes = new byte[stream.Size];

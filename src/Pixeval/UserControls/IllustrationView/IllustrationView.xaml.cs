@@ -249,12 +249,12 @@ public sealed partial class IllustrationView
 
     private void CopyWebLinkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString()));
+        UIHelper.ClipboardSetText(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString());
     }
 
     private void CopyAppLinkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationAppUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString()));
+        UIHelper.ClipboardSetText(MakoHelper.GenerateIllustrationAppUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString());
     }
 
     private async void ShowQrCodeContextItem_OnTapped(object sender, TappedRoutedEventArgs e)

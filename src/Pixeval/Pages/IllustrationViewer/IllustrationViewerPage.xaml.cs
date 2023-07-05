@@ -473,7 +473,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
             GenerateLinkToThisPageButtonTeachingTip.IsOpen = true;
         }
 
-        UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationAppUri(_viewModel.Current.IllustrationViewModel.Id).ToString()));
+        UIHelper.ClipboardSetText(MakoHelper.GenerateIllustrationAppUri(_viewModel.Current.IllustrationViewModel.Id).ToString());
     }
 
     private void FullScreenTapped(object sender, TappedRoutedEventArgs e)

@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,10 +40,13 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Graphics.Imaging;
+using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System;
 using Windows.System.UserProfile;
 using WinUI3Utilities;
+using static Pixeval.CoreApi.Net.Response.ReverseSearchResponse;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -359,7 +363,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         var link = MakoHelper.GenerateIllustrationWebUri(Current.IllustrationViewModel.Id).ToString();
-        UIHelper.SetClipboardContent(package => package.SetText(link));
+        UIHelper.ClipboardSetText(link);
         TeachingTipProperties.ShowAndHide(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle);
     }
 
@@ -405,24 +409,8 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     private async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs e)
     {
-        //UIHelper.SetClipboardContent(package =>
-        //{
-        //    //todo package.RequestedOperation = DataPackageOperation.Copy;
-        //    Current.OriginalImageStream!.Seek(0);
-        //    var stream = Current.OriginalImageStream.EncodeBitmapStreamAsync(false).GetAwaiter().GetResult(); 
-        //    var streamRef = RandomAccessStreamReference.CreateFromStream(stream);
-        //    package.SetBitmap(streamRef);
-        //});
-        await UIHelper.SetClipboardContentAsync(async package =>
-        {
-            package.RequestedOperation = DataPackageOperation.Copy;
-            var file = await AppKnownFolders.CreateTemporaryFileWithNameAsync(GetCopyContentFileName(), IsUgoira ? "gif" : "png");
-            await Current.OriginalImageStream!.SaveToFileAsync(file);
-            var streamRef = RandomAccessStreamReference.CreateFromFile(file);
-            package.SetBitmap(streamRef);
-        });
-
-        string GetCopyContentFileName() => $"{IllustrationId}{(IsUgoira ? "" : IsManga ? $"_p{CurrentIndex}" : "")}";
+        var encoded = await Current.OriginalImageStream!.EncodeBitmapStreamAsync(false);
+        UIHelper.ClipboardSetBitmap(encoded);
     }
 
     public ImageViewerPageViewModel Next()

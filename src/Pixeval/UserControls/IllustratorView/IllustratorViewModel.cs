@@ -184,13 +184,13 @@ public partial class IllustratorViewModel : ObservableObject, IDisposable
 
     private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustratorAppUri(UserId!).ToString()));
+        UIHelper.ClipboardSetText(MakoHelper.GenerateIllustratorAppUri(UserId!).ToString());
         TeachingTipProperties.ShowAndHide(IllustratorProfileResources.LinkCopiedToClipboard);
     }
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustratorWebUri(UserId!).ToString()));
+        UIHelper.ClipboardSetText(MakoHelper.GenerateIllustratorWebUri(UserId!).ToString());
         TeachingTipProperties.ShowAndHide(IllustratorProfileResources.LinkCopiedToClipboard);
     }
 

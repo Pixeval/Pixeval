@@ -67,8 +67,7 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
 
     public void Receive(LoginCompletedMessage message)
     {
-        // TODO
-        // DownloadAndSetAvatar();
+        // TODO DownloadAndSetAvatar();
     }
 
     /// <summary>
