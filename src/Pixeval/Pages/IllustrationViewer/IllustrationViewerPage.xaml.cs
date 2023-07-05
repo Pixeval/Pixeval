@@ -68,7 +68,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private readonly AsyncLatch _collapseThumbnailList;
 
-    private static readonly EasingFunctionBase ExponentialEasingFunction = new ExponentialEase
+    private static readonly EasingFunctionBase _exponentialEasingFunction = new ExponentialEase
     {
         EasingMode = EasingMode.EaseOut,
         Exponent = 12
@@ -85,14 +85,14 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
             var translateXAnimation = transform.CreateDoubleAnimation(
                 nameof(CompositeTransform.ScaleX),
                 new Duration(TimeSpan.FromMilliseconds(500)),
-                ExponentialEasingFunction,
+                _exponentialEasingFunction,
                 from: transform.ScaleX,
                 to: scale);
 
             var translateYAnimation = transform.CreateDoubleAnimation(
                 nameof(CompositeTransform.ScaleY),
                 new Duration(TimeSpan.FromMilliseconds(500)),
-                ExponentialEasingFunction,
+                _exponentialEasingFunction,
                 from: transform.ScaleY,
                 to: scale);
             UIHelper.CreateStoryboard(translateXAnimation, translateYAnimation).Begin();

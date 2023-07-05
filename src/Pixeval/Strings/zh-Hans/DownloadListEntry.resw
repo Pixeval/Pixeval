@@ -132,10 +132,10 @@
   <data name="ActionButtonContentRetry" xml:space="preserve">
     <value>重试</value>
   </data>
-  <data name="CancelDownloadItem.Text" xml:space="preserve">
+  <data name="CancelDownloadItem.Label" xml:space="preserve">
     <value>取消下载</value>
   </data>
-  <data name="CheckErrorMessageInDetailItem.Text" xml:space="preserve">
+  <data name="CheckErrorMessageInDetailItem.Label" xml:space="preserve">
     <value>查看详细错误信息</value>
   </data>
   <data name="DownloadCancelled" xml:space="preserve">
@@ -162,13 +162,13 @@
   <data name="ErrorMessageDialogTitle" xml:space="preserve">
     <value>错误信息</value>
   </data>
-  <data name="GoToPageItem.Text" xml:space="preserve">
+  <data name="GoToPageItem.Label" xml:space="preserve">
     <value>查看页面</value>
   </data>
-  <data name="OpenDownloadLocationItem.Text" xml:space="preserve">
+  <data name="OpenDownloadLocationItem.Label" xml:space="preserve">
     <value>打开下载位置</value>
   </data>
-  <data name="RedownloadItem.Text" xml:space="preserve">
+  <data name="RedownloadItem.Label" xml:space="preserve">
     <value>重新下载</value>
   </data>
 </root>

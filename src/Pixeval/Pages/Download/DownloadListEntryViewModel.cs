@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -103,17 +103,5 @@ public partial class DownloadListEntryViewModel : ObservableObject, IDisposable
     public static bool GetIsShowErrorDetailDialogItemEnabled(DownloadState currentState)
     {
         return currentState == DownloadState.Error;
-    }
-
-    public static Brush GetActionButtonBackground(DownloadState currentState)
-    {
-        return GetSelectedBackground(currentState is DownloadState.Running or DownloadState.Paused);
-    }
-
-    public static Brush GetSelectedBackground(bool selected)
-    {
-        return selected
-            ? (Brush)Application.Current.Resources["AccentFillColorDefaultBrush"]
-            : (Brush)Application.Current.Resources["CardBackground"];
     }
 }

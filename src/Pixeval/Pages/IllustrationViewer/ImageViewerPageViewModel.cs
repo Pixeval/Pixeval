@@ -98,7 +98,6 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         _ = LoadImage();
     }
 
-
     public IRandomAccessStream? OriginalImageStream { get; private set; }
 
     public Task? LoadingOriginalSourceTask
@@ -167,10 +166,9 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         if (LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true } || _disposed)
         {
             _disposed = false;
-            _ = IllustrationViewModel.LoadThumbnailIfRequired().ContinueWith(_ =>
-            {
-                OriginalImageSource ??= IllustrationViewModel.ThumbnailSource;
-            }, TaskScheduler.FromCurrentSynchronizationContext());
+            _ = IllustrationViewModel.LoadThumbnailIfRequired().ContinueWith(
+                _ => OriginalImageSource ??= IllustrationViewModel.ThumbnailSource,
+                TaskScheduler.FromCurrentSynchronizationContext());
             AddHistory();
             await LoadOriginalImage();
         }

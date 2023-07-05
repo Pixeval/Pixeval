@@ -7,8 +7,7 @@
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:misc="using:Pixeval.Pages.Misc"
-    xmlns:personView="using:Pixeval.Controls.PersonView"
-    xmlns:personView1="using:Pixeval.UserControls.PersonView"
+    xmlns:personView="using:Pixeval.UserControls.PersonView"
     xmlns:ui="using:Pixeval.Util.UI"
     Loaded="AboutPage_OnLoaded"
     mc:Ignorable="d">
@@ -42,7 +41,7 @@
                         </ItemsRepeater.Layout>
                         <ItemsRepeater.ItemTemplate>
                             <DataTemplate x:DataType="misc:Supporter">
-                                <personView1:PersonView
+                                <personView:PersonView
                                     PersonName="{x:Bind Name}"
                                     PersonNickname="{x:Bind Nickname}"
                                     PersonPicture="{x:Bind ProfilePicture}"
@@ -112,7 +111,7 @@
                         </Hyperlink>
                         <Run x:Uid="/AboutPage/OpenSourceLicenseContentPartII" />
                     </TextBlock>
-                    <controls:MarkdownTextBlock x:Name="OpenSourceLicenseMarkdownTextBlock" />
+                    <controls:MarkdownTextBlock x:Name="OpenSourceLicenseMarkdownTextBlock" Background="Transparent" />
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

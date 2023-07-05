@@ -20,6 +20,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -43,16 +44,15 @@ namespace Pixeval.Pages.Download;
 [DependencyProperty<string>("ActionButtonContent")]
 [DependencyProperty<bool>("IsRedownloadItemEnabled")]
 [DependencyProperty<bool>("IsCancelItemEnabled")]
-[DependencyProperty<Brush>("ActionButtonBackground")]
 [DependencyProperty<bool>("IsShowErrorDetailDialogItemEnabled")]
 public sealed partial class DownloadListEntry
 {
-    private EventHandler<bool>? _selected;
-
     public DownloadListEntry()
     {
         InitializeComponent();
     }
+
+    private bool IsSelected => ViewModel?.Selected ?? false;
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -63,82 +63,7 @@ public sealed partial class DownloadListEntry
         }
     }
 
-    public event EventHandler<bool> Selected
-    {
-        add => _selected += value;
-        remove => _selected -= value;
-    }
-
-    private void DownloadListEntry_OnSizeChanged(object sender, SizeChangedEventArgs e)
-    {
-        const int minWindowWidth = 768;
-        switch (e.PreviousSize.Width)
-        {
-            case > minWindowWidth when e.NewSize.Width <= minWindowWidth:
-                ApplyVisualStateChange(true);
-                break;
-            case <= minWindowWidth when e.NewSize.Width > minWindowWidth:
-                ApplyVisualStateChange(false);
-                break;
-        }
-    }
-
-    private void ApplyVisualStateChange(bool compact)
-    {
-        // VisualStateManager won't work for unknown reason, sucks
-        if (compact)
-        {
-            ImageColumn.Width = new GridLength(1, GridUnitType.Star);
-            CaptionColumn.Width = new GridLength(0);
-            ProgressColumn.Width = new GridLength(0);
-            ButtonColumn.Width = new GridLength(0);
-            OptionColumn.Width = new GridLength(0);
-            Grid.SetRowSpan(ThumbnailImageContainer, 1);
-            Grid.SetRowSpan(CaptionContainer, 1);
-            Grid.SetColumn(CaptionContainer, 0);
-            CaptionContainer.Margin = new Thickness(60, 0, 0, 0);
-            CaptionContainer.HorizontalAlignment = HorizontalAlignment.Left;
-            Grid.SetRow(ProgressBarContainer, 1);
-            Grid.SetRowSpan(ProgressBarContainer, 1);
-            Grid.SetColumn(ProgressBarContainer, 0);
-            ProgressBarContainer.Margin = new Thickness(0, 8, 0, 0);
-            Grid.SetRow(ActionButton, 2);
-            Grid.SetRowSpan(ActionButton, 1);
-            Grid.SetColumn(ActionButton, 0);
-            ActionButton.Width = double.NaN;
-            ActionButton.HorizontalAlignment = HorizontalAlignment.Stretch;
-            ActionButton.Margin = new Thickness(0, 8, 0, 0);
-            Grid.SetRowSpan(MoreOptionButton, 1);
-            Grid.SetColumn(MoreOptionButton, 0);
-            MoreOptionButton.HorizontalAlignment = HorizontalAlignment.Right;
-        }
-        else
-        {
-            ImageColumn.Width = new GridLength(60);
-            CaptionColumn.Width = new GridLength(120);
-            ProgressColumn.Width = new GridLength(1, GridUnitType.Star);
-            ButtonColumn.Width = new GridLength(130);
-            OptionColumn.Width = new GridLength(45);
-            Grid.SetRowSpan(ThumbnailImageContainer, 3);
-            Grid.SetRowSpan(CaptionContainer, 3);
-            Grid.SetColumn(CaptionContainer, 1);
-            CaptionContainer.Margin = new Thickness(0);
-            CaptionContainer.HorizontalAlignment = HorizontalAlignment.Stretch;
-            Grid.SetRow(ProgressBarContainer, 0);
-            Grid.SetRowSpan(ProgressBarContainer, 3);
-            Grid.SetColumn(ProgressBarContainer, 2);
-            ProgressBarContainer.Margin = new Thickness(0, 3, 50, 0);
-            Grid.SetRow(ActionButton, 0);
-            Grid.SetRowSpan(ActionButton, 3);
-            Grid.SetColumn(ActionButton, 3);
-            ActionButton.Width = 120;
-            ActionButton.HorizontalAlignment = HorizontalAlignment.Center;
-            ActionButton.Margin = new Thickness(0);
-            Grid.SetRowSpan(MoreOptionButton, 3);
-            Grid.SetColumn(MoreOptionButton, 4);
-            MoreOptionButton.HorizontalAlignment = HorizontalAlignment.Center;
-        }
-    }
+    public event EventHandler<bool>? Selected;
 
     private async void ActionButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
@@ -202,14 +127,13 @@ public sealed partial class DownloadListEntry
             .ShowAsync();
     }
 
-    private void MoreOptionButton_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        e.Handled = true;
-    }
+    private Brush _lastBorderBrush = (Brush)Application.Current.Resources["SystemControlHighlightAccentBrush"];
 
-    private void BackgroundGrid_OnTapped(object sender, TappedRoutedEventArgs e)
+    private void RootCardControl_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         ViewModel.Selected = !ViewModel.Selected;
-        _selected?.Invoke(this, ViewModel.Selected);
+        (_lastBorderBrush, RootCardControl.BorderBrush) = (RootCardControl.BorderBrush, _lastBorderBrush);
+        (RootCardControl.Margin, RootCardControl.BorderThickness) = (RootCardControl.BorderThickness, RootCardControl.Margin);
+        Selected?.Invoke(this, ViewModel.Selected);
     }
 }
