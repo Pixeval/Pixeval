@@ -8,13 +8,13 @@
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:misc="using:Pixeval.Pages.Misc"
+    xmlns:model1="using:Pixeval.UserControls.Setting.UI.Model"
     xmlns:pixeval="using:Pixeval"
     xmlns:system="using:System"
     xmlns:tokenInput="using:Pixeval.UserControls.TokenInput"
     xmlns:ui="using:Pixeval.Util.UI"
     xmlns:ui1="using:Pixeval.Controls.Setting.UI"
     xmlns:ui2="using:Pixeval.UserControls.Setting.UI"
-    xmlns:model1="using:Pixeval.UserControls.Setting.UI.Model"
     Loaded="SettingsPage_OnLoaded"
     mc:Ignorable="d">
     <Page.Resources>

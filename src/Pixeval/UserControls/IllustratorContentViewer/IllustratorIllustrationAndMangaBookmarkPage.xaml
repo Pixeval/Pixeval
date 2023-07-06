@@ -1,6 +1,3 @@
-<!--  Copyright (c) Microsoft Corporation and Contributors.  -->
-<!--  Licensed under the MIT License.  -->
-
 <controls:EnhancedPage
     x:Class="Pixeval.UserControls.IllustratorContentViewer.IllustratorIllustrationAndMangaBookmarkPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"

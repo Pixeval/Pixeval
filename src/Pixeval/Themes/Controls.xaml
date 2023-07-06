@@ -1,6 +1,7 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:numberFormatting="using:Windows.Globalization.NumberFormatting">
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:numberFormatting="using:Windows.Globalization.NumberFormatting">
     <Style x:Key="PixevalRoundedButtonStyle" TargetType="Button">
         <Style.Setters>
             <Setter Property="CornerRadius" Value="90" />
