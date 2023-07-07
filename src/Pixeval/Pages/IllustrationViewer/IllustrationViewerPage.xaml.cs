@@ -22,7 +22,6 @@ using System;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -32,7 +31,6 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
-using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.UserControls.IllustrationView;
@@ -45,6 +43,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Graphics;
 using Windows.Storage.Streams;
+using Pixeval.UserControls;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
@@ -122,15 +121,12 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
     {
-        WeakReferenceMessenger.Default.Send(new NavigatingFromIllustrationViewerMessage());
         foreach (var imageViewerPageViewModel in _viewModel.ImageViewerPageViewModels!)
         {
             imageViewerPageViewModel.ImageLoadingCancellationHandle.Cancel();
         }
-
-        _viewModel.ZoomChanged -= OnZoomChanged;
+        
         _viewModel.Dispose();
-        WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
@@ -144,7 +140,6 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         if (parameter is IllustrationViewerPageViewModel viewModel)
         {
             _viewModel = viewModel.IsDisposed ? viewModel.CreateNew() : viewModel;
-            _viewModel.ZoomChanged += OnZoomChanged;
         }
 
         _relatedWorksTag = new NavigationViewTag(typeof(RelatedWorksPage), _viewModel);
@@ -152,16 +147,9 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         _commentsTag = new NavigationViewTag(typeof(CommentsPage), (App.AppViewModel.MakoClient.IllustrationComments(_viewModel.IllustrationId).Where(c => c is not null), _viewModel.IllustrationId));
 
         Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.Current);
-
-        // todo WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(_viewModel.IllustrationView?.GetItemContainer(_viewModel.IllustrationViewModelInTheGridView!) ?? App.AppViewModel.AppWindowRootFrame));
     }
 
     private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;
-
-    private void CurrentScalePercentage_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        OnZoomChanged(null, 1); // trigger the first calculation of the percentage of the zooming, does not imply that there is a zooming happened.
-    }
 
     private void TopCommandBarPointerEntered(object sender, PointerRoutedEventArgs e)
     {
@@ -181,63 +169,6 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
             TopCommandBarAnimation.To = -TitleBarHeight;
             TopCommandBarStoryboard.Begin();
         }
-    }
-
-    private void IllustrationViewerPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
-    {
-        CurrentScalePercentage.Text = $"{ScaledPercentage()}%";
-    }
-
-    private void RestoreResolutionToggleButton_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        if (_viewModel.Current.Scale > 1)
-        {
-            _viewModel.Current.Zoom(1 - _viewModel.Current.Scale);
-        }
-        else if (IllustrationImageShowcaseFrame.FindDescendant<Image>() is { } imageControl)
-        {
-            var illustWidth = _viewModel.Current.IllustrationViewModel.Illustration.Width;
-            var illustHeight = _viewModel.Current.IllustrationViewModel.Illustration.Height;
-            var displayImageResolution = UIHelper.GetImageScaledFactor(
-                illustWidth,
-                illustHeight,
-                imageControl.ActualWidth,
-                imageControl.ActualHeight,
-                _viewModel.Current.Scale);
-            _viewModel.Current.Zoom(displayImageResolution >= 1 ? displayImageResolution * 2 : 1 / displayImageResolution - _viewModel.Current.Scale);
-        }
-    }
-
-    private void OnZoomChanged(object? sender, double e)
-    {
-        if (IllustrationImageShowcaseFrame.FindDescendant<Image>() is { } imageControl)
-        {
-            if (imageControl.RenderTransform is CompositeTransform transform)
-            {
-                _zoomingAnimation.RunAsync((transform, e)).Discard();
-            }
-
-            CurrentScalePercentage.Text = $"{ScaledPercentage()}%";
-
-            var scaled = Math.Abs(_viewModel.Current.Scale - 1) > double.Epsilon;
-            RestoreResolutionToggleButton.IsChecked = scaled;
-            _viewModel.FlipRestoreResolutionCommand(scaled);
-        }
-    }
-
-    private int ScaledPercentage()
-    {
-        var illustWidth = _viewModel.Current.IllustrationViewModel.Illustration.Width;
-        var illustHeight = _viewModel.Current.IllustrationViewModel.Illustration.Height;
-        var imageControl = IllustrationImageShowcaseFrame.FindDescendant<Image>()!;
-        var displayImageResolution = UIHelper.GetImageScaledFactor(
-            illustWidth,
-            illustHeight,
-            imageControl.ActualWidth,
-            imageControl.ActualHeight,
-            _viewModel.Current.Scale);
-
-        return (int)(displayImageResolution * 100);
     }
 
     private async void OnDataTransferManagerOnDataRequested(DataTransferManager _, DataRequestedEventArgs args)

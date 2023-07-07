@@ -35,7 +35,8 @@ using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 using Windows.Storage.Streams;
-using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
+using Pixeval.UserControls;
+using Pixeval.UserControls.IllustrationView;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -62,10 +63,6 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         LoadingImage
     }
 
-    private const int MaxZoomFactor = 50;
-
-    private const int MinZoomFactor = 1;
-
     private bool _disposed;
 
     private TaskNotifier? _loadingOriginalSourceTask;
@@ -80,15 +77,10 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
     private ImageSource? _originalImageSource;
 
     [ObservableProperty]
-    private double _scale = 1;
+    private float _scale = 1;
 
-    private EventHandler<double>? _zoomChanged;
-
-    public event EventHandler<double> ZoomChanged
-    {
-        add => _zoomChanged += value;
-        remove => _zoomChanged -= value;
-    }
+    [ObservableProperty]
+    private ZoomableImageMode _showMode; 
 
     public ImageViewerPageViewModel(IllustrationViewerPageViewModel illustrationViewerPageViewModel, IllustrationViewModel illustrationViewModel)
     {
@@ -125,23 +117,9 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    public void Zoom(double delta)
+    public void Zoom(float delta)
     {
-        var factor = Scale;
-        switch (delta)
-        {
-            case < 0 when factor > MinZoomFactor:
-            case > 0 when factor < MaxZoomFactor:
-                delta = (factor + delta) switch
-                {
-                    > MaxZoomFactor => MaxZoomFactor - factor,
-                    < MinZoomFactor => -(factor - MinZoomFactor),
-                    _ => delta
-                };
-                Scale += delta;
-                _zoomChanged?.Invoke(this, Scale);
-                break;
-        }
+        Scale = MathF.Exp(MathF.Log(Scale) + delta / 5000f);
     }
 
     private void AdvancePhase(LoadingPhase phase)

@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.UI.Converters"
+    xmlns:converters1="using:Pixeval.Util.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:illustrationView="using:Pixeval.UserControls.IllustrationView"
@@ -13,7 +14,6 @@
     xmlns:ui="using:Pixeval.Util.UI"
     KeyboardAcceleratorPlacementMode="Hidden"
     Loaded="IllustrationViewerPage_OnLoaded"
-    SizeChanged="IllustrationViewerPage_OnSizeChanged"
     mc:Ignorable="d">
     <controls:EnhancedWindowPage.Resources>
         <ThemeShadow x:Name="SidePanelShadow" />
@@ -26,6 +26,7 @@
             TintOpacity="0.8" />
         <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
         <Thickness x:Key="FullScreenMargin">0</Thickness>
+        <converters1:NumberToPercentageConverter x:Key="NumberToPercentageConverter" />
     </controls:EnhancedWindowPage.Resources>
     <Page.KeyboardAccelerators>
         <KeyboardAccelerator
@@ -366,25 +367,21 @@
                             Width="{StaticResource CollapsedAppBarButtonWidth}"
                             Command="{x:Bind _viewModel.FullScreenCommand}"
                             Tapped="FullScreenTapped" />
-                        <AppBarToggleButton
-                            x:Name="RestoreResolutionToggleButton"
-                            Width="{StaticResource CollapsedAppBarButtonWidth}"
-                            Command="{x:Bind _viewModel.RestoreResolutionCommand}"
-                            Tapped="RestoreResolutionToggleButton_OnTapped" />
+                        <AppBarToggleButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.RestoreResolutionCommand}" />
                         <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.ZoomOutCommand}" />
                         <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.ZoomInCommand}" />
                     </CommandBar>
                     <TextBlock
-                        x:Name="CurrentScalePercentage"
                         Grid.Column="4"
-                        Width="50"
+                        Width="60"
                         Margin="-5,-3,0,0"
                         VerticalAlignment="Center"
                         FontSize="{StaticResource PixevalContentFontSize}"
                         FontWeight="SemiBold"
                         HorizontalTextAlignment="Center"
-                        Loaded="CurrentScalePercentage_OnLoaded"
-                        TextAlignment="Center" />
+                        Text="{x:Bind _viewModel.Current.Scale, Converter={StaticResource NumberToPercentageConverter}, ConverterParameter=2, Mode=OneWay}"
+                        TextAlignment="Center"
+                        TextTrimming="CharacterEllipsis" />
                     <TeachingTip
                         x:Name="QrCodeTeachingTip"
                         x:Uid="/IllustrationViewerPage/QrCodeTeachingTip"

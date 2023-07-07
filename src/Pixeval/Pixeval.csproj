@@ -27,6 +27,9 @@
         <!--此处写多个警告就会导致WMC1501失效，所以其他警告写到.editorconfig里面了-->
         <NoWarn>$(NoWarn);WMC1501</NoWarn>
     </PropertyGroup>
+    <ItemGroup>
+      <None Remove="UserControls\ZoomableImage.xaml" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Labs.WinUI.SettingsControls" Version="0.0.18" />
@@ -374,6 +377,9 @@
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Folder Include="UserControls\RecommendIllustratorProfile\" />
+        <Page Update="UserControls\ZoomableImage.xaml">
+          <Generator>MSBuild:Compile</Generator>
+        </Page>
         <Page Update="UserControls\Setting.UI\SettingRadioButtons.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>

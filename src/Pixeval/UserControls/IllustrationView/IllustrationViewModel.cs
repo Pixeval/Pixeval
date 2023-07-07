@@ -148,7 +148,7 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
         });
     }
 
-    public async Task<bool> LoadThumbnailIfRequired(ThumbnailUrlOption thumbnailUrlOption = ThumbnailUrlOption.SquareMedium)
+    public async Task<bool> LoadThumbnailIfRequired(ThumbnailUrlOption thumbnailUrlOption = ThumbnailUrlOption.Medium)
     {
         if (ThumbnailSource is not null || LoadingThumbnail)
         {

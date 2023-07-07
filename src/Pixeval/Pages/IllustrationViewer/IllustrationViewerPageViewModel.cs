@@ -39,14 +39,10 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Graphics.Imaging;
-using Windows.Storage;
-using Windows.Storage.Streams;
 using Windows.System;
 using Windows.System.UserProfile;
+using Pixeval.UserControls;
 using WinUI3Utilities;
-using static Pixeval.CoreApi.Net.Response.ReverseSearchResponse;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -143,8 +139,6 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     public bool IsDisposed { get; set; }
 
-    public event EventHandler<double>? ZoomChanged;
-
     // illustrations should contains only one item if the illustration is a single
     // otherwise it contains the entire manga data
     public IllustrationViewerPageViewModel(IllustrationView illustrationView, params IllustrationViewModel[] illustrations) : this(illustrations)
@@ -158,7 +152,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         _illustrations = illustrations;
         ImageViewerPageViewModels = illustrations.Select(i => new ImageViewerPageViewModel(this, i)).ToArray();
-        ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModels[CurrentIndex]);
+        Current = ImageViewerPageViewModels![CurrentIndex];
         InitializeCommands();
         _ = LoadUserProfile();
     }
@@ -232,10 +226,12 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         FullScreenCommand.NotifyCanExecuteChanged();
     }
 
-    public void FlipRestoreResolutionCommand(bool scaled)
+    public void FlipRestoreResolutionCommand(ZoomableImageMode mode)
     {
+        var scaled = mode is ZoomableImageMode.Fit;
         RestoreResolutionCommand.Label = scaled ? IllustrationViewerPageResources.UniformToFillResolution : IllustrationViewerPageResources.RestoreOriginalResolution;
         RestoreResolutionCommand.IconSource = scaled ? FontIconSymbols.Webcam2E960.GetFontIconSource() : FontIconSymbols.WebcamE8B8.GetFontIconSource();
+        Current.ShowMode = Current.ShowMode is ZoomableImageMode.Fit ? ZoomableImageMode.Original : ZoomableImageMode.Fit;
     }
 
     private void InitializeCommands()
@@ -257,10 +253,10 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
 
         ZoomOutCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        ZoomOutCommand.ExecuteRequested += (_, _) => Current.Zoom(-0.5f);
+        ZoomOutCommand.ExecuteRequested += (_, _) => Current.Zoom(-120);
 
         ZoomInCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        ZoomInCommand.ExecuteRequested += (_, _) => Current.Zoom(0.5f);
+        ZoomInCommand.ExecuteRequested += (_, _) => Current.Zoom(120);
 
         SaveCommand.ExecuteRequested += SaveCommandOnExecuteRequested;
         SaveAsCommand.ExecuteRequested += SaveAsCommandOnExecuteRequested;
@@ -274,6 +270,8 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
         SetAsBackgroundCommand.CanExecuteRequested += SetAsBackgroundCommandOnCanExecuteRequested;
         SetAsBackgroundCommand.ExecuteRequested += SetAsBackgroundCommandOnExecuteRequested;
+
+        RestoreResolutionCommand.ExecuteRequested += (_, _) => FlipRestoreResolutionCommand(Current.ShowMode);
     }
 
     private void LoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
@@ -415,34 +413,16 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     public ImageViewerPageViewModel Next()
     {
-        ++CurrentIndex;
-        ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModels![CurrentIndex]);
+        ++CurrentIndex; 
+        Current = ImageViewerPageViewModels![CurrentIndex];
         return Current;
     }
 
     public ImageViewerPageViewModel Prev()
     {
         --CurrentIndex;
-        ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModels![CurrentIndex]);
+        Current = ImageViewerPageViewModels![CurrentIndex];
         return Current;
-    }
-
-    private void ReassignAndResubscribeZoomingEvent(ImageViewerPageViewModel newViewModel)
-    {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (Current is not null)
-        {
-            Current.ZoomChanged -= CurrentOnZoomChanged;
-        }
-        Current = newViewModel;
-        Current.ZoomChanged += CurrentOnZoomChanged;
-        CurrentOnZoomChanged(null, Current.Scale); // trigger as new viewmodel attached
-    }
-
-    // what a trash code...
-    private void CurrentOnZoomChanged(object? sender, double e)
-    {
-        ZoomChanged?.Invoke(this, e);
     }
 
     public Task PostPublicBookmarkAsync()

@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/ImageViewerPage.xaml.cs
+// Copyright (c) 2023 Pixeval/FloatToVector3Converter.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,24 +18,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Microsoft.UI.Xaml.Navigation;
+using System;
+using System.Numerics;
+using Microsoft.UI.Xaml.Data;
+using WinUI3Utilities;
 
-namespace Pixeval.Pages.IllustrationViewer;
+namespace Pixeval.Util.Converters;
 
-public sealed partial class ImageViewerPage
+public class FloatToVector3Converter : IValueConverter
 {
-    private ImageViewerPageViewModel _viewModel = null!;
-
-    public ImageViewerPage()
+    public object Convert(object value, Type targetType, object parameter, string language)
     {
-        InitializeComponent();
+        return new Vector3(value.To<float>());
     }
 
-    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
     {
-        if (parameter is ImageViewerPageViewModel viewModel)
-        {
-            _viewModel = viewModel;
-        }
+        return value.To<Vector3>().X;
     }
 }
