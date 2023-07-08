@@ -316,9 +316,6 @@
         <Page Update="Flyouts\IllustrationResultFilter\IllustrationResultFilterContent.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Controls\Expander\Expander.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
         <Page Update="Controls\Card\CardControl.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>

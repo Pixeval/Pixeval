@@ -22,7 +22,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Windows.Foundation;
 
-namespace Pixeval.Controls.Card;
+namespace Pixeval.Controls;
 
 public sealed class ContentFiller : ContentControl
 {

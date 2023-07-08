@@ -2,7 +2,6 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///Controls/Card/CardControl.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/IllustratorView/IllustratorView.xaml" />
-        <ResourceDictionary Source="ms-appx:///Controls/Expander/Expander.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/NotifyOnLoadedCalendarDatePicker/NotifyOnLoadedCalendarDatePicker.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/NotifyOnLoadedComboBox/NotifyOnLoadedComboBox.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/IconButton/IconButton.xaml" />

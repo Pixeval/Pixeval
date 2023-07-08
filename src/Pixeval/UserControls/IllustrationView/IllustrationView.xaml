@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:card="using:Pixeval.Controls.Card"
+    xmlns:controls="using:Pixeval.Controls"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:illustrationView="using:Pixeval.UserControls.IllustrationView"
@@ -77,11 +78,11 @@
                                         <MenuFlyoutSeparator />
                                     </MenuFlyout>
                                 </GridViewItem.ContextFlyout>
-                                <card:ContentFiller
+                                <controls:ContentFiller
                                     CornerRadius="5"
                                     DesiredHeight="{x:Bind illustrationView:IllustrationViewViewModel.StaticItemHeight}"
                                     DesiredWidth="{x:Bind GetDesiredWidth(illustrationView:IllustrationViewViewModel.StaticItemHeight)}">
-                                    <card:ContentFiller.Resources>
+                                    <controls:ContentFiller.Resources>
                                         <ExponentialEase
                                             x:Key="EasingFunction"
                                             EasingMode="EaseOut"
@@ -198,7 +199,7 @@
                                                 To="0"
                                                 Duration="0:0:2" />
                                         </Storyboard>
-                                    </card:ContentFiller.Resources>
+                                    </controls:ContentFiller.Resources>
                                     <interactivity:Interaction.Behaviors>
                                         <core:EventTriggerBehavior EventName="PointerEntered">
                                             <media:ControlStoryboardAction Storyboard="{StaticResource ThumbnailScaleOutStoryboard}" />
@@ -315,7 +316,7 @@
                                             </Grid>
                                         </Grid>
                                     </Grid>
-                                </card:ContentFiller>
+                                </controls:ContentFiller>
                             </GridViewItem>
                         </DataTemplate>
                     </ItemsRepeater.ItemTemplate>
