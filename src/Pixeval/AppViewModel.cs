@@ -39,9 +39,7 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval;
 
-public class AppViewModel : AutoActivateObservableRecipient,
-    IRecipient<ApplicationExitingMessage>,
-    IRecipient<LoginCompletedMessage>
+public class AppViewModel : AutoActivateObservableRecipient, IRecipient<ApplicationExitingMessage>, IRecipient<LoginCompletedMessage>
 {
     private bool _activatedByProtocol;
 

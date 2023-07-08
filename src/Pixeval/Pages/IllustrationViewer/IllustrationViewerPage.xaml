@@ -24,6 +24,7 @@
             TintColor="{StaticResource SecondaryAccentColor}"
             TintLuminosityOpacity="0.8"
             TintOpacity="0.8" />
+        <SolidColorBrush x:Key="TransparentBrush" Color="Transparent" />
         <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
         <Thickness x:Key="FullScreenMargin">0</Thickness>
         <converters1:NumberToPercentageConverter x:Key="NumberToPercentageConverter" />
@@ -280,10 +281,10 @@
                 </StackPanel>
             </Grid>
 
-            <Border
+            <Grid
+                x:Name="TitleBarBorder"
                 Height="100"
                 VerticalAlignment="Top"
-                Background="Transparent"
                 PointerEntered="TopCommandBarPointerEntered"
                 PointerExited="TopCommandBarPointerExited">
                 <Grid
@@ -401,7 +402,7 @@
                         </TeachingTip.HeroContent>
                     </TeachingTip>
                 </Grid>
-            </Border>
+            </Grid>
 
             <TeachingTip
                 Title="{x:Bind _viewModel.TeachingTipProperties.Title, Mode=OneWay}"
@@ -422,6 +423,7 @@
                         <Setter Target="TopCommandBarTranslation.Y" Value="0" />
                         <Setter Target="TitleControlButtonsColumn.Width" Value="150" />
                         <Setter Target="TitleBarArea.Background" Value="{x:Null}" />
+                        <Setter Target="TitleBarBorder.Background" Value="{x:Null}" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="FullScreen">
@@ -433,6 +435,7 @@
                         <Setter Target="TopCommandBarTranslation.Y" Value="-48" />
                         <Setter Target="TitleControlButtonsColumn.Width" Value="0" />
                         <Setter Target="TitleBarArea.Background" Value="{StaticResource PixevalAppAcrylicBrush}" />
+                        <Setter Target="TitleBarBorder.Background" Value="{StaticResource TransparentBrush}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

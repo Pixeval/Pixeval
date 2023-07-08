@@ -24,7 +24,7 @@ public sealed partial class ZoomableImage : UserControl
     public ZoomableImage()
     {
         InitializeComponent();
-        ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Cross);
+        ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeAll);
     }
 
     private static void OnSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

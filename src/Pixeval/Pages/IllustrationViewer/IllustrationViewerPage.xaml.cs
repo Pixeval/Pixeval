@@ -125,7 +125,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         {
             imageViewerPageViewModel.ImageLoadingCancellationHandle.Cancel();
         }
-        
+
         _viewModel.Dispose();
     }
 
