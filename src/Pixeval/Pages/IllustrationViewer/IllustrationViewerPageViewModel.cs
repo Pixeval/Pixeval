@@ -263,7 +263,6 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
         GenerateWebLinkCommand.ExecuteRequested += GenerateWebLinkCommandOnExecuteRequested;
         OpenInWebBrowserCommand.ExecuteRequested += OpenInWebBrowserCommandOnExecuteRequested;
-        ShareCommand.ExecuteRequested += ShareCommandOnExecuteRequested;
 
         SetAsLockScreenCommand.CanExecuteRequested += SetAsLockScreenCommandOnCanExecuteRequested;
         SetAsLockScreenCommand.ExecuteRequested += SetAsLockScreenCommandOnExecuteRequested;
@@ -341,18 +340,6 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         args.CanExecute = !IsUgoira && Current.LoadingCompletedSuccessfully;
     }
 
-    private void ShareCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        if (Current.LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true })
-        {
-            TeachingTipProperties.ShowAndHide(IllustrationViewerPageResources.CannotShareImageForNowTitle, TeachingTipSeverity.Warning,
-                IllustrationViewerPageResources.CannotShareImageForNowContent);
-            return;
-        }
-
-        UIHelper.ShowShareUI();
-    }
-
     private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(Current.IllustrationViewModel.Id));
@@ -413,7 +400,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     public ImageViewerPageViewModel Next()
     {
-        ++CurrentIndex; 
+        ++CurrentIndex;
         Current = ImageViewerPageViewModels![CurrentIndex];
         return Current;
     }

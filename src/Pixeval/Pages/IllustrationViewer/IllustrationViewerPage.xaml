@@ -356,7 +356,10 @@
                             Command="{x:Bind _viewModel.ShowQrCodeCommand}"
                             SizeChanged="CommandBarElementOnSizeChanged"
                             Tapped="ShowQrCodeOnTapped" />
-                        <AppBarButton Command="{x:Bind _viewModel.ShareCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
+                        <AppBarButton
+                            Command="{x:Bind _viewModel.ShareCommand}"
+                            SizeChanged="CommandBarElementOnSizeChanged"
+                            Tapped="ShareOnTapped" />
                     </CommandBar>
                     <CommandBar
                         x:Name="IllustrationViewerSubCommandBar"

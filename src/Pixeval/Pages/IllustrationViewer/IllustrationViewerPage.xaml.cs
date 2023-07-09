@@ -63,40 +63,11 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private const double TitleBarHeight = 48;
 
-    private readonly AsyncLatch<(CompositeTransform, double scale)> _zoomingAnimation;
-
     private readonly AsyncLatch _collapseThumbnailList;
-
-    private static readonly EasingFunctionBase _exponentialEasingFunction = new ExponentialEase
-    {
-        EasingMode = EasingMode.EaseOut,
-        Exponent = 12
-    };
 
     public IllustrationViewerPage()
     {
         InitializeComponent();
-        var dataTransferManager = UIHelper.GetDataTransferManager();
-        dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
-        _zoomingAnimation = new(tuple =>
-        {
-            var (transform, scale) = tuple;
-            var translateXAnimation = transform.CreateDoubleAnimation(
-                nameof(CompositeTransform.ScaleX),
-                new Duration(TimeSpan.FromMilliseconds(500)),
-                _exponentialEasingFunction,
-                from: transform.ScaleX,
-                to: scale);
-
-            var translateYAnimation = transform.CreateDoubleAnimation(
-                nameof(CompositeTransform.ScaleY),
-                new Duration(TimeSpan.FromMilliseconds(500)),
-                _exponentialEasingFunction,
-                from: transform.ScaleY,
-                to: scale);
-            UIHelper.CreateStoryboard(translateXAnimation, translateYAnimation).Begin();
-            return Task.CompletedTask;
-        });
 
         _collapseThumbnailList = new AsyncLatch(async () =>
         {
@@ -108,6 +79,9 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
     {
+        var dataTransferManager = Window.GetDataTransferManager();
+        dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
+
         SidePanelShadow.Receivers.Add(IllustrationPresenterDockPanel);
         CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
         ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
@@ -356,7 +330,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
     private void ThumbnailBorder_OnLoaded(object sender, RoutedEventArgs e)
     {
         var context = sender.GetDataContext<IllustrationViewModel>();
-        if (context.Illustration.Id.ToString() == _viewModel.Current.IllustrationViewModel.Id && _viewModel.Snapshot is [..])
+        if (context.Illustration.Id.ToString() == _viewModel.Current.IllustrationViewModel.Id && _viewModel.Snapshot is [])
         {
             ThumbnailList.ScrollIntoView(context);
             if (_viewModel.Snapshot.IndexOf(context) is var index and not -1)
@@ -405,6 +379,18 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         }
 
         UIHelper.ClipboardSetText(MakoHelper.GenerateIllustrationAppUri(_viewModel.Current.IllustrationViewModel.Id).ToString());
+    }
+
+    private void ShareOnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (_viewModel.Current.LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true })
+        {
+            _viewModel.TeachingTipProperties.ShowAndHide(IllustrationViewerPageResources.CannotShareImageForNowTitle, TeachingTipSeverity.Warning,
+                IllustrationViewerPageResources.CannotShareImageForNowContent);
+            return;
+        }
+
+        Window.ShowShareUI();
     }
 
     private void FullScreenTapped(object sender, TappedRoutedEventArgs e)

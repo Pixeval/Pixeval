@@ -25,7 +25,7 @@
                     <AppBarSeparator />
                     <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.CopyCommand}" />
                     <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.SaveCommand}" />
-                    <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ShareCommand}" />
+                    <!--<AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ShareCommand}" />-->
                     <CommandBarFlyout.SecondaryCommands>
                         <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ZoomInCommand}" />
                         <AppBarButton Command="{x:Bind _viewModel.IllustrationViewerPageViewModel.ZoomOutCommand}" />
