@@ -47,12 +47,8 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Graphics;
 using Windows.Storage.Streams;
-using Microsoft.Xaml.Interactivity;
-using Pixeval.UserControls;
 using WinUI3Utilities;
-using WinUI3Utilities.Attributes;
 using AppContext = Pixeval.AppManagement.AppContext;
-using Microsoft.UI.Xaml.Markup;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -69,6 +65,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
     private IllustrationViewerPageViewModel _viewModel = null!;
 
     private const double TitleBarHeight = 48;
+    private const double NegativeTitleBarHeight = -48;
 
     private readonly AsyncLatch _collapseThumbnailList;
 
@@ -132,26 +129,6 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;
 
-    private void TopCommandBarPointerEntered(object sender, PointerRoutedEventArgs e)
-    {
-        if (_viewModel.IsFullScreen)
-        {
-            TopCommandBarAnimation.From = -TitleBarHeight;
-            TopCommandBarAnimation.To = 0;
-            TopCommandBarStoryboard.Begin();
-        }
-    }
-
-    private void TopCommandBarPointerExited(object sender, PointerRoutedEventArgs e)
-    {
-        if (_viewModel.IsFullScreen)
-        {
-            TopCommandBarAnimation.From = 0;
-            TopCommandBarAnimation.To = -TitleBarHeight;
-            TopCommandBarStoryboard.Begin();
-        }
-    }
-
     private async void OnDataTransferManagerOnDataRequested(DataTransferManager _, DataRequestedEventArgs args)
     {
         // all the illustrations in _viewModels only differ in different image sources
@@ -203,8 +180,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerRiverFlowIllustrationViewViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value + 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
-        NavigateSelf(new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel),
-            new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight });
+        NavigateSelf(new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel));
     }
 
     private void PrevIllustration()
@@ -212,8 +188,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerRiverFlowIllustrationViewViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value - 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
-        NavigateSelf(new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel),
-            new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft });
+        NavigateSelf(new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel));
     }
 
     private void NextButton_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -258,14 +233,11 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
     {
         if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag })
         {
-            IllustrationInfoAndCommentsFrame.Navigate(tag.NavigateTo, tag.Parameter, args.RecommendedNavigationTransitionInfo);
+            _ = IllustrationInfoAndCommentsFrame.Navigate(tag.NavigateTo, tag.Parameter, args.RecommendedNavigationTransitionInfo);
         }
     }
 
-    private void IllustrationInfoAndCommentsSplitView_OnPaneOpenedOrClosed(SplitView sender, object args)
-    {
-        SetTitleBarDragRegion();
-    }
+    private void IllustrationInfoAndCommentsSplitView_OnPaneOpenedOrClosed(SplitView sender, object args) => SetTitleBarDragRegion();
 
     public void SetTitleBarDragRegion()
     {
@@ -319,7 +291,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         if (listView.SelectedItem is IllustrationViewModel viewModel && viewModel.Id != _viewModel.Current.IllustrationViewModel.Id)
         {
             var viewModels = viewModel.GetMangaIllustrationViewModels().ToArray();
-            NavigateSelf(new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModels), new EntranceNavigationTransitionInfo());
+            NavigateSelf(new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModels));
         }
     }
 

@@ -19,10 +19,13 @@
 #endregion
 
 using CommunityToolkit.WinUI.UI;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Attributes;
+using WinUI3Utilities;
+using WinUI3Utilities.Attributes;
 
 
 namespace Pixeval.Util.UI;
@@ -40,7 +43,7 @@ public class FontIconExtension : TextIconExtension
         var fontIcon = new FontIcon
         {
             Glyph = Glyph.GetMetadataOnEnumMember(),
-            FontFamily = FontFamily ?? (WinUI3Utilities.AppHelper.IsWindows11 ? new FontFamily("Segoe Fluent Icons") : new FontFamily("Segoe MDL2 Assets")),
+            FontFamily = FontFamily ?? (WinUI3Utilities.AppHelper.IsWindows11 ? new("Segoe Fluent Icons") : new FontFamily("Segoe MDL2 Assets")),
             FontWeight = FontWeight,
             FontStyle = FontStyle,
             IsTextScaleFactorEnabled = IsTextScaleFactorEnabled,
@@ -58,5 +61,14 @@ public class FontIconExtension : TextIconExtension
         }
 
         return fontIcon;
+    }
+}
+
+[DependencyProperty<FontIconSymbols>("Glyph", DependencyPropertyDefaultValue.UnsetValue, nameof(PropertyChangedCallback))]
+public partial class FontSymbolIcon : FontIcon
+{
+    private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        d.To<FontIcon>().Glyph = e.NewValue.To<FontIconSymbols>().GetMetadataOnEnumMember();
     }
 }

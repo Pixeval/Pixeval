@@ -11,6 +11,8 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Pixeval.Pages.IllustrationViewer"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:media="using:Microsoft.Xaml.Interactions.Media"
+    xmlns:triggers="using:Pixeval.Util.Triggers"
     xmlns:ui="using:Pixeval.Util.UI"
     KeyboardAcceleratorPlacementMode="Hidden"
     Loaded="IllustrationViewerPage_OnLoaded"
@@ -73,19 +75,6 @@
             </Grid>
         </SplitView.Pane>
         <Grid x:Name="IllustrationPresenterDockPanel" HorizontalAlignment="Stretch">
-            <Grid.Resources>
-                <Storyboard x:Name="TopCommandBarStoryboard">
-                    <DoubleAnimation
-                        x:Name="TopCommandBarAnimation"
-                        Storyboard.TargetName="TopCommandBarTranslation"
-                        Storyboard.TargetProperty="Y">
-                        <DoubleAnimation.EasingFunction>
-                            <ExponentialEase EasingMode="EaseOut" Exponent="7" />
-                        </DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                </Storyboard>
-            </Grid.Resources>
-
             <Grid x:Name="ImagePanel" Margin="{StaticResource NormalMargin}">
                 <Frame
                     x:Name="IllustrationImageShowcaseFrame"
@@ -287,19 +276,40 @@
             <Grid
                 x:Name="TitleBarBorder"
                 Height="100"
-                VerticalAlignment="Top"
-                PointerEntered="TopCommandBarPointerEntered"
-                PointerExited="TopCommandBarPointerExited">
+                VerticalAlignment="Top">
                 <interactivity:Interaction.Behaviors>
-                    <core:EventTriggerBehavior EventName="PointerEntered">
-                        <core:ChangePropertyAction PropertyName="Opacity" Value="1" />
-                    </core:EventTriggerBehavior>
-                    <core:EventTriggerBehavior EventName="PointerExited">
-                        <core:ChangePropertyAction
-                            PropertyName="Opacity"
-                            TargetObject="{x:Bind CommandBorder}"
-                            Value="0.7" />
-                    </core:EventTriggerBehavior>
+                    <triggers:EventWithConditionTriggerBehavior EventName="PointerEntered" IsActive="{x:Bind _viewModel.IsFullScreen, Mode=OneWay}">
+                        <media:ControlStoryboardAction>
+                            <media:ControlStoryboardAction.Storyboard>
+                                <Storyboard>
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="TopCommandBarTranslation"
+                                        Storyboard.TargetProperty="Y"
+                                        To="0">
+                                        <DoubleAnimation.EasingFunction>
+                                            <ExponentialEase EasingMode="EaseOut" Exponent="7" />
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </media:ControlStoryboardAction.Storyboard>
+                        </media:ControlStoryboardAction>
+                    </triggers:EventWithConditionTriggerBehavior>
+                    <triggers:EventWithConditionTriggerBehavior EventName="PointerExited" IsActive="{x:Bind _viewModel.IsFullScreen, Mode=OneWay}">
+                        <media:ControlStoryboardAction>
+                            <media:ControlStoryboardAction.Storyboard>
+                                <Storyboard>
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="TopCommandBarTranslation"
+                                        Storyboard.TargetProperty="Y"
+                                        To="{x:Bind local:IllustrationViewerPage.NegativeTitleBarHeight}">
+                                        <DoubleAnimation.EasingFunction>
+                                            <ExponentialEase EasingMode="EaseOut" Exponent="7" />
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </media:ControlStoryboardAction.Storyboard>
+                        </media:ControlStoryboardAction>
+                    </triggers:EventWithConditionTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
                 <Grid
                     x:Name="TitleBarArea"

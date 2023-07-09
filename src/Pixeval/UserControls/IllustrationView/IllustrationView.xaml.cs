@@ -75,18 +75,14 @@ public sealed partial class IllustrationView
 
     public IllustrationViewViewModel ViewModel { get; }
 
-    private async void RemoveBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void ToggleBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         e.Handled = true;
         var viewModel = sender.GetDataContext<IllustrationViewModel>();
-        await viewModel.RemoveBookmarkAsync();
-    }
-
-    private async void PostBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        e.Handled = true;
-        var viewModel = sender.GetDataContext<IllustrationViewModel>();
-        await viewModel.PostPublicBookmarkAsync();
+        if (viewModel.IsBookmarked)
+            await viewModel.RemoveBookmarkAsync();
+        else
+            await viewModel.PostPublicBookmarkAsync();
     }
 
     private void Thumbnail_OnTapped(object sender, TappedRoutedEventArgs e)

@@ -36,6 +36,9 @@ using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 using Windows.Storage.Streams;
+using Windows.UI;
+using Microsoft.UI;
+using Microsoft.UI.Xaml.Media;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.UserControls.IllustrationView;
@@ -80,8 +83,14 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
     public bool IsBookmarked
     {
         get => Illustration.IsBookmarked;
-        set => SetProperty(Illustration.IsBookmarked, value, m => Illustration.IsBookmarked = m);
+        set => SetProperty(Illustration.IsBookmarked, value, m =>
+        {
+            Illustration.IsBookmarked = m;
+            OnPropertyChanged(nameof(BookmarkedColor));
+        });
     }
+
+    public SolidColorBrush BookmarkedColor => new(IsBookmarked ? Colors.Crimson : Color.FromArgb(0x80, 0, 0, 0));
 
     public bool IsSelected
     {
