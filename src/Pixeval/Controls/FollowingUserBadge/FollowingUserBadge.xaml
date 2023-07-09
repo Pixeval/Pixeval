@@ -11,7 +11,7 @@
                         Height="{TemplateBinding Height}"
                         VerticalAlignment="Center"
                         Background="Crimson"
-                        CornerRadius="5">
+                        CornerRadius="{ThemeResource ControlCornerRadius}">
                         <TextBlock
                             x:Uid="/FollowingUserBadge/FollowingTextBlock"
                             Margin="2"

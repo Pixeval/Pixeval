@@ -26,6 +26,6 @@
         <Border
             Margin="100"
             Child="{x:Bind _viewModel.WebView, Mode=OneWay}"
-            CornerRadius="4" />
+            CornerRadius="{ThemeResource ControlCornerRadius}" />
     </Grid>
 </controls:EnhancedWindowPage>

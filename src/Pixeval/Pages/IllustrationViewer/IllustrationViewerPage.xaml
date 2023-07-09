@@ -99,40 +99,52 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="150" />
                     </Grid.ColumnDefinitions>
-                    <Border
+                    <Grid
                         Grid.Column="0"
                         Width="150"
                         Background="Transparent"
-                        PointerEntered="ButtonArea_OnPointerEntered"
-                        PointerExited="ButtonArea_OnPointerExited">
+                        Opacity="0">
+                        <interactivity:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="PointerEntered">
+                                <core:ChangePropertyAction PropertyName="Opacity" Value="1" />
+                            </core:EventTriggerBehavior>
+                            <core:EventTriggerBehavior EventName="PointerExited">
+                                <core:ChangePropertyAction PropertyName="Opacity" Value="0" />
+                            </core:EventTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
                         <Button
                             Width="50"
                             Height="100"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Content="{ui:FontIcon Glyph=ChevronLeft20F743}"
-                            Opacity="0"
                             RightTapped="PrevButton_OnRightTapped"
                             Tapped="PrevButton_OnTapped"
                             Visibility="{x:Bind _viewModel.PrevButtonEnable, Mode=OneWay}" />
-                    </Border>
-                    <Border
+                    </Grid>
+                    <Grid
                         Grid.Column="2"
                         Width="150"
                         Background="Transparent"
-                        PointerEntered="ButtonArea_OnPointerEntered"
-                        PointerExited="ButtonArea_OnPointerExited">
+                        Opacity="0">
+                        <interactivity:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="PointerEntered">
+                                <core:ChangePropertyAction PropertyName="Opacity" Value="1" />
+                            </core:EventTriggerBehavior>
+                            <core:EventTriggerBehavior EventName="PointerExited">
+                                <core:ChangePropertyAction PropertyName="Opacity" Value="0" />
+                            </core:EventTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
                         <Button
                             Width="50"
                             Height="100"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Content="{ui:FontIcon Glyph=ChevronRight20F745}"
-                            Opacity="0"
                             RightTapped="NextButton_OnRightTapped"
                             Tapped="NextButton_OnTapped"
                             Visibility="{x:Bind _viewModel.NextButtonEnable, Mode=OneWay}" />
-                    </Border>
+                    </Grid>
                 </Grid>
 
                 <!--  工具栏的识别区  -->
@@ -141,60 +153,51 @@
                     Margin="0,0,0,20"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Bottom"
-                    Spacing="10">
+                    Spacing="20">
                     <StackPanel.TranslationTransition>
                         <Vector3Transition Duration="0:0:0.300" />
                     </StackPanel.TranslationTransition>
-                    <Grid Margin="0,0,0,10" HorizontalAlignment="Center">
-                        <Rectangle
-                            Width="400"
-                            Height="100"
-                            Fill="Transparent"
-                            Opacity="0">
-                            <interactivity:Interaction.Behaviors>
-                                <core:EventTriggerBehavior EventName="PointerEntered">
-                                    <core:ChangePropertyAction
-                                        PropertyName="Opacity"
-                                        TargetObject="{x:Bind CommandBorder}"
-                                        Value="0.7" />
-                                </core:EventTriggerBehavior>
-                                <core:EventTriggerBehavior EventName="PointerExited">
-                                    <core:ChangePropertyAction
-                                        PropertyName="Opacity"
-                                        TargetObject="{x:Bind CommandBorder}"
-                                        Value="0" />
-                                </core:EventTriggerBehavior>
-                            </interactivity:Interaction.Behaviors>
-                        </Rectangle>
+                    <Grid
+                        Width="400"
+                        Height="100"
+                        Background="Transparent"
+                        Opacity="0">
+                        <Grid.OpacityTransition>
+                            <ScalarTransition />
+                        </Grid.OpacityTransition>
+                        <interactivity:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="PointerEntered">
+                                <core:ChangePropertyAction PropertyName="Opacity" Value="1" />
+                            </core:EventTriggerBehavior>
+                            <core:EventTriggerBehavior EventName="PointerExited">
+                                <core:ChangePropertyAction PropertyName="Opacity" Value="0" />
+                            </core:EventTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
                         <Border
                             x:Name="CommandBorder"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             BorderBrush="{StaticResource SecondaryAccentBorderBrush}"
                             BorderThickness="0.5"
-                            CornerRadius="10"
-                            Opacity="0"
+                            CornerRadius="{ThemeResource ControlCornerRadius}"
+                            Opacity="0.7"
                             Translation="0,0,30">
                             <Border.Shadow>
                                 <ThemeShadow x:Name="CommandBorderDropShadow" />
                             </Border.Shadow>
+                            <Border.OpacityTransition>
+                                <ScalarTransition />
+                            </Border.OpacityTransition>
                             <interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="PointerEntered">
                                     <core:ChangePropertyAction PropertyName="Opacity" Value="1" />
                                 </core:EventTriggerBehavior>
                                 <core:EventTriggerBehavior EventName="PointerExited">
-                                    <core:ChangePropertyAction
-                                        PropertyName="Opacity"
-                                        TargetObject="{x:Bind CommandBorder}"
-                                        Value="0.7" />
+                                    <core:ChangePropertyAction PropertyName="Opacity" Value="0.7" />
                                 </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
-                            <Border.OpacityTransition>
-                                <ScalarTransition />
-                            </Border.OpacityTransition>
                             <CommandBar
                                 Background="{StaticResource BottomCommandSectionBackground}"
-                                CornerRadius="10"
                                 DefaultLabelPosition="Collapsed"
                                 OverflowButtonVisibility="Collapsed">
                                 <AppBarButton
@@ -224,7 +227,7 @@
                         Background="{StaticResource BottomCommandSectionBackground}"
                         BorderBrush="{StaticResource SecondaryAccentBorderBrush}"
                         BorderThickness="0.5"
-                        CornerRadius="15"
+                        CornerRadius="{ThemeResource ControlCornerRadius}"
                         PointerEntered="ThumbnailListGrid_OnPointerEntered"
                         PointerExited="ThumbnailListGrid_OnPointerExited"
                         Translation="0,0,30">
@@ -260,7 +263,7 @@
                                         <Border
                                             Width="78"
                                             Height="78"
-                                            CornerRadius="5"
+                                            CornerRadius="{ThemeResource ControlCornerRadius}"
                                             Loaded="ThumbnailBorder_OnLoaded">
                                             <Border.Background>
                                                 <ImageBrush ImageSource="{x:Bind ThumbnailSource, Mode=OneWay}" Stretch="UniformToFill" />
@@ -271,7 +274,7 @@
                                             Width="80"
                                             Height="80"
                                             BorderBrush="{StaticResource SystemControlHighlightAccentBrush}"
-                                            CornerRadius="5"
+                                            CornerRadius="{ThemeResource ControlCornerRadius}"
                                             EffectiveViewportChanged="ThumbnailList_OnEffectiveViewportChanged" />
                                     </Grid>
                                 </DataTemplate>
@@ -287,6 +290,17 @@
                 VerticalAlignment="Top"
                 PointerEntered="TopCommandBarPointerEntered"
                 PointerExited="TopCommandBarPointerExited">
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="PointerEntered">
+                        <core:ChangePropertyAction PropertyName="Opacity" Value="1" />
+                    </core:EventTriggerBehavior>
+                    <core:EventTriggerBehavior EventName="PointerExited">
+                        <core:ChangePropertyAction
+                            PropertyName="Opacity"
+                            TargetObject="{x:Bind CommandBorder}"
+                            Value="0.7" />
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
                 <Grid
                     x:Name="TitleBarArea"
                     Height="{x:Bind local:IllustrationViewerPage.TitleBarHeight}"

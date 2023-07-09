@@ -65,7 +65,7 @@
                     <Border
                         Grid.Column="0"
                         VerticalAlignment="Top"
-                        CornerRadius="5">
+                        CornerRadius="{ThemeResource ControlCornerRadius}">
                         <Image Source="../../Assets/Images/pixeval-mock.png" Stretch="UniformToFill" />
                     </Border>
                     <StackPanel Grid.Column="1">

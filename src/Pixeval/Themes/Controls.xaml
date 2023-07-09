@@ -10,6 +10,8 @@
         </Style.Setters>
     </Style>
     <x:Double x:Key="PixevalButtonIconSize">12</x:Double>
+    <CornerRadius x:Key="ControlTopCornerRadius">4,4,0,0</CornerRadius>
+    <CornerRadius x:Key="ControlBottomCornerRadius">0,0,4,4</CornerRadius>
     <x:Double x:Key="PixevalButtonIconSmallSize">10</x:Double>
     <Style x:Key="TitleTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontWeight" Value="SemiBold" />

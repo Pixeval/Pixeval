@@ -19,8 +19,12 @@
 #endregion
 
 using System;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Windowing;
@@ -43,9 +47,12 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Graphics;
 using Windows.Storage.Streams;
+using Microsoft.Xaml.Interactivity;
 using Pixeval.UserControls;
 using WinUI3Utilities;
+using WinUI3Utilities.Attributes;
 using AppContext = Pixeval.AppManagement.AppContext;
+using Microsoft.UI.Xaml.Markup;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -164,17 +171,16 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         props.Square30x30Logo = RandomAccessStreamReference.CreateFromStream(await AppContext.GetAssetStreamAsync("Images/logo44x44.ico"));
 
         var thumbnailStream = await _viewModel.Current.IllustrationViewModel.GetThumbnail(ThumbnailUrlOption.SquareMedium);
-        var file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(_viewModel.IsUgoira ? "gif" : "png");
+        props.Thumbnail = RandomAccessStreamReference.CreateFromStream(thumbnailStream);
+        request.Data.SetWebLink(webLink);
 
         if (_viewModel.Current.OriginalImageStream is { } stream)
         {
+            var file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(_viewModel.IsUgoira ? "gif" : "png");
             await stream.SaveToFileAsync(file);
-
-            props.Thumbnail = RandomAccessStreamReference.CreateFromStream(thumbnailStream);
-
             request.Data.SetStorageItems(Enumerates.ArrayOf(file), true);
-            request.Data.SetWebLink(webLink);
-            request.Data.SetApplicationLink(MakoHelper.GenerateIllustrationAppUri(vm.Id));
+            // SetWebLink 后会导致 SetApplicationLink 无效
+            // request.Data.SetApplicationLink(MakoHelper.GenerateIllustrationAppUri(vm.Id));
         }
 
         deferral.Complete();
@@ -276,16 +282,6 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         });
     }
 
-    private void ButtonArea_OnPointerEntered(object sender, PointerRoutedEventArgs e)
-    {
-        sender.To<Border>().Child.Opacity = 1;
-    }
-
-    private void ButtonArea_OnPointerExited(object sender, PointerRoutedEventArgs e)
-    {
-        sender.To<Border>().Child.Opacity = 0;
-    }
-
     private void ThumbnailList_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
     {
         var context = sender.GetDataContext<IllustrationViewModel>();
@@ -296,7 +292,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
         if (sender is Border b && ThumbnailList.SelectedItem is not null)
         {
-            b.BorderThickness = ThumbnailList.SelectedItem == context ? new Thickness(2) : new Thickness(0);
+            b.BorderThickness = new Thickness(ThumbnailList.SelectedItem == context ? 2 : 0);
         }
     }
 

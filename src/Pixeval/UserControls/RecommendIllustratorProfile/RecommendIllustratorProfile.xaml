@@ -11,7 +11,7 @@
 
     <card:CardControl Width="300" Padding="0">
         <StackPanel>
-            <Border Height="100" CornerRadius="5,5,0,0">
+            <Border Height="100" CornerRadius="{StaticResource ControlTopCornerRadius}">
                 <StackPanel
                     x:Name="IllustratorDisplayImages"
                     Width="300"

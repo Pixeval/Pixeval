@@ -79,7 +79,7 @@
                                     </MenuFlyout>
                                 </GridViewItem.ContextFlyout>
                                 <controls:ContentFiller
-                                    CornerRadius="5"
+                                    CornerRadius="{ThemeResource ControlCornerRadius}"
                                     DesiredHeight="{x:Bind illustrationView:IllustrationViewViewModel.StaticItemHeight}"
                                     DesiredWidth="{x:Bind GetDesiredWidth(illustrationView:IllustrationViewViewModel.StaticItemHeight)}">
                                     <controls:ContentFiller.Resources>
@@ -211,7 +211,7 @@
                                     <Grid>
                                         <Border
                                             x:Name="Thumbnail"
-                                            CornerRadius="5"
+                                            CornerRadius="{ThemeResource ControlCornerRadius}"
                                             RenderTransformOrigin="0.5,0.5"
                                             Tapped="Thumbnail_OnTapped">
                                             <Border.Background>
@@ -275,7 +275,7 @@
                                             </Grid.RenderTransform>
                                             <Grid
                                                 Background="White"
-                                                CornerRadius="5"
+                                                CornerRadius="{ThemeResource ControlCornerRadius}"
                                                 Opacity="0.8" />
                                             <CheckBox IsChecked="{x:Bind IsSelected, Mode=TwoWay}" />
                                         </Grid>
@@ -290,7 +290,7 @@
                                                 Grid.Row="0"
                                                 Grid.Column="0"
                                                 Background="Crimson"
-                                                CornerRadius="5"
+                                                CornerRadius="{ThemeResource ControlCornerRadius}"
                                                 Visibility="{x:Bind IsRestricted}">
                                                 <TextBlock
                                                     Margin="3"
@@ -304,7 +304,7 @@
                                                 Grid.Row="0"
                                                 Grid.Column="1"
                                                 Background="Green"
-                                                CornerRadius="5"
+                                                CornerRadius="{ThemeResource ControlCornerRadius}"
                                                 Visibility="{x:Bind IsUgoira}">
                                                 <TextBlock
                                                     Margin="3"

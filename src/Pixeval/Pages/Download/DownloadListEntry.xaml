@@ -25,7 +25,7 @@
                 Height="50"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                CornerRadius="5">
+                CornerRadius="{ThemeResource ControlCornerRadius}">
                 <Grid>
                     <ProgressRing
                         Width="35"
