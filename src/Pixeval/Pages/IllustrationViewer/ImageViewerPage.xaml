@@ -12,7 +12,7 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             ImageScale="{x:Bind _viewModel.Scale, Mode=TwoWay}"
-            Mode="{x:Bind _viewModel.ShowMode, Mode=OneWay}"
+            Mode="{x:Bind _viewModel.ShowMode, Mode=TwoWay}"
             OriginalImageHeight="{x:Bind _viewModel.IllustrationViewModel.Illustration.Height}"
             OriginalImageWidth="{x:Bind _viewModel.IllustrationViewModel.Illustration.Width}"
             Source="{x:Bind _viewModel.OriginalImageSource, Mode=OneWay}">

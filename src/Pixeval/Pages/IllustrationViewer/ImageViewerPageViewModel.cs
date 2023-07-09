@@ -80,7 +80,10 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
     private float _scale = 1;
 
     [ObservableProperty]
-    private ZoomableImageMode _showMode; 
+    [NotifyPropertyChangedFor(nameof(IsFit))]
+    private ZoomableImageMode _showMode;
+
+    public bool IsFit => ShowMode is ZoomableImageMode.Fit;
 
     public ImageViewerPageViewModel(IllustrationViewerPageViewModel illustrationViewerPageViewModel, IllustrationViewModel illustrationViewModel)
     {

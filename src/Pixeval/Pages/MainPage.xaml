@@ -166,10 +166,10 @@
                     x:Uid="/MainPage/SpotlightsTab"
                     Icon="{ui:FontIcon Glyph=MapLayersE81E}"
                     Tag="{x:Bind _viewModel.SpotlightsTag}" />
-                <NavigationViewItem x:Uid="/MainPage/FeedsTab" Icon="{ui:FontIcon Glyph=MobLocationEC43}" />
+                <NavigationViewItem x:Uid="/MainPage/FeedsTab" Icon="{ui:FontIcon Glyph=LocationE81D}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/RecentPostsTab"
-                    Icon="{ui:FontIcon Glyph=DevUpdateECC5}"
+                    Icon="{ui:FontIcon Glyph=CaloriesECAD}"
                     Tag="{x:Bind _viewModel.RecentPostsTag}" />
                 <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />
                 <NavigationViewItem
@@ -179,7 +179,7 @@
                 <NavigationViewItem
                     x:Name="DownloadListTab"
                     x:Uid="/MainPage/DownloadListTab"
-                    Icon="{ui:FontIcon Glyph=CheckListE9D5}" />
+                    Icon="{ui:FontIcon Glyph=DownloadE896}" />
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem x:Uid="/MainPage/HelpTab" Icon="{ui:FontIcon Glyph=HelpE897}" />

@@ -168,7 +168,7 @@
 
                     <labs:SettingsExpander
                         x:Uid="/SettingsPage/ThemeEntry"
-                        HeaderIcon="{ui:FontIcon Glyph=ColorE790}"
+                        HeaderIcon="{ui:FontIcon Glyph=PersonalizeE771}"
                         Tag="{x:Bind pixeval:SettingEntry.Theme}">
                         <labs:SettingsExpander.Description>
                             <HyperlinkButton x:Uid="/SettingsPage/ThemeEntryDescriptionHyperlinkButton" Tapped="ThemeEntryDescriptionHyperlinkButton_OnTapped" />
@@ -185,7 +185,7 @@
 
                     <labs:SettingsExpander
                         x:Uid="/SettingsPage/BackdropEntry"
-                        HeaderIcon="{ui:FontIcon Glyph=TiltDownE80A}"
+                        HeaderIcon="{ui:FontIcon Glyph=ColorE790}"
                         Tag="{x:Bind pixeval:SettingEntry.AppBackdrop}">
                         <labs:SettingsExpander.Items>
                             <labs:SettingsCard ContentAlignment="Left">
@@ -252,7 +252,7 @@
 
                     <labs:SettingsExpander
                         x:Uid="/SettingsPage/ThumbnailDirectionEntry"
-                        HeaderIcon="{ui:FontIcon Glyph=LandscapeOrientationEF6B}"
+                        HeaderIcon="{ui:FontIcon Glyph=TypeE97C}"
                         Tag="{x:Bind pixeval:SettingEntry.ThumbnailDirection}">
                         <labs:SettingsExpander.Items>
                             <labs:SettingsCard ContentAlignment="Left">
@@ -263,7 +263,7 @@
 
                     <labs:SettingsExpander
                         x:Uid="/SettingsPage/IllustrationViewOptionEntry"
-                        HeaderIcon="{ui:FontIcon Glyph=TaskViewE7C4}"
+                        HeaderIcon="{ui:FontIcon Glyph=TilesECA5}"
                         Tag="{x:Bind pixeval:SettingEntry.IllustrationViewOption}">
                         <labs:SettingsExpander.Items>
                             <labs:SettingsCard ContentAlignment="Left">

@@ -395,7 +395,7 @@
                             Width="{StaticResource CollapsedAppBarButtonWidth}"
                             Command="{x:Bind _viewModel.FullScreenCommand}"
                             Tapped="FullScreenTapped" />
-                        <AppBarToggleButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.RestoreResolutionCommand}" />
+                        <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.RestoreResolutionCommand}" />
                         <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.ZoomOutCommand}" />
                         <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.ZoomInCommand}" />
                     </CommandBar>

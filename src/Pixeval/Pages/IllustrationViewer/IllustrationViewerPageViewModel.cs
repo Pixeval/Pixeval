@@ -41,6 +41,7 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.System;
 using Windows.System.UserProfile;
+using Pixeval.Attributes;
 using Pixeval.UserControls;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
@@ -226,14 +227,6 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         FullScreenCommand.NotifyCanExecuteChanged();
     }
 
-    public void FlipRestoreResolutionCommand(ZoomableImageMode mode)
-    {
-        var scaled = mode is ZoomableImageMode.Fit;
-        RestoreResolutionCommand.Label = scaled ? IllustrationViewerPageResources.UniformToFillResolution : IllustrationViewerPageResources.RestoreOriginalResolution;
-        RestoreResolutionCommand.IconSource = scaled ? FontIconSymbols.Webcam2E960.GetFontIconSource() : FontIconSymbols.WebcamE8B8.GetFontIconSource();
-        Current.ShowMode = Current.ShowMode is ZoomableImageMode.Fit ? ZoomableImageMode.Original : ZoomableImageMode.Fit;
-    }
-
     private void InitializeCommands()
     {
         BookmarkCommand =
@@ -270,7 +263,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         SetAsBackgroundCommand.CanExecuteRequested += SetAsBackgroundCommandOnCanExecuteRequested;
         SetAsBackgroundCommand.ExecuteRequested += SetAsBackgroundCommandOnExecuteRequested;
 
-        RestoreResolutionCommand.ExecuteRequested += (_, _) => FlipRestoreResolutionCommand(Current.ShowMode);
+        RestoreResolutionCommand.ExecuteRequested += FlipRestoreResolutionCommand;
     }
 
     private void LoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
@@ -392,10 +385,17 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         }
     }
 
-    private async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs e)
+    private async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         var encoded = await Current.OriginalImageStream!.EncodeBitmapStreamAsync(false);
         UIHelper.ClipboardSetBitmap(encoded);
+    }
+
+    public void FlipRestoreResolutionCommand(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
+        RestoreResolutionCommand.Label = Current.IsFit ? IllustrationViewerPageResources.UniformToFillResolution : IllustrationViewerPageResources.RestoreOriginalResolution;
+        RestoreResolutionCommand.IconSource = Current.IsFit ? FontIconSymbols.FitPageE9A6.GetFontIconSource() : FontIconSymbols.WebcamE8B8.GetFontIconSource();
+        Current.ShowMode = Current.ShowMode is ZoomableImageMode.Fit ? ZoomableImageMode.Original : ZoomableImageMode.Fit;
     }
 
     public ImageViewerPageViewModel Next()
