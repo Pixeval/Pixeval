@@ -150,18 +150,18 @@ public sealed partial class IllustratorPage
 
         ElementCompositionPreview.SetElementChildVisual(OverlayRectangle, _blurredBackgroundImageVisual);
 
-        ExpressionNode progressAnimation = ExpressionFunctions.Clamp(-scrollingProperties.Translation.Y / clampSizeNode, 0, 1);
+        var progressAnimation = ExpressionFunctions.Clamp(-scrollingProperties.Translation.Y / clampSizeNode, 0, 1);
         _props.StartAnimation("progress", progressAnimation);
 
-        ExpressionNode blurAnimation = ExpressionFunctions.Lerp(0, 15, progressNode);
+        var blurAnimation = ExpressionFunctions.Lerp(0, 15, progressNode);
         _blurredBackgroundImageVisual.Brush.Properties.StartAnimation("blur.BlurAmount", blurAnimation);
 
         var headerVisual = ElementCompositionPreview.GetElementVisual(Header);
 
-        ExpressionNode headerTranslationAnimation = ExpressionFunctions.Conditional(progressNode < 1, 0, -scrollingProperties.Translation.Y - clampSizeNode);
+        var headerTranslationAnimation = ExpressionFunctions.Conditional(progressNode < 1, 0, -scrollingProperties.Translation.Y - clampSizeNode);
         headerVisual.StartAnimation("Offset.Y", headerTranslationAnimation);
 
-        ExpressionNode headerScaleAnimation = ExpressionFunctions.Lerp(1, 1.25f, ExpressionFunctions.Clamp(scrollingProperties.Translation.Y / 50, 0, 1));
+        var headerScaleAnimation = ExpressionFunctions.Lerp(1, 1.25f, ExpressionFunctions.Clamp(scrollingProperties.Translation.Y / 50, 0, 1));
         headerVisual.StartAnimation("Scale.X", headerScaleAnimation);
         headerVisual.StartAnimation("Scale.Y", headerScaleAnimation);
 
@@ -169,19 +169,19 @@ public sealed partial class IllustratorPage
 
         var photoVisual = ElementCompositionPreview.GetElementVisual(BackgroundRectangle);
 
-        ExpressionNode imageOpacityAnimation = 1 - progressNode;
+        var imageOpacityAnimation = 1 - progressNode;
         photoVisual.StartAnimation("opacity", imageOpacityAnimation);
 
         var profileVisual = ElementCompositionPreview.GetElementVisual(ProfileImage);
 
-        ExpressionNode scaleAnimation = ExpressionFunctions.Lerp(1, scaleFactorNode, progressNode);
+        var scaleAnimation = ExpressionFunctions.Lerp(1, scaleFactorNode, progressNode);
         profileVisual.StartAnimation("Scale.X", scaleAnimation);
         profileVisual.StartAnimation("Scale.Y", scaleAnimation);
 
         var blurbVisual = ElementCompositionPreview.GetElementVisual(Blurb);
         var subtitleVisual = ElementCompositionPreview.GetElementVisual(SubtitleBlock);
 
-        ExpressionNode textOpacityAnimation = ExpressionFunctions.Clamp(1 - (progressNode * 2), 0, 1);
+        var textOpacityAnimation = ExpressionFunctions.Clamp(1 - (progressNode * 2), 0, 1);
 
         // Start opacity and scale animations on the text block visuals
         blurbVisual.StartAnimation("Opacity", textOpacityAnimation);
@@ -195,10 +195,10 @@ public sealed partial class IllustratorPage
         var textVisual = ElementCompositionPreview.GetElementVisual(TextContainer);
         var buttonVisual = ElementCompositionPreview.GetElementVisual(CommandBar);
 
-        ExpressionNode contentOffsetAnimation = progressNode * 100;
+        var contentOffsetAnimation = progressNode * 100;
         textVisual.StartAnimation("Offset.Y", contentOffsetAnimation);
 
-        ExpressionNode buttonOffsetAnimation = progressNode * -100;
+        var buttonOffsetAnimation = progressNode * -100;
         buttonVisual.StartAnimation("Offset.Y", buttonOffsetAnimation);
     }
 

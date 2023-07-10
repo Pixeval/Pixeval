@@ -27,7 +27,6 @@ using Pixeval.Attributes;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
-
 namespace Pixeval.Util.UI;
 
 [MarkupExtensionReturnType(ReturnType = typeof(FontIcon))]
@@ -43,7 +42,7 @@ public class FontIconExtension : TextIconExtension
         var fontIcon = new FontIcon
         {
             Glyph = Glyph.GetMetadataOnEnumMember(),
-            FontFamily = FontFamily ?? (WinUI3Utilities.AppHelper.IsWindows11 ? new("Segoe Fluent Icons") : new FontFamily("Segoe MDL2 Assets")),
+            FontFamily = FontFamily ?? new(AppHelper.IsWindows11 ? "Segoe Fluent Icons" : "Segoe MDL2 Assets"),
             FontWeight = FontWeight,
             FontStyle = FontStyle,
             IsTextScaleFactorEnabled = IsTextScaleFactorEnabled,
