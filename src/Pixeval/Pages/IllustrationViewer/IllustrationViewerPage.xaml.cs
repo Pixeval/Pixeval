@@ -19,19 +19,14 @@
 #endregion
 
 using System;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using System.Reflection;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
@@ -91,7 +86,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
 
         // IMPORTANT
-        _viewModel.Snapshot = new(_viewModel.ContainerRiverFlowIllustrationViewViewModel!.DataProvider.IllustrationsSource);
+        _viewModel.Snapshot = new(_viewModel.ContainerIllustrationViewViewModel!.DataProvider.IllustrationsSource);
 
         _viewModel.CollapseThumbnailList = () => BottomCommandSection.Translation = new Vector3(0, 120, 0);
         _collapseThumbnailList.RunAsync().Discard();
@@ -109,12 +104,6 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        if (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation") is { } animation)
-        {
-            animation.Configuration = new DirectConnectedAnimationConfiguration();
-            animation.TryStart(IllustrationImageShowcaseFrame);
-        }
-
         if (parameter is IllustrationViewerPageViewModel viewModel)
         {
             _viewModel = viewModel.IsDisposed ? viewModel.CreateNew() : viewModel;
@@ -156,6 +145,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
             var file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(_viewModel.IsUgoira ? "gif" : "png");
             await stream.SaveToFileAsync(file);
             request.Data.SetStorageItems(Enumerates.ArrayOf(file), true);
+            // SetBitmap 无效
             // SetWebLink 后会导致 SetApplicationLink 无效
             // request.Data.SetApplicationLink(MakoHelper.GenerateIllustrationAppUri(vm.Id));
         }
@@ -177,7 +167,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void NextIllustration()
     {
-        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerRiverFlowIllustrationViewViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value + 1];
+        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerIllustrationViewViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value + 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
         NavigateSelf(new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel));
@@ -185,7 +175,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void PrevIllustration()
     {
-        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerRiverFlowIllustrationViewViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value - 1];
+        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerIllustrationViewViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value - 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
         NavigateSelf(new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel));

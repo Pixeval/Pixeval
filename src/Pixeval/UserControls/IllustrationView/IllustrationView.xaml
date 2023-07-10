@@ -19,6 +19,8 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters1:BoolNegationToVisibilityConverter x:Key="BoolNegationToVisibilityConverter" />
     </UserControl.Resources>
     <Grid>
         <ScrollViewer
@@ -99,8 +101,6 @@
                                                 Storyboard.TargetProperty="Opacity"
                                                 To="1"
                                                 Duration="0:0:2" />
-                                        </Storyboard>
-                                        <Storyboard x:Key="ThumbnailScaleOutStoryboard2">
                                             <DoubleAnimation
                                                 EasingFunction="{StaticResource EasingFunction}"
                                                 Storyboard.TargetName="ImageBookmarkButtonGrid"
@@ -113,6 +113,8 @@
                                                 Storyboard.TargetProperty="(Grid.RenderTransform).(ScaleTransform.ScaleY)"
                                                 To="1"
                                                 Duration="0:0:2" />
+                                        </Storyboard>
+                                        <Storyboard x:Key="ThumbnailScaleOutStoryboard2">
                                             <DoubleAnimation
                                                 EasingFunction="{StaticResource EasingFunction}"
                                                 Storyboard.TargetName="ImageSelectionButtonGrid"

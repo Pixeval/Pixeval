@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,7 +40,6 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.System;
 using Windows.System.UserProfile;
-using Pixeval.Attributes;
 using Pixeval.UserControls;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
@@ -145,8 +143,8 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     public IllustrationViewerPageViewModel(IllustrationView illustrationView, params IllustrationViewModel[] illustrations) : this(illustrations)
     {
         IllustrationView = illustrationView;
-        ContainerRiverFlowIllustrationViewViewModel = illustrationView.ViewModel;
-        IllustrationViewModelInTheGridView = ContainerRiverFlowIllustrationViewViewModel.DataProvider.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
+        ContainerIllustrationViewViewModel = illustrationView.ViewModel;
+        IllustrationViewModelInTheGridView = ContainerIllustrationViewViewModel.DataProvider.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
     }
 
     public IllustrationViewerPageViewModel(params IllustrationViewModel[] illustrations)
@@ -170,10 +168,10 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     /// <summary>
     ///     The view model of the GridView that the <see cref="ImageViewerPageViewModels" /> comes from
     /// </summary>
-    public IllustrationViewViewModel? ContainerRiverFlowIllustrationViewViewModel { get; }
+    public IllustrationViewViewModel? ContainerIllustrationViewViewModel { get; }
 
     /// <summary>
-    ///     The <see cref="UserControls.IllustrationView.IllustrationView" /> that owns <see cref="ContainerRiverFlowIllustrationViewViewModel" />
+    ///     The <see cref="UserControls.IllustrationView.IllustrationView" /> that owns <see cref="ContainerIllustrationViewViewModel" />
     /// </summary>
     public IllustrationView? IllustrationView { get; }
 
@@ -187,7 +185,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     /// <summary>
     ///     The index of current illustration in <see cref="UserControls.IllustrationView.IllustrationView" />
     /// </summary>
-    public int? IllustrationIndex => ContainerRiverFlowIllustrationViewViewModel?.DataProvider.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
+    public int? IllustrationIndex => ContainerIllustrationViewViewModel?.DataProvider.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
 
     public ImageViewerPageViewModel[]? ImageViewerPageViewModels { get; }
 
@@ -500,7 +498,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     public Visibility NextButtonEnable => NextButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
 
-    public bool NextIllustrationEnable => ContainerRiverFlowIllustrationViewViewModel is not null && ContainerRiverFlowIllustrationViewViewModel.DataProvider.IllustrationsView.Count > IllustrationIndex + 1;
+    public bool NextIllustrationEnable => ContainerIllustrationViewViewModel is not null && ContainerIllustrationViewViewModel.DataProvider.IllustrationsView.Count > IllustrationIndex + 1;
 
     /// <summary>
     /// <see langword="true"/>: next image<br/>
@@ -527,7 +525,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     public Visibility PrevButtonEnable => PrevButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
 
-    public bool PrevIllustrationEnable => ContainerRiverFlowIllustrationViewViewModel is not null && IllustrationIndex > 0;
+    public bool PrevIllustrationEnable => ContainerIllustrationViewViewModel is not null && IllustrationIndex > 0;
 
     /// <summary>
     /// <see langword="true"/>: prev image<br/>

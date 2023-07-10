@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -24,8 +24,8 @@ using System.Threading;
 namespace Pixeval.Utilities.Threading;
 
 /// <summary>
-///     A re-entrant cancellation helper that prevents the default behaviors of <see cref="CancellationToken" />, which is,
-///     throws an <see cref="OperationCanceledException" />
+/// A re-entrant cancellation helper that prevents the default behaviors of <see cref="CancellationToken" />,
+/// which is, throws an <see cref="OperationCanceledException" />
 /// </summary>
 public class CancellationHandle
 {

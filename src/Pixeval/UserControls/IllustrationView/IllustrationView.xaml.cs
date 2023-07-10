@@ -37,6 +37,7 @@ using Pixeval.Util.UI;
 using Pixeval.Util.UI.Windowing;
 using Windows.System;
 using Windows.UI.Core;
+using Microsoft.UI.Xaml.Data;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -101,7 +102,7 @@ public sealed partial class IllustrationView
         var viewModels = vm.GetMangaIllustrationViewModels().ToArray();
 
         var (width, height) = DetermineWindowSize(viewModels[0].Illustration.Width, viewModels[0].Illustration.Width / (double)viewModels[0].Illustration.Height);
-
+       
         WindowFactory.RootWindow.Fork(out var w)
             .WithLoaded((o, _) => o.To<Frame>().NavigateTo<IllustrationViewerPage>(w,
                 new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo()))
