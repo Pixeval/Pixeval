@@ -123,13 +123,13 @@
   <data name="AddBookmark" xml:space="preserve">
     <value>添加收藏</value>
   </data>
-  <data name="ApplicationThemeDark" xml:space="preserve">
+  <data name="AppThemeDark" xml:space="preserve">
     <value>暗色</value>
   </data>
-  <data name="ApplicationThemeLight" xml:space="preserve">
+  <data name="AppThemeLight" xml:space="preserve">
     <value>亮色</value>
   </data>
-  <data name="ApplicationThemeSystemDefault" xml:space="preserve">
+  <data name="AppThemeSystemDefault" xml:space="preserve">
     <value>跟随系统主题</value>
   </data>
   <data name="CannotFindLoginProxyServerExecutable" xml:space="preserve">

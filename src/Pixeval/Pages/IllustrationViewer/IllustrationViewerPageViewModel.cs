@@ -189,7 +189,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     public ImageViewerPageViewModel[]? ImageViewerPageViewModels { get; }
 
-    public string IllustrationId => FirstIllustrationViewModel?.Illustration.Id.ToString() ?? string.Empty;
+    public string IllustrationId => FirstIllustrationViewModel?.Illustration.Id.ToString() ?? "";
 
     public string? IllustratorName => FirstIllustrationViewModel?.Illustration.User?.Name;
 

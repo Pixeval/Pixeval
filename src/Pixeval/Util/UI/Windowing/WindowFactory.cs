@@ -20,41 +20,38 @@
 
 using System.Collections.Generic;
 using Microsoft.UI.Composition.SystemBackdrops;
-using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Options;
 using Windows.Foundation;
 using Windows.Graphics;
 using WinUI3Utilities;
-using ApplicationTheme = Microsoft.UI.Xaml.ApplicationTheme;
-using AppTheme = Pixeval.Options.ApplicationTheme;
 
 namespace Pixeval.Util.UI.Windowing;
 
 public static class WindowFactory
 {
-    public static EnhancedWindow RootWindow => ForkedWindowsInternal[0];
+    public static EnhancedWindow RootWindow => _forkedWindowsInternal[0];
 
-    private static readonly List<EnhancedWindow> ForkedWindowsInternal = new();
+    private static readonly List<EnhancedWindow> _forkedWindowsInternal = new();
 
-    public static IReadOnlyList<EnhancedWindow> ForkedWindows => ForkedWindowsInternal;
+    public static IReadOnlyList<EnhancedWindow> ForkedWindows => _forkedWindowsInternal;
 
     public static EnhancedWindow Create(out EnhancedWindow window)
     {
         var w = window = new();
-        if (ForkedWindowsInternal.Count is 0)
+        if (_forkedWindowsInternal.Count is 0)
             CurrentContext.Window = window;
-        window.Closed += (_, _) => ForkedWindowsInternal.Remove(w);
-        ForkedWindowsInternal.Add(window);
+        window.Closed += (_, _) => _forkedWindowsInternal.Remove(w);
+        _forkedWindowsInternal.Add(window);
         return window;
     }
 
     public static EnhancedWindow Fork(this EnhancedWindow owner, out EnhancedWindow window)
     {
         var w = window = new(owner);
-        window.Closed += (_, _) => ForkedWindowsInternal.Remove(w);
-        ForkedWindowsInternal.Add(window);
+        window.Closed += (_, _) => _forkedWindowsInternal.Remove(w);
+        _forkedWindowsInternal.Add(window);
         return window;
     }
 
@@ -89,36 +86,32 @@ public static class WindowFactory
         {
             BackdropType = App.AppViewModel.AppSetting.AppBackdrop switch
             {
-                ApplicationBackdropType.None => BackdropType.None,
-                ApplicationBackdropType.Acrylic => BackdropType.Acrylic,
-                ApplicationBackdropType.Mica => BackdropType.Mica,
-                ApplicationBackdropType.MicaAlt => BackdropType.MicaAlt,
-                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ApplicationBackdropType, BackdropType>(App.AppViewModel.AppSetting.AppBackdrop)
+                AppBackdropType.None => BackdropType.None,
+                AppBackdropType.Acrylic => BackdropType.Acrylic,
+                AppBackdropType.Mica => BackdropType.Mica,
+                AppBackdropType.MicaAlt => BackdropType.MicaAlt,
+                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<AppBackdropType, BackdropType>(App.AppViewModel.AppSetting.AppBackdrop)
             },
             TitleBarType = TitleBarType.AppWindow,
             Size = size
         });
-        window.AppWindow.TitleBar.IconShowOptions = IconShowOptions.HideIconAndSystemMenu;// TODO: Remove this line when utilities implemented
         var theme = GetElementTheme(App.AppViewModel.AppSetting.Theme);
         window.SetAppWindowTitleBarButtonColor(theme is ElementTheme.Dark);
-        window.FrameLoaded += (s, _) =>
-        {
-            s.To<FrameworkElement>().RequestedTheme = theme;
-        };
+        window.FrameLoaded += (s, _) => s.To<FrameworkElement>().RequestedTheme = theme;
         return window;
     }
 
-    public static void SetBackdrop(ApplicationBackdropType backdropType)
+    public static void SetBackdrop(AppBackdropType backdropType)
     {
-        foreach (var window in ForkedWindowsInternal)
+        foreach (var window in _forkedWindowsInternal)
         {
             window.SystemBackdrop = backdropType switch
             {
-                ApplicationBackdropType.None => null,
-                ApplicationBackdropType.Acrylic => new DesktopAcrylicBackdrop(),
-                ApplicationBackdropType.Mica => new MicaBackdrop(),
-                ApplicationBackdropType.MicaAlt => new MicaBackdrop { Kind = MicaKind.BaseAlt },
-                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ApplicationBackdropType, SystemBackdrop>(backdropType)
+                AppBackdropType.None => null,
+                AppBackdropType.Acrylic => new DesktopAcrylicBackdrop(),
+                AppBackdropType.Mica => new MicaBackdrop(),
+                AppBackdropType.MicaAlt => new MicaBackdrop { Kind = MicaKind.BaseAlt },
+                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<AppBackdropType, SystemBackdrop>(backdropType)
             };
         }
     }
@@ -127,7 +120,7 @@ public static class WindowFactory
     {
         var t = GetElementTheme(theme);
 
-        foreach (var window in ForkedWindowsInternal)
+        foreach (var window in _forkedWindowsInternal)
         {
             window.Content.To<FrameworkElement>().RequestedTheme = t;
             window.SetAppWindowTitleBarButtonColor(t is ElementTheme.Dark);
@@ -140,12 +133,7 @@ public static class WindowFactory
         {
             AppTheme.Dark => ElementTheme.Dark,
             AppTheme.Light => ElementTheme.Light,
-            AppTheme.SystemDefault => Application.Current.RequestedTheme switch
-            {
-                ApplicationTheme.Light => ElementTheme.Light,
-                ApplicationTheme.Dark => ElementTheme.Dark,
-                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ApplicationTheme, ElementTheme>(Application.Current.RequestedTheme)
-            },
+            AppTheme.SystemDefault => TitleBarHelper.GetDefaultTheme(),
             _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<AppTheme, ElementTheme>(theme)
         };
     }

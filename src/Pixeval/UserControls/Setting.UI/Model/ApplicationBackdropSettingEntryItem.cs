@@ -27,9 +27,9 @@ namespace Pixeval.UserControls.Setting.UI.Model;
 
 public record ApplicationBackdropSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public ApplicationBackdropSettingEntryItem(ApplicationBackdropType item) : base(item)
+    public ApplicationBackdropSettingEntryItem(AppBackdropType item) : base(item)
     {
     }
 
-    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ApplicationBackdropType>().Select(i => new ApplicationBackdropSettingEntryItem(i));
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<AppBackdropType>().Select(i => new ApplicationBackdropSettingEntryItem(i));
 }

@@ -1,8 +1,8 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/ApplicationTheme.cs
+// Copyright (c) 2023 Pixeval/ApplicationBackdropType.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,17 +20,19 @@
 
 using Pixeval.Attributes;
 
-
 namespace Pixeval.Options;
 
-public enum ApplicationTheme
+public enum AppBackdropType
 {
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.ApplicationThemeDark))]
-    Dark,
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.NoneBackdrop))]
+    None,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.ApplicationThemeLight))]
-    Light,
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.AcrylicBackdrop))]
+    Acrylic,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.ApplicationThemeSystemDefault))]
-    SystemDefault
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.MicaBackdrop))]
+    Mica,
+
+    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.MicaAltBackdrop))]
+    MicaAlt
 }

@@ -98,7 +98,7 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
         set => SetProperty(_isSelected, value, this, (_, b) =>
         {
             _isSelected = b;
-            _isSelectedChanged?.Invoke(this, this);
+            IsSelectedChanged?.Invoke(this, this);
         });
     }
 
@@ -107,13 +107,7 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
         return itemHeight * Illustration.Width / Illustration.Height;
     }
 
-    private EventHandler<IllustrationViewModel>? _isSelectedChanged;
-
-    public event EventHandler<IllustrationViewModel> IsSelectedChanged
-    {
-        add => _isSelectedChanged += value;
-        remove => _isSelectedChanged -= value;
-    }
+    public event EventHandler<IllustrationViewModel>? IsSelectedChanged;
 
     public CancellationHandle LoadingThumbnailCancellationHandle { get; }
 

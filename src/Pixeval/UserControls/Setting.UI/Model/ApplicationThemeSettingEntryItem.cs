@@ -27,9 +27,9 @@ namespace Pixeval.UserControls.Setting.UI.Model;
 
 public record ApplicationThemeSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public ApplicationThemeSettingEntryItem(ApplicationTheme item) : base(item)
+    public ApplicationThemeSettingEntryItem(AppTheme item) : base(item)
     {
     }
 
-    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ApplicationTheme>().Select(a => new ApplicationThemeSettingEntryItem(a));
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<AppTheme>().Select(a => new ApplicationThemeSettingEntryItem(a));
 }
