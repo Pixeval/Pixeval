@@ -255,7 +255,7 @@
                                             CornerRadius="{ThemeResource ControlCornerRadius}"
                                             Loaded="ThumbnailBorder_OnLoaded">
                                             <Border.Background>
-                                                <ImageBrush ImageSource="{x:Bind ThumbnailSource, Mode=OneWay}" Stretch="UniformToFill" />
+                                                <ImageBrush ImageSource="{x:Bind ThumbnailMediumSource, Mode=OneWay}" Stretch="UniformToFill" />
                                             </Border.Background>
                                         </Border>
                                         <Border

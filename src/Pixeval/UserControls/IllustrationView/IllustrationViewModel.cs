@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Attributes;
@@ -50,12 +49,13 @@ namespace Pixeval.UserControls.IllustrationView;
 ///     It is responsible for being the elements of the <see cref="AdaptiveGridView" /> to present the thumbnail of an
 ///     illustration
 /// </summary>
-public partial class IllustrationViewModel : IllustrateViewModel<Illustration>
+public class IllustrationViewModel : IllustrateViewModel<Illustration>
 {
     private bool _isSelected;
 
-    [ObservableProperty]
-    private SoftwareBitmapSource? _thumbnailSource;
+    public SoftwareBitmapSource? ThumbnailMediumSource => ThumbnailSources.TryGetValue(ThumbnailUrlOption.Medium, out var value) ? value : null;
+
+    public Dictionary<ThumbnailUrlOption, SoftwareBitmapSource> ThumbnailSources = new();
 
     public IllustrationViewModel(Illustration illustration) : base(illustration)
     {
@@ -145,16 +145,18 @@ public partial class IllustrationViewModel : IllustrateViewModel<Illustration>
 
     public async Task<bool> LoadThumbnailIfRequired(ThumbnailUrlOption thumbnailUrlOption = ThumbnailUrlOption.Medium)
     {
-        if (ThumbnailSource is not null || LoadingThumbnail)
+        if (ThumbnailSources.ContainsKey(thumbnailUrlOption) || LoadingThumbnail)
         {
             return false;
         }
 
         LoadingThumbnail = true;
-        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(Illustrate.GetIllustrationThumbnailCacheKey()) is { } stream)
+        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(Illustrate.GetIllustrationThumbnailCacheKey(thumbnailUrlOption)) is { } stream)
         {
-            ThumbnailSource = await stream.GetSoftwareBitmapSourceAsync(true);
+            ThumbnailSources[thumbnailUrlOption] = await stream.GetSoftwareBitmapSourceAsync(true);
             LoadingThumbnail = false;
+            if (thumbnailUrlOption is ThumbnailUrlOption.Medium)
+                OnPropertyChanged(nameof(ThumbnailMediumSource));
             return true;
         }
 
@@ -162,10 +164,12 @@ public partial class IllustrationViewModel : IllustrateViewModel<Illustration>
         {
             if (App.AppViewModel.AppSetting.UseFileCache)
             {
-                await App.AppViewModel.Cache.TryAddAsync(Illustrate.GetIllustrationThumbnailCacheKey(), ras, TimeSpan.FromDays(1));
+                await App.AppViewModel.Cache.TryAddAsync(Illustrate.GetIllustrationThumbnailCacheKey(thumbnailUrlOption), ras, TimeSpan.FromDays(1));
             }
-            ThumbnailSource = await ras.GetSoftwareBitmapSourceAsync(true);
+            ThumbnailSources[thumbnailUrlOption] = await ras.GetSoftwareBitmapSourceAsync(true);
             LoadingThumbnail = false;
+            if (thumbnailUrlOption is ThumbnailUrlOption.Medium)
+                OnPropertyChanged(nameof(ThumbnailMediumSource));
             return true;
         }
 
@@ -245,8 +249,11 @@ public partial class IllustrationViewModel : IllustrateViewModel<Illustration>
 
     private void DisposeInternal()
     {
-        ThumbnailSource?.Dispose();
-        ThumbnailSource = null;
+        foreach (var (_, softwareBitmapSource) in ThumbnailSources)
+        {
+            softwareBitmapSource?.Dispose();
+        }
+        ThumbnailSources.Clear();
     }
 
     public override void Dispose()

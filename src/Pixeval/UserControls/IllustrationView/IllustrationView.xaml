@@ -179,7 +179,7 @@
                                     </interactivity:Interaction.Behaviors>
                                     <Grid>
                                         <Border CornerRadius="{ThemeResource ControlCornerRadius}">
-                                            <Image Source="{x:Bind ThumbnailSource, Mode=OneWay}" Stretch="UniformToFill" />
+                                            <Image Source="{x:Bind ThumbnailMediumSource, Mode=OneWay}" Stretch="UniformToFill" />
                                         </Border>
                                         <Grid
                                             x:Name="MaskGrid"

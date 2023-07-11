@@ -148,7 +148,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         {
             _disposed = false;
             _ = IllustrationViewModel.LoadThumbnailIfRequired().ContinueWith(
-                _ => OriginalImageSource ??= IllustrationViewModel.ThumbnailSource,
+                _ => OriginalImageSource ??= IllustrationViewModel.ThumbnailMediumSource,
                 TaskScheduler.FromCurrentSynchronizationContext());
             AddHistory();
             await LoadOriginalImage();

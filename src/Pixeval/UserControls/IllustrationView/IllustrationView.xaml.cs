@@ -187,16 +187,13 @@ public sealed partial class IllustrationView
         }
 
         // small tricks to reduce memory consumption
-        switch (context)
+        if (context is { LoadingThumbnail: true })
         {
-            case { LoadingThumbnail: true }:
-                context.LoadingThumbnailCancellationHandle.Cancel();
-                break;
-            case { ThumbnailSource: not null }:
-                var source = context.ThumbnailSource;
-                context.ThumbnailSource = null;
-                source.Dispose();
-                break;
+            context.LoadingThumbnailCancellationHandle.Cancel();
+        }
+        else if (context.ThumbnailSources.Remove(ThumbnailUrlOption.Medium, out var source))
+        {
+            source.Dispose();
         }
     }
 

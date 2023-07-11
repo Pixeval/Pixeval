@@ -49,9 +49,6 @@
                     </CommandBarFlyout.SecondaryCommands>
                 </CommandBarFlyout>
             </userControls:ZoomableImage.ContextFlyout>
-            <userControls:ZoomableImage.RenderTransform>
-                <CompositeTransform x:Name="IllustrationOriginalImageRenderTransform" />
-            </userControls:ZoomableImage.RenderTransform>
         </userControls:ZoomableImage>
         <Grid Visibility="{x:Bind _viewModel.GetLoadingMaskVisibility(_viewModel.LoadingOriginalSourceTask), Mode=OneWay}">
             <Rectangle Fill="{ThemeResource PixevalAppAcrylicBrush}" />

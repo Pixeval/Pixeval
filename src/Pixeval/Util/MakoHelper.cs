@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -101,9 +101,9 @@ public static class MakoHelper
         return illustration.GetOriginalUrl() is { } url ? url[url.LastIndexOf(".", StringComparison.Ordinal)..] : string.Empty;
     }
 
-    public static string GetIllustrationThumbnailCacheKey(this Illustration illustration)
+    public static string GetIllustrationThumbnailCacheKey(this Illustration illustration, ThumbnailUrlOption thumbnailUrlOption)
     {
-        return $"thumbnail-{illustration.GetOriginalUrl() ?? illustration.Id.ToString()}";
+        return $"thumbnail-{thumbnailUrlOption}-{illustration.GetOriginalUrl() ?? illustration.Id.ToString()}";
     }
 
     public static string GetIllustrationOriginalImageCacheKey(this Illustration illustration)

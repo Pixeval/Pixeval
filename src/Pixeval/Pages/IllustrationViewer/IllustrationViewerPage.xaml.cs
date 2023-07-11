@@ -211,7 +211,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         var context = sender.GetDataContext<IllustrationViewModel>();
         if (args.BringIntoViewDistanceX <= sender.ActualWidth)
         {
-            _ = context.LoadThumbnailIfRequired();
+            _ = context.LoadThumbnailIfRequired(ThumbnailUrlOption.SquareMedium);
         }
 
         if (sender is Border b && ThumbnailList.SelectedItem is not null)
