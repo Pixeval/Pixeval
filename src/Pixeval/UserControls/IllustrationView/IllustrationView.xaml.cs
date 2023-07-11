@@ -37,7 +37,6 @@ using Pixeval.Util.UI;
 using Pixeval.Util.UI.Windowing;
 using Windows.System;
 using Windows.UI.Core;
-using Microsoft.UI.Xaml.Data;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -62,11 +61,11 @@ public sealed partial class IllustrationView
         {
             if (sender is Predicate<object> predicate)
             {
-                ViewModel.DataProvider.IllustrationsView.Filter = predicate;
+                ViewModel.DataProvider.View.Filter = predicate;
             }
             else
             {
-                ViewModel.DataProvider.IllustrationsView.Refresh();
+                ViewModel.DataProvider.View.Refresh();
             }
             LoadMoreIfNeeded().Discard();
         };
@@ -101,7 +100,7 @@ public sealed partial class IllustrationView
 
         var viewModels = vm.GetMangaIllustrationViewModels().ToArray();
 
-        var (width, height) = DetermineWindowSize(viewModels[0].Illustration.Width, viewModels[0].Illustration.Width / (double)viewModels[0].Illustration.Height);
+        var (width, height) = DetermineWindowSize(viewModels[0].Illustrate.Width, viewModels[0].Illustrate.Width / (double)viewModels[0].Illustrate.Height);
        
         WindowFactory.RootWindow.Fork(out var w)
             .WithLoaded((o, _) => o.To<Frame>().NavigateTo<IllustrationViewerPage>(w,
@@ -202,7 +201,7 @@ public sealed partial class IllustrationView
     {
         // TODO load after being Filtrated
         if (ScrollViewer.ScrollableHeight - LoadingArea.ActualHeight < ScrollViewer.VerticalOffset)
-            await ViewModel.DataProvider.IllustrationsView.LoadMoreItemsAsync(number);
+            await ViewModel.DataProvider.View.LoadMoreItemsAsync(number);
     }
 
     private void BookmarkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)

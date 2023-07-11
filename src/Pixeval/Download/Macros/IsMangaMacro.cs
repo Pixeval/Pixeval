@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -31,6 +31,6 @@ public class IsMangaMacro : IMacro<IllustrationViewModel>.IPredicate
 
     public bool Match(IllustrationViewModel context)
     {
-        return context.Illustration.IsManga();
+        return context.Illustrate.IsManga();
     }
 }

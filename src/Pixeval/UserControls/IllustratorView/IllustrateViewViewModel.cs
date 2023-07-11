@@ -23,19 +23,23 @@ using ABI.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
+using Pixeval.UserControls.Illustrate;
 
 namespace Pixeval.UserControls.IllustratorView;
 
-public abstract partial class AbstractIllustratorViewViewModel : ObservableObject, IDisposable
+public abstract partial class IllustrateViewViewModel<T, TViewModel> : ObservableObject, IDisposable where T : IIllustrate where TViewModel : IllustrateViewModel<T>
 {
     [ObservableProperty]
     private bool _hasNoItems;
 
-    public abstract IIllustratorViewDataProvider DataProvider { get; }
+    /// <summary>
+    /// Avoid calls to <see cref="IDataProvider{T, TViewModel}.ResetAndFillAsync"/>, calls to <see cref="ResetEngineAndFillAsync"/> instead.
+    /// </summary>
+    public abstract IDataProvider<T, TViewModel> DataProvider { get; }
 
     public abstract void Dispose();
 
-    public async Task ResetEngineAndFillAsync(IFetchEngine<User?>? newEngine, int? itemLimit = null)
+    public async Task ResetEngineAndFillAsync(IFetchEngine<T?>? newEngine, int itemLimit = -1)
     {
         HasNoItems = await DataProvider.ResetAndFillAsync(newEngine, itemLimit) is 0;
     }

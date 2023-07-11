@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -32,7 +32,7 @@ public abstract class FetchEngineIncrementalSource<T, TModel> : IIncrementalSour
 
     private readonly IAsyncEnumerator<T> _asyncEnumerator;
 
-    private readonly int? _limit;
+    private readonly int _limit;
 
     private int _yieldedCounter;
 
@@ -40,7 +40,7 @@ public abstract class FetchEngineIncrementalSource<T, TModel> : IIncrementalSour
 
     protected abstract TModel Select(T entity);
 
-    protected FetchEngineIncrementalSource(IAsyncEnumerable<T> asyncEnumerator, int? limit = null)
+    protected FetchEngineIncrementalSource(IAsyncEnumerable<T> asyncEnumerator, int limit = -1)
     {
         _asyncEnumerator = asyncEnumerator.GetAsyncEnumerator();
         _limit = limit;
@@ -53,7 +53,7 @@ public abstract class FetchEngineIncrementalSource<T, TModel> : IIncrementalSour
         var i = 0;
         while (i < pageSize)
         {
-            if (_limit is { } l && _yieldedCounter > l)
+            if (_limit is not -1 && _yieldedCounter > _limit)
             {
                 return result;
             }

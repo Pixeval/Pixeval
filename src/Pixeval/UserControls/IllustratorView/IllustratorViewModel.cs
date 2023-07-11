@@ -37,12 +37,13 @@ using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.Storage.Streams;
+using Pixeval.UserControls.Illustrate;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.UserControls.IllustratorView;
 
-public partial class IllustratorViewModel : ObservableObject, IDisposable
+public partial class IllustratorViewModel : IllustrateViewModel<User>
 {
     // Dominant color of the "No Image" image
     public static readonly SolidColorBrush DefaultAvatarBorderColorBrush = new(UIHelper.ParseHexColor("#D6DEE5"));
@@ -51,13 +52,12 @@ public partial class IllustratorViewModel : ObservableObject, IDisposable
 
     public ObservableTeachingTipProperties TeachingTipProperties { get; } = new();
 
-    public IllustratorViewModel(User user)
+    public IllustratorViewModel(User user) : base(user)
     {
-        User = user;
         _bannerImageTaskCompletionSource = new TaskCompletionSource<SoftwareBitmapSource[]>();
-        IsFollowed = User.UserInfo?.IsFollowed ?? false;
-        Username = User.UserInfo?.Name ?? string.Empty;
-        UserId = User.UserInfo?.Id.ToString() ?? string.Empty;
+        IsFollowed = Illustrate.UserInfo?.IsFollowed ?? false;
+        Username = Illustrate.UserInfo?.Name ?? string.Empty;
+        UserId = Illustrate.UserInfo?.Id.ToString() ?? string.Empty;
 
         SetAvatarAsync().Discard();
         SetBannerSourceAsync().Discard();
@@ -68,9 +68,6 @@ public partial class IllustratorViewModel : ObservableObject, IDisposable
     public PixivSingleUserResponse? UserDetail { get; private set; }
 
     public Task<SoftwareBitmapSource[]> BannerImageTask => _bannerImageTaskCompletionSource.Task;
-
-    [ObservableProperty]
-    private User? _user;
 
     [ObservableProperty]
     private ImageSource? _avatarSource;
@@ -106,14 +103,14 @@ public partial class IllustratorViewModel : ObservableObject, IDisposable
 
     private async Task SetAvatarAsync()
     {
-        var avatar = User!.UserInfo?.ProfileImageUrls?.Medium?.Let(url => App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(url, 100)) ?? Task.FromResult(Result<ImageSource>.OfFailure());
+        var avatar = Illustrate.UserInfo?.ProfileImageUrls?.Medium?.Let(url => App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(url, 100)) ?? Task.FromResult(Result<ImageSource>.OfFailure());
         AvatarSource = await avatar.GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync());
     }
 
     private async Task SetBannerSourceAsync()
     {
         var client = App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi);
-        if (User!.Illusts?.Take(3).ToArray() is { Length: > 0 } illustrations && illustrations.SelectNotNull(c => c.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium)).ToArray() is { Length: > 0 } urls)
+        if (Illustrate.Illusts?.Take(3).ToArray() is { Length: > 0 } illustrations && illustrations.SelectNotNull(c => c.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium)).ToArray() is { Length: > 0 } urls)
         {
             var tasks = await Task.WhenAll(urls.Select(u => client.DownloadAsIRandomAccessStreamAsync(u)));
             if (tasks is [Result<IRandomAccessStream>.Success(var first), ..])
@@ -128,7 +125,7 @@ public partial class IllustratorViewModel : ObservableObject, IDisposable
             return;
         }
 
-        UserDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(User!.UserInfo?.Id.ToString() ?? string.Empty, App.AppViewModel.AppSetting.TargetFilter);
+        UserDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(Illustrate.UserInfo?.Id.ToString() ?? string.Empty, App.AppViewModel.AppSetting.TargetFilter);
         if (UserDetail.UserProfile?.BackgroundImageUrl is { } url && await client.DownloadAsIRandomAccessStreamAsync(url) is Result<IRandomAccessStream>.Success(var stream))
         {
             var managedStream = stream.AsStreamForRead();
@@ -156,7 +153,7 @@ public partial class IllustratorViewModel : ObservableObject, IDisposable
         FollowCommand = new XamlUICommand
         {
             Label = IsFollowed ? IllustratorProfileResources.Unfollow : IllustratorProfileResources.Follow,
-            IconSource = MakoHelper.GetFollowButtonIcon(User!.UserInfo?.IsFollowed ?? false)
+            IconSource = MakoHelper.GetFollowButtonIcon(Illustrate.UserInfo?.IsFollowed ?? false)
         };
 
         GenerateLinkCommand = new XamlUICommand
@@ -221,7 +218,7 @@ public partial class IllustratorViewModel : ObservableObject, IDisposable
         App.AppViewModel.MakoClient.RemoveFollowUserAsync(UserId!);
     }
 
-    public void Dispose()
+    public override void Dispose()
     {
         _bannerImageTaskCompletionSource.Task.ContinueWith(s => s.Dispose());
         BannerImageTask.ContinueWith(i => i.Dispose());

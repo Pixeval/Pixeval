@@ -72,8 +72,8 @@ public sealed partial class IllustratorIllustrationPage : ISortedIllustrationCon
                 if (o is IllustrationViewModel viewModel)
                 {
                     return viewModel.Id.Contains(keyword)
-                           || (viewModel.Illustration.Tags ?? Enumerable.Empty<Tag>()).Any(x => x.Name.Contains(keyword) || (x.TranslatedName?.Contains(keyword) ?? false))
-                           || (viewModel.Illustration.Title?.Contains(keyword) ?? false);
+                           || (viewModel.Illustrate.Tags ?? Enumerable.Empty<Tag>()).Any(x => x.Name.Contains(keyword) || (x.TranslatedName?.Contains(keyword) ?? false))
+                           || (viewModel.Illustrate.Title?.Contains(keyword) ?? false);
                 }
 
                 return false;

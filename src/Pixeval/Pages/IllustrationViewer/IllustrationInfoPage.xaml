@@ -52,7 +52,7 @@
             <!--#endregion-->
             <!--#region Illustration Title-->
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationTitleTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.Current.IllustrationViewModel.Illustration.Title}" />
+            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.Current.IllustrationViewModel.Illustrate.Title}" />
             <!--#endregion-->
             <!--#region Illustration Id-->
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationIdTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
@@ -70,9 +70,9 @@
                 TextWrapping="Wrap" />
             <!--#endregion-->
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationTotalBookmarksTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.Current.IllustrationViewModel.Illustration.TotalBookmarks}" />
+            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.Current.IllustrationViewModel.Illustrate.TotalBookmarks}" />
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationTotalViewsTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
-            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.Current.IllustrationViewModel.Illustration.TotalView}" />
+            <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind _viewModel.Current.IllustrationViewModel.Illustrate.TotalView}" />
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationDimensionTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />
             <TextBlock Style="{StaticResource InfoPageSectionContentTextBlockStyle}" Text="{x:Bind GetIllustrationDimensionText()}" />
             <TextBlock x:Uid="/IllustrationInfoPage/IllustrationUploadDateTextBlock" Style="{StaticResource InfoPageSectionHeaderTextBlockStyle}" />

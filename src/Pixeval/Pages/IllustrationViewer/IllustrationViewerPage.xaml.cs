@@ -86,7 +86,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
 
         // IMPORTANT
-        _viewModel.Snapshot = new(_viewModel.ContainerIllustrationViewViewModel!.DataProvider.IllustrationsSource);
+        _viewModel.Snapshot = new(_viewModel.ContainerIllustrationViewViewModel!.DataProvider.Source);
 
         _viewModel.CollapseThumbnailList = () => BottomCommandSection.Translation = new Vector3(0, 120, 0);
         _collapseThumbnailList.RunAsync().Discard();
@@ -133,7 +133,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         var webLink = MakoHelper.GenerateIllustrationWebUri(vm.Id);
 
         props.Title = IllustrationViewerPageResources.ShareTitleFormatted.Format(vm.Id);
-        props.Description = vm.Illustration.Title;
+        props.Description = vm.Illustrate.Title;
         props.Square30x30Logo = RandomAccessStreamReference.CreateFromStream(await AppContext.GetAssetStreamAsync("Images/logo44x44.ico"));
 
         var thumbnailStream = await _viewModel.Current.IllustrationViewModel.GetThumbnail(ThumbnailUrlOption.SquareMedium);
@@ -167,7 +167,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void NextIllustration()
     {
-        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerIllustrationViewViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value + 1];
+        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerIllustrationViewViewModel!.DataProvider.View[_viewModel.IllustrationIndex!.Value + 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
         NavigateSelf(new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel));
@@ -175,7 +175,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void PrevIllustration()
     {
-        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerIllustrationViewViewModel!.DataProvider.IllustrationsView[_viewModel.IllustrationIndex!.Value - 1];
+        var illustrationViewModel = (IllustrationViewModel)_viewModel.ContainerIllustrationViewViewModel!.DataProvider.View[_viewModel.IllustrationIndex!.Value - 1];
         var viewModel = illustrationViewModel.GetMangaIllustrationViewModels().ToArray();
 
         NavigateSelf(new IllustrationViewerPageViewModel(_viewModel.IllustrationView!, viewModel));
@@ -288,7 +288,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
     private void ThumbnailBorder_OnLoaded(object sender, RoutedEventArgs e)
     {
         var context = sender.GetDataContext<IllustrationViewModel>();
-        if (context.Illustration.Id.ToString() == _viewModel.Current.IllustrationViewModel.Id && _viewModel.Snapshot is [])
+        if (context.Illustrate.Id.ToString() == _viewModel.Current.IllustrationViewModel.Id && _viewModel.Snapshot is [])
         {
             ThumbnailList.ScrollIntoView(context);
             if (_viewModel.Snapshot.IndexOf(context) is var index and not -1)

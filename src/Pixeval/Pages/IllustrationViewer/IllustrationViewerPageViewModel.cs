@@ -144,7 +144,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     {
         IllustrationView = illustrationView;
         ContainerIllustrationViewViewModel = illustrationView.ViewModel;
-        IllustrationViewModelInTheGridView = ContainerIllustrationViewViewModel.DataProvider.IllustrationsView.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
+        IllustrationViewModelInTheGridView = ContainerIllustrationViewViewModel.DataProvider.View.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
     }
 
     public IllustrationViewerPageViewModel(params IllustrationViewModel[] illustrations)
@@ -185,19 +185,19 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     /// <summary>
     ///     The index of current illustration in <see cref="UserControls.IllustrationView.IllustrationView" />
     /// </summary>
-    public int? IllustrationIndex => ContainerIllustrationViewViewModel?.DataProvider.IllustrationsView.IndexOf(IllustrationViewModelInTheGridView);
+    public int? IllustrationIndex => ContainerIllustrationViewViewModel?.DataProvider.View.IndexOf(IllustrationViewModelInTheGridView);
 
     public ImageViewerPageViewModel[]? ImageViewerPageViewModels { get; }
 
-    public string IllustrationId => FirstIllustrationViewModel?.Illustration.Id.ToString() ?? "";
+    public string IllustrationId => FirstIllustrationViewModel?.Illustrate.Id.ToString() ?? "";
 
-    public string? IllustratorName => FirstIllustrationViewModel?.Illustration.User?.Name;
+    public string? IllustratorName => FirstIllustrationViewModel?.Illustrate.User?.Name;
 
-    public string? IllustratorUid => FirstIllustrationViewModel?.Illustration.User?.Id.ToString();
+    public string? IllustratorUid => FirstIllustrationViewModel?.Illustrate.User?.Id.ToString();
 
     public bool IsManga => ImageViewerPageViewModels?.Length > 1;
 
-    public bool IsUgoira => Current.IllustrationViewModel.Illustration.IsUgoira();
+    public bool IsUgoira => Current.IllustrationViewModel.Illustrate.IsUgoira();
 
     public IllustrationViewModel? FirstIllustrationViewModel => FirstImageViewerPageViewModel?.IllustrationViewModel;
 
@@ -434,7 +434,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     public async Task LoadUserProfile()
     {
-        if (FirstIllustrationViewModel!.Illustration.User is { } userInfo && UserProfileImageSource is null)
+        if (FirstIllustrationViewModel!.Illustrate.User is { } userInfo && UserProfileImageSource is null)
         {
             UserInfo = userInfo;
             if (userInfo.ProfileImageUrls?.Medium is { } profileImage)
@@ -498,7 +498,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     public Visibility NextButtonEnable => NextButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
 
-    public bool NextIllustrationEnable => ContainerIllustrationViewViewModel is not null && ContainerIllustrationViewViewModel.DataProvider.IllustrationsView.Count > IllustrationIndex + 1;
+    public bool NextIllustrationEnable => ContainerIllustrationViewViewModel is not null && ContainerIllustrationViewViewModel.DataProvider.View.Count > IllustrationIndex + 1;
 
     /// <summary>
     /// <see langword="true"/>: next image<br/>

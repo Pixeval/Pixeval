@@ -18,41 +18,20 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.UI;
-using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
+using Pixeval.UserControls.IllustratorView;
 
-namespace Pixeval.UserControls.IllustrationView;
+namespace Pixeval.UserControls.Illustrate;
 
-public abstract partial class SortableIllustrationViewViewModel : ObservableObject, IDisposable
+public abstract partial class SortableIllustrateViewViewModel<T, TViewModel> : IllustrateViewViewModel<T, TViewModel> where T : IIllustrate where TViewModel : IllustrateViewModel<T>
 {
-    #region MyRegion
-
-    [ObservableProperty]
-    private bool _hasNoItems;
-
     [ObservableProperty]
     private string? _selectionLabel;
 
     [ObservableProperty]
     private bool _isAnyIllustrationSelected;
-
-    /// <summary>
-    /// Avoid calls to <see cref="IIllustrationViewDataProvider.ResetAndFillAsync"/>, calls to <see cref="ResetEngineAndFillAsync"/> instead.
-    /// </summary>
-    public abstract IIllustrationViewDataProvider DataProvider { get; }
-
-    public async Task ResetEngineAndFillAsync(IFetchEngine<Illustration?>? newEngine, int? itemLimit = null)
-    {
-        HasNoItems = await DataProvider.ResetAndFillAsync(newEngine, itemLimit) == 0;
-    }
-
-    public abstract void Dispose();
-
-    #endregion
 
     public abstract void SetSortDescription(SortDescription description);
 

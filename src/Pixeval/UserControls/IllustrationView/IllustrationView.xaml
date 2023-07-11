@@ -28,7 +28,7 @@
             x:FieldModifier="public"
             ViewChanged="ScrollViewer_ViewChanged">
             <StackPanel>
-                <ItemsRepeater x:Name="IllustrationItemsRepeater" ItemsSource="{x:Bind ViewModel.DataProvider.IllustrationsView}">
+                <ItemsRepeater x:Name="IllustrationItemsRepeater" ItemsSource="{x:Bind ViewModel.DataProvider.View}">
                     <ItemsRepeater.ItemTemplate>
                         <DataTemplate x:DataType="illustrationView:IllustrationViewModel">
                             <GridViewItem

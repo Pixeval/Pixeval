@@ -158,13 +158,13 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
     private async Task LoadOriginalImage()
     {
         var imageClient = App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi);
-        var cacheKey = IllustrationViewModel.Illustration.GetIllustrationOriginalImageCacheKey();
+        var cacheKey = IllustrationViewModel.Illustrate.GetIllustrationOriginalImageCacheKey();
         AdvancePhase(LoadingPhase.CheckingCache);
         if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(cacheKey) is { } stream)
         {
             AdvancePhase(LoadingPhase.LoadingFromCache);
             OriginalImageStream = stream;
-            OriginalImageSource = IllustrationViewModel.Illustration.IsUgoira()
+            OriginalImageSource = IllustrationViewModel.Illustrate.IsUgoira()
                 ? await OriginalImageStream.GetBitmapImageAsync(false)
                 : await stream.EncodeSoftwareBitmapSourceAsync(false);
             LoadingOriginalSourceTask = Task.CompletedTask;

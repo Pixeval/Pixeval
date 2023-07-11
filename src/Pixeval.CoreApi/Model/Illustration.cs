@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -25,7 +25,7 @@ using System.Text.Json.Serialization;
 namespace Pixeval.CoreApi.Model;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
-public record Illustration
+public record Illustration : IIllustrate
 {
     [JsonIgnore]
     public bool FromSpotlight { get; set; }

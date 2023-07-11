@@ -340,7 +340,7 @@
                         MaxWidth="200"
                         VerticalAlignment="Center"
                         FontSize="{StaticResource PixevalContentFontSize}"
-                        Text="{x:Bind _viewModel.IllustrationViewModelInTheGridView.Illustration.Title, Mode=OneWay}"
+                        Text="{x:Bind _viewModel.IllustrationViewModelInTheGridView.Illustrate.Title, Mode=OneWay}"
                         TextTrimming="CharacterEllipsis" />
                     <CommandBar
                         x:Name="IllustrationViewerCommandBar"

@@ -124,7 +124,7 @@ public sealed partial class IllustrationViewCommandBar
 
     private void SelectAllToggleButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        ViewModel.DataProvider.IllustrationsSource.WhereNotNull().ForEach(i => i.IsSelected = true);
+        ViewModel.DataProvider.Source.WhereNotNull().ForEach(i => i.IsSelected = true);
     }
 
     private async void AddAllToBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -213,7 +213,7 @@ public sealed partial class IllustrationViewCommandBar
 
     private void CancelSelectionButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        ViewModel.DataProvider.IllustrationsSource.WhereNotNull().ForEach(i => i.IsSelected = false);
+        ViewModel.DataProvider.Source.WhereNotNull().ForEach(i => i.IsSelected = false);
     }
 
     private void OpenConditionDialogButton_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -253,16 +253,16 @@ public sealed partial class IllustrationViewCommandBar
         {
             if (o is IllustrationViewModel vm)
             {
-                var stringTags = vm.Illustration.Tags?.Select(t => t.Name).WhereNotNull().ToArray() ??
+                var stringTags = vm.Illustrate.Tags?.Select(t => t.Name).WhereNotNull().ToArray() ??
                                  Array.Empty<string>();
                 var result = ExamineExcludeTags(stringTags, excludeTags)
                              && ExamineIncludeTags(stringTags, includeTags)
                              && vm.Bookmark >= leastBookmark
                              && vm.Bookmark <= maximumBookmark
-                             && illustrationName.Match(vm.Illustration.Title)
-                             && illustratorName.Match(vm.Illustration.User?.Name)
+                             && illustrationName.Match(vm.Illustrate.Title)
+                             && illustratorName.Match(vm.Illustrate.User?.Name)
                              && (illustratorId.IsNullOrEmpty() ||
-                                 illustratorId == vm.Illustration.User?.Id.ToString())
+                                 illustratorId == vm.Illustrate.User?.Id.ToString())
                              && (illustrationId.IsNullOrEmpty() || illustrationId == vm.Id)
                              && vm.PublishDate >= publishDateStart
                              && vm.PublishDate <= publishDateEnd;
@@ -302,8 +302,8 @@ public sealed partial class IllustrationViewCommandBar
                 if (o is IllustrationViewModel viewModel)
                 {
                     return viewModel.Id.Contains(text)
-                           || (viewModel.Illustration.Tags ?? Enumerable.Empty<Tag>()).Any(x => x.Name.Contains(text) || (x.TranslatedName?.Contains(text) ?? false))
-                           || (viewModel.Illustration.Title?.Contains(text) ?? false);
+                           || (viewModel.Illustrate.Tags ?? Enumerable.Empty<Tag>()).Any(x => x.Name.Contains(text) || (x.TranslatedName?.Contains(text) ?? false))
+                           || (viewModel.Illustrate.Title?.Contains(text) ?? false);
                 }
 
                 return false;

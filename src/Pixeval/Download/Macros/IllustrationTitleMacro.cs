@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -32,6 +32,6 @@ public class IllustrationTitleMacro : IMacro<IllustrationViewModel>.ITransducer
 
     public string Substitute(IllustrationViewModel context)
     {
-        return context.Illustration.Title?.Let(IOHelper.NormalizePathSegment) ?? MacroParserResources.UnknownIllustrationTitle;
+        return context.Illustrate.Title?.Let(IOHelper.NormalizePathSegment) ?? MacroParserResources.UnknownIllustrationTitle;
     }
 }

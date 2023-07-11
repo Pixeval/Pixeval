@@ -29,31 +29,32 @@ using CommunityToolkit.WinUI.UI;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
+using Pixeval.UserControls.Illustrate;
 using Pixeval.Utilities;
 
 namespace Pixeval.UserControls.IllustrationView;
 
-public class IllustrationViewDataProvider : ObservableObject, IIllustrationViewDataProvider, IDisposable
+public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illustration, IllustrationViewModel>, IDisposable
 {
     public IllustrationViewDataProvider()
     {
-        IllustrationsView = new AdvancedCollectionView(IllustrationsSource);
-        IllustrationsSource.CollectionChanged += OnIllustrationsSourceOnCollectionChanged;
+        View = new AdvancedCollectionView(Source);
+        Source.CollectionChanged += OnIllustrationsSourceOnCollectionChanged;
     }
 
     public IFetchEngine<Illustration?>? FetchEngine { get; set; }
 
-    public AdvancedCollectionView IllustrationsView { get; }
+    public AdvancedCollectionView View { get; }
 
     private ObservableCollection<IllustrationViewModel> _illustrationSource = new();
 
-    public ObservableCollection<IllustrationViewModel> IllustrationsSource
+    public ObservableCollection<IllustrationViewModel> Source
     {
         get => _illustrationSource;
         protected set
         {
             SetProperty(ref _illustrationSource, value);
-            IllustrationsView.Source = value;
+            View.Source = value;
         }
     }
 
@@ -65,53 +66,41 @@ public class IllustrationViewDataProvider : ObservableObject, IIllustrationViewD
         set
         {
             _filter = value;
-            _filterChanged?.Invoke(_filter, EventArgs.Empty);
+            FilterChanged?.Invoke(_filter, EventArgs.Empty);
         }
     }
 
-    private EventHandler? _filterChanged;
-
-    public event EventHandler? FilterChanged
-    {
-        add => _filterChanged += value;
-        remove => _filterChanged -= value;
-    }
+    public event EventHandler? FilterChanged;
 
     public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; set; } = new();
 
     public void DisposeCurrent()
     {
-        foreach (var illustrationViewModel in IllustrationsSource)
+        foreach (var illustrationViewModel in Source)
         {
             illustrationViewModel.Dispose();
         }
 
         SelectedIllustrations.Clear();
-        IllustrationsView.Clear();
+        View.Clear();
         SelectedIllustrations.Clear();
     }
 
-    public virtual Task<int> LoadMore()
-    {
-        //TODO: delete
-        return Task.FromResult(0);
-    }
-
-    public virtual async Task<int> FillAsync(int? itemsLimit = null)
-    {
-        var collection = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, itemsLimit));
-        IllustrationsSource = collection;
-        IllustrationsSource.CollectionChanged += OnIllustrationsSourceOnCollectionChanged;
-        var result = await collection.LoadMoreItemsAsync(20);
-        return (int)result.Count;
-    }
-
-    public Task<int> ResetAndFillAsync(IFetchEngine<Illustration?>? fetchEngine, int? itemLimit = null)
+    public Task<int> ResetAndFillAsync(IFetchEngine<Illustration?>? fetchEngine, int itemLimit = -1)
     {
         FetchEngine?.EngineHandle.Cancel();
         FetchEngine = fetchEngine;
         DisposeCurrent();
         return FillAsync(itemLimit);
+
+        async Task<int> FillAsync(int itemsLimit = -1)
+        {
+            var collection = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, itemsLimit));
+            Source = collection;
+            Source.CollectionChanged += OnIllustrationsSourceOnCollectionChanged;
+            var result = await collection.LoadMoreItemsAsync(20);
+            return (int)result.Count;
+        }
     }
 
     protected virtual void OnIllustrationsSourceOnCollectionChanged(object? _, NotifyCollectionChangedEventArgs args)

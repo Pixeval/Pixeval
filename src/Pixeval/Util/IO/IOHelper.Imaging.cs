@@ -29,6 +29,10 @@ using Pixeval.Utilities;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Webp;
+using SixLabors.ImageSharp.Metadata;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace Pixeval.Util.IO;
 
@@ -85,6 +89,21 @@ public static partial class IOHelper
     /// <returns></returns>
     public static async Task WriteGifBitmapAsync(IRandomAccessStream target, IEnumerable<IRandomAccessStream> frames, int delayInMilliseconds)
     {
+        /*
+        var width = 0;
+        var height = 0;
+
+        using var image = new Image<Rgba32>(width, height);
+
+        foreach (var frame in frames)
+        {
+            using var f = await Image.LoadAsync(frame.AsStream());
+            image.Frames.AddFrame(f.Frames[0]);
+        }
+
+        await image.SaveAsync(target.AsStreamForWrite(), new WebpEncoder());
+        */
+
         var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.GifEncoderId, target);
         await encoder.BitmapProperties.SetPropertiesAsync(new Dictionary<string, BitmapTypedValue> // wtf?
         {

@@ -42,7 +42,7 @@ public class IllustrationVisualizationController : IDisposable
         _visualizer = visualizer;
     }
 
-    public async Task<bool> FillAsync(int? itemsLimit = null)
+    public async Task<bool> FillAsync(int itemsLimit = -1)
     {
         var collection = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, itemsLimit));
         _visualizer.Illustrations = collection;
@@ -51,18 +51,18 @@ public class IllustrationVisualizationController : IDisposable
         return _visualizer.Illustrations.Count > 0;
     }
 
-    public async Task FillAsync(IFetchEngine<Illustration?>? newEngine, int? itemsLimit = null)
+    public async Task FillAsync(IFetchEngine<Illustration?>? newEngine, int itemsLimit = -1)
     {
         FetchEngine = newEngine;
         await FillAsync(itemsLimit);
     }
 
-    public Task<bool> ResetAndFillAsync(IFetchEngine<Illustration?>? newEngine, int? itemLimit = null)
+    public Task<bool> ResetAndFillAsync(IFetchEngine<Illustration?>? newEngine, int itemsLimit = -1)
     {
         FetchEngine?.EngineHandle.Cancel();
         FetchEngine = newEngine;
         _visualizer.DisposeCurrent();
-        return FillAsync(itemLimit);
+        return FillAsync(itemsLimit);
     }
 
     public void Dispose()
