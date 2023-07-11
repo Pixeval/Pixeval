@@ -192,19 +192,19 @@
                                 <AppBarButton
                                     x:Uid="/IllustrationViewerPage/BookmarkButton"
                                     Width="50"
-                                    Command="{x:Bind _viewModel.Current.IllustrationViewerPageViewModel.BookmarkCommand}" />
+                                    Command="{x:Bind _viewModel.BookmarkCommand}" />
                                 <AppBarButton
                                     x:Uid="/IllustrationViewerPage/ZoomInButton"
                                     Width="50"
-                                    Command="{x:Bind _viewModel.Current.IllustrationViewerPageViewModel.ZoomInCommand}" />
+                                    Command="{x:Bind _viewModel.ZoomInCommand}" />
                                 <AppBarButton
                                     x:Uid="/IllustrationViewerPage/ZoomOutButton"
                                     Width="50"
-                                    Command="{x:Bind _viewModel.Current.IllustrationViewerPageViewModel.ZoomOutCommand}" />
+                                    Command="{x:Bind _viewModel.ZoomOutCommand}" />
                                 <AppBarButton
                                     x:Uid="/IllustrationViewerPage/SaveCurrentImageButton"
                                     Width="50"
-                                    Command="{x:Bind _viewModel.Current.IllustrationViewerPageViewModel.SaveCommand}" />
+                                    Command="{x:Bind _viewModel.SaveCommand}" />
                             </CommandBar>
                         </Border>
                     </Grid>
@@ -230,7 +230,7 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             IsMultiSelectCheckBoxEnabled="False"
-                            ItemsSource="{x:Bind _viewModel.Snapshot, Mode=OneWay}"
+                            ItemsSource="{x:Bind _viewModel.ThumbnailListSource}"
                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
                             ScrollViewer.HorizontalScrollMode="Auto"
                             ScrollViewer.IsHorizontalRailEnabled="True"
@@ -340,7 +340,7 @@
                         MaxWidth="200"
                         VerticalAlignment="Center"
                         FontSize="{StaticResource PixevalContentFontSize}"
-                        Text="{x:Bind _viewModel.IllustrationViewModelInTheGridView.Illustrate.Title, Mode=OneWay}"
+                        Text="{x:Bind _viewModel.CurrentIllustration.Illustrate.Title, Mode=OneWay}"
                         TextTrimming="CharacterEllipsis" />
                     <CommandBar
                         x:Name="IllustrationViewerCommandBar"
@@ -407,7 +407,7 @@
                         FontSize="{StaticResource PixevalContentFontSize}"
                         FontWeight="SemiBold"
                         HorizontalTextAlignment="Center"
-                        Text="{x:Bind _viewModel.Current.Scale, Converter={StaticResource NumberToPercentageConverter}, ConverterParameter=2, Mode=OneWay}"
+                        Text="{x:Bind _viewModel.CurrentViewModel.Scale, Converter={StaticResource NumberToPercentageConverter}, ConverterParameter=2, Mode=OneWay}"
                         TextAlignment="Center"
                         TextTrimming="CharacterEllipsis" />
                     <TeachingTip

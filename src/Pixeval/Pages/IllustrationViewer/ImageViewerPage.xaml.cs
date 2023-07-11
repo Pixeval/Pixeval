@@ -38,4 +38,9 @@ public sealed partial class ImageViewerPage
             _viewModel = viewModel;
         }
     }
+
+    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
+    {
+        _viewModel.Dispose();
+    }
 }

@@ -245,8 +245,8 @@ public partial class IllustrationViewModel : IllustrateViewModel<Illustration>
 
     private void DisposeInternal()
     {
-        _thumbnailSource?.Dispose();
-        _thumbnailSource = null;
+        ThumbnailSource?.Dispose();
+        ThumbnailSource = null;
     }
 
     public override void Dispose()

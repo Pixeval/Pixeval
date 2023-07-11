@@ -98,13 +98,16 @@ public sealed partial class IllustrationView
         var vm = sender.GetDataContext<IllustrationViewModel>();
         ItemTapped?.Invoke(this, vm);
 
-        var viewModels = vm.GetMangaIllustrationViewModels().ToArray();
+        var (width, height) = DetermineWindowSize(vm.Illustrate.Width, vm.Illustrate.Width / (double)vm.Illustrate.Height);
 
-        var (width, height) = DetermineWindowSize(viewModels[0].Illustrate.Width, viewModels[0].Illustrate.Width / (double)viewModels[0].Illustrate.Height);
-       
+        var illustrations = ViewModel.DataProvider.Source.ToArray();
+        var index = Array.IndexOf(illustrations, vm);
+
+
         WindowFactory.RootWindow.Fork(out var w)
             .WithLoaded((o, _) => o.To<Frame>().NavigateTo<IllustrationViewerPage>(w,
-                new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo()))
+                new IllustrationViewerPageViewModel(illustrations, index, ViewModel.DataProvider.View.Cast<IllustrationViewModel>()),
+                new SuppressNavigationTransitionInfo()))
             .WithSizeLimit(640, 360)
             .Init(new(width, height))
             .Activate();

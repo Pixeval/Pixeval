@@ -103,9 +103,9 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
 
     public bool LoadingCompletedSuccessfully => LoadingOriginalSourceTask?.IsCompletedSuccessfully ?? false;
 
-    public IllustrationViewModel IllustrationViewModel { get; }
-
     public CancellationHandle ImageLoadingCancellationHandle { get; }
+
+    public IllustrationViewModel IllustrationViewModel { get; }
 
     /// <summary>
     ///     The view model of the <see cref="IllustrationViewerPage" /> that hosts the owner <see cref="ImageViewerPage" />
@@ -229,23 +229,6 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         }
 
         throw new IllustrationSourceNotFoundException(ImageViewerPageResources.CannotFindImageSourceContent);
-    }
-
-    /// <summary>
-    ///     We use the <see cref="IllustrationViewerPageViewModel" /> to remove and add bookmark
-    ///     because the manga have multiple works and those works aside of this one cannot receive
-    ///     the bookmark notification if we use <see cref="IllustrationViewModel" />
-    /// </summary>
-    public void SwitchBookmarkState()
-    {
-        if (IllustrationViewerPageViewModel.FirstIllustrationViewModel?.IsBookmarked is true)
-        {
-            IllustrationViewerPageViewModel.RemoveBookmarkAsync();
-        }
-        else
-        {
-            IllustrationViewerPageViewModel.PostPublicBookmarkAsync();
-        }
     }
 
     public Visibility GetLoadingMaskVisibility(Task? loadingTask)

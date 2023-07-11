@@ -79,7 +79,7 @@ public sealed partial class IllustrationInfoPage
 
     private IEnumerable<Tag> GetIllustrationTagItemSource()
     {
-        return _viewModel.Current.IllustrationViewModel.Illustrate.Tags ?? Enumerable.Empty<Tag>();
+        return _viewModel.CurrentIllustration.Illustrate.Tags ?? Enumerable.Empty<Tag>();
     }
 
     public static string GetMakoTagTranslatedNameText(string? name, string? fallback)
@@ -99,12 +99,12 @@ public sealed partial class IllustrationInfoPage
 
     private string GetIllustrationDimensionText()
     {
-        return _viewModel.Current.IllustrationViewModel.Illustrate.Let(i => $"{i.Width} x {i.Height}") ?? IllustrationInfoPageResources.IllustrationDimensionUnknown;
+        return _viewModel.CurrentIllustration.Illustrate.Let(i => $"{i.Width} x {i.Height}") ?? IllustrationInfoPageResources.IllustrationDimensionUnknown;
     }
 
     private string GetIllustrationUploadDateText()
     {
-        return _viewModel.Current.IllustrationViewModel.Illustrate.CreateDate.ToString("yyyy-M-d HH:mm:ss");
+        return _viewModel.CurrentIllustration.Illustrate.CreateDate.ToString("yyyy-M-d HH:mm:ss");
     }
 
     private readonly Converter _markdownConverter = new(new Config
@@ -115,7 +115,7 @@ public sealed partial class IllustrationInfoPage
 
     private void SetIllustrationCaptionText()
     {
-        var caption = _viewModel.Current.IllustrationViewModel.Illustrate.Caption;
+        var caption = _viewModel.CurrentIllustration.Illustrate.Caption;
         Task.Run(() => string.IsNullOrEmpty(caption) ? IllustrationInfoPageResources.IllustrationCaptionEmpty : _markdownConverter.Convert(caption))
             .ContinueWith(task => IllustrationCaptionMarkdownTextBlock.Text = task.Result, TaskScheduler.FromCurrentSynchronizationContext());
     }

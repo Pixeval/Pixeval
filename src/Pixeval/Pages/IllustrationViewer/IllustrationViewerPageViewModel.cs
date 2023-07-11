@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -49,18 +50,7 @@ namespace Pixeval.Pages.IllustrationViewer;
 public partial class IllustrationViewerPageViewModel : ObservableObject, IDisposable
 {
     [ObservableProperty]
-    private ImageViewerPageViewModel _current = null!;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(NextButtonEnable))]
-    [NotifyPropertyChangedFor(nameof(PrevButtonEnable))]
-    private int _currentIndex;
-
-    [ObservableProperty]
     private bool _isInfoPaneOpen;
-
-    [ObservableProperty]
-    private IllustrationViewModel? _selectedIllustrationViewModel;
 
     /// <summary>
     /// Todo: May need refactor
@@ -88,6 +78,9 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
                 CollapseThumbnailList?.Invoke();
         }
     }
+
+    private bool _timeUp;
+    private bool _pointerNotInArea;
 
     // The reason why we don't put UserProfileImageSource into IllustrationViewModel
     // is because the whole array of Illustrations is just representing the same 
@@ -129,91 +122,240 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         }
     }
 
+    #region Current
+
+    public AdvancedCollectionView ThumbnailListSource { get; }
+
+    public IllustrationViewModel[] Illustrations { get; }
+
+    public IllustrationViewModel CurrentIllustration => Illustrations[CurrentIllustrationIndex];
+
+    public IllustrationViewModel CurrentPage => _pages[CurrentPageIndex];
+
+    public int CurrentIllustrationIndex
+    {
+        get => _currentIllustrationIndex;
+        set
+        {
+            _currentIllustrationIndex = value;
+
+            _pages = CurrentIllustration.Illustrate.PageCount <= 1
+                ? new[] { CurrentIllustration }
+                : CurrentIllustration.Illustrate.MetaPages!
+                    .Select((m, i) =>
+                        new IllustrationViewModel(CurrentIllustration.Illustrate with { ImageUrls = m.ImageUrls })
+                        {
+                            MangaIndex = i
+                        }).ToArray();
+
+            CurrentPageIndex = 0;
+        }
+    }
+
+    public int CurrentPageIndex
+    {
+        get => _currentPageIndex;
+        set
+        {
+            _currentPageIndex = value;
+            OnPropertyChanged(nameof(NextButtonEnable));
+            OnPropertyChanged(nameof(PrevButtonEnable));
+            CurrentViewModel = new(this, CurrentPage);
+        }
+    }
+
+    private int _currentIllustrationIndex;
+    private int _currentPageIndex;
+
+    private IllustrationViewModel[] _pages = null!;
+
     [ObservableProperty]
-    private AdvancedCollectionView? _snapshot;
+    private ImageViewerPageViewModel _currentViewModel = null!;
 
-    private readonly IllustrationViewModel[] _illustrations;
-    private bool _timeUp;
-    private bool _pointerNotInArea;
-
-    public bool IsDisposed { get; set; }
+    #endregion
 
     // illustrations should contains only one item if the illustration is a single
     // otherwise it contains the entire manga data
-    public IllustrationViewerPageViewModel(IllustrationView illustrationView, params IllustrationViewModel[] illustrations) : this(illustrations)
+    public IllustrationViewerPageViewModel(IllustrationViewModel[] illustrations, int currentIllustrationIndex, IEnumerable<IllustrationViewModel>? illustrationsOuter = null)
     {
-        IllustrationView = illustrationView;
-        ContainerIllustrationViewViewModel = illustrationView.ViewModel;
-        IllustrationViewModelInTheGridView = ContainerIllustrationViewViewModel.DataProvider.View.Cast<IllustrationViewModel>().First(model => model.Id == Current.IllustrationViewModel.Id);
-    }
+        IllustrationViewModelsInGridView = new(illustrationsOuter);
+        Illustrations = illustrations;
+        CurrentIllustrationIndex = currentIllustrationIndex;
+        ThumbnailListSource = new(Illustrations);
 
-    public IllustrationViewerPageViewModel(params IllustrationViewModel[] illustrations)
-    {
-        _illustrations = illustrations;
-        ImageViewerPageViewModels = illustrations.Select(i => new ImageViewerPageViewModel(this, i)).ToArray();
-        Current = ImageViewerPageViewModels![CurrentIndex];
         InitializeCommands();
         _ = LoadUserProfile();
     }
 
     /// <summary>
-    /// Copy a new view model
-    /// </summary>
-    /// <returns></returns>
-    public IllustrationViewerPageViewModel CreateNew()
-    {
-        return IllustrationView is not null ? new IllustrationViewerPageViewModel(IllustrationView, _illustrations) : new IllustrationViewerPageViewModel(_illustrations);
-    }
-
-    /// <summary>
-    ///     The view model of the GridView that the <see cref="ImageViewerPageViewModels" /> comes from
-    /// </summary>
-    public IllustrationViewViewModel? ContainerIllustrationViewViewModel { get; }
-
-    /// <summary>
-    ///     The <see cref="UserControls.IllustrationView.IllustrationView" /> that owns <see cref="ContainerIllustrationViewViewModel" />
-    /// </summary>
-    public IllustrationView? IllustrationView { get; }
-
-    /// <summary>
-    ///     The <see cref="IllustrationViewModelInTheGridView" /> in <see cref="UserControls.IllustrationView.IllustrationView" /> that corresponds to
+    ///     The <see cref="IllustrationViewModelsInGridView" /> in <see cref="IllustrationView" /> that corresponds to
     ///     current
     ///     <see cref="IllustrationViewerPageViewModel" />
     /// </summary>
-    public IllustrationViewModel? IllustrationViewModelInTheGridView { get; }
+    public WeakReference<IEnumerable<IllustrationViewModel>?> IllustrationViewModelsInGridView { get; }
+
+    public IllustrationViewModel? CurrentIllustrationViewModelInGridView
+        => IllustrationViewModelsInGridView.TryGetTarget(out var target) ?
+            target.FirstOrDefault(model => model.Id == CurrentIllustration.Id) : null;
+
+    #region Navigation
+
+    public ImageViewerPageViewModel Goto(IllustrationViewModel viewModel)
+    {
+        CurrentIllustrationIndex = Array.IndexOf(Illustrations, viewModel);
+        return CurrentViewModel;
+    }
+
+    public ImageViewerPageViewModel NextPage()
+    {
+        ++CurrentPageIndex;
+        return CurrentViewModel;
+    }
+
+    public ImageViewerPageViewModel PrevPage()
+    {
+        --CurrentPageIndex;
+        return CurrentViewModel;
+    }
+
+    public ImageViewerPageViewModel NextIllustration()
+    {
+        ++CurrentIllustrationIndex;
+        return CurrentViewModel;
+    }
+
+    public ImageViewerPageViewModel PrevIllustration()
+    {
+        --CurrentIllustrationIndex;
+        return CurrentViewModel;
+    }
+
+    public ImageViewerPageViewModel? Next()
+    {
+        return NextButtonAction switch
+        {
+            true => NextPage(),
+            false => NextIllustration(),
+            null => null
+        };
+    }
+
+    public ImageViewerPageViewModel? Prev()
+    {
+        return PrevButtonAction switch
+        {
+            true => PrevPage(),
+            false => PrevIllustration(),
+            null => null
+        };
+    }
+
+    #region Helper Functions
+
+    public Visibility NextButtonEnable => NextButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
+
+    public bool NextIllustrationEnable => Illustrations.Length > CurrentIllustrationIndex + 1;
 
     /// <summary>
-    ///     The index of current illustration in <see cref="UserControls.IllustrationView.IllustrationView" />
+    /// <see langword="true"/>: next page<br/>
+    /// <see langword="false"/>: next illustration<br/>
+    /// <see langword="null"/>: none
     /// </summary>
-    public int? IllustrationIndex => ContainerIllustrationViewViewModel?.DataProvider.View.IndexOf(IllustrationViewModelInTheGridView);
-
-    public ImageViewerPageViewModel[]? ImageViewerPageViewModels { get; }
-
-    public string IllustrationId => FirstIllustrationViewModel?.Illustrate.Id.ToString() ?? "";
-
-    public string? IllustratorName => FirstIllustrationViewModel?.Illustrate.User?.Name;
-
-    public string? IllustratorUid => FirstIllustrationViewModel?.Illustrate.User?.Id.ToString();
-
-    public bool IsManga => ImageViewerPageViewModels?.Length > 1;
-
-    public bool IsUgoira => Current.IllustrationViewModel.Illustrate.IsUgoira();
-
-    public IllustrationViewModel? FirstIllustrationViewModel => FirstImageViewerPageViewModel?.IllustrationViewModel;
-
-    public ImageViewerPageViewModel? FirstImageViewerPageViewModel => ImageViewerPageViewModels?.FirstOrDefault();
-
-    public void Dispose()
+    public bool? NextButtonAction
     {
-        ImageViewerPageViewModels?.ForEach(i => i.Dispose());
-        // The first ImageViewerPageViewModel contains the thumbnail that is used to be displayed in the GridView
-        // disposing of it will also empty the corresponding image in GridView.
-        ImageViewerPageViewModels?.Skip(1).ForEach(i => i.IllustrationViewModel.Dispose());
+        get
+        {
+            if (CurrentPageIndex < _pages.Length - 1)
+            {
+                return true;
+            }
 
-        (UserProfileImageSource as SoftwareBitmapSource)?.Dispose();
-        UserProfileImageSource = null;
-        IsDisposed = true;
+            if (NextIllustrationEnable)
+            {
+                return false;
+            }
+
+            return null;
+        }
     }
+
+    public Visibility PrevButtonEnable => PrevButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
+
+    public bool PrevIllustrationEnable => CurrentIllustrationIndex > 0;
+
+    /// <summary>
+    /// <see langword="true"/>: prev page<br/>
+    /// <see langword="false"/>: prev illustration<br/>
+    /// <see langword="null"/>: none
+    /// </summary>
+    public bool? PrevButtonAction
+    {
+        get
+        {
+            if (CurrentPageIndex > 0)
+            {
+                return true;
+            }
+
+            if (PrevIllustrationEnable)
+            {
+                return false;
+            }
+
+            return null;
+        }
+    }
+
+    #endregion
+
+    #endregion
+
+    public Task PostPublicBookmarkAsync()
+    {
+        // changes the IsBookmarked property of the item that of in the thumbnail list
+        // so the thumbnail item will also receive state update 
+        if (CurrentIllustrationViewModelInGridView is { } viewModel)
+        {
+            viewModel.IsBookmarked = true;
+        }
+
+        return CurrentIllustration.PostPublicBookmarkAsync();
+    }
+
+    public Task RemoveBookmarkAsync()
+    {
+        if (CurrentIllustrationViewModelInGridView is { } viewModel)
+        {
+            viewModel.IsBookmarked = false;
+        }
+
+        return CurrentIllustration.RemoveBookmarkAsync();
+    }
+
+    public async Task LoadUserProfile()
+    {
+        if (CurrentIllustration.Illustrate.User is { } userInfo && UserProfileImageSource is null)
+        {
+            UserInfo = userInfo;
+            if (userInfo.ProfileImageUrls?.Medium is { } profileImage)
+            {
+                UserProfileImageSource = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceResultAsync(profileImage)
+                    .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync());
+            }
+        }
+    }
+
+    public string IllustrationId => CurrentIllustration.Illustrate.Id.ToString();
+
+    public string? IllustratorName => CurrentIllustration.Illustrate.User?.Name;
+
+    public string? IllustratorUid => CurrentIllustration.Illustrate.User?.Id.ToString();
+
+    public bool IsManga => _pages.Length > 1;
+
+    public bool IsUgoira => CurrentIllustration.Illustrate.IsUgoira();
+
+    #region Command
 
     public void UpdateCommandCanExecute()
     {
@@ -228,9 +370,9 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     private void InitializeCommands()
     {
         BookmarkCommand =
-            (FirstIllustrationViewModel!.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark)
+            (CurrentIllustration.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark)
             .GetCommand(
-                MakoHelper.GetBookmarkButtonIconSource(FirstIllustrationViewModel.IsBookmarked),
+                MakoHelper.GetBookmarkButtonIconSource(CurrentIllustration.IsBookmarked),
                 VirtualKeyModifiers.Control, VirtualKey.D);
 
         RestoreResolutionCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
@@ -244,10 +386,10 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
 
         ZoomOutCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        ZoomOutCommand.ExecuteRequested += (_, _) => Current.Zoom(-120);
+        ZoomOutCommand.ExecuteRequested += (_, _) => CurrentViewModel.Zoom(-120);
 
         ZoomInCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        ZoomInCommand.ExecuteRequested += (_, _) => Current.Zoom(120);
+        ZoomInCommand.ExecuteRequested += (_, _) => CurrentViewModel.Zoom(120);
 
         SaveCommand.ExecuteRequested += SaveCommandOnExecuteRequested;
         SaveAsCommand.ExecuteRequested += SaveAsCommandOnExecuteRequested;
@@ -266,24 +408,24 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     private void LoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
     {
-        args.CanExecute = Current.LoadingCompletedSuccessfully;
+        args.CanExecute = CurrentViewModel.LoadingCompletedSuccessfully;
     }
 
     private async void SetAsBackgroundCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        if (Current.OriginalImageStream is null)
+        if (CurrentViewModel.OriginalImageStream is null)
         {
             TeachingTipProperties.ShowAndHide(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, TeachingTipSeverity.Error);
             return;
         }
 
-        var guid = await Current.OriginalImageStream.Sha1Async();
+        var guid = await CurrentViewModel.OriginalImageStream.Sha1Async();
         if (await AppKnownFolders.SavedWallPaper.TryGetFileRelativeToSelfAsync(guid) is null)
         {
             var path = Path.Combine(AppKnownFolders.SavedWallPaper.Self.Path, guid);
             using var scope = App.AppViewModel.AppServicesScope;
             var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
-            var intrinsicTask = await factory.TryCreateIntrinsicAsync(Current.IllustrationViewModel, Current.OriginalImageStream!, path);
+            var intrinsicTask = await factory.TryCreateIntrinsicAsync(CurrentIllustration, CurrentViewModel.OriginalImageStream!, path);
             App.AppViewModel.DownloadManager.QueueTask(intrinsicTask);
             await intrinsicTask.Completion.Task;
         }
@@ -297,19 +439,19 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     private async void SetAsLockScreenCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        if (Current.OriginalImageStream is null)
+        if (CurrentViewModel.OriginalImageStream is null)
         {
             TeachingTipProperties.ShowAndHide(IllustrationViewerPageResources.OriginalmageStreamIsEmptyContent, TeachingTipSeverity.Error);
             return;
         }
 
-        var guid = await Current.OriginalImageStream.Sha1Async();
+        var guid = await CurrentViewModel.OriginalImageStream.Sha1Async();
         if (await AppKnownFolders.SavedWallPaper.TryGetFileRelativeToSelfAsync(guid) is null)
         {
             var path = Path.Combine(AppKnownFolders.SavedWallPaper.Self.Path, guid);
             using var scope = App.AppViewModel.AppServicesScope;
             var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();
-            var intrinsicTask = await factory.TryCreateIntrinsicAsync(Current.IllustrationViewModel, Current.OriginalImageStream!, path);
+            var intrinsicTask = await factory.TryCreateIntrinsicAsync(CurrentIllustration, CurrentViewModel.OriginalImageStream!, path);
             App.AppViewModel.DownloadManager.QueueTask(intrinsicTask);
             await intrinsicTask.Completion.Task;
         }
@@ -323,52 +465,55 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     private void SetAsBackgroundCommandOnCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
     {
-        args.CanExecute = !IsUgoira && Current.LoadingCompletedSuccessfully;
+        args.CanExecute = !IsUgoira && CurrentViewModel.LoadingCompletedSuccessfully;
     }
 
     private void SetAsLockScreenCommandOnCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
     {
-        args.CanExecute = !IsUgoira && Current.LoadingCompletedSuccessfully;
+        args.CanExecute = !IsUgoira && CurrentViewModel.LoadingCompletedSuccessfully;
     }
 
     private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(Current.IllustrationViewModel.Id));
+        await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(CurrentIllustration.Id));
     }
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        var link = MakoHelper.GenerateIllustrationWebUri(Current.IllustrationViewModel.Id).ToString();
+        var link = MakoHelper.GenerateIllustrationWebUri(CurrentIllustration.Id).ToString();
         UIHelper.ClipboardSetText(link);
         TeachingTipProperties.ShowAndHide(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle);
     }
 
     private async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        await Current.IllustrationViewModel.SaveAsAsync();
+        await CurrentIllustration.SaveAsAsync();
     }
 
     private async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        await Current.IllustrationViewModel.SaveAsync();
+        await CurrentIllustration.SaveAsync();
     }
 
     private void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        FirstImageViewerPageViewModel!.SwitchBookmarkState();
+        if (CurrentIllustration.IsBookmarked)
+            RemoveBookmarkAsync();
+        else
+            PostPublicBookmarkAsync();
         // update manually
-        BookmarkCommand.Label = FirstIllustrationViewModel!.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
-        BookmarkCommand.IconSource = MakoHelper.GetBookmarkButtonIconSource(FirstIllustrationViewModel.IsBookmarked);
+        BookmarkCommand.Label = CurrentIllustration.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
+        BookmarkCommand.IconSource = MakoHelper.GetBookmarkButtonIconSource(CurrentIllustration.IsBookmarked);
     }
 
     private void PlayGifCommandOnCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
     {
-        args.CanExecute = IsUgoira && (Current.LoadingOriginalSourceTask?.IsCompletedSuccessfully ?? false);
+        args.CanExecute = IsUgoira && (CurrentViewModel.LoadingOriginalSourceTask?.IsCompletedSuccessfully ?? false);
     }
 
     private void PlayGifCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        var bitmap = Current.OriginalImageSource.To<BitmapImage>();
+        var bitmap = CurrentViewModel.OriginalImageSource.To<BitmapImage>();
         if (bitmap.IsPlaying)
         {
             bitmap.Stop();
@@ -385,65 +530,18 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     private async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        var encoded = await Current.OriginalImageStream!.EncodeBitmapStreamAsync(false);
+        var encoded = await CurrentViewModel.OriginalImageStream!.EncodeBitmapStreamAsync(false);
         UIHelper.ClipboardSetBitmap(encoded);
     }
 
     public void FlipRestoreResolutionCommand(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        RestoreResolutionCommand.Label = Current.IsFit ? IllustrationViewerPageResources.UniformToFillResolution : IllustrationViewerPageResources.RestoreOriginalResolution;
-        RestoreResolutionCommand.IconSource = Current.IsFit ? FontIconSymbols.FitPageE9A6.GetFontIconSource() : FontIconSymbols.WebcamE8B8.GetFontIconSource();
-        Current.ShowMode = Current.ShowMode is ZoomableImageMode.Fit ? ZoomableImageMode.Original : ZoomableImageMode.Fit;
+        RestoreResolutionCommand.Label = CurrentViewModel.IsFit ? IllustrationViewerPageResources.UniformToFillResolution : IllustrationViewerPageResources.RestoreOriginalResolution;
+        RestoreResolutionCommand.IconSource = CurrentViewModel.IsFit ? FontIconSymbols.FitPageE9A6.GetFontIconSource() : FontIconSymbols.WebcamE8B8.GetFontIconSource();
+        CurrentViewModel.ShowMode = CurrentViewModel.ShowMode is ZoomableImageMode.Fit ? ZoomableImageMode.Original : ZoomableImageMode.Fit;
     }
 
-    public ImageViewerPageViewModel Next()
-    {
-        ++CurrentIndex;
-        Current = ImageViewerPageViewModels![CurrentIndex];
-        return Current;
-    }
-
-    public ImageViewerPageViewModel Prev()
-    {
-        --CurrentIndex;
-        Current = ImageViewerPageViewModels![CurrentIndex];
-        return Current;
-    }
-
-    public Task PostPublicBookmarkAsync()
-    {
-        // changes the IsBookmarked property of the item that of in the thumbnail list
-        // so the thumbnail item will also receive state update 
-        if (IllustrationViewModelInTheGridView is not null)
-        {
-            IllustrationViewModelInTheGridView.IsBookmarked = true;
-        }
-
-        return FirstIllustrationViewModel!.PostPublicBookmarkAsync();
-    }
-
-    public Task RemoveBookmarkAsync()
-    {
-        if (IllustrationViewModelInTheGridView is not null)
-        {
-            IllustrationViewModelInTheGridView.IsBookmarked = false;
-        }
-
-        return FirstIllustrationViewModel!.RemoveBookmarkAsync();
-    }
-
-    public async Task LoadUserProfile()
-    {
-        if (FirstIllustrationViewModel!.Illustrate.User is { } userInfo && UserProfileImageSource is null)
-        {
-            UserInfo = userInfo;
-            if (userInfo.ProfileImageUrls?.Medium is { } profileImage)
-            {
-                UserProfileImageSource = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceResultAsync(profileImage)
-                    .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync());
-            }
-        }
-    }
+    #endregion
 
     #region Commands
 
@@ -494,61 +592,14 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     #endregion
 
-    #region Helper Functions
+    public bool IsDisposed { get; set; }
 
-    public Visibility NextButtonEnable => NextButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
-
-    public bool NextIllustrationEnable => ContainerIllustrationViewViewModel is not null && ContainerIllustrationViewViewModel.DataProvider.View.Count > IllustrationIndex + 1;
-
-    /// <summary>
-    /// <see langword="true"/>: next image<br/>
-    /// <see langword="false"/>: next illustration<br/>
-    /// <see langword="null"/>: none
-    /// </summary>
-    public bool? NextButtonAction
+    public void Dispose()
     {
-        get
-        {
-            if (IllustrationView is not null && CurrentIndex < ImageViewerPageViewModels!.Length - 1)
-            {
-                return true;
-            }
+        _pages?.ForEach(i => i.Dispose());
 
-            if (NextIllustrationEnable)
-            {
-                return false;
-            }
-
-            return null;
-        }
+        (UserProfileImageSource as SoftwareBitmapSource)?.Dispose();
+        UserProfileImageSource = null;
+        IsDisposed = true;
     }
-
-    public Visibility PrevButtonEnable => PrevButtonAction is null ? Visibility.Collapsed : Visibility.Visible;
-
-    public bool PrevIllustrationEnable => ContainerIllustrationViewViewModel is not null && IllustrationIndex > 0;
-
-    /// <summary>
-    /// <see langword="true"/>: prev image<br/>
-    /// <see langword="false"/>: prev illustration<br/>
-    /// <see langword="null"/>: none
-    /// </summary>
-    public bool? PrevButtonAction
-    {
-        get
-        {
-            if (IllustrationView is not null && CurrentIndex > 0)
-            {
-                return true;
-            }
-
-            if (PrevIllustrationEnable)
-            {
-                return false;
-            }
-
-            return null;
-        }
-    }
-
-    #endregion
 }
