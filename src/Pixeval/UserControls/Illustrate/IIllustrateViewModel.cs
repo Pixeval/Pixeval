@@ -7,7 +7,7 @@ namespace Pixeval.UserControls.Illustrate;
 public abstract class IllustrateViewModel<T> : ObservableObject, IDisposable where T : IIllustrate
 {
     public T Illustrate { get; }
-    
+
     protected IllustrateViewModel(T illustrate)
     {
         Illustrate = illustrate;

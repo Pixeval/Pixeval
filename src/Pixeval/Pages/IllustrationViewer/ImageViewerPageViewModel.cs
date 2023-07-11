@@ -30,13 +30,13 @@ using Pixeval.Attributes;
 using Pixeval.CoreApi.Net;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
+using Pixeval.UserControls;
+using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 using Windows.Storage.Streams;
-using Pixeval.UserControls;
-using Pixeval.UserControls.IllustrationView;
 
 namespace Pixeval.Pages.IllustrationViewer;
 

@@ -26,13 +26,10 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Utilities;
+using SixLabors.ImageSharp;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Webp;
-using SixLabors.ImageSharp.Metadata;
-using SixLabors.ImageSharp.PixelFormats;
 
 namespace Pixeval.Util.IO;
 

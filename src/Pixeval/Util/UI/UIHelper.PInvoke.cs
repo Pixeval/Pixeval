@@ -19,11 +19,9 @@
 #endregion
 
 using System;
+using Microsoft.UI.Xaml;
 using Pixeval.Interop;
 using Windows.ApplicationModel.DataTransfer;
-using Microsoft.UI.Xaml;
-using Pixeval.Util.UI.Windowing;
-using WinUI3Utilities;
 
 namespace Pixeval.Util.UI;
 

@@ -19,7 +19,6 @@
 #endregion
 
 using Pixeval.UserControls;
-using Pixeval.UserControls.IllustrationView;
 
 namespace Pixeval.Misc;
 

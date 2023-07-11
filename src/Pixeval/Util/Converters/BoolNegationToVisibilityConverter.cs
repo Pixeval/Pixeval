@@ -9,7 +9,7 @@ public class BoolNegationToVisibilityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-       return value.To<bool>() ? Visibility.Collapsed : Visibility.Visible;
+        return value.To<bool>() ? Visibility.Collapsed : Visibility.Visible;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, string language)

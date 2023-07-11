@@ -34,6 +34,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi.Model;
 using Pixeval.Download;
+using Pixeval.UserControls;
 using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util;
 using Pixeval.Util.IO;
@@ -41,7 +42,6 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.System;
 using Windows.System.UserProfile;
-using Pixeval.UserControls;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
