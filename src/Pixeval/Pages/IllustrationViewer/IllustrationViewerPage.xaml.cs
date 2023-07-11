@@ -149,30 +149,42 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void NextButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (_viewModel.Next() is { } vm)
-            Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, vm,
-                new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight });
+        switch (_viewModel.NextButtonAction)
+        {
+            case true:
+                Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.NextPage(),
+                    new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight });
+                break;
+            case false:
+                ++ThumbnailList.SelectedIndex;
+                break;
+            case null: break;
+        }
     }
 
     private void NextButton_OnRightTapped(object sender, RightTappedRoutedEventArgs e)
     {
-        if (_viewModel.NextIllustrationEnable)
-            Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.NextIllustration(),
-                new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight });
+        ++ThumbnailList.SelectedIndex;
     }
 
     private void PrevButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (_viewModel.Prev() is { } vm)
-            Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, vm,
-                new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft });
+        switch (_viewModel.PrevButtonAction)
+        {
+            case true:
+                Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.PrevPage(),
+                    new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft });
+                break;
+            case false:
+                --ThumbnailList.SelectedIndex;
+                break;
+            case null: break;
+        }
     }
 
     private void PrevButton_OnRightTapped(object sender, RightTappedRoutedEventArgs e)
     {
-        if (_viewModel.PrevIllustrationEnable)
-            Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.PrevIllustration(),
-                new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft });
+        --ThumbnailList.SelectedIndex;
     }
 
     private void GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick(TeachingTip sender, object args)
@@ -233,16 +245,27 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
             border.BorderThickness = new Thickness(2);
         }
 
+        var oldIndex = -1;
         if (e.RemovedItems is [IllustrationViewModel removedItem]
             && listView.ContainerFromItem(removedItem) is { } container
             && container.FindDescendant(borderControlName) is Border removedBorder)
         {
             removedBorder.BorderThickness = new Thickness(0);
+            oldIndex = Array.IndexOf(_viewModel.Illustrations, removedItem);
         }
 
         if (listView.SelectedItem is IllustrationViewModel viewModel && viewModel.Id != _viewModel.CurrentIllustration.Id)
         {
-            Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.Goto(viewModel));
+            var info = (NavigationTransitionInfo?)null;
+            if (oldIndex < listView.SelectedIndex && oldIndex is not -1)
+            {
+                info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight };
+            }
+            else if (oldIndex > listView.SelectedIndex)
+            {
+                info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft };
+            }
+            Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.Goto(viewModel), info);
         }
     }
 

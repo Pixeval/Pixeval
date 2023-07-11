@@ -24,7 +24,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.WinUI.UI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -124,8 +123,6 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     #region Current
 
-    public AdvancedCollectionView ThumbnailListSource { get; }
-
     public IllustrationViewModel[] Illustrations { get; }
 
     public IllustrationViewModel CurrentIllustration => Illustrations[CurrentIllustrationIndex];
@@ -181,7 +178,6 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         IllustrationViewModelsInGridView = new(illustrationsOuter);
         Illustrations = illustrations;
         CurrentIllustrationIndex = currentIllustrationIndex;
-        ThumbnailListSource = new(Illustrations);
 
         InitializeCommands();
         _ = LoadUserProfile();
@@ -218,6 +214,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         return CurrentViewModel;
     }
 
+    /*
     public ImageViewerPageViewModel NextIllustration()
     {
         ++CurrentIllustrationIndex;
@@ -229,26 +226,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         --CurrentIllustrationIndex;
         return CurrentViewModel;
     }
-
-    public ImageViewerPageViewModel? Next()
-    {
-        return NextButtonAction switch
-        {
-            true => NextPage(),
-            false => NextIllustration(),
-            null => null
-        };
-    }
-
-    public ImageViewerPageViewModel? Prev()
-    {
-        return PrevButtonAction switch
-        {
-            true => PrevPage(),
-            false => PrevIllustration(),
-            null => null
-        };
-    }
+    */
 
     #region Helper Functions
 

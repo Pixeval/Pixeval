@@ -230,7 +230,7 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             IsMultiSelectCheckBoxEnabled="False"
-                            ItemsSource="{x:Bind _viewModel.ThumbnailListSource}"
+                            ItemsSource="{x:Bind _viewModel.Illustrations}"
                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
                             ScrollViewer.HorizontalScrollMode="Auto"
                             ScrollViewer.IsHorizontalRailEnabled="True"
