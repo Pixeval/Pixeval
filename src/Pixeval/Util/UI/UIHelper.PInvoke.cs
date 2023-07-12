@@ -19,12 +19,9 @@
 #endregion
 
 using System;
-using Windows.ApplicationModel.DataTransfer;
 using Microsoft.UI.Xaml;
-using PInvoke;
 using Pixeval.Interop;
-using WinRT;
-using WinUI3Utilities;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace Pixeval.Util.UI;
 
@@ -40,36 +37,36 @@ public static partial class UIHelper
 
     public static IDataTransferManagerInterop DataTransferManagerInterop => DataTransferManager.As<IDataTransferManagerInterop>();
 
-    public static void SetTaskBarIconProgressState(TaskBarState state)
+    public static void SetTaskBarIconProgressState(this Window window, TaskBarState state)
     {
         if (TaskBarCustomizationSupported)
         {
-            TaskBarList3Instance.SetProgressState((nint)CurrentContext.HWnd, state);
+            TaskBarList3Instance.SetProgressState((nint)window.AppWindow.Id.Value, state);
         }
     }
 
-    public static void SetTaskBarIconProgressValue(ulong progressValue, ulong max)
+    public static void SetTaskBarIconProgressValue(this Window window, ulong progressValue, ulong max)
     {
         if (TaskBarCustomizationSupported)
         {
-            TaskBarList3Instance.SetProgressValue((nint)CurrentContext.HWnd, progressValue, max);
+            TaskBarList3Instance.SetProgressValue((nint)window.AppWindow.Id.Value, progressValue, max);
         }
     }
 
     // see https://github.com/microsoft/microsoft-ui-xaml/issues/4886
-    public static unsafe DataTransferManager GetDataTransferManager()
+    public static unsafe DataTransferManager GetDataTransferManager(this Window window)
     {
         var interop = DataTransferManager.As<IDataTransferManagerInterop>();
         var manager = nint.Zero;
         fixed (Guid* id = &RiId)
         {
-            interop.GetForWindow((nint)CurrentContext.HWnd, id, (void**)&manager);
+            interop.GetForWindow((nint)window.AppWindow.Id.Value, id, (void**)&manager);
             return DataTransferManager.FromAbi(manager);
         }
     }
 
-    public static void ShowShareUI()
+    public static void ShowShareUI(this Window window)
     {
-        DataTransferManagerInterop.ShowShareUIForWindow((nint)CurrentContext.HWnd);
+        DataTransferManagerInterop.ShowShareUIForWindow((nint)window.AppWindow.Id.Value);
     }
 }

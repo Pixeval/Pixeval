@@ -26,16 +26,16 @@ public class DoubleValueAnimation : AbstractValueAnimation<double>
 {
     public DoubleValueAnimation(
         TimeSpan duration,
-        double from, 
+        double from,
         double to,
         IEasingFunction<double>? easingFunction = null) : this(duration, TimeSpan.FromMilliseconds(10), from, to, easingFunction)
     {
-        
+
     }
 
     public DoubleValueAnimation(TimeSpan duration,
         TimeSpan sampleRate,
-        double from, 
+        double from,
         double to,
         IEasingFunction<double>? easingFunction)
     {

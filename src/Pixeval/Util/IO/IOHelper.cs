@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -32,12 +32,12 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
+using Pixeval.Utilities;
 using Windows.Foundation;
 using Windows.Security.Cryptography;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using JetBrains.Annotations;
-using Pixeval.Utilities;
 
 namespace Pixeval.Util.IO;
 
@@ -155,7 +155,7 @@ public static partial class IOHelper
             return null;
         }
 
-        using IRandomAccessStream stream = await file.OpenReadAsync();
+        using var stream = await file.OpenReadAsync();
         using var reader = new DataReader(stream.GetInputStreamAt(0));
         await reader.LoadAsync((uint)stream.Size);
         var bytes = new byte[stream.Size];
@@ -209,7 +209,7 @@ public static partial class IOHelper
     {
         try
         {
-            await using (new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None, 4096, FileOptions.DeleteOnClose)) { }
+            await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None, 4096, FileOptions.DeleteOnClose);
         }
         catch
         {

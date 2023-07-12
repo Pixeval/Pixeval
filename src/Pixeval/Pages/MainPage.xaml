@@ -156,7 +156,7 @@
                     Tag="{x:Bind _viewModel.RankingsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/BookmarksTab"
-                    Icon="{ui:FontIcon Glyph=LibraryE8F1}"
+                    Icon="{ui:FontIcon Glyph=HeartEB51}"
                     Tag="{x:Bind _viewModel.BookmarksTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/FollowingsTab"
@@ -164,12 +164,12 @@
                     Tag="{x:Bind _viewModel.FollowingsTag}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/SpotlightsTab"
-                    Icon="{ui:FontIcon Glyph=MapLayersE81E}"
+                    Icon="{ui:FontIcon Glyph=LibraryE8F1}"
                     Tag="{x:Bind _viewModel.SpotlightsTag}" />
-                <NavigationViewItem x:Uid="/MainPage/FeedsTab" Icon="{ui:FontIcon Glyph=MobLocationEC43}" />
+                <NavigationViewItem x:Uid="/MainPage/FeedsTab" Icon="{ui:FontIcon Glyph=LocationE81D}" />
                 <NavigationViewItem
                     x:Uid="/MainPage/RecentPostsTab"
-                    Icon="{ui:FontIcon Glyph=DevUpdateECC5}"
+                    Icon="{ui:FontIcon Glyph=CaloriesECAD}"
                     Tag="{x:Bind _viewModel.RecentPostsTag}" />
                 <NavigationViewItemHeader x:Uid="/MainPage/DownloadAndHistoriesTab" />
                 <NavigationViewItem
@@ -179,7 +179,7 @@
                 <NavigationViewItem
                     x:Name="DownloadListTab"
                     x:Uid="/MainPage/DownloadListTab"
-                    Icon="{ui:FontIcon Glyph=CheckListE9D5}" />
+                    Icon="{ui:FontIcon Glyph=DownloadE896}" />
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem x:Uid="/MainPage/HelpTab" Icon="{ui:FontIcon Glyph=HelpE897}" />

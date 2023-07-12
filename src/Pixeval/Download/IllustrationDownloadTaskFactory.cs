@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -20,7 +20,6 @@
 
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
@@ -29,6 +28,7 @@ using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
+using Windows.Storage.Streams;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Download;
@@ -53,14 +53,14 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
             manager.Delete(entry => entry.Destination == path);
         }
 
-        ObservableDownloadTask task = context.Illustration.IsUgoira() switch
+        ObservableDownloadTask task = context.Illustrate.IsUgoira() switch
         {
             true => await Functions.Block(async () =>
             {
                 var ugoiraMetadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(context.Id);
                 if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Medium is { } url)
                 {
-                    var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path, DownloadItemType.Ugoira, context.Id, context.Illustration.Title, context.Illustration.User?.Name, url, context.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
+                    var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path, DownloadItemType.Ugoira, context.Id, context.Illustrate.Title, context.Illustrate.User?.Name, url, context.Illustrate.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
                     return new AnimatedIllustrationDownloadTask(downloadHistoryEntry, context, ugoiraMetadata);
                 }
 
@@ -68,7 +68,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
             }),
             false => Functions.Block(() =>
             {
-                var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path, context.IsManga ? DownloadItemType.Manga : DownloadItemType.Illustration, context.Id, context.Illustration.Title, context.Illustration.User?.Name, context.Illustration.GetOriginalUrl()!, context.Illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
+                var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path, context.IsManga ? DownloadItemType.Manga : DownloadItemType.Illustration, context.Id, context.Illustrate.Title, context.Illustrate.User?.Name, context.Illustrate.GetOriginalUrl()!, context.Illustrate.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
                 return new IllustrationDownloadTask(downloadHistoryEntry, context);
             })
         };
@@ -86,7 +86,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
             _ => DownloadItemType.Illustration
         };
         var entry = new DownloadHistoryEntry(DownloadState.Completed, null, rawPath, type, context.Id,
-            context.Illustration.Title, context.Illustration.User?.Name, null, null);
+            context.Illustrate.Title, context.Illustrate.User?.Name, null, null);
         return Task.FromResult<ObservableDownloadTask>(new IntrinsicIllustrationDownloadTask(entry, context, stream));
     }
 }

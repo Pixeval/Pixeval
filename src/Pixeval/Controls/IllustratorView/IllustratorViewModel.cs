@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -27,10 +27,10 @@ using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Pages.IllustrationViewer;
+using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
-using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Controls.IllustratorView;
 
@@ -82,7 +82,7 @@ public partial class IllustratorViewModel : ObservableObject, IIllustrationVisua
     {
         if (AvatarSource != null) return;
         AvatarSource = (await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(AvatarUrl, 60)
-            .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync())!)!;
+            .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync()))!;
     }
 
     public async Task LoadThumbnail()

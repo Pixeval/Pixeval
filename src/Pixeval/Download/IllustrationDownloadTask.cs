@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -21,10 +21,10 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using Pixeval.Database;
 using Pixeval.Util;
 using Pixeval.Util.IO;
+using Windows.Storage.Streams;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Download;
@@ -55,7 +55,7 @@ public class IllustrationDownloadTask : ObservableDownloadTask, IIllustrationVie
             return;
         }
 
-        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(IllustrationViewModel.Illustration.GetIllustrationOriginalImageCacheKey()) is { } stream)
+        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(IllustrationViewModel.Illustrate.GetIllustrationOriginalImageCacheKey()) is { } stream)
         {
             // fast path
             deferral.Complete(false);

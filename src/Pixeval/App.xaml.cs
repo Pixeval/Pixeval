@@ -22,17 +22,17 @@ using System;
 using System.Linq;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
 using Pixeval.AppManagement;
-using Pixeval.Messages;
-using WinUI3Utilities;
-using AppContext = Pixeval.AppManagement.AppContext;
-using Microsoft.UI.Xaml.Controls;
 using Pixeval.Controls;
+using Pixeval.Messages;
 using Pixeval.Pages.Login;
 using Pixeval.Util.UI.Windowing;
+using WinUI3Utilities;
+using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval;
 

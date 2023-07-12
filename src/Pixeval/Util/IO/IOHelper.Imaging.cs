@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -23,12 +23,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Graphics.Imaging;
-using Windows.Storage.Streams;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Utilities;
+using SixLabors.ImageSharp;
+using Windows.Foundation;
+using Windows.Graphics.Imaging;
+using Windows.Storage.Streams;
 
 namespace Pixeval.Util.IO;
 
@@ -85,6 +86,21 @@ public static partial class IOHelper
     /// <returns></returns>
     public static async Task WriteGifBitmapAsync(IRandomAccessStream target, IEnumerable<IRandomAccessStream> frames, int delayInMilliseconds)
     {
+        /*
+        var width = 0;
+        var height = 0;
+
+        using var image = new Image<Rgba32>(width, height);
+
+        foreach (var frame in frames)
+        {
+            using var f = await Image.LoadAsync(frame.AsStream());
+            image.Frames.AddFrame(f.Frames[0]);
+        }
+
+        await image.SaveAsync(target.AsStreamForWrite(), new WebpEncoder());
+        */
+
         var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.GifEncoderId, target);
         await encoder.BitmapProperties.SetPropertiesAsync(new Dictionary<string, BitmapTypedValue> // wtf?
         {
@@ -158,7 +174,8 @@ public static partial class IOHelper
     /// <returns></returns>
     public static async Task<SoftwareBitmap?> GetSoftwareBitmapFromStreamAsync(IRandomAccessStream? imageStream)
     {
-        if (imageStream == null) return null;
+        if (imageStream is null)
+            return null;
         var decoder = await BitmapDecoder.CreateAsync(imageStream);
         return await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
     }

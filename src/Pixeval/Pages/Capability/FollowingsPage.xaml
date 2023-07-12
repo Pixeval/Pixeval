@@ -19,7 +19,7 @@
                 x:Name="IllustratorListView"
                 Grid.Column="0"
                 HorizontalAlignment="Stretch"
-                ItemsSource="{x:Bind ViewModel.DataProvider.IllustratorsView}"
+                ItemsSource="{x:Bind ViewModel.DataProvider.View}"
                 Loaded="IllustratorListView_OnLoaded"
                 ScrollViewer.VerticalScrollBarVisibility="Hidden"
                 SelectionChanged="IllustratorListView_OnSelectionChanged">

@@ -8,12 +8,13 @@
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:misc="using:Pixeval.Pages.Misc"
-    xmlns:model="using:Pixeval.Controls.Setting.UI.Model"
+    xmlns:model1="using:Pixeval.UserControls.Setting.UI.Model"
     xmlns:pixeval="using:Pixeval"
     xmlns:system="using:System"
     xmlns:tokenInput="using:Pixeval.UserControls.TokenInput"
     xmlns:ui="using:Pixeval.Util.UI"
     xmlns:ui1="using:Pixeval.Controls.Setting.UI"
+    xmlns:ui2="using:Pixeval.UserControls.Setting.UI"
     Loaded="SettingsPage_OnLoaded"
     mc:Ignorable="d">
     <Page.Resources>
@@ -64,7 +65,7 @@
                     <Border
                         Grid.Column="0"
                         VerticalAlignment="Top"
-                        CornerRadius="5">
+                        CornerRadius="{ThemeResource ControlCornerRadius}">
                         <Image Source="../../Assets/Images/pixeval-mock.png" Stretch="UniformToFill" />
                     </Border>
                     <StackPanel Grid.Column="1">
@@ -167,15 +168,15 @@
 
                     <labs:SettingsExpander
                         x:Uid="/SettingsPage/ThemeEntry"
-                        HeaderIcon="{ui:FontIcon Glyph=ColorE790}"
+                        HeaderIcon="{ui:FontIcon Glyph=PersonalizeE771}"
                         Tag="{x:Bind pixeval:SettingEntry.Theme}">
                         <labs:SettingsExpander.Description>
                             <HyperlinkButton x:Uid="/SettingsPage/ThemeEntryDescriptionHyperlinkButton" Tapped="ThemeEntryDescriptionHyperlinkButton_OnTapped" />
                         </labs:SettingsExpander.Description>
                         <labs:SettingsExpander.Items>
                             <labs:SettingsCard ContentAlignment="Left">
-                                <ui1:SettingRadioButtons
-                                    ItemsSource="{x:Bind model:ApplicationThemeSettingEntryItem.AvailableItems}"
+                                <ui2:SettingRadioButtons
+                                    ItemsSource="{x:Bind model1:ApplicationThemeSettingEntryItem.AvailableItems}"
                                     SelectedItem="{x:Bind _viewModel.Theme, Mode=TwoWay}"
                                     SelectionChanged="Theme_OnSelectionChanged" />
                             </labs:SettingsCard>
@@ -184,12 +185,12 @@
 
                     <labs:SettingsExpander
                         x:Uid="/SettingsPage/BackdropEntry"
-                        HeaderIcon="{ui:FontIcon Glyph=TiltDownE80A}"
+                        HeaderIcon="{ui:FontIcon Glyph=ColorE790}"
                         Tag="{x:Bind pixeval:SettingEntry.AppBackdrop}">
                         <labs:SettingsExpander.Items>
                             <labs:SettingsCard ContentAlignment="Left">
-                                <ui1:SettingRadioButtons
-                                    ItemsSource="{x:Bind model:ApplicationBackdropSettingEntryItem.AvailableItems}"
+                                <ui2:SettingRadioButtons
+                                    ItemsSource="{x:Bind model1:ApplicationBackdropSettingEntryItem.AvailableItems}"
                                     SelectedItem="{x:Bind _viewModel.AppBackdrop, Mode=TwoWay}"
                                     SelectionChanged="Backdrop_OnSelectionChanged" />
                             </labs:SettingsCard>
@@ -241,7 +242,7 @@
                         Tag="{x:Bind pixeval:SettingEntry.DefaultSelectedTabItem}">
                         <labs:SettingsExpander.Items>
                             <labs:SettingsCard ContentAlignment="Left">
-                                <ui1:SettingRadioButtons ItemsSource="{x:Bind model:MainPageTabItemSettingEntryItem.AvailableItems}" SelectedItem="{x:Bind _viewModel.DefaultSelectedTabItem, Mode=TwoWay}" />
+                                <ui2:SettingRadioButtons ItemsSource="{x:Bind model1:MainPageTabItemSettingEntryItem.AvailableItems}" SelectedItem="{x:Bind _viewModel.DefaultSelectedTabItem, Mode=TwoWay}" />
                             </labs:SettingsCard>
                         </labs:SettingsExpander.Items>
                     </labs:SettingsExpander>
@@ -251,22 +252,22 @@
 
                     <labs:SettingsExpander
                         x:Uid="/SettingsPage/ThumbnailDirectionEntry"
-                        HeaderIcon="{ui:FontIcon Glyph=LandscapeOrientationEF6B}"
+                        HeaderIcon="{ui:FontIcon Glyph=TypeE97C}"
                         Tag="{x:Bind pixeval:SettingEntry.ThumbnailDirection}">
                         <labs:SettingsExpander.Items>
                             <labs:SettingsCard ContentAlignment="Left">
-                                <ui1:SettingRadioButtons ItemsSource="{x:Bind model:ThumbnailDirectionSettingEntryItem.AvailableItems}" SelectedItem="{x:Bind _viewModel.ThumbnailDirection, Mode=TwoWay}" />
+                                <ui2:SettingRadioButtons ItemsSource="{x:Bind model1:ThumbnailDirectionSettingEntryItem.AvailableItems}" SelectedItem="{x:Bind _viewModel.ThumbnailDirection, Mode=TwoWay}" />
                             </labs:SettingsCard>
                         </labs:SettingsExpander.Items>
                     </labs:SettingsExpander>
 
                     <labs:SettingsExpander
                         x:Uid="/SettingsPage/IllustrationViewOptionEntry"
-                        HeaderIcon="{ui:FontIcon Glyph=TaskViewE7C4}"
+                        HeaderIcon="{ui:FontIcon Glyph=TilesECA5}"
                         Tag="{x:Bind pixeval:SettingEntry.IllustrationViewOption}">
                         <labs:SettingsExpander.Items>
                             <labs:SettingsCard ContentAlignment="Left">
-                                <ui1:SettingRadioButtons ItemsSource="{x:Bind model:IllustrationViewOptionSettingEntryItem.AvailableItems}" SelectedItem="{x:Bind _viewModel.IllustrationViewOption, Mode=TwoWay}" />
+                                <ui2:SettingRadioButtons ItemsSource="{x:Bind model1:IllustrationViewOptionSettingEntryItem.AvailableItems}" SelectedItem="{x:Bind _viewModel.IllustrationViewOption, Mode=TwoWay}" />
                             </labs:SettingsCard>
                         </labs:SettingsExpander.Items>
                     </labs:SettingsExpander>
@@ -284,7 +285,7 @@
                         Tag="{x:Bind pixeval:SettingEntry.TargetFilter}">
                         <labs:SettingsExpander.Items>
                             <labs:SettingsCard ContentAlignment="Left">
-                                <ui1:SettingRadioButtons ItemsSource="{x:Bind model:IllustrationViewOptionSettingEntryItem.AvailableItems}" SelectedItem="{x:Bind _viewModel.TargetFilter, Mode=TwoWay}" />
+                                <ui2:SettingRadioButtons ItemsSource="{x:Bind model1:IllustrationViewOptionSettingEntryItem.AvailableItems}" SelectedItem="{x:Bind _viewModel.TargetFilter, Mode=TwoWay}" />
                             </labs:SettingsCard>
                         </labs:SettingsExpander.Items>
                     </labs:SettingsExpander>
@@ -345,7 +346,7 @@
 
                         <labs:SettingsExpander.Items>
                             <labs:SettingsCard ContentAlignment="Left">
-                                <ui1:SettingRadioButtons ItemsSource="{x:Bind model:IllustrationSortOptionSettingEntryItem.AvailableItems}" SelectedItem="{x:Bind _viewModel.DefaultSortOption, Mode=TwoWay}" />
+                                <ui2:SettingRadioButtons ItemsSource="{x:Bind model1:IllustrationSortOptionSettingEntryItem.AvailableItems}" SelectedItem="{x:Bind _viewModel.DefaultSortOption, Mode=TwoWay}" />
                             </labs:SettingsCard>
                         </labs:SettingsExpander.Items>
                     </labs:SettingsExpander>
@@ -356,7 +357,7 @@
                         Tag="{x:Bind pixeval:SettingEntry.TagMatchOption}">
                         <labs:SettingsExpander.Items>
                             <labs:SettingsCard ContentAlignment="Left">
-                                <ui1:SettingRadioButtons ItemsSource="{x:Bind model:SearchTagMatchOptionSettingEntryItem.AvailableItems}" SelectedItem="{x:Bind _viewModel.TagMatchOption, Mode=TwoWay}" />
+                                <ui2:SettingRadioButtons ItemsSource="{x:Bind model1:SearchTagMatchOptionSettingEntryItem.AvailableItems}" SelectedItem="{x:Bind _viewModel.TagMatchOption, Mode=TwoWay}" />
                             </labs:SettingsCard>
                         </labs:SettingsExpander.Items>
                     </labs:SettingsExpander>
@@ -391,7 +392,7 @@
                         Tag="{x:Bind pixeval:SettingEntry.SearchDuration}">
                         <labs:SettingsExpander.Items>
                             <labs:SettingsCard ContentAlignment="Left">
-                                <ui1:SettingRadioButtons ItemsSource="{x:Bind model:SearchDurationSettingEntryItem.AvailableItems}" SelectedItem="{x:Bind _viewModel.SearchDuration, Mode=TwoWay}" />
+                                <ui2:SettingRadioButtons ItemsSource="{x:Bind model1:SearchDurationSettingEntryItem.AvailableItems}" SelectedItem="{x:Bind _viewModel.SearchDuration, Mode=TwoWay}" />
                             </labs:SettingsCard>
                         </labs:SettingsExpander.Items>
                     </labs:SettingsExpander>

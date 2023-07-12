@@ -24,17 +24,15 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
-using Pixeval.Controls.Setting.UI;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Download.MacroParser;
 using Pixeval.Misc;
+using Pixeval.UserControls.Setting.UI;
 using Pixeval.UserControls.TokenInput;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
@@ -65,7 +63,6 @@ public partial class SettingsPageViewModel : ObservableObject
     {
         _appSetting = appSetting;
     }
-
 
     [DefaultValue(false)]
     public bool DisableDomainFronting

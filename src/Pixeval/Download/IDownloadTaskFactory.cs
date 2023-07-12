@@ -19,8 +19,8 @@
 #endregion
 
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using Pixeval.Download.MacroParser;
+using Windows.Storage.Streams;
 
 namespace Pixeval.Download;
 

@@ -18,16 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Util.Threading;
-using Pixeval.Util.UI;
-using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -35,115 +26,21 @@ public sealed partial class ImageViewerPage
 {
     private ImageViewerPageViewModel _viewModel = null!;
 
-    private readonly AsyncLatch _resetImagePositionAnimation;
-
     public ImageViewerPage()
     {
         InitializeComponent();
-        _resetImagePositionAnimation = new AsyncLatch(() =>
-        {
-            var translateXAnimation = IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(
-                nameof(CompositeTransform.TranslateX),
-                from: IllustrationOriginalImageRenderTransform.TranslateX,
-                to: 0,
-                duration: TimeSpan.FromSeconds(1),
-                easingFunction: _easingFunction);
-            var translateYAnimation = IllustrationOriginalImageRenderTransform.CreateDoubleAnimation(
-                nameof(CompositeTransform.TranslateY),
-                from: IllustrationOriginalImageRenderTransform.TranslateY,
-                to: 0,
-                duration: TimeSpan.FromSeconds(1),
-                easingFunction: _easingFunction);
-            UIHelper.CreateStoryboard(translateXAnimation, translateYAnimation).Begin();
-            return Task.CompletedTask;
-        });
     }
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        if(parameter is ImageViewerPageViewModel viewModel)
+        if (parameter is ImageViewerPageViewModel viewModel)
         {
             _viewModel = viewModel;
         }
     }
 
-    private void IllustrationOriginalImage_OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
     {
-        var (deltaX, deltaY) = (e.Delta.Translation.X, e.Delta.Translation.Y);
-        if (GetZoomFactor() > 1)
-        {
-            var renderedImageWidth = IllustrationOriginalImage.ActualWidth * GetZoomFactor();
-            var renderedImageHeight = IllustrationOriginalImage.ActualHeight * GetZoomFactor();
-            var containerWidth = IllustrationOriginalImageContainer.ActualWidth;
-            var containerHeight = IllustrationOriginalImageContainer.ActualHeight;
-            var imagePos = IllustrationOriginalImage.TransformToVisual(IllustrationOriginalImageContainer).TransformPoint(new Point(0, 0));
-            if (renderedImageWidth > containerWidth)
-            {
-                switch (deltaX)
-                {
-                    case < 0 when imagePos.X > -(renderedImageWidth - containerWidth):
-                    case > 0 when imagePos.X < 0:
-                        IllustrationOriginalImageRenderTransform.TranslateX += deltaX;
-                        break;
-                }
-            }
-
-            if (renderedImageHeight > containerHeight)
-            {
-                switch (deltaY)
-                {
-                    case < 0 when imagePos.Y > -(renderedImageHeight - containerHeight):
-                    case > 0 when imagePos.Y < 0:
-                        IllustrationOriginalImageRenderTransform.TranslateY += deltaY;
-                        break;
-                }
-            }
-        }
+        _viewModel.Dispose();
     }
-
-    private void IllustrationOriginalImage_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
-    {
-        if (GetZoomFactor() > 1)
-        {
-            Zoom(1 - GetZoomFactor());
-        }
-        else
-        {
-            var illustWidth = _viewModel.IllustrationViewModel.Illustration.Width;
-            var illustHeight = _viewModel.IllustrationViewModel.Illustration.Height;
-            var displayImageResolution = UIHelper.GetImageScaledFactor(
-                illustWidth,
-                illustHeight,
-                IllustrationOriginalImage.ActualWidth,
-                IllustrationOriginalImage.ActualHeight,
-                GetZoomFactor());
-            Zoom(displayImageResolution >= 1 ? displayImageResolution * 2 : 1 / displayImageResolution - GetZoomFactor());
-        }
-    }
-
-    private void IllustrationOriginalImageContainer_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
-    {
-        Zoom(e.GetCurrentPoint(null).Properties.MouseWheelDelta / 1000d);
-    }
-
-    #region Helper Functions
-
-    private readonly EasingFunctionBase _easingFunction = new ExponentialEase
-    {
-        EasingMode = EasingMode.EaseOut,
-        Exponent = 12
-    };
-
-    private double GetZoomFactor()
-    {
-        return IllustrationOriginalImageRenderTransform.ScaleX;
-    }
-
-    private void Zoom(double delta)
-    {
-        _resetImagePositionAnimation.RunAsync().Discard();
-        _viewModel.Zoom(delta);
-    }
-
-    #endregion
 }

@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -29,10 +29,10 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.Streams;
 using CommunityToolkit.Diagnostics;
 using Pixeval.Utilities;
+using Windows.Storage;
+using Windows.Storage.Streams;
 
 namespace Pixeval.Util.IO;
 
@@ -600,10 +600,7 @@ public class FileCache
             _ => throw new ArgumentException($"The input type '{input.GetType()}' is not supported.")
         };
 
-        static byte[] HashAndTruncateTo128Bit(ReadOnlySpan<byte> span)
-        {
-            return SHA256.HashData(span)[..16];
-        }
+        static byte[] HashAndTruncateTo128Bit(ReadOnlySpan<byte> span) => SHA256.HashData(span)[..16];
     }
 
     /// <summary>

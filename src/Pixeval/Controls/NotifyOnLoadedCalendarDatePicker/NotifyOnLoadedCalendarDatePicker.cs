@@ -18,8 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Windows.Foundation;
 using Microsoft.UI.Xaml.Controls;
+using Windows.Foundation;
 
 namespace Pixeval.Controls.NotifyOnLoadedCalendarDatePicker;
 

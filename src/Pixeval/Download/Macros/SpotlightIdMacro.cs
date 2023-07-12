@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -30,6 +30,6 @@ public class SpotlightIdMacro : IMacro<IllustrationViewModel>.ITransducer
 
     public string Substitute(IllustrationViewModel context)
     {
-        return context.Illustration.SpotlightId ?? MacroParserResources.UnknownSpotlightId;
+        return context.Illustrate.SpotlightId ?? MacroParserResources.UnknownSpotlightId;
     }
 }

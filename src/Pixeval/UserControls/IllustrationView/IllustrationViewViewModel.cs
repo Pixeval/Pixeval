@@ -18,15 +18,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.Linq;
 using CommunityToolkit.WinUI.UI;
+using Pixeval.CoreApi.Model;
 using Pixeval.Options;
+using Pixeval.UserControls.Illustrate;
 using Pixeval.Util;
 using Pixeval.Utilities;
 
 namespace Pixeval.UserControls.IllustrationView;
 
-public sealed class IllustrationViewViewModel : SortableIllustrationViewViewModel
+public sealed class IllustrationViewViewModel : SortableIllustrateViewViewModel<Illustration, IllustrationViewModel>
 {
     #region RiverFlowLayout
 
@@ -41,7 +44,7 @@ public sealed class IllustrationViewViewModel : SortableIllustrationViewViewMode
         get => _thumbnailDirection;
         set
         {
-            if (_thumbnailDirection == value) 
+            if (_thumbnailDirection == value)
                 return;
             _thumbnailDirection = value;
             switch (_thumbnailDirection)
@@ -73,7 +76,7 @@ public sealed class IllustrationViewViewModel : SortableIllustrationViewViewMode
         set
         {
             // 需要通过绑定更新
-            if (StaticItemHeight == value)
+            if (Math.Abs(StaticItemHeight - value) < double.Epsilon)
                 return;
             OnPropertyChanging();
             StaticItemHeight = value;
@@ -83,17 +86,16 @@ public sealed class IllustrationViewViewModel : SortableIllustrationViewViewMode
 
     #endregion
 
-    public override IIllustrationViewDataProvider DataProvider { get; }
+    public override IllustrationViewDataProvider DataProvider { get; } = new();
 
     public IllustrationViewViewModel()
     {
         SelectionLabel = IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel;
-        DataProvider = new IllustrationViewDataProvider();
         DataProvider.SelectedIllustrations.CollectionChanged += (_, _) =>
         {
             IsAnyIllustrationSelected = DataProvider.SelectedIllustrations.Count > 0;
             var count = DataProvider.SelectedIllustrations.Count;
-            SelectionLabel = count == 0
+            SelectionLabel = count is 0
                 ? IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel
                 : IllustrationViewCommandBarResources.CancelSelectionButtonFormatted.Format(count);
         };
@@ -107,17 +109,17 @@ public sealed class IllustrationViewViewModel : SortableIllustrationViewViewMode
 
     public override void SetSortDescription(SortDescription description)
     {
-        if (!DataProvider.IllustrationsView.SortDescriptions.Any())
+        if (!DataProvider.View.SortDescriptions.Any())
         {
-            DataProvider.IllustrationsView.SortDescriptions.Add(description);
+            DataProvider.View.SortDescriptions.Add(description);
             return;
         }
 
-        DataProvider.IllustrationsView.SortDescriptions[0] = description;
+        DataProvider.View.SortDescriptions[0] = description;
     }
 
     public override void ClearSortDescription()
     {
-        DataProvider.IllustrationsView.SortDescriptions.Clear();
+        DataProvider.View.SortDescriptions.Clear();
     }
 }

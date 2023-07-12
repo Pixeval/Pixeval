@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -55,7 +55,7 @@ public class IllustrationBookmarkComparer : IComparer<IllustrationViewModel>, IC
 
     public int Compare(IllustrationViewModel? x, IllustrationViewModel? y)
     {
-        if (x?.Illustration is { } xi && y?.Illustration is { } yi)
+        if (x?.Illustrate is { } xi && y?.Illustrate is { } yi)
         {
             return xi.TotalBookmarks.CompareTo(yi.TotalBookmarks);
         }

@@ -4,16 +4,18 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.UI.Converters"
+    xmlns:converters1="using:Pixeval.Util.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:illustrationView="using:Pixeval.UserControls.IllustrationView"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Pixeval.Pages.IllustrationViewer"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:media="using:Microsoft.Xaml.Interactions.Media"
+    xmlns:triggers="using:Pixeval.Util.Triggers"
     xmlns:ui="using:Pixeval.Util.UI"
     KeyboardAcceleratorPlacementMode="Hidden"
     Loaded="IllustrationViewerPage_OnLoaded"
-    SizeChanged="IllustrationViewerPage_OnSizeChanged"
     mc:Ignorable="d">
     <controls:EnhancedWindowPage.Resources>
         <ThemeShadow x:Name="SidePanelShadow" />
@@ -24,8 +26,10 @@
             TintColor="{StaticResource SecondaryAccentColor}"
             TintLuminosityOpacity="0.8"
             TintOpacity="0.8" />
+        <SolidColorBrush x:Key="TransparentBrush" Color="Transparent" />
         <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
         <Thickness x:Key="FullScreenMargin">0</Thickness>
+        <converters1:NumberToPercentageConverter x:Key="NumberToPercentageConverter" />
     </controls:EnhancedWindowPage.Resources>
     <Page.KeyboardAccelerators>
         <KeyboardAccelerator
@@ -71,19 +75,6 @@
             </Grid>
         </SplitView.Pane>
         <Grid x:Name="IllustrationPresenterDockPanel" HorizontalAlignment="Stretch">
-            <Grid.Resources>
-                <Storyboard x:Name="TopCommandBarStoryboard">
-                    <DoubleAnimation
-                        x:Name="TopCommandBarAnimation"
-                        Storyboard.TargetName="TopCommandBarTranslation"
-                        Storyboard.TargetProperty="Y">
-                        <DoubleAnimation.EasingFunction>
-                            <ExponentialEase EasingMode="EaseOut" Exponent="7" />
-                        </DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                </Storyboard>
-            </Grid.Resources>
-
             <Grid x:Name="ImagePanel" Margin="{StaticResource NormalMargin}">
                 <Frame
                     x:Name="IllustrationImageShowcaseFrame"
@@ -97,40 +88,52 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="150" />
                     </Grid.ColumnDefinitions>
-                    <Border
+                    <Grid
                         Grid.Column="0"
                         Width="150"
                         Background="Transparent"
-                        PointerEntered="ButtonArea_OnPointerEntered"
-                        PointerExited="ButtonArea_OnPointerExited">
+                        Opacity="0">
+                        <interactivity:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="PointerEntered">
+                                <core:ChangePropertyAction PropertyName="Opacity" Value="1" />
+                            </core:EventTriggerBehavior>
+                            <core:EventTriggerBehavior EventName="PointerExited">
+                                <core:ChangePropertyAction PropertyName="Opacity" Value="0" />
+                            </core:EventTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
                         <Button
                             Width="50"
                             Height="100"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Content="{ui:FontIcon Glyph=ChevronLeft20F743}"
-                            Opacity="0"
                             RightTapped="PrevButton_OnRightTapped"
                             Tapped="PrevButton_OnTapped"
                             Visibility="{x:Bind _viewModel.PrevButtonEnable, Mode=OneWay}" />
-                    </Border>
-                    <Border
+                    </Grid>
+                    <Grid
                         Grid.Column="2"
                         Width="150"
                         Background="Transparent"
-                        PointerEntered="ButtonArea_OnPointerEntered"
-                        PointerExited="ButtonArea_OnPointerExited">
+                        Opacity="0">
+                        <interactivity:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="PointerEntered">
+                                <core:ChangePropertyAction PropertyName="Opacity" Value="1" />
+                            </core:EventTriggerBehavior>
+                            <core:EventTriggerBehavior EventName="PointerExited">
+                                <core:ChangePropertyAction PropertyName="Opacity" Value="0" />
+                            </core:EventTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
                         <Button
                             Width="50"
                             Height="100"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Content="{ui:FontIcon Glyph=ChevronRight20F745}"
-                            Opacity="0"
                             RightTapped="NextButton_OnRightTapped"
                             Tapped="NextButton_OnTapped"
                             Visibility="{x:Bind _viewModel.NextButtonEnable, Mode=OneWay}" />
-                    </Border>
+                    </Grid>
                 </Grid>
 
                 <!--  工具栏的识别区  -->
@@ -139,78 +142,69 @@
                     Margin="0,0,0,20"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Bottom"
-                    Spacing="10">
+                    Spacing="20">
                     <StackPanel.TranslationTransition>
                         <Vector3Transition Duration="0:0:0.300" />
                     </StackPanel.TranslationTransition>
-                    <Grid Margin="0,0,0,10" HorizontalAlignment="Center">
-                        <Rectangle
-                            Width="400"
-                            Height="100"
-                            Fill="Transparent"
-                            Opacity="0">
-                            <interactivity:Interaction.Behaviors>
-                                <core:EventTriggerBehavior EventName="PointerEntered">
-                                    <core:ChangePropertyAction
-                                        PropertyName="Opacity"
-                                        TargetObject="{x:Bind CommandBorder}"
-                                        Value="0.7" />
-                                </core:EventTriggerBehavior>
-                                <core:EventTriggerBehavior EventName="PointerExited">
-                                    <core:ChangePropertyAction
-                                        PropertyName="Opacity"
-                                        TargetObject="{x:Bind CommandBorder}"
-                                        Value="0" />
-                                </core:EventTriggerBehavior>
-                            </interactivity:Interaction.Behaviors>
-                        </Rectangle>
+                    <Grid
+                        Width="400"
+                        Height="100"
+                        Background="Transparent"
+                        Opacity="0">
+                        <Grid.OpacityTransition>
+                            <ScalarTransition />
+                        </Grid.OpacityTransition>
+                        <interactivity:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="PointerEntered">
+                                <core:ChangePropertyAction PropertyName="Opacity" Value="1" />
+                            </core:EventTriggerBehavior>
+                            <core:EventTriggerBehavior EventName="PointerExited">
+                                <core:ChangePropertyAction PropertyName="Opacity" Value="0" />
+                            </core:EventTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
                         <Border
                             x:Name="CommandBorder"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             BorderBrush="{StaticResource SecondaryAccentBorderBrush}"
                             BorderThickness="0.5"
-                            CornerRadius="10"
-                            Opacity="0"
+                            CornerRadius="{ThemeResource ControlCornerRadius}"
+                            Opacity="0.7"
                             Translation="0,0,30">
                             <Border.Shadow>
                                 <ThemeShadow x:Name="CommandBorderDropShadow" />
                             </Border.Shadow>
+                            <Border.OpacityTransition>
+                                <ScalarTransition />
+                            </Border.OpacityTransition>
                             <interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="PointerEntered">
                                     <core:ChangePropertyAction PropertyName="Opacity" Value="1" />
                                 </core:EventTriggerBehavior>
                                 <core:EventTriggerBehavior EventName="PointerExited">
-                                    <core:ChangePropertyAction
-                                        PropertyName="Opacity"
-                                        TargetObject="{x:Bind CommandBorder}"
-                                        Value="0.7" />
+                                    <core:ChangePropertyAction PropertyName="Opacity" Value="0.7" />
                                 </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
-                            <Border.OpacityTransition>
-                                <ScalarTransition />
-                            </Border.OpacityTransition>
                             <CommandBar
                                 Background="{StaticResource BottomCommandSectionBackground}"
-                                CornerRadius="10"
                                 DefaultLabelPosition="Collapsed"
                                 OverflowButtonVisibility="Collapsed">
                                 <AppBarButton
                                     x:Uid="/IllustrationViewerPage/BookmarkButton"
                                     Width="50"
-                                    Command="{x:Bind _viewModel.Current.IllustrationViewerPageViewModel.BookmarkCommand}" />
+                                    Command="{x:Bind _viewModel.BookmarkCommand}" />
                                 <AppBarButton
                                     x:Uid="/IllustrationViewerPage/ZoomInButton"
                                     Width="50"
-                                    Command="{x:Bind _viewModel.Current.IllustrationViewerPageViewModel.ZoomInCommand}" />
+                                    Command="{x:Bind _viewModel.ZoomInCommand}" />
                                 <AppBarButton
                                     x:Uid="/IllustrationViewerPage/ZoomOutButton"
                                     Width="50"
-                                    Command="{x:Bind _viewModel.Current.IllustrationViewerPageViewModel.ZoomOutCommand}" />
+                                    Command="{x:Bind _viewModel.ZoomOutCommand}" />
                                 <AppBarButton
                                     x:Uid="/IllustrationViewerPage/SaveCurrentImageButton"
                                     Width="50"
-                                    Command="{x:Bind _viewModel.Current.IllustrationViewerPageViewModel.SaveCommand}" />
+                                    Command="{x:Bind _viewModel.SaveCommand}" />
                             </CommandBar>
                         </Border>
                     </Grid>
@@ -222,7 +216,7 @@
                         Background="{StaticResource BottomCommandSectionBackground}"
                         BorderBrush="{StaticResource SecondaryAccentBorderBrush}"
                         BorderThickness="0.5"
-                        CornerRadius="15"
+                        CornerRadius="{ThemeResource ControlCornerRadius}"
                         PointerEntered="ThumbnailListGrid_OnPointerEntered"
                         PointerExited="ThumbnailListGrid_OnPointerExited"
                         Translation="0,0,30">
@@ -236,7 +230,7 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             IsMultiSelectCheckBoxEnabled="False"
-                            ItemsSource="{x:Bind _viewModel.Snapshot, Mode=OneWay}"
+                            ItemsSource="{x:Bind _viewModel.Illustrations}"
                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
                             ScrollViewer.HorizontalScrollMode="Auto"
                             ScrollViewer.IsHorizontalRailEnabled="True"
@@ -258,10 +252,10 @@
                                         <Border
                                             Width="78"
                                             Height="78"
-                                            CornerRadius="5"
+                                            CornerRadius="{ThemeResource ControlCornerRadius}"
                                             Loaded="ThumbnailBorder_OnLoaded">
                                             <Border.Background>
-                                                <ImageBrush ImageSource="{x:Bind ThumbnailSource, Mode=OneWay}" Stretch="UniformToFill" />
+                                                <ImageBrush ImageSource="{x:Bind ThumbnailMediumSource, Mode=OneWay}" Stretch="UniformToFill" />
                                             </Border.Background>
                                         </Border>
                                         <Border
@@ -269,7 +263,7 @@
                                             Width="80"
                                             Height="80"
                                             BorderBrush="{StaticResource SystemControlHighlightAccentBrush}"
-                                            CornerRadius="5"
+                                            CornerRadius="{ThemeResource ControlCornerRadius}"
                                             EffectiveViewportChanged="ThumbnailList_OnEffectiveViewportChanged" />
                                     </Grid>
                                 </DataTemplate>
@@ -279,12 +273,44 @@
                 </StackPanel>
             </Grid>
 
-            <Border
+            <Grid
+                x:Name="TitleBarBorder"
                 Height="100"
-                VerticalAlignment="Top"
-                Background="Transparent"
-                PointerEntered="TopCommandBarPointerEntered"
-                PointerExited="TopCommandBarPointerExited">
+                VerticalAlignment="Top">
+                <interactivity:Interaction.Behaviors>
+                    <triggers:EventWithConditionTriggerBehavior EventName="PointerEntered" IsActive="{x:Bind _viewModel.IsFullScreen, Mode=OneWay}">
+                        <media:ControlStoryboardAction>
+                            <media:ControlStoryboardAction.Storyboard>
+                                <Storyboard>
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="TopCommandBarTranslation"
+                                        Storyboard.TargetProperty="Y"
+                                        To="0">
+                                        <DoubleAnimation.EasingFunction>
+                                            <ExponentialEase EasingMode="EaseOut" Exponent="7" />
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </media:ControlStoryboardAction.Storyboard>
+                        </media:ControlStoryboardAction>
+                    </triggers:EventWithConditionTriggerBehavior>
+                    <triggers:EventWithConditionTriggerBehavior EventName="PointerExited" IsActive="{x:Bind _viewModel.IsFullScreen, Mode=OneWay}">
+                        <media:ControlStoryboardAction>
+                            <media:ControlStoryboardAction.Storyboard>
+                                <Storyboard>
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="TopCommandBarTranslation"
+                                        Storyboard.TargetProperty="Y"
+                                        To="{x:Bind local:IllustrationViewerPage.NegativeTitleBarHeight}">
+                                        <DoubleAnimation.EasingFunction>
+                                            <ExponentialEase EasingMode="EaseOut" Exponent="7" />
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </media:ControlStoryboardAction.Storyboard>
+                        </media:ControlStoryboardAction>
+                    </triggers:EventWithConditionTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
                 <Grid
                     x:Name="TitleBarArea"
                     Height="{x:Bind local:IllustrationViewerPage.TitleBarHeight}"
@@ -314,7 +340,7 @@
                         MaxWidth="200"
                         VerticalAlignment="Center"
                         FontSize="{StaticResource PixevalContentFontSize}"
-                        Text="{x:Bind _viewModel.IllustrationViewModelInTheGridView.Illustration.Title, Mode=OneWay}"
+                        Text="{x:Bind _viewModel.CurrentIllustration.Illustrate.Title, Mode=OneWay}"
                         TextTrimming="CharacterEllipsis" />
                     <CommandBar
                         x:Name="IllustrationViewerCommandBar"
@@ -354,7 +380,10 @@
                             Command="{x:Bind _viewModel.ShowQrCodeCommand}"
                             SizeChanged="CommandBarElementOnSizeChanged"
                             Tapped="ShowQrCodeOnTapped" />
-                        <AppBarButton Command="{x:Bind _viewModel.ShareCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
+                        <AppBarButton
+                            Command="{x:Bind _viewModel.ShareCommand}"
+                            SizeChanged="CommandBarElementOnSizeChanged"
+                            Tapped="ShareOnTapped" />
                     </CommandBar>
                     <CommandBar
                         x:Name="IllustrationViewerSubCommandBar"
@@ -366,25 +395,21 @@
                             Width="{StaticResource CollapsedAppBarButtonWidth}"
                             Command="{x:Bind _viewModel.FullScreenCommand}"
                             Tapped="FullScreenTapped" />
-                        <AppBarToggleButton
-                            x:Name="RestoreResolutionToggleButton"
-                            Width="{StaticResource CollapsedAppBarButtonWidth}"
-                            Command="{x:Bind _viewModel.RestoreResolutionCommand}"
-                            Tapped="RestoreResolutionToggleButton_OnTapped" />
+                        <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.RestoreResolutionCommand}" />
                         <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.ZoomOutCommand}" />
                         <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.ZoomInCommand}" />
                     </CommandBar>
                     <TextBlock
-                        x:Name="CurrentScalePercentage"
                         Grid.Column="4"
-                        Width="50"
+                        Width="60"
                         Margin="-5,-3,0,0"
                         VerticalAlignment="Center"
                         FontSize="{StaticResource PixevalContentFontSize}"
                         FontWeight="SemiBold"
                         HorizontalTextAlignment="Center"
-                        Loaded="CurrentScalePercentage_OnLoaded"
-                        TextAlignment="Center" />
+                        Text="{x:Bind _viewModel.CurrentViewModel.Scale, Converter={StaticResource NumberToPercentageConverter}, ConverterParameter=2, Mode=OneWay}"
+                        TextAlignment="Center"
+                        TextTrimming="CharacterEllipsis" />
                     <TeachingTip
                         x:Name="QrCodeTeachingTip"
                         x:Uid="/IllustrationViewerPage/QrCodeTeachingTip"
@@ -404,7 +429,7 @@
                         </TeachingTip.HeroContent>
                     </TeachingTip>
                 </Grid>
-            </Border>
+            </Grid>
 
             <TeachingTip
                 Title="{x:Bind _viewModel.TeachingTipProperties.Title, Mode=OneWay}"
@@ -425,6 +450,7 @@
                         <Setter Target="TopCommandBarTranslation.Y" Value="0" />
                         <Setter Target="TitleControlButtonsColumn.Width" Value="150" />
                         <Setter Target="TitleBarArea.Background" Value="{x:Null}" />
+                        <Setter Target="TitleBarBorder.Background" Value="{x:Null}" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="FullScreen">
@@ -436,6 +462,7 @@
                         <Setter Target="TopCommandBarTranslation.Y" Value="-48" />
                         <Setter Target="TitleControlButtonsColumn.Width" Value="0" />
                         <Setter Target="TitleBarArea.Background" Value="{StaticResource PixevalAppAcrylicBrush}" />
+                        <Setter Target="TitleBarBorder.Background" Value="{StaticResource TransparentBrush}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

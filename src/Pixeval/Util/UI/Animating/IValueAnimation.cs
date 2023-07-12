@@ -31,7 +31,7 @@ public interface IValueAnimation<out V> where V : INumber<V>
     TimeSpan SampleRate { get; }
 
     V From { get; }
-    
+
     V To { get; }
 
     IEasingFunction<V>? EasingFunction { get; }

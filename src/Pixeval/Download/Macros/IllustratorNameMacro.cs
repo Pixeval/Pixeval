@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -32,6 +32,6 @@ public class IllustratorNameMacro : IMacro<IllustrationViewModel>.ITransducer
 
     public string Substitute(IllustrationViewModel context)
     {
-        return context.Illustration.User?.Name?.Let(IOHelper.NormalizePathSegment) ?? MacroParserResources.UnknownArtist;
+        return context.Illustrate.User?.Name?.Let(IOHelper.NormalizePathSegment) ?? MacroParserResources.UnknownArtist;
     }
 }

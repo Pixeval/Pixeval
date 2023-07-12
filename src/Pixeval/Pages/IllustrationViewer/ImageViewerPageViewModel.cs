@@ -21,9 +21,8 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
-using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -31,11 +30,13 @@ using Pixeval.Attributes;
 using Pixeval.CoreApi.Net;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
+using Pixeval.UserControls;
+using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
-using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
+using Windows.Storage.Streams;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -62,10 +63,6 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         LoadingImage
     }
 
-    private const int MaxZoomFactor = 50;
-
-    private const int MinZoomFactor = 1;
-
     private bool _disposed;
 
     private TaskNotifier? _loadingOriginalSourceTask;
@@ -80,15 +77,13 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
     private ImageSource? _originalImageSource;
 
     [ObservableProperty]
-    private double _scale = 1;
+    private float _scale = 1;
 
-    private EventHandler<double>? _zoomChanged;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsFit))]
+    private ZoomableImageMode _showMode;
 
-    public event EventHandler<double> ZoomChanged
-    {
-        add => _zoomChanged += value;
-        remove => _zoomChanged -= value;
-    }
+    public bool IsFit => ShowMode is ZoomableImageMode.Fit;
 
     public ImageViewerPageViewModel(IllustrationViewerPageViewModel illustrationViewerPageViewModel, IllustrationViewModel illustrationViewModel)
     {
@@ -97,7 +92,6 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         ImageLoadingCancellationHandle = new CancellationHandle();
         _ = LoadImage();
     }
-
 
     public IRandomAccessStream? OriginalImageStream { get; private set; }
 
@@ -109,9 +103,9 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
 
     public bool LoadingCompletedSuccessfully => LoadingOriginalSourceTask?.IsCompletedSuccessfully ?? false;
 
-    public IllustrationViewModel IllustrationViewModel { get; }
-
     public CancellationHandle ImageLoadingCancellationHandle { get; }
+
+    public IllustrationViewModel IllustrationViewModel { get; }
 
     /// <summary>
     ///     The view model of the <see cref="IllustrationViewerPage" /> that hosts the owner <see cref="ImageViewerPage" />
@@ -126,23 +120,9 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    public void Zoom(double delta)
+    public void Zoom(float delta)
     {
-        var factor = Scale;
-        switch (delta)
-        {
-            case < 0 when factor > MinZoomFactor:
-            case > 0 when factor < MaxZoomFactor:
-                delta = (factor + delta) switch
-                {
-                    > MaxZoomFactor => MaxZoomFactor - factor,
-                    < MinZoomFactor => -(factor - MinZoomFactor),
-                    _ => delta
-                };
-                Scale += delta;
-                _zoomChanged?.Invoke(this, Scale);
-                break;
-        }
+        Scale = MathF.Exp(MathF.Log(Scale) + delta / 5000f);
     }
 
     private void AdvancePhase(LoadingPhase phase)
@@ -167,10 +147,9 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         if (LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true } || _disposed)
         {
             _disposed = false;
-            _ = IllustrationViewModel.LoadThumbnailIfRequired().ContinueWith(_ =>
-            {
-                OriginalImageSource ??= IllustrationViewModel.ThumbnailSource;
-            }, TaskScheduler.FromCurrentSynchronizationContext());
+            _ = IllustrationViewModel.LoadThumbnailIfRequired().ContinueWith(
+                _ => OriginalImageSource ??= IllustrationViewModel.ThumbnailMediumSource,
+                TaskScheduler.FromCurrentSynchronizationContext());
             AddHistory();
             await LoadOriginalImage();
         }
@@ -179,13 +158,13 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
     private async Task LoadOriginalImage()
     {
         var imageClient = App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi);
-        var cacheKey = IllustrationViewModel.Illustration.GetIllustrationOriginalImageCacheKey();
+        var cacheKey = IllustrationViewModel.Illustrate.GetIllustrationOriginalImageCacheKey();
         AdvancePhase(LoadingPhase.CheckingCache);
         if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(cacheKey) is { } stream)
         {
             AdvancePhase(LoadingPhase.LoadingFromCache);
             OriginalImageStream = stream;
-            OriginalImageSource = IllustrationViewModel.Illustration.IsUgoira()
+            OriginalImageSource = IllustrationViewModel.Illustrate.IsUgoira()
                 ? await OriginalImageStream.GetBitmapImageAsync(false)
                 : await stream.EncodeSoftwareBitmapSourceAsync(false);
             LoadingOriginalSourceTask = Task.CompletedTask;
@@ -250,23 +229,6 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         }
 
         throw new IllustrationSourceNotFoundException(ImageViewerPageResources.CannotFindImageSourceContent);
-    }
-
-    /// <summary>
-    ///     We use the <see cref="IllustrationViewerPageViewModel" /> to remove and add bookmark
-    ///     because the manga have multiple works and those works aside of this one cannot receive
-    ///     the bookmark notification if we use <see cref="IllustrationViewModel" />
-    /// </summary>
-    public void SwitchBookmarkState()
-    {
-        if (IllustrationViewerPageViewModel.FirstIllustrationViewModel?.IsBookmarked is true)
-        {
-            IllustrationViewerPageViewModel.RemoveBookmarkAsync();
-        }
-        else
-        {
-            IllustrationViewerPageViewModel.PostPublicBookmarkAsync();
-        }
     }
 
     public Visibility GetLoadingMaskVisibility(Task? loadingTask)

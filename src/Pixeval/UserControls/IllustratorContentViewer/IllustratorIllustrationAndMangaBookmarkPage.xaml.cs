@@ -2,16 +2,13 @@
 // Licensed under the MIT License.
 
 using System.Linq;
-using System.Xml.Linq;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
 using Pixeval.Misc;
-using Pixeval.Options;
 using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util;
 using Pixeval.Util.Threading;
@@ -113,8 +110,8 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
                 if (o is IllustrationViewModel viewModel)
                 {
                     return viewModel.Id.Contains(keyword)
-                           || (viewModel.Illustration.Tags ?? Enumerable.Empty<Tag>()).Any(x => x.Name.Contains(keyword) || (x.TranslatedName?.Contains(keyword) ?? false))
-                           || (viewModel.Illustration.Title?.Contains(keyword) ?? false);
+                           || (viewModel.Illustrate.Tags ?? Enumerable.Empty<Tag>()).Any(x => x.Name.Contains(keyword) || (x.TranslatedName?.Contains(keyword) ?? false))
+                           || (viewModel.Illustrate.Title?.Contains(keyword) ?? false);
                 }
 
                 return false;

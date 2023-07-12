@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -18,18 +18,20 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Pixeval.CoreApi.Model;
+using Pixeval.UserControls.Illustrate;
 using Pixeval.Util;
 
 namespace Pixeval.UserControls.IllustratorView;
 
-public sealed class IllustratorViewViewModel : AbstractIllustratorViewViewModel
+public sealed class IllustratorViewViewModel : IllustrateViewViewModel<User, IllustratorViewModel>
 {
     public IllustratorViewViewModel()
     {
         DataProvider = new IllustratorViewDataProvider();
     }
 
-    public override IIllustratorViewDataProvider DataProvider { get; }
+    public override IDataProvider<User, IllustratorViewModel> DataProvider { get; }
 
     public override void Dispose()
     {

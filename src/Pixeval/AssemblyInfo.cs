@@ -21,6 +21,3 @@
 using WinUI3Utilities.Attributes;
 
 [assembly: LocalizedStringResources(nameof(Pixeval))]
-// TODO: 源生成器有破坏式更新
-// temporary solution before the source generator become stable
-// [assembly: DisableSourceGenerator]

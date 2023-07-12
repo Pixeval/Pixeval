@@ -23,7 +23,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
@@ -33,6 +32,7 @@ using Pixeval.UserControls;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using Windows.Storage.Streams;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;

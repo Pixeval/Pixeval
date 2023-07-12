@@ -20,9 +20,9 @@
 
 using System;
 using System.Reflection;
-using Windows.UI.Notifications;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Pixeval.Utilities;
+using Windows.UI.Notifications;
 
 namespace Pixeval.Util.UI;
 

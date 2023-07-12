@@ -24,40 +24,35 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
-using Windows.Graphics;
-using Windows.Storage;
-using Windows.Storage.Pickers;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.UI;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Attributes;
 using Pixeval.Misc;
 using Pixeval.Util.IO;
+using Pixeval.Util.Threading;
 using Pixeval.Utilities;
 using QRCoder;
-using Microsoft.UI.Xaml.Data;
-using Pixeval.Options;
-using Pixeval.Util.Threading;
-using WinUI3Utilities;
-using Microsoft.UI.Windowing;
-using Microsoft.UI;
-using System.Runtime.InteropServices;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors.Quantization;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
+using WinUI3Utilities;
 using Brush = Microsoft.UI.Xaml.Media.Brush;
 using Color = Windows.UI.Color;
 using Image = SixLabors.ImageSharp.Image;
 using Point = Windows.Foundation.Point;
-using Size = Windows.Foundation.Size;
 
 namespace Pixeval.Util.UI;
 
@@ -93,13 +88,13 @@ public static partial class UIHelper
             }
         }
 
-        return Color.FromArgb(color.A, (byte) red, (byte) green, (byte) blue);
+        return Color.FromArgb(color.A, (byte)red, (byte)green, (byte)blue);
     }
 
     public static async Task<double> GetImageAspectRatioAsync(Stream stream, bool disposeOfStream = true)
     {
         using var image = await Image.LoadAsync(stream);
-        var result = image.Width / (double) image.Height;
+        var result = image.Width / (double)image.Height;
         if (disposeOfStream)
         {
             await stream.DisposeAsync();
@@ -192,16 +187,21 @@ public static partial class UIHelper
         CreateStoryboard(timeline).Begin();
     }
 
-    public static void SetClipboardContent(Action<DataPackage> contentAction)
+    public static void ClipboardSetText(string text)
     {
-        Clipboard.SetContent(new DataPackage().Apply(contentAction));
+        var content = new DataPackage { RequestedOperation = DataPackageOperation.Copy };
+        content.SetText(text);
+        Clipboard.SetContent(content);
+        Clipboard.Flush();
     }
 
-    public static async Task SetClipboardContentAsync(Func<DataPackage, Task> contentAction)
+    public static void ClipboardSetBitmap(IRandomAccessStream stream)
     {
-        var package = new DataPackage();
-        await contentAction(package);
-        Clipboard.SetContent(package);
+        var reference = RandomAccessStreamReference.CreateFromStream(stream);
+        var content = new DataPackage { RequestedOperation = DataPackageOperation.Copy };
+        content.SetBitmap(reference);
+        Clipboard.SetContent(content);
+        Clipboard.Flush();
     }
 
     public static void NavigateByNavigationViewTag(this Frame frame, NavigationView sender, NavigationTransitionInfo? transitionInfo = null)
@@ -351,7 +351,7 @@ public static partial class UIHelper
     {
         return ThreadingHelper.SpinWaitAsync(() => root.FindDescendant<T>() is null);
     }
-    
+
     public static Color ParseHexColor(string hex)
     {
         var trimmed = !hex.StartsWith('#') ? $"#{hex}" : hex;

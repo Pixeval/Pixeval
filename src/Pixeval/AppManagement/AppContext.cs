@@ -18,6 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Preference;
@@ -25,12 +28,8 @@ using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
-using System;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using Pixeval.Util.UI;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -235,5 +234,4 @@ public static partial class AppContext
             return null;
         }
     }
-
 }

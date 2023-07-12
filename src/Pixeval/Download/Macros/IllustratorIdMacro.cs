@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -30,6 +30,6 @@ public class IllustratorIdMacro : IMacro<IllustrationViewModel>.ITransducer
 
     public string Substitute(IllustrationViewModel context)
     {
-        return context.Illustration.User?.Id.ToString() ?? string.Empty;
+        return context.Illustrate.User?.Id.ToString() ?? string.Empty;
     }
 }

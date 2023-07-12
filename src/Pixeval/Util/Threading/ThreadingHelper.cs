@@ -21,9 +21,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Foundation;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Dispatching;
+using Windows.Foundation;
 using WinUI3Utilities;
 
 namespace Pixeval.Util.Threading;
@@ -52,7 +52,7 @@ public static class ThreadingHelper
 
     public static void CompareExchange(ref int location1, int value, int comparand)
     {
-        while (Interlocked.CompareExchange(ref location1, value, comparand) != comparand);
+        while (Interlocked.CompareExchange(ref location1, value, comparand) != comparand) ;
     }
 
     // fork a task from current context.

@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -24,15 +24,15 @@ using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.Pickers;
-using Windows.Storage.Streams;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IO;
 using Pixeval.Download;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
 using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Util.IO;
@@ -170,7 +170,7 @@ public static partial class IOHelper
     {
         IStorageItem? item = viewModel.IsManga
             ? await UIHelper.OpenFolderPickerAsync(PickerLocationId.PicturesLibrary)
-            : await UIHelper.OpenFileSavePickerAsync(viewModel.Id, $"{viewModel.Illustration.GetImageFormat().RemoveSurrounding(".", string.Empty)} file", viewModel.Illustration.GetImageFormat());
+            : await UIHelper.OpenFileSavePickerAsync(viewModel.Id, $"{viewModel.Illustrate.GetImageFormat().RemoveSurrounding(".", string.Empty)} file", viewModel.Illustrate.GetImageFormat());
 
         using var scope = App.AppViewModel.AppServicesScope;
         var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();

@@ -1,72 +1,81 @@
-name: Build
+name: Pixeval Build Pipeline
 
 on:
-    workflow_dispatch:
-    push:
+  push:
+    branches-ignore:
+    - 'dependabot**'
+    tags-ignore:
+    - '**'
+  pull_request:
+    paths-ignore:
+    - '**.md'
+    - '.builds/**'
+    - '.specs/**'
+  schedule:
+    - cron: '0 0 * * *'
   
 defaults:
   run:
     shell: pwsh
 
 jobs:
-    build:
-        strategy:
-            matrix:
-                platform: ['x64','x86','arm64']
+  build:
+    runs-on: windows-latest
 
-        runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration: [Debug]
+        platform: ['x64','x86','arm64']
 
-        env:
-            private_key: ${{ secrets.PRIVATE_KEY }}
-            private_key_thumbprint: ${{ secrets.PRIVATE_KEY_THUMBPRINT }}
-            private_key_password: ${{ secrets.PRIVATE_KEY_PASSWORD }}
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v3
-              with:
-                fetch-depth: 0
+    env:
+      SOLUTION_NAME: 'Pixeval.sln'
+      PACKAGE_PROJECT_NAME: 'src/Pixeval/Pixeval.csproj'
+      PROJECT_RESTORE_PLATFORM: "x64"
+      CONFIGURATION: ${{ matrix.configuration }}
+      PLATFORM: ${{ matrix.platform }}
+      DEFAULT_DIR: ${{ github.workspace }} # Default: D:\a\Pixeval\Pixeval\
+      APPX_PACKAGE_DIR: ${{ github.workspace }}\AppxPackages
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+  
+    - name: Setup MSBuild
+      id: setup_msbuild
+      uses: microsoft/setup-msbuild@v1
 
-            - uses: actions/setup-dotnet@v2
-              with:
-                global-json-file: global.json
-                include-prerelease: true
+    - name: Setup NuGet
+      id: setup-nuget
+      uses: NuGet/setup-nuget@v1.1.1
 
-            - name: Add msbuild to PATH
-              uses: microsoft/setup-msbuild@v1.1
-              with:
-                vs-prerelease: true
+    - name: Setup .NET 7
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '7.0.x'
+  
+    - name: Restore Files
+      id: restore_project
+      shell: pwsh
+      run: |
+        msbuild $env:SOLUTION_NAME `
+        -t:Restore `
+        -p:Platform=$env:PROJECT_RESTORE_PLATFORM `
+        -p:Configuration=$env:CONFIGURATION `
+        -p:PublishReadyToRun=true `
 
-            - name: Install pfx
-              if: github.repository_owner == 'Pixeval'
-              run: |
-                [io.file]::WriteAllBytes("$PWD/temp.pfx",[convert]::FromBase64String($env:private_key))
-                Import-PfxCertificate -FilePath $PWD/temp.pfx -CertStoreLocation Cert:\CurrentUser\My -Password (ConvertTo-SecureString -AsPlainText "$env:private_key_password")
-                Remove-Item -Path "$PWD/temp.pfx"
-            - uses: actions/cache@v3
-              with:
-                path: ~/.nuget/packages
-                key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-                restore-keys: |
-                    ${{ runner.os }}-nuget-
-            - name: Restore the application
-              run: msbuild -t:restore -p:Platform=${{ matrix.platform }} -p:RestoreLockedMode=true -m
+    - name: Restore NuGet
+      id: restore_nuget
+      shell: pwsh
+      run: 'nuget restore $env:SOLUTION_NAME'
 
-            - name: Publish the application
-              run: |
-                if($env:GITHUB_REPOSITORY_OWNER -eq "Pixeval"){
-                    msbuild -t:publish -p:Configuration=Release -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:PackageCertificateThumbprint="$env:private_key_thumbprint" -p:OutDir="$PWD\build" -m
-                }
-                else{
-                    msbuild -t:publish -p:Configuration=Release -p:Platform=${{ matrix.platform }} -p:GenerateAppxPackageOnBuild=true -p:AppxPackageSigningEnabled="false" -p:OutDir="$PWD\build"  -m
-                }
-                
-            - name: Copy files
-              run: |
-                $files = @(Get-ChildItem -Recurse|Where-Object -Property Name -Like Pixeval*.msix)
-                $files += Get-Item -Path Pixeval_PublicKey.cer
-                Copy-Item $files -Destination ( New-Item -Path ./output -ItemType Directory)
-            - name: Upload a Build Artifact
-              uses: actions/upload-artifact@v3
-              with:
-                  name: Pixeval-${{ matrix.platform }}
-                  path: "./output/*"
+    - name: Build Files (Debug)
+      id: build_app_with_debug
+      shell: pwsh
+      run: |
+        msbuild $env:PACKAGE_PROJECT_NAME `
+        -t:Build `
+        -p:Platform=$env:PLATFORM `
+        -p:Configuration=$env:CONFIGURATION `
+        -p:AppxBundle=Never `

@@ -253,12 +253,12 @@ internal class FeedEngine : AbstractPixivFetchEngine<Feed>
                 switch (feedType)
                 {
                     case FeedType.AddBookmark or FeedType.AddIllust:
-                        {
-                            var illustration = illusts.FirstOrNull(i => i.Name == feedTargetId);
-                            feedObject.ArtistName = users.FirstOrNull(u => u.Name == (illustration?.GetPropertyOrNull("post_user")?.GetPropertyOrNull("id")?.GetString() ?? string.Empty))?.GetPropertyOrNull("name")?.GetString();
-                            feedObject.FeedName = illustration?.GetPropertyOrNull("title")?.GetString();
-                            break;
-                        }
+                    {
+                        var illustration = illusts.FirstOrNull(i => i.Name == feedTargetId);
+                        feedObject.ArtistName = users.FirstOrNull(u => u.Name == (illustration?.GetPropertyOrNull("post_user")?.GetPropertyOrNull("id")?.GetString() ?? string.Empty))?.GetPropertyOrNull("name")?.GetString();
+                        feedObject.FeedName = illustration?.GetPropertyOrNull("title")?.GetString();
+                        break;
+                    }
                     case FeedType.AddFavorite:
                         feedObject.FeedName = users.FirstOrNull(u => u.Name == feedTargetId)?.GetPropertyOrNull("name")?.GetString();
                         feedObject.IsTargetRefersToUser = true;
@@ -311,19 +311,19 @@ internal class FeedEngine : AbstractPixivFetchEngine<Feed>
     private record FeedRequestContext
     {
         public FeedRequestContext(string unifyToken, string sid, string mode, bool isLastPage)
-    {
-        UnifyToken = unifyToken;
-        Sid = sid;
-        Mode = mode;
-        IsLastPage = isLastPage;
+        {
+            UnifyToken = unifyToken;
+            Sid = sid;
+            Mode = mode;
+            IsLastPage = isLastPage;
+        }
+
+        public string UnifyToken { get; }
+
+        public string Sid { get; }
+
+        public string Mode { get; }
+
+        public bool IsLastPage { get; }
     }
-
-    public string UnifyToken { get; }
-
-    public string Sid { get; }
-
-    public string Mode { get; }
-
-    public bool IsLastPage { get; }
-}
 }

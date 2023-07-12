@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -19,7 +19,6 @@
 #endregion
 
 using Pixeval.UserControls;
-using Pixeval.UserControls.IllustrationView;
 
 namespace Pixeval.Misc;
 
@@ -41,7 +40,7 @@ public interface ISortedIllustrationContainerPageHelper
 
     public void OnSortOptionChanged()
     {
-        if (ViewModelProvider.ViewModel is SortableIllustrationViewViewModel vm)
+        if (ViewModelProvider.ViewModel is { } vm)
         {
             switch (SortOptionProvider.GetSortDescription())
             {
@@ -52,7 +51,7 @@ public interface ISortedIllustrationContainerPageHelper
                 default:
                     // reset the view so that it can resort its item to the initial order
                     vm.ClearSortDescription();
-                    vm.DataProvider.IllustrationsView.Refresh();
+                    vm.DataProvider.View.Refresh();
                     ViewModelProvider.ScrollToTop();
                     break;
             }

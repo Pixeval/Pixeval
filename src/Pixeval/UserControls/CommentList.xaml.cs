@@ -22,9 +22,9 @@ using System;
 using System.Collections.Generic;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
-using WinUI3Utilities.Attributes;
 using Pixeval.Pages.IllustrationViewer;
 using WinUI3Utilities;
+using WinUI3Utilities.Attributes;
 
 namespace Pixeval.UserControls;
 

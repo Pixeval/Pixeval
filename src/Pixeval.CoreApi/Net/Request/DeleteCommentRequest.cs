@@ -25,10 +25,10 @@ namespace Pixeval.CoreApi.Net.Request;
 public record DeleteCommentRequest
 {
     public DeleteCommentRequest(string commentId)
-{
-    CommentId = commentId;
-}
+    {
+        CommentId = commentId;
+    }
 
-[AliasAs("comment_id")]
-public string CommentId { get; }
+    [AliasAs("comment_id")]
+    public string CommentId { get; }
 }

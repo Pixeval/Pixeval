@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -27,28 +27,29 @@ using CommunityToolkit.WinUI.UI;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
+using Pixeval.UserControls.Illustrate;
 
 namespace Pixeval.UserControls.IllustratorView;
 
-public class IllustratorViewDataProvider : ObservableObject, IIllustratorViewDataProvider
+public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User, IllustratorViewModel>
 {
     public IllustratorViewDataProvider()
     {
         _illustratorsSource = new ObservableCollection<IllustratorViewModel>();
-        IllustratorsView = new AdvancedCollectionView(IllustratorsSource);
+        View = new AdvancedCollectionView(Source);
     }
 
-    public AdvancedCollectionView IllustratorsView { get; }
+    public AdvancedCollectionView View { get; }
 
     private ObservableCollection<IllustratorViewModel> _illustratorsSource;
 
-    public ObservableCollection<IllustratorViewModel> IllustratorsSource
+    public ObservableCollection<IllustratorViewModel> Source
     {
         get => _illustratorsSource;
         set
         {
             SetProperty(ref _illustratorsSource, value);
-            IllustratorsView.Source = value;
+            View.Source = value;
         }
     }
 
@@ -62,51 +63,35 @@ public class IllustratorViewDataProvider : ObservableObject, IIllustratorViewDat
         set
         {
             _filter = value;
-            _filterChanged?.Invoke(_filter, EventArgs.Empty);
+            FilterChanged?.Invoke(_filter, EventArgs.Empty);
         }
     }
 
-    private EventHandler? _filterChanged;
-
-    public event EventHandler? FilterChanged
-    {
-        add => _filterChanged += value;
-        remove => _filterChanged -= value;
-    }
+    public event EventHandler? FilterChanged;
 
     public void DisposeCurrent()
     {
-        foreach (var illustratorViewModel in IllustratorsSource)
+        foreach (var illustratorViewModel in Source)
         {
             illustratorViewModel.Dispose();
         }
 
-        IllustratorsView.Clear();
+        View.Clear();
     }
 
-    public async Task<int> LoadMore()
-    {
-        if (IllustratorsSource is IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel> coll)
-        {
-            return (int) (await coll.LoadMoreItemsAsync(20)).Count;
-        }
-
-        return 0;
-    }
-
-    public async Task<int> FillAsync(int? itemsLimit = null)
-    {
-        var collection = new IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel>(new IllustratorFetchEngineIncrementalSource(FetchEngine!, itemsLimit));
-        IllustratorsSource = collection;
-        var result = await collection.LoadMoreItemsAsync(20);
-        return (int) result.Count;
-    }
-
-    public Task<int> ResetAndFillAsync(IFetchEngine<User?>? fetchEngine, int? itemLimit = null)
+    public Task<int> ResetAndFillAsync(IFetchEngine<User?>? fetchEngine, int itemLimit = -1)
     {
         FetchEngine?.EngineHandle.Cancel();
         FetchEngine = fetchEngine;
         DisposeCurrent();
         return FillAsync(itemLimit);
+
+        async Task<int> FillAsync(int itemsLimit = -1)
+        {
+            var collection = new IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel>(new IllustratorFetchEngineIncrementalSource(FetchEngine!, itemsLimit));
+            Source = collection;
+            var result = await collection.LoadMoreItemsAsync(20);
+            return (int)result.Count;
+        }
     }
 }

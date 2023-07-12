@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -19,8 +19,8 @@
 #endregion
 
 using Pixeval.Download.MacroParser;
+using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util;
-using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
 
 namespace Pixeval.Download.Macros;
 
@@ -31,6 +31,6 @@ public class IsUgoiraMacro : IMacro<IllustrationViewModel>.IPredicate
 
     public bool Match(IllustrationViewModel context)
     {
-        return context.Illustration.IsUgoira();
+        return context.Illustrate.IsUgoira();
     }
 }

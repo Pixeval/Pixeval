@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -26,7 +26,7 @@ namespace Pixeval.Misc;
 
 public class IllustrationFetchEngineIncrementalSource : FetchEngineIncrementalSource<Illustration, IllustrationViewModel>
 {
-    public IllustrationFetchEngineIncrementalSource(IAsyncEnumerable<Illustration> asyncEnumerator, int? limit = null) : base(asyncEnumerator, limit)
+    public IllustrationFetchEngineIncrementalSource(IAsyncEnumerable<Illustration> asyncEnumerator, int limit = -1) : base(asyncEnumerator, limit)
     {
     }
 

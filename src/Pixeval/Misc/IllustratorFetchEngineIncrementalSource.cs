@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -26,7 +26,7 @@ namespace Pixeval.Misc;
 
 public class IllustratorFetchEngineIncrementalSource : FetchEngineIncrementalSource<User, IllustratorViewModel>
 {
-    public IllustratorFetchEngineIncrementalSource(IAsyncEnumerable<User> asyncEnumerator, int? limit = null) : base(asyncEnumerator, limit)
+    public IllustratorFetchEngineIncrementalSource(IAsyncEnumerable<User> asyncEnumerator, int limit = -1) : base(asyncEnumerator, limit)
     {
     }
 

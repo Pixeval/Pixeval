@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -30,6 +30,6 @@ public class IsFromSpotlightMacro : IMacro<IllustrationViewModel>.IPredicate
 
     public bool Match(IllustrationViewModel context)
     {
-        return context.Illustration.FromSpotlight;
+        return context.Illustrate.FromSpotlight;
     }
 }

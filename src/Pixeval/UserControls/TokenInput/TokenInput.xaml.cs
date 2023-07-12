@@ -19,13 +19,13 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
-using WinUI3Utilities.Attributes;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
+using WinUI3Utilities.Attributes;
 
 namespace Pixeval.UserControls.TokenInput;
 

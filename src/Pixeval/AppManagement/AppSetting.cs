@@ -44,9 +44,9 @@ public partial record AppSetting
     /// <summary>
     ///     The Application Theme
     /// </summary>
-    [DefaultValue(ApplicationTheme.SystemDefault)]
+    [DefaultValue(AppTheme.SystemDefault)]
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.ThemeEntryHeader))]
-    public ApplicationTheme Theme { get; set; }
+    public AppTheme Theme { get; set; }
 
     /// <summary>
     ///     Indicates whether the restricted content are permitted to be included
@@ -243,9 +243,9 @@ public partial record AppSetting
     [SyntheticSetting]
     public bool ShowExternalCommandBarInIllustratorContentViewer { get; set; }
 
-    [DefaultValue(ApplicationBackdropType.Mica)]
+    [DefaultValue(AppBackdropType.Mica)]
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.BackdropEntryHeader))]
-    public ApplicationBackdropType AppBackdrop { get; set; }
+    public AppBackdropType AppBackdrop { get; set; }
 
     public static AppSetting CreateDefault()
     {

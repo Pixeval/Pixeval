@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -31,6 +31,6 @@ public class FileExtensionMacro : IMacro<IllustrationViewModel>.ITransducer
 
     public string Substitute(IllustrationViewModel context)
     {
-        return context.Illustration.IsUgoira() ? ".gif" : context.Illustration.GetImageFormat();
+        return context.Illustrate.IsUgoira() ? ".gif" : context.Illustrate.GetImageFormat();
     }
 }

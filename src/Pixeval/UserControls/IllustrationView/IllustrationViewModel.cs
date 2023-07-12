@@ -23,19 +23,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.UI.Controls;
+using Microsoft.UI;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Attributes;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.CoreApi.Net;
 using Pixeval.Options;
+using Pixeval.UserControls.Illustrate;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
+using Windows.Storage.Streams;
+using Windows.UI;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.UserControls.IllustrationView;
@@ -46,42 +49,46 @@ namespace Pixeval.UserControls.IllustrationView;
 ///     It is responsible for being the elements of the <see cref="AdaptiveGridView" /> to present the thumbnail of an
 ///     illustration
 /// </summary>
-public partial class IllustrationViewModel : ObservableObject, IDisposable
+public class IllustrationViewModel : IllustrateViewModel<Illustration>
 {
     private bool _isSelected;
 
-    [ObservableProperty]
-    private SoftwareBitmapSource? _thumbnailSource;
+    public SoftwareBitmapSource? ThumbnailMediumSource => ThumbnailSources.TryGetValue(ThumbnailUrlOption.Medium, out var value) ? value : null;
 
-    public IllustrationViewModel(Illustration illustration)
+    public Dictionary<ThumbnailUrlOption, SoftwareBitmapSource> ThumbnailSources = new();
+
+    public IllustrationViewModel(Illustration illustration) : base(illustration)
     {
-        Illustration = illustration;
         LoadingThumbnailCancellationHandle = new CancellationHandle();
     }
 
-    public Illustration Illustration { get; }
-
     public int MangaIndex { get; set; }
 
-    public bool IsRestricted => Illustration.IsRestricted();
+    public bool IsRestricted => Illustrate.IsRestricted();
 
-    public bool IsManga => Illustration.IsManga();
+    public bool IsManga => Illustrate.IsManga();
 
-    public string RestrictionCaption => Illustration.RestrictLevel().GetMetadataOnEnumMember()!;
+    public string RestrictionCaption => Illustrate.RestrictLevel().GetMetadataOnEnumMember()!;
 
-    public string Id => Illustration.Id.ToString();
+    public string Id => Illustrate.Id.ToString();
 
-    public int Bookmark => Illustration.TotalBookmarks;
+    public int Bookmark => Illustrate.TotalBookmarks;
 
-    public DateTimeOffset PublishDate => Illustration.CreateDate;
+    public DateTimeOffset PublishDate => Illustrate.CreateDate;
 
-    public string? OriginalSourceUrl => Illustration.GetOriginalUrl();
+    public string? OriginalSourceUrl => Illustrate.GetOriginalUrl();
 
     public bool IsBookmarked
     {
-        get => Illustration.IsBookmarked;
-        set => SetProperty(Illustration.IsBookmarked, value, m => Illustration.IsBookmarked = m);
+        get => Illustrate.IsBookmarked;
+        set => SetProperty(Illustrate.IsBookmarked, value, m =>
+        {
+            Illustrate.IsBookmarked = m;
+            OnPropertyChanged(nameof(BookmarkedColor));
+        });
     }
+
+    public SolidColorBrush BookmarkedColor => new(IsBookmarked ? Colors.Crimson : Color.FromArgb(0x80, 0, 0, 0));
 
     public bool IsSelected
     {
@@ -89,34 +96,22 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
         set => SetProperty(_isSelected, value, this, (_, b) =>
         {
             _isSelected = b;
-            _isSelectedChanged?.Invoke(this, this);
+            IsSelectedChanged?.Invoke(this, this);
         });
     }
 
     public double GetDesiredWidth(double itemHeight)
     {
-        return itemHeight * Illustration.Width / Illustration.Height;
+        return itemHeight * Illustrate.Width / Illustrate.Height;
     }
 
-    private EventHandler<IllustrationViewModel>? _isSelectedChanged;
-
-    public event EventHandler<IllustrationViewModel> IsSelectedChanged
-    {
-        add => _isSelectedChanged += value;
-        remove => _isSelectedChanged -= value;
-    }
+    public event EventHandler<IllustrationViewModel>? IsSelectedChanged;
 
     public CancellationHandle LoadingThumbnailCancellationHandle { get; }
 
     public bool LoadingThumbnail { get; private set; }
 
-    public bool IsUgoira => Illustration.IsUgoira();
-
-    public void Dispose()
-    {
-        DisposeInternal();
-        GC.SuppressFinalize(this);
-    }
+    public bool IsUgoira => Illustrate.IsUgoira();
 
     /// <summary>
     ///     An illustration may contains multiple works and such illustrations are named "manga".
@@ -130,7 +125,7 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
     /// </returns>
     public IEnumerable<IllustrationViewModel> GetMangaIllustrationViewModels()
     {
-        if (Illustration.PageCount <= 1)
+        if (Illustrate.PageCount <= 1)
         {
             return new[] { this };
         }
@@ -139,7 +134,7 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
         // that only differs from the illustrations of a single work on the MetaPages property, this property
         // contains the download urls of the manga
 
-        return Illustration.MetaPages!.Select(m => Illustration with
+        return Illustrate.MetaPages!.Select(m => Illustrate with
         {
             ImageUrls = m.ImageUrls
         }).Select((p, i) => new IllustrationViewModel(p)
@@ -148,18 +143,20 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
         });
     }
 
-    public async Task<bool> LoadThumbnailIfRequired(ThumbnailUrlOption thumbnailUrlOption = ThumbnailUrlOption.SquareMedium)
+    public async Task<bool> LoadThumbnailIfRequired(ThumbnailUrlOption thumbnailUrlOption = ThumbnailUrlOption.Medium)
     {
-        if (ThumbnailSource is not null || LoadingThumbnail)
+        if (ThumbnailSources.ContainsKey(thumbnailUrlOption) || LoadingThumbnail)
         {
             return false;
         }
 
         LoadingThumbnail = true;
-        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(Illustration.GetIllustrationThumbnailCacheKey()) is { } stream)
+        if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(Illustrate.GetIllustrationThumbnailCacheKey(thumbnailUrlOption)) is { } stream)
         {
-            ThumbnailSource = await stream.GetSoftwareBitmapSourceAsync(true);
+            ThumbnailSources[thumbnailUrlOption] = await stream.GetSoftwareBitmapSourceAsync(true);
             LoadingThumbnail = false;
+            if (thumbnailUrlOption is ThumbnailUrlOption.Medium)
+                OnPropertyChanged(nameof(ThumbnailMediumSource));
             return true;
         }
 
@@ -167,10 +164,12 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
         {
             if (App.AppViewModel.AppSetting.UseFileCache)
             {
-                await App.AppViewModel.Cache.TryAddAsync(Illustration.GetIllustrationThumbnailCacheKey(), ras, TimeSpan.FromDays(1));
+                await App.AppViewModel.Cache.TryAddAsync(Illustrate.GetIllustrationThumbnailCacheKey(thumbnailUrlOption), ras, TimeSpan.FromDays(1));
             }
-            ThumbnailSource = await ras.GetSoftwareBitmapSourceAsync(true);
+            ThumbnailSources[thumbnailUrlOption] = await ras.GetSoftwareBitmapSourceAsync(true);
             LoadingThumbnail = false;
+            if (thumbnailUrlOption is ThumbnailUrlOption.Medium)
+                OnPropertyChanged(nameof(ThumbnailMediumSource));
             return true;
         }
 
@@ -180,7 +179,7 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
 
     public async Task<IRandomAccessStream?> GetThumbnail(ThumbnailUrlOption thumbnailUrlOptions)
     {
-        if (Illustration.GetThumbnailUrl(thumbnailUrlOptions) is { } url)
+        if (Illustrate.GetThumbnailUrl(thumbnailUrlOptions) is { } url)
         {
             switch (await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url, cancellationHandle: LoadingThumbnailCancellationHandle))
             {
@@ -212,24 +211,25 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
         return App.AppViewModel.MakoClient.PostBookmarkAsync(Id, PrivacyPolicy.Public);
     }
 
-    public string Tooltip => GetTooltip();
-
-    public string GetTooltip()
+    public string Tooltip
     {
-        var sb = new StringBuilder(Illustration.Title);
-        if (Illustration.IsUgoira())
+        get
         {
-            sb.AppendLine();
-            sb.Append(MiscResources.TheIllustrationIsAnUgoira);
-        }
+            var sb = new StringBuilder(Illustrate.Title);
+            if (Illustrate.IsUgoira())
+            {
+                _ = sb.AppendLine()
+                    .Append(MiscResources.TheIllustrationIsAnUgoira);
+            }
 
-        if (Illustration.IsManga())
-        {
-            sb.AppendLine();
-            sb.Append(MiscResources.TheIllustrationIsAMangaFormatted.Format(Illustration.PageCount));
-        }
+            if (Illustrate.IsManga())
+            {
+                _ = sb.AppendLine()
+                    .Append(MiscResources.TheIllustrationIsAMangaFormatted.Format(Illustrate.PageCount));
+            }
 
-        return sb.ToString();
+            return sb.ToString();
+        }
     }
 
     public string GetBookmarkContextItemText(bool isBookmarked)
@@ -239,17 +239,26 @@ public partial class IllustrationViewModel : ObservableObject, IDisposable
 
     public bool Equals(IllustrationViewModel x, IllustrationViewModel y)
     {
-        return x.Illustration.Equals(y.Illustration);
+        return x.Illustrate.Equals(y.Illustrate);
     }
 
     public int GetHashCode(IllustrationViewModel obj)
     {
-        return obj.Illustration.GetHashCode();
+        return obj.Illustrate.GetHashCode();
     }
 
     private void DisposeInternal()
     {
-        _thumbnailSource?.Dispose();
-        _thumbnailSource = null;
+        foreach (var (_, softwareBitmapSource) in ThumbnailSources)
+        {
+            softwareBitmapSource?.Dispose();
+        }
+        ThumbnailSources.Clear();
+    }
+
+    public override void Dispose()
+    {
+        DisposeInternal();
+        GC.SuppressFinalize(this);
     }
 }

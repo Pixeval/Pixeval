@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Threading;
 using JetBrains.Annotations;
 
 namespace Pixeval.CoreApi.Engine;

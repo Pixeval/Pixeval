@@ -25,7 +25,6 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net;
 using Pixeval.Messages;
@@ -68,8 +67,7 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
 
     public void Receive(LoginCompletedMessage message)
     {
-        // TODO
-        // DownloadAndSetAvatar();
+        // TODO DownloadAndSetAvatar();
     }
 
     /// <summary>

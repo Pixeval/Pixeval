@@ -21,28 +21,24 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.System;
-using Windows.UI.Core;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Messages;
+using Pixeval.Controls;
 using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
 using Pixeval.Util.IO;
-using WinUI3Utilities.Attributes;
-using PInvoke;
-using Pixeval.Util.UI.Windowing;
-using Windows.Graphics;
-using Pixeval.Controls;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
+using Pixeval.Util.UI.Windowing;
+using Windows.System;
+using Windows.UI.Core;
 using WinUI3Utilities;
+using WinUI3Utilities.Attributes;
 
 namespace Pixeval.UserControls.IllustrationView;
 
@@ -65,11 +61,11 @@ public sealed partial class IllustrationView
         {
             if (sender is Predicate<object> predicate)
             {
-                ViewModel.DataProvider.IllustrationsView.Filter = predicate;
+                ViewModel.DataProvider.View.Filter = predicate;
             }
             else
             {
-                ViewModel.DataProvider.IllustrationsView.Refresh();
+                ViewModel.DataProvider.View.Refresh();
             }
             LoadMoreIfNeeded().Discard();
         };
@@ -79,18 +75,14 @@ public sealed partial class IllustrationView
 
     public IllustrationViewViewModel ViewModel { get; }
 
-    private async void RemoveBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void ToggleBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         e.Handled = true;
         var viewModel = sender.GetDataContext<IllustrationViewModel>();
-        await viewModel.RemoveBookmarkAsync();
-    }
-
-    private async void PostBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        e.Handled = true;
-        var viewModel = sender.GetDataContext<IllustrationViewModel>();
-        await viewModel.PostPublicBookmarkAsync();
+        if (viewModel.IsBookmarked)
+            await viewModel.RemoveBookmarkAsync();
+        else
+            await viewModel.PostPublicBookmarkAsync();
     }
 
     private void Thumbnail_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -102,32 +94,28 @@ public sealed partial class IllustrationView
         }
 
         e.Handled = true;
-        WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(sender as UIElement));
 
-        ItemTapped?.Invoke(this, sender.GetDataContext<IllustrationViewModel>());
+        var vm = sender.GetDataContext<IllustrationViewModel>();
+        ItemTapped?.Invoke(this, vm);
 
-        var viewModels = sender.GetDataContext<IllustrationViewModel>()
-            .GetMangaIllustrationViewModels()
-            .ToArray();
+        var (width, height) = DetermineWindowSize(vm.Illustrate.Width, vm.Illustrate.Width / (double)vm.Illustrate.Height);
 
-        // This is commented because the connected animation used to be used when IllustrationViewerPage does not create a new window.
-        // ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement) sender);
+        var illustrations = ViewModel.DataProvider.Source.ToArray();
+        var index = Array.IndexOf(illustrations, vm);
 
-        // TODO: Test Use the new windowing API
-        var (width, height) = DetermineWindowSize(viewModels[0].Illustration.Width, viewModels[0].Illustration.Width / (double)viewModels[0].Illustration.Height);
 
         WindowFactory.RootWindow.Fork(out var w)
             .WithLoaded((o, _) => o.To<Frame>().NavigateTo<IllustrationViewerPage>(w,
-                new IllustrationViewerPageViewModel(this, viewModels), new SuppressNavigationTransitionInfo()))
+                new IllustrationViewerPageViewModel(illustrations, index, ViewModel.DataProvider.View.Cast<IllustrationViewModel>()),
+                new SuppressNavigationTransitionInfo()))
             .WithSizeLimit(640, 360)
-            .Init(new SizeInt32(width, height))
+            .Init(new(width, height))
             .Activate();
     }
 
-    private static unsafe (int windowWidth, int windowHeight) DetermineWindowSize(int illustWidth, double illustRatio)
+    private static (int windowWidth, int windowHeight) DetermineWindowSize(int illustWidth, double illustRatio)
     {
-        var windowPlacement = User32.WINDOWPLACEMENT.Create();
-        User32.GetWindowPlacement((nint)CurrentContext.HWnd, &windowPlacement);
+        /*
         var windowHandle = User32.MonitorFromWindow((nint)CurrentContext.HWnd, User32.MonitorOptions.MONITOR_DEFAULTTONEAREST);
         User32.GetMonitorInfo(windowHandle, out var monitorInfoEx);
         var devMode = DEVMODE.Create();
@@ -139,6 +127,9 @@ public sealed partial class IllustrationView
 
         var monitorWidth = devMode.dmPelsWidth;
         var monitorHeight = devMode.dmPelsHeight;
+        */
+
+        var (monitorWidth, monitorHeight) = WindowHelper.GetScreenSize();
 
         var determinedWidth = illustWidth switch
         {
@@ -196,16 +187,13 @@ public sealed partial class IllustrationView
         }
 
         // small tricks to reduce memory consumption
-        switch (context)
+        if (context is { LoadingThumbnail: true })
         {
-            case { LoadingThumbnail: true }:
-                context.LoadingThumbnailCancellationHandle.Cancel();
-                break;
-            case { ThumbnailSource: not null }:
-                var source = context.ThumbnailSource;
-                context.ThumbnailSource = null;
-                source.Dispose();
-                break;
+            context.LoadingThumbnailCancellationHandle.Cancel();
+        }
+        else if (context.ThumbnailSources.Remove(ThumbnailUrlOption.Medium, out var source))
+        {
+            source.Dispose();
         }
     }
 
@@ -213,13 +201,7 @@ public sealed partial class IllustrationView
     {
         // TODO load after being Filtrated
         if (ScrollViewer.ScrollableHeight - LoadingArea.ActualHeight < ScrollViewer.VerticalOffset)
-            await ViewModel.DataProvider.IllustrationsView.LoadMoreItemsAsync(number);
-    }
-
-    public UIElement? GetItemContainer(IllustrationViewModel viewModel)
-    {
-        //TODO: delete
-        return null;// IllustrationItemsRepeater.ItemsSourceView.f as UIElement;
+            await ViewModel.DataProvider.View.LoadMoreItemsAsync(number);
     }
 
     private void BookmarkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -249,12 +231,12 @@ public sealed partial class IllustrationView
 
     private void CopyWebLinkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString()));
+        UIHelper.ClipboardSetText(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString());
     }
 
     private void CopyAppLinkContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        UIHelper.SetClipboardContent(package => package.SetText(MakoHelper.GenerateIllustrationAppUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString()));
+        UIHelper.ClipboardSetText(MakoHelper.GenerateIllustrationAppUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString());
     }
 
     private async void ShowQrCodeContextItem_OnTapped(object sender, TappedRoutedEventArgs e)
