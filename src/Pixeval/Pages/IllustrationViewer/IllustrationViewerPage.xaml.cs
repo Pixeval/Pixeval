@@ -76,21 +76,6 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         });
     }
 
-    private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        var dataTransferManager = Window.GetDataTransferManager();
-        dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
-
-        SidePanelShadow.Receivers.Add(IllustrationPresenterDockPanel);
-        CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
-        ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
-
-        // IMPORTANT
-
-        _viewModel.CollapseThumbnailList = () => BottomCommandSection.Translation = new Vector3(0, 120, 0);
-        _collapseThumbnailList.RunAsync().Discard();
-    }
-
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
     {
         _viewModel.Dispose();
@@ -107,7 +92,20 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         _illustrationInfoTag = new NavigationViewTag(typeof(IllustrationInfoPage), _viewModel);
         _commentsTag = new NavigationViewTag(typeof(CommentsPage), (App.AppViewModel.MakoClient.IllustrationComments(_viewModel.IllustrationId).Where(c => c is not null), _viewModel.IllustrationId));
 
-        Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.CurrentViewModel);
+        ThumbnailList.SelectedIndex = _viewModel.CurrentIllustrationIndex;
+    }
+
+    private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        var dataTransferManager = Window.GetDataTransferManager();
+        dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
+
+        SidePanelShadow.Receivers.Add(IllustrationPresenterDockPanel);
+        CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
+        ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
+
+        _viewModel.CollapseThumbnailList = () => BottomCommandSection.Translation = new Vector3(0, 120, 0);
+        _collapseThumbnailList.RunAsync().Discard();
     }
 
     private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;
@@ -218,68 +216,36 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         });
     }
 
-    private void ThumbnailList_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
+    private void ThumbnailOnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
     {
         var context = sender.GetDataContext<IllustrationViewModel>();
         if (args.BringIntoViewDistanceX <= sender.ActualWidth)
         {
-            _ = context.LoadThumbnailIfRequired(ThumbnailUrlOption.SquareMedium);
-        }
-
-        if (sender is Border b && ThumbnailList.SelectedItem is not null)
-        {
-            b.BorderThickness = new Thickness(ThumbnailList.SelectedItem == context ? 2 : 0);
+            _ = context.LoadThumbnailIfRequired();
         }
     }
 
     private void ThumbnailList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (sender is not ListView listView)
+        if (sender is not ListViewBase list)
             return;
 
-        const string borderControlName = "ThumbnailBorder";
-
-        var item = listView.ContainerFromItem(listView.SelectedItem);
-        if (item.FindDescendant(borderControlName) is Border border)
-        {
-            border.BorderThickness = new Thickness(2);
-        }
-
         var oldIndex = -1;
-        if (e.RemovedItems is [IllustrationViewModel removedItem]
-            && listView.ContainerFromItem(removedItem) is { } container
-            && container.FindDescendant(borderControlName) is Border removedBorder)
+        if (e.RemovedItems is [IllustrationViewModel removedItem])
         {
-            removedBorder.BorderThickness = new Thickness(0);
             oldIndex = Array.IndexOf(_viewModel.Illustrations, removedItem);
         }
 
-        if (listView.SelectedItem is IllustrationViewModel viewModel && viewModel.Id != _viewModel.CurrentIllustration.Id)
-        {
-            var info = (NavigationTransitionInfo?)null;
-            if (oldIndex < listView.SelectedIndex && oldIndex is not -1)
-            {
-                info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight };
-            }
-            else if (oldIndex > listView.SelectedIndex)
-            {
-                info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft };
-            }
-            Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.Goto(viewModel), info);
-        }
-    }
+        if (list.SelectedItem is not IllustrationViewModel viewModel)
+            return;
 
-    private void ThumbnailBorder_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        var context = sender.GetDataContext<IllustrationViewModel>();
-        if (context.Illustrate.Id.ToString() == _viewModel.CurrentIllustration.Id)
-        {
-            ThumbnailList.ScrollIntoView(context);
-            if (Array.IndexOf(_viewModel.Illustrations, context) is var index and not -1)
-            {
-                ThumbnailList.SelectedIndex = index;
-            }
-        }
+        var info = (NavigationTransitionInfo?)null;
+        if (oldIndex < list.SelectedIndex && oldIndex is not -1)
+            info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight };
+        else if (oldIndex > list.SelectedIndex)
+            info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft };
+        list.ScrollIntoView(list.SelectedItem);
+        Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.Goto(viewModel), info);
     }
 
     private void IllustrationImageShowcaseFrame_OnTapped(object sender, TappedRoutedEventArgs e)

@@ -175,6 +175,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
     // otherwise it contains the entire manga data
     public IllustrationViewerPageViewModel(IllustrationViewModel[] illustrations, int currentIllustrationIndex, IEnumerable<IllustrationViewModel>? illustrationsOuter = null)
     {
+        // todo: fetch engine, 解决缩略图共用问题
         IllustrationViewModelsInGridView = new(illustrationsOuter);
         Illustrations = illustrations;
         CurrentIllustrationIndex = currentIllustrationIndex;
@@ -333,7 +334,7 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
 
     public bool IsUgoira => CurrentIllustration.Illustrate.IsUgoira();
 
-    #region Command
+    #region Commands
 
     public void UpdateCommandCanExecute()
     {
@@ -518,10 +519,6 @@ public partial class IllustrationViewerPageViewModel : ObservableObject, IDispos
         RestoreResolutionCommand.IconSource = CurrentViewModel.IsFit ? FontIconSymbols.FitPageE9A6.GetFontIconSource() : FontIconSymbols.WebcamE8B8.GetFontIconSource();
         CurrentViewModel.ShowMode = CurrentViewModel.ShowMode is ZoomableImageMode.Fit ? ZoomableImageMode.Original : ZoomableImageMode.Fit;
     }
-
-    #endregion
-
-    #region Commands
 
     public XamlUICommand IllustrationInfoAndCommentsCommand { get; } =
         IllustrationViewerPageResources.IllustrationInfoAndComments.GetCommand(FontIconSymbols.InfoE946, VirtualKey.F12);

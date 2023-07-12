@@ -19,8 +19,6 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <converters1:BoolNegationToVisibilityConverter x:Key="BoolNegationToVisibilityConverter" />
     </UserControl.Resources>
     <Grid>
         <ScrollViewer

@@ -209,9 +209,7 @@
                         </Border>
                     </Grid>
                     <Grid
-                        Height="98"
                         Margin="150,0"
-                        Padding="0,3"
                         HorizontalAlignment="Center"
                         Background="{StaticResource BottomCommandSectionBackground}"
                         BorderBrush="{StaticResource SecondaryAccentBorderBrush}"
@@ -223,52 +221,35 @@
                         <Grid.Shadow>
                             <ThemeShadow x:Name="ThumbnailListDropShadow" />
                         </Grid.Shadow>
-                        <ListView
+                        <GridView
                             x:Name="ThumbnailList"
                             Margin="5"
                             Padding="0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
-                            IsMultiSelectCheckBoxEnabled="False"
+                            IsItemClickEnabled="True"
                             ItemsSource="{x:Bind _viewModel.Illustrations}"
                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
                             ScrollViewer.HorizontalScrollMode="Auto"
-                            ScrollViewer.IsHorizontalRailEnabled="True"
+                            ScrollViewer.VerticalScrollMode="Disabled"
                             SelectionChanged="ThumbnailList_OnSelectionChanged"
                             SelectionMode="Single">
-                            <ListView.ItemContainerStyle>
-                                <Style BasedOn="{StaticResource ListViewItemStretchStyle}" TargetType="ListViewItem">
-                                    <Setter Property="VerticalAlignment" Value="Stretch" />
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                            <ListView.ItemsPanel>
+                            <GridView.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <VirtualizingStackPanel Orientation="Horizontal" />
+                                    <ItemsStackPanel Orientation="Horizontal" />
                                 </ItemsPanelTemplate>
-                            </ListView.ItemsPanel>
-                            <ListView.ItemTemplate>
+                            </GridView.ItemsPanel>
+                            <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="illustrationView:IllustrationViewModel">
-                                    <Grid Width="80" Height="80">
-                                        <Border
-                                            Width="78"
-                                            Height="78"
-                                            CornerRadius="{ThemeResource ControlCornerRadius}"
-                                            Loaded="ThumbnailBorder_OnLoaded">
-                                            <Border.Background>
-                                                <ImageBrush ImageSource="{x:Bind ThumbnailMediumSource, Mode=OneWay}" Stretch="UniformToFill" />
-                                            </Border.Background>
-                                        </Border>
-                                        <Border
-                                            x:Name="ThumbnailBorder"
-                                            Width="80"
-                                            Height="80"
-                                            BorderBrush="{StaticResource SystemControlHighlightAccentBrush}"
-                                            CornerRadius="{ThemeResource ControlCornerRadius}"
-                                            EffectiveViewportChanged="ThumbnailList_OnEffectiveViewportChanged" />
-                                    </Grid>
+                                    <Image
+                                        Width="80"
+                                        Height="80"
+                                        EffectiveViewportChanged="ThumbnailOnEffectiveViewportChanged"
+                                        Source="{x:Bind ThumbnailMediumSource, Mode=OneWay}"
+                                        Stretch="UniformToFill" />
                                 </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
+                            </GridView.ItemTemplate>
+                        </GridView>
                     </Grid>
                 </StackPanel>
             </Grid>
