@@ -16,6 +16,7 @@
     xmlns:ui="using:Pixeval.Util.UI"
     KeyboardAcceleratorPlacementMode="Hidden"
     Loaded="IllustrationViewerPage_OnLoaded"
+    Unloaded="IllustrationViewerPage_OnUnloaded"
     mc:Ignorable="d">
     <controls:EnhancedWindowPage.Resources>
         <ThemeShadow x:Name="SidePanelShadow" />
@@ -228,11 +229,11 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             IsItemClickEnabled="True"
-                            ItemsSource="{x:Bind _viewModel.Illustrations}"
+                            ItemsSource="{x:Bind _viewModel.ViewModel.DataProvider.View}"
                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
                             ScrollViewer.HorizontalScrollMode="Auto"
                             ScrollViewer.VerticalScrollMode="Disabled"
-                            SelectionChanged="ThumbnailList_OnSelectionChanged"
+                            SelectedIndex="{x:Bind _viewModel.CurrentIllustrationIndex, Mode=TwoWay}"
                             SelectionMode="Single">
                             <GridView.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -352,19 +353,16 @@
                         <AppBarSeparator />
                         <AppBarButton Command="{x:Bind _viewModel.AddToBookmarkCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton
+                            x:Name="GenerateLinkButton"
                             Command="{x:Bind _viewModel.GenerateLinkCommand}"
-                            SizeChanged="CommandBarElementOnSizeChanged"
-                            Tapped="GenerateLinkCommandOnTapped" />
+                            SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton Command="{x:Bind _viewModel.GenerateWebLinkCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton Command="{x:Bind _viewModel.OpenInWebBrowserCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton
+                            x:Name="ShowQrCodeButton"
                             Command="{x:Bind _viewModel.ShowQrCodeCommand}"
-                            SizeChanged="CommandBarElementOnSizeChanged"
-                            Tapped="ShowQrCodeOnTapped" />
-                        <AppBarButton
-                            Command="{x:Bind _viewModel.ShareCommand}"
-                            SizeChanged="CommandBarElementOnSizeChanged"
-                            Tapped="ShareOnTapped" />
+                            SizeChanged="CommandBarElementOnSizeChanged" />
+                        <AppBarButton Command="{x:Bind _viewModel.ShareCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
                     </CommandBar>
                     <CommandBar
                         x:Name="IllustrationViewerSubCommandBar"
@@ -372,10 +370,7 @@
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         DefaultLabelPosition="Collapsed">
-                        <AppBarButton
-                            Width="{StaticResource CollapsedAppBarButtonWidth}"
-                            Command="{x:Bind _viewModel.FullScreenCommand}"
-                            Tapped="FullScreenTapped" />
+                        <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.FullScreenCommand}" />
                         <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.RestoreResolutionCommand}" />
                         <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.ZoomOutCommand}" />
                         <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.ZoomInCommand}" />
@@ -388,11 +383,11 @@
                         FontSize="{StaticResource PixevalContentFontSize}"
                         FontWeight="SemiBold"
                         HorizontalTextAlignment="Center"
-                        Text="{x:Bind _viewModel.CurrentViewModel.Scale, Converter={StaticResource NumberToPercentageConverter}, ConverterParameter=2, Mode=OneWay}"
+                        Text="{x:Bind _viewModel.CurrentImage.Scale, Converter={StaticResource NumberToPercentageConverter}, ConverterParameter=2, Mode=OneWay}"
                         TextAlignment="Center"
                         TextTrimming="CharacterEllipsis" />
                     <TeachingTip
-                        x:Name="QrCodeTeachingTip"
+                        x:Name="ShowQrCodeTeachingTip"
                         x:Uid="/IllustrationViewerPage/QrCodeTeachingTip"
                         Grid.Column="0"
                         IsLightDismissEnabled="True">
@@ -401,7 +396,7 @@
                         </TeachingTip.HeroContent>
                     </TeachingTip>
                     <TeachingTip
-                        x:Name="GenerateLinkToThisPageButtonTeachingTip"
+                        x:Name="GenerateLinkTeachingTip"
                         x:Uid="/IllustrationViewerPage/GenerateLinkToThisPageButtonTeachingTip"
                         Grid.Column="0"
                         ActionButtonClick="GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick">
@@ -412,12 +407,7 @@
                 </Grid>
             </Grid>
 
-            <TeachingTip
-                Title="{x:Bind _viewModel.TeachingTipProperties.Title, Mode=OneWay}"
-                IconSource="{x:Bind _viewModel.TeachingTipProperties.IconSource, Mode=OneWay}"
-                IsLightDismissEnabled="True"
-                IsOpen="{x:Bind _viewModel.TeachingTipProperties.IsOpen, Mode=OneWay}"
-                Subtitle="{x:Bind _viewModel.TeachingTipProperties.Subtitle, Mode=OneWay}" />
+            <TeachingTip x:Name="SnackBarTeachingTip" IsLightDismissEnabled="True" />
 
         </Grid>
         <VisualStateManager.VisualStateGroups>

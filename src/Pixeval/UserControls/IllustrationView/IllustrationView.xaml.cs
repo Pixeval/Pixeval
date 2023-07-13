@@ -56,7 +56,7 @@ public sealed partial class IllustrationView
     public IllustrationView()
     {
         InitializeComponent();
-        ViewModel = new IllustrationViewViewModel();
+        _viewModelRef = new(new());
         ViewModel.DataProvider.FilterChanged += (sender, _) =>
         {
             if (sender is Predicate<object> predicate)
@@ -73,7 +73,11 @@ public sealed partial class IllustrationView
 
     public event EventHandler<IllustrationViewModel>? ItemTapped;
 
-    public IllustrationViewViewModel ViewModel { get; }
+    private readonly SharedRef<IllustrationViewViewModel> _viewModelRef;
+
+    public SharedRef<IllustrationViewViewModel> ViewModelRef => _viewModelRef.MakeShared();
+
+    public IllustrationViewViewModel ViewModel => _viewModelRef.Value;
 
     private async void ToggleBookmarkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
@@ -100,13 +104,11 @@ public sealed partial class IllustrationView
 
         var (width, height) = DetermineWindowSize(vm.Illustrate.Width, vm.Illustrate.Width / (double)vm.Illustrate.Height);
 
-        var illustrations = ViewModel.DataProvider.Source.ToArray();
-        var index = Array.IndexOf(illustrations, vm);
-
+        var index = ViewModel.DataProvider.View.Cast<IllustrationViewModel>().ToList().IndexOf(vm);
 
         WindowFactory.RootWindow.Fork(out var w)
             .WithLoaded((o, _) => o.To<Frame>().NavigateTo<IllustrationViewerPage>(w,
-                new IllustrationViewerPageViewModel(illustrations, index, ViewModel.DataProvider.View.Cast<IllustrationViewModel>()),
+                new IllustrationViewerPageViewModel(ViewModelRef, index),
                 new SuppressNavigationTransitionInfo()))
             .WithSizeLimit(640, 360)
             .Init(new(width, height))
@@ -272,5 +274,10 @@ public sealed partial class IllustrationView
     private void ScrollViewer_ViewChanged(object? sender, ScrollViewerViewChangedEventArgs e)
     {
         LoadMoreIfNeeded().Discard();
+    }
+
+    private void IllustrationView_OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        _viewModelRef.Dispose();
     }
 }

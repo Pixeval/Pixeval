@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.UI.Converters"
-    xmlns:converters1="using:Pixeval.Util.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:illustrationView="using:Pixeval.UserControls.IllustrationView"
@@ -16,6 +15,7 @@
     xmlns:triggers1="using:Pixeval.Util.Triggers"
     xmlns:ui="using:Pixeval.Util.UI"
     xmlns:util="using:Pixeval.Util"
+    Unloaded="IllustrationView_OnUnloaded"
     mc:Ignorable="d">
     <UserControl.Resources>
         <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
