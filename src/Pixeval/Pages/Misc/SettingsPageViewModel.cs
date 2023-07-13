@@ -26,6 +26,7 @@ using System.Linq;
 using System.Reflection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Database.Managers;
@@ -118,7 +119,7 @@ public partial class SettingsPageViewModel : ObservableObject
     public void ClearData<T, TModel>(ClearDataKind kind, IPersistentManager<T, TModel> manager) where T : new()
     {
         manager.Clear();
-        TeachingTipProperties.ShowAndHide(kind switch
+        SettingsTeachingTip.ShowAndHide(kind switch
         {
             ClearDataKind.BrowseHistory => SettingsPageResources.BrowseHistoriesCleared,
             ClearDataKind.SearchHistory => SettingsPageResources.SearchHistoriesCleared,
@@ -127,5 +128,8 @@ public partial class SettingsPageViewModel : ObservableObject
         });
     }
 
-    public ObservableTeachingTipProperties TeachingTipProperties { get; } = new();
+    /// <summary>
+    /// 写成字段防止被反射
+    /// </summary>
+    public TeachingTip SettingsTeachingTip;
 }
