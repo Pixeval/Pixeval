@@ -37,6 +37,7 @@ using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 using Windows.Storage.Streams;
+using Pixeval.Options;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -147,8 +148,9 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         if (LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true } || _disposed)
         {
             _disposed = false;
-            _ = IllustrationViewModel.LoadThumbnailIfRequired().ContinueWith(
-                _ => OriginalImageSource ??= IllustrationViewModel.ThumbnailMediumSource,
+            var option = ThumbnailUrlOption.Medium;
+            _ = IllustrationViewModel.LoadThumbnailIfRequired(option).ContinueWith(
+                _ => OriginalImageSource ??= IllustrationViewModel.ThumbnailSources[option],
                 TaskScheduler.FromCurrentSynchronizationContext());
             AddHistory();
             await LoadOriginalImage();

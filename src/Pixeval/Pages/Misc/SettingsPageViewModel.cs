@@ -131,5 +131,5 @@ public partial class SettingsPageViewModel : ObservableObject
     /// <summary>
     /// 写成字段防止被反射
     /// </summary>
-    public TeachingTip SettingsTeachingTip;
+    public TeachingTip SettingsTeachingTip = null!;
 }

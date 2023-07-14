@@ -9,11 +9,15 @@
     Loaded="IllustrationContainer_OnLoaded"
     mc:Ignorable="d">
 
-    <controls:DockPanel x:Name="IllustrationContainerDockPanel">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <illustrationView:IllustrationViewCommandBar
             x:Name="TopCommandBar"
+            Grid.Row="0"
             HorizontalAlignment="Stretch"
-            controls:DockPanel.Dock="Top"
             IsDefaultCommandsEnabled="{x:Bind TopCommandBar.ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
             PrimaryCommandsSupplements="{x:Bind PrimaryCommandsSupplements, Mode=OneWay}"
             SecondaryCommandsSupplements="{x:Bind SecondaryCommandsSupplements, Mode=TwoWay}"
@@ -21,7 +25,9 @@
             Visibility="{x:Bind ShowCommandBar, Mode=OneWay}" />
         <illustrationView:IllustrationView
             x:Name="IllustrationView"
+            Grid.Row="1"
             x:FieldModifier="public"
-            IllustrationViewOption="{x:Bind IllustrationViewOption}" />
-    </controls:DockPanel>
+            IllustrationViewOption="{x:Bind IllustrationViewOption}"
+            ThumbnailDirection="{x:Bind ThumbnailDirection}" />
+    </Grid>
 </UserControl>

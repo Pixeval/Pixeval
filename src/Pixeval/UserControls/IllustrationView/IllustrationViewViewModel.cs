@@ -18,11 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Linq;
 using CommunityToolkit.WinUI.UI;
 using Pixeval.CoreApi.Model;
-using Pixeval.Options;
 using Pixeval.UserControls.Illustrate;
 using Pixeval.Util;
 using Pixeval.Utilities;
@@ -31,61 +29,6 @@ namespace Pixeval.UserControls.IllustrationView;
 
 public sealed class IllustrationViewViewModel : SortableIllustrateViewViewModel<Illustration, IllustrationViewModel>
 {
-    #region RiverFlowLayout
-
-    private ThumbnailDirection _thumbnailDirection;
-
-    private static double _itemWidth;
-
-    public static double StaticItemHeight;
-
-    public ThumbnailDirection ThumbnailDirection
-    {
-        get => _thumbnailDirection;
-        set
-        {
-            if (_thumbnailDirection == value)
-                return;
-            _thumbnailDirection = value;
-            switch (_thumbnailDirection)
-            {
-                case ThumbnailDirection.Landscape:
-                    ItemHeight = 180;
-                    ItemWidth = 250;
-                    break;
-                case ThumbnailDirection.Portrait:
-                    ItemHeight = 250;
-                    ItemWidth = 180;
-                    break;
-                default:
-                    WinUI3Utilities.ThrowHelper.ArgumentOutOfRange(_thumbnailDirection);
-                    break;
-            }
-        }
-    }
-
-    public double ItemWidth
-    {
-        get => _itemWidth;
-        set => _itemWidth = value;
-    }
-
-    public double ItemHeight
-    {
-        get => StaticItemHeight;
-        set
-        {
-            // 需要通过绑定更新
-            if (Math.Abs(StaticItemHeight - value) < double.Epsilon)
-                return;
-            OnPropertyChanging();
-            StaticItemHeight = value;
-            OnPropertyChanged();
-        }
-    }
-
-    #endregion
-
     public override IllustrationViewDataProvider DataProvider { get; } = new();
 
     public IllustrationViewViewModel()

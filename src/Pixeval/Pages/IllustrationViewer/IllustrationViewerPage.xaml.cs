@@ -139,7 +139,6 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
                     case IllustrationViewerPageViewModel.ShowShare:
                     {
                         Window.ShowShareUI();
-                        TeachingTip a;
                         break;
                     }
                 }
@@ -282,7 +281,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         var context = sender.GetDataContext<IllustrationViewModel>();
         if (args.BringIntoViewDistanceX <= sender.ActualWidth)
         {
-            _ = context.LoadThumbnailIfRequired();
+            _ = context.LoadThumbnailIfRequired(ThumbnailUrlOption.SquareMedium);
         }
     }
 

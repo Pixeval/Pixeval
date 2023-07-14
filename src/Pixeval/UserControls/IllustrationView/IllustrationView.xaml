@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.UI.Converters"
+    xmlns:converters1="using:Pixeval.Util.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:illustrationView="using:Pixeval.UserControls.IllustrationView"
@@ -19,6 +20,10 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
+        <converters1:DictionaryConverter x:Key="DictionaryConverter" />
+        <converters1:IllustrationWidthConverter x:Key="IllustrationWidthConverter" />
+        <converters1:IllustrationHeightConverter x:Key="IllustrationHeightConverter" />
+        <converters1:Box x:Key="Box" />
     </UserControl.Resources>
     <Grid>
         <ScrollViewer
@@ -85,8 +90,8 @@
                                 </GridViewItem.ContextFlyout>
                                 <controls:ContentFiller
                                     CornerRadius="{ThemeResource ControlCornerRadius}"
-                                    DesiredHeight="{x:Bind illustrationView:IllustrationViewViewModel.StaticItemHeight}"
-                                    DesiredWidth="{x:Bind GetDesiredWidth(illustrationView:IllustrationViewViewModel.StaticItemHeight)}">
+                                    DesiredHeight="{Binding Illustrate, Converter={StaticResource IllustrationHeightConverter}, ConverterParameter={StaticResource Box}}"
+                                    DesiredWidth="{Binding Illustrate, Converter={StaticResource IllustrationWidthConverter}, ConverterParameter={StaticResource Box}}">
                                     <controls:ContentFiller.Resources>
                                         <ExponentialEase
                                             x:Key="EasingFunction"
@@ -176,9 +181,10 @@
                                         </triggers1:EventWithConditionTriggerBehavior>
                                     </interactivity:Interaction.Behaviors>
                                     <Grid>
-                                        <Border CornerRadius="{ThemeResource ControlCornerRadius}">
-                                            <Image Source="{x:Bind ThumbnailMediumSource, Mode=OneWay}" Stretch="UniformToFill" />
-                                        </Border>
+                                        <Grid.Background>
+                                            <!--  他妈的，只有在Grid模式下如果不设为BackgroundBrush就不会自动刷新图片，可能是ContentFiller逻辑造成的，但是很几把奇怪，有机会务必改回Image  -->
+                                            <ImageBrush ImageSource="{Binding ThumbnailSources, Converter={StaticResource DictionaryConverter}, ConverterParameter={StaticResource Box}, Mode=OneWay}" Stretch="UniformToFill" />
+                                        </Grid.Background>
                                         <Grid
                                             x:Name="MaskGrid"
                                             Padding="10"
@@ -316,7 +322,7 @@
                             <Setter.Value>
                                 <RiverFlowLayout
                                     ItemsStretch="Fill"
-                                    LineSize="{x:Bind ViewModel.ItemHeight, Mode=OneWay}"
+                                    LineSize="{x:Bind ThumbnailDirection, Converter={StaticResource IllustrationHeightConverter}, Mode=OneWay}"
                                     LineSpacing="5"
                                     MinItemSpacing="5" />
                             </Setter.Value>
@@ -333,8 +339,8 @@
                                 <UniformGridLayout
                                     ItemsStretch="Fill"
                                     MinColumnSpacing="5"
-                                    MinItemHeight="{x:Bind ViewModel.ItemHeight, Mode=OneWay}"
-                                    MinItemWidth="{x:Bind ViewModel.ItemWidth}"
+                                    MinItemHeight="{x:Bind ThumbnailDirection, Converter={StaticResource IllustrationHeightConverter}, Mode=OneWay}"
+                                    MinItemWidth="180"
                                     MinRowSpacing="5" />
                             </Setter.Value>
                         </Setter>

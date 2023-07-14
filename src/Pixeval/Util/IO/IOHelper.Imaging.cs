@@ -26,10 +26,10 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Utilities;
-using SixLabors.ImageSharp;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
+using Pixeval.Options;
 
 namespace Pixeval.Util.IO;
 
@@ -186,5 +186,16 @@ public static partial class IOHelper
         var inMemoryRandomAccessStream = new InMemoryRandomAccessStream();
         await WriteGifBitmapAsync(inMemoryRandomAccessStream, entryStreams.Select(s => s.content.AsRandomAccessStream()), (int)(ugoiraMetadataResponse.UgoiraMetadataInfo?.Frames?.FirstOrDefault()?.Delay ?? 0));
         return inMemoryRandomAccessStream;
+    }
+
+    public static ThumbnailUrlOption ToThumbnailUrlOption(
+        this IllustrationViewOption illustrationViewOption)
+    {
+        return illustrationViewOption switch
+        {
+            IllustrationViewOption.RiverFlow => ThumbnailUrlOption.Medium,
+            IllustrationViewOption.Grid => ThumbnailUrlOption.SquareMedium,
+            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<IllustrationViewOption, ThumbnailUrlOption>(illustrationViewOption)
+        };
     }
 }

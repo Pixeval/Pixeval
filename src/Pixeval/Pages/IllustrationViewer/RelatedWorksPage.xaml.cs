@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -21,12 +21,15 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Messages;
+using Pixeval.Options;
 using Pixeval.Util;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
 public sealed partial class RelatedWorksPage
 {
+    public ThumbnailDirection ThumbnailDirection => App.AppViewModel.AppSetting.ThumbnailDirection;
+
     private IllustrationViewerPageViewModel? _illustrationViewerPageViewModel;
 
     public RelatedWorksPage()

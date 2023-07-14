@@ -54,8 +54,9 @@ public class IllustrationViewModel : IllustrateViewModel<Illustration>
     private bool _isSelected;
 
     public SoftwareBitmapSource? ThumbnailMediumSource => ThumbnailSources.TryGetValue(ThumbnailUrlOption.Medium, out var value) ? value : null;
+    public SoftwareBitmapSource? ThumbnailSquareMediumSource => ThumbnailSources.TryGetValue(ThumbnailUrlOption.SquareMedium, out var value) ? value : null;
 
-    public Dictionary<ThumbnailUrlOption, SoftwareBitmapSource> ThumbnailSources = new();
+    public Dictionary<ThumbnailUrlOption, SoftwareBitmapSource> ThumbnailSources { get; set; } = new();
 
     public IllustrationViewModel(Illustration illustration) : base(illustration)
     {
@@ -98,11 +99,6 @@ public class IllustrationViewModel : IllustrateViewModel<Illustration>
             _isSelected = b;
             IsSelectedChanged?.Invoke(this, this);
         });
-    }
-
-    public double GetDesiredWidth(double itemHeight)
-    {
-        return itemHeight * Illustrate.Width / Illustrate.Height;
     }
 
     public event EventHandler<IllustrationViewModel>? IsSelectedChanged;
@@ -155,8 +151,14 @@ public class IllustrationViewModel : IllustrateViewModel<Illustration>
         {
             ThumbnailSources[thumbnailUrlOption] = await stream.GetSoftwareBitmapSourceAsync(true);
             LoadingThumbnail = false;
-            if (thumbnailUrlOption is ThumbnailUrlOption.Medium)
-                OnPropertyChanged(nameof(ThumbnailMediumSource));
+            OnPropertyChanged(thumbnailUrlOption switch
+            {
+                ThumbnailUrlOption.Medium => nameof(ThumbnailMediumSource),
+                ThumbnailUrlOption.SquareMedium => nameof(ThumbnailSquareMediumSource),
+                // ThumbnailUrlOption.Large => expr,
+                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ThumbnailUrlOption, string>(thumbnailUrlOption)
+            });
+            OnPropertyChanged(nameof(ThumbnailSources));
             return true;
         }
 
@@ -168,11 +170,18 @@ public class IllustrationViewModel : IllustrateViewModel<Illustration>
             }
             ThumbnailSources[thumbnailUrlOption] = await ras.GetSoftwareBitmapSourceAsync(true);
             LoadingThumbnail = false;
-            if (thumbnailUrlOption is ThumbnailUrlOption.Medium)
-                OnPropertyChanged(nameof(ThumbnailMediumSource));
+            OnPropertyChanged(thumbnailUrlOption switch
+            {
+                ThumbnailUrlOption.Medium => nameof(ThumbnailMediumSource),
+                ThumbnailUrlOption.SquareMedium => nameof(ThumbnailSquareMediumSource),
+                // ThumbnailUrlOption.Large => expr,
+                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ThumbnailUrlOption, string>(thumbnailUrlOption)
+            });
+            OnPropertyChanged(nameof(ThumbnailSources));
             return true;
         }
 
+        OnPropertyChanged(nameof(ThumbnailSources));
         LoadingThumbnail = false;
         return false;
     }

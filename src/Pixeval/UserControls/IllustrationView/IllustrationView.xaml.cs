@@ -31,6 +31,7 @@ using Pixeval.Controls;
 using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
+using Pixeval.Util.Converters;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
@@ -44,9 +45,22 @@ namespace Pixeval.UserControls.IllustrationView;
 
 // use "load failed" image for those thumbnails who failed to load its source due to various reasons
 // note: please ALWAYS add e.Handled = true before every "tapped" event for the buttons
-[DependencyProperty<IllustrationViewOption>("IllustrationViewOption")]
+[DependencyProperty<IllustrationViewOption>("IllustrationViewOption", DependencyPropertyDefaultValue.Default, nameof(OnIllustrationViewOptionChanged))]
+[DependencyProperty<ThumbnailDirection>("ThumbnailDirection", DependencyPropertyDefaultValue.Default, nameof(OnThumbnailDirectionChanged))]
 public sealed partial class IllustrationView
 {
+    private static void OnIllustrationViewOptionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var value = e.NewValue.To<IllustrationViewOption>();
+        d.To<UserControl>().Resources[nameof(Box)].To<Box>().Value = value.ToThumbnailUrlOption();
+    }
+
+    private static void OnThumbnailDirectionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var value = e.NewValue.To<ThumbnailDirection>();
+        d.To<UserControl>().Resources[nameof(Box)].To<Box>().Tag = value;
+    }
+
     private static readonly ExponentialEase _imageSourceSetEasingFunction = new()
     {
         EasingMode = EasingMode.EaseOut,
@@ -161,12 +175,7 @@ public sealed partial class IllustrationView
 
         if (args.BringIntoViewDistanceY <= sender.ActualHeight * preLoadRows)
         {
-            var option = IllustrationViewOption switch
-            {
-                IllustrationViewOption.RiverFlow => ThumbnailUrlOption.Medium,
-                IllustrationViewOption.Grid => ThumbnailUrlOption.SquareMedium,
-                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<IllustrationViewOption, ThumbnailUrlOption>(IllustrationViewOption)
-            };
+            var option = IllustrationViewOption.ToThumbnailUrlOption();
             if (await context.LoadThumbnailIfRequired(option))
             {
                 var transform = (ScaleTransform)sender.RenderTransform;
@@ -193,10 +202,10 @@ public sealed partial class IllustrationView
         {
             context.LoadingThumbnailCancellationHandle.Cancel();
         }
-        else if (context.ThumbnailSources.Remove(ThumbnailUrlOption.Medium, out var source))
-        {
-            source.Dispose();
-        }
+        // else if (context.ThumbnailSources.Remove(ThumbnailUrlOption.Medium, out var source))
+        // {
+        //     source.Dispose();
+        // }
     }
 
     public async Task LoadMoreIfNeeded(uint number = 20)

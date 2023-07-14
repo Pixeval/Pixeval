@@ -246,7 +246,7 @@
                                         Width="80"
                                         Height="80"
                                         EffectiveViewportChanged="ThumbnailOnEffectiveViewportChanged"
-                                        Source="{x:Bind ThumbnailMediumSource, Mode=OneWay}"
+                                        Source="{x:Bind ThumbnailSquareMediumSource, Mode=OneWay}"
                                         Stretch="UniformToFill" />
                                 </DataTemplate>
                             </GridView.ItemTemplate>
