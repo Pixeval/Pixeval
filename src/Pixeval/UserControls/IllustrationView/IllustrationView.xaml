@@ -16,7 +16,7 @@
     xmlns:triggers1="using:Pixeval.Util.Triggers"
     xmlns:ui="using:Pixeval.Util.UI"
     xmlns:util="using:Pixeval.Util"
-    Unloaded="IllustrationView_OnUnloaded"
+    Unloaded="IllustrationViewOnUnloaded"
     mc:Ignorable="d">
     <UserControl.Resources>
         <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
@@ -24,22 +24,40 @@
         <converters1:IllustrationWidthConverter x:Key="IllustrationWidthConverter" />
         <converters1:IllustrationHeightConverter x:Key="IllustrationHeightConverter" />
         <converters1:Box x:Key="Box" />
+        <ExponentialEase
+            x:Key="EasingFunction"
+            EasingMode="EaseOut"
+            Exponent="12" />
     </UserControl.Resources>
     <Grid>
         <ScrollViewer
             x:Name="ScrollViewer"
             x:FieldModifier="public"
-            ViewChanged="ScrollViewer_ViewChanged">
+            ViewChanged="ScrollViewerViewChanged">
             <StackPanel>
+                <!--  ReSharper disable once UnusedMember.Local  -->
                 <ItemsRepeater x:Name="IllustrationItemsRepeater" ItemsSource="{x:Bind ViewModel.DataProvider.View}">
                     <ItemsRepeater.ItemTemplate>
                         <DataTemplate x:DataType="illustrationView:IllustrationViewModel">
                             <GridViewItem
+                                x:Name="IllustrationThumbnailContainerItem"
                                 DataContext="{x:Bind}"
-                                EffectiveViewportChanged="IllustrationThumbnailContainerItem_OnEffectiveViewportChanged"
+                                EffectiveViewportChanged="IllustrationThumbnailContainerItemOnEffectiveViewportChanged"
                                 IsSelected="{x:Bind IsSelected, Mode=OneWay}"
                                 RenderTransformOrigin="0.5,0.5"
-                                Tapped="IllustrationThumbnailContainerItem_OnTapped">
+                                Tapped="IllustrationThumbnailContainerItemOnTapped">
+                                <GridViewItem.Resources>
+                                    <!--  ReSharper disable once Xaml.RedundantResource  -->
+                                    <Storyboard x:Key="IllustrationThumbnailContainerItemStoryboard">
+                                        <DoubleAnimation
+                                            EasingFunction="{StaticResource EasingFunction}"
+                                            Storyboard.TargetName="IllustrationThumbnailContainerItem"
+                                            Storyboard.TargetProperty="Opacity"
+                                            From="0"
+                                            To="1"
+                                            Duration="0:0:2" />
+                                    </Storyboard>
+                                </GridViewItem.Resources>
                                 <GridViewItem.RenderTransform>
                                     <ScaleTransform />
                                 </GridViewItem.RenderTransform>
@@ -48,55 +66,53 @@
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/BookmarkContextItem"
                                             Icon="{x:Bind util:MakoHelper.GetBookmarkButtonIcon(IsBookmarked), Mode=OneWay}"
-                                            Tapped="BookmarkContextItem_OnTapped"
+                                            Tapped="BookmarkContextItemOnTapped"
                                             Text="{x:Bind GetBookmarkContextItemText(IsBookmarked), Mode=OneWay}" />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/AddToBookmarkContextItem"
                                             Icon="{ui:FontIcon Glyph=BookmarksE8A4}"
-                                            Tapped="AddToBookmarkContextItem_OnTapped" />
+                                            Tapped="AddToBookmarkContextItemOnTapped" />
                                         <MenuFlyoutSeparator />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/SaveContextItem"
                                             Icon="{ui:FontIcon Glyph=SaveE74E}"
-                                            Tapped="SaveContextItem_OnTapped" />
+                                            Tapped="SaveContextItemOnTapped" />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/SaveAsContextItem"
                                             Icon="{ui:FontIcon Glyph=SaveAsE792}"
-                                            Tapped="SaveAsContextItem_OnTapped" />
+                                            Tapped="SaveAsContextItemOnTapped" />
                                         <MenuFlyoutSeparator />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/OpenInBrowserContextItem"
                                             Icon="{ui:FontIcon Glyph=WebSearchF6FA}"
-                                            Tapped="OpenInBrowserContextItem_OnTapped" />
+                                            Tapped="OpenInBrowserContextItemOnTapped" />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/CopyWebLinkContextItem"
                                             Icon="{ui:FontIcon Glyph=PreviewLinkE8A1}"
-                                            Tapped="CopyWebLinkContextItem_OnTapped" />
+                                            Tapped="CopyWebLinkContextItemOnTapped" />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/CopyAppLinkContextItem"
                                             Icon="{ui:FontIcon Glyph=LinkE71B}"
-                                            Tapped="CopyAppLinkContextItem_OnTapped" />
+                                            Tapped="CopyAppLinkContextItemOnTapped" />
                                         <MenuFlyoutSeparator />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/ShowQrCodeContextItem"
                                             Icon="{ui:FontIcon Glyph=QRCodeED14}"
-                                            Tapped="ShowQrCodeContextItem_OnTapped" />
+                                            Tapped="ShowQrCodeContextItemOnTapped" />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/ShowPixEzQrCodeContextItem"
                                             Icon="{ui:FontIcon Glyph=Photo2EB9F}"
-                                            Tapped="ShowPixEzQrCodeContextItem_OnTapped" />
+                                            Tapped="ShowPixEzQrCodeContextItemOnTapped" />
                                         <MenuFlyoutSeparator />
                                     </MenuFlyout>
                                 </GridViewItem.ContextFlyout>
+                                <!--  ReSharper disable Xaml.ConstructorWarning  -->
                                 <controls:ContentFiller
                                     CornerRadius="{ThemeResource ControlCornerRadius}"
                                     DesiredHeight="{Binding Illustrate, Converter={StaticResource IllustrationHeightConverter}, ConverterParameter={StaticResource Box}}"
                                     DesiredWidth="{Binding Illustrate, Converter={StaticResource IllustrationWidthConverter}, ConverterParameter={StaticResource Box}}">
+                                    <!--  ReSharper restore Xaml.ConstructorWarning  -->
                                     <controls:ContentFiller.Resources>
-                                        <ExponentialEase
-                                            x:Key="EasingFunction"
-                                            EasingMode="EaseOut"
-                                            Exponent="12" />
                                         <Storyboard x:Key="ThumbnailScaleOutStoryboard">
                                             <DoubleAnimation
                                                 EasingFunction="{StaticResource EasingFunction}"
@@ -183,6 +199,7 @@
                                     <Grid>
                                         <Grid.Background>
                                             <!--  他妈的，只有在Grid模式下如果不设为BackgroundBrush就不会自动刷新图片，可能是ContentFiller逻辑造成的，但是很几把奇怪，有机会务必改回Image  -->
+                                            <!--  ReSharper disable once Xaml.ConstructorWarning  -->
                                             <ImageBrush ImageSource="{Binding ThumbnailSources, Converter={StaticResource DictionaryConverter}, ConverterParameter={StaticResource Box}, Mode=OneWay}" Stretch="UniformToFill" />
                                         </Grid.Background>
                                         <Grid
@@ -190,7 +207,7 @@
                                             Padding="10"
                                             Background="#40FFFFFF"
                                             Opacity="0"
-                                            Tapped="Thumbnail_OnTapped">
+                                            Tapped="ThumbnailOnTapped">
                                             <ToolTipService.ToolTip>
                                                 <ToolTip Content="{x:Bind Tooltip}" Placement="Right" />
                                             </ToolTipService.ToolTip>
@@ -200,7 +217,7 @@
                                                 Height="20"
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Top"
-                                                Tapped="ToggleBookmarkButton_OnTapped">
+                                                Tapped="ToggleBookmarkButtonOnTapped">
                                                 <Grid.RenderTransform>
                                                     <ScaleTransform CenterX="10" CenterY="10" ScaleX="0" ScaleY="0" />
                                                 </Grid.RenderTransform>
@@ -285,7 +302,7 @@
                         VerticalAlignment="Center"
                         IsIndeterminate="True" />
                     <TextBlock VerticalAlignment="Center">Loading</TextBlock>
-                    <!--  TODO move to resw  -->
+                    <!--  TODO move to ResW  -->
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
