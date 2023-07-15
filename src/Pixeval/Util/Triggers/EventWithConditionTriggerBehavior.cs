@@ -20,14 +20,14 @@ public partial class EventWithConditionTriggerBehavior : Trigger
     private bool _isLoadedEventRegistered;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="EventTriggerWithConditionBehavior"/> class.
+    /// Initializes a new instance of the <see cref="EventWithConditionTriggerBehavior"/> class.
     /// </summary>
     public EventWithConditionTriggerBehavior()
     {
     }
 
     /// <summary>
-    /// Called after the behavior is attached to the <see cref="Microsoft.Xaml.Interactivity.Behavior.AssociatedObject"/>.
+    /// Called after the behavior is attached to the <see cref="Behavior.AssociatedObject"/>.
     /// </summary>
     protected override void OnAttached()
     {
@@ -36,7 +36,7 @@ public partial class EventWithConditionTriggerBehavior : Trigger
     }
 
     /// <summary>
-    /// Called when the behavior is being detached from its <see cref="Microsoft.Xaml.Interactivity.Behavior.AssociatedObject"/>.
+    /// Called when the behavior is being detached from its <see cref="Behavior.AssociatedObject"/>.
     /// </summary>
     protected override void OnDetaching()
     {

@@ -109,17 +109,11 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
         {
             // Do not add to collection is the model does not conform to the filter
             if (!Filter?.Invoke(model) ?? false)
-            {
                 return;
-            }
             if (model.IsSelected)
-            {
                 SelectedIllustrations.Add(model);
-            }
             else
-            {
-                SelectedIllustrations.Remove(model);
-            }
+                _ = SelectedIllustrations.Remove(model);
         }
 
         switch (args)

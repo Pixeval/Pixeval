@@ -22,6 +22,7 @@
     <UserControl.Resources>
         <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
         <converters1:DictionaryConverter x:Key="DictionaryConverter" />
+        <converters1:BoolToDoubleConverter x:Key="BoolToDoubleConverter" />
         <converters1:IllustrationWidthConverter x:Key="IllustrationWidthConverter" />
         <converters1:IllustrationHeightConverter x:Key="IllustrationHeightConverter" />
         <converters1:Box x:Key="Box" />
@@ -277,7 +278,7 @@
                                             HorizontalAlignment="Right"
                                             VerticalAlignment="Top">
                                             <Grid.RenderTransform>
-                                                <ScaleTransform CenterX="10" CenterY="10" ScaleX="0" ScaleY="0" />
+                                                <ScaleTransform CenterX="10" CenterY="10" ScaleX="{x:Bind IsSelected, Converter={StaticResource BoolToDoubleConverter}, Mode=OneWay}" ScaleY="{x:Bind IsSelected, Converter={StaticResource BoolToDoubleConverter}, Mode=OneWay}" />
                                             </Grid.RenderTransform>
                                             <Grid Background="#80000000" CornerRadius="{ThemeResource ControlCornerRadius}" />
                                             <CheckBox IsChecked="{x:Bind IsSelected, Mode=TwoWay}" />

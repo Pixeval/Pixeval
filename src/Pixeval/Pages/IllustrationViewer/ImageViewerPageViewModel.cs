@@ -145,15 +145,16 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
 
     private async Task LoadImage()
     {
-        if (LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true } || _disposed)
+        if (!LoadingCompletedSuccessfully || _disposed)
         {
             _disposed = false;
-            var option = ThumbnailUrlOption.Medium;
-            _ = IllustrationViewModel.LoadThumbnailIfRequired(option).ContinueWith(
+            const ThumbnailUrlOption option = ThumbnailUrlOption.Medium;
+            _ = IllustrationViewModel.TryLoadThumbnail(this, option).ContinueWith(
                 _ => OriginalImageSource ??= IllustrationViewModel.ThumbnailSources[option],
                 TaskScheduler.FromCurrentSynchronizationContext());
             AddHistory();
             await LoadOriginalImage();
+            IllustrationViewModel.UnloadThumbnail(this, option);
         }
     }
 
@@ -241,10 +242,11 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
     private void DisposeInternal()
     {
         OriginalImageStream?.Dispose();
+        IllustrationViewModel.UnloadThumbnail(this, ThumbnailUrlOption.Medium);
         // if the loading task is null or hasn't been completed yet, the 
         // OriginalImageSource would be the thumbnail source, its disposal may 
         // causing the IllustrationGrid shows weird result such as an empty content
-        if (LoadingOriginalSourceTask?.IsCompletedSuccessfully is true)
+        if (LoadingCompletedSuccessfully)
         {
             (OriginalImageSource as SoftwareBitmapSource)?.Dispose();
         }

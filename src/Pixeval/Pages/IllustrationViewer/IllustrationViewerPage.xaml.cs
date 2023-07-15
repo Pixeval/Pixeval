@@ -32,7 +32,6 @@ using Pixeval.Options;
 using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util;
 using Pixeval.Util.IO;
-using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.ApplicationModel.DataTransfer;
@@ -50,19 +49,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
     private const double TitleBarHeight = 48;
     private const double NegativeTitleBarHeight = -TitleBarHeight;
 
-    private readonly AsyncLatch _collapseThumbnailList;
-
-    public IllustrationViewerPage()
-    {
-        InitializeComponent();
-
-        _collapseThumbnailList = new(async () =>
-        {
-            TimeUp = false;
-            await Task.Delay(3000);
-            TimeUp = true;
-        });
-    }
+    public IllustrationViewerPage() => InitializeComponent();
 
     /// <summary>
     /// <see cref="IllustrationViewerPage.OnPageDeactivated"/> might not be called when the window is closed
@@ -139,7 +126,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
             }
         };
 
-        // 第一次 _viewModel.CurrentIllustrationIndex 变化时，还没有订阅事件，所以不会触发 DetailedPropertyChanged，需要手动触发
+        // 第一次_viewModel.CurrentIllustrationIndex变化时，还没有订阅事件，所以不会触发DetailedPropertyChanged，需要手动触发
         Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.CurrentImage);
     }
 
@@ -152,7 +139,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
         ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
 
-        _collapseThumbnailList.RunAsync().Discard();
+        IllustrationImageShowcaseFrame_OnTapped(null!, null!);
     }
 
     private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;
@@ -272,17 +259,26 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void ThumbnailOnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
     {
-        var context = sender.GetDataContext<IllustrationViewModel>();
+        var context = sender.GetDataContext<IllustrationViewModel?>();
+        const ThumbnailUrlOption option = ThumbnailUrlOption.SquareMedium;
+        if (context is null)
+            return;
         if (args.BringIntoViewDistanceX <= sender.ActualWidth)
         {
-            _ = context.LoadThumbnailIfRequired(ThumbnailUrlOption.SquareMedium);
+            _ = context.TryLoadThumbnail(_viewModel, option);
+        }
+        else
+        {
+            context.UnloadThumbnail(_viewModel, option);
         }
     }
 
-    private void IllustrationImageShowcaseFrame_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void IllustrationImageShowcaseFrame_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         BottomCommandSection.Translation = new();
-        _collapseThumbnailList.RunAsync().Discard();
+        TimeUp = false;
+        await Task.Delay(3000);
+        TimeUp = true;
     }
 
     private void CommandBarElementOnSizeChanged(object sender, SizeChangedEventArgs e)

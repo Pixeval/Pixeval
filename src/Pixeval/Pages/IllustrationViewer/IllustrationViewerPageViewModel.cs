@@ -42,6 +42,8 @@ using Pixeval.Utilities;
 using Windows.System;
 using Windows.System.UserProfile;
 using Pixeval.Misc;
+using Pixeval.Options;
+using Pixeval.Util.Ref;
 using Pixeval.Util.Threading;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
@@ -126,8 +128,10 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             var oldTag = _pages?[CurrentPageIndex].Id ?? "";
 
             _currentIllustrationIndex = value;
+            _pages?.ForEach(i => i.Dispose());
             _pages = CurrentIllustration.Illustrate.PageCount <= 1
-                ? new[] { CurrentIllustration }
+            // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
+                ? new[] { new IllustrationViewModel(CurrentIllustration.Illustrate) }
                 : CurrentIllustration.Illustrate.MetaPages!
                     .Select((m, i) =>
                         new IllustrationViewModel(CurrentIllustration.Illustrate with { ImageUrls = m.ImageUrls })
@@ -179,15 +183,13 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     private readonly SharedRef<IllustrationViewViewModel> _viewModelRef;
 
-    public SharedRef<IllustrationViewViewModel> ViewModelRef => _viewModelRef.MakeShared();
-
     public IllustrationViewViewModel ViewModel => _viewModelRef.Value;
 
     // illustrations should contains only one item if the illustration is a single
     // otherwise it contains the entire manga data
     public IllustrationViewerPageViewModel(SharedRef<IllustrationViewViewModel> viewModelRef, int currentIllustrationIndex)
     {
-        _viewModelRef = viewModelRef;
+        _viewModelRef = viewModelRef.MakeShared(this);
         IllustrationInfoTag.Parameter = this;
         ViewModel.DataProvider.FilterChanged += (_, _) => CurrentIllustrationIndex = Illustrations.IndexOf(CurrentIllustration);
         CurrentIllustrationIndex = currentIllustrationIndex;
@@ -526,8 +528,10 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     public void Dispose()
     {
+        foreach (var illustrationViewModel in ViewModel.DataProvider.Source)
+            illustrationViewModel.UnloadThumbnail(this, ThumbnailUrlOption.SquareMedium);
         _pages?.ForEach(i => i.Dispose());
         (UserProfileImageSource as SoftwareBitmapSource)?.Dispose();
-        _viewModelRef.Dispose();
+        _ = _viewModelRef.Dispose(this);
     }
 }

@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -23,13 +23,13 @@ using System.Threading.Tasks;
 
 namespace Pixeval.Util.Threading;
 
-public sealed class AsyncLatch
+public sealed class AsyncFunc
 {
     private readonly Func<Task> _action;
 
     private bool _running;
 
-    public AsyncLatch(Func<Task> action)
+    public AsyncFunc(Func<Task> action)
     {
         _action = action;
         _running = false;
@@ -37,30 +37,32 @@ public sealed class AsyncLatch
 
     public async Task RunAsync()
     {
-        if (_running) return;
+        if (_running)
+            return;
         _running = true;
         await _action();
         _running = false;
     }
 }
 
-public sealed class AsyncLatch<T>
+public sealed class AsyncFunc<T>
 {
-    private readonly Func<T, Task> _action;
+    private readonly Func<T, Task> _func;
 
     private bool _running;
 
-    public AsyncLatch(Func<T, Task> action)
+    public AsyncFunc(Func<T, Task> action)
     {
-        _action = action;
+        _func = action;
         _running = false;
     }
 
     public async Task RunAsync(T param)
     {
-        if (_running) return;
+        if (_running)
+            return;
         _running = true;
-        await _action(param);
+        await _func(param);
         _running = false;
     }
 }

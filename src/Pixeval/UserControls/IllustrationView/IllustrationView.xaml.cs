@@ -37,6 +37,7 @@ using Pixeval.Util.UI;
 using Pixeval.Util.UI.Windowing;
 using Windows.System;
 using Windows.UI.Core;
+using Pixeval.Util.Ref;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -63,7 +64,7 @@ public sealed partial class IllustrationView
     public IllustrationView()
     {
         InitializeComponent();
-        _viewModelRef = new(new());
+        _viewModelRef = new(new(), this);
         ViewModel.DataProvider.FilterChanged += (sender, _) =>
         {
             if (sender is Predicate<object> predicate)
@@ -78,13 +79,14 @@ public sealed partial class IllustrationView
 
     private readonly SharedRef<IllustrationViewViewModel> _viewModelRef;
 
-    public SharedRef<IllustrationViewViewModel> ViewModelRef => _viewModelRef.MakeShared();
-
     public IllustrationViewViewModel ViewModel => _viewModelRef.Value;
 
     private void IllustrationViewOnUnloaded(object sender, RoutedEventArgs e)
     {
-        _viewModelRef.Dispose();
+        var option = IllustrationViewOption.ToThumbnailUrlOption();
+        foreach (var illustrationViewModel in ViewModel.DataProvider.Source)
+            illustrationViewModel.UnloadThumbnail(ViewModel, option);
+        _ = _viewModelRef.Dispose(this);
     }
 
     private async void ToggleBookmarkButtonOnTapped(object sender, TappedRoutedEventArgs e)
@@ -116,7 +118,7 @@ public sealed partial class IllustrationView
 
         WindowFactory.RootWindow.Fork(out var w)
             .WithLoaded((o, _) => o.To<Frame>().NavigateTo<IllustrationViewerPage>(w,
-                new IllustrationViewerPageViewModel(ViewModelRef, index),
+                new IllustrationViewerPageViewModel(_viewModelRef, index),
                 new SuppressNavigationTransitionInfo()))
             .WithSizeLimit(640, 360)
             .Init(new(width, height))
@@ -170,7 +172,7 @@ public sealed partial class IllustrationView
 
         if (args.BringIntoViewDistanceY <= sender.ActualHeight * preLoadRows)
         {
-            if (await context.LoadThumbnailIfRequired(option))
+            if (await context.TryLoadThumbnail(ViewModel, option))
             {
                 if (sender.IsFullyOrPartiallyVisible(this))
                     sender.Resources["IllustrationThumbnailContainerItemStoryboard"].To<Storyboard>().Begin();
@@ -180,15 +182,7 @@ public sealed partial class IllustrationView
         }
         else
         {
-            // small tricks to reduce memory consumption
-            if (context is { LoadingThumbnail: true })
-            {
-                context.LoadingThumbnailCancellationHandle.Cancel();
-            }
-            else if (context.ThumbnailSources.Remove(option, out var source))
-            {
-                source.Dispose();
-            }
+            context.UnloadThumbnail(ViewModel, option);
         }
     }
 
