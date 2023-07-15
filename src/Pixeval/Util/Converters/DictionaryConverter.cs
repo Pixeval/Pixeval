@@ -25,7 +25,12 @@ public class DictionaryConverter : IValueConverter
         var typeArgs = type.GetGenericArguments();
         if (typeArgs.Length is not 2)
             return null;
-        var target = parameter.To<Box>().Value;
+        var target = parameter switch
+        {
+            Box box => box.Value,
+            // Enum e => e,
+            _ => parameter
+        };
         return dict.Contains(target) ? dict[target] : null;
     }
 

@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:misc="using:Pixeval.Pages.Misc"
     xmlns:personView="using:Pixeval.UserControls.PersonView"
-    xmlns:ui="using:Pixeval.Util.UI"
+    xmlns:markup="using:Pixeval.Util.MarkupExtensions"
     Loaded="AboutPage_OnLoaded"
     mc:Ignorable="d">
 
@@ -59,32 +59,32 @@
                         TextWrapping="Wrap" />
                     <labs:SettingsCard
                         x:Uid="/AboutPage/WCTKIntroductoryTextBlock"
-                        ActionIcon="{ui:FontIcon Glyph=OpenInNewWindowE8A7}"
+                        ActionIcon="{markup:FontIcon Glyph=OpenInNewWindowE8A7}"
                         IsClickEnabled="True"
                         Tapped="LaunchUri" />
                     <labs:SettingsCard
                         x:Uid="/AboutPage/MSHostingIntroductoryTextBlock"
-                        ActionIcon="{ui:FontIcon Glyph=OpenInNewWindowE8A7}"
+                        ActionIcon="{markup:FontIcon Glyph=OpenInNewWindowE8A7}"
                         IsClickEnabled="True"
                         Tapped="LaunchUri" />
                     <labs:SettingsCard
                         x:Uid="/AboutPage/RCMemoryStreamIntroductoryTextBlock"
-                        ActionIcon="{ui:FontIcon Glyph=OpenInNewWindowE8A7}"
+                        ActionIcon="{markup:FontIcon Glyph=OpenInNewWindowE8A7}"
                         IsClickEnabled="True"
                         Tapped="LaunchUri" />
                     <labs:SettingsCard
                         x:Uid="/AboutPage/ReverseMDIntroductoryTextBlock"
-                        ActionIcon="{ui:FontIcon Glyph=OpenInNewWindowE8A7}"
+                        ActionIcon="{markup:FontIcon Glyph=OpenInNewWindowE8A7}"
                         IsClickEnabled="True"
                         Tapped="LaunchUri" />
                     <labs:SettingsCard
                         x:Uid="/AboutPage/SQLiteIntroductoryTextBlock"
-                        ActionIcon="{ui:FontIcon Glyph=OpenInNewWindowE8A7}"
+                        ActionIcon="{markup:FontIcon Glyph=OpenInNewWindowE8A7}"
                         IsClickEnabled="True"
                         Tapped="LaunchUri" />
                     <labs:SettingsCard
                         x:Uid="/AboutPage/QRCoderIntroductoryTextBlock"
-                        ActionIcon="{ui:FontIcon Glyph=OpenInNewWindowE8A7}"
+                        ActionIcon="{markup:FontIcon Glyph=OpenInNewWindowE8A7}"
                         IsClickEnabled="True"
                         Tapped="LaunchUri" />
                 </StackPanel>

@@ -10,10 +10,10 @@
     xmlns:illustrationView="using:Pixeval.UserControls.IllustrationView"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Pixeval.Pages.IllustrationViewer"
+    xmlns:markup="using:Pixeval.Util.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:triggers="using:Pixeval.Util.Triggers"
-    xmlns:ui="using:Pixeval.Util.UI"
     KeyboardAcceleratorPlacementMode="Hidden"
     Loaded="IllustrationViewerPage_OnLoaded"
     Unloaded="IllustrationViewerPage_OnUnloaded"
@@ -30,6 +30,7 @@
         <SolidColorBrush x:Key="TransparentBrush" Color="Transparent" />
         <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
         <Thickness x:Key="FullScreenMargin">0</Thickness>
+        <converters1:DictionaryConverter x:Key="DictionaryConverter" />
         <converters1:NumberToPercentageConverter x:Key="NumberToPercentageConverter" />
     </controls:EnhancedWindowPage.Resources>
     <Page.KeyboardAccelerators>
@@ -107,7 +108,7 @@
                             Height="100"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Content="{ui:FontIcon Glyph=ChevronLeft20F743}"
+                            Content="{markup:FontIcon Glyph=ChevronLeft20F743}"
                             RightTapped="PrevButton_OnRightTapped"
                             Tapped="PrevButton_OnTapped"
                             Visibility="{x:Bind _viewModel.PrevButtonEnable, Mode=OneWay}" />
@@ -130,7 +131,7 @@
                             Height="100"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Content="{ui:FontIcon Glyph=ChevronRight20F745}"
+                            Content="{markup:FontIcon Glyph=ChevronRight20F745}"
                             RightTapped="NextButton_OnRightTapped"
                             Tapped="NextButton_OnTapped"
                             Visibility="{x:Bind _viewModel.NextButtonEnable, Mode=OneWay}" />
@@ -246,7 +247,7 @@
                                         Width="80"
                                         Height="80"
                                         EffectiveViewportChanged="ThumbnailOnEffectiveViewportChanged"
-                                        Source="{x:Bind ThumbnailSquareMediumSource, Mode=OneWay}"
+                                        Source="{Binding Path=ThumbnailSources, Converter={StaticResource DictionaryConverter}, ConverterParameter={markup:ThumbnailUrlOption Enum=SquareMedium}, Mode=OneWay}"
                                         Stretch="UniformToFill" />
                                 </DataTemplate>
                             </GridView.ItemTemplate>

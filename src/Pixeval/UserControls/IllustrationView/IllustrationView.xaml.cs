@@ -166,10 +166,10 @@ public sealed partial class IllustrationView
     {
         var context = sender.GetDataContext<IllustrationViewModel>();
         var preLoadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
+        var option = IllustrationViewOption.ToThumbnailUrlOption();
 
         if (args.BringIntoViewDistanceY <= sender.ActualHeight * preLoadRows)
         {
-            var option = IllustrationViewOption.ToThumbnailUrlOption();
             if (await context.LoadThumbnailIfRequired(option))
             {
                 if (sender.IsFullyOrPartiallyVisible(this))
@@ -177,19 +177,19 @@ public sealed partial class IllustrationView
                 else
                     sender.Opacity = 1;
             }
-
-            return;
         }
-
-        // small tricks to reduce memory consumption
-        if (context is { LoadingThumbnail: true })
+        else
         {
-            context.LoadingThumbnailCancellationHandle.Cancel();
+            // small tricks to reduce memory consumption
+            if (context is { LoadingThumbnail: true })
+            {
+                context.LoadingThumbnailCancellationHandle.Cancel();
+            }
+            else if (context.ThumbnailSources.Remove(option, out var source))
+            {
+                source.Dispose();
+            }
         }
-        // else if (context.ThumbnailSources.Remove(ThumbnailUrlOption.Medium, out var source))
-        // {
-        //     source.Dispose();
-        // }
     }
 
     private void ScrollViewerViewChanged(object? sender, ScrollViewerViewChangedEventArgs e)

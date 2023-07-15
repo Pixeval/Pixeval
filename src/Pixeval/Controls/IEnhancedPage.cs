@@ -28,6 +28,9 @@ public interface IEnhancedPage
 
     public bool ClearCacheAfterNavigation { get; set; }
 
+    /// <summary>
+    /// 当有些延时操作导致在Unloaded后访问控件时，使用这个属性判断，防止异常
+    /// </summary>
     public bool Initialized { get; }
 
     void OnPageDeactivated(NavigatingCancelEventArgs e);

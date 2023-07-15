@@ -9,12 +9,11 @@
     xmlns:followingUserBadge="using:Pixeval.Controls.FollowingUserBadge"
     xmlns:illustratorView="using:Pixeval.UserControls.IllustratorView"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:markup="using:Pixeval.Util.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:CommunityToolkit.WinUI.UI.Media"
-    xmlns:ui="using:Pixeval.Util.UI"
     Loaded="IllustratorProfile_OnLoaded"
     mc:Ignorable="d">
-
     <Grid
         Width="302"
         Background="Transparent"
@@ -98,8 +97,8 @@
                         <StackPanel Orientation="Horizontal" Spacing="5">
                             <ContentControl
                                 VerticalAlignment="Center"
-                                Content="{ui:FontIcon Glyph=IDBadgeF427,
-                                                      FontSize=11}"
+                                Content="{markup:FontIcon Glyph=IDBadgeF427,
+                                                          FontSize=11}"
                                 Foreground="{StaticResource TextSecondaryAccentColor}" />
                             <StackPanel Orientation="Horizontal" Spacing="5">
                                 <TextBlock

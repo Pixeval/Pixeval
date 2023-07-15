@@ -112,6 +112,9 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         get => _currentIllustrationIndex;
         set
         {
+            if (value is -1)
+                return;
+
             var oldValue = _currentIllustrationIndex;
             var oldTag = _pages?[CurrentPageIndex].Id ?? "";
 

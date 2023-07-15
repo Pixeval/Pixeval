@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/FontIconSourceExtension.cs
+// Copyright (c) 2022 Pixeval/FontIconExtension.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,12 +23,13 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Attributes;
+using Pixeval.Util.UI;
+using WinUI3Utilities;
 
+namespace Pixeval.Util.MarkupExtensions;
 
-namespace Pixeval.Util.UI;
-
-[MarkupExtensionReturnType(ReturnType = typeof(FontIconSource))]
-public class FontIconSourceExtension : TextIconExtension
+[MarkupExtensionReturnType(ReturnType = typeof(FontIcon))]
+public class FontIconExtension : TextIconExtension
 {
     public FontIconSymbols Glyph { get; set; }
 
@@ -37,10 +38,10 @@ public class FontIconSourceExtension : TextIconExtension
     /// <inheritdoc />
     protected override object ProvideValue()
     {
-        var fontIcon = new FontIconSource
+        var fontIcon = new FontIcon
         {
             Glyph = Glyph.GetMetadataOnEnumMember(),
-            FontFamily = FontFamily ?? SegoeMDL2AssetsFontFamily,
+            FontFamily = FontFamily ?? new(AppHelper.IsWindows11 ? "Segoe Fluent Icons" : "Segoe MDL2 Assets"),
             FontWeight = FontWeight,
             FontStyle = FontStyle,
             IsTextScaleFactorEnabled = IsTextScaleFactorEnabled,

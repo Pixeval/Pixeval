@@ -313,7 +313,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         set
         {
             _pointerNotInArea = value;
-            if (_pointerNotInArea && TimeUp)
+            if (Initialized && _pointerNotInArea && TimeUp)
                 BottomCommandSection.Translation = new Vector3(0, 120, 0);
         }
     }
@@ -324,7 +324,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         set
         {
             _timeUp = value;
-            if (_timeUp && PointerNotInArea)
+            if (Initialized && _timeUp && PointerNotInArea)
                 BottomCommandSection.Translation = new Vector3(0, 120, 0);
         }
     }

@@ -9,12 +9,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:illustrationView="using:Pixeval.UserControls.IllustrationView"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:markup="using:Pixeval.Util.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:options="using:Pixeval.Options"
     xmlns:triggers="using:CommunityToolkit.WinUI.UI.Triggers"
     xmlns:triggers1="using:Pixeval.Util.Triggers"
-    xmlns:ui="using:Pixeval.Util.UI"
+    xmlns:userControls="using:Pixeval.UserControls"
     xmlns:util="using:Pixeval.Util"
     Unloaded="IllustrationViewOnUnloaded"
     mc:Ignorable="d">
@@ -70,48 +71,46 @@
                                             Text="{x:Bind GetBookmarkContextItemText(IsBookmarked), Mode=OneWay}" />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/AddToBookmarkContextItem"
-                                            Icon="{ui:FontIcon Glyph=BookmarksE8A4}"
+                                            Icon="{markup:FontIcon Glyph=BookmarksE8A4}"
                                             Tapped="AddToBookmarkContextItemOnTapped" />
                                         <MenuFlyoutSeparator />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/SaveContextItem"
-                                            Icon="{ui:FontIcon Glyph=SaveE74E}"
+                                            Icon="{markup:FontIcon Glyph=SaveE74E}"
                                             Tapped="SaveContextItemOnTapped" />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/SaveAsContextItem"
-                                            Icon="{ui:FontIcon Glyph=SaveAsE792}"
+                                            Icon="{markup:FontIcon Glyph=SaveAsE792}"
                                             Tapped="SaveAsContextItemOnTapped" />
                                         <MenuFlyoutSeparator />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/OpenInBrowserContextItem"
-                                            Icon="{ui:FontIcon Glyph=WebSearchF6FA}"
+                                            Icon="{markup:FontIcon Glyph=WebSearchF6FA}"
                                             Tapped="OpenInBrowserContextItemOnTapped" />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/CopyWebLinkContextItem"
-                                            Icon="{ui:FontIcon Glyph=PreviewLinkE8A1}"
+                                            Icon="{markup:FontIcon Glyph=PreviewLinkE8A1}"
                                             Tapped="CopyWebLinkContextItemOnTapped" />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/CopyAppLinkContextItem"
-                                            Icon="{ui:FontIcon Glyph=LinkE71B}"
+                                            Icon="{markup:FontIcon Glyph=LinkE71B}"
                                             Tapped="CopyAppLinkContextItemOnTapped" />
                                         <MenuFlyoutSeparator />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/ShowQrCodeContextItem"
-                                            Icon="{ui:FontIcon Glyph=QRCodeED14}"
+                                            Icon="{markup:FontIcon Glyph=QRCodeED14}"
                                             Tapped="ShowQrCodeContextItemOnTapped" />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/ShowPixEzQrCodeContextItem"
-                                            Icon="{ui:FontIcon Glyph=Photo2EB9F}"
+                                            Icon="{markup:FontIcon Glyph=Photo2EB9F}"
                                             Tapped="ShowPixEzQrCodeContextItemOnTapped" />
                                         <MenuFlyoutSeparator />
                                     </MenuFlyout>
                                 </GridViewItem.ContextFlyout>
-                                <!--  ReSharper disable Xaml.ConstructorWarning  -->
                                 <controls:ContentFiller
                                     CornerRadius="{ThemeResource ControlCornerRadius}"
-                                    DesiredHeight="{Binding Illustrate, Converter={StaticResource IllustrationHeightConverter}, ConverterParameter={StaticResource Box}}"
-                                    DesiredWidth="{Binding Illustrate, Converter={StaticResource IllustrationWidthConverter}, ConverterParameter={StaticResource Box}}">
-                                    <!--  ReSharper restore Xaml.ConstructorWarning  -->
+                                    DesiredHeight="{Binding Path=Illustrate, Converter={StaticResource IllustrationHeightConverter}, ConverterParameter={StaticResource Box}}"
+                                    DesiredWidth="{Binding Path=Illustrate, Converter={StaticResource IllustrationWidthConverter}, ConverterParameter={StaticResource Box}}">
                                     <controls:ContentFiller.Resources>
                                         <Storyboard x:Key="ThumbnailScaleOutStoryboard">
                                             <DoubleAnimation
@@ -199,8 +198,7 @@
                                     <Grid>
                                         <Grid.Background>
                                             <!--  他妈的，只有在Grid模式下如果不设为BackgroundBrush就不会自动刷新图片，可能是ContentFiller逻辑造成的，但是很几把奇怪，有机会务必改回Image  -->
-                                            <!--  ReSharper disable once Xaml.ConstructorWarning  -->
-                                            <ImageBrush ImageSource="{Binding ThumbnailSources, Converter={StaticResource DictionaryConverter}, ConverterParameter={StaticResource Box}, Mode=OneWay}" Stretch="UniformToFill" />
+                                            <ImageBrush ImageSource="{Binding Path=ThumbnailSources, Converter={StaticResource DictionaryConverter}, ConverterParameter={StaticResource Box}, Mode=OneWay}" Stretch="UniformToFill" />
                                         </Grid.Background>
                                         <Grid
                                             x:Name="MaskGrid"
@@ -221,7 +219,7 @@
                                                 <Grid.RenderTransform>
                                                     <ScaleTransform CenterX="10" CenterY="10" ScaleX="0" ScaleY="0" />
                                                 </Grid.RenderTransform>
-                                                <ui:FontSymbolIcon Foreground="{x:Bind BookmarkedColor, Mode=OneWay}" Glyph="HeartFillEB52" />
+                                                <userControls:FontSymbolIcon Foreground="{x:Bind BookmarkedColor, Mode=OneWay}" Glyph="HeartFillEB52" />
                                             </Grid>
                                         </Grid>
                                         <Grid
