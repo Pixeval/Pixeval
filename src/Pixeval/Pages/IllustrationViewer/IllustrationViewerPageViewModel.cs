@@ -41,6 +41,8 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.System;
 using Windows.System.UserProfile;
+using Pixeval.Misc;
+using Pixeval.Util.Threading;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
@@ -51,6 +53,14 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     public const string GenerateLink = nameof(GenerateLink);
     public const string ShowShare = nameof(ShowShare);
     public const string ShowQrCode = nameof(ShowQrCode);
+
+    #region Tags for IllustrationInfoAndCommentsNavigationView
+
+    public NavigationViewTag RelatedWorksTag = new(typeof(RelatedWorksPage), null);
+    public NavigationViewTag IllustrationInfoTag = new(typeof(IllustrationInfoPage), null);
+    public NavigationViewTag CommentsTag = new(typeof(CommentsPage), null);
+
+    #endregion
 
     [ObservableProperty]
     private bool _isInfoPaneOpen;
@@ -64,10 +74,6 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     // the waste of system resource
     [ObservableProperty]
     private ImageSource? _userProfileImageSource;
-
-    // Preserved for illustrator view use
-    [ObservableProperty]
-    private UserInfo? _userInfo;
 
     public TeachingTip SnackBarTeachingTip { get; set; } = null!;
 
@@ -116,6 +122,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
                 return;
 
             var oldValue = _currentIllustrationIndex;
+            // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
             var oldTag = _pages?[CurrentPageIndex].Id ?? "";
 
             _currentIllustrationIndex = value;
@@ -128,8 +135,23 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
                             MangaIndex = i
                         }).ToArray();
 
+            RelatedWorksTag.Parameter = IllustrationId;
+            // IllustrationInfoTag.Parameter = this;
+            CommentsTag.Parameter = (App.AppViewModel.MakoClient.IllustrationComments(IllustrationId).Where(c => c is not null), IllustrationId);
+
+            LoadUserProfile().Discard();
+
             CurrentPageIndex = 0;
             OnDetailedPropertyChanged(oldValue, value, oldTag, CurrentPage.Id);
+
+            async Task LoadUserProfile()
+            {
+                if (Illustrator is { ProfileImageUrls.Medium: { } profileImage })
+                {
+                    UserProfileImageSource = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceResultAsync(profileImage)
+                        .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync());
+                }
+            }
         }
     }
 
@@ -166,14 +188,11 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     public IllustrationViewerPageViewModel(SharedRef<IllustrationViewViewModel> viewModelRef, int currentIllustrationIndex)
     {
         _viewModelRef = viewModelRef;
-        ViewModel.DataProvider.FilterChanged += (_, _) =>
-        {
-            CurrentIllustrationIndex = Illustrations.IndexOf(CurrentIllustration);
-        };
+        IllustrationInfoTag.Parameter = this;
+        ViewModel.DataProvider.FilterChanged += (_, _) => CurrentIllustrationIndex = Illustrations.IndexOf(CurrentIllustration);
         CurrentIllustrationIndex = currentIllustrationIndex;
 
         InitializeCommands();
-        _ = LoadUserProfile();
     }
 
     public ImageViewerPageViewModel NextPage()
@@ -246,40 +265,17 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     #endregion
 
-    public Task PostPublicBookmarkAsync()
-    {
-        // changes the IsBookmarked property of the item that of in the thumbnail list
-        // so the thumbnail item will also receive state update 
-        CurrentIllustration.IsBookmarked = true;
+    public Task PostPublicBookmarkAsync() => CurrentIllustration.PostPublicBookmarkAsync();
 
-        return CurrentIllustration.PostPublicBookmarkAsync();
-    }
-
-    public Task RemoveBookmarkAsync()
-    {
-        CurrentIllustration.IsBookmarked = false;
-
-        return CurrentIllustration.RemoveBookmarkAsync();
-    }
-
-    public async Task LoadUserProfile()
-    {
-        if (CurrentIllustration.Illustrate.User is { } userInfo && UserProfileImageSource is null)
-        {
-            UserInfo = userInfo;
-            if (userInfo.ProfileImageUrls?.Medium is { } profileImage)
-            {
-                UserProfileImageSource = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceResultAsync(profileImage)
-                    .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync());
-            }
-        }
-    }
+    public Task RemoveBookmarkAsync() => CurrentIllustration.RemoveBookmarkAsync();
 
     public string IllustrationId => CurrentIllustration.Illustrate.Id.ToString();
 
-    public string? IllustratorName => CurrentIllustration.Illustrate.User?.Name;
+    public UserInfo? Illustrator => CurrentIllustration.Illustrate.User;
 
-    public string? IllustratorUid => CurrentIllustration.Illustrate.User?.Id.ToString();
+    public string? IllustratorName => Illustrator?.Name;
+
+    public string? IllustratorUid => Illustrator?.Id.ToString();
 
     public bool IsManga => _pages.Length > 1;
 
@@ -304,15 +300,14 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             .GetCommand(
                 MakoHelper.GetBookmarkButtonIconSource(CurrentIllustration.IsBookmarked),
                 VirtualKeyModifiers.Control, VirtualKey.D);
+        BookmarkCommand.ExecuteRequested += BookmarkCommandOnExecuteRequested;
 
         RestoreResolutionCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
 
-        BookmarkCommand.ExecuteRequested += BookmarkCommandOnExecuteRequested;
-
         CopyCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        CopyCommand.ExecuteRequested += CopyCommandOnExecuteRequested;
+        CopyCommand.ExecuteRequested += async (_, _) => UIHelper.ClipboardSetBitmap(await CurrentImage.OriginalImageStream!.EncodeBitmapStreamAsync(false));
 
-        PlayGifCommand.CanExecuteRequested += PlayGifCommandOnCanExecuteRequested;
+        PlayGifCommand.CanExecuteRequested += (_, e) => e.CanExecute = IsUgoira && CurrentImage.LoadingCompletedSuccessfully;
         PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
 
         ZoomOutCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
@@ -321,20 +316,20 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         ZoomInCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         ZoomInCommand.ExecuteRequested += (_, _) => CurrentImage.Zoom(120);
 
-        SaveCommand.ExecuteRequested += SaveCommandOnExecuteRequested;
-        SaveAsCommand.ExecuteRequested += SaveAsCommandOnExecuteRequested;
+        SaveCommand.ExecuteRequested += async (_, _) => await CurrentIllustration.SaveAsync();
+        SaveAsCommand.ExecuteRequested += async (_, _) => await CurrentIllustration.SaveAsAsync();
 
         GenerateLinkCommand.ExecuteRequested += GenerateLinkCommandOnExecuteRequested;
         GenerateWebLinkCommand.ExecuteRequested += GenerateWebLinkCommandOnExecuteRequested;
-        OpenInWebBrowserCommand.ExecuteRequested += OpenInWebBrowserCommandOnExecuteRequested;
+        OpenInWebBrowserCommand.ExecuteRequested += async (_, _) => await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(CurrentIllustration.Id));
 
         ShareCommand.ExecuteRequested += ShareCommandExecuteRequested;
         ShowQrCodeCommand.ExecuteRequested += ShowQrCodeCommandExecuteRequested;
 
-        SetAsLockScreenCommand.CanExecuteRequested += SetAsLockScreenCommandOnCanExecuteRequested;
+        SetAsLockScreenCommand.CanExecuteRequested += IsNotUgoiraAndLoadingCompletedCanExecuteRequested;
         SetAsLockScreenCommand.ExecuteRequested += SetAsLockScreenCommandOnExecuteRequested;
 
-        SetAsBackgroundCommand.CanExecuteRequested += SetAsBackgroundCommandOnCanExecuteRequested;
+        SetAsBackgroundCommand.CanExecuteRequested += IsNotUgoiraAndLoadingCompletedCanExecuteRequested;
         SetAsBackgroundCommand.ExecuteRequested += SetAsBackgroundCommandOnExecuteRequested;
 
         FullScreenCommand.ExecuteRequested += (_, _) => IsFullScreen = !IsFullScreen;
@@ -345,6 +340,11 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     private void LoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
     {
         args.CanExecute = CurrentImage.LoadingCompletedSuccessfully;
+    }
+
+    private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
+    {
+        args.CanExecute = !IsUgoira && CurrentImage.LoadingCompletedSuccessfully;
     }
 
     private async void SetAsBackgroundCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -366,7 +366,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             await intrinsicTask.Completion.Task;
         }
 
-        await UserProfilePersonalizationSettings.Current.TrySetWallpaperImageAsync(await AppKnownFolders.SavedWallPaper.GetFileAsync(guid));
+        _ = await UserProfilePersonalizationSettings.Current.TrySetWallpaperImageAsync(await AppKnownFolders.SavedWallPaper.GetFileAsync(guid));
         ToastNotificationHelper.ShowTextToastNotification(
             IllustrationViewerPageResources.SetAsSucceededTitle,
             IllustrationViewerPageResources.SetAsBackgroundSucceededTitle,
@@ -392,21 +392,11 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             await intrinsicTask.Completion.Task;
         }
 
-        await UserProfilePersonalizationSettings.Current.TrySetLockScreenImageAsync(await AppKnownFolders.SavedWallPaper.GetFileAsync(guid));
+        _ = await UserProfilePersonalizationSettings.Current.TrySetLockScreenImageAsync(await AppKnownFolders.SavedWallPaper.GetFileAsync(guid));
         ToastNotificationHelper.ShowTextToastNotification(
             IllustrationViewerPageResources.SetAsSucceededTitle,
             IllustrationViewerPageResources.SetAsBackgroundSucceededTitle,
             AppContext.AppLogoNoCaptionUri);
-    }
-
-    private void SetAsBackgroundCommandOnCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
-    {
-        args.CanExecute = !IsUgoira && CurrentImage.LoadingCompletedSuccessfully;
-    }
-
-    private void SetAsLockScreenCommandOnCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
-    {
-        args.CanExecute = !IsUgoira && CurrentImage.LoadingCompletedSuccessfully;
     }
 
     private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -425,11 +415,6 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         var link = MakoHelper.GenerateIllustrationWebUri(CurrentIllustration.Id).ToString();
         UIHelper.ClipboardSetText(link);
         SnackBarTeachingTip.ShowAndHide(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle);
-    }
-
-    private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(CurrentIllustration.Id));
     }
 
     private void ShareCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -460,30 +445,12 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         ShowQrCodeTeachingTip.Closed += Closed;
     }
 
-    private async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        await CurrentIllustration.SaveAsAsync();
-    }
-
-    private async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        await CurrentIllustration.SaveAsync();
-    }
-
     private void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        if (CurrentIllustration.IsBookmarked)
-            RemoveBookmarkAsync();
-        else
-            PostPublicBookmarkAsync();
+        (CurrentIllustration.IsBookmarked ? RemoveBookmarkAsync() : PostPublicBookmarkAsync()).Discard();
         // update manually
         BookmarkCommand.Label = CurrentIllustration.IsBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
         BookmarkCommand.IconSource = MakoHelper.GetBookmarkButtonIconSource(CurrentIllustration.IsBookmarked);
-    }
-
-    private void PlayGifCommandOnCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args)
-    {
-        args.CanExecute = IsUgoira && (CurrentImage.LoadingOriginalSourceTask?.IsCompletedSuccessfully ?? false);
     }
 
     private void PlayGifCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -501,12 +468,6 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             PlayGifCommand.Description = PlayGifCommand.Label = IllustrationViewerPageResources.PauseGif;
             PlayGifCommand.IconSource = new SymbolIconSource { Symbol = Symbol.Stop };
         }
-    }
-
-    private async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        var encoded = await CurrentImage.OriginalImageStream!.EncodeBitmapStreamAsync(false);
-        UIHelper.ClipboardSetBitmap(encoded);
     }
 
     public void FlipRestoreResolutionCommand(XamlUICommand sender, ExecuteRequestedEventArgs args)

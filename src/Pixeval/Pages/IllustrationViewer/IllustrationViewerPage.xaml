@@ -59,17 +59,18 @@
                     Shadow="{x:Bind SidePanelShadow}"
                     Translation="0,0,40">
                     <NavigationView
+                        x:Name="InfoPaneNavigationView"
                         IsBackButtonVisible="Collapsed"
                         IsSettingsVisible="False"
                         PaneDisplayMode="Top"
-                        SelectionChanged="IllustrationInfoAndCommentsNavigationView_OnSelectionChanged">
+                        SelectionChanged="IllustrationInfoAndCommentsNavigationViewOnSelectionChanged">
                         <NavigationView.MenuItems>
                             <NavigationViewItem
                                 x:Uid="/IllustrationViewerPage/IllustrationInfoTab"
                                 IsSelected="True"
-                                Tag="{x:Bind _illustrationInfoTag}" />
-                            <NavigationViewItem x:Uid="/IllustrationViewerPage/CommentsTab" Tag="{x:Bind _commentsTag}" />
-                            <NavigationViewItem x:Uid="/IllustrationViewerPage/RelatedWorksTab" Tag="{x:Bind _relatedWorksTag}" />
+                                Tag="{x:Bind _viewModel.IllustrationInfoTag}" />
+                            <NavigationViewItem x:Uid="/IllustrationViewerPage/CommentsTab" Tag="{x:Bind _viewModel.CommentsTag}" />
+                            <NavigationViewItem x:Uid="/IllustrationViewerPage/RelatedWorksTab" Tag="{x:Bind _viewModel.RelatedWorksTag}" />
                         </NavigationView.MenuItems>
                         <Frame x:Name="IllustrationInfoAndCommentsFrame" Width="320" />
                     </NavigationView>
@@ -77,6 +78,7 @@
             </Grid>
         </SplitView.Pane>
         <Grid x:Name="IllustrationPresenterDockPanel" HorizontalAlignment="Stretch">
+            <!--  ReSharper disable once UnusedMember.Local  -->
             <Grid x:Name="ImagePanel" Margin="{StaticResource NormalMargin}">
                 <Frame
                     x:Name="IllustrationImageShowcaseFrame"
@@ -164,6 +166,7 @@
                                 <core:ChangePropertyAction PropertyName="Opacity" Value="0" />
                             </core:EventTriggerBehavior>
                         </interactivity:Interaction.Behaviors>
+                        <!--  ReSharper disable once UnusedMember.Local  -->
                         <Border
                             x:Name="CommandBorder"
                             HorizontalAlignment="Center"
@@ -256,6 +259,7 @@
                 </StackPanel>
             </Grid>
 
+            <!--  ReSharper disable once UnusedMember.Local  -->
             <Grid
                 x:Name="TitleBarBorder"
                 Height="100"
@@ -294,6 +298,7 @@
                         </media:ControlStoryboardAction>
                     </triggers:EventWithConditionTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
+                <!--  ReSharper disable once UnusedMember.Local  -->
                 <Grid
                     x:Name="TitleBarArea"
                     Height="{x:Bind local:IllustrationViewerPage.TitleBarHeight}"
@@ -308,6 +313,7 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
+                        <!--  ReSharper disable once UnusedMember.Local  -->
                         <ColumnDefinition x:Name="TitleControlButtonsColumn" Width="150" />
                     </Grid.ColumnDefinitions>
                     <Image

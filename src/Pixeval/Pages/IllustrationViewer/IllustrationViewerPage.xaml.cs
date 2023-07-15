@@ -19,8 +19,6 @@
 #endregion
 
 using System;
-using System.Linq;
-using System.Numerics;
 using System.Threading.Tasks;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -38,7 +36,6 @@ using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
 using Windows.Graphics;
 using Windows.Storage.Streams;
 using WinUI3Utilities;
@@ -48,14 +45,6 @@ namespace Pixeval.Pages.IllustrationViewer;
 
 public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragRegion
 {
-    // Tags for IllustrationInfoAndCommentsNavigationView
-
-    private NavigationViewTag? _relatedWorksTag;
-
-    private NavigationViewTag? _commentsTag;
-
-    private NavigationViewTag? _illustrationInfoTag;
-
     private IllustrationViewerPageViewModel _viewModel = null!;
 
     private const double TitleBarHeight = 48;
@@ -67,7 +56,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
     {
         InitializeComponent();
 
-        _collapseThumbnailList = new AsyncLatch(async () =>
+        _collapseThumbnailList = new(async () =>
         {
             TimeUp = false;
             await Task.Delay(3000);
@@ -87,68 +76,70 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        if (parameter is IllustrationViewerPageViewModel viewModel)
+        if (parameter is not IllustrationViewerPageViewModel viewModel)
+            return;
+        _viewModel = viewModel;
+        _viewModel.GenerateLinkTeachingTip = GenerateLinkTeachingTip;
+        _viewModel.ShowQrCodeTeachingTip = ShowQrCodeTeachingTip;
+        _viewModel.SnackBarTeachingTip = SnackBarTeachingTip;
+
+        _viewModel.DetailedPropertyChanged += (sender, args) =>
         {
-            _viewModel = viewModel;
-            _viewModel.GenerateLinkTeachingTip = GenerateLinkTeachingTip;
-            _viewModel.ShowQrCodeTeachingTip = ShowQrCodeTeachingTip;
-            _viewModel.SnackBarTeachingTip = SnackBarTeachingTip;
+            var vm = sender.To<IllustrationViewerPageViewModel>();
+            if (args.PropertyName is not nameof(vm.CurrentIllustrationIndex))
+                return;
 
-            _viewModel.DetailedPropertyChanged += (sender, args) =>
+            var oldIndex = args.OldValue.To<int>();
+            var newIndex = args.NewValue.To<int>(); // vm.CurrentIllustrationIndex
+            var oldTag = args.OldTag.To<string>();
+            var newTag = args.NewTag.To<string>(); // vm.CurrentPage.Id
+
+            if (oldTag == newTag)
+                return;
+            var info = (NavigationTransitionInfo?)null;
+            if (oldIndex < newIndex && oldIndex is not -1)
+                info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight };
+            else if (oldIndex > newIndex)
+                info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft };
+            ThumbnailList.ScrollIntoView(vm.CurrentIllustration);
+            Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, vm.CurrentImage, info);
+        };
+
+        _viewModel.PropertyChanged += (sender, args) =>
+        {
+            var vm = sender.To<IllustrationViewerPageViewModel>();
+            switch (args.PropertyName)
             {
-                var vm = sender.To<IllustrationViewerPageViewModel>();
-                if (args.PropertyName is not nameof(vm.CurrentIllustrationIndex))
-                    return;
-
-                var oldIndex = args.OldValue.To<int>();
-                var newIndex = args.NewValue.To<int>(); // vm.CurrentIllustrationIndex
-                var oldTag = args.OldTag.To<string>();
-                var newTag = args.NewTag.To<string>(); // vm.CurrentPage.Id
-
-                if (oldTag == newTag)
-                    return;
-                var info = (NavigationTransitionInfo?)null;
-                if (oldIndex < newIndex && oldIndex is not -1)
-                    info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight };
-                else if (oldIndex > newIndex)
-                    info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft };
-                ThumbnailList.ScrollIntoView(vm.CurrentIllustration);
-                Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, vm.CurrentImage, info);
-            };
-
-            _viewModel.PropertyChanged += (sender, args) =>
-            {
-                var vm = sender.To<IllustrationViewerPageViewModel>();
-                switch (args.PropertyName)
+                case nameof(IllustrationViewerPageViewModel.IsFullScreen):
                 {
-                    case nameof(IllustrationViewerPageViewModel.IsFullScreen):
-                    {
-                        Window.AppWindow.SetPresenter(_viewModel.IsFullScreen ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
-                        break;
-                    }
-                    case IllustrationViewerPageViewModel.GenerateLink:
-                    {
-                        _viewModel.GenerateLinkTeachingTip.Target = GenerateLinkButton.IsInOverflow ? null : GenerateLinkButton;
-                        break;
-                    }
-                    case IllustrationViewerPageViewModel.ShowQrCode:
-                    {
-                        _viewModel.ShowQrCodeTeachingTip.Target = ShowQrCodeButton.IsInOverflow ? null : ShowQrCodeButton;
-                        break;
-                    }
-                    case IllustrationViewerPageViewModel.ShowShare:
-                    {
-                        Window.ShowShareUI();
-                        break;
-                    }
+                    Window.AppWindow.SetPresenter(vm.IsFullScreen ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
+                    break;
                 }
-            };
-        }
+                case IllustrationViewerPageViewModel.GenerateLink:
+                {
+                    vm.GenerateLinkTeachingTip.Target = GenerateLinkButton.IsInOverflow ? null : GenerateLinkButton;
+                    break;
+                }
+                case IllustrationViewerPageViewModel.ShowQrCode:
+                {
+                    vm.ShowQrCodeTeachingTip.Target = ShowQrCodeButton.IsInOverflow ? null : ShowQrCodeButton;
+                    break;
+                }
+                case IllustrationViewerPageViewModel.ShowShare:
+                {
+                    Window.ShowShareUI();
+                    break;
+                }
+                case nameof(IllustrationViewerPageViewModel.IsInfoPaneOpen):
+                {
+                    if (vm.IsInfoPaneOpen)
+                        IllustrationInfoAndCommentsNavigationViewNavigate(InfoPaneNavigationView, new SuppressNavigationTransitionInfo());
+                    break;
+                }
+            }
+        };
 
-        _relatedWorksTag = new NavigationViewTag(typeof(RelatedWorksPage), _viewModel);
-        _illustrationInfoTag = new NavigationViewTag(typeof(IllustrationInfoPage), _viewModel);
-        _commentsTag = new NavigationViewTag(typeof(CommentsPage), (App.AppViewModel.MakoClient.IllustrationComments(_viewModel.IllustrationId).Where(c => c is not null), _viewModel.IllustrationId));
-
+        // 第一次 _viewModel.CurrentIllustrationIndex 变化时，还没有订阅事件，所以不会触发 DetailedPropertyChanged，需要手动触发
         Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.CurrentImage);
     }
 
@@ -251,20 +242,23 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         App.AppViewModel.AppSetting.DisplayTeachingTipWhenGeneratingAppLink = false;
     }
 
-    private void IllustrationInfoAndCommentsNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+    private void IllustrationInfoAndCommentsNavigationViewOnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs e)
+    {
+        IllustrationInfoAndCommentsNavigationViewNavigate(sender, e.RecommendedNavigationTransitionInfo);
+    }
+
+    private void IllustrationInfoAndCommentsNavigationViewNavigate(NavigationView sender, NavigationTransitionInfo info)
     {
         if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag })
-        {
-            _ = IllustrationInfoAndCommentsFrame.Navigate(tag.NavigateTo, tag.Parameter, args.RecommendedNavigationTransitionInfo);
-        }
+            _ = IllustrationInfoAndCommentsFrame.Navigate(tag.NavigateTo, tag.Parameter, info);
     }
 
     private void IllustrationInfoAndCommentsSplitView_OnPaneOpenedOrClosed(SplitView sender, object args) => SetTitleBarDragRegion();
 
     public void SetTitleBarDragRegion()
     {
-        var pointCommandBar = IllustrationViewerCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
-        var pointSubCommandBar = IllustrationViewerSubCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
+        var pointCommandBar = IllustrationViewerCommandBar.TransformToVisual(this).TransformPoint(new(0, 0));
+        var pointSubCommandBar = IllustrationViewerSubCommandBar.TransformToVisual(this).TransformPoint(new(0, 0));
         var commandBarRect = new RectInt32((int)pointCommandBar.X, (int)pointCommandBar.Y, (int)IllustrationViewerCommandBar.ActualWidth, (int)IllustrationViewerCommandBar.ActualHeight);
         var subCommandBarRect = new RectInt32((int)pointSubCommandBar.X, (int)pointSubCommandBar.Y, (int)IllustrationViewerSubCommandBar.ActualWidth, (int)IllustrationViewerSubCommandBar.ActualHeight);
 
@@ -287,7 +281,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void IllustrationImageShowcaseFrame_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        BottomCommandSection.Translation = new Vector3();
+        BottomCommandSection.Translation = new();
         _collapseThumbnailList.RunAsync().Discard();
     }
 
@@ -297,15 +291,9 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         ((FrameworkElement)sender).Width = button.IsInOverflow ? double.NaN : (double)Application.Current.Resources["CollapsedAppBarButtonWidth"];
     }
 
-    private void ThumbnailListGrid_OnPointerEntered(object sender, PointerRoutedEventArgs e)
-    {
-        PointerNotInArea = false;
-    }
+    private void ThumbnailListGrid_OnPointerEntered(object sender, PointerRoutedEventArgs e) => PointerNotInArea = false;
 
-    private void ThumbnailListGrid_OnPointerExited(object sender, PointerRoutedEventArgs e)
-    {
-        PointerNotInArea = true;
-    }
+    private void ThumbnailListGrid_OnPointerExited(object sender, PointerRoutedEventArgs e) => PointerNotInArea = true;
 
     public bool PointerNotInArea
     {
@@ -314,7 +302,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         {
             _pointerNotInArea = value;
             if (Initialized && _pointerNotInArea && TimeUp)
-                BottomCommandSection.Translation = new Vector3(0, 120, 0);
+                BottomCommandSection.Translation = new(0, 120, 0);
         }
     }
 
@@ -325,7 +313,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         {
             _timeUp = value;
             if (Initialized && _timeUp && PointerNotInArea)
-                BottomCommandSection.Translation = new Vector3(0, 120, 0);
+                BottomCommandSection.Translation = new(0, 120, 0);
         }
     }
 
