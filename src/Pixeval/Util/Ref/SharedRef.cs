@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Pixeval.Util.Ref;
 
-public class SharedRef<T> where T : class, IDisposable
+public class SharedRef<T>
 {
     private readonly HashSet<object> _keys = new();
 
@@ -17,19 +17,21 @@ public class SharedRef<T> where T : class, IDisposable
 
     public bool IsDisposed { get; private set; }
 
-    public bool Dispose(object key)
+    public bool TryDispose(object key)
     {
         _ = _keys.Remove(key);
         if (_keys.Count > 0)
             return false;
-        Value.Dispose();
+        if (Value is IDisposable disposable)
+            disposable.Dispose();
         return IsDisposed = true;
     }
 
     public void DisposeForce()
     {
         _keys.Clear();
-        Value.Dispose();
+        if (Value is IDisposable disposable)
+            disposable.Dispose();
         IsDisposed = true;
     }
 

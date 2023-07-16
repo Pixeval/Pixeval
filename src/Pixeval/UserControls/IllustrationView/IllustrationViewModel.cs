@@ -202,9 +202,7 @@ public class IllustrationViewModel : IllustrateViewModel<Illustration>
         if (!ThumbnailSourcesRef.TryGetValue(thumbnailUrlOption, out var value))
             return;
 
-        _ = value.Dispose(key);
-
-        if (!value.IsDisposed)
+        if (!value.TryDispose(key))
             return;
 
         _ = ThumbnailSourcesRef.Remove(thumbnailUrlOption);

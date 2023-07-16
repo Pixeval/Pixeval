@@ -19,19 +19,35 @@
 #endregion
 
 using System.Linq;
+using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.UI;
 using Pixeval.CoreApi.Model;
+using Pixeval.Misc;
 using Pixeval.UserControls.Illustrate;
+using Pixeval.UserControls.IllustratorView;
 using Pixeval.Util;
+using Pixeval.Util.Ref;
 using Pixeval.Utilities;
 
 namespace Pixeval.UserControls.IllustrationView;
 
 public sealed class IllustrationViewViewModel : SortableIllustrateViewViewModel<Illustration, IllustrationViewModel>
 {
-    public override IllustrationViewDataProvider DataProvider { get; } = new();
+    public override IllustrationViewDataProvider DataProvider { get; }
+
+    public IllustrationViewViewModel(IllustrationViewViewModel viewModel)
+    {
+        DataProvider = viewModel.DataProvider.CloneRef();
+        Init();
+    }
 
     public IllustrationViewViewModel()
+    {
+        DataProvider = new();
+        Init();
+    }
+
+    private void Init()
     {
         SelectionLabel = IllustrationViewCommandBarResources.CancelSelectionButtonDefaultLabel;
         DataProvider.SelectedIllustrations.CollectionChanged += (_, _) =>

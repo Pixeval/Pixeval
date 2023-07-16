@@ -35,15 +35,14 @@ public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User,
 {
     public IllustratorViewDataProvider()
     {
-        _illustratorsSource = new ObservableCollection<IllustratorViewModel>();
-        View = new AdvancedCollectionView(Source);
+        View = new(Array.Empty<IllustratorViewModel>());
     }
 
     public AdvancedCollectionView View { get; }
 
-    private ObservableCollection<IllustratorViewModel> _illustratorsSource;
+    private IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel> _illustratorsSource = null!;
 
-    public ObservableCollection<IllustratorViewModel> Source
+    public IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel> Source
     {
         get => _illustratorsSource;
         set

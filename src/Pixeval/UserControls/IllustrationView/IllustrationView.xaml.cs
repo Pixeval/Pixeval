@@ -64,7 +64,7 @@ public sealed partial class IllustrationView
     public IllustrationView()
     {
         InitializeComponent();
-        _viewModelRef = new(new(), this);
+        ViewModel = new();
         ViewModel.DataProvider.FilterChanged += (sender, _) =>
         {
             if (sender is Predicate<object> predicate)
@@ -77,16 +77,14 @@ public sealed partial class IllustrationView
 
     public event EventHandler<IllustrationViewModel>? ItemTapped;
 
-    private readonly SharedRef<IllustrationViewViewModel> _viewModelRef;
-
-    public IllustrationViewViewModel ViewModel => _viewModelRef.Value;
+    public IllustrationViewViewModel ViewModel { get; }
 
     private void IllustrationViewOnUnloaded(object sender, RoutedEventArgs e)
     {
         var option = IllustrationViewOption.ToThumbnailUrlOption();
         foreach (var illustrationViewModel in ViewModel.DataProvider.Source)
             illustrationViewModel.UnloadThumbnail(ViewModel, option);
-        _ = _viewModelRef.Dispose(this);
+        ViewModel.Dispose();
     }
 
     private async void ToggleBookmarkButtonOnTapped(object sender, TappedRoutedEventArgs e)
@@ -118,7 +116,7 @@ public sealed partial class IllustrationView
 
         WindowFactory.RootWindow.Fork(out var w)
             .WithLoaded((o, _) => o.To<Frame>().NavigateTo<IllustrationViewerPage>(w,
-                new IllustrationViewerPageViewModel(_viewModelRef, index),
+                new IllustrationViewerPageViewModel(ViewModel, index),
                 new SuppressNavigationTransitionInfo()))
             .WithSizeLimit(640, 360)
             .Init(vm.Illustrate.Title ?? "", new(width, height))

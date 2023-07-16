@@ -181,15 +181,13 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     #endregion
 
-    private readonly SharedRef<IllustrationViewViewModel> _viewModelRef;
-
-    public IllustrationViewViewModel ViewModel => _viewModelRef.Value;
+    public IllustrationViewViewModel ViewModel { get; }
 
     // illustrations should contains only one item if the illustration is a single
     // otherwise it contains the entire manga data
-    public IllustrationViewerPageViewModel(SharedRef<IllustrationViewViewModel> viewModelRef, int currentIllustrationIndex)
+    public IllustrationViewerPageViewModel(IllustrationViewViewModel viewModel, int currentIllustrationIndex)
     {
-        _viewModelRef = viewModelRef.MakeShared(this);
+        ViewModel = new(viewModel);
         IllustrationInfoTag.Parameter = this;
         ViewModel.DataProvider.FilterChanged += (_, _) => CurrentIllustrationIndex = Illustrations.IndexOf(CurrentIllustration);
         CurrentIllustrationIndex = currentIllustrationIndex;
@@ -532,6 +530,6 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             illustrationViewModel.UnloadThumbnail(this, ThumbnailUrlOption.SquareMedium);
         _pages?.ForEach(i => i.Dispose());
         (UserProfileImageSource as SoftwareBitmapSource)?.Dispose();
-        _ = _viewModelRef.Dispose(this);
+        ViewModel.Dispose();
     }
 }
