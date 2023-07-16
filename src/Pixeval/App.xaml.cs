@@ -75,7 +75,7 @@ public partial class App
             .WithLoaded((s, _) => s.To<Frame>().NavigateTo<LoginPage>(w))
             .WithClosed((_, _) => AppContext.SaveContext())
             .WithSizeLimit(800, 360)
-            .Init(new(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight))
+            .Init(nameof(Pixeval), new(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight))
             .Activate();
 
         await AppViewModel.InitializeAsync(isProtocolActivated);

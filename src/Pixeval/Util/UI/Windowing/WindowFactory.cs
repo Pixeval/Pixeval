@@ -25,6 +25,7 @@ using Microsoft.UI.Xaml.Media;
 using Pixeval.Options;
 using Windows.Foundation;
 using Windows.Graphics;
+using Pixeval.AppManagement;
 using WinUI3Utilities;
 
 namespace Pixeval.Util.UI.Windowing;
@@ -80,7 +81,7 @@ public static class WindowFactory
         return window;
     }
 
-    public static EnhancedWindow Init(this EnhancedWindow window, SizeInt32 size = default)
+    public static EnhancedWindow Init(this EnhancedWindow window, string title, SizeInt32 size = default)
     {
         window.Initialize(new()
         {
@@ -93,8 +94,10 @@ public static class WindowFactory
                 _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<AppBackdropType, BackdropType>(App.AppViewModel.AppSetting.AppBackdrop)
             },
             TitleBarType = TitleBarType.AppWindow,
-            Size = size
+            Size = size,
+            IconPath = AppContext.IconAbsolutePath
         });
+        window.AppWindow.Title = title;
         var theme = GetElementTheme(App.AppViewModel.AppSetting.Theme);
         window.SetAppWindowTitleBarButtonColor(theme is ElementTheme.Dark);
         window.FrameLoaded += (s, _) => s.To<FrameworkElement>().RequestedTheme = theme;

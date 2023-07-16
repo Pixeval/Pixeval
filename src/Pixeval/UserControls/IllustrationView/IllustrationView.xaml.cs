@@ -121,7 +121,7 @@ public sealed partial class IllustrationView
                 new IllustrationViewerPageViewModel(_viewModelRef, index),
                 new SuppressNavigationTransitionInfo()))
             .WithSizeLimit(640, 360)
-            .Init(new(width, height))
+            .Init(vm.Illustrate.Title ?? "", new(width, height))
             .Activate();
 
         static (int windowWidth, int windowHeight) DetermineWindowSize(int illustWidth, double illustRatio)
