@@ -64,7 +64,6 @@ public sealed partial class IllustrationView
     public IllustrationView()
     {
         InitializeComponent();
-        ViewModel = new();
         ViewModel.DataProvider.FilterChanged += (sender, _) =>
         {
             if (sender is Predicate<object> predicate)
@@ -77,7 +76,7 @@ public sealed partial class IllustrationView
 
     public event EventHandler<IllustrationViewModel>? ItemTapped;
 
-    public IllustrationViewViewModel ViewModel { get; }
+    public IllustrationViewViewModel ViewModel { get; } = new();
 
     private void IllustrationViewOnUnloaded(object sender, RoutedEventArgs e)
     {

@@ -43,7 +43,6 @@ using Windows.System;
 using Windows.System.UserProfile;
 using Pixeval.Misc;
 using Pixeval.Options;
-using Pixeval.Util.Ref;
 using Pixeval.Util.Threading;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
@@ -190,8 +189,9 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         ViewModel = new(viewModel);
         IllustrationInfoTag.Parameter = this;
         ViewModel.DataProvider.FilterChanged += (_, _) => CurrentIllustrationIndex = Illustrations.IndexOf(CurrentIllustration);
+        // ViewModel.DataProvider.View.CurrentItem为null，而且只设置这个属性会导致空引用
         CurrentIllustrationIndex = currentIllustrationIndex;
-
+        
         InitializeCommands();
     }
 

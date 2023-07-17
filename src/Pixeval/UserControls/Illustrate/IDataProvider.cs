@@ -25,5 +25,5 @@ public interface IDataProvider<T, TViewModel> where T : IIllustrate where TViewM
 
     void DisposeCurrent();
 
-    Task<int> ResetAndFillAsync(IFetchEngine<T?>? fetchEngine, int itemLimit = -1);
+    Task<int> ResetAndFillAsync(IFetchEngine<T?>? fetchEngine, int limit = -1);
 }

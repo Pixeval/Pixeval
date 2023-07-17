@@ -95,7 +95,11 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
     {
         var dataProvider = new IllustrationViewDataProvider();
         dataProvider.FetchEngineRef = FetchEngineRef?.MakeShared(dataProvider);
-        dataProvider.IllustrationSourceRef = _illustrationSourceRef.MakeShared(dataProvider);
+        dataProvider.IllustrationSourceRef = IllustrationSourceRef.MakeShared(dataProvider);
+        dataProvider.View.Filter = View.Filter;
+        foreach (var viewSortDescription in View.SortDescriptions)
+            dataProvider.View.SortDescriptions.Add(viewSortDescription);
+        dataProvider.View.CurrentItem = View.CurrentItem;
         return dataProvider;
     }
 
@@ -129,18 +133,17 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
         SelectedIllustrations.Clear();
     }
 
-    public Task<int> ResetAndFillAsync(IFetchEngine<Illustration?>? fetchEngine, int itemLimit = -1)
+    public async Task<int> ResetAndFillAsync(IFetchEngine<Illustration?>? fetchEngine, int limit = -1)
     {
         FetchEngineRef = new(fetchEngine, this);
         DisposeCurrent();
-        return FillAsync(itemLimit);
 
-        async Task<int> FillAsync(int itemsLimit = -1)
-        {
-            IllustrationSourceRef = new(new(new IllustrationFetchEngineIncrementalSource(FetchEngine!, itemsLimit)), this);
-            var result = await Source.LoadMoreItemsAsync(20);
-            return (int)result.Count;
-        }
+        IllustrationSourceRef = new(new(new IllustrationFetchEngineIncrementalSource(FetchEngine!, limit)), this);
+        // TODO: 根据屏幕大小决定加载多少
+        var result = (await Source.LoadMoreItemsAsync(20)).Count;
+        result += (await Source.LoadMoreItemsAsync(20)).Count;
+        result += (await Source.LoadMoreItemsAsync(10)).Count;
+        return (int)result;
     }
 
     protected virtual void OnIllustrationsSourceOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

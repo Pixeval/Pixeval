@@ -78,19 +78,15 @@ public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User,
         View.Clear();
     }
 
-    public Task<int> ResetAndFillAsync(IFetchEngine<User?>? fetchEngine, int itemLimit = -1)
+    public async Task<int> ResetAndFillAsync(IFetchEngine<User?>? fetchEngine, int limit = -1)
     {
         FetchEngine?.EngineHandle.Cancel();
         FetchEngine = fetchEngine;
         DisposeCurrent();
-        return FillAsync(itemLimit);
 
-        async Task<int> FillAsync(int itemsLimit = -1)
-        {
-            var collection = new IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel>(new IllustratorFetchEngineIncrementalSource(FetchEngine!, itemsLimit));
-            Source = collection;
-            var result = await collection.LoadMoreItemsAsync(20);
-            return (int)result.Count;
-        }
+        var collection = new IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel>(new IllustratorFetchEngineIncrementalSource(FetchEngine!, limit));
+        Source = collection;
+        var result = await collection.LoadMoreItemsAsync(20);
+        return (int)result.Count;
     }
 }
