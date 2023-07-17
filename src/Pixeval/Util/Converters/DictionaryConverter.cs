@@ -14,17 +14,13 @@ public class Box
 
 public class DictionaryConverter : IValueConverter
 {
-    public object? Convert(object value, Type targetType, object? parameter, string language)
+    public object? Convert(object value, Type targetType, object? parameter, string language) => GetItemOrNull(value, parameter);
+
+    public static object? GetItemOrNull(object value, object? parameter)
     {
         if (parameter is null)
             return null;
         var dict = value.To<IDictionary>();
-        var type = value.GetType();
-        if (!type.IsGenericType)
-            return null;
-        var typeArgs = type.GetGenericArguments();
-        if (typeArgs.Length is not 2)
-            return null;
         var target = parameter switch
         {
             Box box => box.Value,

@@ -9,6 +9,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:illustrationView="using:Pixeval.UserControls.IllustrationView"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:markup="using:Pixeval.Util.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
@@ -23,6 +24,7 @@
         <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
         <converters1:DictionaryConverter x:Key="DictionaryConverter" />
         <converters1:BoolToDoubleConverter x:Key="BoolToDoubleConverter" />
+        <converters1:DictionaryIsNullToVisibilityConverter x:Key="DictionaryIsNullToVisibilityConverter" />
         <converters1:IllustrationWidthConverter x:Key="IllustrationWidthConverter" />
         <converters1:IllustrationHeightConverter x:Key="IllustrationHeightConverter" />
         <converters1:Box x:Key="Box" />
@@ -199,8 +201,12 @@
                                     <Grid>
                                         <Grid.Background>
                                             <!--  他妈的，只有在Grid模式下如果不设为BackgroundBrush就不会自动刷新图片，可能是ContentFiller逻辑造成的，但是很几把奇怪，有机会务必改回Image  -->
-                                            <ImageBrush ImageSource="{Binding Path=ThumbnailSources, Converter={StaticResource DictionaryConverter}, ConverterParameter={StaticResource Box}, Mode=OneWay}" Stretch="UniformToFill" />
+                                            <ImageBrush
+                                                x:Name="Brush"
+                                                ImageSource="{Binding Path=ThumbnailSources, Converter={StaticResource DictionaryConverter}, ConverterParameter={StaticResource Box}, Mode=OneWay}"
+                                                Stretch="UniformToFill" />
                                         </Grid.Background>
+                                        <labs:Shimmer Visibility="{Binding Path=ThumbnailSources, Converter={StaticResource DictionaryIsNullToVisibilityConverter}, ConverterParameter={StaticResource Box}, Mode=OneWay}" />
                                         <Grid
                                             x:Name="MaskGrid"
                                             Padding="10"

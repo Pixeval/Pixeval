@@ -18,6 +18,16 @@
           "Microsoft.WindowsAppSDK": "1.2.230118.102"
         }
       },
+      "CommunityToolkit.Labs.WinUI.Shimmer": {
+        "type": "Direct",
+        "requested": "[0.0.1, )",
+        "resolved": "0.0.1",
+        "contentHash": "XbTM5goq4mg+7PFEQX7F9dswxEGedkTT4k4Tu7O9z6SbvluibY++Lp5jnHI5+ExLBxstSP8W6YCc6c05J1UBsg==",
+        "dependencies": {
+          "CommunityToolkit.WinUI.UI.Animations": "7.1.2",
+          "Microsoft.WindowsAppSDK": "1.2.230118.102"
+        }
+      },
       "CommunityToolkit.Mvvm": {
         "type": "Direct",
         "requested": "[8.2.1, )",
