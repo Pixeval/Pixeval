@@ -5,6 +5,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+    xmlns:markup="using:Pixeval.Util.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:misc="using:Pixeval.Pages.Misc"
     xmlns:model="using:Pixeval.UserControls.Setting.UI.Model"
@@ -13,7 +14,6 @@
     xmlns:radio="using:Pixeval.UserControls.Setting.UI"
     xmlns:system="using:System"
     xmlns:tokenInput="using:Pixeval.UserControls.TokenInput"
-    xmlns:markup="using:Pixeval.Util.MarkupExtensions"
     Loaded="SettingsPage_OnLoaded"
     mc:Ignorable="d">
     <Page.Resources>
@@ -472,6 +472,17 @@
                                         LostFocus="DefaultDownloadPathMacroTextBox_OnLostFocus"
                                         Text="{x:Bind _viewModel.DefaultDownloadPathMacro, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
+                            </labs:SettingsCard>
+                        </labs:SettingsExpander.Items>
+                    </labs:SettingsExpander>
+
+                    <labs:SettingsExpander
+                        x:Uid="/SettingsPage/UgoiraDownloadFormatEntry"
+                        HeaderIcon="{markup:FontIcon Glyph=GIFF4A9}"
+                        Tag="{x:Bind pixeval:SettingEntry.UgoiraDownloadFormat}">
+                        <labs:SettingsExpander.Items>
+                            <labs:SettingsCard ContentAlignment="Left">
+                                <radio:SettingRadioButtons ItemsSource="{x:Bind model:UgoiraDownloadFormatSettingEntryItem.AvailableItems}" SelectedItem="{x:Bind _viewModel.UgoiraDownloadFormat, Mode=TwoWay}" />
                             </labs:SettingsCard>
                         </labs:SettingsExpander.Items>
                     </labs:SettingsExpander>

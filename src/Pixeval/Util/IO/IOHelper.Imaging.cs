@@ -25,12 +25,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Net.Response;
-using Pixeval.Utilities;
-using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
 using Pixeval.Options;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Formats.Gif;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Formats.Tiff;
+using SixLabors.ImageSharp.Formats.Webp;
 
 namespace Pixeval.Util.IO;
 
@@ -82,78 +85,39 @@ public static partial class IOHelper
 
     /// <summary>
     ///     Writes the frames that are contained in <paramref name="frames" /> into <paramref name="target" />
-    ///     and encodes to a GIF format
+    ///     and encodes to <paramref name="ugoiraDownloadFormat"/> format
     /// </summary>
     /// <returns></returns>
-    public static async Task WriteGifBitmapAsync(IRandomAccessStream target, IEnumerable<IRandomAccessStream> frames, int delayInMilliseconds)
+    public static async Task WriteBitmapAsync(IRandomAccessStream target, IEnumerable<(IRandomAccessStream Frame, int Delay)> frames, UgoiraDownloadFormat ugoiraDownloadFormat)
     {
-        var framesArray = (frames as IRandomAccessStream[] ?? frames.ToArray())
-            .Select(t =>
-            {
-                t.Seek(0);
-                return t.AsStream();
-            }).ToArray();
+        var framesArray = (frames as (IRandomAccessStream Frame, int Delay)[] ?? frames.ToArray());
+        foreach (var (frame, _) in framesArray)
+            frame.Seek(0);
 
         if (framesArray.Length is 0)
             return;
 
-        using var image = await Image.LoadAsync(framesArray[0]);
+        using var image = await Image.LoadAsync(framesArray[0].Frame.AsStream());
 
-        foreach (var frame in framesArray.Skip(1))
+        foreach (var (frame, delay) in framesArray.Skip(1))
         {
-            using var f = await Image.LoadAsync(frame);
+            using var f = await Image.LoadAsync(frame.AsStream());
+            // TODO: delay
             _ = image.Frames.AddFrame(f.Frames[0]);
         }
 
-        await image.SaveAsGifAsync(target.AsStreamForWrite());
+        await image.SaveAsync(target.AsStreamForWrite(),
+            ugoiraDownloadFormat switch
+            {
+                // Png and Webp are not supported by SixLabors.ImageSharp yet
+                UgoiraDownloadFormat.Tiff => new TiffEncoder(),
+                UgoiraDownloadFormat.APng => new PngEncoder(),
+                UgoiraDownloadFormat.Gif => new GifEncoder(),
+                UgoiraDownloadFormat.WebP => new WebpEncoder(),
+                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<UgoiraDownloadFormat, IImageEncoder>(
+                    ugoiraDownloadFormat)
+            });
         target.Seek(0);
-        return;
-        var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.GifEncoderId, target);
-        await encoder.BitmapProperties.SetPropertiesAsync(new Dictionary<string, BitmapTypedValue> // wtf?
-        {
-            ["/appext/Application"] = new("NETSCAPE2.0".GetBytes(), PropertyType.UInt8Array),
-            ["/appext/Data"] = new(new byte[] { 3, 1, 0, 0 }, PropertyType.UInt8Array),
-            ["/grctlext/Delay"] = new(delayInMilliseconds / 10, PropertyType.UInt16)
-        });
-        var randomAccessStreams = frames as IRandomAccessStream[] ?? frames.ToArray();
-        var frameSoftwareBitmaps = (await Task.WhenAll(randomAccessStreams.Traverse(f => f.Seek(0)).Select(async stream =>
-        {
-            try
-            {
-                // The await keyword here is vital, the exception inside a task can be caught only if you await it
-                // otherwise it will be caught by the TaskScheduler.UnobservedTaskException
-                return await GetSoftwareBitmapFromStreamAsync(stream);
-            }
-            catch (Exception e)
-            {
-                return e.HResult switch
-                {
-                    // The GIF images are consist of multiple frames, some of them may be corrupted or having
-                    // a illegal format and thus are incapable of being encoded in to the GIF file, such frames will raise
-                    // a COMException indicating an unsuccessful HResult WIN_CODEC_ERR_COMPONENT_NOT_FOUND(0x88982F50),
-                    // there is no way to fix this, so instead of try to repair the image, we just simply drop that frame
-                    unchecked((int)0x88982F50) or unchecked((int)0x88982F81) => null!, // WIN_CODEC_ERR_COMPONENT_NOT_FOUND and WIN_CODEC_ERR_UNSUPPORTED_OPERATION 
-                    _ => throw e
-                };
-            }
-        }))).WhereNotNull().ToArray();
-        for (var i = 0; i < frameSoftwareBitmaps.Length; i++)
-        {
-            var frame = frameSoftwareBitmaps[i];
-            encoder.SetSoftwareBitmap(frame);
-            if (i < frameSoftwareBitmaps.Length - 1)
-            {
-                await encoder.GoToNextFrameAsync();
-            }
-        }
-
-        encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Fant;
-        foreach (var randomAccessStream in randomAccessStreams)
-        {
-            randomAccessStream.Dispose();
-        }
-
-        await encoder.FlushAsync();
     }
 
     public static async Task<BitmapImage> GetBitmapImageAsync(this IRandomAccessStream imageStream, bool disposeOfImageStream, int? desiredWidth = 0)
@@ -186,11 +150,15 @@ public static partial class IOHelper
         var decoder = await BitmapDecoder.CreateAsync(imageStream);
         return await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
     }
-    public static async Task<IRandomAccessStream> GetGifStreamFromZipStreamAsync(Stream zipStream, UgoiraMetadataResponse ugoiraMetadataResponse)
+
+    public static async Task<IRandomAccessStream> GetStreamFromZipStreamAsync(Stream zipStream, UgoiraMetadataResponse ugoiraMetadataResponse)
     {
         var entryStreams = await ReadZipArchiveEntries(zipStream);
+        var frames = ugoiraMetadataResponse.UgoiraMetadataInfo?.Frames?.ToArray();
         var inMemoryRandomAccessStream = new InMemoryRandomAccessStream();
-        await WriteGifBitmapAsync(inMemoryRandomAccessStream, entryStreams.Select(s => s.content.AsRandomAccessStream()), (int)(ugoiraMetadataResponse.UgoiraMetadataInfo?.Frames?.FirstOrDefault()?.Delay ?? 0));
+        await WriteBitmapAsync(inMemoryRandomAccessStream, entryStreams.Select((s, i) =>
+                (s.content.AsRandomAccessStream(), (int)(frames?[i]?.Delay ?? 20))),
+            App.AppViewModel.AppSetting.UgoiraDownloadFormat);
         return inMemoryRandomAccessStream;
     }
 

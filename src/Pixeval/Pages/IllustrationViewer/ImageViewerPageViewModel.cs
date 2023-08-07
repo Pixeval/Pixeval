@@ -180,10 +180,9 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         else if (IllustrationViewModel.IsUgoira)
         {
             var ugoiraMetadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(IllustrationViewModel.Id);
-            if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Medium is { } url)
+            if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Large is { } url)
             {
                 AdvancePhase(LoadingPhase.DownloadingGifZip);
-                url = url.Replace("600x600", "1920x1080");
                 var downloadRes = await imageClient.DownloadAsStreamAsync(url, new Progress<int>(d =>
                 {
                     LoadingProgress = d;

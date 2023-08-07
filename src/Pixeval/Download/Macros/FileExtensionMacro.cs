@@ -31,6 +31,7 @@ public class FileExtensionMacro : IMacro<IllustrationViewModel>.ITransducer
 
     public string Substitute(IllustrationViewModel context)
     {
-        return context.Illustrate.IsUgoira() ? ".gif" : context.Illustrate.GetImageFormat();
+        // TODO: 直接在此处调用了AppSetting
+        return context.IsUgoira ? "." + App.AppViewModel.AppSetting.UgoiraDownloadFormat.ToString().ToLower() : context.Illustrate.GetImageFormat();
     }
 }

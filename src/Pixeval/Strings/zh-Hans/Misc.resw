@@ -123,6 +123,9 @@
   <data name="AddBookmark" xml:space="preserve">
     <value>添加收藏</value>
   </data>
+  <data name="APng" xml:space="preserve">
+    <value>APng（无损，文件小）</value>
+  </data>
   <data name="AppThemeDark" xml:space="preserve">
     <value>暗色</value>
   </data>
@@ -137,6 +140,9 @@
   </data>
   <data name="ExceptionEncountered" xml:space="preserve">
     <value>应用程序遇到了异常</value>
+  </data>
+  <data name="Gif" xml:space="preserve">
+    <value>Gif（无损，只支持256色，文件小，支持广泛）</value>
   </data>
   <data name="IllustrationSortOptionDoNotSort" xml:space="preserve">
     <value>不进行任何排序</value>
@@ -237,7 +243,13 @@
   <data name="ThumbnailDirectionPortrait" xml:space="preserve">
     <value>纵向</value>
   </data>
+  <data name="Tiff" xml:space="preserve">
+    <value>Tiff（无损，无法自动播放，文件大）</value>
+  </data>
   <data name="UnexpectedBehavior" xml:space="preserve">
     <value>发生了未定义的行为，如果你看到了该信息，请联系开发者寻求帮助</value>
+  </data>
+  <data name="WebP" xml:space="preserve">
+    <value>WebP（无损，文件小，支持广泛）</value>
   </data>
 </root>

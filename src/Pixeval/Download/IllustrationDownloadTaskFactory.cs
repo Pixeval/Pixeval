@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,7 +38,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
 {
     public IMetaPathParser<IllustrationViewModel> PathParser { get; } = new IllustrationMetaPathParser();
 
-    public async Task<ObservableDownloadTask> CreateAsync(IllustrationViewModel context, string rawPath)
+    public Task<ObservableDownloadTask> CreateAsync(IllustrationViewModel context, string rawPath)
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
@@ -48,28 +49,34 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
             manager.Delete(entry => entry.Destination == path);
         }
 
-        ObservableDownloadTask task = context.Illustrate.IsUgoira() switch
+        var task = Functions.Block<ObservableDownloadTask>(() =>
         {
-            true => await Functions.Block(async () =>
+            if (context.IsUgoira)
             {
-                var ugoiraMetadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(context.Id);
-                if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Medium is { } url)
-                {
-                    var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path, DownloadItemType.Ugoira, context.Id, context.Illustrate.Title, context.Illustrate.User?.Name, url, context.Illustrate.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
-                    return new AnimatedIllustrationDownloadTask(downloadHistoryEntry, context, ugoiraMetadata);
-                }
+                var ugoiraMetadata = App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(context.Id).GetAwaiter().GetResult();
+                if (ugoiraMetadata.UgoiraMetadataInfo?.ZipUrls?.Large is not { } url)
+                    throw new DownloadTaskInitializationException(
+                        DownloadTaskResources.GifSourceUrlNotFoundFormatted.Format(context.Id));
 
-                throw new DownloadTaskInitializationException(DownloadTaskResources.GifSourceUrlNotFoundFormatted.Format(context.Id));
-            }),
-            false => Functions.Block(() =>
+                var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path,
+                    DownloadItemType.Ugoira,
+                    context.Id, context.Illustrate.Title, context.Illustrate.User?.Name,
+                    url, context.Illustrate.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
+                return new AnimatedIllustrationDownloadTask(downloadHistoryEntry, context, ugoiraMetadata);
+            }
+            else
             {
-                var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path, context.IsManga ? DownloadItemType.Manga : DownloadItemType.Illustration, context.Id, context.Illustrate.Title, context.Illustrate.User?.Name, context.Illustrate.GetOriginalUrl()!, context.Illustrate.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
+                var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path,
+                    context.IsManga ? DownloadItemType.Manga : DownloadItemType.Illustration, 
+                    context.Id, context.Illustrate.Title, context.Illustrate.User?.Name,
+                    context.Illustrate.GetOriginalUrl()!,
+                    context.Illustrate.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
                 return new IllustrationDownloadTask(downloadHistoryEntry, context);
-            })
-        };
+            }
+        });
 
         manager.Insert(task.DatabaseEntry);
-        return task;
+        return Task.FromResult(task);
     }
 
     public Task<ObservableDownloadTask> TryCreateIntrinsicAsync(IllustrationViewModel context, IRandomAccessStream stream, string rawPath)

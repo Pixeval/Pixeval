@@ -51,4 +51,6 @@ public class ZipUrls
 {
     [JsonPropertyName("medium")]
     public string? Medium { get; set; }
+
+    public string? Large => Medium?.Replace("600x600", "1920x1080");
 }

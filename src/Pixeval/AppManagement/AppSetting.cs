@@ -203,6 +203,10 @@ public partial record AppSetting
     [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.DefaultDownloadPathMacroEntryHeader))]
     public string DefaultDownloadPathMacro { get; set; }
 
+    [DefaultValue(UgoiraDownloadFormat.Tiff)]
+    [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.UgoiraDownloadFormatEntryHeader))]
+    public UgoiraDownloadFormat UgoiraDownloadFormat { get; set; }
+
     [DefaultValue(false)]
     [SettingMetadata(SettingEntryCategory.Download, typeof(SettingsPageResources), nameof(SettingsPageResources.OverwriteDownloadedFileEntryHeader))]
     public bool OverwriteDownloadedFile { get; set; }
