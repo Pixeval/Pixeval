@@ -60,12 +60,8 @@ public delegate void DetailedPropertyChangedEventHandler(object? sender, Detaile
 
 public delegate void DetailedPropertyChangingEventHandler(object? sender, DetailedPropertyChangingEventArgs e);
 
-public class DetailedPropertyChangedEventArgs : PropertyChangedEventArgs
+public class DetailedPropertyChangedEventArgs(string? propertyName) : PropertyChangedEventArgs(propertyName)
 {
-    public DetailedPropertyChangedEventArgs(string? propertyName) : base(propertyName)
-    {
-    }
-
     public Type? Type { get; init; }
 
     public object? OldValue { get; init; }
@@ -77,12 +73,8 @@ public class DetailedPropertyChangedEventArgs : PropertyChangedEventArgs
     public object? NewTag { get; init; }
 }
 
-public class DetailedPropertyChangingEventArgs : PropertyChangingEventArgs
+public class DetailedPropertyChangingEventArgs(string? propertyName) : PropertyChangingEventArgs(propertyName)
 {
-    public DetailedPropertyChangingEventArgs(string? propertyName) : base(propertyName)
-    {
-    }
-
     public Type? Type { get; init; }
 
     public object? OldValue { get; init; }

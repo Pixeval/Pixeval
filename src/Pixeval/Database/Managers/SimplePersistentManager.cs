@@ -30,19 +30,13 @@ namespace Pixeval.Database.Managers;
 ///     A simple persistent manager without mapping
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public abstract class SimplePersistentManager<T> : IPersistentManager<T, T>
+public abstract class SimplePersistentManager<T>(ILiteDatabase db, int maximumRecords) : IPersistentManager<T, T>
     where T : new()
 {
-    protected SimplePersistentManager(ILiteDatabase db, int maximumRecords)
-    {
-        Collection = db.GetCollection<T>(typeof(T).Name);
-        MaximumRecords = maximumRecords;
-    }
-
 #nullable disable
-    public ILiteCollection<T> Collection { get; init; }
+    public ILiteCollection<T> Collection { get; init; } = db.GetCollection<T>(typeof(T).Name);
 #nullable restore
-    public int MaximumRecords { get; set; }
+    public int MaximumRecords { get; set; } = maximumRecords;
 
     public int Count => Collection.Count();
 

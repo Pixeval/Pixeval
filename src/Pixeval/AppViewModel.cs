@@ -39,14 +39,9 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval;
 
-public class AppViewModel : AutoActivateObservableRecipient, IRecipient<ApplicationExitingMessage>, IRecipient<LoginCompletedMessage>
+public class AppViewModel(App app) : AutoActivateObservableRecipient, IRecipient<ApplicationExitingMessage>, IRecipient<LoginCompletedMessage>
 {
     private bool _activatedByProtocol;
-
-    public AppViewModel(App app)
-    {
-        App = app;
-    }
 
     public IHost AppHost { get; private set; } = null!;
 
@@ -57,7 +52,7 @@ public class AppViewModel : AutoActivateObservableRecipient, IRecipient<Applicat
     /// </summary>
     public bool SignOutExit { get; set; }
 
-    public App App { get; }
+    public App App { get; } = app;
 
     public DownloadManager<ObservableDownloadTask> DownloadManager { get; private set; } = null!;
 

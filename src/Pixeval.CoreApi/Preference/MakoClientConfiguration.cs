@@ -28,29 +28,17 @@ namespace Pixeval.CoreApi.Preference;
 ///     Contains all the user-configurable keys
 /// </summary>
 [PublicAPI]
-public record MakoClientConfiguration
+public record MakoClientConfiguration(int ConnectionTimeout, bool Bypass, string? MirrorHost, CultureInfo CultureInfo)
 {
-    public MakoClientConfiguration()
+    public MakoClientConfiguration() : this(5000, false, string.Empty, CultureInfo.CurrentCulture)
     {
-        CultureInfo = CultureInfo.CurrentCulture;
-        ConnectionTimeout = 5000;
-        Bypass = false;
-        MirrorHost = string.Empty;
-    }
-
-    public MakoClientConfiguration(int connectionTimeout, bool bypass, string? mirrorHost, CultureInfo cultureInfo)
-    {
-        ConnectionTimeout = connectionTimeout;
-        Bypass = bypass;
-        MirrorHost = mirrorHost;
-        CultureInfo = cultureInfo;
     }
 
     [JsonIgnore]
-    public CultureInfo CultureInfo { get; set; }
+    public CultureInfo CultureInfo { get; set; } = CultureInfo;
 
     [JsonPropertyName("connectionTimeout")]
-    public int ConnectionTimeout { get; set; }
+    public int ConnectionTimeout { get; set; } = ConnectionTimeout;
 
     /// <summary>
     ///     Automatically bypass GFW or not, default is set to true.
@@ -59,11 +47,11 @@ public record MakoClientConfiguration
     ///     need a proper proxy server to bypass the GFW
     /// </summary>
     [JsonPropertyName("bypass")]
-    public bool Bypass { get; set; }
+    public bool Bypass { get; set; } = Bypass;
 
     /// <summary>
     ///     Mirror server's host of image downloading
     /// </summary>
     [JsonPropertyName("mirrorHost")]
-    public string? MirrorHost { get; set; }
+    public string? MirrorHost { get; set; } = MirrorHost;
 }

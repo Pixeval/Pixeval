@@ -51,7 +51,7 @@ namespace Pixeval.UserControls.IllustrationView;
 ///     It is responsible for being the elements of the <see cref="AdaptiveGridView" /> to present the thumbnail of an
 ///     illustration
 /// </summary>
-public class IllustrationViewModel : IllustrateViewModel<Illustration>
+public class IllustrationViewModel(Illustration illustration) : IllustrateViewModel<Illustration>(illustration)
 {
     private bool _isSelected;
 
@@ -62,8 +62,6 @@ public class IllustrationViewModel : IllustrateViewModel<Illustration>
     private Dictionary<ThumbnailUrlOption, IRandomAccessStream> ThumbnailStreamsRef { get; } = new();
 
     private Dictionary<ThumbnailUrlOption, SharedRef<SoftwareBitmapSource>> ThumbnailSourcesRef { get; } = new();
-
-    public IllustrationViewModel(Illustration illustration) : base(illustration) { }
 
     public int MangaIndex { get; set; }
 

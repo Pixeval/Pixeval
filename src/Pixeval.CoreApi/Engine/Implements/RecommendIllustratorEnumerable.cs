@@ -27,14 +27,10 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-internal class RecommendIllustratorEngine : AbstractPixivFetchEngine<User>
+internal class RecommendIllustratorEngine(MakoClient makoClient, TargetFilter targetFilter, EngineHandle? engineHandle)
+    : AbstractPixivFetchEngine<User>(makoClient, engineHandle)
 {
-    private readonly TargetFilter _targetFilter;
-
-    public RecommendIllustratorEngine(MakoClient makoClient, TargetFilter targetFilter, EngineHandle? engineHandle) : base(makoClient, engineHandle)
-    {
-        _targetFilter = targetFilter;
-    }
+    private readonly TargetFilter _targetFilter = targetFilter;
 
     public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new())
     {

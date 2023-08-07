@@ -12,7 +12,6 @@ using Microsoft.Graphics.Canvas.UI.Xaml;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Microsoft.UI;
 using System.Threading;
 using System.Threading.Tasks;

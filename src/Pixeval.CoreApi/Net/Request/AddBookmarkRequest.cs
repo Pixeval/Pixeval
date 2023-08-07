@@ -24,17 +24,11 @@ namespace Pixeval.CoreApi.Net.Request;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable MemberCanBePrivate.Global
-internal class AddBookmarkRequest
+internal class AddBookmarkRequest(string restrict, string id)
 {
-    public AddBookmarkRequest(string restrict, string id)
-    {
-        Restrict = restrict;
-        Id = id;
-    }
-
     [AliasAs("restrict")]
-    public string Restrict { get; }
+    public string Restrict { get; } = restrict;
 
     [AliasAs("illust_id")]
-    public string Id { get; }
+    public string Id { get; } = id;
 }

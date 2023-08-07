@@ -24,13 +24,8 @@ namespace Pixeval.CoreApi.Net.Request;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable MemberCanBePrivate.Global
-internal class RemoveFollowUserRequest
+internal class RemoveFollowUserRequest(string userId)
 {
-    public RemoveFollowUserRequest(string userId)
-    {
-        UserId = userId;
-    }
-
     [AliasAs("user_id")]
-    public string UserId { get; }
+    public string UserId { get; } = userId;
 }

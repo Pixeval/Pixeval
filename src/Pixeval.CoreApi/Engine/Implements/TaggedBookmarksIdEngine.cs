@@ -31,29 +31,21 @@ namespace Pixeval.CoreApi.Engine.Implements;
 ///     Get the bookmarks that have user-defined tags associate with them, only returns their ID in string representation
 ///     This API is not supposed to have other usages
 /// </summary>
-internal class TaggedBookmarksIdEngine : AbstractPixivFetchEngine<string>
+internal class TaggedBookmarksIdEngine(MakoClient makoClient, EngineHandle? engineHandle, string uid, string tag)
+    : AbstractPixivFetchEngine<string>(makoClient, engineHandle)
 {
-    private readonly string _tag;
-    private readonly string _uid;
-
-    public TaggedBookmarksIdEngine(MakoClient makoClient, EngineHandle? engineHandle, string uid, string tag) : base(makoClient, engineHandle)
-    {
-        _uid = uid;
-        _tag = tag;
-    }
+    private readonly string _tag = tag;
+    private readonly string _uid = uid;
 
     public override IAsyncEnumerator<string> GetAsyncEnumerator(CancellationToken cancellationToken = new())
     {
         return new TaggedBookmarksIdAsyncEnumerator(this, MakoApiKind.WebApi)!;
     }
 
-    private class TaggedBookmarksIdAsyncEnumerator : RecursivePixivAsyncEnumerator<string, WebApiBookmarksWithTagResponse, TaggedBookmarksIdEngine>
+    private class TaggedBookmarksIdAsyncEnumerator(TaggedBookmarksIdEngine pixivFetchEngine, MakoApiKind apiKind)
+        : RecursivePixivAsyncEnumerator<string, WebApiBookmarksWithTagResponse, TaggedBookmarksIdEngine>(pixivFetchEngine, apiKind)
     {
         private int _currentIndex;
-
-        public TaggedBookmarksIdAsyncEnumerator(TaggedBookmarksIdEngine pixivFetchEngine, MakoApiKind apiKind) : base(pixivFetchEngine, apiKind)
-        {
-        }
 
         protected override bool ValidateResponse(WebApiBookmarksWithTagResponse rawEntity)
         {

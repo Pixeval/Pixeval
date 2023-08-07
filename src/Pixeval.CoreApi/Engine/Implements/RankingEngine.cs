@@ -28,23 +28,16 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-internal class RankingEngine : AbstractPixivFetchEngine<Illustration>
-{
-    private readonly DateTime _dateTime;
-    private readonly RankOption _rankOption;
-    private readonly TargetFilter _targetFilter;
-
-    public RankingEngine(
-        MakoClient makoClient,
+internal class RankingEngine(MakoClient makoClient,
         RankOption rankOption,
         DateTime dateTime,
         TargetFilter targetFilter,
-        EngineHandle? engineHandle) : base(makoClient, engineHandle)
-    {
-        _rankOption = rankOption;
-        _dateTime = dateTime;
-        _targetFilter = targetFilter;
-    }
+        EngineHandle? engineHandle)
+    : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
+{
+    private readonly DateTime _dateTime = dateTime;
+    private readonly RankOption _rankOption = rankOption;
+    private readonly TargetFilter _targetFilter = targetFilter;
 
     public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new())
     {

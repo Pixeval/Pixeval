@@ -35,12 +35,7 @@ namespace Pixeval.Download;
 
 public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>
 {
-    public IllustrationDownloadTaskFactory()
-    {
-        PathParser = new IllustrationMetaPathParser();
-    }
-
-    public IMetaPathParser<IllustrationViewModel> PathParser { get; }
+    public IMetaPathParser<IllustrationViewModel> PathParser { get; } = new IllustrationMetaPathParser();
 
     public async Task<ObservableDownloadTask> CreateAsync(IllustrationViewModel context, string rawPath)
     {

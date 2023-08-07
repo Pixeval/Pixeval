@@ -7,7 +7,7 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.UserControls;
 
-[DependencyProperty<FontIconSymbols>("Glyph", DependencyPropertyDefaultValue.UnsetValue, nameof(PropertyChangedCallback))]
+[DependencyProperty<FontIconSymbols>("Symbol", DependencyPropertyDefaultValue.UnsetValue, nameof(PropertyChangedCallback))]
 public partial class FontSymbolIcon : FontIcon
 {
     private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)

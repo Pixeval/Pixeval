@@ -28,20 +28,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-internal class SearchEngine : AbstractPixivFetchEngine<Illustration>
-{
-    private readonly int _current;
-    private readonly DateTimeOffset? _endDate;
-    private readonly SearchTagMatchOption _matchOption;
-    private readonly int _pages;
-    private readonly SearchDuration _searchDuration;
-    private readonly IllustrationSortOption _sortOption;
-    private readonly DateTimeOffset? _startDate;
-    private readonly string _tag;
-    private readonly TargetFilter _targetFilter;
-
-    public SearchEngine(
-        MakoClient makoClient,
+internal class SearchEngine(MakoClient makoClient,
         EngineHandle? engineHandle,
         SearchTagMatchOption matchOption,
         string tag,
@@ -51,30 +38,27 @@ internal class SearchEngine : AbstractPixivFetchEngine<Illustration>
         SearchDuration searchDuration,
         DateTimeOffset? startDate,
         DateTimeOffset? endDate,
-        TargetFilter? targetFilter) : base(makoClient, engineHandle)
-    {
-        _matchOption = matchOption;
-        _tag = tag;
-        _current = start;
-        _pages = pages;
-        _sortOption = sortOption ?? IllustrationSortOption.PublishDateDescending;
-        _searchDuration = searchDuration;
-        _startDate = startDate;
-        _endDate = endDate;
-        _targetFilter = targetFilter ?? TargetFilter.ForAndroid;
-    }
+        TargetFilter? targetFilter)
+    : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
+{
+    private readonly int _current = start;
+    private readonly DateTimeOffset? _endDate = endDate;
+    private readonly SearchTagMatchOption _matchOption = matchOption;
+    private readonly int _pages = pages;
+    private readonly SearchDuration _searchDuration = searchDuration;
+    private readonly IllustrationSortOption _sortOption = sortOption ?? IllustrationSortOption.PublishDateDescending;
+    private readonly DateTimeOffset? _startDate = startDate;
+    private readonly string _tag = tag;
+    private readonly TargetFilter _targetFilter = targetFilter ?? TargetFilter.ForAndroid;
 
     public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new())
     {
         return new SearchAsyncEnumerator(this, MakoApiKind.AppApi)!;
     }
 
-    private class SearchAsyncEnumerator : RecursivePixivAsyncEnumerators.Illustration<SearchEngine>
+    private class SearchAsyncEnumerator
+        (SearchEngine pixivFetchEngine, MakoApiKind makoApiKind) : RecursivePixivAsyncEnumerators.Illustration<SearchEngine>(pixivFetchEngine, makoApiKind)
     {
-        public SearchAsyncEnumerator(SearchEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
-        {
-        }
-
         protected override string InitialUrl()
         {
             return GetSearchUrl();

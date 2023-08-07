@@ -33,26 +33,19 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-internal class FeedEngine : AbstractPixivFetchEngine<Feed>
+internal class FeedEngine(MakoClient makoClient, EngineHandle? engineHandle) : AbstractPixivFetchEngine<Feed>(makoClient, engineHandle)
 {
-    public FeedEngine(MakoClient makoClient, EngineHandle? engineHandle) : base(makoClient, engineHandle)
-    {
-    }
-
     public override IAsyncEnumerator<Feed> GetAsyncEnumerator(CancellationToken cancellationToken = new())
     {
         return new UserFeedsAsyncEnumerator(this, MakoApiKind.WebApi)!;
     }
 
-    private class UserFeedsAsyncEnumerator : AbstractPixivAsyncEnumerator<Feed, string, FeedEngine>
+    private class UserFeedsAsyncEnumerator
+        (FeedEngine pixivFetchEngine, MakoApiKind apiKind) : AbstractPixivAsyncEnumerator<Feed, string, FeedEngine>(pixivFetchEngine, apiKind)
     {
         private FeedRequestContext? _feedRequestContext;
         private string? _tt;
 
-
-        public UserFeedsAsyncEnumerator(FeedEngine pixivFetchEngine, MakoApiKind apiKind) : base(pixivFetchEngine, apiKind)
-        {
-        }
 
         public override async ValueTask<bool> MoveNextAsync()
         {
@@ -308,22 +301,5 @@ internal class FeedEngine : AbstractPixivFetchEngine<Feed>
     /// <summary>
     ///     Required parameters established from multiple tests, I don't know what do they mean
     /// </summary>
-    private record FeedRequestContext
-    {
-        public FeedRequestContext(string unifyToken, string sid, string mode, bool isLastPage)
-        {
-            UnifyToken = unifyToken;
-            Sid = sid;
-            Mode = mode;
-            IsLastPage = isLastPage;
-        }
-
-        public string UnifyToken { get; }
-
-        public string Sid { get; }
-
-        public string Mode { get; }
-
-        public bool IsLastPage { get; }
-    }
+    private record FeedRequestContext(string UnifyToken, string Sid, string Mode, bool IsLastPage);
 }

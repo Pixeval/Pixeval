@@ -40,29 +40,23 @@ namespace Pixeval.CoreApi.Engine;
 /// <typeparam name="TEntity">The entity that will be yield by the enumerator</typeparam>
 /// <typeparam name="TRawEntity">The entity class corresponding to the result entry</typeparam>
 /// <typeparam name="TFetchEngine">The fetch engine</typeparam>
-public abstract class AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine> : IAsyncEnumerator<TEntity?>
+public abstract class AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine>(TFetchEngine pixivFetchEngine,
+    MakoApiKind apiKind) : IAsyncEnumerator<TEntity?>
     where TEntity : class?
     where TFetchEngine : class, IFetchEngine<TEntity>
 {
-    protected readonly MakoClient MakoClient;
-    protected readonly TFetchEngine PixivFetchEngine;
+    protected readonly MakoClient MakoClient = pixivFetchEngine.MakoClient;
+    protected readonly TFetchEngine PixivFetchEngine = pixivFetchEngine;
 
     /// <summary>
     ///     The result entries of the current page
     /// </summary>
     protected IEnumerator<TEntity>? CurrentEntityEnumerator;
 
-    protected AbstractPixivAsyncEnumerator(TFetchEngine pixivFetchEngine, MakoApiKind apiKind)
-    {
-        PixivFetchEngine = pixivFetchEngine;
-        MakoClient = pixivFetchEngine.MakoClient;
-        ApiKind = apiKind;
-    }
-
     /// <summary>
     ///     Indicates which kind of API this enumerator will use
     /// </summary>
-    private MakoApiKind ApiKind { get; }
+    private MakoApiKind ApiKind { get; } = apiKind;
 
     /// <summary>
     ///     Indicates if the current operation has been cancelled

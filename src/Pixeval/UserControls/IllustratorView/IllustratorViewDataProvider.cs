@@ -33,12 +33,7 @@ namespace Pixeval.UserControls.IllustratorView;
 
 public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User, IllustratorViewModel>
 {
-    public IllustratorViewDataProvider()
-    {
-        View = new(Array.Empty<IllustratorViewModel>());
-    }
-
-    public AdvancedCollectionView View { get; }
+    public AdvancedCollectionView View { get; } = new(Array.Empty<IllustratorViewModel>());
 
     private IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel> _illustratorsSource = null!;
 
@@ -70,10 +65,11 @@ public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User,
 
     public void DisposeCurrent()
     {
-        foreach (var illustratorViewModel in Source)
-        {
-            illustratorViewModel.Dispose();
-        }
+        if (Source is { } source)
+            foreach (var illustratorViewModel in source)
+            {
+                illustratorViewModel.Dispose();
+            }
 
         View.Clear();
     }

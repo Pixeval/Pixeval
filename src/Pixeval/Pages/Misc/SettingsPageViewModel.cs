@@ -42,13 +42,13 @@ using Pixeval.UserControls.IllustrationView;
 namespace Pixeval.Pages.Misc;
 
 [SettingsViewModel<AppSetting>(nameof(_appSetting))]
-public partial class SettingsPageViewModel : ObservableObject
+public partial class SettingsPageViewModel(AppSetting appSetting) : ObservableObject
 {
     public static readonly IEnumerable<string> AvailableFonts = new InstalledFontCollection().Families.Select(f => f.Name);
 
     public static readonly ICollection<Token> AvailableIllustMacros;
 
-    private readonly AppSetting _appSetting;
+    private readonly AppSetting _appSetting = appSetting;
 
     static SettingsPageViewModel()
     {
@@ -58,11 +58,6 @@ public partial class SettingsPageViewModel : ObservableObject
             .Select(m => $"@{{{(m is IMacro<IllustrationViewModel>.IPredicate ? $"{m.Name}:" : m.Name)}}}")
             .Select(s => new Token(s, false, false))
             .ToList();
-    }
-
-    public SettingsPageViewModel(AppSetting appSetting)
-    {
-        _appSetting = appSetting;
     }
 
     [DefaultValue(false)]

@@ -23,11 +23,9 @@ using System;
 namespace Pixeval.Attributes;
 
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-public class LoadSaveConfigurationAttribute<T> : Attribute
+public class LoadSaveConfigurationAttribute<T>(string containerName) : Attribute
 {
-    public LoadSaveConfigurationAttribute(string containerName) => ContainerName = containerName;
-
-    public string ContainerName { get; }
+    public string ContainerName { get; } = containerName;
 
     public string CastMethod { get; set; } = "null!";
 }

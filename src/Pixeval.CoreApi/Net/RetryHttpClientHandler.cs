@@ -27,20 +27,13 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Net;
 
-internal class RetryHttpClientHandler : HttpMessageHandler
+internal class RetryHttpClientHandler(HttpMessageHandler delegatedHandler, int timeout) : HttpMessageHandler
 {
-    private readonly HttpMessageInvoker _delegatedHandler;
-    private readonly int _timeout;
-
-    public RetryHttpClientHandler(HttpMessageHandler delegatedHandler, int timeout)
-    {
-        _timeout = timeout;
-        _delegatedHandler = new HttpMessageInvoker(delegatedHandler);
-    }
+    private readonly HttpMessageInvoker _delegatedHandler = new(delegatedHandler);
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        return await Functions.RetryAsync(() => _delegatedHandler.SendAsync(request, cancellationToken), 2, _timeout).ConfigureAwait(false) switch
+        return await Functions.RetryAsync(() => _delegatedHandler.SendAsync(request, cancellationToken), 2, timeout).ConfigureAwait(false) switch
         {
             Result<HttpResponseMessage>.Success(var response) => response,
             Result<HttpResponseMessage>.Failure failure => throw failure.Cause ?? new HttpRequestException(),
@@ -49,14 +42,9 @@ internal class RetryHttpClientHandler : HttpMessageHandler
     }
 }
 
-internal class MakoRetryHttpClientHandler : HttpMessageHandler, IMakoClientSupport
+internal class MakoRetryHttpClientHandler(HttpMessageHandler delegatedHandler) : HttpMessageHandler, IMakoClientSupport
 {
-    private readonly HttpMessageInvoker _delegatedHandler;
-
-    public MakoRetryHttpClientHandler(HttpMessageHandler delegatedHandler)
-    {
-        _delegatedHandler = new HttpMessageInvoker(delegatedHandler);
-    }
+    private readonly HttpMessageInvoker _delegatedHandler = new(delegatedHandler);
 
     // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global ! Dependency Injected
     public MakoClient MakoClient { get; set; } = null!;

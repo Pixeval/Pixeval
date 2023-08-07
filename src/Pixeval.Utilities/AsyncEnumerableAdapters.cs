@@ -27,44 +27,29 @@ using JetBrains.Annotations;
 namespace Pixeval.Utilities;
 
 [PublicAPI]
-public class AdaptedAsyncEnumerator<T> : IAsyncEnumerator<T>
+public class AdaptedAsyncEnumerator<T>(IEnumerator<T> outerEnumerator, CancellationToken cancellationToken = new())
+    : IAsyncEnumerator<T>
 {
-    private readonly CancellationToken _cancellationToken;
-    private readonly IEnumerator<T> _outerEnumerator;
-
-    public AdaptedAsyncEnumerator(IEnumerator<T> outerEnumerator, CancellationToken cancellationToken = new())
-    {
-        _outerEnumerator = outerEnumerator;
-        _cancellationToken = cancellationToken;
-    }
-
     public ValueTask DisposeAsync()
     {
-        _outerEnumerator.Dispose();
+        outerEnumerator.Dispose();
         GC.SuppressFinalize(this);
         return ValueTask.CompletedTask;
     }
 
     public ValueTask<bool> MoveNextAsync()
     {
-        return ValueTask.FromResult(!_cancellationToken.IsCancellationRequested && _outerEnumerator.MoveNext());
+        return ValueTask.FromResult(!cancellationToken.IsCancellationRequested && outerEnumerator.MoveNext());
     }
 
-    public T Current => _outerEnumerator.Current;
+    public T Current => outerEnumerator.Current;
 }
 
 [PublicAPI]
-public class AdaptedAsyncEnumerable<T> : IAsyncEnumerable<T>
+public class AdaptedAsyncEnumerable<T>(IEnumerable<T> sync) : IAsyncEnumerable<T>
 {
-    private readonly IEnumerable<T> _sync;
-
-    public AdaptedAsyncEnumerable(IEnumerable<T> sync)
-    {
-        _sync = sync;
-    }
-
     public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = new())
     {
-        return new AdaptedAsyncEnumerator<T>(_sync.GetEnumerator());
+        return new AdaptedAsyncEnumerator<T>(sync.GetEnumerator());
     }
 }

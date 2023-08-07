@@ -24,12 +24,9 @@ using Pixeval.UserControls.IllustratorView;
 
 namespace Pixeval.Misc;
 
-public class IllustratorFetchEngineIncrementalSource : FetchEngineIncrementalSource<User, IllustratorViewModel>
+public class IllustratorFetchEngineIncrementalSource
+    (IAsyncEnumerable<User> asyncEnumerator, int limit = -1) : FetchEngineIncrementalSource<User, IllustratorViewModel>(asyncEnumerator, limit)
 {
-    public IllustratorFetchEngineIncrementalSource(IAsyncEnumerable<User> asyncEnumerator, int limit = -1) : base(asyncEnumerator, limit)
-    {
-    }
-
     protected override long Identifier(User entity)
     {
         return entity.UserInfo?.Id ?? 0;

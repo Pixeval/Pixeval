@@ -24,14 +24,9 @@ using Pixeval.Util;
 namespace Pixeval.Attributes;
 
 [AttributeUsage(AttributeTargets.Field)]
-public class Metadata : Attribute
+public class Metadata(string key) : Attribute
 {
-    public Metadata(string key)
-    {
-        Key = key;
-    }
-
-    public string Key { get; }
+    public string Key { get; } = key;
 }
 
 public static class MetadataAttributeHelper

@@ -29,26 +29,19 @@ using Pixeval.UserControls.IllustrationView;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public class IllustrationVisualizationController : IDisposable
+public class IllustrationVisualizationController(IIllustrationVisualizer visualizer) : IDisposable
 {
-    private readonly IIllustrationVisualizer _visualizer;
-
     public IFetchEngine<Illustration?>? FetchEngine { get; set; }
 
     public NotifyCollectionChangedEventHandler? CollectionChanged { get; set; }
 
-    public IllustrationVisualizationController(IIllustrationVisualizer visualizer)
-    {
-        _visualizer = visualizer;
-    }
-
     public async Task<bool> FillAsync(int itemsLimit = -1)
     {
         var collection = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, itemsLimit));
-        _visualizer.Illustrations = collection;
+        visualizer.Illustrations = collection;
         await collection.LoadMoreItemsAsync(20);
-        _visualizer.Illustrations.CollectionChanged += CollectionChanged;
-        return _visualizer.Illustrations.Count > 0;
+        visualizer.Illustrations.CollectionChanged += CollectionChanged;
+        return visualizer.Illustrations.Count > 0;
     }
 
     public async Task FillAsync(IFetchEngine<Illustration?>? newEngine, int itemsLimit = -1)
@@ -61,13 +54,13 @@ public class IllustrationVisualizationController : IDisposable
     {
         FetchEngine?.EngineHandle.Cancel();
         FetchEngine = newEngine;
-        _visualizer.DisposeCurrent();
+        visualizer.DisposeCurrent();
         return FillAsync(itemsLimit);
     }
 
     public void Dispose()
     {
-        _visualizer.DisposeCurrent();
+        visualizer.DisposeCurrent();
         FetchEngine = null;
     }
 }

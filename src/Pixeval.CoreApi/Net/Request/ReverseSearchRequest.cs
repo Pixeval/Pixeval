@@ -22,25 +22,17 @@ using Refit;
 
 namespace Pixeval.CoreApi.Net.Request;
 
-internal class ReverseSearchRequest
+internal class ReverseSearchRequest(string apiKey)
 {
-    public ReverseSearchRequest(string apiKey)
-    {
-        ApiKey = apiKey;
-        DbMask = "96";
-        OutputType = "2";
-        NumberResult = "1";
-    }
-
     [AliasAs("api_key")]
-    public string ApiKey { get; }
+    public string ApiKey { get; } = apiKey;
 
     [AliasAs("dbmask")]
-    public string DbMask { get; }
+    public string DbMask { get; } = "96";
 
     [AliasAs("output_type")]
-    public string OutputType { get; }
+    public string OutputType { get; } = "2";
 
     [AliasAs("numres")]
-    public string NumberResult { get; }
+    public string NumberResult { get; } = "1";
 }

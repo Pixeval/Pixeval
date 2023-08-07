@@ -23,46 +23,30 @@ using System.Threading.Tasks;
 
 namespace Pixeval.Util.Threading;
 
-public sealed class AsyncFunc
+public sealed class AsyncFunc(Func<Task> action)
 {
-    private readonly Func<Task> _action;
-
-    private bool _running;
-
-    public AsyncFunc(Func<Task> action)
-    {
-        _action = action;
-        _running = false;
-    }
+    private bool _running = false;
 
     public async Task RunAsync()
     {
         if (_running)
             return;
         _running = true;
-        await _action();
+        await action();
         _running = false;
     }
 }
 
-public sealed class AsyncFunc<T>
+public sealed class AsyncFunc<T>(Func<T, Task> action)
 {
-    private readonly Func<T, Task> _func;
-
-    private bool _running;
-
-    public AsyncFunc(Func<T, Task> action)
-    {
-        _func = action;
-        _running = false;
-    }
+    private bool _running = false;
 
     public async Task RunAsync(T param)
     {
         if (_running)
             return;
         _running = true;
-        await _func(param);
+        await action(param);
         _running = false;
     }
 }

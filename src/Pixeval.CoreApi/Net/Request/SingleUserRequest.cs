@@ -24,17 +24,11 @@ namespace Pixeval.CoreApi.Net.Request;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
-internal class SingleUserRequest
+internal class SingleUserRequest(string id, string filter)
 {
-    public SingleUserRequest(string id, string filter)
-    {
-        Id = id;
-        Filter = filter;
-    }
-
     [AliasAs("user_id")]
-    public string Id { get; }
+    public string Id { get; } = id;
 
     [AliasAs("filter")]
-    public string Filter { get; }
+    public string Filter { get; } = filter;
 }

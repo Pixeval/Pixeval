@@ -25,17 +25,11 @@ using Windows.Storage.Streams;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public class PixivReplyEmojiViewModel
+public class PixivReplyEmojiViewModel(PixivReplyEmoji emojiEnumValue, IRandomAccessStream imageStream)
 {
-    public PixivReplyEmojiViewModel(PixivReplyEmoji emojiEnumValue, IRandomAccessStream imageStream)
-    {
-        EmojiEnumValue = emojiEnumValue;
-        ImageStream = imageStream;
-    }
+    public PixivReplyEmoji EmojiEnumValue { get; } = emojiEnumValue;
 
-    public PixivReplyEmoji EmojiEnumValue { get; }
-
-    public IRandomAccessStream ImageStream { get; }
+    public IRandomAccessStream ImageStream { get; } = imageStream;
 
     public ImageSource? ImageSource { get; set; }
 }

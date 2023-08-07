@@ -22,9 +22,4 @@ using LiteDB;
 
 namespace Pixeval.Database.Managers;
 
-public class SearchHistoryPersistentManager : SimplePersistentManager<SearchHistoryEntry>
-{
-    public SearchHistoryPersistentManager(ILiteDatabase db, int maximumRecords) : base(db, maximumRecords)
-    {
-    }
-}
+public class SearchHistoryPersistentManager(ILiteDatabase db, int maximumRecords) : SimplePersistentManager<SearchHistoryEntry>(db, maximumRecords);

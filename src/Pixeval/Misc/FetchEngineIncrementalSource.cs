@@ -26,13 +26,12 @@ using CommunityToolkit.Common.Collections;
 
 namespace Pixeval.Misc;
 
-public abstract class FetchEngineIncrementalSource<T, TModel> : IIncrementalSource<TModel>
+public abstract class FetchEngineIncrementalSource<T, TModel>
+    (IAsyncEnumerable<T> asyncEnumerator, int limit = -1) : IIncrementalSource<TModel>
 {
-    private readonly ISet<long> _yieldedItems;
+    private readonly ISet<long> _yieldedItems = new HashSet<long>();
 
-    private readonly IAsyncEnumerator<T> _asyncEnumerator;
-
-    private readonly int _limit;
+    private readonly IAsyncEnumerator<T> _asyncEnumerator = asyncEnumerator.GetAsyncEnumerator();
 
     private int _yieldedCounter;
 
@@ -40,20 +39,13 @@ public abstract class FetchEngineIncrementalSource<T, TModel> : IIncrementalSour
 
     protected abstract TModel Select(T entity);
 
-    protected FetchEngineIncrementalSource(IAsyncEnumerable<T> asyncEnumerator, int limit = -1)
-    {
-        _asyncEnumerator = asyncEnumerator.GetAsyncEnumerator();
-        _limit = limit;
-        _yieldedItems = new HashSet<long>();
-    }
-
     public async Task<IEnumerable<TModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new())
     {
         var result = new List<TModel>();
         var i = 0;
         while (i < pageSize)
         {
-            if (_limit is not -1 && _yieldedCounter > _limit)
+            if (limit is not -1 && _yieldedCounter > limit)
             {
                 return result;
             }

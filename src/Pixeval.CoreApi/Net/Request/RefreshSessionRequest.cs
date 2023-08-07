@@ -25,15 +25,10 @@ namespace Pixeval.CoreApi.Net.Request;
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable MemberCanBePrivate.Global
 #pragma warning disable CA1822
-internal class RefreshSessionRequest
+internal class RefreshSessionRequest(string? refreshToken)
 {
-    public RefreshSessionRequest(string? refreshToken)
-    {
-        RefreshToken = refreshToken;
-    }
-
     [AliasAs("refresh_token")]
-    public string? RefreshToken { get; }
+    public string? RefreshToken { get; } = refreshToken;
 
     [AliasAs("grant_type")]
     public string GrantType => "refresh_token";

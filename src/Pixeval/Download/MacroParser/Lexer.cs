@@ -20,14 +20,9 @@
 
 namespace Pixeval.Download.MacroParser;
 
-public class Lexer
+public class Lexer(string rawString)
 {
-    private readonly CharStream _rawString;
-
-    public Lexer(string rawString)
-    {
-        _rawString = new CharStream(rawString);
-    }
+    private readonly CharStream _rawString = new(rawString);
 
     private char _currentChar => _rawString.Peek();
 

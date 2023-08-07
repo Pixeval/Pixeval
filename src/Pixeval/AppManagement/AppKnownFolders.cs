@@ -27,7 +27,7 @@ using Windows.Storage;
 
 namespace Pixeval.AppManagement;
 
-public class AppKnownFolders
+public class AppKnownFolders(StorageFolder self)
 {
     public static AppKnownFolders Local = new(ApplicationData.Current.LocalFolder, _ => ApplicationData.Current.ClearAsync(ApplicationDataLocality.Local).AsTask());
 
@@ -37,17 +37,12 @@ public class AppKnownFolders
 
     private readonly Func<StorageFolder, Task>? _deleter;
 
-    public AppKnownFolders(StorageFolder self)
-    {
-        Self = self;
-    }
-
     private AppKnownFolders(StorageFolder self, Func<StorageFolder, Task> deleter) : this(self)
     {
         _deleter = deleter;
     }
 
-    public StorageFolder Self { get; }
+    public StorageFolder Self { get; } = self;
 
     private static async Task<AppKnownFolders> GetOrCreate(AppKnownFolders folder, string subfolderName)
     {

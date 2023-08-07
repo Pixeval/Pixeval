@@ -25,14 +25,10 @@ using Pixeval.UserControls.IllustrationView;
 
 namespace Pixeval.Download;
 
-public class LazyInitializedIllustrationDownloadTask : ObservableDownloadTask, IIllustrationViewModelProvider
+public class LazyInitializedIllustrationDownloadTask
+    (DownloadHistoryEntry databaseEntry) : ObservableDownloadTask(databaseEntry), IIllustrationViewModelProvider
 {
-    private readonly Lazy<Task<IllustrationViewModel>> _resultGenerator;
-
-    public LazyInitializedIllustrationDownloadTask(DownloadHistoryEntry databaseEntry) : base(databaseEntry)
-    {
-        _resultGenerator = new Lazy<Task<IllustrationViewModel>>(async () => new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(databaseEntry.Id!)));
-    }
+    private readonly Lazy<Task<IllustrationViewModel>> _resultGenerator = new(async () => new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(databaseEntry.Id!)));
 
     public Task<IllustrationViewModel> GetViewModelAsync()
     {

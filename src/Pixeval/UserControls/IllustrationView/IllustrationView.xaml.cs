@@ -37,7 +37,6 @@ using Pixeval.Util.UI;
 using Pixeval.Util.UI.Windowing;
 using Windows.System;
 using Windows.UI.Core;
-using Pixeval.Util.Ref;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 

@@ -23,25 +23,17 @@ using System.Threading;
 
 namespace Pixeval.CoreApi.Engine;
 
-public class ComputedFetchEngine<T> : IFetchEngine<T>
+public class ComputedFetchEngine<T>(IAsyncEnumerable<T> result, MakoClient makoClient, EngineHandle engineHandle)
+    : IFetchEngine<T>
 {
-    private readonly IAsyncEnumerable<T> _result;
-
-    public ComputedFetchEngine(IAsyncEnumerable<T> result, MakoClient makoClient, EngineHandle engineHandle)
-    {
-        _result = result;
-        MakoClient = makoClient;
-        EngineHandle = engineHandle;
-    }
-
     public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = new())
     {
-        return _result.GetAsyncEnumerator(cancellationToken);
+        return result.GetAsyncEnumerator(cancellationToken);
     }
 
-    public MakoClient MakoClient { get; }
+    public MakoClient MakoClient { get; } = makoClient;
 
-    public EngineHandle EngineHandle { get; }
+    public EngineHandle EngineHandle { get; } = engineHandle;
 
     /// <summary>
     /// The <see cref="RequestedPages"/> in <see cref="ComputedFetchEngine{T}"/> should always returns -1

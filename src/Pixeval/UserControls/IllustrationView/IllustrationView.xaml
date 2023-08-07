@@ -226,7 +226,7 @@
                                                 <Grid.RenderTransform>
                                                     <ScaleTransform CenterX="10" CenterY="10" ScaleX="0" ScaleY="0" />
                                                 </Grid.RenderTransform>
-                                                <userControls:FontSymbolIcon Foreground="{x:Bind BookmarkedColor, Mode=OneWay}" Glyph="HeartFillEB52" />
+                                                <userControls:FontSymbolIcon Foreground="{x:Bind BookmarkedColor, Mode=OneWay}" Symbol="HeartFillEB52" />
                                             </Grid>
                                         </Grid>
                                         <Grid

@@ -25,19 +25,13 @@ using System.Threading.Tasks;
 
 namespace Pixeval.Utilities.Threading;
 
-public class ReenterableAwaiter : INotifyCompletion
+public class ReenterableAwaiter(bool initialSignal) : INotifyCompletion
 {
     private Action? _continuation;
-    private bool _continueOnCapturedContext; // whether the continuation should be posted to the captured SynchronizationContext
+    private bool _continueOnCapturedContext = true; // whether the continuation should be posted to the captured SynchronizationContext
     private Exception? _exception;
 
-    public ReenterableAwaiter(bool initialSignal)
-    {
-        IsCompleted = initialSignal;
-        _continueOnCapturedContext = true;
-    }
-
-    public bool IsCompleted { get; set; }
+    public bool IsCompleted { get; set; } = initialSignal;
 
     public void OnCompleted(Action continuation)
     {
