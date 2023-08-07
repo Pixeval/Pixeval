@@ -5,12 +5,23 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
+using Windows.Storage.Streams;
+using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.UI;
+using Microsoft.Graphics.Canvas.UI.Xaml;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
+using System.Collections.Generic;
+using System.Diagnostics;
+using Microsoft.UI;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Pixeval.UserControls;
 
-[DependencyProperty<ImageSource>("Source", DependencyPropertyDefaultValue.Default, nameof(OnSourceChanged))]
+[DependencyProperty<IEnumerable<IRandomAccessStream>>("Sources", DependencyPropertyDefaultValue.Default, nameof(OnSourcesChanged))]
+[DependencyProperty<List<int>>("MsIntervals", DependencyPropertyDefaultValue.Default, nameof(OnMsIntervalsChanged))]
+[DependencyProperty<bool>("IsPlaying", "true", nameof(OnIsPlayingChanged))]
 [DependencyProperty<double>("ImagePositionX", "0d")]
 [DependencyProperty<double>("ImagePositionY", "0d")]
 [DependencyProperty<double>("OriginalImageWidth", "0d", nameof(OnOriginalSizeChanged))]
@@ -24,14 +35,99 @@ public sealed partial class ZoomableImage : UserControl
     public ZoomableImage()
     {
         InitializeComponent();
+
+        _ = Task.Run(Func, _token.Token);
         ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeAll);
+
+        async Task Func()
+        {
+            while (true)
+            {
+                if (_frames.Count is 0)
+                {
+                    await Task.Delay(200, _token.Token);
+                }
+                else
+                {
+                    var totalDelay = 0;
+                    var startTime = DateTime.Now;
+                    for (var i = 0; i < _frames.Count; ++i)
+                    {
+                        _currentFrame = _frames[i];
+                        _ = ManualResetEvent.WaitOne();
+                        CanvasControl.Invalidate();
+                        _ = ManualResetEvent.WaitOne();
+                        var delay = 20;
+                        var index = i;
+                        if (ClonedMsIntervals is { } t && t.Count > index)
+                            delay = ClonedMsIntervals[index];
+                        totalDelay += delay;
+                        do
+                        {
+                            _ = ManualResetEvent.WaitOne();
+                            await Task.Delay(10, _token.Token);
+                        } while ((DateTime.Now - startTime).TotalMilliseconds < totalDelay);
+                    }
+                }
+                if (_token.IsCancellationRequested)
+                    return;
+            }
+        }
     }
 
-    private static void OnSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    #region FrameRelated
+
+    private static void OnMsIntervalsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var zoomableImage = d.To<ZoomableImage>();
+        zoomableImage.ClonedMsIntervals = new(zoomableImage.MsIntervals);
+    }
+
+    private static void OnSourcesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var zoomableImage = d.To<ZoomableImage>();
+        zoomableImage.IsPlaying = true;
+        zoomableImage._timerRunning = false;
+        _ = zoomableImage.ManualResetEvent.Reset();
+        zoomableImage.CanvasControl.Invalidate();
         zoomableImage.Mode = zoomableImage.InitMode;
     }
+
+    private static void OnIsPlayingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var zoomableImage = d.To<ZoomableImage>();
+        _ = zoomableImage.IsPlaying ? zoomableImage.ManualResetEvent.Set() : zoomableImage.ManualResetEvent.Reset();
+    }
+
+    private async void CanvasControlOnDraw(CanvasControl sender, CanvasDrawEventArgs e)
+    {
+        if (!IsPlaying || _timerRunning)
+        {
+            if (_currentFrame is null)
+                return;
+            e.DrawingSession.Clear(Colors.Transparent);
+            e.DrawingSession.DrawImage(_currentFrame, new(0, 0, OriginalImageWidth, OriginalImageHeight));
+        }
+        else
+        {
+            _frames.Clear();
+            if (Sources is null)
+                return;
+            foreach (var source in Sources)
+                _frames.Add(await CanvasBitmap.LoadAsync(sender, source));
+            _timerRunning = true;
+            _ = ManualResetEvent.Set();
+        }
+    }
+
+    private bool _timerRunning;
+    private CanvasBitmap? _currentFrame;
+    private readonly List<CanvasBitmap> _frames = new();
+    private readonly CancellationTokenSource _token = new();
+    private List<int>? ClonedMsIntervals { get; set; }
+    private ManualResetEvent ManualResetEvent { get; } = new(true);
+
+    #endregion
 
     #region ScaleRelated
 
@@ -153,9 +249,9 @@ public sealed partial class ZoomableImage : UserControl
     public void SetPosition(ZoomableImagePosition position, double imageWidth = 0, double imageHeight = 0)
     {
         if (imageWidth is 0)
-            imageWidth = Image.ActualWidth;
+            imageWidth = CanvasControl.ActualWidth;
         if (imageHeight is 0)
-            imageHeight = Image.ActualHeight;
+            imageHeight = CanvasControl.ActualHeight;
         switch (position)
         {
             case ZoomableImagePosition.Left:
@@ -199,6 +295,25 @@ public sealed partial class ZoomableImage : UserControl
     private Point _lastPoint;
 
     #endregion
+
+    private void CanvasControlOnCreateResources(CanvasControl sender, CanvasCreateResourcesEventArgs e)
+    {
+        //if (Source is not null)
+        //    _frames.Add(await CanvasBitmap.LoadAsync(sender, Source));
+        //else if (Sources is not null)
+        //    foreach (var source in Sources)
+        //        _frames.Add(await CanvasBitmap.LoadAsync(sender, source));
+    }
+
+    private void CanvasControlOnUnloaded(object sender, RoutedEventArgs e)
+    {
+        foreach (var frame in _frames)
+            frame.Dispose();
+        _frames.Clear();
+        _token.Cancel();
+        _token.Dispose();
+        ManualResetEvent.Dispose();
+    }
 }
 
 public enum ZoomableImageMode

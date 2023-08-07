@@ -57,12 +57,13 @@ public class IllustrationViewModel : IllustrateViewModel<Illustration>
 
     public ImmutableDictionary<ThumbnailUrlOption, SoftwareBitmapSource> ThumbnailSources => ThumbnailSourcesRef.ToImmutableDictionary(pair => pair.Key, pair => pair.Value.Value);
 
-    public Dictionary<ThumbnailUrlOption, SharedRef<SoftwareBitmapSource>> ThumbnailSourcesRef { get; set; } = new();
+    public IReadOnlyDictionary<ThumbnailUrlOption, IRandomAccessStream> ThumbnailStreams => ThumbnailStreamsRef;
 
-    public IllustrationViewModel(Illustration illustration) : base(illustration)
-    {
-        LoadingThumbnailCancellationHandle = new CancellationHandle();
-    }
+    private Dictionary<ThumbnailUrlOption, IRandomAccessStream> ThumbnailStreamsRef { get; } = new();
+
+    private Dictionary<ThumbnailUrlOption, SharedRef<SoftwareBitmapSource>> ThumbnailSourcesRef { get; } = new();
+
+    public IllustrationViewModel(Illustration illustration) : base(illustration) { }
 
     public int MangaIndex { get; set; }
 
@@ -104,7 +105,7 @@ public class IllustrationViewModel : IllustrateViewModel<Illustration>
 
     public event EventHandler<IllustrationViewModel>? IsSelectedChanged;
 
-    public CancellationHandle LoadingThumbnailCancellationHandle { get; }
+    public CancellationHandle LoadingThumbnailCancellationHandle { get; } = new CancellationHandle();
 
     public bool LoadingThumbnail { get; private set; }
 
@@ -159,7 +160,8 @@ public class IllustrationViewModel : IllustrateViewModel<Illustration>
         LoadingThumbnail = true;
         if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(Illustrate.GetIllustrationThumbnailCacheKey(thumbnailUrlOption)) is { } stream)
         {
-            ThumbnailSourcesRef[thumbnailUrlOption] = new(await stream.GetSoftwareBitmapSourceAsync(true), key);
+            ThumbnailStreamsRef[thumbnailUrlOption] = stream;
+            ThumbnailSourcesRef[thumbnailUrlOption] = new(await stream.GetSoftwareBitmapSourceAsync(false), key);
             LoadingThumbnail = false;
             OnPropertyChanged(nameof(ThumbnailSources));
             return true;
@@ -171,7 +173,8 @@ public class IllustrationViewModel : IllustrateViewModel<Illustration>
             {
                 _ = await App.AppViewModel.Cache.TryAddAsync(Illustrate.GetIllustrationThumbnailCacheKey(thumbnailUrlOption), ras, TimeSpan.FromDays(1));
             }
-            ThumbnailSourcesRef[thumbnailUrlOption] = new(await ras.GetSoftwareBitmapSourceAsync(true), key);
+            ThumbnailStreamsRef[thumbnailUrlOption] = ras;
+            ThumbnailSourcesRef[thumbnailUrlOption] = new(await ras.GetSoftwareBitmapSourceAsync(false), key);
             LoadingThumbnail = false;
             OnPropertyChanged(nameof(ThumbnailSources));
             return true;
@@ -205,6 +208,8 @@ public class IllustrationViewModel : IllustrateViewModel<Illustration>
         if (!value.TryDispose(key))
             return;
 
+        ThumbnailStreamsRef[thumbnailUrlOption]?.Dispose();
+        ThumbnailStreamsRef.Remove(thumbnailUrlOption);
         _ = ThumbnailSourcesRef.Remove(thumbnailUrlOption);
         OnPropertyChanged(nameof(ThumbnailSources));
     }
@@ -281,11 +286,13 @@ public class IllustrationViewModel : IllustrateViewModel<Illustration>
 
     private void DisposeInternal()
     {
-        foreach (var (_, softwareBitmapSource) in ThumbnailSourcesRef)
+        foreach (var (option, softwareBitmapSource) in ThumbnailSourcesRef)
         {
             softwareBitmapSource?.DisposeForce();
+            ThumbnailStreamsRef[option]?.Dispose();
         }
         ThumbnailSourcesRef.Clear();
+        ThumbnailStreamsRef.Clear();
     }
 
     public override void Dispose()

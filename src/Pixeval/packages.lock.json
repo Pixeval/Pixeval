@@ -126,6 +126,15 @@
           "System.Diagnostics.DiagnosticSource": "7.0.1"
         }
       },
+      "Microsoft.Graphics.Win2D": {
+        "type": "Direct",
+        "requested": "[1.0.5.1, )",
+        "resolved": "1.0.5.1",
+        "contentHash": "9DVEVvyQWWz8kqhsFBAx9Zv4KRIAcmxuT7kFpK1Fgh6czSiMB+CQW0DlhZXT44Mtv41FRXG47lhEv+7a2YyiLA==",
+        "dependencies": {
+          "Microsoft.WindowsAppSDK": "1.0.4"
+        }
+      },
       "Microsoft.IO.RecyclableMemoryStream": {
         "type": "Direct",
         "requested": "[2.3.2, )",
@@ -609,11 +618,6 @@
         "type": "Transitive",
         "resolved": "7.0.0",
         "contentHash": "um1KU5kxcRp3CNuI8o/GrZtD4AIOXDk+RLsytjZ9QPok3ttLUelLKpilVPuaFT3TFjOhSibUAso0odbOaCDj3Q=="
-      },
-      "Microsoft.Graphics.Win2D": {
-        "type": "Transitive",
-        "resolved": "1.0.0.30",
-        "contentHash": "pEGf7FSx2dRWJuoaSoXk+WYkZfYwhWoJKOyyo0XLRU6V2Ul02MjxRhoxggrzGz6jVFiT7R2NdPdV8M6N1F+QfA=="
       },
       "Microsoft.NETCore.Platforms": {
         "type": "Transitive",
@@ -1587,6 +1591,15 @@
       }
     },
     "net7.0-windows10.0.19041/win10-arm64": {
+      "Microsoft.Graphics.Win2D": {
+        "type": "Direct",
+        "requested": "[1.0.5.1, )",
+        "resolved": "1.0.5.1",
+        "contentHash": "9DVEVvyQWWz8kqhsFBAx9Zv4KRIAcmxuT7kFpK1Fgh6czSiMB+CQW0DlhZXT44Mtv41FRXG47lhEv+7a2YyiLA==",
+        "dependencies": {
+          "Microsoft.WindowsAppSDK": "1.0.4"
+        }
+      },
       "Microsoft.Win32.Registry": {
         "type": "Direct",
         "requested": "[6.0.0-preview.5.21301.5, )",
@@ -1605,11 +1618,6 @@
         "dependencies": {
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.1"
         }
-      },
-      "Microsoft.Graphics.Win2D": {
-        "type": "Transitive",
-        "resolved": "1.0.0.30",
-        "contentHash": "pEGf7FSx2dRWJuoaSoXk+WYkZfYwhWoJKOyyo0XLRU6V2Ul02MjxRhoxggrzGz6jVFiT7R2NdPdV8M6N1F+QfA=="
       },
       "Microsoft.Win32.Primitives": {
         "type": "Transitive",
@@ -2473,6 +2481,15 @@
       }
     },
     "net7.0-windows10.0.19041/win10-x64": {
+      "Microsoft.Graphics.Win2D": {
+        "type": "Direct",
+        "requested": "[1.0.5.1, )",
+        "resolved": "1.0.5.1",
+        "contentHash": "9DVEVvyQWWz8kqhsFBAx9Zv4KRIAcmxuT7kFpK1Fgh6czSiMB+CQW0DlhZXT44Mtv41FRXG47lhEv+7a2YyiLA==",
+        "dependencies": {
+          "Microsoft.WindowsAppSDK": "1.0.4"
+        }
+      },
       "Microsoft.Win32.Registry": {
         "type": "Direct",
         "requested": "[6.0.0-preview.5.21301.5, )",
@@ -2491,11 +2508,6 @@
         "dependencies": {
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.1"
         }
-      },
-      "Microsoft.Graphics.Win2D": {
-        "type": "Transitive",
-        "resolved": "1.0.0.30",
-        "contentHash": "pEGf7FSx2dRWJuoaSoXk+WYkZfYwhWoJKOyyo0XLRU6V2Ul02MjxRhoxggrzGz6jVFiT7R2NdPdV8M6N1F+QfA=="
       },
       "Microsoft.Win32.Primitives": {
         "type": "Transitive",
@@ -3359,6 +3371,15 @@
       }
     },
     "net7.0-windows10.0.19041/win10-x86": {
+      "Microsoft.Graphics.Win2D": {
+        "type": "Direct",
+        "requested": "[1.0.5.1, )",
+        "resolved": "1.0.5.1",
+        "contentHash": "9DVEVvyQWWz8kqhsFBAx9Zv4KRIAcmxuT7kFpK1Fgh6czSiMB+CQW0DlhZXT44Mtv41FRXG47lhEv+7a2YyiLA==",
+        "dependencies": {
+          "Microsoft.WindowsAppSDK": "1.0.4"
+        }
+      },
       "Microsoft.Win32.Registry": {
         "type": "Direct",
         "requested": "[6.0.0-preview.5.21301.5, )",
@@ -3377,11 +3398,6 @@
         "dependencies": {
           "Microsoft.Windows.SDK.BuildTools": "10.0.22621.1"
         }
-      },
-      "Microsoft.Graphics.Win2D": {
-        "type": "Transitive",
-        "resolved": "1.0.0.30",
-        "contentHash": "pEGf7FSx2dRWJuoaSoXk+WYkZfYwhWoJKOyyo0XLRU6V2Ul02MjxRhoxggrzGz6jVFiT7R2NdPdV8M6N1F+QfA=="
       },
       "Microsoft.Win32.Primitives": {
         "type": "Transitive",

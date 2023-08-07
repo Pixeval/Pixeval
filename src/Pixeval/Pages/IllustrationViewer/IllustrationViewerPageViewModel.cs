@@ -145,6 +145,10 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             LoadUserProfile().Discard();
 
             CurrentPageIndex = 0;
+            // 更新PlayGif按钮的状态
+            OnPropertyChanged(nameof(IsUgoira));
+            PlayGifCommand.Description = PlayGifCommand.Label = IllustrationViewerPageResources.PauseGif;
+            PlayGifCommand.IconSource = new SymbolIconSource { Symbol = Symbol.Stop };
             OnDetailedPropertyChanged(oldValue, value, oldTag, CurrentPage.Id);
 
             async Task LoadUserProfile()
@@ -279,7 +283,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     public bool IsManga => _pages.Length > 1;
 
-    public bool IsUgoira => CurrentIllustration.Illustrate.IsUgoira();
+    public bool IsUgoira => CurrentIllustration.IsUgoira;
 
     #region Commands
 
@@ -455,18 +459,16 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     private void PlayGifCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        var bitmap = CurrentImage.OriginalImageSource.To<BitmapImage>();
-        if (bitmap.IsPlaying)
+        CurrentImage.IsPlaying = !CurrentImage.IsPlaying;
+        if (CurrentImage.IsPlaying)
         {
-            bitmap.Stop();
-            PlayGifCommand.Description = PlayGifCommand.Label = IllustrationViewerPageResources.PlayGif;
-            PlayGifCommand.IconSource = new SymbolIconSource { Symbol = Symbol.Play };
+            PlayGifCommand.Description = PlayGifCommand.Label = IllustrationViewerPageResources.PauseGif;
+            PlayGifCommand.IconSource = new SymbolIconSource { Symbol = Symbol.Stop };
         }
         else
         {
-            bitmap.Play();
-            PlayGifCommand.Description = PlayGifCommand.Label = IllustrationViewerPageResources.PauseGif;
-            PlayGifCommand.IconSource = new SymbolIconSource { Symbol = Symbol.Stop };
+            PlayGifCommand.Description = PlayGifCommand.Label = IllustrationViewerPageResources.PlayGif;
+            PlayGifCommand.IconSource = new SymbolIconSource { Symbol = Symbol.Play };
         }
     }
 

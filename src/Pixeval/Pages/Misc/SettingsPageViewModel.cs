@@ -37,7 +37,7 @@ using Pixeval.UserControls.Setting.UI;
 using Pixeval.UserControls.TokenInput;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
-using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
+using Pixeval.UserControls.IllustrationView;
 
 namespace Pixeval.Pages.Misc;
 

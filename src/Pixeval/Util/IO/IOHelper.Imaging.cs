@@ -30,6 +30,7 @@ using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
 using Pixeval.Options;
+using SixLabors.ImageSharp;
 
 namespace Pixeval.Util.IO;
 
@@ -86,21 +87,27 @@ public static partial class IOHelper
     /// <returns></returns>
     public static async Task WriteGifBitmapAsync(IRandomAccessStream target, IEnumerable<IRandomAccessStream> frames, int delayInMilliseconds)
     {
-        /*
-        var width = 0;
-        var height = 0;
+        var framesArray = (frames as IRandomAccessStream[] ?? frames.ToArray())
+            .Select(t =>
+            {
+                t.Seek(0);
+                return t.AsStream();
+            }).ToArray();
 
-        using var image = new Image<Rgba32>(width, height);
+        if (framesArray.Length is 0)
+            return;
 
-        foreach (var frame in frames)
+        using var image = await Image.LoadAsync(framesArray[0]);
+
+        foreach (var frame in framesArray.Skip(1))
         {
-            using var f = await Image.LoadAsync(frame.AsStream());
-            image.Frames.AddFrame(f.Frames[0]);
+            using var f = await Image.LoadAsync(frame);
+            _ = image.Frames.AddFrame(f.Frames[0]);
         }
 
-        await image.SaveAsync(target.AsStreamForWrite(), new WebpEncoder());
-        */
-
+        await image.SaveAsGifAsync(target.AsStreamForWrite());
+        target.Seek(0);
+        return;
         var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.GifEncoderId, target);
         await encoder.BitmapProperties.SetPropertiesAsync(new Dictionary<string, BitmapTypedValue> // wtf?
         {
@@ -179,13 +186,18 @@ public static partial class IOHelper
         var decoder = await BitmapDecoder.CreateAsync(imageStream);
         return await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
     }
-
     public static async Task<IRandomAccessStream> GetGifStreamFromZipStreamAsync(Stream zipStream, UgoiraMetadataResponse ugoiraMetadataResponse)
     {
         var entryStreams = await ReadZipArchiveEntries(zipStream);
         var inMemoryRandomAccessStream = new InMemoryRandomAccessStream();
         await WriteGifBitmapAsync(inMemoryRandomAccessStream, entryStreams.Select(s => s.content.AsRandomAccessStream()), (int)(ugoiraMetadataResponse.UgoiraMetadataInfo?.Frames?.FirstOrDefault()?.Delay ?? 0));
         return inMemoryRandomAccessStream;
+    }
+
+    public static async Task<IEnumerable<IRandomAccessStream>> GetStreamsFromZipStreamAsync(Stream zipStream)
+    {
+        var entryStreams = await ReadZipArchiveEntries(zipStream);
+        return entryStreams.Select(s => s.content.AsRandomAccessStream());
     }
 
     public static ThumbnailUrlOption ToThumbnailUrlOption(

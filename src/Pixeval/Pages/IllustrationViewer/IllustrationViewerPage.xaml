@@ -343,7 +343,7 @@
                         <AppBarButton
                             Command="{x:Bind _viewModel.PlayGifCommand}"
                             SizeChanged="CommandBarElementOnSizeChanged"
-                            Visibility="{x:Bind _viewModel.IsUgoira}" />
+                            Visibility="{x:Bind _viewModel.IsUgoira, Mode=OneWay}" />
                         <AppBarSeparator />
                         <AppBarButton Command="{x:Bind _viewModel.CopyCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton Command="{x:Bind _viewModel.SaveCommand}" SizeChanged="CommandBarElementOnSizeChanged" />

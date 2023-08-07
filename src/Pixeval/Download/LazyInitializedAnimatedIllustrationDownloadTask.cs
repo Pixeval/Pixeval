@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 using Pixeval.Database;
 using Pixeval.Util.IO;
 using Windows.Storage.Streams;
-using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
+using Pixeval.UserControls.IllustrationView;
 
 namespace Pixeval.Download;
 
@@ -37,7 +37,7 @@ public class LazyInitializedAnimatedIllustrationDownloadTask : AnimatedIllustrat
     public LazyInitializedAnimatedIllustrationDownloadTask(DownloadHistoryEntry databaseEntry) : base(databaseEntry)
     {
         _illustId = databaseEntry.Id!;
-        _resultGenerator = new Lazy<Task<IllustrationViewModel>>(async () => new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(_illustId)));
+        _resultGenerator = new(async () => new(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(_illustId)));
     }
 
     public override async void Consume(IRandomAccessStream stream)
