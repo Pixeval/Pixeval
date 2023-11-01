@@ -22,9 +22,4 @@ using System;
 
 namespace Pixeval.Download.MacroParser.Ast;
 
-public class IllegalMacroException : Exception
-{
-    public IllegalMacroException(string? message) : base(message)
-    {
-    }
-}
+public class IllegalMacroException(string? message) : Exception(message);

@@ -50,12 +50,7 @@ public class SuggestionStateMachine
 
     private static readonly TreeSearcher<SettingEntry> SettingEntriesTreeSearcher = new(SearcherLogic.Contain, PinIn.CreateDefault());
 
-    public ObservableCollection<SuggestionModel> Suggestions { get; }
-
-    public SuggestionStateMachine()
-    {
-        Suggestions = new ObservableCollection<SuggestionModel>();
-    }
+    public ObservableCollection<SuggestionModel> Suggestions { get; } = new();
 
     static SuggestionStateMachine()
     {

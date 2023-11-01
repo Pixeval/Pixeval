@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -19,7 +19,7 @@
 #endregion
 
 using System.Threading.Tasks;
-using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
+using Pixeval.UserControls.IllustrationView;
 
 namespace Pixeval.Download;
 

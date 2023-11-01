@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tokenInput="using:Pixeval.UserControls.TokenInput"
     xmlns:tokenInputTextBox="using:Pixeval.Controls.TokenInputTextBox"
-    xmlns:ui="using:Pixeval.Util.UI"
+    xmlns:markup="using:Pixeval.Util.MarkupExtensions"
     mc:Ignorable="d">
     <StackPanel
         HorizontalAlignment="Stretch"
@@ -26,7 +26,7 @@
                                 Visibility="{x:Bind CaseSensitive}" />
                             <ContentPresenter
                                 VerticalAlignment="Center"
-                                Content="{ui:FontIcon Glyph=UpShiftKeyE84B,
+                                Content="{markup:FontIcon Glyph=UpShiftKeyE84B,
                                                       FontSize=15}"
                                 Visibility="{x:Bind CaseSensitive}" />
                             <AppBarSeparator
@@ -37,7 +37,7 @@
                             <ContentPresenter
                                 Margin="5,0,0,0"
                                 VerticalAlignment="Center"
-                                Content="{ui:FontIcon Glyph=ProcessingE9F5,
+                                Content="{markup:FontIcon Glyph=ProcessingE9F5,
                                                       FontSize=15}"
                                 Visibility="{x:Bind IsRegularExpression}" />
                             <AppBarSeparator

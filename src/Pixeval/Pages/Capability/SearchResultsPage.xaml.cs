@@ -43,7 +43,6 @@ public sealed partial class SearchResultsPage : ISortedIllustrationContainerPage
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs navigatingCancelEventArgs)
     {
-        IllustrationContainer.ViewModel.Dispose();
         WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 

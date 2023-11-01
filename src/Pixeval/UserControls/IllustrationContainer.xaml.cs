@@ -39,6 +39,8 @@ public sealed partial class IllustrationContainer
 {
     public IllustrationViewOption IllustrationViewOption => App.AppViewModel.AppSetting.IllustrationViewOption;
 
+    public ThumbnailDirection ThumbnailDirection => App.AppViewModel.AppSetting.ThumbnailDirection;
+
     public IllustrationContainer()
     {
         InitializeComponent();
@@ -61,7 +63,6 @@ public sealed partial class IllustrationContainer
                     throw new ArgumentOutOfRangeException();
             }
         };
-        ViewModel.ThumbnailDirection = App.AppViewModel.AppSetting.ThumbnailDirection;
     }
 
     private static void OnShowCommandBarChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)

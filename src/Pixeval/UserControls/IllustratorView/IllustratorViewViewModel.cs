@@ -26,12 +26,7 @@ namespace Pixeval.UserControls.IllustratorView;
 
 public sealed class IllustratorViewViewModel : IllustrateViewViewModel<User, IllustratorViewModel>
 {
-    public IllustratorViewViewModel()
-    {
-        DataProvider = new IllustratorViewDataProvider();
-    }
-
-    public override IDataProvider<User, IllustratorViewModel> DataProvider { get; }
+    public override IDataProvider<User, IllustratorViewModel> DataProvider { get; } = new IllustratorViewDataProvider();
 
     public override void Dispose()
     {

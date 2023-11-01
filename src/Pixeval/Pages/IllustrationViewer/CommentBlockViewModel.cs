@@ -37,19 +37,13 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public class CommentBlockViewModel
+public class CommentBlockViewModel(Comment comment, string illustrationId)
 {
     public const string AddCommentUrlSegment = "/v1/illust/comment/add";
 
-    public CommentBlockViewModel(Comment comment, string illustrationId)
-    {
-        Comment = comment;
-        IllustrationId = illustrationId;
-    }
+    public string IllustrationId { get; } = illustrationId;
 
-    public string IllustrationId { get; }
-
-    public Comment Comment { get; }
+    public Comment Comment { get; } = comment;
 
     public bool HasReplies => Comment.HasReplies;
 

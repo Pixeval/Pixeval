@@ -25,14 +25,9 @@ using System.Threading.Tasks;
 
 namespace Pixeval.CoreApi.Net;
 
-internal class PixivApiHttpMessageHandler : MakoClientSupportedHttpMessageHandler
+internal class PixivApiHttpMessageHandler(MakoClient makoClient) : MakoClientSupportedHttpMessageHandler
 {
-    public PixivApiHttpMessageHandler(MakoClient makoClient)
-    {
-        MakoClient = makoClient;
-    }
-
-    public sealed override MakoClient MakoClient { get; set; }
+    public sealed override MakoClient MakoClient { get; set; } = makoClient;
 
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {

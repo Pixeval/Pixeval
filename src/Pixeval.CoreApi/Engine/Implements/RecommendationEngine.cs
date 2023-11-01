@@ -27,20 +27,15 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-internal class RecommendationEngine : AbstractPixivFetchEngine<Illustration>
+internal class RecommendationEngine(MakoClient makoClient, RecommendationContentType? recommendContentType,
+        TargetFilter filter, uint? maxBookmarkIdForRecommend, uint? minBookmarkIdForRecentIllust,
+        EngineHandle? engineHandle)
+    : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
 {
-    private readonly TargetFilter _filter;
-    private readonly uint? _maxBookmarkIdForRecommend;
-    private readonly uint? _minBookmarkIdForRecentIllust;
-    private readonly RecommendationContentType _recommendContentType;
-
-    public RecommendationEngine(MakoClient makoClient, RecommendationContentType? recommendContentType, TargetFilter filter, uint? maxBookmarkIdForRecommend, uint? minBookmarkIdForRecentIllust, EngineHandle? engineHandle) : base(makoClient, engineHandle)
-    {
-        _recommendContentType = recommendContentType ?? RecommendationContentType.Illust;
-        _filter = filter;
-        _maxBookmarkIdForRecommend = maxBookmarkIdForRecommend;
-        _minBookmarkIdForRecentIllust = minBookmarkIdForRecentIllust;
-    }
+    private readonly TargetFilter _filter = filter;
+    private readonly uint? _maxBookmarkIdForRecommend = maxBookmarkIdForRecommend;
+    private readonly uint? _minBookmarkIdForRecentIllust = minBookmarkIdForRecentIllust;
+    private readonly RecommendationContentType _recommendContentType = recommendContentType ?? RecommendationContentType.Illust;
 
     public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new())
     {

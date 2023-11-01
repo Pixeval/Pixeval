@@ -30,32 +30,77 @@ using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 using Pixeval.UserControls.Illustrate;
+using Pixeval.Util.Ref;
 using Pixeval.Utilities;
 
 namespace Pixeval.UserControls.IllustrationView;
 
+/// <summary>
+/// 复用时调用<see cref="CloneRef"/>，<see cref="FetchEngineRef"/>和<see cref="IllustrationSourceRef"/>会在所有复用对象都Dispose时Dispose
+/// </summary>
 public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illustration, IllustrationViewModel>, IDisposable
 {
+    /// <summary>
+    /// Call <see cref="ResetAndFillAsync"/> to initialize
+    /// </summary>
     public IllustrationViewDataProvider()
     {
-        View = new AdvancedCollectionView(Source);
-        Source.CollectionChanged += OnIllustrationsSourceOnCollectionChanged;
     }
 
-    public IFetchEngine<Illustration?>? FetchEngine { get; set; }
+    private SharedRef<IFetchEngine<Illustration?>?>? _fetchEngineRef;
 
-    public AdvancedCollectionView View { get; }
-
-    private ObservableCollection<IllustrationViewModel> _illustrationSource = new();
-
-    public ObservableCollection<IllustrationViewModel> Source
+    public SharedRef<IFetchEngine<Illustration?>?>? FetchEngineRef
     {
-        get => _illustrationSource;
-        protected set
+        get => _fetchEngineRef;
+        private set
         {
-            SetProperty(ref _illustrationSource, value);
-            View.Source = value;
+            if (Equals(value, _fetchEngineRef))
+                return;
+            FetchEngine?.EngineHandle.Cancel();
+
+            _fetchEngineRef = value;
         }
+    }
+
+    public IFetchEngine<Illustration?>? FetchEngine => _fetchEngineRef?.Value;
+
+    public AdvancedCollectionView View { get; } = new(Array.Empty<IllustrationViewModel>());
+
+    private SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>> _illustrationSourceRef = null!;
+
+    protected SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>> IllustrationSourceRef
+    {
+        get => _illustrationSourceRef;
+        set
+        {
+            if (Equals(_illustrationSourceRef, value))
+                return;
+
+            OnPropertyChanging();
+            if (_illustrationSourceRef is { } old)
+            {
+                old.Value.CollectionChanged -= OnIllustrationsSourceOnCollectionChanged;
+                _ = old.TryDispose(this);
+            }
+            _illustrationSourceRef = value;
+            value.Value.CollectionChanged += OnIllustrationsSourceOnCollectionChanged;
+            View.Source = value.Value;
+            OnPropertyChanged();
+        }
+    }
+
+    public IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel> Source => _illustrationSourceRef.Value;
+
+    public IllustrationViewDataProvider CloneRef()
+    {
+        var dataProvider = new IllustrationViewDataProvider();
+        dataProvider.FetchEngineRef = FetchEngineRef?.MakeShared(dataProvider);
+        dataProvider.IllustrationSourceRef = IllustrationSourceRef.MakeShared(dataProvider);
+        dataProvider.View.Filter = View.Filter;
+        foreach (var viewSortDescription in View.SortDescriptions)
+            dataProvider.View.SortDescriptions.Add(viewSortDescription);
+        dataProvider.View.CurrentItem = View.CurrentItem;
+        return dataProvider;
     }
 
     private Predicate<object>? _filter;
@@ -76,59 +121,51 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
 
     public void DisposeCurrent()
     {
-        foreach (var illustrationViewModel in Source)
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        if (IllustrationSourceRef is not null)
         {
-            illustrationViewModel.Dispose();
+            Source.CollectionChanged -= OnIllustrationsSourceOnCollectionChanged;
+            if (IllustrationSourceRef.TryDispose(this))
+                foreach (var illustrationViewModel in Source)
+                    illustrationViewModel.Dispose();
         }
 
         SelectedIllustrations.Clear();
-        View.Clear();
-        SelectedIllustrations.Clear();
     }
 
-    public Task<int> ResetAndFillAsync(IFetchEngine<Illustration?>? fetchEngine, int itemLimit = -1)
+    public async Task<int> ResetAndFillAsync(IFetchEngine<Illustration?>? fetchEngine, int limit = -1)
     {
-        FetchEngine?.EngineHandle.Cancel();
-        FetchEngine = fetchEngine;
+        FetchEngineRef = new(fetchEngine, this);
         DisposeCurrent();
-        return FillAsync(itemLimit);
 
-        async Task<int> FillAsync(int itemsLimit = -1)
-        {
-            var collection = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, itemsLimit));
-            Source = collection;
-            Source.CollectionChanged += OnIllustrationsSourceOnCollectionChanged;
-            var result = await collection.LoadMoreItemsAsync(20);
-            return (int)result.Count;
-        }
+        IllustrationSourceRef = new(new(new IllustrationFetchEngineIncrementalSource(FetchEngine!, limit)), this);
+        // TODO: 根据屏幕大小决定加载多少
+        var result = (await Source.LoadMoreItemsAsync(20)).Count;
+        result += (await Source.LoadMoreItemsAsync(20)).Count;
+        result += (await Source.LoadMoreItemsAsync(10)).Count;
+        return (int)result;
     }
 
-    protected virtual void OnIllustrationsSourceOnCollectionChanged(object? _, NotifyCollectionChangedEventArgs args)
+    protected virtual void OnIllustrationsSourceOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        void OnIsSelectionChanged(object? sender, IllustrationViewModel model)
+        void OnIsSelectedChanged(object? s, IllustrationViewModel model)
         {
             // Do not add to collection is the model does not conform to the filter
             if (!Filter?.Invoke(model) ?? false)
-            {
                 return;
-            }
             if (model.IsSelected)
-            {
                 SelectedIllustrations.Add(model);
-            }
             else
-            {
-                SelectedIllustrations.Remove(model);
-            }
+                _ = SelectedIllustrations.Remove(model);
         }
 
-        switch (args)
+        switch (e)
         {
             case { Action: NotifyCollectionChangedAction.Add }:
-                args.NewItems?.OfType<IllustrationViewModel>().ForEach(i => i.IsSelectedChanged += OnIsSelectionChanged);
+                e.NewItems?.OfType<IllustrationViewModel>().ForEach(i => i.IsSelectedChanged += OnIsSelectedChanged);
                 break;
             case { Action: NotifyCollectionChangedAction.Remove }:
-                args.NewItems?.OfType<IllustrationViewModel>().ForEach(i => i.IsSelectedChanged -= OnIsSelectionChanged);
+                e.NewItems?.OfType<IllustrationViewModel>().ForEach(i => i.IsSelectedChanged -= OnIsSelectedChanged);
                 break;
         }
     }
@@ -136,6 +173,8 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
     public void Dispose()
     {
         DisposeCurrent();
-        FetchEngine = null;
+        FetchEngineRef = null;
     }
+
+    ~IllustrationViewDataProvider() => Dispose();
 }

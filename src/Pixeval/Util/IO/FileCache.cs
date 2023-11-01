@@ -353,7 +353,7 @@ public class FileCache
         }
     }
 
-    public Task<T?> GetAsync<T>(object key)
+    public Task<T> GetAsync<T>(object key)
     {
         Guard.IsNotNull(key, nameof(key));
 
@@ -371,7 +371,7 @@ public class FileCache
         return await ExistsAsync(key) ? await GetAsync<T>(key) : default;
     }
 
-    public Task<T?> GetAsync<T>(string key)
+    public Task<T> GetAsync<T>(string key)
     {
         return GetAsync<T>(HashToGuid(key));
     }
@@ -381,7 +381,7 @@ public class FileCache
     /// </summary>
     /// <param name="key">Unique identifier for the entry to get</param>
     /// <returns>The data object that was stored if found, else default(T)</returns>
-    public async Task<T?> GetAsync<T>(Guid key)
+    public async Task<T> GetAsync<T>(Guid key)
     {
         await _indexLocker.WaitAsync();
 
@@ -399,7 +399,7 @@ public class FileCache
                     _ => await Functions.Block(async () =>
                     {
                         await using var stream = await file.OpenStreamForReadAsync();
-                        return await JsonSerializer.DeserializeAsync<T>(stream);
+                        return (await JsonSerializer.DeserializeAsync<T>(stream))!;
                     })
                 };
             }

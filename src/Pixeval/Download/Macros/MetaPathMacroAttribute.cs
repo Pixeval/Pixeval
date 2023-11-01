@@ -25,14 +25,9 @@ using System.Reflection;
 
 namespace Pixeval.Download.Macros;
 
-public class MetaPathMacroAttribute : Attribute
+public class MetaPathMacroAttribute(object key) : Attribute
 {
-    public object Key;
-
-    public MetaPathMacroAttribute(object key)
-    {
-        Key = key;
-    }
+    public object Key = key;
 }
 
 public static class MetaPathMacroAttributeHelper

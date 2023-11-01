@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/FontIconExtension.cs
+// Copyright (c) 2022 Pixeval/FontIconSourceExtension.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,18 +19,16 @@
 #endregion
 
 using CommunityToolkit.WinUI.UI;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Attributes;
-using WinUI3Utilities;
-using WinUI3Utilities.Attributes;
+using Pixeval.Util.UI;
 
-namespace Pixeval.Util.UI;
+namespace Pixeval.Util.MarkupExtensions;
 
-[MarkupExtensionReturnType(ReturnType = typeof(FontIcon))]
-public class FontIconExtension : TextIconExtension
+[MarkupExtensionReturnType(ReturnType = typeof(FontIconSource))]
+public class FontIconSourceExtension : TextIconExtension
 {
     public FontIconSymbols Glyph { get; set; }
 
@@ -39,10 +37,10 @@ public class FontIconExtension : TextIconExtension
     /// <inheritdoc />
     protected override object ProvideValue()
     {
-        var fontIcon = new FontIcon
+        var fontIcon = new FontIconSource
         {
             Glyph = Glyph.GetMetadataOnEnumMember(),
-            FontFamily = FontFamily ?? new(AppHelper.IsWindows11 ? "Segoe Fluent Icons" : "Segoe MDL2 Assets"),
+            FontFamily = FontFamily ?? SegoeMDL2AssetsFontFamily,
             FontWeight = FontWeight,
             FontStyle = FontStyle,
             IsTextScaleFactorEnabled = IsTextScaleFactorEnabled,
@@ -50,24 +48,11 @@ public class FontIconExtension : TextIconExtension
         };
 
         if (FontSize > 0)
-        {
             fontIcon.FontSize = FontSize;
-        }
 
-        if (Foreground != null)
-        {
+        if (Foreground is not null)
             fontIcon.Foreground = Foreground;
-        }
 
         return fontIcon;
-    }
-}
-
-[DependencyProperty<FontIconSymbols>("Glyph", DependencyPropertyDefaultValue.UnsetValue, nameof(PropertyChangedCallback))]
-public partial class FontSymbolIcon : FontIcon
-{
-    private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        d.To<FontIcon>().Glyph = e.NewValue.To<FontIconSymbols>().GetMetadataOnEnumMember();
     }
 }

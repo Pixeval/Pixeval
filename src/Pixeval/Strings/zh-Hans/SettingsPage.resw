@@ -476,6 +476,12 @@
   <data name="TitleTextBlock.Text" xml:space="preserve">
     <value>Pixeval 设置</value>
   </data>
+  <data name="UgoiraDownloadFormatEntry.Description" xml:space="preserve">
+    <value>指定下载动图的格式</value>
+  </data>
+  <data name="UgoiraDownloadFormatEntry.Header" xml:space="preserve">
+    <value>下载动图格式</value>
+  </data>
   <data name="UseFileCacheEntry.Description" xml:space="preserve">
     <value>开启此选项后会减少网络流量消耗并提升浏览体验，但是会增加 CPU 占用以及硬盘读写</value>
   </data>

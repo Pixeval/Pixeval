@@ -24,12 +24,7 @@ namespace Pixeval.Download;
 
 public class DownloadStartingEventArgs
 {
-    private readonly DownloadStartingDeferral _deferral;
-
-    public DownloadStartingEventArgs()
-    {
-        _deferral = new DownloadStartingDeferral();
-    }
+    private readonly DownloadStartingDeferral _deferral = new();
 
     public ReenterableAwaiter<bool> DeferralAwaiter => _deferral.Signal;
 

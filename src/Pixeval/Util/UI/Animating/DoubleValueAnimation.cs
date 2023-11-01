@@ -22,7 +22,12 @@ using System;
 
 namespace Pixeval.Util.UI.Animating;
 
-public class DoubleValueAnimation : AbstractValueAnimation<double>
+public class DoubleValueAnimation(TimeSpan duration,
+        TimeSpan sampleRate,
+        double from,
+        double to,
+        IEasingFunction<double>? easingFunction)
+    : AbstractValueAnimation<double>
 {
     public DoubleValueAnimation(
         TimeSpan duration,
@@ -33,26 +38,13 @@ public class DoubleValueAnimation : AbstractValueAnimation<double>
 
     }
 
-    public DoubleValueAnimation(TimeSpan duration,
-        TimeSpan sampleRate,
-        double from,
-        double to,
-        IEasingFunction<double>? easingFunction)
-    {
-        Duration = duration;
-        SampleRate = sampleRate;
-        From = from;
-        To = to;
-        EasingFunction = easingFunction;
-    }
+    public override TimeSpan Duration { get; } = duration;
 
-    public override TimeSpan Duration { get; }
+    public override TimeSpan SampleRate { get; } = sampleRate;
 
-    public override TimeSpan SampleRate { get; }
+    public override double From { get; } = from;
 
-    public override double From { get; }
+    public override double To { get; } = to;
 
-    public override double To { get; }
-
-    public override IEasingFunction<double>? EasingFunction { get; }
+    public override IEasingFunction<double>? EasingFunction { get; } = easingFunction;
 }

@@ -25,52 +25,32 @@ using System.Threading.Tasks;
 
 namespace Pixeval.CoreApi.Engine;
 
-internal class FetchEngineSelector<T, R> : IFetchEngine<R>
+internal class FetchEngineSelector<T, R>(IFetchEngine<T> delegateEngine, Func<T, Task<R>> selector) : IFetchEngine<R>
 {
-    private readonly IFetchEngine<T> _delegateEngine;
-    private readonly Func<T, Task<R>> _selector;
+    public MakoClient MakoClient { get; } = delegateEngine.MakoClient;
 
-    public FetchEngineSelector(IFetchEngine<T> delegateEngine, Func<T, Task<R>> selector)
-    {
-        _delegateEngine = delegateEngine;
-        _selector = selector;
-        MakoClient = delegateEngine.MakoClient;
-        EngineHandle = delegateEngine.EngineHandle;
-        RequestedPages = 0;
-    }
+    public EngineHandle EngineHandle { get; } = delegateEngine.EngineHandle;
 
-    public MakoClient MakoClient { get; }
-
-    public EngineHandle EngineHandle { get; }
-
-    public int RequestedPages { get; set; }
+    public int RequestedPages { get; set; } = 0;
 
     public IAsyncEnumerator<R> GetAsyncEnumerator(CancellationToken cancellationToken = new())
     {
-        return new FetchEngineSelectorAsyncEnumerator(_delegateEngine.GetAsyncEnumerator(cancellationToken), _selector)!;
+        return new FetchEngineSelectorAsyncEnumerator(delegateEngine.GetAsyncEnumerator(cancellationToken), selector)!;
     }
 
-    private class FetchEngineSelectorAsyncEnumerator : IAsyncEnumerator<R?>
+    private class FetchEngineSelectorAsyncEnumerator(IAsyncEnumerator<T> delegateEnumerator, Func<T, Task<R>> selector)
+        : IAsyncEnumerator<R?>
     {
-        private readonly IAsyncEnumerator<T> _delegateEnumerator;
-        private readonly Func<T, Task<R>> _selector;
-
-        public FetchEngineSelectorAsyncEnumerator(IAsyncEnumerator<T> delegateEnumerator, Func<T, Task<R>> selector)
-        {
-            _delegateEnumerator = delegateEnumerator;
-            _selector = selector;
-        }
-
         public ValueTask DisposeAsync()
         {
-            return _delegateEnumerator.DisposeAsync();
+            return delegateEnumerator.DisposeAsync();
         }
 
         public async ValueTask<bool> MoveNextAsync()
         {
-            if (await _delegateEnumerator.MoveNextAsync().ConfigureAwait(false))
+            if (await delegateEnumerator.MoveNextAsync().ConfigureAwait(false))
             {
-                Current = await _selector(_delegateEnumerator.Current).ConfigureAwait(false);
+                Current = await selector(delegateEnumerator.Current).ConfigureAwait(false);
                 return true;
             }
 

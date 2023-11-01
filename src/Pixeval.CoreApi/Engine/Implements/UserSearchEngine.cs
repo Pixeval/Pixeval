@@ -27,18 +27,13 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-public class UserSearchEngine : AbstractPixivFetchEngine<User>
+public class UserSearchEngine(MakoClient makoClient, TargetFilter targetFilter, UserSortOption? userSortOption,
+        string keyword, EngineHandle? engineHandle)
+    : AbstractPixivFetchEngine<User>(makoClient, engineHandle)
 {
-    private readonly string _keyword;
-    private readonly TargetFilter _targetFilter;
-    private readonly UserSortOption _userSortOption;
-
-    public UserSearchEngine(MakoClient makoClient, TargetFilter targetFilter, UserSortOption? userSortOption, string keyword, EngineHandle? engineHandle) : base(makoClient, engineHandle)
-    {
-        _keyword = keyword;
-        _targetFilter = targetFilter;
-        _userSortOption = userSortOption ?? UserSortOption.DateDescending;
-    }
+    private readonly string _keyword = keyword;
+    private readonly TargetFilter _targetFilter = targetFilter;
+    private readonly UserSortOption _userSortOption = userSortOption ?? UserSortOption.DateDescending;
 
     public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new())
     {

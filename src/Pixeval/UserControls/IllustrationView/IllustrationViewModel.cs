@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,6 +40,7 @@ using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 using Windows.Storage.Streams;
 using Windows.UI;
+using Pixeval.Util.Ref;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.UserControls.IllustrationView;
@@ -49,18 +51,17 @@ namespace Pixeval.UserControls.IllustrationView;
 ///     It is responsible for being the elements of the <see cref="AdaptiveGridView" /> to present the thumbnail of an
 ///     illustration
 /// </summary>
-public class IllustrationViewModel : IllustrateViewModel<Illustration>
+public class IllustrationViewModel(Illustration illustration) : IllustrateViewModel<Illustration>(illustration)
 {
     private bool _isSelected;
 
-    public SoftwareBitmapSource? ThumbnailMediumSource => ThumbnailSources.TryGetValue(ThumbnailUrlOption.Medium, out var value) ? value : null;
+    public ImmutableDictionary<ThumbnailUrlOption, SoftwareBitmapSource> ThumbnailSources => ThumbnailSourcesRef.ToImmutableDictionary(pair => pair.Key, pair => pair.Value.Value);
 
-    public Dictionary<ThumbnailUrlOption, SoftwareBitmapSource> ThumbnailSources = new();
+    public IReadOnlyDictionary<ThumbnailUrlOption, IRandomAccessStream> ThumbnailStreams => ThumbnailStreamsRef;
 
-    public IllustrationViewModel(Illustration illustration) : base(illustration)
-    {
-        LoadingThumbnailCancellationHandle = new CancellationHandle();
-    }
+    private Dictionary<ThumbnailUrlOption, IRandomAccessStream> ThumbnailStreamsRef { get; } = new();
+
+    private Dictionary<ThumbnailUrlOption, SharedRef<SoftwareBitmapSource>> ThumbnailSourcesRef { get; } = new();
 
     public int MangaIndex { get; set; }
 
@@ -100,14 +101,9 @@ public class IllustrationViewModel : IllustrateViewModel<Illustration>
         });
     }
 
-    public double GetDesiredWidth(double itemHeight)
-    {
-        return itemHeight * Illustrate.Width / Illustrate.Height;
-    }
-
     public event EventHandler<IllustrationViewModel>? IsSelectedChanged;
 
-    public CancellationHandle LoadingThumbnailCancellationHandle { get; }
+    public CancellationHandle LoadingThumbnailCancellationHandle { get; } = new CancellationHandle();
 
     public bool LoadingThumbnail { get; private set; }
 
@@ -143,9 +139,18 @@ public class IllustrationViewModel : IllustrateViewModel<Illustration>
         });
     }
 
-    public async Task<bool> LoadThumbnailIfRequired(ThumbnailUrlOption thumbnailUrlOption = ThumbnailUrlOption.Medium)
+    /// <summary>
+    /// 当控件需要显示图片时，调用此方法加载缩略图
+    /// </summary>
+    public async Task<bool> TryLoadThumbnail(object key, ThumbnailUrlOption thumbnailUrlOption)
     {
-        if (ThumbnailSources.ContainsKey(thumbnailUrlOption) || LoadingThumbnail)
+        if (ThumbnailSourcesRef.TryGetValue(thumbnailUrlOption, out var value))
+        {
+            _ = value.MakeShared(key);
+            return false;
+        }
+
+        if (LoadingThumbnail)
         {
             return false;
         }
@@ -153,10 +158,10 @@ public class IllustrationViewModel : IllustrateViewModel<Illustration>
         LoadingThumbnail = true;
         if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(Illustrate.GetIllustrationThumbnailCacheKey(thumbnailUrlOption)) is { } stream)
         {
-            ThumbnailSources[thumbnailUrlOption] = await stream.GetSoftwareBitmapSourceAsync(true);
+            ThumbnailStreamsRef[thumbnailUrlOption] = stream;
+            ThumbnailSourcesRef[thumbnailUrlOption] = new(await stream.GetSoftwareBitmapSourceAsync(false), key);
             LoadingThumbnail = false;
-            if (thumbnailUrlOption is ThumbnailUrlOption.Medium)
-                OnPropertyChanged(nameof(ThumbnailMediumSource));
+            OnPropertyChanged(nameof(ThumbnailSources));
             return true;
         }
 
@@ -164,17 +169,47 @@ public class IllustrationViewModel : IllustrateViewModel<Illustration>
         {
             if (App.AppViewModel.AppSetting.UseFileCache)
             {
-                await App.AppViewModel.Cache.TryAddAsync(Illustrate.GetIllustrationThumbnailCacheKey(thumbnailUrlOption), ras, TimeSpan.FromDays(1));
+                _ = await App.AppViewModel.Cache.TryAddAsync(Illustrate.GetIllustrationThumbnailCacheKey(thumbnailUrlOption), ras, TimeSpan.FromDays(1));
             }
-            ThumbnailSources[thumbnailUrlOption] = await ras.GetSoftwareBitmapSourceAsync(true);
+            ThumbnailStreamsRef[thumbnailUrlOption] = ras;
+            ThumbnailSourcesRef[thumbnailUrlOption] = new(await ras.GetSoftwareBitmapSourceAsync(false), key);
             LoadingThumbnail = false;
-            if (thumbnailUrlOption is ThumbnailUrlOption.Medium)
-                OnPropertyChanged(nameof(ThumbnailMediumSource));
+            OnPropertyChanged(nameof(ThumbnailSources));
             return true;
         }
 
         LoadingThumbnail = false;
         return false;
+    }
+
+    /// <summary>
+    /// small tricks to reduce memory consumption
+    /// </summary>
+    /// <remarks>
+    /// 当控件不显示，或者Unload时，调用此方法以尝试释放内存
+    /// </remarks>
+    public void UnloadThumbnail(object key, ThumbnailUrlOption thumbnailUrlOption)
+    {
+        if (LoadingThumbnail)
+        {
+            LoadingThumbnailCancellationHandle.Cancel();
+            LoadingThumbnail = false;
+            return;
+        }
+
+        if (App.AppViewModel.AppSetting.UseFileCache)
+            return;
+
+        if (!ThumbnailSourcesRef.TryGetValue(thumbnailUrlOption, out var value))
+            return;
+
+        if (!value.TryDispose(key))
+            return;
+
+        ThumbnailStreamsRef[thumbnailUrlOption]?.Dispose();
+        ThumbnailStreamsRef.Remove(thumbnailUrlOption);
+        _ = ThumbnailSourcesRef.Remove(thumbnailUrlOption);
+        OnPropertyChanged(nameof(ThumbnailSources));
     }
 
     public async Task<IRandomAccessStream?> GetThumbnail(ThumbnailUrlOption thumbnailUrlOptions)
@@ -249,11 +284,13 @@ public class IllustrationViewModel : IllustrateViewModel<Illustration>
 
     private void DisposeInternal()
     {
-        foreach (var (_, softwareBitmapSource) in ThumbnailSources)
+        foreach (var (option, softwareBitmapSource) in ThumbnailSourcesRef)
         {
-            softwareBitmapSource?.Dispose();
+            softwareBitmapSource?.DisposeForce();
+            ThumbnailStreamsRef[option]?.Dispose();
         }
-        ThumbnailSources.Clear();
+        ThumbnailSourcesRef.Clear();
+        ThumbnailStreamsRef.Clear();
     }
 
     public override void Dispose()

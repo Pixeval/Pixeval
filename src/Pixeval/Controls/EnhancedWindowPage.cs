@@ -51,7 +51,11 @@ public class EnhancedWindowPage : Page, IEnhancedPage
             Initialized = true;
             (this as ISupportCustomTitleBarDragRegion)?.SetTitleBarDragRegion();
         };
-        SizeChanged += (_, _) => (this as ISupportCustomTitleBarDragRegion)?.SetTitleBarDragRegion();
+        Unloaded += (_, _) => Initialized = false;
+#pragma warning disable IDE0038 // 使用模式匹配
+        if (this is ISupportCustomTitleBarDragRegion)
+            SizeChanged += (_, _) => ((ISupportCustomTitleBarDragRegion)this).SetTitleBarDragRegion();
+#pragma warning restore IDE0038 // 使用模式匹配
     }
 
     public bool ClearCacheAfterNavigation { get; set; }
@@ -72,16 +76,14 @@ public class EnhancedWindowPage : Page, IEnhancedPage
         base.OnNavigatingFrom(e);
         OnPageDeactivated(e);
 
-        if (ClearCacheAfterNavigation)
-        {
-            NavigationCacheMode = NavigationCacheMode.Disabled;
-            if (Parent is Frame frame)
-            {
-                var cacheSize = frame.CacheSize;
-                frame.CacheSize = 0;
-                frame.CacheSize = cacheSize;
-            }
-        }
+        if (!ClearCacheAfterNavigation)
+            return;
+        NavigationCacheMode = NavigationCacheMode.Disabled;
+        if (Parent is not Frame frame)
+            return;
+        var cacheSize = frame.CacheSize;
+        frame.CacheSize = 0;
+        frame.CacheSize = cacheSize;
     }
 
     protected void Navigate<TPage>(Frame frame, object? parameter, NavigationTransitionInfo? info = null) where TPage : EnhancedWindowPage

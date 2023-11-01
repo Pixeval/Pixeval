@@ -33,7 +33,7 @@ using Pixeval.Utilities.Threading;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
-using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
+using Pixeval.UserControls.IllustrationView;
 
 namespace Pixeval.Util.IO;
 
@@ -76,7 +76,7 @@ public static partial class IOHelper
     /// progress support
     /// </para>
     /// <remarks>
-    /// A <see cref="Pixeval.Utilities.Threading.CancellationHandle" /> is used instead of <see cref="CancellationToken" />, since this function
+    /// A <see cref="CancellationHandle" /> is used instead of <see cref="CancellationToken" />, since this function
     /// will be called in
     /// such a frequent manner that the default behavior of <see cref="CancellationToken" /> will brings a huge impact
     /// on performance
@@ -98,7 +98,7 @@ public static partial class IOHelper
         CancellationHandle? cancellationHandle = default)
     {
         var awaiter = new ReenterableAwaiter<bool>(!cancellationHandle?.IsPaused ?? true, true);
-        cancellationHandle?.RegisterPaused(() => awaiter.Reset());
+        cancellationHandle?.RegisterPaused(awaiter.Reset);
         cancellationHandle?.RegisterResumed(() => awaiter.SetResult(true));
         try
         {

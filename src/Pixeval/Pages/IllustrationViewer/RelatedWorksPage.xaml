@@ -11,5 +11,6 @@
     <illustrationView:IllustrationView
         x:Name="RelatedWorksIllustrationGrid"
         Margin="10,0,5,0"
-        IllustrationViewOption="Grid" />
+        IllustrationViewOption="Grid"
+        ThumbnailDirection="{x:Bind ThumbnailDirection}" />
 </controls:EnhancedPage>

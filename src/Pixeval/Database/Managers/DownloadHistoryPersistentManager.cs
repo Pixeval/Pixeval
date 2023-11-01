@@ -27,17 +27,11 @@ using Pixeval.Download;
 
 namespace Pixeval.Database.Managers;
 
-public class DownloadHistoryPersistentManager : IPersistentManager<DownloadHistoryEntry, ObservableDownloadTask>
+public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maximumRecords) : IPersistentManager<DownloadHistoryEntry, ObservableDownloadTask>
 {
-    public DownloadHistoryPersistentManager(ILiteDatabase collection, int maximumRecords)
-    {
-        Collection = collection.GetCollection<DownloadHistoryEntry>(nameof(DownloadHistoryEntry));
-        MaximumRecords = maximumRecords;
-    }
+    public ILiteCollection<DownloadHistoryEntry> Collection { get; init; } = collection.GetCollection<DownloadHistoryEntry>(nameof(DownloadHistoryEntry));
 
-    public ILiteCollection<DownloadHistoryEntry> Collection { get; init; }
-
-    public int MaximumRecords { get; set; }
+    public int MaximumRecords { get; set; } = maximumRecords;
 
     public int Count => Collection.Count();
 

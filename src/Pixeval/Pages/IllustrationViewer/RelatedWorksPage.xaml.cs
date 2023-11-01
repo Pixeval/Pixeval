@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -21,13 +21,17 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Messages;
+using Pixeval.Options;
 using Pixeval.Util;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
 public sealed partial class RelatedWorksPage
 {
-    private IllustrationViewerPageViewModel? _illustrationViewerPageViewModel;
+    public ThumbnailDirection ThumbnailDirection => App.AppViewModel.AppSetting.ThumbnailDirection;
+
+    private string? _illustrationId;
 
     public RelatedWorksPage()
     {
@@ -42,10 +46,7 @@ public sealed partial class RelatedWorksPage
             recipient.RelatedWorksIllustrationGrid.ViewModel.Dispose();
             WeakReferenceMessenger.Default.UnregisterAll(this);
         });
-        if (_illustrationViewerPageViewModel is null)
-        {
-            _illustrationViewerPageViewModel = e.Parameter as IllustrationViewerPageViewModel;
-            await RelatedWorksIllustrationGrid.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.RelatedWorks(_illustrationViewerPageViewModel!.IllustrationId));
-        }
+        _illustrationId = e.Parameter.To<string>();
+        await RelatedWorksIllustrationGrid.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.RelatedWorks(_illustrationId));
     }
 }

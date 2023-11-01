@@ -24,18 +24,12 @@ using System;
 
 namespace Pixeval.Attributes;
 
-public class SettingMetadata : Attribute
+public class SettingMetadata(SettingEntryCategory category, Type resourceLoaderType, string localizedResourceKey)
+    : Attribute
 {
-    public SettingEntryCategory Category { get; }
+    public SettingEntryCategory Category { get; } = category;
 
-    public Type ResourceLoaderType { get; }
+    public Type ResourceLoaderType { get; } = resourceLoaderType;
 
-    public string LocalizedResourceKey { get; }
-
-    public SettingMetadata(SettingEntryCategory category, Type resourceLoaderType, string localizedResourceKey)
-    {
-        Category = category;
-        ResourceLoaderType = resourceLoaderType;
-        LocalizedResourceKey = localizedResourceKey;
-    }
+    public string LocalizedResourceKey { get; } = localizedResourceKey;
 }

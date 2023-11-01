@@ -2,18 +2,21 @@
     x:Class="Pixeval.UserControls.IllustrationContainer"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:illustrationView="using:Pixeval.UserControls.IllustrationView"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Loaded="IllustrationContainer_OnLoaded"
     mc:Ignorable="d">
 
-    <controls:DockPanel x:Name="IllustrationContainerDockPanel">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <illustrationView:IllustrationViewCommandBar
             x:Name="TopCommandBar"
+            Grid.Row="0"
             HorizontalAlignment="Stretch"
-            controls:DockPanel.Dock="Top"
             IsDefaultCommandsEnabled="{x:Bind TopCommandBar.ViewModel.IsAnyIllustrationSelected, Mode=OneWay}"
             PrimaryCommandsSupplements="{x:Bind PrimaryCommandsSupplements, Mode=OneWay}"
             SecondaryCommandsSupplements="{x:Bind SecondaryCommandsSupplements, Mode=TwoWay}"
@@ -21,7 +24,9 @@
             Visibility="{x:Bind ShowCommandBar, Mode=OneWay}" />
         <illustrationView:IllustrationView
             x:Name="IllustrationView"
+            Grid.Row="1"
             x:FieldModifier="public"
-            IllustrationViewOption="{x:Bind IllustrationViewOption}" />
-    </controls:DockPanel>
+            IllustrationViewOption="{x:Bind IllustrationViewOption}"
+            ThumbnailDirection="{x:Bind ThumbnailDirection}" />
+    </Grid>
 </UserControl>

@@ -125,28 +125,16 @@ public sealed partial class TokenInput
     }
 }
 
-public class TokenAddingEventArgs : EventArgs
+public class TokenAddingEventArgs(Token token, bool cancel) : EventArgs
 {
-    public TokenAddingEventArgs(Token token, bool cancel)
-    {
-        Token = token;
-        Cancel = cancel;
-    }
+    public Token Token { get; } = token;
 
-    public Token Token { get; }
-
-    public bool Cancel { get; set; }
+    public bool Cancel { get; set; } = cancel;
 }
 
-public class TokenDeletingEventArgs : EventArgs
+public class TokenDeletingEventArgs(Token token, bool cancel) : EventArgs
 {
-    public TokenDeletingEventArgs(Token token, bool cancel)
-    {
-        Token = token;
-        Cancel = cancel;
-    }
+    public Token Token { get; } = token;
 
-    public Token Token { get; }
-
-    public bool Cancel { get; set; }
+    public bool Cancel { get; set; } = cancel;
 }

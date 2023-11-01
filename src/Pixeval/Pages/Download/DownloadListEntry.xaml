@@ -5,7 +5,7 @@
     xmlns:card="using:Pixeval.Controls.Card"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="using:Pixeval.Util.UI"
+    xmlns:markup="using:Pixeval.Util.MarkupExtensions"
     mc:Ignorable="d">
     <card:CardControl
         x:Name="RootCardControl"
@@ -74,30 +74,30 @@
                 OverflowButtonVisibility="Visible">
                 <!--  Width="125"是试出来刚好只显示一个按钮的宽度  -->
                 <AppBarButton
-                    Icon="{ui:FontIcon Glyph=OpenInNewWindowE8A7}"
+                    Icon="{markup:FontIcon Glyph=OpenInNewWindowE8A7}"
                     Label="{x:Bind ActionButtonContent, Mode=OneWay}"
                     Tapped="ActionButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/DownloadListEntry/RedownloadItem"
-                    Icon="{ui:FontIcon Glyph=DownloadE896}"
+                    Icon="{markup:FontIcon Glyph=DownloadE896}"
                     IsEnabled="{x:Bind IsRedownloadItemEnabled, Mode=OneWay}"
                     Tapped="RedownloadItem_OnTapped" />
                 <AppBarButton
                     x:Uid="/DownloadListEntry/CancelDownloadItem"
-                    Icon="{ui:FontIcon Glyph=CancelE711}"
+                    Icon="{markup:FontIcon Glyph=CancelE711}"
                     IsEnabled="{x:Bind IsCancelItemEnabled, Mode=OneWay}"
                     Tapped="CancelDownloadItem_OnTapped" />
                 <AppBarButton
                     x:Uid="/DownloadListEntry/OpenDownloadLocationItem"
-                    Icon="{ui:FontIcon Glyph=OpenFolderHorizontalED25}"
+                    Icon="{markup:FontIcon Glyph=OpenFolderHorizontalED25}"
                     Tapped="OpenDownloadLocationItem_OnTapped" />
                 <AppBarButton
                     x:Uid="/DownloadListEntry/GoToPageItem"
-                    Icon="{ui:FontIcon Glyph=SlideshowE786}"
+                    Icon="{markup:FontIcon Glyph=SlideshowE786}"
                     Tapped="GoToPageItem_OnTapped" />
                 <AppBarButton
                     x:Uid="/DownloadListEntry/CheckErrorMessageInDetailItem"
-                    Icon="{ui:FontIcon Glyph=DocumentE8A5}"
+                    Icon="{markup:FontIcon Glyph=DocumentE8A5}"
                     IsEnabled="{x:Bind IsShowErrorDetailDialogItemEnabled, Mode=OneWay}"
                     Tapped="CheckErrorMessageInDetail_OnTapped" />
             </CommandBar>

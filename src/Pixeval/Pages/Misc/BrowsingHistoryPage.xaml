@@ -1,16 +1,16 @@
-﻿<controls:EnhancedPage
+<controls:EnhancedPage
     x:Class="Pixeval.Pages.Misc.BrowsingHistoryPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:markup="using:Pixeval.Util.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="using:Pixeval.Util.UI"
     xmlns:userControls="using:Pixeval.UserControls"
     mc:Ignorable="d">
     <userControls:IllustrationContainer x:Name="IllustrationContainer">
         <userControls:IllustrationContainer.SecondaryCommandsSupplements>
-            <AppBarButton Icon="{ui:FontIcon Glyph=DeleteE74D}" Label="Delete" />
+            <AppBarButton Icon="{markup:FontIcon Glyph=DeleteE74D}" Label="Delete" />
         </userControls:IllustrationContainer.SecondaryCommandsSupplements>
         <userControls:IllustrationContainer.CommandBarElements>
             <userControls:SortOptionComboBox

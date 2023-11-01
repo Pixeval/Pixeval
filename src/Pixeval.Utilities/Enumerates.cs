@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.Utilities
+#region Copyright (c) Pixeval/Pixeval.Utilities
 // GPL v3 License
 // 
 // Pixeval/Pixeval.Utilities

@@ -24,19 +24,12 @@ using Pixeval.Util;
 namespace Pixeval.Attributes;
 
 [AttributeUsage(AttributeTargets.Field)]
-public class LocalizedResource : Attribute
+public class LocalizedResource(Type resourceLoader, string key, object? formatKey = null) : Attribute
 {
-    public LocalizedResource(Type resourceLoader, string key, object? formatKey = null)
-    {
-        ResourceLoader = resourceLoader;
-        Key = key;
-        FormatKey = formatKey;
-    }
+    public Type ResourceLoader { get; } = resourceLoader;
 
-    public Type ResourceLoader { get; }
-
-    public string Key { get; }
-    public object? FormatKey { get; }
+    public string Key { get; } = key;
+    public object? FormatKey { get; } = formatKey;
 }
 
 public static class LocalizedResourceAttributeHelper

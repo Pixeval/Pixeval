@@ -31,14 +31,8 @@ namespace Pixeval.CoreApi.Engine;
 /// <typeparam name="E">
 ///     <inheritdoc cref="IFetchEngine{E}" />
 /// </typeparam>
-public abstract class AbstractPixivFetchEngine<E> : IFetchEngine<E>
+public abstract class AbstractPixivFetchEngine<E>(MakoClient makoClient, EngineHandle? engineHandle) : IFetchEngine<E>
 {
-    protected AbstractPixivFetchEngine(MakoClient makoClient, EngineHandle? engineHandle)
-    {
-        MakoClient = makoClient;
-        EngineHandle = engineHandle ?? new EngineHandle(Guid.NewGuid());
-    }
-
     public abstract IAsyncEnumerator<E> GetAsyncEnumerator(CancellationToken cancellationToken = new()); // the 'CancellationToken' is no longer useful, we use 'EngineHandle' to track the lifetime
 
     /// <summary>
@@ -47,7 +41,7 @@ public abstract class AbstractPixivFetchEngine<E> : IFetchEngine<E>
     ///     <see cref="IFetchEngine{E}" /> to provides the required fields when the <see cref="IFetchEngine{E}" />
     ///     performing its task
     /// </summary>
-    public MakoClient MakoClient { get; }
+    public MakoClient MakoClient { get; } = makoClient;
 
     /// <summary>
     ///     How many pages have been fetched
@@ -57,5 +51,5 @@ public abstract class AbstractPixivFetchEngine<E> : IFetchEngine<E>
     /// <summary>
     ///     The <see cref="EngineHandle" /> used to manage the lifetime of <see cref="IFetchEngine{E}" />
     /// </summary>
-    public EngineHandle EngineHandle { get; }
+    public EngineHandle EngineHandle { get; } = engineHandle ?? new EngineHandle(Guid.NewGuid());
 }

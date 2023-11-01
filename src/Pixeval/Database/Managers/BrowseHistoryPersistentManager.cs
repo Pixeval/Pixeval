@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -22,9 +22,4 @@ using LiteDB;
 
 namespace Pixeval.Database.Managers;
 
-public class BrowseHistoryPersistentManager : SimplePersistentManager<BrowseHistoryEntry>
-{
-    public BrowseHistoryPersistentManager(ILiteDatabase db, int maximumRecords) : base(db, maximumRecords)
-    {
-    }
-}
+public class BrowseHistoryPersistentManager(ILiteDatabase db, int maximumRecords) : SimplePersistentManager<BrowseHistoryEntry>(db, maximumRecords);

@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -51,7 +51,6 @@ public sealed partial class BrowsingHistoryPage : ISortedIllustrationContainerPa
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs navigatingCancelEventArgs)
     {
-        IllustrationContainer.ViewModel.Dispose();
         WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 

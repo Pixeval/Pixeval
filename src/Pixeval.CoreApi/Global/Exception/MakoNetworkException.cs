@@ -25,20 +25,13 @@ using JetBrains.Annotations;
 namespace Pixeval.CoreApi.Global.Exception;
 
 [PublicAPI]
-public class MakoNetworkException : MakoException
+public class MakoNetworkException(string url, bool bypass, string? extraMsg, int statusCode)
+    : MakoException($"Network error while requesting URL: {url}:\n {extraMsg}\n Bypassing: {bypass}\n Status code: {statusCode}")
 {
-    public MakoNetworkException(string url, bool bypass, string? extraMsg, int statusCode)
-        : base($"Network error while requesting URL: {url}:\n {extraMsg}\n Bypassing: {bypass}\n Status code: {statusCode}")
-    {
-        Url = url;
-        Bypass = bypass;
-        StatusCode = statusCode;
-    }
+    public string Url { get; set; } = url;
 
-    public string Url { get; set; }
-
-    public bool Bypass { get; set; }
-    public int StatusCode { get; }
+    public bool Bypass { get; set; } = bypass;
+    public int StatusCode { get; } = statusCode;
 
     // We use Task<Exception> instead of Task<MakoNetworkException> to compromise with the generic variance
     public static async Task<System.Exception> FromHttpResponseMessageAsync(HttpResponseMessage message, bool bypass)

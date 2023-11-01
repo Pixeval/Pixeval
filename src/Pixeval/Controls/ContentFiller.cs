@@ -21,15 +21,14 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Windows.Foundation;
+using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-public sealed class ContentFiller : ContentControl
+[DependencyProperty<double>("DesiredWidth")]
+[DependencyProperty<double>("DesiredHeight")]
+public sealed partial class ContentFiller : ContentControl
 {
-    public double DesiredWidth { get; set; }
-
-    public double DesiredHeight { get; set; }
-
     protected override Size MeasureOverride(Size availableSize)
     {
         ((FrameworkElement)Content).Measure(availableSize);

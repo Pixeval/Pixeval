@@ -4,11 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:followingUserBadge="using:Pixeval.Controls.FollowingUserBadge"
+    xmlns:markup="using:Pixeval.Util.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:premiumUserBadge="using:Pixeval.Controls.PremiumUserBadge"
     xmlns:recommendIllustratorProfile="using:Pixeval.UserControls.RecommendIllustratorProfile"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
-    xmlns:util="using:Pixeval.Util.UI"
     mc:Ignorable="d">
 
     <Grid>
@@ -62,33 +62,33 @@
                 <NavigationViewItem
                     x:Name="IllustrationTab"
                     x:Uid="/IllustratorContentViewer/IllustrationNavigationViewItem"
-                    Icon="{util:FontIcon Glyph=PictureE8B9}"
+                    Icon="{markup:FontIcon Glyph=PictureE8B9}"
                     Tag="{x:Bind ViewModel.IllustrationTag, Mode=OneWay}" />
                 <NavigationViewItem
                     x:Uid="/IllustratorContentViewer/MangaNavigationViewItem"
-                    Icon="{util:FontIcon Glyph=FavoriteListE728}"
+                    Icon="{markup:FontIcon Glyph=FavoriteListE728}"
                     Tag="{x:Bind ViewModel.MangaTag, Mode=OneWay}" />
                 <NavigationViewItem
                     x:Uid="/IllustratorContentViewer/NovelNavigationViewItem"
-                    Icon="{util:FontIcon Glyph=ReadingModeE736}"
+                    Icon="{markup:FontIcon Glyph=ReadingModeE736}"
                     Tag="{x:Bind ViewModel.NovelTag, Mode=OneWay}" />
                 <NavigationViewItemSeparator />
                 <NavigationViewItem
                     x:Uid="/IllustratorContentViewer/BookmarkedIllustrationAndMangaNavigationViewItem"
-                    Icon="{util:FontIcon Glyph=LibraryE8F1}"
+                    Icon="{markup:FontIcon Glyph=LibraryE8F1}"
                     Tag="{x:Bind ViewModel.BookmarkedIllustrationAndMangaTag, Mode=OneWay}" />
                 <NavigationViewItem
                     x:Uid="/IllustratorContentViewer/BookmarkedNovelNavigationViewItem"
-                    Icon="{util:FontIcon Glyph=ReadingListE7BC}"
+                    Icon="{markup:FontIcon Glyph=ReadingListE7BC}"
                     Tag="{x:Bind ViewModel.BookmarkedNovelTag, Mode=OneWay}" />
                 <NavigationViewItemSeparator />
                 <NavigationViewItem
                     x:Uid="/IllustratorContentViewer/FollowingUserNavigationViewItem"
-                    Icon="{util:FontIcon Glyph=PeopleE716}"
+                    Icon="{markup:FontIcon Glyph=PeopleE716}"
                     Tag="{x:Bind ViewModel.FollowingUserTag, Mode=OneWay}" />
                 <NavigationViewItem
                     x:Uid="/IllustratorContentViewer/MyPixivUserNavigationViewItem"
-                    Icon="{util:FontIcon Glyph=PeopleE716}"
+                    Icon="{markup:FontIcon Glyph=PeopleE716}"
                     Tag="{x:Bind ViewModel.MyPixivUserTag, Mode=OneWay}" />
             </NavigationView.MenuItems>
             <NavigationView.PaneFooter>
@@ -136,8 +136,8 @@
                             <StackPanel Orientation="Horizontal" Spacing="5">
                                 <ContentControl
                                     VerticalAlignment="Center"
-                                    Content="{util:FontIcon Glyph=AddFriendE8FA,
-                                                            FontSize=15}"
+                                    Content="{markup:FontIcon Glyph=AddFriendE8FA,
+                                                              FontSize=15}"
                                     FlowDirection="RightToLeft"
                                     Foreground="{StaticResource TextSecondaryAccentColor}" />
                                 <TextBlock
@@ -165,9 +165,9 @@
                             <StackPanel Orientation="Horizontal" Spacing="5">
                                 <ContentControl
                                     VerticalAlignment="Center"
-                                    Content="{util:FontIcon Glyph=PeopleE716,
-                                                            MirroredWhenRightToLeft=True,
-                                                            FontSize=15}"
+                                    Content="{markup:FontIcon Glyph=PeopleE716,
+                                                              MirroredWhenRightToLeft=True,
+                                                              FontSize=15}"
                                     FlowDirection="RightToLeft"
                                     Foreground="{StaticResource TextSecondaryAccentColor}" />
                                 <TextBlock
@@ -195,9 +195,9 @@
                             <StackPanel Orientation="Horizontal" Spacing="5">
                                 <ContentControl
                                     VerticalAlignment="Center"
-                                    Content="{util:FontIcon Glyph=PictureE8B9,
-                                                            MirroredWhenRightToLeft=True,
-                                                            FontSize=15}"
+                                    Content="{markup:FontIcon Glyph=PictureE8B9,
+                                                              MirroredWhenRightToLeft=True,
+                                                              FontSize=15}"
                                     FlowDirection="RightToLeft"
                                     Foreground="{StaticResource TextSecondaryAccentColor}" />
                                 <TextBlock
@@ -210,7 +210,7 @@
                     <CommandBar Margin="10,0,0,0" OverflowButtonVisibility="Collapsed">
                         <AppBarButton
                             Width="40"
-                            Icon="{util:FontIcon Glyph=MoreE712}"
+                            Icon="{markup:FontIcon Glyph=MoreE712}"
                             LabelPosition="Collapsed">
                             <AppBarButton.Flyout>
                                 <MenuFlyout>
@@ -219,11 +219,11 @@
                                     <MenuFlyoutSeparator />
                                     <ToggleMenuFlyoutItem
                                         x:Uid="/IllustratorContentViewer/ToggleShowRecommendIllustratorItem"
-                                        Icon="{util:FontIcon Glyph=WebcamE8B8}"
+                                        Icon="{markup:FontIcon Glyph=WebcamE8B8}"
                                         IsChecked="{x:Bind ViewModel.ShowRecommendIllustrators, Mode=TwoWay}" />
                                     <ToggleMenuFlyoutItem
                                         x:Uid="/IllustratorContentViewer/ToggleShowExternalCommandBarItem"
-                                        Icon="{util:FontIcon Glyph=CommandPromptE756}"
+                                        Icon="{markup:FontIcon Glyph=CommandPromptE756}"
                                         IsChecked="{x:Bind ViewModel.ShowExternalCommandBar, Mode=TwoWay}" />
                                 </MenuFlyout>
                             </AppBarButton.Flyout>

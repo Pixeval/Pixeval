@@ -26,6 +26,7 @@ using Microsoft.UI.Xaml.Media;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
+using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util.IO;
@@ -87,10 +88,10 @@ public partial class IllustratorViewModel : ObservableObject, IIllustrationVisua
 
     public async Task LoadThumbnail()
     {
-        await VisualizationController.ResetAndFillAsync(FetchEngine, 3);
+        _ = await VisualizationController.ResetAndFillAsync(FetchEngine, 3);
         foreach (var model in Illustrations)
         {
-            await model.LoadThumbnailIfRequired();
+            _ = await model.TryLoadThumbnail(this, ThumbnailUrlOption.SquareMedium);
         }
     }
 
@@ -120,6 +121,8 @@ public partial class IllustratorViewModel : ObservableObject, IIllustrationVisua
 
     public void DisposeCurrent()
     {
+        foreach (var illustration in Illustrations) 
+            illustration.UnloadThumbnail(this, ThumbnailUrlOption.SquareMedium);
         Illustrations.Clear();
     }
 

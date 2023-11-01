@@ -60,7 +60,7 @@ public sealed partial class IllustrationViewCommandBar
         var defaultCommands = new List<ICommandBarElement>(CommandBar.PrimaryCommands);
         defaultCommands.AddRange(CommandBar.SecondaryCommands);
         _defaultCommands = defaultCommands.Where(e => e is AppBarButton).Cast<Control>();
-        CommandBarElements = new ObservableCollection<UIElement>();
+        CommandBarElements = new();
         CommandBarElements.CollectionChanged += (_, args) =>
         {
             switch (args)

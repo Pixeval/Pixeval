@@ -27,14 +27,11 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-public class RecentPostedIllustrationEngine : AbstractPixivFetchEngine<Illustration>
+public class RecentPostedIllustrationEngine(MakoClient makoClient, PrivacyPolicy privacyPolicy,
+        EngineHandle? engineHandle)
+    : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
 {
-    private readonly PrivacyPolicy _privacyPolicy;
-
-    public RecentPostedIllustrationEngine(MakoClient makoClient, PrivacyPolicy privacyPolicy, EngineHandle? engineHandle) : base(makoClient, engineHandle)
-    {
-        _privacyPolicy = privacyPolicy;
-    }
+    private readonly PrivacyPolicy _privacyPolicy = privacyPolicy;
 
     public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new())
     {

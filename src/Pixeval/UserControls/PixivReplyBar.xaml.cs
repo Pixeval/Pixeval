@@ -93,28 +93,19 @@ public sealed partial class PixivReplyBar
     }
 }
 
-public class SendButtonTappedEventArgs : EventArgs
+public class SendButtonTappedEventArgs(TappedRoutedEventArgs tappedEventArgs,
+        string replyContentRichEditBoxStringContent)
+    : EventArgs
 {
-    public SendButtonTappedEventArgs(TappedRoutedEventArgs tappedEventArgs, string replyContentRichEditBoxStringContent)
-    {
-        TappedEventArgs = tappedEventArgs;
-        ReplyContentRichEditBoxStringContent = replyContentRichEditBoxStringContent;
-    }
+    public TappedRoutedEventArgs TappedEventArgs { get; } = tappedEventArgs;
 
-    public TappedRoutedEventArgs TappedEventArgs { get; }
-
-    public string ReplyContentRichEditBoxStringContent { get; }
+    public string ReplyContentRichEditBoxStringContent { get; } = replyContentRichEditBoxStringContent;
 }
 
-public class StickerTappedEventArgs : EventArgs
+public class StickerTappedEventArgs(TappedRoutedEventArgs tappedEventArgs, PixivReplyStickerViewModel stickerViewModel)
+    : EventArgs
 {
-    public StickerTappedEventArgs(TappedRoutedEventArgs tappedEventArgs, PixivReplyStickerViewModel stickerViewModel)
-    {
-        TappedEventArgs = tappedEventArgs;
-        StickerViewModel = stickerViewModel;
-    }
+    public TappedRoutedEventArgs TappedEventArgs { get; } = tappedEventArgs;
 
-    public TappedRoutedEventArgs TappedEventArgs { get; }
-
-    public PixivReplyStickerViewModel StickerViewModel { get; }
+    public PixivReplyStickerViewModel StickerViewModel { get; } = stickerViewModel;
 }

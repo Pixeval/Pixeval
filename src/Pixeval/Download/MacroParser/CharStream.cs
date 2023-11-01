@@ -216,18 +216,12 @@ public class CharStream : ISeekable<char>
         return str;
     }
 
-    public struct LineInfo
+    public struct LineInfo(int lineNumber, int position)
     {
         public static readonly LineInfo Eof = new(-1, -1);
 
-        public int LineNumber;
+        public int LineNumber = lineNumber;
 
-        public int Position;
-
-        public LineInfo(int lineNumber, int position)
-        {
-            LineNumber = lineNumber;
-            Position = position;
-        }
+        public int Position = position;
     }
 }

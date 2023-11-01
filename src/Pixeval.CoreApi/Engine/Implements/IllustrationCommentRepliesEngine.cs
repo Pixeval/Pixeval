@@ -25,14 +25,10 @@ using Pixeval.CoreApi.Net;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-public class IllustrationCommentRepliesEngine : AbstractPixivFetchEngine<Comment>
+public class IllustrationCommentRepliesEngine(string commentId, MakoClient makoClient, EngineHandle? engineHandle)
+    : AbstractPixivFetchEngine<Comment>(makoClient, engineHandle)
 {
-    private readonly string _commentId;
-
-    public IllustrationCommentRepliesEngine(string commentId, MakoClient makoClient, EngineHandle? engineHandle) : base(makoClient, engineHandle)
-    {
-        _commentId = commentId;
-    }
+    private readonly string _commentId = commentId;
 
     public override IAsyncEnumerator<Comment> GetAsyncEnumerator(CancellationToken cancellationToken = new())
     {

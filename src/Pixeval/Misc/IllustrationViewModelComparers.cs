@@ -20,7 +20,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
+using Pixeval.UserControls.IllustrationView;
 
 namespace Pixeval.Misc;
 

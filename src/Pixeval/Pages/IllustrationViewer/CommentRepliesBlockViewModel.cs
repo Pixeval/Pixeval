@@ -22,14 +22,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
-public class CommentRepliesBlockViewModel : ObservableObject
+public class CommentRepliesBlockViewModel(CommentBlockViewModel comment) : ObservableObject
 {
-    public CommentRepliesBlockViewModel(CommentBlockViewModel comment)
-    {
-        Comment = comment;
-    }
-
-    public CommentBlockViewModel Comment { get; }
+    public CommentBlockViewModel Comment { get; } = comment;
 
     public bool HasReplies => Comment.HasReplies;
 }

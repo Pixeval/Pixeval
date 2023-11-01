@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -24,7 +24,7 @@ using Pixeval.CoreApi.Net.Response;
 using Pixeval.Database;
 using Pixeval.Util.IO;
 using Windows.Storage.Streams;
-using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
+using Pixeval.UserControls.IllustrationView;
 
 namespace Pixeval.Download;
 
@@ -59,8 +59,8 @@ public class AnimatedIllustrationDownloadTask : ObservableDownloadTask, ICustomB
     {
         using (stream)
         {
-            using var gifStream = await IOHelper.GetGifStreamFromZipStreamAsync(stream.AsStreamForRead(), _metadata);
-            await IOHelper.CreateAndWriteToFileAsync(gifStream, Destination);
+            using var ugoiraStream = await IOHelper.GetStreamFromZipStreamAsync(stream.AsStreamForRead(), _metadata);
+            await IOHelper.CreateAndWriteToFileAsync(ugoiraStream, Destination);
         }
     }
 

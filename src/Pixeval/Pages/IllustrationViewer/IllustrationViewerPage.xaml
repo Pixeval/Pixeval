@@ -10,12 +10,13 @@
     xmlns:illustrationView="using:Pixeval.UserControls.IllustrationView"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Pixeval.Pages.IllustrationViewer"
+    xmlns:markup="using:Pixeval.Util.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:triggers="using:Pixeval.Util.Triggers"
-    xmlns:ui="using:Pixeval.Util.UI"
     KeyboardAcceleratorPlacementMode="Hidden"
     Loaded="IllustrationViewerPage_OnLoaded"
+    Unloaded="IllustrationViewerPage_OnUnloaded"
     mc:Ignorable="d">
     <controls:EnhancedWindowPage.Resources>
         <ThemeShadow x:Name="SidePanelShadow" />
@@ -29,6 +30,7 @@
         <SolidColorBrush x:Key="TransparentBrush" Color="Transparent" />
         <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
         <Thickness x:Key="FullScreenMargin">0</Thickness>
+        <converters1:DictionaryConverter x:Key="DictionaryConverter" />
         <converters1:NumberToPercentageConverter x:Key="NumberToPercentageConverter" />
     </controls:EnhancedWindowPage.Resources>
     <Page.KeyboardAccelerators>
@@ -57,17 +59,18 @@
                     Shadow="{x:Bind SidePanelShadow}"
                     Translation="0,0,40">
                     <NavigationView
+                        x:Name="InfoPaneNavigationView"
                         IsBackButtonVisible="Collapsed"
                         IsSettingsVisible="False"
                         PaneDisplayMode="Top"
-                        SelectionChanged="IllustrationInfoAndCommentsNavigationView_OnSelectionChanged">
+                        SelectionChanged="IllustrationInfoAndCommentsNavigationViewOnSelectionChanged">
                         <NavigationView.MenuItems>
                             <NavigationViewItem
                                 x:Uid="/IllustrationViewerPage/IllustrationInfoTab"
                                 IsSelected="True"
-                                Tag="{x:Bind _illustrationInfoTag}" />
-                            <NavigationViewItem x:Uid="/IllustrationViewerPage/CommentsTab" Tag="{x:Bind _commentsTag}" />
-                            <NavigationViewItem x:Uid="/IllustrationViewerPage/RelatedWorksTab" Tag="{x:Bind _relatedWorksTag}" />
+                                Tag="{x:Bind _viewModel.IllustrationInfoTag}" />
+                            <NavigationViewItem x:Uid="/IllustrationViewerPage/CommentsTab" Tag="{x:Bind _viewModel.CommentsTag}" />
+                            <NavigationViewItem x:Uid="/IllustrationViewerPage/RelatedWorksTab" Tag="{x:Bind _viewModel.RelatedWorksTag}" />
                         </NavigationView.MenuItems>
                         <Frame x:Name="IllustrationInfoAndCommentsFrame" Width="320" />
                     </NavigationView>
@@ -75,6 +78,7 @@
             </Grid>
         </SplitView.Pane>
         <Grid x:Name="IllustrationPresenterDockPanel" HorizontalAlignment="Stretch">
+            <!--  ReSharper disable once UnusedMember.Local  -->
             <Grid x:Name="ImagePanel" Margin="{StaticResource NormalMargin}">
                 <Frame
                     x:Name="IllustrationImageShowcaseFrame"
@@ -106,7 +110,7 @@
                             Height="100"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Content="{ui:FontIcon Glyph=ChevronLeft20F743}"
+                            Content="{markup:FontIcon Glyph=ChevronLeft20F743}"
                             RightTapped="PrevButton_OnRightTapped"
                             Tapped="PrevButton_OnTapped"
                             Visibility="{x:Bind _viewModel.PrevButtonEnable, Mode=OneWay}" />
@@ -129,7 +133,7 @@
                             Height="100"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Content="{ui:FontIcon Glyph=ChevronRight20F745}"
+                            Content="{markup:FontIcon Glyph=ChevronRight20F745}"
                             RightTapped="NextButton_OnRightTapped"
                             Tapped="NextButton_OnTapped"
                             Visibility="{x:Bind _viewModel.NextButtonEnable, Mode=OneWay}" />
@@ -162,6 +166,7 @@
                                 <core:ChangePropertyAction PropertyName="Opacity" Value="0" />
                             </core:EventTriggerBehavior>
                         </interactivity:Interaction.Behaviors>
+                        <!--  ReSharper disable once UnusedMember.Local  -->
                         <Border
                             x:Name="CommandBorder"
                             HorizontalAlignment="Center"
@@ -209,9 +214,7 @@
                         </Border>
                     </Grid>
                     <Grid
-                        Height="98"
                         Margin="150,0"
-                        Padding="0,3"
                         HorizontalAlignment="Center"
                         Background="{StaticResource BottomCommandSectionBackground}"
                         BorderBrush="{StaticResource SecondaryAccentBorderBrush}"
@@ -223,56 +226,40 @@
                         <Grid.Shadow>
                             <ThemeShadow x:Name="ThumbnailListDropShadow" />
                         </Grid.Shadow>
-                        <ListView
+                        <GridView
                             x:Name="ThumbnailList"
                             Margin="5"
                             Padding="0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
-                            IsMultiSelectCheckBoxEnabled="False"
-                            ItemsSource="{x:Bind _viewModel.Illustrations}"
+                            IsItemClickEnabled="True"
+                            ItemsSource="{x:Bind _viewModel.ViewModel.DataProvider.View}"
                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
                             ScrollViewer.HorizontalScrollMode="Auto"
-                            ScrollViewer.IsHorizontalRailEnabled="True"
-                            SelectionChanged="ThumbnailList_OnSelectionChanged"
+                            ScrollViewer.VerticalScrollMode="Disabled"
+                            SelectedIndex="{x:Bind _viewModel.CurrentIllustrationIndex, Mode=TwoWay}"
                             SelectionMode="Single">
-                            <ListView.ItemContainerStyle>
-                                <Style BasedOn="{StaticResource ListViewItemStretchStyle}" TargetType="ListViewItem">
-                                    <Setter Property="VerticalAlignment" Value="Stretch" />
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                            <ListView.ItemsPanel>
+                            <GridView.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <VirtualizingStackPanel Orientation="Horizontal" />
+                                    <ItemsStackPanel Orientation="Horizontal" />
                                 </ItemsPanelTemplate>
-                            </ListView.ItemsPanel>
-                            <ListView.ItemTemplate>
+                            </GridView.ItemsPanel>
+                            <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="illustrationView:IllustrationViewModel">
-                                    <Grid Width="80" Height="80">
-                                        <Border
-                                            Width="78"
-                                            Height="78"
-                                            CornerRadius="{ThemeResource ControlCornerRadius}"
-                                            Loaded="ThumbnailBorder_OnLoaded">
-                                            <Border.Background>
-                                                <ImageBrush ImageSource="{x:Bind ThumbnailMediumSource, Mode=OneWay}" Stretch="UniformToFill" />
-                                            </Border.Background>
-                                        </Border>
-                                        <Border
-                                            x:Name="ThumbnailBorder"
-                                            Width="80"
-                                            Height="80"
-                                            BorderBrush="{StaticResource SystemControlHighlightAccentBrush}"
-                                            CornerRadius="{ThemeResource ControlCornerRadius}"
-                                            EffectiveViewportChanged="ThumbnailList_OnEffectiveViewportChanged" />
-                                    </Grid>
+                                    <Image
+                                        Width="80"
+                                        Height="80"
+                                        EffectiveViewportChanged="ThumbnailOnEffectiveViewportChanged"
+                                        Source="{Binding Path=ThumbnailSources, Converter={StaticResource DictionaryConverter}, ConverterParameter={markup:ThumbnailUrlOption Enum=SquareMedium}, Mode=OneWay}"
+                                        Stretch="UniformToFill" />
                                 </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
+                            </GridView.ItemTemplate>
+                        </GridView>
                     </Grid>
                 </StackPanel>
             </Grid>
 
+            <!--  ReSharper disable once UnusedMember.Local  -->
             <Grid
                 x:Name="TitleBarBorder"
                 Height="100"
@@ -311,6 +298,7 @@
                         </media:ControlStoryboardAction>
                     </triggers:EventWithConditionTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
+                <!--  ReSharper disable once UnusedMember.Local  -->
                 <Grid
                     x:Name="TitleBarArea"
                     Height="{x:Bind local:IllustrationViewerPage.TitleBarHeight}"
@@ -325,6 +313,7 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
+                        <!--  ReSharper disable once UnusedMember.Local  -->
                         <ColumnDefinition x:Name="TitleControlButtonsColumn" Width="150" />
                     </Grid.ColumnDefinitions>
                     <Image
@@ -354,7 +343,7 @@
                         <AppBarButton
                             Command="{x:Bind _viewModel.PlayGifCommand}"
                             SizeChanged="CommandBarElementOnSizeChanged"
-                            Visibility="{x:Bind _viewModel.IsUgoira}" />
+                            Visibility="{x:Bind _viewModel.IsUgoira, Mode=OneWay}" />
                         <AppBarSeparator />
                         <AppBarButton Command="{x:Bind _viewModel.CopyCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton Command="{x:Bind _viewModel.SaveCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
@@ -371,19 +360,16 @@
                         <AppBarSeparator />
                         <AppBarButton Command="{x:Bind _viewModel.AddToBookmarkCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton
+                            x:Name="GenerateLinkButton"
                             Command="{x:Bind _viewModel.GenerateLinkCommand}"
-                            SizeChanged="CommandBarElementOnSizeChanged"
-                            Tapped="GenerateLinkCommandOnTapped" />
+                            SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton Command="{x:Bind _viewModel.GenerateWebLinkCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton Command="{x:Bind _viewModel.OpenInWebBrowserCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
                         <AppBarButton
+                            x:Name="ShowQrCodeButton"
                             Command="{x:Bind _viewModel.ShowQrCodeCommand}"
-                            SizeChanged="CommandBarElementOnSizeChanged"
-                            Tapped="ShowQrCodeOnTapped" />
-                        <AppBarButton
-                            Command="{x:Bind _viewModel.ShareCommand}"
-                            SizeChanged="CommandBarElementOnSizeChanged"
-                            Tapped="ShareOnTapped" />
+                            SizeChanged="CommandBarElementOnSizeChanged" />
+                        <AppBarButton Command="{x:Bind _viewModel.ShareCommand}" SizeChanged="CommandBarElementOnSizeChanged" />
                     </CommandBar>
                     <CommandBar
                         x:Name="IllustrationViewerSubCommandBar"
@@ -391,10 +377,7 @@
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         DefaultLabelPosition="Collapsed">
-                        <AppBarButton
-                            Width="{StaticResource CollapsedAppBarButtonWidth}"
-                            Command="{x:Bind _viewModel.FullScreenCommand}"
-                            Tapped="FullScreenTapped" />
+                        <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.FullScreenCommand}" />
                         <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.RestoreResolutionCommand}" />
                         <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.ZoomOutCommand}" />
                         <AppBarButton Width="{StaticResource CollapsedAppBarButtonWidth}" Command="{x:Bind _viewModel.ZoomInCommand}" />
@@ -407,11 +390,11 @@
                         FontSize="{StaticResource PixevalContentFontSize}"
                         FontWeight="SemiBold"
                         HorizontalTextAlignment="Center"
-                        Text="{x:Bind _viewModel.CurrentViewModel.Scale, Converter={StaticResource NumberToPercentageConverter}, ConverterParameter=2, Mode=OneWay}"
+                        Text="{x:Bind _viewModel.CurrentImage.Scale, Converter={StaticResource NumberToPercentageConverter}, ConverterParameter=2, Mode=OneWay}"
                         TextAlignment="Center"
                         TextTrimming="CharacterEllipsis" />
                     <TeachingTip
-                        x:Name="QrCodeTeachingTip"
+                        x:Name="ShowQrCodeTeachingTip"
                         x:Uid="/IllustrationViewerPage/QrCodeTeachingTip"
                         Grid.Column="0"
                         IsLightDismissEnabled="True">
@@ -420,7 +403,7 @@
                         </TeachingTip.HeroContent>
                     </TeachingTip>
                     <TeachingTip
-                        x:Name="GenerateLinkToThisPageButtonTeachingTip"
+                        x:Name="GenerateLinkTeachingTip"
                         x:Uid="/IllustrationViewerPage/GenerateLinkToThisPageButtonTeachingTip"
                         Grid.Column="0"
                         ActionButtonClick="GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick">
@@ -431,12 +414,7 @@
                 </Grid>
             </Grid>
 
-            <TeachingTip
-                Title="{x:Bind _viewModel.TeachingTipProperties.Title, Mode=OneWay}"
-                IconSource="{x:Bind _viewModel.TeachingTipProperties.IconSource, Mode=OneWay}"
-                IsLightDismissEnabled="True"
-                IsOpen="{x:Bind _viewModel.TeachingTipProperties.IsOpen, Mode=OneWay}"
-                Subtitle="{x:Bind _viewModel.TeachingTipProperties.Subtitle, Mode=OneWay}" />
+            <TeachingTip x:Name="SnackBarTeachingTip" IsLightDismissEnabled="True" />
 
         </Grid>
         <VisualStateManager.VisualStateGroups>

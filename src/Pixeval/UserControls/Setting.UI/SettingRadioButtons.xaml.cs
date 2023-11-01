@@ -49,7 +49,7 @@ public sealed partial class SettingRadioButtons : UserControl
         if (d is not SettingRadioButtons { Buttons: { } buttons, ItemsSource: { } itemsSource })
             return;
 
-        var correspondingItem = itemsSource.First<StringRepresentableItem>(r => Equals(r.Item, newValue));
+        var correspondingItem = itemsSource.First(r => Equals(r.Item, newValue));
         // set RadioButtons.SelectedItem won't work
         buttons.FindDescendants().OfType<RadioButton>().First(b => b.GetDataContext<StringRepresentableItem>() == correspondingItem).IsChecked = true;
     }

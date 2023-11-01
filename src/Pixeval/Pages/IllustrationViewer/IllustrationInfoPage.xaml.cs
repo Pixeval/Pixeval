@@ -34,6 +34,8 @@ using Pixeval.Messages;
 using Pixeval.Utilities;
 using ReverseMarkdown;
 using Windows.System;
+using Pixeval.Util.Threading;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -48,7 +50,7 @@ public sealed partial class IllustrationInfoPage
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        _viewModel = (IllustrationViewerPageViewModel)e.Parameter;
+        _viewModel = e.Parameter.To<IllustrationViewerPageViewModel>();
         SetIllustrationCaptionText();
     }
 
@@ -64,7 +66,7 @@ public sealed partial class IllustrationInfoPage
 
     private void IllustratorPersonPicture_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (_viewModel.UserInfo is { } userInfo)
+        if (_viewModel.Illustrator is { } userInfo)
         {
             ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement)sender);
             // todo IllustratorPage use Navigate
@@ -117,7 +119,7 @@ public sealed partial class IllustrationInfoPage
     {
         var caption = _viewModel.CurrentIllustration.Illustrate.Caption;
         Task.Run(() => string.IsNullOrEmpty(caption) ? IllustrationInfoPageResources.IllustrationCaptionEmpty : _markdownConverter.Convert(caption))
-            .ContinueWith(task => IllustrationCaptionMarkdownTextBlock.Text = task.Result, TaskScheduler.FromCurrentSynchronizationContext());
+            .ContinueWith(task => IllustrationCaptionMarkdownTextBlock.Text = task.Result, TaskScheduler.FromCurrentSynchronizationContext()).Discard();
     }
 
     #endregion

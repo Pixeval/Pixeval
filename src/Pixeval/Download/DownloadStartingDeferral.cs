@@ -24,15 +24,10 @@ namespace Pixeval.Download;
 
 public class DownloadStartingDeferral
 {
-    public DownloadStartingDeferral()
-    {
-        Signal = new ReenterableAwaiter<bool>(true, true);
-    }
-
     /// <summary>
     ///     Set its result to <see langword="true" /> if you want the download to proceed, otherwise, <see langword="false" />
     /// </summary>
-    public ReenterableAwaiter<bool> Signal { get; }
+    public ReenterableAwaiter<bool> Signal { get; } = new(true, true);
 
     public void Set()
     {

@@ -19,10 +19,7 @@
 #endregion
 
 using System;
-using System.Linq;
-using System.Numerics;
 using System.Threading.Tasks;
-using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -35,11 +32,9 @@ using Pixeval.Options;
 using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util;
 using Pixeval.Util.IO;
-using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
 using Windows.Graphics;
 using Windows.Storage.Streams;
 using WinUI3Utilities;
@@ -49,31 +44,90 @@ namespace Pixeval.Pages.IllustrationViewer;
 
 public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragRegion
 {
-    // Tags for IllustrationInfoAndCommentsNavigationView
-
-    private NavigationViewTag? _relatedWorksTag;
-
-    private NavigationViewTag? _commentsTag;
-
-    private NavigationViewTag? _illustrationInfoTag;
-
     private IllustrationViewerPageViewModel _viewModel = null!;
 
     private const double TitleBarHeight = 48;
     private const double NegativeTitleBarHeight = -TitleBarHeight;
 
-    private readonly AsyncLatch _collapseThumbnailList;
+    public IllustrationViewerPage() => InitializeComponent();
 
-    public IllustrationViewerPage()
+    /// <summary>
+    /// <see cref="IllustrationViewerPage.OnPageDeactivated"/> might not be called when the window is closed
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void IllustrationViewerPage_OnUnloaded(object sender, RoutedEventArgs e)
     {
-        InitializeComponent();
+        _viewModel.Dispose();
+    }
 
-        _collapseThumbnailList = new AsyncLatch(async () =>
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
+    {
+        if (parameter is not IllustrationViewerPageViewModel viewModel)
+            return;
+        _viewModel = viewModel;
+        _viewModel.GenerateLinkTeachingTip = GenerateLinkTeachingTip;
+        _viewModel.ShowQrCodeTeachingTip = ShowQrCodeTeachingTip;
+        _viewModel.SnackBarTeachingTip = SnackBarTeachingTip;
+
+        _viewModel.DetailedPropertyChanged += (sender, args) =>
         {
-            _viewModel.TimeUp = false;
-            await Task.Delay(3000);
-            _viewModel.TimeUp = true;
-        });
+            var vm = sender.To<IllustrationViewerPageViewModel>();
+            if (args.PropertyName is not nameof(vm.CurrentIllustrationIndex))
+                return;
+
+            var oldIndex = args.OldValue.To<int>();
+            var newIndex = args.NewValue.To<int>(); // vm.CurrentIllustrationIndex
+            var oldTag = args.OldTag.To<string>();
+            var newTag = args.NewTag.To<string>(); // vm.CurrentPage.Id
+
+            if (oldTag == newTag)
+                return;
+            var info = (NavigationTransitionInfo?)null;
+            if (oldIndex < newIndex && oldIndex is not -1)
+                info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight };
+            else if (oldIndex > newIndex)
+                info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft };
+            ThumbnailList.ScrollIntoView(vm.CurrentIllustration);
+            Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, vm.CurrentImage, info);
+        };
+
+        _viewModel.PropertyChanged += (sender, args) =>
+        {
+            var vm = sender.To<IllustrationViewerPageViewModel>();
+            switch (args.PropertyName)
+            {
+                case nameof(IllustrationViewerPageViewModel.IsFullScreen):
+                {
+                    Window.AppWindow.SetPresenter(vm.IsFullScreen ? AppWindowPresenterKind.FullScreen : AppWindowPresenterKind.Default);
+                    break;
+                }
+                case IllustrationViewerPageViewModel.GenerateLink:
+                {
+                    vm.GenerateLinkTeachingTip.Target = GenerateLinkButton.IsInOverflow ? null : GenerateLinkButton;
+                    break;
+                }
+                case IllustrationViewerPageViewModel.ShowQrCode:
+                {
+                    vm.ShowQrCodeTeachingTip.Target = ShowQrCodeButton.IsInOverflow ? null : ShowQrCodeButton;
+                    break;
+                }
+                case IllustrationViewerPageViewModel.ShowShare:
+                {
+                    Window.ShowShareUI();
+                    break;
+                }
+                case nameof(IllustrationViewerPageViewModel.IsInfoPaneOpen):
+                {
+                    if (vm.IsInfoPaneOpen)
+                        IllustrationInfoAndCommentsNavigationViewNavigate(InfoPaneNavigationView, new SuppressNavigationTransitionInfo());
+                    break;
+                }
+            }
+        };
+
+        // 第一次_viewModel.CurrentIllustrationIndex变化时，还没有订阅事件，所以不会触发DetailedPropertyChanged，需要手动触发
+        Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.CurrentImage);
     }
 
     private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
@@ -85,29 +139,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
         ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
 
-        // IMPORTANT
-
-        _viewModel.CollapseThumbnailList = () => BottomCommandSection.Translation = new Vector3(0, 120, 0);
-        _collapseThumbnailList.RunAsync().Discard();
-    }
-
-    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
-    {
-        _viewModel.Dispose();
-    }
-
-    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
-    {
-        if (parameter is IllustrationViewerPageViewModel viewModel)
-        {
-            _viewModel = viewModel;
-        }
-
-        _relatedWorksTag = new NavigationViewTag(typeof(RelatedWorksPage), _viewModel);
-        _illustrationInfoTag = new NavigationViewTag(typeof(IllustrationInfoPage), _viewModel);
-        _commentsTag = new NavigationViewTag(typeof(CommentsPage), (App.AppViewModel.MakoClient.IllustrationComments(_viewModel.IllustrationId).Where(c => c is not null), _viewModel.IllustrationId));
-
-        Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.CurrentViewModel);
+        IllustrationImageShowcaseFrame_OnTapped(null!, null!);
     }
 
     private void ExitFullScreenKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => _viewModel.IsFullScreen = false;
@@ -116,7 +148,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
     {
         // all the illustrations in _viewModels only differ in different image sources
         var vm = _viewModel.CurrentIllustration;
-        if (_viewModel.CurrentViewModel.LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true })
+        if (_viewModel.CurrentImage.LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true })
         {
             return;
         }
@@ -134,7 +166,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         props.Thumbnail = RandomAccessStreamReference.CreateFromStream(thumbnailStream);
         request.Data.SetWebLink(webLink);
 
-        if (_viewModel.CurrentViewModel.OriginalImageStream is { } stream)
+        if (_viewModel.CurrentImage.OriginalImageStream is { } stream)
         {
             var file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(_viewModel.IsUgoira ? "gif" : "png");
             await stream.SaveToFileAsync(file);
@@ -156,6 +188,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
                     new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight });
                 break;
             case false:
+                // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentIllustrationIndex
                 ++ThumbnailList.SelectedIndex;
                 break;
             case null: break;
@@ -164,6 +197,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void NextButton_OnRightTapped(object sender, RightTappedRoutedEventArgs e)
     {
+        // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentIllustrationIndex
         ++ThumbnailList.SelectedIndex;
     }
 
@@ -176,6 +210,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
                     new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft });
                 break;
             case false:
+                // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentIllustrationIndex
                 --ThumbnailList.SelectedIndex;
                 break;
             case null: break;
@@ -184,29 +219,33 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private void PrevButton_OnRightTapped(object sender, RightTappedRoutedEventArgs e)
     {
+        // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentIllustrationIndex
         --ThumbnailList.SelectedIndex;
     }
 
     private void GenerateLinkToThisPageButtonTeachingTip_OnActionButtonClick(TeachingTip sender, object args)
     {
-        GenerateLinkToThisPageButtonTeachingTip.IsOpen = false;
+        GenerateLinkTeachingTip.IsOpen = false;
         App.AppViewModel.AppSetting.DisplayTeachingTipWhenGeneratingAppLink = false;
     }
 
-    private void IllustrationInfoAndCommentsNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+    private void IllustrationInfoAndCommentsNavigationViewOnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs e)
+    {
+        IllustrationInfoAndCommentsNavigationViewNavigate(sender, e.RecommendedNavigationTransitionInfo);
+    }
+
+    private void IllustrationInfoAndCommentsNavigationViewNavigate(NavigationView sender, NavigationTransitionInfo info)
     {
         if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag })
-        {
-            _ = IllustrationInfoAndCommentsFrame.Navigate(tag.NavigateTo, tag.Parameter, args.RecommendedNavigationTransitionInfo);
-        }
+            _ = IllustrationInfoAndCommentsFrame.Navigate(tag.NavigateTo, tag.Parameter, info);
     }
 
     private void IllustrationInfoAndCommentsSplitView_OnPaneOpenedOrClosed(SplitView sender, object args) => SetTitleBarDragRegion();
 
     public void SetTitleBarDragRegion()
     {
-        var pointCommandBar = IllustrationViewerCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
-        var pointSubCommandBar = IllustrationViewerSubCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
+        var pointCommandBar = IllustrationViewerCommandBar.TransformToVisual(this).TransformPoint(new(0, 0));
+        var pointSubCommandBar = IllustrationViewerSubCommandBar.TransformToVisual(this).TransformPoint(new(0, 0));
         var commandBarRect = new RectInt32((int)pointCommandBar.X, (int)pointCommandBar.Y, (int)IllustrationViewerCommandBar.ActualWidth, (int)IllustrationViewerCommandBar.ActualHeight);
         var subCommandBarRect = new RectInt32((int)pointSubCommandBar.X, (int)pointSubCommandBar.Y, (int)IllustrationViewerSubCommandBar.ActualWidth, (int)IllustrationViewerSubCommandBar.ActualHeight);
 
@@ -218,74 +257,28 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         });
     }
 
-    private void ThumbnailList_OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
+    private void ThumbnailOnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
     {
-        var context = sender.GetDataContext<IllustrationViewModel>();
+        var context = sender.GetDataContext<IllustrationViewModel?>();
+        const ThumbnailUrlOption option = ThumbnailUrlOption.SquareMedium;
+        if (context is null)
+            return;
         if (args.BringIntoViewDistanceX <= sender.ActualWidth)
         {
-            _ = context.LoadThumbnailIfRequired(ThumbnailUrlOption.SquareMedium);
+            _ = context.TryLoadThumbnail(_viewModel, option);
         }
-
-        if (sender is Border b && ThumbnailList.SelectedItem is not null)
+        else
         {
-            b.BorderThickness = new Thickness(ThumbnailList.SelectedItem == context ? 2 : 0);
+            context.UnloadThumbnail(_viewModel, option);
         }
     }
 
-    private void ThumbnailList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    private async void IllustrationImageShowcaseFrame_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (sender is not ListView listView)
-            return;
-
-        const string borderControlName = "ThumbnailBorder";
-
-        var item = listView.ContainerFromItem(listView.SelectedItem);
-        if (item.FindDescendant(borderControlName) is Border border)
-        {
-            border.BorderThickness = new Thickness(2);
-        }
-
-        var oldIndex = -1;
-        if (e.RemovedItems is [IllustrationViewModel removedItem]
-            && listView.ContainerFromItem(removedItem) is { } container
-            && container.FindDescendant(borderControlName) is Border removedBorder)
-        {
-            removedBorder.BorderThickness = new Thickness(0);
-            oldIndex = Array.IndexOf(_viewModel.Illustrations, removedItem);
-        }
-
-        if (listView.SelectedItem is IllustrationViewModel viewModel && viewModel.Id != _viewModel.CurrentIllustration.Id)
-        {
-            var info = (NavigationTransitionInfo?)null;
-            if (oldIndex < listView.SelectedIndex && oldIndex is not -1)
-            {
-                info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight };
-            }
-            else if (oldIndex > listView.SelectedIndex)
-            {
-                info = new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromLeft };
-            }
-            Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.Goto(viewModel), info);
-        }
-    }
-
-    private void ThumbnailBorder_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        var context = sender.GetDataContext<IllustrationViewModel>();
-        if (context.Illustrate.Id.ToString() == _viewModel.CurrentIllustration.Id)
-        {
-            ThumbnailList.ScrollIntoView(context);
-            if (Array.IndexOf(_viewModel.Illustrations, context) is var index and not -1)
-            {
-                ThumbnailList.SelectedIndex = index;
-            }
-        }
-    }
-
-    private void IllustrationImageShowcaseFrame_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        BottomCommandSection.Translation = new Vector3();
-        _collapseThumbnailList.RunAsync().Discard();
+        BottomCommandSection.Translation = new();
+        TimeUp = false;
+        await Task.Delay(3000);
+        TimeUp = true;
     }
 
     private void CommandBarElementOnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -294,60 +287,32 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         ((FrameworkElement)sender).Width = button.IsInOverflow ? double.NaN : (double)Application.Current.Resources["CollapsedAppBarButtonWidth"];
     }
 
-    private async void ShowQrCodeOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        var button = sender.To<AppBarButton>();
-        var qrCodeSource = await UIHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustrationWebUri(_viewModel.CurrentIllustration.Id).ToString());
-        QrCodeTeachingTip.HeroContent.To<Image>().Source = qrCodeSource;
-        QrCodeTeachingTip.Target = button.IsInOverflow ? null : button;
-        QrCodeTeachingTip.IsOpen = true;
+    private void ThumbnailListGrid_OnPointerEntered(object sender, PointerRoutedEventArgs e) => PointerNotInArea = false;
 
-        void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
+    private void ThumbnailListGrid_OnPointerExited(object sender, PointerRoutedEventArgs e) => PointerNotInArea = true;
+
+    public bool PointerNotInArea
+    {
+        get => _pointerNotInArea;
+        set
         {
-            qrCodeSource.Dispose();
-            s.Closed -= Closed;
+            _pointerNotInArea = value;
+            if (Initialized && _pointerNotInArea && TimeUp)
+                BottomCommandSection.Translation = new(0, 120, 0);
         }
-
-        QrCodeTeachingTip.Closed += Closed;
     }
 
-    private void GenerateLinkCommandOnTapped(object sender, TappedRoutedEventArgs e)
+    public bool TimeUp
     {
-        if (App.AppViewModel.AppSetting.DisplayTeachingTipWhenGeneratingAppLink)
+        get => _timeUp;
+        set
         {
-            var button = (AppBarButton)sender;
-            GenerateLinkToThisPageButtonTeachingTip.Target = button.IsInOverflow ? null : button;
-            GenerateLinkToThisPageButtonTeachingTip.IsOpen = true;
+            _timeUp = value;
+            if (Initialized && _timeUp && PointerNotInArea)
+                BottomCommandSection.Translation = new(0, 120, 0);
         }
-
-        UIHelper.ClipboardSetText(MakoHelper.GenerateIllustrationAppUri(_viewModel.CurrentIllustration.Id).ToString());
     }
 
-    private void ShareOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        if (_viewModel.CurrentViewModel.LoadingOriginalSourceTask is not { IsCompletedSuccessfully: true })
-        {
-            _viewModel.TeachingTipProperties.ShowAndHide(IllustrationViewerPageResources.CannotShareImageForNowTitle, TeachingTipSeverity.Warning,
-                IllustrationViewerPageResources.CannotShareImageForNowContent);
-            return;
-        }
-
-        Window.ShowShareUI();
-    }
-
-    private void FullScreenTapped(object sender, TappedRoutedEventArgs e)
-    {
-        Window.AppWindow.SetPresenter(_viewModel.IsFullScreen ? AppWindowPresenterKind.Default : AppWindowPresenterKind.FullScreen);
-        _viewModel.IsFullScreen = !_viewModel.IsFullScreen;
-    }
-
-    private void ThumbnailListGrid_OnPointerEntered(object sender, PointerRoutedEventArgs e)
-    {
-        _viewModel.PointerNotInArea = false;
-    }
-
-    private void ThumbnailListGrid_OnPointerExited(object sender, PointerRoutedEventArgs e)
-    {
-        _viewModel.PointerNotInArea = true;
-    }
+    private bool _timeUp;
+    private bool _pointerNotInArea = true;
 }

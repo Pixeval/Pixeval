@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:iconButton="using:Pixeval.Controls.IconButton"
     xmlns:local="using:Pixeval.Controls.TokenInputTextBox"
-    xmlns:ui="using:Pixeval.Util.UI">
+    xmlns:markup="using:Pixeval.Util.MarkupExtensions">
     <Style TargetType="local:TokenInputTextBox">
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />
@@ -38,7 +38,7 @@
                             Padding="0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Content="{ui:FontIcon Glyph=UpShiftKeyE84B,
+                            Content="{markup:FontIcon Glyph=UpShiftKeyE84B,
                                                   FontSize={StaticResource PixevalButtonIconSize}}"
                             IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Token.CaseSensitive, Mode=TwoWay}" />
                         <ToggleButton
@@ -49,7 +49,7 @@
                             Padding="0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Content="{ui:FontIcon Glyph=ProcessingE9F5,
+                            Content="{markup:FontIcon Glyph=ProcessingE9F5,
                                                   FontSize={StaticResource PixevalButtonIconSize}}"
                             IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Token.IsRegularExpression, Mode=TwoWay}" />
                         <iconButton:IconButton
@@ -59,7 +59,7 @@
                             Height="32"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Icon="{ui:FontIcon Glyph=SendE724,
+                            Icon="{markup:FontIcon Glyph=SendE724,
                                                FontSize={StaticResource PixevalButtonIconSize}}"
                             Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SubmitEnable, Mode=OneWay}" />
                     </Grid>

@@ -33,6 +33,7 @@
 
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Labs.WinUI.SettingsControls" Version="0.0.18" />
+        <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.0.1" />
         <PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.1.2" />
         <PackageReference Include="CommunityToolkit.WinUI.UI.Behaviors" Version="7.1.2" />
         <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
@@ -43,6 +44,7 @@
         </PackageReference>
         <PackageReference Include="LiteDB" Version="5.0.16" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+        <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.5.1" />
         <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.3.2" />
         <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.1" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />

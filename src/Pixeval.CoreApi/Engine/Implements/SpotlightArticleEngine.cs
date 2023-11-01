@@ -27,23 +27,16 @@ using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
 
-internal class SpotlightArticleEngine : AbstractPixivFetchEngine<SpotlightArticle>
+internal class SpotlightArticleEngine(MakoClient makoClient, EngineHandle? engineHandle) : AbstractPixivFetchEngine<SpotlightArticle>(makoClient, engineHandle)
 {
-    public SpotlightArticleEngine(MakoClient makoClient, EngineHandle? engineHandle) : base(makoClient, engineHandle)
-    {
-    }
-
     public override IAsyncEnumerator<SpotlightArticle> GetAsyncEnumerator(CancellationToken cancellationToken = new())
     {
         return new SpotlightArticleAsyncEnumerator(this, MakoApiKind.AppApi)!;
     }
 
-    private class SpotlightArticleAsyncEnumerator : RecursivePixivAsyncEnumerator<SpotlightArticle, PixivSpotlightResponse, SpotlightArticleEngine>
+    private class SpotlightArticleAsyncEnumerator(SpotlightArticleEngine pixivFetchEngine, MakoApiKind makoApiKind)
+        : RecursivePixivAsyncEnumerator<SpotlightArticle, PixivSpotlightResponse, SpotlightArticleEngine>(pixivFetchEngine, makoApiKind)
     {
-        public SpotlightArticleAsyncEnumerator(SpotlightArticleEngine pixivFetchEngine, MakoApiKind makoApiKind) : base(pixivFetchEngine, makoApiKind)
-        {
-        }
-
         protected override bool ValidateResponse(PixivSpotlightResponse rawEntity)
         {
             return rawEntity.SpotlightArticles.IsNotNullOrEmpty();

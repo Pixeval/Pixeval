@@ -33,17 +33,11 @@ namespace Pixeval.UserControls.IllustratorView;
 
 public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User, IllustratorViewModel>
 {
-    public IllustratorViewDataProvider()
-    {
-        _illustratorsSource = new ObservableCollection<IllustratorViewModel>();
-        View = new AdvancedCollectionView(Source);
-    }
+    public AdvancedCollectionView View { get; } = new(Array.Empty<IllustratorViewModel>());
 
-    public AdvancedCollectionView View { get; }
+    private IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel> _illustratorsSource = null!;
 
-    private ObservableCollection<IllustratorViewModel> _illustratorsSource;
-
-    public ObservableCollection<IllustratorViewModel> Source
+    public IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel> Source
     {
         get => _illustratorsSource;
         set
@@ -71,27 +65,24 @@ public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User,
 
     public void DisposeCurrent()
     {
-        foreach (var illustratorViewModel in Source)
-        {
-            illustratorViewModel.Dispose();
-        }
+        if (Source is { } source)
+            foreach (var illustratorViewModel in source)
+            {
+                illustratorViewModel.Dispose();
+            }
 
         View.Clear();
     }
 
-    public Task<int> ResetAndFillAsync(IFetchEngine<User?>? fetchEngine, int itemLimit = -1)
+    public async Task<int> ResetAndFillAsync(IFetchEngine<User?>? fetchEngine, int limit = -1)
     {
         FetchEngine?.EngineHandle.Cancel();
         FetchEngine = fetchEngine;
         DisposeCurrent();
-        return FillAsync(itemLimit);
 
-        async Task<int> FillAsync(int itemsLimit = -1)
-        {
-            var collection = new IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel>(new IllustratorFetchEngineIncrementalSource(FetchEngine!, itemsLimit));
-            Source = collection;
-            var result = await collection.LoadMoreItemsAsync(20);
-            return (int)result.Count;
-        }
+        var collection = new IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel>(new IllustratorFetchEngineIncrementalSource(FetchEngine!, limit));
+        Source = collection;
+        var result = await collection.LoadMoreItemsAsync(20);
+        return (int)result.Count;
     }
 }

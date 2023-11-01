@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -114,6 +115,10 @@ public static partial class AppContext
         const string iconName = "logo44x44.ico";
         return (await AppKnownFolders.Local.GetFileAsync(iconName)).Path;
     }
+
+    public static string IconName => "logo44x44.ico";
+
+    public static string IconAbsolutePath => Path.Combine(AppKnownFolders.Local.Self.Path, IconName);
 
     /// <summary>
     ///     Get the byte array of a file in the Assets folder

@@ -1,9 +1,10 @@
 using System;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.UI;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
+using Pixeval.Misc;
 
 namespace Pixeval.UserControls.Illustrate;
 
@@ -14,7 +15,7 @@ public interface IDataProvider<T, TViewModel> where T : IIllustrate where TViewM
     /// </summary>
     AdvancedCollectionView View { get; }
 
-    ObservableCollection<TViewModel> Source { get; }
+    IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel> Source { get; }
 
     IFetchEngine<T?>? FetchEngine { get; }
 
@@ -24,5 +25,5 @@ public interface IDataProvider<T, TViewModel> where T : IIllustrate where TViewM
 
     void DisposeCurrent();
 
-    Task<int> ResetAndFillAsync(IFetchEngine<T?>? fetchEngine, int itemLimit = -1);
+    Task<int> ResetAndFillAsync(IFetchEngine<T?>? fetchEngine, int limit = -1);
 }

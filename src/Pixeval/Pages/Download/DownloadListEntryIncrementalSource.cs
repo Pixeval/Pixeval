@@ -27,17 +27,10 @@ using Pixeval.Download;
 
 namespace Pixeval.Pages.Download;
 
-public class ObservableDownloadTaskIncrementalSource : IIncrementalSource<ObservableDownloadTask>
+public class ObservableDownloadTaskIncrementalSource(IEnumerable<ObservableDownloadTask> source) : IIncrementalSource<ObservableDownloadTask>
 {
-    private readonly IEnumerable<ObservableDownloadTask> _source;
-
-    public ObservableDownloadTaskIncrementalSource(IEnumerable<ObservableDownloadTask> source)
-    {
-        _source = source;
-    }
-
     public Task<IEnumerable<ObservableDownloadTask>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new())
     {
-        return Task.FromResult(_source.Skip(pageIndex * pageSize).Take(pageSize));
+        return Task.FromResult(source.Skip(pageIndex * pageSize).Take(pageSize));
     }
 }

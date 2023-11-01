@@ -26,6 +26,7 @@ using System.Linq;
 using System.Reflection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Database.Managers;
@@ -36,18 +37,18 @@ using Pixeval.UserControls.Setting.UI;
 using Pixeval.UserControls.TokenInput;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
-using IllustrationViewModel = Pixeval.UserControls.IllustrationView.IllustrationViewModel;
+using Pixeval.UserControls.IllustrationView;
 
 namespace Pixeval.Pages.Misc;
 
 [SettingsViewModel<AppSetting>(nameof(_appSetting))]
-public partial class SettingsPageViewModel : ObservableObject
+public partial class SettingsPageViewModel(AppSetting appSetting) : ObservableObject
 {
     public static readonly IEnumerable<string> AvailableFonts = new InstalledFontCollection().Families.Select(f => f.Name);
 
     public static readonly ICollection<Token> AvailableIllustMacros;
 
-    private readonly AppSetting _appSetting;
+    private readonly AppSetting _appSetting = appSetting;
 
     static SettingsPageViewModel()
     {
@@ -57,11 +58,6 @@ public partial class SettingsPageViewModel : ObservableObject
             .Select(m => $"@{{{(m is IMacro<IllustrationViewModel>.IPredicate ? $"{m.Name}:" : m.Name)}}}")
             .Select(s => new Token(s, false, false))
             .ToList();
-    }
-
-    public SettingsPageViewModel(AppSetting appSetting)
-    {
-        _appSetting = appSetting;
     }
 
     [DefaultValue(false)]
@@ -118,7 +114,7 @@ public partial class SettingsPageViewModel : ObservableObject
     public void ClearData<T, TModel>(ClearDataKind kind, IPersistentManager<T, TModel> manager) where T : new()
     {
         manager.Clear();
-        TeachingTipProperties.ShowAndHide(kind switch
+        SettingsTeachingTip.ShowAndHide(kind switch
         {
             ClearDataKind.BrowseHistory => SettingsPageResources.BrowseHistoriesCleared,
             ClearDataKind.SearchHistory => SettingsPageResources.SearchHistoriesCleared,
@@ -127,5 +123,8 @@ public partial class SettingsPageViewModel : ObservableObject
         });
     }
 
-    public ObservableTeachingTipProperties TeachingTipProperties { get; } = new();
+    /// <summary>
+    /// 写成字段防止被反射
+    /// </summary>
+    public TeachingTip SettingsTeachingTip = null!;
 }

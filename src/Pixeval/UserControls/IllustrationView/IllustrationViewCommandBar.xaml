@@ -5,8 +5,8 @@
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:illustrationResultFilter1="using:Pixeval.Flyouts.IllustrationResultFilter"
+    xmlns:markup="using:Pixeval.Util.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="using:Pixeval.Util.UI"
     mc:Ignorable="d">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -36,35 +36,35 @@
             controls:DockPanel.Dock="Right"
             DefaultLabelPosition="Right">
             <AppBarButton
-                Icon="{ui:FontIcon Glyph=CancelE711}"
+                Icon="{markup:FontIcon Glyph=CancelE711}"
                 Label="{x:Bind ViewModel.SelectionLabel, Mode=OneWay}"
                 Tapped="CancelSelectionButton_OnTapped" />
             <AppBarButton
                 x:Name="OpenConditionDialogButton"
                 x:Uid="/IllustrationViewCommandBar/OpenConditionDialogButton"
-                Icon="{ui:FontIcon Glyph=FilterE71C}"
+                Icon="{markup:FontIcon Glyph=FilterE71C}"
                 Tapped="OpenConditionDialogButton_OnTapped" />
             <AppBarButton
                 x:Name="SelectAllButton"
                 x:Uid="/IllustrationViewCommandBar/SelectAllButton"
-                Icon="{ui:FontIcon Glyph=SelectAllE8B3}"
+                Icon="{markup:FontIcon Glyph=SelectAllE8B3}"
                 Tapped="SelectAllToggleButton_OnTapped" />
             <AppBarSeparator />
             <AppBarButton
                 x:Uid="/IllustrationViewCommandBar/AddAllToBookmarkButton"
-                Icon="{ui:FontIcon Glyph=BookmarksE8A4}"
+                Icon="{markup:FontIcon Glyph=BookmarksE8A4}"
                 Tapped="AddAllToBookmarkButton_OnTapped" />
             <AppBarButton
                 x:Uid="/IllustrationViewCommandBar/SaveAllButton"
-                Icon="{ui:FontIcon Glyph=SaveE74E}"
+                Icon="{markup:FontIcon Glyph=SaveE74E}"
                 Tapped="SaveAllButton_OnTapped" />
             <AppBarButton
                 x:Uid="/IllustrationViewCommandBar/OpenAllInBrowserButton"
-                Icon="{ui:FontIcon Glyph=WebSearchF6FA}"
+                Icon="{markup:FontIcon Glyph=WebSearchF6FA}"
                 Tapped="OpenAllInBrowserButton_OnTapped" />
             <AppBarButton
                 x:Uid="/IllustrationViewCommandBar/ShareButton"
-                Icon="{ui:FontIcon Glyph=ShareE72D}"
+                Icon="{markup:FontIcon Glyph=ShareE72D}"
                 Tapped="ShareButton_OnTapped" />
         </CommandBar>
         <TeachingTip

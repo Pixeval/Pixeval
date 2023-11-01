@@ -4,8 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="using:Pixeval.Util.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:Pixeval.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:win2d="using:Microsoft.Graphics.Canvas.UI.Xaml"
     mc:Ignorable="d">
     <UserControl.Resources>
         <converters:FloatToVector3Converter x:Key="FloatToVector3Converter" />
@@ -18,14 +18,15 @@
         <Canvas.Clip>
             <RectangleGeometry x:Name="CanvasRectangleGeometry" />
         </Canvas.Clip>
-        <Image
-            x:Name="Image"
+        <win2d:CanvasControl
+            x:Name="CanvasControl"
             Canvas.Left="{x:Bind ImagePositionX, Mode=OneWay}"
             Canvas.Top="{x:Bind ImagePositionY, Mode=OneWay}"
             Width="{x:Bind OriginalImageWidth, Mode=OneWay}"
             Height="{x:Bind OriginalImageHeight, Mode=OneWay}"
+            CreateResources="CanvasControlOnCreateResources"
+            Draw="CanvasControlOnDraw"
             Scale="{x:Bind ImageScale, Converter={StaticResource FloatToVector3Converter}, Mode=OneWay}"
-            Source="{x:Bind Source, Mode=OneWay}"
-            Stretch="Uniform" />
+            Unloaded="CanvasControlOnUnloaded" />
     </Canvas>
 </UserControl>

@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -23,7 +23,6 @@
 // ReSharper disable InconsistentNaming
 
 using Pixeval.Attributes;
-
 
 namespace Pixeval.Util.UI;
 

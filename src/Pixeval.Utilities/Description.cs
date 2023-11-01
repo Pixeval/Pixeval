@@ -26,14 +26,9 @@ namespace Pixeval.Utilities;
 
 [AttributeUsage(AttributeTargets.Field)]
 [PublicAPI]
-public class Description : Attribute
+public class Description(string name) : Attribute
 {
-    public Description(string name)
-    {
-        Name = name;
-    }
-
-    public string Name { get; }
+    public string Name { get; } = name;
 }
 
 [PublicAPI]

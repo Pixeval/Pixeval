@@ -54,6 +54,7 @@ public sealed partial class SettingsPage
     {
         InitializeComponent();
         _viewModel = new SettingsPageViewModel(App.AppViewModel.AppSetting);
+        _viewModel.SettingsTeachingTip = SettingsTeachingTip;
         _previousPath = _viewModel.DefaultDownloadPathMacro;
     }
 
