@@ -7,38 +7,52 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:download="using:Pixeval.Pages.Download"
     xmlns:downloader="using:Pixeval.Download"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:toolkit="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:markup="using:Pixeval.Util.MarkupExtensions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Grid Padding="20,0">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
-            <RowDefinition Height="50" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <toolkit:DockPanel Grid.Row="1">
-            <TextBlock
-                x:Uid="/DownloadListPage/PageTitleTextBlock"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                toolkit:DockPanel.Dock="Left"
-                Style="{StaticResource TitleTextBlockStyle}" />
-            <StackPanel
-                Margin="5,0,0,0"
+        <Grid
+            Margin="5,0,0,0"
+            ColumnSpacing="10"
+            Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <ComboBox
+                x:Uid="/DownloadListPage/ModeFilterComboBox"
+                Grid.Column="0"
                 VerticalAlignment="Center"
-                toolkit:DockPanel.Dock="Left"
-                Background="Transparent"
-                FlowDirection="LeftToRight"
-                Orientation="Horizontal" />
-            <CommandBar
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Center"
-                toolkit:DockPanel.Dock="Right"
-                Background="Transparent"
-                DefaultLabelPosition="Right">
+                ItemsSource="{x:Bind download:DownloadListPageViewModel.AvailableDownloadListOptions}"
+                SelectedItem="{x:Bind _viewModel.CurrentOption, Mode=TwoWay}"
+                SelectionChanged="ModeFilterComboBox_OnSelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="download:DownloadListOption">
+                        <TextBlock Text="{x:Bind attributes:LocalizedResourceAttributeHelper.GetLocalizedResourceContent((download:DownloadListOption))}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <AutoSuggestBox
+                x:Uid="/DownloadListPage/FilterAutoSuggestBox"
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                ItemsSource="{x:Bind _viewModel.FilteredTasks}"
+                QueryIcon="Find"
+                QuerySubmitted="FilterAutoSuggestBox_OnQuerySubmitted"
+                SuggestionChosen="FilterAutoSuggestBox_OnSuggestionChosen"
+                TextChanged="FilterAutoSuggestBox_OnTextChanged">
+                <AutoSuggestBox.ItemTemplate>
+                    <DataTemplate x:DataType="downloader:IDownloadTask">
+                        <TextBlock Text="{x:Bind Title}" />
+                    </DataTemplate>
+                </AutoSuggestBox.ItemTemplate>
+            </AutoSuggestBox>
+            <CommandBar Grid.Column="2" DefaultLabelPosition="Right">
                 <AppBarButton
                     Icon="{markup:FontIcon Glyph=CancelE711}"
                     IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
@@ -66,69 +80,29 @@
                     Icon="{markup:FontIcon Glyph=DeleteE74D}"
                     Tapped="ClearDownloadListButton_OnTapped" />
             </CommandBar>
-        </toolkit:DockPanel>
-        <ComboBox
-            x:Uid="/DownloadListPage/ModeFilterComboBox"
-            Grid.Row="2"
-            Width="135"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Center"
-            ItemsSource="{x:Bind download:DownloadListPageViewModel.AvailableDownloadListOptions}"
-            SelectedItem="{x:Bind _viewModel.CurrentOption, Mode=TwoWay}"
-            SelectionChanged="ModeFilterComboBox_OnSelectionChanged">
-            <ComboBox.ItemTemplate>
-                <DataTemplate x:DataType="download:DownloadListOption">
-                    <TextBlock Text="{x:Bind attributes:LocalizedResourceAttributeHelper.GetLocalizedResourceContent((download:DownloadListOption))}" />
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
-        <toolkit:WrapPanel
-            Grid.Row="2"
-            Grid.RowSpan="2"
-            Margin="0,0,-9,0"
-            Padding="0"
-            HorizontalAlignment="Left"
-            HorizontalSpacing="10"
-            VerticalSpacing="10">
-            <AutoSuggestBox
-                x:Uid="/DownloadListPage/FilterAutoSuggestBox"
-                Width="265"
-                VerticalAlignment="Center"
-                ItemsSource="{x:Bind _viewModel.FilteredTasks}"
-                QueryIcon="Find"
-                QuerySubmitted="FilterAutoSuggestBox_OnQuerySubmitted"
-                SuggestionChosen="FilterAutoSuggestBox_OnSuggestionChosen"
-                TextChanged="FilterAutoSuggestBox_OnTextChanged">
-                <AutoSuggestBox.ItemTemplate>
-                    <DataTemplate x:DataType="downloader:IDownloadTask">
-                        <TextBlock Text="{x:Bind Title}" />
+        </Grid>
+        <ScrollViewer Grid.Row="1">
+            <ItemsRepeater ItemsSource="{x:Bind _viewModel.DownloadTasksView, Mode=OneWay}">
+                <ItemsRepeater.Layout>
+                    <StackLayout Orientation="Vertical" />
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate x:DataType="download:DownloadListEntryViewModel">
+                        <download:DownloadListEntry
+                            Title="{x:Bind DownloadTask.Title}"
+                            ActionButtonContent="{x:Bind download:DownloadListEntryViewModel.GetEntryActionButtonContent(DownloadTask.CurrentState), Mode=OneWay}"
+                            Description="{x:Bind DownloadTask.Description}"
+                            IsCancelItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsEntryCancelDownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
+                            IsRedownloadItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsRedownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
+                            IsSelectedChanged="DownloadListEntry_OnSelected"
+                            IsShowErrorDetailDialogItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsShowErrorDetailDialogItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
+                            Progress="{x:Bind DownloadTask.ProgressPercentage, Mode=OneWay}"
+                            ProgressMessage="{x:Bind download:DownloadListEntryViewModel.GetEntryProgressMessage(DownloadTask.CurrentState, DownloadTask.ProgressPercentage, DownloadTask.ErrorCause), Mode=OneWay}"
+                            Thumbnail="{x:Bind Thumbnail, Mode=OneWay}"
+                            ViewModel="{x:Bind DownloadTask}" />
                     </DataTemplate>
-                </AutoSuggestBox.ItemTemplate>
-            </AutoSuggestBox>
-        </toolkit:WrapPanel>
-        <ItemsRepeater
-            Grid.Row="4"
-            Margin="0,5,0,0"
-            ItemsSource="{x:Bind _viewModel.DownloadTasksView, Mode=OneWay}">
-            <ItemsRepeater.Layout>
-                <StackLayout Orientation="Vertical" />
-            </ItemsRepeater.Layout>
-            <ItemsRepeater.ItemTemplate>
-                <DataTemplate x:DataType="download:DownloadListEntryViewModel">
-                    <download:DownloadListEntry
-                        Title="{x:Bind DownloadTask.Title}"
-                        ActionButtonContent="{x:Bind download:DownloadListEntryViewModel.GetEntryActionButtonContent(DownloadTask.CurrentState), Mode=OneWay}"
-                        Description="{x:Bind DownloadTask.Description}"
-                        IsCancelItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsEntryCancelDownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
-                        IsRedownloadItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsRedownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
-                        IsShowErrorDetailDialogItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsShowErrorDetailDialogItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
-                        Progress="{x:Bind DownloadTask.ProgressPercentage, Mode=OneWay}"
-                        ProgressMessage="{x:Bind download:DownloadListEntryViewModel.GetEntryProgressMessage(DownloadTask.CurrentState, DownloadTask.ProgressPercentage, DownloadTask.ErrorCause), Mode=OneWay}"
-                        IsSelectedChanged="DownloadListEntry_OnSelected"
-                        Thumbnail="{x:Bind Thumbnail, Mode=OneWay}"
-                        ViewModel="{x:Bind DownloadTask}" />
-                </DataTemplate>
-            </ItemsRepeater.ItemTemplate>
-        </ItemsRepeater>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+        </ScrollViewer>
     </Grid>
 </controls:EnhancedPage>

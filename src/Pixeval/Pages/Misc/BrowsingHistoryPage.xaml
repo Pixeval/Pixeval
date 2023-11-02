@@ -13,10 +13,7 @@
             <AppBarButton Icon="{markup:FontIcon Glyph=DeleteE74D}" Label="Delete" />
         </userControls:IllustrationContainer.SecondaryCommandsSupplements>
         <userControls:IllustrationContainer.CommandBarElements>
-            <userControls:SortOptionComboBox
-                x:Name="SortOptionComboBox"
-                Margin="10,0,0,0"
-                SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
+            <userControls:SortOptionComboBox x:Name="SortOptionComboBox" SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
         </userControls:IllustrationContainer.CommandBarElements>
     </userControls:IllustrationContainer>
 </controls:EnhancedPage>

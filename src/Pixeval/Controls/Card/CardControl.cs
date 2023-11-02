@@ -32,6 +32,11 @@ namespace Pixeval.Controls.Card;
 /// This is the base control to create consistent settings experiences, inline with the Windows 11 design language.
 /// A CardControl can also be hosted within a SettingsExpander.
 /// </summary>
+/// <remarks>
+/// 未设置<see cref="IsSelectEnabled"/>时，也可以通过代码方式设置<see cref="IsSelected"/>，但是无法通过UI更改值，
+/// 也不会触发<see cref="IsSelectedChanging"/>和<see cref="IsSelectedChanged"/>事件。<br/>
+/// 同时设置<see cref="IsSelectEnabled"/>和<see cref="IsClickEnabled"/>时，<see cref="IsSelectEnabled"/>会覆盖<see cref="IsClickEnabled"/>效果。
+/// </remarks>
 [DependencyProperty<bool>("IsClickEnabled", "false", nameof(OnIsClickEnabledChanged))]
 [DependencyProperty<bool>("IsSelectEnabled", "false", nameof(OnIsSelectEnabledChanged))]
 [DependencyProperty<bool>("IsSelected", "false", nameof(OnIsSelectedChanged))]
