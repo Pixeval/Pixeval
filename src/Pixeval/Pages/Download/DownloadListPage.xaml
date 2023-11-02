@@ -124,7 +124,7 @@
                         IsShowErrorDetailDialogItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsShowErrorDetailDialogItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
                         Progress="{x:Bind DownloadTask.ProgressPercentage, Mode=OneWay}"
                         ProgressMessage="{x:Bind download:DownloadListEntryViewModel.GetEntryProgressMessage(DownloadTask.CurrentState, DownloadTask.ProgressPercentage, DownloadTask.ErrorCause), Mode=OneWay}"
-                        Selected="DownloadListEntry_OnSelected"
+                        IsSelectedChanged="DownloadListEntry_OnSelected"
                         Thumbnail="{x:Bind Thumbnail, Mode=OneWay}"
                         ViewModel="{x:Bind DownloadTask}" />
                 </DataTemplate>

@@ -29,6 +29,7 @@ using Microsoft.UI.Xaml.Media;
 using Pixeval.Download;
 using Pixeval.Util.UI;
 using Windows.System;
+using Pixeval.Controls.Card;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -51,8 +52,6 @@ public sealed partial class DownloadListEntry
         InitializeComponent();
     }
 
-    private bool IsSelected => ViewModel?.Selected ?? false;
-
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is DownloadListEntry entry && e.NewValue is ObservableDownloadTask value)
@@ -61,8 +60,6 @@ public sealed partial class DownloadListEntry
             ToolTipService.SetPlacement(entry, PlacementMode.Mouse);
         }
     }
-
-    public event EventHandler<bool>? Selected;
 
     private async void ActionButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
@@ -92,7 +89,7 @@ public sealed partial class DownloadListEntry
     private void RedownloadItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         ViewModel.Reset();
-        App.AppViewModel.DownloadManager.TryExecuteInline(ViewModel);
+        _ = App.AppViewModel.DownloadManager.TryExecuteInline(ViewModel);
     }
 
     private void CancelDownloadItem_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -124,15 +121,5 @@ public sealed partial class DownloadListEntry
     {
         await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, DownloadListEntryResources.ErrorMessageDialogTitle, ViewModel.ErrorCause!.ToString())
             .ShowAsync();
-    }
-
-    private Brush _lastBorderBrush = (Brush)Application.Current.Resources["SystemControlHighlightAccentBrush"];
-
-    private void RootCardControl_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        ViewModel.Selected = !ViewModel.Selected;
-        (_lastBorderBrush, RootCardControl.BorderBrush) = (RootCardControl.BorderBrush, _lastBorderBrush);
-        (RootCardControl.Margin, RootCardControl.BorderThickness) = (RootCardControl.BorderThickness, RootCardControl.Margin);
-        Selected?.Invoke(this, ViewModel.Selected);
     }
 }

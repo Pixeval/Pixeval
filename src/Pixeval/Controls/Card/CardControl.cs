@@ -18,6 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System;
+using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation.Peers;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -31,29 +33,71 @@ namespace Pixeval.Controls.Card;
 /// A CardControl can also be hosted within a SettingsExpander.
 /// </summary>
 [DependencyProperty<bool>("IsClickEnabled", "false", nameof(OnIsClickEnabledChanged))]
+[DependencyProperty<bool>("IsSelectEnabled", "false", nameof(OnIsSelectEnabledChanged))]
+[DependencyProperty<bool>("IsSelected", "false", nameof(OnIsSelectedChanged))]
 public partial class CardControl : ButtonBase
 {
+    public event TypedEventHandler<CardControl, CancellableEventArgs>? IsSelectedChanging;
+    public event TypedEventHandler<CardControl, EventArgs>? IsSelectedChanged;
+
     internal const string NormalState = "Normal";
     internal const string PointerOverState = "PointerOver";
     internal const string PressedState = "Pressed";
     internal const string DisabledState = "Disabled";
+    internal const string SelectedState = "Selected";
 
     /// <summary>
     /// Creates a new instance of the <see cref="CardControl"/> class.
     /// </summary>
-    public CardControl()
-    {
-        _ = DefaultStyleKey = typeof(CardControl);
-    }
+    public CardControl() => DefaultStyleKey = typeof(CardControl);
 
     private static void OnIsClickEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ((CardControl)d).OnIsClickEnabledPropertyChanged((bool)e.OldValue, (bool)e.NewValue);
     }
 
+    private static void OnIsSelectEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        ((CardControl)d).OnIsSelectEnabledPropertyChanged((bool)e.OldValue, (bool)e.NewValue);
+    }
+
+    private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        ((CardControl)d).OnIsSelectedPropertyChanged((bool)e.OldValue, (bool)e.NewValue);
+    }
+
+    private void OnIsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        ChangeSelectionState(IsEnabled ? NormalState : DisabledState);
+    }
+
     protected virtual void OnIsClickEnabledPropertyChanged(bool oldValue, bool newValue)
     {
-        OnIsClickEnabledChanged();
+        OnEnabledModeChanged();
+    }
+
+    protected virtual void OnIsSelectEnabledPropertyChanged(bool oldValue, bool newValue)
+    {
+        OnEnabledModeChanged();
+    }
+
+    protected virtual void OnIsSelectedPropertyChanged(bool oldValue, bool newValue)
+    {
+        ChangeSelectionState();
+    }
+
+    private bool IsOperationEnabled => IsClickEnabled || IsSelectEnabled;
+
+    private string _currentState = NormalState;
+
+    private void ChangeSelectionState(string? newState = null)
+    {
+        if (newState is not null)
+            _currentState = newState;
+        else
+            newState = _currentState;
+
+        _ = VisualStateManager.GoToState(this, newState + (IsSelected ? SelectedState : ""), true);
     }
 
     /// <inheritdoc />
@@ -61,40 +105,56 @@ public partial class CardControl : ButtonBase
     {
         base.OnApplyTemplate();
         IsEnabledChanged -= OnIsEnabledChanged;
-        OnIsClickEnabledChanged();
-        _ = VisualStateManager.GoToState(this, IsEnabled ? NormalState : DisabledState, true);
+        OnEnabledModeChanged();
+        ChangeSelectionState(IsEnabled ? NormalState : DisabledState);
         IsEnabledChanged += OnIsEnabledChanged;
     }
+
+    private bool _isInteractionEnabled;
 
     private void EnableButtonInteraction()
     {
         DisableButtonInteraction();
 
-        IsTabStop = true;
+        _isInteractionEnabled = IsTabStop = IsTapEnabled = true;
         PointerEntered += Control_PointerEntered;
         PointerExited += Control_PointerExited;
         PointerCaptureLost += Control_PointerCaptureLost;
         PointerCanceled += Control_PointerCanceled;
         PreviewKeyDown += Control_PreviewKeyDown;
-        PreviewKeyUp += Control_PreviewKeyUp;
+        Tapped += Control_Tapped;
     }
 
     private void DisableButtonInteraction()
     {
-        IsTabStop = false;
+        _isInteractionEnabled = IsTabStop = IsTapEnabled = false;
         PointerEntered -= Control_PointerEntered;
         PointerExited -= Control_PointerExited;
         PointerCaptureLost -= Control_PointerCaptureLost;
         PointerCanceled -= Control_PointerCanceled;
         PreviewKeyDown -= Control_PreviewKeyDown;
         PreviewKeyUp -= Control_PreviewKeyUp;
+        Tapped -= Control_Tapped;
+    }
+
+    private void Control_Tapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (IsSelectEnabled && IsEnabled)
+        {
+            var eventArgs = new CancellableEventArgs();
+            IsSelectedChanging?.Invoke(this, eventArgs);
+            if (eventArgs.Cancel)
+                return;
+            IsSelected = !IsSelected;
+            IsSelectedChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     private void Control_PreviewKeyUp(object sender, KeyRoutedEventArgs e)
     {
         if (e.Key is Windows.System.VirtualKey.Enter or Windows.System.VirtualKey.Space or Windows.System.VirtualKey.GamepadA)
         {
-            _ = VisualStateManager.GoToState(this, NormalState, true);
+            ChangeSelectionState(NormalState);
         }
     }
 
@@ -105,7 +165,7 @@ public partial class CardControl : ButtonBase
             // Check if the active focus is on the card itself - only then we show the pressed state.
             if (GetFocusedElement() is CardControl)
             {
-                _ = VisualStateManager.GoToState(this, PressedState, true);
+                ChangeSelectionState(PressedState);
             }
         }
     }
@@ -113,43 +173,43 @@ public partial class CardControl : ButtonBase
     public void Control_PointerEntered(object sender, PointerRoutedEventArgs e)
     {
         base.OnPointerEntered(e);
-        _ = VisualStateManager.GoToState(this, PointerOverState, true);
+        ChangeSelectionState(PointerOverState);
     }
 
     public void Control_PointerExited(object sender, PointerRoutedEventArgs e)
     {
         base.OnPointerExited(e);
-        _ = VisualStateManager.GoToState(this, NormalState, true);
+        ChangeSelectionState(NormalState);
     }
 
     private void Control_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
     {
         base.OnPointerCaptureLost(e);
-        _ = VisualStateManager.GoToState(this, NormalState, true);
+        ChangeSelectionState(NormalState);
     }
 
     private void Control_PointerCanceled(object sender, PointerRoutedEventArgs e)
     {
         base.OnPointerCanceled(e);
-        _ = VisualStateManager.GoToState(this, NormalState, true);
+        ChangeSelectionState(NormalState);
     }
 
     protected override void OnPointerPressed(PointerRoutedEventArgs e)
     {
         //  e.Handled = true;
-        if (IsClickEnabled)
+        if (IsOperationEnabled)
         {
             base.OnPointerPressed(e);
-            _ = VisualStateManager.GoToState(this, PressedState, true);
+            ChangeSelectionState(PressedState);
         }
     }
 
     protected override void OnPointerReleased(PointerRoutedEventArgs e)
     {
-        if (IsClickEnabled)
+        if (IsOperationEnabled)
         {
             base.OnPointerReleased(e);
-            _ = VisualStateManager.GoToState(this, NormalState, true);
+            ChangeSelectionState(NormalState);
         }
     }
 
@@ -157,16 +217,14 @@ public partial class CardControl : ButtonBase
     /// Creates AutomationPeer
     /// </summary>
     /// <returns>An automation peer for <see cref="CardControl"/>.</returns>
-    protected override AutomationPeer OnCreateAutomationPeer()
-    {
-        return new CardControlAutomationPeer(this);
-    }
+    protected override AutomationPeer OnCreateAutomationPeer() => new CardControlAutomationPeer(this);
 
-    private void OnIsClickEnabledChanged()
+    private void OnEnabledModeChanged()
     {
-        if (IsClickEnabled)
+        if (IsOperationEnabled)
         {
-            EnableButtonInteraction();
+            if (!_isInteractionEnabled)
+                EnableButtonInteraction();
         }
         else
         {
@@ -174,14 +232,9 @@ public partial class CardControl : ButtonBase
         }
     }
 
-    private void OnIsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
-    {
-        _ = VisualStateManager.GoToState(this, IsEnabled ? NormalState : DisabledState, true);
-    }
-
     private FrameworkElement? GetFocusedElement()
     {
-        return XamlRoot != null
+        return XamlRoot is not null
             ? FocusManager.GetFocusedElement(XamlRoot) as FrameworkElement
             : FocusManager.GetFocusedElement() as FrameworkElement;
     }

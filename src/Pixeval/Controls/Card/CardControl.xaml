@@ -17,9 +17,14 @@
             <StaticResource x:Key="CardControlBorderBrushPointerOver" ResourceKey="ControlElevationBorderBrush" />
             <StaticResource x:Key="CardControlBorderBrushPressed" ResourceKey="ControlStrokeColorDefaultBrush" />
             <StaticResource x:Key="CardControlBorderBrushDisabled" ResourceKey="ControlStrokeColorDefaultBrush" />
+            <StaticResource x:Key="CardControlBorderBrushSelected" ResourceKey="SystemControlHighlightListAccentHighBrush" />
+            <StaticResource x:Key="CardControlBorderBrushPointerOverSelected" ResourceKey="SystemControlHighlightAccentRevealBorderBrush" />
+            <StaticResource x:Key="CardControlBorderBrushPressedSelected" ResourceKey="SystemControlHighlightListAccentMediumBrush" />
+            <StaticResource x:Key="CardControlBorderBrushDisabledSelected" ResourceKey="SystemControlHighlightListAccentLowBrush" />
+
         </ResourceDictionary>
 
-        <ResourceDictionary x:Key="Light">
+        <!--<ResourceDictionary x:Key="Light">
             <StaticResource x:Key="CardControlBackground" ResourceKey="CardBackgroundFillColorDefaultBrush" />
             <StaticResource x:Key="CardControlBackgroundPointerOver" ResourceKey="ControlFillColorSecondaryBrush" />
             <StaticResource x:Key="CardControlBackgroundPressed" ResourceKey="ControlFillColorTertiaryBrush" />
@@ -29,23 +34,16 @@
             <StaticResource x:Key="CardControlBorderBrushPointerOver" ResourceKey="ControlElevationBorderBrush" />
             <StaticResource x:Key="CardControlBorderBrushPressed" ResourceKey="ControlStrokeColorDefaultBrush" />
             <StaticResource x:Key="CardControlBorderBrushDisabled" ResourceKey="ControlStrokeColorDefaultBrush" />
-        </ResourceDictionary>
-
-        <ResourceDictionary x:Key="HighContrast">
-            <StaticResource x:Key="CardControlBackground" ResourceKey="SystemColorButtonFaceColorBrush" />
-            <StaticResource x:Key="CardControlBackgroundPointerOver" ResourceKey="SystemColorHighlightTextColorBrush" />
-            <StaticResource x:Key="CardControlBackgroundPressed" ResourceKey="SystemColorHighlightTextColorBrush" />
-            <StaticResource x:Key="CardControlBackgroundDisabled" ResourceKey="SystemControlBackgroundBaseLowBrush" />
-
-            <StaticResource x:Key="CardControlBorderBrush" ResourceKey="SystemColorButtonTextColorBrush" />
-            <StaticResource x:Key="CardControlBorderBrushPointerOver" ResourceKey="SystemColorHighlightColorBrush" />
-            <StaticResource x:Key="CardControlBorderBrushPressed" ResourceKey="SystemColorHighlightTextColorBrush" />
-            <StaticResource x:Key="CardControlBorderBrushDisabled" ResourceKey="SystemControlDisabledTransparentBrush" />
-        </ResourceDictionary>
+            <StaticResource x:Key="CardControlBorderBrushSelected" ResourceKey="SystemControlHighlightListAccentHighBrush" />
+            <StaticResource x:Key="CardControlBorderBrushPointerOverSelected" ResourceKey="SystemControlHighlightAccentRevealBorderBrush" />
+            <StaticResource x:Key="CardControlBorderBrushPressedSelected" ResourceKey="SystemControlHighlightListAccentMediumBrush" />
+            <StaticResource x:Key="CardControlBorderBrushDisabledSelected" ResourceKey="SystemControlHighlightListAccentLowBrush" />
+        </ResourceDictionary>-->
 
     </ResourceDictionary.ThemeDictionaries>
-    <Thickness x:Key="CardControlBorderThickness">1</Thickness>
     <Thickness x:Key="CardControlPadding">16</Thickness>
+    <Thickness x:Key="CollapsedThickness">1</Thickness>
+    <Thickness x:Key="ExpandedThickness">2</Thickness>
     <x:Double x:Key="CardControlMinWidth">0</x:Double>
     <x:Double x:Key="CardControlMinHeight">0</x:Double>
 
@@ -54,8 +52,7 @@
     <Style x:Key="DefaultCardControlStyle" TargetType="card:CardControl">
         <Style.Setters>
             <Setter Property="Background" Value="{ThemeResource CardControlBackground}" />
-            <Setter Property="BorderBrush" Value="{ThemeResource CardControlBorderBrush}" />
-            <Setter Property="BorderThickness" Value="{ThemeResource CardControlBorderThickness}" />
+            <!--<Setter Property="BorderBrush" Value="{ThemeResource CardControlBorderBrush}" />-->
             <Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
             <Setter Property="MinHeight" Value="{ThemeResource CardControlMinHeight}" />
             <Setter Property="MinWidth" Value="{ThemeResource CardControlMinWidth}" />
@@ -97,7 +94,17 @@
 
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
-                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_RootGrid" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CardControlBorderBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                        <VisualState.Setters>
+                                            <Setter Target="PART_RootGrid.BorderThickness" Value="{ThemeResource CollapsedThickness}" />
+                                            <Setter Target="PART_RootGrid.Margin" Value="{ThemeResource ExpandedThickness}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
                                     <VisualState x:Name="PointerOver">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_RootGrid" Storyboard.TargetProperty="Background">
@@ -109,6 +116,8 @@
                                         </Storyboard>
                                         <VisualState.Setters>
                                             <Setter Target="PART_RootGrid.(muxc:AnimatedIcon.State)" Value="PointerOver" />
+                                            <Setter Target="PART_RootGrid.BorderThickness" Value="{ThemeResource CollapsedThickness}" />
+                                            <Setter Target="PART_RootGrid.Margin" Value="{ThemeResource ExpandedThickness}" />
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState x:Name="Pressed">
@@ -122,15 +131,95 @@
                                         </Storyboard>
                                         <VisualState.Setters>
                                             <Setter Target="PART_RootGrid.(muxc:AnimatedIcon.State)" Value="Pressed" />
+                                            <Setter Target="PART_RootGrid.BorderThickness" Value="{ThemeResource CollapsedThickness}" />
+                                            <Setter Target="PART_RootGrid.Margin" Value="{ThemeResource ExpandedThickness}" />
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_RootGrid" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CardControlBorderBrushDisabled}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
                                         <VisualState.Setters>
                                             <!--  DisabledVisual Should be handled by the control, not the animated icon.  -->
                                             <Setter Target="PART_RootGrid.(muxc:AnimatedIcon.State)" Value="Normal" />
+                                            <Setter Target="PART_RootGrid.BorderThickness" Value="{ThemeResource CollapsedThickness}" />
+                                            <Setter Target="PART_RootGrid.Margin" Value="{ThemeResource ExpandedThickness}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="NormalSelected">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_RootGrid" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CardControlBorderBrushSelected}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                        <VisualState.Setters>
+                                            <Setter Target="PART_RootGrid.BorderThickness" Value="{ThemeResource ExpandedThickness}" />
+                                            <Setter Target="PART_RootGrid.Margin" Value="{ThemeResource CollapsedThickness}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOverSelected">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_RootGrid" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CardControlBackgroundPointerOver}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_RootGrid" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CardControlBorderBrushPointerOverSelected}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                        <VisualState.Setters>
+                                            <Setter Target="PART_RootGrid.(muxc:AnimatedIcon.State)" Value="PointerOver" />
+                                            <Setter Target="PART_RootGrid.BorderThickness" Value="{ThemeResource ExpandedThickness}" />
+                                            <Setter Target="PART_RootGrid.Margin" Value="{ThemeResource CollapsedThickness}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="PressedSelected">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_RootGrid" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CardControlBackgroundPressed}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_RootGrid" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CardControlBorderBrushPressedSelected}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                        <VisualState.Setters>
+                                            <Setter Target="PART_RootGrid.(muxc:AnimatedIcon.State)" Value="Pressed" />
+                                            <Setter Target="PART_RootGrid.BorderThickness" Value="{ThemeResource ExpandedThickness}" />
+                                            <Setter Target="PART_RootGrid.Margin" Value="{ThemeResource CollapsedThickness}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="DisabledSelected">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_RootGrid" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CardControlBorderBrushDisabledSelected}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                        <VisualState.Setters>
+                                            <!--  DisabledVisual Should be handled by the control, not the animated icon.  -->
+                                            <Setter Target="PART_RootGrid.(muxc:AnimatedIcon.State)" Value="Normal" />
+                                            <Setter Target="PART_RootGrid.BorderThickness" Value="{ThemeResource ExpandedThickness}" />
+                                            <Setter Target="PART_RootGrid.Margin" Value="{ThemeResource CollapsedThickness}" />
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
+
+                                <!--VisualStateGroup x:Name="SelectionStates">
+                                    <VisualState x:Name="NotSelected">
+                                        <VisualState.Setters>
+                                            <Setter Target="PART_RootGrid.BorderThickness" Value="{ThemeResource CollapsedThickness}" />
+                                            <Setter Target="PART_RootGrid.Margin" Value="{ThemeResource ExpandedThickness}" />
+                                            <Setter Target="PART_RootGrid.BorderBrush" Value="{ThemeResource CardControlBorderBrush}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Target="PART_RootGrid.BorderThickness" Value="{ThemeResource ExpandedThickness}" />
+                                            <Setter Target="PART_RootGrid.Margin" Value="{ThemeResource CollapsedThickness}" />
+                                            <Setter Target="PART_RootGrid.BorderBrush" Value="{ThemeResource CardControlBorderBrushSelected}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>-->
 
                                 <!--  Collapsing the Content presenter whenever it's empty  -->
                                 <VisualStateGroup x:Name="ContentVisibilityStates">

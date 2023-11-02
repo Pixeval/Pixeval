@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -57,8 +57,8 @@ public partial class DownloadListPageViewModel : ObservableObject
     {
         downloadTasks.Reverse();
         _downloadTasks = downloadTasks;
-        _filteredTasks = new ObservableCollection<IDownloadTask>();
-        _downloadTasksView = new AdvancedCollectionView(downloadTasks);
+        _filteredTasks = new();
+        _downloadTasksView = new(downloadTasks);
         _selectionLabel = DownloadListPageResources.CancelSelectionButtonDefaultLabel;
     }
 
@@ -67,7 +67,7 @@ public partial class DownloadListPageViewModel : ObservableObject
     public void UpdateSelection()
     {
         var count = SelectedTasks.Count();
-        SelectionLabel = count == 0
+        SelectionLabel = count is 0
             ? DownloadListPageResources.CancelSelectionButtonDefaultLabel
             : DownloadListPageResources.CancelSelectionButtonFormatted.Format(count);
         IsAnyEntrySelected = count != 0;

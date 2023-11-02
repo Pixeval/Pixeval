@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -24,6 +24,7 @@ using System.Linq;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls.Card;
 using Pixeval.Dialogs;
 using Pixeval.Download;
 using Pixeval.Util.IO;
@@ -144,7 +145,7 @@ public sealed partial class DownloadListPage
         _viewModel.UpdateSelection();
     }
 
-    private void DownloadListEntry_OnSelected(object? sender, bool e)
+    private void DownloadListEntry_OnSelected(CardControl cardControl, EventArgs args)
     {
         _viewModel.UpdateSelection();
     }
