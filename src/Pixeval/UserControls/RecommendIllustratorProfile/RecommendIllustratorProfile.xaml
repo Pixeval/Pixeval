@@ -2,14 +2,14 @@
     x:Class="Pixeval.UserControls.RecommendIllustratorProfile.RecommendIllustratorProfile"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:card="using:Pixeval.Controls.Card"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:premiumUserBadge="using:Pixeval.Controls.PremiumUserBadge"
+    xmlns:controls="using:Pixeval.Controls"
     Loaded="RecommendIllustratorProfile_OnLoaded"
     mc:Ignorable="d">
 
-    <card:CardControl Width="300" Padding="0">
+    <controls:CardControl Width="300" Padding="0">
         <StackPanel>
             <Border Height="100" CornerRadius="{StaticResource ControlTopCornerRadius}">
                 <StackPanel
@@ -62,5 +62,5 @@
                 </Button>
             </Grid>
         </StackPanel>
-    </card:CardControl>
+    </controls:CardControl>
 </UserControl>

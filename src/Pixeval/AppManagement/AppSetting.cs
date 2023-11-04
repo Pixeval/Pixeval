@@ -22,17 +22,19 @@ using System;
 using System.Globalization;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Attributes;
+using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Preference;
 using Pixeval.Misc;
 using Pixeval.Options;
+using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.AppManagement;
 
 [GenerateConstructor, SettingPOCO]
-public partial record AppSetting
+public partial record AppSetting : IWindowSettings
 {
 #pragma warning disable CS8618
     public AppSetting()
@@ -247,17 +249,20 @@ public partial record AppSetting
     [SyntheticSetting]
     public bool ShowExternalCommandBarInIllustratorContentViewer { get; set; }
 
-    [DefaultValue(AppBackdropType.Mica)]
+    [DefaultValue(BackdropType.MicaAlt)]
     [SettingMetadata(SettingEntryCategory.Application, typeof(SettingsPageResources), nameof(SettingsPageResources.BackdropEntryHeader))]
-    public AppBackdropType AppBackdrop { get; set; }
+    public BackdropType Backdrop { get; set; }
+
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
+    public string IconAbsolutePath { get; set; }
 
     public static AppSetting CreateDefault()
     {
-        return new AppSetting();
+        return new();
     }
 
     public MakoClientConfiguration ToMakoClientConfiguration()
     {
-        return new MakoClientConfiguration(5000, !DisableDomainFronting, MirrorHost, CultureInfo.CurrentUICulture);
+        return new(5000, !DisableDomainFronting, MirrorHost, CultureInfo.CurrentUICulture);
     }
 }

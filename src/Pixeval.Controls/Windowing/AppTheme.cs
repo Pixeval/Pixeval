@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/ISupportCustomTitleBarDragRegion.cs
+// Copyright (c) 2022 Pixeval/ApplicationTheme.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,13 +18,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-namespace Pixeval;
+namespace Pixeval.Controls.Windowing;
 
-public interface ISupportCustomTitleBarDragRegion
+public enum AppTheme
 {
-    /// <summary>
-    /// Informs the bearer to refresh the drag region.
-    /// </summary>
-    /// <returns></returns>
-    void SetTitleBarDragRegion();
+    Dark,
+
+    Light,
+
+    SystemDefault
 }

@@ -1573,6 +1573,16 @@
           "System.Xml.ReaderWriter": "4.3.0"
         }
       },
+      "pixeval.controls": {
+        "type": "Project",
+        "dependencies": {
+          "CommunityToolkit.Mvvm": "[8.2.1, )",
+          "Microsoft.Graphics.Win2D": "[1.0.5.1, )",
+          "Microsoft.Windows.SDK.BuildTools": "[10.0.25206-preview, )",
+          "Microsoft.WindowsAppSDK": "[1.4.230518007-experimental1, )",
+          "WinUI3Utilities": "[1.1.4.3, )"
+        }
+      },
       "pixeval.coreapi": {
         "type": "Project",
         "dependencies": {

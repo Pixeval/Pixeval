@@ -25,7 +25,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
-namespace Pixeval.Util.UI.Windowing;
+namespace Pixeval.Controls.Windowing;
 
 [WindowSizeHelper]
 public sealed partial class EnhancedWindow : Window

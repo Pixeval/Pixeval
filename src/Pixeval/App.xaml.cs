@@ -27,10 +27,9 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
 using Pixeval.AppManagement;
-using Pixeval.Controls;
+using Pixeval.Controls.Windowing;
 using Pixeval.Messages;
 using Pixeval.Pages.Login;
-using Pixeval.Util.UI.Windowing;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
@@ -44,6 +43,7 @@ public partial class App
     {
         // The theme can only be changed in ctor
         AppViewModel = new(this) { AppSetting = AppContext.LoadConfiguration() ?? AppSetting.CreateDefault() };
+        WindowFactory.WindowSettings = AppViewModel.AppSetting;
         AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);
         InitializeComponent();
     }

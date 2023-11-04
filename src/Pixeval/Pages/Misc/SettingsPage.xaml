@@ -185,12 +185,12 @@
                     <labs:SettingsExpander
                         x:Uid="/SettingsPage/BackdropEntry"
                         HeaderIcon="{markup:FontIcon Glyph=ColorE790}"
-                        Tag="{x:Bind pixeval:SettingEntry.AppBackdrop}">
+                        Tag="{x:Bind pixeval:SettingEntry.Backdrop}">
                         <labs:SettingsExpander.Items>
                             <labs:SettingsCard ContentAlignment="Left">
                                 <radio:SettingRadioButtons
                                     ItemsSource="{x:Bind model:ApplicationBackdropSettingEntryItem.AvailableItems}"
-                                    SelectedItem="{x:Bind _viewModel.AppBackdrop, Mode=TwoWay}"
+                                    SelectedItem="{x:Bind _viewModel.Backdrop, Mode=TwoWay}"
                                     SelectionChanged="Backdrop_OnSelectionChanged" />
                             </labs:SettingsCard>
                         </labs:SettingsExpander.Items>

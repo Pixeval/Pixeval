@@ -1,9 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval
-
+#region Copyright (c) Pixeval/Pixeval.Controls
 // GPL v3 License
 // 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/CancellableEventArgs.cs
+// Pixeval/Pixeval.Controls
+// Copyright (c) 2023 Pixeval.Controls/IWindowSetting.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,14 +16,17 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #endregion
 
-using System;
+using WinUI3Utilities;
 
-namespace Pixeval.Controls.Card;
+namespace Pixeval.Controls.Windowing;
 
-public class CancellableEventArgs : EventArgs
+public interface IWindowSettings
 {
-    public bool Cancel { get; set; }
+    public BackdropType Backdrop { get; }
+
+    public AppTheme Theme { get; }
+
+    public string IconAbsolutePath { get; }
 }

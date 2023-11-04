@@ -21,13 +21,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Pixeval.Options;
+using Pixeval.Controls.Windowing;
 
 namespace Pixeval.UserControls.Setting.UI.Model;
 
 public record ApplicationThemeSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public ApplicationThemeSettingEntryItem(AppTheme item) : base(item)
+    public ApplicationThemeSettingEntryItem(AppTheme item) : base(item, item switch
+    {
+        AppTheme.Dark => MiscResources.AppThemeDark,
+        AppTheme.Light => MiscResources.AppThemeLight,
+        AppTheme.SystemDefault => MiscResources.AppThemeSystemDefault,
+        _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
+    })
     {
     }
 

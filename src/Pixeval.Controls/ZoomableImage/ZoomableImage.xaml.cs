@@ -1,22 +1,22 @@
 using System;
-using Microsoft.UI.Input;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage.Streams;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI;
 using Microsoft.Graphics.Canvas.UI.Xaml;
+using Microsoft.UI;
+using Microsoft.UI.Input;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
-using System.Collections.Generic;
-using Microsoft.UI;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Pixeval.UserControls;
+namespace Pixeval.Controls;
 
 [DependencyProperty<IEnumerable<IRandomAccessStream>>("Sources", DependencyPropertyDefaultValue.Default, nameof(OnSourcesChanged))]
 [DependencyProperty<List<int>>("MsIntervals", DependencyPropertyDefaultValue.Default, nameof(OnMsIntervalsChanged))]
@@ -37,6 +37,7 @@ public sealed partial class ZoomableImage : UserControl
 
         _ = Task.Run(Func, _token.Token);
         ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeAll);
+        return;
 
         async Task Func()
         {
@@ -113,7 +114,7 @@ public sealed partial class ZoomableImage : UserControl
             if (Sources is null)
                 return;
             foreach (var source in Sources)
-                _frames.Add(await CanvasBitmap.LoadAsync(sender, source));
+                _frames.Add(await CanvasBitmap.LoadAsync((ICanvasResourceCreator)sender, (IRandomAccessStream)source));
             _timerRunning = true;
             _ = ManualResetEvent.Set();
         }
@@ -157,7 +158,7 @@ public sealed partial class ZoomableImage : UserControl
     {
         CanvasRectangleGeometry.Rect = new(0, 0, Canvas.ActualWidth, Canvas.ActualHeight);
         ScaledFactor = GetImageScaledFactor();
-        OnImageScaleChanged(this, ImageScale);
+        OnImageScaleChanged(this, (float)ImageScale);
     }
 
     private static void OnImageScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
+        <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+        <RootNamespace>Pixeval.Controls</RootNamespace>
+        <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+        <UseWinUI>true</UseWinUI>
+        <Nullable>Enable</Nullable>
+        <DefaultLanguage>zh-Hans</DefaultLanguage>
+        <LangVersion>preview</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Remove="CardControl\CardControl.xaml" />
+        <None Remove="ZoomableImage.xaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!--<PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.0.230907" PrivateAssets="all" />-->
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+        <PackageReference Include="WinUI3Utilities" Version="1.1.4.3" />
+        <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.5.1" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.25206-preview" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230518007-experimental1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Page Update="Card\CardControl.xaml">
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
+        <Page Update="ZoomableImage.xaml">
+          <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+          <SubType>Designer</SubType>
+        </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="ZoomableImage\" />
+    </ItemGroup>
+</Project>

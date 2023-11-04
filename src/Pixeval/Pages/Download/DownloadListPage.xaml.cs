@@ -24,13 +24,14 @@ using System.Linq;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Controls.Card;
+using Pixeval.Controls;
 using Pixeval.Dialogs;
 using Pixeval.Download;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.Download;
 
@@ -39,14 +40,18 @@ public sealed partial class DownloadListPage
     private bool _queriedBySuggestion;
     private DownloadListPageViewModel _viewModel = null!;
 
-    public DownloadListPage()
-    {
-        InitializeComponent();
-    }
+    public DownloadListPage() => InitializeComponent();
 
-    public override void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        _viewModel = new DownloadListPageViewModel(((IEnumerable<ObservableDownloadTask>)e.Parameter).Select(o => new DownloadListEntryViewModel(o)).ToList());
+        var Task = async () =>
+        {
+            var list = new List<DownloadListEntryViewModel>();
+            foreach (var o in parameter.To<IEnumerable<ObservableDownloadTask>>())
+                list.Add(new(o, await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(o.Id!)));
+            _viewModel = new(list);
+        };
+        Task().GetAwaiter().GetResult();
     }
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
@@ -80,7 +85,8 @@ public sealed partial class DownloadListPage
     private async void ClearDownloadListButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         var dialogContent = new DownloadListPageDeleteTasksDialog();
-        var dialog = MessageDialogBuilder.Create().WithTitle(DownloadListPageResources.DeleteDownloadHistoryRecordsFormatted.Format(_viewModel.SelectedTasks.Count()))
+        var dialog = MessageDialogBuilder.Create()
+            .WithTitle(DownloadListPageResources.DeleteDownloadHistoryRecordsFormatted.Format(_viewModel.SelectedTasks.Count()))
             .WithContent(dialogContent)
             .WithPrimaryButtonText(MessageContentDialogResources.OkButtonContent)
             .WithCloseButtonText(MessageContentDialogResources.CancelButtonContent)
@@ -148,5 +154,73 @@ public sealed partial class DownloadListPage
     private void DownloadListEntry_OnSelected(CardControl cardControl, EventArgs args)
     {
         _viewModel.UpdateSelection();
+    }
+
+    private void DownloadListEntry_OnOpenIllustrationRequested(DownloadListEntry sender, ObservableDownloadTask viewModel)
+    {
+        switch (viewModel)
+        {
+            //  _viewModel.DownloadTasks[0].Thumbnail
+            //case IIllustrationViewModelProvider provider:
+            //{
+            //    .
+            //    OpenIllustrationRequested
+            //        (await provider.GetViewModelAsync()).var viewModels = (await provider.GetViewModelAsync())
+            //        .GetMangaIllustrationViewModels()
+            //        .ToArray();
+
+            //    // ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
+            //    // todo UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
+
+
+            //    var (width, height) = DetermineWindowSize(vm.Illustrate.Width,
+            //        vm.Illustrate.Width / (double)vm.Illustrate.Height);
+
+            //    var index = _viewModel.DownloadTasks.IndexOf(sender.GetDataContext<DownloadListEntryViewModel>());
+
+            //    WindowFactory.RootWindow.Fork(out var w)
+            //        .WithLoaded((o, _) => o.To<Frame>().NavigateTo<IllustrationViewerPage>(w,
+            //            new IllustrationViewerPageViewModel(_viewModel, index),
+            //            new SuppressNavigationTransitionInfo()))
+            //        .WithSizeLimit(640, 360)
+            //        .Init(vm.Illustrate.Title ?? "", new(width, height))
+            //        .Activate();
+
+            //    static (int windowWidth, int windowHeight) DetermineWindowSize(int illustWidth, double illustRatio)
+            //    {
+            //        /*
+            //        var windowHandle = User32.MonitorFromWindow((nint)CurrentContext.HWnd, User32.MonitorOptions.MONITOR_DEFAULTTONEAREST);
+            //        User32.GetMonitorInfo(windowHandle, out var monitorInfoEx);
+            //        var devMode = DEVMODE.Create();
+            //        while (!User32.EnumDisplaySettings(
+            //                   monitorInfoEx.DeviceName,
+            //                   User32.ENUM_CURRENT_SETTINGS,
+            //                   &devMode))
+            //        { }
+
+            //        var monitorWidth = devMode.dmPelsWidth;
+            //        var monitorHeight = devMode.dmPelsHeight;
+            //        */
+
+            //        var (monitorWidth, monitorHeight) = WindowHelper.GetScreenSize();
+
+            //        var determinedWidth = illustWidth switch
+            //        {
+            //            not 1500 => 1500 + Random.Shared.Next(0, 200),
+            //            _ => 1500
+            //        };
+            //        var windowWidth = determinedWidth > monitorWidth ? (int)monitorWidth - 100 : determinedWidth;
+            //        // 51 is determined through calculation, it is the height of the title bar
+            //        var windowHeight =
+            //            windowWidth / illustRatio + 51 is var height &&
+            //            height > monitorHeight - 80 // 80: estimated working area height
+            //                ? monitorHeight - 100
+            //                : height;
+            //        return (windowWidth, (int)windowHeight);
+            //    }
+
+            //    break;
+            //}
+        }
     }
 }

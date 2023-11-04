@@ -26,7 +26,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using WinUI3Utilities.Attributes;
 
-namespace Pixeval.Controls.Card;
+namespace Pixeval.Controls;
 
 /// <summary>
 /// This is the base control to create consistent settings experiences, inline with the Windows 11 design language.

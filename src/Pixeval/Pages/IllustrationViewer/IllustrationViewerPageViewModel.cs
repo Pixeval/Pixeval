@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
@@ -33,7 +34,6 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.CoreApi.Model;
 using Pixeval.Download;
-using Pixeval.UserControls;
 using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util;
 using Pixeval.Util.IO;
@@ -41,6 +41,7 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.System;
 using Windows.System.UserProfile;
+using Pixeval.Controls;
 using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util.Threading;
@@ -108,7 +109,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     #region Current
 
-    public ImmutableArray<IllustrationViewModel> Illustrations => ViewModel.DataProvider.View.Cast<IllustrationViewModel>().ToImmutableArray();
+    public ImmutableArray<IllustrationViewModel> Illustrations => ViewModelSource?.DataProvider.View.Cast<IllustrationViewModel>().ToImmutableArray() ?? IllustrationsSource!.Value;
 
     public IllustrationViewModel CurrentIllustration => Illustrations[CurrentIllustrationIndex];
 
@@ -184,18 +185,30 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     #endregion
 
-    public IllustrationViewViewModel ViewModel { get; }
+    public IllustrationViewViewModel? ViewModelSource { get; }
+
+    public ImmutableArray<IllustrationViewModel>? IllustrationsSource { get; }
+
+    public IllustrationViewerPageViewModel(IEnumerable<IllustrationViewModel> illustrationViewModels, int currentIllustrationIndex)
+    {
+        IllustrationsSource = illustrationViewModels.ToImmutableArray();
+        IllustrationInfoTag.Parameter = this;
+        // ViewModel.DataProvider.View.CurrentItem为null，而且只设置这个属性会导致空引用
+        CurrentIllustrationIndex = currentIllustrationIndex;
+
+        InitializeCommands();
+    }
 
     // illustrations should contains only one item if the illustration is a single
     // otherwise it contains the entire manga data
     public IllustrationViewerPageViewModel(IllustrationViewViewModel viewModel, int currentIllustrationIndex)
     {
-        ViewModel = new(viewModel);
+        ViewModelSource = new(viewModel);
         IllustrationInfoTag.Parameter = this;
-        ViewModel.DataProvider.FilterChanged += (_, _) => CurrentIllustrationIndex = Illustrations.IndexOf(CurrentIllustration);
+        ViewModelSource.DataProvider.FilterChanged += (_, _) => CurrentIllustrationIndex = Illustrations.IndexOf(CurrentIllustration);
         // ViewModel.DataProvider.View.CurrentItem为null，而且只设置这个属性会导致空引用
         CurrentIllustrationIndex = currentIllustrationIndex;
-        
+
         InitializeCommands();
     }
 
@@ -528,10 +541,16 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     public void Dispose()
     {
-        foreach (var illustrationViewModel in ViewModel.DataProvider.Source)
-            illustrationViewModel.UnloadThumbnail(this, ThumbnailUrlOption.SquareMedium);
+        if (ViewModelSource is not null)
+            foreach (var illustrationViewModel in ViewModelSource.DataProvider.Source)
+                illustrationViewModel.UnloadThumbnail(this, ThumbnailUrlOption.SquareMedium);
+        else
+        {
+            foreach (var illustrationViewModel in IllustrationsSource!.Value)
+                illustrationViewModel.UnloadThumbnail(this, ThumbnailUrlOption.SquareMedium);
+        }
         _pages?.ForEach(i => i.Dispose());
         (UserProfileImageSource as SoftwareBitmapSource)?.Dispose();
-        ViewModel.Dispose();
+        ViewModelSource?.Dispose();
     }
 }

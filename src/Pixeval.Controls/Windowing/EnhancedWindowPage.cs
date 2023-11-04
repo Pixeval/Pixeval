@@ -23,10 +23,9 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.Util.UI.Windowing;
 using WinUI3Utilities;
 
-namespace Pixeval.Controls;
+namespace Pixeval.Controls.Windowing;
 
 public static class EnhancedWindowPageExtension
 {
@@ -36,9 +35,9 @@ public static class EnhancedWindowPageExtension
     }
 }
 
-public record NavigateParameter(object? Parameter, EnhancedWindow Window);
+file record NavigateParameter(object? Parameter, EnhancedWindow Window);
 
-public class EnhancedWindowPage : Page, IEnhancedPage
+public class EnhancedWindowPage : Page
 {
     protected EnhancedWindow Window { get; private set; } = null!;
 

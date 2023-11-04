@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -39,8 +39,8 @@ public partial class ObservableDownloadTask : ObservableObject, IDownloadTask
     protected ObservableDownloadTask(DownloadHistoryEntry entry)
     {
         DatabaseEntry = entry;
-        CancellationHandle = new CancellationHandle();
-        Completion = new TaskCompletionSource();
+        CancellationHandle = new();
+        Completion = new();
     }
 
     public DownloadHistoryEntry DatabaseEntry { get; }

@@ -25,13 +25,13 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
 using Pixeval.UserControls.Setting.UI;
 using Pixeval.UserControls.TokenInput;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
-using Pixeval.Util.UI.Windowing;
 using Pixeval.Utilities;
 using Windows.System;
 using WinUI3Utilities;
@@ -77,7 +77,7 @@ public sealed partial class SettingsPage
 
     private void Backdrop_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        WindowFactory.SetBackdrop(_viewModel.AppBackdrop);
+        WindowFactory.SetBackdrop(_viewModel.Backdrop);
     }
 
     private async void ThemeEntryDescriptionHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)

@@ -37,6 +37,7 @@ using Pixeval.Utilities;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Graphics;
 using Windows.Storage.Streams;
+using Pixeval.Controls.Windowing;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 

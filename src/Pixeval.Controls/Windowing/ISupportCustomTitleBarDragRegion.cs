@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/ApplicationBackdropType.cs
+// Copyright (c) 2023 Pixeval/ISupportCustomTitleBarDragRegion.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,21 +18,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Attributes;
 
-namespace Pixeval.Options;
+namespace Pixeval.Controls.Windowing;
 
-public enum AppBackdropType
+public interface ISupportCustomTitleBarDragRegion
 {
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.NoneBackdrop))]
-    None,
-
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.AcrylicBackdrop))]
-    Acrylic,
-
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.MicaBackdrop))]
-    Mica,
-
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.MicaAltBackdrop))]
-    MicaAlt
+    /// <summary>
+    /// Informs the bearer to refresh the drag region.
+    /// </summary>
+    /// <returns></returns>
+    void SetTitleBarDragRegion();
 }

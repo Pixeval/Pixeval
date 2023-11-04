@@ -1,4 +1,4 @@
-<controls:EnhancedWindowPage
+<windowing:EnhancedWindowPage
     x:Class="Pixeval.Pages.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,8 +9,9 @@
     xmlns:pages="using:Pixeval.Pages"
     xmlns:utilities="using:WinUI3Utilities"
     xmlns:markup="using:Pixeval.Util.MarkupExtensions"
+    xmlns:windowing="using:Pixeval.Controls.Windowing"
     mc:Ignorable="d">
-    <controls:EnhancedWindowPage.Resources>
+    <windowing:EnhancedWindowPage.Resources>
         <DataTemplate x:Key="IllustrationHeaderSuggestionTemplate">
             <TextBlock
                 x:Uid="/MainPage/IllustrationHeaderSuggestionTextBlock"
@@ -81,7 +82,7 @@
             IllustrationHeader="{StaticResource IllustrationHeaderSuggestionTemplate}"
             NovelHeader="{StaticResource NovelHeaderSuggestionTemplate}"
             SettingEntryHeader="{StaticResource SettingsEntryHeaderSuggestionTemplate}" />
-    </controls:EnhancedWindowPage.Resources>
+    </windowing:EnhancedWindowPage.Resources>
     <Grid>
         <NavigationView
             x:Name="MainPageRootNavigationView"
@@ -280,4 +281,4 @@
             </Grid>
         </Grid>
     </Grid>
-</controls:EnhancedWindowPage>
+</windowing:EnhancedWindowPage>

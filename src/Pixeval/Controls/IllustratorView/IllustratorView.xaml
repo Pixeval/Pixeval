@@ -1,14 +1,14 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:card="using:Pixeval.Controls.Card"
     xmlns:local="using:Pixeval.Controls.IllustratorView"
-    xmlns:markup="using:Pixeval.Util.MarkupExtensions">
+    xmlns:markup="using:Pixeval.Util.MarkupExtensions"
+    xmlns:controls="using:Pixeval.Controls">
     <Style TargetType="local:IllustratorView">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:IllustratorView">
-                    <card:CardControl
+                    <controls:CardControl
                         x:Name="ContentContainer"
                         Height="80"
                         HorizontalAlignment="Stretch">
@@ -68,7 +68,7 @@
                                 VerticalAlignment="Stretch"
                                 Icon="{markup:FontIcon Glyph=ForwardE72A}" />
                         </Grid>
-                    </card:CardControl>
+                    </controls:CardControl>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

@@ -27,9 +27,6 @@
         <!--此处写多个警告就会导致WMC1501失效，所以其他警告写到.editorconfig里面了-->
         <NoWarn>$(NoWarn);WMC1501</NoWarn>
     </PropertyGroup>
-    <ItemGroup>
-      <None Remove="UserControls\ZoomableImage.xaml" />
-    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Labs.WinUI.SettingsControls" Version="0.0.18" />
@@ -62,6 +59,7 @@
         <PackageReference Include="WinUI3Utilities" Version="1.1.4.3" />
         <PackageReference Include="WinUIEx" Version="2.2.0" />
 
+        <ProjectReference Include="..\Pixeval.Controls\Pixeval.Controls.csproj" />
         <ProjectReference Include="..\Pixeval.CoreApi\Pixeval.CoreApi.csproj" />
         <ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
         <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
@@ -318,9 +316,6 @@
         <Page Update="Flyouts\IllustrationResultFilter\IllustrationResultFilterContent.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Controls\Card\CardControl.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
         <Page Update="Themes\Generic.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
@@ -376,9 +371,6 @@
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Folder Include="UserControls\RecommendIllustratorProfile\" />
-        <Page Update="UserControls\ZoomableImage.xaml">
-          <Generator>MSBuild:Compile</Generator>
-        </Page>
         <Page Update="UserControls\Setting.UI\SettingRadioButtons.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>

@@ -55,6 +55,7 @@ using Windows.Graphics;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
+using Pixeval.Controls.Windowing;
 using WinUI3Utilities;
 using Image = SixLabors.ImageSharp.Image;
 
@@ -132,7 +133,7 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
         // args.SelectedItem may be null here
         if (Equals(args.SelectedItem, DownloadListTab))
         {
-            MainPageRootFrame.Navigate(typeof(DownloadListPage), App.AppViewModel.DownloadManager.QueuedTasks.Where(task => task is not IIntrinsicDownloadTask));
+            Navigate<DownloadListPage>(MainPageRootFrame, App.AppViewModel.DownloadManager.QueuedTasks.Where(task => task is not IIntrinsicDownloadTask));
             return;
         }
 

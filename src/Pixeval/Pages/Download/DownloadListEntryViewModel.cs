@@ -20,45 +20,18 @@
 
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.CoreApi.Net;
+using Pixeval.CoreApi.Model;
 using Pixeval.Download;
-using Pixeval.Util.IO;
+using Pixeval.UserControls.IllustrationView;
 using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Download;
 
-public partial class DownloadListEntryViewModel : ObservableObject, IDisposable
+public partial class DownloadListEntryViewModel(ObservableDownloadTask downloadTask, Illustration illustration)
+    : IllustrationViewModel(illustration)
 {
     [ObservableProperty]
-    private ObservableDownloadTask _downloadTask;
-
-    [ObservableProperty]
-    private BitmapImage? _thumbnail;
-
-    public DownloadListEntryViewModel(ObservableDownloadTask downloadTask)
-    {
-        _downloadTask = downloadTask;
-        LoadThumbnail();
-    }
-
-    public void Dispose()
-    {
-        _thumbnail = null;
-    }
-
-    public async void LoadThumbnail()
-    {
-        if (DownloadTask.Thumbnail is { } url)
-        {
-            var stream = (await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(url))
-                .GetOrElse(null);
-            if (stream is not null)
-            {
-                Thumbnail = await stream.GetBitmapImageAsync(true, 50);
-            }
-        }
-    }
+    private ObservableDownloadTask _downloadTask = downloadTask;
 
     public static string GetEntryProgressMessage(DownloadState currentState, double progress, Exception? errorCause)
     {

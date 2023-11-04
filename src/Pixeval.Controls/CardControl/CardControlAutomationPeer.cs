@@ -20,7 +20,7 @@
 
 using Microsoft.UI.Xaml.Automation.Peers;
 
-namespace Pixeval.Controls.Card;
+namespace Pixeval.Controls;
 
 /// <summary>
 /// AutomationPeer for CardControl

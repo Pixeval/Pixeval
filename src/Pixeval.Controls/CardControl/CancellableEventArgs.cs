@@ -1,8 +1,9 @@
 #region Copyright (c) Pixeval/Pixeval
+
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/ApplicationTheme.cs
+// Copyright (c) 2023 Pixeval/CancellableEventArgs.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,20 +17,14 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #endregion
 
-using Pixeval.Attributes;
+using System;
 
-namespace Pixeval.Options;
+namespace Pixeval.Controls;
 
-public enum AppTheme
+public class CancellableEventArgs : EventArgs
 {
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.AppThemeDark))]
-    Dark,
-
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.AppThemeLight))]
-    Light,
-
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.AppThemeSystemDefault))]
-    SystemDefault
+    public bool Cancel { get; set; }
 }

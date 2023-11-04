@@ -55,14 +55,6 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
 {
     private bool _isSelected;
 
-    public ImmutableDictionary<ThumbnailUrlOption, SoftwareBitmapSource> ThumbnailSources => ThumbnailSourcesRef.ToImmutableDictionary(pair => pair.Key, pair => pair.Value.Value);
-
-    public IReadOnlyDictionary<ThumbnailUrlOption, IRandomAccessStream> ThumbnailStreams => ThumbnailStreamsRef;
-
-    private Dictionary<ThumbnailUrlOption, IRandomAccessStream> ThumbnailStreamsRef { get; } = new();
-
-    private Dictionary<ThumbnailUrlOption, SharedRef<SoftwareBitmapSource>> ThumbnailSourcesRef { get; } = new();
-
     public int MangaIndex { get; set; }
 
     public bool IsRestricted => Illustrate.IsRestricted();
@@ -103,10 +95,6 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
 
     public event EventHandler<IllustrationViewModel>? IsSelectedChanged;
 
-    public CancellationHandle LoadingThumbnailCancellationHandle { get; } = new CancellationHandle();
-
-    public bool LoadingThumbnail { get; private set; }
-
     public bool IsUgoira => Illustrate.IsUgoira();
 
     /// <summary>
@@ -138,6 +126,29 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
             MangaIndex = i
         });
     }
+
+    #region Thumbnail
+
+    /// <summary>
+    /// 缩略图图片
+    /// </summary>
+    public ImmutableDictionary<ThumbnailUrlOption, SoftwareBitmapSource> ThumbnailSources => ThumbnailSourcesRef.ToImmutableDictionary(pair => pair.Key, pair => pair.Value.Value);
+
+    /// <summary>
+    /// 缩略图流
+    /// </summary>
+    public IReadOnlyDictionary<ThumbnailUrlOption, IRandomAccessStream> ThumbnailStreams => ThumbnailStreamsRef;
+
+    private Dictionary<ThumbnailUrlOption, IRandomAccessStream> ThumbnailStreamsRef { get; } = new();
+
+    private Dictionary<ThumbnailUrlOption, SharedRef<SoftwareBitmapSource>> ThumbnailSourcesRef { get; } = new();
+
+    private CancellationHandle LoadingThumbnailCancellationHandle { get; } = new();
+
+    /// <summary>
+    /// 是否正在加载缩略图
+    /// </summary>
+    private bool LoadingThumbnail { get; set; }
 
     /// <summary>
     /// 当控件需要显示图片时，调用此方法加载缩略图
@@ -207,7 +218,7 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
             return;
 
         ThumbnailStreamsRef[thumbnailUrlOption]?.Dispose();
-        ThumbnailStreamsRef.Remove(thumbnailUrlOption);
+        _ = ThumbnailStreamsRef.Remove(thumbnailUrlOption);
         _ = ThumbnailSourcesRef.Remove(thumbnailUrlOption);
         OnPropertyChanged(nameof(ThumbnailSources));
     }
@@ -228,6 +239,8 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
 
         return await AppContext.GetNotAvailableImageStreamAsync();
     }
+
+    #endregion
 
     public Task SwitchBookmarkStateAsync()
     {

@@ -22,16 +22,16 @@ using System.Collections.Generic;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.Options;
 using Windows.Foundation;
 using Windows.Graphics;
-using Pixeval.AppManagement;
 using WinUI3Utilities;
 
-namespace Pixeval.Util.UI.Windowing;
+namespace Pixeval.Controls.Windowing;
 
 public static class WindowFactory
 {
+    public static IWindowSettings WindowSettings { get; set; } = null!;
+
     public static EnhancedWindow RootWindow => _forkedWindowsInternal[0];
 
     private static readonly List<EnhancedWindow> _forkedWindowsInternal = new();
@@ -85,38 +85,29 @@ public static class WindowFactory
     {
         window.Initialize(new()
         {
-            BackdropType = App.AppViewModel.AppSetting.AppBackdrop switch
-            {
-                AppBackdropType.None => BackdropType.None,
-                AppBackdropType.Acrylic => BackdropType.Acrylic,
-                AppBackdropType.Mica => BackdropType.Mica,
-                AppBackdropType.MicaAlt => BackdropType.MicaAlt,
-                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<AppBackdropType, BackdropType>(App.AppViewModel.AppSetting.AppBackdrop)
-            },
+            BackdropType = WindowSettings.Backdrop,
             TitleBarType = TitleBarType.AppWindow,
             Size = size,
-            IconPath = AppContext.IconAbsolutePath
+            IconPath = WindowSettings.IconAbsolutePath
         });
         window.AppWindow.Title = title;
-        var theme = GetElementTheme(App.AppViewModel.AppSetting.Theme);
+        var theme = GetElementTheme(WindowSettings.Theme);
         window.SetAppWindowTitleBarButtonColor(theme is ElementTheme.Dark);
         window.FrameLoaded += (s, _) => s.To<FrameworkElement>().RequestedTheme = theme;
         return window;
     }
 
-    public static void SetBackdrop(AppBackdropType backdropType)
+    public static void SetBackdrop(BackdropType backdropType)
     {
         foreach (var window in _forkedWindowsInternal)
-        {
             window.SystemBackdrop = backdropType switch
             {
-                AppBackdropType.None => null,
-                AppBackdropType.Acrylic => new DesktopAcrylicBackdrop(),
-                AppBackdropType.Mica => new MicaBackdrop(),
-                AppBackdropType.MicaAlt => new MicaBackdrop { Kind = MicaKind.BaseAlt },
-                _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<AppBackdropType, SystemBackdrop>(backdropType)
+                BackdropType.None => null,
+                BackdropType.Acrylic => new DesktopAcrylicBackdrop(),
+                BackdropType.Mica => new MicaBackdrop(),
+                BackdropType.MicaAlt => new MicaBackdrop { Kind = MicaKind.BaseAlt },
+                _ => ThrowHelper.ArgumentOutOfRange<BackdropType, SystemBackdrop>(backdropType)
             };
-        }
     }
 
     public static void SetTheme(AppTheme theme)
@@ -137,7 +128,7 @@ public static class WindowFactory
             AppTheme.Dark => ElementTheme.Dark,
             AppTheme.Light => ElementTheme.Light,
             AppTheme.SystemDefault => TitleBarHelper.GetDefaultTheme(),
-            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<AppTheme, ElementTheme>(theme)
+            _ => ThrowHelper.ArgumentOutOfRange<AppTheme, ElementTheme>(theme)
         };
     }
 }

@@ -26,7 +26,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Controls;
+using Pixeval.Controls.Windowing;
 using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
@@ -34,7 +34,6 @@ using Pixeval.Util.Converters;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
-using Pixeval.Util.UI.Windowing;
 using Windows.System;
 using Windows.UI.Core;
 using WinUI3Utilities;
@@ -235,13 +234,14 @@ public sealed partial class IllustrationView
         QrCodeTeachingTip.HeroContent.To<Image>().Source = webQrCodeSource;
         QrCodeTeachingTip.IsOpen = true;
 
+        QrCodeTeachingTip.Closed += Closed;
+        return;
+
         void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
         {
             webQrCodeSource.Dispose();
             s.Closed -= Closed;
         }
-
-        QrCodeTeachingTip.Closed += Closed;
     }
 
     private async void ShowPixEzQrCodeContextItemOnTapped(object sender, TappedRoutedEventArgs e)
@@ -250,12 +250,13 @@ public sealed partial class IllustrationView
         QrCodeTeachingTip.HeroContent.To<Image>().Source = pixEzQrCodeSource;
         QrCodeTeachingTip.IsOpen = true;
 
+        QrCodeTeachingTip.Closed += Closed;
+        return;
+
         void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
         {
             pixEzQrCodeSource.Dispose();
             s.Closed -= Closed;
         }
-
-        QrCodeTeachingTip.Closed += Closed;
     }
 }

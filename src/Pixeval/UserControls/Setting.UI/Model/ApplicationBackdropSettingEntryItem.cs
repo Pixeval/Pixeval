@@ -21,15 +21,25 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Pixeval.Options;
+using WinUI3Utilities;
 
 namespace Pixeval.UserControls.Setting.UI.Model;
 
 public record ApplicationBackdropSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public ApplicationBackdropSettingEntryItem(AppBackdropType item) : base(item)
+    public ApplicationBackdropSettingEntryItem(BackdropType item) : base(item, item switch
+    {
+        BackdropType.Acrylic => MiscResources.AcrylicBackdrop,
+        BackdropType.Mica => MiscResources.MicaBackdrop,
+        BackdropType.MicaAlt => MiscResources.MicaAltBackdrop,
+        BackdropType.None => MiscResources.NoneBackdrop,
+        _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
+    })
     {
     }
 
-    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<AppBackdropType>().Select(i => new ApplicationBackdropSettingEntryItem(i));
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } =
+        Enum.GetValues<BackdropType>()
+            .Where(i => i is not BackdropType.Maintain)
+            .Select(i => new ApplicationBackdropSettingEntryItem(i));
 }

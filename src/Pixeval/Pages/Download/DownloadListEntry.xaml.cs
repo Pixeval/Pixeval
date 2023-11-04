@@ -20,23 +20,22 @@
 
 using System;
 using System.Diagnostics;
-using System.Linq;
+using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Pixeval.Download;
 using Pixeval.Util.UI;
 using Windows.System;
-using Pixeval.Controls.Card;
+using Pixeval.CoreApi.Model;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Pages.Download;
 
 [DependencyProperty<ObservableDownloadTask>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
-[DependencyProperty<ImageSource>("Thumbnail")]
+[DependencyProperty<Illustration>("Illustration")]
 [DependencyProperty<string>("Title")]
 [DependencyProperty<string>("Description")]
 [DependencyProperty<double>("Progress")]
@@ -47,6 +46,8 @@ namespace Pixeval.Pages.Download;
 [DependencyProperty<bool>("IsShowErrorDetailDialogItemEnabled")]
 public sealed partial class DownloadListEntry
 {
+    public event TypedEventHandler<DownloadListEntry, ObservableDownloadTask>? OpenIllustrationRequested;
+
     public DownloadListEntry()
     {
         InitializeComponent();
@@ -102,20 +103,7 @@ public sealed partial class DownloadListEntry
         Process.Start("explorer.exe", $@"/select, ""{ViewModel.Destination}""");
     }
 
-    private async void GoToPageItem_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        switch (ViewModel)
-        {
-            case IIllustrationViewModelProvider provider:
-                var viewModels = (await provider.GetViewModelAsync())
-                    .GetMangaIllustrationViewModels()
-                    .ToArray();
-
-                // ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
-                // todo UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
-                break;
-        }
-    }
+    private void GoToPageItem_OnTapped(object sender, TappedRoutedEventArgs e) => OpenIllustrationRequested?.Invoke(this, ViewModel);
 
     private async void CheckErrorMessageInDetail_OnTapped(object sender, TappedRoutedEventArgs e)
     {
