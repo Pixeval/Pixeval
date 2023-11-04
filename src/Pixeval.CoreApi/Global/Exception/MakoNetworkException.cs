@@ -20,11 +20,9 @@
 
 using System.Net.Http;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 namespace Pixeval.CoreApi.Global.Exception;
 
-[PublicAPI]
 public class MakoNetworkException(string url, bool bypass, string? extraMsg, int statusCode)
     : MakoException($"Network error while requesting URL: {url}:\n {extraMsg}\n Bypassing: {bypass}\n Status code: {statusCode}")
 {

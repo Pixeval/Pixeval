@@ -20,14 +20,12 @@
 
 using System.Globalization;
 using System.Text.Json.Serialization;
-using JetBrains.Annotations;
 
 namespace Pixeval.CoreApi.Preference;
 
 /// <summary>
 ///     Contains all the user-configurable keys
 /// </summary>
-[PublicAPI]
 public record MakoClientConfiguration(int ConnectionTimeout, bool Bypass, string? MirrorHost, CultureInfo CultureInfo)
 {
     public MakoClientConfiguration() : this(5000, false, string.Empty, CultureInfo.CurrentCulture)

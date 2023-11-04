@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using JetBrains.Annotations;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Global.Enum;
@@ -27,7 +26,6 @@ namespace Pixeval.CoreApi.Global.Enum;
 ///     The privacy policy of Pixiv, be aware that the <see cref="Private" /> option
 ///     is only permitted when the ID is pointing to yourself
 /// </summary>
-[PublicAPI]
 public enum PrivacyPolicy
 {
     [Description("public")]

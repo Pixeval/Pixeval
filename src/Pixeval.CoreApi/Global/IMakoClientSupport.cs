@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using JetBrains.Annotations;
 
 namespace Pixeval.CoreApi.Global;
 
@@ -28,7 +27,6 @@ namespace Pixeval.CoreApi.Global;
 ///     the properties that are required when performing some context-aware tasks, such as the
 ///     access token while sending a request to app-api.pixiv.net
 /// </summary>
-[PublicAPI]
 public interface IMakoClientSupport
 {
     /// <summary>

@@ -24,18 +24,15 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 namespace Pixeval.Utilities;
 
-[PublicAPI]
 public enum SequenceComparison
 {
     Sequential,
     Unordered
 }
 
-[PublicAPI]
 public static class Enumerates
 {
     public static TValue GetOrCreate<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TValue> valueFactory)
@@ -188,7 +185,7 @@ public static class Enumerates
         var enumerable = source as T[] ?? source.ToArray();
         if (enumerable.Any())
         {
-            dest.RemoveAll(x => !enumerable.Contains(x));
+            _ = dest.RemoveAll(x => !enumerable.Contains(x));
             enumerable.Where(x => !dest.Contains(x)).ForEach(dest.Add);
         }
         else
@@ -256,7 +253,6 @@ public static class Enumerates
     }
 }
 
-[PublicAPI]
 public static class EmptyEnumerators<T>
 {
     public static readonly IEnumerator<T> Sync = new List<T>().GetEnumerator();

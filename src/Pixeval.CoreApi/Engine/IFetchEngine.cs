@@ -19,7 +19,6 @@
 #endregion
 
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using Pixeval.CoreApi.Global;
 
 namespace Pixeval.CoreApi.Engine;
@@ -33,7 +32,6 @@ namespace Pixeval.CoreApi.Engine;
 ///     </para>
 /// </summary>
 /// <typeparam name="E">The type of the results of the <see cref="IFetchEngine{E}" /></typeparam>
-[PublicAPI]
 public interface IFetchEngine<out E> : IAsyncEnumerable<E>, IMakoClientSupport, IEngineHandleSource
 {
     /// <summary>

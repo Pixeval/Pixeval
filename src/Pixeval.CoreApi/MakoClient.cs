@@ -23,7 +23,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Autofac;
-using JetBrains.Annotations;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Global.Exception;
@@ -34,7 +33,6 @@ using Refit;
 
 namespace Pixeval.CoreApi;
 
-[PublicAPI]
 public partial class MakoClient : ICancellable
 {
     /// <summary>

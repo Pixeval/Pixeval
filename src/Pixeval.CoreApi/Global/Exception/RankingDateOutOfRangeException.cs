@@ -19,14 +19,12 @@
 #endregion
 
 using System.Runtime.Serialization;
-using JetBrains.Annotations;
 
 namespace Pixeval.CoreApi.Global.Exception;
 
 /// <summary>
 ///     搜索榜单时设定的日期大于等于当前日期-2天
 /// </summary>
-[PublicAPI]
 public class RankingDateOutOfRangeException : MakoException
 {
     public RankingDateOutOfRangeException()

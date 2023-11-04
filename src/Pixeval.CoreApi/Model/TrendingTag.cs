@@ -18,9 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using JetBrains.Annotations;
 
 namespace Pixeval.CoreApi.Model;
 
-[PublicAPI]
 public record TrendingTag(string? Tag, string? Translation, Illustration? Illustration);

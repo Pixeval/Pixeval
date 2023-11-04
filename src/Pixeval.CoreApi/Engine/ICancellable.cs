@@ -18,11 +18,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using JetBrains.Annotations;
 
 namespace Pixeval.CoreApi.Engine;
 
-[PublicAPI]
 public interface ICancellable
 {
     bool IsCancelled { get; set; }

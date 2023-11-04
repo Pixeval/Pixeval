@@ -19,7 +19,6 @@
 #endregion
 
 using System.Runtime.Serialization;
-using JetBrains.Annotations;
 using Pixeval.CoreApi.Global.Enum;
 
 namespace Pixeval.CoreApi.Global.Exception;
@@ -28,7 +27,6 @@ namespace Pixeval.CoreApi.Global.Exception;
 ///     When a <see cref="PrivacyPolicy" /> is set to <see cref="PrivacyPolicy.Private" /> while the uid is not equivalent
 ///     to the <see cref="MakoClient.Session" />
 /// </summary>
-[PublicAPI]
 public class IllegalPrivatePolicyException : MakoException
 {
     public IllegalPrivatePolicyException(string uid)

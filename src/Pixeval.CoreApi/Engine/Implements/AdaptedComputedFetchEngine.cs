@@ -21,7 +21,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using JetBrains.Annotations;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Engine.Implements;
@@ -32,7 +31,6 @@ namespace Pixeval.CoreApi.Engine.Implements;
 ///     only supposed to be used by caching systems
 /// </summary>
 /// <typeparam name="T">The type of the results of the <see cref="IFetchEngine{E}" /></typeparam>
-[PublicAPI]
 public class AdaptedComputedFetchEngine<T> : IFetchEngine<T>
 {
     private readonly IEnumerable<T> _outer;

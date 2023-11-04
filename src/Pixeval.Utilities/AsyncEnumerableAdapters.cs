@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.Utilities
+#region Copyright (c) Pixeval/Pixeval.Utilities
 // GPL v3 License
 // 
 // Pixeval/Pixeval.Utilities
@@ -22,11 +22,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 namespace Pixeval.Utilities;
 
-[PublicAPI]
 public class AdaptedAsyncEnumerator<T>(IEnumerator<T> outerEnumerator, CancellationToken cancellationToken = new())
     : IAsyncEnumerator<T>
 {
@@ -45,7 +43,6 @@ public class AdaptedAsyncEnumerator<T>(IEnumerator<T> outerEnumerator, Cancellat
     public T Current => outerEnumerator.Current;
 }
 
-[PublicAPI]
 public class AdaptedAsyncEnumerable<T>(IEnumerable<T> sync) : IAsyncEnumerable<T>
 {
     public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = new())

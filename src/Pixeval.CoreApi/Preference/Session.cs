@@ -20,12 +20,10 @@
 
 using System;
 using System.Text.Json.Serialization;
-using JetBrains.Annotations;
 using Pixeval.Utilities;
 
 namespace Pixeval.CoreApi.Preference;
 
-[PublicAPI]
 public record Session
 {
     /// <summary>

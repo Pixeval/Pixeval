@@ -309,11 +309,6 @@
         "resolved": "1.11.46",
         "contentHash": "dLMn4EVfJBHWmWK4Uh0XGD76FPLHI0qr2Tm0s1m/xmgiHb1JUb9zB8AzO8HtrkBBlMN6JfCUBYddhqC0hZNR+g=="
       },
-      "JetBrains.Annotations": {
-        "type": "Transitive",
-        "resolved": "2023.2.0",
-        "contentHash": "dvO//8aLmLRsCVVgoc/7qBqi2/y4BTyRcg20LCBWtK4n6E9Um06Zp7jF1n0hOE+yqBHwcrDzAjWvCaM3qH8flg=="
-      },
       "Microsoft.Bcl.AsyncInterfaces": {
         "type": "Transitive",
         "resolved": "6.0.0",
@@ -662,7 +657,6 @@
         "type": "Project",
         "dependencies": {
           "Autofac": "[7.1.0, )",
-          "JetBrains.Annotations": "[2023.2.0, )",
           "Pixeval.Utilities": "[1.0.0, )",
           "Refit": "[7.0.0, )"
         }
@@ -670,8 +664,7 @@
       "pixeval.utilities": {
         "type": "Project",
         "dependencies": {
-          "CommunityToolkit.HighPerformance": "[8.2.2, )",
-          "JetBrains.Annotations": "[2023.2.0, )"
+          "CommunityToolkit.HighPerformance": "[8.2.2, )"
         }
       }
     },

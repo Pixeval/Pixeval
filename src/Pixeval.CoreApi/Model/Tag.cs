@@ -19,9 +19,7 @@
 #endregion
 
 using System.Text.Json.Serialization;
-using JetBrains.Annotations;
 
 namespace Pixeval.CoreApi.Model;
 
-[PublicAPI]
 public record Tag([property: JsonPropertyName("name")] string Name, [property: JsonPropertyName("translated_name")] string? TranslatedName);

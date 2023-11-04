@@ -19,11 +19,9 @@
 #endregion
 
 using System;
-using JetBrains.Annotations;
 
 namespace Pixeval.CoreApi.Engine;
 
-[PublicAPI]
 #pragma warning disable 660,661 // Object.Equals() and Object.GetHashCode() are not overwritten
 public class EngineHandle : ICancellable, INotifyCompletion, ICompletionCallback<EngineHandle>
 #pragma warning restore 660,661

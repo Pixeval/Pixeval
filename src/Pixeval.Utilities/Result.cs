@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.Utilities
+#region Copyright (c) Pixeval/Pixeval.Utilities
 // GPL v3 License
 // 
 // Pixeval/Pixeval.Utilities
@@ -21,11 +21,9 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 namespace Pixeval.Utilities;
 
-[PublicAPI]
 public record Result<T>
 {
     public T GetOrThrow()
@@ -38,7 +36,6 @@ public record Result<T>
         };
     }
 
-    [ContractAnnotation("else:null => null; else:notnull => notnull")]
     public T? GetOrElse(T? @else)
     {
         return this switch
@@ -86,9 +83,7 @@ public record Result<T>
         return result.Bind(t => t as R);
     }
 
-    [PublicAPI]
     public record Success(T Value) : Result<T>;
 
-    [PublicAPI]
     public record Failure(Exception? Cause) : Result<T>;
 }

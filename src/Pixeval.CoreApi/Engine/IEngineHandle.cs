@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using JetBrains.Annotations;
 
 namespace Pixeval.CoreApi.Engine;
 
@@ -27,7 +26,6 @@ namespace Pixeval.CoreApi.Engine;
 ///     implements <see cref="IEngineHandleSource" /> must exposes an <see cref="EngineHandle" />
 ///     that can be used to cancel itself or report the completion
 /// </summary>
-[PublicAPI]
 public interface IEngineHandleSource
 {
     EngineHandle EngineHandle { get; }
