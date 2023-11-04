@@ -1,8 +1,8 @@
-#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval.Controls
 // GPL v3 License
 // 
-// Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IEnhancedPage.cs
+// Pixeval/Pixeval.Controls
+// Copyright (c) 2023 Pixeval.Controls/GlyphAttribute.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,20 +18,21 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Microsoft.UI.Xaml.Navigation;
+using System;
+using System.Reflection;
 
-namespace Pixeval.Controls;
+namespace Pixeval.Controls.MarkupExtensions.FontSymbolIcon;
 
-public interface IEnhancedPage
+[AttributeUsage(AttributeTargets.Field)]
+internal sealed class GlyphAttribute(char glyph) : Attribute
 {
-    public int ActivationCount { get; }
+    public char Glyph { get; } = glyph;
+}
 
-    public bool ClearCacheAfterNavigation { get; set; }
-
-    /// <summary>
-    /// 当有些延时操作导致在Unloaded后访问控件时，使用这个属性判断，防止异常
-    /// </summary>
-    public bool Initialized { get; }
-
-    void OnPageDeactivated(NavigatingCancelEventArgs e);
+public static class GlyphAttributeHelper
+{
+    public static char GetGlyph(this Enum e)
+    {
+        return e.GetType().GetField(e.ToString())!.GetCustomAttribute<GlyphAttribute>()!.Glyph;
+    }
 }

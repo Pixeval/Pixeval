@@ -23,7 +23,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace Pixeval.Controls;
 
-public class EnhancedPage : Page, IEnhancedPage
+public class EnhancedPage : Page
 {
     public int ActivationCount { get; private set; }
 

@@ -1,6 +1,6 @@
 using System.Linq;
 using System.Numerics;
-using CommunityToolkit.WinUI.UI;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -61,7 +61,7 @@ public sealed partial class IllustratorProfile
             AvatarButton.Scale = CommonScale;
             AvatarButton.Translation = CommonTranslation;
             AvatarButton.Rotation = CommonRotation;
-            BlurOutAnimation.Start(Banner);
+            //TODO:BlurEffect BlurOutAnimation.Start(Banner);
         }
     }
 }

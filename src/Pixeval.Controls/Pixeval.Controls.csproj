@@ -12,12 +12,14 @@
     </PropertyGroup>
     <ItemGroup>
         <None Remove="CardControl\CardControl.xaml" />
+        <None Remove="PremiumUserBadge\PremiumUserBadge.xaml" />
         <None Remove="ZoomableImage.xaml" />
     </ItemGroup>
 
     <ItemGroup>
-        <!--<PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.0.230907" PrivateAssets="all" />-->
+        <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.0.230907" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+        <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.0.230907" />
         <PackageReference Include="WinUI3Utilities" Version="1.1.4.3" />
         <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.5.1" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.25206-preview" />
@@ -28,13 +30,16 @@
         <Page Update="Card\CardControl.xaml">
             <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
         </Page>
+        <Page Update="PremiumUserBadge\PremiumUserBadge.xaml">
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
         <Page Update="ZoomableImage.xaml">
-          <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-          <SubType>Designer</SubType>
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+            <SubType>Designer</SubType>
         </Page>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="ZoomableImage\" />
+        <Folder Include="ZoomableImage\" />
     </ItemGroup>
 </Project>

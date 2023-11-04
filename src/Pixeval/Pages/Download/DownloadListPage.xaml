@@ -7,7 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:download="using:Pixeval.Pages.Download"
     xmlns:downloader="using:Pixeval.Download"
-    xmlns:markup="using:Pixeval.Util.MarkupExtensions"
+    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:windowing="using:Pixeval.Controls.Windowing"
     mc:Ignorable="d">
@@ -55,30 +55,30 @@
             </AutoSuggestBox>
             <CommandBar Grid.Column="2" DefaultLabelPosition="Right">
                 <AppBarButton
-                    Icon="{markup:FontIcon Glyph=CancelE711}"
+                    Icon="{markup:FontSymbolIcon Glyph=CancelE711}"
                     IsEnabled="{x:Bind _viewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Label="{x:Bind _viewModel.SelectionLabel, Mode=OneWay}"
                     Tapped="CancelSelectButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/DownloadListPage/SelectAllButton"
-                    Icon="{markup:FontIcon Glyph=SelectAllE8B3}"
+                    Icon="{markup:FontSymbolIcon Glyph=SelectAllE8B3}"
                     Tapped="SelectAllButton_OnTapped" />
                 <AppBarSeparator />
                 <AppBarButton
                     x:Uid="/DownloadListPage/ResumeButton"
-                    Icon="{markup:FontIcon Glyph=PlayE768}"
+                    Icon="{markup:FontSymbolIcon Glyph=PlayE768}"
                     Tapped="ResumeAllButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/DownloadListPage/PauseButton"
-                    Icon="{markup:FontIcon Glyph=PauseE769}"
+                    Icon="{markup:FontSymbolIcon Glyph=PauseE769}"
                     Tapped="PauseAllButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/DownloadListPage/StopButton"
-                    Icon="{markup:FontIcon Glyph=CancelE711}"
+                    Icon="{markup:FontSymbolIcon Glyph=CancelE711}"
                     Tapped="CancelAllButton_OnTapped" />
                 <AppBarButton
                     x:Uid="/DownloadListPage/DeleteButton"
-                    Icon="{markup:FontIcon Glyph=DeleteE74D}"
+                    Icon="{markup:FontSymbolIcon Glyph=DeleteE74D}"
                     Tapped="ClearDownloadListButton_OnTapped" />
             </CommandBar>
         </Grid>

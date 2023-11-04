@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Pixeval.Controls"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:triggers="using:CommunityToolkit.WinUI.UI.Triggers">
+    xmlns:winUi="using:CommunityToolkit.WinUI">
 
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Default">
@@ -203,19 +203,18 @@
                                     </VisualState>
                                 </VisualStateGroup>
 
-                                <!--  这块不注释掉会导致XAML Parsing Failed  -->
                                 <!--  Collapsing the Content presenter whenever it's empty  -->
-                                <!--<VisualStateGroup x:Name="ContentVisibilityStates">
+                                <VisualStateGroup x:Name="ContentVisibilityStates">
                                     <VisualState x:Name="Visible" />
                                     <VisualState x:Name="Collapsed">
                                         <VisualState.StateTriggers>
-                                            <triggers:IsNullOrEmptyStateTrigger Value="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" />
+                                            <winUi:IsNullOrEmptyStateTrigger Value="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" />
                                         </VisualState.StateTriggers>
                                         <VisualState.Setters>
                                             <Setter Target="PART_ContentPresenter.Visibility" Value="Collapsed" />
                                         </VisualState.Setters>
                                     </VisualState>
-                                </VisualStateGroup>-->
+                                </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
                         </Grid>
                     </ControlTemplate>

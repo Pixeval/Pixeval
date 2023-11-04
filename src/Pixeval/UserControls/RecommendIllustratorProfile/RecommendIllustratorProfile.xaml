@@ -42,7 +42,7 @@
                     Text="{x:Bind ViewModel.Username, Mode=OneWay}"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="NoWrap" />
-                <premiumUserBadge:PremiumUserBadge
+                <controls:PremiumUserBadge
                     Grid.Column="2"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center" />

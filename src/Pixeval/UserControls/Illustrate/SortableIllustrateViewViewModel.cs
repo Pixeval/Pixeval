@@ -19,7 +19,7 @@
 #endregion
 
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.WinUI.UI;
+using CommunityToolkit.WinUI.Collections;
 using Pixeval.CoreApi.Model;
 using Pixeval.UserControls.IllustratorView;
 

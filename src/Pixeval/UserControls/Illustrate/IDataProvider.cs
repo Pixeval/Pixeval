@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using CommunityToolkit.WinUI;
-using CommunityToolkit.WinUI.UI;
+using CommunityToolkit.WinUI.Collections;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;

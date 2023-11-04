@@ -3,14 +3,14 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
-    xmlns:converters="using:CommunityToolkit.WinUI.UI.Converters"
+    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:converters1="using:Pixeval.Util.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:illustrationView="using:Pixeval.UserControls.IllustrationView"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
-    xmlns:markup="using:Pixeval.Util.MarkupExtensions"
+    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:options="using:Pixeval.Options"
@@ -18,6 +18,7 @@
     xmlns:triggers1="using:Pixeval.Util.Triggers"
     xmlns:userControls="using:Pixeval.UserControls"
     xmlns:util="using:Pixeval.Util"
+    xmlns:winUi="using:CommunityToolkit.WinUI"
     Unloaded="IllustrationViewOnUnloaded"
     mc:Ignorable="d">
     <UserControl.Resources>
@@ -74,38 +75,38 @@
                                             Text="{x:Bind GetBookmarkContextItemText(IsBookmarked), Mode=OneWay}" />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/AddToBookmarkContextItem"
-                                            Icon="{markup:FontIcon Glyph=BookmarksE8A4}"
+                                            Icon="{markup:FontSymbolIcon Glyph=BookmarksE8A4}"
                                             Tapped="AddToBookmarkContextItemOnTapped" />
                                         <MenuFlyoutSeparator />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/SaveContextItem"
-                                            Icon="{markup:FontIcon Glyph=SaveE74E}"
+                                            Icon="{markup:FontSymbolIcon Glyph=SaveE74E}"
                                             Tapped="SaveContextItemOnTapped" />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/SaveAsContextItem"
-                                            Icon="{markup:FontIcon Glyph=SaveAsE792}"
+                                            Icon="{markup:FontSymbolIcon Glyph=SaveAsE792}"
                                             Tapped="SaveAsContextItemOnTapped" />
                                         <MenuFlyoutSeparator />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/OpenInBrowserContextItem"
-                                            Icon="{markup:FontIcon Glyph=WebSearchF6FA}"
+                                            Icon="{markup:FontSymbolIcon Glyph=WebSearchF6FA}"
                                             Tapped="OpenInBrowserContextItemOnTapped" />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/CopyWebLinkContextItem"
-                                            Icon="{markup:FontIcon Glyph=PreviewLinkE8A1}"
+                                            Icon="{markup:FontSymbolIcon Glyph=PreviewLinkE8A1}"
                                             Tapped="CopyWebLinkContextItemOnTapped" />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/CopyAppLinkContextItem"
-                                            Icon="{markup:FontIcon Glyph=LinkE71B}"
+                                            Icon="{markup:FontSymbolIcon Glyph=LinkE71B}"
                                             Tapped="CopyAppLinkContextItemOnTapped" />
                                         <MenuFlyoutSeparator />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/ShowQrCodeContextItem"
-                                            Icon="{markup:FontIcon Glyph=QRCodeED14}"
+                                            Icon="{markup:FontSymbolIcon Glyph=QRCodeED14}"
                                             Tapped="ShowQrCodeContextItemOnTapped" />
                                         <MenuFlyoutItem
                                             x:Uid="/IllustrationView/ShowPixEzQrCodeContextItem"
-                                            Icon="{markup:FontIcon Glyph=Photo2EB9F}"
+                                            Icon="{markup:FontSymbolIcon Glyph=Photo2EB9F}"
                                             Tapped="ShowPixEzQrCodeContextItemOnTapped" />
                                         <MenuFlyoutSeparator />
                                     </MenuFlyout>
@@ -206,7 +207,7 @@
                                                 ImageSource="{Binding Path=ThumbnailSources, Converter={StaticResource DictionaryConverter}, ConverterParameter={StaticResource Box}, Mode=OneWay}"
                                                 Stretch="UniformToFill" />
                                         </Grid.Background>
-                                        <labs:Shimmer Visibility="{Binding Path=ThumbnailSources, Converter={StaticResource DictionaryIsNullToVisibilityConverter}, ConverterParameter={StaticResource Box}, Mode=OneWay}" />
+                                        <!--TODO: <labs:Shimmer Visibility="{Binding Path=ThumbnailSources, Converter={StaticResource DictionaryIsNullToVisibilityConverter}, ConverterParameter={StaticResource Box}, Mode=OneWay}" />-->
                                         <Grid
                                             x:Name="MaskGrid"
                                             Padding="10"
@@ -337,7 +338,7 @@
             <VisualStateGroup x:Name="Group">
                 <VisualState x:Name="VisualStateGrid">
                     <VisualState.StateTriggers>
-                        <triggers:IsEqualStateTrigger Value="{x:Bind IllustrationViewOption}" To="{x:Bind options:IllustrationViewOption.RiverFlow}" />
+                        <winUi:IsEqualStateTrigger Value="{x:Bind IllustrationViewOption}" To="{x:Bind options:IllustrationViewOption.RiverFlow}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="IllustrationItemsRepeater.Layout">
@@ -353,7 +354,7 @@
                 </VisualState>
                 <VisualState x:Name="VisualStateRiverFlow">
                     <VisualState.StateTriggers>
-                        <triggers:IsEqualStateTrigger Value="{x:Bind IllustrationViewOption}" To="{x:Bind options:IllustrationViewOption.Grid}" />
+                        <winUi:IsEqualStateTrigger Value="{x:Bind IllustrationViewOption}" To="{x:Bind options:IllustrationViewOption.Grid}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="IllustrationItemsRepeater.Layout">

@@ -19,7 +19,7 @@
 #endregion
 
 using System.Linq;
-using CommunityToolkit.WinUI.UI;
+using CommunityToolkit.WinUI.Collections;
 using Pixeval.CoreApi.Model;
 using Pixeval.UserControls.Illustrate;
 using Pixeval.Util;

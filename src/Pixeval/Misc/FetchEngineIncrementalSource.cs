@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CommunityToolkit.Common.Collections;
+using CommunityToolkit.WinUI.Collections;
 
 namespace Pixeval.Misc;
 

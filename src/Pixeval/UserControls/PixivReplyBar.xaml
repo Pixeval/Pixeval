@@ -4,8 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:iconButton="using:Pixeval.Controls.IconButton"
+    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:markup="using:Pixeval.Util.MarkupExtensions"
     Loaded="PixivReplyBar_OnLoaded"
     mc:Ignorable="d">
     <Grid>
@@ -19,8 +19,8 @@
             Grid.Column="0"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            Content="{markup:FontIcon Glyph=Emoji2E76E,
-                                  FontSize={StaticResource PixevalButtonIconSize}}"
+            Content="{markup:FontSymbolIcon Glyph=Emoji2E76E,
+                                            FontSize={StaticResource PixevalButtonIconSize}}"
             Style="{StaticResource PixevalRoundedButtonStyle}">
             <Button.Flyout>
                 <Flyout>
@@ -33,12 +33,12 @@
                             <NavigationViewItem
                                 x:Name="EmojiButtonFlyoutEmojiSectionNavigationViewItem"
                                 x:Uid="/CommentRepliesBlock/EmojiButtonFlyoutEmojiSectionNavigationViewItem"
-                                Icon="{markup:FontIcon Glyph=Emoji2E76E}"
+                                Icon="{markup:FontSymbolIcon Glyph=Emoji2E76E}"
                                 IsSelected="True" />
                             <NavigationViewItem
                                 x:Name="EmojiButtonFlyoutStickersSectionNavigationViewItem"
                                 x:Uid="/CommentRepliesBlock/EmojiButtonFlyoutStickersSectionNavigationViewItem"
-                                Icon="{markup:FontIcon Glyph=Sticker2F4AA}" />
+                                Icon="{markup:FontSymbolIcon Glyph=Sticker2F4AA}" />
                         </NavigationView.MenuItems>
                         <Frame
                             x:Name="EmojiButtonFlyoutFrame"
@@ -65,8 +65,8 @@
             Height="30"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Icon="{markup:FontIcon Glyph=SendE724,
-                               FontSize={StaticResource PixevalSubscriptFontSize}}"
+            Icon="{markup:FontSymbolIcon Glyph=SendE724,
+                                         FontSize={StaticResource PixevalSubscriptFontSize}}"
             Tapped="SendButton_OnTapped" />
     </Grid>
 </UserControl>

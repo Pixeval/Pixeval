@@ -26,6 +26,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.Collections;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Model;

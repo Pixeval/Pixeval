@@ -29,12 +29,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.Labs.WinUI.SettingsControls" Version="0.0.18" />
-        <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.0.1" />
-        <PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.1.2" />
-        <PackageReference Include="CommunityToolkit.WinUI.UI.Behaviors" Version="7.1.2" />
-        <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
-        <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.2" />
+        <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.0.230907" />
+        <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.0.230907" />
+        <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.0.230907" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.0.230907" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.0.230907" />
+        <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.0.230907" />
+        <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.0.230907" />
         <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -384,9 +385,6 @@
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Controls\FollowingUserBadge\FollowingUserBadge.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\PremiumUserBadge\PremiumUserBadge.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="UserControls\RecommendIllustratorProfile.xaml">

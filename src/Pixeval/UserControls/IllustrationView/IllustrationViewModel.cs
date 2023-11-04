@@ -24,7 +24,6 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;

@@ -1,7 +1,7 @@
 using Microsoft.UI.Xaml.Markup;
 using Pixeval.Options;
 
-namespace Pixeval.Util.MarkupExtensions;
+namespace Pixeval.Controls.MarkupExtensions;
 
 [MarkupExtensionReturnType(ReturnType = typeof(ThumbnailUrlOption))]
 public class ThumbnailUrlOptionExtension : MarkupExtension

@@ -18,18 +18,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using CommunityToolkit.WinUI.UI;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.Attributes;
-using Pixeval.Util.UI;
+using Pixeval.Controls.MarkupExtensions.FontSymbolIcon;
 using WinUI3Utilities;
 
-namespace Pixeval.Util.MarkupExtensions;
+namespace Pixeval.Controls.MarkupExtensions;
 
 [MarkupExtensionReturnType(ReturnType = typeof(FontIcon))]
-public class FontIconExtension : TextIconExtension
+public class FontSymbolIconExtension : TextIconExtension
 {
     public FontIconSymbols Glyph { get; set; }
 
@@ -40,7 +39,7 @@ public class FontIconExtension : TextIconExtension
     {
         var fontIcon = new FontIcon
         {
-            Glyph = Glyph.GetMetadataOnEnumMember(),
+            Glyph = Glyph.GetGlyph().ToString(),
             FontFamily = FontFamily ?? new(AppHelper.IsWindows11 ? "Segoe Fluent Icons" : "Segoe MDL2 Assets"),
             FontWeight = FontWeight,
             FontStyle = FontStyle,

@@ -42,7 +42,7 @@ public sealed partial class AboutPage
     private async void AboutPage_OnLoaded(object sender, RoutedEventArgs e)
     {
         var licenseText = Encoding.UTF8.GetString(await AppContext.GetAssetBytesAsync("GPLv3.md"));
-        OpenSourceLicenseMarkdownTextBlock.Text = licenseText;
+        //TODO OpenSourceLicenseMarkdownTextBlock.Text = licenseText;
     }
 
     private async void LaunchUri(object sender, TappedRoutedEventArgs e)

@@ -18,7 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using CommunityToolkit.WinUI.UI;
+using CommunityToolkit.WinUI.Collections;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Options;

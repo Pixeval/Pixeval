@@ -24,8 +24,6 @@ using System.Linq;
 using System.Runtime;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.WinUI.UI;
-using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
@@ -55,6 +53,7 @@ using Windows.Graphics;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
+using CommunityToolkit.WinUI;
 using Pixeval.Controls.Windowing;
 using WinUI3Utilities;
 using Image = SixLabors.ImageSharp.Image;
@@ -115,12 +114,12 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
             _connectedAnimationTarget = null;
         }
 
-        // Scroll the content to the item that were being browsed just now
-        if (_illustrationViewerContent is not null && MainPageRootFrame.FindDescendant<AdaptiveGridView>() is { } gridView)
-        {
-            gridView.ScrollIntoView(_illustrationViewerContent);
-            _illustrationViewerContent = null;
-        }
+        // TODO: Scroll the content to the item that were being browsed just now
+        //if (_illustrationViewerContent is not null && MainPageRootFrame.FindDescendant<ItemsRepeater>() is { } gridView)
+        //{
+        //    gridView.ScrollIntoView(_illustrationViewerContent);
+        //    _illustrationViewerContent = null;
+        //}
     }
 
     private void MainPageRootNavigationView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
