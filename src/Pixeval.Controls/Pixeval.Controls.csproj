@@ -3,6 +3,7 @@
         <TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
         <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
         <RootNamespace>Pixeval.Controls</RootNamespace>
+        <Platforms>x86;x64;arm64</Platforms>
         <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
         <UseWinUI>true</UseWinUI>
         <Nullable>Enable</Nullable>
@@ -21,25 +22,21 @@
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
         <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.0.230907" />
         <PackageReference Include="WinUI3Utilities" Version="1.1.4.3" />
-        <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.0" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.25206-preview" />
+        <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.5.1" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
     </ItemGroup>
 
     <ItemGroup>
-        <Page Update="Card\CardControl.xaml">
+        <Page Update="CardControl\CardControl.xaml">
             <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
         </Page>
         <Page Update="PremiumUserBadge\PremiumUserBadge.xaml">
             <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
         </Page>
-        <Page Update="ZoomableImage.xaml">
+        <Page Update="ZoomableImage\ZoomableImage.xaml">
             <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
             <SubType>Designer</SubType>
         </Page>
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="ZoomableImage\" />
     </ItemGroup>
 </Project>
