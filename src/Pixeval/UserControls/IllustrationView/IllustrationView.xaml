@@ -343,11 +343,17 @@
                     <VisualState.Setters>
                         <Setter Target="IllustrationItemsRepeater.Layout">
                             <Setter.Value>
-                                <RiverFlowLayout
+                                <UniformGridLayout
                                     ItemsStretch="Fill"
-                                    LineSize="{x:Bind ThumbnailDirection, Converter={StaticResource IllustrationHeightConverter}, Mode=OneWay}"
+                                    MinColumnSpacing="5"
+                                    MinItemHeight="{x:Bind ThumbnailDirection, Converter={StaticResource IllustrationHeightConverter}, Mode=OneWay}"
+                                    MinItemWidth="180"
+                                    MinRowSpacing="5" />
+                                <!--TODO: <LinedFlowLayout
+                                    ItemsStretch="Fill"
+                                    LineHeight="{x:Bind ThumbnailDirection, Converter={StaticResource IllustrationHeightConverter}, Mode=OneWay}"
                                     LineSpacing="5"
-                                    MinItemSpacing="5" />
+                                    MinItemSpacing="5" />-->
                             </Setter.Value>
                         </Setter>
                     </VisualState.Setters>

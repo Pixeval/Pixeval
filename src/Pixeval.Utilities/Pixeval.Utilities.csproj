@@ -7,7 +7,7 @@
         <LangVersion>preview</LangVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.2.1" />
+        <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.2.2" />
         <PackageReference Include="JetBrains.Annotations" Version="2023.2.0" PrivateAssets="True" />
     </ItemGroup>
 </Project>
