@@ -4,6 +4,7 @@
     xmlns:local="using:Pixeval.Controls">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///Pixeval.Controls/CardControl/CardControl.xaml" />
+        <ResourceDictionary Source="ms-appx:///Pixeval.Controls/IconButton/IconButton.xaml" />
         <ResourceDictionary Source="ms-appx:///Pixeval.Controls/PremiumUserBadge/PremiumUserBadge.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

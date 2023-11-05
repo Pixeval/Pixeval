@@ -23,8 +23,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using WinUI3Utilities.Attributes;
 
-
-namespace Pixeval.Controls.IconButton;
+namespace Pixeval.Controls;
 
 [DependencyProperty<string>("Text", propertyChanged: nameof(OnTextChanged))]
 [DependencyProperty<IconElement>("Icon", propertyChanged: nameof(OnIconChanged))]

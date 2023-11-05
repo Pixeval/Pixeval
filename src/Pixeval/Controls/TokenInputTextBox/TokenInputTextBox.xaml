@@ -5,7 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:iconButton="using:Pixeval.Controls.IconButton"
     xmlns:local="using:Pixeval.Controls.TokenInputTextBox"
-    xmlns:markup="using:Pixeval.Controls.MarkupExtensions">
+    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
+    xmlns:controls="using:Pixeval.Controls">
     <Style TargetType="local:TokenInputTextBox">
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />
@@ -52,7 +53,7 @@
                             Content="{markup:FontSymbolIcon Glyph=ProcessingE9F5,
                                                             FontSize={StaticResource PixevalButtonIconSize}}"
                             IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Token.IsRegularExpression, Mode=TwoWay}" />
-                        <iconButton:IconButton
+                        <controls:IconButton
                             x:Name="SubmitButton"
                             x:Uid="/TokenInputTextBox/SubmitButton"
                             Grid.Column="3"

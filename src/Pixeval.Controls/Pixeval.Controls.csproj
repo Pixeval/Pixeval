@@ -13,6 +13,7 @@
     </PropertyGroup>
     <ItemGroup>
         <None Remove="CardControl\CardControl.xaml" />
+        <None Remove="IconButton\IconButton.xaml" />
         <None Remove="PremiumUserBadge\PremiumUserBadge.xaml" />
         <None Remove="ZoomableImage.xaml" />
     </ItemGroup>
@@ -30,6 +31,9 @@
     <ItemGroup>
         <Page Update="CardControl\CardControl.xaml">
             <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
+        <Page Update="IconButton\IconButton.xaml">
+          <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
         </Page>
         <Page Update="PremiumUserBadge\PremiumUserBadge.xaml">
             <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
