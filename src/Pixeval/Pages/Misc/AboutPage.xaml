@@ -110,7 +110,8 @@
                         </Hyperlink>
                         <Run x:Uid="/AboutPage/OpenSourceLicenseContentPartII" />
                     </TextBlock>
-                    <!--<controls:MarkdownTextBlock x:Name="OpenSourceLicenseMarkdownTextBlock" Background="Transparent" />-->
+                    <!--  TODO: Use Markdown  -->
+                    <TextBlock x:Name="LicenseTextBlock" />
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
