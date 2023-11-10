@@ -3,8 +3,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Pixeval.Controls">
     <ResourceDictionary.MergedDictionaries>
+        <!--  ReSharper disable Xaml.PathError  -->
         <ResourceDictionary Source="ms-appx:///Pixeval.Controls/CardControl/CardControl.xaml" />
         <ResourceDictionary Source="ms-appx:///Pixeval.Controls/IconButton/IconButton.xaml" />
         <ResourceDictionary Source="ms-appx:///Pixeval.Controls/PremiumUserBadge/PremiumUserBadge.xaml" />
+        <ResourceDictionary Source="ms-appx:///Pixeval.Controls/NotifyOnLoadedComboBox/NotifyOnLoadedComboBox.xaml" />
+        <ResourceDictionary Source="ms-appx:///Pixeval.Controls/NotifyOnLoadedCalendarDatePicker/NotifyOnLoadedCalendarDatePicker.xaml" />
+        <!--  ReSharper restore Xaml.PathError  -->
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

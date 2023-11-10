@@ -39,6 +39,8 @@ public sealed partial class AboutPage
         InitializeComponent();
     }
 
+    private string Test => "/AboutPage/QRCoderIntroductoryTextBlock";
+
     private async void AboutPage_OnLoaded(object sender, RoutedEventArgs e)
     {
         var licenseText = Encoding.UTF8.GetString(await AppContext.GetAssetBytesAsync("GPLv3.md"));

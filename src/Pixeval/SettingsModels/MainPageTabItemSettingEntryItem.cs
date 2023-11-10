@@ -21,13 +21,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Pixeval.Attributes;
+using Pixeval.Controls;
 using Pixeval.Options;
 
-namespace Pixeval.UserControls.Setting.UI.Model;
+namespace Pixeval.SettingsModels;
 
 public record MainPageTabItemSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public MainPageTabItemSettingEntryItem(MainPageTabItem item) : base(item)
+    public MainPageTabItemSettingEntryItem(MainPageTabItem item) : base(item, item.GetLocalizedResourceContent()!)
     {
     }
 

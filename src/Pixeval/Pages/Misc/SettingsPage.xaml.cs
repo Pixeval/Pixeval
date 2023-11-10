@@ -28,12 +28,12 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
-using Pixeval.UserControls.Setting.UI;
 using Pixeval.UserControls.TokenInput;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.System;
+using Pixeval.SettingsModels;
 using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 

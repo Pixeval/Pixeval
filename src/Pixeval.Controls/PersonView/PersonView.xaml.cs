@@ -25,8 +25,11 @@ using Microsoft.UI.Xaml.Media;
 using Windows.System;
 using WinUI3Utilities.Attributes;
 
-namespace Pixeval.UserControls.PersonView;
+namespace Pixeval.Controls;
 
+/// <summary>
+/// Used to display contributors, not illustrators
+/// </summary>
 [DependencyProperty<string>("PersonNickname")]
 [DependencyProperty<string>("PersonName")]
 [DependencyProperty<Uri>("PersonProfileNavigateUri")]

@@ -20,16 +20,11 @@
 
 using System;
 using System.Collections.Generic;
-using Pixeval.Attributes;
 
-namespace Pixeval.UserControls.Setting.UI.Model;
+namespace Pixeval.Controls;
 
 public record StringRepresentableItem(Enum Item, string StringRepresentation)
 {
-    public StringRepresentableItem(Enum item) : this(item, item.GetLocalizedResourceContent()!)
-    {
-    }
-
     public override string ToString() => StringRepresentation;
 }
 

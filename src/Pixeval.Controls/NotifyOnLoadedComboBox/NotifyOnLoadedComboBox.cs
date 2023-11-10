@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustrationViewOptionSettingEntryItem.cs
+// Copyright (c) 2022 Pixeval/NotifyOnLoadedComboBox.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,17 +19,29 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Pixeval.Options;
+using Microsoft.UI.Xaml.Controls;
 
-namespace Pixeval.UserControls.Setting.UI.Model;
+namespace Pixeval.Controls;
 
-public record IllustrationViewOptionSettingEntryItem : StringRepresentableItem, IAvailableItems
+public class NotifyOnLoadedComboBox : ComboBox
 {
-    public IllustrationViewOptionSettingEntryItem(IllustrationViewOption item) : base(item)
+    private EventHandler<SelectionChangedEventArgs>? _selectionChangedWhenLoaded;
+
+    public NotifyOnLoadedComboBox()
     {
+        DefaultStyleKey = typeof(NotifyOnLoadedComboBox);
+        SelectionChanged += (sender, args) =>
+        {
+            if (IsDropDownOpen)
+            {
+                _selectionChangedWhenLoaded?.Invoke(sender, args);
+            }
+        };
     }
 
-    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<IllustrationViewOption>().Select(i => new IllustrationViewOptionSettingEntryItem(i));
+    public event EventHandler<SelectionChangedEventArgs> SelectionChangedWhenLoaded
+    {
+        add => _selectionChangedWhenLoaded += value;
+        remove => _selectionChangedWhenLoaded -= value;
+    }
 }

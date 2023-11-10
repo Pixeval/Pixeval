@@ -44,10 +44,7 @@ public partial class IllustratorView : Control
 
     public PersonPicture? Avatar { get; private set; }
 
-    public IllustratorView()
-    {
-        DefaultStyleKey = typeof(IllustratorView);
-    }
+    public IllustratorView() => DefaultStyleKey = typeof(IllustratorView);
 
     protected override void OnApplyTemplate()
     {

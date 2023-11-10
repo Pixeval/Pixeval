@@ -2,12 +2,14 @@ using Pixeval.Options;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using Pixeval.Controls;
+using Pixeval.Attributes;
 
-namespace Pixeval.UserControls.Setting.UI.Model;
+namespace Pixeval.SettingsModels;
 
 public record UgoiraDownloadFormatSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public UgoiraDownloadFormatSettingEntryItem(UgoiraDownloadFormat item) : base(item)
+    public UgoiraDownloadFormatSettingEntryItem(UgoiraDownloadFormat item) : base(item, item.GetLocalizedResourceContent()!)
     {
     }
 

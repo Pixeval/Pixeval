@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -21,7 +21,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Windows.Foundation;
 
-namespace Pixeval.Controls.NotifyOnLoadedCalendarDatePicker;
+namespace Pixeval.Controls;
 
 public class NotifyOnLoadedCalendarDatePicker : CalendarDatePicker
 {

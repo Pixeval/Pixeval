@@ -7,7 +7,6 @@
     xmlns:local="using:Pixeval.UserControls.IllustratorContentViewer"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Pixeval.CoreApi.Model"
-    xmlns:notifyOnLoadedComboBox="using:Pixeval.Controls.NotifyOnLoadedComboBox"
     xmlns:userControls="using:Pixeval.UserControls"
     mc:Ignorable="d">
     <userControls:IllustrationContainer x:Name="IllustrationContainer">
@@ -16,17 +15,17 @@
                 <userControls:SortOptionComboBox x:Name="SortOptionComboBox" SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
             </Grid>
             <Grid Margin="10,0,0,0">
-                <notifyOnLoadedComboBox:NotifyOnLoadedComboBox
+                <controls:NotifyOnLoadedComboBox
                     x:Name="TagComboBox"
                     x:Uid="/IllustratorIllustrationAndMangaBookmarkPage/TagComboBox"
                     ItemsSource="{x:Bind _viewModel.UserBookmarkTags, Mode=OneWay}"
                     SelectionChangedWhenLoaded="TagComboBox_OnSelectionChangedWhenLoaded">
-                    <notifyOnLoadedComboBox:NotifyOnLoadedComboBox.ItemTemplate>
+                    <controls:NotifyOnLoadedComboBox.ItemTemplate>
                         <DataTemplate x:DataType="model:CountedTag">
                             <TextBlock Text="{x:Bind local:IllustratorIllustrationAndMangaBookmarkPageViewModel.GetCountedTagDisplayText((model:CountedTag))}" />
                         </DataTemplate>
-                    </notifyOnLoadedComboBox:NotifyOnLoadedComboBox.ItemTemplate>
-                </notifyOnLoadedComboBox:NotifyOnLoadedComboBox>
+                    </controls:NotifyOnLoadedComboBox.ItemTemplate>
+                </controls:NotifyOnLoadedComboBox>
             </Grid>
         </userControls:IllustrationContainer.CommandBarElements>
     </userControls:IllustrationContainer>

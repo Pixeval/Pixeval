@@ -6,24 +6,23 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:notifyOnLoadedComboBox="using:Pixeval.Controls.NotifyOnLoadedComboBox"
     xmlns:userControls="using:Pixeval.UserControls"
     ClearCacheAfterNavigation="True"
     mc:Ignorable="d">
     <userControls:IllustrationContainer x:Name="IllustrationContainer">
         <userControls:IllustrationContainer.CommandBarElements>
-            <notifyOnLoadedComboBox:NotifyOnLoadedComboBox
+            <controls:NotifyOnLoadedComboBox
                 x:Name="PrivacyPolicyComboBox"
                 x:Uid="/BookmarksPage/PrivacyPolicyComboBox"
                 SelectionChangedWhenLoaded="PrivacyPolicyComboBox_OnSelectionChangedWhenLoaded">
-                <notifyOnLoadedComboBox:NotifyOnLoadedComboBox.Items>
+                <controls:NotifyOnLoadedComboBox.Items>
                     <ComboBoxItem
                         x:Name="PrivacyPolicyComboBoxPublicItem"
                         x:Uid="/BookmarksPage/PrivacyPolicyComboBoxPublicComboBoxItem"
                         Tag="{x:Bind enum:PrivacyPolicy.Public}" />
                     <ComboBoxItem x:Uid="/BookmarksPage/PrivacyPolicyComboBoxPrivateComboBoxItem" Tag="{x:Bind enum:PrivacyPolicy.Private}" />
-                </notifyOnLoadedComboBox:NotifyOnLoadedComboBox.Items>
-            </notifyOnLoadedComboBox:NotifyOnLoadedComboBox>
+                </controls:NotifyOnLoadedComboBox.Items>
+            </controls:NotifyOnLoadedComboBox>
             <Grid Margin="10,0,0,0" Background="Transparent">
                 <userControls:SortOptionComboBox x:Name="SortOptionComboBox" SelectionChangedWhenLoaded="SortOptionComboBox_OnSelectionChanged" />
             </Grid>

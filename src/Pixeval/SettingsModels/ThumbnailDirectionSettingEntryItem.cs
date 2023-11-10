@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/ClearDataKind.cs
+// Copyright (c) 2022 Pixeval/ThumbnailDirectionSettingEntryItem.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,11 +18,20 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-namespace Pixeval.UserControls.Setting.UI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Pixeval.Attributes;
+using Pixeval.Controls;
+using Pixeval.Options;
 
-public enum ClearDataKind
+namespace Pixeval.SettingsModels;
+
+public record ThumbnailDirectionSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    BrowseHistory,
-    SearchHistory,
-    DownloadHistory
+    public ThumbnailDirectionSettingEntryItem(ThumbnailDirection item) : base(item, item.GetLocalizedResourceContent()!)
+    {
+    }
+
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ThumbnailDirection>().Select(t => new ThumbnailDirectionSettingEntryItem(t));
 }

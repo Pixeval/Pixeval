@@ -14,11 +14,7 @@
     xmlns:media="using:CommunityToolkit.WinUI.Media"
     Loaded="IllustratorProfile_OnLoaded"
     mc:Ignorable="d">
-    <Grid
-        Width="302"
-        Background="Transparent"
-        BorderThickness="0"
-        CornerRadius="{ThemeResource ControlCornerRadius}">
+    <Grid Width="302" CornerRadius="{ThemeResource ControlCornerRadius}">
         <Grid>
             <ToolTipService.ToolTip>
                 <ToolTip Padding="0">

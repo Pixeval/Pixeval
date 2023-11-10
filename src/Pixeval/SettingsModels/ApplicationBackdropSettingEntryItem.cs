@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/SearchDurationSettingEntryItem.cs
+// Copyright (c) 2023 Pixeval/ApplicationBackdropSettingEntryItem.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,22 +21,26 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Pixeval.CoreApi.Global.Enum;
+using Pixeval.Controls;
+using WinUI3Utilities;
 
-namespace Pixeval.UserControls.Setting.UI.Model;
+namespace Pixeval.SettingsModels;
 
-public record SearchDurationSettingEntryItem : StringRepresentableItem, IAvailableItems
+public record ApplicationBackdropSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public SearchDurationSettingEntryItem(SearchDuration item) : base(item, item switch
+    public ApplicationBackdropSettingEntryItem(BackdropType item) : base(item, item switch
     {
-        SearchDuration.Undecided => MiscResources.SearchDurationUndecided,
-        SearchDuration.WithinLastDay => MiscResources.SearchDurationWithinLastDay,
-        SearchDuration.WithinLastWeek => MiscResources.SearchDurationWithinLastWeek,
-        SearchDuration.WithinLastMonth => MiscResources.SearchDurationWithinLastMonth,
+        BackdropType.Acrylic => MiscResources.AcrylicBackdrop,
+        BackdropType.Mica => MiscResources.MicaBackdrop,
+        BackdropType.MicaAlt => MiscResources.MicaAltBackdrop,
+        BackdropType.None => MiscResources.NoneBackdrop,
         _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
     })
     {
     }
 
-    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<SearchDuration>().Select(s => new SearchDurationSettingEntryItem(s));
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } =
+        Enum.GetValues<BackdropType>()
+            .Where(i => i is not BackdropType.Maintain)
+            .Select(i => new ApplicationBackdropSettingEntryItem(i));
 }

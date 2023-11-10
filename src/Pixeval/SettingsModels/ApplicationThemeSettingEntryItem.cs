@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/ApplicationBackdropSettingEntryItem.cs
+// Copyright (c) 2022 Pixeval/ApplicationThemeSettingEntryItem.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,25 +21,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WinUI3Utilities;
+using Pixeval.Controls;
+using Pixeval.Controls.Windowing;
 
-namespace Pixeval.UserControls.Setting.UI.Model;
+namespace Pixeval.SettingsModels;
 
-public record ApplicationBackdropSettingEntryItem : StringRepresentableItem, IAvailableItems
+public record ApplicationThemeSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public ApplicationBackdropSettingEntryItem(BackdropType item) : base(item, item switch
+    public ApplicationThemeSettingEntryItem(AppTheme item) : base(item, item switch
     {
-        BackdropType.Acrylic => MiscResources.AcrylicBackdrop,
-        BackdropType.Mica => MiscResources.MicaBackdrop,
-        BackdropType.MicaAlt => MiscResources.MicaAltBackdrop,
-        BackdropType.None => MiscResources.NoneBackdrop,
+        AppTheme.Dark => MiscResources.AppThemeDark,
+        AppTheme.Light => MiscResources.AppThemeLight,
+        AppTheme.SystemDefault => MiscResources.AppThemeSystemDefault,
         _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
     })
     {
     }
 
-    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } =
-        Enum.GetValues<BackdropType>()
-            .Where(i => i is not BackdropType.Maintain)
-            .Select(i => new ApplicationBackdropSettingEntryItem(i));
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<AppTheme>().Select(a => new ApplicationThemeSettingEntryItem(a));
 }

@@ -4,13 +4,12 @@ using System.Runtime.CompilerServices;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.UserControls.Setting.UI.Model;
 using Windows.Foundation;
 using CommunityToolkit.WinUI;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
-namespace Pixeval.UserControls.Setting.UI;
+namespace Pixeval.Controls;
 
 [DependencyProperty<IEnumerable<StringRepresentableItem>>("ItemsSource")]
 [DependencyProperty<object>("SelectedItem", propertyChanged: nameof(OnSelectedItemChanged))]

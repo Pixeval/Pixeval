@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/ApplicationThemeSettingEntryItem.cs
+// Copyright (c) 2023 Pixeval/IllustrationViewOptionSettingEntryItem.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,21 +21,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Pixeval.Controls.Windowing;
+using Pixeval.Attributes;
+using Pixeval.Controls;
+using Pixeval.Options;
 
-namespace Pixeval.UserControls.Setting.UI.Model;
+namespace Pixeval.SettingsModels;
 
-public record ApplicationThemeSettingEntryItem : StringRepresentableItem, IAvailableItems
+public record IllustrationViewOptionSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public ApplicationThemeSettingEntryItem(AppTheme item) : base(item, item switch
-    {
-        AppTheme.Dark => MiscResources.AppThemeDark,
-        AppTheme.Light => MiscResources.AppThemeLight,
-        AppTheme.SystemDefault => MiscResources.AppThemeSystemDefault,
-        _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
-    })
+    public IllustrationViewOptionSettingEntryItem(IllustrationViewOption item) : base(item, item.GetLocalizedResourceContent()!)
     {
     }
 
-    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<AppTheme>().Select(a => new ApplicationThemeSettingEntryItem(a));
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<IllustrationViewOption>().Select(i => new IllustrationViewOptionSettingEntryItem(i));
 }

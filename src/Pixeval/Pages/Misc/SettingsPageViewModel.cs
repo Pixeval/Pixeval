@@ -33,11 +33,11 @@ using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Download.MacroParser;
 using Pixeval.Misc;
-using Pixeval.UserControls.Setting.UI;
 using Pixeval.UserControls.TokenInput;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 using Pixeval.UserControls.IllustrationView;
+using Pixeval.SettingsModels;
 
 namespace Pixeval.Pages.Misc;
 

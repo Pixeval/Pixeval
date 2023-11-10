@@ -14,7 +14,11 @@
     <ItemGroup>
         <None Remove="CardControl\CardControl.xaml" />
         <None Remove="IconButton\IconButton.xaml" />
+        <None Remove="NotifyOnLoadedCalendarDatePicker\NotifyOnLoadedCalendarDatePicker.xaml" />
+        <None Remove="NotifyOnLoadedComboBox\NotifyOnLoadedComboBox.xaml" />
+        <None Remove="PersonView\PersonView.xaml" />
         <None Remove="PremiumUserBadge\PremiumUserBadge.xaml" />
+        <None Remove="SettingRadioButtons\SettingRadioButtons.xaml" />
         <None Remove="ZoomableImage.xaml" />
     </ItemGroup>
 
@@ -35,8 +39,20 @@
         <Page Update="IconButton\IconButton.xaml">
           <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
         </Page>
+        <Page Update="NotifyOnLoadedCalendarDatePicker\NotifyOnLoadedCalendarDatePicker.xaml">
+          <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
+        <Page Update="NotifyOnLoadedComboBox\NotifyOnLoadedComboBox.xaml">
+          <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
+        <Page Update="PersonView\PersonView.xaml">
+          <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
         <Page Update="PremiumUserBadge\PremiumUserBadge.xaml">
             <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
+        <Page Update="SettingRadioButtons\SettingRadioButtons.xaml">
+          <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
         </Page>
         <Page Update="ZoomableImage\ZoomableImage.xaml">
             <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>

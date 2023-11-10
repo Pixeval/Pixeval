@@ -48,7 +48,7 @@ public sealed partial class TokenInput
     public TokenInput()
     {
         InitializeComponent();
-        Token = new Token();
+        Token = new();
     }
 
     public Token Token { get; }

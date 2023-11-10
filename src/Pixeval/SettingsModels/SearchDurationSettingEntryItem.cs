@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2022 Pixeval/TargetPlatformSettingEntryItem.cs
+// Copyright (c) 2022 Pixeval/SearchDurationSettingEntryItem.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,20 +21,23 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
 
-namespace Pixeval.UserControls.Setting.UI.Model;
+namespace Pixeval.SettingsModels;
 
-public record TargetPlatformSettingEntryItem : StringRepresentableItem, IAvailableItems
+public record SearchDurationSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public TargetPlatformSettingEntryItem(TargetFilter item) : base(item, item switch
+    public SearchDurationSettingEntryItem(SearchDuration item) : base(item, item switch
     {
-        TargetFilter.ForAndroid => MiscResources.TargetFilterForAndroid,
-        TargetFilter.ForIos => MiscResources.TargetFilterForIOS,
+        SearchDuration.Undecided => MiscResources.SearchDurationUndecided,
+        SearchDuration.WithinLastDay => MiscResources.SearchDurationWithinLastDay,
+        SearchDuration.WithinLastWeek => MiscResources.SearchDurationWithinLastWeek,
+        SearchDuration.WithinLastMonth => MiscResources.SearchDurationWithinLastMonth,
         _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
     })
     {
     }
 
-    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<TargetFilter>().Select(t => new TargetPlatformSettingEntryItem(t));
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<SearchDuration>().Select(s => new SearchDurationSettingEntryItem(s));
 }
