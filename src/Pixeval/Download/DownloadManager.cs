@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -51,11 +51,11 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
     public DownloadManager(int concurrencyDegree, HttpClient? httpClient = null)
     {
         _httpClient = httpClient ?? new HttpClient();
-        _queuedTasks = new ObservableCollection<TDownloadTask>();
+        _queuedTasks = new();
         _taskQuerySet = new HashSet<TDownloadTask>();
-        _throttle = new ReenterableAwaiter<bool>(true, true);
+        _throttle = new(true, true);
         _downloadTaskChannel = Channel.CreateUnbounded<TDownloadTask>();
-        _semaphoreSlim = new SemaphoreSlim(1, 1);
+        _semaphoreSlim = new(1, 1);
         ConcurrencyDegree = concurrencyDegree;
 
         PollTask();

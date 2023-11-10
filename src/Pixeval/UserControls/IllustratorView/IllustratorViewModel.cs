@@ -42,7 +42,7 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.UserControls.IllustratorView;
 
-public partial class IllustratorViewModel : IllustrateViewModel<User>
+public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
 {
     // Dominant color of the "No Image" image
     public static readonly SolidColorBrush DefaultAvatarBorderColorBrush = new(UIHelper.ParseHexColor("#D6DEE5"));

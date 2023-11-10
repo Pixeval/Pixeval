@@ -27,7 +27,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Download;
 
-public partial class DownloadListEntryViewModel(ObservableDownloadTask downloadTask, Illustration illustration)
+public sealed partial class DownloadListEntryViewModel(ObservableDownloadTask downloadTask, Illustration illustration)
     : IllustrationViewModel(illustration)
 {
     [ObservableProperty]
@@ -37,7 +37,7 @@ public partial class DownloadListEntryViewModel(ObservableDownloadTask downloadT
     {
         return currentState switch
         {
-            DownloadState.Created => string.Empty,
+            DownloadState.Created => "",
             DownloadState.Running => DownloadListEntryResources.DownloadRunningFormatted.Format((int)progress),
             DownloadState.Queued => DownloadListEntryResources.DownloadQueued,
             DownloadState.Error => DownloadListEntryResources.DownloadErrorMessageFormatted.Format(errorCause!.Message),

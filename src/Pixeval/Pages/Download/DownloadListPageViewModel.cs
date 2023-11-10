@@ -39,13 +39,13 @@ public partial class DownloadListPageViewModel : ObservableObject
     private DownloadListOption _currentOption;
 
     [ObservableProperty]
-    private IList<DownloadListEntryViewModel> _downloadTasks;
+    private ObservableCollection<DownloadListEntryViewModel> _downloadTasks;
 
     [ObservableProperty]
     private AdvancedCollectionView _downloadTasksView;
 
     [ObservableProperty]
-    private ObservableCollection<IDownloadTask> _filteredTasks;
+    private ObservableCollection<DownloadListEntryViewModel> _filteredTasks;
 
     [ObservableProperty]
     private bool _isAnyEntrySelected;
@@ -53,12 +53,11 @@ public partial class DownloadListPageViewModel : ObservableObject
     [ObservableProperty]
     private string _selectionLabel;
 
-    public DownloadListPageViewModel(List<DownloadListEntryViewModel> downloadTasks)
+    public DownloadListPageViewModel()
     {
-        downloadTasks.Reverse();
-        _downloadTasks = downloadTasks;
+        _downloadTasks = new();
         _filteredTasks = new();
-        _downloadTasksView = new(downloadTasks);
+        _downloadTasksView = new(_downloadTasks, true);
         _selectionLabel = DownloadListPageResources.CancelSelectionButtonDefaultLabel;
     }
 
@@ -120,28 +119,27 @@ public partial class DownloadListPageViewModel : ObservableObject
             return;
         }
 
-        var newTasks = DownloadTasks.Where(Query).Select(t => t.DownloadTask);
+        var newTasks = DownloadTasks.Where(Query);
         FilteredTasks.ReplaceByUpdate(newTasks);
+        return;
 
-        bool Query(DownloadListEntryViewModel viewModel)
-        {
-            return (viewModel.DownloadTask.Title?.Contains(key) ?? false) ||
+        bool Query(DownloadListEntryViewModel viewModel) =>
+            (viewModel.Illustrate.Title?.Contains(key) ?? false) ||
                    ((viewModel.DownloadTask is IllustrationDownloadTask task ? task.IllustrationViewModel.Id : viewModel.DownloadTask.Id)?.Contains(key) ?? false);
-        }
     }
 
-    public void ResetFilter(IEnumerable<IDownloadTask>? customSearchResultTask = null)
+    public void ResetFilter(IEnumerable<DownloadListEntryViewModel>? customSearchResultTask = null)
     {
         DownloadTasksView.Filter = o => o switch
         {
-            DownloadListEntryViewModel { DownloadTask: var task } => CurrentOption switch
+            DownloadListEntryViewModel { DownloadTask: var task } viewModel => CurrentOption switch
             {
                 DownloadListOption.AllQueued => true,
                 DownloadListOption.Running => task.CurrentState is DownloadState.Running,
                 DownloadListOption.Completed => task.CurrentState is DownloadState.Completed,
                 DownloadListOption.Cancelled => task.CurrentState is DownloadState.Cancelled,
                 DownloadListOption.Error => task.CurrentState is DownloadState.Error,
-                DownloadListOption.CustomSearch => customSearchResultTask?.Contains(task) ?? true,
+                DownloadListOption.CustomSearch => customSearchResultTask?.Contains(viewModel) ?? true,
                 _ => throw new ArgumentOutOfRangeException()
             },
             _ => false

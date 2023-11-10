@@ -261,9 +261,9 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
     private void ThumbnailOnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
     {
         var context = sender.GetDataContext<IllustrationViewModel?>();
-        const ThumbnailUrlOption option = ThumbnailUrlOption.SquareMedium;
         if (context is null)
             return;
+        const ThumbnailUrlOption option = ThumbnailUrlOption.SquareMedium;
         if (args.BringIntoViewDistanceX <= sender.ActualWidth)
         {
             _ = context.TryLoadThumbnail(_viewModel, option);

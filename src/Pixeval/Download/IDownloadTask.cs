@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -26,15 +26,9 @@ namespace Pixeval.Download;
 
 public interface IDownloadTask
 {
-    string? Title { get; }
-
-    string? Description { get; }
-
     string Url { get; }
 
     string Destination { get; }
-
-    string? Thumbnail { get; }
 
     CancellationHandle CancellationHandle { get; set; }
 

@@ -47,15 +47,9 @@ public partial class ObservableDownloadTask : ObservableObject, IDownloadTask
 
     public string? Id => DatabaseEntry.Id;
 
-    public string? Title => DatabaseEntry.Title;
-
-    public string? Description => DatabaseEntry.Description;
-
     public string Url => DatabaseEntry.Url!;
 
     public string Destination => DatabaseEntry.Destination!;
-
-    public string? Thumbnail => DatabaseEntry.Thumbnail;
 
     public CancellationHandle CancellationHandle { get; set; }
 

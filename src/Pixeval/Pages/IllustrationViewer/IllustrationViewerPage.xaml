@@ -10,6 +10,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Pixeval.Pages.IllustrationViewer"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
+    xmlns:markupExtensions="using:Pixeval.Util.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:triggers="using:Pixeval.Util.Triggers"
@@ -250,7 +251,7 @@
                                         Width="80"
                                         Height="80"
                                         EffectiveViewportChanged="ThumbnailOnEffectiveViewportChanged"
-                                        Source="{Binding Path=ThumbnailSources, Converter={StaticResource DictionaryConverter}, ConverterParameter={markup:ThumbnailUrlOption Enum=SquareMedium}, Mode=OneWay}"
+                                        Source="{Binding Path=ThumbnailSources, Converter={StaticResource DictionaryConverter}, ConverterParameter={markupExtensions:ThumbnailUrlOption Enum=SquareMedium}, Mode=OneWay}"
                                         Stretch="UniformToFill" />
                                 </DataTemplate>
                             </GridView.ItemTemplate>

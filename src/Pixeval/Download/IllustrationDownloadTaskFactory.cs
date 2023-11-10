@@ -59,17 +59,16 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
 
                 var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path,
                     DownloadItemType.Ugoira,
-                    context.Id, context.Illustrate.Title, context.Illustrate.User?.Name,
-                    url, context.Illustrate.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
+                    context.Id, 
+                    url);
                 return new AnimatedIllustrationDownloadTask(downloadHistoryEntry, context, ugoiraMetadata);
             }
             else
             {
                 var downloadHistoryEntry = new DownloadHistoryEntry(DownloadState.Created, null, path,
                     context.IsManga ? DownloadItemType.Manga : DownloadItemType.Illustration, 
-                    context.Id, context.Illustrate.Title, context.Illustrate.User?.Name,
-                    context.Illustrate.GetOriginalUrl()!,
-                    context.Illustrate.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium));
+                    context.Id, 
+                    context.Illustrate.GetOriginalUrl()!);
                 return new IllustrationDownloadTask(downloadHistoryEntry, context);
             }
         });
@@ -86,8 +85,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
             { IsManga: true } => DownloadItemType.Manga,
             _ => DownloadItemType.Illustration
         };
-        var entry = new DownloadHistoryEntry(DownloadState.Completed, null, rawPath, type, context.Id,
-            context.Illustrate.Title, context.Illustrate.User?.Name, null, null);
+        var entry = new DownloadHistoryEntry(DownloadState.Completed, null, rawPath, type, context.Id, null);
         return Task.FromResult<ObservableDownloadTask>(new IntrinsicIllustrationDownloadTask(entry, context, stream));
     }
 }

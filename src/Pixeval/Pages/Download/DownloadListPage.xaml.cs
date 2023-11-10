@@ -21,12 +21,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.Dialogs;
 using Pixeval.Download;
+using Pixeval.Options;
+using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
@@ -44,14 +49,16 @@ public sealed partial class DownloadListPage
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        var Task = async () =>
+        _viewModel = new();
+
+        Task().Discard();
+        return;
+
+        async Task Task()
         {
-            var list = new List<DownloadListEntryViewModel>();
             foreach (var o in parameter.To<IEnumerable<ObservableDownloadTask>>())
-                list.Add(new(o, await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(o.Id!)));
-            _viewModel = new(list);
-        };
-        Task().GetAwaiter().GetResult();
+                _viewModel.DownloadTasks.Insert(0, new(o, await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(o.Id!)));
+        }
     }
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
@@ -113,9 +120,9 @@ public sealed partial class DownloadListPage
 
     private void FilterAutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
     {
-        sender.Text = ((IDownloadTask)args.SelectedItem).Title;
+        sender.Text = ((DownloadListEntryViewModel)args.SelectedItem).Illustrate.Title;
         _viewModel.CurrentOption = DownloadListOption.CustomSearch;
-        _viewModel.ResetFilter(Enumerates.EnumerableOf((IDownloadTask)args.SelectedItem));
+        _viewModel.ResetFilter(Enumerates.EnumerableOf((DownloadListEntryViewModel)args.SelectedItem));
         _queriedBySuggestion = true;
     }
 
@@ -221,6 +228,22 @@ public sealed partial class DownloadListPage
 
             //    break;
             //}
+        }
+    }
+
+
+    private async void DownloadListEntryOnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
+    {
+        var context = sender.GetDataContext<IllustrationViewModel>();
+        var preLoadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
+        const ThumbnailUrlOption option = ThumbnailUrlOption.SquareMedium;
+        if (args.BringIntoViewDistanceY <= sender.ActualHeight * preLoadRows)
+        {
+            _ = context.TryLoadThumbnail(_viewModel, option);
+        }
+        else
+        {
+            context.UnloadThumbnail(_viewModel, option);
         }
     }
 }

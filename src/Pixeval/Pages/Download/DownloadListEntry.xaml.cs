@@ -34,7 +34,7 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Pages.Download;
 
-[DependencyProperty<ObservableDownloadTask>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
+[DependencyProperty<DownloadListEntryViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 [DependencyProperty<Illustration>("Illustration")]
 [DependencyProperty<string>("Title")]
 [DependencyProperty<string>("Description")]
@@ -55,9 +55,9 @@ public sealed partial class DownloadListEntry
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is DownloadListEntry entry && e.NewValue is ObservableDownloadTask value)
+        if (d is DownloadListEntry entry && e.NewValue is DownloadListEntryViewModel value)
         {
-            ToolTipService.SetToolTip(entry, value.Title);
+            ToolTipService.SetToolTip(entry, value.Illustrate.Title);
             ToolTipService.SetPlacement(entry, PlacementMode.Mouse);
         }
     }
@@ -65,22 +65,22 @@ public sealed partial class DownloadListEntry
     private async void ActionButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         e.Handled = true;
-        switch (ViewModel.CurrentState)
+        switch (ViewModel.DownloadTask.CurrentState)
         {
             case DownloadState.Created:
             case DownloadState.Queued:
-                ViewModel.CancellationHandle.Cancel();
+                ViewModel.DownloadTask.CancellationHandle.Cancel();
                 break;
             case DownloadState.Running:
-                ViewModel.CancellationHandle.Pause();
+                ViewModel.DownloadTask.CancellationHandle.Pause();
                 break;
             case DownloadState.Error:
             case DownloadState.Cancelled:
             case DownloadState.Completed:
-                await Launcher.LaunchUriAsync(new Uri(ViewModel.Destination));
+                await Launcher.LaunchUriAsync(new Uri(ViewModel.DownloadTask.Destination));
                 break;
             case DownloadState.Paused:
-                ViewModel.CancellationHandle.Resume();
+                ViewModel.DownloadTask.CancellationHandle.Resume();
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -89,25 +89,25 @@ public sealed partial class DownloadListEntry
 
     private void RedownloadItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        ViewModel.Reset();
-        _ = App.AppViewModel.DownloadManager.TryExecuteInline(ViewModel);
+        ViewModel.DownloadTask.Reset();
+        _ = App.AppViewModel.DownloadManager.TryExecuteInline(ViewModel.DownloadTask);
     }
 
     private void CancelDownloadItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        ViewModel.CancellationHandle.Cancel();
+        ViewModel.DownloadTask.CancellationHandle.Cancel();
     }
 
     private void OpenDownloadLocationItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        Process.Start("explorer.exe", $@"/select, ""{ViewModel.Destination}""");
+        Process.Start("explorer.exe", $@"/select, ""{ViewModel.DownloadTask.Destination}""");
     }
 
-    private void GoToPageItem_OnTapped(object sender, TappedRoutedEventArgs e) => OpenIllustrationRequested?.Invoke(this, ViewModel);
+    private void GoToPageItem_OnTapped(object sender, TappedRoutedEventArgs e) => OpenIllustrationRequested?.Invoke(this, ViewModel.DownloadTask);
 
     private async void CheckErrorMessageInDetail_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, DownloadListEntryResources.ErrorMessageDialogTitle, ViewModel.ErrorCause!.ToString())
+        await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, DownloadListEntryResources.ErrorMessageDialogTitle, ViewModel.DownloadTask.ErrorCause!.ToString())
             .ShowAsync();
     }
 }

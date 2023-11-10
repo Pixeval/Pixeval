@@ -39,6 +39,7 @@ using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 using Windows.Storage.Streams;
 using Windows.UI;
+using Microsoft.UI.Xaml.Controls;
 using Pixeval.Util.Ref;
 using AppContext = Pixeval.AppManagement.AppContext;
 
@@ -47,7 +48,7 @@ namespace Pixeval.UserControls.IllustrationView;
 /// <summary>
 ///     A view model that communicates between the model <see cref="Illustration" /> and the view
 ///     <see cref="IllustrationView" />.
-///     It is responsible for being the elements of the <see cref="AdaptiveGridView" /> to present the thumbnail of an
+///     It is responsible for being the elements of the <see cref="ItemsRepeater" /> to present the thumbnail of an
 ///     illustration
 /// </summary>
 public class IllustrationViewModel(Illustration illustration) : IllustrateViewModel<Illustration>(illustration)
@@ -152,16 +153,19 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
     /// <summary>
     /// 当控件需要显示图片时，调用此方法加载缩略图
     /// </summary>
+    /// <returns>缩略图首次加载完成则返回<see langword="true"/>，之前已加载、正在加载或加载失败则返回<see langword="false"/></returns>
     public async Task<bool> TryLoadThumbnail(object key, ThumbnailUrlOption thumbnailUrlOption)
     {
         if (ThumbnailSourcesRef.TryGetValue(thumbnailUrlOption, out var value))
         {
             _ = value.MakeShared(key);
+            // 之前已加载
             return false;
         }
 
         if (LoadingThumbnail)
         {
+            // 已有别的线程在加载缩略图
             return false;
         }
 
@@ -170,6 +174,8 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
         {
             ThumbnailStreamsRef[thumbnailUrlOption] = stream;
             ThumbnailSourcesRef[thumbnailUrlOption] = new(await stream.GetSoftwareBitmapSourceAsync(false), key);
+
+            // 读取缓存并加载完成
             LoadingThumbnail = false;
             OnPropertyChanged(nameof(ThumbnailSources));
             return true;
@@ -183,11 +189,14 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
             }
             ThumbnailStreamsRef[thumbnailUrlOption] = ras;
             ThumbnailSourcesRef[thumbnailUrlOption] = new(await ras.GetSoftwareBitmapSourceAsync(false), key);
+
+            // 获取并加载完成
             LoadingThumbnail = false;
             OnPropertyChanged(nameof(ThumbnailSources));
             return true;
         }
 
+        // 加载失败
         LoadingThumbnail = false;
         return false;
     }
