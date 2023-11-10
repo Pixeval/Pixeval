@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -42,13 +42,7 @@ public class IllustratorIllustrationAndMangaBookmarkPageViewModel : ObservableOb
 
     public ObservableCollection<CountedTag> UserBookmarkTags { get; } = new();
 
-    private EventHandler<string>? _tagBookmarksIncrementallyLoaded;
-
-    public event EventHandler<string> TagBookmarksIncrementallyLoaded
-    {
-        add => _tagBookmarksIncrementallyLoaded += value;
-        remove => _tagBookmarksIncrementallyLoaded -= value;
-    }
+    public event EventHandler<string>? TagBookmarksIncrementallyLoaded;
 
     public async Task LoadUserBookmarkTagsAsync(string uid)
     {
@@ -85,7 +79,7 @@ public class IllustratorIllustrationAndMangaBookmarkPageViewModel : ObservableOb
             {
                 counter = 0;
                 // tells the UI that new IDs are available
-                _tagBookmarksIncrementallyLoaded?.Invoke(this, tag);
+                TagBookmarksIncrementallyLoaded?.Invoke(this, tag);
             }
 
             hashSet.Add(id);
@@ -94,7 +88,7 @@ public class IllustratorIllustrationAndMangaBookmarkPageViewModel : ObservableOb
 
         if (counter != 0)
         {
-            _tagBookmarksIncrementallyLoaded?.Invoke(this, tag);
+            TagBookmarksIncrementallyLoaded?.Invoke(this, tag);
         }
     }
 

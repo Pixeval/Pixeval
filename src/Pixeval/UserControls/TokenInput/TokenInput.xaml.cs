@@ -35,16 +35,6 @@ namespace Pixeval.UserControls.TokenInput;
 [DependencyProperty<bool>("IsTokenTappedDefaultBehaviorEnabled", "true")]
 public sealed partial class TokenInput
 {
-    private EventHandler<Token>? _tokenAdded;
-
-    private EventHandler<TokenAddingEventArgs>? _tokenAdding;
-
-    private EventHandler<Token>? _tokenDeleted;
-
-    private EventHandler<TokenDeletingEventArgs>? _tokenDeleting;
-
-    private EventHandler<Token>? _tokenTapped;
-
     public TokenInput()
     {
         InitializeComponent();
@@ -53,38 +43,18 @@ public sealed partial class TokenInput
 
     public Token Token { get; }
 
-    public event EventHandler<TokenAddingEventArgs> TokenAdding
-    {
-        add => _tokenAdding += value;
-        remove => _tokenAdding -= value;
-    }
+    public event EventHandler<TokenAddingEventArgs>? TokenAdding;
 
-    public event EventHandler<Token> TokenAdded
-    {
-        add => _tokenAdded += value;
-        remove => _tokenAdded -= value;
-    }
+    public event EventHandler<Token>? TokenAdded;
 
     /// <summary>
     ///     Only works when <see cref="IsTokenTappedDefaultBehaviorEnabled" /> is set to <see langword="true" />
     /// </summary>
-    public event EventHandler<TokenDeletingEventArgs> TokenDeleting
-    {
-        add => _tokenDeleting += value;
-        remove => _tokenDeleting -= value;
-    }
+    public event EventHandler<TokenDeletingEventArgs>? TokenDeleting;
 
-    public event EventHandler<Token> TokenDeleted
-    {
-        add => _tokenDeleted += value;
-        remove => _tokenDeleted -= value;
-    }
+    public event EventHandler<Token>? TokenDeleted;
 
-    public event EventHandler<Token> TokenTapped
-    {
-        add => _tokenTapped += value;
-        remove => _tokenTapped -= value;
-    }
+    public event EventHandler<Token>? TokenTapped;
 
     private void TokenInputTextBox_OnTokenSubmitted(object? sender, Token e)
     {
@@ -94,11 +64,11 @@ public sealed partial class TokenInput
         }
 
         var arg = new TokenAddingEventArgs(e, false);
-        _tokenAdding?.Invoke(this, arg);
+        TokenAdding?.Invoke(this, arg);
         if (!arg.Cancel)
         {
             TokenSource.Add(e);
-            _tokenAdded?.Invoke(this, e);
+            TokenAdded?.Invoke(this, e);
         }
     }
 
@@ -108,15 +78,15 @@ public sealed partial class TokenInput
         {
             var token = sender.GetDataContext<Token>();
             var arg = new TokenDeletingEventArgs(token, false);
-            _tokenDeleting?.Invoke(this, arg);
+            TokenDeleting?.Invoke(this, arg);
             if (!arg.Cancel)
             {
                 TokenSource.Remove(token);
-                _tokenDeleted?.Invoke(this, token);
+                TokenDeleted?.Invoke(this, token);
             }
         }
 
-        _tokenTapped?.Invoke(sender, sender.GetDataContext<Token>());
+        TokenTapped?.Invoke(sender, sender.GetDataContext<Token>());
     }
 
     public static Visibility CalculateTokenIconRightmostSeparatorVisibility(bool caseSensitive, bool isRegex)

@@ -31,8 +31,6 @@ namespace Pixeval.UserControls;
 [DependencyProperty<object>("ItemsSource", "System.Linq.Enumerable.Empty<Pixeval.Pages.IllustrationViewer.CommentBlockViewModel>()", nameof(OnItemsSourceChanged), IsNullable = true)]
 public sealed partial class CommentList : IDisposable
 {
-    private EventHandler<TappedRoutedEventArgs>? _repliesHyperlinkButtonTapped;
-
     public CommentList()
     {
         InitializeComponent();
@@ -43,16 +41,11 @@ public sealed partial class CommentList : IDisposable
         ((CommentList)o).CommentsList.ItemsSource = args.NewValue;
     }
 
-
-    public event EventHandler<TappedRoutedEventArgs> RepliesHyperlinkButtonTapped
-    {
-        add => _repliesHyperlinkButtonTapped += value;
-        remove => _repliesHyperlinkButtonTapped -= value;
-    }
+    public event EventHandler<TappedRoutedEventArgs>? RepliesHyperlinkButtonTapped;
 
     private void CommentBlock_OnRepliesHyperlinkButtonTapped(object? sender, TappedRoutedEventArgs e)
     {
-        _repliesHyperlinkButtonTapped?.Invoke(sender, e);
+        RepliesHyperlinkButtonTapped?.Invoke(sender, e);
     }
 
     private void CommentBlock_OnDeleteHyperlinkButtonTapped(object? sender, TappedRoutedEventArgs e)

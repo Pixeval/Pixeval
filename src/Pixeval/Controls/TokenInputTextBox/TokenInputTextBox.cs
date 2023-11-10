@@ -42,8 +42,6 @@ public partial class TokenInputTextBox : Control
 
     private IconButton? _submitButton;
 
-    private EventHandler<Token>? _tokenSubmitted;
-
     private TextBox? _tokenTextBox;
 
     public TokenInputTextBox()
@@ -51,11 +49,7 @@ public partial class TokenInputTextBox : Control
         DefaultStyleKey = typeof(TokenInputTextBox);
     }
 
-    public event EventHandler<Token> TokenSubmitted
-    {
-        add => _tokenSubmitted += value;
-        remove => _tokenSubmitted -= value;
-    }
+    public event EventHandler<Token>? TokenSubmitted;
 
     protected override void OnApplyTemplate()
     {
@@ -100,7 +94,7 @@ public partial class TokenInputTextBox : Control
     {
         if (SubmitEnable && _tokenTextBox is { Text.Length: > 0 })
         {
-            _tokenSubmitted?.Invoke(this, (Token)Token.Clone());
+            TokenSubmitted?.Invoke(this, (Token)Token.Clone());
             _tokenTextBox.Text = string.Empty;
         }
     }

@@ -30,8 +30,6 @@ namespace Pixeval.UserControls;
 [DependencyProperty<object>("SelectedItem")]
 public sealed partial class SortOptionComboBox
 {
-    private SelectionChangedEventHandler? _selectionChangedWhenLoadedInternal;
-
     public SortOptionComboBox()
     {
         InitializeComponent();
@@ -39,11 +37,7 @@ public sealed partial class SortOptionComboBox
 
     public IllustrationSortOption SelectedOption => ((IllustrationSortOptionWrapper)SelectedItem).Value;
 
-    public event SelectionChangedEventHandler SelectionChangedWhenLoaded
-    {
-        add => _selectionChangedWhenLoadedInternal += value;
-        remove => _selectionChangedWhenLoadedInternal -= value;
-    }
+    public event SelectionChangedEventHandler? SelectionChangedWhenLoaded;
 
     public SortDescription? GetSortDescription()
     {
@@ -53,6 +47,6 @@ public sealed partial class SortOptionComboBox
     private void SortOptionComboBox_OnSelectionChangedWhenPrepared(object sender, SelectionChangedEventArgs e)
     {
         SelectedItem = ComboBox.SelectedItem;
-        _selectionChangedWhenLoadedInternal?.Invoke(sender, e);
+        SelectionChangedWhenLoaded?.Invoke(sender, e);
     }
 }

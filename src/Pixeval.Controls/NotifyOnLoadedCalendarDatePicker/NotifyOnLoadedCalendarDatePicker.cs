@@ -25,8 +25,6 @@ namespace Pixeval.Controls;
 
 public class NotifyOnLoadedCalendarDatePicker : CalendarDatePicker
 {
-    private TypedEventHandler<CalendarDatePicker, CalendarDatePickerDateChangedEventArgs>? _dateChangedWhenLoaded;
-
     public NotifyOnLoadedCalendarDatePicker()
     {
         DefaultStyleKey = typeof(NotifyOnLoadedCalendarDatePicker);
@@ -34,14 +32,10 @@ public class NotifyOnLoadedCalendarDatePicker : CalendarDatePicker
         {
             if (IsLoaded)
             {
-                _dateChangedWhenLoaded?.Invoke(sender, args);
+                DateChangedWhenLoaded?.Invoke(sender, args);
             }
         };
     }
 
-    public event TypedEventHandler<CalendarDatePicker, CalendarDatePickerDateChangedEventArgs> DateChangedWhenLoaded
-    {
-        add => _dateChangedWhenLoaded += value;
-        remove => _dateChangedWhenLoaded -= value;
-    }
+    public event TypedEventHandler<CalendarDatePicker, CalendarDatePickerDateChangedEventArgs>? DateChangedWhenLoaded;
 }

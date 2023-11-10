@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -58,7 +58,7 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
 
     public IllustratorContentViewerViewModel(PixivSingleUserResponse userDetail)
     {
-        RecommendIllustrators = new ObservableCollection<RecommendIllustratorProfileViewModel>();
+        RecommendIllustrators = new();
         UserDetail = userDetail;
 
         InitializeTags();
@@ -124,7 +124,7 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
         set => SetProperty(App.AppViewModel.AppSetting.ShowRecommendIllustratorsInIllustratorContentViewer, value, App.AppViewModel.AppSetting, (setting, value) =>
         {
             setting.ShowRecommendIllustratorsInIllustratorContentViewer = value;
-            _showRecommendIllustratorsChanged?.Invoke(this, value);
+            ShowRecommendIllustratorsChanged?.Invoke(this, value);
         });
     }
 
@@ -134,33 +134,21 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
         set => SetProperty(App.AppViewModel.AppSetting.ShowExternalCommandBarInIllustratorContentViewer, value, App.AppViewModel.AppSetting, (setting, value) =>
         {
             setting.ShowExternalCommandBarInIllustratorContentViewer = value;
-            _showExternalCommandBarChanged?.Invoke(this, value);
+            ShowExternalCommandBarChanged?.Invoke(this, value);
         });
     }
 
-    private EventHandler<bool>? _showRecommendIllustratorsChanged;
+    public event EventHandler<bool>? ShowRecommendIllustratorsChanged;
 
-    public event EventHandler<bool> ShowRecommendIllustratorsChanged
-    {
-        add => _showRecommendIllustratorsChanged += value;
-        remove => _showRecommendIllustratorsChanged -= value;
-    }
-
-    private EventHandler<bool>? _showExternalCommandBarChanged;
-
-    public event EventHandler<bool> ShowExternalCommandBarChanged
-    {
-        add => _showExternalCommandBarChanged += value;
-        remove => _showExternalCommandBarChanged -= value;
-    }
+    public event EventHandler<bool>? ShowExternalCommandBarChanged;
 
     public ObservableCollection<RecommendIllustratorProfileViewModel> RecommendIllustrators { get; init; }
 
     private void InitializeTags()
     {
-        IllustrationTag = new NavigationViewTag(typeof(IllustratorIllustrationPage), UserDetail.UserEntity!.Id.ToString());
-        MangaTag = new NavigationViewTag(typeof(IllustratorMangaPage), UserDetail.UserEntity!.Id.ToString());
-        BookmarkedIllustrationAndMangaTag = new NavigationViewTag(typeof(IllustratorIllustrationAndMangaBookmarkPage), UserDetail.UserEntity!.Id.ToString());
+        IllustrationTag = new(typeof(IllustratorIllustrationPage), UserDetail.UserEntity!.Id.ToString());
+        MangaTag = new(typeof(IllustratorMangaPage), UserDetail.UserEntity!.Id.ToString());
+        BookmarkedIllustrationAndMangaTag = new(typeof(IllustratorIllustrationAndMangaBookmarkPage), UserDetail.UserEntity!.Id.ToString());
     }
 
     private void InitializeCommands()
@@ -168,7 +156,7 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
         FollowCommand = GetFollowCommand();
         FollowCommand.ExecuteRequested += OnFollowCommandOnExecuteRequested;
 
-        FollowPrivatelyCommand = new XamlUICommand
+        FollowPrivatelyCommand = new()
         {
             IconSource = FontIconSymbols.FavoriteStarE734.GetFontIconSource(),
             Label = IllustratorContentViewerResources.FollowPrivately
@@ -183,10 +171,10 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
 
         CurrentTab = IllustratorContentViewerTab.Illustration;
         Username = UserDetail.UserEntity?.Name;
-        Metrics = new UserMetrics(profile?.TotalFollowUsers ?? 0, profile?.TotalMyPixivUsers ?? 0, profile?.TotalIllusts ?? 0);
+        Metrics = new(profile?.TotalFollowUsers ?? 0, profile?.TotalMyPixivUsers ?? 0, profile?.TotalIllusts ?? 0);
         Premium = profile?.IsPremium ?? false;
         Following = UserDetail.UserEntity?.IsFollowed ?? false;
-        ActionMenuFlyoutItems = new ObservableCollection<MenuFlyoutItemBase>();
+        ActionMenuFlyoutItems = new();
     }
 
     private async Task SetAvatarAsync()
@@ -219,7 +207,7 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
 
     private XamlUICommand GetFollowCommand()
     {
-        return new XamlUICommand
+        return new()
         {
             IconSource = Following ? FontIconSymbols.HeartFillEB52.GetFontIconSource(foregroundBrush: new SolidColorBrush(Colors.Crimson)) : FontIconSymbols.HeartEB51.GetFontIconSource(),
             Label = Following ? IllustratorContentViewerResources.Unfollow : IllustratorProfileResources.Follow
@@ -238,7 +226,7 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
 
             var displayImageUrls = (recommendUser.IllustIds ?? Enumerable.Empty<string>()).Select(id => thumbnails.First(t => t.Id == id)).SelectNotNull(illust => illust.Urls?.The250X250);
 
-            return new RecommendIllustratorProfileViewModel(userId ?? string.Empty, user.Name ?? string.Empty, displayImageUrls, user.Image, user.Premium);
+            return new(userId ?? string.Empty, user.Name ?? string.Empty, displayImageUrls, user.Image, user.Premium);
         }
 
         var recommendIllustrators = await App.AppViewModel.MakoClient.GetRelatedRecommendUsersAsync(UserDetail.UserEntity!.Id.ToString(), isR18: !App.AppViewModel.AppSetting.FiltrateRestrictedContent, lang: CultureInfo.CurrentUICulture);

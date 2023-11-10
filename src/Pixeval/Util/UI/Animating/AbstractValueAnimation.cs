@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -25,38 +25,26 @@ using System.Threading.Tasks;
 
 namespace Pixeval.Util.UI.Animating;
 
-public abstract class AbstractValueAnimation<V> : IValueAnimation<V> where V : INumber<V>
+public abstract class AbstractValueAnimation<TValue> : IValueAnimation<TValue> where TValue : INumber<TValue>
 {
     public abstract TimeSpan Duration { get; }
 
     public abstract TimeSpan SampleRate { get; }
 
-    public abstract V From { get; }
+    public abstract TValue From { get; }
 
-    public abstract V To { get; }
+    public abstract TValue To { get; }
 
-    public abstract IEasingFunction<V>? EasingFunction { get; }
+    public abstract IEasingFunction<TValue>? EasingFunction { get; }
 
-    private Action<V>? _onValueChanged;
+    public event Action<TValue>? OnValueChanged;
 
-    public event Action<V> OnValueChanged
-    {
-        add => _onValueChanged += value;
-        remove => _onValueChanged -= value;
-    }
-
-    private EventHandler? _onCompleted;
-
-    public event EventHandler OnCompleted
-    {
-        add => _onCompleted += value;
-        remove => _onCompleted -= value;
-    }
+    public event EventHandler? OnCompleted;
 
     public Task StartAsync()
     {
         return ValueAnimations.StartAsync(this)
-            .ForEachAsync(e => _onValueChanged?.Invoke(e))
-            .ContinueWith(_ => _onCompleted?.Invoke(this, EventArgs.Empty));
+            .ForEachAsync(e => OnValueChanged?.Invoke(e))
+            .ContinueWith(_ => OnCompleted?.Invoke(this, EventArgs.Empty));
     }
 }

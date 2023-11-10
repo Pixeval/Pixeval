@@ -8,7 +8,6 @@
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:recommendIllustratorProfile="using:Pixeval.UserControls.RecommendIllustratorProfile"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
 
     <Grid>
@@ -43,10 +42,8 @@
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="recommendIllustratorProfile:RecommendIllustratorProfileViewModel">
-                    <recommendIllustratorProfile:RecommendIllustratorProfile
-                        Margin="5,0"
-                        ViewModel="{x:Bind Mode=OneWay}" />
-                    <!--TODO ui:FrameworkElementExtensions.Cursor="Hand"-->
+                    <recommendIllustratorProfile:RecommendIllustratorProfile Margin="5,0" ViewModel="{x:Bind Mode=OneWay}" />
+                    <!--  TODO ui:FrameworkElementExtensions.Cursor="Hand"  -->
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

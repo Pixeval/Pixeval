@@ -34,26 +34,14 @@ namespace Pixeval.UserControls;
 [DependencyProperty<CommentBlockViewModel>("ViewModel", propertyChanged: nameof(OnViewModelChanged))]
 public sealed partial class CommentBlock
 {
-    private EventHandler<TappedRoutedEventArgs>? _deleteHyperlinkButtonTapped;
-
-    private EventHandler<TappedRoutedEventArgs>? _repliesHyperlinkButtonTapped;
-
     public CommentBlock()
     {
         InitializeComponent();
     }
 
-    public event EventHandler<TappedRoutedEventArgs> RepliesHyperlinkButtonTapped
-    {
-        add => _repliesHyperlinkButtonTapped += value;
-        remove => _repliesHyperlinkButtonTapped -= value;
-    }
+    public event EventHandler<TappedRoutedEventArgs>? RepliesHyperlinkButtonTapped;
 
-    public event EventHandler<TappedRoutedEventArgs> DeleteHyperlinkButtonTapped
-    {
-        add => _deleteHyperlinkButtonTapped += value;
-        remove => _deleteHyperlinkButtonTapped -= value;
-    }
+    public event EventHandler<TappedRoutedEventArgs>? DeleteHyperlinkButtonTapped;
 
     private static async void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -98,11 +86,11 @@ public sealed partial class CommentBlock
 
     private void OpenRepliesHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _repliesHyperlinkButtonTapped?.Invoke(sender, e);
+        RepliesHyperlinkButtonTapped?.Invoke(sender, e);
     }
 
     private void DeleteReplyHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _deleteHyperlinkButtonTapped?.Invoke(sender, e);
+        DeleteHyperlinkButtonTapped?.Invoke(sender, e);
     }
 }

@@ -25,8 +25,6 @@ namespace Pixeval.Controls;
 
 public class NotifyOnLoadedComboBox : ComboBox
 {
-    private EventHandler<SelectionChangedEventArgs>? _selectionChangedWhenLoaded;
-
     public NotifyOnLoadedComboBox()
     {
         DefaultStyleKey = typeof(NotifyOnLoadedComboBox);
@@ -34,14 +32,10 @@ public class NotifyOnLoadedComboBox : ComboBox
         {
             if (IsDropDownOpen)
             {
-                _selectionChangedWhenLoaded?.Invoke(sender, args);
+                SelectionChangedWhenLoaded?.Invoke(sender, args);
             }
         };
     }
 
-    public event EventHandler<SelectionChangedEventArgs> SelectionChangedWhenLoaded
-    {
-        add => _selectionChangedWhenLoaded += value;
-        remove => _selectionChangedWhenLoaded -= value;
-    }
+    public event EventHandler<SelectionChangedEventArgs>? SelectionChangedWhenLoaded;
 }
