@@ -234,7 +234,7 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             IsItemClickEnabled="True"
-                            ItemsSource="{x:Bind _viewModel.ViewModelSource.DataProvider.View}"
+                            ItemsSource="{x:Bind _viewModel.View}"
                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
                             ScrollViewer.HorizontalScrollMode="Auto"
                             ScrollViewer.VerticalScrollMode="Disabled"

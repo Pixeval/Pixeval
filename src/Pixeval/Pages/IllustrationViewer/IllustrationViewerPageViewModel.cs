@@ -185,10 +185,17 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     #endregion
 
-    public IllustrationViewViewModel? ViewModelSource { get; }
+    public IEnumerable<IllustrationViewModel> View => ViewModelSource?.DataProvider.View.To<IEnumerable<IllustrationViewModel>>() ?? IllustrationsSource!.Value;
+
+    private IllustrationViewViewModel? ViewModelSource { get; }
 
     public ImmutableArray<IllustrationViewModel>? IllustrationsSource { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="illustrationViewModels"></param>
+    /// <param name="currentIllustrationIndex"></param>
     public IllustrationViewerPageViewModel(IEnumerable<IllustrationViewModel> illustrationViewModels, int currentIllustrationIndex)
     {
         IllustrationsSource = illustrationViewModels.ToImmutableArray();
@@ -199,8 +206,15 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         InitializeCommands();
     }
 
-    // illustrations should contains only one item if the illustration is a single
-    // otherwise it contains the entire manga data
+    /// <summary>
+    /// 当拥有DataProvider的时候调用这个构造函数，dispose的时候会自动dispose掉DataProvider
+    /// </summary>
+    /// <param name="viewModel"></param>
+    /// <param name="currentIllustrationIndex"></param>
+    /// <remarks>
+    /// illustrations should contains only one item if the illustration is a single
+    /// otherwise it contains the entire manga data
+    /// </remarks>
     public IllustrationViewerPageViewModel(IllustrationViewViewModel viewModel, int currentIllustrationIndex)
     {
         ViewModelSource = new(viewModel);

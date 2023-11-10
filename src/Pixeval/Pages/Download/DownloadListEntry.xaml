@@ -91,7 +91,7 @@
                 Tapped="CancelDownloadItem_OnTapped" />
             <AppBarButton
                 x:Uid="/DownloadListEntry/OpenDownloadLocationItem"
-                Icon="{markup:FontSymbolIcon Glyph=OpenFolderHorizontalED25}"
+                Icon="{markup:FontSymbolIcon Glyph=OpenLocalE8DA}"
                 Tapped="OpenDownloadLocationItem_OnTapped" />
             <AppBarButton
                 x:Uid="/DownloadListEntry/GoToPageItem"

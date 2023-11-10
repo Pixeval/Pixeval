@@ -135,7 +135,7 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
     public ImmutableDictionary<ThumbnailUrlOption, SoftwareBitmapSource> ThumbnailSources => ThumbnailSourcesRef.ToImmutableDictionary(pair => pair.Key, pair => pair.Value.Value);
 
     /// <summary>
-    /// 缩略图流
+    /// 缩略图文件流
     /// </summary>
     public IReadOnlyDictionary<ThumbnailUrlOption, IRandomAccessStream> ThumbnailStreams => ThumbnailStreamsRef;
 
@@ -159,13 +159,14 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
         if (ThumbnailSourcesRef.TryGetValue(thumbnailUrlOption, out var value))
         {
             _ = value.MakeShared(key);
+
             // 之前已加载
             return false;
         }
 
         if (LoadingThumbnail)
         {
-            // 已有别的线程在加载缩略图
+            // 已有别的线程正在加载缩略图
             return false;
         }
 
@@ -202,11 +203,8 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
     }
 
     /// <summary>
-    /// small tricks to reduce memory consumption
-    /// </summary>
-    /// <remarks>
     /// 当控件不显示，或者Unload时，调用此方法以尝试释放内存
-    /// </remarks>
+    /// </summary>
     public void UnloadThumbnail(object key, ThumbnailUrlOption thumbnailUrlOption)
     {
         if (LoadingThumbnail)
@@ -231,6 +229,9 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
         OnPropertyChanged(nameof(ThumbnailSources));
     }
 
+    /// <summary>
+    /// 直接获取对应缩略图
+    /// </summary>
     public async Task<IRandomAccessStream?> GetThumbnail(ThumbnailUrlOption thumbnailUrlOptions)
     {
         if (Illustrate.GetThumbnailUrl(thumbnailUrlOptions) is { } url)
@@ -246,6 +247,26 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
         }
 
         return await AppContext.GetNotAvailableImageStreamAsync();
+    }
+
+    /// <summary>
+    /// 强制释放所有缩略图
+    /// </summary>
+    private void DisposeInternal()
+    {
+        foreach (var (option, softwareBitmapSource) in ThumbnailSourcesRef)
+        {
+            softwareBitmapSource?.DisposeForce();
+            ThumbnailStreamsRef[option]?.Dispose();
+        }
+        ThumbnailSourcesRef.Clear();
+        ThumbnailStreamsRef.Clear();
+    }
+
+    public override void Dispose()
+    {
+        DisposeInternal();
+        GC.SuppressFinalize(this);
     }
 
     #endregion
@@ -301,22 +322,5 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
     public int GetHashCode(IllustrationViewModel obj)
     {
         return obj.Illustrate.GetHashCode();
-    }
-
-    private void DisposeInternal()
-    {
-        foreach (var (option, softwareBitmapSource) in ThumbnailSourcesRef)
-        {
-            softwareBitmapSource?.DisposeForce();
-            ThumbnailStreamsRef[option]?.Dispose();
-        }
-        ThumbnailSourcesRef.Clear();
-        ThumbnailStreamsRef.Clear();
-    }
-
-    public override void Dispose()
-    {
-        DisposeInternal();
-        GC.SuppressFinalize(this);
     }
 }

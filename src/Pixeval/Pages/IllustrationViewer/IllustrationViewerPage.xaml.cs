@@ -172,7 +172,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
             var file = await AppKnownFolders.CreateTemporaryFileWithRandomNameAsync(_viewModel.IsUgoira ? "gif" : "png");
             await stream.SaveToFileAsync(file);
             request.Data.SetStorageItems(Enumerates.ArrayOf(file), true);
-            // SetBitmap 无效
+            // TODO: SetBitmap 无效
             // SetWebLink 后会导致 SetApplicationLink 无效
             // request.Data.SetApplicationLink(MakoHelper.GenerateIllustrationAppUri(vm.Id));
         }

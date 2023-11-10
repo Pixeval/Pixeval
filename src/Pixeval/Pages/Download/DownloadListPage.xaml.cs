@@ -28,9 +28,11 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
+using Pixeval.Controls.Windowing;
 using Pixeval.Dialogs;
 using Pixeval.Download;
 using Pixeval.Options;
+using Pixeval.Pages.IllustrationViewer;
 using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
@@ -56,8 +58,8 @@ public sealed partial class DownloadListPage
 
         async Task Task()
         {
-            foreach (var o in parameter.To<IEnumerable<ObservableDownloadTask>>())
-                _viewModel.DownloadTasks.Insert(0, new(o, await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(o.Id!)));
+            foreach (var o in parameter.To<IEnumerable<ObservableDownloadTask>>().Reverse())
+                _viewModel.DownloadTasks.Add(new(o, await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(o.Id!)));
         }
     }
 
@@ -163,76 +165,43 @@ public sealed partial class DownloadListPage
         _viewModel.UpdateSelection();
     }
 
-    private void DownloadListEntry_OnOpenIllustrationRequested(DownloadListEntry sender, ObservableDownloadTask viewModel)
+    private void DownloadListEntry_OnOpenIllustrationRequested(DownloadListEntry sender, DownloadListEntryViewModel viewModel)
     {
-        switch (viewModel)
+        var (width, height) = DetermineWindowSize(viewModel.Illustrate.Width,
+            viewModel.Illustrate.Width / (double)viewModel.Illustrate.Height);
+
+        var index = _viewModel.DownloadTasks.IndexOf(viewModel);
+
+        WindowFactory.RootWindow.Fork(out var w)
+            .WithLoaded((o, _) => o.To<Frame>().NavigateTo<IllustrationViewerPage>(w,
+                new IllustrationViewerPageViewModel(_viewModel.DownloadTasks, index),
+                new SuppressNavigationTransitionInfo()))
+            .WithSizeLimit(640, 360)
+            .Init(viewModel.Illustrate.Title ?? "", new(width, height))
+            .Activate();
+
+        static (int windowWidth, int windowHeight) DetermineWindowSize(int illustWidth, double illustRatio)
         {
-            //  _viewModel.DownloadTasks[0].Thumbnail
-            //case IIllustrationViewModelProvider provider:
-            //{
-            //    .
-            //    OpenIllustrationRequested
-            //        (await provider.GetViewModelAsync()).var viewModels = (await provider.GetViewModelAsync())
-            //        .GetMangaIllustrationViewModels()
-            //        .ToArray();
+            var (monitorWidth, monitorHeight) = WindowHelper.GetScreenSize();
 
-            //    // ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", App.AppViewModel.AppWindowRootFrame);
-            //    // todo UIHelper.RootFrameNavigate(typeof(IllustrationViewerPage), new IllustrationViewerPageViewModel(viewModels), new SuppressNavigationTransitionInfo());
-
-
-            //    var (width, height) = DetermineWindowSize(vm.Illustrate.Width,
-            //        vm.Illustrate.Width / (double)vm.Illustrate.Height);
-
-            //    var index = _viewModel.DownloadTasks.IndexOf(sender.GetDataContext<DownloadListEntryViewModel>());
-
-            //    WindowFactory.RootWindow.Fork(out var w)
-            //        .WithLoaded((o, _) => o.To<Frame>().NavigateTo<IllustrationViewerPage>(w,
-            //            new IllustrationViewerPageViewModel(_viewModel, index),
-            //            new SuppressNavigationTransitionInfo()))
-            //        .WithSizeLimit(640, 360)
-            //        .Init(vm.Illustrate.Title ?? "", new(width, height))
-            //        .Activate();
-
-            //    static (int windowWidth, int windowHeight) DetermineWindowSize(int illustWidth, double illustRatio)
-            //    {
-            //        /*
-            //        var windowHandle = User32.MonitorFromWindow((nint)CurrentContext.HWnd, User32.MonitorOptions.MONITOR_DEFAULTTONEAREST);
-            //        User32.GetMonitorInfo(windowHandle, out var monitorInfoEx);
-            //        var devMode = DEVMODE.Create();
-            //        while (!User32.EnumDisplaySettings(
-            //                   monitorInfoEx.DeviceName,
-            //                   User32.ENUM_CURRENT_SETTINGS,
-            //                   &devMode))
-            //        { }
-
-            //        var monitorWidth = devMode.dmPelsWidth;
-            //        var monitorHeight = devMode.dmPelsHeight;
-            //        */
-
-            //        var (monitorWidth, monitorHeight) = WindowHelper.GetScreenSize();
-
-            //        var determinedWidth = illustWidth switch
-            //        {
-            //            not 1500 => 1500 + Random.Shared.Next(0, 200),
-            //            _ => 1500
-            //        };
-            //        var windowWidth = determinedWidth > monitorWidth ? (int)monitorWidth - 100 : determinedWidth;
-            //        // 51 is determined through calculation, it is the height of the title bar
-            //        var windowHeight =
-            //            windowWidth / illustRatio + 51 is var height &&
-            //            height > monitorHeight - 80 // 80: estimated working area height
-            //                ? monitorHeight - 100
-            //                : height;
-            //        return (windowWidth, (int)windowHeight);
-            //    }
-
-            //    break;
-            //}
+            var determinedWidth = illustWidth switch
+            {
+                not 1500 => 1500 + Random.Shared.Next(0, 200),
+                _ => 1500
+            };
+            var windowWidth = determinedWidth > monitorWidth ? (int)monitorWidth - 100 : determinedWidth;
+            // 51 is determined through calculation, it is the height of the title bar
+            var windowHeight =
+                windowWidth / illustRatio + 51 is var height &&
+                height > monitorHeight - 80 // 80: estimated working area height
+                    ? monitorHeight - 100
+                    : height;
+            return (windowWidth, (int)windowHeight);
         }
     }
 
 
-    private async void DownloadListEntryOnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
+    private void DownloadListEntryOnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
     {
         var context = sender.GetDataContext<IllustrationViewModel>();
         var preLoadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
@@ -245,5 +214,10 @@ public sealed partial class DownloadListPage
         {
             context.UnloadThumbnail(_viewModel, option);
         }
+    }
+
+    private void DownloadListPage_OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        _viewModel.Dispose();
     }
 }

@@ -27,11 +27,12 @@ using CommunityToolkit.WinUI.Collections;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
+using Pixeval.Options;
 using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Download;
 
-public partial class DownloadListPageViewModel : ObservableObject
+public partial class DownloadListPageViewModel : ObservableObject, IDisposable
 {
     public static readonly IEnumerable<DownloadListOption> AvailableDownloadListOptions = Enum.GetValues<DownloadListOption>();
 
@@ -147,12 +148,18 @@ public partial class DownloadListPageViewModel : ObservableObject
         DownloadTasksView.Refresh();
         foreach (var downloadListEntryViewModel in DownloadTasks)
         {
-            if (!DownloadTasksView.Any(entry => downloadListEntryViewModel.DownloadTask.Equals(entry)))
+            if (!DownloadTasksView.Any(downloadListEntryViewModel.DownloadTask.Equals))
             {
                 downloadListEntryViewModel.DownloadTask.Selected = false;
             }
         }
 
         UpdateSelection();
+    }
+
+    public void Dispose()
+    {
+        foreach (var illustrationViewModel in DownloadTasks)
+            illustrationViewModel.UnloadThumbnail(this, ThumbnailUrlOption.SquareMedium);
     }
 }

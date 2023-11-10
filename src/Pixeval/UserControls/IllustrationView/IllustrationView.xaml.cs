@@ -118,6 +118,7 @@ public sealed partial class IllustrationView
             .WithSizeLimit(640, 360)
             .Init(vm.Illustrate.Title ?? "", new(width, height))
             .Activate();
+        return;
 
         static (int windowWidth, int windowHeight) DetermineWindowSize(int illustWidth, double illustRatio)
         {
@@ -142,7 +143,7 @@ public sealed partial class IllustrationView
                 not 1500 => 1500 + Random.Shared.Next(0, 200),
                 _ => 1500
             };
-            var windowWidth = determinedWidth > monitorWidth ? (int)monitorWidth - 100 : determinedWidth;
+            var windowWidth = determinedWidth > monitorWidth ? monitorWidth - 100 : determinedWidth;
             // 51 is determined through calculation, it is the height of the title bar
             var windowHeight = windowWidth / illustRatio + 51 is var height && height > monitorHeight - 80 // 80: estimated working area height
                 ? monitorHeight - 100

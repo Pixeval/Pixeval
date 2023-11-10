@@ -20,6 +20,7 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -46,7 +47,7 @@ namespace Pixeval.Pages.Download;
 [DependencyProperty<bool>("IsShowErrorDetailDialogItemEnabled")]
 public sealed partial class DownloadListEntry
 {
-    public event TypedEventHandler<DownloadListEntry, ObservableDownloadTask>? OpenIllustrationRequested;
+    public event TypedEventHandler<DownloadListEntry, DownloadListEntryViewModel>? OpenIllustrationRequested;
 
     public DownloadListEntry()
     {
@@ -77,7 +78,7 @@ public sealed partial class DownloadListEntry
             case DownloadState.Error:
             case DownloadState.Cancelled:
             case DownloadState.Completed:
-                await Launcher.LaunchUriAsync(new Uri(ViewModel.DownloadTask.Destination));
+                await Launcher.LaunchUriAsync(new(ViewModel.DownloadTask.Destination));
                 break;
             case DownloadState.Paused:
                 ViewModel.DownloadTask.CancellationHandle.Resume();
@@ -98,12 +99,12 @@ public sealed partial class DownloadListEntry
         ViewModel.DownloadTask.CancellationHandle.Cancel();
     }
 
-    private void OpenDownloadLocationItem_OnTapped(object sender, TappedRoutedEventArgs e)
+    private async void OpenDownloadLocationItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        Process.Start("explorer.exe", $@"/select, ""{ViewModel.DownloadTask.Destination}""");
+        await Launcher.LaunchFolderPathAsync(Path.GetDirectoryName(ViewModel.DownloadTask.Destination));
     }
 
-    private void GoToPageItem_OnTapped(object sender, TappedRoutedEventArgs e) => OpenIllustrationRequested?.Invoke(this, ViewModel.DownloadTask);
+    private void GoToPageItem_OnTapped(object sender, TappedRoutedEventArgs e) => OpenIllustrationRequested?.Invoke(this, ViewModel);
 
     private async void CheckErrorMessageInDetail_OnTapped(object sender, TappedRoutedEventArgs e)
     {
