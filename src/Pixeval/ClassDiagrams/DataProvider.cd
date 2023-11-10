@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Pixeval.UserControls.IllustrationView.IllustrationViewDataProvider" Collapsed="true">
+    <Position X="7.5" Y="4.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>BAAEIAAAAiAAAACAAAAAAEIACBABAoAAAQQAAAAAAAA=</HashCode>
+      <FileName>UserControls\IllustrationView\IllustrationViewDataProvider.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pixeval.UserControls.IllustratorView.IllustratorViewDataProvider" Collapsed="true">
+    <Position X="4" Y="4.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAgAAAAAAAAAAAEAABBABAIAAAAQAAAAAAAA=</HashCode>
+      <FileName>UserControls\IllustratorView\IllustratorViewDataProvider.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.Misc.IllustrationFetchEngineIncrementalSource" Collapsed="true">
+    <Position X="4" Y="7" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Misc\IllustrationFetchEngineIncrementalSource.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.Misc.IllustratorFetchEngineIncrementalSource" Collapsed="true">
+    <Position X="8.75" Y="7" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Misc\IllustratorFetchEngineIncrementalSource.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.Misc.FetchEngineIncrementalSource&lt;T, TModel&gt;" Collapsed="true">
+    <Position X="6.75" Y="5.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAQAAAAAgQAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Misc\FetchEngineIncrementalSource.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pixeval.UserControls.Illustrate.DataProvider&lt;T, TViewModel&gt;" Collapsed="true">
+    <Position X="6.25" Y="2.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAgAAAAAAAAAAAEAAABABAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>UserControls\Illustrate\DataProvider.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="FetchEngine" />
+    </ShowAsAssociation>
+  </Class>
+  <Interface Name="Pixeval.CoreApi.Engine.IFetchEngine&lt;E&gt;" Collapsed="true">
+    <Position X="6.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>

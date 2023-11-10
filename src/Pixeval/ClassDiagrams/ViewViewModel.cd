@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Pixeval.UserControls.IllustratorView.IllustrateViewViewModel&lt;T, TViewModel&gt;" Collapsed="true">
+    <Position X="4.75" Y="2.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAEAACAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UserControls\IllustratorView\IllustrateViewViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pixeval.UserControls.Illustrate.SortableIllustrateViewViewModel&lt;T, TViewModel&gt;" Collapsed="true">
+    <Position X="2.5" Y="3.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAAAAAAAAAAAAIBAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>UserControls\Illustrate\SortableIllustrateViewViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.UserControls.IllustratorView.IllustratorViewViewModel" Collapsed="true">
+    <Position X="6.75" Y="3.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UserControls\IllustratorView\IllustratorViewViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.UserControls.IllustrationView.IllustrationViewViewModel" Collapsed="true">
+    <Position X="2.5" Y="5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAABAIAAAAAAAAAACEAAAAAA=</HashCode>
+      <FileName>UserControls\IllustrationView\IllustrationViewViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>

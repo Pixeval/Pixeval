@@ -23,7 +23,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
@@ -37,7 +36,7 @@ namespace Pixeval.UserControls.IllustrationView;
 /// <summary>
 /// 复用时调用<see cref="CloneRef"/>，<see cref="FetchEngineRef"/>和<see cref="IllustrationSourceRef"/>会在所有复用对象都Dispose时Dispose
 /// </summary>
-public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illustration, IllustrationViewModel>, IDisposable
+public class IllustrationViewDataProvider : DataProvider<Illustration, IllustrationViewModel>, IDisposable
 {
     /// <summary>
     /// Call <see cref="ResetAndFillAsync"/> to initialize
@@ -61,9 +60,13 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
         }
     }
 
-    public IFetchEngine<Illustration?>? FetchEngine => _fetchEngineRef?.Value;
+    public override IFetchEngine<Illustration?>? FetchEngine
+    {
+        get => _fetchEngineRef?.Value;
+        protected set => throw new NotImplementedException("Not used setter.");
+    }
 
-    public AdvancedCollectionView View { get; } = new(Array.Empty<IllustrationViewModel>());
+    public override AdvancedCollectionView View { get; } = new(Array.Empty<IllustrationViewModel>());
 
     private SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>> _illustrationSourceRef = null!;
 
@@ -88,7 +91,11 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
         }
     }
 
-    public IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel> Source => _illustrationSourceRef.Value;
+    public override IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel> Source
+    {
+        get => _illustrationSourceRef.Value;
+        protected set => throw new NotImplementedException("Not used setter.");
+    }
 
     public IllustrationViewDataProvider CloneRef()
     {
@@ -104,7 +111,7 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
 
     private Predicate<object>? _filter;
 
-    public Predicate<object>? Filter
+    public override Predicate<object>? Filter
     {
         get => _filter;
         set
@@ -114,11 +121,11 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
         }
     }
 
-    public event EventHandler? FilterChanged;
+    public override event EventHandler? FilterChanged;
 
     public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; set; } = new();
 
-    public void DisposeCurrent()
+    public override void DisposeCurrent()
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (IllustrationSourceRef is not null)
@@ -132,7 +139,7 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
         SelectedIllustrations.Clear();
     }
 
-    public async Task<int> ResetAndFillAsync(IFetchEngine<Illustration?>? fetchEngine, int limit = -1)
+    public override async Task<int> ResetAndFillAsync(IFetchEngine<Illustration?>? fetchEngine, int limit = -1)
     {
         FetchEngineRef = new(fetchEngine, this);
         DisposeCurrent();

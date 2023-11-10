@@ -20,7 +20,6 @@
 
 using System;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
@@ -29,27 +28,27 @@ using Pixeval.UserControls.Illustrate;
 
 namespace Pixeval.UserControls.IllustratorView;
 
-public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User, IllustratorViewModel>
+public class IllustratorViewDataProvider : DataProvider<User, IllustratorViewModel>
 {
-    public AdvancedCollectionView View { get; } = new(Array.Empty<IllustratorViewModel>());
+    public override AdvancedCollectionView View { get; } = new(Array.Empty<IllustratorViewModel>());
 
     private IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel> _illustratorsSource = null!;
 
-    public IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel> Source
+    public override IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel> Source
     {
         get => _illustratorsSource;
-        set
+        protected set
         {
             SetProperty(ref _illustratorsSource, value);
             View.Source = value;
         }
     }
 
-    public IFetchEngine<User?>? FetchEngine { get; private set; }
+    public override IFetchEngine<User?>? FetchEngine { get; protected set; }
 
     private Predicate<object>? _filter;
 
-    public Predicate<object>? Filter
+    public override Predicate<object>? Filter
     {
         get => _filter;
         set
@@ -59,9 +58,9 @@ public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User,
         }
     }
 
-    public event EventHandler? FilterChanged;
+    public override event EventHandler? FilterChanged;
 
-    public void DisposeCurrent()
+    public override void DisposeCurrent()
     {
         if (Source is { } source)
             foreach (var illustratorViewModel in source)
@@ -72,7 +71,7 @@ public class IllustratorViewDataProvider : ObservableObject, IDataProvider<User,
         View.Clear();
     }
 
-    public async Task<int> ResetAndFillAsync(IFetchEngine<User?>? fetchEngine, int limit = -1)
+    public override async Task<int> ResetAndFillAsync(IFetchEngine<User?>? fetchEngine, int limit = -1)
     {
         FetchEngine?.EngineHandle.Cancel();
         FetchEngine = fetchEngine;

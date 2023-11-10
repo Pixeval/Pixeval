@@ -33,9 +33,9 @@ public abstract partial class IllustrateViewViewModel<T, TViewModel> : Observabl
     private bool _hasNoItems;
 
     /// <summary>
-    /// Avoid calls to <see cref="IDataProvider{T, TViewModel}.ResetAndFillAsync"/>, calls to <see cref="ResetEngineAndFillAsync"/> instead.
+    /// Avoid calls to <see cref="DataProvider{T, TViewModel}.ResetAndFillAsync"/>, calls to <see cref="ResetEngineAndFillAsync"/> instead.
     /// </summary>
-    public abstract IDataProvider<T, TViewModel> DataProvider { get; }
+    public abstract DataProvider<T, TViewModel> DataProvider { get; }
 
     public abstract void Dispose();
 

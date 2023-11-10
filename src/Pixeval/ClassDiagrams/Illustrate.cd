@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Pixeval.CoreApi.Model.Illustration" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4" Y="3.75" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.221" Collapsed="true" />
+  </Class>
+  <Class Name="Pixeval.CoreApi.Model.User" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.304" Collapsed="true" />
+  </Class>
+  <Interface Name="Pixeval.CoreApi.Model.IIllustrate" Collapsed="true">
+    <Position X="4" Y="2.5" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>
