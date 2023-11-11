@@ -82,9 +82,9 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="model:Tag">
                         <Button
-                            Click="IllustrationTagButton_OnClick"
                             Content="{x:Bind Name}"
                             FontSize="{StaticResource PixevalSubscriptFontSize}"
+                            Tapped="IllustrationTagButton_OnTapped"
                             ToolTipService.ToolTip="{x:Bind viewer:IllustrationInfoPage.GetMakoTagTranslatedNameText(TranslatedName, Name)}" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

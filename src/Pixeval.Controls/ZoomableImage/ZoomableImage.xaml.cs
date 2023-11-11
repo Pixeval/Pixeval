@@ -305,11 +305,7 @@ public sealed partial class ZoomableImage : UserControl
 
     private void CanvasControlOnCreateResources(CanvasControl sender, CanvasCreateResourcesEventArgs e)
     {
-        //if (Source is not null)
-        //    _frames.Add(await CanvasBitmap.LoadAsync(sender, Source));
-        //else if (Sources is not null)
-        //    foreach (var source in Sources)
-        //        _frames.Add(await CanvasBitmap.LoadAsync(sender, source));
+        // 由于需要随时重新加载新图片，故创建资源的逻辑放在CanvasControlOnDraw的else分支中
     }
 
     private void CanvasControlOnUnloaded(object sender, RoutedEventArgs e)

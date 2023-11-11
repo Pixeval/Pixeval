@@ -50,7 +50,7 @@ public sealed partial class IllustrationInfoPage
         SetIllustrationCaptionText();
     }
 
-    private void IllustrationTagButton_OnClick(object sender, RoutedEventArgs e)
+    private void IllustrationTagButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         WeakReferenceMessenger.Default.Send(new IllustrationTagClickedMessage((string)((Button)sender).Content));
     }

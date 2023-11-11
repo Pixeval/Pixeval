@@ -14,7 +14,7 @@
                 HorizontalAlignment="Stretch"
                 DeleteHyperlinkButtonTapped="CommentBlock_OnDeleteHyperlinkButtonTapped"
                 RepliesHyperlinkButtonTapped="CommentBlock_OnRepliesHyperlinkButtonTapped"
-                ViewModel="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                ViewModel="{x:Bind}" />
         </DataTemplate>
     </UserControl.Resources>
     <ListView
@@ -24,7 +24,13 @@
         SelectionMode="None">
         <ListView.ItemContainerStyle>
             <Style TargetType="ListViewItem">
-                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListViewItem">
+                            <ContentPresenter Content="{TemplateBinding Content}" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
         </ListView.ItemContainerStyle>
         <ListView.Transitions>

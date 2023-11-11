@@ -63,32 +63,32 @@ public static class MakoHelper
 
     public static Uri GenerateIllustrationWebUri(string id)
     {
-        return new Uri($"https://www.pixiv.net/artworks/{id}");
+        return new($"https://www.pixiv.net/artworks/{id}");
     }
 
     public static Uri GenerateIllustrationPixEzUri(string id)
     {
-        return new Uri($"pixez://www.pixiv.net/artworks/{id}");
+        return new($"pixez://www.pixiv.net/artworks/{id}");
     }
 
     public static Uri GenerateIllustrationAppUri(string id)
     {
-        return new Uri($"{AppContext.AppProtocol}://illust/{id}");
+        return new($"{AppContext.AppProtocol}://illust/{id}");
     }
 
     public static Uri GenerateIllustratorWebUri(string id)
     {
-        return new Uri($"https://www.pixiv.net/users/{id}");
+        return new($"https://www.pixiv.net/users/{id}");
     }
 
     public static Uri GenerateIllustratorPixEzUri(string id)
     {
-        return new Uri($"pixez://www.pixiv.net/users/{id}");
+        return new($"pixez://www.pixiv.net/users/{id}");
     }
 
     public static Uri GenerateIllustratorAppUri(string id)
     {
-        return new Uri($"{AppContext.AppProtocol}://user/{id}");
+        return new($"{AppContext.AppProtocol}://user/{id}");
     }
 
     public static string? GetOriginalUrl(this Illustration illustration)
@@ -115,9 +115,9 @@ public static class MakoHelper
     {
         return sortOption switch
         {
-            IllustrationSortOption.PopularityDescending => new SortDescription(SortDirection.Descending, IllustrationBookmarkComparer.Instance),
-            IllustrationSortOption.PublishDateAscending => new SortDescription(SortDirection.Ascending, IllustrationViewModelPublishDateComparer.Instance),
-            IllustrationSortOption.PublishDateDescending => new SortDescription(SortDirection.Descending, IllustrationViewModelPublishDateComparer.Instance),
+            IllustrationSortOption.PopularityDescending => new(SortDirection.Descending, IllustrationBookmarkComparer.Instance),
+            IllustrationSortOption.PublishDateAscending => new(SortDirection.Ascending, IllustrationViewModelPublishDateComparer.Instance),
+            IllustrationSortOption.PublishDateDescending => new(SortDirection.Descending, IllustrationViewModelPublishDateComparer.Instance),
             IllustrationSortOption.DoNotSort => null,
             _ => throw new ArgumentOutOfRangeException(nameof(sortOption), sortOption, null)
         };
@@ -153,51 +153,51 @@ public static class MakoHelper
         return $"https://s.pximg.net/common/images/stamp/generated-stamps/{id}_s.jpg";
     }
 
-    public static IconSource GetBookmarkButtonIconSource(bool isBookmarked)
+    public static FontIconSource GetBookmarkButtonIconSource(bool isBookmarked)
     {
         var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         return isBookmarked
-            ? new FontIconSource
+            ? new()
             {
                 Glyph = "\xEB52", // HeartFill
                 Foreground = new SolidColorBrush(Colors.Crimson),
                 FontFamily = systemThemeFontFamily
             }
-            : new FontIconSource
+            : new()
             {
                 Glyph = "\xEB51", // Heart
                 FontFamily = systemThemeFontFamily
             };
     }
 
-    public static IconElement GetBookmarkButtonIcon(bool isBookmarked)
+    public static FontIcon GetBookmarkButtonIcon(bool isBookmarked)
     {
         var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         return isBookmarked
-            ? new FontIcon
+            ? new()
             {
                 Glyph = "\xEB52", // HeartFill
                 Foreground = new SolidColorBrush(Colors.Crimson),
                 FontFamily = systemThemeFontFamily
             }
-            : new FontIcon
+            : new()
             {
                 Glyph = "\xEB51", // Heart
                 FontFamily = systemThemeFontFamily
             };
     }
 
-    public static IconSource GetFollowButtonIcon(bool isFollowed)
+    public static FontIconSource GetFollowButtonIcon(bool isFollowed)
     {
         var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         return isFollowed
-            ? new FontIconSource
+            ? new()
             {
                 Glyph = "\xEA8C", // ContactSolid
                 Foreground = new SolidColorBrush(Colors.Crimson),
                 FontFamily = systemThemeFontFamily
             }
-            : new FontIconSource
+            : new()
             {
                 Glyph = "\xE77B", // Contact
                 FontFamily = systemThemeFontFamily

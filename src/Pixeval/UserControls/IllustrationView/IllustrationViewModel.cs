@@ -40,7 +40,6 @@ using Pixeval.Utilities.Threading;
 using Windows.Storage.Streams;
 using Windows.UI;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Util.Ref;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.UserControls.IllustrationView;

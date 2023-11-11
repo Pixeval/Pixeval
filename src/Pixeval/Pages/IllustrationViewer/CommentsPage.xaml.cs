@@ -25,7 +25,6 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Collections;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
@@ -63,13 +62,13 @@ public sealed partial class CommentsPage
         if (CommentList.ItemsSource is not ICollection<CommentBlockViewModel>)
         {
             CommentList.ItemsSource = new IncrementalLoadingCollection<CommentsIncrementalSource, CommentBlockViewModel>(
-                new CommentsIncrementalSource(engine.Select(c => new CommentBlockViewModel(c, illustId))), 30);
+                new(engine.Select(c => new CommentBlockViewModel(c, illustId))), 30);
         }
     }
 
     private void CommentList_OnRepliesHyperlinkButtonTapped(object? sender, TappedRoutedEventArgs e)
     {
-        CommentRepliesBlock.ViewModel = new CommentRepliesBlockViewModel(sender!.GetDataContext<CommentBlockViewModel>());
+        CommentRepliesBlock.ViewModel = new(sender!.GetDataContext<CommentBlockViewModel>());
         CommentRepliesTeachingTip.IsOpen = true;
     }
 
@@ -101,7 +100,7 @@ public sealed partial class CommentsPage
         if (postCommentResponse.IsSuccessStatusCode)
         {
             var response = await postCommentResponse.Content.ReadFromJsonAsync<PostCommentResponse>();
-            (CommentList.ItemsSource as ObservableCollection<CommentBlockViewModel>)?.Insert(0, new CommentBlockViewModel(response?.Comment!, _illustId!));
+            (CommentList.ItemsSource as ObservableCollection<CommentBlockViewModel>)?.Insert(0, new(response?.Comment!, _illustId!));
         }
     }
 }

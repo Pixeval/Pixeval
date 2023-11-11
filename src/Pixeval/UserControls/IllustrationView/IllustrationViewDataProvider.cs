@@ -28,7 +28,6 @@ using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 using Pixeval.UserControls.Illustrate;
-using Pixeval.Util.Ref;
 using Pixeval.Utilities;
 
 namespace Pixeval.UserControls.IllustrationView;

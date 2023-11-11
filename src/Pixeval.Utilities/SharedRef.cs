@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Pixeval.Util.Ref;
+namespace Pixeval.Utilities;
 
 public class SharedRef<T>
 {

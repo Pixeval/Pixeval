@@ -30,24 +30,24 @@ public record Supporter(string Nickname, string Name, ImageSource ProfilePicture
     // ReSharper disable StringLiteralTypo
     public static readonly IEnumerable<Supporter> Supporters = new List<Supporter>
     {
-        new("Sep", "@Guro2", SupportImageOf(22517862), new Uri("https://github.com/Guro2")),
-        new("无论时间", "@wulunshijian", SupportImageOf(46415928), new Uri("https://github.com/wulunshijian")),
-        new("CN", "@ControlNet", SupportImageOf(12800094), new Uri("https://github.com/ControlNet")),
-        new("CY", "@Cyl18", SupportImageOf(14993992), new Uri("https://github.com/cyl18")),
-        new("对味", "@duiweiya", SupportImageOf(40987061), new Uri("https://github.com/duiweiya")),
-        new("LG", "@LasmGratel", SupportImageOf(6669365), new Uri("https://github.com/LasmGratel")),
-        new("鱼鱼", "@sovetskyfish",SupportImageOf(76583116), new Uri("https://github.com/sovetskyfish")),
-        new("探姬", "@PerolNotsfsssf", SupportImageOf(96558937), new Uri("https://github.com/Notsfsssf")),
-        new("Summpot", "@Summpot", SupportImageOf(29229273), new Uri("https://github.com/Summpot")),
-        new("扑克", "@Poker-sang", SupportImageOf(62325494), new Uri("https://github.com/Poker-sang")),
-        new("南门二", "@Rigil-Kentaurus", SupportImageOf(49679244), new Uri("https://github.com/Rigil-Kentaurus")),
-        new("当妈", "@TheRealKamisama", SupportImageOf(35005476), new Uri("https://github.com/TheRealKamisama")),
-        new("茶栗", "@CharlieJiang", SupportImageOf(5109850), new Uri("https://github.com/cqjjjzr"))
+        new("Sep", "@Guro2", SupportImageOf(22517862), new("https://github.com/Guro2")),
+        new("无论时间", "@wulunshijian", SupportImageOf(46415928), new("https://github.com/wulunshijian")),
+        new("CN", "@ControlNet", SupportImageOf(12800094), new("https://github.com/ControlNet")),
+        new("CY", "@Cyl18", SupportImageOf(14993992), new("https://github.com/cyl18")),
+        new("对味", "@duiweiya", SupportImageOf(40987061), new("https://github.com/duiweiya")),
+        new("LG", "@LasmGratel", SupportImageOf(6669365), new("https://github.com/LasmGratel")),
+        new("鱼鱼", "@sovetskyfish",SupportImageOf(76583116), new("https://github.com/sovetskyfish")),
+        new("探姬", "@PerolNotsfsssf", SupportImageOf(96558937), new("https://github.com/Notsfsssf")),
+        new("Summpot", "@Summpot", SupportImageOf(29229273), new("https://github.com/Summpot")),
+        new("扑克", "@Poker-sang", SupportImageOf(62325494), new("https://github.com/Poker-sang")),
+        new("南门二", "@Rigil-Kentaurus", SupportImageOf(49679244), new("https://github.com/Rigil-Kentaurus")),
+        new("当妈", "@TheRealKamisama", SupportImageOf(35005476), new("https://github.com/TheRealKamisama")),
+        new("茶栗", "@CharlieJiang", SupportImageOf(5109850), new("https://github.com/cqjjjzr"))
     };
     // ReSharper restore StringLiteralTypo
 
     private static ImageSource SupportImageOf(int supporterId)
     {
-        return new BitmapImage(new Uri($"https://avatars.githubusercontent.com/u/{supporterId}?v=4"));
+        return new BitmapImage(new($"https://avatars.githubusercontent.com/u/{supporterId}?v=4"));
     }
 }

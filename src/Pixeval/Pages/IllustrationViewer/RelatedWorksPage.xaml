@@ -10,7 +10,7 @@
     mc:Ignorable="d">
     <illustrationView:IllustrationView
         x:Name="RelatedWorksIllustrationGrid"
-        Margin="10,0,5,0"
+        Margin="5,0,0,0"
         IllustrationViewOption="Grid"
         ThumbnailDirection="{x:Bind ThumbnailDirection}" />
 </controls:EnhancedPage>
