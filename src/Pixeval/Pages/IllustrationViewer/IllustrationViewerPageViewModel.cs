@@ -210,8 +210,6 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     #endregion
 
-    public IEnumerable<IllustrationViewModel> View => ViewModelSource?.DataProvider.View.To<IEnumerable<IllustrationViewModel>>() ?? IllustrationsSource!.Value;
-
     private IllustrationViewViewModel? ViewModelSource { get; }
 
     public ImmutableArray<IllustrationViewModel>? IllustrationsSource { get; }
@@ -492,13 +490,14 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         OnPropertyChanged(nameof(ShowQrCode));
         ShowQrCodeTeachingTip.IsOpen = true;
 
+        ShowQrCodeTeachingTip.Closed += Closed;
+        return;
+
         void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
         {
             qrCodeSource.Dispose();
             s.Closed -= Closed;
         }
-
-        ShowQrCodeTeachingTip.Closed += Closed;
     }
 
     private void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -526,9 +525,18 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     public void FlipRestoreResolutionCommand(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        RestoreResolutionCommand.Label = CurrentImage.IsFit ? IllustrationViewerPageResources.UniformToFillResolution : IllustrationViewerPageResources.RestoreOriginalResolution;
-        RestoreResolutionCommand.IconSource = CurrentImage.IsFit ? FontIconSymbols.FitPageE9A6.GetFontIconSource() : FontIconSymbols.WebcamE8B8.GetFontIconSource();
-        CurrentImage.ShowMode = CurrentImage.ShowMode is ZoomableImageMode.Fit ? ZoomableImageMode.Original : ZoomableImageMode.Fit;
+        if (CurrentImage.IsFit)
+        {
+            RestoreResolutionCommand.Label = IllustrationViewerPageResources.UniformToFillResolution;
+            RestoreResolutionCommand.IconSource = FontIconSymbols.FitPageE9A6.GetFontIconSource();
+            CurrentImage.ShowMode = ZoomableImageMode.Original;
+        }
+        else
+        {
+            RestoreResolutionCommand.Label = IllustrationViewerPageResources.RestoreOriginalResolution;
+            RestoreResolutionCommand.IconSource = FontIconSymbols.WebcamE8B8.GetFontIconSource();
+            CurrentImage.ShowMode = ZoomableImageMode.Fit;
+        }
     }
 
     public XamlUICommand IllustrationInfoAndCommentsCommand { get; } =
@@ -580,14 +588,8 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     public void Dispose()
     {
-        if (ViewModelSource is not null)
-            foreach (var illustrationViewModel in ViewModelSource.DataProvider.Source)
-                illustrationViewModel.UnloadThumbnail(this, ThumbnailUrlOption.SquareMedium);
-        else
-        {
-            foreach (var illustrationViewModel in IllustrationsSource!.Value)
-                illustrationViewModel.UnloadThumbnail(this, ThumbnailUrlOption.SquareMedium);
-        }
+        foreach (var illustrationViewModel in Illustrations)
+            illustrationViewModel.UnloadThumbnail(this, ThumbnailUrlOption.SquareMedium);
         _pages?.ForEach(i => i.Dispose());
         (UserProfileImageSource as SoftwareBitmapSource)?.Dispose();
         ViewModelSource?.Dispose();

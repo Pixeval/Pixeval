@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage.Streams;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI;
 using Microsoft.Graphics.Canvas.UI.Xaml;
@@ -23,14 +25,19 @@ namespace Pixeval.Controls;
 [DependencyProperty<bool>("IsPlaying", "true", nameof(OnIsPlayingChanged))]
 [DependencyProperty<double>("ImagePositionX", "0d")]
 [DependencyProperty<double>("ImagePositionY", "0d")]
-[DependencyProperty<double>("OriginalImageWidth", "0d", nameof(OnOriginalSizeChanged))]
-[DependencyProperty<double>("OriginalImageHeight", "0d", nameof(OnOriginalSizeChanged))]
 [DependencyProperty<float>("ImageScale", "1f", nameof(OnImageScaleChanged))]
 [DependencyProperty<ZoomableImageMode>("Mode", DependencyPropertyDefaultValue.Default, nameof(OnModeChanged))]
 [DependencyProperty<ZoomableImageMode>("InitMode", "ZoomableImageMode.Fit")]
 [DependencyProperty<ZoomableImagePosition>("InitPosition", "ZoomableImagePosition.AbsoluteCenter")]
+[ObservableObject]
 public sealed partial class ZoomableImage : UserControl
 {
+    [ObservableProperty]
+    private double _originalImageWidth;
+
+    [ObservableProperty]
+    private double _originalImageHeight;
+
     public ZoomableImage()
     {
         InitializeComponent();
@@ -89,8 +96,10 @@ public sealed partial class ZoomableImage : UserControl
         zoomableImage.IsPlaying = true;
         zoomableImage._timerRunning = false;
         _ = zoomableImage.ManualResetEvent.Reset();
+        // 使CanvasControl具有大小，否则不会触发CanvasControlOnDraw
+        zoomableImage.OriginalImageWidth = zoomableImage.OriginalImageHeight = 10;
         zoomableImage.CanvasControl.Invalidate();
-        zoomableImage.Mode = zoomableImage.InitMode;
+        // 进入CanvasControlOnDraw的else分支，其中会令Mode = InitMode，从而触发OnModeChanged
     }
 
     private static void OnIsPlayingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -114,7 +123,10 @@ public sealed partial class ZoomableImage : UserControl
             if (Sources is null)
                 return;
             foreach (var source in Sources)
-                _frames.Add(await CanvasBitmap.LoadAsync((ICanvasResourceCreator)sender, (IRandomAccessStream)source));
+                _frames.Add(await CanvasBitmap.LoadAsync(sender, source));
+            OriginalImageWidth = _frames[0].Size.Width;
+            OriginalImageHeight = _frames[0].Size.Height;
+            Mode = InitMode; // 触发OnModeChanged
             _timerRunning = true;
             _ = ManualResetEvent.Set();
         }
@@ -140,7 +152,26 @@ public sealed partial class ZoomableImage : UserControl
         ImageScale = MathF.Exp(MathF.Log(ImageScale) + delta / 5000f);
     }
 
-    private double ScaledFactor { get; set; }
+    /// <summary>
+    /// Get the scale factor of the original image when it is contained inside an <see cref="Image"/> control, and the <see cref="Image.Stretch"/>
+    /// property is set to <see cref="Stretch.UniformToFill"/> or <see cref="Stretch.Uniform"/>
+    /// </summary>
+    /// <remarks>当图片按原比例显示，并占满画布时，图片的缩放比例</remarks>>
+    private double ScaledFactor
+    {
+        get
+        {
+            var canvasWidth = Canvas.ActualWidth;
+            var canvasHeight = Canvas.ActualHeight;
+            var imageResolution = OriginalImageWidth / OriginalImageHeight;
+            var canvasResolution = canvasWidth / canvasHeight;
+            return (canvasResolution - imageResolution) switch
+            {
+                > 0 => canvasHeight / OriginalImageHeight,
+                _ => canvasWidth / OriginalImageWidth
+            };
+        }
+    }
 
     private void CanvasOnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
     {
@@ -156,9 +187,8 @@ public sealed partial class ZoomableImage : UserControl
 
     private void CanvasOnSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        CanvasRectangleGeometry.Rect = new(0, 0, Canvas.ActualWidth, Canvas.ActualHeight);
-        ScaledFactor = GetImageScaledFactor();
-        OnImageScaleChanged(this, (float)ImageScale);
+        CanvasRectangleGeometry.Rect = new(new(), Canvas.ActualSize.ToSize());
+        OnImageScaleChanged(this, ImageScale);
     }
 
     private static void OnImageScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -178,7 +208,7 @@ public sealed partial class ZoomableImage : UserControl
                     zoomableImage.ImageScale = 1;
                     var imageWidth = zoomableImage.OriginalImageWidth;
                     var imageHeight = zoomableImage.OriginalImageHeight;
-                    zoomableImage.SetPosition(zoomableImage.InitPosition, imageWidth, imageHeight);
+                    zoomableImage.SetPosition(zoomableImage.InitPosition, new(imageWidth, imageHeight));
                 }
                 break;
             case ZoomableImageMode.Fit:
@@ -188,7 +218,7 @@ public sealed partial class ZoomableImage : UserControl
                     zoomableImage.ImageScale = (float)scale;
                     var imageWidth = zoomableImage.OriginalImageWidth * zoomableImage.ScaledFactor;
                     var imageHeight = zoomableImage.OriginalImageHeight * zoomableImage.ScaledFactor;
-                    zoomableImage.SetPosition(zoomableImage.InitPosition, imageWidth, imageHeight);
+                    zoomableImage.SetPosition(zoomableImage.InitPosition, new(imageWidth, imageHeight));
                 }
                 break;
             case ZoomableImageMode.NotFit:
@@ -219,39 +249,16 @@ public sealed partial class ZoomableImage : UserControl
         }
     }
 
-    private static void OnOriginalSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var zoomableImage = d.To<ZoomableImage>();
-        zoomableImage.ScaledFactor = zoomableImage.GetImageScaledFactor();
-    }
-
-    /// <summary>
-    /// Get the scale factor of the original image when it is contained inside an <see cref="Microsoft.UI.Xaml.Controls.Image"/> control, and the <see cref="Microsoft.UI.Xaml.Controls.Image.Stretch"/>
-    /// property is set to <see cref="Stretch.UniformToFill"/> or <see cref="Stretch.Uniform"/>
-    /// </summary>
-    private double GetImageScaledFactor()
-    {
-        var canvasWidth = Canvas.ActualWidth;
-        var canvasHeight = Canvas.ActualHeight;
-        var imageResolution = OriginalImageWidth / OriginalImageHeight;
-        var canvasResolution = canvasWidth / canvasHeight;
-        return (canvasResolution - imageResolution) switch
-        {
-            > 0 => canvasHeight / OriginalImageHeight,
-            _ => canvasWidth / OriginalImageWidth
-        };
-    }
-
     #endregion
 
     #region PositionRelated
 
-    public void SetPosition(ZoomableImagePosition position, double imageWidth = 0, double imageHeight = 0)
+    public void SetPosition(ZoomableImagePosition position, Size size)
     {
-        if (imageWidth is 0)
-            imageWidth = CanvasControl.ActualWidth;
-        if (imageHeight is 0)
-            imageHeight = CanvasControl.ActualHeight;
+        if (size.Width is 0)
+            size.Width = CanvasControl.ActualWidth;
+        if (size.Height is 0)
+            size.Height = CanvasControl.ActualHeight;
         switch (position)
         {
             case ZoomableImagePosition.Left:
@@ -262,15 +269,15 @@ public sealed partial class ZoomableImage : UserControl
                 break;
             case ZoomableImagePosition.LeftCenter:
                 ImagePositionX = 0;
-                ImagePositionY = (Canvas.ActualHeight - imageWidth) / 2;
+                ImagePositionY = (Canvas.ActualHeight - size.Width) / 2;
                 break;
             case ZoomableImagePosition.TopCenter:
-                ImagePositionX = (Canvas.ActualWidth - imageHeight) / 2;
+                ImagePositionX = (Canvas.ActualWidth - size.Height) / 2;
                 ImagePositionY = 0;
                 break;
             case ZoomableImagePosition.AbsoluteCenter:
-                ImagePositionX = (Canvas.ActualWidth - imageWidth) / 2;
-                ImagePositionY = (Canvas.ActualHeight - imageHeight) / 2;
+                ImagePositionX = (Canvas.ActualWidth - size.Width) / 2;
+                ImagePositionY = (Canvas.ActualHeight - size.Height) / 2;
                 break;
             case ZoomableImagePosition.Default:
                 break;
@@ -314,32 +321,4 @@ public sealed partial class ZoomableImage : UserControl
         _token.Dispose();
         ManualResetEvent.Dispose();
     }
-}
-
-public enum ZoomableImageMode
-{
-    /// <summary>
-    /// Image is fitting the canvas
-    /// </summary>
-    Fit,
-
-    /// <summary>
-    /// Image scale is 1
-    /// </summary>
-    Original,
-
-    /// <summary>
-    /// Image is not fitting the canvas
-    /// </summary>
-    NotFit
-}
-
-public enum ZoomableImagePosition
-{
-    Default,
-    Left,
-    Top,
-    LeftCenter,
-    TopCenter,
-    AbsoluteCenter
 }
