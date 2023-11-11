@@ -167,37 +167,7 @@ public sealed partial class DownloadListPage
 
     private void DownloadListEntry_OnOpenIllustrationRequested(DownloadListEntry sender, DownloadListEntryViewModel viewModel)
     {
-        var (width, height) = DetermineWindowSize(viewModel.Illustrate.Width,
-            viewModel.Illustrate.Width / (double)viewModel.Illustrate.Height);
-
-        var index = _viewModel.DownloadTasks.IndexOf(viewModel);
-
-        WindowFactory.RootWindow.Fork(out var w)
-            .WithLoaded((o, _) => o.To<Frame>().NavigateTo<IllustrationViewerPage>(w,
-                new IllustrationViewerPageViewModel(_viewModel.DownloadTasks, index),
-                new SuppressNavigationTransitionInfo()))
-            .WithSizeLimit(640, 360)
-            .Init(viewModel.Illustrate.Title ?? "", new(width, height))
-            .Activate();
-
-        static (int windowWidth, int windowHeight) DetermineWindowSize(int illustWidth, double illustRatio)
-        {
-            var (monitorWidth, monitorHeight) = WindowHelper.GetScreenSize();
-
-            var determinedWidth = illustWidth switch
-            {
-                not 1500 => 1500 + Random.Shared.Next(0, 200),
-                _ => 1500
-            };
-            var windowWidth = determinedWidth > monitorWidth ? (int)monitorWidth - 100 : determinedWidth;
-            // 51 is determined through calculation, it is the height of the title bar
-            var windowHeight =
-                windowWidth / illustRatio + 51 is var height &&
-                height > monitorHeight - 80 // 80: estimated working area height
-                    ? monitorHeight - 100
-                    : height;
-            return (windowWidth, (int)windowHeight);
-        }
+        viewModel.CreateWindowWithPage(_viewModel.DownloadTasks);
     }
 
 

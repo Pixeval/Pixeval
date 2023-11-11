@@ -249,9 +249,9 @@
       },
       "WinUIEx": {
         "type": "Direct",
-        "requested": "[2.3.2, )",
-        "resolved": "2.3.2",
-        "contentHash": "YOUIU6k1psJC5JPn+TGh3NO8ZBlmCA8okhCgaG5BE04die0cjt53pwdzBC/42e/SNtOYybVMSUWF4cwPBHg8Bg==",
+        "requested": "[2.3.3, )",
+        "resolved": "2.3.3",
+        "contentHash": "wKGyXOijf7yZnVXMvVQNGAbDV+GGbU0dkjklHyNvI33AdvqGYCxP2s20YdeB0opFp+P8a4Wb/ncwUw2uIUZM/w==",
         "dependencies": {
           "Microsoft.WindowsAppSDK": "1.4.230822000"
         }

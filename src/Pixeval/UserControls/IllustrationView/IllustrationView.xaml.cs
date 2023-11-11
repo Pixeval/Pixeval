@@ -19,14 +19,12 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.Controls.Windowing;
 using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util;
@@ -107,49 +105,7 @@ public sealed partial class IllustrationView
         var vm = sender.GetDataContext<IllustrationViewModel>();
         ItemTapped?.Invoke(this, vm);
 
-        var (width, height) = DetermineWindowSize(vm.Illustrate.Width, vm.Illustrate.Width / (double)vm.Illustrate.Height);
-
-        var index = ViewModel.DataProvider.View.Cast<IllustrationViewModel>().ToList().IndexOf(vm);
-
-        WindowFactory.RootWindow.Fork(out var w)
-            .WithLoaded((o, _) => o.To<Frame>().NavigateTo<IllustrationViewerPage>(w,
-                new IllustrationViewerPageViewModel(ViewModel, index),
-                new SuppressNavigationTransitionInfo()))
-            .WithSizeLimit(640, 360)
-            .Init(vm.Illustrate.Title ?? "", new(width, height))
-            .Activate();
-        return;
-
-        static (int windowWidth, int windowHeight) DetermineWindowSize(int illustWidth, double illustRatio)
-        {
-            /*
-            var windowHandle = User32.MonitorFromWindow((nint)CurrentContext.HWnd, User32.MonitorOptions.MONITOR_DEFAULTTONEAREST);
-            User32.GetMonitorInfo(windowHandle, out var monitorInfoEx);
-            var devMode = DEVMODE.Create();
-            while (!User32.EnumDisplaySettings(
-                       monitorInfoEx.DeviceName,
-                       User32.ENUM_CURRENT_SETTINGS,
-                       &devMode))
-            { }
-
-            var monitorWidth = devMode.dmPelsWidth;
-            var monitorHeight = devMode.dmPelsHeight;
-            */
-
-            var (monitorWidth, monitorHeight) = WindowHelper.GetScreenSize();
-
-            var determinedWidth = illustWidth switch
-            {
-                not 1500 => 1500 + Random.Shared.Next(0, 200),
-                _ => 1500
-            };
-            var windowWidth = determinedWidth > monitorWidth ? monitorWidth - 100 : determinedWidth;
-            // 51 is determined through calculation, it is the height of the title bar
-            var windowHeight = windowWidth / illustRatio + 51 is var height && height > monitorHeight - 80 // 80: estimated working area height
-                ? monitorHeight - 100
-                : height;
-            return (windowWidth, (int)windowHeight);
-        }
+        vm.CreateWindowWithPage(ViewModel);
     }
 
     /// <summary>

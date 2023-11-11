@@ -107,14 +107,26 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         }
     }
 
-    #region Current
+    #region Current相关
 
+    /// <summary>
+    /// 插画列表
+    /// </summary>
     public ImmutableArray<IllustrationViewModel> Illustrations => ViewModelSource?.DataProvider.View.Cast<IllustrationViewModel>().ToImmutableArray() ?? IllustrationsSource!.Value;
 
+    /// <summary>
+    /// 当前插画
+    /// </summary>
     public IllustrationViewModel CurrentIllustration => Illustrations[CurrentIllustrationIndex];
 
+    /// <summary>
+    /// 当前插画的页面
+    /// </summary>
     public IllustrationViewModel CurrentPage => _pages[CurrentPageIndex];
 
+    /// <summary>
+    /// 当前插画的索引
+    /// </summary>
     public int CurrentIllustrationIndex
     {
         get => _currentIllustrationIndex;
@@ -151,6 +163,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             PlayGifCommand.Description = PlayGifCommand.Label = IllustrationViewerPageResources.PauseGif;
             PlayGifCommand.IconSource = new SymbolIconSource { Symbol = Symbol.Stop };
             OnDetailedPropertyChanged(oldValue, value, oldTag, CurrentPage.Id);
+            return;
 
             async Task LoadUserProfile()
             {
@@ -163,6 +176,9 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         }
     }
 
+    /// <summary>
+    /// 当前插画的页面索引
+    /// </summary>
     public int CurrentPageIndex
     {
         get => _currentPageIndex;
@@ -175,11 +191,20 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         }
     }
 
+    /// <inheritdoc cref="CurrentIllustrationIndex"/>
     private int _currentIllustrationIndex;
+
+    /// <inheritdoc cref="CurrentPageIndex"/>
     private int _currentPageIndex;
 
+    /// <summary>
+    /// 一个插画所有的页面
+    /// </summary>
     private IllustrationViewModel[] _pages = null!;
 
+    /// <summary>
+    /// 当前图片的ViewModel
+    /// </summary>
     [ObservableProperty]
     private ImageViewerPageViewModel _currentImage = null!;
 
