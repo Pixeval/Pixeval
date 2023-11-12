@@ -102,7 +102,7 @@ public static partial class IOHelper
         foreach (var (frame, delay) in framesArray.Skip(1))
         {
             using var f = await Image.LoadAsync(frame.AsStream());
-            // TODO: delay
+            // TODO: delay, wait for ImageSharp 3.10
             _ = image.Frames.AddFrame(f.Frames[0]);
         }
 
@@ -168,6 +168,11 @@ public static partial class IOHelper
         return entryStreams.Select(s => s.content.AsRandomAccessStream());
     }
 
+    /// <summary>
+    /// 根据显示模式获取缩略图所需的Url
+    /// </summary>
+    /// <param name="illustrationViewOption"></param>
+    /// <returns></returns>
     public static ThumbnailUrlOption ToThumbnailUrlOption(
         this IllustrationViewOption illustrationViewOption)
     {

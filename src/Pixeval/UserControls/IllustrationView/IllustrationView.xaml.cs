@@ -20,20 +20,20 @@
 
 using System;
 using System.Threading.Tasks;
+using Windows.System;
+using Windows.UI.Core;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
-using Pixeval.Util;
-using Pixeval.Util.Converters;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
-using Windows.System;
-using Windows.UI.Core;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -43,18 +43,26 @@ namespace Pixeval.UserControls.IllustrationView;
 // note: please ALWAYS add e.Handled = true before every "tapped" event for the buttons
 [DependencyProperty<IllustrationViewOption>("IllustrationViewOption", DependencyPropertyDefaultValue.Default, nameof(OnIllustrationViewOptionChanged))]
 [DependencyProperty<ThumbnailDirection>("ThumbnailDirection", DependencyPropertyDefaultValue.Default, nameof(OnThumbnailDirectionChanged))]
+[INotifyPropertyChanged]
 public sealed partial class IllustrationView
 {
+    public const double LandscapeHeight = 180;
+    public const double PortraitHeight = 250;
+
+    public double DesiredHeight => ThumbnailDirection switch
+    {
+        ThumbnailDirection.Landscape => LandscapeHeight,
+        ThumbnailDirection.Portrait => PortraitHeight,
+        _ => ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(ThumbnailDirection)
+    };
+
     private static void OnIllustrationViewOptionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var value = e.NewValue.To<IllustrationViewOption>();
-        d.To<UserControl>().Resources[nameof(Box)].To<Box>().Value = value.ToThumbnailUrlOption();
     }
 
     private static void OnThumbnailDirectionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var value = e.NewValue.To<ThumbnailDirection>();
-        d.To<UserControl>().Resources[nameof(Box)].To<Box>().Tag = value;
+        d.To<IllustrationView>().OnPropertyChanged(nameof(ThumbnailDirection));
     }
 
     public IllustrationView()
@@ -70,27 +78,7 @@ public sealed partial class IllustrationView
         };
     }
 
-    public event EventHandler<IllustrationViewModel>? ItemTapped;
-
     public IllustrationViewViewModel ViewModel { get; } = new();
-
-    private void IllustrationViewOnUnloaded(object sender, RoutedEventArgs e)
-    {
-        var option = IllustrationViewOption.ToThumbnailUrlOption();
-        foreach (var illustrationViewModel in ViewModel.DataProvider.Source)
-            illustrationViewModel.UnloadThumbnail(ViewModel, option);
-        ViewModel.Dispose();
-    }
-
-    private async void ToggleBookmarkButtonOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        e.Handled = true;
-        var viewModel = sender.GetDataContext<IllustrationViewModel>();
-        if (viewModel.IsBookmarked)
-            await viewModel.RemoveBookmarkAsync();
-        else
-            await viewModel.PostPublicBookmarkAsync();
-    }
 
     private void ThumbnailOnTapped(object sender, TappedRoutedEventArgs e)
     {
@@ -102,23 +90,36 @@ public sealed partial class IllustrationView
 
         e.Handled = true;
 
-        var vm = sender.GetDataContext<IllustrationViewModel>();
-        ItemTapped?.Invoke(this, vm);
+        var vm = sender.To<IllustrationThumbnail>().ViewModel;
 
         vm.CreateWindowWithPage(ViewModel);
     }
 
-    /// <summary>
-    /// For Bookmark Button
-    /// </summary>
-    private void IllustrationThumbnailContainerItemOnTapped(object sender, TappedRoutedEventArgs e)
+    private void IllustrationThumbnailOnShowQrCodeRequested(object sender, SoftwareBitmapSource e)
     {
-        e.Handled = true;
+        QrCodeTeachingTip.HeroContent.To<Image>().Source = e;
+        QrCodeTeachingTip.IsOpen = true;
+        QrCodeTeachingTip.Closed += Closed;
+        return;
+
+        void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
+        {
+            e.Dispose();
+            s.Closed -= Closed;
+        }
+    }
+
+    private void IllustrationViewOnUnloaded(object sender, RoutedEventArgs e)
+    {
+        var option = IllustrationViewOption.ToThumbnailUrlOption();
+        foreach (var illustrationViewModel in ViewModel.DataProvider.Source)
+            illustrationViewModel.UnloadThumbnail(ViewModel, option);
+        ViewModel.Dispose();
     }
 
     private async void IllustrationThumbnailContainerItemOnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
     {
-        var context = sender.GetDataContext<IllustrationViewModel>();
+        var context = sender.To<IllustrationThumbnail>().ViewModel;
         var preLoadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
         var option = IllustrationViewOption.ToThumbnailUrlOption();
 
@@ -150,70 +151,8 @@ public sealed partial class IllustrationView
             _ = await ViewModel.DataProvider.View.LoadMoreItemsAsync(number);
     }
 
-    private async void BookmarkContextItemOnTapped(object sender, TappedRoutedEventArgs e)
+    private IllustrationView IllustrationThumbnail_OnThisRequired()
     {
-        await sender.GetDataContext<IllustrationViewModel>().SwitchBookmarkStateAsync();
-    }
-
-    private async void SaveContextItemOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        await sender.GetDataContext<IllustrationViewModel>().SaveAsync();
-    }
-
-    private async void SaveAsContextItemOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        await sender.GetDataContext<IllustrationViewModel>().SaveAsAsync();
-    }
-
-    private async void OpenInBrowserContextItemOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        _ = await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<IllustrationViewModel>().Id));
-    }
-
-    private void AddToBookmarkContextItemOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        throw new NotImplementedException();
-    }
-
-    private void CopyWebLinkContextItemOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        UIHelper.ClipboardSetText(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString());
-    }
-
-    private void CopyAppLinkContextItemOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        UIHelper.ClipboardSetText(MakoHelper.GenerateIllustrationAppUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString());
-    }
-
-    private async void ShowQrCodeContextItemOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        var webQrCodeSource = await UIHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString());
-        QrCodeTeachingTip.HeroContent.To<Image>().Source = webQrCodeSource;
-        QrCodeTeachingTip.IsOpen = true;
-
-        QrCodeTeachingTip.Closed += Closed;
-        return;
-
-        void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
-        {
-            webQrCodeSource.Dispose();
-            s.Closed -= Closed;
-        }
-    }
-
-    private async void ShowPixEzQrCodeContextItemOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        var pixEzQrCodeSource = await UIHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustrationPixEzUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString());
-        QrCodeTeachingTip.HeroContent.To<Image>().Source = pixEzQrCodeSource;
-        QrCodeTeachingTip.IsOpen = true;
-
-        QrCodeTeachingTip.Closed += Closed;
-        return;
-
-        void Closed(TeachingTip s, TeachingTipClosedEventArgs ea)
-        {
-            pixEzQrCodeSource.Dispose();
-            s.Closed -= Closed;
-        }
+        return this;
     }
 }
