@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
+    xmlns:controls="using:Pixeval.Controls"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:followingUserBadge="using:Pixeval.Controls.FollowingUserBadge"
@@ -103,7 +104,10 @@
                                     Foreground="{StaticResource TextSecondaryAccentColor}"
                                     Style="{StaticResource SubscriptTextBlockStyle}"
                                     Text="{x:Bind ViewModel.UserId, Mode=OneWay}" />
-                                <followingUserBadge:FollowingUserBadge Visibility="{x:Bind ViewModel.IsFollowed, Mode=OneWay}" />
+                                <controls:PixevalBadge
+                                    Mode="Following"
+                                    UseSmall="True"
+                                    Visibility="{x:Bind ViewModel.IsFollowed, Mode=OneWay}" />
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>

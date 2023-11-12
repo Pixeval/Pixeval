@@ -43,7 +43,7 @@ public partial class IconButton : Button
                 },
                 new TextBlock
                 {
-                    Margin = new Thickness(5, 0, 0, 0),
+                    Margin = new(5, 0, 0, 0),
                     VerticalAlignment = VerticalAlignment.Center
                 }
             }

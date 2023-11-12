@@ -17,7 +17,7 @@
         <None Remove="NotifyOnLoadedCalendarDatePicker\NotifyOnLoadedCalendarDatePicker.xaml" />
         <None Remove="NotifyOnLoadedComboBox\NotifyOnLoadedComboBox.xaml" />
         <None Remove="PersonView\PersonView.xaml" />
-        <None Remove="PremiumUserBadge\PremiumUserBadge.xaml" />
+        <None Remove="PixevalBadge\PixevalBadge.xaml" />
         <None Remove="SettingRadioButtons\SettingRadioButtons.xaml" />
         <None Remove="ZoomableImage.xaml" />
     </ItemGroup>
@@ -48,9 +48,6 @@
         <Page Update="PersonView\PersonView.xaml">
           <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
         </Page>
-        <Page Update="PremiumUserBadge\PremiumUserBadge.xaml">
-            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-        </Page>
         <Page Update="SettingRadioButtons\SettingRadioButtons.xaml">
           <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
         </Page>
@@ -58,5 +55,8 @@
             <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
             <SubType>Designer</SubType>
         </Page>
+      <Page Update="PixevalBadge\PixevalBadge.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
     </ItemGroup>
 </Project>

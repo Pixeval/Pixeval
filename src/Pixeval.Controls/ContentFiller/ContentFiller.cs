@@ -42,7 +42,7 @@ public sealed partial class ContentFiller : ContentControl
 
     protected override Size ArrangeOverride(Size finalSize)
     {
-        ((FrameworkElement)Content).Arrange(new Rect(new Point(), finalSize));
+        ((FrameworkElement)Content).Arrange(new(new(), finalSize));
         return finalSize;
     }
 }

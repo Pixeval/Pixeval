@@ -2,7 +2,6 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///Controls/IllustratorView/IllustratorView.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/TokenInputTextBox/TokenInputTextBox.xaml" />
-        <ResourceDictionary Source="ms-appx:///Controls/FollowingUserBadge/FollowingUserBadge.xaml" />
         <ResourceDictionary Source="ms-appx:///Flyouts/IllustrationResultFilter/IllustrationResultFilterFunctionEntry.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

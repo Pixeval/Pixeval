@@ -41,10 +41,12 @@
                     Text="{x:Bind ViewModel.Username, Mode=OneWay}"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="NoWrap" />
-                <controls:PremiumUserBadge
+                <controls:PixevalBadge
                     Grid.Column="2"
                     HorizontalAlignment="Left"
-                    VerticalAlignment="Center" />
+                    VerticalAlignment="Center"
+                    Mode="Premium"
+                    UseSmall="True" />
                 <Button
                     Grid.Column="3"
                     Background="{x:Bind ViewModel.GetButtonBackground(ViewModel.Followed), Mode=OneWay}"

@@ -108,8 +108,14 @@
                             HorizontalAlignment="Left"
                             Orientation="Horizontal"
                             Spacing="5">
-                            <controls:PremiumUserBadge Visibility="{x:Bind ViewModel.Premium, Mode=OneWay}" />
-                            <followingUserBadge:FollowingUserBadge Visibility="{x:Bind ViewModel.Following, Mode=OneWay}" />
+                            <controls:PixevalBadge
+                                Mode="Premium"
+                                UseSmall="True"
+                                Visibility="{x:Bind ViewModel.Premium, Mode=OneWay}" />
+                            <controls:PixevalBadge
+                                Mode="Following"
+                                UseSmall="True"
+                                Visibility="{x:Bind ViewModel.Following, Mode=OneWay}" />
                         </StackPanel>
                     </StackPanel>
                     <Grid Margin="20,0,0,0" VerticalAlignment="Center">

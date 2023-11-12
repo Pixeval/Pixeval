@@ -40,6 +40,7 @@ using Pixeval.Utilities.Threading;
 using Windows.Storage.Streams;
 using Windows.UI;
 using Microsoft.UI.Xaml.Controls;
+using Pixeval.Controls;
 using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.UserControls.IllustrationView;
@@ -60,7 +61,13 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
 
     public bool IsManga => Illustrate.IsManga();
 
-    public string RestrictionCaption => Illustrate.RestrictLevel().GetMetadataOnEnumMember()!;
+    public BadgeMode RestrictionCaption =>
+        Illustrate.RestrictLevel() switch
+        {
+            XRestrictLevel.R18 => BadgeMode.R18,
+            XRestrictLevel.R18G => BadgeMode.R18G,
+            _ => BadgeMode.R18
+        };
 
     public string Id => Illustrate.Id.ToString();
 

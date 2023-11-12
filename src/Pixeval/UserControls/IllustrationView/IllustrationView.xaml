@@ -242,32 +242,14 @@
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto" />
                                             </Grid.RowDefinitions>
-                                            <Grid
+                                            <controls:PixevalBadge
                                                 Grid.Column="0"
-                                                Background="Crimson"
-                                                CornerRadius="{ThemeResource ControlCornerRadius}"
-                                                Visibility="{x:Bind IsRestricted}">
-                                                <TextBlock
-                                                    Margin="3"
-                                                    FontSize="9"
-                                                    FontWeight="Bold"
-                                                    Foreground="White"
-                                                    Text="{x:Bind RestrictionCaption}"
-                                                    TextAlignment="Center" />
-                                            </Grid>
-                                            <Grid
+                                                Mode="{x:Bind RestrictionCaption}"
+                                                Visibility="{x:Bind IsRestricted}" />
+                                            <controls:PixevalBadge
                                                 Grid.Column="1"
-                                                Background="Green"
-                                                CornerRadius="{ThemeResource ControlCornerRadius}"
-                                                Visibility="{x:Bind IsUgoira}">
-                                                <TextBlock
-                                                    Margin="3"
-                                                    FontSize="9"
-                                                    FontWeight="Bold"
-                                                    Foreground="White"
-                                                    Text="GIF"
-                                                    TextAlignment="Center" />
-                                            </Grid>
+                                                Mode="Gif"
+                                                Visibility="{x:Bind IsUgoira}" />
                                             <FontIcon
                                                 Grid.Column="3"
                                                 Width="20"
