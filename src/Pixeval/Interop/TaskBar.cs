@@ -19,7 +19,6 @@
 #endregion
 
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.Marshalling;
 
 namespace Pixeval.Interop;
 
@@ -33,7 +32,7 @@ public enum TaskBarState
     Paused = 1 << 3
 }
 
-[GeneratedComInterface]
+[ComImport]
 [Guid("ea1afb91-9e28-4b86-90e9-9e9f8a5eefaf")]
 [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 public partial interface ITaskBarList3

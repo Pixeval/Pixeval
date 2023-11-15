@@ -20,11 +20,10 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.Marshalling;
 
 namespace Pixeval.Interop;
 
-[GeneratedComInterface]
+[ComImport]
 [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 [Guid("3A3DCD6C-3EAB-43DC-BCDE-45671CE800C8")]
 public partial interface IDataTransferManagerInterop
