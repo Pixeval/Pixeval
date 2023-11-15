@@ -19,9 +19,7 @@
         <a href="https://dotnet.microsoft.com/download/dotnet/8.0" target="_blank">
             <img src="https://img.shields.io/static/v1?label=runtime&message=.NET%208.0&color=yellow&style=for-the-badge&logo=.NET&logoColor=white"/>
         </a>
-        <a href="" target="_blank">
-            <img src="https://img.shields.io/badge/Platform-Windows10.0.19041-512BD4?&style=for-the-badge&logo=Windows&logoColor=white"/>
-        </a>
+        <img src="https://img.shields.io/badge/Platform-Windows10.0.19041-512BD4?&style=for-the-badge&logo=Windows&logoColor=white"/>
     </p>
     </br>
 </div>
@@ -44,7 +42,7 @@
 
 1. 安装[Visual Studio 2022](https://visualstudio.microsoft.com/vs)（Roslyn 4.x要求必须是VS17.x，即VS2022）
 2. 在**工具-获取工具与功能**的**工作负载**中选择 **.NET 桌面开发**（建议在安装对话框的“安装详细信息”窗格中，选择位于列表底部的“Windows 应用 SDK C# 模板”，但不是必需的。可以参考[安装适用于 Windows 应用 SDK 的工具](https://learn.microsoft.com/windows/apps/windows-app-sdk/set-up-your-development-environment)）
-3. 在**工具-获取工具与功能**的**单个组件**中选择 **.NET 7**；也可以在VS外部下载[.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)最新版本，但不推荐这么做
+3. 在**工具-获取工具与功能**的**单个组件**中选择 **.NET 8**；也可以在VS外部下载[.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)最新版本，但不推荐这么做
 4. 在**扩展-管理扩展**中搜索[Single-project MSIX Packaging Tools for VS 2022](https://marketplace.visualstudio.com/items?itemName=ProjectReunion.MicrosoftSingleProjectMSIXPackagingToolsDev17)并安装
 
 ## 运行项目
@@ -106,9 +104,8 @@
 如果你感觉该项目帮助到了你，欢迎前往[爱发电](https://afdian.net/@dylech30th)赞助我，你的支持是我维护项目的动力，谢谢！
 
 <div>
-  <a href="https://www.jetbrains.com/?from=Pixeval" align="right"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="JetBrains" class="logo-footer" width="72" align="left"></a>
+  <a href="https://www.jetbrains.com/?from=Pixeval" align="right"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="JetBrains" class="logo-footer" width="100" align="left"></a>
   <br/>
   
   本项目重度依赖于 [JetBrains](https://www.jetbrains.com/?from=ImageSharp) ReSharper，感谢JetBrains s.r.o为本项目提供 [开源许可证](https://www.jetbrains.com/community/opensource/#support)，如果你同样对开发充满热情并且经常使用JetBrains s.r.o的产品，你也可以尝试通过JetBrains官方渠道 [申请](https://www.jetbrains.com/shop/eform/opensource) 开源许可证以供核心开发者使用
 </div>
-
