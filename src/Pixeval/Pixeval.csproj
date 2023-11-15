@@ -28,10 +28,12 @@
         <NoWarn>$(NoWarn);WMC1501</NoWarn>
     </PropertyGroup>
     <ItemGroup>
+      <None Remove="Controls\ZoomableImage\ZoomableImage.xaml" />
       <None Remove="UserControls\IllustrationView\IllustrationThumbnail.xaml" />
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.0" />
         <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.0.230907" />
         <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.0.230907" />
         <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.0.230907" />
@@ -207,6 +209,10 @@
 
     <!--XAML-->
     <ItemGroup>
+        <Page Update="Controls\ZoomableImage\ZoomableImage.xaml">
+          <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+          <SubType>Designer</SubType>
+        </Page>
         <Page Update="Pages\Capability\SpotlightsPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>

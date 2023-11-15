@@ -27,7 +27,6 @@
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
         <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.0.230907" />
         <PackageReference Include="WinUI3Utilities" Version="1.1.4.3" />
-        <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.5.1" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
     </ItemGroup>
@@ -37,26 +36,22 @@
             <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
         </Page>
         <Page Update="IconButton\IconButton.xaml">
-          <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
         </Page>
         <Page Update="NotifyOnLoadedCalendarDatePicker\NotifyOnLoadedCalendarDatePicker.xaml">
-          <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
         </Page>
         <Page Update="NotifyOnLoadedComboBox\NotifyOnLoadedComboBox.xaml">
-          <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
         </Page>
         <Page Update="PersonView\PersonView.xaml">
-          <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
         </Page>
         <Page Update="SettingRadioButtons\SettingRadioButtons.xaml">
-          <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-        </Page>
-        <Page Update="ZoomableImage\ZoomableImage.xaml">
             <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-            <SubType>Designer</SubType>
         </Page>
-      <Page Update="PixevalBadge\PixevalBadge.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
+        <Page Update="PixevalBadge\PixevalBadge.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
     </ItemGroup>
 </Project>
