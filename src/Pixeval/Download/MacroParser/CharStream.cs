@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -29,30 +29,30 @@ namespace Pixeval.Download.MacroParser;
 
 public class CharStream : ISeekable<char>
 {
-    private readonly Stack<int> markers = new();
-    private readonly string text;
+    private readonly Stack<int> _markers = new();
+    private readonly string _text;
 
-    private char[] stream;
+    private char[] _stream;
 
     public CharStream(string text)
     {
-        stream = text.ToCharArray();
-        this.text = text;
-        markers.Push(0);
+        _stream = text.ToCharArray();
+        this._text = text;
+        _markers.Push(0);
     }
 
     public int Forward { get; private set; }
 
     public void Seek(int pos)
     {
-        markers.Pop();
-        markers.Push(pos);
+        _ = _markers.Pop();
+        _markers.Push(pos);
         Forward = pos;
     }
 
     public char Peek()
     {
-        return Forward >= stream.Length ? char.MaxValue : stream[Forward];
+        return Forward >= _stream.Length ? char.MaxValue : _stream[Forward];
     }
 
     public void Advance()
@@ -67,18 +67,18 @@ public class CharStream : ISeekable<char>
 
     public char[] GetWindow()
     {
-        return stream[markers.Peek()..Forward];
+        return _stream[_markers.Peek()..Forward];
     }
 
     public void AdvanceMarker()
     {
-        markers.Pop();
-        markers.Push(Forward);
+        _ = _markers.Pop();
+        _markers.Push(Forward);
     }
 
     public void ResetForward()
     {
-        Forward = markers.Peek();
+        Forward = _markers.Peek();
     }
 
     public void Return()
@@ -94,25 +94,25 @@ public class CharStream : ISeekable<char>
 
     public LineInfo GetCurrentLineInfo()
     {
-        if (Forward >= text.Length)
+        if (Forward >= _text.Length)
         {
             return LineInfo.Eof;
         }
 
-        var lines = text[..Forward].Split(Environment.NewLine);
+        var lines = _text[..Forward].Split(Environment.NewLine);
         return new LineInfo(lines.Length, lines[^1].Length);
     }
 
     public void Replace(char[] newStream)
     {
-        stream = newStream;
+        _stream = newStream;
         Forward = 0;
-        if (markers.Any())
+        if (_markers.Any())
         {
-            markers.Clear();
+            _markers.Clear();
         }
 
-        markers.Push(0);
+        _markers.Push(0);
     }
 
     public char NextChar()
@@ -124,7 +124,7 @@ public class CharStream : ISeekable<char>
 
     public string GetWindowString()
     {
-        return new string(stream[markers.Peek()..Forward]);
+        return new string(_stream[_markers.Peek()..Forward]);
     }
 
     public void Return(int count)
@@ -201,12 +201,12 @@ public class CharStream : ISeekable<char>
 
     public void PushMarker()
     {
-        markers.Push(Forward);
+        _markers.Push(Forward);
     }
 
     public int PopMarker()
     {
-        return markers.Pop();
+        return _markers.Pop();
     }
 
     public string GetUntilIfAndReturn(Func<char, bool> func)

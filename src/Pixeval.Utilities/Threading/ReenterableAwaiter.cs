@@ -93,7 +93,7 @@ public class ReenterableAwaiter(bool initialSignal) : INotifyCompletion
         }
         else
         {
-            Task.Factory.StartNew(_continuation, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
+            _ = Task.Factory.StartNew(_continuation, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
         }
     }
 

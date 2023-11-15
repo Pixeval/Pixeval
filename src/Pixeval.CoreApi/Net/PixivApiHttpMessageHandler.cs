@@ -41,14 +41,14 @@ internal class PixivApiHttpMessageHandler(MakoClient makoClient) : MakoClientSup
             MakoHttpOptions.UseHttpScheme(request);
         }
 
-        headers.TryAddWithoutValidation("Accept-Language", MakoClient.Configuration.CultureInfo.Name);
+        _ = headers.TryAddWithoutValidation("Accept-Language", MakoClient.Configuration.CultureInfo.Name);
 
         var session = MakoClient.Session;
 
         switch (host)
         {
             case MakoHttpOptions.WebApiHost:
-                headers.TryAddWithoutValidation("Cookie", session.Cookie);
+                _ = headers.TryAddWithoutValidation("Cookie", session.Cookie);
                 break;
             case MakoHttpOptions.AppApiHost:
                 headers.Authorization = new AuthenticationHeaderValue("Bearer", session.AccessToken);

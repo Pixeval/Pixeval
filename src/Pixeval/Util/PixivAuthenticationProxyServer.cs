@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -31,7 +31,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Util;
 
-public class PixivAuthenticationProxyServer : IDisposable
+public partial class PixivAuthenticationProxyServer : IDisposable
 {
     private readonly X509Certificate2? _certificate;
     private readonly TcpListener? _tcpListener;
@@ -41,7 +41,7 @@ public class PixivAuthenticationProxyServer : IDisposable
         _certificate = certificate;
         _tcpListener = tcpListener;
         _tcpListener.Start();
-        _tcpListener.BeginAcceptTcpClient(AcceptTcpClientCallback, _tcpListener);
+        _ = _tcpListener.BeginAcceptTcpClient(AcceptTcpClientCallback, _tcpListener);
     }
 
     public void Dispose()
@@ -74,7 +74,7 @@ public class PixivAuthenticationProxyServer : IDisposable
             if (result.AsyncState is TcpListener listener)
             {
                 using var client = listener.EndAcceptTcpClient(result);
-                listener.BeginAcceptTcpClient(AcceptTcpClientCallback, listener);
+                _ = listener.BeginAcceptTcpClient(AcceptTcpClientCallback, listener);
                 using (client)
                 {
                     var clientStream = client.GetStream();
@@ -95,11 +95,11 @@ public class PixivAuthenticationProxyServer : IDisposable
                     // use specify certificate to establish the HTTPS connection
                     await clientSsl.AuthenticateAsServerAsync(_certificate!, false, SslProtocols.None, false);
                     // create an HTTP connection to the target IP
-                    var host = Regex.Match(content, "CONNECT (?<host>.+)\\:\\d+").Groups["host"].Value;
+                    var host = HostRegex().Match(content).Groups["host"].Value;
                     var serverSsl = await CreateConnection(await GetTargetIp(host));
                     var request = Functions.IgnoreExceptionAsync(async () => await clientSsl.CopyToAsync(serverSsl));
                     var response = Functions.IgnoreExceptionAsync(async () => await serverSsl.CopyToAsync(clientSsl));
-                    await Task.WhenAny(request, response);
+                    _ = await Task.WhenAny(request, response);
                     serverSsl.Close();
                 }
             }
@@ -109,7 +109,6 @@ public class PixivAuthenticationProxyServer : IDisposable
             // ignore
         }
     }
-
 
     private static async Task<SslStream> CreateConnection(IPAddress[] ipAddresses)
     {
@@ -128,4 +127,7 @@ public class PixivAuthenticationProxyServer : IDisposable
             throw;
         }
     }
+
+    [GeneratedRegex("CONNECT (?<host>.+)\\:\\d+")]
+    private static partial Regex HostRegex();
 }

@@ -55,7 +55,7 @@ public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelpe
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
         RankOptionComboBox.SelectedItem = LocalizedBoxHelper.Of<RankOption, RankOptionWrapper>(RankOption.Day);
         RankDateTimeCalendarDatePicker.Date = DateTime.Now.AddDays(-2);
-        WeakReferenceMessenger.Default.TryRegister<RankingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
+        _ = WeakReferenceMessenger.Default.TryRegister<RankingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
         ChangeSource();
     }
 

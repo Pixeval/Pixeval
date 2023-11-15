@@ -45,7 +45,6 @@ public interface IPersistentManager<TEntry, out TModel> where TEntry : new()
 
     int MaximumRecords { get; set; }
 
-
     int Count { get; }
 
     void Insert(TEntry t);

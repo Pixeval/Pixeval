@@ -34,9 +34,10 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        if (ActivationCount > 1) return;
+        if (ActivationCount > 1)
+            return;
 
-        WeakReferenceMessenger.Default.TryRegister<IllustratorIllustrationAndMangaBookmarkPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
+        _ = WeakReferenceMessenger.Default.TryRegister<IllustratorIllustrationAndMangaBookmarkPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
         if (e.Parameter is string id)
         {
             _uid = id;

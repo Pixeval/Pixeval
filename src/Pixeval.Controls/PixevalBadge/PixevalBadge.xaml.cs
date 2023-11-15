@@ -48,6 +48,6 @@ public sealed partial class PixevalBadge : UserControl
 
     private void GoToState(bool useSmall)
     {
-        VisualStateManager.GoToState(this, useSmall ? SmallState : NormalState, true);
+        _ = VisualStateManager.GoToState(this, useSmall ? SmallState : NormalState, true);
     }
 }

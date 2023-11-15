@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-
 namespace Pixeval.CoreApi.Model;
 
 public record TrendingTag(string? Tag, string? Translation, Illustration? Illustration);

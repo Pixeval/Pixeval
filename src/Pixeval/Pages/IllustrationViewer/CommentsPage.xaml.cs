@@ -51,7 +51,7 @@ public sealed partial class CommentsPage
     public override void OnPageActivated(NavigationEventArgs e)
     {
         // Dispose current page contents if the parent page (IllustrationViewerPage) is navigating
-        WeakReferenceMessenger.Default.TryRegister<CommentsPage, NavigatingFromIllustrationViewerMessage>(this, (recipient, _) =>
+        _ = WeakReferenceMessenger.Default.TryRegister<CommentsPage, NavigatingFromIllustrationViewerMessage>(this, (recipient, _) =>
         {
             recipient.CommentList.Dispose();
             WeakReferenceMessenger.Default.UnregisterAll(this);

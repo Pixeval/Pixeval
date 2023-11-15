@@ -62,7 +62,7 @@ public sealed partial class FollowingsPage
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        WeakReferenceMessenger.Default.TryRegister<FollowingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.ViewModel.DataProvider.FetchEngine?.Cancel());
+        _ = WeakReferenceMessenger.Default.TryRegister<FollowingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.ViewModel.DataProvider.FetchEngine?.Cancel());
         _ = ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public));
     }
 
@@ -75,7 +75,7 @@ public sealed partial class FollowingsPage
 
         if (IllustratorListView.SelectedIndex is > 0 and var i && i < ViewModel.DataProvider.Source.Count && IllustratorContentViewerFrame is { } frame)
         {
-            frame.Navigate(typeof(IllustratorContentViewerPage), ViewModel.DataProvider.Source[i]);
+            _ = frame.Navigate(typeof(IllustratorContentViewerPage), ViewModel.DataProvider.Source[i]);
         }
     }
 
@@ -89,6 +89,6 @@ public sealed partial class FollowingsPage
         _illustratorListViewLoaded = true;
         await ThreadingHelper.SpinWaitAsync(() => !ViewModel.DataProvider.Source.Any() && !ViewModel.HasNoItems);
         IllustratorListView.SelectedIndex = 0;
-        IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), ViewModel.DataProvider.Source[0]);
+        _ = IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), ViewModel.DataProvider.Source[0]);
     }
 }

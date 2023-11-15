@@ -22,7 +22,6 @@ using Microsoft.UI.Xaml.Media;
 using Pixeval.Misc;
 using Windows.Storage.Streams;
 
-
 namespace Pixeval.Pages.IllustrationViewer;
 
 public class PixivReplyEmojiViewModel(PixivReplyEmoji emojiEnumValue, IRandomAccessStream imageStream)

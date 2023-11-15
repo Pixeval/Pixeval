@@ -31,20 +31,15 @@ namespace Pixeval.CoreApi.Engine.Implements;
 ///     only supposed to be used by caching systems
 /// </summary>
 /// <typeparam name="T">The type of the results of the <see cref="IFetchEngine{E}" /></typeparam>
-public class AdaptedComputedFetchEngine<T> : IFetchEngine<T>
+/// <remarks>
+///     Creates an <see cref="AdaptedComputedFetchEngine{T}" /> that delegates all of its
+///     property and methods to
+///     <param name="outer"></param>
+/// </remarks>
+/// <param name="outer">The <see cref="IEnumerable{T}" /> that is going to be delegated</param>
+public class AdaptedComputedFetchEngine<T>(IEnumerable<T> outer) : IFetchEngine<T>
 {
-    private readonly IEnumerable<T> _outer;
-
-    /// <summary>
-    ///     Creates an <see cref="AdaptedComputedFetchEngine{T}" /> that delegates all of its
-    ///     property and methods to
-    ///     <param name="outer"></param>
-    /// </summary>
-    /// <param name="outer">The <see cref="IEnumerable{T}" /> that is going to be delegated</param>
-    public AdaptedComputedFetchEngine(IEnumerable<T> outer)
-    {
-        _outer = outer;
-    }
+    private readonly IEnumerable<T> _outer = outer;
 
     public MakoClient MakoClient => throw new NotSupportedException();
 

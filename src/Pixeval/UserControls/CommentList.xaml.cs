@@ -51,10 +51,10 @@ public sealed partial class CommentList : IDisposable
     private void CommentBlock_OnDeleteHyperlinkButtonTapped(object? sender, TappedRoutedEventArgs e)
     {
         var viewModel = sender!.GetDataContext<CommentBlockViewModel>();
-        App.AppViewModel.MakoClient.DeleteCommentAsync(viewModel.CommentId);
+        _ = App.AppViewModel.MakoClient.DeleteCommentAsync(viewModel.CommentId);
         if (ItemsSource is IList<CommentBlockViewModel> list)
         {
-            list.Remove(viewModel);
+            _ = list.Remove(viewModel);
         }
     }
 

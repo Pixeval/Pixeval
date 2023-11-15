@@ -58,7 +58,7 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
 
     public IllustratorContentViewerViewModel(PixivSingleUserResponse userDetail)
     {
-        RecommendIllustrators = new();
+        RecommendIllustrators = [];
         UserDetail = userDetail;
 
         InitializeTags();
@@ -174,7 +174,7 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
         Metrics = new(profile?.TotalFollowUsers ?? 0, profile?.TotalMyPixivUsers ?? 0, profile?.TotalIllusts ?? 0);
         Premium = profile?.IsPremium ?? false;
         Following = UserDetail.UserEntity?.IsFollowed ?? false;
-        ActionMenuFlyoutItems = new();
+        ActionMenuFlyoutItems = [];
     }
 
     private async Task SetAvatarAsync()
@@ -239,13 +239,13 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
     private void Follow(bool privately)
     {
         Following = true;
-        App.AppViewModel.MakoClient.PostFollowUserAsync(UserDetail.UserEntity!.Id.ToString(), privately ? PrivacyPolicy.Private : PrivacyPolicy.Public);
+        _ = App.AppViewModel.MakoClient.PostFollowUserAsync(UserDetail.UserEntity!.Id.ToString(), privately ? PrivacyPolicy.Private : PrivacyPolicy.Public);
     }
 
     private void Unfollow()
     {
         Following = false;
-        App.AppViewModel.MakoClient.RemoveFollowUserAsync(UserDetail.UserEntity!.Id.ToString());
+        _ = App.AppViewModel.MakoClient.RemoveFollowUserAsync(UserDetail.UserEntity!.Id.ToString());
     }
 
     public Visibility GetNavigationViewAutoSuggestBoxVisibility(bool showExternalCommandBar)

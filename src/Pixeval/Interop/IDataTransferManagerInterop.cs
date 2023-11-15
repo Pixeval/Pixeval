@@ -20,13 +20,14 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace Pixeval.Interop;
 
-[ComImport]
+[GeneratedComInterface]
 [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 [Guid("3A3DCD6C-3EAB-43DC-BCDE-45671CE800C8")]
-public interface IDataTransferManagerInterop
+public partial interface IDataTransferManagerInterop
 {
     unsafe void GetForWindow(nint appWindow, Guid* riId, [Optional] void** dataTransferManager);
 

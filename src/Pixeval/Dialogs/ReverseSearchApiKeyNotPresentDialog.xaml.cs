@@ -43,6 +43,6 @@ public sealed partial class ReverseSearchApiKeyNotPresentDialog
     private void SetApiKeyHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         Owner?.Hide();
-        WeakReferenceMessenger.Default.Send(new NavigateToSettingEntryMessage(SettingEntry.ReverseSearchApiKey));
+        _ = WeakReferenceMessenger.Default.Send(new NavigateToSettingEntryMessage(SettingEntry.ReverseSearchApiKey));
     }
 }

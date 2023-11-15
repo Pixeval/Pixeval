@@ -37,7 +37,7 @@ using Pixeval.UserControls.IllustrationView;
 
 namespace Pixeval.Util.IO;
 
-public static partial class IOHelper
+public static partial class IoHelper
 {
     private const int BlockSizeInBytes = 1024; // 1KB
 
@@ -49,7 +49,7 @@ public static partial class IOHelper
 
     private const int MaximumSmallBufferPoolSizeInBytes = 24 * 1024 * BlockSizeInBytes; // 24MB
 
-    private static readonly RecyclableMemoryStreamManager RecyclableMemoryStreamManager = new(
+    private static readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager = new(
         BlockSizeInBytes,
         LargeBufferMultipleInBytes,
         MaxBufferSizeInBytes,
@@ -58,7 +58,7 @@ public static partial class IOHelper
 
     // To avoid collecting stack trace, which is quite a time-consuming task
     // and this exception is intended to be used at a massive magnitude
-    private static readonly OperationCanceledException CancellationMark = new();
+    private static readonly OperationCanceledException _cancellationMark = new();
 
     /// <summary>
     /// Attempts to download the content that are located by the <paramref name="url" /> argument
@@ -105,10 +105,10 @@ public static partial class IOHelper
             using var response = await httpClient.GetResponseHeader(url);
             if (response.Content.Headers.ContentLength is { } responseLength)
             {
-                response.EnsureSuccessStatusCode();
+                _ = response.EnsureSuccessStatusCode();
                 if (cancellationHandle?.IsCancelled is true)
                 {
-                    return Result<Stream>.OfFailure(CancellationMark);
+                    return Result<Stream>.OfFailure(_cancellationMark);
                 }
 
                 await using var contentStream = await response.Content.ReadAsStreamAsync();
@@ -117,7 +117,7 @@ public static partial class IOHelper
                 // running, so we check the state right after the completion of that statement
                 if (cancellationHandle?.IsCancelled is true)
                 {
-                    return Result<Stream>.OfFailure(CancellationMark);
+                    return Result<Stream>.OfFailure(_cancellationMark);
                 }
 
                 var resultStream = new MemoryStream();
@@ -129,7 +129,7 @@ public static partial class IOHelper
                     if (cancellationHandle?.IsCancelled is true)
                     {
                         await resultStream.DisposeAsync();
-                        return Result<Stream>.OfFailure(CancellationMark);
+                        return Result<Stream>.OfFailure(_cancellationMark);
                     }
 
                     await resultStream.WriteAsync(buffer, 0, bytesRead);
@@ -143,11 +143,11 @@ public static partial class IOHelper
                 }
 
                 ArrayPool<byte>.Shared.Return(buffer, true);
-                resultStream.Seek(0, SeekOrigin.Begin);
+                _ = resultStream.Seek(0, SeekOrigin.Begin);
                 return Result<Stream>.OfSuccess(resultStream);
             }
 
-            return (await httpClient.DownloadByteArrayAsync(url)).Bind(m => (Stream)RecyclableMemoryStreamManager.GetStream(m.Span));
+            return (await httpClient.DownloadByteArrayAsync(url)).Bind(m => (Stream)_recyclableMemoryStreamManager.GetStream(m.Span));
         }
         catch (Exception e)
         {
@@ -169,8 +169,8 @@ public static partial class IOHelper
     public static async Task SaveAsAsync(this IllustrationViewModel viewModel)
     {
         IStorageItem? item = viewModel.IsManga
-            ? await UIHelper.OpenFolderPickerAsync(PickerLocationId.PicturesLibrary)
-            : await UIHelper.OpenFileSavePickerAsync(viewModel.Id, $"{viewModel.Illustrate.GetImageFormat().RemoveSurrounding(".", string.Empty)} file", viewModel.Illustrate.GetImageFormat());
+            ? await UiHelper.OpenFolderPickerAsync(PickerLocationId.PicturesLibrary)
+            : await UiHelper.OpenFileSavePickerAsync(viewModel.Id, $"{viewModel.Illustrate.GetImageFormat().RemoveSurrounding(".", string.Empty)} file", viewModel.Illustrate.GetImageFormat());
 
         using var scope = App.AppViewModel.AppServicesScope;
         var factory = scope.ServiceProvider.GetRequiredService<IDownloadTaskFactory<IllustrationViewModel, ObservableDownloadTask>>();

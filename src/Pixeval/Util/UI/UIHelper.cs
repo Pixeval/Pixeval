@@ -56,7 +56,7 @@ using Point = Windows.Foundation.Point;
 
 namespace Pixeval.Util.UI;
 
-public static partial class UIHelper
+public static partial class UiHelper
 {
     /// <summary>
     /// With higher <paramref name="magnitude"/> you will get brighter color and vice-versa.
@@ -142,7 +142,7 @@ public static partial class UIHelper
     {
         var transform = element.TransformToVisual((UIElement)scrollViewer.Content);
         var position = transform.TransformPoint(new Point(0, 0));
-        scrollViewer.ChangeView(null, position.Y, null, false);
+        _ = scrollViewer.ChangeView(null, position.Y, null, false);
     }
 
     public static Storyboard CreateStoryboard(params Timeline[] animations)
@@ -208,7 +208,7 @@ public static partial class UIHelper
     {
         if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag })
         {
-            frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo ?? new SuppressNavigationTransitionInfo());
+            _ = frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo ?? new SuppressNavigationTransitionInfo());
         }
     }
 
@@ -300,7 +300,7 @@ public static partial class UIHelper
         var qrCodeData = qrCodeGen.CreateQrCode(urlPayload, QRCodeGenerator.ECCLevel.Q);
         var qrCode = new BitmapByteQRCode(qrCodeData);
         var bytes = qrCode.GetGraphic(20);
-        return await (await IOHelper.GetRandomAccessStreamFromByteArrayAsync(bytes)).GetSoftwareBitmapSourceAsync(true);
+        return await (await IoHelper.GetRandomAccessStreamFromByteArrayAsync(bytes)).GetSoftwareBitmapSourceAsync(true);
     }
 
     public static async Task<SoftwareBitmapSource> GenerateQrCodeAsync(string content)
@@ -309,7 +309,7 @@ public static partial class UIHelper
         var qrCodeData = qrCodeGen.CreateQrCode(content, QRCodeGenerator.ECCLevel.Q);
         var qrCode = new BitmapByteQRCode(qrCodeData);
         var bytes = qrCode.GetGraphic(20);
-        return await (await IOHelper.GetRandomAccessStreamFromByteArrayAsync(bytes)).GetSoftwareBitmapSourceAsync(true);
+        return await (await IoHelper.GetRandomAccessStreamFromByteArrayAsync(bytes)).GetSoftwareBitmapSourceAsync(true);
     }
 
     public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(PickerLocationId suggestedStartLocation)

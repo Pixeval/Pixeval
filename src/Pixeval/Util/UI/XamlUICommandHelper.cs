@@ -24,7 +24,7 @@ using Windows.System;
 
 namespace Pixeval.Util.UI;
 
-public static class XamlUICommandHelper
+public static class XamlUiCommandHelper
 {
     public static XamlUICommand GetCommand(this string label, FontIconSymbols icon)
     {

@@ -30,7 +30,7 @@ namespace Pixeval.SourceGen;
 [Generator]
 public class SettingsEntryGenerator : IIncrementalGenerator
 {
-    private const string SettingPOCOAttributeFqName = "Pixeval.Attributes.SettingPOCO";
+    private const string SettingPocoAttributeFqName = "Pixeval.Attributes.SettingPoco";
     private const string SyntheticSettingAttributeFqName = "Pixeval.Attributes.SyntheticSetting";
     private const string SettingMetadataAttributeFqName = "Pixeval.Attributes.SettingMetadata";
     private const string SettingEntryFqName = "global::Pixeval.SettingEntry";
@@ -42,7 +42,7 @@ public class SettingsEntryGenerator : IIncrementalGenerator
             transform: static (ctx, _) =>
             {
                 var tds = (TypeDeclarationSyntax)ctx.Node;
-                (TypeDeclarationSyntax, IEnumerable<(PropertyDeclarationSyntax, AttributeSyntax?)>)? tuple = tds.HasAttribute(ctx.SemanticModel, SettingPOCOAttributeFqName)
+                (TypeDeclarationSyntax, IEnumerable<(PropertyDeclarationSyntax, AttributeSyntax?)>)? tuple = tds.HasAttribute(ctx.SemanticModel, SettingPocoAttributeFqName)
                     ? (tds, tds.Members.OfType<PropertyDeclarationSyntax>().Where(pds => !pds.HasAttribute(ctx.SemanticModel, SyntheticSettingAttributeFqName) && pds.HasAttribute(ctx.SemanticModel, SettingMetadataAttributeFqName))
                         .Select(property => (property, property.GetAttribute(ctx.SemanticModel, SettingMetadataAttributeFqName)))
                         .Where(tuple => tuple.Item2 is not null))
@@ -96,8 +96,8 @@ public class SettingsEntryGenerator : IIncrementalGenerator
                         ctx.ReportDiagnostic(
                             Diagnostic.Create(new DiagnosticDescriptor(
                                 "PSG0001",
-                                "There should be only one [SettingPOCO] in an assembly",
-                                "There should be only one [SettingPOCO] in an assembly",
+                                "There should be only one [SettingPoco] in an assembly",
+                                "There should be only one [SettingPoco] in an assembly",
                                 "SourceGen",
                                 DiagnosticSeverity.Error,
                                 true), typeDeclarationSyntax.GetLocation()));

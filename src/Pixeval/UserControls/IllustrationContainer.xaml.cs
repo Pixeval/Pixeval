@@ -28,7 +28,6 @@ using Pixeval.UserControls.IllustrationView;
 using Pixeval.Util.UI;
 using WinUI3Utilities.Attributes;
 
-
 namespace Pixeval.UserControls;
 
 [DependencyProperty<ObservableCollection<ICommandBarElement>>("PrimaryCommandsSupplements", DependencyPropertyDefaultValue.New)]
@@ -44,7 +43,7 @@ public sealed partial class IllustrationContainer
     public IllustrationContainer()
     {
         InitializeComponent();
-        CommandBarElements = new ObservableCollection<UIElement>();
+        CommandBarElements = [];
         CommandBarElements.CollectionChanged += (_, args) =>
         {
             switch (args)
@@ -91,11 +90,11 @@ public sealed partial class IllustrationContainer
 
     private void IllustrationContainer_OnLoaded(object sender, RoutedEventArgs e)
     {
-        IllustrationView.Focus(FocusState.Programmatic);
+        _ = IllustrationView.Focus(FocusState.Programmatic);
     }
 
     public void ScrollToTop()
     {
-        IllustrationView.ScrollViewer.ChangeView(null, 0, null, false);
+        _ = IllustrationView.ScrollViewer.ChangeView(null, 0, null, false);
     }
 }

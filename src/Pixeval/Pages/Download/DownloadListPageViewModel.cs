@@ -56,8 +56,8 @@ public partial class DownloadListPageViewModel : ObservableObject, IDisposable
 
     public DownloadListPageViewModel()
     {
-        _downloadTasks = new();
-        _filteredTasks = new();
+        _downloadTasks = [];
+        _filteredTasks = [];
         _downloadTasksView = new(_downloadTasks, true);
         _selectionLabel = DownloadListPageResources.CancelSelectionButtonDefaultLabel;
     }
@@ -104,8 +104,8 @@ public partial class DownloadListPageViewModel : ObservableObject, IDisposable
         SelectedTasks.ToList().ForEach(task =>
         {
             App.AppViewModel.DownloadManager.RemoveTask(task.DownloadTask);
-            DownloadTasks.Remove(task);
-            manager.Delete(m => m.Destination == task.DownloadTask.Destination);
+            _ = DownloadTasks.Remove(task);
+            _ = manager.Delete(m => m.Destination == task.DownloadTask.Destination);
         });
 
         DownloadTasksView.Refresh();

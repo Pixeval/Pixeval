@@ -28,13 +28,13 @@ namespace Pixeval.Util.UI.Animating;
 
 public static class ValueAnimations
 {
-    internal static async IAsyncEnumerable<V> StartAsync<V>(IValueAnimation<V> valueAnimation) where V : INumber<V>
+    internal static async IAsyncEnumerable<TV> StartAsync<TV>(IValueAnimation<TV> valueAnimation) where TV : INumber<TV>
     {
         await Task.Yield();
         var start = valueAnimation.From;
         var sampleCount = (int)Math.Ceiling(valueAnimation.Duration.Divide(valueAnimation.SampleRate));
         var by = valueAnimation.To - valueAnimation.From;
-        var delta = by / V.Parse(sampleCount.ToString(), NumberStyles.Integer, null);
+        var delta = by / TV.Parse(sampleCount.ToString(), NumberStyles.Integer, null);
         yield return start;
         var counter = 1;
 

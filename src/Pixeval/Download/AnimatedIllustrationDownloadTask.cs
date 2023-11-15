@@ -59,8 +59,8 @@ public class AnimatedIllustrationDownloadTask : ObservableDownloadTask, ICustomB
     {
         using (stream)
         {
-            using var ugoiraStream = await IOHelper.GetStreamFromZipStreamAsync(stream.AsStreamForRead(), _metadata);
-            await IOHelper.CreateAndWriteToFileAsync(ugoiraStream, Destination);
+            using var ugoiraStream = await IoHelper.GetStreamFromZipStreamAsync(stream.AsStreamForRead(), _metadata);
+            await IoHelper.CreateAndWriteToFileAsync(ugoiraStream, Destination);
         }
     }
 

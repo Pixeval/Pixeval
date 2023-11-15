@@ -45,7 +45,7 @@ namespace Pixeval.UserControls.IllustratorView;
 public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
 {
     // Dominant color of the "No Image" image
-    public static readonly SolidColorBrush DefaultAvatarBorderColorBrush = new(UIHelper.ParseHexColor("#D6DEE5"));
+    public static readonly SolidColorBrush DefaultAvatarBorderColorBrush = new(UiHelper.ParseHexColor("#D6DEE5"));
 
     private readonly TaskCompletionSource<SoftwareBitmapSource[]> _bannerImageTaskCompletionSource;
 
@@ -114,13 +114,13 @@ public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
             var tasks = await Task.WhenAll(urls.Select(u => client.DownloadAsIRandomAccessStreamAsync(u)));
             if (tasks is [Result<IRandomAccessStream>.Success(var first), ..])
             {
-                var dominantColor = await UIHelper.GetDominantColorAsync(first.AsStreamForRead(), false);
+                var dominantColor = await UiHelper.GetDominantColorAsync(first.AsStreamForRead(), false);
                 AvatarBorderBrush = new SolidColorBrush(dominantColor);
             }
 
             var result = (await Task.WhenAll(tasks.SelectNotNull(r => r.BindAsync(s => s.GetSoftwareBitmapSourceAsync(true)))))
                 .SelectNotNull(res => res.GetOrElse(null)).ToArray();
-            _bannerImageTaskCompletionSource.TrySetResult(result);
+            _ = _bannerImageTaskCompletionSource.TrySetResult(result);
             return;
         }
 
@@ -128,15 +128,15 @@ public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
         if (UserDetail.UserProfile?.BackgroundImageUrl is { } url && await client.DownloadAsIRandomAccessStreamAsync(url) is Result<IRandomAccessStream>.Success(var stream))
         {
             var managedStream = stream.AsStreamForRead();
-            var dominantColor = await UIHelper.GetDominantColorAsync(managedStream, false);
+            var dominantColor = await UiHelper.GetDominantColorAsync(managedStream, false);
             AvatarBorderBrush = new SolidColorBrush(dominantColor);
             var result = Enumerates.ArrayOf(await stream.GetSoftwareBitmapSourceAsync(true));
-            _bannerImageTaskCompletionSource.TrySetResult(result);
+            _ = _bannerImageTaskCompletionSource.TrySetResult(result);
             return;
         }
 
         AvatarBorderBrush = DefaultAvatarBorderColorBrush;
-        _bannerImageTaskCompletionSource.TrySetResult(Enumerates.ArrayOf(await AppContext.GetPixivNoProfileImageAsync()));
+        _ = _bannerImageTaskCompletionSource.TrySetResult(Enumerates.ArrayOf(await AppContext.GetPixivNoProfileImageAsync()));
     }
 
     // private void SetMetrics()
@@ -180,13 +180,13 @@ public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
 
     private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        UIHelper.ClipboardSetText(MakoHelper.GenerateIllustratorAppUri(UserId!).ToString());
+        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustratorAppUri(UserId!).ToString());
         TeachingTipProperties.ShowAndHide(IllustratorProfileResources.LinkCopiedToClipboard);
     }
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        UIHelper.ClipboardSetText(MakoHelper.GenerateIllustratorWebUri(UserId!).ToString());
+        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustratorWebUri(UserId!).ToString());
         TeachingTipProperties.ShowAndHide(IllustratorProfileResources.LinkCopiedToClipboard);
     }
 
@@ -208,18 +208,18 @@ public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
     private void Follow()
     {
         IsFollowed = true;
-        App.AppViewModel.MakoClient.PostFollowUserAsync(UserId!, PrivacyPolicy.Public);
+        _ = App.AppViewModel.MakoClient.PostFollowUserAsync(UserId!, PrivacyPolicy.Public);
     }
 
     private void Unfollow()
     {
         IsFollowed = false;
-        App.AppViewModel.MakoClient.RemoveFollowUserAsync(UserId!);
+        _ = App.AppViewModel.MakoClient.RemoveFollowUserAsync(UserId!);
     }
 
     public override void Dispose()
     {
-        _bannerImageTaskCompletionSource.Task.ContinueWith(s => s.Dispose());
-        BannerImageTask.ContinueWith(i => i.Dispose());
+        _ = _bannerImageTaskCompletionSource.Task.ContinueWith(s => s.Dispose());
+        _ = BannerImageTask.ContinueWith(i => i.Dispose());
     }
 }

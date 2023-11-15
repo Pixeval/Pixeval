@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-
 namespace Pixeval.Controls.Windowing;
 
 public interface ISupportCustomTitleBarDragRegion

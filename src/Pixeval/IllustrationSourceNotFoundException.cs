@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -19,17 +19,12 @@
 #endregion
 
 using System;
-using System.Runtime.Serialization;
 
 namespace Pixeval;
 
 public class IllustrationSourceNotFoundException : Exception
 {
     public IllustrationSourceNotFoundException()
-    {
-    }
-
-    protected IllustrationSourceNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
 

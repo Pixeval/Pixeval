@@ -93,8 +93,8 @@ public sealed partial class IllustratorPage
         switch (navigationEventArgs.Parameter)
         {
             case (UIElement sender, IllustratorViewModel viewModel):
-                WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(sender));
-                ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation")?.TryStart(ProfileImage);
+                _ = WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(sender));
+                _ = (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation")?.TryStart(ProfileImage));
                 _viewModel = viewModel;
                 break;
             case IllustratorViewModel viewModel1:
@@ -102,7 +102,7 @@ public sealed partial class IllustratorPage
                 break;
         }
 
-        WeakReferenceMessenger.Default.TryRegister<IllustratorPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.ViewModelProvider.ViewModel.DataProvider.FetchEngine?.Cancel());
+        _ = WeakReferenceMessenger.Default.TryRegister<IllustratorPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.ViewModelProvider.ViewModel.DataProvider.FetchEngine?.Cancel());
 
         ChangeSource();
     }
@@ -217,7 +217,7 @@ public sealed partial class IllustratorPage
 
     public void GoBack()
     {
-        ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", ProfileImage);
+        _ = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", ProfileImage);
         Parent.To<Frame>().GoBack(new SuppressNavigationTransitionInfo());
     }
 
@@ -228,7 +228,7 @@ public sealed partial class IllustratorPage
 
     private async void OpenLinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await Launcher.LaunchUriAsync(new Uri($"https://www.pixiv.net/users/{_viewModel!.Id}"));
+        _ = await Launcher.LaunchUriAsync(new Uri($"https://www.pixiv.net/users/{_viewModel!.Id}"));
     }
 
     private async void FollowButton_OnTapped(object sender, TappedRoutedEventArgs e)

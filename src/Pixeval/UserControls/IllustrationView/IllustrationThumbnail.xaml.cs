@@ -121,23 +121,23 @@ public sealed partial class IllustrationThumbnail : CardControl
 
     private void CopyWebLinkContextItemOnTapped(object sender, TappedRoutedEventArgs e)
     {
-        UIHelper.ClipboardSetText(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString());
+        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString());
     }
 
     private void CopyAppLinkContextItemOnTapped(object sender, TappedRoutedEventArgs e)
     {
-        UIHelper.ClipboardSetText(MakoHelper.GenerateIllustrationAppUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString());
+        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustrationAppUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString());
     }
 
     private async void ShowQrCodeContextItemOnTapped(object sender, TappedRoutedEventArgs e)
     {
-        var webQrCodeSource = await UIHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString());
+        var webQrCodeSource = await UiHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustrationWebUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString());
         ShowQrCodeRequested?.Invoke(this, webQrCodeSource);
     }
 
     private async void ShowPixEzQrCodeContextItemOnTapped(object sender, TappedRoutedEventArgs e)
     {
-        var pixEzQrCodeSource = await UIHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustrationPixEzUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString());
+        var pixEzQrCodeSource = await UiHelper.GenerateQrCodeAsync(MakoHelper.GenerateIllustrationPixEzUri(sender.GetDataContext<IllustrationViewModel>().Id).ToString());
         ShowQrCodeRequested?.Invoke(this, pixEzQrCodeSource);
     }
 }

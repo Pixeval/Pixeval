@@ -88,7 +88,7 @@ public class AppViewModel(App app) : AutoActivateObservableRecipient, IRecipient
 
     public async Task ShowExceptionDialogAsync(Exception e)
     {
-        await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
+        _ = await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, MiscResources.ExceptionEncountered, e.ToString()).ShowAsync();
     }
 
     public async Task InitializeAsync(bool activatedByProtocol)

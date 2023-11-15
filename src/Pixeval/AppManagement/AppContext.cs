@@ -56,7 +56,7 @@ public static partial class AppContext
 
     public static readonly string AppVersion = GitVersionInformation.AssemblySemVer;
 
-    private static readonly ApplicationDataContainer SessionContainer;
+    private static readonly ApplicationDataContainer _sessionContainer;
 
     private static SoftwareBitmapSource? _imageNotAvailable;
 
@@ -70,14 +70,14 @@ public static partial class AppContext
     {
         if (!ApplicationData.Current.LocalSettings.Containers.ContainsKey(SessionContainerKey))
         {
-            ApplicationData.Current.LocalSettings.CreateContainer(SessionContainerKey, ApplicationDataCreateDisposition.Always);
+            _ = ApplicationData.Current.LocalSettings.CreateContainer(SessionContainerKey, ApplicationDataCreateDisposition.Always);
         }
 
         // Keys in the RoamingSettings will be synced through the devices of the same user
         // For more detailed information see https://docs.microsoft.com/en-us/windows/apps/design/app-settings/store-and-retrieve-app-data
         InitializeConfigurationContainer();
 
-        SessionContainer = ApplicationData.Current.LocalSettings.Containers[SessionContainerKey];
+        _sessionContainer = ApplicationData.Current.LocalSettings.Containers[SessionContainerKey];
     }
 
     public static async Task<SoftwareBitmapSource> GetNotAvailableImageAsync()
@@ -160,7 +160,7 @@ public static partial class AppContext
         using var scope = App.AppViewModel.AppServicesScope;
         var downloadHistoryManager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         // the HasFlag is not allow in expression tree
-        downloadHistoryManager.Delete(entry => entry.State == DownloadState.Running ||
+        _ = downloadHistoryManager.Delete(entry => entry.State == DownloadState.Running ||
                                                entry.State == DownloadState.Queued ||
                                                entry.State == DownloadState.Created ||
                                                entry.State == DownloadState.Paused);
@@ -201,7 +201,7 @@ public static partial class AppContext
     {
         if (App.AppViewModel.MakoClient.Session is { } session)
         {
-            var values = SessionContainer.Values;
+            var values = _sessionContainer.Values;
             values[nameof(Session.AccessToken)] = session.AccessToken;
             values[nameof(Session.Account)] = session.Account;
             values[nameof(Session.AvatarUrl)] = session.AvatarUrl;
@@ -219,7 +219,7 @@ public static partial class AppContext
     {
         try
         {
-            var values = SessionContainer.Values;
+            var values = _sessionContainer.Values;
             return new Session
             {
                 AccessToken = values[nameof(Session.AccessToken)].CastOrThrow<string>(),

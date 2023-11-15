@@ -37,7 +37,7 @@ namespace Pixeval.Pages.IllustrationViewer;
 
 public sealed partial class PixivReplyStickerListPage
 {
-    public static readonly ObservableCollection<PixivReplyStickerViewModel> Stickers = new();
+    public static readonly ObservableCollection<PixivReplyStickerViewModel> Stickers = [];
 
     private EventHandler<StickerTappedEventArgs>? _replyBarStickerTappedEventHandler;
 

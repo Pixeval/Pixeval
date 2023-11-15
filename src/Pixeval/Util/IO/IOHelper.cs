@@ -40,7 +40,7 @@ using Windows.Storage.Streams;
 
 namespace Pixeval.Util.IO;
 
-public static partial class IOHelper
+public static partial class IoHelper
 {
     public static async Task<string> Sha1Async(this IRandomAccessStream randomAccessStream)
     {

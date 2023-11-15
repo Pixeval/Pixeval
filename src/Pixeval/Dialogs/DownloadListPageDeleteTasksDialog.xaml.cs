@@ -20,7 +20,6 @@
 
 using WinUI3Utilities.Attributes;
 
-
 namespace Pixeval.Dialogs;
 
 [DependencyProperty<bool>("DeleteLocalFiles", "false")]

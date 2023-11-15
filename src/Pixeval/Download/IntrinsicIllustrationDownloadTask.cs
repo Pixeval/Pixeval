@@ -25,22 +25,16 @@ using Pixeval.UserControls.IllustrationView;
 
 namespace Pixeval.Download;
 
-public class IntrinsicIllustrationDownloadTask : IllustrationDownloadTask, IIntrinsicDownloadTask
+/// <summary>
+///     The disposal of <paramref name="imageStream" /> is not handled
+/// </summary>
+public class IntrinsicIllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationViewModel illustrationViewModel, IRandomAccessStream imageStream) : IllustrationDownloadTask(entry, illustrationViewModel), IIntrinsicDownloadTask
 {
-    /// <summary>
-    ///     The disposal of <paramref name="imageStream" /> is not handled
-    /// </summary>
-    public IntrinsicIllustrationDownloadTask(DownloadHistoryEntry entry, IllustrationViewModel illustrationViewModel, IRandomAccessStream imageStream)
-        : base(entry, illustrationViewModel)
-    {
-        Stream = imageStream;
-    }
-
-    public IRandomAccessStream Stream { get; }
+    public IRandomAccessStream Stream { get; } = imageStream;
 
     public override async void DownloadStarting(DownloadStartingEventArgs args)
     {
         args.GetDeferral().Complete(false);
-        await IOHelper.CreateAndWriteToFileAsync(Stream, Destination);
+        await IoHelper.CreateAndWriteToFileAsync(Stream, Destination);
     }
 }

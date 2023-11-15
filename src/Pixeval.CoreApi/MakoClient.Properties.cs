@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -28,7 +28,7 @@ namespace Pixeval.CoreApi;
 
 public partial class MakoClient
 {
-    private readonly List<IEngineHandleSource> _runningInstances = new();
+    private readonly List<IEngineHandleSource> _runningInstances = [];
 
     /// <summary>
     ///     The globally unique ID of current <see cref="MakoClient" />

@@ -39,7 +39,7 @@ public class IllustratorViewDataProvider : DataProvider<User, IllustratorViewMod
         get => _illustratorsSource;
         protected set
         {
-            SetProperty(ref _illustratorsSource, value);
+            _ = SetProperty(ref _illustratorsSource, value);
             View.Source = value;
         }
     }

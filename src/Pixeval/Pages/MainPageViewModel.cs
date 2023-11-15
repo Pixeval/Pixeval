@@ -108,7 +108,7 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
 
                         break;
                     case var s:
-                        await MessageDialogBuilder.CreateAcknowledgement(
+                        _ = await MessageDialogBuilder.CreateAcknowledgement(
                                 window,
                                 MainPageResources.ReverseSearchErrorTitle,
                                 s > 0 ? MainPageResources.ReverseSearchServerSideErrorContent : MainPageResources.ReverseSearchClientSideErrorContent)
@@ -117,7 +117,7 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
                 }
 
                 // window.HideProgressRing();
-                MessageDialogBuilder.CreateAcknowledgement(window, MainPageResources.ReverseSearchNotFoundTitle, MainPageResources.ReverseSearchNotFoundContent);
+                _ = MessageDialogBuilder.CreateAcknowledgement(window, MainPageResources.ReverseSearchNotFoundTitle, MainPageResources.ReverseSearchNotFoundContent);
             }
         }
         catch (Exception e)

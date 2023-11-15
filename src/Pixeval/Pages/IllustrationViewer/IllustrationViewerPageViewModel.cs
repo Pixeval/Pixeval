@@ -359,7 +359,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         RestoreResolutionCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
 
         CopyCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        CopyCommand.ExecuteRequested += async (_, _) => UIHelper.ClipboardSetBitmap(await CurrentImage.OriginalImageStream!.EncodeBitmapStreamAsync(false));
+        CopyCommand.ExecuteRequested += async (_, _) => UiHelper.ClipboardSetBitmap(await CurrentImage.OriginalImageStream!.EncodeBitmapStreamAsync(false));
 
         PlayGifCommand.CanExecuteRequested += (_, e) => e.CanExecute = IsUgoira && CurrentImage.LoadingCompletedSuccessfully;
         PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
@@ -461,13 +461,13 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             GenerateLinkTeachingTip.IsOpen = true;
         }
 
-        UIHelper.ClipboardSetText(MakoHelper.GenerateIllustrationAppUri(CurrentIllustration.Id).ToString());
+        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustrationAppUri(CurrentIllustration.Id).ToString());
     }
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         var link = MakoHelper.GenerateIllustrationWebUri(CurrentIllustration.Id).ToString();
-        UIHelper.ClipboardSetText(link);
+        UiHelper.ClipboardSetText(link);
         SnackBarTeachingTip.ShowAndHide(IllustrationViewerPageResources.WebLinkCopiedToClipboardToastTitle);
     }
 
@@ -484,7 +484,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     private async void ShowQrCodeCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        var qrCodeSource = await UIHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustrationWebUri(CurrentIllustration.Id).ToString());
+        var qrCodeSource = await UiHelper.GenerateQrCodeForUrlAsync(MakoHelper.GenerateIllustrationWebUri(CurrentIllustration.Id).ToString());
 
         ShowQrCodeTeachingTip.HeroContent.To<Image>().Source = qrCodeSource;
         OnPropertyChanged(nameof(ShowQrCode));

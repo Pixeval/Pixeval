@@ -24,19 +24,19 @@ using System.Threading.Tasks;
 
 namespace Pixeval.Util.UI.Animating;
 
-public interface IValueAnimation<out V> where V : INumber<V>
+public interface IValueAnimation<out TV> where TV : INumber<TV>
 {
     TimeSpan Duration { get; }
 
     TimeSpan SampleRate { get; }
 
-    V From { get; }
+    TV From { get; }
 
-    V To { get; }
+    TV To { get; }
 
-    IEasingFunction<V>? EasingFunction { get; }
+    IEasingFunction<TV>? EasingFunction { get; }
 
-    event Action<V> OnValueChanged;
+    event Action<TV> OnValueChanged;
 
     event EventHandler OnCompleted;
 

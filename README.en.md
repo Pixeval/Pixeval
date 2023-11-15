@@ -30,16 +30,17 @@
 ---
 
 **The Pixeval that based on WinUI 3 is now WIP, the older version, 
-which is the WPF version has been deprecated and expecting no more supports from developers,
-the WinUI 3 version provides a better user interface,
-a more structural codebase and a modern development experience compared to the WPF version.
-You can download and compile it yourself if you want to take a glance at the new version,
-follow the following steps to compile and run:**
-
-For more information, see [main page](https://sora.ink/pixeval/)
+which is the WPF version has been deprecated and expecting no more supports from developers.**
 
 > The WinUI 3 codebase for Pixeval supports only Windows 10 (1809, Build Number 17763) and higher.
 > You can check this at Settings | System | About | Windows specifications
+
+For more information, see [main page](https://sora.ink/pixeval/)
+
+**The WinUI 3 version provides a better user interface,
+a more structural codebase and a modern development experience compared to the WPF version.
+You can download and compile it yourself if you want to take a glance at the new version,
+follow the following steps to compile and run:**
 
 ## Prerequisites
 
@@ -107,7 +108,6 @@ After your development, Please create a [Pull Request](https://github.com/Pixeva
 If this project meets your requirements perfectly, welcome the buy me a coffee at [afdian](https://afdian.net/@dylech30th). It's my pleasure to having your rewards. Thanks!
 
 ## JetBrains Open Source License
-
 
 <div>
   <a href="https://www.jetbrains.com/?from=Pixeval" align="right"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="JetBrains" class="logo-footer" width="100" align="left"></a>

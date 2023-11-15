@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Runtime.Serialization;
 
 namespace Pixeval.CoreApi.Global.Exception;
 
@@ -28,10 +27,6 @@ namespace Pixeval.CoreApi.Global.Exception;
 public class RankingDateOutOfRangeException : MakoException
 {
     public RankingDateOutOfRangeException()
-    {
-    }
-
-    protected RankingDateOutOfRangeException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
 

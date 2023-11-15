@@ -24,11 +24,11 @@ public class Lexer(string rawString)
 {
     private readonly CharStream _rawString = new(rawString);
 
-    private char _currentChar => _rawString.Peek();
+    private char CurrentChar => _rawString.Peek();
 
     public TokenInfo? NextToken()
     {
-        switch (_currentChar)
+        switch (CurrentChar)
         {
             case char.MaxValue:
                 return null;

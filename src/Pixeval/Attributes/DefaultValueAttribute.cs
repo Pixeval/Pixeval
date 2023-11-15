@@ -22,7 +22,6 @@ using System;
 using System.Reflection;
 using Pixeval.Misc;
 
-
 namespace Pixeval.Attributes;
 
 [AttributeUsage(AttributeTargets.Property)]

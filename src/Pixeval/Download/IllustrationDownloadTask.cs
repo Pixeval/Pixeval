@@ -64,7 +64,7 @@ public class IllustrationDownloadTask : ObservableDownloadTask, IIllustrationVie
             {
                 using (stream)
                 {
-                    IOHelper.CreateParentDirectories(Destination);
+                    IoHelper.CreateParentDirectories(Destination);
                     await using var fs = File.Open(Destination, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
                     await stream.AsStreamForRead().CopyToAsync(fs);
                 }

@@ -33,7 +33,7 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.AppManagement;
 
-[GenerateConstructor, SettingPOCO]
+[GenerateConstructor, SettingPoco]
 public partial record AppSetting : IWindowSettings
 {
 #pragma warning disable CS8618

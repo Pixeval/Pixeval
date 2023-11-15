@@ -72,7 +72,6 @@ public static class MakoHttpOptions
         return new HttpMessageInvoker(new SocketsHttpHandler());
     }
 
-
     private static Func<SocketsHttpConnectionContext, CancellationToken, ValueTask<Stream>> BypassedConnectCallback(INameResolver nameResolver)
     {
         return async (context, token) =>

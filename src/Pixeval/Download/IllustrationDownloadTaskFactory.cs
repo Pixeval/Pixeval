@@ -41,11 +41,11 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
-        var path = IOHelper.NormalizePath(PathParser.Reduce(rawPath, context));
+        var path = IoHelper.NormalizePath(PathParser.Reduce(rawPath, context));
         if (manager.Collection.Find(entry => entry.Destination == path).Any())
         {
             // delete the original entry
-            manager.Delete(entry => entry.Destination == path);
+            _ = manager.Delete(entry => entry.Destination == path);
         }
 
         var task = Functions.Block<ObservableDownloadTask>(() =>

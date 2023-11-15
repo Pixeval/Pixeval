@@ -52,7 +52,7 @@ public sealed partial class IllustrationInfoPage
 
     private void IllustrationTagButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        WeakReferenceMessenger.Default.Send(new IllustrationTagClickedMessage((string)((Button)sender).Content));
+        _ = WeakReferenceMessenger.Default.Send(new IllustrationTagClickedMessage((string)((Button)sender).Content));
     }
 
     //private async void IllustrationCaptionMarkdownTextBlock_OnLinkClicked(object? sender, LinkClickedEventArgs e)
@@ -64,7 +64,7 @@ public sealed partial class IllustrationInfoPage
     {
         if (_viewModel.Illustrator is { } userInfo)
         {
-            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement)sender);
+            _ = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", (UIElement)sender);
             // todo IllustratorPage use Navigate
             // CurrentContext.Window.Content.To<Frame>().Navigate(typeof(IllustratorPage), Tuple.Create((UIElement)sender, new IllustratorViewModel(userInfo)), new SlideNavigationTransitionInfo
             // {

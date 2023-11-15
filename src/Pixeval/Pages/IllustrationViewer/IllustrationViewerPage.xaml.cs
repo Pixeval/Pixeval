@@ -115,7 +115,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
                 }
                 case IllustrationViewerPageViewModel.ShowShare:
                 {
-                    Window.ShowShareUI();
+                    Window.ShowShareUi();
                     break;
                 }
                 case nameof(IllustrationViewerPageViewModel.IsInfoPaneOpen):

@@ -64,7 +64,7 @@ public sealed partial class PixivReplyBar
         ReplyContentRichEditBox.Document.GetText(TextGetOptions.UseObjectText, out var content);
         if (content.Length is 0 or > 140)
         {
-            MessageDialogBuilder.CreateAcknowledgement(this,
+            _ = MessageDialogBuilder.CreateAcknowledgement(this,
                 PixivReplyBarResources.CommentIsTooShortOrTooLongToastTitle,
                 PixivReplyBarResources.CommentIsTooShortOrTooLongToastContentFormatted.Format(content.Length));
             return;

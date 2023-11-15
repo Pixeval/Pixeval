@@ -134,7 +134,7 @@ public sealed partial class ZoomableImage : UserControl
 
     private bool _timerRunning;
     private CanvasBitmap? _currentFrame;
-    private readonly List<CanvasBitmap> _frames = new();
+    private readonly List<CanvasBitmap> _frames = [];
     private readonly CancellationTokenSource _token = new();
     private List<int>? ClonedMsIntervals { get; set; }
     private ManualResetEvent ManualResetEvent { get; } = new(true);

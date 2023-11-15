@@ -147,7 +147,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-        manager.Delete(x => x.Id == IllustrationViewerPageViewModel.IllustrationId);
+        _ = manager.Delete(x => x.Id == IllustrationViewerPageViewModel.IllustrationId);
         manager.Insert(new() { Id = IllustrationViewModel.Id });
     }
 
@@ -158,10 +158,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
             _disposed = false;
             const ThumbnailUrlOption option = ThumbnailUrlOption.Medium;
             _ = IllustrationViewModel.TryLoadThumbnail(this, option).ContinueWith(
-                _ =>
-                {
-                    OriginalImageSources ??= new[] { IllustrationViewModel.ThumbnailStreams[option] };
-                },
+                _ => OriginalImageSources ??= [IllustrationViewModel.ThumbnailStreams[option]],
                 TaskScheduler.FromCurrentSynchronizationContext());
             AddHistory();
             await LoadOriginalImage();
@@ -198,7 +195,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
                     {
                         case Result<Stream>.Success(var zipStream):
                             AdvancePhase(LoadingPhase.MergingGifFrames);
-                            OriginalImageSources = await IOHelper.GetStreamsFromZipStreamAsync(zipStream);
+                            OriginalImageSources = await IoHelper.GetStreamsFromZipStreamAsync(zipStream);
                             MsIntervals = ugoiraMetadata.UgoiraMetadataInfo.Frames?.Select(x => (int)x.Delay)?.ToList();
                             break;
                         case Result<Stream>.Failure(OperationCanceledException):

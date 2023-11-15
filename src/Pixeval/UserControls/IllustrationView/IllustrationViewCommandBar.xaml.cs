@@ -60,7 +60,7 @@ public sealed partial class IllustrationViewCommandBar
         var defaultCommands = new List<ICommandBarElement>(CommandBar.PrimaryCommands);
         defaultCommands.AddRange(CommandBar.SecondaryCommands);
         _defaultCommands = defaultCommands.Where(e => e is AppBarButton).Cast<Control>();
-        CommandBarElements = new();
+        CommandBarElements = [];
         CommandBarElements.CollectionChanged += (_, args) =>
         {
             switch (args)
@@ -148,7 +148,7 @@ public sealed partial class IllustrationViewCommandBar
 
         if (viewModelSelectedIllustrations.Length is var c and > 0)
         {
-            MessageDialogBuilder.CreateAcknowledgement(this,
+            _ = MessageDialogBuilder.CreateAcknowledgement(this,
                 IllustrationViewCommandBarResources.AddAllToBookmarkTitle,
                 IllustrationViewCommandBarResources.AddAllToBookmarkContentFormatted.Format(c));
         }
@@ -200,7 +200,7 @@ public sealed partial class IllustrationViewCommandBar
 
             foreach (var illustrationViewModel in selected)
             {
-                await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(illustrationViewModel.Id));
+                _ = await Launcher.LaunchUriAsync(MakoHelper.GenerateIllustrationWebUri(illustrationViewModel.Id));
             }
         }
     }
@@ -254,7 +254,7 @@ public sealed partial class IllustrationViewCommandBar
             if (o is IllustrationViewModel vm)
             {
                 var stringTags = vm.Illustrate.Tags?.Select(t => t.Name).WhereNotNull().ToArray() ??
-                                 Array.Empty<string>();
+                                 [];
                 var result = ExamineExcludeTags(stringTags, excludeTags)
                              && ExamineIncludeTags(stringTags, includeTags)
                              && vm.Bookmark >= leastBookmark

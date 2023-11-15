@@ -43,6 +43,6 @@ public partial class PersonView : UserControl
 
     private async void ContentContainerOnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await Launcher.LaunchUriAsync(PersonProfileNavigateUri);
+        _ = await Launcher.LaunchUriAsync(PersonProfileNavigateUri);
     }
 }

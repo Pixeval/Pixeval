@@ -83,7 +83,7 @@ public partial class App
 
     public static void ExitWithPushNotification()
     {
-        WeakReferenceMessenger.Default.Send(new ApplicationExitingMessage());
+        _ = WeakReferenceMessenger.Default.Send(new ApplicationExitingMessage());
         CurrentContext.App.Exit();
     }
 }

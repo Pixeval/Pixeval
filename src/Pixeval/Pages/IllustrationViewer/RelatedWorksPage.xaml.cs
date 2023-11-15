@@ -41,7 +41,7 @@ public sealed partial class RelatedWorksPage
     public override async void OnPageActivated(NavigationEventArgs e)
     {
         // Dispose current page contents if the parent page (IllustrationViewerPage) is navigating
-        WeakReferenceMessenger.Default.TryRegister<RelatedWorksPage, NavigatingFromIllustrationViewerMessage>(this, (recipient, _) =>
+        _ = WeakReferenceMessenger.Default.TryRegister<RelatedWorksPage, NavigatingFromIllustrationViewerMessage>(this, (recipient, _) =>
         {
             recipient.RelatedWorksIllustrationGrid.ViewModel.Dispose();
             WeakReferenceMessenger.Default.UnregisterAll(this);

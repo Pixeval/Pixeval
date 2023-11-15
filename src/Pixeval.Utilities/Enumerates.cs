@@ -137,14 +137,14 @@ public static class Enumerates
     public static T? FirstOrNull<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate) where T : struct
     {
         var matches = enumerable.Where(predicate).Take(1).ToArray();
-        return matches.Any() ? matches[0] : null;
+        return matches.Length is 0 ? null : matches[0];
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T? FirstOrNull<T>(this IEnumerable<T> enumerable) where T : struct
     {
         var matches = enumerable.Take(1).ToArray();
-        return matches.Any() ? matches[0] : null;
+        return matches.Length is 0 ? null : matches[0];
     }
 
     public static IAsyncEnumerable<T> ToAsyncEnumerable<T>(this IEnumerable<T> source)
@@ -183,7 +183,7 @@ public static class Enumerates
     public static void ReplaceByUpdate<T>(this IList<T> dest, IEnumerable<T> source)
     {
         var enumerable = source as T[] ?? source.ToArray();
-        if (enumerable.Any())
+        if (enumerable.Length != 0)
         {
             _ = dest.RemoveAll(x => !enumerable.Contains(x));
             enumerable.Where(x => !dest.Contains(x)).ForEach(dest.Add);
@@ -197,7 +197,7 @@ public static class Enumerates
     public static void ReplaceByUpdate<T>(this ISet<T> dest, IEnumerable<T> source)
     {
         var enumerable = source as T[] ?? source.ToArray();
-        if (enumerable.Any())
+        if (enumerable.Length != 0)
         {
             dest.ToArray().Where(x => !enumerable.Contains(x)).ForEach(x => dest.Remove(x));
             dest.AddRange(enumerable);

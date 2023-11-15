@@ -84,23 +84,23 @@ public partial class RecommendIllustratorProfileViewModel : ObservableObject
     public void Follow()
     {
         Followed = true;
-        App.AppViewModel.MakoClient.PostFollowUserAsync(_userId, PrivacyPolicy.Public);
+        _ = App.AppViewModel.MakoClient.PostFollowUserAsync(_userId, PrivacyPolicy.Public);
     }
 
     public void Unfollow()
     {
         Followed = false;
-        App.AppViewModel.MakoClient.RemoveFollowUserAsync(_userId);
+        _ = App.AppViewModel.MakoClient.RemoveFollowUserAsync(_userId);
     }
 
     public SolidColorBrush GetButtonBackground(bool isFollowed)
     {
-        return isFollowed ? new SolidColorBrush(UIHelper.ParseHexColor("#525252")) : new SolidColorBrush(UIHelper.ParseHexColor("#0096FA"));
+        return isFollowed ? new SolidColorBrush(UiHelper.ParseHexColor("#525252")) : new SolidColorBrush(UiHelper.ParseHexColor("#0096FA"));
     }
 
     public SolidColorBrush GetButtonForeground(bool isFollowed)
     {
-        return isFollowed ? new SolidColorBrush(UIHelper.ParseHexColor("#DBDBDB")) : new SolidColorBrush(UIHelper.ParseHexColor("#F5F5F5"));
+        return isFollowed ? new SolidColorBrush(UiHelper.ParseHexColor("#DBDBDB")) : new SolidColorBrush(UiHelper.ParseHexColor("#F5F5F5"));
     }
 
     public string GetFollowButtonText(bool isFollowed)

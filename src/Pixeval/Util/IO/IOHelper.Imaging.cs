@@ -37,7 +37,7 @@ using SixLabors.ImageSharp.Formats.Webp;
 
 namespace Pixeval.Util.IO;
 
-public static partial class IOHelper
+public static partial class IoHelper
 {
     /// <summary>
     ///     Re-encode and decode the image that wrapped in <paramref name="imageStream" />. Note that this function

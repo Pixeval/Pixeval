@@ -81,7 +81,7 @@ public sealed partial class TokenInput
             TokenDeleting?.Invoke(this, arg);
             if (!arg.Cancel)
             {
-                TokenSource.Remove(token);
+                _ = TokenSource.Remove(token);
                 TokenDeleted?.Invoke(this, token);
             }
         }

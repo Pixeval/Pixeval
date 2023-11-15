@@ -54,7 +54,7 @@ public abstract class FetchEngineIncrementalSource<T, TModel>
                 if (_asyncEnumerator.Current is { } obj && !_yieldedItems.Contains(Identifier(obj)))
                 {
                     result.Add(Select(obj));
-                    _yieldedItems.Add(Identifier(obj));
+                    _ = _yieldedItems.Add(Identifier(obj));
                     i++;
                     _yieldedCounter++;
                 }

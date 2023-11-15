@@ -34,7 +34,7 @@ public static class WindowFactory
 
     public static EnhancedWindow RootWindow => _forkedWindowsInternal[0];
 
-    private static readonly List<EnhancedWindow> _forkedWindowsInternal = new();
+    private static readonly List<EnhancedWindow> _forkedWindowsInternal = [];
 
     public static IReadOnlyList<EnhancedWindow> ForkedWindows => _forkedWindowsInternal;
 

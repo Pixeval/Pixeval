@@ -40,7 +40,7 @@ public class IllustratorIllustrationAndMangaBookmarkPageViewModel : ObservableOb
 
     private readonly CancellationTokenSource _bookmarksIdLoadingCancellationTokenSource = new();
 
-    public ObservableCollection<CountedTag> UserBookmarkTags { get; } = new();
+    public ObservableCollection<CountedTag> UserBookmarkTags { get; } = [];
 
     public event EventHandler<string>? TagBookmarksIncrementallyLoaded;
 
@@ -66,7 +66,7 @@ public class IllustratorIllustrationAndMangaBookmarkPageViewModel : ObservableOb
         var token = _bookmarksIdLoadingCancellationTokenSource.Token;
         var engine = App.AppViewModel.MakoClient.UserTaggedBookmarksId(uid, tag);
         var counter = 0;
-        var hashSet = _bookmarkTagIllustrationIdDictionary.GetOrAdd(tag, new HashSet<string>());
+        var hashSet = _bookmarkTagIllustrationIdDictionary.GetOrAdd(tag, []);
         await foreach (var id in engine)
         {
             if (token.IsCancellationRequested)
@@ -82,7 +82,7 @@ public class IllustratorIllustrationAndMangaBookmarkPageViewModel : ObservableOb
                 TagBookmarksIncrementallyLoaded?.Invoke(this, tag);
             }
 
-            hashSet.Add(id);
+            _ = hashSet.Add(id);
             counter++;
         }
 

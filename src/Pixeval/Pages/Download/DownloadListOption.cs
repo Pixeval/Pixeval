@@ -20,7 +20,6 @@
 
 using Pixeval.Attributes;
 
-
 namespace Pixeval.Pages.Download;
 
 public enum DownloadListOption

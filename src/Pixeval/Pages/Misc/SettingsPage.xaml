@@ -117,7 +117,6 @@
                         <ToggleSwitch IsOn="{x:Bind _viewModel.DownloadUpdateAutomatically, Mode=TwoWay}" />
                     </controls:SettingsCard>
 
-
                     <TextBlock x:Uid="/SettingsPage/SessionSettingsGroup" Style="{StaticResource SettingHeaderStyle}" />
 
                     <controls:SettingsCard
@@ -151,7 +150,6 @@
                                 Tapped="DeleteDownloadHistoriesButton_OnTapped" />
                         </controls:SettingsExpander.Items>
                     </controls:SettingsExpander>
-
 
                     <TextBlock x:Uid="/SettingsPage/ApplicationSettingsGroup" Style="{StaticResource SettingHeaderStyle}" />
 
@@ -235,7 +233,6 @@
                             </controls:SettingsCard>
                         </controls:SettingsExpander.Items>
                     </controls:SettingsExpander>
-
 
                     <TextBlock x:Uid="/SettingsPage/BrowsingExperienceSettingsGroup" Style="{StaticResource SettingHeaderStyle}" />
 
@@ -410,7 +407,6 @@
                         </controls:SettingsExpander.Items>
                     </controls:SettingsExpander>
 
-
                     <TextBlock x:Uid="/SettingsPage/DownloadSettingsGroup" Style="{StaticResource SettingHeaderStyle}" />
 
                     <controls:SettingsCard
@@ -476,7 +472,6 @@
                             </controls:SettingsCard>
                         </controls:SettingsExpander.Items>
                     </controls:SettingsExpander>
-
 
                     <TextBlock x:Uid="/SettingsPage/MiscSettingsGroup" Style="{StaticResource SettingHeaderStyle}" />
 

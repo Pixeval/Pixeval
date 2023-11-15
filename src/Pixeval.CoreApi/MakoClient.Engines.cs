@@ -312,7 +312,7 @@ public partial class MakoClient
     public IFetchEngine<Novel> NovelBookmarks(string uid, PrivacyPolicy privacyPolicy, TargetFilter targetFilter)
     {
         EnsureNotCancelled();
-        CheckPrivacyPolicy(uid, privacyPolicy);
+        _ = CheckPrivacyPolicy(uid, privacyPolicy);
         return new NovelBookmarkEngine(this, uid, privacyPolicy, targetFilter, new EngineHandle(CancelInstance));
     }
 

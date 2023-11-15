@@ -45,8 +45,8 @@ public class LazyInitializedAnimatedIllustrationDownloadTask : AnimatedIllustrat
         using (stream)
         {
             var metadata = await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(_illustId);
-            using var ugoiraStream = await IOHelper.GetStreamFromZipStreamAsync(stream.AsStreamForRead(), metadata);
-            await IOHelper.CreateAndWriteToFileAsync(ugoiraStream, Destination);
+            using var ugoiraStream = await IoHelper.GetStreamFromZipStreamAsync(stream.AsStreamForRead(), metadata);
+            await IoHelper.CreateAndWriteToFileAsync(ugoiraStream, Destination);
         }
     }
 

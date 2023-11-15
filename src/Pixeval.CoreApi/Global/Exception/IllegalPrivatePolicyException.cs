@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Runtime.Serialization;
 using Pixeval.CoreApi.Global.Enum;
 
 namespace Pixeval.CoreApi.Global.Exception;
@@ -30,11 +29,6 @@ namespace Pixeval.CoreApi.Global.Exception;
 public class IllegalPrivatePolicyException : MakoException
 {
     public IllegalPrivatePolicyException(string uid)
-    {
-        Uid = uid;
-    }
-
-    protected IllegalPrivatePolicyException(SerializationInfo info, StreamingContext context, string uid) : base(info, context)
     {
         Uid = uid;
     }

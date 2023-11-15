@@ -44,12 +44,14 @@ public sealed partial class IllustratorContentViewer : IDisposable
 
         ViewModel.ShowExternalCommandBarChanged += (_, b) =>
         {
-            if (IllustratorContentViewerFrame.Content is IIllustratorContentViewerCommandBarHostSubPage subPage) subPage.ChangeCommandBarVisibility(b);
+            if (IllustratorContentViewerFrame.Content is IIllustratorContentViewerCommandBarHostSubPage subPage)
+                subPage.ChangeCommandBarVisibility(b);
         };
 
         ViewModel.ShowRecommendIllustratorsChanged += (_, b) =>
         {
-            if (b && !ViewModel.RecommendIllustrators.Any()) ViewModel.LoadRecommendIllustratorsAsync().Discard();
+            if (b && !ViewModel.RecommendIllustrators.Any())
+                ViewModel.LoadRecommendIllustratorsAsync().Discard();
         };
 
         ViewModel.CurrentTab = args.SelectedItemContainer.Tag switch
@@ -69,7 +71,7 @@ public sealed partial class IllustratorContentViewer : IDisposable
         _lastNavigationViewTag = args.SelectedItemContainer.Tag as NavigationViewTag;
 
         await ThreadingHelper.SpinWaitAsync(() => IllustratorContentViewerFrame.Content.GetType() != _lastNavigationViewTag!.NavigateTo);
-        _pageCache.Add((Page)IllustratorContentViewerFrame.Content);
+        _ = _pageCache.Add((Page)IllustratorContentViewerFrame.Content);
     }
 
     private void NavigationViewAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

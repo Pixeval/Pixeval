@@ -27,7 +27,7 @@ namespace Pixeval.Activation;
 
 public static class ActivationRegistrar
 {
-    public static readonly List<IAppActivationHandler> FeatureHandlers = new();
+    public static readonly List<IAppActivationHandler> FeatureHandlers = [];
 
     static ActivationRegistrar()
     {
@@ -39,7 +39,7 @@ public static class ActivationRegistrar
         if (args is { Kind: ExtendedActivationKind.Protocol, Data: IProtocolActivatedEventArgs { Uri: var activationUri } } &&
             FeatureHandlers.FirstOrDefault(f => f.ActivationFragment == activationUri.Host) is { } handler)
         {
-            handler.Execute(activationUri.PathAndQuery[1..]);
+            _ = handler.Execute(activationUri.PathAndQuery[1..]);
         }
     }
 }

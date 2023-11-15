@@ -56,10 +56,10 @@ public class FileCache
 
     private FileCache()
     {
-        _supportedKeyTypes = new[] { typeof(int), typeof(uint), typeof(ulong), typeof(long) };
+        _supportedKeyTypes = [typeof(int), typeof(uint), typeof(ulong), typeof(long)];
 
-        _index = new Dictionary<Guid, string>();
-        _expireIndex = new Dictionary<Guid, DateTimeOffset>();
+        _index = [];
+        _expireIndex = [];
 
         _indexLocker = new SemaphoreSlim(1, 1);
         _expireIndexLocker = new SemaphoreSlim(1, 1);
@@ -117,7 +117,7 @@ public class FileCache
         }
         finally
         {
-            _indexLocker.Release();
+            _ = _indexLocker.Release();
         }
     }
 
@@ -211,15 +211,15 @@ public class FileCache
         {
             foreach (var k in keys)
             {
-                (await _baseDirectory.TryGetItemAsync(HashToGuid(k).ToString("N")))?.DeleteAsync(StorageDeleteOption.PermanentDelete);
-                _index.Remove(k);
+                _ = ((await _baseDirectory.TryGetItemAsync(HashToGuid(k).ToString("N")))?.DeleteAsync(StorageDeleteOption.PermanentDelete));
+                _ = _index.Remove(k);
             }
 
             await WriteIndexAsync();
         }
         finally
         {
-            _indexLocker.Release();
+            _ = _indexLocker.Release();
         }
     }
 
@@ -233,7 +233,7 @@ public class FileCache
 
         try
         {
-            await Task.WhenAll(_index.Select(item => HashToGuid(item.Key))
+            _ = await Task.WhenAll(_index.Select(item => HashToGuid(item.Key))
                 .Select(guid => _baseDirectory.TryGetItemAsync(guid.ToString("N")).AsTask())
                 .Select(item => item.ContinueWith(t => t.Result?.DeleteAsync())));
             _index.Clear();
@@ -241,7 +241,7 @@ public class FileCache
         }
         finally
         {
-            _indexLocker.Release();
+            _ = _indexLocker.Release();
         }
     }
 
@@ -260,7 +260,7 @@ public class FileCache
             foreach (var (key, _) in expired)
             {
                 await (await _baseDirectory.TryGetItemAsync(key.ToString("N")))?.DeleteAsync();
-                _index.Remove(key);
+                _ = _index.Remove(key);
             }
 
             await WriteIndexAsync();
@@ -268,7 +268,7 @@ public class FileCache
         }
         finally
         {
-            _indexLocker.Release();
+            _ = _indexLocker.Release();
         }
     }
 
@@ -316,7 +316,7 @@ public class FileCache
         }
         finally
         {
-            _indexLocker.Release();
+            _ = _indexLocker.Release();
         }
     }
 
@@ -334,7 +334,7 @@ public class FileCache
                 ? _expireIndex
                     .Where(x => x.Value >= DateTimeOffset.Now)
                     .ToList()
-                : new List<KeyValuePair<Guid, DateTimeOffset>>();
+                : [];
 
             if (state.HasFlag(CacheState.Expired))
             {
@@ -349,7 +349,7 @@ public class FileCache
         }
         finally
         {
-            _indexLocker.Release();
+            _ = _indexLocker.Release();
         }
     }
 
@@ -406,7 +406,7 @@ public class FileCache
         }
         finally
         {
-            _indexLocker.Release();
+            _ = _indexLocker.Release();
         }
 
         throw new KeyNotFoundException(key.ToString());
@@ -451,7 +451,7 @@ public class FileCache
         }
         finally
         {
-            _indexLocker.Release();
+            _ = _indexLocker.Release();
         }
     }
 
@@ -499,7 +499,7 @@ public class FileCache
         }
         finally
         {
-            _indexLocker.Release();
+            _ = _indexLocker.Release();
         }
     }
 
@@ -546,7 +546,7 @@ public class FileCache
         }
         finally
         {
-            _expireIndexLocker.Release();
+            _ = _expireIndexLocker.Release();
         }
     }
 

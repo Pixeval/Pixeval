@@ -5,7 +5,7 @@ namespace Pixeval.Utilities;
 
 public class SharedRef<T>
 {
-    private readonly HashSet<object> _keys = new();
+    private readonly HashSet<object> _keys = [];
 
     public T Value { get; init; }
 

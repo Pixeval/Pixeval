@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -29,10 +29,6 @@ namespace Pixeval;
 public class LoginProxyException : Exception
 {
     public LoginProxyException()
-    {
-    }
-
-    protected LoginProxyException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
 

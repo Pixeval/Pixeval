@@ -60,7 +60,7 @@ public sealed partial class CommentRepliesBlock
 
     private void CommentList_OnRepliesHyperlinkButtonTapped(object? sender, TappedRoutedEventArgs e)
     {
-        ReplyBar.FindDescendant<RichEditBox>()?.Focus(FocusState.Programmatic);
+        _ = (ReplyBar.FindDescendant<RichEditBox>()?.Focus(FocusState.Programmatic));
     }
 
     private async void ReplyBar_OnSendButtonTapped(object? sender, SendButtonTappedEventArgs e)

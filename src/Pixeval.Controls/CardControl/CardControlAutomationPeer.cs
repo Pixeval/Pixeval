@@ -25,17 +25,12 @@ namespace Pixeval.Controls;
 /// <summary>
 /// AutomationPeer for CardControl
 /// </summary>
-public class CardControlAutomationPeer : FrameworkElementAutomationPeer
+/// <remarks>
+/// Initializes a new instance of the <see cref="CardControl"/> class.
+/// </remarks>
+/// <param name="owner">CardControl</param>
+public class CardControlAutomationPeer(CardControl owner) : FrameworkElementAutomationPeer(owner)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CardControl"/> class.
-    /// </summary>
-    /// <param name="owner">CardControl</param>
-    public CardControlAutomationPeer(CardControl owner)
-        : base(owner)
-    {
-    }
-
     /// <summary>
     /// Gets the control type for the element that is associated with the UI Automation peer.
     /// </summary>

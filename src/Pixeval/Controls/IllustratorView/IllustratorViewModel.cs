@@ -73,7 +73,7 @@ public partial class IllustratorViewModel : ObservableObject, IIllustrationVisua
         Account = info.Account;
         Comment = info.Comment;
         IsFollowed = info.IsFollowed;
-        Illustrations = new ObservableCollection<IllustrationViewModel>();
+        Illustrations = [];
         VisualizationController = new IllustrationVisualizationController(this);
         IsFollowButtonEnabled = true;
         _ = LoadAvatar();
@@ -81,7 +81,8 @@ public partial class IllustratorViewModel : ObservableObject, IIllustrationVisua
 
     public async Task LoadAvatar()
     {
-        if (AvatarSource != null) return;
+        if (AvatarSource != null)
+            return;
         AvatarSource = (await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(AvatarUrl, 60)
             .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync()))!;
     }

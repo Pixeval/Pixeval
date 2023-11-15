@@ -22,4 +22,4 @@ using System;
 
 namespace Pixeval.Attributes;
 
-public class SettingPOCO : Attribute { }
+public class SettingPoco : Attribute { }

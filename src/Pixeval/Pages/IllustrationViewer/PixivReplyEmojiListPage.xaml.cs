@@ -39,7 +39,7 @@ namespace Pixeval.Pages.IllustrationViewer;
 
 public sealed partial class PixivReplyEmojiListPage
 {
-    public static ObservableCollection<PixivReplyEmojiViewModel> EmojiList = new();
+    public static ObservableCollection<PixivReplyEmojiViewModel> EmojiList = [];
 
     private PixivReplyBar? _replyBar;
 

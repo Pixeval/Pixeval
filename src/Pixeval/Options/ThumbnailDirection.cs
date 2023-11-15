@@ -20,7 +20,6 @@
 
 using Pixeval.Attributes;
 
-
 namespace Pixeval.Options;
 
 public enum ThumbnailDirection

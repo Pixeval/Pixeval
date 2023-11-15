@@ -48,7 +48,7 @@ public class CancellationHandle
         if (!IsCancelled)
         {
             _onCancellation?.Invoke();
-            Interlocked.Increment(ref _isCancelled);
+            _ = Interlocked.Increment(ref _isCancelled);
         }
     }
 
@@ -56,12 +56,12 @@ public class CancellationHandle
     {
         if (IsPaused)
         {
-            Interlocked.Decrement(ref _paused);
+            _ = Interlocked.Decrement(ref _paused);
         }
 
         if (IsCancelled)
         {
-            Interlocked.Decrement(ref _isCancelled);
+            _ = Interlocked.Decrement(ref _isCancelled);
         }
     }
 
@@ -70,7 +70,7 @@ public class CancellationHandle
         if (!IsPaused)
         {
             _onPause?.Invoke();
-            Interlocked.Increment(ref _paused);
+            _ = Interlocked.Increment(ref _paused);
         }
     }
 
@@ -79,7 +79,7 @@ public class CancellationHandle
         if (IsPaused)
         {
             _onResume?.Invoke();
-            Interlocked.Decrement(ref _paused);
+            _ = Interlocked.Decrement(ref _paused);
         }
     }
 

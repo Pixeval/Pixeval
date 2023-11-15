@@ -40,7 +40,7 @@ public class IllustrationVisualizationController(IIllustrationVisualizer visuali
     {
         var collection = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, itemsLimit));
         visualizer.Illustrations = collection;
-        await collection.LoadMoreItemsAsync(20);
+        _ = await collection.LoadMoreItemsAsync(20);
         visualizer.Illustrations.CollectionChanged += CollectionChanged;
         return visualizer.Illustrations.Count > 0;
     }
@@ -48,7 +48,7 @@ public class IllustrationVisualizationController(IIllustrationVisualizer visuali
     public async Task FillAsync(IFetchEngine<Illustration?>? newEngine, int itemsLimit = -1)
     {
         FetchEngine = newEngine;
-        await FillAsync(itemsLimit);
+        _ = await FillAsync(itemsLimit);
     }
 
     public Task<bool> ResetAndFillAsync(IFetchEngine<Illustration?>? newEngine, int itemsLimit = -1)

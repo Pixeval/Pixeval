@@ -226,6 +226,5 @@ dotnet_naming_style.camel_begin_with__.required_prefix = _
 dotnet_naming_style.camel_begin_with__.capitalization = camel_case
 
 
-
 # ReSharper properties
 resharper_max_initializer_elements_on_line = 1

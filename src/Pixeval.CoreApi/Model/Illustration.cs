@@ -113,7 +113,6 @@ public record Illustration : IIllustrate
         return other?.Id == Id;
     }
 
-
     public class IllustrationMetaSinglePage
     {
         [JsonPropertyName("original_image_url")]

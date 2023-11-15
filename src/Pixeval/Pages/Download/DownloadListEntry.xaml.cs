@@ -78,7 +78,7 @@ public sealed partial class DownloadListEntry
             case DownloadState.Error:
             case DownloadState.Cancelled:
             case DownloadState.Completed:
-                await Launcher.LaunchUriAsync(new(ViewModel.DownloadTask.Destination));
+                _ = await Launcher.LaunchUriAsync(new(ViewModel.DownloadTask.Destination));
                 break;
             case DownloadState.Paused:
                 ViewModel.DownloadTask.CancellationHandle.Resume();
@@ -101,14 +101,14 @@ public sealed partial class DownloadListEntry
 
     private async void OpenDownloadLocationItem_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await Launcher.LaunchFolderPathAsync(Path.GetDirectoryName(ViewModel.DownloadTask.Destination));
+        _ = await Launcher.LaunchFolderPathAsync(Path.GetDirectoryName(ViewModel.DownloadTask.Destination));
     }
 
     private void GoToPageItem_OnTapped(object sender, TappedRoutedEventArgs e) => OpenIllustrationRequested?.Invoke(this, ViewModel);
 
     private async void CheckErrorMessageInDetail_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, DownloadListEntryResources.ErrorMessageDialogTitle, ViewModel.DownloadTask.ErrorCause!.ToString())
+        _ = await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, DownloadListEntryResources.ErrorMessageDialogTitle, ViewModel.DownloadTask.ErrorCause!.ToString())
             .ShowAsync();
     }
 }

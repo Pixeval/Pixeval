@@ -48,15 +48,15 @@ public class SuggestionStateMachine
             .SelectAsync(t => new Tag(t.Tag!, t.Translation))
             .SelectAsync(SuggestionModel.FromTag), LazyThreadSafetyMode.ExecutionAndPublication);
 
-    private static readonly TreeSearcher<SettingEntry> SettingEntriesTreeSearcher = new(SearcherLogic.Contain, PinIn.CreateDefault());
+    private static readonly TreeSearcher<SettingEntry> _settingEntriesTreeSearcher = new(SearcherLogic.Contain, PinIn.CreateDefault());
 
-    public ObservableCollection<SuggestionModel> Suggestions { get; } = new();
+    public ObservableCollection<SuggestionModel> Suggestions { get; } = [];
 
     static SuggestionStateMachine()
     {
         foreach (var settingsEntry in SettingEntry.LazyValues.Value)
         {
-            SettingEntriesTreeSearcher.Put(settingsEntry.GetLocalizedResourceContent()!, settingsEntry);
+            _settingEntriesTreeSearcher.Put(settingsEntry.GetLocalizedResourceContent()!, settingsEntry);
         }
     }
 
@@ -105,7 +105,7 @@ public class SuggestionStateMachine
 
     private static IReadOnlySet<SettingEntry> MatchSettings(string keyword)
     {
-        var pinInResult = SettingEntriesTreeSearcher.Search(keyword).ToHashSet();
+        var pinInResult = _settingEntriesTreeSearcher.Search(keyword).ToHashSet();
         var nonPinInResult = SettingEntry.LazyValues.Value.Where(it => it.GetLocalizedResourceContent()!.Contains(keyword));
         pinInResult.AddRange(nonPinInResult);
         return pinInResult;

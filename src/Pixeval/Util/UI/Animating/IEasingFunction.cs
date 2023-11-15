@@ -22,7 +22,7 @@ using System.Numerics;
 
 namespace Pixeval.Util.UI.Animating;
 
-public interface IEasingFunction<out V> where V : INumber<V>
+public interface IEasingFunction<out TV> where TV : INumber<TV>
 {
-    V GetValue(double percentage);
+    TV GetValue(double percentage);
 }

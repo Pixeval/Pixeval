@@ -97,7 +97,7 @@ public class ReenterableAwaiter<TResult>(bool initialSignal, TResult resultIniti
         }
         else
         {
-            Task.Factory.StartNew(_continuation, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
+            _ = Task.Factory.StartNew(_continuation, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
         }
     }
 

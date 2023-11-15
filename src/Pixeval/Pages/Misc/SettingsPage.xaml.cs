@@ -43,7 +43,7 @@ namespace Pixeval.Pages.Misc;
 public sealed partial class SettingsPage
 {
     // This TestParser is used to test whether the user input meta path is legal
-    private static readonly MacroParser<string> TestParser = new();
+    private static readonly MacroParser<string> _testParser = new();
     private SettingsPageViewModel _viewModel;
 
     // The previous meta path after user changes the path field, if the path is illegal
@@ -53,8 +53,10 @@ public sealed partial class SettingsPage
     public SettingsPage()
     {
         InitializeComponent();
-        _viewModel = new SettingsPageViewModel(App.AppViewModel.AppSetting);
-        _viewModel.SettingsTeachingTip = SettingsTeachingTip;
+        _viewModel = new SettingsPageViewModel(App.AppViewModel.AppSetting)
+        {
+            SettingsTeachingTip = SettingsTeachingTip
+        };
         _previousPath = _viewModel.DefaultDownloadPathMacro;
     }
 
@@ -82,7 +84,7 @@ public sealed partial class SettingsPage
 
     private async void ThemeEntryDescriptionHyperlinkButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await Launcher.LaunchUriAsync(new Uri("ms-settings:themes"));
+        _ = await Launcher.LaunchUriAsync(new Uri("ms-settings:themes"));
     }
 
     private void ImageMirrorServerTextBox_OnGotFocus(object sender, RoutedEventArgs e)
@@ -156,8 +158,8 @@ public sealed partial class SettingsPage
 
         try
         {
-            TestParser.SetupParsingEnvironment(new Lexer(_viewModel.DefaultDownloadPathMacro));
-            TestParser.Parse();
+            _testParser.SetupParsingEnvironment(new Lexer(_viewModel.DefaultDownloadPathMacro));
+            _ = _testParser.Parse();
         }
         catch (Exception exception)
         {

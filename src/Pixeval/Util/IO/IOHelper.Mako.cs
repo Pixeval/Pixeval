@@ -26,7 +26,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Util.IO;
 
-public static partial class IOHelper
+public static partial class IoHelper
 {
     public static async Task<Result<ImageSource>> DownloadSoftwareBitmapSourceResultAsync(this MakoClient client, string url)
     {

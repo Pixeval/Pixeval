@@ -25,12 +25,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Pixeval.Misc;
 
-
 namespace Pixeval.Util.UI;
 
 public static partial class ReplyEmojiHelper
 {
-    private static readonly IReadOnlyDictionary<string, PixivReplyEmoji> StringToEmojiTable = BuildQueryTable();
+    private static readonly IReadOnlyDictionary<string, PixivReplyEmoji> _stringToEmojiTable = BuildQueryTable();
 
     private static IReadOnlyDictionary<string, PixivReplyEmoji> BuildQueryTable()
     {
@@ -56,12 +55,12 @@ public static partial class ReplyEmojiHelper
 
     public static PixivReplyEmoji GetReplyEmojiFromPlaceholderKey(string content)
     {
-        return StringToEmojiTable[content];
+        return _stringToEmojiTable[content];
     }
 
     public static IReadOnlyDictionary<int, (PixivReplyEmoji emoji, int contentLength)> BuildEmojiReplacementIndexTableOfReplyContent(string replyContent)
     {
-        return Regex.Matches(replyContent, string.Join("|", StringToEmojiTable.Keys.Select(Regex.Escape)))
-            .ToImmutableDictionary(m => m.Index, m => (StringToEmojiTable[m.Value], m.Value.Length));
+        return Regex.Matches(replyContent, string.Join("|", _stringToEmojiTable.Keys.Select(Regex.Escape)))
+            .ToImmutableDictionary(m => m.Index, m => (_stringToEmojiTable[m.Value], m.Value.Length));
     }
 }

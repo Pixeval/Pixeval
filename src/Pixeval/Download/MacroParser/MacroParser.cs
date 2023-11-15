@@ -104,12 +104,12 @@ public class MacroParser<TContext>
 
     private Macro<TContext> Macro()
     {
-        EatToken(TokenKind.At);
-        EatToken(TokenKind.LBrace);
+        _ = EatToken(TokenKind.At);
+        _ = EatToken(TokenKind.LBrace);
         var macroName = PlainText();
         _expectContextualColon = true;
         var node = new Macro<TContext>(macroName, OptionalMacroParameter());
-        EatToken(TokenKind.RBrace);
+        _ = EatToken(TokenKind.RBrace);
         return node;
     }
 
@@ -128,7 +128,7 @@ public class MacroParser<TContext>
                 throw new MacroParseException(MacroParserResources.UnexpectedTokenFormatted.Format(_currentToken.Position.Start));
             }
 
-            EatToken(TokenKind.Colon);
+            _ = EatToken(TokenKind.Colon);
             return new PlainText<TContext>($":{EatToken(TokenKind.PlainText).Text}");
         }
 

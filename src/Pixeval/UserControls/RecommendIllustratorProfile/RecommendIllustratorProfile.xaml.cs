@@ -22,7 +22,7 @@ public sealed partial class RecommendIllustratorProfile
 
     private void RecommendIllustratorProfile_OnLoaded(object sender, RoutedEventArgs e)
     {
-        ThreadingHelper.Fork(async () =>
+        _ = ThreadingHelper.Fork(async () =>
         {
             if (ViewModel.AvatarTask is { } task)
             {
@@ -30,7 +30,7 @@ public sealed partial class RecommendIllustratorProfile
                 AvatarPersonPicture.ProfilePicture = result;
             }
         });
-        ThreadingHelper.Fork(async () =>
+        _ = ThreadingHelper.Fork(async () =>
         {
             if (ViewModel.DisplayImagesTask is { } task)
             {

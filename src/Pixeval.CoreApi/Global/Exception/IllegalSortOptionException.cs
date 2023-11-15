@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -18,8 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Runtime.Serialization;
-
 namespace Pixeval.CoreApi.Global.Exception;
 
 /// <summary>
@@ -28,10 +26,6 @@ namespace Pixeval.CoreApi.Global.Exception;
 public class IllegalSortOptionException : MakoException
 {
     public IllegalSortOptionException()
-    {
-    }
-
-    protected IllegalSortOptionException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
 

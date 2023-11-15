@@ -107,7 +107,7 @@ public sealed partial class DownloadListPage
             {
                 foreach (var downloadListEntryViewModel in _viewModel.SelectedTasks)
                 {
-                    IOHelper.DeleteAsync(downloadListEntryViewModel.DownloadTask.Destination).Discard();
+                    IoHelper.DeleteAsync(downloadListEntryViewModel.DownloadTask.Destination).Discard();
                 }
             }
 
@@ -169,7 +169,6 @@ public sealed partial class DownloadListPage
     {
         viewModel.CreateWindowWithPage(_viewModel.DownloadTasks);
     }
-
 
     private void DownloadListEntryOnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
     {

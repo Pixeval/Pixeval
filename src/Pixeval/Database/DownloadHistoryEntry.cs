@@ -29,7 +29,6 @@ public partial class DownloadHistoryEntry : ObservableObject
     [ObservableProperty]
     private string? _errorCause;
 
-
     [ObservableProperty]
     private DownloadState _state;
 

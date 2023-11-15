@@ -152,7 +152,7 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
         }
         else
         {
-            await MessageDialogBuilder.CreateAcknowledgement(
+            _ = await MessageDialogBuilder.CreateAcknowledgement(
                     CurrentContext.Window,
                     LoginPageResources.RefreshingSessionIsNotPresentTitle,
                     LoginPageResources.RefreshingSessionIsNotPresentContent)
@@ -188,10 +188,7 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
 
         await WebView.LoginWebView2.EnsureCoreWebView2Async();
         WebView.LoginWebView2.CoreWebView2.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All);
-        WebView.LoginWebView2.CoreWebView2.WebResourceRequested += (_, args) =>
-        {
-            args.Request.Headers.SetHeader("Accept-Language", args.Request.Uri.Contains("recaptcha") ? "zh-cn" : CultureInfo.CurrentUICulture.Name);
-        };
+        WebView.LoginWebView2.CoreWebView2.WebResourceRequested += (_, args) => args.Request.Headers.SetHeader("Accept-Language", args.Request.Uri.Contains("recaptcha") ? "zh-cn" : CultureInfo.CurrentUICulture.Name);
 
         var verifier = PixivAuthSignature.GetCodeVerify();
         WebView.LoginWebView2.Source = new Uri(PixivAuthSignature.GenerateWebPageUrl(verifier));
@@ -221,7 +218,7 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
             ("grant_type", "authorization_code"),
             ("include_policy", "true"),
             ("redirect_uri", "https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback"));
-        result.EnsureSuccessStatusCode();
+        _ = result.EnsureSuccessStatusCode();
         var session = (await result.Content.ReadAsStringAsync()).FromJson<TokenResponse>()!.ToSession() with
         {
             Cookie = cookie,

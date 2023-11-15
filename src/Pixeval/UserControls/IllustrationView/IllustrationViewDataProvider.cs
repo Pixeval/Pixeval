@@ -122,7 +122,7 @@ public class IllustrationViewDataProvider : DataProvider<Illustration, Illustrat
 
     public override event EventHandler? FilterChanged;
 
-    public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; set; } = new();
+    public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; set; } = [];
 
     public override void DisposeCurrent()
     {
