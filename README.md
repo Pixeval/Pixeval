@@ -16,10 +16,10 @@
         <a href="https://github.com/Pixeval/Pixeval/issues/new/choose" target="_blank">
             <img src="https://img.shields.io/static/v1?label=feedback&message=issues&color=pink&style=for-the-badge&logo=Github&logoColor=white"/>
         </a>
-        <a href="https://dotnet.microsoft.com/en-us/download/dotnet/8.0" target="_blank">
+        <a href="https://dotnet.microsoft.com/download/dotnet/8.0" target="_blank">
             <img src="https://img.shields.io/static/v1?label=runtime&message=.NET%208.0&color=yellow&style=for-the-badge&logo=.NET&logoColor=white"/>
         </a>
-        <a href="https://dotnet.microsoft.com/en-us/download/dotnet/6.0" target="_blank">
+        <a href="" target="_blank">
             <img src="https://img.shields.io/badge/Platform-Windows10.0.19041-512BD4?&style=for-the-badge&logo=Windows&logoColor=white"/>
         </a>
     </p>
