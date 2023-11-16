@@ -364,11 +364,12 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         PlayGifCommand.CanExecuteRequested += (_, e) => e.CanExecute = IsUgoira && CurrentImage.LoadingCompletedSuccessfully;
         PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
 
+        // 相当于鼠标滚轮滚动10次，方便快速缩放
         ZoomOutCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        ZoomOutCommand.ExecuteRequested += (_, _) => CurrentImage.Zoom(-120);
+        ZoomOutCommand.ExecuteRequested += (_, _) => CurrentImage.Zoom(-1200);
 
         ZoomInCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
-        ZoomInCommand.ExecuteRequested += (_, _) => CurrentImage.Zoom(120);
+        ZoomInCommand.ExecuteRequested += (_, _) => CurrentImage.Zoom(1200);
 
         SaveCommand.ExecuteRequested += async (_, _) => await CurrentIllustration.SaveAsync();
         SaveAsCommand.ExecuteRequested += async (_, _) => await CurrentIllustration.SaveAsAsync();

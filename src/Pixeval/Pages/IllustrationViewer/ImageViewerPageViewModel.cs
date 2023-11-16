@@ -128,6 +128,10 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         GC.SuppressFinalize(this);
     }
 
+    /// <summary>
+    /// see <see cref="ZoomableImage.Zoom"/>
+    /// </summary>
+    /// <param name="delta"></param>
     public void Zoom(float delta)
     {
         Scale = MathF.Exp(MathF.Log(Scale) + delta / 5000f);
