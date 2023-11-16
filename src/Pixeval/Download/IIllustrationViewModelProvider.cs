@@ -19,7 +19,7 @@
 #endregion
 
 using System.Threading.Tasks;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Download;
 

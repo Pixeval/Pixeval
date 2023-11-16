@@ -22,7 +22,7 @@ using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.CoreApi.Model;
 using Pixeval.Download;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Download;

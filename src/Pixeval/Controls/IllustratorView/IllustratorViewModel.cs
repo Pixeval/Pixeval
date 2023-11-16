@@ -28,7 +28,7 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;

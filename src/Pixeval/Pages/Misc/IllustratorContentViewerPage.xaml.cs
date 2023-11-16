@@ -1,7 +1,7 @@
 using System;
 using Microsoft.UI.Xaml.Navigation;
-using Pixeval.UserControls.IllustratorContentViewer;
-using Pixeval.UserControls.IllustratorView;
+using Pixeval.Controls.IllustratorContentViewer;
+using Pixeval.Controls.IllustratorProfile;
 
 namespace Pixeval.Pages.Misc;
 
@@ -16,7 +16,7 @@ public sealed partial class IllustratorContentViewerPage : IDisposable
 
     public override async void OnPageActivated(NavigationEventArgs e)
     {
-        if (e.Parameter is IllustratorViewModel viewModel)
+        if (e.Parameter is IllustratorProfileViewModel viewModel)
         {
             _illustratorContentViewerViewModel = new IllustratorContentViewerViewModel(viewModel.UserDetail ?? await App.AppViewModel.MakoClient.GetUserFromIdAsync(viewModel.UserId!, App.AppViewModel.AppSetting.TargetFilter));
             IllustratorContentViewer.ViewModel = _illustratorContentViewerViewModel;

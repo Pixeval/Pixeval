@@ -27,7 +27,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Database.Managers;
 using Pixeval.Messages;
 using Pixeval.Misc;
-using Pixeval.UserControls;
+using Pixeval.Controls;
 using Pixeval.Util;
 
 // To learn more about WinUI, the WinUI project structure,

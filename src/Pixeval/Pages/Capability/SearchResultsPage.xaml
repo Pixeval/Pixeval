@@ -5,7 +5,7 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:userControls="using:Pixeval.UserControls"
+    xmlns:userControls="using:Pixeval.Controls"
     ClearCacheAfterNavigation="True"
     mc:Ignorable="d">
     <userControls:IllustrationContainer x:Name="IllustrationContainer">

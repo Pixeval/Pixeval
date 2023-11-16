@@ -28,8 +28,7 @@
         <NoWarn>$(NoWarn);WMC1501</NoWarn>
     </PropertyGroup>
     <ItemGroup>
-      <None Remove="Controls\ZoomableImage\ZoomableImage.xaml" />
-      <None Remove="UserControls\IllustrationView\IllustrationThumbnail.xaml" />
+      <None Remove="Controls\IllustrationView\IllustrationThumbnail.xaml" />
     </ItemGroup>
 
     <ItemGroup>
@@ -209,10 +208,7 @@
 
     <!--XAML-->
     <ItemGroup>
-        <Page Update="Controls\ZoomableImage\ZoomableImage.xaml">
-          <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-          <SubType>Designer</SubType>
-        </Page>
+        <Folder Include="Controls\IllustratorProfile\" />
         <Page Update="Pages\Capability\SpotlightsPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
@@ -240,9 +236,6 @@
         <Page Update="Pages\Login\LoginPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Controls\IllustratorView\IllustratorView.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
         <Page Update="Pages\Capability\SearchResultsPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
@@ -268,9 +261,6 @@
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\Misc\LoginPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-        <Page Update="Controls\TokenInputTextBox\TokenInputTextBox.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Dialogs\ReverseSearchApiKeyNotPresentDialog.xaml">
@@ -366,7 +356,7 @@
         <Page Update="UserControls\IllustratorView\IllustratorProfile.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Folder Include="UserControls\RecommendIllustratorProfile\" />
+        <Folder Include="Controls\RecommendIllustratorProfile\" />
         <Page Update="UserControls\IllustrationView\IllustrationThumbnail.xaml">
           <Generator>MSBuild:Compile</Generator>
         </Page>

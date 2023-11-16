@@ -19,7 +19,7 @@
 #endregion
 
 using Pixeval.Download.MacroParser;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Util;
 
 namespace Pixeval.Download.Macros;

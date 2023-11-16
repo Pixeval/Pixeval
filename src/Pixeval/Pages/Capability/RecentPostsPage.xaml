@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:enum="using:Pixeval.CoreApi.Global.Enum"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:userControls="using:Pixeval.UserControls"
+    xmlns:userControls="using:Pixeval.Controls"
     ClearCacheAfterNavigation="True"
     mc:Ignorable="d">
     <userControls:IllustrationContainer x:Name="IllustrationContainer">

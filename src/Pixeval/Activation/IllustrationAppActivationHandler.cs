@@ -21,7 +21,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;

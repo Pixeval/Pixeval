@@ -28,7 +28,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Pages.Misc;
-using Pixeval.UserControls.IllustratorView;
+using Pixeval.Controls.IllustratorView;
 using Pixeval.Util;
 using Pixeval.Util.Threading;
 

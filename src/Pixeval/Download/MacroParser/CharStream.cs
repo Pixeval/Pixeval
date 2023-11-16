@@ -37,7 +37,7 @@ public class CharStream : ISeekable<char>
     public CharStream(string text)
     {
         _stream = text.ToCharArray();
-        this._text = text;
+        _text = text;
         _markers.Push(0);
     }
 

@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using Windows.Foundation;
 using Microsoft.UI.Xaml;

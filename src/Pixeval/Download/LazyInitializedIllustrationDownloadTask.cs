@@ -21,7 +21,7 @@
 using System;
 using System.Threading.Tasks;
 using Pixeval.Database;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Download;
 

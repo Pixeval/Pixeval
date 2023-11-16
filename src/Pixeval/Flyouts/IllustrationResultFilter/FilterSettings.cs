@@ -21,7 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Pixeval.UserControls.TokenInput;
+using Pixeval.Controls.TokenInput;
 using Pixeval.Utilities;
 
 namespace Pixeval.Flyouts.IllustrationResultFilter;

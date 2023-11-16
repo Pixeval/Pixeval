@@ -20,7 +20,7 @@
 
 using Pixeval.Download.MacroParser;
 using Pixeval.Util;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 
 namespace Pixeval.Download.Macros;
 

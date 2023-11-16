@@ -33,7 +33,7 @@ namespace Pixeval.Controls.IllustratorView;
 [DependencyProperty<object>("ThumbnailSources")]
 [DependencyProperty<object>("ThumbnailItemTemplate")]
 [DependencyProperty<ImageSource>("IllustratorPicture")]
-[DependencyProperty<IllustratorViewModel>("ViewModel")]
+[DependencyProperty<IllustratorViewViewModel>("ViewModel")]
 public partial class IllustratorView : Control
 {
     private const string PartContentContainer = "ContentContainer";

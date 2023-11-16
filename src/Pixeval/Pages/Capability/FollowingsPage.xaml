@@ -4,8 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:illustratorView="using:Pixeval.UserControls.IllustratorView"
+    xmlns:illustratorView="using:Pixeval.Controls.IllustratorView"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:illustratorProfile="using:Pixeval.Controls.IllustratorProfile"
     ClearCacheAfterNavigation="True"
     mc:Ignorable="d">
     <Grid>
@@ -24,8 +25,8 @@
                 ScrollViewer.VerticalScrollBarVisibility="Hidden"
                 SelectionChanged="IllustratorListView_OnSelectionChanged">
                 <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="illustratorView:IllustratorViewModel">
-                        <illustratorView:IllustratorProfile
+                    <DataTemplate x:DataType="illustratorProfile:IllustratorProfileViewModel">
+                        <illustratorProfile:IllustratorProfile
                             Margin="0,5"
                             BorderThickness="1"
                             ViewModel="{x:Bind}" />

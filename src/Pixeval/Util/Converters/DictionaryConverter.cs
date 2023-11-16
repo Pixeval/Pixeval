@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using Windows.UI.Text;
 using Microsoft.UI.Xaml.Data;
 using WinUI3Utilities;
 

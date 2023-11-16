@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Pixeval.UserControls.IllustrationView.IllustrationViewDataProvider" Collapsed="true">
+  <Class Name="Pixeval.Controls.IllustrationView.IllustrationViewDataProvider" Collapsed="true">
     <Position X="7.5" Y="4.25" Width="3.25" />
     <TypeIdentifier>
       <HashCode>BAAEIAAAAiAAAACAAAAAAEIACBABAoAAAQQAAAAAAAA=</HashCode>
@@ -8,7 +8,7 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Pixeval.UserControls.IllustratorView.IllustratorViewDataProvider" Collapsed="true">
+  <Class Name="Pixeval.Controls.IllustratorView.IllustratorViewDataProvider" Collapsed="true">
     <Position X="4" Y="4.25" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAEAAAAAgAAAAAAAAAAAEAABBABAIAAAAQAAAAAAAA=</HashCode>
@@ -37,7 +37,7 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Pixeval.UserControls.Illustrate.DataProvider&lt;T, TViewModel&gt;" Collapsed="true">
+  <Class Name="Pixeval.Controls.Illustrate.DataProvider&lt;T, TViewModel&gt;" Collapsed="true">
     <Position X="6.25" Y="2.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAEAAAAAgAAAAAAAAAAAEAAABABAAAAAAQAAAAAAAA=</HashCode>

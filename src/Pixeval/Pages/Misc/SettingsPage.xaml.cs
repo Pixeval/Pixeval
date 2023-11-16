@@ -28,7 +28,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
-using Pixeval.UserControls.TokenInput;
+using Pixeval.Controls.TokenInput;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;

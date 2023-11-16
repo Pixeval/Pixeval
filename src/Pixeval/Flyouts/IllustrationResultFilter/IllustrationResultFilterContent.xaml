@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:filter="using:Pixeval.Flyouts.IllustrationResultFilter"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:tokenInput="using:Pixeval.UserControls.TokenInput"
+    xmlns:tokenInput="using:Pixeval.Controls.TokenInput"
     xmlns:tokenInputTextBox="using:Pixeval.Controls.TokenInputTextBox"
     mc:Ignorable="d">
     <StackPanel Spacing="5">

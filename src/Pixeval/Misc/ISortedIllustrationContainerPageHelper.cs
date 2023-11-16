@@ -18,7 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.UserControls;
+using Pixeval.Controls;
 
 namespace Pixeval.Misc;
 

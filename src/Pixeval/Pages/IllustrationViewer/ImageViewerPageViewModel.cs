@@ -27,7 +27,7 @@ using Microsoft.UI.Xaml;
 using Pixeval.Attributes;
 using Pixeval.CoreApi.Net;
 using Pixeval.Database.Managers;
-using Pixeval.UserControls.IllustrationView;
+using Pixeval.Controls.IllustrationView;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
@@ -36,7 +36,6 @@ using Windows.Storage.Streams;
 using Pixeval.Options;
 using System.Collections.Generic;
 using System.Linq;
-using Windows.Foundation;
 using Pixeval.Controls;
 
 namespace Pixeval.Pages.IllustrationViewer;

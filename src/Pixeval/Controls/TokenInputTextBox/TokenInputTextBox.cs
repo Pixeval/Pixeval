@@ -21,7 +21,7 @@
 using System;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.UserControls.TokenInput;
+using Pixeval.Controls.TokenInput;
 using Windows.System;
 using WinUI3Utilities.Attributes;
 
