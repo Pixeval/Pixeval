@@ -208,7 +208,6 @@
 
     <!--XAML-->
     <ItemGroup>
-        <Folder Include="Controls\IllustratorProfile\" />
         <Page Update="Pages\Capability\SpotlightsPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
@@ -221,7 +220,7 @@
         <Page Update="Pages\IllustrationViewer\IllustrationViewerPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="UserControls\IllustrationViewCommandBar.xaml">
+        <Page Update="Controls\IllustrationViewCommandBar.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\Capabilities\RecommendationPage.xaml">
@@ -248,7 +247,7 @@
         <Page Update="Pages\IllustrationViewer\IllustrationViewerPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="UserControls\IllustrationViewCommandBar.xaml">
+        <Page Update="Controls\IllustrationViewCommandBar.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\Capabilities\RecommendationPage.xaml">
@@ -293,7 +292,7 @@
         <Page Update="Pages\Misc\BrowsingHistoryPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="UserControls\TokenInput\TokenInput.xaml">
+        <Page Update="Controls\TokenInput\TokenInput.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Flyouts\IllustrationResultFilter\IllustrationResultFilterFunctionEntry.xaml">
@@ -305,7 +304,7 @@
         <Page Update="Themes\Generic.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="UserControls\PixivReplyBar.xaml">
+        <Page Update="Controls\PixivReplyBar.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\IllustrationViewer\PixivReplyStickerListPage.xaml">
@@ -317,22 +316,22 @@
         <Page Update="Styles\Controls.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="UserControls\CommentList.xaml">
+        <Page Update="Controls\CommentList.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Flyouts\CommentRepliesBlock.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="UserControls\CommentBlock.xaml">
+        <Page Update="Controls\CommentBlock.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="UserControls\SortOptionComboBox.xaml">
+        <Page Update="Controls\SortOptionComboBox.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\Capability\RecentPostsPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="UserControls\IllustrationContainer.xaml">
+        <Page Update="Controls\IllustrationContainer.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\Capability\RankingsPage.xaml">
@@ -353,29 +352,29 @@
         <Page Update="Pages\Capabilities\BookmarksPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="UserControls\IllustratorView\IllustratorProfile.xaml">
+        <Page Update="Controls\IllustratorView\IllustratorProfile.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Folder Include="Controls\RecommendIllustratorProfile\" />
-        <Page Update="UserControls\IllustrationView\IllustrationThumbnail.xaml">
+        <Page Update="Controls\IllustrationView\IllustrationThumbnail.xaml">
           <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="UserControls\IllustratorContentViewer\IllustratorIllustrationAndMangaBookmarkPage.xaml">
+        <Page Update="Controls\IllustratorContentViewer\IllustratorIllustrationAndMangaBookmarkPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="UserControls\IllustratorContentViewer\IllustratorMangaPage.xaml">
+        <Page Update="Controls\IllustratorContentViewer\IllustratorMangaPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="UserControls\IllustratorContentViewer\IllustratorIllustrationPage.xaml">
+        <Page Update="Controls\IllustratorContentViewer\IllustratorIllustrationPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="UserControls\RecommendIllustratorProfile.xaml">
+        <Page Update="Controls\RecommendIllustratorProfile.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Pages\Misc\IllustratorContentViewerPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="UserControls\IllustratorContentViewer\IllustratorContentViewer.xaml">
+        <Page Update="Controls\IllustratorContentViewer\IllustratorContentViewer.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
     </ItemGroup>

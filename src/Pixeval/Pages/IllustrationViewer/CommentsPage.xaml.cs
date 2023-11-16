@@ -41,7 +41,7 @@ namespace Pixeval.Pages.IllustrationViewer;
 
 public sealed partial class CommentsPage
 {
-    private string? _illustId;
+    private string _illustrationId = null!;
 
     public CommentsPage()
     {
@@ -57,12 +57,12 @@ public sealed partial class CommentsPage
             WeakReferenceMessenger.Default.UnregisterAll(this);
         });
 
-        var (engine, illustId) = ((IAsyncEnumerable<Comment>, string))e.Parameter;
-        _illustId = illustId;
+        var (engine, illustrationId) = ((IAsyncEnumerable<Comment>, string))e.Parameter;
+        _illustrationId = illustrationId;
         if (CommentList.ItemsSource is not ICollection<CommentBlockViewModel>)
         {
             CommentList.ItemsSource = new IncrementalLoadingCollection<CommentsIncrementalSource, CommentBlockViewModel>(
-                new(engine.Select(c => new CommentBlockViewModel(c, illustId))), 30);
+                new(engine.Select(c => new CommentBlockViewModel(c, illustrationId))), 30);
         }
     }
 
@@ -75,7 +75,7 @@ public sealed partial class CommentsPage
     private async void ReplyBar_OnSendButtonTapped(object? sender, SendButtonTappedEventArgs e)
     {
         using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
-            ("illust_id", _illustId!),
+            ("illust_id", _illustrationId),
             ("comment", e.ReplyContentRichEditBoxStringContent));
 
         await AddComment(result);
@@ -84,7 +84,7 @@ public sealed partial class CommentsPage
     private async void ReplyBar_OnStickerTapped(object? sender, StickerTappedEventArgs e)
     {
         using var result = await App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.AppApi).PostFormAsync(CommentBlockViewModel.AddCommentUrlSegment,
-            ("illust_id", _illustId!),
+            ("illust_id", _illustrationId),
             ("stamp_id", e.StickerViewModel.StickerId.ToString()));
 
         await AddComment(result);
@@ -100,7 +100,7 @@ public sealed partial class CommentsPage
         if (postCommentResponse.IsSuccessStatusCode)
         {
             var response = await postCommentResponse.Content.ReadFromJsonAsync<PostCommentResponse>();
-            (CommentList.ItemsSource as ObservableCollection<CommentBlockViewModel>)?.Insert(0, new(response?.Comment!, _illustId!));
+            (CommentList.ItemsSource as ObservableCollection<CommentBlockViewModel>)?.Insert(0, new(response?.Comment!, _illustrationId));
         }
     }
 }

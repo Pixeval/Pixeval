@@ -23,10 +23,13 @@ using System.Runtime.InteropServices;
 
 namespace Pixeval.Interop;
 
+/// <summary>
+/// wait for <see href="https://github.com/microsoft/CsWinRT/issues/1337"/>
+/// </summary>
 [ComImport]
 [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 [Guid("3A3DCD6C-3EAB-43DC-BCDE-45671CE800C8")]
-public partial interface IDataTransferManagerInterop
+public interface IDataTransferManagerInterop
 {
     unsafe void GetForWindow(nint appWindow, Guid* riId, [Optional] void** dataTransferManager);
 

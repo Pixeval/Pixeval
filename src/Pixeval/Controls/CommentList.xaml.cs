@@ -28,7 +28,7 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<object>("ItemsSource", "System.Linq.Enumerable.Empty<Pixeval.Pages.IllustrationViewer.CommentBlockViewModel>()", nameof(OnItemsSourceChanged), IsNullable = true)]
+[DependencyProperty<object>("ItemsSource", propertyChanged: nameof(OnItemsSourceChanged), IsNullable = true)]
 public sealed partial class CommentList : IDisposable
 {
     public CommentList()
