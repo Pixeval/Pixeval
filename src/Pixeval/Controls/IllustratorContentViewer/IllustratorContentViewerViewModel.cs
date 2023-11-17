@@ -29,6 +29,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Pixeval.Controls.MarkupExtensions;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Net.Response;
 using Pixeval.Misc;

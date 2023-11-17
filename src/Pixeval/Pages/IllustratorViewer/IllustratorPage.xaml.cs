@@ -38,6 +38,7 @@ using Pixeval.Util;
 using Pixeval.Util.UI;
 using Windows.System;
 using CommunityToolkit.WinUI.Animations.Expressions;
+using Pixeval.Controls.MarkupExtensions;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustratorViewer;

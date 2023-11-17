@@ -48,6 +48,8 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using CommunityToolkit.WinUI.Collections;
+using Pixeval.Controls.MarkupExtensions;
+using Pixeval.Controls.MarkupExtensions.FontSymbolIcon;
 using WinUI3Utilities;
 using Brush = Microsoft.UI.Xaml.Media.Brush;
 using Color = Windows.UI.Color;
@@ -117,22 +119,6 @@ public static partial class UiHelper
         return Color.FromArgb(0xFF, pixel.R, pixel.G, pixel.B);
     }
 
-    public static async Task LoadMoreItemsAsync(this AdvancedCollectionView acv, uint count, Action<LoadMoreItemsResult> callback)
-    {
-        var result = await acv.LoadMoreItemsAsync(count);
-        callback(result);
-    }
-
-    //public static T GetDataContext<T>(this FrameworkElement element)
-    //{
-    //    return (T) element.DataContext;
-    //}
-
-    //public static T GetDataContext<T>(this object element)
-    //{
-    //    return ((FrameworkElement) element).GetDataContext<T>(); // direct cast will throw exception if the type check fails, and that's exactly what we want
-    //}
-
     public static ImageSource GetImageSourceFromUriRelativeToAssetsImageFolder(string relativeToAssetsImageFolder)
     {
         return new BitmapImage(new Uri($"ms-appx:///Assets/Images/{relativeToAssetsImageFolder}"));
@@ -154,37 +140,6 @@ public static partial class UiHelper
         }
 
         return sb;
-    }
-
-    public static DoubleAnimation CreateDoubleAnimation(this DependencyObject depObj,
-        string property,
-        Duration duration = default,
-        EasingFunctionBase? easingFunction = null,
-        double by = default,
-        double from = default,
-        double to = default)
-    {
-        var animation = new DoubleAnimation
-        {
-            Duration = duration,
-            EasingFunction = easingFunction,
-            By = by,
-            From = from,
-            To = to
-        };
-        Storyboard.SetTarget(animation, depObj);
-        Storyboard.SetTargetProperty(animation, property);
-        return animation;
-    }
-
-    public static Storyboard GetStoryboard(this Timeline timeline)
-    {
-        return CreateStoryboard(timeline);
-    }
-
-    public static void BeginStoryboard(this Timeline timeline)
-    {
-        CreateStoryboard(timeline).Begin();
     }
 
     public static void ClipboardSetText(string text)
@@ -226,7 +181,7 @@ public static partial class UiHelper
     {
         var icon = new FontIcon
         {
-            Glyph = symbol.GetMetadataOnEnumMember()
+            Glyph = symbol.GetGlyph().ToString()
         };
         if (fontSize is not null)
         {
@@ -240,7 +195,7 @@ public static partial class UiHelper
     {
         var icon = new FontIconSource
         {
-            Glyph = symbol.GetMetadataOnEnumMember(),
+            Glyph = symbol.GetGlyph().ToString()
         };
         if (fontSize is not null)
         {
@@ -357,22 +312,5 @@ public static partial class UiHelper
         var trimmed = !hex.StartsWith('#') ? $"#{hex}" : hex;
         var color = ColorTranslator.FromHtml(trimmed);
         return Color.FromArgb(color.A, color.R, color.G, color.B);
-    }
-
-    /// <summary>
-    /// Get the scale factor of the original image when it is contained inside an <see cref="Microsoft.UI.Xaml.Controls.Image"/> control, and the <see cref="Microsoft.UI.Xaml.Controls.Image.Stretch"/>
-    /// property is set to <see cref="Stretch.UniformToFill"/> or <see cref="Stretch.Uniform"/>
-    /// </summary>
-    public static double GetImageScaledFactor(double originalImageWidth, double originalImageHeight, double imageWidth, double imageHeight, double imageZoomFactor)
-    {
-        var illustResolution = originalImageWidth / originalImageHeight;
-        var imageResolution = imageWidth / imageHeight;
-
-        var displayImageResolution = (imageResolution - illustResolution) switch
-        {
-            > 0 => imageHeight * imageZoomFactor / originalImageHeight, // imageResolution - illustResolution > 0: the height is filled
-            _ => imageWidth * imageZoomFactor / originalImageWidth, // imageResolution - illustResolution < 0: the width is filled; or = 0, then the choose is arbitrary
-        };
-        return displayImageResolution;
     }
 }
