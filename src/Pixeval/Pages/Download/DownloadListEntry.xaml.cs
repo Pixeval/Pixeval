@@ -113,12 +113,4 @@ public sealed partial class DownloadListEntry
         _ = await MessageDialogBuilder.CreateAcknowledgement(CurrentContext.Window, DownloadListEntryResources.ErrorMessageDialogTitle, ViewModel.DownloadTask.ErrorCause!.ToString())
             .ShowAsync();
     }
-
-    /// <summary>
-    /// 这个方法用来刷新获取缩略图属性
-    /// </summary>
-    /// <param name="dictionary"></param>
-    /// <returns></returns>
-    private SoftwareBitmapSource? GetSquareMediumThumbnailSource(ImmutableDictionary<ThumbnailUrlOption, SoftwareBitmapSource> dictionary)
-        => dictionary.TryGetValue(ThumbnailUrlOption.SquareMedium, out var source) ? source : null;
 }

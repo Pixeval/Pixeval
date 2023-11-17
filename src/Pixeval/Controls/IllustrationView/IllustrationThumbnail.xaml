@@ -177,7 +177,7 @@
         <!--  PlaceHolderGrid  -->
         <Grid Width="{x:Bind GetDesiredWidth(ViewModel), Mode=OneWay}" Height="{x:Bind GetDesiredHeight(ViewModel), Mode=OneWay}" />
         <Grid HorizontalAlignment="Stretch" CornerRadius="{ThemeResource ControlCornerRadius}">
-            <Image Source="{x:Bind GetThumbnailSource(ViewModel.ThumbnailSources), Mode=OneWay}" Stretch="UniformToFill" />
+            <controls:IllustrationImage ThumbnailOption="{x:Bind ThumbnailUrlOption}" ViewModel="{x:Bind ViewModel}" />
             <!--TODO: <labs:Shimmer Visibility="{Binding Path=ViewModel.ThumbnailSources, Converter={StaticResource DictionaryIsNullToVisibilityConverter}, ConverterParameter={StaticResource Box}, Mode=OneWay}" />-->
             <Grid
                 x:Name="MaskGrid"

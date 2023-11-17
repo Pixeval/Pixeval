@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Immutable;
 using Windows.System;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -62,15 +61,9 @@ public sealed partial class IllustrationThumbnail : CardControl
     private double GetDesiredHeight(IllustrationViewModel viewModel) => ThisRequired.Invoke().DesiredHeight;
 #pragma warning restore IDE0060
 
-    /// <summary>
-    /// 这个方法用来刷新获取缩略图属性
-    /// </summary>
-    /// <param name="dictionary"></param>
-    /// <returns></returns>
-    private SoftwareBitmapSource? GetThumbnailSource(ImmutableDictionary<ThumbnailUrlOption, SoftwareBitmapSource> dictionary)
-        => dictionary.TryGetValue(ThisRequired.Invoke().IllustrationViewOption.ToThumbnailUrlOption(), out var source) ? source : null;
-
     #endregion
+
+    private ThumbnailUrlOption ThumbnailUrlOption => ThisRequired.Invoke().IllustrationViewOption.ToThumbnailUrlOption();
 
     /// <summary>
     /// For Bookmark Button
@@ -98,12 +91,12 @@ public sealed partial class IllustrationThumbnail : CardControl
 
     private async void SaveContextItemOnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await IoHelper.SaveAsync(ViewModel);
+        await ViewModel.SaveAsync();
     }
 
     private async void SaveAsContextItemOnTapped(object sender, TappedRoutedEventArgs e)
     {
-        await IoHelper.SaveAsAsync(ViewModel);
+        await ViewModel.SaveAsAsync();
     }
 
     private async void OpenInBrowserContextItemOnTapped(object sender, TappedRoutedEventArgs e)

@@ -11,7 +11,6 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Pixeval.Pages.IllustrationViewer"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
-    xmlns:markupExtensions="using:Pixeval.Util.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:triggers="using:Pixeval.Util.Triggers"
@@ -31,7 +30,6 @@
         <SolidColorBrush x:Key="TransparentBrush" Color="Transparent" />
         <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
         <Thickness x:Key="FullScreenMargin">0</Thickness>
-        <converters1:DictionaryConverter x:Key="DictionaryConverter" />
         <converters1:NumberToPercentageConverter x:Key="NumberToPercentageConverter" />
     </controls:EnhancedWindowPage.Resources>
     <Page.KeyboardAccelerators>
@@ -247,12 +245,12 @@
                             </GridView.ItemsPanel>
                             <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="illustrationView:IllustrationViewModel">
-                                    <Image
+                                    <controls:IllustrationImage
                                         Width="80"
                                         Height="80"
                                         EffectiveViewportChanged="ThumbnailOnEffectiveViewportChanged"
-                                        Source="{Binding Path=ThumbnailSources, Converter={StaticResource DictionaryConverter}, ConverterParameter={markupExtensions:ThumbnailUrlOption Enum=SquareMedium}, Mode=OneWay}"
-                                        Stretch="UniformToFill" />
+                                        ThumbnailOption="SquareMedium"
+                                        ViewModel="{x:Bind}" />
                                 </DataTemplate>
                             </GridView.ItemTemplate>
                         </GridView>

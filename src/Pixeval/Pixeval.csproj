@@ -28,6 +28,7 @@
         <NoWarn>$(NoWarn);WMC1501</NoWarn>
     </PropertyGroup>
     <ItemGroup>
+      <None Remove="Controls\IllustrationImage.xaml" />
       <None Remove="Controls\IllustrationView\IllustrationThumbnail.xaml" />
     </ItemGroup>
 
@@ -356,6 +357,9 @@
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Folder Include="Controls\RecommendIllustratorProfile\" />
+        <Page Update="Controls\IllustrationImage.xaml">
+          <Generator>MSBuild:Compile</Generator>
+        </Page>
         <Page Update="Controls\IllustrationView\IllustrationThumbnail.xaml">
           <Generator>MSBuild:Compile</Generator>
         </Page>
