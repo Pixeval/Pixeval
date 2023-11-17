@@ -20,12 +20,14 @@
 
 #endregion
 
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls.Windowing;
 using WinUI3Utilities;
 
-namespace Pixeval.Controls.Windowing;
+namespace Pixeval.Controls;
 
 public static class EnhancedWindowPageExtension
 {
@@ -37,52 +39,29 @@ public static class EnhancedWindowPageExtension
 
 file record NavigateParameter(object? Parameter, EnhancedWindow Window);
 
-public class EnhancedWindowPage : Page
+public class EnhancedWindowPage : EnhancedPage
 {
     protected EnhancedWindow Window { get; private set; } = null!;
 
-    public int ActivationCount { get; private set; }
-
     public EnhancedWindowPage()
     {
-        Loaded += (_, _) =>
-        {
-            Initialized = true;
-            (this as ISupportCustomTitleBarDragRegion)?.SetTitleBarDragRegion();
-        };
-        Unloaded += (_, _) => Initialized = false;
-#pragma warning disable IDE0038 // 使用模式匹配
         if (this is ISupportCustomTitleBarDragRegion)
-            SizeChanged += (_, _) => ((ISupportCustomTitleBarDragRegion)this).SetTitleBarDragRegion();
-#pragma warning restore IDE0038 // 使用模式匹配
+        {
+            Loaded += SetTitleBarDragRegion;
+            SizeChanged += SetTitleBarDragRegion;
+        }
+
+        return;
+
+        // 不要捕获外部变量
+        static void SetTitleBarDragRegion(object sender, RoutedEventArgs _) => ((ISupportCustomTitleBarDragRegion)sender).SetTitleBarDragRegion();
     }
 
-    public bool ClearCacheAfterNavigation { get; set; }
-
-    public bool Initialized { get; private set; }
-
-    protected override void OnNavigatedTo(NavigationEventArgs e)
+    public sealed override void OnPageActivated(NavigationEventArgs e)
     {
-        base.OnNavigatedTo(e);
-        ++ActivationCount;
         var parameter = e.Parameter.To<NavigateParameter>();
         Window = parameter.Window;
         OnPageActivated(e, parameter.Parameter);
-    }
-
-    protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
-    {
-        base.OnNavigatingFrom(e);
-        OnPageDeactivated(e);
-
-        if (!ClearCacheAfterNavigation)
-            return;
-        NavigationCacheMode = NavigationCacheMode.Disabled;
-        if (Parent is not Frame frame)
-            return;
-        var cacheSize = frame.CacheSize;
-        frame.CacheSize = 0;
-        frame.CacheSize = cacheSize;
     }
 
     protected void Navigate<TPage>(Frame frame, object? parameter, NavigationTransitionInfo? info = null) where TPage : EnhancedWindowPage
@@ -99,10 +78,6 @@ public class EnhancedWindowPage : Page
     {
         info ??= new SuppressNavigationTransitionInfo();
         _ = Frame.Navigate(GetType(), new NavigateParameter(parameter, Window), info);
-    }
-
-    public virtual void OnPageDeactivated(NavigatingCancelEventArgs e)
-    {
     }
 
     public virtual void OnPageActivated(NavigationEventArgs e, object? parameter)

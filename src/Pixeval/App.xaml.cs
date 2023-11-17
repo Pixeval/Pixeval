@@ -27,6 +27,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.Windows.AppLifecycle;
 using Pixeval.Activation;
 using Pixeval.AppManagement;
+using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.Messages;
 using Pixeval.Pages.Login;

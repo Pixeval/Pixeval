@@ -27,34 +27,36 @@ public class EnhancedPage : Page
 {
     public int ActivationCount { get; private set; }
 
-    public EnhancedPage() => Loaded += (_, _) => Initialized = true;
+    public EnhancedPage()
+    {
+        Loaded += (_, _) => Initialized = true;
+        Unloaded += (_, _) => Initialized = false;
+    }
 
     public bool ClearCacheAfterNavigation { get; set; }
 
     public bool Initialized { get; private set; }
 
-    protected override void OnNavigatedTo(NavigationEventArgs e)
+    protected sealed override void OnNavigatedTo(NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);
         ++ActivationCount;
         OnPageActivated(e);
     }
 
-    protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+    protected sealed override void OnNavigatingFrom(NavigatingCancelEventArgs e)
     {
         base.OnNavigatingFrom(e);
         OnPageDeactivated(e);
 
-        if (ClearCacheAfterNavigation)
-        {
-            NavigationCacheMode = NavigationCacheMode.Disabled;
-            if (Parent is Frame frame)
-            {
-                var cacheSize = frame.CacheSize;
-                frame.CacheSize = 0;
-                frame.CacheSize = cacheSize;
-            }
-        }
+        if (!ClearCacheAfterNavigation)
+            return;
+        NavigationCacheMode = NavigationCacheMode.Disabled;
+        if (Parent is not Frame frame)
+            return;
+        var cacheSize = frame.CacheSize;
+        frame.CacheSize = 0;
+        frame.CacheSize = cacheSize;
     }
 
     public virtual void OnPageDeactivated(NavigatingCancelEventArgs e)

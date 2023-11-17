@@ -27,6 +27,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.CoreApi.Model;
 using WinUI3Utilities;
+using Pixeval.Controls;
 
 namespace Pixeval.Pages.IllustrationViewer;
 

@@ -1,7 +1,8 @@
-<windowing:EnhancedWindowPage
+<controls:EnhancedWindowPage
     x:Class="Pixeval.Pages.IllustrationViewer.IllustrationViewerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:converters1="using:Pixeval.Util.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
@@ -14,12 +15,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:triggers="using:Pixeval.Util.Triggers"
-    xmlns:windowing="using:Pixeval.Controls.Windowing"
     KeyboardAcceleratorPlacementMode="Hidden"
     Loaded="IllustrationViewerPage_OnLoaded"
     Unloaded="IllustrationViewerPage_OnUnloaded"
     mc:Ignorable="d">
-    <windowing:EnhancedWindowPage.Resources>
+    <controls:EnhancedWindowPage.Resources>
         <ThemeShadow x:Name="SidePanelShadow" />
         <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
         <AcrylicBrush
@@ -33,7 +33,7 @@
         <Thickness x:Key="FullScreenMargin">0</Thickness>
         <converters1:DictionaryConverter x:Key="DictionaryConverter" />
         <converters1:NumberToPercentageConverter x:Key="NumberToPercentageConverter" />
-    </windowing:EnhancedWindowPage.Resources>
+    </controls:EnhancedWindowPage.Resources>
     <Page.KeyboardAccelerators>
         <KeyboardAccelerator
             Key="Escape"
@@ -447,4 +447,4 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </SplitView>
-</windowing:EnhancedWindowPage>
+</controls:EnhancedWindowPage>
