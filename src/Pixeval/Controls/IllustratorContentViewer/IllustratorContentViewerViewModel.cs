@@ -217,6 +217,13 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
 
     public async Task LoadRecommendIllustratorsAsync()
     {
+        var recommendIllustrators = await App.AppViewModel.MakoClient.GetRelatedRecommendUsersAsync(UserDetail.UserEntity!.Id.ToString(), isR18: !App.AppViewModel.AppSetting.FiltrateRestrictedContent, lang: CultureInfo.CurrentUICulture);
+        var viewModels = (recommendIllustrators.ResponseBody?.RecommendUsers ?? Enumerable.Empty<PixivRelatedRecommendUsersResponse.RecommendUser>())
+            .Select(ru => ToRecommendIllustratorProfileViewModel(recommendIllustrators, ru));
+
+        RecommendIllustrators.AddRange(viewModels);
+        return;
+
         static RecommendIllustratorProfileViewModel ToRecommendIllustratorProfileViewModel(PixivRelatedRecommendUsersResponse context, PixivRelatedRecommendUsersResponse.RecommendUser recommendUser)
         {
             var users = context.ResponseBody!.Users ?? Enumerates.ArrayOf<PixivRelatedRecommendUsersResponse.User>();
@@ -229,12 +236,6 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
 
             return new(userId ?? string.Empty, user.Name ?? string.Empty, displayImageUrls, user.Image, user.Premium);
         }
-
-        var recommendIllustrators = await App.AppViewModel.MakoClient.GetRelatedRecommendUsersAsync(UserDetail.UserEntity!.Id.ToString(), isR18: !App.AppViewModel.AppSetting.FiltrateRestrictedContent, lang: CultureInfo.CurrentUICulture);
-        var viewModels = (recommendIllustrators.ResponseBody?.RecommendUsers ?? Enumerable.Empty<PixivRelatedRecommendUsersResponse.RecommendUser>())
-            .Select(ru => ToRecommendIllustratorProfileViewModel(recommendIllustrators, ru));
-
-        RecommendIllustrators.AddRange(viewModels);
     }
 
     private void Follow(bool privately)

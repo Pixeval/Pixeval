@@ -46,10 +46,7 @@ namespace Pixeval.Pages.IllustrationViewer;
 public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragRegion
 {
     private IllustrationViewerPageViewModel _viewModel = null!;
-
-    private const double TitleBarHeight = 48;
-    private const double NegativeTitleBarHeight = -TitleBarHeight;
-
+    
     public IllustrationViewerPage() => InitializeComponent();
 
     /// <summary>
@@ -287,10 +284,6 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         var button = (ICommandBarElement)sender;
         ((FrameworkElement)sender).Width = button.IsInOverflow ? double.NaN : (double)Application.Current.Resources["CollapsedAppBarButtonWidth"];
     }
-
-    private void ThumbnailListGrid_OnPointerEntered(object sender, PointerRoutedEventArgs e) => PointerNotInArea = false;
-
-    private void ThumbnailListGrid_OnPointerExited(object sender, PointerRoutedEventArgs e) => PointerNotInArea = true;
 
     public bool PointerNotInArea
     {

@@ -28,14 +28,11 @@ public sealed partial class PixevalBadge : UserControl
             [BadgeMode.R18G] = ("R18G", Colors.Crimson),
         };
 
-    public PixevalBadge()
-    {
-        InitializeComponent();
-    }
+    public PixevalBadge() => InitializeComponent();
 
     public static void OnUseSmallPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        // d.To<PixevalBadge>().GoToState(e.NewValue.To<bool>());
+        d.To<PixevalBadge>().GoToState(e.NewValue.To<bool>());
     }
 
     public static void OnBadgeModePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

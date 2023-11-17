@@ -41,7 +41,7 @@ public sealed partial class FollowingsPage
     public FollowingsPage()
     {
         InitializeComponent();
-        ViewModel = new IllustratorViewViewModel();
+        ViewModel = new();
     }
 
     public IllustratorViewViewModel ViewModel { get; }
@@ -91,4 +91,6 @@ public sealed partial class FollowingsPage
         IllustratorListView.SelectedIndex = 0;
         _ = IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), ViewModel.DataProvider.Source[0]);
     }
+
+    private TeachingTip IllustratorProfileOnRequestTeachingTip() => FollowingPageTeachingTip;
 }

@@ -51,10 +51,7 @@ public sealed partial class DownloadListEntry
 {
     public event TypedEventHandler<DownloadListEntry, DownloadListEntryViewModel>? OpenIllustrationRequested;
 
-    public DownloadListEntry()
-    {
-        InitializeComponent();
-    }
+    public DownloadListEntry() => InitializeComponent();
 
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {

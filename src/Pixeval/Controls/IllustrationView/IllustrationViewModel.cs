@@ -157,8 +157,10 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
     /// <summary>
     /// 当控件需要显示图片时，调用此方法加载缩略图
     /// </summary>
+    /// <param name="key">使用<see cref="IDisposable"/>对象，防止复用本对象的时候，本对象持有对<paramref name="key"/>的引用，导致<paramref name="key"/>无法释放</param>
+    /// <param name="thumbnailUrlOption"></param>
     /// <returns>缩略图首次加载完成则返回<see langword="true"/>，之前已加载、正在加载或加载失败则返回<see langword="false"/></returns>
-    public async Task<bool> TryLoadThumbnail(object key, ThumbnailUrlOption thumbnailUrlOption)
+    public async Task<bool> TryLoadThumbnail(IDisposable key, ThumbnailUrlOption thumbnailUrlOption)
     {
         if (ThumbnailSourcesRef.TryGetValue(thumbnailUrlOption, out var value))
         {

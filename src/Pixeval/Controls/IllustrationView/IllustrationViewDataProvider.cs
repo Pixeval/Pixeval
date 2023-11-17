@@ -33,17 +33,11 @@ using Pixeval.Utilities;
 namespace Pixeval.Controls.IllustrationView;
 
 /// <summary>
-/// 复用时调用<see cref="CloneRef"/>，<see cref="FetchEngineRef"/>和<see cref="IllustrationSourceRef"/>会在所有复用对象都Dispose时Dispose
+/// 复用时调用<see cref="CloneRef"/>，<see cref="FetchEngineRef"/>和<see cref="IllustrationSourceRef"/>会在所有复用对象都Dispose时Dispose。
+/// 初始化时调用<see cref="ResetAndFillAsync"/>
 /// </summary>
 public class IllustrationViewDataProvider : DataProvider<Illustration, IllustrationViewModel>, IDisposable
 {
-    /// <summary>
-    /// Call <see cref="ResetAndFillAsync"/> to initialize
-    /// </summary>
-    public IllustrationViewDataProvider()
-    {
-    }
-
     private SharedRef<IFetchEngine<Illustration?>?>? _fetchEngineRef;
 
     public SharedRef<IFetchEngine<Illustration?>?>? FetchEngineRef
@@ -153,6 +147,18 @@ public class IllustrationViewDataProvider : DataProvider<Illustration, Illustrat
 
     protected virtual void OnIllustrationsSourceOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
+        switch (e)
+        {
+            case { Action: NotifyCollectionChangedAction.Add }:
+                e.NewItems?.OfType<IllustrationViewModel>().ForEach(i => i.IsSelectedChanged += OnIsSelectedChanged);
+                break;
+            case { Action: NotifyCollectionChangedAction.Remove }:
+                e.NewItems?.OfType<IllustrationViewModel>().ForEach(i => i.IsSelectedChanged -= OnIsSelectedChanged);
+                break;
+        }
+
+        return;
+
         void OnIsSelectedChanged(object? s, IllustrationViewModel model)
         {
             // Do not add to collection is the model does not conform to the filter
@@ -162,16 +168,6 @@ public class IllustrationViewDataProvider : DataProvider<Illustration, Illustrat
                 SelectedIllustrations.Add(model);
             else
                 _ = SelectedIllustrations.Remove(model);
-        }
-
-        switch (e)
-        {
-            case { Action: NotifyCollectionChangedAction.Add }:
-                e.NewItems?.OfType<IllustrationViewModel>().ForEach(i => i.IsSelectedChanged += OnIsSelectedChanged);
-                break;
-            case { Action: NotifyCollectionChangedAction.Remove }:
-                e.NewItems?.OfType<IllustrationViewModel>().ForEach(i => i.IsSelectedChanged -= OnIsSelectedChanged);
-                break;
         }
     }
 

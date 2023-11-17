@@ -63,7 +63,6 @@ public partial class IllustratorViewModel : ObservableObject, IIllustrationVisua
 
     public ObservableCollection<IllustrationViewModel> Illustrations { get; set; }
 
-    public IllustrationVisualizationController VisualizationController { get; internal set; }
 
     public IllustratorViewModel(UserInfo info)
     {
@@ -74,7 +73,6 @@ public partial class IllustratorViewModel : ObservableObject, IIllustrationVisua
         Comment = info.Comment;
         IsFollowed = info.IsFollowed;
         Illustrations = [];
-        VisualizationController = new IllustrationVisualizationController(this);
         IsFollowButtonEnabled = true;
         _ = LoadAvatar();
     }
@@ -85,15 +83,6 @@ public partial class IllustratorViewModel : ObservableObject, IIllustrationVisua
             return;
         AvatarSource = (await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(AvatarUrl, 60)
             .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync()))!;
-    }
-
-    public async Task LoadThumbnail()
-    {
-        _ = await VisualizationController.ResetAndFillAsync(FetchEngine, 3);
-        foreach (var model in Illustrations)
-        {
-            _ = await model.TryLoadThumbnail(this, ThumbnailUrlOption.SquareMedium);
-        }
     }
 
     public async Task Follow()
@@ -122,7 +111,7 @@ public partial class IllustratorViewModel : ObservableObject, IIllustrationVisua
 
     public void DisposeCurrent()
     {
-        foreach (var illustration in Illustrations) 
+        foreach (var illustration in Illustrations)
             illustration.UnloadThumbnail(this, ThumbnailUrlOption.SquareMedium);
         Illustrations.Clear();
     }

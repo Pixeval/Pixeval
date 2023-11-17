@@ -45,7 +45,7 @@ namespace Pixeval.Pages.IllustratorViewer;
 
 public sealed partial class IllustratorPage
 {
-    private IllustratorViewModel? _viewModel;
+    private IllustratorViewModel _viewModel = null!;
 
     private CompositionPropertySet? _props;
     private CompositionPropertySet? _scrollerPropertySet;
