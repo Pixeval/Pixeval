@@ -168,6 +168,9 @@
   <data name="LockScreen" xml:space="preserve">
     <value>锁屏</value>
   </data>
+  <data name="Mirror" xml:space="preserve">
+    <value>镜像翻转</value>
+  </data>
   <data name="OpenInWebBrowser" xml:space="preserve">
     <value>打开网页</value>
   </data>
@@ -188,6 +191,12 @@
   </data>
   <data name="RestoreOriginalResolution" xml:space="preserve">
     <value>缩放到图片实际大小</value>
+  </data>
+  <data name="RotateClockwise" xml:space="preserve">
+    <value>顺时针旋转</value>
+  </data>
+  <data name="RotateCounterclockwise" xml:space="preserve">
+    <value>逆时针旋转</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>保存</value>

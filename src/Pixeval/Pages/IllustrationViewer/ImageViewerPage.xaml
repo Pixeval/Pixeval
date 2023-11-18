@@ -10,6 +10,8 @@
         <controls:ZoomableImage
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
+            ImageIsMirrored="{x:Bind _viewModel.IsMirrored, Mode=OneWay}"
+            ImageRotationDegree="{x:Bind _viewModel.RotationDegree, Mode=OneWay}"
             ImageScale="{x:Bind _viewModel.Scale, Mode=TwoWay}"
             IsPlaying="{x:Bind _viewModel.IsPlaying, Mode=OneWay}"
             Mode="{x:Bind _viewModel.ShowMode, Mode=TwoWay}"

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Foundation;
 using Windows.Storage.Streams;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Graphics.Canvas;
@@ -17,6 +16,9 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
+using Point = Windows.Foundation.Point;
+using Size = Windows.Foundation.Size;
+using Microsoft.Graphics.Canvas.Effects;
 
 namespace Pixeval.Controls;
 
@@ -30,6 +32,8 @@ namespace Pixeval.Controls;
 [DependencyProperty<bool>("IsPlaying", "true", nameof(OnIsPlayingChanged))]
 [DependencyProperty<double>("ImagePositionX", "0d")]
 [DependencyProperty<double>("ImagePositionY", "0d")]
+[DependencyProperty<int>("ImageRotationDegree", "0", nameof(OnImageRotationAngleChanged))]
+[DependencyProperty<bool>("ImageIsMirrored", "false")]
 [DependencyProperty<float>("ImageScale", "1f", nameof(OnImageScaleChanged))]
 [DependencyProperty<ZoomableImageMode>("Mode", DependencyPropertyDefaultValue.Default, nameof(OnModeChanged))]
 [DependencyProperty<ZoomableImageMode>("InitMode", "ZoomableImageMode.Fit")]
@@ -37,11 +41,27 @@ namespace Pixeval.Controls;
 [ObservableObject]
 public sealed partial class ZoomableImage : UserControl
 {
-    [ObservableProperty]
     private double _originalImageWidth;
 
-    [ObservableProperty]
     private double _originalImageHeight;
+
+    private double OriginalImageWidth
+    {
+        get => _originalImageWidth;
+        set => CanvasWidth = _originalImageWidth = value;
+    }
+
+    private double OriginalImageHeight
+    {
+        get => _originalImageWidth;
+        set => CanvasHeight = _originalImageHeight = value;
+    }
+
+    [ObservableProperty]
+    private double _canvasWidth;
+
+    [ObservableProperty]
+    private double _canvasHeight;
 
     public ZoomableImage()
     {
@@ -120,7 +140,34 @@ public sealed partial class ZoomableImage : UserControl
             if (_currentFrame is null)
                 return;
             e.DrawingSession.Clear(Colors.Transparent);
-            e.DrawingSession.DrawImage(_currentFrame, new(0, 0, OriginalImageWidth, OriginalImageHeight));
+
+            var transform = new Matrix3x2
+            {
+                M11 = 1,
+                M22 = 1
+            };
+            if (ImageIsMirrored)
+            {
+                // 沿x轴翻转
+                transform *= new Matrix3x2
+                {
+                    M11 = -1,
+                    M22 = 1
+                };
+                // 平移回原来位置
+                transform *= Matrix3x2.CreateTranslation((float)OriginalImageWidth, 0);
+            }
+            transform *= Matrix3x2.CreateRotation(
+                float.DegreesToRadians(ImageRotationDegree),
+                new((float)(OriginalImageWidth / 2), (float)(OriginalImageHeight / 2)));
+
+            var image = new Transform2DEffect
+            {
+                Source = _currentFrame,
+                TransformMatrix = transform
+            };
+
+            e.DrawingSession.DrawImage(image);
         }
         else
         {
@@ -131,6 +178,11 @@ public sealed partial class ZoomableImage : UserControl
                 _frames.Add(await CanvasBitmap.LoadAsync(sender, source));
             OriginalImageWidth = _frames[0].Size.Width;
             OriginalImageHeight = _frames[0].Size.Height;
+            if (ImageRotationDegree % 180 is not 0)
+            {
+                CanvasWidth = OriginalImageHeight;
+                CanvasHeight = OriginalImageWidth;
+            }
             Mode = InitMode; // 触发OnModeChanged
             _timerRunning = true;
             _ = ManualResetEvent.Set();
@@ -158,7 +210,7 @@ public sealed partial class ZoomableImage : UserControl
     }
 
     /// <summary>
-    /// Get the scale factor of the original image when it is contained inside an <see cref="Image"/> control, and the <see cref="Image.Stretch"/>
+    /// Get the scale factor of the original image when it is contained inside an <see cref="Microsoft.UI.Xaml.Controls.Image"/> control, and the <see cref="Microsoft.UI.Xaml.Controls.Image.Stretch"/>
     /// property is set to <see cref="Stretch.UniformToFill"/> or <see cref="Stretch.Uniform"/>
     /// </summary>
     /// <remarks>当图片按原比例显示，并占满画布时，图片的缩放比例</remarks>>
@@ -305,6 +357,35 @@ public sealed partial class ZoomableImage : UserControl
     }
 
     private Point _lastPoint;
+
+    #endregion
+
+    #region RotationRelated
+
+    private static void OnImageRotationAngleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var zoomableImage = d.To<ZoomableImage>();
+        switch (zoomableImage.ImageRotationDegree)
+        {
+            case >= 360:
+                zoomableImage.ImageRotationDegree %= 360;
+                return;
+            case <= -360:
+                zoomableImage.ImageRotationDegree = zoomableImage.ImageRotationDegree % 360 + 360;
+                return;
+        }
+
+        if (zoomableImage.ImageRotationDegree % 90 is not 0)
+        {
+            throw new ArgumentException("ImageRotationDegree must be a multiple of 90");
+        }
+
+        if (zoomableImage.ImageRotationDegree % 180 is not 0)
+        {
+            zoomableImage.CanvasWidth = zoomableImage.OriginalImageHeight;
+            zoomableImage.CanvasHeight = zoomableImage.OriginalImageWidth;
+        }
+    }
 
     #endregion
 

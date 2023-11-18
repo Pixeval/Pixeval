@@ -43,6 +43,7 @@ using Windows.System;
 using Windows.System.UserProfile;
 using Pixeval.Controls;
 using Pixeval.Controls.MarkupExtensions;
+using Pixeval.Controls.MarkupExtensions.FontSymbolIcon;
 using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util.Threading;
@@ -345,6 +346,9 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
         RestoreResolutionCommand.NotifyCanExecuteChanged();
         ZoomInCommand.NotifyCanExecuteChanged();
         ZoomOutCommand.NotifyCanExecuteChanged();
+        RotateClockwiseCommand.NotifyCanExecuteChanged();
+        RotateCounterclockwiseCommand.NotifyCanExecuteChanged();
+        MirrorCommand.NotifyCanExecuteChanged();
         FullScreenCommand.NotifyCanExecuteChanged();
     }
 
@@ -371,6 +375,15 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
         ZoomInCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         ZoomInCommand.ExecuteRequested += (_, _) => CurrentImage.Zoom(1200);
+
+        RotateClockwiseCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        RotateClockwiseCommand.ExecuteRequested += (_, _) => CurrentImage.RotationDegree += 90;
+
+        RotateCounterclockwiseCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        RotateCounterclockwiseCommand.ExecuteRequested += (_, _) => CurrentImage.RotationDegree -= 90;
+
+        MirrorCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        MirrorCommand.ExecuteRequested += (_, _) => CurrentImage.IsMirrored = !CurrentImage.IsMirrored;
 
         SaveCommand.ExecuteRequested += async (_, _) => await CurrentIllustration.SaveAsync();
         SaveAsCommand.ExecuteRequested += async (_, _) => await CurrentIllustration.SaveAsAsync();
@@ -555,6 +568,17 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     public XamlUICommand ZoomInCommand { get; } = IllustrationViewerPageResources.ZoomIn.GetCommand(
         FontIconSymbols.ZoomInE8A3, VirtualKey.Add);
+
+    public XamlUICommand RotateClockwiseCommand { get; } = IllustrationViewerPageResources.RotateClockwise.GetCommand(
+        FontIconSymbols.RotateE7AD, VirtualKeyModifiers.Control, VirtualKey.R);
+
+    public XamlUICommand RotateCounterclockwiseCommand { get; } =
+        IllustrationViewerPageResources.RotateCounterclockwise.GetCommand(
+            null!, VirtualKeyModifiers.Control, VirtualKey.L);
+
+    public XamlUICommand MirrorCommand { get; } =
+        IllustrationViewerPageResources.Mirror.GetCommand(
+            FontIconSymbols.CollatePortraitF57C, VirtualKeyModifiers.Control, VirtualKey.M);
 
     public XamlUICommand BookmarkCommand { get; private set; } = null!; // the null-state is transient
 

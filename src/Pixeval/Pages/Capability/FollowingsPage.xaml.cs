@@ -30,6 +30,7 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Pages.Misc;
 using Pixeval.Controls.IllustratorView;
+using Pixeval.CoreApi;
 using Pixeval.Util;
 using Pixeval.Util.Threading;
 
@@ -80,6 +81,7 @@ public sealed partial class FollowingsPage
             _lastSelectedItem.IsSelected = false;
         _lastSelectedItem = (IllustratorProfile)sender;
         _ = IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), _lastSelectedItem.ViewModel);
+        App.AppViewModel.MakoClient.Spotlights();
     }
 
     private async void IllustratorListView_OnLoaded(object sender, RoutedEventArgs e)
@@ -91,7 +93,7 @@ public sealed partial class FollowingsPage
 
         _illustratorListViewLoaded = true;
         await ThreadingHelper.SpinWaitAsync(() => !ViewModel.DataProvider.Source.Any() && !ViewModel.HasNoItems);
-        // IllustratorListView.SelectedIndex = 0;
+        // TODO: 暂时不加载页面，以后把ListView改成GridView，并占用右侧空白区域
         // _ = IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), ViewModel.DataProvider.Source[0]);
     }
 

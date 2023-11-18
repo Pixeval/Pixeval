@@ -86,6 +86,12 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
     private bool _isPlaying = true;
 
     [ObservableProperty]
+    private bool _isMirrored;
+
+    [ObservableProperty]
+    private int _rotationDegree;
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsFit))]
     private ZoomableImageMode _showMode;
 
@@ -179,7 +185,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
             {
                 AdvancePhase(LoadingPhase.LoadingFromCache);
                 OriginalImageSources = IllustrationViewModel.IsUgoira
-                    ? new[] { await App.AppViewModel.Cache.GetAsync<IRandomAccessStream>(cacheKey) }
+                    ? [await App.AppViewModel.Cache.GetAsync<IRandomAccessStream>(cacheKey)]
                     : await App.AppViewModel.Cache.GetAsync<IEnumerable<IRandomAccessStream>>(cacheKey);
                 LoadingOriginalSourceTask = Task.CompletedTask;
             }

@@ -19,6 +19,7 @@
 #endregion
 
 using CommunityToolkit.WinUI;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
@@ -34,6 +35,8 @@ public class FontSymbolIconExtension : TextIconExtension
 
     public FontFamily? FontFamily { get; set; }
 
+    public FlowDirection FlowDirection { get; set; }
+
     /// <inheritdoc />
     protected override object ProvideValue()
     {
@@ -44,7 +47,8 @@ public class FontSymbolIconExtension : TextIconExtension
             FontWeight = FontWeight,
             FontStyle = FontStyle,
             IsTextScaleFactorEnabled = IsTextScaleFactorEnabled,
-            MirroredWhenRightToLeft = MirroredWhenRightToLeft
+            MirroredWhenRightToLeft = MirroredWhenRightToLeft,
+            FlowDirection = FlowDirection
         };
 
         if (FontSize > 0)

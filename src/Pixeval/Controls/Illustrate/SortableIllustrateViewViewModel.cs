@@ -20,7 +20,6 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
-using Pixeval.Controls.IllustratorView;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Controls.Illustrate;

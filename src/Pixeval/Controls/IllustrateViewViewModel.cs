@@ -25,7 +25,7 @@ using Pixeval.Controls.Illustrate;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 
-namespace Pixeval.Controls.IllustratorView;
+namespace Pixeval.Controls;
 
 public abstract partial class IllustrateViewViewModel<T, TViewModel> : ObservableObject, IDisposable where T : IIllustrate where TViewModel : IllustrateViewModel<T>
 {

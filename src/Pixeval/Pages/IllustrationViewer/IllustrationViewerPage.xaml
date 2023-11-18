@@ -195,22 +195,19 @@
                                 Background="{StaticResource BottomCommandSectionBackground}"
                                 DefaultLabelPosition="Collapsed"
                                 OverflowButtonVisibility="Collapsed">
+                                <AppBarButton Width="50" Command="{x:Bind _viewModel.BookmarkCommand}" />
                                 <AppBarButton
-                                    x:Uid="/IllustrationViewerPage/BookmarkButton"
                                     Width="50"
-                                    Command="{x:Bind _viewModel.BookmarkCommand}" />
-                                <AppBarButton
-                                    x:Uid="/IllustrationViewerPage/ZoomInButton"
+                                    Command="{x:Bind _viewModel.RotateCounterclockwiseCommand}"
+                                    Icon="{markup:FontSymbolIcon Glyph=RotateE7AD,
+                                                                 FlowDirection=RightToLeft,
+                                                                 MirroredWhenRightToLeft=True}" />
+                                <AppBarToggleButton
                                     Width="50"
-                                    Command="{x:Bind _viewModel.ZoomInCommand}" />
-                                <AppBarButton
-                                    x:Uid="/IllustrationViewerPage/ZoomOutButton"
-                                    Width="50"
-                                    Command="{x:Bind _viewModel.ZoomOutCommand}" />
-                                <AppBarButton
-                                    x:Uid="/IllustrationViewerPage/SaveCurrentImageButton"
-                                    Width="50"
-                                    Command="{x:Bind _viewModel.SaveCommand}" />
+                                    Command="{x:Bind _viewModel.MirrorCommand}"
+                                    IsChecked="{x:Bind _viewModel.CurrentImage.IsMirrored, Mode=OneWay}" />
+                                <AppBarButton Width="50" Command="{x:Bind _viewModel.RotateClockwiseCommand}" />
+                                <AppBarButton Width="50" Command="{x:Bind _viewModel.SaveCommand}" />
                             </CommandBar>
                         </Border>
                     </Grid>
