@@ -22,11 +22,11 @@
             x:Name="CanvasControl"
             Canvas.Left="{x:Bind ImagePositionX, Mode=OneWay}"
             Canvas.Top="{x:Bind ImagePositionY, Mode=OneWay}"
-            Width="{x:Bind CanvasWidth, Mode=OneWay}"
-            Height="{x:Bind CanvasHeight, Mode=OneWay}"
-            CreateResources="CanvasControlOnCreateResources"
+            Width="{x:Bind ImageWidth, Mode=OneWay}"
+            Height="{x:Bind ImageHeight, Mode=OneWay}"
             Draw="CanvasControlOnDraw"
             Scale="{x:Bind ImageScale, Converter={StaticResource FloatToVector3Converter}, Mode=OneWay}"
             Unloaded="CanvasControlOnUnloaded" />
+        <!--  由于需要随时重新加载新图片，故创建资源的逻辑放在CanvasControlOnDraw的else分支中  -->
     </Canvas>
 </UserControl>

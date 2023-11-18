@@ -23,10 +23,10 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.Storage.Streams;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Graphics.Canvas;
-using Microsoft.Graphics.Canvas.UI;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using Microsoft.UI;
 using Microsoft.UI.Input;
@@ -36,23 +36,24 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
-using Point = Windows.Foundation.Point;
-using Size = Windows.Foundation.Size;
 using Microsoft.Graphics.Canvas.Effects;
 
 namespace Pixeval.Controls;
 
 /// <summary>
+/// 主体：<see cref="ZoomableImageMain"/>，由此控制渲染速度<br/>
+/// 渲染：<see cref="CanvasControlOnDraw"/>，图片渲染逻辑<br/>
+/// 对外API：<see cref="Zoom"/>、<see cref="SetPosition"/>
+/// </summary>
+/// <remarks>
 /// 这个控件放在Pixeval.Controls项目时出现
 /// Cannot create instance of type 'Microsoft.Graphics.Canvas.UI.Xaml.CanvasControl'
 /// Win2D的玄学问题，放在这里暂时没问题，如果可以还是放回去
-/// </summary>
+/// </remarks>
 [DependencyProperty<IEnumerable<IRandomAccessStream>>("Sources", DependencyPropertyDefaultValue.Default, nameof(OnSourcesChanged))]
 [DependencyProperty<List<int>>("MsIntervals", DependencyPropertyDefaultValue.Default, nameof(OnMsIntervalsChanged))]
 [DependencyProperty<bool>("IsPlaying", "true", nameof(OnIsPlayingChanged))]
-[DependencyProperty<double>("ImagePositionX", "0d")]
-[DependencyProperty<double>("ImagePositionY", "0d")]
-[DependencyProperty<int>("ImageRotationDegree", "0", nameof(OnImageRotationAngleChanged))]
+[DependencyProperty<int>("ImageRotationDegree", "0", nameof(OnImageRotationDegreeChanged))]
 [DependencyProperty<bool>("ImageIsMirrored", "false")]
 [DependencyProperty<float>("ImageScale", "1f", nameof(OnImageScaleChanged))]
 [DependencyProperty<ZoomableImageMode>("Mode", DependencyPropertyDefaultValue.Default, nameof(OnModeChanged))]
@@ -61,71 +62,158 @@ namespace Pixeval.Controls;
 [ObservableObject]
 public sealed partial class ZoomableImage : UserControl
 {
-    private double _originalImageWidth;
-
-    private double _originalImageHeight;
-
-    private double OriginalImageWidth
-    {
-        get => _originalImageWidth;
-        set => CanvasWidth = _originalImageWidth = value;
-    }
-
-    private double OriginalImageHeight
-    {
-        get => _originalImageWidth;
-        set => CanvasHeight = _originalImageHeight = value;
-    }
-
-    [ObservableProperty]
-    private double _canvasWidth;
-
-    [ObservableProperty]
-    private double _canvasHeight;
-
     public ZoomableImage()
     {
         InitializeComponent();
 
-        _ = Task.Run(Func, _token.Token);
+        _ = Task.Run(ZoomableImageMain, _token.Token);
         ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeAll);
-        return;
+    }
 
-        async Task Func()
+    /// <summary> 
+    /// 每个<see cref="ZoomableImage"/>实例只会有一个本函数运行
+    /// </summary>
+    private async Task ZoomableImageMain()
+    {
+        while (true)
         {
-            while (true)
+            if (_frames.Count is 0)
             {
-                if (_frames.Count is 0)
-                {
-                    await Task.Delay(200, _token.Token);
-                }
-                else
-                {
-                    var totalDelay = 0;
-                    var startTime = DateTime.Now;
-                    for (var i = 0; i < _frames.Count; ++i)
-                    {
-                        _currentFrame = _frames[i];
-                        _ = ManualResetEvent.WaitOne();
-                        CanvasControl.Invalidate();
-                        _ = ManualResetEvent.WaitOne();
-                        var delay = 20;
-                        var index = i;
-                        if (ClonedMsIntervals is { } t && t.Count > index)
-                            delay = ClonedMsIntervals[index];
-                        totalDelay += delay;
-                        do
-                        {
-                            _ = ManualResetEvent.WaitOne();
-                            await Task.Delay(10, _token.Token);
-                        } while ((DateTime.Now - startTime).TotalMilliseconds < totalDelay);
-                    }
-                }
-                if (_token.IsCancellationRequested)
-                    return;
+                await Task.Delay(200, _token.Token);
             }
+            else
+            {
+                var totalDelay = 0;
+                var startTime = DateTime.Now;
+                for (var i = 0; i < _frames.Count; ++i)
+                {
+                    _currentFrame = _frames[i];
+                    _ = ManualResetEvent.WaitOne();
+                    CanvasControl.Invalidate();
+                    _ = ManualResetEvent.WaitOne();
+                    var delay = 20;
+                    if (ClonedMsIntervals is { } t && t.Count > i)
+                        delay = ClonedMsIntervals[i];
+                    totalDelay += delay;
+                    do
+                    {
+                        _ = ManualResetEvent.WaitOne();
+                        await Task.Delay(10, _token.Token);
+                    } while ((DateTime.Now - startTime).TotalMilliseconds < totalDelay);
+                }
+            }
+            if (_token.IsCancellationRequested)
+                return;
         }
     }
+
+    #region SizePositionControl
+
+    private double _centerX;
+    private double _centerY;
+    private double _originalImageWidth;
+    private double _originalImageHeight;
+
+    /// <summary>
+    /// <see cref="CanvasControl"/>中心点在<see cref="Canvas"/>的X坐标
+    /// </summary>
+    private double ImageCenterX
+    {
+        get => _centerX;
+        set
+        {
+            _centerX = value;
+            OnPropertyChanged(nameof(ImagePositionX));
+        }
+    }
+
+    /// <summary>
+    /// <see cref="CanvasControl"/>中心点在<see cref="Canvas"/>的Y坐标
+    /// </summary>
+    private double ImageCenterY
+    {
+        get => _centerY;
+        set
+        {
+            _centerY = value;
+            OnPropertyChanged(nameof(ImagePositionY));
+        }
+    }
+
+    /// <summary>
+    /// <see cref="CanvasControl"/>左上角<see cref="Canvas"/>的X坐标
+    /// </summary>
+    private double ImagePositionX
+    {
+        get => ImageCenterX - ImageActualWidth / 2;
+        set => ImageCenterX = value + ImageActualWidth / 2;
+    }
+
+    /// <summary>
+    /// <see cref="CanvasControl"/>左上角<see cref="Canvas"/>的Y坐标
+    /// </summary>
+    private double ImagePositionY
+    {
+        get => ImageCenterY - ImageActualHeight / 2;
+        set => ImageCenterY = value + ImageActualHeight / 2;
+    }
+
+    /// <summary>
+    /// 图片是否90度旋转（即垂直）
+    /// </summary>
+    private bool IsVertical => ImageRotationDegree % 180 is not 0;
+
+    /// <summary>
+    /// 图片当前方向的宽度
+    /// </summary>
+    private double ImageWidth => IsVertical ? OriginalImageHeight : OriginalImageWidth;
+
+    /// <summary>
+    /// 图片当前方向的高度
+    /// </summary>
+    private double ImageHeight => IsVertical ? OriginalImageWidth : OriginalImageHeight;
+
+    /// <summary>
+    /// <see cref="CanvasControl"/>当前方向的宽度
+    /// </summary>
+    private double ImageActualWidth => ImageWidth * ImageScale;
+
+    /// <summary>
+    /// <see cref="CanvasControl"/>当前方向的宽度
+    /// </summary>
+    private double ImageActualHeight => ImageHeight * ImageScale;
+
+    /// <summary>
+    /// 原始图片的宽度
+    /// </summary>
+    private double OriginalImageWidth
+    {
+        get => _originalImageWidth;
+        set
+        {
+            _originalImageWidth = value;
+            OnPropertyChanged(nameof(ImageWidth));
+            OnPropertyChanged(nameof(ImagePositionX));
+            OnPropertyChanged(nameof(ImagePositionY));
+        }
+    }
+
+    /// <summary>
+    /// 原始图片的高度
+    /// </summary>
+    private double OriginalImageHeight
+    {
+        get => _originalImageHeight;
+        set
+        {
+            _originalImageHeight = value;
+            OnPropertyChanged(nameof(ImageHeight));
+            OnPropertyChanged(nameof(ImagePositionX));
+            OnPropertyChanged(nameof(ImagePositionY));
+        }
+    }
+
+    #endregion
 
     #region FrameRelated
 
@@ -161,11 +249,7 @@ public sealed partial class ZoomableImage : UserControl
                 return;
             e.DrawingSession.Clear(Colors.Transparent);
 
-            var transform = new Matrix3x2
-            {
-                M11 = 1,
-                M22 = 1
-            };
+            var transform = Matrix3x2.Identity;
             if (ImageIsMirrored)
             {
                 // 沿x轴翻转
@@ -177,9 +261,17 @@ public sealed partial class ZoomableImage : UserControl
                 // 平移回原来位置
                 transform *= Matrix3x2.CreateTranslation((float)OriginalImageWidth, 0);
             }
+
             transform *= Matrix3x2.CreateRotation(
-                float.DegreesToRadians(ImageRotationDegree),
-                new((float)(OriginalImageWidth / 2), (float)(OriginalImageHeight / 2)));
+                float.DegreesToRadians(ImageRotationDegree));
+
+            transform *= ImageRotationDegree switch
+            {
+                90 => Matrix3x2.CreateTranslation((float)OriginalImageHeight, 0),
+                180 => Matrix3x2.CreateTranslation((float)OriginalImageWidth, (float)OriginalImageHeight),
+                270 => Matrix3x2.CreateTranslation(0, (float)OriginalImageWidth),
+                _ => Matrix3x2.Identity
+            };
 
             var image = new Transform2DEffect
             {
@@ -198,11 +290,6 @@ public sealed partial class ZoomableImage : UserControl
                 _frames.Add(await CanvasBitmap.LoadAsync(sender, source));
             OriginalImageWidth = _frames[0].Size.Width;
             OriginalImageHeight = _frames[0].Size.Height;
-            if (ImageRotationDegree % 180 is not 0)
-            {
-                CanvasWidth = OriginalImageHeight;
-                CanvasHeight = OriginalImageWidth;
-            }
             Mode = InitMode; // 触发OnModeChanged
             _timerRunning = true;
             _ = ManualResetEvent.Set();
@@ -213,7 +300,9 @@ public sealed partial class ZoomableImage : UserControl
     private CanvasBitmap? _currentFrame;
     private readonly List<CanvasBitmap> _frames = [];
     private readonly CancellationTokenSource _token = new();
+
     private List<int>? ClonedMsIntervals { get; set; }
+
     private ManualResetEvent ManualResetEvent { get; } = new(true);
 
     #endregion
@@ -221,8 +310,9 @@ public sealed partial class ZoomableImage : UserControl
     #region ScaleRelated
 
     /// <summary>
-    /// MouseWheelDelta = 120 when mouse wheel scrolls up
+    /// 缩放
     /// </summary>
+    /// <remarks>MouseWheelDelta = 120 when mouse wheel scrolls up</remarks>
     /// <param name="delta"></param>
     public void Zoom(float delta)
     {
@@ -240,12 +330,12 @@ public sealed partial class ZoomableImage : UserControl
         {
             var canvasWidth = Canvas.ActualWidth;
             var canvasHeight = Canvas.ActualHeight;
-            var imageResolution = OriginalImageWidth / OriginalImageHeight;
+            var imageResolution = ImageWidth / ImageHeight;
             var canvasResolution = canvasWidth / canvasHeight;
             return (canvasResolution - imageResolution) switch
             {
-                > 0 => canvasHeight / OriginalImageHeight,
-                _ => canvasWidth / OriginalImageWidth
+                > 0 => canvasHeight / ImageHeight,
+                _ => canvasWidth / ImageWidth
             };
         }
     }
@@ -256,10 +346,10 @@ public sealed partial class ZoomableImage : UserControl
         var originalScale = ImageScale;
         Zoom(point.Properties.MouseWheelDelta);
         var ratio = ImageScale / originalScale;
-        var left = point.Position.X - ImagePositionX;
-        var top = point.Position.Y - ImagePositionY;
-        ImagePositionX = point.Position.X - left * ratio;
-        ImagePositionY = point.Position.Y - top * ratio;
+        var left = point.Position.X - ImageCenterX;
+        var top = point.Position.Y - ImageCenterY;
+        ImageCenterX = point.Position.X - left * ratio;
+        ImageCenterY = point.Position.Y - top * ratio;
     }
 
     private void CanvasOnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -277,15 +367,13 @@ public sealed partial class ZoomableImage : UserControl
     {
         var zoomableImage = d.To<ZoomableImage>();
         var imageScale = zoomableImage.ImageScale;
-        switch (e.NewValue.To<ZoomableImageMode>())
+        switch (zoomableImage.Mode)
         {
             case ZoomableImageMode.Original:
                 if (imageScale is not 1)
                 {
                     zoomableImage.ImageScale = 1;
-                    var imageWidth = zoomableImage.OriginalImageWidth;
-                    var imageHeight = zoomableImage.OriginalImageHeight;
-                    zoomableImage.SetPosition(zoomableImage.InitPosition, new(imageWidth, imageHeight));
+                    zoomableImage.SetPosition(zoomableImage.InitPosition);
                 }
                 break;
             case ZoomableImageMode.Fit:
@@ -293,9 +381,7 @@ public sealed partial class ZoomableImage : UserControl
                 if (Math.Abs(scale - imageScale) > 0.01 || imageScale is float.NaN)
                 {
                     zoomableImage.ImageScale = (float)scale;
-                    var imageWidth = zoomableImage.OriginalImageWidth * zoomableImage.ScaledFactor;
-                    var imageHeight = zoomableImage.OriginalImageHeight * zoomableImage.ScaledFactor;
-                    zoomableImage.SetPosition(zoomableImage.InitPosition, new(imageWidth, imageHeight));
+                    zoomableImage.SetPosition(zoomableImage.InitPosition);
                 }
                 break;
             case ZoomableImageMode.NotFit:
@@ -330,12 +416,12 @@ public sealed partial class ZoomableImage : UserControl
 
     #region PositionRelated
 
-    public void SetPosition(ZoomableImagePosition position, Size size)
+    /// <summary>
+    /// 设置位置
+    /// </summary>
+    /// <param name="position"></param>
+    public void SetPosition(ZoomableImagePosition position)
     {
-        if (size.Width is 0)
-            size.Width = CanvasControl.ActualWidth;
-        if (size.Height is 0)
-            size.Height = CanvasControl.ActualHeight;
         switch (position)
         {
             case ZoomableImagePosition.Left:
@@ -346,15 +432,15 @@ public sealed partial class ZoomableImage : UserControl
                 break;
             case ZoomableImagePosition.LeftCenter:
                 ImagePositionX = 0;
-                ImagePositionY = (Canvas.ActualHeight - size.Width) / 2;
+                ImageCenterY = Canvas.ActualHeight / 2;
                 break;
             case ZoomableImagePosition.TopCenter:
-                ImagePositionX = (Canvas.ActualWidth - size.Height) / 2;
+                ImageCenterX = Canvas.ActualWidth / 2;
                 ImagePositionY = 0;
                 break;
             case ZoomableImagePosition.AbsoluteCenter:
-                ImagePositionX = (Canvas.ActualWidth - size.Width) / 2;
-                ImagePositionY = (Canvas.ActualHeight - size.Height) / 2;
+                ImageCenterX = Canvas.ActualWidth / 2;
+                ImageCenterY = Canvas.ActualHeight / 2;
                 break;
             case ZoomableImagePosition.Default:
                 break;
@@ -369,8 +455,8 @@ public sealed partial class ZoomableImage : UserControl
         var currentPoint = e.GetCurrentPoint(Canvas);
         if (currentPoint.Properties.IsLeftButtonPressed)
         {
-            ImagePositionX += currentPoint.Position.X - _lastPoint.X;
-            ImagePositionY += currentPoint.Position.Y - _lastPoint.Y;
+            ImageCenterX += currentPoint.Position.X - _lastPoint.X;
+            ImageCenterY += currentPoint.Position.Y - _lastPoint.Y;
         }
 
         _lastPoint = currentPoint.Position;
@@ -382,9 +468,15 @@ public sealed partial class ZoomableImage : UserControl
 
     #region RotationRelated
 
-    private static void OnImageRotationAngleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnImageRotationDegreeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var zoomableImage = d.To<ZoomableImage>();
+
+        if (zoomableImage.ImageRotationDegree % 90 is not 0)
+        {
+            throw new ArgumentException($"{nameof(ImageRotationDegree)} must be a multiple of 90");
+        }
+
         switch (zoomableImage.ImageRotationDegree)
         {
             case >= 360:
@@ -393,26 +485,21 @@ public sealed partial class ZoomableImage : UserControl
             case <= -360:
                 zoomableImage.ImageRotationDegree = zoomableImage.ImageRotationDegree % 360 + 360;
                 return;
+            case < 0:
+                zoomableImage.ImageRotationDegree += 360;
+                return;
         }
 
-        if (zoomableImage.ImageRotationDegree % 90 is not 0)
-        {
-            throw new ArgumentException("ImageRotationDegree must be a multiple of 90");
-        }
+        // 更新图片大小
+        zoomableImage.OnPropertyChanged(nameof(ImageWidth));
+        zoomableImage.OnPropertyChanged(nameof(ImageHeight));
 
-        if (zoomableImage.ImageRotationDegree % 180 is not 0)
-        {
-            zoomableImage.CanvasWidth = zoomableImage.OriginalImageHeight;
-            zoomableImage.CanvasHeight = zoomableImage.OriginalImageWidth;
-        }
+        // 更新图片位置
+        zoomableImage.OnPropertyChanged(nameof(ImagePositionX));
+        zoomableImage.OnPropertyChanged(nameof(ImagePositionY));
     }
 
     #endregion
-
-    private void CanvasControlOnCreateResources(CanvasControl sender, CanvasCreateResourcesEventArgs e)
-    {
-        // 由于需要随时重新加载新图片，故创建资源的逻辑放在CanvasControlOnDraw的else分支中
-    }
 
     private void CanvasControlOnUnloaded(object sender, RoutedEventArgs e)
     {
