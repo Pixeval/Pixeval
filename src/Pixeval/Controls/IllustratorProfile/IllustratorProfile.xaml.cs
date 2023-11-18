@@ -1,14 +1,16 @@
-using System.Linq;
+using System;
 using System.Numerics;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.Utilities;
+using Pixeval.Util;
+using Pixeval.Util.UI;
+using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
-namespace Pixeval.Controls.IllustratorProfile;
+namespace Pixeval.Controls;
 
 [DependencyProperty<IllustratorProfileViewModel>("ViewModel")]
 public sealed partial class IllustratorProfile
@@ -19,6 +21,8 @@ public sealed partial class IllustratorProfile
     public static readonly Vector3 CommonTranslation = new(0, 0, 30);
     public const float RotatedRotation = 10f;
     public const float CommonRotation = 0f;
+
+    public event Func<TeachingTip>? RequestTeachingTip;
 
     public IllustratorProfile()
     {
@@ -33,35 +37,39 @@ public sealed partial class IllustratorProfile
     private async void IllustratorProfile_OnLoaded(object sender, RoutedEventArgs e)
     {
         var result = await ViewModel.BannerImageTask;
-        var averageLength = 300 / result.Length;
-        var images = result.Select(source => new Image
+        for (var i = 0; i < Math.Min(result.Length, 3); i++)
         {
-            Source = source,
-            Stretch = Stretch.UniformToFill,
-            Width = averageLength,
-            Height = 100
-        }.Apply(i => UIElementExtensions.SetClipToBounds(i, true)));
-        BannerContainer.Children.AddRange(images);
+            var image = new Image
+            {
+                Source = result[i],
+                Stretch = Stretch.UniformToFill,
+            };
+            UIElementExtensions.SetClipToBounds(image, true);
+            Grid.SetColumn(image, i);
+            BannerContainer.Children.Add(image);
+        }
     }
 
-    private void AvatarButton_OnPointerExited(object sender, PointerRoutedEventArgs e)
-    {
-        RestoreAvatarButton();
-    }
-
-    private void AvatarButtonMenuFlyout_OnClosed(object? sender, object e)
-    {
-        RestoreAvatarButton();
-    }
-
-    private void RestoreAvatarButton()
+    private void RestoreAvatarButton(object? sender, object e)
     {
         if (!AvatarButton.Flyout.IsOpen)
         {
             AvatarButton.Scale = CommonScale;
             AvatarButton.Translation = CommonTranslation;
             AvatarButton.Rotation = CommonRotation;
-            //TODO:BlurEffect BlurOutAnimation.Start(Banner);
+            // TODO: BlurEffect BlurOutAnimation.Start(Banner);
         }
+    }
+
+    private void GenerateLinkCommandOnExecuteRequested(object sender, RoutedEventArgs routedEventArgs)
+    {
+        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustratorAppUri(ViewModel.UserId!).ToString());
+        RequestTeachingTip?.Invoke().ShowAndHide(IllustratorProfileResources.LinkCopiedToClipboard);
+    }
+
+    private void GenerateWebLinkCommandOnExecuteRequested(object sender, RoutedEventArgs routedEventArgs)
+    {
+        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustratorWebUri(ViewModel.UserId!).ToString());
+        RequestTeachingTip?.Invoke().ShowAndHide(IllustratorProfileResources.LinkCopiedToClipboard);
     }
 }

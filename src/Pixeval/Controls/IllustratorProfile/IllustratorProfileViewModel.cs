@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustratorViewModel.cs
+// Copyright (c) 2023 Pixeval/IllustratorProfileViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -38,10 +38,9 @@ using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using WinUI3Utilities;
 using AppContext = Pixeval.AppManagement.AppContext;
 
-namespace Pixeval.Controls.IllustratorProfile;
+namespace Pixeval.Controls;
 
 public sealed partial class IllustratorProfileViewModel : IllustrateViewModel<User>
 {
@@ -49,8 +48,6 @@ public sealed partial class IllustratorProfileViewModel : IllustrateViewModel<Us
     public static readonly SolidColorBrush DefaultAvatarBorderColorBrush = new(UiHelper.ParseHexColor("#D6DEE5"));
 
     private readonly TaskCompletionSource<SoftwareBitmapSource[]> _bannerImageTaskCompletionSource;
-
-    public ObservableTeachingTipProperties TeachingTipProperties { get; } = new();
 
     public IllustratorProfileViewModel(User user) : base(user)
     {
@@ -89,12 +86,6 @@ public sealed partial class IllustratorProfileViewModel : IllustrateViewModel<Us
 
     [ObservableProperty]
     private XamlUICommand? _shareCommand;
-
-    [ObservableProperty]
-    private XamlUICommand? _generateLinkCommand;
-
-    [ObservableProperty]
-    private XamlUICommand? _generateWebLinkCommand;
 
     public string GetIllustrationToolTipSubtitleText(User? user)
     {
@@ -156,18 +147,6 @@ public sealed partial class IllustratorProfileViewModel : IllustrateViewModel<Us
             IconSource = MakoHelper.GetFollowButtonIcon(Illustrate.UserInfo?.IsFollowed ?? false)
         };
 
-        GenerateLinkCommand = new XamlUICommand
-        {
-            Label = IllustratorProfileResources.GenerateWebLink,
-            IconSource = FontIconSymbols.LinkE71B.GetFontIconSource()
-        };
-
-        GenerateWebLinkCommand = new XamlUICommand
-        {
-            Label = IllustratorProfileResources.GenerateWebLink,
-            IconSource = FontIconSymbols.PreviewLinkE8A1.GetFontIconSource()
-        };
-
         ShareCommand = new XamlUICommand
         {
             Label = IllustratorProfileResources.Share,
@@ -175,20 +154,7 @@ public sealed partial class IllustratorProfileViewModel : IllustrateViewModel<Us
         };
 
         FollowCommand.ExecuteRequested += FollowCommandOnExecuteRequested;
-        GenerateLinkCommand.ExecuteRequested += GenerateLinkCommandOnExecuteRequested;
-        GenerateWebLinkCommand.ExecuteRequested += GenerateWebLinkCommandOnExecuteRequested;
-    }
-
-    private void GenerateLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustratorAppUri(UserId!).ToString());
-        TeachingTipProperties.ShowAndHide(IllustratorProfileResources.LinkCopiedToClipboard);
-    }
-
-    private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustratorWebUri(UserId!).ToString());
-        TeachingTipProperties.ShowAndHide(IllustratorProfileResources.LinkCopiedToClipboard);
+        // TODO: ShareCommand
     }
 
     private void FollowCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)

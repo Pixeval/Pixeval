@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:illustratorProfile="using:Pixeval.Controls.IllustratorProfile"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     ClearCacheAfterNavigation="True"
     mc:Ignorable="d">
@@ -19,13 +18,18 @@
                 x:Name="IllustratorListView"
                 Grid.Column="0"
                 HorizontalAlignment="Stretch"
+                ItemContainerStyle="{StaticResource ListViewItemNoStyle}"
                 ItemsSource="{x:Bind ViewModel.DataProvider.View}"
                 Loaded="IllustratorListView_OnLoaded"
                 ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                SelectionChanged="IllustratorListView_OnSelectionChanged">
+                SelectionMode="None">
                 <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="illustratorProfile:IllustratorProfileViewModel">
-                        <illustratorProfile:IllustratorProfile  RequestTeachingTip="IllustratorProfileOnRequestTeachingTip" ViewModel="{x:Bind}" />
+                    <DataTemplate x:DataType="controls:IllustratorProfileViewModel">
+                        <controls:IllustratorProfile
+                            IsSelectEnabled="True"
+                            IsSelectedChanging="IllustratorProfileSelectedChanging"
+                            RequestTeachingTip="IllustratorProfileOnRequestTeachingTip"
+                            ViewModel="{x:Bind}" />
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

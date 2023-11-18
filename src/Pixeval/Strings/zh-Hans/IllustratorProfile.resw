@@ -120,10 +120,10 @@
   <data name="Follow" xml:space="preserve">
     <value>关注用户</value>
   </data>
-  <data name="GenerateLink" xml:space="preserve">
+  <data name="GenerateLink.Text" xml:space="preserve">
     <value>复制应用链接</value>
   </data>
-  <data name="GenerateWebLink" xml:space="preserve">
+  <data name="GenerateWebLink.Text" xml:space="preserve">
     <value>复制网页链接</value>
   </data>
   <data name="LinkCopiedToClipboard" xml:space="preserve">

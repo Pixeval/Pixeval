@@ -25,6 +25,7 @@ using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Pages.Misc;
@@ -66,17 +67,19 @@ public sealed partial class FollowingsPage
         _ = ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public));
     }
 
-    private void IllustratorListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    private IllustratorProfile? _lastSelectedItem;
+
+    private void IllustratorProfileSelectedChanging(CardControl sender, CancellableEventArgs e)
     {
-        if (!IllustratorListView.IsLoaded)
+        if (_lastSelectedItem == sender)
         {
+            e.Cancel = true;
             return;
         }
-
-        if (IllustratorListView.SelectedIndex is > 0 and var i && i < ViewModel.DataProvider.Source.Count && IllustratorContentViewerFrame is { } frame)
-        {
-            _ = frame.Navigate(typeof(IllustratorContentViewerPage), ViewModel.DataProvider.Source[i]);
-        }
+        if (_lastSelectedItem is not null)
+            _lastSelectedItem.IsSelected = false;
+        _lastSelectedItem = (IllustratorProfile)sender;
+        _ = IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), _lastSelectedItem.ViewModel);
     }
 
     private async void IllustratorListView_OnLoaded(object sender, RoutedEventArgs e)
@@ -88,8 +91,8 @@ public sealed partial class FollowingsPage
 
         _illustratorListViewLoaded = true;
         await ThreadingHelper.SpinWaitAsync(() => !ViewModel.DataProvider.Source.Any() && !ViewModel.HasNoItems);
-        IllustratorListView.SelectedIndex = 0;
-        _ = IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), ViewModel.DataProvider.Source[0]);
+        // IllustratorListView.SelectedIndex = 0;
+        // _ = IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), ViewModel.DataProvider.Source[0]);
     }
 
     private TeachingTip IllustratorProfileOnRequestTeachingTip() => FollowingPageTeachingTip;

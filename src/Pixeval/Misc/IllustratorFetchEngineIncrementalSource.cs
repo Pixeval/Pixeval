@@ -19,7 +19,7 @@
 #endregion
 
 using System.Collections.Generic;
-using Pixeval.Controls.IllustratorProfile;
+using Pixeval.Controls;
 using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Misc;

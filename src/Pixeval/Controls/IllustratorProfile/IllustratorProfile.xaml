@@ -1,20 +1,22 @@
-<UserControl
-    x:Class="Pixeval.Controls.IllustratorProfile.IllustratorProfile"
+<local:CardControl
+    x:Class="Pixeval.Controls.IllustratorProfile"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
-    xmlns:controls="using:Pixeval.Controls"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:illustratorProfile="using:Pixeval.Controls.IllustratorProfile"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:Pixeval.Controls"
     xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:CommunityToolkit.WinUI.Media"
+    Padding="0"
     Loaded="IllustratorProfile_OnLoaded"
     mc:Ignorable="d">
-    <Grid Width="302" CornerRadius="{ThemeResource ControlCornerRadius}">
+    <!--  图片长宽均为5，故为(3*5):(3+5)  -->
+    <controls:ConstrainedBox AspectRatio="15:8">
         <Grid>
             <ToolTipService.ToolTip>
                 <ToolTip Padding="0">
@@ -35,25 +37,22 @@
                     </StackPanel>
                 </ToolTip>
             </ToolTipService.ToolTip>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="100" />
-                    <RowDefinition Height="60" />
-                </Grid.RowDefinitions>
-                <Border
-                    x:Name="Banner"
-                    Grid.Row="0"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    BorderThickness="0">
-                    <StackPanel
-                        x:Name="BannerContainer"
-                        Width="300"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch"
-                        CornerRadius="{StaticResource ControlTopCornerRadius}"
-                        Orientation="Horizontal" />
-                    <!--TODO:BlurEffect 会出现空引用异常，原因未知
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <controls:ConstrainedBox
+                x:Name="Banner"
+                Grid.Row="0"
+                AspectRatio="3:1">
+                <Grid x:Name="BannerContainer" CornerRadius="{StaticResource ControlTopCornerRadius}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                </Grid>
+                <!--TODO:BlurEffect 会出现空引用异常，原因未知
                     <media:UIElementExtensions.VisualFactory>
                         <media:PipelineVisualFactory>
                             <media:BlurEffect
@@ -82,38 +81,39 @@
                                 Duration="0:0:0.500" />
                         </animations:AnimationSet>
                     </animations:Explicit.Animations>-->
-                </Border>
-                <Grid Grid.Row="1">
-                    <StackPanel Margin="105,0,15,0" Spacing="5">
-                        <TextBlock
-                            Margin="0,5,0,0"
-                            Style="{StaticResource SubtitleTextBlockStyle}"
-                            Text="{x:Bind ViewModel.Username, Mode=OneWay}"
-                            TextTrimming="CharacterEllipsis"
-                            TextWrapping="NoWrap" />
+            </controls:ConstrainedBox>
+            <Grid Grid.Row="1">
+                <StackPanel Margin="105,0,15,0" Spacing="5">
+                    <TextBlock
+                        Margin="0,5,0,0"
+                        Style="{StaticResource SubtitleTextBlockStyle}"
+                        Text="{x:Bind ViewModel.Username, Mode=OneWay}"
+                        TextTrimming="CharacterEllipsis"
+                        TextWrapping="NoWrap" />
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <ContentControl
+                            VerticalAlignment="Center"
+                            Content="{markup:FontSymbolIcon Glyph=IDBadgeF427,
+                                                            FontSize=11}"
+                            Foreground="{StaticResource TextSecondaryAccentColor}" />
                         <StackPanel Orientation="Horizontal" Spacing="5">
-                            <ContentControl
+                            <TextBlock
                                 VerticalAlignment="Center"
-                                Content="{markup:FontSymbolIcon Glyph=IDBadgeF427,
-                                                                FontSize=11}"
-                                Foreground="{StaticResource TextSecondaryAccentColor}" />
-                            <StackPanel Orientation="Horizontal" Spacing="5">
-                                <TextBlock
-                                    VerticalAlignment="Center"
-                                    Foreground="{StaticResource TextSecondaryAccentColor}"
-                                    Style="{StaticResource SubscriptTextBlockStyle}"
-                                    Text="{x:Bind ViewModel.UserId, Mode=OneWay}" />
-                                <controls:PixevalBadge
-                                    Mode="Following"
-                                    UseSmall="True"
-                                    Visibility="{x:Bind ViewModel.IsFollowed, Mode=OneWay}" />
-                            </StackPanel>
+                                Foreground="{StaticResource TextSecondaryAccentColor}"
+                                Style="{StaticResource SubscriptTextBlockStyle}"
+                                Text="{x:Bind ViewModel.UserId, Mode=OneWay}" />
+                            <local:PixevalBadge
+                                Mode="Following"
+                                UseSmall="True"
+                                Visibility="{x:Bind ViewModel.IsFollowed, Mode=OneWay}" />
                         </StackPanel>
                     </StackPanel>
-                </Grid>
+                </StackPanel>
             </Grid>
             <Button
                 x:Name="AvatarButton"
+                Grid.Row="0"
+                Grid.RowSpan="2"
                 Width="84"
                 Height="84"
                 Margin="10,0,0,15"
@@ -123,7 +123,7 @@
                 Background="Transparent"
                 CenterPoint="42,42,0"
                 CornerRadius="42"
-                PointerExited="AvatarButton_OnPointerExited"
+                PointerExited="RestoreAvatarButton"
                 Translation="0,0,30">
                 <Button.TranslationTransition>
                     <Vector3Transition />
@@ -157,33 +157,34 @@
                         <core:ChangePropertyAction
                             PropertyName="Scale"
                             TargetObject="{x:Bind AvatarButton}"
-                            Value="{x:Bind illustratorProfile:IllustratorProfile.ZoomedScale}" />
+                            Value="{x:Bind local:IllustratorProfile.ZoomedScale}" />
                         <core:ChangePropertyAction
                             PropertyName="Translation"
                             TargetObject="{x:Bind AvatarButton}"
-                            Value="{x:Bind illustratorProfile:IllustratorProfile.ElevatedTranslation}" />
+                            Value="{x:Bind local:IllustratorProfile.ElevatedTranslation}" />
                         <core:ChangePropertyAction
                             PropertyName="Rotation"
                             TargetObject="{x:Bind AvatarButton}"
-                            Value="{x:Bind illustratorProfile:IllustratorProfile.RotatedRotation}" />
+                            Value="{x:Bind local:IllustratorProfile.RotatedRotation}" />
                     </core:EventTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
                 <Button.Flyout>
-                    <MenuFlyout Closed="AvatarButtonMenuFlyout_OnClosed">
+                    <MenuFlyout Closed="RestoreAvatarButton">
                         <MenuFlyoutItem Command="{x:Bind ViewModel.FollowCommand, Mode=OneWay}" />
                         <MenuFlyoutSeparator />
                         <MenuFlyoutItem Command="{x:Bind ViewModel.ShareCommand, Mode=OneWay}" />
-                        <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateLinkCommand, Mode=OneWay}" />
-                        <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateWebLinkCommand, Mode=OneWay}" />
+                        <!--  不知道为什么Tapped事件不会触发，只能用Click  -->
+                        <MenuFlyoutItem
+                            x:Uid="/IllustratorProfile/GenerateLink"
+                            Click="GenerateLinkCommandOnExecuteRequested"
+                            Icon="{markup:FontSymbolIcon Glyph=LinkE71B}" />
+                        <MenuFlyoutItem
+                            x:Uid="/IllustratorProfile/GenerateWebLink"
+                            Click="GenerateWebLinkCommandOnExecuteRequested"
+                            Icon="{markup:FontSymbolIcon Glyph=PreviewLinkE8A1}" />
                     </MenuFlyout>
                 </Button.Flyout>
             </Button>
         </Grid>
-        <TeachingTip
-            Title="{x:Bind ViewModel.TeachingTipProperties.Title, Mode=OneWay}"
-            IconSource="{x:Bind ViewModel.TeachingTipProperties.IconSource, Mode=OneWay}"
-            IsLightDismissEnabled="True"
-            IsOpen="{x:Bind ViewModel.TeachingTipProperties.IsOpen, Mode=OneWay}"
-            Subtitle="{x:Bind ViewModel.TeachingTipProperties.Subtitle, Mode=OneWay}" />
-    </Grid>
-</UserControl>
+    </controls:ConstrainedBox>
+</local:CardControl>

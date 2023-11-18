@@ -1,7 +1,7 @@
 using System;
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls;
 using Pixeval.Controls.IllustratorContentViewer;
-using Pixeval.Controls.IllustratorProfile;
 
 namespace Pixeval.Pages.Misc;
 

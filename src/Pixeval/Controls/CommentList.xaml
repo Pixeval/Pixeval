@@ -20,19 +20,9 @@
     <ListView
         x:Name="CommentsList"
         IsItemClickEnabled="False"
+        ItemContainerStyle="{StaticResource ListViewItemNoStyle}"
         ItemTemplate="{StaticResource CommentDataTemplate}"
         SelectionMode="None">
-        <ListView.ItemContainerStyle>
-            <Style TargetType="ListViewItem">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="ListViewItem">
-                            <ContentPresenter Content="{TemplateBinding Content}" />
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-        </ListView.ItemContainerStyle>
         <ListView.Transitions>
             <AddDeleteThemeTransition />
         </ListView.Transitions>

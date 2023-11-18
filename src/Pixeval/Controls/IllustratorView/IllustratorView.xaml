@@ -1,9 +1,9 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
     xmlns:local="using:Pixeval.Controls.IllustratorView"
-    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
-    xmlns:controls="using:Pixeval.Controls">
+    xmlns:markup="using:Pixeval.Controls.MarkupExtensions">
     <Style TargetType="local:IllustratorView">
         <Setter Property="Template">
             <Setter.Value>

@@ -22,7 +22,6 @@ using System;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Controls.Illustrate;
-using Pixeval.Controls.IllustratorProfile;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;

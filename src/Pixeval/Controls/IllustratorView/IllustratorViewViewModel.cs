@@ -20,7 +20,6 @@
 
 using Pixeval.CoreApi.Model;
 using Pixeval.Controls.Illustrate;
-using Pixeval.Controls.IllustratorProfile;
 using Pixeval.Util;
 
 namespace Pixeval.Controls.IllustratorView;

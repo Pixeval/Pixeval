@@ -1,18 +1,17 @@
-<!--  ReSharper disable Xaml.ConstructorWarning  -->
-<!--  ReSharper disable MarkupAttributeTypo  -->
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:iconButton="using:Pixeval.Controls.IconButton"
+    xmlns:controls="using:Pixeval.Controls"
     xmlns:local="using:Pixeval.Controls.TokenInputTextBox"
-    xmlns:markup="using:Pixeval.Controls.MarkupExtensions"
-    xmlns:controls="using:Pixeval.Controls">
+    xmlns:markup="using:Pixeval.Controls.MarkupExtensions">
     <Style TargetType="local:TokenInputTextBox">
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:TokenInputTextBox">
+                    <!--  ReSharper disable Xaml.ConstructorWarning  -->
+                    <!--  ReSharper disable MarkupAttributeTypo  -->
                     <Grid
                         Height="{TemplateBinding Height}"
                         HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
