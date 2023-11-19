@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustratorViewViewModel.cs
+// Copyright (c) 2023 Pixeval/SpotlightArticleViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,19 +18,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.CoreApi.Model;
 using Pixeval.Controls.Illustrate;
-using Pixeval.Util;
+using Pixeval.CoreApi.Model;
 
-namespace Pixeval.Controls.IllustratorView;
+namespace Pixeval.Controls.SpotlightArticleView;
 
-public sealed class IllustratorViewViewModel : IllustrateViewViewModel<User, IllustratorViewModel>
+public class SpotlightArticleViewModel(SpotlightArticle illustrate) : IllustrateViewModel<SpotlightArticle>(illustrate)
 {
-    public override DataProvider<User, IllustratorViewModel> DataProvider { get; } = new IllustratorViewDataProvider();
-
-    public override void Dispose()
-    {
-        DataProvider.FetchEngine?.Cancel();
-        DataProvider.DisposeCurrent();
-    }
+    public override void Dispose() => throw new System.NotImplementedException();
 }

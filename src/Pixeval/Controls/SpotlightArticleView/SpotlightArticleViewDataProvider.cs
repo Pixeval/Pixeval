@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustratorViewDataProvider.cs
+// Copyright (c) 2023 Pixeval/SpotlightArticleViewDataProvider.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -26,25 +26,24 @@ using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Model;
 using Pixeval.Misc;
 
-namespace Pixeval.Controls.IllustratorView;
-
-public class IllustratorViewDataProvider : DataProvider<User, IllustratorViewModel>
+namespace Pixeval.Controls.SpotlightArticleView;
+public class SpotlightArticleViewDataProvider : DataProvider<SpotlightArticle, SpotlightArticleViewModel>
 {
-    public override AdvancedCollectionView View { get; } = new(Array.Empty<IllustratorViewModel>());
+    public override AdvancedCollectionView View { get; } = new(Array.Empty<SpotlightArticleViewModel>());
 
-    private IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel> _illustratorsSource = null!;
+    private IncrementalLoadingCollection<FetchEngineIncrementalSource<SpotlightArticle, SpotlightArticleViewModel>, SpotlightArticleViewModel> _articlesSource = null!;
 
-    public override IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel> Source
+    public override IncrementalLoadingCollection<FetchEngineIncrementalSource<SpotlightArticle, SpotlightArticleViewModel>, SpotlightArticleViewModel> Source
     {
-        get => _illustratorsSource;
+        get => _articlesSource;
         protected set
         {
-            _ = SetProperty(ref _illustratorsSource, value);
+            _ = SetProperty(ref _articlesSource, value);
             View.Source = value;
         }
     }
 
-    public override IFetchEngine<User?>? FetchEngine { get; protected set; }
+    public override IFetchEngine<SpotlightArticle?>? FetchEngine { get; protected set; }
 
     public override void DisposeCurrent()
     {
@@ -57,13 +56,13 @@ public class IllustratorViewDataProvider : DataProvider<User, IllustratorViewMod
         View.Clear();
     }
 
-    public override async Task<int> ResetAndFillAsync(IFetchEngine<User?>? fetchEngine, int limit = -1)
+    public override async Task<int> ResetAndFillAsync(IFetchEngine<SpotlightArticle?>? fetchEngine, int limit = -1)
     {
         FetchEngine?.EngineHandle.Cancel();
         FetchEngine = fetchEngine;
         DisposeCurrent();
 
-        Source = new(new IllustratorFetchEngineIncrementalSource(FetchEngine!, limit));
+        Source = new(new SpotlightArticleFetchEngineIncrementalSource(FetchEngine!, limit));
         var result = await Source.LoadMoreItemsAsync(20);
         return (int)result.Count;
     }

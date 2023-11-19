@@ -56,7 +56,7 @@ public sealed partial class DownloadListPage
 
         async Task Task()
         {
-            foreach (var o in parameter.To<IEnumerable<ObservableDownloadTask>>().Reverse())
+            foreach (var o in parameter.To<IEnumerable<ObservableDownloadTask>>())
                 _viewModel.DownloadTasks.Add(new(o, await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(o.Id!)));
         }
     }

@@ -43,7 +43,6 @@ using Windows.System;
 using Windows.System.UserProfile;
 using Pixeval.Controls;
 using Pixeval.Controls.MarkupExtensions;
-using Pixeval.Controls.MarkupExtensions.FontSymbolIcon;
 using Pixeval.Misc;
 using Pixeval.Options;
 using Pixeval.Util.Threading;

@@ -39,9 +39,19 @@ public abstract class DataProvider<T, TViewModel> : ObservableObject where T : I
 
     public abstract IFetchEngine<T?>? FetchEngine { get; protected set; }
 
-    public abstract Predicate<object>? Filter { get; set; }
+    private Predicate<object>? _filter;
 
-    public abstract event EventHandler FilterChanged;
+    public Predicate<object>? Filter
+    {
+        get => _filter;
+        set
+        {
+            _filter = value;
+            FilterChanged?.Invoke(_filter, EventArgs.Empty);
+        }
+    }
+
+    public event EventHandler? FilterChanged;
 
     public abstract void DisposeCurrent();
 

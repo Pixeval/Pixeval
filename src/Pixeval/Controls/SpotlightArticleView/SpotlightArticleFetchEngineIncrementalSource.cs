@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustratorViewViewModel.cs
+// Copyright (c) 2023 Pixeval/SpotlightArticleFetchEngineIncrementalSource.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,19 +18,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Collections.Generic;
 using Pixeval.CoreApi.Model;
-using Pixeval.Controls.Illustrate;
-using Pixeval.Util;
+using Pixeval.Misc;
 
-namespace Pixeval.Controls.IllustratorView;
+namespace Pixeval.Controls.SpotlightArticleView;
 
-public sealed class IllustratorViewViewModel : IllustrateViewViewModel<User, IllustratorViewModel>
+public class SpotlightArticleFetchEngineIncrementalSource(IAsyncEnumerable<SpotlightArticle> asyncEnumerator, int limit = -1)
+    : FetchEngineIncrementalSource<SpotlightArticle, SpotlightArticleViewModel>(asyncEnumerator, limit)
 {
-    public override DataProvider<User, IllustratorViewModel> DataProvider { get; } = new IllustratorViewDataProvider();
-
-    public override void Dispose()
+    protected override long Identifier(SpotlightArticle entity)
     {
-        DataProvider.FetchEngine?.Cancel();
-        DataProvider.DisposeCurrent();
+        return entity.Id;
+    }
+
+    protected override SpotlightArticleViewModel Select(SpotlightArticle entity)
+    {
+        return new(entity);
     }
 }

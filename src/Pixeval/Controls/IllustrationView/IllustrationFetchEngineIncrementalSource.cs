@@ -20,9 +20,9 @@
 
 using System.Collections.Generic;
 using Pixeval.CoreApi.Model;
-using Pixeval.Controls.IllustrationView;
+using Pixeval.Misc;
 
-namespace Pixeval.Misc;
+namespace Pixeval.Controls.IllustrationView;
 
 public class IllustrationFetchEngineIncrementalSource(IAsyncEnumerable<Illustration> asyncEnumerator, int limit = -1)
     : FetchEngineIncrementalSource<Illustration, IllustrationViewModel>(asyncEnumerator, limit)
@@ -34,6 +34,6 @@ public class IllustrationFetchEngineIncrementalSource(IAsyncEnumerable<Illustrat
 
     protected override IllustrationViewModel Select(Illustration entity)
     {
-        return new IllustrationViewModel(entity);
+        return new(entity);
     }
 }

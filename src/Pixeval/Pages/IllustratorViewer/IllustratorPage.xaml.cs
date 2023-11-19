@@ -45,7 +45,7 @@ namespace Pixeval.Pages.IllustratorViewer;
 
 public sealed partial class IllustratorPage
 {
-    private IllustratorViewModel _viewModel = null!;
+    private IllustratorPageViewModel _viewModel = null!;
 
     private CompositionPropertySet? _props;
     private CompositionPropertySet? _scrollerPropertySet;
@@ -93,12 +93,12 @@ public sealed partial class IllustratorPage
     {
         switch (navigationEventArgs.Parameter)
         {
-            case (UIElement sender, IllustratorViewModel viewModel):
+            case (UIElement sender, IllustratorPageViewModel viewModel):
                 _ = WeakReferenceMessenger.Default.Send(new MainPageFrameSetConnectedAnimationTargetMessage(sender));
                 _ = (ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation")?.TryStart(ProfileImage));
                 _viewModel = viewModel;
                 break;
-            case IllustratorViewModel viewModel1:
+            case IllustratorPageViewModel viewModel1:
                 _viewModel = viewModel1;
                 break;
         }

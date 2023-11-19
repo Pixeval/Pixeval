@@ -1,33 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Pixeval.Controls.IllustratorView.IllustrateViewViewModel&lt;T, TViewModel&gt;" Collapsed="true">
-    <Position X="4.75" Y="2.25" Width="3" />
-    <TypeIdentifier>
-      <HashCode>AgAAAAEAACAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>UserControls\IllustratorView\IllustrateViewViewModel.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
   <Class Name="Pixeval.Controls.Illustrate.SortableIllustrateViewViewModel&lt;T, TViewModel&gt;" Collapsed="true">
-    <Position X="2.5" Y="3.75" Width="3.5" />
+    <Position X="3" Y="3.75" Width="3.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAgAAAAAAAAAAAAAAAAIBAAAAAAAAAAEAAAAAA=</HashCode>
-      <FileName>UserControls\Illustrate\SortableIllustrateViewViewModel.cs</FileName>
+      <FileName>Controls\Illustrate\SortableIllustrateViewViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Controls.IllustratorView.IllustratorViewViewModel" Collapsed="true">
-    <Position X="6.75" Y="3.75" Width="3.25" />
+    <Position X="7.5" Y="3.75" Width="3.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>UserControls\IllustratorView\IllustratorViewViewModel.cs</FileName>
+      <FileName>Controls\IllustratorView\IllustratorViewViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Controls.IllustrationView.IllustrationViewViewModel" Collapsed="true">
-    <Position X="2.5" Y="5" Width="3.5" />
+    <Position X="2.5" Y="5" Width="4.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAAAAAAAABAIAAAAAAAAAACEAAAAAA=</HashCode>
-      <FileName>UserControls\IllustrationView\IllustrationViewViewModel.cs</FileName>
+      <FileName>Controls\IllustrationView\IllustrationViewViewModel.cs</FileName>
     </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.Controls.IllustrateViewViewModel&lt;T, TViewModel&gt;" Collapsed="true">
+    <Position X="5.5" Y="2.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAEAACAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controls\IllustrateViewViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Font Name="Microsoft YaHei UI" Size="9" />
 </ClassDiagram>

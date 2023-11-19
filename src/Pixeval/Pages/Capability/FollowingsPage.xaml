@@ -24,7 +24,7 @@
                 ScrollViewer.VerticalScrollBarVisibility="Hidden"
                 SelectionMode="None">
                 <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="controls:IllustratorProfileViewModel">
+                    <DataTemplate x:DataType="controls:IllustratorViewModel">
                         <controls:IllustratorProfile
                             IsSelectEnabled="True"
                             IsSelectedChanging="IllustratorProfileSelectedChanging"

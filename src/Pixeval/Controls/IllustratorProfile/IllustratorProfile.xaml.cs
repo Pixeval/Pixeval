@@ -32,7 +32,7 @@ using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls;
 
-[DependencyProperty<IllustratorProfileViewModel>("ViewModel")]
+[DependencyProperty<IllustratorViewModel>("ViewModel")]
 public sealed partial class IllustratorProfile
 {
     public static readonly Vector3 ZoomedScale = new(1.2f, 1.2f, 1.2f);

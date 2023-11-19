@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustratorViewModel.cs
+// Copyright (c) 2023 Pixeval/IllustratorPageViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Controls.IllustratorView;
 
-public partial class IllustratorViewModel : ObservableObject, IIllustrationVisualizer
+public partial class IllustratorPageViewModel : ObservableObject, IIllustrationVisualizer
 {
     public string Name { get; set; }
 
@@ -64,7 +64,7 @@ public partial class IllustratorViewModel : ObservableObject, IIllustrationVisua
     public ObservableCollection<IllustrationViewModel> Illustrations { get; set; }
 
 
-    public IllustratorViewModel(UserInfo info)
+    public IllustratorPageViewModel(UserInfo info)
     {
         Name = info.Name!;
         AvatarUrl = info.ProfileImageUrls?.Medium!;

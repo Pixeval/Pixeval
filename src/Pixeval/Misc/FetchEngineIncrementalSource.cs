@@ -26,8 +26,8 @@ using CommunityToolkit.WinUI.Collections;
 
 namespace Pixeval.Misc;
 
-public abstract class FetchEngineIncrementalSource<T, TModel>
-    (IAsyncEnumerable<T> asyncEnumerator, int limit = -1) : IIncrementalSource<TModel>
+public abstract class FetchEngineIncrementalSource<T, TModel>(IAsyncEnumerable<T> asyncEnumerator, int limit = -1)
+    : IIncrementalSource<TModel>
 {
     private readonly ISet<long> _yieldedItems = new HashSet<long>();
 

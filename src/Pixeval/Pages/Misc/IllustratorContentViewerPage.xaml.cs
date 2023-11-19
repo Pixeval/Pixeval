@@ -36,7 +36,7 @@ public sealed partial class IllustratorContentViewerPage : IDisposable
 
     public override async void OnPageActivated(NavigationEventArgs e)
     {
-        if (e.Parameter is IllustratorProfileViewModel viewModel)
+        if (e.Parameter is IllustratorViewModel viewModel)
         {
             _illustratorContentViewerViewModel = new IllustratorContentViewerViewModel(viewModel.UserDetail ?? await App.AppViewModel.MakoClient.GetUserFromIdAsync(viewModel.UserId!, App.AppViewModel.AppSetting.TargetFilter));
             IllustratorContentViewer.ViewModel = _illustratorContentViewerViewModel;

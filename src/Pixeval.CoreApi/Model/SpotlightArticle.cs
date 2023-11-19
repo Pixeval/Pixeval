@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -23,7 +23,7 @@ using System.Text.Json.Serialization;
 
 namespace Pixeval.CoreApi.Model;
 
-public record SpotlightArticle
+public record SpotlightArticle : IIllustrate
 {
     [JsonPropertyName("id")]
     public long Id { get; set; }

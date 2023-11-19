@@ -1,40 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Pixeval.Pages.Download.DownloadListEntryViewModel" Collapsed="true">
-    <Position X="5.25" Y="4" Width="2.5" />
+    <Position X="8.5" Y="4" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAQEAAAAAAAAAAIAQIAAAAAAAAAAAAAA=</HashCode>
       <FileName>Pages\Download\DownloadListEntryViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Controls.IllustrationView.IllustrationViewModel" Collapsed="true">
-    <Position X="5.5" Y="2.75" Width="2.25" />
+    <Position X="8.75" Y="2.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>ACSGAAAAACBAEQAQiAASAACAFIAQA4CAAIAAZBAEEIA=</HashCode>
       <FileName>Controls\IllustrationView\IllustrationViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Controls.Illustrate.IllustrateViewModel&lt;T&gt;" Collapsed="true">
-    <Position X="4" Y="1.25" Width="2" />
+    <Position X="5.75" Y="1.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Controls\Illustrate\IIllustrateViewModel.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Pixeval.Controls.IllustratorView.IllustratorViewModel" Collapsed="true">
-    <Position X="8.75" Y="1.25" Width="1.5" />
+  <Class Name="Pixeval.Controls.IllustratorViewModel" Collapsed="true">
+    <Position X="5.75" Y="2.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAGIAAEAAAAQAAIAQAAAEQCAAIgAAAAAAgAABACAEE=</HashCode>
-      <FileName>Controls\IllustratorView\IllustratorViewModel.cs</FileName>
+      <HashCode>AAACIAAEAKAoQAAAAcEAAgSCAAAAEAAIAAIAAAAAAAE=</HashCode>
+      <FileName>Controls\IllustratorProfile\IllustratorViewModel.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Pixeval.Controls.IllustratorProfile.IllustratorProfileViewModel" Collapsed="true">
-    <Position X="2.25" Y="2.75" Width="2.25" />
+  <Class Name="Pixeval.Controls.SpotlightView.SpotlightArticleViewModel" Collapsed="true">
+    <Position X="2.5" Y="2.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAACIAAEAKAoQAAAAcEAEgTCCAAAEAAIAIIAAAAAAIE=</HashCode>
-      <FileName>Controls\IllustratorProfile\IllustratorProfileViewModel.cs</FileName>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controls\SpotlightView\SpotlightArticleViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Microsoft YaHei UI" Size="9" />

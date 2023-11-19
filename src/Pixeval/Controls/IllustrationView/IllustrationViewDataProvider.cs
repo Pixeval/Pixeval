@@ -56,7 +56,7 @@ public class IllustrationViewDataProvider : DataProvider<Illustration, Illustrat
     public override IFetchEngine<Illustration?>? FetchEngine
     {
         get => _fetchEngineRef?.Value;
-        protected set => throw new NotImplementedException("Not used setter.");
+        protected set => throw new NotImplementedException("No setter.");
     }
 
     public override AdvancedCollectionView View { get; } = new(Array.Empty<IllustrationViewModel>());
@@ -87,7 +87,7 @@ public class IllustrationViewDataProvider : DataProvider<Illustration, Illustrat
     public override IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel> Source
     {
         get => _illustrationSourceRef.Value;
-        protected set => throw new NotImplementedException("Not used setter.");
+        protected set => throw new NotImplementedException("No setter.");
     }
 
     public IllustrationViewDataProvider CloneRef()
@@ -101,20 +101,6 @@ public class IllustrationViewDataProvider : DataProvider<Illustration, Illustrat
         dataProvider.View.CurrentItem = View.CurrentItem;
         return dataProvider;
     }
-
-    private Predicate<object>? _filter;
-
-    public override Predicate<object>? Filter
-    {
-        get => _filter;
-        set
-        {
-            _filter = value;
-            FilterChanged?.Invoke(_filter, EventArgs.Empty);
-        }
-    }
-
-    public override event EventHandler? FilterChanged;
 
     public ObservableCollection<IllustrationViewModel> SelectedIllustrations { get; set; } = [];
 

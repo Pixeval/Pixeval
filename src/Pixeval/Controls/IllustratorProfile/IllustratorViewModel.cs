@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustratorProfileViewModel.cs
+// Copyright (c) 2023 Pixeval/IllustratorViewModel.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -42,14 +42,14 @@ using AppContext = Pixeval.AppManagement.AppContext;
 
 namespace Pixeval.Controls;
 
-public sealed partial class IllustratorProfileViewModel : IllustrateViewModel<User>
+public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
 {
     // Dominant color of the "No Image" image
     public static readonly SolidColorBrush DefaultAvatarBorderColorBrush = new(UiHelper.ParseHexColor("#D6DEE5"));
 
     private readonly TaskCompletionSource<SoftwareBitmapSource[]> _bannerImageTaskCompletionSource;
 
-    public IllustratorProfileViewModel(User user) : base(user)
+    public IllustratorViewModel(User user) : base(user)
     {
         _bannerImageTaskCompletionSource = new TaskCompletionSource<SoftwareBitmapSource[]>();
         IsFollowed = Illustrate.UserInfo?.IsFollowed ?? false;

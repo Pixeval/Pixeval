@@ -30,7 +30,6 @@ using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Pages.Misc;
 using Pixeval.Controls.IllustratorView;
-using Pixeval.CoreApi;
 using Pixeval.Util;
 using Pixeval.Util.Threading;
 
@@ -81,7 +80,6 @@ public sealed partial class FollowingsPage
             _lastSelectedItem.IsSelected = false;
         _lastSelectedItem = (IllustratorProfile)sender;
         _ = IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), _lastSelectedItem.ViewModel);
-        App.AppViewModel.MakoClient.Spotlights();
     }
 
     private async void IllustratorListView_OnLoaded(object sender, RoutedEventArgs e)
