@@ -18,15 +18,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using Pixeval.Attributes;
-
 namespace Pixeval.Options;
 
 public enum IllustrationViewOption
 {
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.IllustrationViewGridLayout))]
+    LinedFlow,
     Grid,
-
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.IllustrationViewRiverFlowLayout))]
-    RiverFlow
+    VerticalStack,
+    HorizontalStack
 }

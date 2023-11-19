@@ -19,6 +19,7 @@
 #endregion
 
 using System.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.CoreApi.Model;
 using Pixeval.Controls.Illustrate;
@@ -27,8 +28,11 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Controls.IllustrationView;
 
-public sealed class IllustrationViewViewModel : SortableIllustrateViewViewModel<Illustration, IllustrationViewModel>
+public sealed partial class IllustrationViewViewModel : SortableIllustrateViewViewModel<Illustration, IllustrationViewModel>
 {
+    [ObservableProperty]
+    private bool _isSelecting;
+
     public override IllustrationViewDataProvider DataProvider { get; }
 
     public IllustrationViewViewModel(IllustrationViewViewModel viewModel)

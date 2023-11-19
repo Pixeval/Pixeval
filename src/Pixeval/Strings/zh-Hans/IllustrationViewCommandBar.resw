@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -158,6 +158,9 @@
   </data>
   <data name="ShareButton.Label" xml:space="preserve">
     <value>分享</value>
+  </data>
+  <data name="SelectionButton.Label" xml:space="preserve">
+    <value>多选</value>
   </data>
   <data name="CancelSelectionButtonDefaultLabel" xml:space="preserve">
     <value>取消选择</value>

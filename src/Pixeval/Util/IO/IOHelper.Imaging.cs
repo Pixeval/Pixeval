@@ -178,8 +178,8 @@ public static partial class IoHelper
     {
         return illustrationViewOption switch
         {
-            IllustrationViewOption.RiverFlow => ThumbnailUrlOption.Medium,
-            IllustrationViewOption.Grid => ThumbnailUrlOption.SquareMedium,
+            IllustrationViewOption.LinedFlow => ThumbnailUrlOption.Medium,
+            IllustrationViewOption.Grid or IllustrationViewOption.VerticalStack or IllustrationViewOption.HorizontalStack => ThumbnailUrlOption.SquareMedium,
             _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<IllustrationViewOption, ThumbnailUrlOption>(illustrationViewOption)
         };
     }

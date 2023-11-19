@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
@@ -38,20 +37,6 @@ public abstract class DataProvider<T, TViewModel> : ObservableObject where T : I
     public abstract IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel> Source { get; protected set; }
 
     public abstract IFetchEngine<T?>? FetchEngine { get; protected set; }
-
-    private Predicate<object>? _filter;
-
-    public Predicate<object>? Filter
-    {
-        get => _filter;
-        set
-        {
-            _filter = value;
-            FilterChanged?.Invoke(_filter, EventArgs.Empty);
-        }
-    }
-
-    public event EventHandler? FilterChanged;
 
     public abstract void DisposeCurrent();
 

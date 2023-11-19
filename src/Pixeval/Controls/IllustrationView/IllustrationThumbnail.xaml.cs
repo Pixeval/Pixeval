@@ -19,7 +19,9 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Windows.System;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Options;
@@ -27,6 +29,7 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using WinUI3Utilities.Attributes;
+using System.Collections.Immutable;
 
 namespace Pixeval.Controls.IllustrationView;
 
@@ -36,11 +39,6 @@ namespace Pixeval.Controls.IllustrationView;
 [DependencyProperty<IllustrationViewModel>("ViewModel")]
 public sealed partial class IllustrationThumbnail : CardControl
 {
-    /// <summary>
-    /// 当本控件被点击时触发，取代Tapped事件
-    /// </summary>
-    public event EventHandler<TappedRoutedEventArgs>? TappedOverride;
-
     /// <summary>
     /// 请求显示二维码
     /// </summary>
@@ -81,17 +79,11 @@ public sealed partial class IllustrationThumbnail : CardControl
     private double GetDesiredHeight(IllustrationViewModel viewModel) => ThisRequired.Invoke().DesiredHeight;
 #pragma warning restore IDE0060
 
+    private Visibility IsImageLoaded(IDictionary<ThumbnailUrlOption, SoftwareBitmapSource> dictionary) => dictionary.ContainsKey(ThumbnailUrlOption) ? Visibility.Collapsed : Visibility.Visible;
+
     #endregion
 
     private ThumbnailUrlOption ThumbnailUrlOption => ThisRequired.Invoke().IllustrationViewOption.ToThumbnailUrlOption();
-
-    /// <summary>
-    /// For Bookmark Button
-    /// </summary>
-    private void IllustrationThumbnailContainerItemOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        e.Handled = true;
-    }
 
     private async void ToggleBookmarkButtonOnTapped(object sender, TappedRoutedEventArgs e)
     {
@@ -101,8 +93,6 @@ public sealed partial class IllustrationThumbnail : CardControl
         else
             await ViewModel.PostPublicBookmarkAsync();
     }
-
-    private void ThumbnailOnTapped(object sender, TappedRoutedEventArgs e) => TappedOverride?.Invoke(this, e);
 
     private async void BookmarkContextItemOnTapped(object sender, TappedRoutedEventArgs e)
     {

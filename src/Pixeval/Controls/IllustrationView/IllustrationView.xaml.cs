@@ -20,15 +20,12 @@
 
 using System;
 using System.Threading.Tasks;
-using Windows.System;
-using Windows.UI.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Pixeval.CoreApi.Model;
 using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.IO;
@@ -41,7 +38,7 @@ namespace Pixeval.Controls.IllustrationView;
 
 // use "load failed" image for those thumbnails who failed to load its source due to various reasons
 // note: please ALWAYS add e.Handled = true before every "tapped" event for the buttons
-[DependencyProperty<IllustrationViewOption>("IllustrationViewOption", DependencyPropertyDefaultValue.Default, nameof(OnIllustrationViewOptionChanged))]
+[DependencyProperty<IllustrationViewOption>("IllustrationViewOption", DependencyPropertyDefaultValue.Default)]
 [DependencyProperty<ThumbnailDirection>("ThumbnailDirection", DependencyPropertyDefaultValue.Default, nameof(OnThumbnailDirectionChanged))]
 [INotifyPropertyChanged]
 public sealed partial class IllustrationView
@@ -56,10 +53,6 @@ public sealed partial class IllustrationView
         _ => ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(ThumbnailDirection)
     };
 
-    private static void OnIllustrationViewOptionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-    }
-
     private static void OnThumbnailDirectionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         d.To<IllustrationView>().OnPropertyChanged(nameof(ThumbnailDirection));
@@ -68,10 +61,10 @@ public sealed partial class IllustrationView
     public IllustrationView()
     {
         InitializeComponent();
-        ViewModel.DataProvider.FilterChanged += (sender, _) =>
+        ViewModel.DataProvider.FilterChanged += (_, filter) =>
         {
-            if (sender is Predicate<object> predicate)
-                ViewModel.DataProvider.View.Filter = predicate;
+            if (filter is { } predicate)
+                ViewModel.DataProvider.View.Filter = o => predicate((IllustrationViewModel)o);
             else
                 ViewModel.DataProvider.View.Refresh();
             LoadMoreIfNeeded().Discard();
@@ -79,21 +72,6 @@ public sealed partial class IllustrationView
     }
 
     public IllustrationViewViewModel ViewModel { get; } = new();
-
-    private void ThumbnailOnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        if (InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Shift).HasFlag(CoreVirtualKeyStates.Down))
-        {
-            // User is doing the range selection
-            return;
-        }
-
-        e.Handled = true;
-
-        var vm = sender.To<IllustrationThumbnail>().ViewModel;
-
-        vm.CreateWindowWithPage(ViewModel);
-    }
 
     private void IllustrationThumbnailOnShowQrCodeRequested(object sender, SoftwareBitmapSource e)
     {
@@ -128,7 +106,7 @@ public sealed partial class IllustrationView
             if (await context.TryLoadThumbnail(ViewModel, option))
             {
                 if (sender.IsFullyOrPartiallyVisible(this))
-                    sender.Resources["IllustrationThumbnailContainerItemStoryboard"].To<Storyboard>().Begin();
+                    sender.Resources["IllustrationThumbnailStoryboard"].To<Storyboard>().Begin();
                 else
                     sender.Opacity = 1;
             }
@@ -148,11 +126,18 @@ public sealed partial class IllustrationView
     {
         // TODO load after being Filtrated
         if (ScrollViewer.ScrollableHeight - LoadingArea.ActualHeight < ScrollViewer.VerticalOffset)
-            _ = await ViewModel.DataProvider.View.LoadMoreItemsAsync(number);
+            _ = await ViewModel.DataProvider.LoadMoreAsync(number);
     }
 
     private IllustrationView IllustrationThumbnail_OnThisRequired()
     {
         return this;
+    }
+
+    private void IllustrationItemsView_OnItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs e)
+    {
+        var vm = e.InvokedItem.To<IllustrationViewModel>();
+
+        vm.CreateWindowWithPage(ViewModel);
     }
 }

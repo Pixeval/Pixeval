@@ -251,26 +251,26 @@ public sealed partial class IllustrationViewCommandBar
         ViewModel.DataProvider.Filter = null;
         ViewModel.DataProvider.Filter = o =>
         {
-            if (o is IllustrationViewModel vm)
+            if (o != null)
             {
-                var stringTags = vm.Illustrate.Tags?.Select(t => t.Name).WhereNotNull().ToArray() ??
-                                 [];
+                var stringTags = o.Illustrate.Tags?.Select(t => t.Name).WhereNotNull().ToArray() ?? [];
                 var result = ExamineExcludeTags(stringTags, excludeTags)
                              && ExamineIncludeTags(stringTags, includeTags)
-                             && vm.Bookmark >= leastBookmark
-                             && vm.Bookmark <= maximumBookmark
-                             && illustrationName.Match(vm.Illustrate.Title)
-                             && illustratorName.Match(vm.Illustrate.User?.Name)
+                             && o.Bookmark >= leastBookmark
+                             && o.Bookmark <= maximumBookmark
+                             && illustrationName.Match(o.Illustrate.Title)
+                             && illustratorName.Match(o.Illustrate.User?.Name)
                              && (illustratorId.IsNullOrEmpty() ||
-                                 illustratorId == vm.Illustrate.User?.Id.ToString())
-                             && (illustrationId.IsNullOrEmpty() || illustrationId == vm.Id)
-                             && vm.PublishDate >= publishDateStart
-                             && vm.PublishDate <= publishDateEnd;
+                                 illustratorId == o.Illustrate.User?.Id.ToString())
+                             && (illustrationId.IsNullOrEmpty() || illustrationId == o.Id)
+                             && o.PublishDate >= publishDateStart
+                             && o.PublishDate <= publishDateEnd;
                 return result;
             }
 
             return false;
         };
+        return;
 
         static bool ExamineExcludeTags(IEnumerable<string> tags, IEnumerable<Token> predicates)
         {
@@ -299,11 +299,11 @@ public sealed partial class IllustrationViewCommandBar
         {
             ViewModel.DataProvider.Filter = o =>
             {
-                if (o is IllustrationViewModel viewModel)
+                if (o != null)
                 {
-                    return viewModel.Id.Contains(text)
-                           || (viewModel.Illustrate.Tags ?? Enumerable.Empty<Tag>()).Any(x => x.Name.Contains(text) || (x.TranslatedName?.Contains(text) ?? false))
-                           || (viewModel.Illustrate.Title?.Contains(text) ?? false);
+                    return o.Id.Contains(text)
+                           || (o.Illustrate.Tags ?? Enumerable.Empty<Tag>()).Any(x => x.Name.Contains(text) || (x.TranslatedName?.Contains(text) ?? false))
+                           || (o.Illustrate.Title?.Contains(text) ?? false);
                 }
 
                 return false;

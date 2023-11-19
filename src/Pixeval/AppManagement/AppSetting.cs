@@ -237,7 +237,7 @@ public partial record AppSetting : IWindowSettings
     [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumSuggestionBoxSearchHistoryEntryHeader))]
     public int MaximumSuggestionBoxSearchHistory { get; set; }
 
-    [DefaultValue(IllustrationViewOption.RiverFlow)]
+    [DefaultValue(IllustrationViewOption.LinedFlow)]
     [SettingMetadata(SettingEntryCategory.BrowsingExperience, typeof(SettingsPageResources), nameof(SettingsPageResources.IllustrationViewOptionEntryHeader))]
     public IllustrationViewOption IllustrationViewOption { get; set; }
 

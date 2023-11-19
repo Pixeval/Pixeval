@@ -125,11 +125,11 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
         {
             IllustrationContainer.IllustrationView.ViewModel.DataProvider.Filter = o =>
             {
-                if (o is IllustrationViewModel viewModel)
+                if (o != null)
                 {
-                    return viewModel.Id.Contains(keyword)
-                           || (viewModel.Illustrate.Tags ?? Enumerable.Empty<Tag>()).Any(x => x.Name.Contains(keyword) || (x.TranslatedName?.Contains(keyword) ?? false))
-                           || (viewModel.Illustrate.Title?.Contains(keyword) ?? false);
+                    return o.Id.Contains(keyword)
+                           || (o.Illustrate.Tags ?? Enumerable.Empty<Tag>()).Any(x => x.Name.Contains(keyword) || (x.TranslatedName?.Contains(keyword) ?? false))
+                           || (o.Illustrate.Title?.Contains(keyword) ?? false);
                 }
 
                 return false;

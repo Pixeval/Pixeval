@@ -21,7 +21,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Pixeval.Attributes;
 using Pixeval.Controls;
 using Pixeval.Options;
 
@@ -29,9 +28,16 @@ namespace Pixeval.SettingsModels;
 
 public record IllustrationViewOptionSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public IllustrationViewOptionSettingEntryItem(IllustrationViewOption item) : base(item, item.GetLocalizedResourceContent()!)
+    public IllustrationViewOptionSettingEntryItem(IllustrationViewOption item) : base(item, item switch
+    {
+        IllustrationViewOption.LinedFlow => MiscResources.IllustrationViewLinedFlowLayout,
+        IllustrationViewOption.Grid => MiscResources.IllustrationViewGridLayout,
+        _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
+    })
     {
     }
 
-    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<IllustrationViewOption>().Select(i => new IllustrationViewOptionSettingEntryItem(i));
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<IllustrationViewOption>()
+        .Where(i => i is not IllustrationViewOption.VerticalStack and not IllustrationViewOption.HorizontalStack)
+        .Select(i => new IllustrationViewOptionSettingEntryItem(i));
 }

@@ -2,6 +2,7 @@
     x:Class="Pixeval.Controls.IllustrationView.IllustrationView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:Pixeval.Util.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Controls.IllustrationView"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -9,6 +10,9 @@
     xmlns:winUi="using:CommunityToolkit.WinUI"
     Unloaded="IllustrationViewOnUnloaded"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:BoolToItemsViewSelectionModeConverter x:Key="BoolToItemsViewSelectionModeConverter" />
+    </UserControl.Resources>
     <Grid>
         <ScrollViewer
             x:Name="ScrollViewer"
@@ -16,18 +20,25 @@
             ViewChanged="ScrollViewerViewChanged">
             <StackPanel>
                 <!--  ReSharper disable once UnusedMember.Local  -->
-                <ItemsRepeater x:Name="IllustrationItemsRepeater" ItemsSource="{x:Bind ViewModel.DataProvider.View}">
-                    <ItemsRepeater.ItemTemplate>
+                <ItemsView
+                    x:Name="IllustrationItemsView"
+                    IsItemInvokedEnabled="True"
+                    ItemInvoked="IllustrationItemsView_OnItemInvoked"
+                    ItemsSource="{x:Bind ViewModel.DataProvider.ItemsViewSource, Mode=OneWay}"
+                    SelectionMode="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToItemsViewSelectionModeConverter}, Mode=OneWay}">
+                    <ItemsView.ItemTemplate>
                         <DataTemplate x:DataType="local:IllustrationViewModel">
-                            <local:IllustrationThumbnail
-                                EffectiveViewportChanged="IllustrationThumbnailContainerItemOnEffectiveViewportChanged"
-                                ShowQrCodeRequested="IllustrationThumbnailOnShowQrCodeRequested"
-                                TappedOverride="ThumbnailOnTapped"
-                                ThisRequired="IllustrationThumbnail_OnThisRequired"
-                                ViewModel="{x:Bind}" />
+                            <ItemContainer IsSelected="{x:Bind IsSelected, Mode=TwoWay}">
+                                <local:IllustrationThumbnail
+                                    EffectiveViewportChanged="IllustrationThumbnailContainerItemOnEffectiveViewportChanged"
+                                    IsTapEnabled="False"
+                                    ShowQrCodeRequested="IllustrationThumbnailOnShowQrCodeRequested"
+                                    ThisRequired="IllustrationThumbnail_OnThisRequired"
+                                    ViewModel="{x:Bind}" />
+                            </ItemContainer>
                         </DataTemplate>
-                    </ItemsRepeater.ItemTemplate>
-                </ItemsRepeater>
+                    </ItemsView.ItemTemplate>
+                </ItemsView>
                 <StackPanel
                     x:Name="LoadingArea"
                     Height="100"
@@ -70,32 +81,26 @@
             <VisualStateGroup x:Name="Group">
                 <VisualState x:Name="VisualStateGrid">
                     <VisualState.StateTriggers>
-                        <winUi:IsEqualStateTrigger Value="{x:Bind IllustrationViewOption}" To="{x:Bind options:IllustrationViewOption.RiverFlow}" />
+                        <winUi:IsEqualStateTrigger Value="{x:Bind IllustrationViewOption}" To="{x:Bind options:IllustrationViewOption.LinedFlow}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="IllustrationItemsRepeater.Layout">
+                        <Setter Target="IllustrationItemsView.Layout">
                             <Setter.Value>
-                                <UniformGridLayout
-                                    ItemsStretch="Fill"
-                                    MinColumnSpacing="5"
-                                    MinItemHeight="{x:Bind DesiredHeight, Mode=OneWay}"
-                                    MinItemWidth="180"
-                                    MinRowSpacing="5" />
-                                <!--TODO: <LinedFlowLayout
+                                <LinedFlowLayout
                                     ItemsStretch="Fill"
                                     LineHeight="{x:Bind DesiredHeight, Mode=OneWay}"
                                     LineSpacing="5"
-                                    MinItemSpacing="5" />-->
+                                    MinItemSpacing="5" />
                             </Setter.Value>
                         </Setter>
                     </VisualState.Setters>
                 </VisualState>
-                <VisualState x:Name="VisualStateRiverFlow">
+                <VisualState x:Name="VisualStateLinedFlow">
                     <VisualState.StateTriggers>
                         <winUi:IsEqualStateTrigger Value="{x:Bind IllustrationViewOption}" To="{x:Bind options:IllustrationViewOption.Grid}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="IllustrationItemsRepeater.Layout">
+                        <Setter Target="IllustrationItemsView.Layout">
                             <Setter.Value>
                                 <UniformGridLayout
                                     ItemsStretch="Fill"
@@ -103,6 +108,30 @@
                                     MinItemHeight="{x:Bind DesiredHeight, Mode=OneWay}"
                                     MinItemWidth="180"
                                     MinRowSpacing="5" />
+                            </Setter.Value>
+                        </Setter>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="VisualStateVerticalStack">
+                    <VisualState.StateTriggers>
+                        <winUi:IsEqualStateTrigger Value="{x:Bind IllustrationViewOption}" To="{x:Bind options:IllustrationViewOption.VerticalStack}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="IllustrationItemsView.Layout">
+                            <Setter.Value>
+                                <StackLayout Orientation="Vertical" Spacing="5" />
+                            </Setter.Value>
+                        </Setter>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="VisualStateHorizontalStack">
+                    <VisualState.StateTriggers>
+                        <winUi:IsEqualStateTrigger Value="{x:Bind IllustrationViewOption}" To="{x:Bind options:IllustrationViewOption.HorizontalStack}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="IllustrationItemsView.Layout">
+                            <Setter.Value>
+                                <StackLayout Orientation="Horizontal" Spacing="5" />
                             </Setter.Value>
                         </Setter>
                     </VisualState.Setters>

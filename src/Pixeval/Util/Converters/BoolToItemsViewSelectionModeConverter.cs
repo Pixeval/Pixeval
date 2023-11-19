@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/BoolToDoubleConverter.cs
+// Copyright (c) 2023 Pixeval/BoolToItemsViewSelectionModeConverter.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,20 +19,16 @@
 #endregion
 
 using System;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using WinUI3Utilities;
 
 namespace Pixeval.Util.Converters;
 
-public class BoolToDoubleConverter : IValueConverter
+public class BoolToItemsViewSelectionModeConverter : IValueConverter
 {
-    public object Convert(object value, Type targetType, object parameter, string language)
-    {
-        return value.To<bool>() ? 1d : 0d;
-    }
+    public object Convert(object value, Type targetType, object parameter, string language) =>
+        value.To<bool>() ? ItemsViewSelectionMode.Multiple : ItemsViewSelectionMode.None;
 
-    public object ConvertBack(object value, Type targetType, object parameter, string language)
-    {
-        throw new NotImplementedException();
-    }
+    public object ConvertBack(object value, Type targetType, object parameter, string language) => throw new NotImplementedException();
 }
