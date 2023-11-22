@@ -12,6 +12,7 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     <ItemGroup>
+        <None Remove="AdvancedItemsView\AdvancedItemsView.xaml" />
         <None Remove="CardControl\CardControl.xaml" />
         <None Remove="IconButton\IconButton.xaml" />
         <None Remove="NotifyOnLoadedCalendarDatePicker\NotifyOnLoadedCalendarDatePicker.xaml" />
@@ -25,6 +26,7 @@
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.0.230907" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.0.230907" />
         <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.0.230907" />
         <PackageReference Include="WinUI3Utilities" Version="1.1.4.3" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
@@ -53,5 +55,11 @@
         <Page Update="PixevalBadge\PixevalBadge.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="AdvancedItemsView\AdvancedItemsView.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
     </ItemGroup>
 </Project>

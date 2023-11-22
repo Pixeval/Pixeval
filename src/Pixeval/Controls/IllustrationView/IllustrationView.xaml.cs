@@ -19,17 +19,13 @@
 #endregion
 
 using System;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.CoreApi.Model;
 using Pixeval.Options;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Util.IO;
-using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
@@ -38,11 +34,12 @@ namespace Pixeval.Controls.IllustrationView;
 
 // use "load failed" image for those thumbnails who failed to load its source due to various reasons
 // note: please ALWAYS add e.Handled = true before every "tapped" event for the buttons
-[DependencyProperty<IllustrationViewOption>("IllustrationViewOption", DependencyPropertyDefaultValue.Default)]
-[DependencyProperty<ThumbnailDirection>("ThumbnailDirection", DependencyPropertyDefaultValue.Default, nameof(OnThumbnailDirectionChanged))]
-[INotifyPropertyChanged]
+[DependencyProperty<ItemsViewLayoutType>("LayoutType", DependencyPropertyDefaultValue.Default)]
+[DependencyProperty<ThumbnailDirection>("ThumbnailDirection", DependencyPropertyDefaultValue.Default)]
 public sealed partial class IllustrationView
 {
+    public ScrollView ScrollView => IllustrationItemsView.ScrollView;
+
     public const double LandscapeHeight = 180;
     public const double PortraitHeight = 250;
 
@@ -53,11 +50,6 @@ public sealed partial class IllustrationView
         _ => ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(ThumbnailDirection)
     };
 
-    private static void OnThumbnailDirectionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        d.To<IllustrationView>().OnPropertyChanged(nameof(ThumbnailDirection));
-    }
-
     public IllustrationView()
     {
         InitializeComponent();
@@ -67,7 +59,7 @@ public sealed partial class IllustrationView
                 ViewModel.DataProvider.View.Filter = o => predicate((IllustrationViewModel)o);
             else
                 ViewModel.DataProvider.View.Refresh();
-            LoadMoreIfNeeded().Discard();
+            IllustrationItemsView.TryRaiseLoadMoreRequested();
         };
     }
 
@@ -89,7 +81,7 @@ public sealed partial class IllustrationView
 
     private void IllustrationViewOnUnloaded(object sender, RoutedEventArgs e)
     {
-        var option = IllustrationViewOption.ToThumbnailUrlOption();
+        var option = LayoutType.ToThumbnailUrlOption();
         foreach (var illustrationViewModel in ViewModel.DataProvider.Source)
             illustrationViewModel.UnloadThumbnail(ViewModel, option);
         ViewModel.Dispose();
@@ -99,7 +91,7 @@ public sealed partial class IllustrationView
     {
         var context = sender.To<IllustrationThumbnail>().ViewModel;
         var preLoadRows = Math.Clamp(App.AppViewModel.AppSetting.PreLoadRows, 1, 15);
-        var option = IllustrationViewOption.ToThumbnailUrlOption();
+        var option = LayoutType.ToThumbnailUrlOption();
 
         if (args.BringIntoViewDistanceY <= sender.ActualHeight * preLoadRows)
         {
@@ -117,16 +109,9 @@ public sealed partial class IllustrationView
         }
     }
 
-    private void ScrollViewerViewChanged(object? sender, ScrollViewerViewChangedEventArgs e)
+    public void LoadMoreIfNeeded()
     {
-        LoadMoreIfNeeded().Discard();
-    }
-
-    public async Task LoadMoreIfNeeded(uint number = 20)
-    {
-        // TODO load after being Filtrated
-        if (ScrollViewer.ScrollableHeight - LoadingArea.ActualHeight < ScrollViewer.VerticalOffset)
-            _ = await ViewModel.DataProvider.LoadMoreAsync(number);
+        IllustrationItemsView.TryRaiseLoadMoreRequested();
     }
 
     private IllustrationView IllustrationThumbnail_OnThisRequired()
@@ -139,5 +124,10 @@ public sealed partial class IllustrationView
         var vm = e.InvokedItem.To<IllustrationViewModel>();
 
         vm.CreateWindowWithPage(ViewModel);
+    }
+
+    private async void IllustrationItemsView_OnLoadMoreRequested(object? sender, EventArgs e)
+    {
+        _ = await ViewModel.DataProvider.LoadMoreAsync();
     }
 }

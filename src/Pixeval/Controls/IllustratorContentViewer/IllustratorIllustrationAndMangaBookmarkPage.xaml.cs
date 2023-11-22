@@ -86,7 +86,7 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
 
             // refresh the filter when there are newly fetched IDs.
             IllustrationContainer.IllustrationView.ViewModel.DataProvider.Filter = o => BookmarkTagFilter(name, o);
-            IllustrationContainer.IllustrationView.LoadMoreIfNeeded().Discard();
+            IllustrationContainer.IllustrationView.LoadMoreIfNeeded();
             return;
         }
 

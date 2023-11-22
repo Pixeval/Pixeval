@@ -58,7 +58,7 @@ public sealed partial class IllustrationThumbnail : CardControl
     private double GetDesiredWidth(IllustrationViewModel viewModel)
     {
         var illustration = viewModel.Illustrate;
-        var thumbnailUrlOption = ThisRequired.Invoke().IllustrationViewOption.ToThumbnailUrlOption();
+        var thumbnailUrlOption = ThisRequired.Invoke().LayoutType.ToThumbnailUrlOption();
         var thumbnailDirection = ThisRequired.Invoke().ThumbnailDirection;
         return thumbnailUrlOption is ThumbnailUrlOption.SquareMedium
             ? thumbnailDirection switch
@@ -83,7 +83,7 @@ public sealed partial class IllustrationThumbnail : CardControl
 
     #endregion
 
-    private ThumbnailUrlOption ThumbnailUrlOption => ThisRequired.Invoke().IllustrationViewOption.ToThumbnailUrlOption();
+    private ThumbnailUrlOption ThumbnailUrlOption => ThisRequired.Invoke().LayoutType.ToThumbnailUrlOption();
 
     private async void ToggleBookmarkButtonOnTapped(object sender, TappedRoutedEventArgs e)
     {

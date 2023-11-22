@@ -248,12 +248,12 @@
                     </controls:SettingsExpander>
 
                     <controls:SettingsExpander
-                        x:Uid="/SettingsPage/IllustrationViewOptionEntry"
+                        x:Uid="/SettingsPage/ItemsViewLayoutTypeEntry"
                         HeaderIcon="{markup:FontSymbolIcon Glyph=TilesECA5}"
-                        Tag="{x:Bind pixeval:SettingEntry.IllustrationViewOption}">
+                        Tag="{x:Bind pixeval:SettingEntry.ItemsViewLayoutType}">
                         <controls:SettingsExpander.Items>
                             <controls:SettingsCard ContentAlignment="Left">
-                                <controls1:SettingRadioButtons ItemsSource="{x:Bind models:IllustrationViewOptionSettingEntryItem.AvailableItems}" SelectedItem="{x:Bind _viewModel.IllustrationViewOption, Mode=TwoWay}" />
+                                <controls1:SettingRadioButtons ItemsSource="{x:Bind models:ItemsViewLayoutTypeSettingEntryItem.AvailableItems}" SelectedItem="{x:Bind _viewModel.ItemsViewLayoutType, Mode=TwoWay}" />
                             </controls:SettingsCard>
                         </controls:SettingsExpander.Items>
                     </controls:SettingsExpander>

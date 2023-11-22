@@ -19,15 +19,15 @@
 4. Create a setting entry UI in the `Pixeval.Pages.Misc.SettingsPage.xaml`, there are several kinds of setting entry control you can use, they reside in `Pixeval.Controls.Setting.UI` namespace. Specifically, if you are using the `SingleSelectionSettingEntry`, that is, a setting entry that contains a single selection value, usually binds to a list of enum values and select one of which, follow the following pattern:
     1. Create a class that implements the `Pixeval.Controls.Setting.UI.Model.IStringRepresentableItem`, the `IStringRepresentableItem.Item`, each `IStringRepresentableItem` represents an option that can be bind to a `ComboBox` or `RadioButtons`, the `IStringRepresentableItem.Item` will be the enum value, and the `IStringRepresentableItem.StringRepresentation` will control how the item will be displayed on the UI. After all of this, create a field named `AvailableItems` and include all the possible `IStringRepresentableItem`, a typical implementation would be:
         ```cs
-        public record IllustrationViewOptionSettingEntryItem : IStringRepresentableItem
+        public record ItemsViewLayoutTypeSettingEntryItem : IStringRepresentableItem
         {
-            public IllustrationViewOptionSettingEntryItem(IllustrationViewOption item)
+            public ItemsViewLayoutTypeSettingEntryItem(ItemsViewLayoutType item)
             {
                 Item = item;
                 StringRepresentation = item switch
                 {
-                    IllustrationViewOption.Regular => MiscResources.IllustrationViewRegularLayout,
-                    IllustrationViewOption.Justified => MiscResources.IllustrationViewJustifiedLayout,
+                    ItemsViewLayoutType.Regular => MiscResources.IllustrationViewRegularLayout,
+                    ItemsViewLayoutType.Justified => MiscResources.IllustrationViewJustifiedLayout,
                     _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
                 };
             }
@@ -36,7 +36,7 @@
 
             public string StringRepresentation { get; }
 
-            public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<IllustrationViewOption>().Select(i => new IllustrationViewOptionSettingEntryItem(i));
+            public static IEnumerable<IStringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ItemsViewLayoutType>().Select(i => new ItemsViewLayoutTypeSettingEntryItem(i));
         }
         ```
 

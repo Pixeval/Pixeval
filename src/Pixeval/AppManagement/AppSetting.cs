@@ -22,6 +22,7 @@ using System;
 using System.Globalization;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Attributes;
+using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
 using Pixeval.CoreApi.Global.Enum;
@@ -237,9 +238,9 @@ public partial record AppSetting : IWindowSettings
     [SettingMetadata(SettingEntryCategory.Search, typeof(SettingsPageResources), nameof(SettingsPageResources.MaximumSuggestionBoxSearchHistoryEntryHeader))]
     public int MaximumSuggestionBoxSearchHistory { get; set; }
 
-    [DefaultValue(IllustrationViewOption.LinedFlow)]
-    [SettingMetadata(SettingEntryCategory.BrowsingExperience, typeof(SettingsPageResources), nameof(SettingsPageResources.IllustrationViewOptionEntryHeader))]
-    public IllustrationViewOption IllustrationViewOption { get; set; }
+    [DefaultValue(ItemsViewLayoutType.LinedFlow)]
+    [SettingMetadata(SettingEntryCategory.BrowsingExperience, typeof(SettingsPageResources), nameof(SettingsPageResources.ItemsViewLayoutTypeEntryHeader))]
+    public ItemsViewLayoutType ItemsViewLayoutType { get; set; }
 
     [DefaultValue(true)]
     [SyntheticSetting]

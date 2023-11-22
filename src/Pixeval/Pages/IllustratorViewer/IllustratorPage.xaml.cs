@@ -114,8 +114,8 @@ public sealed partial class IllustratorPage
         var headerPresenter = (UIElement)VisualTreeHelper.GetParent(Header);
         var headerContainer = (UIElement)VisualTreeHelper.GetParent(headerPresenter);
         Canvas.SetZIndex(headerContainer, 1);
-
-        _scrollerPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(IllustrationContainer.IllustrationView.ScrollViewer);
+        return;
+        //        _scrollerPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(IllustrationContainer.IllustrationView.ScrollView);
         _compositor = _scrollerPropertySet.Compositor;
 
         _props = _compositor.CreatePropertySet();

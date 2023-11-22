@@ -23,8 +23,8 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Options;
 using Pixeval.Controls.IllustrationView;
+using Pixeval.Options;
 using Pixeval.Util.UI;
 using WinUI3Utilities.Attributes;
 
@@ -36,7 +36,7 @@ namespace Pixeval.Controls;
 [DependencyProperty<object>("Header")]
 public sealed partial class IllustrationContainer
 {
-    public IllustrationViewOption IllustrationViewOption => App.AppViewModel.AppSetting.IllustrationViewOption;
+    public ItemsViewLayoutType ItemsViewLayoutType => App.AppViewModel.AppSetting.ItemsViewLayoutType;
 
     public ThumbnailDirection ThumbnailDirection => App.AppViewModel.AppSetting.ThumbnailDirection;
 
@@ -95,6 +95,6 @@ public sealed partial class IllustrationContainer
 
     public void ScrollToTop()
     {
-        _ = IllustrationView.ScrollViewer.ChangeView(null, 0, null, false);
+        _ = IllustrationView.ScrollView.ScrollTo(0, 0);
     }
 }

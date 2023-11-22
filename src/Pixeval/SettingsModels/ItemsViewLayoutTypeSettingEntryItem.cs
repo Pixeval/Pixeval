@@ -2,7 +2,7 @@
 // GPL v3 License
 // 
 // Pixeval/Pixeval
-// Copyright (c) 2023 Pixeval/IllustrationViewOptionSettingEntryItem.cs
+// Copyright (c) 2023 Pixeval/ItemsViewLayoutTypeSettingEntryItem.cs
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,22 +22,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Pixeval.Controls;
-using Pixeval.Options;
 
 namespace Pixeval.SettingsModels;
 
-public record IllustrationViewOptionSettingEntryItem : StringRepresentableItem, IAvailableItems
+public record ItemsViewLayoutTypeSettingEntryItem : StringRepresentableItem, IAvailableItems
 {
-    public IllustrationViewOptionSettingEntryItem(IllustrationViewOption item) : base(item, item switch
+    public ItemsViewLayoutTypeSettingEntryItem(ItemsViewLayoutType item) : base(item, item switch
     {
-        IllustrationViewOption.LinedFlow => MiscResources.IllustrationViewLinedFlowLayout,
-        IllustrationViewOption.Grid => MiscResources.IllustrationViewGridLayout,
+        ItemsViewLayoutType.LinedFlow => MiscResources.IllustrationViewLinedFlowLayout,
+        ItemsViewLayoutType.Grid => MiscResources.IllustrationViewGridLayout,
         _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
     })
     {
     }
 
-    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<IllustrationViewOption>()
-        .Where(i => i is not IllustrationViewOption.VerticalStack and not IllustrationViewOption.HorizontalStack)
-        .Select(i => new IllustrationViewOptionSettingEntryItem(i));
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ItemsViewLayoutType>()
+        .Where(i => i is not ItemsViewLayoutType.VerticalStack and not ItemsViewLayoutType.HorizontalStack)
+        .Select(i => new ItemsViewLayoutTypeSettingEntryItem(i));
 }

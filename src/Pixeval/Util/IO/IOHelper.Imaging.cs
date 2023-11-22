@@ -27,6 +27,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Net.Response;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
+using Pixeval.Controls;
 using Pixeval.Options;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
@@ -174,13 +175,13 @@ public static partial class IoHelper
     /// <param name="illustrationViewOption"></param>
     /// <returns></returns>
     public static ThumbnailUrlOption ToThumbnailUrlOption(
-        this IllustrationViewOption illustrationViewOption)
+        this ItemsViewLayoutType illustrationViewOption)
     {
         return illustrationViewOption switch
         {
-            IllustrationViewOption.LinedFlow => ThumbnailUrlOption.Medium,
-            IllustrationViewOption.Grid or IllustrationViewOption.VerticalStack or IllustrationViewOption.HorizontalStack => ThumbnailUrlOption.SquareMedium,
-            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<IllustrationViewOption, ThumbnailUrlOption>(illustrationViewOption)
+            ItemsViewLayoutType.LinedFlow => ThumbnailUrlOption.Medium,
+            ItemsViewLayoutType.Grid or ItemsViewLayoutType.VerticalStack or ItemsViewLayoutType.HorizontalStack => ThumbnailUrlOption.SquareMedium,
+            _ => WinUI3Utilities.ThrowHelper.ArgumentOutOfRange<ItemsViewLayoutType, ThumbnailUrlOption>(illustrationViewOption)
         };
     }
 }
