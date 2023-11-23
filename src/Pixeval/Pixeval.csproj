@@ -24,8 +24,7 @@
         <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
         <LangVersion>preview</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <!--此处写多个警告就会导致WMC1501失效，所以其他警告写到.editorconfig里面了-->
-        <NoWarn>$(NoWarn);WMC1501</NoWarn>
+        <NoWarn>$(NoWarn)</NoWarn>
     </PropertyGroup>
     <ItemGroup>
       <None Remove="Controls\IllustrationImage.xaml" />
@@ -33,7 +32,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.0" />
+        <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.1" />
         <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.0.230907" />
         <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.0.230907" />
         <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.0.230907" />
@@ -52,7 +51,7 @@
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
         <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231115000" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
         <PackageReference Include="PininSharp" Version="1.2.0" />
         <PackageReference Include="Pixeval.QRCoder" Version="1.4.5" />
