@@ -6,7 +6,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:flyouts="using:Pixeval.Flyouts"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:userControls="using:Pixeval.Controls"
     Background="{ThemeResource PixevalPanelBackgroundThemeBrush}"
     mc:Ignorable="d">
     <Grid>
@@ -14,13 +13,13 @@
             <RowDefinition Height="50" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <userControls:PixivReplyBar
+        <controls:PixivReplyBar
             Grid.Row="0"
             Margin="10,0"
             VerticalAlignment="Center"
             SendButtonTapped="ReplyBar_OnSendButtonTapped"
             StickerTapped="ReplyBar_OnStickerTapped" />
-        <userControls:CommentList
+        <controls:CommentList
             x:Name="CommentList"
             Grid.Row="1"
             RepliesHyperlinkButtonTapped="CommentList_OnRepliesHyperlinkButtonTapped" />

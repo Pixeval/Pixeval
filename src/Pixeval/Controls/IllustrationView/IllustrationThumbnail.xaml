@@ -11,7 +11,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:triggers="using:Pixeval.Util.Triggers"
-    xmlns:userControls="using:Pixeval.Controls"
     xmlns:util="using:Pixeval.Util"
     x:Name="IllustrationThumbnailCard"
     Padding="0"
@@ -139,8 +138,8 @@
                 <Grid.RenderTransform>
                     <ScaleTransform CenterX="10" CenterY="10" ScaleX="0" ScaleY="0" />
                 </Grid.RenderTransform>
-                <userControls:FontSymbolIcon Foreground="{x:Bind ViewModel.BookmarkedColor, Mode=OneWay}" Symbol="HeartFillEB52" />
-                <userControls:FontSymbolIcon Foreground="White" Symbol="HeartEB51" />
+                <controls:FontSymbolIcon Foreground="{x:Bind ViewModel.BookmarkedColor, Mode=OneWay}" Symbol="HeartFillEB52" />
+                <controls:FontSymbolIcon Foreground="White" Symbol="HeartEB51" />
             </Grid>
             <Grid
                 Margin="10"
@@ -160,7 +159,7 @@
                     Grid.Column="1"
                     Mode="Gif"
                     Visibility="{x:Bind ViewModel.IsUgoira, Mode=OneWay}" />
-                <userControls:FontSymbolIcon
+                <controls:FontSymbolIcon
                     Grid.Column="3"
                     Symbol="SetF5ED"
                     Visibility="{x:Bind ViewModel.IsManga, Mode=OneWay}" />

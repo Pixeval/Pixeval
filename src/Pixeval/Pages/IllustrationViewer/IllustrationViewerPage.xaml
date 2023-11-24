@@ -49,10 +49,7 @@
         PaneClosed="IllustrationInfoAndCommentsSplitView_OnPaneOpenedOrClosed"
         PaneOpened="IllustrationInfoAndCommentsSplitView_OnPaneOpenedOrClosed">
         <SplitView.Pane>
-            <Grid
-                Width="330"
-                HorizontalAlignment="Left"
-                Background="Transparent">
+            <Grid Width="330" HorizontalAlignment="Left">
                 <Grid
                     Width="320"
                     HorizontalAlignment="Left"
@@ -96,7 +93,6 @@
                     <Grid
                         Grid.Column="0"
                         Width="150"
-                        Background="Transparent"
                         Opacity="0">
                         <interactivity:Interaction.Behaviors>
                             <core:EventTriggerBehavior EventName="PointerEntered">
@@ -119,7 +115,6 @@
                     <Grid
                         Grid.Column="2"
                         Width="150"
-                        Background="Transparent"
                         Opacity="0">
                         <interactivity:Interaction.Behaviors>
                             <core:EventTriggerBehavior EventName="PointerEntered">
@@ -154,7 +149,6 @@
                     <Grid
                         Width="400"
                         Height="100"
-                        Background="Transparent"
                         Opacity="0">
                         <Grid.OpacityTransition>
                             <ScalarTransition />
