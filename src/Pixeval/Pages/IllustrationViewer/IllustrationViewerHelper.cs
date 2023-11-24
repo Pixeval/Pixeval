@@ -22,7 +22,6 @@ using Pixeval.Controls.Windowing;
 using Pixeval.Controls.IllustrationView;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.CoreApi.Model;
@@ -52,7 +51,7 @@ public static class IllustrationViewerHelper
     /// <param name="illustrationViewViewModel">指定的插画ViewModel所在的<see cref="IllustrationView"/>的ViewModel</param>
     public static void CreateWindowWithPage(this IllustrationViewModel illustrationViewModel, IllustrationViewViewModel illustrationViewViewModel)
     {
-        var index = illustrationViewViewModel.DataProvider.View.Cast<IllustrationViewModel>().ToList().IndexOf(illustrationViewModel);
+        var index = illustrationViewViewModel.DataProvider.View.IndexOf(illustrationViewModel);
         CreateWindowWithPage(illustrationViewModel.Illustrate, new(illustrationViewViewModel, index));
     }
 

@@ -243,7 +243,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     {
         ViewModelSource = new(viewModel);
         IllustrationInfoTag.Parameter = this;
-        ViewModelSource.DataProvider.FilterChanged += (_, _) => CurrentIllustrationIndex = Illustrations.IndexOf(CurrentIllustration);
+        ViewModelSource.DataProvider.View.FilterChanged += (_, _) => CurrentIllustrationIndex = Illustrations.IndexOf(CurrentIllustration);
         // ViewModel.DataProvider.View.CurrentItem为null，而且只设置这个属性会导致空引用
         CurrentIllustrationIndex = currentIllustrationIndex;
 

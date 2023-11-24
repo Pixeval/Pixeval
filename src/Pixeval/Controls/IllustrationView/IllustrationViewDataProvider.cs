@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -39,20 +38,6 @@ namespace Pixeval.Controls.IllustrationView;
 /// </summary>
 public class IllustrationViewDataProvider : DataProvider<Illustration, IllustrationViewModel>, IDisposable
 {
-    private Predicate<IllustrationViewModel?>? _filter;
-
-    public Predicate<IllustrationViewModel?>? Filter
-    {
-        get => _filter;
-        set
-        {
-            _filter = value;
-            FilterChanged?.Invoke(this, Filter);
-        }
-    }
-
-    public event Action<IllustrationViewDataProvider, Predicate<IllustrationViewModel?>?>? FilterChanged;
-
     private SharedRef<IFetchEngine<Illustration?>?>? _fetchEngineRef;
 
     public SharedRef<IFetchEngine<Illustration?>?>? FetchEngineRef
@@ -74,9 +59,7 @@ public class IllustrationViewDataProvider : DataProvider<Illustration, Illustrat
         protected set => throw new NotImplementedException("No setter.");
     }
 
-    public IEnumerable<IllustrationViewModel> ItemsViewSource => View.Cast<IllustrationViewModel>();
-
-    public override AdvancedCollectionView View { get; } = new(Array.Empty<IllustrationViewModel>());
+    public override AdvancedObservableCollection<IllustrationViewModel> View { get; } = [];
 
     private SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>> _illustrationSourceRef = null!;
 
@@ -115,7 +98,6 @@ public class IllustrationViewDataProvider : DataProvider<Illustration, Illustrat
         dataProvider.View.Filter = View.Filter;
         foreach (var viewSortDescription in View.SortDescriptions)
             dataProvider.View.SortDescriptions.Add(viewSortDescription);
-        dataProvider.View.CurrentItem = View.CurrentItem;
         return dataProvider;
     }
 
@@ -142,17 +124,13 @@ public class IllustrationViewDataProvider : DataProvider<Illustration, Illustrat
 
         IllustrationSourceRef = new(new(new IllustrationFetchEngineIncrementalSource(FetchEngine!, limit)), this);
         // TODO: 根据屏幕大小决定加载多少
-        var result = await LoadMoreAsync(20);
-        result += await LoadMoreAsync(20);
-        result += await LoadMoreAsync(10);
+        var result = await LoadMoreAsync(50);
         return (int)result;
     }
 
     public async Task<uint> LoadMoreAsync(uint count = 20)
     {
-        var u = (await Source.LoadMoreItemsAsync(count)).Count;
-        OnPropertyChanged(nameof(ItemsViewSource));
-        return u;
+        return (await View.LoadMoreItemsAsync(count)).Count;
     }
 
     protected virtual void OnIllustrationsSourceOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -172,7 +150,7 @@ public class IllustrationViewDataProvider : DataProvider<Illustration, Illustrat
         void OnIsSelectedChanged(object? s, IllustrationViewModel model)
         {
             // Do not add to collection is the model does not conform to the filter
-            if (!Filter?.Invoke(model) ?? false)
+            if (!View.Filter?.Invoke(model) ?? false)
                 return;
             if (model.IsSelected)
                 SelectedIllustrations.Add(model);

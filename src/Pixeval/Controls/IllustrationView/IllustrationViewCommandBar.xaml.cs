@@ -248,27 +248,22 @@ public sealed partial class IllustrationViewCommandBar
 
         _lastFilterSettings = filterSettings;
 
-        ViewModel.DataProvider.Filter = null;
-        ViewModel.DataProvider.Filter = o =>
+        ViewModel.DataProvider.View.Filter = null;
+        ViewModel.DataProvider.View.Filter = o =>
         {
-            if (o != null)
-            {
-                var stringTags = o.Illustrate.Tags?.Select(t => t.Name).WhereNotNull().ToArray() ?? [];
-                var result = ExamineExcludeTags(stringTags, excludeTags)
-                             && ExamineIncludeTags(stringTags, includeTags)
-                             && o.Bookmark >= leastBookmark
-                             && o.Bookmark <= maximumBookmark
-                             && illustrationName.Match(o.Illustrate.Title)
-                             && illustratorName.Match(o.Illustrate.User?.Name)
-                             && (illustratorId.IsNullOrEmpty() ||
-                                 illustratorId == o.Illustrate.User?.Id.ToString())
-                             && (illustrationId.IsNullOrEmpty() || illustrationId == o.Id)
-                             && o.PublishDate >= publishDateStart
-                             && o.PublishDate <= publishDateEnd;
-                return result;
-            }
-
-            return false;
+            var stringTags = o.Illustrate.Tags?.Select(t => t.Name).WhereNotNull().ToArray() ?? [];
+            var result = ExamineExcludeTags(stringTags, excludeTags)
+                         && ExamineIncludeTags(stringTags, includeTags)
+                         && o.Bookmark >= leastBookmark
+                         && o.Bookmark <= maximumBookmark
+                         && illustrationName.Match(o.Illustrate.Title)
+                         && illustratorName.Match(o.Illustrate.User?.Name)
+                         && (illustratorId.IsNullOrEmpty() ||
+                             illustratorId == o.Illustrate.User?.Id.ToString())
+                         && (illustrationId.IsNullOrEmpty() || illustrationId == o.Id)
+                         && o.PublishDate >= publishDateStart
+                         && o.PublishDate <= publishDateEnd;
+            return result;
         };
         return;
 
@@ -291,23 +286,11 @@ public sealed partial class IllustrationViewCommandBar
 
     public void PerformSearch(string text)
     {
-        if (text.IsNullOrBlank())
-        {
-            ViewModel.DataProvider.Filter = null;
-        }
-        else
-        {
-            ViewModel.DataProvider.Filter = o =>
-            {
-                if (o != null)
-                {
-                    return o.Id.Contains(text)
-                           || (o.Illustrate.Tags ?? Enumerable.Empty<Tag>()).Any(x => x.Name.Contains(text) || (x.TranslatedName?.Contains(text) ?? false))
-                           || (o.Illustrate.Title?.Contains(text) ?? false);
-                }
-
-                return false;
-            };
-        }
+        ViewModel.DataProvider.View.Filter = text.IsNullOrBlank()
+            ? null
+            : o => o.Id.Contains(text)
+                   || (o.Illustrate.Tags ?? Enumerable.Empty<Tag>()).Any(x =>
+                       x.Name.Contains(text) || (x.TranslatedName?.Contains(text) ?? false))
+                   || (o.Illustrate.Title?.Contains(text) ?? false);
     }
 }

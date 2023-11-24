@@ -46,7 +46,7 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
     public IllustratorIllustrationAndMangaBookmarkPage()
     {
         InitializeComponent();
-        _viewModel = new IllustratorIllustrationAndMangaBookmarkPageViewModel();
+        _viewModel = new();
     }
 
     public override void OnPageActivated(NavigationEventArgs e)
@@ -58,7 +58,7 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
         if (e.Parameter is string id)
         {
             _uid = id;
-            IllustrationContainer.IllustrationView.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Bookmarks(id, PrivacyPolicy.Public, App.AppViewModel.AppSetting.TargetFilter)).Discard();
+            IllustrationContainer.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Bookmarks(id, PrivacyPolicy.Public, App.AppViewModel.AppSetting.TargetFilter)).Discard();
             _viewModel.LoadUserBookmarkTagsAsync(id).Discard();
             _viewModel.TagBookmarksIncrementallyLoaded += ViewModelOnTagBookmarksIncrementallyLoaded;
         }
@@ -73,7 +73,7 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
     {
         if (TagComboBox.SelectedItem is CountedTag(var (name, _), _) && name == e)
         {
-            IllustrationContainer.IllustrationView.ViewModel.DataProvider.Filter = o => BookmarkTagFilter(name, o);
+            IllustrationContainer.ViewModel.DataProvider.View.Filter = o => BookmarkTagFilter(name, o);
         }
     }
 
@@ -85,12 +85,12 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
             _viewModel.LoadBookmarksForTagAsync(id, tag.Tag.Name).Discard();
 
             // refresh the filter when there are newly fetched IDs.
-            IllustrationContainer.IllustrationView.ViewModel.DataProvider.Filter = o => BookmarkTagFilter(name, o);
+            IllustrationContainer.ViewModel.DataProvider.View.Filter = o => BookmarkTagFilter(name, o);
             IllustrationContainer.IllustrationView.LoadMoreIfNeeded();
             return;
         }
 
-        IllustrationContainer.IllustrationView.ViewModel.DataProvider.Filter = null;
+        IllustrationContainer.ViewModel.DataProvider.View.Filter = null;
     }
 
     private bool BookmarkTagFilter(string name, object o) => o is IllustrationViewModel model && _viewModel.GetBookmarkIdsForTag(name).Contains(model.Id);
@@ -107,7 +107,7 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
 
     public void Dispose()
     {
-        IllustrationContainer.IllustrationView.ViewModel.Dispose();
+        IllustrationContainer.ViewModel.Dispose();
     }
 
     public void PerformSearch(string keyword)
@@ -117,24 +117,12 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
             return;
         }
 
-        if (keyword.IsNullOrBlank())
-        {
-            IllustrationContainer.IllustrationView.ViewModel.DataProvider.Filter = null;
-        }
-        else
-        {
-            IllustrationContainer.IllustrationView.ViewModel.DataProvider.Filter = o =>
-            {
-                if (o != null)
-                {
-                    return o.Id.Contains(keyword)
-                           || (o.Illustrate.Tags ?? Enumerable.Empty<Tag>()).Any(x => x.Name.Contains(keyword) || (x.TranslatedName?.Contains(keyword) ?? false))
-                           || (o.Illustrate.Title?.Contains(keyword) ?? false);
-                }
-
-                return false;
-            };
-        }
+        IllustrationContainer.ViewModel.DataProvider.View.Filter = keyword.IsNullOrBlank()
+            ? null
+            : o => o.Id.Contains(keyword)
+                   || (o.Illustrate.Tags ?? Enumerable.Empty<Tag>()).Any(x =>
+                       x.Name.Contains(keyword) || (x.TranslatedName?.Contains(keyword) ?? false))
+                   || (o.Illustrate.Title?.Contains(keyword) ?? false);
     }
 
     public void ChangeCommandBarVisibility(bool isVisible)

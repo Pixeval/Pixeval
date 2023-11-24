@@ -229,7 +229,8 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
         if (!value.TryDispose(key))
             return;
 
-        ThumbnailStreamsRef[thumbnailUrlOption]?.Dispose();
+        if (ThumbnailStreamsRef.TryGetValue(thumbnailUrlOption, out var stream))
+            stream?.Dispose();
         _ = ThumbnailStreamsRef.Remove(thumbnailUrlOption);
         _ = ThumbnailSourcesRef.Remove(thumbnailUrlOption);
         OnPropertyChanged(nameof(ThumbnailSources));

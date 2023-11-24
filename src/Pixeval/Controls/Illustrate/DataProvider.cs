@@ -32,7 +32,7 @@ public abstract class DataProvider<T, TViewModel> : ObservableObject where T : I
     /// <summary>
     /// Avoid using <see cref="AdvancedCollectionView.Filter"/>, if you want to set the filter, use <see cref="Filter"/>
     /// </summary>
-    public abstract AdvancedCollectionView View { get; }
+    public abstract AdvancedObservableCollection<TViewModel> View { get; }
 
     public abstract IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel> Source { get; protected set; }
 

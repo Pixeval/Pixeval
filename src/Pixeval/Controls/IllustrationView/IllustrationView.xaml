@@ -17,7 +17,7 @@
         IsItemInvokedEnabled="True"
         ItemHeight="{x:Bind DesiredHeight}"
         ItemInvoked="IllustrationItemsView_OnItemInvoked"
-        ItemsSource="{x:Bind ViewModel.DataProvider.ItemsViewSource, Mode=OneWay}"
+        ItemsSource="{x:Bind ViewModel.DataProvider.View, Mode=OneWay}"
         LayoutType="{x:Bind LayoutType, Mode=OneWay}"
         LoadMoreRequested="IllustrationItemsView_OnLoadMoreRequested"
         SelectionMode="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToItemsViewSelectionModeConverter}, Mode=OneWay}">

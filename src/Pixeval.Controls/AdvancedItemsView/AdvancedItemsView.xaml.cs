@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using WinUI3Utilities;
@@ -11,7 +12,7 @@ namespace Pixeval.Controls;
 [DependencyProperty<double>("LoadingHeight", "100d")]
 public sealed partial class AdvancedItemsView : ItemsView
 {
-    public event EventHandler? LoadMoreRequested;
+    public event Func<AdvancedItemsView, EventArgs, Task>? LoadMoreRequested;
 
     private static void OnItemHeightChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
     {
@@ -73,11 +74,18 @@ public sealed partial class AdvancedItemsView : ItemsView
         };
     }
 
-    public void TryRaiseLoadMoreRequested()
+    public async void TryRaiseLoadMoreRequested()
     {
-        if (ScrollView.ScrollableHeight - LoadingHeight < ScrollView.VerticalOffset)
-            LoadMoreRequested?.Invoke(this, EventArgs.Empty);
+        if (LoadMoreRequested is { } handler && !IsLoadingMore)
+            if (ScrollView.ScrollableHeight - LoadingHeight < ScrollView.VerticalOffset)
+            {
+                IsLoadingMore = true;
+                await handler(this, EventArgs.Empty);
+                IsLoadingMore = false;
+            }
     }
+
+    private bool IsLoadingMore { get; set; }
 
     public AdvancedItemsView()
     {

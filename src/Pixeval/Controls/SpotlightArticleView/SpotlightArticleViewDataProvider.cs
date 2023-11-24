@@ -29,7 +29,7 @@ using Pixeval.Misc;
 namespace Pixeval.Controls.SpotlightArticleView;
 public class SpotlightArticleViewDataProvider : DataProvider<SpotlightArticle, SpotlightArticleViewModel>
 {
-    public override AdvancedCollectionView View { get; } = new(Array.Empty<SpotlightArticleViewModel>());
+    public override AdvancedObservableCollection<SpotlightArticleViewModel> View { get; } = [];
 
     private IncrementalLoadingCollection<FetchEngineIncrementalSource<SpotlightArticle, SpotlightArticleViewModel>, SpotlightArticleViewModel> _articlesSource = null!;
 

@@ -30,7 +30,7 @@ namespace Pixeval.Controls.IllustratorView;
 
 public class IllustratorViewDataProvider : DataProvider<User, IllustratorViewModel>
 {
-    public override AdvancedCollectionView View { get; } = new(Array.Empty<IllustratorViewModel>());
+    public override AdvancedObservableCollection<IllustratorViewModel> View { get; } = [];
 
     private IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel> _illustratorsSource = null!;
 

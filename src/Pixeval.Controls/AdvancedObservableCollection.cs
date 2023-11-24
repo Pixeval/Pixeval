@@ -32,13 +32,12 @@ using Windows.Foundation;
 using CommunityToolkit.WinUI.Collections;
 using CommunityToolkit.WinUI.Helpers;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace Pixeval.Controls;
 
 [DebuggerDisplay("Count = {Count}")]
-public class AdvancedObservableCollection<T> : IList<T>, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IComparer<T> where T : class
+public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IComparer<T> where T : class
 {
     private readonly Dictionary<string, PropertyInfo> _sortProperties = [];
 
@@ -48,7 +47,9 @@ public class AdvancedObservableCollection<T> : IList<T>, INotifyCollectionChange
 
     private ObservableCollection<T> _source = null!;
 
-    private List<T> _view = [];
+    private readonly List<T> _view = [];
+
+    private IList ListView => _view;
 
     private Func<T, bool>? _filter;
 
@@ -84,12 +85,11 @@ public class AdvancedObservableCollection<T> : IList<T>, INotifyCollectionChange
         get => _source;
         set
         {
-            if (_source is null)
+            if (value is null)
                 throw new InvalidDataException("Null is not allowed");
 
             if (_source == value)
                 return;
-
 
             DetachPropertyChangedHandler(_source);
             _source = value;
@@ -109,6 +109,8 @@ public class AdvancedObservableCollection<T> : IList<T>, INotifyCollectionChange
         }
     }
 
+    #region IList<T>
+
     /// <inheritdoc />
     public IEnumerator<T> GetEnumerator() => _view.GetEnumerator();
 
@@ -118,7 +120,7 @@ public class AdvancedObservableCollection<T> : IList<T>, INotifyCollectionChange
     /// <inheritdoc />
     public void Add(T item) => _source.Add(item);
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="ICollection{T}.Clear"/> />
     public void Clear() => _source.Clear();
 
     /// <inheritdoc />
@@ -130,9 +132,10 @@ public class AdvancedObservableCollection<T> : IList<T>, INotifyCollectionChange
     /// <inheritdoc />
     public bool Remove(T item) => _source.Remove(item);
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="ICollection{T}.Count"/> />
     public int Count => _view.Count;
 
+    /// <inheritdoc />
     public bool IsReadOnly => false;
 
     /// <inheritdoc />
@@ -141,7 +144,7 @@ public class AdvancedObservableCollection<T> : IList<T>, INotifyCollectionChange
     /// <inheritdoc />
     public void Insert(int index, T item) => _source.Insert(index, item);
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IList{T}.RemoveAt"/> />
     public void RemoveAt(int index) => _source.Remove(_view[index]);
 
     /// <inheritdoc cref="List{T}.this[int]"/>
@@ -150,6 +153,8 @@ public class AdvancedObservableCollection<T> : IList<T>, INotifyCollectionChange
         get => _view[index];
         set => _view[index] = value;
     }
+
+    #endregion
 
     /// <inheritdoc cref="ISupportIncrementalLoading.LoadMoreItemsAsync"/>
     public IAsyncOperation<LoadMoreItemsResult>? LoadMoreItemsAsync(uint count) => (_source as ISupportIncrementalLoading)?.LoadMoreItemsAsync(count);
@@ -170,6 +175,7 @@ public class AdvancedObservableCollection<T> : IList<T>, INotifyCollectionChange
 
             _filter = value;
             HandleFilterChanged();
+            FilterChanged?.Invoke(this, _filter);
         }
     }
 
@@ -221,6 +227,11 @@ public class AdvancedObservableCollection<T> : IList<T>, INotifyCollectionChange
     /// Occurs when the collection changes.
     /// </summary>
     public event NotifyCollectionChangedEventHandler? CollectionChanged;
+
+    /// <summary>
+    /// Occurs when the <see cref="Filter"/> changes.
+    /// </summary>
+    public event Action<AdvancedObservableCollection<T>, Func<T, bool>?>? FilterChanged;
 
     /// <summary>
     /// Property changed event invoker
@@ -475,4 +486,34 @@ public class AdvancedObservableCollection<T> : IList<T>, INotifyCollectionChange
         var e = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, itemIndex);
         OnCollectionChanged(e);
     }
+
+    #region IList
+
+    int IList.Add(object? value) => ListView.Add(value);
+
+    bool IList.Contains(object? value) => ListView.Contains(value);
+
+    int IList.IndexOf(object? value) => ListView.IndexOf(value);
+
+    void IList.Insert(int index, object? value) => ListView.Insert(index, value);
+
+    void IList.Remove(object? value) => ListView.Remove(value);
+
+    void ICollection.CopyTo(Array array, int index) => ListView.CopyTo(array, index);
+
+    bool ICollection.IsSynchronized => false;
+
+    object ICollection.SyncRoot => ListView.SyncRoot;
+
+    bool IList.IsReadOnly => false;
+
+    object? IList.this[int index]
+    {
+        get => ListView[index];
+        set => ListView[index] = value;
+    }
+
+    bool IList.IsFixedSize => false;
+
+    #endregion
 }

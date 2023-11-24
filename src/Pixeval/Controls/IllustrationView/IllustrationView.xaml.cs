@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -53,14 +54,7 @@ public sealed partial class IllustrationView
     public IllustrationView()
     {
         InitializeComponent();
-        ViewModel.DataProvider.FilterChanged += (_, filter) =>
-        {
-            if (filter is { } predicate)
-                ViewModel.DataProvider.View.Filter = o => predicate((IllustrationViewModel)o);
-            else
-                ViewModel.DataProvider.View.Refresh();
-            IllustrationItemsView.TryRaiseLoadMoreRequested();
-        };
+        ViewModel.DataProvider.View.FilterChanged += (_, _) => IllustrationItemsView.TryRaiseLoadMoreRequested();
     }
 
     public IllustrationViewViewModel ViewModel { get; } = new();
@@ -126,7 +120,7 @@ public sealed partial class IllustrationView
         vm.CreateWindowWithPage(ViewModel);
     }
 
-    private async void IllustrationItemsView_OnLoadMoreRequested(object? sender, EventArgs e)
+    private async Task IllustrationItemsView_OnLoadMoreRequested(object? sender, EventArgs e)
     {
         _ = await ViewModel.DataProvider.LoadMoreAsync();
     }
