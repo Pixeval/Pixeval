@@ -19,7 +19,6 @@
 #endregion
 
 using System;
-using System.Collections.Immutable;
 using System.IO;
 using Windows.Foundation;
 using Microsoft.UI.Xaml;
@@ -29,9 +28,7 @@ using Microsoft.UI.Xaml.Input;
 using Pixeval.Download;
 using Pixeval.Util.UI;
 using Windows.System;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.CoreApi.Model;
-using Pixeval.Options;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 

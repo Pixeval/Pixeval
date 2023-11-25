@@ -159,7 +159,7 @@ public static class Objects
     public static async Task<Result<string>> GetStringResultAsync(this HttpClient httpClient, string url, Func<HttpResponseMessage, Task<Exception>>? exceptionSelector = null)
     {
         var responseMessage = await httpClient.GetAsync(url).ConfigureAwait(false);
-        return !responseMessage.IsSuccessStatusCode ? Result<string>.OfFailure(exceptionSelector is { } selector ? await selector.Invoke(responseMessage).ConfigureAwait(false) : null) : Result<string>.OfSuccess(await responseMessage.Content.ReadAsStringAsync());
+        return !responseMessage.IsSuccessStatusCode ? Result<string>.AsFailure(exceptionSelector is { } selector ? await selector.Invoke(responseMessage).ConfigureAwait(false) : null) : Result<string>.AsSuccess(await responseMessage.Content.ReadAsStringAsync());
     }
 
     public static Task<TResult[]> WhenAll<TResult>(this IEnumerable<Task<TResult>> tasks)
@@ -237,9 +237,9 @@ public static class Objects
         return b = !b;
     }
 
-    public static async Task<R?> GetOrElseAsync<R>(this Task<Result<R>> task, R? orElse)
+    public static async Task<R?> UnwrapOrElseAsync<R>(this Task<Result<R>> task, R? orElse)
     {
-        return (await task).GetOrElse(orElse);
+        return (await task).UnwrapOrElse(orElse);
     }
 
     public static bool IsValidRegexPattern(this string pattern)

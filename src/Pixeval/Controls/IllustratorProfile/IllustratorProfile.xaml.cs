@@ -19,12 +19,14 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Util;
 using Pixeval.Util.UI;
 using WinUI3Utilities;
@@ -54,20 +56,25 @@ public sealed partial class IllustratorProfile
         e.Handled = true;
     }
 
-    private async void IllustratorProfile_OnLoaded(object sender, RoutedEventArgs e)
+    private Thickness GetIllustrationAt(List<SoftwareBitmapSource> sources)
     {
-        var result = await ViewModel.BannerImageTask;
-        for (var i = 0; i < Math.Min(result.Length, 3); i++)
+        BannerContainer.Children.Clear();
+        var i = 0;
+        // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
+        foreach (var source in sources)
         {
             var image = new Image
             {
-                Source = result[i],
+                Source = source,
                 Stretch = Stretch.UniformToFill,
             };
             UIElementExtensions.SetClipToBounds(image, true);
             Grid.SetColumn(image, i);
             BannerContainer.Children.Add(image);
+            ++i;
         }
+
+        return new();
     }
 
     private void RestoreAvatarButton(object? sender, object e)

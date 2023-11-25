@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -95,22 +95,22 @@ public abstract class AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEn
             var responseMessage = await MakoClient.GetMakoHttpClient(ApiKind).GetAsync(url).ConfigureAwait(false);
             if (!responseMessage.IsSuccessStatusCode)
             {
-                return Result<TRawEntity>.OfFailure(await MakoNetworkException.FromHttpResponseMessageAsync(responseMessage, MakoClient.Configuration.Bypass).ConfigureAwait(false));
+                return Result<TRawEntity>.AsFailure(await MakoNetworkException.FromHttpResponseMessageAsync(responseMessage, MakoClient.Configuration.Bypass).ConfigureAwait(false));
             }
 
             var result = (await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false)).FromJson<TRawEntity>();
             if (result is null)
             {
-                return Result<TRawEntity>.OfFailure();
+                return Result<TRawEntity>.AsFailure();
             }
 
             return ValidateResponse(result)
-                ? Result<TRawEntity>.OfSuccess(result)
-                : Result<TRawEntity>.OfFailure();
+                ? Result<TRawEntity>.AsSuccess(result)
+                : Result<TRawEntity>.AsFailure();
         }
         catch (HttpRequestException e)
         {
-            return Result<TRawEntity>.OfFailure(new MakoNetworkException(url, MakoClient.Configuration.Bypass, e.Message, (int?)e.StatusCode ?? -1));
+            return Result<TRawEntity>.AsFailure(new MakoNetworkException(url, MakoClient.Configuration.Bypass, e.Message, (int?)e.StatusCode ?? -1));
         }
     }
 }

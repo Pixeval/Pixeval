@@ -79,7 +79,7 @@ public partial class MainPageViewModel : AutoActivateObservableRecipient, IRecip
         // get byte array of avatar
         // and set to the bitmap image
         Avatar = await (await makoClient.GetMakoHttpClient(MakoApiKind.ImageApi).DownloadAsIRandomAccessStreamAsync(makoClient.Session.AvatarUrl!))
-            .GetOrThrow()
+            .UnwrapOrThrow()
             .GetBitmapImageAsync(true);
     }
 

@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.WinUI.Collections;
 using Microsoft.UI;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls;
 using Pixeval.Controls.MarkupExtensions;

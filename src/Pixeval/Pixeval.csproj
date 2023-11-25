@@ -18,7 +18,7 @@
         <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
         <EnableDefaultPriItems>false</EnableDefaultPriItems>
-        <NeutralLanguage>zh-Hans</NeutralLanguage>
+        <DefaultLanguage>zh-Hans</DefaultLanguage>
         <AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Release'">true</AppxPackageSigningEnabled>
         <AppxPackageSigningEnabled Condition="'$(Configuration)' == 'Debug'">false</AppxPackageSigningEnabled>
         <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
@@ -169,7 +169,7 @@
     <!--PRIResource-->
     <ItemGroup>
         <PRIResource Include="Strings\zh-Hans\CommentsPage.resw" />
-        <PRIResource Include="Strings\zh-Hans\FollowingPage.resw" />
+        <PRIResource Include="Strings\zh-Hans\FollowingsPage.resw" />
         <PRIResource Include="Strings\zh-Hans\FollowingUserBadge.resw" />
         <PRIResource Include="Strings\zh-Hans\IllustratorContentViewer.resw" />
         <PRIResource Include="Strings\zh-Hans\IllustratorIllustrationAndMangaBookmarkPage.resw" />

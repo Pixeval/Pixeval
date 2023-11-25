@@ -12,75 +12,72 @@
     ClearCacheAfterNavigation="True"
     SizeChanged="FollowingsPage_OnSizeChanged"
     mc:Ignorable="d">
-    <Grid>
-        <SplitView
-            x:Name="MainSplitView"
-            CompactPaneLength="300"
-            DisplayMode="CompactOverlay"
-            IsPaneOpen="True"
-            OpenPaneLength="1000"
-            PaneBackground="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"
-            PaneClosing="MainSplitView_OnPaneAction"
-            PaneOpening="MainSplitView_OnPaneAction">
-            <SplitView.Pane>
-                <Grid
-                    x:Name="ContentGrid"
-                    Width="{x:Bind MainSplitView.OpenPaneLength}"
-                    Padding="5"
-                    HorizontalAlignment="Left"
-                    RowSpacing="5">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <controls:IconButton
-                        Width="40"
-                        Height="40"
-                        Icon="{markup:FontSymbolIcon Glyph=GlobalNavButtonE700}">
-                        <interactivity:Interaction.Behaviors>
-                            <core:EventTriggerBehavior EventName="Tapped">
-                                <actions:NavigatePropertyAction PropertyName="IsPaneOpen" TargetObject="{x:Bind MainSplitView}" />
-                            </core:EventTriggerBehavior>
-                        </interactivity:Interaction.Behaviors>
-                    </controls:IconButton>
-                    <controls:AdvancedItemsView
-                        x:Name="IllustratorItemsView"
-                        Grid.Row="1"
-                        ItemsSource="{x:Bind ViewModel.DataProvider.View}"
-                        LayoutType="Grid"
-                        LoadMoreRequested="IllustratorListView_OnLoadMoreRequested"
-                        Loaded="IllustratorListView_OnLoaded"
-                        MinItemWidth="300"
-                        SelectionChanged="IllustratorListView_OnSelectionChanged"
-                        SelectionMode="Single">
-                        <controls:AdvancedItemsView.ItemTemplate>
-                            <DataTemplate x:DataType="controls:IllustratorViewModel">
-                                <ItemContainer>
-                                    <controls:IllustratorProfile RequestTeachingTip="IllustratorProfileOnRequestTeachingTip" ViewModel="{x:Bind}" />
-                                </ItemContainer>
-                            </DataTemplate>
-                        </controls:AdvancedItemsView.ItemTemplate>
-                    </controls:AdvancedItemsView>
-                    <StackPanel
-                        Grid.Row="0"
-                        Grid.RowSpan="2"
+    <SplitView
+        x:Name="MainSplitView"
+        CompactPaneLength="300"
+        DisplayMode="CompactOverlay"
+        IsPaneOpen="True"
+        OpenPaneLength="1000"
+        PaneBackground="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"
+        PaneClosing="MainSplitView_OnPaneAction"
+        PaneOpening="MainSplitView_OnPaneAction">
+        <SplitView.Pane>
+            <Grid
+                x:Name="ContentGrid"
+                Width="{x:Bind MainSplitView.OpenPaneLength}"
+                Padding="5"
+                HorizontalAlignment="Left"
+                RowSpacing="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <controls:IconButton
+                    Width="40"
+                    Height="40"
+                    Icon="{markup:FontSymbolIcon Glyph=GlobalNavButtonE700}">
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="Tapped">
+                            <actions:NavigatePropertyAction PropertyName="IsPaneOpen" TargetObject="{x:Bind MainSplitView}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </controls:IconButton>
+                <controls:AdvancedItemsView
+                    x:Name="IllustratorItemsView"
+                    Grid.Row="1"
+                    ItemsSource="{x:Bind _viewModel.DataProvider.View}"
+                    LayoutType="Grid"
+                    LoadMoreRequested="IllustratorItemsView_OnLoadMoreRequested"
+                    MinItemWidth="300"
+                    SelectionChanged="IllustratorItemsView_OnSelectionChanged"
+                    SelectionMode="Single">
+                    <controls:AdvancedItemsView.ItemTemplate>
+                        <DataTemplate x:DataType="controls:IllustratorViewModel">
+                            <ItemContainer>
+                                <controls:IllustratorProfile RequestTeachingTip="IllustratorProfileOnRequestTeachingTip" ViewModel="{x:Bind}" />
+                            </ItemContainer>
+                        </DataTemplate>
+                    </controls:AdvancedItemsView.ItemTemplate>
+                </controls:AdvancedItemsView>
+                <StackPanel
+                    Grid.Row="0"
+                    Grid.RowSpan="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Spacing="20"
+                    Visibility="{x:Bind _viewModel.HasNoItems, Mode=OneWay}">
+                    <Image
+                        Width="200"
+                        Height="200"
+                        Source="/Assets/Images/empty-box.png" />
+                    <TextBlock
+                        x:Uid="/FollowingsPage/ResultIsEmptyTextBlock"
                         HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Spacing="20"
-                        Visibility="{x:Bind ViewModel.HasNoItems, Mode=OneWay}">
-                        <Image
-                            Width="200"
-                            Height="200"
-                            Source="/Assets/Images/empty-box.png" />
-                        <TextBlock
-                            x:Uid="/FollowingPage/ResultIsEmptyTextBlock"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource PixevalTitleFontSize}" />
-                    </StackPanel>
-                    <TeachingTip x:Name="FollowingPageTeachingTip" Grid.Row="0" />
-                </Grid>
-            </SplitView.Pane>
-            <Frame x:Name="IllustratorContentViewerFrame" />
-        </SplitView>
-    </Grid>
+                        FontSize="{StaticResource PixevalTitleFontSize}" />
+                </StackPanel>
+                <TeachingTip x:Name="FollowingsPageTeachingTip" Grid.Row="0" />
+            </Grid>
+        </SplitView.Pane>
+        <Frame x:Name="IllustratorContentViewerFrame" />
+    </SplitView>
 </controls:EnhancedPage>

@@ -69,7 +69,7 @@ public sealed partial class CommentBlock
         if (viewModel.IsStamp)
         {
             block.StickerImageContent.Source = viewModel.StampSource is { } url
-                ? await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceResultAsync(url).GetOrElseAsync(await AppContext.GetNotAvailableImageAsync())
+                ? await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceResultAsync(url).UnwrapOrElseAsync(await AppContext.GetNotAvailableImageAsync())
                 : await AppContext.GetNotAvailableImageAsync();
         }
         else

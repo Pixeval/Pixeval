@@ -25,7 +25,6 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
 using Pixeval.Misc;
-using Pixeval.Controls.IllustrationView;
 using Pixeval.Util;
 using Pixeval.Util.Threading;
 using Pixeval.Utilities;

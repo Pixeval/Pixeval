@@ -18,8 +18,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -47,22 +47,23 @@ public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
     // Dominant color of the "No Image" image
     public static readonly SolidColorBrush DefaultAvatarBorderColorBrush = new(UiHelper.ParseHexColor("#D6DEE5"));
 
-    private readonly TaskCompletionSource<SoftwareBitmapSource[]> _bannerImageTaskCompletionSource;
-
     public IllustratorViewModel(User user) : base(user)
     {
-        _bannerImageTaskCompletionSource = new();
         IsFollowed = Illustrate.UserInfo?.IsFollowed ?? false;
 
         SetAvatarAsync().Discard();
         SetBannerSourceAsync().Discard();
 
+        FollowCommand = FollowText.GetCommand(MakoHelper.GetFollowButtonIcon(IsFollowed));
         InitializeCommands();
     }
 
     public PixivSingleUserResponse? UserDetail { get; private set; }
 
-    public Task<SoftwareBitmapSource[]> BannerImageTask => _bannerImageTaskCompletionSource.Task;
+    public List<SoftwareBitmapSource> BannerSources { get; } = new(3);
+
+    [ObservableProperty]
+    private SoftwareBitmapSource? _backgroundSource;
 
     [ObservableProperty]
     private ImageSource? _avatarSource;
@@ -79,7 +80,7 @@ public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
 
     public XamlUICommand FollowCommand { get; set; }
 
-    public XamlUICommand ShareCommand { get; set; }
+    public XamlUICommand ShareCommand { get; set; } = IllustratorProfileResources.Share.GetCommand(FontIconSymbols.ShareE72D);
 
     public string GetIllustrationToolTipSubtitleText(User? user)
     {
@@ -88,41 +89,67 @@ public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
 
     private async Task SetAvatarAsync()
     {
-        var avatar = Illustrate.UserInfo?.ProfileImageUrls?.Medium?.Let(url => App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(url, 100)) ?? Task.FromResult(Result<ImageSource>.OfFailure());
-        AvatarSource = await avatar.GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync());
+        var url = Illustrate.UserInfo?.ProfileImageUrls?.Medium;
+        if (url is not null)
+        {
+            var avatar = await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(url, 100);
+            AvatarSource = avatar.UnwrapOrElse(await AppContext.GetPixivNoProfileImageAsync());
+        }
+        else
+            AvatarSource = await AppContext.GetPixivNoProfileImageAsync();
     }
 
     private async Task SetBannerSourceAsync()
     {
         var client = App.AppViewModel.MakoClient.GetMakoHttpClient(MakoApiKind.ImageApi);
-        if (Illustrate.Illusts?.Take(3).ToArray() is { Length: > 0 } illustrations && illustrations.SelectNotNull(c => c.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium)).ToArray() is { Length: > 0 } urls)
-        {
-            var tasks = await Task.WhenAll(urls.Select(u => client.DownloadAsIRandomAccessStreamAsync(u)));
-            if (tasks is [Result<IRandomAccessStream>.Success(var first), ..])
+        AvatarBorderBrush = null;
+        DisposeAllBanner();
+
+        if (Illustrate.Illusts is not null)
+            foreach (var illustration in Illustrate.Illusts)
             {
-                var dominantColor = await UiHelper.GetDominantColorAsync(first.AsStreamForRead(), false);
-                AvatarBorderBrush = new SolidColorBrush(dominantColor);
+                if (illustration.GetThumbnailUrl(ThumbnailUrlOption.SquareMedium) is not { } url)
+                    continue;
+                if (await client.DownloadAsIRandomAccessStreamAsync(url) is not
+                    Result<IRandomAccessStream>.Success(var stream))
+                    continue;
+                if (AvatarBorderBrush is null)
+                {
+                    var dominantColor = await UiHelper.GetDominantColorAsync(stream.AsStreamForRead(), false);
+                    AvatarBorderBrush = new SolidColorBrush(dominantColor);
+                }
+
+                var bitmapSource = await stream.GetSoftwareBitmapSourceAsync(true);
+                BannerSources.Add(bitmapSource);
+
+                // 一般只会取 ==
+                if (BannerSources.Count >= 3)
+                    break;
             }
 
-            var result = (await Task.WhenAll(tasks.SelectNotNull(r => r.BindAsync(s => s.GetSoftwareBitmapSourceAsync(true)))))
-                .SelectNotNull(res => res.GetOrElse(null)).ToArray();
-            _ = _bannerImageTaskCompletionSource.TrySetResult(result);
-            return;
-        }
+        OnPropertyChanged(nameof(BannerSources));
 
-        UserDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(Illustrate.UserInfo?.Id.ToString() ?? string.Empty, App.AppViewModel.AppSetting.TargetFilter);
-        if (UserDetail.UserProfile?.BackgroundImageUrl is { } url && await client.DownloadAsIRandomAccessStreamAsync(url) is Result<IRandomAccessStream>.Success(var stream))
-        {
-            var managedStream = stream.AsStreamForRead();
-            var dominantColor = await UiHelper.GetDominantColorAsync(managedStream, false);
-            AvatarBorderBrush = new SolidColorBrush(dominantColor);
-            var result = Enumerates.ArrayOf(await stream.GetSoftwareBitmapSourceAsync(true));
-            _ = _bannerImageTaskCompletionSource.TrySetResult(result);
+        if (AvatarBorderBrush is not null)
             return;
-        }
+
+        UserDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(UserId, App.AppViewModel.AppSetting.TargetFilter);
+        if (UserDetail.UserProfile?.BackgroundImageUrl is { } backgroundImageUrl)
+            if (await client.DownloadAsIRandomAccessStreamAsync(backgroundImageUrl) is Result<IRandomAccessStream>.Success(var stream))
+            {
+                if (AvatarBorderBrush is null)
+                {
+                    var dominantColor = await UiHelper.GetDominantColorAsync(stream.AsStreamForRead(), false);
+                    AvatarBorderBrush = new SolidColorBrush(dominantColor);
+                }
+
+                BackgroundSource = await stream.GetSoftwareBitmapSourceAsync(true);
+            }
+
+        if (AvatarBorderBrush is not null)
+            return;
 
         AvatarBorderBrush = DefaultAvatarBorderColorBrush;
-        _ = _bannerImageTaskCompletionSource.TrySetResult(Enumerates.ArrayOf(await AppContext.GetPixivNoProfileImageAsync()));
+        BackgroundSource = await AppContext.GetPixivNoProfileImageAsync();
     }
 
     // private void SetMetrics()
@@ -137,9 +164,6 @@ public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
 
     private void InitializeCommands()
     {
-        FollowCommand = FollowText.GetCommand(MakoHelper.GetFollowButtonIcon(IsFollowed));
-        ShareCommand = IllustratorProfileResources.Share.GetCommand(FontIconSymbols.ShareE72D);
-
         FollowCommand.ExecuteRequested += FollowCommandOnExecuteRequested;
         // TODO: ShareCommand
     }
@@ -171,9 +195,15 @@ public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
         _ = App.AppViewModel.MakoClient.RemoveFollowUserAsync(UserId);
     }
 
+    public void DisposeAllBanner()
+    {
+        foreach (var softwareBitmapSource in BannerSources)
+            softwareBitmapSource.Dispose();
+        BannerSources.Clear();
+    }
+
     public override void Dispose()
     {
-        _ = _bannerImageTaskCompletionSource.Task.ContinueWith(s => s.Dispose());
-        _ = BannerImageTask.ContinueWith(i => i.Dispose());
+        DisposeAllBanner();
     }
 }

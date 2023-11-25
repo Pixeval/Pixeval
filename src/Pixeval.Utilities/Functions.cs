@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.Utilities
+#region Copyright (c) Pixeval/Pixeval.Utilities
 // GPL v3 License
 // 
 // Pixeval/Pixeval.Utilities
@@ -61,10 +61,10 @@ public static class Functions
         if (await Task.WhenAny(task, Task.Delay(timeoutMills, cancellationToken.Token)).ConfigureAwait(false) == task)
         {
             cancellationToken.Cancel();
-            return Result<TResult>.OfSuccess(task.Result);
+            return Result<TResult>.AsSuccess(task.Result);
         }
 
-        return Result<TResult>.OfFailure();
+        return Result<TResult>.AsFailure();
     }
 
     public static async Task<Result<TResult>> RetryAsync<TResult>(Func<Task<TResult>> body, int attempts = 3, int timeoutMills = 0)
@@ -87,7 +87,7 @@ public static class Functions
             }
         }
 
-        return Result<TResult>.OfFailure(cause);
+        return Result<TResult>.AsFailure(cause);
     }
 
     public static Task<TResult> TryCatchAsync<TResult>(Func<Task<TResult>> function, Func<Exception, Task<TResult>> onException)

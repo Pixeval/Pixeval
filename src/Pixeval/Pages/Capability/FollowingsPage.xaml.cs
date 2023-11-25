@@ -19,13 +19,10 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
@@ -33,29 +30,23 @@ using Pixeval.Messages;
 using Pixeval.Pages.Misc;
 using Pixeval.Controls.IllustratorView;
 using Pixeval.Util;
-using Pixeval.Util.Threading;
 
 namespace Pixeval.Pages.Capability;
 
 public sealed partial class FollowingsPage
 {
-    private bool _illustratorListViewLoaded;
+    private readonly IllustratorViewViewModel _viewModel = new();
 
     public FollowingsPage()
     {
         InitializeComponent();
-        ViewModel = new();
     }
-
-    public IllustratorViewViewModel ViewModel { get; }
 
     public FrameworkElement SelfIllustratorView => this;
 
-    public ScrollViewer ScrollViewer => IllustratorItemsView.FindDescendant<ScrollViewer>()!;
-
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
     {
-        ViewModel.Dispose();
+        _viewModel.Dispose();
         if (IllustratorContentViewerFrame.Content is IDisposable disposable)
         {
             disposable.Dispose();
@@ -65,34 +56,21 @@ public sealed partial class FollowingsPage
 
     public override void OnPageActivated(NavigationEventArgs e)
     {
-        _ = WeakReferenceMessenger.Default.TryRegister<FollowingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.ViewModel.DataProvider.FetchEngine?.Cancel());
-        _ = ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public));
+        _ = WeakReferenceMessenger.Default.TryRegister<FollowingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient._viewModel.DataProvider.FetchEngine?.Cancel());
+        _ = _viewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public));
     }
 
-    private async void IllustratorListView_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        if (_illustratorListViewLoaded)
-        {
-            return;
-        }
+    private TeachingTip IllustratorProfileOnRequestTeachingTip() => FollowingsPageTeachingTip;
 
-        _illustratorListViewLoaded = true;
-        await ThreadingHelper.SpinWaitAsync(() => !ViewModel.DataProvider.Source.Any() && !ViewModel.HasNoItems);
-        // TODO: 暂时不加载页面，以后把ListView改成GridView，并占用右侧空白区域
-        // _ = IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), ViewModel.DataProvider.Source[0]);
-    }
-
-    private TeachingTip IllustratorProfileOnRequestTeachingTip() => FollowingPageTeachingTip;
-
-    private void IllustratorListView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs e)
+    private void IllustratorItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs e)
     {
         if (IllustratorItemsView.SelectedItem is IllustratorViewModel viewModel)
             _ = IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), viewModel);
     }
 
-    private async Task IllustratorListView_OnLoadMoreRequested(AdvancedItemsView sender, EventArgs e)
+    private async Task IllustratorItemsView_OnLoadMoreRequested(AdvancedItemsView sender, EventArgs e)
     {
-        await ViewModel.DataProvider.View.LoadMoreItemsAsync(20);
+        await _viewModel.DataProvider.View.LoadMoreItemsAsync(20);
     }
 
     private void FollowingsPage_OnSizeChanged(object sender, SizeChangedEventArgs e)

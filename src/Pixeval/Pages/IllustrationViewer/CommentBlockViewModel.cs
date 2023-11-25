@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -74,7 +74,7 @@ public class CommentBlockViewModel(Comment comment, string illustrationId)
     public async Task<ImageSource> GetAvatarSource()
     {
         return (await App.AppViewModel.MakoClient.DownloadBitmapImageResultAsync(Comment.CommentPoster!.ProfileImageUrls!.Medium!, 35)
-            .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync()))!;
+            .UnwrapOrElseAsync(await AppContext.GetPixivNoProfileImageAsync()))!;
     }
 
     public async Task<Paragraph> GetReplyContentParagraphAsync()

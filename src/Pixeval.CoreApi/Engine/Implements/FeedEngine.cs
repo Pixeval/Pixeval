@@ -292,7 +292,7 @@ internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHan
             }
             catch (HttpRequestException e)
             {
-                return Result<string>.OfFailure(new MakoNetworkException(url, MakoClient.Configuration.Bypass, e.Message, (int?)e.StatusCode ?? -1));
+                return Result<string>.AsFailure(new MakoNetworkException(url, MakoClient.Configuration.Bypass, e.Message, (int?)e.StatusCode ?? -1));
             }
         }
 

@@ -74,13 +74,10 @@ public static partial class IoHelper
     public static async Task<SoftwareBitmapSource> GetSoftwareBitmapSourceAsync(this IRandomAccessStream imageStream, bool disposeOfImageStream)
     {
         var bitmap = await GetSoftwareBitmapFromStreamAsync(imageStream);
+        if (disposeOfImageStream)
+            imageStream.Dispose();
         var source = new SoftwareBitmapSource();
         await source.SetBitmapAsync(bitmap);
-        if (disposeOfImageStream)
-        {
-            imageStream.Dispose();
-        }
-
         return source;
     }
 
@@ -143,11 +140,8 @@ public static partial class IoHelper
     /// <summary>
     ///     Decodes the <paramref name="imageStream" /> to a <see cref="SoftwareBitmap" />
     /// </summary>
-    /// <returns></returns>
-    public static async Task<SoftwareBitmap?> GetSoftwareBitmapFromStreamAsync(IRandomAccessStream? imageStream)
+    public static async Task<SoftwareBitmap> GetSoftwareBitmapFromStreamAsync(IRandomAccessStream imageStream)
     {
-        if (imageStream is null)
-            return null;
         var decoder = await BitmapDecoder.CreateAsync(imageStream);
         return await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
     }

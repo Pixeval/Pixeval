@@ -29,11 +29,9 @@ using CommunityToolkit.WinUI;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.Attributes;
 using Pixeval.Misc;
 using Pixeval.Util.IO;
 using Pixeval.Util.Threading;
@@ -47,7 +45,6 @@ using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
-using CommunityToolkit.WinUI.Collections;
 using Pixeval.Controls.MarkupExtensions;
 using Pixeval.Controls.MarkupExtensions.FontSymbolIcon;
 using WinUI3Utilities;
@@ -110,7 +107,7 @@ public static partial class UiHelper
         using var image = await Image.LoadAsync<Rgb24>(stream);
         image.Mutate(x => x
             .Resize(new ResizeOptions { Sampler = KnownResamplers.NearestNeighbor, Size = new(100, 0) })
-            .Quantize(new OctreeQuantizer(new QuantizerOptions { Dither = null, MaxColors = 1 })));
+            .Quantize(new OctreeQuantizer(new() { Dither = null, MaxColors = 1 })));
         var pixel = image[0, 0];
         if (disposeOfStream)
         {

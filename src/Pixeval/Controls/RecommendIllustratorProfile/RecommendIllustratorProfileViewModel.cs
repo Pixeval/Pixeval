@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -63,7 +63,7 @@ public partial class RecommendIllustratorProfileViewModel : ObservableObject
     private static async Task<SoftwareBitmapSource[]> GetDisplayImageTaskAsync(IEnumerable<string> displayImages)
     {
         var results = await Task.WhenAll(displayImages.Select(App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceResultAsync));
-        return results.SelectNotNull(r => r is Result<ImageSource>.Success(SoftwareBitmapSource s) ? s : null).ToArray();
+        return results.SelectNotNull(r => r is Result<SoftwareBitmapSource>.Success(var s) ? s : null).ToArray();
     }
 
     private static async Task<ImageSource> GetAvatarTaskAsync(string? avatarUrl)

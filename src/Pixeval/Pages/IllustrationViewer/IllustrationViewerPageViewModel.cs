@@ -171,7 +171,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
                 if (Illustrator is { ProfileImageUrls.Medium: { } profileImage })
                 {
                     UserProfileImageSource = await App.AppViewModel.MakoClient.DownloadSoftwareBitmapSourceResultAsync(profileImage)
-                        .GetOrElseAsync(await AppContext.GetPixivNoProfileImageAsync());
+                        .UnwrapOrElseAsync(await AppContext.GetPixivNoProfileImageAsync());
                 }
             }
         }

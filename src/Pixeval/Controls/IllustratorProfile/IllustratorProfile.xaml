@@ -15,7 +15,6 @@
     Padding="0"
     AspectRatio="15:8"
     Background="{StaticResource CardBackgroundFillColorDefaultBrush}"
-    Loaded="IllustratorProfile_OnLoaded"
     mc:Ignorable="d">
     <!--  图片长宽均为5，故为(3*5):(3+5)  -->
     <Grid>
@@ -46,7 +45,10 @@
             x:Name="Banner"
             Grid.Row="0"
             AspectRatio="3:1">
-            <Grid x:Name="BannerContainer" CornerRadius="{StaticResource ControlTopCornerRadius}">
+            <Grid
+                x:Name="BannerContainer"
+                Margin="{x:Bind GetIllustrationAt(ViewModel.BannerSources), Mode=OneWay}"
+                CornerRadius="{StaticResource ControlTopCornerRadius}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />

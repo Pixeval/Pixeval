@@ -10,6 +10,7 @@
         <DefaultLanguage>zh-Hans</DefaultLanguage>
         <LangVersion>preview</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <DefaultLanguage>zh-Hans</DefaultLanguage>
     </PropertyGroup>
     <ItemGroup>
         <None Remove="AdvancedItemsView\AdvancedItemsView.xaml" />
@@ -33,6 +34,19 @@
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231115000" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
+    </ItemGroup>
+
+    <Target Name="InjectAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
+        <ItemGroup>
+            <AdditionalFiles Include="@(PRIResource)" SourceItemGroup="PRIResource" />
+        </ItemGroup>
+    </Target>
+    <ItemGroup>
+        <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Strings\zh-Hans\" />
     </ItemGroup>
 
     <ItemGroup>
