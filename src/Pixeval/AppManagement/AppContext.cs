@@ -82,7 +82,8 @@ public static partial class AppContext
 
     public static async Task<SoftwareBitmapSource> GetNotAvailableImageAsync()
     {
-        return _imageNotAvailable ??= await (await GetNotAvailableImageStreamAsync()).GetSoftwareBitmapSourceAsync(true);
+        // TODO: 可能会多次同时加载此图，可以考虑用弱引用
+        return _imageNotAvailable ??= await (await GetNotAvailableImageStreamAsync()).GetSoftwareBitmapSourceAsync(false);
     }
 
     public static async Task<IRandomAccessStream> GetNotAvailableImageStreamAsync()
@@ -92,7 +93,8 @@ public static partial class AppContext
 
     public static async Task<SoftwareBitmapSource> GetPixivNoProfileImageAsync()
     {
-        return _pixivNoProfile ??= await (await GetPixivNoProfileImageStreamAsync()).GetSoftwareBitmapSourceAsync(true);
+        // TODO: 可能会多次同时加载此图，可以考虑用弱引用
+        return _pixivNoProfile ??= await (await GetPixivNoProfileImageStreamAsync()).GetSoftwareBitmapSourceAsync(false);
     }
 
     public static async Task<IRandomAccessStream> GetPixivNoProfileImageStreamAsync()

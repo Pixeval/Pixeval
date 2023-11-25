@@ -19,7 +19,6 @@
 #endregion
 
 using System.Linq;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
@@ -57,15 +56,15 @@ public sealed partial class BrowsingHistoryPage : ISortedIllustrationContainerPa
     public override async void OnPageActivated(NavigationEventArgs navigationEventArgs)
     {
         SortOptionComboBox.SelectedItem = MakoHelper.GetAppSettingDefaultSortOptionWrapper();
-        await FetchAndFill();
+        FetchAndFill();
         _ = WeakReferenceMessenger.Default.TryRegister<BrowsingHistoryPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
     }
 
-    private async Task FetchAndFill()
+    private void FetchAndFill()
     {
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-        await IllustrationContainer.ViewModel.ResetEngineAndFillAsync(
+        IllustrationContainer.ViewModel.ResetEngineAsync(
             App.AppViewModel.MakoClient.Computed(manager.Enumerate().ToAsyncEnumerable().SelectAwait(async t =>
                 await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(t.Id!))));
     }

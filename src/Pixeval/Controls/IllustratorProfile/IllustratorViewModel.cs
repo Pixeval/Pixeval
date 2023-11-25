@@ -118,7 +118,6 @@ public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
                     var dominantColor = await UiHelper.GetDominantColorAsync(stream.AsStreamForRead(), false);
                     AvatarBorderBrush = new SolidColorBrush(dominantColor);
                 }
-
                 var bitmapSource = await stream.GetSoftwareBitmapSourceAsync(true);
                 BannerSources.Add(bitmapSource);
 
@@ -128,9 +127,6 @@ public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
             }
 
         OnPropertyChanged(nameof(BannerSources));
-
-        if (AvatarBorderBrush is not null)
-            return;
 
         UserDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(UserId, App.AppViewModel.AppSetting.TargetFilter);
         if (UserDetail.UserProfile?.BackgroundImageUrl is { } backgroundImageUrl)

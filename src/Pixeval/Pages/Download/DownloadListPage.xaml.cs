@@ -49,25 +49,10 @@ public sealed partial class DownloadListPage
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        _viewModel = new();
-
-        Task().Discard();
-        return;
-
-        async Task Task()
-        {
-            foreach (var o in parameter.To<IEnumerable<ObservableDownloadTask>>())
-                _viewModel.DownloadTasks.Add(new(o, await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(o.Id!)));
-        }
+        _viewModel = new(parameter.To<IEnumerable<ObservableDownloadTask>>());
     }
 
-    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
-    {
-        foreach (var downloadListEntryViewModel in _viewModel.DownloadTasks)
-        {
-            downloadListEntryViewModel.Dispose();
-        }
-    }
+    public override void OnPageDeactivated(NavigatingCancelEventArgs e) => _viewModel.Dispose();
 
     private void ModeFilterComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -99,15 +84,11 @@ public sealed partial class DownloadListPage
             .WithCloseButtonText(MessageContentDialogResources.CancelButtonContent)
             .WithDefaultButton(ContentDialogButton.Primary)
             .Build(this);
-        if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+        if (await dialog.ShowAsync() is ContentDialogResult.Primary)
         {
             if (dialogContent.DeleteLocalFiles)
-            {
                 foreach (var downloadListEntryViewModel in _viewModel.SelectedTasks)
-                {
                     IoHelper.DeleteAsync(downloadListEntryViewModel.DownloadTask.Destination).Discard();
-                }
-            }
 
             _viewModel.RemoveSelectedItems();
         }
@@ -148,24 +129,24 @@ public sealed partial class DownloadListPage
 
     private void SelectAllButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _viewModel.DownloadTasks.ForEach(x => x.DownloadTask.Selected = true);
+        _viewModel.DataProvider.Source.ForEach(x => x.DownloadTask.Selected = true);
         _viewModel.UpdateSelection();
     }
 
     private void CancelSelectButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        _viewModel.DownloadTasks.ForEach(x => x.DownloadTask.Selected = false);
+        _viewModel.DataProvider.Source.ForEach(x => x.DownloadTask.Selected = false);
         _viewModel.UpdateSelection();
     }
 
-    private void DownloadListEntry_OnSelected(CardControl cardControl, EventArgs args)
+    private void ItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
     {
         _viewModel.UpdateSelection();
     }
 
     private void DownloadListEntry_OnOpenIllustrationRequested(DownloadListEntry sender, DownloadListEntryViewModel viewModel)
     {
-        viewModel.CreateWindowWithPage(_viewModel.DownloadTasks);
+        viewModel.CreateWindowWithPage(_viewModel.DataProvider.Source);
     }
 
     private void DownloadListEntryOnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
@@ -186,5 +167,10 @@ public sealed partial class DownloadListPage
     private void DownloadListPage_OnUnloaded(object sender, RoutedEventArgs e)
     {
         _viewModel.Dispose();
+    }
+
+    private async Task AdvancedItemsView_OnLoadMoreRequested(AdvancedItemsView sender, EventArgs e)
+    {
+        await _viewModel.LoadMoreAsync(20);
     }
 }

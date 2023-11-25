@@ -26,7 +26,6 @@ using Pixeval.CoreApi.Model;
 using Pixeval.Messages;
 using Pixeval.Misc;
 using Pixeval.Util;
-using Pixeval.Util.Threading;
 using Pixeval.Utilities;
 
 namespace Pixeval.Controls.IllustratorContentViewer;
@@ -50,7 +49,7 @@ public sealed partial class IllustratorIllustrationPage : ISortedIllustrationCon
         _ = WeakReferenceMessenger.Default.TryRegister<IllustratorIllustrationPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
         if (e.Parameter is string id)
         {
-            IllustrationContainer.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Posts(id)).Discard();
+            IllustrationContainer.ViewModel.ResetEngineAsync(App.AppViewModel.MakoClient.Posts(id));
         }
 
         if (!App.AppViewModel.AppSetting.ShowExternalCommandBarInIllustratorContentViewer)

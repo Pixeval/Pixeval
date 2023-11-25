@@ -82,30 +82,33 @@
             </CommandBar>
         </Grid>
         <ScrollViewer Grid.Row="1">
-            <ItemsRepeater ItemsSource="{x:Bind _viewModel.DownloadTasksView, Mode=OneWay}">
-                <ItemsRepeater.Layout>
-                    <StackLayout Orientation="Vertical" />
-                </ItemsRepeater.Layout>
-                <ItemsRepeater.ItemTemplate>
+            <controls:AdvancedItemsView
+                ItemsSource="{x:Bind _viewModel.DataProvider.View}"
+                LayoutType="VerticalStack"
+                LoadMoreRequested="AdvancedItemsView_OnLoadMoreRequested"
+                SelectionChanged="ItemsView_OnSelectionChanged"
+                SelectionMode="Multiple">
+                <controls:AdvancedItemsView.ItemTemplate>
                     <DataTemplate x:DataType="download:DownloadListEntryViewModel">
-                        <!--  ReSharper disable once Xaml.PossibleNullReferenceException (Illustrate.User!.Name)  -->
-                        <download:DownloadListEntry
-                            Title="{x:Bind Illustrate.Title}"
-                            ActionButtonContent="{x:Bind download:DownloadListEntryViewModel.GetEntryActionButtonContent(DownloadTask.CurrentState), Mode=OneWay}"
-                            DataContext="{x:Bind}"
-                            Description="{x:Bind Illustrate.User.Name}"
-                            EffectiveViewportChanged="DownloadListEntryOnEffectiveViewportChanged"
-                            IsCancelItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsEntryCancelDownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
-                            IsRedownloadItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsRedownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
-                            IsSelectedChanged="DownloadListEntry_OnSelected"
-                            IsShowErrorDetailDialogItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsShowErrorDetailDialogItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
-                            OpenIllustrationRequested="DownloadListEntry_OnOpenIllustrationRequested"
-                            Progress="{x:Bind DownloadTask.ProgressPercentage, Mode=OneWay}"
-                            ProgressMessage="{x:Bind download:DownloadListEntryViewModel.GetEntryProgressMessage(DownloadTask.CurrentState, DownloadTask.ProgressPercentage, DownloadTask.ErrorCause), Mode=OneWay}"
-                            ViewModel="{x:Bind}" />
+                        <ItemContainer IsSelected="{x:Bind DownloadTask.Selected, Mode=TwoWay}">
+                            <!--  ReSharper disable once Xaml.PossibleNullReferenceException (Illustrate.User!.Name)  -->
+                            <download:DownloadListEntry
+                                Title="{x:Bind Illustrate.Title}"
+                                ActionButtonContent="{x:Bind download:DownloadListEntryViewModel.GetEntryActionButtonContent(DownloadTask.CurrentState), Mode=OneWay}"
+                                DataContext="{x:Bind}"
+                                Description="{x:Bind Illustrate.User.Name}"
+                                EffectiveViewportChanged="DownloadListEntryOnEffectiveViewportChanged"
+                                IsCancelItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsEntryCancelDownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
+                                IsRedownloadItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsRedownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
+                                IsShowErrorDetailDialogItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsShowErrorDetailDialogItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
+                                OpenIllustrationRequested="DownloadListEntry_OnOpenIllustrationRequested"
+                                Progress="{x:Bind DownloadTask.ProgressPercentage, Mode=OneWay}"
+                                ProgressMessage="{x:Bind download:DownloadListEntryViewModel.GetEntryProgressMessage(DownloadTask.CurrentState, DownloadTask.ProgressPercentage, DownloadTask.ErrorCause), Mode=OneWay}"
+                                ViewModel="{x:Bind}" />
+                        </ItemContainer>
                     </DataTemplate>
-                </ItemsRepeater.ItemTemplate>
-            </ItemsRepeater>
+                </controls:AdvancedItemsView.ItemTemplate>
+            </controls:AdvancedItemsView>
         </ScrollViewer>
     </Grid>
 </controls:EnhancedWindowPage>

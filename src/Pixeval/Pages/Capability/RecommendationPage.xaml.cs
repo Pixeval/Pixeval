@@ -70,6 +70,6 @@ public sealed partial class RecommendationPage : ISortedIllustrationContainerPag
 
     private void ChangeSource()
     {
-        _ = IllustrationContainer.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Recommendations(ModeSelectionComboBox.GetComboBoxSelectedItemTag(RecommendationContentType.Illust)), App.AppViewModel.AppSetting.ItemsNumberLimitForDailyRecommendations);
+        IllustrationContainer.ViewModel.ResetEngineAsync(App.AppViewModel.MakoClient.Recommendations(ModeSelectionComboBox.GetComboBoxSelectedItemTag(RecommendationContentType.Illust)), App.AppViewModel.AppSetting.ItemsNumberLimitForDailyRecommendations);
     }
 }

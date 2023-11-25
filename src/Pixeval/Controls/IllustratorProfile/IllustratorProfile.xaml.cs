@@ -90,13 +90,13 @@ public sealed partial class IllustratorProfile
 
     private void GenerateLinkCommandOnExecuteRequested(object sender, RoutedEventArgs routedEventArgs)
     {
-        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustratorAppUri(ViewModel.UserId!).ToString());
+        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustratorAppUri(ViewModel.UserId).ToString());
         RequestTeachingTip?.Invoke().ShowAndHide(IllustratorProfileResources.LinkCopiedToClipboard);
     }
 
     private void GenerateWebLinkCommandOnExecuteRequested(object sender, RoutedEventArgs routedEventArgs)
     {
-        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustratorWebUri(ViewModel.UserId!).ToString());
+        UiHelper.ClipboardSetText(MakoHelper.GenerateIllustratorWebUri(ViewModel.UserId).ToString());
         RequestTeachingTip?.Invoke().ShowAndHide(IllustratorProfileResources.LinkCopiedToClipboard);
     }
 }

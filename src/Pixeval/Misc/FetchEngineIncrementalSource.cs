@@ -31,7 +31,10 @@ public abstract class FetchEngineIncrementalSource<T, TModel>(IAsyncEnumerable<T
 {
     private readonly ISet<long> _yieldedItems = new HashSet<long>();
 
-    private readonly IAsyncEnumerator<T> _asyncEnumerator = asyncEnumerator.GetAsyncEnumerator();
+    /// <summary>
+    /// 当为null时暂时不报错
+    /// </summary>
+    private readonly IAsyncEnumerator<T> _asyncEnumerator = asyncEnumerator?.GetAsyncEnumerator()!;
 
     private int _yieldedCounter;
 
@@ -39,7 +42,7 @@ public abstract class FetchEngineIncrementalSource<T, TModel>(IAsyncEnumerable<T
 
     protected abstract TModel Select(T entity);
 
-    public async Task<IEnumerable<TModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new())
+    public virtual async Task<IEnumerable<TModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new())
     {
         var result = new List<TModel>();
         var i = 0;

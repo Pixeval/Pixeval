@@ -21,9 +21,13 @@
 using Pixeval.CoreApi.Model;
 using Pixeval.Controls.Illustrate;
 using Pixeval.Util;
+using Pixeval.Pages.Capability;
 
 namespace Pixeval.Controls.IllustratorView;
 
+/// <summary>
+/// For <see cref="FollowingsPage"/>
+/// </summary>
 public sealed class IllustratorViewViewModel : IllustrateViewViewModel<User, IllustratorViewModel>
 {
     public override DataProvider<User, IllustratorViewModel> DataProvider { get; } = new IllustratorViewDataProvider();

@@ -22,7 +22,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
 using Pixeval.Controls.Illustrate;
@@ -35,7 +34,7 @@ namespace Pixeval.Controls.IllustrationView;
 
 /// <summary>
 /// 复用时调用<see cref="CloneRef"/>，<see cref="FetchEngineRef"/>和<see cref="IllustrationSourceRef"/>会在所有复用对象都Dispose时Dispose。
-/// 初始化时调用<see cref="ResetAndFillAsync"/>
+/// 初始化时调用<see cref="ResetEngineAsync"/>
 /// </summary>
 public class IllustrationViewDataProvider : DataProvider<Illustration, IllustrationViewModel>, IDisposable
 {
@@ -118,20 +117,12 @@ public class IllustrationViewDataProvider : DataProvider<Illustration, Illustrat
         SelectedIllustrations.Clear();
     }
 
-    public override async Task<int> ResetAndFillAsync(IFetchEngine<Illustration?>? fetchEngine, int limit = -1)
+    public override void ResetEngineAsync(IFetchEngine<Illustration?>? fetchEngine, int limit = -1)
     {
         FetchEngineRef = new(fetchEngine, this);
         DisposeCurrent();
 
         IllustrationSourceRef = new(new(new IllustrationFetchEngineIncrementalSource(FetchEngine!, limit)), this);
-        // TODO: 根据屏幕大小决定加载多少
-        var result = await LoadMoreAsync(50);
-        return (int)result;
-    }
-
-    public async Task<uint> LoadMoreAsync(uint count = 20)
-    {
-        return (await View.LoadMoreItemsAsync(count)).Count;
     }
 
     protected virtual void OnIllustrationsSourceOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

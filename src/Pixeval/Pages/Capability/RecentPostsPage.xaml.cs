@@ -61,7 +61,7 @@ public sealed partial class RecentPostsPage : ISortedIllustrationContainerPageHe
 
     private void ChangeSource()
     {
-        _ = IllustrationContainer.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public)));
+        IllustrationContainer.ViewModel.ResetEngineAsync(App.AppViewModel.MakoClient.RecentPosts(PrivacyPolicyComboBox.GetComboBoxSelectedItemTag(PrivacyPolicy.Public)));
     }
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -58,7 +58,7 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
         if (e.Parameter is string id)
         {
             _uid = id;
-            IllustrationContainer.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Bookmarks(id, PrivacyPolicy.Public, App.AppViewModel.AppSetting.TargetFilter)).Discard();
+            IllustrationContainer.ViewModel.ResetEngineAsync(App.AppViewModel.MakoClient.Bookmarks(id, PrivacyPolicy.Public, App.AppViewModel.AppSetting.TargetFilter));
             _viewModel.LoadUserBookmarkTagsAsync(id).Discard();
             _viewModel.TagBookmarksIncrementallyLoaded += ViewModelOnTagBookmarksIncrementallyLoaded;
         }

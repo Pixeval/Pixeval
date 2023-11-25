@@ -18,8 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
 using Pixeval.Controls.Illustrate;
@@ -32,16 +30,11 @@ public class SpotlightArticleViewDataProvider : DataProvider<SpotlightArticle, S
 {
     public override AdvancedObservableCollection<SpotlightArticleViewModel> View { get; } = [];
 
-    private IncrementalLoadingCollection<FetchEngineIncrementalSource<SpotlightArticle, SpotlightArticleViewModel>, SpotlightArticleViewModel> _articlesSource = null!;
-
-    public override IncrementalLoadingCollection<FetchEngineIncrementalSource<SpotlightArticle, SpotlightArticleViewModel>, SpotlightArticleViewModel> Source
+    public override IncrementalLoadingCollection<
+        FetchEngineIncrementalSource<SpotlightArticle, SpotlightArticleViewModel>, SpotlightArticleViewModel> Source
     {
-        get => _articlesSource;
-        protected set
-        {
-            _ = SetProperty(ref _articlesSource, value);
-            View.Source = value;
-        }
+        get => (View.Source as IncrementalLoadingCollection<FetchEngineIncrementalSource<SpotlightArticle, SpotlightArticleViewModel>, SpotlightArticleViewModel>)!;
+        protected set => View.Source = value;
     }
 
     public override IFetchEngine<SpotlightArticle?>? FetchEngine { get; protected set; }
@@ -57,14 +50,12 @@ public class SpotlightArticleViewDataProvider : DataProvider<SpotlightArticle, S
         View.Clear();
     }
 
-    public override async Task<int> ResetAndFillAsync(IFetchEngine<SpotlightArticle?>? fetchEngine, int limit = -1)
+    public override void ResetEngineAsync(IFetchEngine<SpotlightArticle?>? fetchEngine, int limit = -1)
     {
         FetchEngine?.EngineHandle.Cancel();
         FetchEngine = fetchEngine;
         DisposeCurrent();
 
         Source = new(new SpotlightArticleFetchEngineIncrementalSource(FetchEngine!, limit));
-        var result = await Source.LoadMoreItemsAsync(20);
-        return (int)result.Count;
     }
 }

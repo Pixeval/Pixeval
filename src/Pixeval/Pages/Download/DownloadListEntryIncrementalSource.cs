@@ -22,15 +22,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CommunityToolkit.WinUI.Collections;
+using Pixeval.CoreApi.Model;
 using Pixeval.Download;
+using Pixeval.Misc;
+using Pixeval.Utilities;
 
 namespace Pixeval.Pages.Download;
 
-public class ObservableDownloadTaskIncrementalSource(IEnumerable<ObservableDownloadTask> source) : IIncrementalSource<ObservableDownloadTask>
+public class DownloadListEntryIncrementalSource(IEnumerable<ObservableDownloadTask> source) : FetchEngineIncrementalSource<Illustration, DownloadListEntryViewModel>(null!)
 {
-    public Task<IEnumerable<ObservableDownloadTask>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new())
+    protected override long Identifier(Illustration entity) => throw new System.NotImplementedException();
+
+    protected override DownloadListEntryViewModel Select(Illustration entity) => throw new System.NotImplementedException();
+
+    public override async Task<IEnumerable<DownloadListEntryViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new())
     {
-        return Task.FromResult(source.Skip(pageIndex * pageSize).Take(pageSize));
+        return await source
+            .Skip(pageIndex * pageSize)
+            .Take(pageSize)
+            .Select(async o => new DownloadListEntryViewModel(o, await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(o.Id!)))
+            .WhenAll();
     }
 }

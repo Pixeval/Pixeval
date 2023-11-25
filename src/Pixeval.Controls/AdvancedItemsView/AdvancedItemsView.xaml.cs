@@ -8,8 +8,8 @@ using WinUI3Utilities.Attributes;
 namespace Pixeval.Controls;
 
 [DependencyProperty<ItemsViewLayoutType>("LayoutType", DependencyPropertyDefaultValue.Default, nameof(OnLayoutTypeChanged))]
-[DependencyProperty<double>("MinItemHeight", "100d", nameof(OnItemHeightChanged))]
-[DependencyProperty<double>("MinItemWidth", "180d", nameof(OnItemWidthChanged))]
+[DependencyProperty<double>("MinItemHeight", "0d", nameof(OnItemHeightChanged))]
+[DependencyProperty<double>("MinItemWidth", "0d", nameof(OnItemWidthChanged))]
 [DependencyProperty<double>("LoadingHeight", "100d")]
 public sealed partial class AdvancedItemsView : ItemsView
 {

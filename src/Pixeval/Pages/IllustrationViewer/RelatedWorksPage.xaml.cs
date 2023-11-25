@@ -38,7 +38,7 @@ public sealed partial class RelatedWorksPage
         InitializeComponent();
     }
 
-    public override async void OnPageActivated(NavigationEventArgs e)
+    public override void OnPageActivated(NavigationEventArgs e)
     {
         // Dispose current page contents if the parent page (IllustrationViewerPage) is navigating
         _ = WeakReferenceMessenger.Default.TryRegister<RelatedWorksPage, NavigatingFromIllustrationViewerMessage>(this, (recipient, _) =>
@@ -47,6 +47,6 @@ public sealed partial class RelatedWorksPage
             WeakReferenceMessenger.Default.UnregisterAll(this);
         });
         _illustrationId = e.Parameter.To<string>();
-        await RelatedWorksIllustrationGrid.ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.RelatedWorks(_illustrationId));
+        RelatedWorksIllustrationGrid.ViewModel.ResetEngineAsync(App.AppViewModel.MakoClient.RelatedWorks(_illustrationId));
     }
 }

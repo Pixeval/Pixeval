@@ -51,6 +51,13 @@ public sealed partial class IllustrationView
         _ => ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(ThumbnailDirection)
     };
 
+    public double DesiredWidth => ThumbnailDirection switch
+    {
+        ThumbnailDirection.Landscape => PortraitHeight,
+        ThumbnailDirection.Portrait => LandscapeHeight,
+        _ => ThrowHelper.ArgumentOutOfRange<ThumbnailDirection, double>(ThumbnailDirection)
+    };
+
     public IllustrationView()
     {
         InitializeComponent();
@@ -122,6 +129,6 @@ public sealed partial class IllustrationView
 
     private async Task IllustrationItemsView_OnLoadMoreRequested(object? sender, EventArgs e)
     {
-        _ = await ViewModel.DataProvider.LoadMoreAsync();
+        await ViewModel.LoadMoreAsync(20);
     }
 }

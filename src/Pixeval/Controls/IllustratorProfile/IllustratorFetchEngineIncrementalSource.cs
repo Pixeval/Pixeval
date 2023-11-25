@@ -24,8 +24,7 @@ using Pixeval.CoreApi.Model;
 
 namespace Pixeval.Misc;
 
-public class IllustratorFetchEngineIncrementalSource
-    (IAsyncEnumerable<User> asyncEnumerator, int limit = -1) : FetchEngineIncrementalSource<User, IllustratorViewModel>(asyncEnumerator, limit)
+public class IllustratorFetchEngineIncrementalSource(IAsyncEnumerable<User> asyncEnumerator, int limit = -1) : FetchEngineIncrementalSource<User, IllustratorViewModel>(asyncEnumerator, limit)
 {
     protected override long Identifier(User entity)
     {

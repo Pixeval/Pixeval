@@ -57,7 +57,7 @@ public sealed partial class FollowingsPage
     public override void OnPageActivated(NavigationEventArgs e)
     {
         _ = WeakReferenceMessenger.Default.TryRegister<FollowingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient._viewModel.DataProvider.FetchEngine?.Cancel());
-        _ = _viewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public));
+        _viewModel.ResetEngineAsync(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public));
     }
 
     private TeachingTip IllustratorProfileOnRequestTeachingTip() => FollowingsPageTeachingTip;
@@ -70,7 +70,7 @@ public sealed partial class FollowingsPage
 
     private async Task IllustratorItemsView_OnLoadMoreRequested(AdvancedItemsView sender, EventArgs e)
     {
-        await _viewModel.DataProvider.View.LoadMoreItemsAsync(20);
+        await _viewModel.LoadMoreAsync(20);
     }
 
     private void FollowingsPage_OnSizeChanged(object sender, SizeChangedEventArgs e)

@@ -18,7 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
@@ -30,9 +29,6 @@ namespace Pixeval.Controls.Illustrate;
 
 public abstract class DataProvider<T, TViewModel> : ObservableObject where T : IIllustrate where TViewModel : IllustrateViewModel<T>
 {
-    /// <summary>
-    /// Avoid using <see cref="AdvancedCollectionView.Filter"/>, if you want to set the filter, use <see cref="Filter"/>
-    /// </summary>
     public abstract AdvancedObservableCollection<TViewModel> View { get; }
 
     public abstract IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel> Source { get; protected set; }
@@ -41,5 +37,5 @@ public abstract class DataProvider<T, TViewModel> : ObservableObject where T : I
 
     public abstract void DisposeCurrent();
 
-    public abstract Task<int> ResetAndFillAsync(IFetchEngine<T?>? fetchEngine, int limit = -1);
+    public abstract void ResetEngineAsync(IFetchEngine<T?>? fetchEngine, int limit = -1);
 }

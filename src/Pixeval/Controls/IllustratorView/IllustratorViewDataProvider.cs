@@ -18,8 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
 using Pixeval.Controls.Illustrate;
@@ -33,16 +31,10 @@ public class IllustratorViewDataProvider : DataProvider<User, IllustratorViewMod
 {
     public override AdvancedObservableCollection<IllustratorViewModel> View { get; } = [];
 
-    private IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel> _illustratorsSource = null!;
-
     public override IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel> Source
     {
-        get => _illustratorsSource;
-        protected set
-        {
-            _ = SetProperty(ref _illustratorsSource, value);
-            View.Source = value;
-        }
+        get => (View.Source as IncrementalLoadingCollection<FetchEngineIncrementalSource<User, IllustratorViewModel>, IllustratorViewModel>)!;
+        protected set => View.Source = value;
     }
 
     public override IFetchEngine<User?>? FetchEngine { get; protected set; }
@@ -51,21 +43,17 @@ public class IllustratorViewDataProvider : DataProvider<User, IllustratorViewMod
     {
         if (Source is { } source)
             foreach (var illustratorViewModel in source)
-            {
                 illustratorViewModel.Dispose();
-            }
 
         View.Clear();
     }
 
-    public override async Task<int> ResetAndFillAsync(IFetchEngine<User?>? fetchEngine, int limit = -1)
+    public override void ResetEngineAsync(IFetchEngine<User?>? fetchEngine, int limit = -1)
     {
         FetchEngine?.EngineHandle.Cancel();
         FetchEngine = fetchEngine;
         DisposeCurrent();
 
         Source = new(new IllustratorFetchEngineIncrementalSource(FetchEngine!, limit));
-        var result = await Source.LoadMoreItemsAsync(20);
-        return (int)result.Count;
     }
 }
