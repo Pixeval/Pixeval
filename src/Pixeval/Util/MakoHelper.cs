@@ -25,6 +25,8 @@ using CommunityToolkit.WinUI.Collections;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Pixeval.Controls;
+using Pixeval.Controls.MarkupExtensions;
 using Pixeval.CoreApi.Engine;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
@@ -153,53 +155,53 @@ public static class MakoHelper
         return $"https://s.pximg.net/common/images/stamp/generated-stamps/{id}_s.jpg";
     }
 
-    public static FontIconSource GetBookmarkButtonIconSource(bool isBookmarked)
+    public static FontSymbolIconSource GetBookmarkButtonIconSource(bool isBookmarked)
     {
         var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         return isBookmarked
             ? new()
             {
-                Glyph = "\xEB52", // HeartFill
+                Symbol = FontIconSymbols.HeartFillEB52,
                 Foreground = new SolidColorBrush(Colors.Crimson),
                 FontFamily = systemThemeFontFamily
             }
             : new()
             {
-                Glyph = "\xEB51", // Heart
+                Symbol = FontIconSymbols.HeartEB51,
                 FontFamily = systemThemeFontFamily
             };
     }
 
-    public static FontIcon GetBookmarkButtonIcon(bool isBookmarked)
+    public static FontSymbolIcon GetBookmarkButtonIcon(bool isBookmarked)
     {
         var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         return isBookmarked
             ? new()
             {
-                Glyph = "\xEB52", // HeartFill
+                Symbol = FontIconSymbols.HeartFillEB52,
                 Foreground = new SolidColorBrush(Colors.Crimson),
                 FontFamily = systemThemeFontFamily
             }
             : new()
             {
-                Glyph = "\xEB51", // Heart
+                Symbol = FontIconSymbols.HeartEB51,
                 FontFamily = systemThemeFontFamily
             };
     }
 
-    public static FontIconSource GetFollowButtonIcon(bool isFollowed)
+    public static FontSymbolIconSource GetFollowButtonIcon(bool isFollowed)
     {
         var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         return isFollowed
             ? new()
             {
-                Glyph = "\xEA8C", // ContactSolid
+                Symbol = FontIconSymbols.ContactSolidEA8C,
                 Foreground = new SolidColorBrush(Colors.Crimson),
                 FontFamily = systemThemeFontFamily
             }
             : new()
             {
-                Glyph = "\xE77B", // Contact
+                Symbol = FontIconSymbols.ContactE77B,
                 FontFamily = systemThemeFontFamily
             };
     }

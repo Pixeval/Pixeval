@@ -111,19 +111,19 @@ public sealed partial class FollowingsPage
         IllustratorItemsView.MinItemHeight = newItemHeight;
     }
 
-    private void MainSplitView_OnPaneAction(SplitView sender, object args)
+    private void MainSplitView_OnPaneAction(SplitView sender, object? args)
     {
         // not loaded
         if (IllustratorItemsView is null)
             return;
 
         // 10： Margin
-        if (sender.IsPaneOpen)
+        if (args is null)
         {
             IllustratorItemsView.LayoutType = ItemsViewLayoutType.Grid;
             ContentGrid.Width = MainSplitView.OpenPaneLength;
         }
-        else
+        else // args is SplitViewPaneClosingEventArgs
         {
             IllustratorItemsView.LayoutType = ItemsViewLayoutType.VerticalStack;
             ContentGrid.Width = MainSplitView.CompactPaneLength;

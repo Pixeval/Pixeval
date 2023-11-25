@@ -326,8 +326,7 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
         return x.Illustrate.Equals(y.Illustrate);
     }
 
-    public int GetHashCode(IllustrationViewModel obj)
-    {
-        return obj.Illustrate.GetHashCode();
-    }
+    public override bool Equals(object? obj) => obj is IllustrationViewModel viewModel && Illustrate.Equals(viewModel.Illustrate);
+
+    public override int GetHashCode() => Illustrate.GetHashCode();
 }

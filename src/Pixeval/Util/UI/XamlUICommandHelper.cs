@@ -57,6 +57,26 @@ public static class XamlUiCommandHelper
         };
     }
 
+    public static XamlUICommand GetCommand(this string label, IconSource icon)
+    {
+        return new()
+        {
+            Label = label,
+            Description = label,
+            IconSource = icon
+        };
+    }
+
+    public static XamlUICommand GetCommand(this string label, IconSource icon, VirtualKey key)
+    {
+        return new()
+        {
+            Label = label,
+            IconSource = icon,
+            KeyboardAccelerators = { new KeyboardAccelerator { Key = key } }
+        };
+    }
+
     public static XamlUICommand GetCommand(this string label, IconSource icon, VirtualKeyModifiers modifiers, VirtualKey key)
     {
         return new()

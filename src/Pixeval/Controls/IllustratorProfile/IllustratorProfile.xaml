@@ -14,6 +14,7 @@
     xmlns:media="using:CommunityToolkit.WinUI.Media"
     Padding="0"
     AspectRatio="15:8"
+    Background="{StaticResource CardBackgroundFillColorDefaultBrush}"
     Loaded="IllustratorProfile_OnLoaded"
     mc:Ignorable="d">
     <!--  图片长宽均为5，故为(3*5):(3+5)  -->
@@ -24,7 +25,7 @@
                     <TextBlock
                         Margin="10,5"
                         Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="{x:Bind ViewModel.Username, Mode=OneWay}"
+                        Text="{x:Bind ViewModel.Username}"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="NoWrap" />
                     <TextBlock
@@ -170,9 +171,9 @@
             </interactivity:Interaction.Behaviors>
             <Button.Flyout>
                 <MenuFlyout Closed="RestoreAvatarButton">
-                    <MenuFlyoutItem Command="{x:Bind ViewModel.FollowCommand, Mode=OneWay}" />
+                    <MenuFlyoutItem Command="{x:Bind ViewModel.FollowCommand}" />
                     <MenuFlyoutSeparator />
-                    <MenuFlyoutItem Command="{x:Bind ViewModel.ShareCommand, Mode=OneWay}" />
+                    <MenuFlyoutItem Command="{x:Bind ViewModel.ShareCommand}" />
                     <!--  不知道为什么Tapped事件不会触发，只能用Click  -->
                     <MenuFlyoutItem
                         x:Uid="/IllustratorProfile/GenerateLink"

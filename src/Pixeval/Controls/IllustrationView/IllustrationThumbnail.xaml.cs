@@ -29,7 +29,6 @@ using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using WinUI3Utilities.Attributes;
-using System.Collections.Immutable;
 
 namespace Pixeval.Controls.IllustrationView;
 

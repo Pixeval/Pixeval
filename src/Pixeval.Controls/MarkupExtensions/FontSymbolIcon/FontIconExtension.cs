@@ -51,15 +51,11 @@ public class FontSymbolIconExtension : TextIconExtension
             FlowDirection = FlowDirection
         };
 
-        if (FontSize > 0)
-        {
+        if (FontSize > 0) 
             fontIcon.FontSize = FontSize;
-        }
 
-        if (Foreground != null)
-        {
+        if (Foreground is not null) 
             fontIcon.Foreground = Foreground;
-        }
 
         return fontIcon;
     }

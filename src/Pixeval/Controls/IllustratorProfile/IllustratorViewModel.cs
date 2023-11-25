@@ -51,10 +51,8 @@ public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
 
     public IllustratorViewModel(User user) : base(user)
     {
-        _bannerImageTaskCompletionSource = new TaskCompletionSource<SoftwareBitmapSource[]>();
+        _bannerImageTaskCompletionSource = new();
         IsFollowed = Illustrate.UserInfo?.IsFollowed ?? false;
-        Username = Illustrate.UserInfo?.Name ?? string.Empty;
-        UserId = Illustrate.UserInfo?.Id.ToString() ?? string.Empty;
 
         SetAvatarAsync().Discard();
         SetBannerSourceAsync().Discard();
@@ -72,20 +70,16 @@ public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
     [ObservableProperty]
     private Brush? _avatarBorderBrush;
 
-    [ObservableProperty]
-    private string? _username;
+    public string Username => Illustrate.UserInfo?.Name ?? "";
 
-    [ObservableProperty]
-    private string? _userId;
+    public string UserId => Illustrate.UserInfo?.Id.ToString() ?? "";
 
     [ObservableProperty]
     private bool _isFollowed;
 
-    [ObservableProperty]
-    private XamlUICommand? _followCommand;
+    public XamlUICommand FollowCommand { get; set; }
 
-    [ObservableProperty]
-    private XamlUICommand? _shareCommand;
+    public XamlUICommand ShareCommand { get; set; }
 
     public string GetIllustrationToolTipSubtitleText(User? user)
     {
@@ -139,19 +133,12 @@ public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
     //     Metrics = new UserMetrics(followings, myPixivUsers, illustrations);
     // }
 
+    private string FollowText => IsFollowed ? IllustratorProfileResources.Unfollow : IllustratorProfileResources.Follow;
+
     private void InitializeCommands()
     {
-        FollowCommand = new XamlUICommand
-        {
-            Label = IsFollowed ? IllustratorProfileResources.Unfollow : IllustratorProfileResources.Follow,
-            IconSource = MakoHelper.GetFollowButtonIcon(Illustrate.UserInfo?.IsFollowed ?? false)
-        };
-
-        ShareCommand = new XamlUICommand
-        {
-            Label = IllustratorProfileResources.Share,
-            IconSource = FontIconSymbols.ShareE72D.GetFontIconSource()
-        };
+        FollowCommand = FollowText.GetCommand(MakoHelper.GetFollowButtonIcon(IsFollowed));
+        ShareCommand = IllustratorProfileResources.Share.GetCommand(FontIconSymbols.ShareE72D);
 
         FollowCommand.ExecuteRequested += FollowCommandOnExecuteRequested;
         // TODO: ShareCommand
@@ -160,8 +147,8 @@ public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
     private void FollowCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         SwitchFollowState();
-        FollowCommand!.Label = IsFollowed ? IllustratorProfileResources.Unfollow : IllustratorProfileResources.Follow;
-        FollowCommand!.IconSource = MakoHelper.GetFollowButtonIcon(IsFollowed);
+        FollowCommand.Label = IsFollowed ? IllustratorProfileResources.Unfollow : IllustratorProfileResources.Follow;
+        FollowCommand.IconSource = MakoHelper.GetFollowButtonIcon(IsFollowed);
     }
 
     private void SwitchFollowState()
@@ -175,13 +162,13 @@ public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
     private void Follow()
     {
         IsFollowed = true;
-        _ = App.AppViewModel.MakoClient.PostFollowUserAsync(UserId!, PrivacyPolicy.Public);
+        _ = App.AppViewModel.MakoClient.PostFollowUserAsync(UserId, PrivacyPolicy.Public);
     }
 
     private void Unfollow()
     {
         IsFollowed = false;
-        _ = App.AppViewModel.MakoClient.RemoveFollowUserAsync(UserId!);
+        _ = App.AppViewModel.MakoClient.RemoveFollowUserAsync(UserId);
     }
 
     public override void Dispose()

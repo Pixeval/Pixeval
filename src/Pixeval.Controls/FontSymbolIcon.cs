@@ -32,6 +32,15 @@ public partial class FontSymbolIcon : FontIcon
 {
     private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        d.To<FontIcon>().Glyph = e.NewValue.To<FontIconSymbols>().GetGlyph().ToString();
+        d.To<FontSymbolIcon>().Glyph = e.NewValue.To<FontIconSymbols>().GetGlyph().ToString();
+    }
+}
+
+[DependencyProperty<FontIconSymbols>("Symbol", DependencyPropertyDefaultValue.UnsetValue, nameof(PropertyChangedCallback))]
+public partial class FontSymbolIconSource : FontIconSource
+{
+    private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        d.To<FontSymbolIconSource>().Glyph = e.NewValue.To<FontIconSymbols>().GetGlyph().ToString();
     }
 }

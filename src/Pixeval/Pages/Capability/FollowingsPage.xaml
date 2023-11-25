@@ -19,6 +19,7 @@
             DisplayMode="CompactOverlay"
             IsPaneOpen="True"
             OpenPaneLength="1000"
+            PaneBackground="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"
             PaneClosing="MainSplitView_OnPaneAction"
             PaneOpening="MainSplitView_OnPaneAction">
             <SplitView.Pane>

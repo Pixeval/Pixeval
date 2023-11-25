@@ -20,7 +20,6 @@
             <StaticResource x:Key="CardControlBorderBrushPointerOverSelected" ResourceKey="SystemControlHighlightAccentRevealBorderBrush" />
             <StaticResource x:Key="CardControlBorderBrushPressedSelected" ResourceKey="SystemControlHighlightListAccentMediumBrush" />
             <StaticResource x:Key="CardControlBorderBrushDisabledSelected" ResourceKey="SystemControlHighlightListAccentLowBrush" />
-
         </ResourceDictionary>
 
         <!--<ResourceDictionary x:Key="Light">
