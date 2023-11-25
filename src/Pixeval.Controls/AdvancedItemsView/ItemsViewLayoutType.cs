@@ -26,6 +26,8 @@ public enum ItemsViewLayoutType
 {
     LinedFlow,
     Grid,
+    VerticalUniformStack,
+    HorizontalUniformStack,
     VerticalStack,
-    HorizontalStack
+    HorizontalStack,
 }

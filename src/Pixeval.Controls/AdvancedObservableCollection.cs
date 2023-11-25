@@ -34,7 +34,7 @@ using CommunityToolkit.WinUI.Helpers;
 using System.Diagnostics;
 using System.IO;
 
-namespace Pixeval.Controls;
+namespace Pixeval.Collections;
 
 [DebuggerDisplay("Count = {Count}")]
 public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IComparer<T> where T : class

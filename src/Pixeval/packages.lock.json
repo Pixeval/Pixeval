@@ -676,6 +676,7 @@
           "CommunityToolkit.WinUI.Triggers": "[8.0.230907, )",
           "Microsoft.Windows.SDK.BuildTools": "[10.0.22621.2428, )",
           "Microsoft.WindowsAppSDK": "[1.4.231115000, )",
+          "Microsoft.Xaml.Behaviors.WinUI.Managed": "[2.0.9, )",
           "WinUI3Utilities": "[1.1.4.3, )"
         }
       },

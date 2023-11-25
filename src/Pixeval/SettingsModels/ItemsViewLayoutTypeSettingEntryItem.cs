@@ -36,7 +36,6 @@ public record ItemsViewLayoutTypeSettingEntryItem : StringRepresentableItem, IAv
     {
     }
 
-    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = Enum.GetValues<ItemsViewLayoutType>()
-        .Where(i => i is not ItemsViewLayoutType.VerticalStack and not ItemsViewLayoutType.HorizontalStack)
+    public static IEnumerable<StringRepresentableItem> AvailableItems { get; } = new[] { ItemsViewLayoutType.LinedFlow, ItemsViewLayoutType.Grid }
         .Select(i => new ItemsViewLayoutTypeSettingEntryItem(i));
 }

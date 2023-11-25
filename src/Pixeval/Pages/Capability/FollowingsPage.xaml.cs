@@ -20,10 +20,12 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Global.Enum;
@@ -49,7 +51,7 @@ public sealed partial class FollowingsPage
 
     public FrameworkElement SelfIllustratorView => this;
 
-    public ScrollViewer ScrollViewer => IllustratorListView.FindDescendant<ScrollViewer>()!;
+    public ScrollViewer ScrollViewer => IllustratorItemsView.FindDescendant<ScrollViewer>()!;
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e)
     {
@@ -67,21 +69,6 @@ public sealed partial class FollowingsPage
         _ = ViewModel.ResetEngineAndFillAsync(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public));
     }
 
-    private IllustratorProfile? _lastSelectedItem;
-
-    private void IllustratorProfileSelectedChanging(CardControl sender, CancellableEventArgs e)
-    {
-        if (_lastSelectedItem == sender)
-        {
-            e.Cancel = true;
-            return;
-        }
-        if (_lastSelectedItem is not null)
-            _lastSelectedItem.IsSelected = false;
-        _lastSelectedItem = (IllustratorProfile)sender;
-        _ = IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), _lastSelectedItem.ViewModel);
-    }
-
     private async void IllustratorListView_OnLoaded(object sender, RoutedEventArgs e)
     {
         if (_illustratorListViewLoaded)
@@ -96,4 +83,50 @@ public sealed partial class FollowingsPage
     }
 
     private TeachingTip IllustratorProfileOnRequestTeachingTip() => FollowingPageTeachingTip;
+
+    private void IllustratorListView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs e)
+    {
+        if (IllustratorItemsView.SelectedItem is IllustratorViewModel viewModel)
+            _ = IllustratorContentViewerFrame.Navigate(typeof(IllustratorContentViewerPage), viewModel);
+    }
+
+    private async Task IllustratorListView_OnLoadMoreRequested(AdvancedItemsView sender, EventArgs e)
+    {
+        await ViewModel.DataProvider.View.LoadMoreItemsAsync(20);
+    }
+
+    private void FollowingsPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        var newWidth = Math.Floor(Math.Max(ActualWidth * 2 / 3, MainSplitView.CompactPaneLength));
+        MainSplitView.OpenPaneLength = newWidth;
+        if (MainSplitView.IsPaneOpen)
+            ContentGrid.Width = newWidth;
+
+        var count = Math.Round(newWidth / 305);
+        // 10：Padding，5：Spacing
+        var newItemWidth = (newWidth - 10 - 5 * (count - 1)) / count;
+        var newItemHeight = newItemWidth * 8 / 15;
+        // 3：空出余量
+        IllustratorItemsView.MinItemWidth = newItemWidth - 3;
+        IllustratorItemsView.MinItemHeight = newItemHeight;
+    }
+
+    private void MainSplitView_OnPaneAction(SplitView sender, object args)
+    {
+        // not loaded
+        if (IllustratorItemsView is null)
+            return;
+
+        // 10： Margin
+        if (sender.IsPaneOpen)
+        {
+            IllustratorItemsView.LayoutType = ItemsViewLayoutType.Grid;
+            ContentGrid.Width = MainSplitView.OpenPaneLength;
+        }
+        else
+        {
+            IllustratorItemsView.LayoutType = ItemsViewLayoutType.VerticalStack;
+            ContentGrid.Width = MainSplitView.CompactPaneLength;
+        }
+    }
 }

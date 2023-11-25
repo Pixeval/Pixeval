@@ -15,11 +15,11 @@
     <controls:AdvancedItemsView
         x:Name="IllustrationItemsView"
         IsItemInvokedEnabled="True"
-        ItemHeight="{x:Bind DesiredHeight}"
         ItemInvoked="IllustrationItemsView_OnItemInvoked"
         ItemsSource="{x:Bind ViewModel.DataProvider.View, Mode=OneWay}"
         LayoutType="{x:Bind LayoutType, Mode=OneWay}"
         LoadMoreRequested="IllustrationItemsView_OnLoadMoreRequested"
+        MinItemHeight="{x:Bind DesiredHeight}"
         SelectionMode="{x:Bind ViewModel.IsSelecting, Converter={StaticResource BoolToItemsViewSelectionModeConverter}, Mode=OneWay}">
         <ItemsView.ItemTemplate>
             <DataTemplate x:DataType="local:IllustrationViewModel">

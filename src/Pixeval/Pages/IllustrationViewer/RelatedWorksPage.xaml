@@ -11,6 +11,6 @@
     <illustrationView:IllustrationView
         x:Name="RelatedWorksIllustrationGrid"
         Margin="5,0,0,0"
-        LayoutType="VerticalStack"
+        LayoutType="VerticalUniformStack"
         ThumbnailDirection="{x:Bind ThumbnailDirection}" />
 </controls:EnhancedPage>
