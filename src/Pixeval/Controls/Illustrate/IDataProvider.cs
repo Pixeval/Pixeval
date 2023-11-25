@@ -18,7 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using CommunityToolkit.Mvvm.ComponentModel;
+using System.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
 using Pixeval.CoreApi.Engine;
@@ -27,15 +27,15 @@ using Pixeval.Misc;
 
 namespace Pixeval.Controls.Illustrate;
 
-public abstract class DataProvider<T, TViewModel> : ObservableObject where T : IIllustrate where TViewModel : IllustrateViewModel<T>
+public interface IDataProvider<T, TViewModel> : INotifyPropertyChanged, INotifyPropertyChanging where T : IIllustrate where TViewModel : IllustrateViewModel<T>
 {
-    public abstract AdvancedObservableCollection<TViewModel> View { get; }
+    AdvancedObservableCollection<TViewModel> View { get; }
 
-    public abstract IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel> Source { get; protected set; }
+    IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel> Source { get; }
 
-    public abstract IFetchEngine<T?>? FetchEngine { get; protected set; }
+    IFetchEngine<T?>? FetchEngine { get; }
 
-    public abstract void DisposeCurrent();
+    void DisposeCurrent();
 
-    public abstract void ResetEngineAsync(IFetchEngine<T?>? fetchEngine, int limit = -1);
+    void ResetEngine(IFetchEngine<T?>? fetchEngine, int limit = -1);
 }

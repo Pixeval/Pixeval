@@ -47,6 +47,6 @@ public sealed partial class RelatedWorksPage
             WeakReferenceMessenger.Default.UnregisterAll(this);
         });
         _illustrationId = e.Parameter.To<string>();
-        RelatedWorksIllustrationGrid.ViewModel.ResetEngineAsync(App.AppViewModel.MakoClient.RelatedWorks(_illustrationId));
+        RelatedWorksIllustrationGrid.ViewModel.ResetEngine(App.AppViewModel.MakoClient.RelatedWorks(_illustrationId));
     }
 }

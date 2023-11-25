@@ -49,7 +49,7 @@ public sealed partial class IllustratorIllustrationPage : ISortedIllustrationCon
         _ = WeakReferenceMessenger.Default.TryRegister<IllustratorIllustrationPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient.IllustrationContainer.ViewModel.DataProvider.FetchEngine?.Cancel());
         if (e.Parameter is string id)
         {
-            IllustrationContainer.ViewModel.ResetEngineAsync(App.AppViewModel.MakoClient.Posts(id));
+            IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Posts(id));
         }
 
         if (!App.AppViewModel.AppSetting.ShowExternalCommandBarInIllustratorContentViewer)

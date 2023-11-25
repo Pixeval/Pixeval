@@ -57,7 +57,7 @@ public sealed partial class FollowingsPage
     public override void OnPageActivated(NavigationEventArgs e)
     {
         _ = WeakReferenceMessenger.Default.TryRegister<FollowingsPage, MainPageFrameNavigatingEvent>(this, static (recipient, _) => recipient._viewModel.DataProvider.FetchEngine?.Cancel());
-        _viewModel.ResetEngineAsync(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public));
+        _viewModel.ResetEngine(App.AppViewModel.MakoClient.Following(App.AppViewModel.PixivUid!, PrivacyPolicy.Public));
     }
 
     private TeachingTip IllustratorProfileOnRequestTeachingTip() => FollowingsPageTeachingTip;

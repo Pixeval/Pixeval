@@ -81,34 +81,33 @@
                     Tapped="ClearDownloadListButton_OnTapped" />
             </CommandBar>
         </Grid>
-        <ScrollViewer Grid.Row="1">
-            <controls:AdvancedItemsView
-                ItemsSource="{x:Bind _viewModel.DataProvider.View}"
-                LayoutType="VerticalStack"
-                LoadMoreRequested="AdvancedItemsView_OnLoadMoreRequested"
-                SelectionChanged="ItemsView_OnSelectionChanged"
-                SelectionMode="Multiple">
-                <controls:AdvancedItemsView.ItemTemplate>
-                    <DataTemplate x:DataType="download:DownloadListEntryViewModel">
-                        <ItemContainer IsSelected="{x:Bind DownloadTask.Selected, Mode=TwoWay}">
-                            <!--  ReSharper disable once Xaml.PossibleNullReferenceException (Illustrate.User!.Name)  -->
-                            <download:DownloadListEntry
-                                Title="{x:Bind Illustrate.Title}"
-                                ActionButtonContent="{x:Bind download:DownloadListEntryViewModel.GetEntryActionButtonContent(DownloadTask.CurrentState), Mode=OneWay}"
-                                DataContext="{x:Bind}"
-                                Description="{x:Bind Illustrate.User.Name}"
-                                EffectiveViewportChanged="DownloadListEntryOnEffectiveViewportChanged"
-                                IsCancelItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsEntryCancelDownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
-                                IsRedownloadItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsRedownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
-                                IsShowErrorDetailDialogItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsShowErrorDetailDialogItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
-                                OpenIllustrationRequested="DownloadListEntry_OnOpenIllustrationRequested"
-                                Progress="{x:Bind DownloadTask.ProgressPercentage, Mode=OneWay}"
-                                ProgressMessage="{x:Bind download:DownloadListEntryViewModel.GetEntryProgressMessage(DownloadTask.CurrentState, DownloadTask.ProgressPercentage, DownloadTask.ErrorCause), Mode=OneWay}"
-                                ViewModel="{x:Bind}" />
-                        </ItemContainer>
-                    </DataTemplate>
-                </controls:AdvancedItemsView.ItemTemplate>
-            </controls:AdvancedItemsView>
-        </ScrollViewer>
+        <controls:AdvancedItemsView
+            Grid.Row="1"
+            ItemsSource="{x:Bind _viewModel.DataProvider.View}"
+            LayoutType="VerticalStack"
+            LoadMoreRequested="AdvancedItemsView_OnLoadMoreRequested"
+            SelectionChanged="ItemsView_OnSelectionChanged"
+            SelectionMode="Multiple">
+            <controls:AdvancedItemsView.ItemTemplate>
+                <DataTemplate x:DataType="download:DownloadListEntryViewModel">
+                    <ItemContainer IsSelected="{x:Bind DownloadTask.Selected, Mode=TwoWay}">
+                        <!--  ReSharper disable once Xaml.PossibleNullReferenceException (Illustrate.User!.Name)  -->
+                        <download:DownloadListEntry
+                            Title="{x:Bind Illustrate.Title}"
+                            ActionButtonContent="{x:Bind download:DownloadListEntryViewModel.GetEntryActionButtonContent(DownloadTask.CurrentState), Mode=OneWay}"
+                            DataContext="{x:Bind}"
+                            Description="{x:Bind Illustrate.User.Name}"
+                            EffectiveViewportChanged="DownloadListEntryOnEffectiveViewportChanged"
+                            IsCancelItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsEntryCancelDownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
+                            IsRedownloadItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsRedownloadItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
+                            IsShowErrorDetailDialogItemEnabled="{x:Bind download:DownloadListEntryViewModel.GetIsShowErrorDetailDialogItemEnabled(DownloadTask.CurrentState), Mode=OneWay}"
+                            OpenIllustrationRequested="DownloadListEntry_OnOpenIllustrationRequested"
+                            Progress="{x:Bind DownloadTask.ProgressPercentage, Mode=OneWay}"
+                            ProgressMessage="{x:Bind download:DownloadListEntryViewModel.GetEntryProgressMessage(DownloadTask.CurrentState, DownloadTask.ProgressPercentage, DownloadTask.ErrorCause), Mode=OneWay}"
+                            ViewModel="{x:Bind}" />
+                    </ItemContainer>
+                </DataTemplate>
+            </controls:AdvancedItemsView.ItemTemplate>
+        </controls:AdvancedItemsView>
     </Grid>
 </controls:EnhancedWindowPage>

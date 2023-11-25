@@ -1,69 +1,83 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Pixeval.Controls.IllustrationView.IllustrationViewDataProvider" Collapsed="true">
-    <Position X="9" Y="4.25" Width="3.25" />
+    <Position X="14" Y="4.25" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>BAAEIAAAAiAAAACAAAAAAEIACAABAgAAAQQAAAAAAAA=</HashCode>
+      <HashCode>BAAEIAEAAiAAAACAAAAAAEIACAABAgAAAQAAAAAAAAA=</HashCode>
       <FileName>Controls\IllustrationView\IllustrationViewDataProvider.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Controls.IllustratorView.IllustratorViewDataProvider" Collapsed="true">
-    <Position X="5.5" Y="4.25" Width="2.75" />
+    <Position X="10.25" Y="4.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAEAAAAAgAAAAAAAAAAAEAABAABAAAAAAQAAAAAAAA=</HashCode>
+      <HashCode>AAAEAAEAAgAAAAAAAAAAAEAAAAABAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Controls\IllustratorView\IllustratorViewDataProvider.cs</FileName>
     </TypeIdentifier>
-  </Class>
-  <Class Name="Pixeval.Misc.IllustrationFetchEngineIncrementalSource" Collapsed="true">
-    <Position X="6.25" Y="7" Width="4" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
-      <FileName>Misc\IllustrationFetchEngineIncrementalSource.cs</FileName>
-    </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Misc.IllustratorFetchEngineIncrementalSource" Collapsed="true">
-    <Position X="11" Y="7" Width="3.75" />
+    <Position X="16.25" Y="7" Width="3.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
-      <FileName>Misc\IllustratorFetchEngineIncrementalSource.cs</FileName>
+      <FileName>Controls\IllustratorProfile\IllustratorFetchEngineIncrementalSource.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Misc.FetchEngineIncrementalSource&lt;T, TModel&gt;" Collapsed="true">
-    <Position X="6.5" Y="5.75" Width="3" />
+    <Position X="9" Y="5.75" Width="3" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAAAAQAAAAAgQAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
       <FileName>Misc\FetchEngineIncrementalSource.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Pixeval.Controls.Illustrate.DataProvider&lt;T, TViewModel&gt;" Collapsed="true">
-    <Position X="5.5" Y="2.75" Width="2.25" />
+  <Class Name="Pixeval.Controls.SpotlightArticleView.SpotlightArticleViewDataProvider" Collapsed="true">
+    <Position X="1.75" Y="4.25" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAEAAAAAgAAAAAAAAAAAEAAABABAIAAAAQAAAAAAAA=</HashCode>
-      <FileName>Controls\Illustrate\DataProvider.cs</FileName>
+      <HashCode>AAAEAAEAAgAAAAAAAAAAAEAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controls\SpotlightArticleView\SpotlightArticleViewDataProvider.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="FetchEngine" />
-    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Pixeval.Controls.SpotlightView.SpotlightArticleViewDataProvider" Collapsed="true">
-    <Position X="1" Y="4.25" Width="3.75" />
-    <TypeIdentifier>
-      <HashCode>AAAEAAAAAgAAAgAAAAAAAEAAAAABAAAAAAQAAAAAAAA=</HashCode>
-      <FileName>Controls\SpotlightView\SpotlightArticleViewDataProvider.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Pixeval.Misc.SpotlightArticleFetchEngineIncrementalSource" Collapsed="true">
+  <Class Name="Pixeval.Controls.SpotlightArticleView.SpotlightArticleFetchEngineIncrementalSource" Collapsed="true">
     <Position X="1" Y="7" Width="4.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
-      <FileName>Misc\SpotlightArticleFetchEngineIncrementalSource.cs</FileName>
+      <FileName>Controls\SpotlightArticleView\SpotlightArticleFetchEngineIncrementalSource.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="Pixeval.Controls.IllustrationView.IllustrationFetchEngineIncrementalSource" Collapsed="true">
+    <Position X="11.5" Y="7" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Controls\IllustrationView\IllustrationFetchEngineIncrementalSource.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.Pages.Download.DownloadListEntryIncrementalSource" Collapsed="true">
+    <Position X="6.25" Y="7" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Pages\Download\DownloadListEntryIncrementalSource.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.Pages.Download.DownloadListEntryDataProvider" Collapsed="true">
+    <Position X="6" Y="4.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAEAAgAAAAAAAAAAAEAQAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Pages\Download\DownloadListEntryDataProvider.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
   <Interface Name="Pixeval.CoreApi.Engine.IFetchEngine&lt;E&gt;" Collapsed="true">
-    <Position X="6" Y="0.75" Width="1.5" />
+    <Position X="8" Y="0.75" Width="1.5" />
     <TypeIdentifier />
+  </Interface>
+  <Interface Name="Pixeval.Controls.Illustrate.IDataProvider&lt;T, TViewModel&gt;" Collapsed="true">
+    <Position X="8" Y="2" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAEAAgAAAAAAAAAAAEAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controls\Illustrate\IDataProvider.cs</FileName>
+    </TypeIdentifier>
   </Interface>
   <Font Name="Microsoft YaHei UI" Size="9" />
 </ClassDiagram>

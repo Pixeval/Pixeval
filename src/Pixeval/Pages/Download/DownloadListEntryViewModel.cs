@@ -73,6 +73,6 @@ public sealed partial class DownloadListEntryViewModel(ObservableDownloadTask do
 
     public static bool GetIsShowErrorDetailDialogItemEnabled(DownloadState currentState)
     {
-        return currentState == DownloadState.Error;
+        return currentState is DownloadState.Error;
     }
 }

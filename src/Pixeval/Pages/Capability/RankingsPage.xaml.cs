@@ -78,6 +78,6 @@ public sealed partial class RankingsPage : ISortedIllustrationContainerPageHelpe
     {
         var rankOption = (RankOptionComboBox.SelectedItem as RankOptionWrapper)?.Value ?? RankOption.Day;
         var dateTime = RankDateTimeCalendarDatePicker.Date?.DateTime ?? DateTime.Now.AddDays(-2);
-        IllustrationContainer.ViewModel.ResetEngineAsync(App.AppViewModel.MakoClient.Ranking(rankOption, dateTime));
+        IllustrationContainer.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Ranking(rankOption, dateTime));
     }
 }

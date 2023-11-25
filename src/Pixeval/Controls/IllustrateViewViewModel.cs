@@ -33,13 +33,13 @@ public abstract partial class IllustrateViewViewModel<T, TViewModel> : Observabl
     private bool _hasNoItems;
 
     /// <summary>
-    /// Avoid calls to <see cref="DataProvider{T,TViewModel}.ResetEngineAsync"/>, calls to <see cref="ResetEngineAsync"/> instead.
+    /// Avoid calls to <see cref="IDataProvider{T,TViewModel}.ResetEngine"/>, calls to <see cref="ResetEngine"/> instead.
     /// </summary>
-    public abstract DataProvider<T, TViewModel> DataProvider { get; }
+    public abstract IDataProvider<T, TViewModel> DataProvider { get; }
 
     public abstract void Dispose();
 
-    public void ResetEngineAsync(IFetchEngine<T?>? newEngine, int itemLimit = -1) => DataProvider.ResetEngineAsync(newEngine, itemLimit);
+    public void ResetEngine(IFetchEngine<T?>? newEngine, int itemLimit = -1) => DataProvider.ResetEngine(newEngine, itemLimit);
 
     public async Task LoadMoreAsync(uint count)
     {

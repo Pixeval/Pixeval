@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
 using Pixeval.Controls.Illustrate;
@@ -10,15 +11,19 @@ using Pixeval.Misc;
 
 namespace Pixeval.Pages.Download;
 
-public class DownloadListEntryDataProvider : DataProvider<Illustration, DownloadListEntryViewModel>
+public class DownloadListEntryDataProvider : ObservableObject, IDataProvider<Illustration, DownloadListEntryViewModel>
 {
-    public override AdvancedObservableCollection<DownloadListEntryViewModel> View { get; } = [];
+    public AdvancedObservableCollection<DownloadListEntryViewModel> View { get; } = [];
 
-    public override IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, DownloadListEntryViewModel>, DownloadListEntryViewModel> Source { get; protected set; } = null!;
+    public IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, DownloadListEntryViewModel>, DownloadListEntryViewModel> Source
+    {
+        get => (View.Source as IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, DownloadListEntryViewModel>, DownloadListEntryViewModel>)!;
+        protected set => View.Source = value;
+    }
 
-    public override IFetchEngine<Illustration?>? FetchEngine { get; protected set; }
+    public IFetchEngine<Illustration?>? FetchEngine { get; protected set; }
 
-    public override void DisposeCurrent()
+    public void DisposeCurrent()
     {
         if (Source is { } source)
             foreach (var downloadListEntryViewModel in source)
@@ -27,13 +32,12 @@ public class DownloadListEntryDataProvider : DataProvider<Illustration, Download
         View.Clear();
     }
 
-    public void ResetAndFillAsync(IEnumerable<ObservableDownloadTask> source)
+    public void ResetEngine(IEnumerable<ObservableDownloadTask> source)
     {
         Source = new(new DownloadListEntryIncrementalSource(source));
     }
 
-    [Obsolete]
-    public override void ResetEngineAsync(IFetchEngine<Illustration?>? fetchEngine, int limit = -1)
+    void IDataProvider<Illustration, DownloadListEntryViewModel>.ResetEngine(IFetchEngine<Illustration?>? fetchEngine, int limit)
     {
         throw new NotImplementedException("DownloadListEntryDataProvider 不使用 FetchEngine");
     }

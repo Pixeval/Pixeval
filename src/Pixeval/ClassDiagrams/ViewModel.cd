@@ -25,15 +25,15 @@
   <Class Name="Pixeval.Controls.IllustratorViewModel" Collapsed="true">
     <Position X="5.75" Y="2.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAACIAAEAKAoQAAAAcEAAgSCAAAAEAAIAAIAAAAAAAE=</HashCode>
+      <HashCode>AAACIAIEAKAQQAAAAYQAAhyCAAAAkAAAAAAAAAAAABE=</HashCode>
       <FileName>Controls\IllustratorProfile\IllustratorViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Pixeval.Controls.SpotlightView.SpotlightArticleViewModel" Collapsed="true">
+  <Class Name="Pixeval.Controls.SpotlightArticleView.SpotlightArticleViewModel" Collapsed="true">
     <Position X="2.5" Y="2.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Controls\SpotlightView\SpotlightArticleViewModel.cs</FileName>
+      <FileName>Controls\SpotlightArticleView\SpotlightArticleViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Microsoft YaHei UI" Size="9" />

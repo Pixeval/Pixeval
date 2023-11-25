@@ -55,7 +55,7 @@ public sealed partial class SearchResultsPage : ISortedIllustrationContainerPage
 
     private void ChangeSource(IFetchEngine<Illustration> engine)
     {
-        IllustrationContainer.ViewModel.ResetEngineAsync(engine);
+        IllustrationContainer.ViewModel.ResetEngine(engine);
     }
 
     private void SortOptionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
