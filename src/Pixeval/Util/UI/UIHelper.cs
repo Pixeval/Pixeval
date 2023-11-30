@@ -52,6 +52,7 @@ using Brush = Microsoft.UI.Xaml.Media.Brush;
 using Color = Windows.UI.Color;
 using Image = SixLabors.ImageSharp.Image;
 using Point = Windows.Foundation.Point;
+using Size = SixLabors.ImageSharp.Size;
 
 namespace Pixeval.Util.UI;
 
@@ -106,8 +107,8 @@ public static partial class UiHelper
     {
         using var image = await Image.LoadAsync<Rgb24>(stream);
         image.Mutate(x => x
-            .Resize(new ResizeOptions { Sampler = KnownResamplers.NearestNeighbor, Size = new(100, 0) })
-            .Quantize(new OctreeQuantizer(new() { Dither = null, MaxColors = 1 })));
+            .Resize(new ResizeOptions { Sampler = KnownResamplers.NearestNeighbor, Size = new Size(100, 0) })
+            .Quantize(new OctreeQuantizer(new QuantizerOptions { Dither = null, MaxColors = 1 })));
         var pixel = image[0, 0];
         if (disposeOfStream)
         {

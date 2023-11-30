@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -30,10 +30,14 @@ public record IllustrationSortOptionWrapper(IllustrationSortOption Value, string
     {
         return new IllustrationSortOptionWrapper[]
         {
-            new(IllustrationSortOption.PublishDateDescending, MiscResources.IllustrationSortOptionPublishDateDescending),
-            new(IllustrationSortOption.PublishDateAscending, MiscResources.IllustrationSortOptionPublishDateAscending),
-            new(IllustrationSortOption.PopularityDescending, MiscResources.IllustrationSortOptionPopularityDescending),
-            new(IllustrationSortOption.DoNotSort, MiscResources.IllustrationSortOptionDoNotSort)
+            new(IllustrationSortOption.PublishDateDescending,
+                MiscResources.IllustrationSortOptionPublishDateDescending),
+            new(IllustrationSortOption.PublishDateAscending,
+                MiscResources.IllustrationSortOptionPublishDateAscending),
+            new(IllustrationSortOption.PopularityDescending,
+                MiscResources.IllustrationSortOptionPopularityDescending),
+            new(IllustrationSortOption.DoNotSort,
+                MiscResources.IllustrationSortOptionDoNotSort)
         };
     }
 }

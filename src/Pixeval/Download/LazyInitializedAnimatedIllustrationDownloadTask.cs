@@ -37,7 +37,7 @@ public class LazyInitializedAnimatedIllustrationDownloadTask : AnimatedIllustrat
     public LazyInitializedAnimatedIllustrationDownloadTask(DownloadHistoryEntry databaseEntry) : base(databaseEntry)
     {
         _illustId = databaseEntry.Id!;
-        _resultGenerator = new(async () => new(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(_illustId)));
+        _resultGenerator = new Lazy<Task<IllustrationViewModel>>(async () => new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(_illustId)));
     }
 
     public override async void Consume(IRandomAccessStream stream)

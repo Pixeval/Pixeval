@@ -29,7 +29,7 @@ public static class XamlUiCommandHelper
 {
     public static XamlUICommand GetCommand(this string label, FontIconSymbols icon)
     {
-        return new()
+        return new XamlUICommand
         {
             Label = label,
             Description = label,
@@ -39,7 +39,7 @@ public static class XamlUiCommandHelper
 
     public static XamlUICommand GetCommand(this string label, FontIconSymbols icon, VirtualKey key)
     {
-        return new()
+        return new XamlUICommand
         {
             Label = label,
             IconSource = icon.GetFontIconSource(),
@@ -49,7 +49,7 @@ public static class XamlUiCommandHelper
 
     public static XamlUICommand GetCommand(this string label, FontIconSymbols icon, VirtualKeyModifiers modifiers, VirtualKey key)
     {
-        return new()
+        return new XamlUICommand
         {
             Label = label,
             IconSource = icon.GetFontIconSource(),
@@ -59,7 +59,7 @@ public static class XamlUiCommandHelper
 
     public static XamlUICommand GetCommand(this string label, IconSource icon)
     {
-        return new()
+        return new XamlUICommand
         {
             Label = label,
             Description = label,
@@ -69,7 +69,7 @@ public static class XamlUiCommandHelper
 
     public static XamlUICommand GetCommand(this string label, IconSource icon, VirtualKey key)
     {
-        return new()
+        return new XamlUICommand
         {
             Label = label,
             IconSource = icon,
@@ -79,7 +79,7 @@ public static class XamlUiCommandHelper
 
     public static XamlUICommand GetCommand(this string label, IconSource icon, VirtualKeyModifiers modifiers, VirtualKey key)
     {
-        return new()
+        return new XamlUICommand
         {
             Label = label,
             IconSource = icon,

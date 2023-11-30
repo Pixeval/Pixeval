@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 
 namespace Pixeval.Utilities;
 
-public class AdaptedAsyncEnumerator<T>(IEnumerator<T> outerEnumerator, CancellationToken cancellationToken = new())
+public class AdaptedAsyncEnumerator<T>(IEnumerator<T> outerEnumerator, CancellationToken cancellationToken = new CancellationToken())
     : IAsyncEnumerator<T>
 {
     public ValueTask DisposeAsync()
@@ -45,7 +45,7 @@ public class AdaptedAsyncEnumerator<T>(IEnumerator<T> outerEnumerator, Cancellat
 
 public class AdaptedAsyncEnumerable<T>(IEnumerable<T> sync) : IAsyncEnumerable<T>
 {
-    public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         return new AdaptedAsyncEnumerator<T>(sync.GetEnumerator());
     }

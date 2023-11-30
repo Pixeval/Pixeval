@@ -147,9 +147,9 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
 
     private void InitializeTags()
     {
-        IllustrationTag = new(typeof(IllustratorIllustrationPage), UserDetail.UserEntity!.Id.ToString());
-        MangaTag = new(typeof(IllustratorMangaPage), UserDetail.UserEntity!.Id.ToString());
-        BookmarkedIllustrationAndMangaTag = new(typeof(IllustratorIllustrationAndMangaBookmarkPage), UserDetail.UserEntity!.Id.ToString());
+        IllustrationTag = new NavigationViewTag(typeof(IllustratorIllustrationPage), UserDetail.UserEntity!.Id.ToString());
+        MangaTag = new NavigationViewTag(typeof(IllustratorMangaPage), UserDetail.UserEntity!.Id.ToString());
+        BookmarkedIllustrationAndMangaTag = new NavigationViewTag(typeof(IllustratorIllustrationAndMangaBookmarkPage), UserDetail.UserEntity!.Id.ToString());
     }
 
     private void InitializeCommands()
@@ -157,7 +157,7 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
         FollowCommand = GetFollowCommand();
         FollowCommand.ExecuteRequested += OnFollowCommandOnExecuteRequested;
 
-        FollowPrivatelyCommand = new()
+        FollowPrivatelyCommand = new XamlUICommand
         {
             IconSource = FontIconSymbols.FavoriteStarE734.GetFontIconSource(),
             Label = IllustratorContentViewerResources.FollowPrivately
@@ -172,7 +172,7 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
 
         CurrentTab = IllustratorContentViewerTab.Illustration;
         Username = UserDetail.UserEntity?.Name;
-        Metrics = new(profile?.TotalFollowUsers ?? 0, profile?.TotalMyPixivUsers ?? 0, profile?.TotalIllusts ?? 0);
+        Metrics = new UserMetrics(profile?.TotalFollowUsers ?? 0, profile?.TotalMyPixivUsers ?? 0, profile?.TotalIllusts ?? 0);
         Premium = profile?.IsPremium ?? false;
         Following = UserDetail.UserEntity?.IsFollowed ?? false;
         ActionMenuFlyoutItems = [];
@@ -208,7 +208,7 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
 
     private XamlUICommand GetFollowCommand()
     {
-        return new()
+        return new XamlUICommand
         {
             IconSource = Following ? FontIconSymbols.HeartFillEB52.GetFontIconSource(foregroundBrush: new SolidColorBrush(Colors.Crimson)) : FontIconSymbols.HeartEB51.GetFontIconSource(),
             Label = Following ? IllustratorContentViewerResources.Unfollow : IllustratorProfileResources.Follow
@@ -234,7 +234,7 @@ public partial class IllustratorContentViewerViewModel : ObservableObject
 
             var displayImageUrls = (recommendUser.IllustIds ?? Enumerable.Empty<string>()).Select(id => thumbnails.First(t => t.Id == id)).SelectNotNull(illust => illust.Urls?.The250X250);
 
-            return new(userId ?? string.Empty, user.Name ?? string.Empty, displayImageUrls, user.Image, user.Premium);
+            return new RecommendIllustratorProfileViewModel(userId ?? string.Empty, user.Name ?? string.Empty, displayImageUrls, user.Image, user.Premium);
         }
     }
 

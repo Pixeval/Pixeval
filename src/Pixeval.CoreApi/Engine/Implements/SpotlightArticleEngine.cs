@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -29,7 +29,7 @@ namespace Pixeval.CoreApi.Engine.Implements;
 
 internal class SpotlightArticleEngine(MakoClient makoClient, EngineHandle? engineHandle) : AbstractPixivFetchEngine<SpotlightArticle>(makoClient, engineHandle)
 {
-    public override IAsyncEnumerator<SpotlightArticle> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public override IAsyncEnumerator<SpotlightArticle> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         return new SpotlightArticleAsyncEnumerator(this, MakoApiKind.AppApi)!;
     }

@@ -74,7 +74,7 @@ public sealed partial class DownloadListEntry
             case DownloadState.Error:
             case DownloadState.Cancelled:
             case DownloadState.Completed:
-                _ = await Launcher.LaunchUriAsync(new(ViewModel.DownloadTask.Destination));
+                _ = await Launcher.LaunchUriAsync(new Uri(ViewModel.DownloadTask.Destination));
                 break;
             case DownloadState.Paused:
                 ViewModel.DownloadTask.CancellationHandle.Resume();

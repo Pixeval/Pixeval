@@ -38,9 +38,8 @@ public sealed partial class PixevalBadge : UserControl
     internal const string SmallState = "Small";
     internal const string NormalState = "Normal";
 
-    private static readonly Dictionary<BadgeMode, (string Text, Color Background)> _propertySet =
-        new()
-        {
+    private static readonly Dictionary<BadgeMode, (string Text, Color Background)> _propertySet = new()
+    {
             [BadgeMode.Premium] = ("Premium", Colors.Orange),
             [BadgeMode.Following] = ("关注中", Colors.Crimson),
             [BadgeMode.Gif] = ("GIF", Colors.Green),

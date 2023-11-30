@@ -45,7 +45,8 @@ namespace Pixeval.Controls;
 public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
 {
     // Dominant color of the "No Image" image
-    public static readonly SolidColorBrush DefaultAvatarBorderColorBrush = new(UiHelper.ParseHexColor("#D6DEE5"));
+    public static readonly SolidColorBrush DefaultAvatarBorderColorBrush =
+        new(UiHelper.ParseHexColor("#D6DEE5"));
 
     public IllustratorViewModel(User user) : base(user)
     {
@@ -60,7 +61,7 @@ public sealed partial class IllustratorViewModel : IllustrateViewModel<User>
 
     public PixivSingleUserResponse? UserDetail { get; private set; }
 
-    public List<SoftwareBitmapSource> BannerSources { get; } = new(3);
+    public List<SoftwareBitmapSource> BannerSources { get; } = new List<SoftwareBitmapSource>(3);
 
     [ObservableProperty]
     private SoftwareBitmapSource? _backgroundSource;

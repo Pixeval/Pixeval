@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -29,11 +29,13 @@ namespace Pixeval.AppManagement;
 
 public class AppKnownFolders(StorageFolder self)
 {
-    public static AppKnownFolders Local = new(ApplicationData.Current.LocalFolder, _ => ApplicationData.Current.ClearAsync(ApplicationDataLocality.Local).AsTask());
+    public static AppKnownFolders Local = new(ApplicationData.Current.LocalFolder,
+        _ => ApplicationData.Current.ClearAsync(ApplicationDataLocality.Local).AsTask());
 
     public static AppKnownFolders SavedWallPaper = null!;
 
-    public static AppKnownFolders Temporary = new(ApplicationData.Current.TemporaryFolder, _ => ApplicationData.Current.ClearAsync(ApplicationDataLocality.Temporary).AsTask());
+    public static AppKnownFolders Temporary = new(ApplicationData.Current.TemporaryFolder,
+        _ => ApplicationData.Current.ClearAsync(ApplicationDataLocality.Temporary).AsTask());
 
     private readonly Func<StorageFolder, Task>? _deleter;
 

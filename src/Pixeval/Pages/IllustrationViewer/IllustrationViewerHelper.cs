@@ -22,6 +22,7 @@ using Pixeval.Controls.Windowing;
 using Pixeval.Controls.IllustrationView;
 using System;
 using System.Collections.Generic;
+using Windows.Graphics;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.CoreApi.Model;
@@ -41,7 +42,7 @@ public static class IllustrationViewerHelper
     public static void CreateWindowWithPage<T>(this T illustrationViewModel, IList<T> illustrationViewModels) where T : IllustrationViewModel
     {
         var index = illustrationViewModels.IndexOf(illustrationViewModel);
-        CreateWindowWithPage(illustrationViewModel.Illustrate, new(illustrationViewModels, index));
+        CreateWindowWithPage(illustrationViewModel.Illustrate, new IllustrationViewerPageViewModel(illustrationViewModels, index));
     }
 
     /// <summary>
@@ -52,7 +53,7 @@ public static class IllustrationViewerHelper
     public static void CreateWindowWithPage(this IllustrationViewModel illustrationViewModel, IllustrationViewViewModel illustrationViewViewModel)
     {
         var index = illustrationViewViewModel.DataProvider.View.IndexOf(illustrationViewModel);
-        CreateWindowWithPage(illustrationViewModel.Illustrate, new(illustrationViewViewModel, index));
+        CreateWindowWithPage(illustrationViewModel.Illustrate, new IllustrationViewerPageViewModel(illustrationViewViewModel, index));
     }
 
     private static void CreateWindowWithPage(Illustration illustration, IllustrationViewerPageViewModel viewModel)
@@ -64,7 +65,7 @@ public static class IllustrationViewerHelper
                 viewModel,
                 new SuppressNavigationTransitionInfo()))
             .WithSizeLimit(640, 360)
-            .Init(illustration.Title ?? "", new(width, height))
+            .Init(illustration.Title ?? "", new SizeInt32(width, height))
             .Activate();
         return;
 

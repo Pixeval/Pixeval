@@ -74,7 +74,7 @@ public sealed partial class IllustratorProfile
             ++i;
         }
 
-        return new();
+        return new Thickness();
     }
 
     private void RestoreAvatarButton(object? sender, object e)

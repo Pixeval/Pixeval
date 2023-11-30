@@ -42,7 +42,7 @@ public abstract class FetchEngineIncrementalSource<T, TModel>(IAsyncEnumerable<T
 
     protected abstract TModel Select(T entity);
 
-    public virtual async Task<IEnumerable<TModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new())
+    public virtual async Task<IEnumerable<TModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
     {
         var result = new List<TModel>();
         var i = 0;

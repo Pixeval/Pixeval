@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -26,7 +26,7 @@ namespace Pixeval.CoreApi.Engine;
 public class ComputedFetchEngine<T>(IAsyncEnumerable<T> result, MakoClient makoClient, EngineHandle engineHandle)
     : IFetchEngine<T>
 {
-    public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         return result.GetAsyncEnumerator(cancellationToken);
     }

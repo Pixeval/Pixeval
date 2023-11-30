@@ -118,10 +118,10 @@ public class IllustrationViewDataProvider : ObservableObject, IDataProvider<Illu
 
     public void ResetEngine(IFetchEngine<Illustration?>? fetchEngine, int limit = -1)
     {
-        FetchEngineRef = new(fetchEngine, this);
+        FetchEngineRef = new SharedRef<IFetchEngine<Illustration>>(fetchEngine, this);
         DisposeCurrent();
 
-        IllustrationSourceRef = new(new(new IllustrationFetchEngineIncrementalSource(FetchEngine!, limit)), this);
+        IllustrationSourceRef = new SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>>(new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, IllustrationViewModel>, IllustrationViewModel>(new IllustrationFetchEngineIncrementalSource(FetchEngine!, limit)), this);
     }
 
     protected virtual void OnIllustrationsSourceOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

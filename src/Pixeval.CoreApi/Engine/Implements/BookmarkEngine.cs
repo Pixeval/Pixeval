@@ -49,7 +49,7 @@ internal class BookmarkEngine(
     private readonly TargetFilter _targetFilter = targetFilter;
     private readonly string _uid = uid;
 
-    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         return RecursivePixivAsyncEnumerators.Illustration<BookmarkEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
             engine => "/v1/user/bookmarks/illust"

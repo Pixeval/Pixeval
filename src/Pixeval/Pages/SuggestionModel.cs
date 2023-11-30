@@ -29,13 +29,17 @@ namespace Pixeval.Pages;
 
 public record SuggestionModel(string? Name, string? TranslatedName, SuggestionType SuggestionType)
 {
-    public static readonly SuggestionModel IllustrationTrendingTagHeader = new(null, null, SuggestionType.IllustrationTrendingTagHeader);
+    public static readonly SuggestionModel IllustrationTrendingTagHeader =
+        new(null, null, SuggestionType.IllustrationTrendingTagHeader);
 
-    public static readonly SuggestionModel IllustrationAutoCompleteTagHeader = new(null, null, SuggestionType.IllustrationAutoCompleteTagHeader);
+    public static readonly SuggestionModel IllustrationAutoCompleteTagHeader =
+        new(null, null, SuggestionType.IllustrationAutoCompleteTagHeader);
 
-    public static readonly SuggestionModel SettingEntryHeader = new(null, null, SuggestionType.SettingEntryHeader);
+    public static readonly SuggestionModel SettingEntryHeader =
+        new(null, null, SuggestionType.SettingEntryHeader);
 
-    public static readonly SuggestionModel NovelTrendingTagHeader = new(null, null, SuggestionType.NovelTrendingTagHeader);
+    public static readonly SuggestionModel NovelTrendingTagHeader =
+        new(null, null, SuggestionType.NovelTrendingTagHeader);
 
     public FontIcon? Icon => SuggestionType switch
     {

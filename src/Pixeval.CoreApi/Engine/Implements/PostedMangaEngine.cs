@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -32,7 +32,7 @@ public class PostedMangaEngine(MakoClient makoClient, string uid, TargetFilter t
 {
     private readonly string _uid = uid;
 
-    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         return RecursivePixivAsyncEnumerators.Illustration<PostedMangaEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
             engine => "/v1/user/illusts"

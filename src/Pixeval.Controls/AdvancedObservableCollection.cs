@@ -97,7 +97,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
 
             _sourceWeakEventListener?.Detach();
 
-            _sourceWeakEventListener = new(this)
+            _sourceWeakEventListener = new WeakEventListener<AdvancedObservableCollection<T>, object, NotifyCollectionChangedEventArgs>(this)
             {
                 OnEventAction = (source, changed, arg) => SourceNcc_CollectionChanged(source, arg),
                 OnDetachAction = listener => _source.CollectionChanged -= _sourceWeakEventListener!.OnEvent
@@ -237,7 +237,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
     /// Property changed event invoker
     /// </summary>
     /// <param name="propertyName">name of the property that changed</param>
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null!) => PropertyChanged?.Invoke(this, new(propertyName));
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null!) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
     /// <summary>
     /// Raise CollectionChanged event to any listeners.
@@ -298,7 +298,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
 
             // Only trigger expensive UI updates if the index really changed:
             if (targetIndex != oldIndex)
-                OnCollectionChanged(new(NotifyCollectionChangedAction.Move, item, targetIndex, oldIndex));
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, item, targetIndex, oldIndex));
         }
         else if (string.IsNullOrEmpty(e.PropertyName))
             HandleSourceChanged();
@@ -327,7 +327,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
         _sortProperties.Clear();
         _view.Sort(this);
         _sortProperties.Clear();
-        OnCollectionChanged(new(NotifyCollectionChangedAction.Reset));
+        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
     }
 
     private void HandleFilterChanged()
@@ -385,7 +385,7 @@ public class AdvancedObservableCollection<T> : IList<T>, IList, INotifyCollectio
         }
 
         _sortProperties.Clear();
-        OnCollectionChanged(new(NotifyCollectionChangedAction.Reset));
+        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
     }
 
     private void SourceNcc_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

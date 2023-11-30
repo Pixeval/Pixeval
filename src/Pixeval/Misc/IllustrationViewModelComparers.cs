@@ -26,7 +26,8 @@ namespace Pixeval.Misc;
 
 public class IllustrationViewModelPublishDateComparer : IComparer<IllustrationViewModel>, IComparer
 {
-    public static readonly IllustrationViewModelPublishDateComparer Instance = new();
+    public static readonly IllustrationViewModelPublishDateComparer Instance =
+        new();
 
     public int Compare(object? x, object? y)
     {

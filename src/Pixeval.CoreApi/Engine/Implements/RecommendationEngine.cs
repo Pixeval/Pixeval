@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -37,7 +37,7 @@ internal class RecommendationEngine(MakoClient makoClient, RecommendationContent
     private readonly uint? _minBookmarkIdForRecentIllust = minBookmarkIdForRecentIllust;
     private readonly RecommendationContentType _recommendContentType = recommendContentType ?? RecommendationContentType.Illust;
 
-    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         return RecursivePixivAsyncEnumerators.Illustration<RecommendationEngine>.WithInitialUrl(this, MakoApiKind.AppApi,
             engine =>

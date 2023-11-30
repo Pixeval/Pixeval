@@ -188,7 +188,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
             _currentPageIndex = value;
             OnPropertyChanged(nameof(NextButtonEnable));
             OnPropertyChanged(nameof(PrevButtonEnable));
-            CurrentImage = new(this, CurrentPage);
+            CurrentImage = new ImageViewerPageViewModel(this, CurrentPage);
         }
     }
 
@@ -241,7 +241,7 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
     /// </remarks>
     public IllustrationViewerPageViewModel(IllustrationViewViewModel viewModel, int currentIllustrationIndex)
     {
-        ViewModelSource = new(viewModel);
+        ViewModelSource = new IllustrationViewViewModel(viewModel);
         IllustrationInfoTag.Parameter = this;
         ViewModelSource.DataProvider.View.FilterChanged += (_, _) => CurrentIllustrationIndex = Illustrations.IndexOf(CurrentIllustration);
         // ViewModel.DataProvider.View.CurrentItem为null，而且只设置这个属性会导致空引用
@@ -597,13 +597,13 @@ public partial class IllustrationViewerPageViewModel : DetailedObservableObject,
 
     public XamlUICommand OpenInWebBrowserCommand { get; } = IllustrationViewerPageResources.OpenInWebBrowser.GetCommand(FontIconSymbols.WebSearchF6FA);
 
-    public StandardUICommand ShareCommand { get; } = new(StandardUICommandKind.Share);
+    public StandardUICommand ShareCommand { get; } = new StandardUICommand(StandardUICommandKind.Share);
 
     public XamlUICommand ShowQrCodeCommand { get; } = IllustrationViewerPageResources.ShowQRCode.GetCommand(FontIconSymbols.QRCodeED14);
 
-    public XamlUICommand SetAsLockScreenCommand { get; } = new() { Label = IllustrationViewerPageResources.LockScreen };
+    public XamlUICommand SetAsLockScreenCommand { get; } = new XamlUICommand { Label = IllustrationViewerPageResources.LockScreen };
 
-    public XamlUICommand SetAsBackgroundCommand { get; } = new() { Label = IllustrationViewerPageResources.Background };
+    public XamlUICommand SetAsBackgroundCommand { get; } = new XamlUICommand { Label = IllustrationViewerPageResources.Background };
 
     public XamlUICommand FullScreenCommand { get; } = IllustrationViewerPageResources.FullScreen.GetCommand(FontIconSymbols.FullScreenE740);
 

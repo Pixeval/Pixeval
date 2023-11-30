@@ -25,7 +25,8 @@ namespace Pixeval.Flyouts.IllustrationResultFilter;
 
 public sealed partial class IllustrationResultFilterContent
 {
-    public IllustrationResultFilterContentViewModel ViewModel { get; set; } = new();
+    public IllustrationResultFilterContentViewModel ViewModel { get; set; } =
+        new IllustrationResultFilterContentViewModel();
 
     public IllustrationResultFilterContent()
     {
@@ -33,17 +34,9 @@ public sealed partial class IllustrationResultFilterContent
     }
 
     public FilterSettings GetFilterSettings =>
-        new(ViewModel.IncludeTags,
-            ViewModel.ExcludeTags,
-            ViewModel.LeastBookmark,
-            ViewModel.MaximumBookmark,
-            ViewModel.UserGroupName,
-            ViewModel.IllustratorName,
-            ViewModel.IllustratorId,
-            ViewModel.IllustrationName,
-            ViewModel.IllustrationId,
-            ViewModel.PublishDateStart,
-            ViewModel.PublishDateEnd);
+        new(ViewModel.IncludeTags, ViewModel.ExcludeTags, ViewModel.LeastBookmark,
+            ViewModel.MaximumBookmark, ViewModel.UserGroupName, ViewModel.IllustratorName, ViewModel.IllustratorId,
+            ViewModel.IllustrationName, ViewModel.IllustrationId, ViewModel.PublishDateStart, ViewModel.PublishDateEnd);
 
     public void Reset()
     {

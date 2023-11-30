@@ -220,7 +220,7 @@ public sealed partial class ZoomableImage : UserControl
     private static void OnMsIntervalsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var zoomableImage = d.To<ZoomableImage>();
-        zoomableImage.ClonedMsIntervals = new(zoomableImage.MsIntervals);
+        zoomableImage.ClonedMsIntervals = new List<int>(zoomableImage.MsIntervals);
     }
 
     private static void OnSourcesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -303,7 +303,7 @@ public sealed partial class ZoomableImage : UserControl
 
     private List<int>? ClonedMsIntervals { get; set; }
 
-    private ManualResetEvent ManualResetEvent { get; } = new(true);
+    private ManualResetEvent ManualResetEvent { get; } = new ManualResetEvent(true);
 
     #endregion
 
@@ -354,7 +354,7 @@ public sealed partial class ZoomableImage : UserControl
 
     private void CanvasOnSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        CanvasRectangleGeometry.Rect = new(new(), Canvas.ActualSize.ToSize());
+        CanvasRectangleGeometry.Rect = new Rect(new Point(), Canvas.ActualSize.ToSize());
         OnImageScaleChanged(this, ImageScale);
     }
 

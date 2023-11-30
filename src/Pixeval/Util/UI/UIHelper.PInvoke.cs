@@ -31,7 +31,8 @@ public static partial class UiHelper
     private static readonly ITaskBarList3 _taskBarList3Instance = (ITaskBarList3)new TaskBarInstance();
 
     // see https://github.com/microsoft/Windows-classic-samples/blob/main/Samples/ShareSource/wpf/DataTransferManagerHelper.cs
-    private static readonly Guid _riId = new(0xa5caee9b, 0x8708, 0x49d1, 0x8d, 0x36, 0x67, 0xd2, 0x5a, 0x8d, 0xa0, 0x0c);
+    private static readonly Guid _riId = new(0xa5caee9b, 0x8708, 0x49d1, 0x8d, 0x36, 0x67, 0xd2, 0x5a, 0x8d, 0xa0,
+        0x0c);
 
     public static bool TaskBarCustomizationSupported => Environment.OSVersion.Version >= new Version(6, 1);
 

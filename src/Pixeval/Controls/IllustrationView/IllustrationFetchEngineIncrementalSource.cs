@@ -34,6 +34,6 @@ public class IllustrationFetchEngineIncrementalSource(IAsyncEnumerable<Illustrat
 
     protected override IllustrationViewModel Select(Illustration entity)
     {
-        return new(entity);
+        return new IllustrationViewModel(entity);
     }
 }

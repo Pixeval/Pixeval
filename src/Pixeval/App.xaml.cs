@@ -20,6 +20,7 @@
 
 using System;
 using System.Linq;
+using Windows.Graphics;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -43,7 +44,7 @@ public partial class App
     public App()
     {
         // The theme can only be changed in ctor
-        AppViewModel = new(this) { AppSetting = AppContext.LoadConfiguration() ?? AppSetting.CreateDefault() };
+        AppViewModel = new AppViewModel(this) { AppSetting = AppContext.LoadConfiguration() ?? AppSetting.CreateDefault() };
         WindowFactory.WindowSettings = AppViewModel.AppSetting;
         AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);
         InitializeComponent();
@@ -76,7 +77,7 @@ public partial class App
             .WithLoaded((s, _) => s.To<Frame>().NavigateTo<LoginPage>(w))
             .WithClosed((_, _) => AppContext.SaveContext())
             .WithSizeLimit(800, 360)
-            .Init(nameof(Pixeval), new(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight))
+            .Init(nameof(Pixeval), new SizeInt32(AppViewModel.AppSetting.WindowWidth, AppViewModel.AppSetting.WindowHeight))
             .Activate();
 
         await AppViewModel.InitializeAsync(isProtocolActivated);

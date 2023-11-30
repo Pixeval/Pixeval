@@ -53,9 +53,9 @@ public class DownloadManager<TDownloadTask> : IDisposable where TDownloadTask : 
         _httpClient = httpClient ?? new HttpClient();
         _queuedTasks = [];
         _taskQuerySet = new HashSet<TDownloadTask>();
-        _throttle = new(true, true);
+        _throttle = new ReenterableAwaiter<bool>(true, true);
         _downloadTaskChannel = Channel.CreateUnbounded<TDownloadTask>();
-        _semaphoreSlim = new(1, 1);
+        _semaphoreSlim = new SemaphoreSlim(1, 1);
         ConcurrencyDegree = concurrencyDegree;
 
         PollTask();

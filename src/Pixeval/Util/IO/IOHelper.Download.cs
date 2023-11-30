@@ -49,12 +49,9 @@ public static partial class IoHelper
 
     private const int MaximumSmallBufferPoolSizeInBytes = 24 * 1024 * BlockSizeInBytes; // 24MB
 
-    private static readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager = new(
-        BlockSizeInBytes,
-        LargeBufferMultipleInBytes,
-        MaxBufferSizeInBytes,
-        MaximumSmallBufferPoolSizeInBytes,
-        MaximumLargeBufferPoolSizeInBytes);
+    private static readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager =
+        new(BlockSizeInBytes, LargeBufferMultipleInBytes, MaxBufferSizeInBytes,
+            MaximumSmallBufferPoolSizeInBytes, MaximumLargeBufferPoolSizeInBytes);
 
     // To avoid collecting stack trace, which is quite a time-consuming task
     // and this exception is intended to be used at a massive magnitude

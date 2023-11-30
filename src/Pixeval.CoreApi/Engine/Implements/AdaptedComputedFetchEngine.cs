@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -50,7 +50,7 @@ public class AdaptedComputedFetchEngine<T>(IEnumerable<T> outer) : IFetchEngine<
 
     public int RequestedPages { get; set; }
 
-    public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         return new AdaptedAsyncEnumerator<T>(_outer.GetEnumerator(), cancellationToken);
     }

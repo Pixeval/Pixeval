@@ -64,7 +64,7 @@ public sealed partial class IllustrationView
         ViewModel.DataProvider.View.FilterChanged += (_, _) => IllustrationItemsView.TryRaiseLoadMoreRequested();
     }
 
-    public IllustrationViewViewModel ViewModel { get; } = new();
+    public IllustrationViewViewModel ViewModel { get; } = new IllustrationViewViewModel();
 
     private void IllustrationThumbnailOnShowQrCodeRequested(object sender, SoftwareBitmapSource e)
     {

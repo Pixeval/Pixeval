@@ -43,7 +43,7 @@ public sealed partial class IllustrationViewViewModel : SortableIllustrateViewVi
 
     public IllustrationViewViewModel()
     {
-        DataProvider = new();
+        DataProvider = new IllustrationViewDataProvider();
         Init();
     }
 

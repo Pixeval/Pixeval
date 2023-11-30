@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -51,7 +51,7 @@ internal class SearchEngine(MakoClient makoClient,
     private readonly string _tag = tag;
     private readonly TargetFilter _targetFilter = targetFilter ?? TargetFilter.ForAndroid;
 
-    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         return new SearchAsyncEnumerator(this, MakoApiKind.AppApi)!;
     }

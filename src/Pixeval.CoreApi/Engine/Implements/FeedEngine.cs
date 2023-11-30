@@ -35,7 +35,7 @@ namespace Pixeval.CoreApi.Engine.Implements;
 
 internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHandle) : AbstractPixivFetchEngine<Feed>(makoClient, engineHandle)
 {
-    public override IAsyncEnumerator<Feed> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public override IAsyncEnumerator<Feed> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         return new UserFeedsAsyncEnumerator(this, MakoApiKind.WebApi)!;
     }

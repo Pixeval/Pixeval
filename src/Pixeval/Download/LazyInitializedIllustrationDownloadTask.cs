@@ -28,7 +28,9 @@ namespace Pixeval.Download;
 public class LazyInitializedIllustrationDownloadTask
     (DownloadHistoryEntry databaseEntry) : ObservableDownloadTask(databaseEntry), IIllustrationViewModelProvider
 {
-    private readonly Lazy<Task<IllustrationViewModel>> _resultGenerator = new(async () => new(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(databaseEntry.Id!)));
+    private readonly Lazy<Task<IllustrationViewModel>> _resultGenerator =
+        new(async () =>
+            new IllustrationViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(databaseEntry.Id!)));
 
     public Task<IllustrationViewModel> GetViewModelAsync()
     {

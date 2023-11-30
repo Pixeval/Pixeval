@@ -34,6 +34,6 @@ public class SpotlightArticleFetchEngineIncrementalSource(IAsyncEnumerable<Spotl
 
     protected override SpotlightArticleViewModel Select(SpotlightArticle entity)
     {
-        return new(entity);
+        return new SpotlightArticleViewModel(entity);
     }
 }

@@ -56,6 +56,6 @@ public class SpotlightArticleViewDataProvider : ObservableObject, IDataProvider<
         FetchEngine = fetchEngine;
         DisposeCurrent();
 
-        Source = new(new SpotlightArticleFetchEngineIncrementalSource(FetchEngine!, limit));
+        Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<SpotlightArticle, SpotlightArticleViewModel>, SpotlightArticleViewModel>(new SpotlightArticleFetchEngineIncrementalSource(FetchEngine!, limit));
     }
 }

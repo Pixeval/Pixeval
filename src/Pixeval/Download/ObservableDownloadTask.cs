@@ -39,8 +39,8 @@ public partial class ObservableDownloadTask : ObservableObject, IDownloadTask
     protected ObservableDownloadTask(DownloadHistoryEntry entry)
     {
         DatabaseEntry = entry;
-        CancellationHandle = new();
-        Completion = new();
+        CancellationHandle = new CancellationHandle();
+        Completion = new TaskCompletionSource();
     }
 
     public DownloadHistoryEntry DatabaseEntry { get; }

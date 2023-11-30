@@ -329,7 +329,7 @@ public sealed partial class MainPage : ISupportCustomTitleBarDragRegion
         var titleBar = TitleBar.TransformToVisual(Content).TransformPoint(new Point(0, 0));
         var titleBarRect = new RectInt32((int)titleBar.X, (int)titleBar.Y, (int)TitleBar.ActualWidth, (int)TitleBar.ActualHeight);
 
-        DragZoneHelper.SetDragZones(new(titleBarRect)
+        DragZoneHelper.SetDragZones(new DragZoneInfo(titleBarRect)
         {
             DragZoneLeftIndent = 48
         });

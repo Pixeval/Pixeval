@@ -39,7 +39,7 @@ public sealed partial class EnhancedWindow : Window
     /// </summary>
     internal EnhancedWindow()
     {
-        Content = _frame = new()
+        Content = _frame = new Frame
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,

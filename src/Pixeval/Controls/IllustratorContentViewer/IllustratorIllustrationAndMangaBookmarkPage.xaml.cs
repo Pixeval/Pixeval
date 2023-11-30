@@ -46,7 +46,7 @@ public sealed partial class IllustratorIllustrationAndMangaBookmarkPage : ISorte
     public IllustratorIllustrationAndMangaBookmarkPage()
     {
         InitializeComponent();
-        _viewModel = new();
+        _viewModel = new IllustratorIllustrationAndMangaBookmarkPageViewModel();
     }
 
     public override void OnPageActivated(NavigationEventArgs e)

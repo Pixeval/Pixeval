@@ -33,6 +33,6 @@ public class IllustratorFetchEngineIncrementalSource(IAsyncEnumerable<User> asyn
 
     protected override IllustratorViewModel Select(User entity)
     {
-        return new(entity);
+        return new IllustratorViewModel(entity);
     }
 }

@@ -70,7 +70,7 @@ public sealed partial class PixivReplyBar
             return;
         }
 
-        SendButtonTapped?.Invoke(this, new(e, content));
+        SendButtonTapped?.Invoke(this, new SendButtonTappedEventArgs(e, content));
         ReplyContentRichEditBox.ClearContent();
     }
 

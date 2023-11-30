@@ -40,7 +40,7 @@ public static class WindowFactory
 
     public static EnhancedWindow Create(out EnhancedWindow window)
     {
-        var w = window = new();
+        var w = window = new EnhancedWindow();
         if (_forkedWindowsInternal.Count is 0)
             CurrentContext.Window = window;
         window.Closed += (_, _) => _forkedWindowsInternal.Remove(w);
@@ -50,7 +50,7 @@ public static class WindowFactory
 
     public static EnhancedWindow Fork(this EnhancedWindow owner, out EnhancedWindow window)
     {
-        var w = window = new(owner);
+        var w = window = new EnhancedWindow(owner);
         window.Closed += (_, _) => _forkedWindowsInternal.Remove(w);
         _forkedWindowsInternal.Add(window);
         return window;
@@ -83,7 +83,7 @@ public static class WindowFactory
 
     public static EnhancedWindow Init(this EnhancedWindow window, string title, SizeInt32 size = default)
     {
-        window.Initialize(new()
+        window.Initialize(new InitializeInfo
         {
             BackdropType = WindowSettings.Backdrop,
             TitleBarType = TitleBarType.AppWindow,

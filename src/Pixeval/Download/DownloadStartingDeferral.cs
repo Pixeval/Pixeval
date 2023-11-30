@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval
+#region Copyright (c) Pixeval/Pixeval
 // GPL v3 License
 // 
 // Pixeval/Pixeval
@@ -27,7 +27,7 @@ public class DownloadStartingDeferral
     /// <summary>
     ///     Set its result to <see langword="true" /> if you want the download to proceed, otherwise, <see langword="false" />
     /// </summary>
-    public ReenterableAwaiter<bool> Signal { get; } = new(true, true);
+    public ReenterableAwaiter<bool> Signal { get; } = new ReenterableAwaiter<bool>(true, true);
 
     public void Set()
     {

@@ -59,25 +59,25 @@ public sealed partial class IllustratorPage
         InitializeComponent();
     }
 
-    public XamlUICommand OpenLinkCommand { get; } = new()
+    public XamlUICommand OpenLinkCommand { get; } = new XamlUICommand
     {
         Label = IllustratorPageResources.OpenLink,
         IconSource = FontIconSymbols.LinkE71B.GetFontIconSource()
     };
 
-    public XamlUICommand FollowCommand { get; } = new()
+    public XamlUICommand FollowCommand { get; } = new XamlUICommand
     {
         Label = IllustratorPageResources.Follow,
         IconSource = FontIconSymbols.HeartEB51.GetFontIconSource()
     };
 
-    public XamlUICommand UnfollowCommand { get; } = new()
+    public XamlUICommand UnfollowCommand { get; } = new XamlUICommand
     {
         Label = IllustratorPageResources.Unfollow,
         IconSource = FontIconSymbols.HeartFillEB52.GetFontIconSource(foregroundBrush: new SolidColorBrush(Colors.Crimson))
     };
 
-    public XamlUICommand PrivateFollowCommand { get; } = new()
+    public XamlUICommand PrivateFollowCommand { get; } = new XamlUICommand
     {
         Label = IllustratorPageResources.PrivateFollow,
         IconSource = FontIconSymbols.HeartEB51.GetFontIconSource()

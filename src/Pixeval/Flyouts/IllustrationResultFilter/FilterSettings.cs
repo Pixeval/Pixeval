@@ -39,18 +39,9 @@ public record FilterSettings(
     DateTimeOffset PublishDateStart,
     DateTimeOffset PublishDateEnd)
 {
-    public static readonly FilterSettings Default = new(
-        Enumerable.Empty<Token>(),
-        Enumerable.Empty<Token>(),
-        0,
-        int.MaxValue,
-        Enumerable.Empty<Token>(),
-        Token.Empty,
-        string.Empty,
-        Token.Empty,
-        string.Empty,
-        DateTimeOffset.MinValue,
-        DateTimeOffset.MaxValue);
+    public static readonly FilterSettings Default = new(Enumerable.Empty<Token>(),
+        Enumerable.Empty<Token>(), 0, int.MaxValue, Enumerable.Empty<Token>(), Token.Empty, string.Empty, Token.Empty,
+        string.Empty, DateTimeOffset.MinValue, DateTimeOffset.MaxValue);
 
     public virtual bool Equals(FilterSettings? other)
     {

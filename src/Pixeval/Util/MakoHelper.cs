@@ -64,32 +64,32 @@ public static class MakoHelper
 
     public static Uri GenerateIllustrationWebUri(string id)
     {
-        return new($"https://www.pixiv.net/artworks/{id}");
+        return new Uri($"https://www.pixiv.net/artworks/{id}");
     }
 
     public static Uri GenerateIllustrationPixEzUri(string id)
     {
-        return new($"pixez://www.pixiv.net/artworks/{id}");
+        return new Uri($"pixez://www.pixiv.net/artworks/{id}");
     }
 
     public static Uri GenerateIllustrationAppUri(string id)
     {
-        return new($"{AppContext.AppProtocol}://illust/{id}");
+        return new Uri($"{AppContext.AppProtocol}://illust/{id}");
     }
 
     public static Uri GenerateIllustratorWebUri(string id)
     {
-        return new($"https://www.pixiv.net/users/{id}");
+        return new Uri($"https://www.pixiv.net/users/{id}");
     }
 
     public static Uri GenerateIllustratorPixEzUri(string id)
     {
-        return new($"pixez://www.pixiv.net/users/{id}");
+        return new Uri($"pixez://www.pixiv.net/users/{id}");
     }
 
     public static Uri GenerateIllustratorAppUri(string id)
     {
-        return new($"{AppContext.AppProtocol}://user/{id}");
+        return new Uri($"{AppContext.AppProtocol}://user/{id}");
     }
 
     public static string? GetOriginalUrl(this Illustration illustration)
@@ -116,9 +116,9 @@ public static class MakoHelper
     {
         return sortOption switch
         {
-            IllustrationSortOption.PopularityDescending => new(SortDirection.Descending, IllustrationBookmarkComparer.Instance),
-            IllustrationSortOption.PublishDateAscending => new(SortDirection.Ascending, IllustrationViewModelPublishDateComparer.Instance),
-            IllustrationSortOption.PublishDateDescending => new(SortDirection.Descending, IllustrationViewModelPublishDateComparer.Instance),
+            IllustrationSortOption.PopularityDescending => new SortDescription(SortDirection.Descending, IllustrationBookmarkComparer.Instance),
+            IllustrationSortOption.PublishDateAscending => new SortDescription(SortDirection.Ascending, IllustrationViewModelPublishDateComparer.Instance),
+            IllustrationSortOption.PublishDateDescending => new SortDescription(SortDirection.Descending, IllustrationViewModelPublishDateComparer.Instance),
             IllustrationSortOption.DoNotSort => null,
             _ => throw new ArgumentOutOfRangeException(nameof(sortOption), sortOption, null)
         };
@@ -158,13 +158,13 @@ public static class MakoHelper
     {
         var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         return isBookmarked
-            ? new()
+            ? new FontSymbolIconSource
             {
                 Symbol = FontIconSymbols.HeartFillEB52,
                 Foreground = new SolidColorBrush(Colors.Crimson),
                 FontFamily = systemThemeFontFamily
             }
-            : new()
+            : new FontSymbolIconSource
             {
                 Symbol = FontIconSymbols.HeartEB51,
                 FontFamily = systemThemeFontFamily
@@ -175,13 +175,13 @@ public static class MakoHelper
     {
         var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         return isBookmarked
-            ? new()
+            ? new FontSymbolIcon
             {
                 Symbol = FontIconSymbols.HeartFillEB52,
                 Foreground = new SolidColorBrush(Colors.Crimson),
                 FontFamily = systemThemeFontFamily
             }
-            : new()
+            : new FontSymbolIcon
             {
                 Symbol = FontIconSymbols.HeartEB51,
                 FontFamily = systemThemeFontFamily
@@ -192,13 +192,13 @@ public static class MakoHelper
     {
         var systemThemeFontFamily = new FontFamily(AppContext.AppIconFontFamilyName);
         return isFollowed
-            ? new()
+            ? new FontSymbolIconSource
             {
                 Symbol = FontIconSymbols.ContactSolidEA8C,
                 Foreground = new SolidColorBrush(Colors.Crimson),
                 FontFamily = systemThemeFontFamily
             }
-            : new()
+            : new FontSymbolIconSource
             {
                 Symbol = FontIconSymbols.ContactE77B,
                 FontFamily = systemThemeFontFamily

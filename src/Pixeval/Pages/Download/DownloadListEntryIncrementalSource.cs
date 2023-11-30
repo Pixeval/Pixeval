@@ -35,7 +35,7 @@ public class DownloadListEntryIncrementalSource(IEnumerable<ObservableDownloadTa
 
     protected override DownloadListEntryViewModel Select(Illustration entity) => throw new System.NotImplementedException();
 
-    public override async Task<IEnumerable<DownloadListEntryViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new())
+    public override async Task<IEnumerable<DownloadListEntryViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
     {
         return await source
             .Skip(pageIndex * pageSize)

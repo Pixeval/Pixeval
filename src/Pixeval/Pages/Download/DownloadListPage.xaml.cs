@@ -49,7 +49,7 @@ public sealed partial class DownloadListPage
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        _viewModel = new(parameter.To<IEnumerable<ObservableDownloadTask>>());
+        _viewModel = new DownloadListPageViewModel(parameter.To<IEnumerable<ObservableDownloadTask>>());
     }
 
     public override void OnPageDeactivated(NavigatingCancelEventArgs e) => _viewModel.Dispose();

@@ -46,7 +46,7 @@ public sealed partial class SettingRadioButtons : UserControl
         {
             SelectedItem = select.Item;
             SelectionChanged?.Invoke(this,
-                new(new List<object>(), new List<object> { select }));
+                new SelectionChangedEventArgs(new List<object>(), new List<object> { select }));
         }
     }
 

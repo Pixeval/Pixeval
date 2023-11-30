@@ -259,11 +259,11 @@ public partial record AppSetting : IWindowSettings
 
     public static AppSetting CreateDefault()
     {
-        return new();
+        return new AppSetting();
     }
 
     public MakoClientConfiguration ToMakoClientConfiguration()
     {
-        return new(5000, !DisableDomainFronting, MirrorHost, CultureInfo.CurrentUICulture);
+        return new MakoClientConfiguration(5000, !DisableDomainFronting, MirrorHost, CultureInfo.CurrentUICulture);
     }
 }

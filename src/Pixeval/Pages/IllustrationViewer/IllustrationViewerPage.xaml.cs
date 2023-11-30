@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Numerics;
 using System.Threading.Tasks;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -35,6 +36,7 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 using Windows.Graphics;
 using Windows.Storage.Streams;
 using Pixeval.Controls.Windowing;
@@ -242,12 +244,12 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     public void SetTitleBarDragRegion()
     {
-        var pointCommandBar = IllustrationViewerCommandBar.TransformToVisual(this).TransformPoint(new(0, 0));
-        var pointSubCommandBar = IllustrationViewerSubCommandBar.TransformToVisual(this).TransformPoint(new(0, 0));
+        var pointCommandBar = IllustrationViewerCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
+        var pointSubCommandBar = IllustrationViewerSubCommandBar.TransformToVisual(this).TransformPoint(new Point(0, 0));
         var commandBarRect = new RectInt32((int)pointCommandBar.X, (int)pointCommandBar.Y, (int)IllustrationViewerCommandBar.ActualWidth, (int)IllustrationViewerCommandBar.ActualHeight);
         var subCommandBarRect = new RectInt32((int)pointSubCommandBar.X, (int)pointSubCommandBar.Y, (int)IllustrationViewerSubCommandBar.ActualWidth, (int)IllustrationViewerSubCommandBar.ActualHeight);
 
-        Window.SetDragRegion(new(commandBarRect, subCommandBarRect)
+        Window.SetDragRegion(new DragZoneInfo(commandBarRect, subCommandBarRect)
         {
             DragZoneLeftIndent = _viewModel.IsInfoPaneOpen
                 ? (int)IllustrationInfoAndCommentsSplitView.OpenPaneLength
@@ -273,7 +275,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
 
     private async void IllustrationImageShowcaseFrame_OnTapped(object sender, TappedRoutedEventArgs e)
     {
-        BottomCommandSection.Translation = new();
+        BottomCommandSection.Translation = new Vector3();
         TimeUp = false;
         await Task.Delay(3000);
         TimeUp = true;
@@ -292,7 +294,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         {
             _pointerNotInArea = value;
             if (Initialized && _pointerNotInArea && TimeUp)
-                BottomCommandSection.Translation = new(0, 120, 0);
+                BottomCommandSection.Translation = new Vector3(0, 120, 0);
         }
     }
 
@@ -303,7 +305,7 @@ public sealed partial class IllustrationViewerPage : ISupportCustomTitleBarDragR
         {
             _timeUp = value;
             if (Initialized && _timeUp && PointerNotInArea)
-                BottomCommandSection.Translation = new(0, 120, 0);
+                BottomCommandSection.Translation = new Vector3(0, 120, 0);
         }
     }
 

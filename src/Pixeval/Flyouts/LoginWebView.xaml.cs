@@ -30,7 +30,8 @@ public sealed partial class LoginWebView
 {
     public LoginWebView() => InitializeComponent();
 
-    public readonly TaskCompletionSource<(string, string)> CookieCompletion = new();
+    public readonly TaskCompletionSource<(string, string)> CookieCompletion =
+        new();
 
     private async void LoginWebView_OnNavigationStarting(WebView2 sender, CoreWebView2NavigationStartingEventArgs args)
     {

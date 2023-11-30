@@ -1,4 +1,4 @@
-﻿#region Copyright (c) Pixeval/Pixeval.CoreApi
+#region Copyright (c) Pixeval/Pixeval.CoreApi
 // GPL v3 License
 // 
 // Pixeval/Pixeval.CoreApi
@@ -34,7 +34,7 @@ internal class FollowingEngine(MakoClient makoClient, PrivacyPolicy privacyPolic
     private readonly PrivacyPolicy _privacyPolicy = privacyPolicy;
     private readonly string _uid = uid;
 
-    public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new())
+    public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
     {
         return RecursivePixivAsyncEnumerators.User<FollowingEngine>
             .WithInitialUrl(this, MakoApiKind.AppApi,

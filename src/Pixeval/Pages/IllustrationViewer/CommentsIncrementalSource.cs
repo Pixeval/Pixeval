@@ -28,7 +28,7 @@ namespace Pixeval.Pages.IllustrationViewer;
 
 public class CommentsIncrementalSource(IAsyncEnumerable<CommentBlockViewModel?> source) : IIncrementalSource<CommentBlockViewModel>
 {
-    public async Task<IEnumerable<CommentBlockViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new())
+    public async Task<IEnumerable<CommentBlockViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
     {
         return (await source.Skip(pageIndex * pageSize).Take(pageSize).ToArrayAsync(cancellationToken))!;
     }

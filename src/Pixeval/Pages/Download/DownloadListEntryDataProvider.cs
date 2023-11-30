@@ -34,7 +34,7 @@ public class DownloadListEntryDataProvider : ObservableObject, IDataProvider<Ill
 
     public void ResetEngine(IEnumerable<ObservableDownloadTask> source)
     {
-        Source = new(new DownloadListEntryIncrementalSource(source));
+        Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<Illustration, DownloadListEntryViewModel>, DownloadListEntryViewModel>(new DownloadListEntryIncrementalSource(source));
     }
 
     void IDataProvider<Illustration, DownloadListEntryViewModel>.ResetEngine(IFetchEngine<Illustration?>? fetchEngine, int limit)

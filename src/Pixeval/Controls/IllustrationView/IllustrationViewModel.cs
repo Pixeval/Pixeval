@@ -85,7 +85,8 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
         });
     }
 
-    public SolidColorBrush BookmarkedColor => new(IsBookmarked ? Colors.Crimson : Color.FromArgb(0x80, 0, 0, 0));
+    public SolidColorBrush BookmarkedColor =>
+        new(IsBookmarked ? Colors.Crimson : Color.FromArgb(0x80, 0, 0, 0));
 
     public bool IsSelected
     {
@@ -147,7 +148,7 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
 
     private Dictionary<ThumbnailUrlOption, SharedRef<SoftwareBitmapSource>> ThumbnailSourcesRef { get; } = [];
 
-    private CancellationHandle LoadingThumbnailCancellationHandle { get; } = new();
+    private CancellationHandle LoadingThumbnailCancellationHandle { get; } = new CancellationHandle();
 
     /// <summary>
     /// 是否正在加载缩略图
@@ -180,7 +181,7 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
         if (App.AppViewModel.AppSetting.UseFileCache && await App.AppViewModel.Cache.TryGetAsync<IRandomAccessStream>(Illustrate.GetIllustrationThumbnailCacheKey(thumbnailUrlOption)) is { } stream)
         {
             ThumbnailStreamsRef[thumbnailUrlOption] = stream;
-            ThumbnailSourcesRef[thumbnailUrlOption] = new(await stream.GetSoftwareBitmapSourceAsync(false), key);
+            ThumbnailSourcesRef[thumbnailUrlOption] = new SharedRef<SoftwareBitmapSource>(await stream.GetSoftwareBitmapSourceAsync(false), key);
 
             // 读取缓存并加载完成
             LoadingThumbnail = false;
@@ -195,7 +196,7 @@ public class IllustrationViewModel(Illustration illustration) : IllustrateViewMo
                 _ = await App.AppViewModel.Cache.TryAddAsync(Illustrate.GetIllustrationThumbnailCacheKey(thumbnailUrlOption), ras, TimeSpan.FromDays(1));
             }
             ThumbnailStreamsRef[thumbnailUrlOption] = ras;
-            ThumbnailSourcesRef[thumbnailUrlOption] = new(await ras.GetSoftwareBitmapSourceAsync(false), key);
+            ThumbnailSourcesRef[thumbnailUrlOption] = new SharedRef<SoftwareBitmapSource>(await ras.GetSoftwareBitmapSourceAsync(false), key);
 
             // 获取并加载完成
             LoadingThumbnail = false;

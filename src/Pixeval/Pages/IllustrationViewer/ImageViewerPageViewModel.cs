@@ -37,6 +37,7 @@ using Pixeval.Options;
 using System.Collections.Generic;
 using System.Linq;
 using Pixeval.Controls;
+using Pixeval.Database;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -117,7 +118,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
 
     public bool LoadingCompletedSuccessfully => LoadingOriginalSourceTask?.IsCompletedSuccessfully ?? false;
 
-    public CancellationHandle ImageLoadingCancellationHandle { get; } = new();
+    public CancellationHandle ImageLoadingCancellationHandle { get; } = new CancellationHandle();
 
     public IllustrationViewModel IllustrationViewModel { get; }
 
@@ -157,7 +158,7 @@ public partial class ImageViewerPageViewModel : ObservableObject, IDisposable
         using var scope = App.AppViewModel.AppServicesScope;
         var manager = scope.ServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
         _ = manager.Delete(x => x.Id == IllustrationViewerPageViewModel.IllustrationId);
-        manager.Insert(new() { Id = IllustrationViewModel.Id });
+        manager.Insert(new BrowseHistoryEntry { Id = IllustrationViewModel.Id });
     }
 
     private async Task LoadImage()

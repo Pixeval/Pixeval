@@ -182,7 +182,7 @@ public partial class LoginPageViewModel : AutoActivateObservableRecipient
         using var proxyServer = PixivAuthenticationProxyServer.Create(IPAddress.Loopback, port, await AppContext.GetFakeServerCertificateAsync());
         Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", $"--proxy-server=127.0.0.1:{port} --ignore-certificate-errors");
 
-        WebView = new();
+        WebView = new LoginWebView();
 
         AdvancePhase(LoginPhaseEnum.ExecutingWebView2);
 
