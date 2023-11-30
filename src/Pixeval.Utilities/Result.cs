@@ -78,15 +78,12 @@ public record Result<T>
         };
     }
 
+    public Result<TNew> Cast<TNew>() where TNew : class
+    {
+        return Rewrap(t => t as TNew ?? throw new InvalidCastException());
+    }
+
     public record Success(T Value) : Result<T>;
 
     public record Failure(Exception? Cause) : Result<T>;
-}
-
-public static class ResultHelper
-{
-    public static Result<TNew?> Cast<TOld, TNew>(this Result<TOld> result) where TNew : class
-    {
-        return result.Rewrap(t => t as TNew);
-    }
 }
